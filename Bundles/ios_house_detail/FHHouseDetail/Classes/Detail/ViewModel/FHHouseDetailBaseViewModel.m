@@ -18,6 +18,8 @@
 #import "FHDetailRentModel.h"
 #import <FHHouseBase/FHEnvContext.h>
 #import <FHHouseBase/FHURLSettings.h>
+#import "FHHouseDetailAPI.h"
+#import <TTReachability/TTReachability.h>
 
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -411,13 +413,16 @@
     poplayer.reportBlock = ^(id  _Nonnull data) {
         [wself popLayerReport:data];
     };
+    poplayer.feedBack = ^(NSInteger type, id  _Nonnull data, void (^ _Nonnull compltion)(BOOL)) {
+        [wself poplayerFeedBack:data type:type completion:compltion];
+    };
+    
     [self.detailController.view addSubview:poplayer];
     return poplayer;
 }
 
 -(void)popLayerReport:(id)model
 {
-    
     NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
     tracerDic[@"log_pb"] = self.listLogPB ?: @"be_null";
     [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
@@ -430,8 +435,19 @@
 
 - (void)gotoLogin:(id)model
 {
+    
+    NSString *enterFrom = @"be_null";
+    if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
+        enterFrom = @"official_inspection";
+    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
+        enterFrom = @"happiness_eye";
+    }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
+        enterFrom = @"transaction_remind";
+    }
+    
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setObject:@"old_feedback" forKey:@"enter_from"];
+    
+    [params setObject:enterFrom forKey:@"enter_from"];
     [params setObject:@"feedback" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(NO) forKey:@"need_pop_vc"];
@@ -498,6 +514,35 @@
             [self.detailController.navigationController setViewControllers:vcs];
         }
     }
+}
+
+-(void)poplayerFeedBack:(id)model type:(NSInteger)type completion:(void (^)(BOOL success))completion
+{
+    NSString *source = nil;
+    NSString *agencyId = nil;
+    if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
+        source = @"official";
+        agencyId = [(FHDetailDataBaseExtraOfficialModel *)model agency].agencyId;
+    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
+        source = @"detective";
+    }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
+        source = @"safety_tips";
+    }
+    
+    [FHHouseDetailAPI requstQualityFeedback:self.houseId houseType:self.houseType source:source feedBack:type agencyId:agencyId completion:^(bool succss, NSError * _Nonnull error) {
+      
+        if (succss) {
+            completion(succss);
+        }else{
+            if (![TTReachability isNetworkConnected]) {
+                SHOW_TOAST(@"网络异常");
+            }else{
+                SHOW_TOAST(error.domain);
+            }
+        }
+        
+    } ];
+    
 }
 
 @end

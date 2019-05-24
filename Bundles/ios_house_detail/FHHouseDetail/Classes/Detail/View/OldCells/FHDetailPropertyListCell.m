@@ -228,6 +228,23 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     if (model.certificate && model.certificate.labels.count) {
         return @[@"agency_info"];
     }
+    if (model.extraInfo) {
+        
+        NSMutableArray *types = [NSMutableArray new];
+        if (model.extraInfo.official) {
+            [types addObject:@"official_inspection"];
+        }
+        if (model.extraInfo.detective) {
+            [types addObject:@"happiness_eye"];
+        }
+        
+        return types;
+    }
+    
+    if (model.rentExtraInfo) {
+        return @[@"transaction_remind"];
+    }
+    
     return @[];
 }
 

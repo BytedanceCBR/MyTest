@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailHalfPopFooter : UIView
 
-@property(nonatomic , copy) void (^actionBlock)(BOOL positive);
+@property(nonatomic , copy) void (^actionBlock)(NSInteger type);
 
 @property(nonatomic , strong) UILabel *tipLabel;
 @property(nonatomic , strong) UIButton *actionButton;
@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showTip:(NSString *)tip type:(FHDetailHalfPopFooterType)type positiveTitle:(NSString *)ptitle negativeTitle:(NSString *_Nullable)ntitle;
 
+-(void)changeToFeedbacked;
 
 @end
 

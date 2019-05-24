@@ -20,6 +20,7 @@
 #import "FHDetailHalfPopDealFooter.h"
 #import "FHDetailCheckHeader.h"
 #import <TTBaseLib/UIViewAdditions.h>
+#import <FHHouseBase/FHUserTracker.h>
 
 #import "FHDetailOldModel.h"
 #import "FHDetailRentModel.h"
@@ -40,6 +41,11 @@
 @property(nonatomic , strong) UITableView *tableView;
 @property(nonatomic , strong) FHDetailHalfPopFooter *footer;
 @property(nonatomic , strong) id data;
+
+//for track
+@property(nonatomic , strong) NSDate *enterDate;
+@property(nonatomic , strong) NSString *showKey;
+@property(nonatomic , strong) NSDictionary *trackInfo;
 
 @end
 
@@ -75,7 +81,7 @@
 //        }
         
         _footer = [[FHDetailHalfPopFooter alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), FOOTER_HEIGHT)];
-        _footer.actionBlock = ^(BOOL positive) {
+        _footer.actionBlock = ^(NSInteger positive) {
             [wself feedBack:positive];
         };
         
@@ -144,9 +150,26 @@
     [self dismiss];
 }
 
--(void)feedBack:(BOOL)positive
+-(void)feedBack:(NSInteger)type
 {
-    
+    if (self.feedBack) {
+        __weak typeof(self) wself = self;
+        self.feedBack(type, self.data, ^(BOOL success) {            
+            [wself updateFooterFeedback:success];
+        });
+    }
+    self.footer.actionButton.enabled = NO;
+    self.footer.negativeButton.enabled = NO;
+}
+
+-(void)updateFooterFeedback:(BOOL)success
+{
+    if (success) {        
+        [self.footer changeToFeedbacked];
+    }else{
+        self.footer.actionButton.enabled = YES;
+        self.footer.negativeButton.enabled = YES;
+    }
 }
 
 -(FHDetailHalfPopLogoHeader *)header
@@ -154,9 +177,13 @@
     return  [[FHDetailHalfPopLogoHeader alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen]bounds].size.width, 77)];
 }
 
--(void)showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)data
+-(void)showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)data trackInfo:(NSDictionary *)trackInfo
 {
-    self.data = data;
+    self.enterDate = [NSDate date];
+    self.trackInfo = trackInfo;
+    self.data = data;    
+    [self addShowLog:@"official_inspection"];
+    
     FHDetailHalfPopLogoHeader *header = [self header];
     [header updateWithTitle:data.dialogs.title tip:data.dialogs.subTitle imgUrl:data.dialogs.icon];
     
@@ -168,9 +195,12 @@
     
 }
 
--(void)showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)data
+-(void)showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)data trackInfo:(NSDictionary *)trackInfo
 {
     self.data = data;
+    self.trackInfo = trackInfo;
+    self.enterDate = [NSDate date];
+    [self addShowLog:@"happiness_eye"];
     
     FHDetailHalfPopLogoHeader *header = [self header];
     
@@ -183,9 +213,13 @@
     [self.tableView reloadData];
 }
 
--(void)showDealData:(FHRentDetailDataBaseExtraModel *)data
+-(void)showDealData:(FHRentDetailDataBaseExtraModel *)data trackInfo:(NSDictionary *)trackInfo
 {
     self.data = data;
+    self.trackInfo = trackInfo;
+    self.enterDate = [NSDate date];
+    [self addShowLog:@"transaction_remind"];
+    
     FHDetailHalfPopLogoHeader *header = [self header];
     header.height = 47;
 //    data.securityInformation.dialogs
@@ -383,6 +417,22 @@
         }];
         
     }
+}
+
+#pragma mark - log
+-(void)addShowLog:(NSString *)key
+{
+    TRACK_EVENT(key, self.trackInfo);
+}
+
+-(void)addStayLog
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    [param addEntriesFromDictionary:self.trackInfo];
+    
+    param[@"stay_time"] = [NSString stringWithFormat:@"%.0f",[[NSDate date] timeIntervalSinceDate:self.enterDate]*1000];
+    
+    TRACK_EVENT(@"stay_category", param);
 }
 
 @end

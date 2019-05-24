@@ -29,6 +29,7 @@
 #import "NSDictionary+TTAdditions.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHMainApi+Contact.h>
+#import <FHHouseBase/FHUserTrackerDefine.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -498,9 +499,38 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     if (!propertyModel) {
         return;
     }
-        
+    
+    [self addClickOptionLog];
+    
     FHDetailHalfPopLayer *popLayer = [self popLayer];
-    [popLayer showDealData:propertyModel.rentExtraInfo];
+    [popLayer showDealData:propertyModel.rentExtraInfo trackInfo:@{}];
+}
+
+-(void)addClickOptionLog
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    /*
+     "1.event_type：house_app2c_v2
+     2.page_type（页面类型）：rent_detail（租房详情页）
+     3.click_position ：transaction_remind (交易提示)
+     4.enter_from：renting（租房）
+     5. origin_from
+     6. origin_search_id
+     7.log_pb
+     8.element_from ："
+     */
+    param[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE];
+    param[UT_ENTER_FROM] = @"renting";
+    param[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];
+    param[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
+    param[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
+    //TODO: add real element_from
+    param[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM];
+    
+    [param addEntriesFromDictionary:self.detailTracerDic];
+    param[@"click_position"] = @"transaction_remind";
+    
+    TRACK_EVENT(@"click_options", param);
 }
 
 @end

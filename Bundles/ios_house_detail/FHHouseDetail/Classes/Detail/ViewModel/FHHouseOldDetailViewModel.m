@@ -40,6 +40,7 @@
 #import "FHDetailMediaHeaderCell.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHMainApi+Contact.h>
+#import <FHHouseBase/FHUserTrackerDefine.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -719,12 +720,34 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         return;
     }
 
+    NSString *position = nil;
     FHDetailHalfPopLayer *popLayer = [self popLayer];
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
-        [popLayer showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)model];
+        [popLayer showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)model trackInfo:nil];
+        position = @"official_inspection ";
     }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-        [popLayer showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)model];
+        [popLayer showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)model trackInfo:nil];
+        position = @"happiness_eye";
     }
+    [self addClickOptionLog:position];
+}
+
+-(void)addClickOptionLog:(NSString *)position
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+
+    param[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE];
+    param[UT_ENTER_FROM] = self.detailTracerDic[UT_ENTER_FROM];
+    param[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];
+    param[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
+    param[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
+    //TODO: add real element_from
+    param[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM];
+    
+    [param addEntriesFromDictionary:self.detailTracerDic];
+    param[@"click_position"] = position;
+    
+    TRACK_EVENT(@"click_options", param);
 }
 
 @end

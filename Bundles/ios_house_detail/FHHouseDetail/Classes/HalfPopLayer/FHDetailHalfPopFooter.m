@@ -46,16 +46,26 @@
 -(void)onAction:(id)sender
 {
     if (self.actionBlock) {
-        self.actionBlock(sender == self.actionButton);
+        NSInteger type = 0;
+        if (!self.actionButton.hidden && !self.negativeButton.hidden) {
+            if (sender == self.actionButton) {
+                type = 1;
+            }else{
+                type = 0;
+            }
+        }
+        self.actionBlock(type);
     }
 }
 
 -(void)showTip:(NSString *)tip type:(FHDetailHalfPopFooterType)type positiveTitle:(NSString *)ptitle negativeTitle:(NSString *)ntitle
 {
     _tipLabel.text = tip;
-    
+
+    self.actionButton.enabled = YES;
     [self.actionButton setTitle:ptitle forState:UIControlStateNormal];
     if (type == FHDetailHalfPopFooterTypeConfirm) {
+        
         self.negativeButton.hidden = YES;
         CGSize size = [self.actionButton sizeThatFits:CGSizeMake(200, CGRectGetHeight(self.bounds))];
         [self.actionButton mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -64,6 +74,7 @@
         }];
         
     }else{
+        self.negativeButton.enabled = YES;
         [self.negativeButton setTitle:ntitle forState:UIControlStateNormal];
         self.negativeButton.hidden = NO;
         [self.actionButton mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -71,6 +82,20 @@
             make.right.mas_equalTo(-88);
         }];                
     }
+}
+
+-(void)changeToFeedbacked
+{
+    [self.actionButton setTitle:@"已提交" forState:UIControlStateNormal];
+    self.negativeButton.hidden = YES;
+    self.actionButton.enabled = NO;
+    
+    CGSize size = [self.actionButton sizeThatFits:CGSizeMake(200, CGRectGetHeight(self.bounds))];
+    [self.actionButton mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(ceil(size.width));
+        make.right.mas_equalTo(-20);
+    }];
+    
 }
 
 -(void)initConstraints

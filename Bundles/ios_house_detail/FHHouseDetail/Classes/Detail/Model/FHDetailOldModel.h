@@ -277,6 +277,8 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) FHImageModel *logo;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *nameSubTitle;
+@property (nonatomic, copy , nullable) NSString *agencyId;
+
 @end
 
 @interface FHDetailDataBaseExtraOfficialModel : JSONModel

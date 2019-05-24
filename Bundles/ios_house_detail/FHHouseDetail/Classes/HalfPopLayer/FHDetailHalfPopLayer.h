@@ -15,12 +15,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailHalfPopLayer : UIView
 
 @property(nonatomic , copy) void (^reportBlock)(id data);
+@property(nonatomic , copy) void (^feedBack)(NSInteger type , id data , void (^compltion)(BOOL success));
 
--(void)showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)data;
+-(void)showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)data trackInfo:(NSDictionary *)trackInfo;
 
--(void)showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)data;
+-(void)showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)data trackInfo:(NSDictionary *)trackInfo;
 
--(void)showDealData:(FHRentDetailDataBaseExtraModel *)data;
+-(void)showDealData:(FHRentDetailDataBaseExtraModel *)data trackInfo:(NSDictionary *)trackInfo;
 
 
 @end
