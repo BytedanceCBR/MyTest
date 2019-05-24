@@ -62,8 +62,10 @@
 {
     if (scoreValue > 0) {
         [self.starView updateStarsCountWithoutLabel:scoreValue];
+        self.starView.hidden = NO;
     }else {
         [self.starView updateStarsCountWithoutLabel:0];
+        self.starView.hidden = YES;
     }
 }
 

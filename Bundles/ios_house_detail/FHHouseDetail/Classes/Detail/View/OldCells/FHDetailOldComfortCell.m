@@ -27,7 +27,7 @@
     }
     self.currentData = data;
     FHDetailOldComfortModel *model = (FHDetailOldComfortModel *)data;
-    [self.headerView updateTitle:model.comfortInfo.title];
+    [self.headerView updateTitle:model.comfortInfo.title ? : @"舒适指数"];
     [self.headerView updateStarsCount:model.comfortInfo.score.integerValue];
     
     for (UIView *subview in self.bgView.subviews) {
@@ -40,22 +40,22 @@
         [self.bgView addSubview:itemView];
         switch (index) {
             case 0:
-                itemView.titleLabel.text = model.comfortInfo.buildingAge;
+                itemView.titleLabel.text = model.comfortInfo.buildingAge ? : @"楼龄 -年";
                 itemView.subtitleLabel.text = @"建议在 0-5年";
                 itemView.icon.image = [UIImage imageNamed:@"detail_comfort_1"];
                 break;
             case 1:
-                itemView.titleLabel.text = model.comfortInfo.houseCount;
+                itemView.titleLabel.text = model.comfortInfo.houseCount ? : @"规模 -户";
                 itemView.subtitleLabel.text = @"建议在 3000-5000户";
                 itemView.icon.image = [UIImage imageNamed:@"detail_comfort_2"];
                 break;
             case 2:
-                itemView.titleLabel.text = model.comfortInfo.plotRatio;
+                itemView.titleLabel.text = model.comfortInfo.plotRatio ? : @"容积率 -";
                 itemView.subtitleLabel.text = @"越低越好,最高不超过5";
                 itemView.icon.image = [UIImage imageNamed:@"detail_comfort_3"];
                 break;
             case 3:
-                itemView.titleLabel.text = model.comfortInfo.propertyFee;
+                itemView.titleLabel.text = model.comfortInfo.propertyFee ? : @"物业费 -元/平/月";
                 itemView.icon.image = [UIImage imageNamed:@"detail_comfort_4"];
                 itemView.subtitleLabel.text = @"越贵服务等级越高";
                 break;
