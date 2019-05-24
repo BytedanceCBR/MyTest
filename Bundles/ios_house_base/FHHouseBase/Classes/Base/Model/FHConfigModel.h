@@ -110,6 +110,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataOpDataItemsModel> *items;
 @property (nonatomic, copy , nullable) NSString *opStyle;
+@property (nonatomic, copy , nullable) NSNumber *iconRowNum;
 
 @end
 
