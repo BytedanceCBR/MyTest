@@ -641,7 +641,6 @@
     self.subTitleLabel.text = commonModel.displayDescription;
     NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:commonModel.tags];
     self.tagLabel.attributedText =  attributeString;
-    
     self.priceLabel.text = commonModel.displayPricePerSqm;
     //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
     FHSearchHouseDataItemsHouseImageModel *imageModel = commonModel.images.firstObject;
@@ -653,9 +652,9 @@
         self.subTitleLabel.text = commonModel.displaySubtitle;
         
         if ([TTDeviceHelper isScreenWidthLarge320]) {
-            _priceLabel.font = [UIFont themeFontSemibold:16];
+            _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
         }else {
-            _priceLabel.font = [UIFont themeFontSemibold:15];
+            _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
         }
         _pricePerSqmLabel.textColor = [UIColor themeGray3];
         
@@ -674,7 +673,6 @@
             self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
             self.imageTagLabelBgView.hidden = NO;
         }else {
-            
             self.imageTagLabelBgView.hidden = YES;
         }
         
@@ -685,12 +683,13 @@
         self.priceLabel.text = commonModel.pricingNum;
         self.pricePerSqmLabel.text = commonModel.pricingUnit;
         
+        
         if ([TTDeviceHelper isScreenWidthLarge320]) {
-            _priceLabel.font = [UIFont themeFontSemibold:16];
+            _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
             _pricePerSqmLabel.textColor = [UIColor themeRed1];
         }else {
-            _priceLabel.font = [UIFont themeFontSemibold:15];
+            _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
             _pricePerSqmLabel.textColor = [UIColor themeRed1];
         }
@@ -712,17 +711,29 @@
     } else {
         
         if ([TTDeviceHelper isScreenWidthLarge320]) {
-            _priceLabel.font = [UIFont themeFontSemibold:16];
+            _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
             _pricePerSqmLabel.textColor = [UIColor themeRed1];
         }else {
-            _priceLabel.font = [UIFont themeFontSemibold:15];
+            _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
             _pricePerSqmLabel.textColor = [UIColor themeRed1];
         }
         
         self.priceLabel.text = commonModel.pricePerSqmNum;
         self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
+        
+        
+        if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
+            
+            self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
+            self.imageTagLabel.text = commonModel.houseImageTag.text;
+            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
+            self.imageTagLabelBgView.hidden = NO;
+        }else {
+            
+            self.imageTagLabelBgView.hidden = YES;
+        }
     }
     
     [self hideRecommendReason];
