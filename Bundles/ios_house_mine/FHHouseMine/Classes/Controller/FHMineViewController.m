@@ -208,11 +208,18 @@
 }
 
 - (void)refreshContentOffset:(CGPoint)contentOffset {
-    CGFloat alpha = contentOffset.y / (self.headerViewHeight + 32 - self.naviBarHeight);
-    self.customNavBarView.title.alpha = alpha;
+    CGFloat begin = self.naviBarHeight;
+    
+    CGFloat alpha = (contentOffset.y - begin) / (self.headerViewHeight + 32 - self.naviBarHeight - begin);
+    if(alpha < 0){
+        alpha = 0;
+    }
+    
     if(alpha > 1){
         alpha = 1;
     }
+    
+    self.customNavBarView.title.alpha = alpha;
     [self.customNavBarView refreshAlpha:alpha];
 }
 
