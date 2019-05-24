@@ -144,8 +144,8 @@
     UIBezierPath *path = [[UIBezierPath alloc] init];
     [path moveToPoint:CGPointMake(0, 0)];
     [path addLineToPoint:CGPointMake(0, 26)];
-    [path addLineToPoint:CGPointMake(self.starsSize * (ratio / 11.0), 26)];
-    [path addLineToPoint:CGPointMake(self.starsSize * (ratio / 11.0), 0)];
+    [path addLineToPoint:CGPointMake(self.starsSize * (ratio / 10.0), 26)];
+    [path addLineToPoint:CGPointMake(self.starsSize * (ratio / 10.0), 0)];
     [path addLineToPoint:CGPointMake(0,0)];
     shapeLayer.path = path.CGPath;
     harfImageView.layer.mask = shapeLayer;
