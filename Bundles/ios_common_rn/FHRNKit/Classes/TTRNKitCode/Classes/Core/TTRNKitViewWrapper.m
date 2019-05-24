@@ -220,21 +220,24 @@
     [urlsPrams setValue:[self getGeckoKey] forKey:@"gecko_key"];
     NSString *geckoBundlePath = geckoBundlePathForGeckoParams(urlsPrams, _channel);
     geckoBundlePath = [geckoBundlePath stringByAppendingString:[NSString stringWithFormat:@"/%@",_urlParams[@"bundle_name"]]];
- 
-    NSURL *urlJSBundle1 = [NSURL URLWithString:geckoBundlePath];
-    
-    TTRNKitBridgeModule *bridgeModule = [[TTRNKitBridgeModule alloc] initWithBundleUrl:urlJSBundle1];
-    [self.manager registerObserver:bridgeModule];
-    RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:bridgeModule launchOptions:nil];
-    RCTRootView *rnView = [[RCTRootView alloc] initWithBridge:bridge moduleName:moduleName initialProperties:_urlParams];
-    rnView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.rnView = rnView;
-    
-    if([self.rnView isKindOfClass:[UIView class]])
-    {
-        [self addSubview:self.rnView];
-        [self addConstraintsToView:self.rnView];
+
+    if ([geckoBundlePath isKindOfClass:[NSString class]] && [[NSFileManager defaultManager] fileExistsAtPath:geckoBundlePath isDirectory:nil]) {
+        NSURL *urlJSBundle1 = [NSURL URLWithString:geckoBundlePath];
+        
+        TTRNKitBridgeModule *bridgeModule = [[TTRNKitBridgeModule alloc] initWithBundleUrl:urlJSBundle1];
+        [self.manager registerObserver:bridgeModule];
+        RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:bridgeModule launchOptions:nil];
+        RCTRootView *rnView = [[RCTRootView alloc] initWithBridge:bridge moduleName:moduleName initialProperties:_urlParams];
+        rnView.translatesAutoresizingMaskIntoConstraints = NO;
+        self.rnView = rnView;
+        
+        if([self.rnView isKindOfClass:[UIView class]])
+        {
+            [self addSubview:self.rnView];
+            [self addConstraintsToView:self.rnView];
+        }
     }
+
 //    TTRNKitBridgeModule *bridgeModule = [[TTRNKitBridgeModule alloc] initWithBundleUrl:urlJSBundle1];
 //    RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:bridgeModule launchOptions:nil];
 //
