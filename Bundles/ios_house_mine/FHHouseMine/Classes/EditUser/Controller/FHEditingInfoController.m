@@ -48,14 +48,16 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.viewModel viewWillAppear];
-    [self.textField becomeFirstResponder];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.textField becomeFirstResponder];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.viewModel viewWillDisappear];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 }
 
@@ -89,6 +91,7 @@
     }else if(self.type == FHEditingInfoTypeUserDesc){
         _textField.text = _userInfo.userDescription;
     }
+    
 }
 
 - (void)initConstraints {
@@ -120,9 +123,6 @@
     if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
         if([change[@"new"] boolValue]){
             [self.view endEditing:YES];
-            self.viewModel.isHideKeyBoard = NO;
-        }else{
-            self.viewModel.isHideKeyBoard = YES;
         }
     }
 }

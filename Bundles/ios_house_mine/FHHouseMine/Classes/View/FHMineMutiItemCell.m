@@ -71,8 +71,8 @@
     
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentView);
-        make.left.mas_equalTo(self.contentView).offset(20);
-        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.left.mas_equalTo(self.contentView).offset(15);
+        make.right.mas_equalTo(self.contentView).offset(-15);
         make.bottom.mas_equalTo(self.contentView).offset(-10);
     }];
 }

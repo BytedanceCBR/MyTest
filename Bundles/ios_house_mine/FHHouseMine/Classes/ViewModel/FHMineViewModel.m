@@ -91,7 +91,8 @@
         
         if (error) {
             //TODO: show handle error
-            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            wself.viewController.showenRetryButton = YES;
             wself.tableView.bounces = NO;
             return;
         }
@@ -111,7 +112,6 @@
     if([TTAccount sharedAccount].isLogin){
         NSDictionary *fhSettings = [self fhSettings];
         NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
-
         if(state == 1){
             [[ToastManager manager] showToast:@"个人资料功能升级中，敬请期待"];
         }else if(state == 2){
@@ -166,7 +166,7 @@
         }
         _hasLogin = YES;
     } else {
-        self.viewController.headerView.userNameLabel.text = @"登录/注册";
+        self.viewController.headerView.userNameLabel.text = @"立即登录";
         self.viewController.headerView.descLabel.text = @"关注房源永不丢失";
         self.viewController.headerView.editIcon.hidden = YES;
         _hasLogin = NO;

@@ -52,7 +52,7 @@
     
     self.icon = [[UIImageView alloc] init];
     self.icon.clipsToBounds = YES;
-    self.icon.contentMode = UIViewContentModeScaleAspectFit;
+    self.icon.contentMode = UIViewContentModeScaleAspectFill;
     [self.iconBorderView addSubview:_icon];
 //    _icon.layer.cornerRadius = 27;
 //    _icon.layer.masksToBounds = YES;

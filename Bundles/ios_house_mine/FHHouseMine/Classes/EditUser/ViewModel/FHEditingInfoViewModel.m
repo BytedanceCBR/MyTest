@@ -36,14 +36,6 @@
     return self;
 }
 
-- (void)viewWillAppear {
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
-}
-
-- (void)viewWillDisappear {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 - (void)save {
     if (self.type == FHEditingInfoTypeUserName) {
         // 修改用户名
@@ -135,14 +127,6 @@
     
     NSDictionary *params = @{(nameOrDesp ? TTAccountUserNameKey : TTAccountUserDescriptionKey) : content};
     [FHMineAPI uploadUserProfileInfo:params completion:didCompletedBlock];
-}
-
-#pragma mark - 键盘通知
-
-- (void)keyboardWillShowNotifiction:(NSNotification *)notification {
-    if(_isHideKeyBoard){
-        return;
-    }
 }
 
 @end

@@ -15,13 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) FHEditableUserInfo *userInfo;
 @property(nonatomic, assign) FHEditingInfoType type;
-@property(nonatomic , assign) BOOL isHideKeyBoard;
 
 - (instancetype)initWithTextField:(UITextField *)textField controller:(FHEditingInfoController *)viewController;
-
-- (void)viewWillAppear;
-
-- (void)viewWillDisappear;
 
 - (void)save;
 

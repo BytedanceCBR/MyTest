@@ -126,12 +126,7 @@
 }
 
 - (void)setupHeaderView {
-    CGFloat top = 20;
-    if (@available(iOS 11.0 , *)) {
-        top = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
-    }
-    
-    self.headerViewHeight = 118 + top;
+    self.headerViewHeight = 74 + self.naviBarHeight;
     
     FHMineHeaderView *headerView = [[FHMineHeaderView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, self.headerViewHeight) naviBarHeight:self.naviBarHeight];
     headerView.userInteractionEnabled = YES;
