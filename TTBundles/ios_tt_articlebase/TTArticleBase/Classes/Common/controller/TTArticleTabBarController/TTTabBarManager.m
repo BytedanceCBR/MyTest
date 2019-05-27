@@ -180,7 +180,7 @@ SINGLETON_GCD(TTTabBarManager);
 //                           kTTTabFollowTabKey:@"关注",
                            kFHouseMessageTabKey: @"消息",
                            kFHouseMineTabKey:@"我的",
-                           kFHouseFindTabKey:@"找房",
+                           kFHouseFindTabKey:@"邻里",
 
 //                           kTTTabWeitoutiaoTabKey:[KitchenMgr getString:kKCUGCFeedNamesTab],
                            };

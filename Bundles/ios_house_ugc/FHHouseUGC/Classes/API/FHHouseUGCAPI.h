@@ -8,7 +8,6 @@
 #import <FHHouseBase/FHURLSettings.h>
 #import <FHHouseBase/FHHouseType.h>
 #import <FHHouseBase/FHMainApi.h>
-#import "FHCommuteType.h"
 
 @class TTHttpTask;
 

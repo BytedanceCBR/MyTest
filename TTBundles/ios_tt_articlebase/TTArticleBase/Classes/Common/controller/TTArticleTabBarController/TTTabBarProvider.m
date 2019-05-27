@@ -36,6 +36,7 @@
 #import <BDABTestSDK/BDABTestManager.h>
 #import "SSCommonLogic.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import <FHHouseUGC/FHCommunityViewController.h>
 
 NSString *kTTMiddleTabDidChangeNotification = @"kTTMiddleTabDidChangeNotification";
 
@@ -111,14 +112,17 @@ static NSString *lastTabIdentifier;
 //    }
     else if ([identifier isEqualToString:kFHouseFindTabKey]) {
 
-        UIViewController *houseFindVC = nil;
-        if ([SSCommonLogic findTabShowHouse] == 1) {
-            houseFindVC = [[FHHouseFindListViewController alloc]init];
-
-        }else {
-            houseFindVC = [[FHHouseFindViewController alloc] init];
-        }
-        return houseFindVC;
+//        UIViewController *houseFindVC = nil;
+//        if ([SSCommonLogic findTabShowHouse] == 1) {
+//            houseFindVC = [[FHHouseFindListViewController alloc]init];
+//
+//        }else {
+//            houseFindVC = [[FHHouseFindViewController alloc] init];
+//        }
+        // add by zyk 记得修改此处
+        FHCommunityViewController *communityVC = [[FHCommunityViewController alloc] init];
+        
+        return communityVC;
 
     } else if ([identifier isEqualToString:kFHouseMessageTabKey]) {
         FHMessageViewController* vc = [[FHMessageViewController alloc] init];

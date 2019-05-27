@@ -6,11 +6,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHBaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 // 社区/邻里 主控制器
-@interface FHCommunityViewController : UIViewController
+@interface FHCommunityViewController : FHBaseViewController
 
 @end
 
