@@ -333,6 +333,11 @@
     return UITableViewAutomaticDimension;
 }
 
+-(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewAutomaticDimension;
+}
+
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]) {
