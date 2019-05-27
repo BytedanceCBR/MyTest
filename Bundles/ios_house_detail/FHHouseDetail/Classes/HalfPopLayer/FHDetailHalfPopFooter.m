@@ -51,7 +51,7 @@
             if (sender == self.actionButton) {
                 type = 1;
             }else{
-                type = 0;
+                type = 2;
             }
         }
         self.actionBlock(type);
