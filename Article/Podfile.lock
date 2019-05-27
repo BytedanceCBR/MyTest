@@ -76,6 +76,7 @@ PODS:
   - FHHouseMessage (0.1.0)
   - FHHouseMine (0.1.0)
   - FHHouseTrend (0.1.0)
+  - FHHouseUGC (0.1.0)
   - FHMapSearch (0.1.0)
   - FHRNKit (0.1.0)
   - FLAnimatedImage (1.0.12.1-binary)
@@ -586,6 +587,7 @@ DEPENDENCIES:
   - FHHouseMessage (from `../Bundles/ios_house_message`)
   - FHHouseMine (from `../Bundles/ios_house_mine`)
   - FHHouseTrend (from `../Bundles/ios_house_trend`)
+  - FHHouseUGC (from `../Bundles/ios_house_ugc`)
   - FHMapSearch (from `../Bundles/ios_map_search`)
   - FHRNKit (from `../Bundles/ios_common_rn`)
   - FLAnimatedImage (= 1.0.12.1-binary)
@@ -829,6 +831,8 @@ EXTERNAL SOURCES:
     :path: ../Bundles/ios_house_mine
   FHHouseTrend:
     :path: ../Bundles/ios_house_trend
+  FHHouseUGC:
+    :path: ../Bundles/ios_house_ugc
   FHMapSearch:
     :path: ../Bundles/ios_map_search
   FHRNKit:
@@ -975,6 +979,7 @@ SPEC CHECKSUMS:
   FHHouseMessage: 1879205d8b77b49fefba376311c38ae3b5e8381c
   FHHouseMine: c0c197cb55d97e3357427d2a1731a7ab4225d94b
   FHHouseTrend: feb4c9736617882d2bd7181262e6a3e2d4ebad4f
+  FHHouseUGC: e29aa4a9f3170024b600f1cb8e5b8c6ed2e40400
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
   FHRNKit: b8966b198eb601696630a3fd4bc72aac277258be
   FLAnimatedImage: c103d911f434514c39961a5eed4c0e29c6cdae48
@@ -994,7 +999,7 @@ SPEC CHECKSUMS:
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
   libwebp: c184f52cefe46b52c753216233ac467ba8f61730
   lottie-ios: 35dd57473fff703c4a9c9c4d4d1ad7c2e2c84a4d
-  Mantle: caa35a4d8f55f5561b0202d08c5d2edf06429ecc
+  Mantle: 12334925664929842f283b898dce59a3979edb8e
   Masonry: e7568c8ebfa71397954e471aa5afa2bc4cc73cf4
   MBProgressHUD: 3dcb01b57ae9af405717a0e338566a0087cca22a
   MJExtension: da69d633398f365e84e052720b7943206f467935
@@ -1104,6 +1109,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 404ba4b8ded586dea8de47aeeaee944077d826b6
+PODFILE CHECKSUM: d823b88630a4bde06b8ede78275bb385ee368790
 
 COCOAPODS: 1.4.0
