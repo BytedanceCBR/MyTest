@@ -201,11 +201,26 @@
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
+    
+    CGFloat originY = tableView.contentOffset.y;
+    CGFloat cellOriginY = cell.frame.origin.y;
+    CGFloat winH = [UIScreen mainScreen].bounds.size.height;
+    // 起始位置，超出屏幕时不上报 element_show 埋点
+    if (cellOriginY - originY > winH * 1.2 && originY <= 0) {
+        // 超出屏幕
+        return;
+    }
+    
     if ([cell conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)] && ![self.weakedCellTable containsObject:cell]) {
         [self.weakedCellTable addObject:cell];
     }
     if ([cell conformsToProtocol:@protocol(FHDetailVCViewLifeCycleProtocol)] && ![self.weakedVCLifeCycleCellTable containsObject:cell]) {
         [self.weakedVCLifeCycleCellTable addObject:cell];
+    }
+    // will display
+    if ([cell isKindOfClass:[FHDetailBaseCell class]]) {
+        FHDetailBaseCell *tCell = (FHDetailBaseCell *)cell;
+        [tCell fh_willDisplayCell];
     }
     // 添加element_show埋点
     if (!self.elementShowCaches[tempKey]) {

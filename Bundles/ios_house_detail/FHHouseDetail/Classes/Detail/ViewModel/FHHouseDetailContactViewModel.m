@@ -442,6 +442,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     // 目前需要添加：realtor_position element_from item_id
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"realtor_position"] = realtor_pos;
+    imExtra[@"from"] = params[@"from"] ?: @"app_oldhouse";
     if (extraDict && [extraDict isKindOfClass:[NSDictionary class]]) {
         if (extraDict[@"element_from"]) {
             imExtra[@"element_from"] = extraDict[@"element_from"];
@@ -537,6 +538,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     contactConfig.searchId = self.searchId;
     contactConfig.imprId = self.imprId;
     contactConfig.showLoading = YES;
+    if (extraDict[@"from"]) {
+        contactConfig.from = extraDict[@"from"];
+    }
     [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
     
     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];

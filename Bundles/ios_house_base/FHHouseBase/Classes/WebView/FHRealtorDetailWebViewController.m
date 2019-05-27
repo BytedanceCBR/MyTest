@@ -81,6 +81,7 @@ static NSString *s_oldAgent = nil;
     contactConfig.houseId = self.houseId;
     contactConfig.phone = phone;
     contactConfig.realtorId = self->_realtorId;
+    contactConfig.from = @"app_realtor_mainpage";
     [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
         if (success) {
             completion(TTRJSBMsgSuccess, @{});
