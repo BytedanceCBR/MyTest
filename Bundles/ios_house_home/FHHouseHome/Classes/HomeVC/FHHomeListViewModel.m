@@ -322,23 +322,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
 - (void)configIconRowCountAndHeight
 {
-    [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
-    [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
-    //下版本等实验结论再上
-//    if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum isKindOfClass:[NSNumber class]]) {
-//        if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum integerValue] == 5) {
-//            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 5;
-//            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 42;
-//        }else
-//        {
-//            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
-//            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
-//        }
-//    }else
-//    {
-//        [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
-//        [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
-//    }
+    [[FHHomeCellHelper sharedInstance] initFHHomeHeaderIconCountAndHeight];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
