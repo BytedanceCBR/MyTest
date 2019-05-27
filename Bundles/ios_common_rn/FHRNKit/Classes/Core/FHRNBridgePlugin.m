@@ -58,6 +58,7 @@
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, alertTest), @"app.alertTest");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, toast), @"app.toast");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, fetch), @"app.fetch");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, fetch), @"app.map");
 }
 
 - (void)toastWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
@@ -67,6 +68,11 @@
     if ([title isKindOfClass:[NSString class]] && title.length > 0) {
         [[ToastManager manager] showToast:title];
     }
+}
+
+- (void)mapWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    
 }
 
 - (void)appInfoWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
