@@ -9,7 +9,9 @@
 #import <BDWebImage/BDWebImage.h>
 #import <FLAnimatedImage/FLAnimatedImage.h>
 #import <TTBaseLib/TTBaseMacro.h>
-#import <TTKitchen/TTKitchen.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchen/TTKitchen.h> 
 #import <TTKitchen/TTCommonKitchenConfig.h>
 
 @interface FRImageViewAdapter(){

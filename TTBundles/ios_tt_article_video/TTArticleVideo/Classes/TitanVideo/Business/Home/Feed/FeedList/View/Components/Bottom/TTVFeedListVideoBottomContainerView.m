@@ -31,7 +31,8 @@
 #import "TTWeChatShare.h"
 #import "TTQQShare.h"
 //#import "TTDingTalkShare.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import "AKUILayout.h"
 #import "TTVDiggAction.h"
 #import "UIColor+Theme.h"
@@ -326,7 +327,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 //        return @"钉钉";
 //    }
     else {
-        return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
+        return [TTKitchen getString:kTTKUGCRepostWordingShareIconTitle];
     }
 }
 

@@ -8,7 +8,8 @@
 
 #import "TTUGCImageCompressHelper.h"
 #import <ImageIO/ImageIO.h>
-#import <TTKitchen/TTKitchen.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import <YYImage/YYImageCoder.h>
 
 //import tgmath.h as suggested by http://stackoverflow.com/questions/5352457/cgfloat-based-math-functions/5352779#5352779

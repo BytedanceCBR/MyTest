@@ -9,7 +9,8 @@
 #import "FRUploadImageManager.h"
 #import <TTNetworkManager/TTNetworkManager.h>
 #import <TTUGCFoundation/FRCommonURLSetting.h>
-#import <TTKitchen/TTKitchen.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTSandBoxHelper.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>

@@ -19,7 +19,8 @@
 #import <TTURLUtils.h>
 //#import "TTWeitoutiaoRepostIconDownloadManager.h"
 #import "TTAdPromotionManager.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTBaseLib/TTBaseMacro.h>
@@ -850,7 +851,7 @@
 }
 
 - (NSString *)activityTitle {
-    return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
+    return [TTKitchen getString:kTTKUGCRepostWordingShareIconTitle];
 }
 
 - (UIImage *)activityImage {

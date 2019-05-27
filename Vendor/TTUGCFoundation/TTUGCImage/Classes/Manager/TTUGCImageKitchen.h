@@ -6,7 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTKitchen/TTKitchen.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 
 static NSString * kTTKUGCImageCacheOptimizeHosts = @"tt_ugc_base_config.image_cache_optimize_hosts"; // TTUGCImage缓存优化host
 

@@ -35,7 +35,8 @@
 #import "HorizontalCard.h"
 
 #import "TSVRecUserCardOriginalData.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 //#import "TTFollowCategoryFetchExtraManager.h"
 #import <TTMonitor/TTMonitor.h>
 #import "ExploreLogicSetting.h"
@@ -775,7 +776,7 @@
         return nil;
     }
 
-    BOOL postThreadInsertEnable = [TTKitchen getBOOL:kKCUGCPostThreadInsertEnable];
+    BOOL postThreadInsertEnable = [TTKitchen getBOOL:kTTKUGCPostThreadInsertEnable];
     if (!postThreadInsertEnable) {
         return nil;
     }

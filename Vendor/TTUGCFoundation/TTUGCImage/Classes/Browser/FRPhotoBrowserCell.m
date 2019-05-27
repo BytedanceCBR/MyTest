@@ -26,7 +26,8 @@
 #import "UIImage+TTThemeExtension.h"
 #import "TTRoute.h"
 #import "TTUIResponderHelper.h"
-#import <TTKitchen/TTKitchen.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import "TTUGCRequestManager.h"
 #import "FRApiModel.h"
 #import <BDWebImageManager.h>
