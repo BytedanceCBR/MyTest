@@ -11,6 +11,8 @@
 #import "UIColor+Theme.h"
 #import <UIImageView+BDWebImage.h>
 
+#define labelFontSize ((CGRectGetWidth([UIScreen mainScreen].bounds) > 320) ? 12 : 10)
+
 @interface FHMineFavoriteItemView()
 
 @property (nonatomic, strong) UIImageView *iconView;
@@ -21,8 +23,7 @@
 
 @implementation FHMineFavoriteItemView
 
-- (instancetype)initWithName:(NSString *)name imageName:(NSString *)imageName;
-{
+- (instancetype)initWithName:(NSString *)name imageName:(NSString *)imageName {
     self = [super initWithFrame:CGRectZero];
     if(self){
         _name = name;
@@ -32,19 +33,17 @@
     return self;
 }
 
-- (void)setupUI
-{
+- (void)setupUI {
     [self initView];
     [self initConstaints];
 }
 
-- (void)initView
-{
+- (void)initView {
     self.userInteractionEnabled = YES;
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewClicked)];
     [self addGestureRecognizer:tapGesture];
     
-    self.nameLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray2]];
+    self.nameLabel = [self LabelWithFont:[UIFont themeFontRegular:labelFontSize] textColor:[UIColor themeGray2]];
     _nameLabel.text = self.name;
     [self addSubview:_nameLabel];
     
@@ -55,8 +54,7 @@
     [self addSubview:_iconView];
 }
 
-- (void)initConstaints
-{
+- (void)initConstaints {
     [_iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
         make.top.mas_equalTo(10);
@@ -71,18 +69,16 @@
     }];
 }
 
--(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor
-{
+-(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
     label.textColor = textColor;
     return label;
 }
 
-- (void)viewClicked
-{
-    if(self.focusClickBlock){
-        self.focusClickBlock();
+- (void)viewClicked {
+    if(self.itemClickBlock){
+        self.itemClickBlock();
     }
 }
 

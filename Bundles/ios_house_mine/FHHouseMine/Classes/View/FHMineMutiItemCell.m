@@ -12,14 +12,15 @@
 #import "TTAccount.h"
 #import "FHMineDefine.h"
 
-#define itemPadding 10
+#define itemPadding ((CGRectGetWidth([UIScreen mainScreen].bounds) > 320) ? 10 : 7)
 #define eachRowCount 4
+#define bgPadding ((CGRectGetWidth([UIScreen mainScreen].bounds) > 320) ? 20 : 15)
 
 @interface FHMineMutiItemCell()
 
-@property(nonatomic, strong) UILabel* titleLabel;
-@property(nonatomic, strong) UIImageView* headerView;
-@property(nonatomic, strong) UIView* bgView;
+@property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, strong) UIImageView *headerView;
+@property(nonatomic, strong) UIView *bgView;
 @property(nonatomic, strong) NSMutableArray<FHMineFavoriteItemView *> *items;
 
 @end
@@ -71,8 +72,8 @@
     
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentView);
-        make.left.mas_equalTo(self.contentView).offset(15);
-        make.right.mas_equalTo(self.contentView).offset(-15);
+        make.left.mas_equalTo(self.contentView).offset(bgPadding);
+        make.right.mas_equalTo(self.contentView).offset(-bgPadding);
         make.bottom.mas_equalTo(self.contentView).offset(-10);
     }];
 }
@@ -122,7 +123,7 @@
         }
         NSString *imageUrl = ((FHMineConfigDataIconOpDataMyIconItemsImageModel *)[itemModel.image firstObject]).url;
         FHMineFavoriteItemView *view = [[FHMineFavoriteItemView alloc] initWithName:title imageName:imageUrl];
-        view.focusClickBlock = ^{
+        view.itemClickBlock = ^{
             [wself didItemClick:itemModel];
         };
         [self.items addObject:view];
@@ -139,7 +140,7 @@
     }
     
     if(items.count > 0){
-        CGFloat width = (UIScreen.mainScreen.bounds.size.width - 40 - (eachRowCount - 1) * itemPadding) / eachRowCount;
+        CGFloat width = (UIScreen.mainScreen.bounds.size.width - bgPadding * 2 - (eachRowCount - 1) * itemPadding) / eachRowCount;
         
         for (NSInteger i = 0; i < items.count; i++) {
             FHMineFavoriteItemView *view = items[i];
