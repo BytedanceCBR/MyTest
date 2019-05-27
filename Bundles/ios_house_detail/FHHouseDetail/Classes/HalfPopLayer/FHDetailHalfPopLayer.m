@@ -106,6 +106,7 @@
         [self.tableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
         
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapAction:)];
+        self.userInteractionEnabled = YES;
         [self addGestureRecognizer:tapGesture];
         
     }
@@ -131,6 +132,9 @@
         }];
     }else{
         [self removeFromSuperview];
+    }
+    if (self.dismissBlock) {
+        self.dismissBlock();
     }
     
     [self addStayLog];

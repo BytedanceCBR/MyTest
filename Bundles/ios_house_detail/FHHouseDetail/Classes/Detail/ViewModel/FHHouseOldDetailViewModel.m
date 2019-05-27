@@ -757,6 +757,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         
     }
     [self addClickOptionLog:position];
+    self.tableView.scrollsToTop = NO;
+    [self enableController:NO];
 }
 
 -(void)addClickOptionLog:(NSString *)position

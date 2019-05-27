@@ -79,6 +79,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 - (void)removePopLayerNotification;
 - (void)onShowPoplayerNotification:(NSNotification *)notification;
 - (FHDetailHalfPopLayer *)popLayer;
+
+- (void)enableController:(BOOL)enabled;
 @end
 
 NS_ASSUME_NONNULL_END

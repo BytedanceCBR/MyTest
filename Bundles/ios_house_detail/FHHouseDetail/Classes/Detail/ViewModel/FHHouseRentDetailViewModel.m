@@ -513,6 +513,9 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     
     FHDetailHalfPopLayer *popLayer = [self popLayer];
     [popLayer showDealData:propertyModel.rentExtraInfo trackInfo:trackInfo];
+    
+    self.tableView.scrollsToTop = NO;
+    [self enableController:NO];
 }
 
 -(void)addClickOptionLog

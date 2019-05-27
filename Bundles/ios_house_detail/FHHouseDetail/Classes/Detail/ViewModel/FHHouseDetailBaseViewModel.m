@@ -406,6 +406,11 @@
     [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_request_failed" status:status extra:attr];
 }
 
+- (void)enableController:(BOOL)enabled
+{
+    TTNavigationController *nav = self.detailController.navigationController;
+    nav.panRecognizer.enabled = enabled;
+}
 #pragma mark - poplayer
 
 - (void)addPopLayerNotification
@@ -430,6 +435,10 @@
     };
     poplayer.feedBack = ^(NSInteger type, id  _Nonnull data, void (^ _Nonnull compltion)(BOOL)) {
         [wself poplayerFeedBack:data type:type completion:compltion];
+    };
+    poplayer.dismissBlock = ^{
+        [wself enableController:YES];
+        wself.tableView.scrollsToTop = YES;
     };
     
     [self.detailController.view addSubview:poplayer];

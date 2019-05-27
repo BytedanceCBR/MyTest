@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , copy) void (^reportBlock)(id data);
 @property(nonatomic , copy) void (^feedBack)(NSInteger type , id data , void (^compltion)(BOOL success));
+@property(nonatomic , copy) void (^dismissBlock)();
 
 -(void)showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)data trackInfo:(NSDictionary *)trackInfo;
 
