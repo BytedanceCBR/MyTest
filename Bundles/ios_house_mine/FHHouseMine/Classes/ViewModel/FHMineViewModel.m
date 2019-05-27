@@ -166,7 +166,7 @@
         }
         _hasLogin = YES;
     } else {
-        self.viewController.headerView.userNameLabel.text = @"立即登录";
+        self.viewController.headerView.userNameLabel.text = @"登录/注册";
         self.viewController.headerView.descLabel.text = @"关注房源永不丢失";
         self.viewController.headerView.editIcon.hidden = YES;
         _hasLogin = NO;
