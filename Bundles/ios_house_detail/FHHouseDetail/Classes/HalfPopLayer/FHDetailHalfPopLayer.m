@@ -360,7 +360,9 @@
         v.backgroundColor = [UIColor whiteColor];
         return v;
     }else if ([self.data isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
-        return [[FHDetailHalfPopDealFooter alloc] init];
+        FHDetailHalfPopDealFooter *footer = [[FHDetailHalfPopDealFooter alloc] init];
+        footer.infoLabel.text = [(FHRentDetailDataBaseExtraModel *)self.data securityInformation].dialogContent.comment;
+        return footer;
     }
     return nil;
 }

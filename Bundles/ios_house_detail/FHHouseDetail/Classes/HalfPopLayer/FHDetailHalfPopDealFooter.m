@@ -34,7 +34,7 @@
         
         _infoLabel.numberOfLines = 0;
         _infoLabel.preferredMaxLayoutWidth = ([UIScreen mainScreen].bounds.size.width - 40);
-        _infoLabel.text = @"*该部分内容有幸福里运营部不定期整理更新，欢迎补充，共建安全租房交易环境";
+//        _infoLabel.text = @"*该部分内容由幸福里运营部不定期整理更新，欢迎补充，共建安全租房交易环境";
         
         [self addSubview:_infoLabel];
         
