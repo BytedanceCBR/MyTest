@@ -12,16 +12,13 @@
 #import <PNChart.h>
 #import "FHDetailPriceMarkerView.h"
 #import "UIView+House.h"
-#import "FHDetailHeaderView.h"
+#import "FHDetailStarHeaderView.h"
+#import <FHHouseBase/FHUtils.h>
 
 @interface FHDetailErshouPriceChartCell () <PNChartDelegate>
 
-@property(nonatomic , strong) FHDetailHeaderView *headerView;
-@property(nonatomic , strong) UIImageView *bgView;
+@property(nonatomic , strong) FHDetailStarHeaderView *headerView;
 @property(nonatomic , strong) UIView *line;
-@property(nonatomic , strong) UILabel *priceUpValueLabel;
-@property(nonatomic , strong) UIImageView *priceUpTrend;
-@property(nonatomic , strong) UILabel *pricePerKeyLabel;
 @property(nonatomic , strong) UILabel *priceKeyLabel;
 @property(nonatomic , strong) UILabel *priceValueLabel;
 @property(nonatomic , strong) UILabel *monthUpKeyLabel;
@@ -224,77 +221,47 @@
 
 - (void)setupUI {
 
-    _headerView = [[FHDetailHeaderView alloc] init];
-    _headerView.label.text = @"价格分析";
+    _headerView = [[FHDetailStarHeaderView alloc] init];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(46);
+        make.height.mas_equalTo(90);
     }];
     
+    [self.contentView addSubview:self.bottomBgView];
     [self.contentView addSubview:self.priceView];
-    [self.priceView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.contentView);
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(20);
-        make.height.mas_equalTo(138);
-    }];
-    [self.priceView addSubview:self.bgView];
+    [self.priceView addSubview:self.line];
 
-    // 小区均价
+    self.priceView.frame = CGRectMake(20, 65, [UIScreen mainScreen].bounds.size.width - 40, 84);
     [self.priceView addSubview:self.priceKeyLabel];
     [self.priceKeyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(0);
-        make.left.mas_equalTo(20);
+        make.top.mas_equalTo(20);
         make.height.mas_equalTo(20);
+        make.left.mas_equalTo(20);
+        make.right.mas_equalTo(self.line.mas_left).mas_offset(-5);
     }];
-    // 均价值
-    [self.priceView addSubview:self.priceValueLabel];
+    // value
+    [self.priceView addSubview:self.self.self.priceValueLabel];
     [self.priceValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.priceKeyLabel);
         make.top.mas_equalTo(self.priceKeyLabel.mas_bottom).mas_offset(5);
-        make.height.mas_equalTo(30);
-    }];
-    // "本房源单价比小区均价"
-    [self.priceView addSubview:self.pricePerKeyLabel];
-    [self.pricePerKeyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.priceValueLabel.mas_bottom).mas_offset(20);
         make.height.mas_equalTo(20);
-        make.left.mas_equalTo(self.priceValueLabel);
+        make.right.mas_equalTo(self.line.mas_left).mas_offset(-5);
     }];
-    // value
-    [self.priceView addSubview:self.priceUpValueLabel];
-    [self.priceUpValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.pricePerKeyLabel);
-        make.top.mas_equalTo(self.pricePerKeyLabel.mas_bottom).mas_offset(11);
-        make.height.mas_equalTo(20);
-    }];
-    [self.priceView addSubview:self.priceUpTrend];
-    [self.priceUpTrend mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.pricePerKeyLabel);
-        make.centerY.mas_equalTo(self.priceUpValueLabel);
-        make.width.height.mas_equalTo(16);
-    }];
-    [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.priceView);
-        make.bottom.mas_equalTo(self.priceUpValueLabel).mas_offset(18);
-        make.bottom.mas_equalTo(self.priceView);
-    }];
-    [self.priceView addSubview:self.line];
     [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.priceView);
-        make.top.mas_equalTo(self.pricePerKeyLabel).mas_offset(10);
-        make.height.mas_equalTo(30);
+        make.center.mas_equalTo(self.priceView);
+        make.height.mas_equalTo(40);
         make.width.mas_equalTo(1);
     }];
     [self.priceView addSubview:self.monthUpKeyLabel];
     [self.monthUpKeyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.pricePerKeyLabel);
+        make.centerY.mas_equalTo(self.priceKeyLabel);
         make.height.mas_equalTo(20);
         make.left.mas_equalTo(self.line.mas_right).mas_offset(30);
     }];
     [self.priceView addSubview:self.monthUpValueLabel];
     [self.monthUpValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.priceUpValueLabel);
+        make.centerY.mas_equalTo(self.priceValueLabel);
         make.left.mas_equalTo(self.monthUpKeyLabel);
         make.height.mas_equalTo(20);
     }];
@@ -304,14 +271,17 @@
         make.centerY.mas_equalTo(self.monthUpValueLabel);
         make.width.height.mas_equalTo(16);
     }];
-    [self.contentView addSubview:self.bottomBgView];
     self.bottomBgView.clipsToBounds = YES;
     [self.bottomBgView addSubview:self.chartBgView];
     [self.bottomBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-        make.top.mas_equalTo(self.priceView.mas_bottom);
+        make.top.mas_equalTo(self.headerView.mas_bottom);
         make.height.mas_equalTo(58);
         make.bottom.mas_equalTo(0);
+    }];
+    [self.chartBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(0);
+        make.height.mas_equalTo(207 + 110);
     }];
     [self.chartBgView addSubview:self.titleView];
     [self.chartBgView addSubview:self.priceLabel];
@@ -324,9 +294,9 @@
     }];
     [self.priceLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
-        make.top.mas_equalTo(20);
+        make.top.mas_equalTo(90);
     }];
-    [self.chartView mas_remakeConstraints:^(MASConstraintMaker *make) {
+    [self.chartView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(0);
         make.right.mas_equalTo(0);
         make.top.mas_equalTo(self.priceLabel.mas_bottom).mas_offset(10);
@@ -336,6 +306,7 @@
 
     [self setupChartUI];
     [self updateChartConstraints:NO];
+    [FHUtils addShadowToView:self.priceView withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(0, 2) shadowRadius:6 andCornerRadius:4];
 }
 
 - (void)refreshWithData:(id)data
@@ -345,32 +316,13 @@
     }
     self.currentData = data;
     FHDetailPriceTrendCellModel *cellModel = (FHDetailPriceTrendCellModel *)data;
+    
+    [self.headerView updateTitle:cellModel.priceAnalyze.title ? : @"价格指数"];
+    [self.headerView updateStarsCount:cellModel.priceAnalyze.score.integerValue];
+    
     NSArray *priceTrends = cellModel.priceTrends; 
     self.priceValueLabel.text = cellModel.neighborhoodInfo.pricingPerSqm;
     self.priceView.hidden = NO;
-    
-    float pricingPerSqm = cellModel.neighborhoodInfo.pricingPerSqmV.floatValue;
-    if (pricingPerSqm > 0) {
-        
-        float pricingPerSqmValue = cellModel.pricingPerSqmV.floatValue;
-        float priceUp = (pricingPerSqmValue - pricingPerSqm) / pricingPerSqm * 100;
-        if (priceUp == 0) {
-            self.priceUpValueLabel.text = @"持平";
-            self.monthUpTrend.hidden = YES;
-        } else {
-            self.priceUpValueLabel.text = [NSString stringWithFormat:@"%.2f%%",fabs(priceUp)];
-            self.monthUpTrend.hidden = NO;
-            if (priceUp > 0) {
-                self.priceUpTrend.image = [UIImage imageNamed:@"detail_trend_red"];
-            } else {
-                self.priceUpTrend.image = [UIImage imageNamed:@"detail_trend_green"];
-            }
-        }
-    }else {
-        
-        self.priceUpValueLabel.text = @"持平";
-        self.monthUpTrend.hidden = YES;
-    }
     if (cellModel.neighborhoodInfo.monthUp.length > 0) {
         float monthUp = cellModel.neighborhoodInfo.monthUp.floatValue;
         float absValue = fabs(monthUp) * 100;
@@ -389,12 +341,11 @@
     }
     self.priceTrends = priceTrends;
     if (priceTrends.count < 1) {
-        [self.chartBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.top.mas_equalTo(0);
+        [self.chartBgView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
         [self.bottomBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
+            make.height.mas_equalTo(50);
         }];
     }else {
         [self updateChartConstraints:NO];
@@ -404,17 +355,9 @@
 - (void)updateChartConstraints:(BOOL)animated
 {
     FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
-    CGFloat bottomHeight = 58;
-    if (!model.hasSuggestion) {
-        bottomHeight = 58 - 20;
-    }
-    [self.chartBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(0);
-        make.top.mas_equalTo(10);
-        make.height.mas_equalTo(207 + 50);
-    }];
+    CGFloat bottomHeight = model.bottomHeight;
     [self.bottomBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(325 - bottomHeight);
+        make.height.mas_equalTo(207 + 110);
     }];
 }
 
@@ -533,17 +476,6 @@
     view.centerY = (self.chartView.height - 40) /2;
 }
 
-
--(UIImageView *)bgView
-{
-    if (!_bgView) {
-        _bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"detail_chart_bg"]];
-        _bgView.contentMode = UIViewContentModeScaleToFill;
-        _bgView.layer.masksToBounds = YES;
-    }
-    return _bgView;
-}
-
 - (UIView *)line
 {
     if (!_line) {
@@ -551,35 +483,6 @@
         _line.backgroundColor = [UIColor themeGray6];
     }
     return _line;
-}
-
-- (UILabel *)priceUpValueLabel
-{
-    if (!_priceUpValueLabel) {
-        _priceUpValueLabel = [[UILabel alloc]init];
-        _priceUpValueLabel.font = [UIFont themeFontSemibold:18];
-        _priceUpValueLabel.textColor = [UIColor themeGray1];
-    }
-    return _priceUpValueLabel;
-}
-
--(UIImageView *)priceUpTrend
-{
-    if (!_priceUpTrend) {
-        _priceUpTrend = [[UIImageView alloc]init];
-    }
-    return _priceUpTrend;
-}
-
-- (UILabel *)pricePerKeyLabel
-{
-    if (!_pricePerKeyLabel) {
-        _pricePerKeyLabel = [[UILabel alloc]init];
-        _pricePerKeyLabel.font = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:14] : [UIFont themeFontRegular:12];
-        _pricePerKeyLabel.textColor = [UIColor themeGray3];
-        _pricePerKeyLabel.text = @"本房源单价比小区均价";
-    }
-    return _pricePerKeyLabel;
 }
 
 - (UILabel *)priceKeyLabel
@@ -597,7 +500,7 @@
 {
     if (!_priceValueLabel) {
         _priceValueLabel = [[UILabel alloc]init];
-        _priceValueLabel.font = [UIFont themeFontMedium:24];
+        _priceValueLabel.font = [UIFont themeFontMedium:16];
         _priceValueLabel.textColor = [UIColor themeGray1];
     }
     return _priceValueLabel;
@@ -609,7 +512,7 @@
         _monthUpKeyLabel = [[UILabel alloc]init];
         _monthUpKeyLabel.font = [UIFont themeFontRegular:14];
         _monthUpKeyLabel.textColor = [UIColor themeGray3];
-        _monthUpKeyLabel.text = @"环比上月";
+        _monthUpKeyLabel.text = @"比上月";
     }
     return _monthUpKeyLabel;
 }
@@ -618,7 +521,7 @@
 {
     if (!_monthUpValueLabel) {
         _monthUpValueLabel = [[UILabel alloc]init];
-        _monthUpValueLabel.font = [UIFont themeFontMedium:18];
+        _monthUpValueLabel.font = [UIFont themeFontMedium:16];
         _monthUpValueLabel.textColor = [UIColor themeGray1];
     }
     return _monthUpValueLabel;
@@ -636,6 +539,7 @@
 {
     if (!_priceView) {
         _priceView = [[UIView alloc]init];
+        _priceView.backgroundColor = [UIColor whiteColor];
     }
     return _priceView;
 }

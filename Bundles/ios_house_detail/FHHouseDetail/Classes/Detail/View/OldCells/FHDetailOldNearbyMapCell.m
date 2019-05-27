@@ -1,11 +1,11 @@
 //
-//  FHDetailNearbyMapCell.m
-//  AFgzipRequestSerializer
+//  FHDetailOldNearbyMapCell.m
+//  FHHouseDetail
 //
-//  Created by 谢飞 on 2019/2/12.
+//  Created by 张元科 on 2019/5/21.
 //
 
-#import "FHDetailNearbyMapCell.h"
+#import "FHDetailOldNearbyMapCell.h"
 
 #import <MAMapKit/MAMapKit.h>
 #import <AMapLocationKit/AMapLocationKit.h>
@@ -26,17 +26,18 @@
 #import "TTRoute.h"
 #import <HMDTTMonitor.h>
 #import "FHDetailMapView.h"
+#import "FHDetailStarHeaderView.h"
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 56;
 static const float kSegementedPadingTop = 5;
 
-@interface FHDetailNearbyMapCell () <AMapSearchDelegate,
+@interface FHDetailOldNearbyMapCell () <AMapSearchDelegate,
 MAMapViewDelegate,
 UITableViewDelegate,
 UITableViewDataSource>
 
-@property (nonatomic, strong)   FHDetailHeaderView       *headerView;
+@property (nonatomic, strong)   FHDetailStarHeaderView       *headerView;
 @property (nonatomic , assign) NSInteger requestIndex;
 @property (nonatomic , strong) HMSegmentedControl *segmentedControl;
 @property (nonatomic , strong) UIImageView *mapImageView;
@@ -55,12 +56,12 @@ UITableViewDataSource>
 @property (nonatomic , assign) BOOL isFirst;
 @property (nonatomic , strong) NSMutableDictionary *countCategoryDict;
 @property (nonatomic , strong) NSMutableDictionary *poiDatasDict;
-@property (nonatomic , strong) FHDetailNearbyMapModel *dataModel;
+@property (nonatomic , strong) FHDetailOldNearbyMapModel *dataModel;
 @property (nonatomic, assign)  BOOL isFirstSnapshot;// 首次截屏
 
 @end
 
-@implementation FHDetailNearbyMapCell
+@implementation FHDetailOldNearbyMapCell
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -69,9 +70,9 @@ UITableViewDataSource>
     if (self) {
         _isFirstSnapshot = YES;
         _isFirst = YES;
-         self.searchCategory = @"交通";
+        self.searchCategory = @"交通";
         self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
-
+        
         _nameArray = [NSArray arrayWithObjects:@"交通",@"购物",@"医院",@"教育", nil];
         _countCategoryDict = [NSMutableDictionary new];
         _poiDatasDict = [NSMutableDictionary new];
@@ -81,7 +82,7 @@ UITableViewDataSource>
         
         //初始化左右切换
         [self setUpSegmentedControl];
-
+        
         [self setUpMapImageView];
         
         self.searchApi = [[AMapSearchAPI alloc] init];
@@ -94,12 +95,12 @@ UITableViewDataSource>
 
 - (void)setUpHeaderView
 {
-    _headerView = [[FHDetailHeaderView alloc] init];
-    _headerView.label.text = @"周边配套";
+    _headerView = [[FHDetailStarHeaderView alloc] init];
+    [_headerView updateTitle:@"便捷指数"];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(46);
+        make.height.mas_equalTo(110);
     }];
 }
 
@@ -117,13 +118,17 @@ UITableViewDataSource>
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHDetailNearbyMapModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailOldNearbyMapModel class]]) {
         return;
     }
     
-    FHDetailNearbyMapModel *dataModel = (FHDetailNearbyMapModel *)data;
+    FHDetailOldNearbyMapModel *dataModel = (FHDetailOldNearbyMapModel *)data;
     dataModel.cell = self;
     _dataModel = dataModel;
+    if (dataModel.title.length > 0) {
+        [_headerView updateTitle:dataModel.title];
+    }
+    [self.headerView updateStarsCount:[dataModel.score integerValue]];
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
     [self.mapView setCenterCoordinate:self.centerPoint];
     
@@ -148,13 +153,13 @@ UITableViewDataSource>
                                      [UIColor themeRed1],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
-//    _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(-10, 5, 0, 5);
+    //    _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(-10, 5, 0, 5);
     _segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 3, 0, 3);
     _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     WeakSelf;
     _segmentedControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
-
+        [self clickFacilitiesTracker:index];
         [self cleanAllAnnotations];
         
         if (self.nameArray.count > index) {
@@ -167,13 +172,25 @@ UITableViewDataSource>
         
     };
     [self.contentView addSubview:_segmentedControl];
+    _segmentedControl.backgroundColor = [UIColor clearColor];
     
     [_segmentedControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.headerView.mas_bottom);
+        make.top.equalTo(self.contentView).offset(52);
         make.left.right.equalTo(self.contentView);
         make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
-        make.height.mas_equalTo(kSegementedHeight);
+        make.height.mas_equalTo(50);
     }];
+}
+
+- (void)clickFacilitiesTracker:(NSInteger)index {
+    NSArray *facilities = @[@"traffic",@"shopping",@"hospital",@"education"];
+    if (index >= 0 && index < facilities.count) {
+        // click_facilities
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"element_type"] = [self elementTypeString:self.baseViewModel.houseType];
+        tracerDic[@"click_position"] = facilities[index];
+        [FHUserTracker writeEvent:@"click_facilities" params:tracerDic];
+    }
 }
 
 - (void)setUpMapImageView
@@ -182,13 +199,12 @@ UITableViewDataSource>
     
     _mapView = [[FHDetailMapView sharedInstance] defaultMapViewWithFrame:mapRect];
     
-    CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 160);
     __weak typeof(self) weakSelf = self;
     // 延时绘制地图
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf snapshotMap];
     });
-
+    
     _mapImageView = [[UIImageView alloc] initWithFrame:mapRect];
     _mapImageView.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:_mapImageView];
@@ -202,7 +218,7 @@ UITableViewDataSource>
     
     _mapMaskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.contentView addSubview:_mapMaskBtn];
-
+    
     
     [_mapMaskBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.segmentedControl.mas_bottom);
@@ -213,7 +229,7 @@ UITableViewDataSource>
     
     [_mapMaskBtn addTarget:self action:@selector(mapMaskBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     
-
+    
 }
 
 - (void)mapMaskBtnClick:(UIButton *)sender
@@ -236,8 +252,8 @@ UITableViewDataSource>
     [infoDict setValue:longitudeNum forKey:@"longitude"];
     [infoDict setValue:self.dataModel.title forKey:@"title"];
     
-
-
+    
+    
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     
     if (sender == _mapMaskBtnLocation) {
@@ -269,9 +285,9 @@ UITableViewDataSource>
     
     
     [_locationList mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_mapImageView.mas_bottom).offset(10);
+        make.top.equalTo(self.mapImageView.mas_bottom).offset(10);
         make.left.right.equalTo(self.contentView);
-        make.bottom.equalTo(self.contentView).offset(-10);
+        make.bottom.equalTo(self.contentView).offset(-20);
         make.height.mas_equalTo(105);
     }];
     
@@ -279,14 +295,14 @@ UITableViewDataSource>
     _emptyInfoLabel = [UILabel new];
     _emptyInfoLabel.text = @"附近没有交通信息";
     _emptyInfoLabel.textAlignment = NSTextAlignmentCenter;
-//    _emptyInfoLabel.hidden = [FHEnvContext isNetworkConnected] ? YES : NO;
+    //    _emptyInfoLabel.hidden = [FHEnvContext isNetworkConnected] ? YES : NO;
     _emptyInfoLabel.hidden = NO;
     _emptyInfoLabel.textColor = [UIColor themeGray1];
     
     [_locationList addSubview:_emptyInfoLabel];
     
     [_emptyInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(_locationList);
+        make.center.equalTo(self.locationList);
         make.width.mas_greaterThanOrEqualTo(100);
         make.height.mas_equalTo(20);
     }];
@@ -294,7 +310,7 @@ UITableViewDataSource>
     
     _mapMaskBtnLocation = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.contentView addSubview:_mapMaskBtnLocation];
-
+    
     [_mapMaskBtnLocation mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.locationList);
     }];
@@ -304,18 +320,18 @@ UITableViewDataSource>
 
 - (void)changeListLayout:(NSInteger)poiCount
 {
-//    [_dataModel.tableView beginUpdates];
+    //    [_dataModel.tableView beginUpdates];
     [_locationList mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_mapImageView.mas_bottom).offset(10);
+        make.top.equalTo(self.mapImageView.mas_bottom).offset(10);
         make.left.right.equalTo(self.contentView);
-        make.bottom.equalTo(self.contentView).offset(-10);
+        make.bottom.equalTo(self.contentView).offset(-20);
         make.height.mas_equalTo((poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 35);
     }];
     
     if (poiCount == 0) {
         _emptyInfoLabel.hidden = NO;
         [_emptyInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.center.equalTo(_locationList);
+            make.center.equalTo(self.locationList);
             make.width.mas_greaterThanOrEqualTo(100);
             make.height.mas_equalTo(20);
         }];
@@ -333,7 +349,7 @@ UITableViewDataSource>
     [_mapMaskBtnLocation mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.locationList);
     }];
-
+    
     if (self.indexChangeCallBack) {
         self.indexChangeCallBack();
     }
@@ -439,7 +455,7 @@ UITableViewDataSource>
         for (NSInteger i = 1; i < _nameArray.count; i++) {
             dispatch_async(dispatch_get_global_queue(0, 0), ^{
                 // 处理耗时操作的代码块...
-                [self requestPoiInfo:self.centerPoint andKeyWord:_nameArray[i]];
+                [self requestPoiInfo:self.centerPoint andKeyWord:self.nameArray[i]];
                 
                 //通知主线程刷新
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -453,12 +469,12 @@ UITableViewDataSource>
         [_countCategoryDict setObject:@(poiArray.count) forKey:searchReqeust.keywords];
         [_poiDatasDict setObject:poiArray forKey:searchReqeust.keywords];
     }
-
+    
     
     NSMutableArray *sectionTitleArray = [NSMutableArray new];
     for (NSInteger i = 0; i < _nameArray.count; i++) {
         if (_countCategoryDict[_nameArray[i]]) {
-            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@(%d)",_nameArray[i],[_countCategoryDict[_nameArray[i]] integerValue]]];
+            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@(%ld)",_nameArray[i],[self.countCategoryDict[_nameArray[i]] integerValue]]];
         }else
         {
             [sectionTitleArray addObject:[NSString stringWithFormat:@"%@(0)",_nameArray[i]]];
@@ -501,7 +517,7 @@ UITableViewDataSource>
             
             CGFloat width = imageAnna.size.width > 0 ? imageAnna.size.width : 10;
             CGFloat height = imageAnna.size.height > 0 ? imageAnna.size.height : 10;
-
+            
             imageAnna = [imageAnna resizableImageWithCapInsets:UIEdgeInsetsMake(height/2.0, width/2.0, height/2.0, width/2.0) resizingMode:UIImageResizingModeStretch];
             backImageView.image = imageAnna;
             
@@ -536,7 +552,6 @@ UITableViewDataSource>
 
 - (MAOverlayRenderer *)mapView:(MAMapView *)mapView rendererForOverlay:(id <MAOverlay>)overlay
 {
-    MACircle * cicle = [MACircle circleWithMapRect:MAMapRectZero];
     MAOverlayRenderer *overlayRender = [[MAOverlayRenderer alloc] initWithOverlay:overlay];
     return overlayRender;
 }
@@ -588,7 +603,7 @@ UITableViewDataSource>
             stringDistance = [NSString stringWithFormat:@"%.1f公里",((CGFloat)distance) / 1000.0];
         }
     }
-
+    
     [cell updateText:stringName andDistance:stringDistance];
     return cell;
 }
@@ -624,7 +639,7 @@ UITableViewDataSource>
 // mapview 的 takeSnapshotInRect 方法有可能等很久（10s）才返回
 - (void)preShowMapviewSnapshot {
     if (self.mapImageView.image == nil && self.isFirstSnapshot) {
-         __weak typeof(self) weakSelf = self;
+        __weak typeof(self) weakSelf = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if (weakSelf.mapImageView.image == nil && !weakSelf.baseViewModel.detailController.isViewDidDisapper) {
                 weakSelf.mapView.hidden = NO;
@@ -654,15 +669,9 @@ UITableViewDataSource>
     return imageResult;
 }
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
+@end
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
+@implementation FHDetailOldNearbyMapModel
 
-    // Configure the view for the selected state
-}
 
 @end

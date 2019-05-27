@@ -17,7 +17,6 @@
 
 @interface FHDetailMultitemCollectionView ()<UICollectionViewDataSource, UICollectionViewDelegate>
 
-@property (nonatomic, strong)   UICollectionView       *collectionContainer;
 @property (nonatomic, copy)     NSString       *cellIdentifier;
 @property (nonatomic, strong)   NSMutableDictionary       *houseShowCache;
 @property (nonatomic, strong)   NSArray       *datas;// 数据数组
