@@ -48,6 +48,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
     return self;
 }
+
 // extra:realtor_position element_from item_id
 - (void)imchatActionWithPhone:(FHDetailContactModel *)contactPhone realtorRank:(NSString *)rank extraDic:(NSDictionary *)extra {
     
@@ -72,6 +73,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     if (extra) {
         [dict addEntriesFromDictionary:extra];
     }
+
+    NSString* from = extra[@"from"] ? : @"be_null";
     
     [FHUserTracker writeEvent:@"click_im" params:dict];
     dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
@@ -83,7 +86,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
     }
     NSURL *openUrl = [NSURL URLWithString:contactPhone.imOpenUrl];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"source": @"1.13", @"tracer":dict}];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":dict, @"from": from}];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
@@ -220,6 +223,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"realtor_rank"] = @"be_null";
     dict[@"realtor_position"] = @"be_null";
     dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
+    dict[@"from"] = @"app_realtor_mainpage";
+
     IMConversation* conv = [[[IMManager shareInstance] chatService] conversationWithUserId:contactPhone.realtorId];
     if ([conv.identifier isEqualToString:@"-1"]) {
         dict[@"conversation_id"] = @"be_null";
@@ -264,7 +269,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
     info[@"house_id"] = _houseId;
     info[@"house_type"] = @(_houseType);
 
-
     if (isOpen) {
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
         [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
@@ -291,9 +295,11 @@ extern NSString *const kFHPhoneNumberCacheKey;
         {
             [dict setValue:@"old_detail_related" forKey:@"element_type"];
         }
+
+        dict[@"from"] = @"app_realtor_mainpage";
         
         dict[@"impr_id"] = dict[@"impr_id"] ? : @"be_null";
-        dict[@"source"] = @"1.81";
+        dict[@"from"] = @"app_realtor_mainpage";
         
         NSString *openUrlRnStr = [NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@&is_login=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle",islogin ? @"1" : @"0"];
         
