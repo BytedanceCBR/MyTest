@@ -17,19 +17,25 @@
 #import <FHHouseBase/FHHouseFillFormHelper.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTBaseLib/TTDeviceHelper.h>
-
+#import <SSCommonLogic.h>
+#import <FHEnvContext.h>
+#import <FHErrorView.h>
+#import <Masonry.h>
+#import <UIViewController+Refresh_ErrorHandler.h>
+#import <UIViewAdditions.h>
+#import "UIView+Refresh_ErrorHandler.h"
 
 @interface FHHouseDetailWebViewController ()
 {
     NSTimeInterval _startTime;
-    NSString* _realtorId;
 }
+
+@property (nonatomic, strong) SSWebViewContainer *webContainer;
 @property (nonatomic, strong) TTRouteUserInfo *realtorUserInfo;
-@property (nonatomic, strong) NSMutableDictionary *tracerDict;
 @property (nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 @property (nonatomic, copy) NSString *houseId;
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
-
+@property (nonatomic, assign) BOOL isShowTopTip;
 @end
 
 @implementation FHHouseDetailWebViewController
@@ -38,158 +44,118 @@ static NSString *s_oldAgent = nil;
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        _tracerDict = @{}.mutableCopy;
         self.realtorUserInfo = paramObj.userInfo;
-        _realtorId = paramObj.allParams[@"realtor_id"];
-        [_tracerDict addEntriesFromDictionary:[self.realtorUserInfo allInfo][@"trace"]];
         _houseId = paramObj.userInfo.allInfo[@"house_id"];
         _houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
+        
+        if ([paramObj.userInfo.allInfo[@"house_type"] respondsToSelector:@selector(boolValue)]) {
+            _isShowTopTip = [paramObj.userInfo.allInfo[@"house_type"] boolValue];
+        }else
+        {
+            _isShowTopTip = NO;
+        }
+        
         _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
     }
     return self;
 }
 
+- (CGRect)frameForListView
+{
+    if (@available(iOS 11.0 , *)) {
+        CGRect rect = CGRectMake(0.0f, 44.f + self.view.tt_safeAreaInsets.top, self.view.bounds.size.width, self.view.bounds.size.height - (44.f + self.view.tt_safeAreaInsets.top));
+        return rect;
+    } else {
+        CGRect rect = CGRectMake(0.0f, 65.0f, self.view.bounds.size.width, self.view.bounds.size.height - 65.0f);
+        return rect;
+    }
+}
+
+- (void)setupUI
+{
+    [self setupDefaultNavBar:NO];
+    
+    self.webContainer = [[SSWebViewContainer alloc] initWithFrame:[self frameForListView]];
+    [_webContainer.ssWebView addDelegate:self];
+    [_webContainer hiddenProgressView:YES];
+    _webContainer.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    _webContainer.ssWebView.opaque = NO;
+    _webContainer.ssWebView.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
+    _webContainer.disableEndRefresh = YES;
+    _webContainer.disableConnectCheck = YES;
+    [self.view addSubview:_webContainer];
+    
+    [_webContainer loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]]];
+    
+    WeakSelf;
+    NSString *loadingText = [SSCommonLogic isNewPullRefreshEnabled] ? nil : @"推荐中";
+    
+    if (![FHEnvContext isNetworkConnected]) {
+        FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.7)];
+        //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
+        [self.view addSubview:noDataErrorView];
+        
+        __weak typeof(self) weakSelf = self;
+        FHErrorView * noDataErrorViewWeak = noDataErrorView;
+        noDataErrorView.retryBlock = ^{
+            if (weakSelf.webContainer.ssWebView.request && [FHEnvContext isNetworkConnected]) {
+                [noDataErrorViewWeak hideEmptyView];
+                [weakSelf.webContainer.ssWebView loadRequest:weakSelf.webContainer.ssWebView.request];
+            }
+        };
+        
+        [noDataErrorView showEmptyWithTip:@"网络异常,请检查网络链接" errorImageName:@"group-4"
+                                showRetry:YES];
+        noDataErrorView.retryButton.userInteractionEnabled = YES;
+        [noDataErrorView.retryButton setTitle:@"刷新" forState:UIControlStateNormal];
+        [noDataErrorView setBackgroundColor:self.view.backgroundColor];
+        [noDataErrorView.retryButton mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(104, 30));
+        }];
+    }
+}
+
+
+
 - (void)viewDidLoad {
-    [[self class] registerUserAgentV2:YES];
     [super viewDidLoad];
+    
+    [self setupUI];
+    
     _startTime = [NSDate new].timeIntervalSince1970;
     //    _delegate = [self.realtorUserInfo allInfo][@"delegate"];
     
-    @weakify(self);
-    [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
-        @strongify(self);
-        self->_realtorId = params[@"realtor_id"];
-        NSString *phone = params[@"phone"];
-        
-        self.tracerDict[@"pageType"] = @"realtor_detail";
-        NSDictionary *reportParams = params[@"reportParams"];
-        [self callWithPhone:phone extraDict:reportParams completion:completion];
-    } forMethodName:@"phoneSwitch"];
     [FHUserTracker writeEvent:@"go_detail" params:[self goDetailParams]];
+    [self.webContainer.ssWebView setBackgroundColor:[UIColor redColor]];
+    [self.view setBackgroundColor:[UIColor redColor]];
+    
+//    [self tt_startUpdate];
 }
 
-- (void)callWithPhone:(NSString *)phone extraDict:(NSDictionary *)extraDict completion:(TTRJSBResponse)completion {
-    
-    NSMutableDictionary *params = @{}.mutableCopy;
-    if (self.tracerDict) {
-        [params addEntriesFromDictionary:self.tracerDict];
-    }
-    if (extraDict) {
-        [params addEntriesFromDictionary:extraDict];
-    }
-    FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:params error:nil];
-    contactConfig.houseType = self.houseType;
-    contactConfig.houseId = self.houseId;
-    contactConfig.phone = phone;
-    contactConfig.realtorId = self->_realtorId;
-    contactConfig.from = @"app_realtor_mainpage";
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
-        if (success) {
-            completion(TTRJSBMsgSuccess, @{});
-        }else {
-            completion(TTRJSBMsgFailed, @{});
-        }
-    }];
-    
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-    configModel.houseType = self.houseType;
-    configModel.followId = self.houseId;
-    configModel.hideToast = YES;
-    // 静默关注功能
-    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
-    
+
+#pragma mark -- UIWebViewDelegate
+
+- (void)webViewDidFinishLoad:(YSWebView *)webView
+{
+    [self.webContainer tt_endUpdataData];
+}
+
+- (void)webViewDidStartLoad:(YSWebView *)webView
+{
+  
+}
+
+- (void)webView:(YSWebView *)webView didFailLoadWithError:(NSError *)error {
+    [self.webContainer tt_endUpdataData];
 }
 
 -(NSMutableDictionary*)goDetailParams {
     
-    NSDictionary* params = @{@"page_type": @"realtor_detail",
-                             @"enter_from": _tracerDict[@"enter_from"] ? : @"be_null",
-                             @"element_from": _tracerDict[@"element_from"] ? : @"be_null",
-                             @"rank": _tracerDict[@"rank"] ? : @"be_null",
-                             @"origin_from": _tracerDict[@"origin_from"] ? : @"be_null",
-                             @"origin_search_id": _tracerDict[@"origin_search_id"] ? : @"be_null",
-                             @"log_pb": _tracerDict[@"log_pb"] ? : @"be_null",
-                             @"realtor_id": _realtorId ? : @"be_null",
-                             };
+    NSDictionary* params = @{};
     return [params mutableCopy];
 }
 
-+ (NSString *)toutiaoUA {
-    NSMutableString *ua = [NSMutableString string];
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    
-    // Attempt to find a name for this application
-    NSString *appName = [bundle objectForInfoDictionaryKey:@"CFBundleName"];
-    if (!appName) {
-        appName = [bundle objectForInfoDictionaryKey:@"CFBundleName"];
-    }
-    
-    NSData *latin1Data = [appName dataUsingEncoding:NSUTF8StringEncoding];
-    appName = [[NSString alloc] initWithData:latin1Data encoding:NSISOLatin1StringEncoding];
-    
-    NSString *marketingVersionNumber = [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *developmentVersionNumber = [bundle objectForInfoDictionaryKey:@"CFBundleVersion"];
-    
-    [ua appendFormat:@"NewsArticle/%@", developmentVersionNumber];
-    
-    NSString *netType = nil;
-    if(TTNetworkWifiConnected())
-    {
-        netType = @"WIFI";
-    }
-    else if(TTNetwork4GConnected())
-    {
-        netType = @"4G";
-    }
-    else if(TTNetwork4GConnected())
-    {
-        netType = @"3G";
-    }
-    else if(TTNetworkConnected())
-    {
-        netType = @"2G";
-    }
-    [ua appendFormat:@" ManyHouse/%@", marketingVersionNumber];
-    [ua appendFormat:@" JsSdk/%@", @"2.0"];
-    [ua appendFormat:@" NetType/%@", netType];
-    [ua appendFormat:@" (%@ %@ %f)", appName, marketingVersionNumber, [TTDeviceHelper OSVersionNumber]];
-    
-    return [ua copy];
-}
 
-+ (NSString *)origUA {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        UIWebView *webView = [[UIWebView alloc] init];
-        s_oldAgent = [webView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
-    });
-    return s_oldAgent;
-}
-
-//新版, 不会每次都创建一个webview里
-+ (void)registerUserAgentV2:(BOOL)appendAppInfo {
-    CFPropertyListRef CFCurrentUA = CFPreferencesCopyAppValue(CFSTR("UserAgent"), CFSTR("com.apple.WebFoundation"));
-    NSString *currentUA = CFPropertyListRefToNSString1(CFCurrentUA);
-    
-    if (isEmptyString(currentUA) || [currentUA rangeOfString:@"WebKit" options:NSCaseInsensitiveSearch].location == NSNotFound) {
-        CFPreferencesSetAppValue(CFSTR("UserAgent"), NULL, CFSTR("com.apple.WebFoundation"));
-        currentUA = [self origUA];
-    }
-    
-    NSString *toutiaoUA = [self toutiaoUA];
-    NSRange toutiaoUARange = [currentUA rangeOfString:toutiaoUA];
-    if (appendAppInfo && toutiaoUARange.location == NSNotFound) { //需要拼接,并且目前UA里没有头条相关参数
-        NSString *appendAppInfoUA = [currentUA stringByAppendingFormat:@" %@", toutiaoUA];
-        CFPreferencesSetAppValue(CFSTR("UserAgent"), (__bridge CFPropertyListRef _Nullable)(appendAppInfoUA), CFSTR("com.apple.WebFoundation"));
-    }
-    
-    if (!appendAppInfo && toutiaoUARange.location != NSNotFound) { //不需要拼接, 但已经包含了头条相关
-        NSString *deappendAppInfoUA = [currentUA componentsSeparatedByString:toutiaoUA].firstObject;
-        deappendAppInfoUA = [deappendAppInfoUA stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        CFPreferencesSetAppValue(CFSTR("UserAgent"), (__bridge CFPropertyListRef _Nullable)(deappendAppInfoUA), CFSTR("com.apple.WebFoundation"));
-    }
-    return;
-}
 
 static NSString * CFPropertyListRefToNSString1(CFPropertyListRef ref) {
     if (ref == NULL) {
