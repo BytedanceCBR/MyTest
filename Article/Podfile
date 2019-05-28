@@ -136,6 +136,7 @@ def appPods
     ]
     
     #-----UGC Other-----
+    pod 'TTLocationManager','1.0.22'
     pod 'Gaia','1.0.7-rc.1'
     pod 'TTGaiaExtension','0.2.13'
     pod 'BDAssert','2.0.0',:subspecs => [
