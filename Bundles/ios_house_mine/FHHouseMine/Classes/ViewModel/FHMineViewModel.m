@@ -237,7 +237,12 @@
          }else{
              //埋点
              NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-             dict[@"tracer"] = model.reportParams;
+             NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+             if (model.reportParams) {
+                 [tracer addEntriesFromDictionary:model.reportParams];
+             }
+             tracer[@"enter_type"] = @"click";
+             dict[@"tracer"] = tracer;
              
              TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
              
