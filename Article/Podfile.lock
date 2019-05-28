@@ -85,7 +85,7 @@ PODS:
   - FMDB (2.6.2.1-binary):
     - FMDB/standard (= 2.6.2.1-binary)
   - FMDB/standard (2.6.2.1-binary)
-  - Gaia (1.0.7-rc.1.1.binary)
+  - Gaia (1.0.7-rc.1)
   - Godzippa (1.1.0.1-binary)
   - Heimdallr/ALog (0.6.27-rc.0.1.binary)
   - Heimdallr/CloudCommand (0.6.27-rc.0.1.binary)
@@ -330,7 +330,7 @@ PODS:
   - TTFileUploadClient (1.7.6.8.1-binary)
   - TTFlowStatisticsManager (0.0.10.1-binary)
   - TTFriendRelation (0.2.10)
-  - TTGaiaExtension (0.2.13.1-binary)
+  - TTGaiaExtension (0.2.13)
   - TTGallery (0.1.0)
   - TTHTSVideo (0.1.0)
   - TTImage (0.8.4.1-binary):
@@ -600,7 +600,7 @@ DEPENDENCIES:
   - FLAnimatedImage (= 1.0.12.1-binary)
   - FLEX (= 2.1.1.1-binary)
   - FMDB (= 2.6.2.1-binary)
-  - Gaia (= 1.0.7-rc.1.1.binary)
+  - Gaia (= 1.0.7-rc.1)
   - Godzippa (= 1.1.0.1-binary)
   - Heimdallr/ALog (= 0.6.27-rc.0.1.binary)
   - Heimdallr/CloudCommand (= 0.6.27-rc.0.1.binary)
@@ -715,7 +715,7 @@ DEPENDENCIES:
   - TTFileUploadClient (= 1.7.6.8.1-binary)
   - TTFlowStatisticsManager (= 0.0.10.1-binary)
   - TTFriendRelation (from `../AKPlugins/TTFriendRelation`)
-  - TTGaiaExtension (= 0.2.13.1-binary)
+  - TTGaiaExtension (= 0.2.13)
   - TTGallery (from `../TTBundles/ios_tt_gallery`)
   - TTHTSVideo (from `../TTBundles/ios_tt_htsvideo`)
   - TTImage (= 0.8.4.1-binary)
@@ -996,7 +996,7 @@ SPEC CHECKSUMS:
   FLAnimatedImage: c103d911f434514c39961a5eed4c0e29c6cdae48
   FLEX: 41f5c73df50a2c8100e3c38f2eba75fdacf788e2
   FMDB: 20748cf597d147c452903c32d101953e46dcb4b5
-  Gaia: 79577f2b5026646b03064e9918a1f23d2cc90971
+  Gaia: 8d07f88e57c49364734d1fb5ea331f37c225c619
   Godzippa: d9e858886267fa9026eb4eb1e2e4ce5e0df2d680
   Heimdallr: 6f61359ac15e725ddc5a421bd679c98bf855c7f5
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
@@ -1060,7 +1060,7 @@ SPEC CHECKSUMS:
   TTFileUploadClient: 974455ed11ab6fe13cf29b5ad3032d1816ac5751
   TTFlowStatisticsManager: 6589b320762fe753556fa2058d0e3e0c42f16ae0
   TTFriendRelation: 376685f5cb6e25bd3960b0a245eb59761c3b576d
-  TTGaiaExtension: 842f47d8be223691fa5aa71e481615afcd073147
+  TTGaiaExtension: 5c3eeb1faa1a6d570adc7505a94787b9dd3ed088
   TTGallery: 694e0873aa6423012bd0a4f8ffd85747e0a60193
   TTHTSVideo: 84859e259f16d792cd01ab4cecc052dec9af21bc
   TTImage: 8c4ddc40fd78a992571042abdbd7a80642e0bfdc
@@ -1122,6 +1122,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 36636ca19229b869228e40acedc5bb435a7efa2b
+PODFILE CHECKSUM: 02e7cff7acd7632f9e657bd582c7bf624ec1f55e
 
 COCOAPODS: 1.4.0

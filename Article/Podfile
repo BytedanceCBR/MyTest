@@ -136,8 +136,8 @@ def appPods
     ]
     
     #-----UGC Other-----
-    pod_binary 'Gaia','1.0.7-rc.1'
-    pod_binary 'TTGaiaExtension','0.2.13'
+    pod 'Gaia','1.0.7-rc.1'
+    pod 'TTGaiaExtension','0.2.13'
     pod 'BDAssert','2.0.0',:subspecs => [
     'Core'
     ]
