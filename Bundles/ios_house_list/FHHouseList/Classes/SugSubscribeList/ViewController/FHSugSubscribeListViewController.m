@@ -54,6 +54,8 @@
         // 添加固定埋点
         self.categoryLogDict[@"category_name"] = @"search_subscribe";
         self.categoryLogDict[@"enter_type"] = @"click";
+        self.categoryLogDict[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? self.tracerDict[@"origin_search_id"] : @"be_null";
+        self.categoryLogDict[@"search_id"] = self.tracerDict[@"search_id"] ? self.tracerDict[@"search_id"] : @"be_null";
     }
     return self;
 }
