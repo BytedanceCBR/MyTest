@@ -126,6 +126,8 @@ def appPods
     pod_binary 'TSVToolkit', '0.1.2'
     pod_binary 'lottie-ios', '2.1.5'
 
+    
+    #-----BDAssert-----
     pod_binary 'BDAssert','2.0.0',:subspecs => [
     'Core'
     ]
@@ -133,7 +135,7 @@ def appPods
     #-----UGC-----
 #    pod 'TTUGCFeature', :path => '../Vendor/TTUGCFeature', :inhibit_warnings => false
     pod 'TTUGCFoundation', :path => '../Vendor/TTUGCFoundation', :inhibit_warnings => false
-    pod_binary 'TTKitchen','1.6.0',:subspecs => [
+    pod 'TTKitchen','1.6.0',:subspecs => [
     'Core',
     'TTCommonConfig'
     ]

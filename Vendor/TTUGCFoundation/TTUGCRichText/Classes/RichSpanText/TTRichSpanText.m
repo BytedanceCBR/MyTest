@@ -604,6 +604,10 @@ static NSString * const TTRichSpansKeyImageList = @"image_list";
     return self;
 }
 
+- (instancetype)initWithText:(NSString *)text richSpanLinks:(NSArray <TTRichSpanLink *>*)links {
+    return [self initWithText:text richSpanLinks:links imageInfoModelArray:nil];
+}
+
 
 - (instancetype)initWithText:(NSString *)text richSpanLinks:(NSArray <TTRichSpanLink *>*)links imageInfoModelArray:(NSArray<TTRichTextImageInfoModel *> *)imageInfoModelArray {
     

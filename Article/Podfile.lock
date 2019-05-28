@@ -364,8 +364,8 @@ PODS:
   - TTIMSDK/IMKit_Core (0.7.7)
   - TTIMSDK/IMKit_WebSocket (0.7.7)
   - TTInstallService (1.0.0.6.1-binary)
-  - TTKitchen/Core (1.6.0.1-binary)
-  - TTKitchen/TTCommonConfig (1.6.0.1-binary)
+  - TTKitchen/Core (1.6.0)
+  - TTKitchen/TTCommonConfig (1.6.0)
   - TTLCSService (0.1.1.1-binary)
   - TTMonitor (0.7.9.44)
   - TTNetBusiness (0.0.10.1-binary)
@@ -739,8 +739,8 @@ DEPENDENCIES:
   - TTIMSDK/IMKit_Core (= 0.7.7)
   - TTIMSDK/IMKit_WebSocket (= 0.7.7)
   - TTInstallService (= 1.0.0.6.1-binary)
-  - TTKitchen/Core (= 1.6.0.1-binary)
-  - TTKitchen/TTCommonConfig (= 1.6.0.1-binary)
+  - TTKitchen/Core (= 1.6.0)
+  - TTKitchen/TTCommonConfig (= 1.6.0)
   - TTLCSService (= 0.1.1.1-binary)
   - TTMonitor (from `../AKPlugins/TTMonitor`)
   - TTNetBusiness (= 0.0.10.1-binary)
@@ -1063,7 +1063,7 @@ SPEC CHECKSUMS:
   TTImpression: d2d80c26abef863c5be6dc8b6fe10ebef3331b84
   TTIMSDK: bc920322f0cb1a542bc0f6c7cfdef1f8576dbc3c
   TTInstallService: e4d70620bc4b61384861f9a1f74de5225b27adfc
-  TTKitchen: 047be0530426709fcc0f0de74730c583f61c73be
+  TTKitchen: b7fcce48014799914152c0b90e6c513ee0e9b1a4
   TTLCSService: d9fc936bba13993ecc454b486a15a403a9fdbdc4
   TTMonitor: 2677003dc3428a13b1fbbc93a0c49344c1adc1b1
   TTNetBusiness: e436bc6d648bf01946cc01756c86adfd0d718e5c
@@ -1116,6 +1116,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 4426bead56cec323f1f497e0216506a332bb8079
+PODFILE CHECKSUM: 6cdaff58374d739a487b6c0a4c8e1277b979e3df
 
 COCOAPODS: 1.4.0
