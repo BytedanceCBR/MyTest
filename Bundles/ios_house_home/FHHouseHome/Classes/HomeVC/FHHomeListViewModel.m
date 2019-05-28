@@ -158,10 +158,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:configDataModel.houseTypeDefault];
                 self.currentHouseType = configDataModel.houseTypeDefault.integerValue;
             }
-//
-           
-            //切换城市先隐藏error页
-            [self.homeViewController.emptyView hideEmptyView];
             
             //更新切换
             [self updateCategoryViewSegmented:self.isFirstChange];
