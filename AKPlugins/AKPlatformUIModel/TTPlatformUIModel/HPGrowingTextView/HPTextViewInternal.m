@@ -190,7 +190,9 @@
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
     [param setValue:text forKey:@"stringifyText"];
     [[TTModuleBridge sharedInstance_tt] triggerAction:@"TTUGCEmojiParser.stringify" object:nil withParams:param complete:^(id  _Nullable result) {
-        string = result;
+        if ([result isKindOfClass:[NSString class]]) {
+            string = result;
+        }
     }];
     return isEmptyString(string)? @"": string;
     
@@ -203,7 +205,9 @@
     [param setValue:text forKey:@"text"];
     [param setValue:@(self.font.pointSize) forKey:@"fontSize"];
     [[TTModuleBridge sharedInstance_tt] triggerAction:@"TTUGCEmojiParser.parseInTextKitContext" object:nil withParams:param complete:^(id  _Nullable result) {
-        string = result;
+        if ([result isKindOfClass:[NSString class]]) {
+            string = result;
+        }
     }];
     return string;
 }

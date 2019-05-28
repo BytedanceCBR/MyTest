@@ -11,6 +11,7 @@
 #import "TTUGCEmojiTextAttachment.h"
 #import "TTUGCRichTextPodBridge.h"
 #import <TTBaseLib/TTBaseMacro.h>
+#import <TTModuleBridge.h>
 
 @interface TTUGCEmoji : NSObject
 
@@ -106,6 +107,29 @@ static NSRegularExpression *emojiRegex;
 @end
 
 @implementation TTUGCEmojiParser
+
+
++ (void)load
+{
+    [[TTModuleBridge sharedInstance_tt] registerAction:@"TTUGCEmojiParser.stringify" withBlock:^id _Nullable(id  _Nullable object, id  _Nullable params) {
+        NSAttributedString *text = (NSAttributedString *)[params valueForKey:@"stringifyText"];
+        NSString *result = nil;
+        if ([text isKindOfClass:[NSAttributedString class]]) {
+            result = [TTUGCEmojiParser stringify:text];
+        }
+        return result;
+    }];
+    
+    [[TTModuleBridge sharedInstance_tt] registerAction:@"TTUGCEmojiParser.parseInTextKitContext" withBlock:^id _Nullable(id  _Nullable object, id  _Nullable params) {
+        NSString *text = (NSString *)[params valueForKey:@"text"];
+        CGFloat fontSize = (CGFloat) [(NSNumber *)[params valueForKey:@"fontSize"] doubleValue];
+        NSAttributedString *result = nil;
+        if (!isEmptyString(text)) {
+            result = [TTUGCEmojiParser parseInTextKitContext:text fontSize:fontSize];
+        }
+        return result;
+    }];
+}
 
 + (instancetype)sharedManager {
     static dispatch_once_t onceToken;
