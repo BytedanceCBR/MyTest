@@ -109,7 +109,7 @@
     TTRNKitViewWrapper *wrapper = [[TTRNKitViewWrapper alloc] init];
     [self.manager registerObserver:wrapper];
     if (!self.contentViewController) {
-        self.contentViewController = [[FHRNBaseViewController alloc] initWithParams:@{RNHideBar:@(1)} viewWrapper:wrapper];
+        self.contentViewController = [[FHBaseViewController alloc] init];
     }
     if ([self.contentViewController respondsToSelector:@selector(addViewWrapper:)]) {
         [self.contentViewController addViewWrapper:wrapper];
