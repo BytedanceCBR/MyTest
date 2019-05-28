@@ -12,7 +12,7 @@
 @implementation FRCommonURLSetting
 
 + (NSString *)ugcCommentRepostDetailURL{    
-    return [NSString stringWithFormat:@"%@/ugc/comment/repost_detail/v2/info/",[self baseURL]];
+    return [NSString stringWithFormat:@"%@/ugc/comment/repost_detail/v3/info/", [self baseURL]];
 }
 
 + (NSString *)ugcThreadDetailV3InfoURL
@@ -21,11 +21,29 @@
 }
 
 + (NSString *)uploadImageURL {
-    return [NSString stringWithFormat:@"%@/ttdiscuss/v1/upload/image/", [FRCommonURLSetting baseURL]];
+
+    return [NSString stringWithFormat:@"%@/ugc/publish/image/v1/upload/", [FRCommonURLSetting baseURL]];
+}
+
++ (NSString *)uploadWithUrlOfImageURL {
+    return [NSString stringWithFormat:@"%@/ugc/publish/image/v1/upload_url/", [FRCommonURLSetting baseURL]];
+}
+
++ (NSString *)actionCountInfoURL {
+    return [NSString stringWithFormat:@"%@/ugc/action/count/info/", [FRCommonURLSetting baseURL]];
 }
 
 + (NSString *)baseURL {
     return [[TTURLDomainHelper shareInstance] domainFromType:TTURLDomainTypeNormal];
 }
+
++ (NSString *)hotBoardUrl {
+    return [NSString stringWithFormat:@"%@/api/feed/hot_board/v1/", [FRCommonURLSetting baseURL]];
+}
+
++ (NSString *)hotBoardClientImprUrl {
+    return [NSString stringWithFormat:@"%@/client_impr/impr_report/v1/", [FRCommonURLSetting baseURL]];
+}
+
 
 @end

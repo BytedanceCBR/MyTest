@@ -23,6 +23,22 @@
 }
 @end
 
+@implementation FRMapStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+}
+@end
+
 @implementation FRGroupStructModel
 - (instancetype) init
 {
@@ -741,6 +757,165 @@
     self.label_style = nil;
     self.icon_style = nil;
     self.concern_id = nil;
+    self.forum_type = nil;
+    self.host_info = nil;
+    self.content_rich_span = nil;
+    self.sub_desc = nil;
+    self.layout = nil;
+}
+@end
+
+@implementation FRTTForumStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.status = 0;
+    self.banner_url = nil;
+    self.forum_name = nil;
+    self.logo_type = nil;
+    self.forum_id = nil;
+    self.avatar_url = nil;
+    self.schema = nil;
+    self.desc = nil;
+    self.desc_rich_span = nil;
+    self.rich_content = nil;
+    self.sub_desc = nil;
+    self.product_type = 0;
+    self.concern_id = nil;
+    self.host_info = nil;
+    self.extra = nil;
+    self.title_url = nil;
+    self.forum_logo_url = nil;
+    self.category_type = nil;
+    self.rank_info = nil;
+    self.header_style = 0;
+    self.forum_spot = nil;
+}
+@end
+
+@implementation FRForumSpotStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.forum_spot_items = nil;
+    self.icon_image = nil;
+    self.title = nil;
+}
+@end
+
+@implementation FRForumSpotItemStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.label_image = nil;
+    self.title = nil;
+    self.schema = nil;
+    self.gid = nil;
+}
+@end
+
+@implementation FRTTForumTitleImageStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.day_url = nil;
+    self.night_url = nil;
+}
+@end
+
+@implementation FRTTForumLogoImageStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.day_url = nil;
+    self.night_url = nil;
+}
+@end
+
+@implementation FRTTForumRankInfoStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.rank_icon = nil;
+    self.title = nil;
+    self.rank = nil;
+    self.rank_id = nil;
+    self.rank_list_schema = nil;
+    self.to_ranking_schema = nil;
+}
+@end
+
+@implementation FRTTForumExtraStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.music_id = nil;
+    self.theme_id = nil;
+    self.effect_id = nil;
+    self.data = nil;
 }
 @end
 
@@ -1233,13 +1408,7 @@
     self.show_tips = nil;
 }
 + (JSONKeyMapper *)keyMapper {
-    JSONKeyMapper * keyMapper = [[JSONKeyMapper alloc] initWithJSONToModelBlock:^NSString *(NSString *keyName) {
-        if ([keyName isEqualToString:@"delete"]) {
-            return @"article_deleted";
-        }else {
-            return keyName;
-        }
-    } modelToJSONBlock:^NSString *(NSString *keyName) {
+    JSONKeyMapper * keyMapper = [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         if ([keyName isEqualToString:@"article_deleted"]) {
             return @"delete";
         }else {
@@ -1517,6 +1686,92 @@
     self.extra = nil;
     self.sole_name = nil;
     self.tab_et_status = nil;
+    self.ban_refresh = nil;
+    self.category_name = nil;
+}
+@end
+
+@implementation FRTTForumTabStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.need_common_params = 0;
+    self.name = nil;
+    self.extra = nil;
+    self.url = nil;
+    self.tab_type = 0;
+    self.tab_id = nil;
+    self.refresh_interval = nil;
+    self.category_name = nil;
+    self.sole_name = nil;
+    self.ban_refresh = nil;
+    self.tab_et_status = nil;
+}
+@end
+
+@implementation FRTTForumTabExtraStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+}
+@end
+
+@implementation FRTTForumPublisherControllStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.publish_module_id = nil;
+    self.show_et_status = nil;
+    self.post_content_hint = nil;
+    self.tab_publisher_status = nil;
+    self.publisher_types = nil;
+}
+@end
+
+@implementation FRTTPublisherTypeStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.type = nil;
+    self.name = nil;
+    self.schema = nil;
+    self.icon = nil;
 }
 @end
 
@@ -1574,6 +1829,9 @@
     self.share_data = nil;
     self.read_count = nil;
     self.desc_rich_span = nil;
+    self.music_id = nil;
+    self.theme_id = nil;
+    self.effect_id = nil;
 }
 @end
 
@@ -1726,6 +1984,9 @@
     self.show_author_delete_entrance = nil;
     self.main_publisher_type = nil;
     self.video_intro = nil;
+    self.show_article_entrance = nil;
+    self.share_repost_style = nil;
+    self.flipchat_sync_entrance = nil;
 }
 @end
 
@@ -2056,6 +2317,7 @@
     self.schema = nil;
     self.icon = nil;
     self.top_icon = nil;
+    self.label = nil;
 }
 @end
 
@@ -2104,6 +2366,8 @@
     self.media_id = nil;
     self.remark_name = nil;
     self.user_decoration = nil;
+    self.live_info_type = nil;
+    self.room_schema = nil;
 }
 @end
 
@@ -2164,6 +2428,31 @@
     self.stats_place_holder = nil;
     self.card_type = nil;
     self.profile_user_id = nil;
+    self.is_action_card = nil;
+    self.action_schema = nil;
+    self.action_card_title = nil;
+    self.inner_list = nil;
+    self.supplement = nil;
+}
+@end
+
+@implementation FRRecommendMultiCardStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.user_cards = nil;
+    self.card_type = nil;
+    self.profile_user_id = nil;
+    self.count = nil;
 }
 @end
 
@@ -2436,12 +2725,9 @@
     self.show_tips = nil;
     self.show_origin = nil;
     self.raw_data = nil;
-}+(JSONKeyMapper*)keyMapper
-{
-    
-    return [[JSONKeyMapper alloc] initWithDictionary:@{
-                                                       @"id":@"group_id",
-                                                       }];
+}
++(JSONKeyMapper*)keyMapper {
+    return [[JSONKeyMapper alloc] initWithModelToJSONDictionary:@{ @"group_id":@"id" }];
 }
 @end
 
@@ -2615,6 +2901,7 @@
     self.show_name = nil;
     self.is_toutiao_user = nil;
     self.intro = nil;
+    self.verify_text = nil;
 }
 @end
 
@@ -2637,6 +2924,7 @@
     self.recommend_users = nil;
     self.has_more = nil;
     self.server_follow = nil;
+    self.count = nil;
 }
 @end
 
@@ -2763,6 +3051,44 @@
     self.share_desc = nil;
     self.share_weibo_desc = nil;
     self.share_cover = nil;
+}
+@end
+
+@implementation FRTokenShareInfoStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.share_type = nil;
+    self.token_type = nil;
+}
+@end
+
+@implementation FRTokenShareTypeStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.pyq = nil;
+    self.qq = nil;
+    self.qzone = nil;
+    self.wx = nil;
 }
 @end
 
@@ -3019,6 +3345,8 @@
     self.desc = nil;
     self.schema = nil;
     self.concern_id = nil;
+    self.talk_count_str = nil;
+    self.status = nil;
 }
 @end
 
@@ -3074,6 +3402,7 @@
     self.has_more = 0;
     self.recently = nil;
     self.hot = nil;
+    self.suggest_tips = nil;
 }
 @end
 
@@ -3093,6 +3422,7 @@
     self.offset = nil;
     self.has_more = 0;
     self.suggest = nil;
+    self.fresh_forum = nil;
 }
 @end
 
@@ -3136,6 +3466,8 @@
     self.opt_id = nil;
     self.opt_id_type = 0;
     self.schema = nil;
+    self.fw_native_schema = nil;
+    self.fw_share_url = nil;
     self.title = nil;
     self.cover_url = nil;
 }
@@ -3159,6 +3491,33 @@
     self.popup_type = nil;
     self.next_time = nil;
     self.redpack = nil;
+    self.contact_upload_settings = nil;
+}
+@end
+
+@implementation FRContactUploadSettingsStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.major_text = nil;
+    self.minor_text = nil;
+    self.privacy_notice = nil;
+    self.button_text = nil;
+    self.diagram_url = nil;
+    self.diagram_url_night = nil;
+    self.friends_list_title = nil;
+    self.friends_list_button_text = nil;
+    self.confirm_times = nil;
+    self.privacy_notice_schema_text = nil;
 }
 @end
 
@@ -3206,6 +3565,10 @@
     self.has_new = nil;
     self.stats_place_holder = nil;
     self.story_label = nil;
+    self.is_live = nil;
+    self.live_gid = nil;
+    self.orientation = nil;
+    self.multi_live = nil;
 }
 @end
 
@@ -3276,6 +3639,30 @@
     self.display_type = 0;
     self.story_label = nil;
     self.display_sub_type = nil;
+    self.recommend_reason = nil;
+    self.story_extra = nil;
+    self.log_pb = nil;
+    self.group_source = nil;
+}
+@end
+
+@implementation FRUGCStoryCoverShowMoreStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.text = nil;
+    self.url = nil;
+    self.icon_day = nil;
+    self.icon_night = nil;
 }
 @end
 
@@ -3332,6 +3719,479 @@
 - (void) reset
 {
     self.url = nil;
+}
+@end
+
+@implementation FRProfileAuthCheckDataStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.title = nil;
+    self.show_auth_guidance = nil;
+    self.body = nil;
+    self.button_schema = nil;
+    self.button_text = nil;
+    self.popup_style = nil;
+}
+@end
+
+@implementation FRListInteractUserInfoStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.user_id = nil;
+    self.name = nil;
+    self.schema = nil;
+    self.user_auth_info = nil;
+}
+@end
+
+@implementation FRListInteractStyleCtrlsStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.max_comment_line = nil;
+    self.max_digg_line = nil;
+    self.comment_entrance = nil;
+    self.comment_show_more_text = nil;
+    self.digg_show_more_text = nil;
+    self.comment_show_more_schema = nil;
+    self.digg_show_more_schema = nil;
+    self.ban_comment = nil;
+    self.ban_face = nil;
+    self.ban_pic_comment = nil;
+    self.show_repost_entrance = nil;
+    self.style_type = nil;
+}
+@end
+
+@implementation FRListRawReplyDataStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.reply_id = nil;
+    self.content = nil;
+    self.content_rich_span = nil;
+    self.user_info = nil;
+}
+@end
+
+@implementation FRListReplyDataStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.reply_id = nil;
+    self.content = nil;
+    self.content_rich_span = nil;
+    self.user_info = nil;
+    self.reply_to_reply = nil;
+}
+@end
+
+@implementation FRListCommentDataStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.comment_id = nil;
+    self.content = nil;
+    self.content_rich_span = nil;
+    self.user_info = nil;
+    self.reply_list = nil;
+}
+@end
+
+@implementation FRListInteractRecommendReasonStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.reason = nil;
+    self.schema = nil;
+}
+@end
+
+@implementation FRListInteractDataStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.digg_user_list = nil;
+    self.comment_list = nil;
+    self.reply_list = nil;
+    self.style_ctrls = nil;
+    self.recommend_reason = nil;
+}
+@end
+
+@implementation FRUGCPublishGuideInfoStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.guide_type = nil;
+    self.major_text = nil;
+    self.minor_text = nil;
+    self.privacy_notice = nil;
+    self.button_text = nil;
+    self.diagram_url = nil;
+    self.diagram_url_night = nil;
+    self.jump_url = nil;
+}
+@end
+
+@implementation FRRecommendCardRelatedControlStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.show_related_card = nil;
+    self.minimum_rate = nil;
+}
+@end
+
+@implementation FRRelationShipUserInfoStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.user = nil;
+    self.recommend_reason = nil;
+    self.fans = nil;
+    self.stats_place_holder = nil;
+    self.interaction = nil;
+}
+@end
+
+@implementation FRRelationShipFansPlatformInfoStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.fans_count = nil;
+    self.apple_id = nil;
+    self.open_url = nil;
+    self.name = nil;
+    self.package_name = nil;
+    self.app_name = nil;
+    self.download_url = nil;
+    self.icon = nil;
+}
+@end
+
+@implementation FRRelationShipFansPlatformDataStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.mplatform_followers_count = nil;
+    self.followers_detail = nil;
+}
+@end
+
+@implementation FRRelationShipFansInteractionStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.title = nil;
+    self.more_info = nil;
+    self.open_url = nil;
+    self.users = nil;
+}
+@end
+
+@implementation FRRelationShipFollowersDataStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.users = nil;
+}
+@end
+
+@implementation FRRelationShipFansDataStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.fans_detail = nil;
+    self.interaction = nil;
+    self.users = nil;
+    self.anonymous_fans = nil;
+}
+@end
+
+@implementation FRGifImageDataStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.large_image = nil;
+    self.thumb_image = nil;
+}
+@end
+
+@implementation FRGifImageDataListStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.count = nil;
+    self.offset = nil;
+    self.has_more = nil;
+    self.keyword = nil;
+    self.images = nil;
+}
+@end
+
+@implementation FRConcernShareInfoStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.share_cover = nil;
+    self.share_title = nil;
+    self.share_url = nil;
+    self.share_desc = nil;
+    self.token_type = nil;
+    self.share_type = nil;
+}
+@end
+
+@implementation FRTTForumShareInfoStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.share_cover = nil;
+    self.share_title = nil;
+    self.share_url = nil;
+    self.share_desc = nil;
+    self.token_type = nil;
+    self.share_type = nil;
+}
+@end
+
+@implementation FRBusinessAllianceStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.protocol_accepted = nil;
+    self.show_shop_icon = nil;
+}
+@end
+
+@implementation FRBusinessToolboxItemStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.title = nil;
+    self.desc = nil;
+    self.type = nil;
+    self.schema = nil;
+    self.source = nil;
+    self.extra = nil;
+}
+@end
+
+@implementation FRBusinessToolboxDataStructModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.item_list = nil;
 }
 @end
 
@@ -3425,6 +4285,56 @@
 }
 @end
 
+@implementation FRUserRelationFansV2RequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"GET";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/user/relation/fans/v2";
+        self._response = @"FRUserRelationFansV2ResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_user_id forKey:@"user_id"];
+    [params setValue:_offset forKey:@"offset"];
+    [params setValue:_count forKey:@"count"];
+    [params setValue:_cursor forKey:@"cursor"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUserRelationFansV2ResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.err_tips = nil;
+    self.offset = nil;
+    self.cursor = nil;
+    self.has_more = nil;
+    self.data = nil;
+}
+@end
+
 @implementation FRTtdiscussV1ForumSearchRequestModel
 - (instancetype) init 
 {
@@ -3468,65 +4378,6 @@
     self.err_no = nil;
     self.forum_list = nil;
     self.has_more = 0;
-    self.err_tips = nil;
-}
-@end
-
-@implementation FRUgcPublishVideoV3CommitRequestModel
-- (instancetype) init 
-{
-    self = [super init];
-    if (self) {
-        self._method = @"POST";
-        self._host = [FRCommonURLSetting baseURL];
-        self._uri = @"/ugc/publish/video/v3/commit";
-        self._response = @"FRUgcPublishVideoV3CommitResponseModel";
-    }
-
-    return self;
-}
-
-- (NSDictionary *)_requestParams
-{
-    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
-    [params setValue:_title forKey:@"title"];
-    [params setValue:_video_id forKey:@"video_id"];
-    [params setValue:_video_name forKey:@"video_name"];
-    [params setValue:_thumb_uri forKey:@"thumb_uri"];
-    [params setValue:_video_type forKey:@"video_type"];
-    [params setValue:_video_duration forKey:@"video_duration"];
-    [params setValue:_width forKey:@"width"];
-    [params setValue:_height forKey:@"height"];
-    [params setValue:_thumb_source forKey:@"thumb_source"];
-    [params setValue:_enter_from forKey:@"enter_from"];
-    [params setValue:_title_rich_span forKey:@"title_rich_span"];
-    [params setValue:_mention_user forKey:@"mention_user"];
-    [params setValue:_mention_concern forKey:@"mention_concern"];
-    [params setValue:_category forKey:@"category"];
-    [params setValue:_music_id forKey:@"music_id"];
-    [params setValue:_challenge_group_id forKey:@"challenge_group_id"];
-
-    return params;
-}
-
-@end
-
-
-@implementation FRUgcPublishVideoV3CommitResponseModel
-- (instancetype) init
-{
-    self = [super init];
-    if (self) {
-        [self reset];
-    }
-
-    return self;
-}
-
-- (void) reset
-{
-    self.err_no = nil;
-    self.data = nil;
     self.err_tips = nil;
 }
 @end
@@ -3631,6 +4482,50 @@
 }
 @end
 
+@implementation FRUserRelationUserRecommendV1DislikeCardRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"POST";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/user/relation/user_recommend/v1/dislike_card";
+        self._response = @"FRUserRelationUserRecommendV1DislikeCardResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_gid forKey:@"gid"];
+    [params setValue:_profile_user_id forKey:@"profile_user_id"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUserRelationUserRecommendV1DislikeCardResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.message = nil;
+    self.data = nil;
+}
+@end
+
 @implementation FRTtdiscussV2UgcVideoCheckTitleRequestModel
 - (instancetype) init 
 {
@@ -3732,6 +4627,7 @@
     self.concern_and_discuss_describe = nil;
     self.hash_tag_type = nil;
     self.publisher_controll = nil;
+    self.share_info = nil;
 }
 @end
 
@@ -3772,66 +4668,6 @@
 
 
 @implementation FRTtdiscussV2CommitPublishResponseModel
-- (instancetype) init
-{
-    self = [super init];
-    if (self) {
-        [self reset];
-    }
-
-    return self;
-}
-
-- (void) reset
-{
-    self.err_no = nil;
-    self.thread = nil;
-    self.err_tips = nil;
-}
-@end
-
-@implementation FRUgcPublishPostV4CommitRequestModel
-- (instancetype) init 
-{
-    self = [super init];
-    if (self) {
-        self._method = @"POST";
-        self._host = [FRCommonURLSetting baseURL];
-        self._uri = @"/ugc/publish/post/v4/commit";
-        self._response = @"FRUgcPublishPostV4CommitResponseModel";
-    }
-
-    return self;
-}
-
-- (NSDictionary *)_requestParams
-{
-    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
-    [params setValue:_content forKey:@"content"];
-    [params setValue:_concern_id forKey:@"concern_id"];
-    [params setValue:_image_uris forKey:@"image_uris"];
-    [params setValue:_longitude forKey:@"longitude"];
-    [params setValue:_latitude forKey:@"latitude"];
-    [params setValue:_city forKey:@"city"];
-    [params setValue:_detail_pos forKey:@"detail_pos"];
-    [params setValue:_is_forward forKey:@"is_forward"];
-    [params setValue:_phone forKey:@"phone"];
-    [params setValue:_title forKey:@"title"];
-    [params setValue:@(_from_where) forKey:@"from_where"];
-    [params setValue:_score forKey:@"score"];
-    [params setValue:_category_id forKey:@"category_id"];
-    [params setValue:_enter_from forKey:@"enter_from"];
-    [params setValue:_content_rich_span forKey:@"content_rich_span"];
-    [params setValue:_mention_user forKey:@"mention_user"];
-    [params setValue:_mention_concern forKey:@"mention_concern"];
-
-    return params;
-}
-
-@end
-
-
-@implementation FRUgcPublishPostV4CommitResponseModel
 - (instancetype) init
 {
     self = [super init];
@@ -3992,6 +4828,50 @@
 }
 @end
 
+@implementation FRUgcBusinessAllianceUserInfoRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"GET";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/ugc/business_alliance/user_info";
+        self._response = @"FRUgcBusinessAllianceUserInfoResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_user_id forKey:@"user_id"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUgcBusinessAllianceUserInfoResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.err_msg = nil;
+    self.data = nil;
+}
+@end
+
 @implementation FRUgcPublishPostV1ContactRequestModel
 - (instancetype) init 
 {
@@ -4076,6 +4956,55 @@
 {
     self.err_no = nil;
     self.err_tips = nil;
+}
+@end
+
+@implementation FRForumHomeV1InfoRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"POST";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/forum/home/v1/info";
+        self._response = @"FRForumHomeV1InfoResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_forum_id forKey:@"forum_id"];
+    [params setValue:_is_preview forKey:@"is_preview"];
+    [params setValue:_request_source forKey:@"request_source"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRForumHomeV1InfoResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.err_tips = nil;
+    self.forum = nil;
+    self.tabs = nil;
+    self.share_info = nil;
+    self.publisher_control = nil;
 }
 @end
 
@@ -4474,15 +5403,15 @@
 }
 @end
 
-@implementation FRUgcPublishRepostV6CommitRequestModel
+@implementation FRUgcPublishPostV1ModifyRequestModel
 - (instancetype) init 
 {
     self = [super init];
     if (self) {
         self._method = @"POST";
         self._host = [FRCommonURLSetting baseURL];
-        self._uri = @"/ugc/publish/repost/v6/commit";
-        self._response = @"FRUgcPublishRepostV6CommitResponseModel";
+        self._uri = @"/ugc/publish/post/v1/modify";
+        self._response = @"FRUgcPublishPostV1ModifyResponseModel";
     }
 
     return self;
@@ -4492,19 +5421,25 @@
 {
     NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
     [params setValue:_content forKey:@"content"];
-    [params setValue:_repost_type forKey:@"repost_type"];
-    [params setValue:_cover_url forKey:@"cover_url"];
+    [params setValue:_concern_id forKey:@"concern_id"];
+    [params setValue:_image_uris forKey:@"image_uris"];
+    [params setValue:_longitude forKey:@"longitude"];
+    [params setValue:_latitude forKey:@"latitude"];
+    [params setValue:_city forKey:@"city"];
+    [params setValue:_detail_pos forKey:@"detail_pos"];
+    [params setValue:_is_forward forKey:@"is_forward"];
+    [params setValue:_phone forKey:@"phone"];
+    [params setValue:_title forKey:@"title"];
+    [params setValue:@(_from_where) forKey:@"from_where"];
+    [params setValue:_score forKey:@"score"];
+    [params setValue:_category_id forKey:@"category_id"];
+    [params setValue:_enter_from forKey:@"enter_from"];
     [params setValue:_content_rich_span forKey:@"content_rich_span"];
-    [params setValue:_fw_user_id forKey:@"fw_user_id"];
-    [params setValue:_fw_id forKey:@"fw_id"];
-    [params setValue:@(_fw_id_type) forKey:@"fw_id_type"];
-    [params setValue:_opt_id forKey:@"opt_id"];
-    [params setValue:@(_opt_id_type) forKey:@"opt_id_type"];
     [params setValue:_mention_user forKey:@"mention_user"];
     [params setValue:_mention_concern forKey:@"mention_concern"];
-    [params setValue:_schema forKey:@"schema"];
-    [params setValue:_title forKey:@"title"];
-    [params setValue:_repost_to_comment forKey:@"repost_to_comment"];
+    [params setValue:_post_id forKey:@"post_id"];
+    [params setValue:_forum_names forKey:@"forum_names"];
+    [params setValue:_sdk_params forKey:@"sdk_params"];
 
     return params;
 }
@@ -4512,7 +5447,7 @@
 @end
 
 
-@implementation FRUgcPublishRepostV6CommitResponseModel
+@implementation FRUgcPublishPostV1ModifyResponseModel
 - (instancetype) init
 {
     self = [super init];
@@ -4525,9 +5460,9 @@
 
 - (void) reset
 {
-    self.err_tips = nil;
     self.err_no = nil;
     self.thread = nil;
+    self.err_tips = nil;
 }
 @end
 
@@ -4823,6 +5758,152 @@
 }
 @end
 
+@implementation FRUgcPublishVideoV4CheckAuthRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"POST";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/ugc/publish/video/v4/check_auth";
+        self._response = @"FRUgcPublishVideoV4CheckAuthResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUgcPublishVideoV4CheckAuthResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.publisher_permission_control = nil;
+    self.err_tips = nil;
+}
+@end
+
+@implementation FRUgcThreadDetailV3InfoRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"GET";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/ugc/thread/detail/v3/info";
+        self._response = @"FRUgcThreadDetailV3InfoResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_thread_id forKey:@"thread_id"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUgcThreadDetailV3InfoResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.err_tips = nil;
+    self.ad = nil;
+    self.h5_extra = nil;
+    self.like_desc = nil;
+    self.content_rich_span = nil;
+    self.repost_type = nil;
+    self.forum_info = nil;
+    self.thread = nil;
+    self.origin_thread = nil;
+    self.origin_group = nil;
+    self.origin_ugc_video = nil;
+    self.recommend_sponsor = nil;
+    self.origin_common_content = nil;
+    self.share_info = nil;
+}
+@end
+
+@implementation FRUserRelationUserRecommendV1SupplementCardsRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"GET";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/user/relation/user_recommend/v1/supplement_cards";
+        self._response = @"FRUserRelationUserRecommendV1SupplementCardsResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_source forKey:@"source"];
+    [params setValue:_follow_user_id forKey:@"follow_user_id"];
+    [params setValue:_count forKey:@"count"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUserRelationUserRecommendV1SupplementCardsResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.message = nil;
+    self.data = nil;
+    self.error_tips = nil;
+}
+@end
+
 @implementation FRUserRelationSetCanBeFoundByPhoneRequestModel
 - (instancetype) init 
 {
@@ -4866,15 +5947,15 @@
 }
 @end
 
-@implementation FRUgcPublishVideoV3CheckAuthRequestModel
+@implementation FRUserRelationFollowingV2RequestModel
 - (instancetype) init 
 {
     self = [super init];
     if (self) {
-        self._method = @"POST";
+        self._method = @"GET";
         self._host = [FRCommonURLSetting baseURL];
-        self._uri = @"/ugc/publish/video/v3/check_auth";
-        self._response = @"FRUgcPublishVideoV3CheckAuthResponseModel";
+        self._uri = @"/user/relation/following/v2";
+        self._response = @"FRUserRelationFollowingV2ResponseModel";
     }
 
     return self;
@@ -4883,6 +5964,10 @@
 - (NSDictionary *)_requestParams
 {
     NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_user_id forKey:@"user_id"];
+    [params setValue:_offset forKey:@"offset"];
+    [params setValue:_count forKey:@"count"];
+    [params setValue:_cursor forKey:@"cursor"];
 
     return params;
 }
@@ -4890,7 +5975,7 @@
 @end
 
 
-@implementation FRUgcPublishVideoV3CheckAuthResponseModel
+@implementation FRUserRelationFollowingV2ResponseModel
 - (instancetype) init
 {
     self = [super init];
@@ -4904,8 +5989,11 @@
 - (void) reset
 {
     self.err_no = nil;
-    self.publisher_permission_control = nil;
     self.err_tips = nil;
+    self.offset = nil;
+    self.cursor = nil;
+    self.has_more = nil;
+    self.data = nil;
 }
 @end
 
@@ -5258,6 +6346,51 @@
 }
 @end
 
+@implementation FRUgcPublishImageV1SuggestRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"GET";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/ugc/publish/image/v1/suggest";
+        self._response = @"FRUgcPublishImageV1SuggestResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_keyword forKey:@"keyword"];
+    [params setValue:_offset forKey:@"offset"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUgcPublishImageV1SuggestResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.err_tips = nil;
+    self.data = nil;
+}
+@end
+
 @implementation FRUserRelationUserRecommendV1DislikeUserRequestModel
 - (instancetype) init 
 {
@@ -5384,6 +6517,48 @@
 {
     self.err_no = nil;
     self.err_tips = nil;
+}
+@end
+
+@implementation FRUserProfileAuthCheckRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"GET";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/user/profile/auth/check";
+        self._response = @"FRUserProfileAuthCheckResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUserProfileAuthCheckResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.message = nil;
+    self.data = nil;
 }
 @end
 
@@ -5527,6 +6702,87 @@
 }
 @end
 
+@implementation FRUgcPublishVideoV4CommitRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"POST";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/ugc/publish/video/v4/commit";
+        self._response = @"FRUgcPublishVideoV4CommitResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_title forKey:@"title"];
+    [params setValue:_video_id forKey:@"video_id"];
+    [params setValue:_video_name forKey:@"video_name"];
+    [params setValue:_thumb_uri forKey:@"thumb_uri"];
+    [params setValue:_video_type forKey:@"video_type"];
+    [params setValue:_video_duration forKey:@"video_duration"];
+    [params setValue:_width forKey:@"width"];
+    [params setValue:_height forKey:@"height"];
+    [params setValue:_thumb_source forKey:@"thumb_source"];
+    [params setValue:_enter_from forKey:@"enter_from"];
+    [params setValue:_title_rich_span forKey:@"title_rich_span"];
+    [params setValue:_mention_user forKey:@"mention_user"];
+    [params setValue:_mention_concern forKey:@"mention_concern"];
+    [params setValue:_category forKey:@"category"];
+    [params setValue:_music_id forKey:@"music_id"];
+    [params setValue:_challenge_group_id forKey:@"challenge_group_id"];
+    [params setValue:_theme_id forKey:@"theme_id"];
+    [params setValue:_effect_id forKey:@"effect_id"];
+    [params setValue:_beautify_face forKey:@"beautify_face"];
+    [params setValue:_beautify_eye forKey:@"beautify_eye"];
+    [params setValue:_role_name forKey:@"role_name"];
+    [params setValue:_role_type forKey:@"role_type"];
+    [params setValue:_video_latitude forKey:@"video_latitude"];
+    [params setValue:_video_longitude forKey:@"video_longitude"];
+    [params setValue:_is_duet forKey:@"is_duet"];
+    [params setValue:_origin_group_id forKey:@"origin_group_id"];
+    [params setValue:_forum_type forKey:@"forum_type"];
+    [params setValue:_filter_id forKey:@"filter_id"];
+    [params setValue:_game_id forKey:@"game_id"];
+    [params setValue:_game_type forKey:@"game_type"];
+    [params setValue:_vertical_extra forKey:@"vertical_extra"];
+    [params setValue:_tma_id forKey:@"tma_id"];
+    [params setValue:_tma_type forKey:@"tma_type"];
+    [params setValue:_dub_type forKey:@"dub_type"];
+    [params setValue:_effect_type forKey:@"effect_type"];
+    [params setValue:_is_ad forKey:@"is_ad"];
+    [params setValue:_flipchat_sync forKey:@"flipchat_sync"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUgcPublishVideoV4CommitResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.data = nil;
+    self.err_tips = nil;
+    self.guide_info = nil;
+}
+@end
+
 @implementation FRUserRelationContactinfoRequestModel
 - (instancetype) init 
 {
@@ -5617,6 +6873,138 @@
     self.data_list = nil;
     self.tips = nil;
     self.err_tips = nil;
+}
+@end
+
+@implementation FRTfeRouteUgcVoteCommitRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"POST";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/tfe/route/ugc/vote/commit";
+        self._response = @"FRTfeRouteUgcVoteCommitResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_option_id forKey:@"option_id"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRTfeRouteUgcVoteCommitResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.record_id = nil;
+    self.err_no = nil;
+    self.err_tips = nil;
+}
+@end
+
+@implementation FRUgcBusinessAllianceUpdateProtocolStatusRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"GET";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/ugc/business_alliance/update_protocol_status";
+        self._response = @"FRUgcBusinessAllianceUpdateProtocolStatusResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_user_id forKey:@"user_id"];
+    [params setValue:_status forKey:@"status"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUgcBusinessAllianceUpdateProtocolStatusResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.err_msg = nil;
+}
+@end
+
+@implementation FRUgcBusinessAllianceUpdateBusinessTagRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"GET";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/ugc/business_alliance/update_business_tag";
+        self._response = @"FRUgcBusinessAllianceUpdateBusinessTagResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_user_id forKey:@"user_id"];
+    [params setValue:_tag forKey:@"tag"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUgcBusinessAllianceUpdateBusinessTagResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.err_msg = nil;
 }
 @end
 
@@ -5928,6 +7316,9 @@
     [params setValue:_offset forKey:@"offset"];
     [params setValue:_count forKey:@"count"];
     [params setValue:_is_preload forKey:@"is_preload"];
+    [params setValue:_is_live forKey:@"is_live"];
+    [params setValue:_live_gid forKey:@"live_gid"];
+    [params setValue:_extra forKey:@"extra"];
 
     return params;
 }
@@ -6019,7 +7410,7 @@
 - (NSDictionary *)_requestParams
 {
     NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
-    [params setValue:_auto_follow forKey:@"auto_follow"];
+    [params setValue:_contact_source forKey:@"contact_source"];
 
     return params;
 }
@@ -6041,6 +7432,51 @@
 - (void) reset
 {
     self.message = nil;
+    self.data = nil;
+    self.auto_follow = nil;
+}
+@end
+
+@implementation FRUgcBusinessAllianceBusinessBoxInfoRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"GET";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/ugc/business_alliance/business_box_info";
+        self._response = @"FRUgcBusinessAllianceBusinessBoxInfoResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_user_id forKey:@"user_id"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUgcBusinessAllianceBusinessBoxInfoResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.err_msg = nil;
     self.data = nil;
 }
 @end
@@ -6430,15 +7866,15 @@
 }
 @end
 
-@implementation FRUserRelationUserRecommendV1SupplementCardRequestModel
+@implementation FRUserProfileUnstickV1RequestModel
 - (instancetype) init 
 {
     self = [super init];
     if (self) {
-        self._method = @"GET";
+        self._method = @"POST";
         self._host = [FRCommonURLSetting baseURL];
-        self._uri = @"/user/relation/user_recommend/v1/supplement_card";
-        self._response = @"FRUserRelationUserRecommendV1SupplementCardResponseModel";
+        self._uri = @"/user/profile/unstick/v1";
+        self._response = @"FRUserProfileUnstickV1ResponseModel";
     }
 
     return self;
@@ -6447,8 +7883,7 @@
 - (NSDictionary *)_requestParams
 {
     NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
-    [params setValue:_source forKey:@"source"];
-    [params setValue:_follow_user_id forKey:@"follow_user_id"];
+    [params setValue:_id forKey:@"id"];
 
     return params;
 }
@@ -6456,7 +7891,7 @@
 @end
 
 
-@implementation FRUserRelationUserRecommendV1SupplementCardResponseModel
+@implementation FRUserProfileUnstickV1ResponseModel
 - (instancetype) init
 {
     self = [super init];
@@ -6470,8 +7905,117 @@
 - (void) reset
 {
     self.err_no = nil;
-    self.message = nil;
-    self.data = nil;
+    self.err_tips = nil;
+}
+@end
+
+@implementation FRUgcPublishPostV5CommitRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"POST";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/ugc/publish/post/v5/commit";
+        self._response = @"FRUgcPublishPostV5CommitResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_content forKey:@"content"];
+    [params setValue:_concern_id forKey:@"concern_id"];
+    [params setValue:_image_uris forKey:@"image_uris"];
+    [params setValue:_longitude forKey:@"longitude"];
+    [params setValue:_latitude forKey:@"latitude"];
+    [params setValue:_city forKey:@"city"];
+    [params setValue:_detail_pos forKey:@"detail_pos"];
+    [params setValue:_is_forward forKey:@"is_forward"];
+    [params setValue:_phone forKey:@"phone"];
+    [params setValue:_title forKey:@"title"];
+    [params setValue:@(_from_where) forKey:@"from_where"];
+    [params setValue:_score forKey:@"score"];
+    [params setValue:_category_id forKey:@"category_id"];
+    [params setValue:_enter_from forKey:@"enter_from"];
+    [params setValue:_content_rich_span forKey:@"content_rich_span"];
+    [params setValue:_mention_user forKey:@"mention_user"];
+    [params setValue:_mention_concern forKey:@"mention_concern"];
+    [params setValue:_community_id forKey:@"community_id"];
+    [params setValue:_business_payload forKey:@"business_payload"];
+    [params setValue:_forum_names forKey:@"forum_names"];
+    [params setValue:_promotion_id forKey:@"promotion_id"];
+    [params setValue:_flipchat_sync forKey:@"flipchat_sync"];
+    [params setValue:_sdk_params forKey:@"sdk_params"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUgcPublishPostV5CommitResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.thread = nil;
+    self.err_tips = nil;
+    self.guide_info = nil;
+}
+@end
+
+@implementation FRUserProfileStickV1RequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"POST";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/user/profile/stick/v1";
+        self._response = @"FRUserProfileStickV1ResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_id forKey:@"id"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUserProfileStickV1ResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.err_tips = nil;
 }
 @end
 
@@ -6682,6 +8226,54 @@
 }
 @end
 
+@implementation FRUserRelationInteractionFansV1RequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"GET";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/user/relation/interaction_fans/v1";
+        self._response = @"FRUserRelationInteractionFansV1ResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_offset forKey:@"offset"];
+    [params setValue:_count forKey:@"count"];
+    [params setValue:_user_id forKey:@"user_id"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUserRelationInteractionFansV1ResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.err_tips = nil;
+    self.has_more = nil;
+    self.offset = nil;
+    self.data = nil;
+}
+@end
+
 @implementation FRUserRelationCredibleFriendsRequestModel
 - (instancetype) init 
 {
@@ -6880,6 +8472,49 @@
 }
 @end
 
+@implementation FRUserRelationSetUserPrivacyExtendRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"POST";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/user/relation/set_user_privacy_extend";
+        self._response = @"FRUserRelationSetUserPrivacyExtendResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_share_with_avatar forKey:@"share_with_avatar"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUserRelationSetUserPrivacyExtendResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_no = nil;
+    self.err_tips = nil;
+}
+@end
+
 @implementation FRTtdiscussV1CommitThreaddiggRequestModel
 - (instancetype) init 
 {
@@ -6963,6 +8598,68 @@
     self.err_no = nil;
     self.forum_list = nil;
     self.err_tips = nil;
+}
+@end
+
+@implementation FRUgcPublishRepostV8CommitRequestModel
+- (instancetype) init 
+{
+    self = [super init];
+    if (self) {
+        self._method = @"POST";
+        self._host = [FRCommonURLSetting baseURL];
+        self._uri = @"/ugc/publish/repost/v8/commit";
+        self._response = @"FRUgcPublishRepostV8CommitResponseModel";
+    }
+
+    return self;
+}
+
+- (NSDictionary *)_requestParams
+{
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
+    [params setValue:_content forKey:@"content"];
+    [params setValue:_repost_type forKey:@"repost_type"];
+    [params setValue:_cover_url forKey:@"cover_url"];
+    [params setValue:_content_rich_span forKey:@"content_rich_span"];
+    [params setValue:_fw_user_id forKey:@"fw_user_id"];
+    [params setValue:_fw_id forKey:@"fw_id"];
+    [params setValue:@(_fw_id_type) forKey:@"fw_id_type"];
+    [params setValue:_opt_id forKey:@"opt_id"];
+    [params setValue:@(_opt_id_type) forKey:@"opt_id_type"];
+    [params setValue:_mention_user forKey:@"mention_user"];
+    [params setValue:_mention_concern forKey:@"mention_concern"];
+    [params setValue:_schema forKey:@"schema"];
+    [params setValue:_fw_native_schema forKey:@"fw_native_schema"];
+    [params setValue:_fw_share_url forKey:@"fw_share_url"];
+    [params setValue:_title forKey:@"title"];
+    [params setValue:_repost_to_comment forKey:@"repost_to_comment"];
+    [params setValue:_sdk_params forKey:@"sdk_params"];
+    [params setValue:_forum_names forKey:@"forum_names"];
+    [params setValue:_business_payload forKey:@"business_payload"];
+
+    return params;
+}
+
+@end
+
+
+@implementation FRUgcPublishRepostV8CommitResponseModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.err_tips = nil;
+    self.err_no = nil;
+    self.thread = nil;
 }
 @end
 
@@ -7109,6 +8806,7 @@
     self.err_tips = nil;
     self.user_cards = nil;
     self.has_more = nil;
+    self.related_control = nil;
 }
 @end
 

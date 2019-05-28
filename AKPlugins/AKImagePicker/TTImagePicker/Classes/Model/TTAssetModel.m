@@ -7,29 +7,16 @@
 //
 
 #import "TTAssetModel.h"
-#import <Photos/Photos.h>
-#import <AssetsLibrary/AssetsLibrary.h>
+#import "TTImagePickerManager.h"
+
 @implementation TTAssetModel
 
 + (instancetype)modelWithAsset:(id)asset type:(TTAssetModelMediaType)type{
     TTAssetModel *model = [[TTAssetModel alloc] init];
     model.asset = asset;
-    model.assetID = [self getAssetIdentifier:asset];
+    model.assetID = [[TTImagePickerManager manager] getAssetIdentifier:asset];
     model.type = type;
     return model;
-}
-
-+ (NSString *)getAssetIdentifier:(id)asset {
-    if ([asset isKindOfClass:[PHAsset class]]) {
-        PHAsset *phAsset = (PHAsset *)asset;
-        return phAsset.localIdentifier;
-    }
-    if ([asset isKindOfClass:[ALAsset class]]) {
-        ALAsset *alAsset = (ALAsset *)asset;
-        NSURL *assetUrl = [alAsset valueForProperty:ALAssetPropertyAssetURL];
-        return assetUrl.absoluteString;
-    }
-    return @"";
 }
 
 + (instancetype)modelWithAsset:(id)asset type:(TTAssetModelMediaType)type timeLength:(NSString *)timeLength {
@@ -42,6 +29,15 @@
     TTAssetModel *model = [[TTAssetModel alloc] init];
     model.cacheImage = image;
     model.type = TTAssetModelMediaTypePhoto;
+    return model;
+}
+
++ (instancetype)modelWithImageWidth:(NSUInteger)width height:(NSUInteger)height url:(NSString *)url uri:(NSString *)uri {
+    TTAssetModel *model = [[TTAssetModel alloc] init];
+    model.width = width;
+    model.height = height;
+    model.imageURL = [NSURL URLWithString:url];
+    model.imageURI = uri;
     return model;
 }
 

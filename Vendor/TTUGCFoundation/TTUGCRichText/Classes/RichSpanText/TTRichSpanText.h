@@ -118,7 +118,7 @@ typedef NS_ENUM (NSInteger, TTRichSpanLinkFlagType) {
 
 - (instancetype)initWithText:(NSString *)text richSpansJSONString:(NSString *)richSpansJSONString;
 - (instancetype)initWithText:(NSString *)text richSpans:(TTRichSpans *)richSpans;
-- (instancetype)initWithText:(NSString *)text richSpanLinks:(NSArray <TTRichSpanLink *>*)links;
+//- (instancetype)initWithText:(NSString *)text richSpanLinks:(NSArray <TTRichSpanLink *>*)links;
 
 - (instancetype)initWithText:(NSString *)text richSpanLinks:(NSArray <TTRichSpanLink *>*)links imageInfoModelDictionary:(NSDictionary<NSString *, TTRichTextImageInfoModel *> *)imageInfoModelDictionary;
 - (instancetype)initWithText:(NSString *)text richSpanLinks:(NSArray <TTRichSpanLink *>*)links imageInfoModelArray:(NSArray<TTRichTextImageInfoModel *> *)imageInfoModelArray;

@@ -7,14 +7,10 @@
 //
 
 #import <CoreText/CoreText.h>
-#import <TTNetworkManager/TTNetworkManager.h>
 #import "TTUGCEmojiParser.h"
 #import "TTUGCEmojiTextAttachment.h"
-#import "TTModuleBridge.h"
-#import <BDTFactoryConfigurator/BDTFactoryConfigurator.h>
-#import "TTBaseMacro.h"
-#import "FRApiModel.h"
-#import "TTLabelTextHelper.h"
+#import "TTUGCRichTextPodBridge.h"
+#import <TTBaseLib/TTBaseMacro.h>
 
 @interface TTUGCEmoji : NSObject
 
@@ -75,21 +71,35 @@ static void deallocationCallback(void *ref) {
     }
 }
 
-#define TTUsedEmojisKey @"TTUsedEmojiKey"
-#define TTMostUsedEmojisKey @"TTMostUsedEmojiKey"
-#define TTUserExpressionConfigSortArrayKey @"TTUserExpressionConfigSortArrayKey"
-#define TTUserExpressionConfigRequestDateKey @"TTUserExpressionConfigRequestDateKey"
+#define kTTUsedEmojisKey @"TTUsedEmojiKey"
+#define kTTMostUsedEmojisKey @"TTMostUsedEmojiKey"
+#define kTTUserExpressionConfigSortArrayKey @"TTUserExpressionConfigSortArrayKey"
+#define kTTUserExpressionConfigEmojiDicKey @"TTUserExpressionConfigEmojiDicKey"
+#define kTTUserExpressionConfigEmojiMappingKey @"TTUserExpressionConfigEmojiMappingKey"
+#define kTTUserExpressionConfigRequestDateKey @"TTUserExpressionConfigRequestDateKey"
+#define kTTUGCEmojiVersionKey @"TTUGCEmojiVersionKey"
+
 
 NSString *const kTTUGCEmojiLinkReplacementText = @"[链接]";
 NSString *const kTTUGCEmojiInactiveLinkReplacementText = @"[链接2]";
+NSString *const kTTUGCEmojiImageReplacementText = @"[图片]";
+//NSString *const kTTUGCEmojiMicroAppReplacementText = @"[小程序]";
+//NSString *const kTTUGCEmojiInactiveMicroAppReplacementText = @"[小程序2]";
+
+NSString *const kTTUGCEmojiDiggReplacementText = @"[点赞]";
+NSString *const kTTUGCEmojiGoldVipReplacementText = @"[金V]";
+NSString *const kTTUGCEmojiYellowVipReplacementText = @"[黄V]";
+NSString *const kTTUGCEmojiBlueVipReplacementText = @"[蓝V]";
+NSString *const kTTUGCEmojiShowMoreReplacementText = @"[查看更多]";
+NSString *const kTTUGCEmojiManyPeopleReplacementText = @"[多人]";
 
 static TTUGCEmojiParser *shareManager;
 static NSRegularExpression *emojiRegex;
 
 @interface TTUGCEmojiParser ()
 
-@property (nonatomic, strong) NSDictionary <NSString *, NSString *> *emojiDictionary;
 @property (nonatomic, strong) NSArray <NSString *> *emojiSortArray;
+@property (nonatomic, strong) NSDictionary <NSString *, NSString *> *emojiDictionary;
 @property (nonatomic, strong) NSDictionary <NSString *, NSString *> *emojiMappingDictionary; // 用于微博、微信表情映射
 @property (nonatomic, strong) NSDictionary <NSString *, NSString *> *customEmojiDictionary; // 仅供内部字符替换，实现诸如网页链接之类的需求
 
@@ -105,105 +115,50 @@ static NSRegularExpression *emojiRegex;
         emojiRegex = [NSRegularExpression regularExpressionWithPattern:emojiPattern
                                                                options:NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators
                                                                  error:nil];
-
-        [shareManager requestUserExpressionConfig];
-
+        [shareManager requestUpdateEmojiConfig];
         shareManager.customEmojiDictionary = @{
             kTTUGCEmojiLinkReplacementText : @"link",
             kTTUGCEmojiInactiveLinkReplacementText : @"link2",
+            kTTUGCEmojiImageReplacementText : @"image",
+            kTTUGCEmojiMicroAppReplacementText : @"ugc_tma",
+            kTTUGCEmojiInactiveMicroAppReplacementText : @"ugc_tma2",
+            kTTUGCEmojiDiggReplacementText : @"digg",
+            kTTUGCEmojiGoldVipReplacementText : @"gold_vip",
+            kTTUGCEmojiYellowVipReplacementText : @"yellow_vip",
+            kTTUGCEmojiBlueVipReplacementText : @"blue_vip",
+            kTTUGCEmojiShowMoreReplacementText : @"show_more",
+            kTTUGCEmojiManyPeopleReplacementText : @"many_people",
         };
     });
-
     return shareManager;
 }
 
-+ (void)load
-{
-    [[TTModuleBridge sharedInstance_tt] registerAction:@"TTUGCEmojiParser.stringify" withBlock:^id _Nullable(id  _Nullable object, id  _Nullable params) {
-        NSAttributedString *text = (NSAttributedString *)[params valueForKey:@"stringifyText"];
-        NSString *result = nil;
-        if ([text isKindOfClass:[NSAttributedString class]]) {
-            result = [TTUGCEmojiParser stringify:text];
-        }
-        return result;
-    }];
-    
-    [[TTModuleBridge sharedInstance_tt] registerAction:@"TTUGCEmojiParser.parseInTextKitContext" withBlock:^id _Nullable(id  _Nullable object, id  _Nullable params) {
-        NSString *text = (NSString *)[params valueForKey:@"text"];
-        CGFloat fontSize = (CGFloat) [(NSNumber *)[params valueForKey:@"fontSize"] doubleValue];
-        NSAttributedString *result = nil;
-        if (!isEmptyString(text)) {
-            result = [TTUGCEmojiParser parseInTextKitContext:text fontSize:fontSize];
-        }
-        return result;
-    }];
+- (void)requestUpdateEmojiConfig {
+    [TTUGCRichTextPodBridge requestUpdateEmojiConfig:^(NSArray *emojiSort, NSDictionary *emojiDic, NSDictionary *emojiMapping) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (emojiSort != nil && emojiDic != nil && emojiMapping != nil ) {
+                self.emojiSortArray = emojiSort;
+                self.emojiDictionary = emojiDic;
+                self.emojiMappingDictionary = emojiMapping;
+            } else {
+                //读取 bundle 里面的表情配置
+                NSString *sortPlistFilePath = [TTUGCEmojiParser pathForFileName:@"emoji_sort"];
+                NSArray *backupSortArray = [[NSArray alloc] initWithContentsOfFile:sortPlistFilePath];
+                NSString *emojiPath = [TTUGCEmojiParser pathForFileName:@"emoji"];
+                NSDictionary *backupEmojiDic = [[NSDictionary alloc] initWithContentsOfFile:emojiPath];
+                NSString *emojiMappingPath = [TTUGCEmojiParser pathForFileName:@"emoji_mapping"];
+                NSDictionary *backupEmojiMappingDic = [[NSDictionary alloc] initWithContentsOfFile:emojiMappingPath];
 
-    [[BDTFactoryConfigurator sharedConfigurator] registerFactoryBlock:^NSAttributedString *(NSString *name, NSDictionary *info) {
-        if ([name isEqualToString:@"TTUGCEmojiParser/parseInTextKitContext"]) {
-            NSString *text = (NSString *)[info valueForKey:@"text"];
-            CGFloat fontSize = (CGFloat) [(NSNumber *)[info valueForKey:@"fontSize"] doubleValue];
-            NSAttributedString *result = nil;
-            if (!isEmptyString(text)) {
-                result = [TTUGCEmojiParser parseInTextKitContext:text fontSize:fontSize];
+                self.emojiSortArray = backupSortArray;
+                self.emojiDictionary = backupEmojiDic;
+                self.emojiMappingDictionary = backupEmojiMappingDic;
             }
-            return result;
-        }
-        return nil;
-    } forKey:@"TTUGC"];
-
-    [[BDTFactoryConfigurator sharedConfigurator] registerFactoryBlock:^NSAttributedString *(NSString *name, NSDictionary *info) {
-        if ([name isEqualToString:@"TTUGCEmojiParser/parseInCoreTextContext"]) {
-            NSString *text = (NSString *)[info valueForKey:@"text"];
-            CGFloat fontSize = (CGFloat) [(NSNumber *)[info valueForKey:@"fontSize"] doubleValue];
-            NSAttributedString *result = nil;
-            if (!isEmptyString(text)) {
-                result = [TTUGCEmojiParser parseInCoreTextContext:text fontSize:fontSize];
-            }
-            return result;
-        }
-        return nil;
-    } forKey:@"TTUGC"];
-}
-
-- (void)requestUserExpressionConfig {
-    if (self.emojiSortArray) return;
-
-    if (![self shouldRequestUserExpressionConfig]) {
-        self.emojiSortArray = [[NSUserDefaults standardUserDefaults] arrayForKey:TTUserExpressionConfigSortArrayKey];
-        return;
-    }
-
-//    FRUserExpressionConfigRequestModel *requestModel = [[FRUserExpressionConfigRequestModel alloc] init];
-//
-//    [[TTNetworkManager shareInstance] requestModel:requestModel callback:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel) {
-//        if (!error && [responseModel isKindOfClass:[FRUserExpressionConfigResponseModel class]]) {
-//            FRUserExpressionConfigResponseModel *response = (FRUserExpressionConfigResponseModel *)responseModel;
-//
-//            NSMutableArray <NSString *> *sortArray = [[NSMutableArray alloc] init];
-//            for (NSNumber *idx in response.data.default_seq) {
-//                [sortArray addObject:[idx stringValue]];
-//            }
-//
-//            self.emojiSortArray = [sortArray copy];
-//
-//            [[NSUserDefaults standardUserDefaults] setObject:[sortArray copy] forKey:TTUserExpressionConfigSortArrayKey];
-//            [[NSUserDefaults standardUserDefaults] setDouble:[[NSDate date] timeIntervalSince1970] forKey:TTUserExpressionConfigRequestDateKey];
-//            [[NSUserDefaults standardUserDefaults] synchronize];
-//        }
-//    }];
-}
-
-- (BOOL)shouldRequestUserExpressionConfig {
-    NSArray *sortArray = [[NSUserDefaults standardUserDefaults] arrayForKey:TTUserExpressionConfigSortArrayKey];
-    if (sortArray) {
-        NSTimeInterval dateLast = [[NSUserDefaults standardUserDefaults] doubleForKey:TTUserExpressionConfigRequestDateKey];
-        NSTimeInterval dateNow = [[NSDate date] timeIntervalSince1970];
-        NSTimeInterval timeInterval = [TTUGCEmojiParser userExpressionConfigTimeInterval];
-
-        return (dateNow - dateLast) > timeInterval;
-    }
-
-    return YES;
+            [[NSUserDefaults standardUserDefaults] setObject:self.emojiSortArray forKey:kTTUserExpressionConfigSortArrayKey];
+            [[NSUserDefaults standardUserDefaults] setObject:self.emojiDictionary forKey:kTTUserExpressionConfigEmojiDicKey];
+            [[NSUserDefaults standardUserDefaults] setObject:self.emojiMappingDictionary forKey:kTTUserExpressionConfigEmojiMappingKey];
+        });
+    }];
 }
 
 static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_config_time_interval";
@@ -223,27 +178,45 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
     return timeInterval;
 }
 
-- (void)loadPlistFileContentsIfNeeded {
-    if (![TTUGCEmojiParser sharedManager].emojiDictionary) {
+- (NSDictionary<NSString *,NSString *> *)emojiDictionary {
+    NSDictionary *emojiDic = [[NSUserDefaults standardUserDefaults] objectForKey:kTTUserExpressionConfigEmojiDicKey];
+    if (emojiDic == nil) {
         NSString *emojiPath = [TTUGCEmojiParser pathForFileName:@"emoji"];
-        shareManager.emojiDictionary = [[NSDictionary alloc] initWithContentsOfFile:emojiPath];
+        emojiDic = [[NSDictionary alloc] initWithContentsOfFile:emojiPath];
+        [[NSUserDefaults standardUserDefaults] setObject:emojiDic forKey:kTTUserExpressionConfigEmojiDicKey];
     }
+    return emojiDic;
+}
 
-    if (![TTUGCEmojiParser sharedManager].emojiMappingDictionary) {
-        NSString *emojiMappingPath = [TTUGCEmojiParser pathForFileName:@"emoji_mapping"];
-        shareManager.emojiMappingDictionary = [[NSDictionary alloc] initWithContentsOfFile:emojiMappingPath];
+- (NSArray<NSString *> *)emojiSortArray {
+    NSArray *emojiSort = [[NSUserDefaults standardUserDefaults] objectForKey:kTTUserExpressionConfigSortArrayKey];
+    if (emojiSort == nil) {
+        NSString *emojiPath = [TTUGCEmojiParser pathForFileName:@"emoji_sort"];
+        emojiSort = [[NSDictionary alloc] initWithContentsOfFile:emojiPath];
+        [[NSUserDefaults standardUserDefaults] setObject:emojiSort forKey:kTTUserExpressionConfigSortArrayKey];
     }
+    return emojiSort;
+}
+
+- (NSDictionary<NSString *,NSString *> *)emojiMappingDictionary {
+    NSDictionary *emojiMappingDic = [[NSUserDefaults standardUserDefaults] objectForKey:kTTUserExpressionConfigEmojiMappingKey];
+    if (emojiMappingDic == nil) {
+        NSString *emojiPath = [TTUGCEmojiParser pathForFileName:@"emoji_mapping"];
+        emojiMappingDic = [[NSDictionary alloc] initWithContentsOfFile:emojiPath];
+        [[NSUserDefaults standardUserDefaults] setObject:emojiMappingDic forKey:kTTUserExpressionConfigEmojiMappingKey];
+    }
+    return emojiMappingDic;
 }
 
 + (NSArray <TTUGCEmojiTextAttachment *> *)top4EmojiTextAttachments {
-    [[TTUGCEmojiParser sharedManager] loadPlistFileContentsIfNeeded];
+    [TTUGCEmojiParser sharedManager];
 
     NSMutableArray *top4EmojiNames = [[NSMutableArray alloc] initWithCapacity:4];
 
     // 默认出 2, 7, 6, 21
     NSArray *defaultTop4EmojiNames = @[@"[爱慕]", @"[发怒]", @"[流泪]", @"[大笑]"];
 
-    NSArray *mostUsedEmojis = [[NSUserDefaults standardUserDefaults] objectForKey:TTMostUsedEmojisKey];
+    NSArray *mostUsedEmojis = [[NSUserDefaults standardUserDefaults] objectForKey:kTTMostUsedEmojisKey];
     [top4EmojiNames addObjectsFromArray:mostUsedEmojis];
 
     // 用默认表情补全
@@ -270,17 +243,23 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
 }
 
 + (NSArray <TTUGCEmojiTextAttachment *> *)emojiTextAttachments {
-    [[TTUGCEmojiParser sharedManager] loadPlistFileContentsIfNeeded];
+    [TTUGCEmojiParser sharedManager];
 
-    NSArray <NSString *> *sortArray = [TTUGCEmojiParser sharedManager].emojiSortArray;
+    NSArray <NSString *> *sortArray = [[NSUserDefaults standardUserDefaults] objectForKey:kTTUserExpressionConfigSortArrayKey];
     if (!sortArray) {
         NSString *sortPlistFilePath = [self pathForFileName:@"emoji_sort"];
         sortArray = [[NSArray alloc] initWithContentsOfFile:sortPlistFilePath];
     }
 
+    NSDictionary<NSString *, NSString *> *dic = [[NSUserDefaults standardUserDefaults] objectForKey:kTTUserExpressionConfigEmojiDicKey];
+    if (!dic) {
+        NSString *emojiPlistFilePath = [self pathForFileName:@"emoji"];
+        dic = [[NSDictionary alloc] initWithContentsOfFile:emojiPlistFilePath];
+    }
+    
     NSMutableArray *as = [[NSMutableArray alloc] init];
-
-    [[TTUGCEmojiParser sharedManager].emojiDictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *imageName, BOOL *stop) {
+    
+    [dic enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *imageName, BOOL *stop) {
         NSInteger idx = 0;
         NSUInteger value = [sortArray indexOfObject:imageName];
         if (value != NSNotFound) {
@@ -350,7 +329,7 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
 + (NSAttributedString *)parse:(NSString *)text context:(TTUGCEmojiContext)context fontSize:(CGFloat)fontSize {
     if (!text) return nil;
 
-    [[TTUGCEmojiParser sharedManager] loadPlistFileContentsIfNeeded];
+    [TTUGCEmojiParser sharedManager];
 
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
     UIFont *font = [UIFont systemFontOfSize:fontSize];
@@ -439,7 +418,7 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
 + (NSArray <NSValue *> *)parseEmojiRangeValues:(NSString *)text {
     if (!text) return nil;
 
-    [[TTUGCEmojiParser sharedManager] loadPlistFileContentsIfNeeded];
+    [TTUGCEmojiParser sharedManager];
 
     NSMutableArray *emojis = [[NSMutableArray alloc] init];
     NSArray *emojiMatches = [emojiRegex matchesInString:text options:0 range:NSMakeRange(0, text.length)];
@@ -458,7 +437,7 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
 + (NSDictionary <NSString *, NSString *> *)parseEmojis:(NSString *)text {
     if (!text) return nil;
 
-    [[TTUGCEmojiParser sharedManager] loadPlistFileContentsIfNeeded];
+    [TTUGCEmojiParser sharedManager];
 
     NSMutableDictionary <NSString *, NSString *> *emojis = [[NSMutableDictionary alloc] init];
     NSArray *emojiMatches = [emojiRegex matchesInString:text options:0 range:NSMakeRange(0, text.length)];
@@ -476,10 +455,10 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
 }
 
 + (void)markEmojisAsUsed:(NSDictionary <NSString *, NSString *> *)emojis {
-    NSArray *mostUsedEmojis = [[NSUserDefaults standardUserDefaults] arrayForKey:TTMostUsedEmojisKey];
+    NSArray *mostUsedEmojis = [[NSUserDefaults standardUserDefaults] arrayForKey:kTTMostUsedEmojisKey];
     NSMutableArray *newMostUsedEmojis = [NSMutableArray arrayWithArray:mostUsedEmojis];
 
-    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:TTUsedEmojisKey];
+    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:kTTUsedEmojisKey];
     NSArray <TTUGCEmoji *> *usedEmojis = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     NSMutableArray <TTUGCEmoji *> *newUsedEmojis = [NSMutableArray arrayWithArray:usedEmojis];
 
@@ -533,9 +512,9 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
         top4MostUsedEmojis = [newMostUsedEmojis copy];
     }
 
-    [[NSUserDefaults standardUserDefaults] setObject:top4MostUsedEmojis forKey:TTMostUsedEmojisKey];
+    [[NSUserDefaults standardUserDefaults] setObject:top4MostUsedEmojis forKey:kTTMostUsedEmojisKey];
     NSData *newData = [NSKeyedArchiver archivedDataWithRootObject:newUsedEmojis];
-    [[NSUserDefaults standardUserDefaults] setObject:newData forKey:TTUsedEmojisKey];
+    [[NSUserDefaults standardUserDefaults] setObject:newData forKey:kTTUsedEmojisKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -551,5 +530,23 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
     NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
     NSString *path = [bundle pathForResource:fileName ofType:@"plist"];
     return path;
+}
+
++ (BOOL)isCustomEmojiTextAttachment:(TTUGCEmojiTextAttachment *)attachment {
+    NSString *plainText = attachment.plainText;
+    if (plainText){
+        return [plainText isEqualToString:kTTUGCEmojiLinkReplacementText] ||
+               [plainText isEqualToString:kTTUGCEmojiInactiveLinkReplacementText] ||
+               [plainText isEqualToString:kTTUGCEmojiImageReplacementText] ||
+               [plainText isEqualToString:kTTUGCEmojiMicroAppReplacementText] ||
+               [plainText isEqualToString:kTTUGCEmojiInactiveMicroAppReplacementText] ||
+               [plainText isEqualToString:kTTUGCEmojiDiggReplacementText] ||
+               [plainText isEqualToString:kTTUGCEmojiGoldVipReplacementText] ||
+               [plainText isEqualToString:kTTUGCEmojiYellowVipReplacementText] ||
+               [plainText isEqualToString:kTTUGCEmojiBlueVipReplacementText] ||
+               [plainText isEqualToString:kTTUGCEmojiShowMoreReplacementText] ||
+               [plainText isEqualToString:kTTUGCEmojiManyPeopleReplacementText];
+    }
+    return NO;
 }
 @end

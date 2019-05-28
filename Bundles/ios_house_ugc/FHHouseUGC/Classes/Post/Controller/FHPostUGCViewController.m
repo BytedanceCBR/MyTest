@@ -15,6 +15,9 @@
 #import "UIView+TTFFrame.h"
 #import "UITextView+TTAdditions.h"
 #import "TTUGCTextViewMediator.h"
+#import "TTUGCToolbar.h"
+#import "NSObject+MultiDelegates.h"
+#import "UIViewAdditions.h"
 //#import "FRAddMultiImagesView.h"
 
 
@@ -37,6 +40,8 @@ static CGFloat kUGCToolbarHeight = 80.f;
 @property (nonatomic, strong) TTUGCTextView * inputTextView;
 @property (nonatomic, strong) UIScrollView       *containerView;
 @property (nonatomic, strong) SSThemedView * inputContainerView;
+@property (nonatomic, strong) TTUGCTextViewMediator       *textViewMediator;
+@property (nonatomic, strong) TTUGCToolbar *toolbar;
 //@property (nonatomic, strong) FRAddMultiImagesView * addImagesView;
 
 @end
@@ -156,10 +161,10 @@ static CGFloat kUGCToolbarHeight = 80.f;
     internalTextView.minHeight = kTextViewHeight;
     internalTextView.maxNumberOfLines = 8;
     
-    internalTextView.placeholder = NSLocalizedString(@"说点什么...", nil);
+    internalTextView.placeholder = [NSString stringWithFormat:@"分享新鲜事"];
     
     
-    internalTextView.backgroundColor = [UIColor clearColor];
+    internalTextView.backgroundColor = [UIColor grayColor];
     internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
     internalTextView.placeholderColor =  SSGetThemedColorWithKey(kColorText3);
     internalTextView.internalTextView.placeHolderFont = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
@@ -204,18 +209,27 @@ static CGFloat kUGCToolbarHeight = 80.f;
 //    [self.goodsInfoView addSubview:self.arrowIcon];
 //    
 //    self.inputContainerView.height = self.postWithGoods ? self.goodsInfoView.bottom : self.addImagesView.bottom + kAddImagesViewBottomPadding;
-     self.inputContainerView.height = 200;
+     self.inputContainerView.height = 500;
+    
+    // toolbar
+    kUGCToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+    self.toolbar = [[TTUGCToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - kUGCToolbarHeight, self.view.width, kUGCToolbarHeight)];
+    self.toolbar.emojiInputView.source = @"post";
+    
+    self.toolbar.banLongText = YES;
+    
+    [self.view addSubview:self.toolbar];
     
     // TextView and Toolbar Mediator
-//    self.textViewMediator = [[TTUGCTextViewMediator alloc] init];
-//    self.textViewMediator.textView = self.inputTextView;
-//    self.textViewMediator.toolbar = self.toolbar;
-//    self.textViewMediator.showCanBeCreatedHashtag = YES;
-//    self.toolbar.emojiInputView.delegate = self.inputTextView;
-//    self.toolbar.delegate = self.textViewMediator;
-//    [self.toolbar tt_addDelegate:self asMainDelegate:NO];
-//    self.inputTextView.delegate = self.textViewMediator;
-//    [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
+    self.textViewMediator = [[TTUGCTextViewMediator alloc] init];
+    self.textViewMediator.textView = self.inputTextView;
+    self.textViewMediator.toolbar = self.toolbar;
+    self.textViewMediator.showCanBeCreatedHashtag = YES;
+    self.toolbar.emojiInputView.delegate = self.inputTextView;
+    self.toolbar.delegate = self.textViewMediator;
+    [self.toolbar tt_addDelegate:self asMainDelegate:NO];
+    self.inputTextView.delegate = self.textViewMediator;
+    [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
     
     /*
     //Rate movie view
