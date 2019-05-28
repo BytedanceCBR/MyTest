@@ -89,14 +89,12 @@
     if ([TTAccountManager isLogin]) {
         __weak typeof(self) wself = self;
         
-        [TTAccount getUserAuditInfoIgnoreDispatchWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
+        [TTAccount getUserInfoWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
             __weak typeof(wself) sself = wself;
             if (!error) {
-                TTAccountUserAuditSet *newAuditInfo = [userEntity.auditInfoSet copy];
-                sself.userInfo.editEnabled = [newAuditInfo modifyUserInfoEnabled];
-                sself.userInfo.name        = [newAuditInfo username];
-                sself.userInfo.avatarURL  = [newAuditInfo userAvatarURLString];
-                sself.userInfo.userDescription = [newAuditInfo userDescription];
+                sself.userInfo.name        = userEntity.name;
+                sself.userInfo.avatarURL  = userEntity.avatarURL;
+                sself.userInfo.userDescription = userEntity.userDescription;
                 
                 [sself reloadViewModel];
             }
@@ -123,9 +121,9 @@
     }
     
     _userInfo.editEnabled = YES;
-    _userInfo.name        = [newAuditInfo username];
-    _userInfo.avatarURL   = [newAuditInfo userAvatarURLString];
-    _userInfo.userDescription = [newAuditInfo userDescription];
+    _userInfo.name        = userInfo.name;
+    _userInfo.avatarURL   = userInfo.avatarURL;
+    _userInfo.userDescription = userInfo.userDescription;
 }
 
 - (void)triggerLogoutUnRegister {

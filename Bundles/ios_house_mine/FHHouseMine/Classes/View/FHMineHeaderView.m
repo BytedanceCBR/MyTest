@@ -51,11 +51,8 @@
     [self addSubview:_iconBorderView];
     
     self.icon = [[UIImageView alloc] init];
-    self.icon.clipsToBounds = YES;
     self.icon.contentMode = UIViewContentModeScaleAspectFill;
     [self.iconBorderView addSubview:_icon];
-//    _icon.layer.cornerRadius = 27;
-//    _icon.layer.masksToBounds = YES;
     
     self.userNameLabel = [[UILabel alloc] init];
     [self addSubview:_userNameLabel];
@@ -130,7 +127,9 @@
 
 -(void)updateAvatar:(NSString *)avatarUrl {
     if(avatarUrl){
-        [self.icon bd_setImageWithURL:[NSURL URLWithString:avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+        [self.icon bd_setImageWithURL:[NSURL URLWithString:avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"] options:BDImageRequestDefaultPriority completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+            NSLog(@"1");
+        }];
     }else{
         self.icon.image = [UIImage imageNamed:@"fh_mine_avatar"];
     }
