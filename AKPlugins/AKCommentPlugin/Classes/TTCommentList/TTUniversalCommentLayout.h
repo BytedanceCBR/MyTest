@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTUIWidget/TTUGCAttributedLabel.h>
+#import <TTUGCFoundation/TTUGCAttributedLabel.h>
 #import "TTCommentModelProtocol.h"
 
 @class TTRichSpanText;

@@ -23,9 +23,9 @@
 #import <TTKitchen.h>
 #import <TTDeviceHelper.h>
 #import <UIViewController+NavigationBarStyle.h>
-#import <BDMobileRuntime/BDContext.h>
-#import <TTRegistry/TTRegistryDefines.h>
-#import <TTServiceProtocols/TTUGCDiggActionIconHelperProtocol.h>
+//#import <BDMobileRuntime/BDContext.h>
+//#import <TTRegistry/TTRegistryDefines.h>
+//#import <TTServiceProtocols/TTUGCDiggActionIconHelperProtocol.h>
 
 static NSString * const kPhotoBrowserCellIdentifier = @"kPhotoBrowserCellIdentifier";
 
@@ -484,20 +484,20 @@ typedef NS_ENUM(NSInteger, FRPhotoBrowserViewControllerMoveDirection) {
             self.diggButton.tintColorThemeKey = kColorText8;
         } else {
             WeakSelf;
-            [[BDContextGet() findServiceByName:TTUGCDiggActionIconHelperServiceName] setDiggActionButton:self.diggButton useDynamicActionIconKey:self.ugcParams.diggIconKey selectTitleColorKey:kTTkUGCDiggActionTitleSelectedColorPhotoBrowserKey scale:TTUGCDiggActionIconScaleMiddle redrawRect:CGRectZero scaleIconToSize:CGSizeMake(24.f, 24.f) completionBlock:^(BOOL isSucceed){
-                StrongSelf;
-                [self.diggButton setImage:[[self.diggButton imageForState:UIControlStateNormal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-                self.diggButton.tintColorThemeKey = kColorText8;
-            }];
-            
-            if ([self.ugcParams.diggTitle isEqualToString:@"赞"]) {
-                WeakSelf;
-                [[BDContextGet() findServiceByName:TTUGCDiggActionIconHelperServiceName] asyncGetDiggDescriptionTitleWithActionIconKey:self.ugcParams.diggIconKey completionBlock:^(NSString * _Nullable diggDescriptionTitle) {
-                    StrongSelf;
-                    [self.diggButton setTitle:diggDescriptionTitle forState:UIControlStateNormal];
-                    self.diggDescriptionTitle = diggDescriptionTitle;
-                }];
-            }
+//            [[BDContextGet() findServiceByName:TTUGCDiggActionIconHelperServiceName] setDiggActionButton:self.diggButton useDynamicActionIconKey:self.ugcParams.diggIconKey selectTitleColorKey:kTTkUGCDiggActionTitleSelectedColorPhotoBrowserKey scale:TTUGCDiggActionIconScaleMiddle redrawRect:CGRectZero scaleIconToSize:CGSizeMake(24.f, 24.f) completionBlock:^(BOOL isSucceed){
+//                StrongSelf;
+//                [self.diggButton setImage:[[self.diggButton imageForState:UIControlStateNormal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+//                self.diggButton.tintColorThemeKey = kColorText8;
+//            }];
+//            
+//            if ([self.ugcParams.diggTitle isEqualToString:@"赞"]) {
+//                WeakSelf;
+//                [[BDContextGet() findServiceByName:TTUGCDiggActionIconHelperServiceName] asyncGetDiggDescriptionTitleWithActionIconKey:self.ugcParams.diggIconKey completionBlock:^(NSString * _Nullable diggDescriptionTitle) {
+//                    StrongSelf;
+//                    [self.diggButton setTitle:diggDescriptionTitle forState:UIControlStateNormal];
+//                    self.diggDescriptionTitle = diggDescriptionTitle;
+//                }];
+//            }
         }
         
         

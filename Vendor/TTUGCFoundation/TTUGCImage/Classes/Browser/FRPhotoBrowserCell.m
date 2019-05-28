@@ -35,7 +35,7 @@
 #import <BDALog/BDAgileLog.h>
 #import "TTUGCImageHelper.h"
 #import <BDImage.h>
-#import <TTScanQrCode/TTScanQrCodeManager.h>
+// #import <TTScanQrCode/TTScanQrCodeManager.h>
 
 static const CGFloat kMinZoomScale = 1.f;
 static const CGFloat kMaxZoomScale = 2.5f;
@@ -718,14 +718,14 @@ typedef NS_ENUM(NSInteger, FRPhotoBrowserCellStatus) {
             [infoParam setValue:@(self.model.imageInfosModel.width) forKey:@"width"];
             [infoParam setValue:@(self.model.imageInfosModel.height) forKey:@"height"];
             BDALOG_INFO_TAG(@"FRPhotoBrowserCell", @"%@", infoParam);
-            [TTScanQrCodeManager handleCodeInfoWithImage:self.image handler:^BOOL(NSString * _Nonnull schema) {
-                if (isEmptyString(schema)) {
-                    return NO;
-                }
-                
-                self.qrURL = [NSURL URLWithString:schema];
-                return YES;
-            }];
+//            [TTScanQrCodeManager handleCodeInfoWithImage:self.image handler:^BOOL(NSString * _Nonnull schema) {
+//                if (isEmptyString(schema)) {
+//                    return NO;
+//                }
+//
+//                self.qrURL = [NSURL URLWithString:schema];
+//                return YES;
+//            }];
         }
     }
 }

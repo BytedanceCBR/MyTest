@@ -12,9 +12,9 @@
 #import "TTTrackerWrapper.h"
 #import "TTIndicatorView.h"
 #import <TTStringHelper.h>
-#import <TTServiceProtocols/TTAccountProvider.h>
-#import <BDMobileRuntime/BDMobileRuntime.h>
-#import <TTRegistry/TTRegistryDefines.h>
+//#import <TTServiceProtocols/TTAccountProvider.h>
+//#import <BDMobileRuntime/BDMobileRuntime.h>
+//#import <TTRegistry/TTRegistryDefines.h>
 #import "TTUGCHashtagModel.h"
 
 @implementation TTUGCTextViewMediator
