@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^resetConditionBlock)(NSDictionary *condition);
 @property(nonatomic , copy) NSString *_Nullable (^conditionNoneFilterBlock)(NSDictionary *params);//获取非过滤器显示的过滤条件
 
+
 -(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel viewController:(FHMapSearchViewController *)viewController;
 
 -(FHMapSearchConfigModel *)configModel;
@@ -55,6 +56,9 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString *)backHouseListOpenUrl;
 
 -(void)showMapUserLocationLayer;
+
+//当前城市是否有地铁
+-(BOOL)suportSubway;
 
 @end
 

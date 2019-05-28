@@ -23,6 +23,7 @@
 @property(nonatomic , strong) UIButton *cancelButton;
 @property(nonatomic , strong) UIButton *okButton;
 @property(nonatomic , strong) UIView *bottomView;
+@property(nonatomic , strong) FHSearchFilterConfigOption *dataModel;
 
 @end
 
@@ -81,15 +82,19 @@
 
 -(void)cancelAction
 {
-    [self dismiss];
+    [self dismiss:NO];
 }
 
 -(void)okAction
 {
     NSInteger mainIndex = [self.picker selectedRowInComponent:0];
     NSInteger subIndex = [self.picker selectedRowInComponent:1];
-    [self chooseMainIndex:mainIndex subIndex:subIndex];
-    [self dismiss];
+    FHSearchFilterConfigOption *line = self.dataModel.options[mainIndex];
+    FHSearchFilterConfigOption *station = line.options[subIndex];
+    if (self.chooseStation) {
+        self.chooseStation(line, station);
+    }
+    [self dismiss:YES];
 }
 
 
@@ -135,26 +140,37 @@
 }
 
 
--(void)showWithSubwayData:(id)data inView:(UIView *)view
+-(void)showWithSubwayData:(FHSearchFilterConfigOption *)data inView:(UIView *)view
 {
+    
+    FHSearchFilterConfigOption *option = [FHSearchFilterConfigOption new];
+    option.type = data.type;
+    option.text = data.text;
+    option.value = data.value;
+    
+    NSMutableArray *options = [[NSMutableArray alloc] initWithCapacity:data.options.count];
+    for (FHSearchFilterConfigOption *op in data.options) {
+        //去掉不限
+        if ([op.type isEqualToString:@"line"]) {
+            [options addObject:op];
+        }
+    }
+    option.options = options;
+    
+    
     [view addSubview:self];
     self.frame = view.bounds;
-    
+    self.dataModel = option;
     [_picker reloadAllComponents];
 }
 
--(void)dismiss
+-(void)dismiss:(BOOL)choosed
 {
+    if (!choosed && self.dismissBlock) {
+        self.dismissBlock();
+    }
     [self removeFromSuperview];
 }
-
--(void)chooseMainIndex:(NSInteger)component subIndex:(NSInteger)index
-{
-    if (self.chooseStation) {
-        self.chooseStation(nil, nil);
-    }
-}
-
 
 #pragma mark - picker delegate
 
@@ -166,9 +182,14 @@
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
     if (component == 0) {
-        return 15;
+        return self.dataModel.options.count;
     }
-    return 30;
+    NSInteger index = [pickerView selectedRowInComponent:0];
+    if (index < self.dataModel.options.count) {
+        FHSearchFilterConfigOption *line = self.dataModel.options[index];
+        return line.options.count;
+    }
+    return 0;
 }
 
 - (nullable NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
@@ -176,29 +197,40 @@
     
     NSString *content = nil;
     if (component == 0) {
-        content = [NSString stringWithFormat:@"%ld号线",row+1];
+        FHSearchFilterConfigOption *line = self.dataModel.options[row];
+        content = line.text;
     }else{
-        content = [NSString stringWithFormat:@"测试 %ld 站",row+1];
+        NSInteger index = [pickerView selectedRowInComponent:0];
+        FHSearchFilterConfigOption *line = self.dataModel.options[index];
+        FHSearchFilterConfigOption *station = line.options[row];
+        content = station.text;
     }
     
-    return [[NSAttributedString alloc] initWithString:content attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16],NSForegroundColorAttributeName:[UIColor blueColor]}];
+    if (content.length == 0) {
+        content = [NSString stringWithFormat:@"-%ld-%ld",component,row];
+        NSLog(@"[SUBWAY] error: %@",content);
+    }
+    
+    return [[NSAttributedString alloc] initWithString:content attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16],NSForegroundColorAttributeName:[UIColor themeGray1]}];
     
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
     
-    NSInteger componentIndex = [pickerView selectedRowInComponent:0];
-    [self chooseMainIndex:componentIndex subIndex:row];
+    if (component == 0) {
+        [pickerView reloadComponent:1];
+    }
+    
 }
 
 
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+ // Only override drawRect: if you perform custom drawing.
+ // An empty implementation adversely affects performance during animation.
+ - (void)drawRect:(CGRect)rect {
+ // Drawing code
+ }
+ */
 
 @end

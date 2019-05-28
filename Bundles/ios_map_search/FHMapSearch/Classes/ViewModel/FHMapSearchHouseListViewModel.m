@@ -413,6 +413,10 @@
         return ;
     }
     
+    if (self.currentBubble.lastShowMode == FHMapSearchShowModeSubway) {
+        param[CHANNEL_ID] = CHANNEL_ID_SUBWAY_SEARCH;
+    }
+    
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.houseList.count needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
         

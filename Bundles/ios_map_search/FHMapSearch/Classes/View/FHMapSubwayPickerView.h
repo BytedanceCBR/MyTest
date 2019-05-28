@@ -7,15 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FHMapSubwayModel.h"
+//#import "FHMapSubwayModel.h"
+#import <FHHouseBase/FHSearchConfigModel.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMapSubwayPickerView : UIView
 
-@property(nonatomic , copy) void (^chooseStation)(FHMapSubwayDataOptionModel * line , FHMapSubwayDataOptionOptionsModel *station);
-@property(nonatomic , copy) void (^requestDataBlock)(FHMapSubwayDataModel *data);
+@property(nonatomic , copy) void (^chooseStation)(FHSearchFilterConfigOption * line , FHSearchFilterConfigOption *station);
+//@property(nonatomic , copy) void (^requestDataBlock)(FHMapSubwayDataModel *data);
 
--(void)showWithSubwayData:(FHMapSubwayDataModel *)data inView:(UIView *)view;
+@property(nonatomic , copy) void (^dismissBlock)();
+
+-(void)showWithSubwayData:(FHSearchFilterConfigOption *)data inView:(UIView *)view;
 
 @end
 

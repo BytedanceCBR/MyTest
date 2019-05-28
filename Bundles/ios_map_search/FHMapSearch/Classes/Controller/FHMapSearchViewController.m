@@ -178,7 +178,7 @@
 
 -(void)backAction
 {
-    if (self.viewModel.showMode == FHMapSearchShowModeMap) {
+    if (self.viewModel.showMode == FHMapSearchShowModeMap || self.viewModel.showMode == FHMapSearchShowModeSubway) {
         [self.navigationController popViewControllerAnimated:YES];
         [self tryCallbackOpenUrl];
     }else{
@@ -310,12 +310,17 @@
     
     if (showDraw) {
         _chooseView = [[FHMapSearchWayChooseView alloc]initWithFrame:CGRectZero];
+        if (![self.viewModel suportSubway]) {
+            //无地铁只显示画圈找房
+            _chooseView.type = FHMapSearchWayChooseViewTypeDraw;
+        }
         _chooseView.delegate = _viewModel;
         _viewModel.chooseView = _chooseView;
         
         _bottomBar = [[FHMapSearchBottomBar alloc] init];
         _bottomBar.delegate = _viewModel;
         _bottomBar.hidden = YES;
+       
         _viewModel.bottomBar = _bottomBar;
     }
         
@@ -539,6 +544,13 @@
     [self.view addSubview:self.drawMaskView];
     TTNavigationController *navController = (TTNavigationController *)self.navigationController;
     navController.panRecognizer.enabled = NO;
+}
+
+-(void)enterSubwayMode
+{
+    [self.houseFilterBridge closeConditionFilterPanel];
+    self.chooseView.hidden = YES;
+    self.bottomBar.hidden = YES;
 }
 
 -(BOOL)isShowingMaskView

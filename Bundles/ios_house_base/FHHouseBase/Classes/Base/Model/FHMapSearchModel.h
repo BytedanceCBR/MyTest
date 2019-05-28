@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *type;
 @property (nonatomic, copy , nullable) NSString *nid;
 @property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSString *path;
 
 @end
 
@@ -52,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHMapSearchDataListModel> *list;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *houseListOpenUrl;
-
+@property (nonatomic, copy , nullable) NSString *path;
 @end
 
 
