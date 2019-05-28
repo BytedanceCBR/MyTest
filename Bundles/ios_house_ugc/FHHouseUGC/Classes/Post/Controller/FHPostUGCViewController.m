@@ -18,7 +18,9 @@
 #import "TTUGCToolbar.h"
 #import "NSObject+MultiDelegates.h"
 #import "UIViewAdditions.h"
-//#import "FRAddMultiImagesView.h"
+#import "FRAddMultiImagesView.h"
+#import "NSDictionary+TTAdditions.h"
+#import "NSString+URLEncoding.h"
 
 
 static CGFloat const kLeftPadding = 15.f;
@@ -32,8 +34,15 @@ static CGFloat const kAddImagesViewTopPadding = 10.f;
 static CGFloat const kAddImagesViewBottomPadding = 18.f;
 static CGFloat kUGCToolbarHeight = 80.f;
 
+static NSString * const kPostTopicEventName = @"topic_post";
+static NSString * const kUserInputTelephoneKey = @"userInputTelephoneKey";
+static NSInteger const kTitleCharactersLimit = 20;
 
-@interface FHPostUGCViewController ()
+NSString * const kForumPostThreadFinish = @"ForumPostThreadFinish";
+
+static NSInteger const kMaxPostImageCount = 9;
+
+@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate>
 
 @property (nonatomic, strong) SSThemedButton * cancelButton;
 @property (nonatomic, strong) SSThemedButton * postButton;
@@ -42,7 +51,12 @@ static CGFloat kUGCToolbarHeight = 80.f;
 @property (nonatomic, strong) SSThemedView * inputContainerView;
 @property (nonatomic, strong) TTUGCTextViewMediator       *textViewMediator;
 @property (nonatomic, strong) TTUGCToolbar *toolbar;
-//@property (nonatomic, strong) FRAddMultiImagesView * addImagesView;
+@property (nonatomic, strong) FRAddMultiImagesView * addImagesView;
+@property (nonatomic, copy) NSDictionary *trackDict; //  add by zyk
+@property (nonatomic, assign) CGRect keyboardEndFrame;
+@property (nonatomic, assign) BOOL keyboardVisibleBeforePresent; // 保存 present 页面之前的键盘状态，用于 Dismiss 之后恢复键盘
+@property (nonatomic, copy) NSArray <TTAssetModel *> * outerInputAssets; //传入的assets
+@property (nonatomic, copy) NSArray <UIImage *> * outerInputImages; //传入的images
 
 @end
 
@@ -164,7 +178,7 @@ static CGFloat kUGCToolbarHeight = 80.f;
     internalTextView.placeholder = [NSString stringWithFormat:@"分享新鲜事"];
     
     
-    internalTextView.backgroundColor = [UIColor grayColor];
+    internalTextView.backgroundColor = [UIColor clearColor];
     internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
     internalTextView.placeholderColor =  SSGetThemedColorWithKey(kColorText3);
     internalTextView.internalTextView.placeHolderFont = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
@@ -175,16 +189,16 @@ static CGFloat kUGCToolbarHeight = 80.f;
     
     // add image view
     y += kAddImagesViewTopPadding;
-//    self.addImagesView = [[FRAddMultiImagesView alloc] initWithFrame:CGRectMake(kLeftPadding, y, self.view.width - kLeftPadding - kRightPadding, self.view.height - y)
-//                                                              assets:self.outerInputAssets
-//                                                              images:self.outerInputImages];
-//    self.addImagesView.eventName = kPostTopicEventName;
-//    self.addImagesView.delegate = self;
-//    self.addImagesView.ssTrackDict = self.trackDict;
-//    [self.addImagesView startTrackImagepicker];
-//    
-//    [self.inputContainerView addSubview:self.addImagesView];
-//    
+    self.addImagesView = [[FRAddMultiImagesView alloc] initWithFrame:CGRectMake(kLeftPadding, y, self.view.width - kLeftPadding - kRightPadding, self.view.height - y)
+                                                              assets:self.outerInputAssets
+                                                              images:self.outerInputImages];
+    self.addImagesView.eventName = kPostTopicEventName;
+    self.addImagesView.delegate = self;
+    self.addImagesView.ssTrackDict = self.trackDict;
+    [self.addImagesView startTrackImagepicker];
+    
+    [self.inputContainerView addSubview:self.addImagesView];
+//
 //    self.goodsInfoView = [[SSThemedView alloc] initWithFrame:CGRectMake(kLeftPadding, self.addImagesView.bottom + 13, self.view.width - kLeftPadding - kRightPadding, 70)];
 //    self.goodsInfoView.backgroundColorThemeKey = kColorBackground3;
 //    self.goodsInfoView.hidden = !self.postWithGoods;
@@ -429,6 +443,81 @@ static CGFloat kUGCToolbarHeight = 80.f;
      */
 }
 
+- (void)parseOutInputImagesWithParamDic:(NSDictionary *)params {
+    
+    // userInfo input assetsLibrary
+    ALAssetsLibrary * assetsLibrary = [params tt_objectForKey:@"library"];
+    NSMutableArray *outInputImageAssets = [NSMutableArray new];
+    
+    NSArray *images;
+    if ([assetsLibrary isKindOfClass:[ALAssetsLibrary class]]) {
+        images = [params tt_arrayValueForKey:@"assets"];
+    } else {
+        images = [self generateInputAssets:[params tt_arrayValueForKey:@"threadImages"]];
+    }
+    
+    if (!SSIsEmptyArray(images)) {
+        [outInputImageAssets addObjectsFromArray:images];
+    }
+    
+    images = nil;
+    
+    // schema input assets
+    NSArray *presetWebImage = [params tt_arrayValueForKey:@"post_images"];
+    if (!SSIsEmptyArray(presetWebImage)) {
+        images = [self generateInputAssets:presetWebImage];
+    } else {
+        NSString *presetWebImageString = [[params tt_stringValueForKey:@"post_images"] URLDecodedString];
+        
+        if (!isEmptyString(presetWebImageString)) {
+            NSError *jsonError;
+            NSArray *presetImageURLArray = [NSJSONSerialization JSONObjectWithData:[presetWebImageString dataUsingEncoding:NSUTF8StringEncoding]
+                                                                           options:0
+                                                                             error:&jsonError];
+            
+            if (!jsonError && !SSIsEmptyArray(presetImageURLArray)) {
+                images = [self generateInputAssets:presetImageURLArray];
+            }
+        }
+    }
+    
+    if (!SSIsEmptyArray(images)) {
+        [outInputImageAssets addObjectsFromArray:images];
+    }
+    
+    // 过滤超9图的数据
+    if ([outInputImageAssets count] > kMaxPostImageCount) {
+        [outInputImageAssets removeObjectsInRange:NSMakeRange(kMaxPostImageCount, [outInputImageAssets count] - kMaxPostImageCount)];
+    }
+    self.outerInputAssets = [outInputImageAssets copy];
+}
+
+#pragma mark - Utils
+
+- (BOOL)isValidateOfPhoneNumber:(NSString *)phoneNumber {
+    NSString * regex = @"^1\\d{10}$";
+    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+    if ([predicate evaluateWithObject:phoneNumber]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (NSArray<TTAssetModel *> *)generateInputAssets:(NSArray<NSDictionary *> *)threadImages {
+    NSMutableArray *assetModelsArrM = [NSMutableArray array];
+    for (NSDictionary *dict in threadImages) {
+        NSUInteger width = [dict tt_integerValueForKey:@"width"];
+        NSUInteger height = [dict tt_integerValueForKey:@"height"];
+        NSString *url = [dict tt_stringValueForKey:@"url"];
+        NSString *uri = [dict tt_stringValueForKey:@"uri"];
+        TTAssetModel *assetModel = [TTAssetModel modelWithImageWidth:width height:height url:url uri:uri];
+        if (assetModel) {
+            [assetModelsArrM addObject:assetModel];
+        }
+    }
+    return [assetModelsArrM copy];
+}
+
 - (void)createInfoComponent {
     /*
     //Info container view
@@ -544,5 +633,81 @@ static CGFloat kUGCToolbarHeight = 80.f;
     
 }
 
+- (void)addImagesViewSizeChanged {
+//    self.inputContainerView.height = self.postWithGoods ? self.goodsInfoView.bottom : self.addImagesView.bottom + kAddImagesViewBottomPadding;
+//    self.infoContainerView.top = self.inputContainerView.height + kMidPadding;
+//
+//    CGFloat targetHeight = self.infoContainerView.bottom + kMidPadding;
+//    CGFloat containerHeight = self.view.height - 64;
+//    containerHeight = containerHeight >= targetHeight ? containerHeight : targetHeight;
+//    containerHeight += kUGCToolbarHeight;
+//    self.containerView.contentSize = CGSizeMake(self.containerView.frame.size.width, containerHeight);
+//    [self refreshPostButtonUI];
+}
+
+- (void)refreshPostButtonUI {
+//    if (![self.enterType isEqualToString:@"edit_publish"]) {
+//        //发布器
+//        if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
+//            self.postButton.titleColorThemeKey = kColorText6;
+//            self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
+//            self.postButton.disabledTitleColorThemeKey = kColorText6;
+//        } else {
+//            self.postButton.titleColorThemeKey = kColorText9;
+//            self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
+//            self.postButton.disabledTitleColorThemeKey = kColorText9;
+//        }
+//    } else {
+//        //编辑发布器按钮刷新逻辑
+//        if (([self textHasChanged] || [self imageHasChanged] || [self locationHasChanged]) && ![self emptyThread]) {
+//            self.postButton.titleColorThemeKey = kColorText6;
+//            self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
+//            self.postButton.disabledTitleColorThemeKey = kColorText6;
+//        } else {
+//            self.postButton.titleColorThemeKey = kColorText9;
+//            self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
+//            self.postButton.disabledTitleColorThemeKey = kColorText9;
+//        }
+//    }
+}
+
+
+#pragma mark - FRAddMultiImagesViewDelegate
+
+- (void)addImagesButtonDidClickedOfAddMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView {
+    self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
+    [self endEditing];
+}
+
+- (void)addMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView clickedImageAtIndex:(NSUInteger)index {
+    self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
+    [self endEditing];
+}
+
+- (void)addMultiImagesViewPresentedViewControllerDidDismiss {
+    // 如果选择定位位置之前，键盘是弹出状态，选择完之后恢复键盘状态
+    if (self.keyboardVisibleBeforePresent) {
+        [self.inputTextView becomeFirstResponder];
+    }
+}
+
+- (void)addMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView changeToSize:(CGSize)size {
+    [self addImagesViewSizeChanged];
+}
+
+- (void)addMultiImagesViewNeedEndEditing {
+    [self endEditing];
+}
+
+- (void)addMultiImageViewDidBeginDragging:(FRAddMultiImagesView *)addMultiImagesView {
+    self.cancelButton.enabled = NO;
+    self.postButton.enabled = NO;
+}
+
+- (void)addMultiImageViewDidFinishDragging:(FRAddMultiImagesView *)addMultiImagesView {
+    self.cancelButton.enabled = YES;
+    self.postButton.enabled = YES;
+    [self refreshPostButtonUI];
+}
 
 @end
