@@ -702,6 +702,7 @@
         }
         
         // 二手房、租房应该有 houseListOpenUrl
+        /* 暂时无用 注释掉
         if (needUploadMapFindHouseUrlEvent) {
             if (self.houseListOpenUrl.length <= 0 && (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse)) {
                 // 上报事件
@@ -716,9 +717,12 @@
                                                       category:@{@"status":@(0),@"desc":res}
                                                          extra:@{@"device_id":did}];
                 // 上报Alog
-                BDALOG_WARN_TAG(@"search_house_params", self.condition);
+                if (self.condition.length > 0) {
+                    BDALOG_WARN_TAG(@"search_house_params", self.condition);
+                }
             }
         }
+         */
         if (self.isFirstLoad) {
             self.originSearchId = self.searchId;
    

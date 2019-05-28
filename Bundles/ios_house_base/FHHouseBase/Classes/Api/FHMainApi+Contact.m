@@ -78,6 +78,7 @@
                           houseType:(FHHouseType)houseType
                            searchId:(NSString*)searchId
                              imprId:(NSString*)imprId
+                             from:(NSString*)fromStr
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/virtual_number"];
@@ -94,6 +95,9 @@
     }
     if (imprId.length > 0) {
         paramDic[@"impr_id"] = imprId;
+    }
+    if (fromStr.length > 0) {
+        paramDic[@"enterfrom"] = fromStr;
     }
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:GET needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         

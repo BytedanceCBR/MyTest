@@ -16,6 +16,7 @@
 #import <React/RCTBridge.h>
 #import "FHRNBaseViewController.h"
 #import "FHRNKitMacro.h"
+#import <UIViewController+Refresh_ErrorHandler.h>
 
 @interface FHRNDebugViewController ()
 @property (nonatomic, strong) UITextField *textField,*moduleField;
@@ -94,27 +95,28 @@
 - (void)loadJSbundleAndShowWithIp:(NSString *)host
                              port:(NSString *)port
                        moduleName:(NSString *)moduleName {
-    NSString *hostFormat = @"http://%@/index.bundle?platform=ios";
+    NSString *hostFormat = @"http://%@/index.bundle?platform=ios&debug=1&module_name=%@";
     NSURL *jsCodeLocation;
     if (host.length && port.length) {
         jsCodeLocation = [NSURL URLWithString:
                           [NSString stringWithFormat:hostFormat,
                            [NSString stringWithFormat:@"%@:%@", host, port]]];
     } else {
-        jsCodeLocation = [NSURL URLWithString:[NSString stringWithFormat:hostFormat, _textField.text]];
+        jsCodeLocation = [NSURL URLWithString:[NSString stringWithFormat:hostFormat, _textField.text,_moduleField.text]];
     }
     NSMutableDictionary *initParams = [NSMutableDictionary dictionaryWithDictionary:_params];
     initParams[RNModuleName] = moduleName ?: _moduleField.text;
     TTRNKitViewWrapper *wrapper = [[TTRNKitViewWrapper alloc] init];
     [self.manager registerObserver:wrapper];
     if (!self.contentViewController) {
-        self.contentViewController = [[FHRNBaseViewController alloc] initWithParams:@{RNHideBar:@(1),FHRN_DEBUG:@(YES)} viewWrapper:wrapper];
+        self.contentViewController = [[FHBaseViewController alloc] init];
     }
     if ([self.contentViewController respondsToSelector:@selector(addViewWrapper:)]) {
         [self.contentViewController addViewWrapper:wrapper];
     } else {
         [self.contentViewController setView:wrapper];
     }
+    [self.contentViewController tt_endUpdataData];
     UIViewController *contentVC = self.contentViewController;
     [self createRNView:initParams bundleURL:jsCodeLocation inWrapper:wrapper];
     [self.navigationController pushViewController:contentVC animated:YES];

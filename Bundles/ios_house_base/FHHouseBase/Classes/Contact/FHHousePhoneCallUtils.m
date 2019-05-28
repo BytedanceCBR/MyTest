@@ -60,6 +60,7 @@ typedef enum : NSUInteger {
     NSString *realtorId = configModel.realtorId;
     NSString *searchId = configModel.searchId;
     NSString *imprId = configModel.imprId;
+    NSString *fromStr = configModel.from.length > 0 ? configModel.from : [self fromStrByHouseType:houseType];
 
     if (![TTReachability isNetworkConnected]) {
         if (phone.length < 1) {
@@ -87,7 +88,7 @@ typedef enum : NSUInteger {
     
     [self isPhoneCallParamsValid:configModel];
 
-    [FHMainApi requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId from:fromStr completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
         NSMutableDictionary *userInfo = @{}.mutableCopy;
         userInfo[@"house_id"] = houseId;
@@ -116,6 +117,27 @@ typedef enum : NSUInteger {
             completionBlock(YES,nil);
         }
     }];
+}
+
++ (NSString *)fromStrByHouseType:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+            return @"app_court";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"app_oldhouse";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"app_neighbourhood";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"app_renthouse";
+            break;
+        default:
+            break;
+    }
+    return @"be_null";
 }
 
 
