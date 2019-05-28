@@ -31,8 +31,7 @@
 
 @implementation FHEditUserViewModel
 
--(instancetype)initWithTableView:(UITableView *)tableView controller:(FHEditUserController *)viewController
-{
+- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHEditUserController *)viewController {
     self = [super init];
     if (self) {
         self.tableView = tableView;

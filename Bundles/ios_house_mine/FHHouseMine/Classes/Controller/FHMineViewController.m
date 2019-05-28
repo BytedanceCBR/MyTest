@@ -122,7 +122,6 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHMineViewModel alloc] initWithTableView:_tableView controller:self];
-//    [self.viewModel requestMineConfig];
 }
 
 - (void)setupHeaderView {
