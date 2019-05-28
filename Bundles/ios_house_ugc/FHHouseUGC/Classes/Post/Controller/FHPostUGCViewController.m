@@ -21,6 +21,8 @@
 #import "FRAddMultiImagesView.h"
 #import "NSDictionary+TTAdditions.h"
 #import "NSString+URLEncoding.h"
+#import "TTKitchen.h"
+#import "TTPostThreadKitchenConfig.h"
 
 
 static CGFloat const kLeftPadding = 15.f;
@@ -42,7 +44,7 @@ NSString * const kForumPostThreadFinish = @"ForumPostThreadFinish";
 
 static NSInteger const kMaxPostImageCount = 9;
 
-@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate>
+@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate>
 
 @property (nonatomic, strong) SSThemedButton * cancelButton;
 @property (nonatomic, strong) SSThemedButton * postButton;
@@ -575,7 +577,7 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)endEditing {
     [self.view endEditing:YES];
     
-//    [self.toolbar endEditing:YES];
+    [self.toolbar endEditing:YES];
 }
 
 - (void)cancel:(id)sender {
@@ -645,6 +647,21 @@ static NSInteger const kMaxPostImageCount = 9;
 //    [self refreshPostButtonUI];
 }
 
+- (void)refreshUI {
+//    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
+//    NSString *inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+//    if (inputText.length > maxTextCount) {
+//        self.tipLabel.hidden = NO;
+//        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
+//        excludeCount = MIN(excludeCount, 9999);
+//        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
+//    } else {
+//        self.tipLabel.hidden = YES;
+//    }
+    
+    [self refreshPostButtonUI];
+}
+
 - (void)refreshPostButtonUI {
 //    if (![self.enterType isEqualToString:@"edit_publish"]) {
 //        //发布器
@@ -669,6 +686,58 @@ static NSInteger const kMaxPostImageCount = 9;
 //            self.postButton.disabledTitleColorThemeKey = kColorText9;
 //        }
 //    }
+}
+
+
+#pragma mark - TTUGCTextViewDelegate
+
+- (void)textViewDidChange:(TTUGCTextView *)textView {
+    [self refreshUI];
+}
+
+- (void)textView:(TTUGCTextView *)textView willChangeHeight:(float)height withDiffHeight:(CGFloat)diffHeight {
+    // 图文发布器展示 add by zyk
+//    if (!(self.showEtStatus & FRShowEtStatusOfTitle)) {
+//        self.addImagesView.top = self.inputTextView.bottom + kAddImagesViewTopPadding;
+//        self.inputContainerView.height = self.postWithGoods ? self.goodsInfoView.bottom : self.addImagesView.bottom + kAddImagesViewBottomPadding;
+//        self.infoContainerView.top = self.inputContainerView.height + kMidPadding;
+//
+//        CGFloat targetHeight = self.infoContainerView.bottom + kMidPadding;
+//        CGFloat containerHeight = self.view.height - 64;
+//        containerHeight = containerHeight >= targetHeight ? containerHeight : targetHeight;
+//        containerHeight += kUGCToolbarHeight;
+//        self.containerView.contentSize = CGSizeMake(self.containerView.frame.size.width, containerHeight);
+//    }
+}
+
+
+#pragma mark - UITextFieldDelegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    self.toolbar.banAtInput = YES;
+    self.toolbar.banHashtagInput = YES;
+    self.toolbar.banEmojiInput = YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    self.toolbar.banAtInput = [TTKitchen getBOOL:kTTKUGCPostAndRepostBanAt];
+    self.toolbar.banHashtagInput = [TTKitchen getBOOL:kTTKUGCPostAndRepostBanHashtag];
+    self.toolbar.banEmojiInput = NO;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    return YES;
+}
+
+- (BOOL)textFieldShouldClear:(UITextField *)textField {
+    return YES;
+}
+
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self endEditing];
 }
 
 
@@ -709,5 +778,72 @@ static NSInteger const kMaxPostImageCount = 9;
     self.postButton.enabled = YES;
     [self refreshPostButtonUI];
 }
+
+#pragma mark - TTUGCToolbarDelegate
+
+- (void)toolbarDidClickLongText {
+//    [TTTrackerWrapper eventV3:@"click_article_editor" params:@{@"uid":[[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID]?:@""}];
+//    if (![[BDContextGet() findServiceByName:TTAccountProviderServiceName] isLogin]) {
+//        [self endEditing];
+//        WeakSelf;
+//        [[TTPostThreadBridge sharedInstance] showLoginAlertWithSource:self.source superView:self.navigationController.view completion:^(BOOL tips) {
+//            StrongSelf;
+//            if (tips) {
+//                [[TTPostThreadBridge sharedInstance] presentQuickLoginFromVC:self source:self.source];
+//            }
+//        }];
+//    } else {
+//        [self handleLongTextRoute];
+//    }
+}
+
+- (void)handleLongTextRoute {
+    
+}
+
+
+- (void)toolbarDidClickShoppingButton {
+//    [TTTrackerWrapper eventV3:@"xuanpin_button_click" params:@{@"source":@"post"}];
+//    if (![[BDContextGet() findServiceByName:TTBusinessAllianceServiceName] ba_isProtocolAccepted]) {
+//        WeakSelf;
+//        [[BDContextGet() findServiceByName:TTBusinessAllianceServiceName] ba_showProtocolAlertWithCompletionBlock:^{
+//            StrongSelf;
+//            FRUgcBusinessAllianceUpdateProtocolStatusRequestModel *requestModel = [FRUgcBusinessAllianceUpdateProtocolStatusRequestModel new];
+//            requestModel.user_id = [[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID];
+//            requestModel.status = @(1);
+//            [TTUGCRequestManager requestModel:requestModel callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, TTUGCRequestMonitorModel *monitorModel) {
+//                if (!error) {
+//                    FRUgcBusinessAllianceUserInfoResponseModel *response = (FRUgcBusinessAllianceUserInfoResponseModel *)responseModel;
+//                    if ([response.err_no integerValue] == 0) {
+//                        [[BDContextGet() findServiceByName:TTBusinessAllianceServiceName] ba_updateUserId:[[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID]
+//                                                                                         acceptedProtocol:YES
+//                                                                                                 showIcon:YES];
+//                        [self goToShoppingPage];
+//                    }
+//                }
+//            }];
+//        }];
+//    } else {
+//        [self goToShoppingPage];
+//    }
+}
+
+- (void)goToShoppingPage {
+//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+//    [params setValue:[[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID] forKey:@"user_id"];
+//    [params setValue:[[BDContextGet() findServiceByName:TTAccountProviderServiceName] phoneNumber] forKey:@"phone_number"];
+//    [params setValue:@"/select_product_page" forKey:@"route"];
+//    [params setValue:[self.goodsItem toJSONString] forKey:@"product_info"];
+//    [params setValue:@"/business_alliance" forKey:@"url"];
+//    [params setValue:[NSString stringWithFormat:@"sslocal://webview?url=%@", [[KitchenMgr getString:kTTUGCBusinessAllianceChoiceProtocolUrl] URLEncodedString]] forKey:@"agreement_schema"];
+//
+//    NSString *url = [NSString stringWithFormat:@"sslocal://flutter?"];
+//    [[TTRoute sharedRoute] openURLByPresentViewController:[NSURL URLWithString:url] userInfo:TTRouteUserInfoWithDict(params)];
+}
+
+//- (void)setGoodsItem:(TTPostGoodsItem *)goodsItem {
+//    _goodsItem = goodsItem;
+//    self.postWithGoods = goodsItem != nil;
+//}
 
 @end
