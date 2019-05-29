@@ -106,6 +106,14 @@ NS_ASSUME_NONNULL_BEGIN
 // 新房-楼盘户型列表信息
 +(TTHttpTask*)requestFloorPanListSearch:(NSString*)courtId
                              completion:(void(^)(FHDetailFloorPanListResponseModel * _Nullable model , NSError * _Nullable error))completion;
+
+/*
+ * 用户反馈该内容是否有帮助
+ * @feedType: 0表示空，1表示是，2表示否
+ * @source: （幸福天眼: detective，安全贴士: safety_tips）
+ */
++(TTHttpTask *)requstQualityFeedback:(NSString *)houseId houseType:(FHHouseType)houseType source:(NSString *)source feedBack:(NSInteger)feedType agencyId:(NSString *)agencyId completion:(void (^)(bool succss , NSError *error))completion;
+
 @end
 
 
