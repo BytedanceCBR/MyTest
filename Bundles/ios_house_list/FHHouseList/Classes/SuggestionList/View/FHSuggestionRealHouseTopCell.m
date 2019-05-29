@@ -32,7 +32,8 @@
     
     _backImageView = [UIImageView new];
     [self.contentView addSubview:_backImageView];
-    [_backImageView setImage:[UIImage imageNamed:@"suglist_subscribe_mask"]];
+    
+    CGFloat itemWidth = ([UIScreen mainScreen].bounds.size.width - 28) / 3;
     
     [_backImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(14);
@@ -63,54 +64,94 @@
         make.height.mas_equalTo(20);
     }];
     
+    UIView *segementContentView = [UIView new];
+    segementContentView.backgroundColor = [UIColor grayColor];
+    [self.contentView addSubview:segementContentView];
     
-    _subTitleLabel = [[UILabel alloc] init];
-    _subTitleLabel.font = [UIFont themeFontRegular:11];
-    _subTitleLabel.textColor = [UIColor themeGray3];
-    _subTitleLabel.textAlignment = NSTextAlignmentRight;
-    [self.contentView addSubview:_subTitleLabel];
-    
-    
-    [_subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.titleLabel).offset(0);
-        make.top.equalTo(self.titleLabel.mas_bottom).offset(1);
-        make.height.mas_equalTo(16);
+    [segementContentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(14);
+        make.right.mas_equalTo(-14);
+        make.bottom.mas_equalTo(-10);
+        make.height.mas_equalTo(30);
     }];
     
-    _bottomContentLabel = [[UILabel alloc] init];
-    _bottomContentLabel.font = [UIFont themeFontRegular:12];
-    _bottomContentLabel.textColor = [UIColor themeGray2];
-    _bottomContentLabel.textAlignment = NSTextAlignmentLeft;
-    [self.contentView addSubview:_bottomContentLabel];
-    [_bottomContentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.contentView).offset(36);
-        make.top.equalTo(self.subTitleLabel.mas_bottom).offset(6);
-        make.right.equalTo(self.contentView).offset(-36);
+    _realHouseLabel = [[UILabel alloc] init];
+    _realHouseLabel.font = [UIFont themeFontRegular:11];
+    _realHouseLabel.textColor = [UIColor themeGray3];
+    _realHouseLabel.textAlignment = NSTextAlignmentRight;
+    [segementContentView addSubview:_realHouseLabel];
+    
+    
+    [_realHouseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(segementContentView).offset(10);
+        make.centerY.equalTo(segementContentView);
+        make.height.mas_equalTo(20);
     }];
     
-    _subscribeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
-    _subscribeBtn.layer.masksToBounds = YES;
-    _subscribeBtn.titleLabel.font = [UIFont themeFontRegular:12];
-    _subscribeBtn.layer.borderColor = [UIColor themeRed1].CGColor;
-    _subscribeBtn.layer.borderWidth = 0.5;
-    _subscribeBtn.layer.cornerRadius = 10.5;
-    [_subscribeBtn addTarget:self action:@selector(subscribeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    [_subscribeBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    [self.contentView addSubview:_subscribeBtn];
+    _segementLine = [UIView new];
+    [_segementLine setBackgroundColor:[UIColor blackColor]];
+    [segementContentView addSubview:_segementLine];
+    [_segementLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(segementContentView);
+        make.width.mas_equalTo(1);
+        make.height.mas_equalTo(20);
+    }];
     
     
-    [_subscribeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.contentView).offset(-40);
+    _falseHouseLabel = [[UILabel alloc] init];
+    _falseHouseLabel.font = [UIFont themeFontRegular:12];
+    _falseHouseLabel.textColor = [UIColor themeGray2];
+    _falseHouseLabel.textAlignment = NSTextAlignmentLeft;
+    [segementContentView addSubview:_falseHouseLabel];
+    [_falseHouseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(segementContentView).offset(-10);
+        make.centerY.equalTo(segementContentView);
+        make.right.equalTo(segementContentView).offset(-36);
+    }];
+    
+    
+    _allWebHouseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_allWebHouseBtn setTitle:@"问号" forState:UIControlStateNormal];
+    _allWebHouseBtn.layer.masksToBounds = YES;
+    _allWebHouseBtn.titleLabel.font = [UIFont themeFontRegular:12];
+    _allWebHouseBtn.layer.borderColor = [UIColor themeRed1].CGColor;
+    _allWebHouseBtn.layer.borderWidth = 0.5;
+    _allWebHouseBtn.layer.cornerRadius = 10.5;
+    [_allWebHouseBtn addTarget:self action:@selector(allWebHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_allWebHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [self.contentView addSubview:_allWebHouseBtn];
+    
+
+    [_allWebHouseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.titleLabel.mas_right).offset(10);
         make.top.equalTo(self.titleLabel);
         make.width.mas_equalTo(52);
         make.height.mas_equalTo(21);
     }];
-        
+    
+    
+    _allFalseHouseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_allFalseHouseBtn setTitle:@"箭头" forState:UIControlStateNormal];
+    _allFalseHouseBtn.layer.masksToBounds = YES;
+    _allFalseHouseBtn.titleLabel.font = [UIFont themeFontRegular:12];
+    _allFalseHouseBtn.layer.borderColor = [UIColor themeRed1].CGColor;
+    _allFalseHouseBtn.layer.borderWidth = 0.5;
+    _allFalseHouseBtn.layer.cornerRadius = 10.5;
+    [_allFalseHouseBtn addTarget:self action:@selector(allWebHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_allFalseHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [segementContentView addSubview:_allFalseHouseBtn];
+    
+    [_allFalseHouseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(segementContentView).offset(0);
+        make.top.equalTo(segementContentView);
+        make.width.mas_equalTo(30);
+        make.height.mas_equalTo(30);
+    }];
+    
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
-- (void)subscribeBtnClick:(UIButton *)button
+- (void)allWebHouseBtnClick:(UIButton *)button
 {
     
     if (![FHEnvContext isNetworkConnected]) {
@@ -118,9 +159,9 @@
         return;
     }
     
-    _subscribeBtn.userInteractionEnabled = NO;
-    if ([_subscribeBtn.titleLabel.text isEqualToString:@"订阅"]) {
-        //        [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
+    _allWebHouseBtn.userInteractionEnabled = NO;
+    if ([_allWebHouseBtn.titleLabel.text isEqualToString:@"订阅"]) {
+        //        [_allWebHouseBtn setTitle:@"已订阅" forState:UIControlStateNormal];
         if(self.addSubscribeAction)
         {
             
@@ -132,62 +173,34 @@
         {
             self.deleteSubscribeAction(self.currentModel.subscribeId);
         }
-        //        [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
+        //        [_allWebHouseBtn setTitle:@"订阅" forState:UIControlStateNormal];
     }
     [self performSelector:@selector(enabelSubscribBtn) withObject:nil afterDelay:1];
 }
 
 #pragma mark -
 - (void)subscribeStatusChanged:(NSNotification *)notification {
-    NSString *text = [notification.userInfo tt_stringValueForKey:@"text"];
-    NSString *subId = [notification.userInfo tt_stringValueForKey:@"subId"];
-    NSString *status = [notification.userInfo tt_stringValueForKey:@"status"];
-    if (subId) {
-        self.currentModel.subscribeId = subId;
-    }
-    //如果是同一个订阅条件
-    if (text && [text isEqualToString:_currentModel.text]) {
-        if (status && [status isEqualToString:@"1"]) {
-            self.currentModel.isSubscribe = YES;
-            [_subscribeBtn setBackgroundColor:[UIColor themeRed1]];
-            [_subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
-        }else if (status && [status isEqualToString:@"0"])
-        {
-            self.currentModel.isSubscribe = NO;
-            [_subscribeBtn setBackgroundColor:[UIColor whiteColor]];
-            [_subscribeBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-            [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
-        }
-    }
-    
-    [self enabelSubscribBtn];
+
 }
 
 - (void)enabelSubscribBtn
 {
-    _subscribeBtn.userInteractionEnabled = YES;
+    _allWebHouseBtn.userInteractionEnabled = YES;
 }
 
 - (void)refreshUI:(JSONModel *)data
 {
-    if ([data isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+    if ([data isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
         FHSugSubscribeDataDataSubscribeInfoModel *model = (FHSugSubscribeDataDataSubscribeInfoModel *)data;
         self.currentModel = model;
         _titleLabel.text = @"订阅当前搜索条件";
-        _subTitleLabel.text = @"新上房源立刻通知";
-        _bottomContentLabel.text = model.text ? : @"暂无";
-        if (model.isSubscribe) {
-            [_subscribeBtn setBackgroundColor:[UIColor themeRed1]];
-            [_subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
-        }else
-        {
-            [_subscribeBtn setBackgroundColor:[UIColor whiteColor]];
-            [_subscribeBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-            [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
-        }
+        _realHouseLabel.text = @"新上房源立刻通知";
     }
+    
+    _titleLabel.text = @"已为您找到50000000套全网房源";
+    _realHouseLabel.text = @"幸福里优选好房 400万套";
+    _falseHouseLabel.text = @"已过滤虚假房源 100万套";
+    
 }
 
 - (void)awakeFromNib {
