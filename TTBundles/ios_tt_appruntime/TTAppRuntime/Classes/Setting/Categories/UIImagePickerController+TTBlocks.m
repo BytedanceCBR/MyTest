@@ -67,4 +67,19 @@ UIImagePickerControllerDelegate
     }
 }
 
+//解决ios11以上系统plus机型，选取图片时，取消按钮很难点中的问题
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if ([UIDevice currentDevice].systemVersion.floatValue < 11) {
+        return;
+    }
+    if ([viewController isKindOfClass:NSClassFromString(@"PUPhotoPickerHostViewController")]) {
+        [viewController.view.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.frame.size.width < 42) {
+                [viewController.view sendSubviewToBack:obj];
+                *stop = YES;
+            }
+        }];
+    }
+}
+
 @end
