@@ -124,6 +124,14 @@ typedef enum TTTimeFormatterType {
  *  @return 转换后的字符串
  */
 + (nullable NSString*)customtimeAndCustomdateStringSince1970:(NSTimeInterval)timeInterval;
+/**
+ *  将NSTimerInterval转换为NSString，格式为根据传入的type决定
+ *
+ *  @param timeInterval timeInterval
+ *
+ *  @return 转换后的字符串
+ */
++ (NSString*)customtimeStringSince1970:(NSTimeInterval)timeInterval formateType:(TTTimeFormatterType)type;
 
 /**
  *  将NSTimerInterval转换为NSString，格式为MM-dd

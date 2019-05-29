@@ -7,7 +7,6 @@
 
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
-#import "FHSuggestionListNavBar.h"
 #import "UIViewController+Track.h"
 #import "FHHouseType.h"
 #import "FHSugSubscribeListViewModel.h"

@@ -7,15 +7,16 @@
 
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
-#import "FHCitySearchNavBarView.h"
+#import <FHCommonUI/FHSearchBar.h>
 #import "FHCityListViewModel.h"
+#import <FHCommonUI/FHHouseBaseTableView.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCitySearchViewController : FHBaseViewController
 
-@property (nonatomic, strong)   FHCitySearchTableView       *tableView;
-@property (nonatomic, strong)     FHCitySearchNavBarView     *naviBar;
+@property (nonatomic, strong)   FHHouseBaseTableView       *tableView;
+@property (nonatomic, strong)     FHSearchBar     *naviBar;
 @property (nonatomic, weak)   FHCityListViewModel       *cityListViewModel;
 
 @end

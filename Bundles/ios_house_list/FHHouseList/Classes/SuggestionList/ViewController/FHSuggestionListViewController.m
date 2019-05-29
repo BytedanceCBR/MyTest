@@ -6,7 +6,6 @@
 //
 
 #import "FHSuggestionListViewController.h"
-#import "FHSuggestionListNavBar.h"
 #import "TTDeviceHelper.h"
 #import "FHHouseType.h"
 #import "FHHouseTypeManager.h"
@@ -190,7 +189,8 @@
 
 - (void)setupNaviBar {
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
-    _naviBar = [[FHSuggestionListNavBar alloc] init];
+    _naviBar = [[FHSearchBar alloc] initWithType:FHSearchNavTypeSug];
+    [_naviBar setSearchPlaceHolderText:@"二手房/租房/小区"];
     [self.view addSubview:_naviBar];
     CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
     [_naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -331,6 +331,13 @@
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {
     NSInteger maxCount = 80;
     NSString *text = self.naviBar.searchInput.text;
+    UITextRange *selectedRange = [self.naviBar.searchInput markedTextRange];
+    //获取高亮部分
+    UITextPosition *position = [self.naviBar.searchInput positionFromPosition:selectedRange.start offset:0];
+    // 没有高亮选择的字，说明不是拼音输入
+    if (position) {
+        return;
+    }
     if (text.length > maxCount) {
         text = [text substringToIndex:maxCount];
         self.naviBar.searchInput.text = text;

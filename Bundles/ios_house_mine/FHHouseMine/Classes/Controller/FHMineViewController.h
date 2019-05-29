@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic , strong) FHMineHeaderView *headerView;
 
+- (void)refreshContentOffset:(CGPoint)contentOffset;
+
 @end
 
 NS_ASSUME_NONNULL_END

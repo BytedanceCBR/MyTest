@@ -74,7 +74,7 @@
             BOOL success = ([json[@"status"] integerValue] == 0);
             if(success){
                 NSInteger count = [json[@"data"][@"total_count"] integerValue];
-                [result setObject:@(count) forKey:@(type)];
+                [result setObject:@(count) forKey:[NSString stringWithFormat:@"%i",type]];
             }
         }
         @catch(NSException *e){
@@ -151,6 +151,40 @@
             return error.localizedDescription;
             break;
     }
+}
+
++ (TTHttpTask *)requestMineConfigWithClassName:(NSString *)className completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
+{
+    NSString *queryPath = @"/f100/v2/api/my_config";
+    
+    Class cls = NSClassFromString(className);
+    
+    return [FHMainApi queryData:queryPath params:nil class:cls completion:completion];
+}
+
++ (void)uploadUserPhoto:(UIImage *)image completion:(void (^)(NSString *imageURIString, NSError *error))completion {
+    [TTAccountManager startUploadUserImage:image completion:^(TTAccountImageEntity *imageEntity, NSError *error) {
+        if (error) {
+            if (completion) {
+                completion(nil, error);
+            }
+        } else {
+            if (completion) {
+                completion(imageEntity.web_uri, nil);
+            }
+        }
+    }];
+}
+
++ (void)uploadUserProfileInfo:(NSDictionary *)params completion:(void (^)(TTAccountUserEntity *userEntity, NSError *error))completedBlock
+{
+    [TTAccount updateUserProfileWithDict:params completion:^(TTAccountUserEntity *userEntity, NSError * _Nullable error) {
+        if (!error) {
+            if (completedBlock) completedBlock(userEntity, nil);
+        } else {
+            if (completedBlock) completedBlock(nil, error);
+        }
+    }];
 }
 
 @end
