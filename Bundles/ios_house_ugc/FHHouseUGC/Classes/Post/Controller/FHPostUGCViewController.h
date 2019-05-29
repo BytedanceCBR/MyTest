@@ -10,6 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define kClosePostThreadViewControllerNotification @"kClosePostThreadViewControllerNotification"
+
+#define kUpdateGoodsItemInfomationNotification @"kUpdateGoodsItemInfomationNotification"
+
 @interface FHPostUGCViewController : FHBaseViewController
 
 @end

@@ -24,7 +24,9 @@
 #import "TTKitchen.h"
 #import "TTPostThreadKitchenConfig.h"
 #import "FRPostThreadAddLocationView.h"
-
+#import <KVOController/KVOController.h>
+#import "TTLocationManager.h"
+#import "TTGoogleMapGeocoder.h"
 
 static CGFloat const kLeftPadding = 15.f;
 static CGFloat const kRightPadding = 15.f;
@@ -65,28 +67,48 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, assign) FRShowEtStatus showEtStatus; //控制发帖页面展示项 add by zyk
 @property (nonatomic, copy) NSString * cid; //关心ID  add by zyk
 @property (nonatomic, copy) NSString * categoryID; //频道ID  add by zyk
+@property (nonatomic, copy) NSDictionary *sdkParamsDict;// 分享调起
+@property (nonatomic, strong) SSThemedLabel * tipLabel;
+
+@property (nonatomic, strong) SSThemedView * infoContainerView;
 
 @end
 
-/*
- {
- "category_id" = "__all__";
- cid = 6454692306795629069;
- "enter_type" = "feed_publisher";
- "post_content_hint" = "\U5206\U4eab\U65b0\U9c9c\U4e8b";
- "post_ugc_enter_from" = 1;
- refer = 1;
- "show_et_status" = 8;
- }
- */
-
 @implementation FHPostUGCViewController
+
+
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+        NSDictionary * params = paramObj.allParams;
+        if ([params isKindOfClass:[NSDictionary class]]) {
+            /* add by zyk
+             {
+             "category_id" = "__all__";
+             cid = 6454692306795629069;
+             "enter_type" = "feed_publisher";
+             "post_content_hint" = "\U5206\U4eab\U65b0\U9c9c\U4e8b";
+             "post_ugc_enter_from" = 1;
+             refer = 1;
+             "show_et_status" = 8;
+             }
+             */
+            
+            // 添加google地图注册
+            [[TTLocationManager sharedManager] registerReverseGeocoder:[TTGoogleMapGeocoder sharedGeocoder] forKey:NSStringFromClass([TTGoogleMapGeocoder class])];
+        }
+    }
+    
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupNaviBar];
     [self createComponent];
+    [self addImagesViewSizeChanged];
+    [self addObserverAndNoti];
 }
 
 - (void)setupNaviBar {
@@ -148,6 +170,20 @@ static NSInteger const kMaxPostImageCount = 9;
     
     //Create info component
     [self createInfoComponent];
+}
+
+- (void)addObserverAndNoti {
+    WeakSelf;
+    [self.KVOController observe:self.addImagesView keyPath:@"frame" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
+        StrongSelf;
+        CGRect newFrame = [change[NSKeyValueChangeNewKey] CGRectValue];
+        CGRect oldFrame = [change[NSKeyValueChangeOldKey] CGRectValue];
+    }];
+    
+    [self addNotification];
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+    [self.containerView addGestureRecognizer:tapGestureRecognizer];
 }
 
 - (void)createInputComponent {
@@ -217,6 +253,18 @@ static NSInteger const kMaxPostImageCount = 9;
     self.addLocationView.trackDic = self.trackDict;
     self.addLocationView.delegate = self;
     [self.toolbar addSubview:self.addLocationView];
+    
+    //Tip label
+    CGFloat tipLabelWidth = 70.0;
+    self.tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(self.view.width - tipLabelWidth - kRightPadding, 0, tipLabelWidth, 36.f)];
+    
+    self.tipLabel.font = [UIFont systemFontOfSize:12];
+    self.tipLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
+    self.tipLabel.textAlignment = NSTextAlignmentRight;
+    self.tipLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
+    self.tipLabel.textColorThemeKey = kColorText4;
+    self.tipLabel.hidden = YES;
+    [self.toolbar addSubview:self.tipLabel];
     
     // TextView and Toolbar Mediator
     self.textViewMediator = [[TTUGCTextViewMediator alloc] init];
@@ -320,45 +368,15 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)createInfoComponent {
-    /*
+    
     //Info container view
     self.infoContainerView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, self.inputContainerView.bottom + kMidPadding , self.view.width, 0)];
     self.infoContainerView.backgroundColorThemeKey = kColorBackground4;
     [self.containerView addSubview:self.infoContainerView];
     
     CGFloat y = 0;
-    
-    //Phone view
-    if (self.showEtStatus & FRShowEtStatusOfPhone) {
-        self.phoneBgView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, y, self.view.width, kUserInfoViewHeight)];
-        self.phoneBgView.backgroundColorThemeKey = kColorBackground4;
-        [self.infoContainerView addSubview:self.phoneBgView];
-        
-        SSThemedImageView * phoneIconView = [[SSThemedImageView alloc] initWithFrame:CGRectMake(kLeftPadding, 12, 20, 20)];
-        phoneIconView.imageName = @"phone_repost";
-        [self.phoneBgView addSubview:phoneIconView];
-        self.phoneTextField = [[SSThemedTextField alloc] initWithFrame:CGRectMake(kLeftPadding + 27, 0, self.phoneBgView.width - kLeftPadding - kRightPadding - 27, kUserInfoViewHeight)];
-        NSString * preInputPhoneNumber = [[NSUserDefaults standardUserDefaults] objectForKey:kUserInputTelephoneKey];
-        if (!isEmptyString(preInputPhoneNumber)) {
-            self.phoneTextField.text = preInputPhoneNumber;
-        }
-        self.phoneTextField.keyboardType = UIKeyboardTypeNumberPad;
-        self.phoneTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-        self.phoneTextField.delegate = self;
-        self.phoneTextField.font = [UIFont systemFontOfSize:16];
-        self.phoneTextField.textColorThemeKey = kColorText1;
-        self.phoneTextField.placeholderColorThemeKey = kColorText3;
-        self.phoneTextField.placeholder = NSLocalizedString(@"联系电话（选填，仅工作人员可见）", nil);
-        [self.phoneBgView addSubview:self.phoneTextField];
-        
-        SSThemedView *separateLine = [[SSThemedView alloc] initWithFrame:CGRectMake(15, kUserInfoViewHeight - [TTDeviceHelper ssOnePixel], self.view.width - 15, [TTDeviceHelper ssOnePixel])];
-        separateLine.backgroundColorThemeKey = kColorLine1;
-        [self.phoneBgView addSubview:separateLine];
-        y = self.phoneBgView.bottom;
-    }
-    
+    // 添加其他视图
     self.infoContainerView.height = y;
-     */
 }
 
 - (void)dismissSelf
@@ -377,6 +395,15 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.view endEditing:YES];
     
     [self.toolbar endEditing:YES];
+}
+
+- (void)tapAction:(UITapGestureRecognizer *)sender {
+    // 点击空白处可以收起或呼出键盘
+    if (self.inputTextView.isFirstResponder) {
+        [self.inputTextView resignFirstResponder];
+    } else {
+        [self.inputTextView becomeFirstResponder];
+    }
 }
 
 - (void)cancel:(id)sender {
@@ -435,28 +462,28 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)addImagesViewSizeChanged {
-//    self.inputContainerView.height = self.postWithGoods ? self.goodsInfoView.bottom : self.addImagesView.bottom + kAddImagesViewBottomPadding;
-//    self.infoContainerView.top = self.inputContainerView.height + kMidPadding;
-//
-//    CGFloat targetHeight = self.infoContainerView.bottom + kMidPadding;
-//    CGFloat containerHeight = self.view.height - 64;
-//    containerHeight = containerHeight >= targetHeight ? containerHeight : targetHeight;
-//    containerHeight += kUGCToolbarHeight;
-//    self.containerView.contentSize = CGSizeMake(self.containerView.frame.size.width, containerHeight);
-//    [self refreshPostButtonUI];
+    self.inputContainerView.height = self.addImagesView.bottom + kAddImagesViewBottomPadding;
+    self.infoContainerView.top = self.inputContainerView.height + kMidPadding;
+
+    CGFloat targetHeight = self.infoContainerView.bottom + kMidPadding;
+    CGFloat containerHeight = self.view.height - 64;
+    containerHeight = containerHeight >= targetHeight ? containerHeight : targetHeight;
+    containerHeight += kUGCToolbarHeight;
+    self.containerView.contentSize = CGSizeMake(self.containerView.frame.size.width, containerHeight);
+    [self refreshPostButtonUI];
 }
 
 - (void)refreshUI {
-//    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
-//    NSString *inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-//    if (inputText.length > maxTextCount) {
-//        self.tipLabel.hidden = NO;
-//        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
-//        excludeCount = MIN(excludeCount, 9999);
-//        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
-//    } else {
-//        self.tipLabel.hidden = YES;
-//    }
+    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
+    NSString *inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (inputText.length > maxTextCount) {
+        self.tipLabel.hidden = NO;
+        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
+        excludeCount = MIN(excludeCount, 9999);
+        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
+    } else {
+        self.tipLabel.hidden = YES;
+    }
     
     [self refreshPostButtonUI];
 }
@@ -659,5 +686,146 @@ static NSInteger const kMaxPostImageCount = 9;
 //    _goodsItem = goodsItem;
 //    self.postWithGoods = goodsItem != nil;
 //}
+
+- (void)clearDraft {
+    // add by zyk
+//    if ([self draftEnable]) {
+//        NSArray *tasks = [TTPostThreadTask fetchTasksFromDiskForConcernID:[self draftConcernID]];
+//        for (TTPostThreadTask *task in tasks) {
+//            [TTPostThreadTask removeTaskFromDiskByTaskID:task.taskID concernID:[self draftConcernID]];
+//        }
+//    }
+}
+
+- (void)saveDraft {
+     // add by zyk
+//    if ([self draftEnable]) {
+//        TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
+//        [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+//
+//        TTPostThreadTask *task = [[TTPostThreadTask alloc] initWithTaskType:TTPostTaskTypeThread];
+//
+//        task.content = richSpanText.text;
+//        task.contentRichSpans = [TTRichSpans JSONStringForRichSpans:richSpanText.richSpans];
+//        task.create_time = [[NSDate date] timeIntervalSince1970];
+//        task.userID = [[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID];
+//        task.concernID = [self draftConcernID];
+//        task.categoryID = [self draftConcernID];
+//        [task addTaskImages:self.addImagesView.selectedImageCacheTasks thumbImages:self.addImagesView.selectedThumbImages];
+//        task.latitude = self.addLocationView.selectedLocation.latitude;
+//        task.longitude = self.addLocationView.selectedLocation.longitude;
+//        task.city = self.addLocationView.selectedLocation.city;
+//        task.detail_pos = self.addLocationView.selectedLocation.locationName;
+//        task.locationType = self.addLocationView.selectedLocation.locationType;
+//        task.locationAddress = self.addLocationView.selectedLocation.locationAddress;
+//        task.selectedRange = self.inputTextView.selectedRange;
+//        if (isEmptyString(task.content) && self.addImagesView.selectedImageCacheTasks.count == 0)
+//            return;
+//
+//        [task saveToDisk];
+//    }
+}
+
+- (void)closeViewController:(NSNotification *)notification {
+    [self clearDraft];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)updateGoodsInfo:(NSNotification *)notification {
+    [self.inputTextView becomeFirstResponder];
+}
+
+#pragma mark - UIKeyboardNotification
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    if (!CGRectIsEmpty(self.keyboardEndFrame)) {
+        CGFloat offset = self.containerView.contentOffset.y - self.keyboardEndFrame.size.height;
+        if (offset < 0) {
+            offset = 0;
+        }
+        [self.containerView setContentOffset:CGPointMake(0, offset) animated:YES];
+        self.keyboardEndFrame = CGRectZero;
+    }
+}
+
+- (void)keyboardWillChange:(NSNotification *)notification {
+    UIView * firstResponder = nil;
+    if (self.inputTextView.isFirstResponder) {
+        firstResponder = self.inputTextView;
+    }
+    if (!firstResponder) {
+        return;
+    }
+    CGRect endFrame = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect firstResponderFrame = [firstResponder convertRect:firstResponder.bounds toView:self.containerView];
+    CGFloat offset = CGRectGetMinY(firstResponderFrame) - self.containerView.contentOffset.y;
+    if (offset < 0) {
+        self.keyboardEndFrame = endFrame;
+        [self.containerView setContentOffset:CGPointMake(0, fabs(self.containerView.contentOffset.y+offset)) animated:YES];
+        return;
+    }
+    offset = self.containerView.height - endFrame.size.height - (CGRectGetMaxY(firstResponderFrame) - self.containerView.contentOffset.y) - kUGCToolbarHeight;
+    if (offset < 0) {
+        self.keyboardEndFrame = endFrame;
+        [self.containerView setContentOffset:CGPointMake(0, fabs(self.containerView.contentOffset.y-offset)) animated:YES];
+        return;
+    }
+}
+
+- (void)textFiledEditDidChanged:(NSNotification *)notification {
+  
+}
+
+- (void)viewDidEnterBackground {
+    
+    if (SSIsEmptyDictionary(self.sdkParamsDict)) {
+        [self saveDraft];
+    } else {
+        
+        UIViewController *controller = [TTUIResponderHelper visibleTopViewController];
+        NSInteger retryCount = 0;
+        while (controller != self && controller) {
+            [controller dismissViewControllerAnimated:NO completion:nil];
+            retryCount++;
+            if (retryCount >= 15) {
+                break;
+            }
+            controller = [TTUIResponderHelper visibleTopViewController];
+        }
+        [controller dismissViewControllerAnimated:NO completion:nil];
+    }
+}
+
+#pragma mark - Notification
+
+- (void)addNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(viewDidEnterBackground)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillChange:)
+                                                 name:UIKeyboardWillChangeFrameNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(closeViewController:)
+                                                 name:kClosePostThreadViewControllerNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateGoodsInfo:)
+                                                 name:kUpdateGoodsItemInfomationNotification
+                                               object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    // 移除google地图注册
+    [[TTLocationManager sharedManager] unregisterReverseGeocoderForKey:NSStringFromClass([TTGoogleMapGeocoder class])];
+}
 
 @end
