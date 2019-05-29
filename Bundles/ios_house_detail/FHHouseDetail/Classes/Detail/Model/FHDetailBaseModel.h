@@ -176,5 +176,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolInfoModel> *schoolList;
 @end
 
+@interface FHDetailDataBaseExtraDialogsModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *feedbackContent;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *subTitle;
+@property (nonatomic, copy , nullable) NSString *icon;
+@property (nonatomic, copy , nullable) NSString *reportUrl;
+@end
 
 NS_ASSUME_NONNULL_END
