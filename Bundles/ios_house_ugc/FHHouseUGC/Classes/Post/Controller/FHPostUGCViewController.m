@@ -23,6 +23,7 @@
 #import "NSString+URLEncoding.h"
 #import "TTKitchen.h"
 #import "TTPostThreadKitchenConfig.h"
+#import "FRPostThreadAddLocationView.h"
 
 
 static CGFloat const kLeftPadding = 15.f;
@@ -44,7 +45,7 @@ NSString * const kForumPostThreadFinish = @"ForumPostThreadFinish";
 
 static NSInteger const kMaxPostImageCount = 9;
 
-@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate>
+@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate,FRPostThreadAddLocationViewDelegate>
 
 @property (nonatomic, strong) SSThemedButton * cancelButton;
 @property (nonatomic, strong) SSThemedButton * postButton;
@@ -54,13 +55,30 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, strong) TTUGCTextViewMediator       *textViewMediator;
 @property (nonatomic, strong) TTUGCToolbar *toolbar;
 @property (nonatomic, strong) FRAddMultiImagesView * addImagesView;
+@property (nonatomic, copy) NSDictionary *position; //编辑带入的位置信息
+@property (nonatomic, strong) FRPostThreadAddLocationView * addLocationView;
 @property (nonatomic, copy) NSDictionary *trackDict; //  add by zyk
 @property (nonatomic, assign) CGRect keyboardEndFrame;
 @property (nonatomic, assign) BOOL keyboardVisibleBeforePresent; // 保存 present 页面之前的键盘状态，用于 Dismiss 之后恢复键盘
 @property (nonatomic, copy) NSArray <TTAssetModel *> * outerInputAssets; //传入的assets
 @property (nonatomic, copy) NSArray <UIImage *> * outerInputImages; //传入的images
+@property (nonatomic, assign) FRShowEtStatus showEtStatus; //控制发帖页面展示项 add by zyk
+@property (nonatomic, copy) NSString * cid; //关心ID  add by zyk
+@property (nonatomic, copy) NSString * categoryID; //频道ID  add by zyk
 
 @end
+
+/*
+ {
+ "category_id" = "__all__";
+ cid = 6454692306795629069;
+ "enter_type" = "feed_publisher";
+ "post_content_hint" = "\U5206\U4eab\U65b0\U9c9c\U4e8b";
+ "post_ugc_enter_from" = 1;
+ refer = 1;
+ "show_et_status" = 8;
+ }
+ */
 
 @implementation FHPostUGCViewController
 
@@ -190,15 +208,15 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.view addSubview:self.toolbar];
     
     //Location view
-//    self.addLocationView = [[FRPostThreadAddLocationView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 36.f) andShowEtStatus:self.showEtStatus];
-//    if (!isEmptyString([self.position tt_stringValueForKey:@"position"])) {
-//        self.addLocationView.selectedLocation = [self generateLocationEntity];
-//    }
-//    self.addLocationView.concernId = self.cid;
-//    self.addLocationView.categotyID = self.categoryID;
-//    self.addLocationView.trackDic = self.trackDict;
-//    self.addLocationView.delegate = self;
-//    [self.toolbar addSubview:self.addLocationView];
+    self.addLocationView = [[FRPostThreadAddLocationView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 36.f) andShowEtStatus:self.showEtStatus];
+    if (!isEmptyString([self.position tt_stringValueForKey:@"position"])) {
+        self.addLocationView.selectedLocation = [self generateLocationEntity];
+    }
+    self.addLocationView.concernId = self.cid;
+    self.addLocationView.categotyID = self.categoryID;
+    self.addLocationView.trackDic = self.trackDict;
+    self.addLocationView.delegate = self;
+    [self.toolbar addSubview:self.addLocationView];
     
     // TextView and Toolbar Mediator
     self.textViewMediator = [[TTUGCTextViewMediator alloc] init];
@@ -262,6 +280,20 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 #pragma mark - Utils
+
+- (FRLocationEntity *)generateLocationEntity {
+    FRLocationEntity *posEntity = [[FRLocationEntity alloc] init];
+    NSString *detail_pos = [self.position tt_stringValueForKey:@"position"];
+    NSRange blankRange = [detail_pos rangeOfString:@" "];
+    if (blankRange.location != NSNotFound) {
+        posEntity.locationName = [detail_pos substringFromIndex:blankRange.location + 1];
+    }
+    posEntity.latitude = [self.position tt_integerValueForKey:@"latitude"];
+    posEntity.longitude = [self.position tt_integerValueForKey:@"longitude"];;
+    posEntity.city = [[detail_pos componentsSeparatedByString:@" "] firstObject];
+    posEntity.locationType = [posEntity.city isEqualToString:detail_pos] ? FRLocationEntityTypeCity : FRLocationEntityTypeNomal;
+    return posEntity;
+}
 
 - (BOOL)isValidateOfPhoneNumber:(NSString *)phoneNumber {
     NSString * regex = @"^1\\d{10}$";
@@ -454,6 +486,21 @@ static NSInteger const kMaxPostImageCount = 9;
 //        }
 //    }
 }
+
+#pragma mark - AddLocationViewDelegate
+
+- (void)addLocationViewWillPresent {
+    self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
+}
+
+- (void)addLocationViewDidDismiss {
+    // 如果选择定位位置之前，键盘是弹出状态，选择完之后恢复键盘状态
+    if (self.keyboardVisibleBeforePresent) {
+        [self.inputTextView becomeFirstResponder];
+    }
+    [self refreshPostButtonUI];
+}
+
 
 
 #pragma mark - TTUGCTextViewDelegate
