@@ -346,8 +346,8 @@
     
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.paddingTop = YGPointValue(3);
-        layout.marginLeft = YGPointValue(0);
+        layout.marginTop = YGPointValue(6);
+        layout.marginLeft = YGPointValue(-3);
         layout.height = YGPointValue(15);
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
     }];
