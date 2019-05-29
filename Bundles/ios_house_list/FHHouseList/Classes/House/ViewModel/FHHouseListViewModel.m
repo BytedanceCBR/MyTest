@@ -674,6 +674,7 @@
                         [itemArray insertObject:topInfoModel atIndex:0];
                     }
                 }
+    
             }
     
         } else if ([model isKindOfClass:[FHNewHouseListResponseModel class]]) {
@@ -1341,7 +1342,7 @@
                 
                 if (cellModel.isRealHouseTopCell) {
                     if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-                        return 121;
+                        return 71;
                     }
                 }
                 

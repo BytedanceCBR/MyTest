@@ -32,7 +32,7 @@
     
     _backImageView = [UIImageView new];
     [self.contentView addSubview:_backImageView];
-    
+    [self.contentView setBackgroundColor:[UIColor themeGray7]];
     CGFloat itemWidth = ([UIScreen mainScreen].bounds.size.width - 28) / 3;
     
     [_backImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -42,81 +42,88 @@
         make.bottom.mas_equalTo(self.contentView);
     }];
     
-    UIImageView *imageRight = [[UIImageView alloc] init];
-    [imageRight setImage:[UIImage imageNamed:@"suglist_subscribe_right"]];
-    [_backImageView addSubview:imageRight];
-    [imageRight mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-14);
-        make.height.mas_equalTo(61);
-        make.width.mas_equalTo(166);
-        make.bottom.equalTo(self.backImageView).offset(-8);
-    }];
-    
-    
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.font = [UIFont themeFontMedium:14];
     _titleLabel.textColor = [UIColor themeGray1];
     _titleLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_titleLabel];
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(36);
-        make.top.mas_equalTo(40);
+        make.left.mas_equalTo(14);
+        make.top.mas_equalTo(14);
         make.height.mas_equalTo(20);
     }];
     
     UIView *segementContentView = [UIView new];
-    segementContentView.backgroundColor = [UIColor grayColor];
+    segementContentView.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:segementContentView];
     
     [segementContentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(14);
         make.right.mas_equalTo(-14);
         make.bottom.mas_equalTo(-10);
-        make.height.mas_equalTo(30);
+        make.height.mas_equalTo(16);
     }];
     
     _realHouseLabel = [[UILabel alloc] init];
     _realHouseLabel.font = [UIFont themeFontRegular:11];
     _realHouseLabel.textColor = [UIColor themeGray3];
-    _realHouseLabel.textAlignment = NSTextAlignmentRight;
+    _realHouseLabel.textAlignment = NSTextAlignmentLeft;
     [segementContentView addSubview:_realHouseLabel];
     
-    
     [_realHouseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(segementContentView).offset(10);
+        make.left.equalTo(segementContentView).offset(0);
         make.centerY.equalTo(segementContentView);
-        make.height.mas_equalTo(20);
+        make.height.equalTo(segementContentView);
+    }];
+    
+    _realHouseNumLabel = [[UILabel alloc] init];
+    _realHouseNumLabel.font = [UIFont themeFontDINAlternateBold:16];
+    _realHouseNumLabel.textColor = [UIColor themeRed3];
+    _realHouseNumLabel.textAlignment = NSTextAlignmentLeft;
+    [segementContentView addSubview:_realHouseNumLabel];
+    
+    [_realHouseNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(_realHouseLabel.mas_right).offset(0);
+        make.centerY.equalTo(segementContentView);
+        make.height.equalTo(segementContentView);
     }];
     
     _segementLine = [UIView new];
-    [_segementLine setBackgroundColor:[UIColor blackColor]];
+    [_segementLine setBackgroundColor:[UIColor themeGray3]];
     [segementContentView addSubview:_segementLine];
     [_segementLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(segementContentView);
         make.width.mas_equalTo(1);
-        make.height.mas_equalTo(20);
+        make.height.mas_equalTo(12);
     }];
     
     
     _falseHouseLabel = [[UILabel alloc] init];
-    _falseHouseLabel.font = [UIFont themeFontRegular:12];
-    _falseHouseLabel.textColor = [UIColor themeGray2];
+    _falseHouseLabel.font = [UIFont themeFontRegular:11];
+    _falseHouseLabel.textColor = [UIColor themeGray3];
     _falseHouseLabel.textAlignment = NSTextAlignmentLeft;
     [segementContentView addSubview:_falseHouseLabel];
     [_falseHouseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(segementContentView).offset(-10);
+        make.left.equalTo(_segementLine).offset(18);
         make.centerY.equalTo(segementContentView);
-        make.right.equalTo(segementContentView).offset(-36);
+    }];
+    
+    _falseHouseNumLabel = [[UILabel alloc] init];
+    _falseHouseNumLabel.font = [UIFont themeFontDINAlternateBold:16];
+    _falseHouseNumLabel.textColor = [UIColor themeRed3];
+    _falseHouseNumLabel.textAlignment = NSTextAlignmentLeft;
+    [segementContentView addSubview:_falseHouseNumLabel];
+    
+    [_falseHouseNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(_falseHouseLabel.mas_right).offset(0);
+        make.centerY.equalTo(segementContentView);
+        make.height.equalTo(segementContentView);
     }];
     
     
     _allWebHouseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_allWebHouseBtn setTitle:@"问号" forState:UIControlStateNormal];
-    _allWebHouseBtn.layer.masksToBounds = YES;
     _allWebHouseBtn.titleLabel.font = [UIFont themeFontRegular:12];
-    _allWebHouseBtn.layer.borderColor = [UIColor themeRed1].CGColor;
-    _allWebHouseBtn.layer.borderWidth = 0.5;
-    _allWebHouseBtn.layer.cornerRadius = 10.5;
+    [_allWebHouseBtn setImage:[UIImage imageNamed:@"house_list_real_info"] forState:UIControlStateNormal];
     [_allWebHouseBtn addTarget:self action:@selector(allWebHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_allWebHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     [self.contentView addSubview:_allWebHouseBtn];
@@ -124,28 +131,23 @@
 
     [_allWebHouseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.titleLabel.mas_right).offset(10);
-        make.top.equalTo(self.titleLabel);
-        make.width.mas_equalTo(52);
-        make.height.mas_equalTo(21);
+        make.centerY.equalTo(self.titleLabel);
+        make.width.mas_equalTo(14);
+        make.height.mas_equalTo(14);
     }];
     
     
     _allFalseHouseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_allFalseHouseBtn setTitle:@"箭头" forState:UIControlStateNormal];
-    _allFalseHouseBtn.layer.masksToBounds = YES;
-    _allFalseHouseBtn.titleLabel.font = [UIFont themeFontRegular:12];
-    _allFalseHouseBtn.layer.borderColor = [UIColor themeRed1].CGColor;
-    _allFalseHouseBtn.layer.borderWidth = 0.5;
-    _allFalseHouseBtn.layer.cornerRadius = 10.5;
+    [_allFalseHouseBtn setImage:[UIImage imageNamed:@"house_list_real_arrow"] forState:UIControlStateNormal];
     [_allFalseHouseBtn addTarget:self action:@selector(allWebHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_allFalseHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     [segementContentView addSubview:_allFalseHouseBtn];
     
     [_allFalseHouseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(segementContentView).offset(0);
-        make.top.equalTo(segementContentView);
-        make.width.mas_equalTo(30);
-        make.height.mas_equalTo(30);
+        make.centerY.equalTo(_falseHouseLabel);
+        make.width.mas_equalTo(12);
+        make.height.mas_equalTo(12);
     }];
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -198,9 +200,10 @@
     }
     
     _titleLabel.text = @"已为您找到50000000套全网房源";
-    _realHouseLabel.text = @"幸福里优选好房 400万套";
-    _falseHouseLabel.text = @"已过滤虚假房源 100万套";
-    
+    _realHouseLabel.text = @"幸福里优选好房";
+    _realHouseNumLabel.text = @" 400万套";
+    _falseHouseLabel.text = @"已过滤虚假房源";
+    _falseHouseNumLabel.text = @" 100万套";
 }
 
 - (void)awakeFromNib {

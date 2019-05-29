@@ -14,7 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)   UILabel       *titleLabel;
 @property (nonatomic, strong)   UILabel       *realHouseLabel;
+@property (nonatomic, strong)   UILabel       *realHouseNumLabel;
 @property (nonatomic, strong)   UILabel       *falseHouseLabel;
+@property (nonatomic, strong)   UILabel       *falseHouseNumLabel;
 @property (nonatomic, strong)   UIButton      *allWebHouseBtn;
 @property (nonatomic, strong)   UIButton      *allFalseHouseBtn;
 @property (nonatomic, strong)   UIView        *segementLine;
