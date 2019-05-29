@@ -21,6 +21,7 @@
 #import "TTSandBoxHelper.h"
 #import "TTArticleCategoryManager.h"
 #import "FHHomeScrollBannerCell.h"
+#import <TTDeviceHelper.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -60,9 +61,18 @@ static CGFloat const kSectionHeaderHeight = 38;
     [self.view addSubview:self.mainTableView];
 
     self.mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
-    }];
+    
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.view);
+        }];
+    }else
+    {
+        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.left.right.equalTo(self.view);
+            make.bottom.equalTo(self.view).offset(-40);
+        }];
+    }
 
     [FHHomeCellHelper registerCells:self.mainTableView];
     

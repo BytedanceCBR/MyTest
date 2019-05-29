@@ -158,10 +158,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:configDataModel.houseTypeDefault];
                 self.currentHouseType = configDataModel.houseTypeDefault.integerValue;
             }
-//
-           
-            //切换城市先隐藏error页
-            [self.homeViewController.emptyView hideEmptyView];
             
             //更新切换
             [self updateCategoryViewSegmented:self.isFirstChange];
@@ -322,23 +318,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
 - (void)configIconRowCountAndHeight
 {
-    [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
-    [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
-    //下版本等实验结论再上
-//    if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum isKindOfClass:[NSNumber class]]) {
-//        if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum integerValue] == 5) {
-//            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 5;
-//            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 42;
-//        }else
-//        {
-//            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
-//            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
-//        }
-//    }else
-//    {
-//        [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
-//        [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
-//    }
+    [[FHHomeCellHelper sharedInstance] initFHHomeHeaderIconCountAndHeight];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
