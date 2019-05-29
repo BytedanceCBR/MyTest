@@ -16,7 +16,7 @@
 #import "TTAccountBusiness.h"
 #import "FHMineAPI.h"
 
-@interface FHEditingInfoViewModel()<UITextFieldDelegate>
+@interface FHEditingInfoViewModel()
 
 @property(nonatomic, strong) UITextField *textField;
 @property(nonatomic, weak) FHEditingInfoController *viewController;
@@ -29,7 +29,6 @@
     self = [super init];
     if (self) {
         self.textField = textField;
-        textField.delegate = self;
         
         self.viewController = viewController;
     }

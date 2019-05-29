@@ -180,7 +180,12 @@
         FHMineConfigDataIconOpDataMyIconItemsModel *itemModel = self.model.myIcon.items[i];
         NSString *key = itemModel.id;
         FHMineFavoriteItemView *view = self.items[i];
-        view.nameLabel.text = [NSString stringWithFormat:@"%@ (%i)",itemModel.title,[itemDic[key] integerValue]];
+        NSInteger num = [itemDic[key] integerValue];
+        NSString *numStr = [NSString stringWithFormat:@"%i",[itemDic[key] integerValue]];
+        if(num > 99){
+            numStr = @"99+";
+        }
+        view.nameLabel.text = [NSString stringWithFormat:@"%@ (%@)",itemModel.title,numStr];
     }
 }
 

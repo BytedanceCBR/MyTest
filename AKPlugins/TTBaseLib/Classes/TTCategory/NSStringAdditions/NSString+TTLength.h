@@ -31,4 +31,7 @@
 *  @return 字节数
 */
 - (NSUInteger)limitedLengthOfMaxCount:(NSUInteger)maxCount;
+
+- (NSUInteger)limitedIndexOfMaxCount:(NSUInteger)maxCount;
+
 @end

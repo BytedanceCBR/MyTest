@@ -10,15 +10,19 @@
 #import "UIFont+House.h"
 #import "FHEditingInfoViewModel.h"
 #import "FHEditableUserInfo.h"
+#import "HPGrowingTextView.h"
+#import "NSString+TTLength.h"
 
-@interface FHEditingInfoController ()
+@interface FHEditingInfoController ()<UITextFieldDelegate>
 
 @property(nonatomic, strong) UITextField *textField;
+@property(nonatomic, strong) UILabel *remainLabel;
 @property(nonatomic, strong) UIView *bgView;
 @property(nonatomic, assign) FHEditingInfoType type;
 @property(nonatomic, strong) FHEditingInfoViewModel *viewModel;
 @property(nonatomic, strong) FHEditableUserInfo *userInfo;
 @property(nonatomic, strong) UIButton *saveBtn;
+@property(nonatomic, assign) NSInteger maxLength;
 
 @end
 
@@ -29,6 +33,12 @@
     if (self) {
         _type = [paramObj.allParams[@"type"] integerValue];
         _userInfo = paramObj.allParams[@"user_info"];
+        
+        if(_type == FHEditingInfoTypeUserName){
+            _maxLength = 20;
+        }else if(_type == FHEditingInfoTypeUserDesc){
+            _maxLength = 30;
+        }
         
         NSHashTable<FHEditingInfoControllerDelegate> *delegate = paramObj.allParams[@"delegate"];
         self.delegate = delegate.anyObject;
@@ -49,6 +59,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -58,6 +69,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 }
 
@@ -80,6 +92,7 @@
     [self.view addSubview:_bgView];
     
     self.textField = [[UITextField alloc] init];
+    _textField.delegate = self;
     _textField.font = [UIFont themeFontRegular:16];
     _textField.textColor = [UIColor themeGray1];
     _textField.tintColor = [UIColor themeRed3];
@@ -92,6 +105,12 @@
         _textField.text = _userInfo.userDescription;
     }
     
+    _remainLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    _remainLabel.textColor = [UIColor themeRed1];
+    _remainLabel.font = [UIFont themeFontRegular:10];
+    _remainLabel.textAlignment = NSTextAlignmentRight;
+    [self.bgView addSubview:_remainLabel];
+    [self refreshCountLabel];
 }
 
 - (void)initConstraints {
@@ -109,6 +128,12 @@
         make.left.equalTo(self.bgView).offset(20);
         make.right.equalTo(self.bgView).offset(-20);
         make.top.bottom.equalTo(self.bgView);
+    }];
+    
+    [self.remainLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.bgView).offset(-3);
+        make.bottom.mas_equalTo(self.bgView).offset(-3);
+        make.height.mas_equalTo(12);
     }];
 }
 
@@ -130,5 +155,44 @@
 - (void)saveInfo {
     [self.viewModel save];
 }
+
+#pragma mark -- textFieldDidChange
+
+- (void)textFieldDidChange:(NSNotification *)notification {
+    UITextField *textField = (UITextField *)notification.object;
+    
+    if(textField.markedTextRange){
+        return;
+    }
+    
+    if ([textField.text tt_lengthOfBytes] > self.maxLength && textField.markedTextRange == nil) {
+            NSUInteger limitedLength = [textField.text limitedIndexOfMaxCount:self.maxLength];
+            NSString *str = [textField.text substringToIndex:MIN(limitedLength, textField.text.length - 1)];
+            textField.text = str;
+    }
+    
+    [self refreshCountLabel];
+}
+
+- (void)refreshCountLabel{
+    if (self.maxLength > 0) {
+        NSInteger wordLength = [self.textField.text tt_lengthOfBytes];
+        self.remainLabel.text = [NSString stringWithFormat:@"%lu", MAX(0, self.maxLength - wordLength)];
+        if (self.maxLength - wordLength < 0) {
+            self.remainLabel.text = @"0";
+        }
+    }
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if(textField.markedTextRange){
+        return YES;
+    }
+    
+    NSInteger changedLength = [textField.text tt_lengthOfBytes] - range.length + [string tt_lengthOfBytes];
+    return changedLength <= self.maxLength || [string length] == 0;
+}
+
+
 
 @end
