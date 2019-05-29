@@ -34,4 +34,6 @@
 
 - (NSUInteger)limitedIndexOfMaxCount:(NSUInteger)maxCount;
 
+- (NSUInteger)tt_lengthOfBytesIncludeOnlyBlank;
+
 @end

@@ -46,7 +46,7 @@
             
             NSUInteger tt_byteLength = [name tt_lengthOfBytes];
             if(tt_byteLength < 2*2 || tt_byteLength > 20*2) {
-                [[ToastManager manager] showToast:@"昵称长度请控制在2-20个汉字"];
+                [[ToastManager manager] showToast:@"昵称长度请控制在2-20个字符"];
             } else {
                 // 上传
                 [self uploadUserAuditContent:name forName:YES];
@@ -59,7 +59,7 @@
         if([desp isEqualToString:self.userInfo.userDescription]) {
             [[ToastManager manager] showToast:@"与原来介绍相同"];
         } else if(tt_byteLength > 30*2) {
-            [[ToastManager manager] showToast:@"介绍长度请控制在0-30个汉字"];
+            [[ToastManager manager] showToast:@"介绍长度请控制在0-60个字符"];
         } else {
             if (tt_byteLength == 0) {
                 desp = @"  ";

@@ -24,6 +24,10 @@
 @property(nonatomic, strong) UIButton *saveBtn;
 @property(nonatomic, assign) NSInteger maxLength;
 
+@property(nonatomic, assign) NSInteger befortLength;
+@property(nonatomic, copy) NSString *tempStr;
+@property(nonatomic, assign) NSRange tempRange;
+
 @end
 
 @implementation FHEditingInfoController
@@ -37,7 +41,7 @@
         if(_type == FHEditingInfoTypeUserName){
             _maxLength = 20;
         }else if(_type == FHEditingInfoTypeUserDesc){
-            _maxLength = 30;
+            _maxLength = 60;
         }
         
         NSHashTable<FHEditingInfoControllerDelegate> *delegate = paramObj.allParams[@"delegate"];
@@ -166,12 +170,25 @@
     }
     
     if ([textField.text tt_lengthOfBytes] > self.maxLength && textField.markedTextRange == nil) {
+        if(self.tempRange.length > 0 && self.tempRange.length > 0){
+            NSString *str = [textField.text stringByReplacingCharactersInRange:self.tempRange withString:self.tempStr];
+            textField.text = str;
+            [self cursorLocation:self.textField index:(self.tempRange.location + self.tempStr.length)];
+        }else{
             NSUInteger limitedLength = [textField.text limitedIndexOfMaxCount:self.maxLength];
             NSString *str = [textField.text substringToIndex:MIN(limitedLength, textField.text.length - 1)];
             textField.text = str;
+        }
     }
     
     [self refreshCountLabel];
+}
+
+- (void)cursorLocation:(UITextField*)textField index:(NSInteger)index {
+    NSRange range = NSMakeRange(index,0);
+    UITextPosition *start = [textField positionFromPosition:[textField beginningOfDocument] offset:range.location];
+    UITextPosition *end = [textField positionFromPosition:start offset:range.length];
+    [textField setSelectedTextRange:[textField textRangeFromPosition:start toPosition:end]];
 }
 
 - (void)refreshCountLabel{
@@ -186,10 +203,15 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if(textField.markedTextRange){
+        NSInteger diff = self.maxLength - self.befortLength;
+        NSUInteger limitedLength = [string limitedIndexOfMaxCount:diff];
+        self.tempStr = [string substringToIndex:MIN(limitedLength, string.length)];
+        self.tempRange = NSMakeRange(range.location, string.length);
         return YES;
     }
     
-    NSInteger changedLength = [textField.text tt_lengthOfBytes] - range.length + [string tt_lengthOfBytes];
+    self.befortLength = [textField.text tt_lengthOfBytes];
+    NSInteger changedLength = [textField.text tt_lengthOfBytes] - range.length + [string tt_lengthOfBytesIncludeOnlyBlank];
     return changedLength <= self.maxLength || [string length] == 0;
 }
 

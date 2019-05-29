@@ -61,7 +61,6 @@
     NSUInteger count = 0;
     NSUInteger index = 0;
     for (NSUInteger i = 0; i < [self length]; i++) {
-        index = i + 1;
         unichar ch = [self characterAtIndex:i];
         if (isblank(ch) || isspace(ch)) {
             count++;
@@ -70,9 +69,25 @@
         } else {
             count += 2;
         }
-        if (count >= maxCount) break;
+        if (count > maxCount) break;
+        index = i + 1;
     }
     return index;
+}
+
+- (NSUInteger)tt_lengthOfBytesIncludeOnlyBlank {
+    NSUInteger chCounts = 0, blankCounts = 0, zhCounts = 0;
+    for (NSUInteger i = 0; i < [self length]; i++) {
+        unichar ch = [self characterAtIndex:i];
+        if (isblank(ch) || isspace(ch)) {
+            blankCounts++;
+        } else if (isascii(ch)) {
+            chCounts++;
+        } else {
+            zhCounts++;
+        }
+    }
+    return (zhCounts * 2 + (int)(blankCounts + chCounts));
 }
 
 @end
