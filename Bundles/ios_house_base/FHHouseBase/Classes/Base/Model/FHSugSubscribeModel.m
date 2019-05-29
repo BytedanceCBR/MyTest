@@ -1,5 +1,13 @@
 //GENERATED CODE , DON'T EDIT
 #import "FHSugSubscribeModel.h"
+
+@implementation FHSugListRealHouseTopInfoModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHSugSubscribeDataDataModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {

@@ -42,6 +42,7 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import <AMapLocationKit/AMapLocationKit.h>
 #import <BDALog/BDAgileLog.h>
+#import "FHSuggestionRealHouseTopCell.h"
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
@@ -224,6 +225,7 @@
     self.tableView.mj_footer = self.refreshFooter;
     
     [self.tableView registerClass:[FHSuggestionSubscribCell class] forCellReuseIdentifier:kFHHouseListSubscribCellId];
+    [self.tableView registerClass:[FHSuggestionRealHouseTopCell class] forCellReuseIdentifier:kFHHouseListTopRealInfoCellId];
 
     [self.tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kFHHouseListRecommendTitleCellId];
     [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
@@ -618,6 +620,20 @@
                         [itemArray addObject:subscribeMode];
                     }
                 }
+                
+                BOOL isShowRealHouse = YES;
+                
+                if (isShowRealHouse) {
+                    FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
+                    topInfoModel.fakeHouse = houseModel.fakeHouse;
+                    topInfoModel.totalHouse = houseModel.totalHouse;
+                    topInfoModel.openUrl = @"";
+                    topInfoModel.searchId = houseModel.searchId;
+                    
+                    if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                        [itemArray insertObject:topInfoModel atIndex:0];
+                    }
+                }
             }
     
         } else if ([model isKindOfClass:[FHNewHouseListResponseModel class]]) {
@@ -703,7 +719,6 @@
         }
 
         if (!self.fromRecommend) {
-            
             self.redirectTips = redirectTips;
             [self updateRedirectTipInfo];
         }
@@ -719,6 +734,14 @@
                 {
                     cellModel.isSubscribCell = NO;
                 }
+                
+                if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                    cellModel.isRealHouseTopCell = YES;
+                }else
+                {
+                    cellModel.isRealHouseTopCell = NO;
+                }
+                
                 [self.houseList addObject:cellModel];
             }
 
@@ -797,6 +820,10 @@
         FHSugSubscribeDataDataSubscribeInfoModel *item = (FHSugSubscribeDataDataSubscribeInfoModel *)obj;
         cellModel.subscribModel = obj;
         
+    }else if ([obj isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+        
+        FHSugListRealHouseTopInfoModel *item = (FHSugListRealHouseTopInfoModel *)obj;
+        cellModel.realHouseTopModel = obj;
     }
     return cellModel;
     
@@ -1139,6 +1166,26 @@
                 if (indexPath.row < self.houseList.count) {
                     
                     FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+                    
+                    if (cellModel.isRealHouseTopCell) {
+                        if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                            FHSugListRealHouseTopInfoModel *realHouseInfo = (FHSugListRealHouseTopInfoModel *)cellModel.subscribModel;
+                            FHSuggestionRealHouseTopCell *topRealCell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListTopRealInfoCellId];
+                            if ([topRealCell respondsToSelector:@selector(refreshUI:)]) {
+                                [topRealCell refreshUI:realHouseInfo];
+                            }
+                            __weak typeof(self) weakSelf = self;
+                            topRealCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
+                                [weakSelf requestAddSubScribe:subscribeText];
+                            };
+                       
+                            topRealCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
+                                
+                            };
+                            return topRealCell;
+                        }
+                    }
+                    
                     if (cellModel.isSubscribCell) {
                         if ([cellModel.subscribModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
                             FHSugSubscribeDataDataSubscribeInfoModel *subscribModel = (FHSugSubscribeDataDataSubscribeInfoModel *)cellModel.subscribModel;
@@ -1159,6 +1206,7 @@
                             return subScribCell;
                         }
                     }
+
                     
                     CGFloat topMargin = 20;
                     if (self.isCommute && indexPath.row == 0) {
@@ -1241,11 +1289,18 @@
             
                 cellModel = self.houseList[indexPath.row];
                 
+                if (cellModel.isRealHouseTopCell) {
+                    if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                        return 121;
+                    }
+                }
+                
                 if (cellModel.isSubscribCell) {
                     if ([cellModel.subscribModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
                         return 121;
                     }
                 }
+                
                 
                 isLastCell = (indexPath.row == self.houseList.count - 1);
             } else {
@@ -1526,7 +1581,12 @@
         [tracerDict removeObjectForKey:@"group_id"];
         self.subScribeShowDict = tracerDict;
         [FHUserTracker writeEvent:@"subscribe_show" params:tracerDict];
-    }else
+    }else if(cellModel.isRealHouseTopCell)
+    {
+        FHSugListRealHouseTopInfoModel *topInfoModel = (FHSugListRealHouseTopInfoModel *)cellModel.subscribModel;
+        [FHUserTracker writeEvent:@"subscribe_show" params:tracerDict];
+    }
+    else
     {
         [FHUserTracker writeEvent:@"house_show" params:tracerDict];
     }
