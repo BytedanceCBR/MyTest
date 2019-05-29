@@ -203,7 +203,8 @@
         }
     }
     
-    NSString * timeStr = [TTBusinessManager noTimeStringSince1970:[model.pubDate doubleValue]];
+//    NSString * timeStr = [TTBusinessManager noTimeStringSince1970:[model.pubDate doubleValue]];
+    NSString * timeStr = [TTBusinessManager customtimeStringSince1970:[model.pubDate doubleValue] formateType:TTTimeFormatterNormalNoTime];
     [_timeLabel setText:timeStr];
     
     if ([SSFeedbackCell hasFeedbackImageForModel:model]) {
@@ -395,7 +396,7 @@
 
 + (CGFloat)minWidthForSSContentViewByModel:(SSFeedbackModel *)model listViewWidth:(CGFloat)width
 {
-    return 70.f;
+    return 80.f;
 }
 
 + (CGFloat)maxAvailableWidthForSSContentViewByModel:(SSFeedbackModel *)model listViewWidth:(CGFloat)width

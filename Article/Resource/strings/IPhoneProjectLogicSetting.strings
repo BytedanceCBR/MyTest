@@ -9,6 +9,7 @@
 
 // f100
 "house_list"            = "FHHouseListViewController";
+"neighborhood_deal_list"            = "FHHouseListViewController"; // 查成交列表页
 "flogin"                = "FHLoginViewController";
 "aboutUs"               = "FHAboutUsViewController";
 "old_house_detail"      = "FHHouseDetailViewController";
@@ -21,8 +22,11 @@
 "message_detail_list"   = "FHMessageListViewController";
 "message_system_list"   = "FHMessageListViewController";
 "house_list_in_neighborhood" = "FHNeighborListViewController";
-"myFavorite"            = "FHMyFavoriteViewController";
-"editUserProfile"       = "TTEditUserProfileViewController";
+"myFocus"            = "FHMyFavoriteViewController";
+//"editUserProfile"       = "TTEditUserProfileViewController";
+"editUserProfile"       = "FHEditUserController";
+"editingInfo"           = "FHEditingInfoController";
+
 // SSAppPageController
 "home"                  = "SSAppPageManagerNotificationHome";
 "profile"               = "ArticleMomentProfileViewController";
@@ -137,11 +141,17 @@
 //房屋估价历史
 "price_valuation_history" = "FHPriceValuationHistoryController";
 //房屋估计小区搜索
-"price_valuation_neighborhood_search" = "FHPriceValuationNeiborhoodSearchController";
+//"price_valuation_neighborhood_search" = "FHPriceValuationNeiborhoodSearchController";
+"price_valuation_neighborhood_search" = "FHBaseSugListViewController";
+
 //房屋估价结果
 "price_valuation_result" = "FHPriceValuationResultController";
 //房屋估价补充信息
 "price_valuation_more_info" = "FHPriceValuationMoreInfoController";
+
+// 查成交小区搜索页面
+"house_search_deal_neighborhood" = "FHBaseSugListViewController";
+
 //房源详情价格对比房源列表
 "house_search_result_list" = "FHOldPriceComparisonListController";
 //视频测试

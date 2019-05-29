@@ -32,6 +32,10 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.type = [paramObj.allParams[@"house_type"] integerValue];
+        
+        if(self.tracerDict){
+            self.tracerDict[@"enter_type"] = @"click";
+        }
     }
     return self;
 }
