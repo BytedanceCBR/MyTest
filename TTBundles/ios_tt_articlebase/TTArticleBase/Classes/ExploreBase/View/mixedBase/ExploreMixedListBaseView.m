@@ -2704,7 +2704,7 @@ TTRefreshViewDelegate
                                              if (_categoryID) {
                                                  NSString *requestRecord = [FHUtils contentForKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
                                                  
-                                                 if (!requestRecord && !isLoadMore && (isFindHouseRefresh || [TTSandBoxHelper isAPPFirstLaunchForAd])) {
+                                                 if (!requestRecord && !isLoadMore && (isFindHouseRefresh || [TTSandBoxHelper isAPPFirstLaunch])) {
                                                      [weakSelf.listView setContentOffset:CGPointMake(0, weakSelf.listView.customTopOffset - weakSelf.listView.contentInset.top) animated:NO];
                                                  }
                                                  
