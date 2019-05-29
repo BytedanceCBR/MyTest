@@ -620,6 +620,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSNumber *isEmpty;
 @property (nonatomic, strong , nullable) NSNumber *isNoLimit;
 @property (nonatomic, copy , nullable) NSString *rankType;
+@property (nonatomic, copy , nullable) NSString *centerLatitude;
+@property (nonatomic, copy , nullable) NSString *centerLongitude;
+@property (nonatomic, copy , nullable) NSString *resizeLevel;
+
 @end
 
 @protocol FHSearchFilterConfigItem <NSObject>

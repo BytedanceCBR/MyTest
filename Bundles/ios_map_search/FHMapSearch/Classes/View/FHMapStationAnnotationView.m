@@ -97,7 +97,7 @@
     CGFloat arrowWidth = 7;
     self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 30-arrowWidth/2, arrowWidth, arrowWidth);
     self.contentLabel.frame = CGRectMake(24, 8, self.width-34, 17);
-    self.stationView.frame = CGRectMake(10, 8, 10, 11);
+    self.stationView.frame = CGRectMake(10, 11, 10, 11);
     
 }
 

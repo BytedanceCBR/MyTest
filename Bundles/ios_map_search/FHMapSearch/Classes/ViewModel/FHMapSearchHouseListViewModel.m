@@ -674,6 +674,8 @@
 {
     if (self.currentBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
         return @"circlefind";
+    }else if (self.currentBubble.lastShowMode == FHMapSearchShowModeSubway){
+        return @"subwayfind";
     }
     return @"mapfind";
 }
@@ -817,6 +819,9 @@
     if (self.currentBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
         param[UT_ENTER_FROM] = @"mapfind";
         TRACK_EVENT(@"circlefind_half_category", param);
+    }else if (self.currentBubble.lastShowMode == FHMapSearchShowModeSubway){
+        param[UT_ENTER_FROM] = @"mapfind";
+        TRACK_EVENT(@"subwayfind_half_category", param);
     }else{
         TRACK_EVENT(@"mapfind_half_category", param);
     }

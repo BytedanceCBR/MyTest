@@ -6,13 +6,12 @@
 //
 
 #import <FHHouseBase/FHMainApi.h>
-#import "FHMapSubwayModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHMainApi (MapSearch)
-
-+(TTHttpTask *)requestSubwayData:(NSString *)cityId completion:(void (^)(FHMapSubwayModel *model , NSError *error))completion;
-
-@end
+//@interface FHMainApi (MapSearch)
+//
+//+(TTHttpTask *)requestSubwayData:(NSString *)cityId completion:(void (^)(FHMapSubwayModel *model , NSError *error))completion;
+//
+//@end
 
 NS_ASSUME_NONNULL_END
