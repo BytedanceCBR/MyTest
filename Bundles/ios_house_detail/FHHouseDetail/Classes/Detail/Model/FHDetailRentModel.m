@@ -100,6 +100,69 @@
 
 @end
 
+#pragma mark - base extra
+@implementation FHRentDetailDataBaseExtraSecurityInformationDialogContentModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHRentDetailDataBaseExtraModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"securityInformation": @"security_information",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHRentDetailDataBaseExtraSecurityInformationModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"dialogContent": @"dialog_content",
+                           @"baseContent": @"base_content",
+                           @"baseTitle": @"base_title",
+                           @"tipsIcon": @"tips_icon",
+                           @"tipsContent": @"tips_content",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHRentDetailDataBaseExtraSecurityInformationDialogContentContentModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"dialogContentImage": @"dialog_content_image",
+                           @"dialogContentTitle": @"dialog_content_title",
+                           @"dialogContentText": @"dialog_content_text",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+
 
 @implementation  FHRentDetailResponseDataModel
 
@@ -118,6 +181,7 @@
                            @"camplaintUrl": @"camplaint_url",
                            @"imShareInfo": @"im_share_info",
                            @"chooseAgencyList": @"choose_agency_list",
+                           @"baseExtra": @"base_extra",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

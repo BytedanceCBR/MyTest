@@ -185,10 +185,44 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
+#pragma mark - base extra
+
+@protocol FHRentDetailDataBaseExtraSecurityInformationDialogContentContentModel<NSObject>
+@end
+
+@interface FHRentDetailDataBaseExtraSecurityInformationDialogContentContentModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *dialogContentImage;
+@property (nonatomic, copy , nullable) NSString *dialogContentTitle;
+@property (nonatomic, copy , nullable) NSString *dialogContentText;
+@end
+
+@interface FHRentDetailDataBaseExtraSecurityInformationDialogContentModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHRentDetailDataBaseExtraSecurityInformationDialogContentContentModel> *content;
+@property (nonatomic, copy , nullable) NSString *comment;
+@end
+
+@interface FHRentDetailDataBaseExtraSecurityInformationModel : JSONModel
+
+@property (nonatomic, strong , nullable) FHRentDetailDataBaseExtraSecurityInformationDialogContentModel *dialogContent ;
+@property (nonatomic, copy , nullable) NSString *baseContent;
+@property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *tipsIcon;
+@property (nonatomic, copy , nullable) NSString *tipsContent;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDialogsModel *dialogs ;
+@end
+
+@interface FHRentDetailDataBaseExtraModel : JSONModel
+
+@property (nonatomic, strong , nullable) FHRentDetailDataBaseExtraSecurityInformationModel *securityInformation ;
+@end
+
 @interface  FHRentDetailResponseDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) FHRentDetailDataBaseExtraModel *baseExtra ;
 @property (nonatomic, copy , nullable) NSString *subtitle;
 @property (nonatomic, strong , nullable) FHRentDetailResponseDataNeighborhoodInfoModel *neighborhoodInfo ;
 @property (nonatomic, copy , nullable) NSString *title;
