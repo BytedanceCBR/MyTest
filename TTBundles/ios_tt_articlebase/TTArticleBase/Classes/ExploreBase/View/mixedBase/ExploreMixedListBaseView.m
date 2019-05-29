@@ -170,7 +170,7 @@
 #import <FHLocManager.h>
 #import <FHHomeCellHelper.h>
 #import "SSCommonLogic.h"
-
+#import "TTSandBoxHelper.h"
 #import <FHUtils.h>
 
 #define kPreloadMoreThreshold           10
@@ -848,6 +848,8 @@ TTRefreshViewDelegate
     }
     
     [self setADRefreshView];
+    
+
 }
 
 - (void)setADRefreshView{
@@ -995,7 +997,7 @@ TTRefreshViewDelegate
 
     NSUInteger originalCount = [_fetchListManager.items count];
     [_fetchListManager refreshItemsForListType:_listType];
-
+    
     
 //    if ([self.categoryID isEqualToString:kTTFollowCategoryID] &&  [KitchenMgr getBOOL:kKUGCFollowCategoryClearUnFollowThreadEnable]) {
 //        [_fetchListManager checkFollowCategoryFollowStatus];
@@ -2636,6 +2638,7 @@ TTRefreshViewDelegate
                                              }
                                              
                                              if(isResponseFromRemote){
+                                                 
                                                  [weakSelf tt_endUpdataData:!isResponseFromRemote error:nil tip:tip duration:duration tipTouchBlock:^{
                                                      [weakSelf notifyBarAction:tipModel];
                                                      
@@ -2696,19 +2699,27 @@ TTRefreshViewDelegate
                                                                                               
                                                                                           }
                                              
-//                                             if (cid) {
-//                                                 NSString *requestRecord = [FHUtils contentForKey:[NSString stringWithFormat:@"%@%@",cid,kCategoryRequestedKey]];
-//
-//                                                 if (requestRecord || (!isResponseFromRemote && weakSelf.listView.pullDownView.state == PULL_REFRESH_STATE_INIT && weakSelf.listView.customTopOffset != 0)) {
-//                                                     [weakSelf.listView setContentOffset:CGPointMake(0, weakSelf.listView.customTopOffset - weakSelf.listView.contentInset.top) animated:NO];
-//                                                 }
-//
-//                                                 [FHUtils setContent:@"1" forKey:[NSString stringWithFormat:@"%@%@",cid,kCategoryRequestedKey]];
-//                                             }
+                                             
+                                             
+                                             if (_categoryID) {
+                                                 NSString *requestRecord = [FHUtils contentForKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
+                                                 
+                                                 if (!requestRecord && !isLoadMore && (isFindHouseRefresh || [TTSandBoxHelper isAPPFirstLaunchForAd])) {
+                                                     [weakSelf.listView setContentOffset:CGPointMake(0, weakSelf.listView.customTopOffset - weakSelf.listView.contentInset.top) animated:NO];
+                                                 }
+                                                 
+                                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                         [FHUtils setContent:@"1" forKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
+                                                     });
+                                                 });
+                                             }
                                              
                                              if (!isResponseFromRemote && weakSelf.listView.pullDownView.state == PULL_REFRESH_STATE_INIT && weakSelf.listView.customTopOffset != 0) {
                                                  [weakSelf.listView setContentOffset:CGPointMake(0, weakSelf.listView.customTopOffset - weakSelf.listView.contentInset.top) animated:NO];
                                              }
+                                             
+                                  
                                              
                                              [weakSelf reportDelegateLoadFinish:isFinish isUserPull:weakSelf.listView.pullDownView.isUserPullAndRefresh isGetMore:getMore];
                                          }
