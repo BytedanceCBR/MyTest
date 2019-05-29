@@ -136,6 +136,10 @@ def appPods
     ]
     
     #-----UGC Other-----
+    pod 'TTSettingsManager','0.4.16',:subspecs => [
+    'Core',
+    'Performance'
+    ]
     pod 'TTLocationManager','1.0.22'
     pod 'Gaia','1.0.7-rc.1'
     pod 'TTGaiaExtension','0.2.13'
@@ -268,7 +272,7 @@ def appPods
     pod 'TTPushAuthorizationManager', :path => '../AKPlugins/AKPushAuthorizationManager', :inhibit_warnings => false
     
     #----头条Settihngs----
-    pod_binary 'TTSettingsManager', '0.4.1'
+#    pod_binary 'TTSettingsManager', '0.4.1'
     #-----手机通讯录操作库---
     pod_binary 'TTAddressBookService', '0.1.4'
     #-----电信取号服务---
