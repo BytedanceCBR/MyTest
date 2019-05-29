@@ -78,6 +78,8 @@
 #import <TTDialogDirector/TTDialogDirector.h>
 #import <TTMonitor/TTExtensions.h>
 #import <Crashlytics/Crashlytics.h>
+#import "GAIAEngine+TTBase.h"
+
 ///...
 //#import "TVLManager.h"
 
@@ -144,6 +146,7 @@ static NSTimeInterval lastTime;
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [GAIAEngine appWillFinishLaunching];
     [TTAccountVersionAdapter oldAccountUserCompatibility];
 
     [TTDialogDirector setQueueEnabled:NO];
@@ -153,6 +156,7 @@ static NSTimeInterval lastTime;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    [GAIAEngine appDidFinishLaunching];
     // add by zjing 这行代码要保留，为了解决启动时addObserver引起的死锁crash问题，我只是代码的搬运工，有问题找谷妈妈
     [TTExtensions networkStatus];
     

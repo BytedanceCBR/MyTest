@@ -549,6 +549,15 @@ static NSInteger const kMaxPostImageCount = 9;
 //        containerHeight += kUGCToolbarHeight;
 //        self.containerView.contentSize = CGSizeMake(self.containerView.frame.size.width, containerHeight);
 //    }
+    self.addImagesView.top = self.inputTextView.bottom + kAddImagesViewTopPadding;
+    self.inputContainerView.height = self.addImagesView.bottom + kAddImagesViewBottomPadding;
+    self.infoContainerView.top = self.inputContainerView.height + kMidPadding;
+    
+    CGFloat targetHeight = self.infoContainerView.bottom + kMidPadding;
+    CGFloat containerHeight = self.view.height - 64;
+    containerHeight = containerHeight >= targetHeight ? containerHeight : targetHeight;
+    containerHeight += kUGCToolbarHeight;
+    self.containerView.contentSize = CGSizeMake(self.containerView.frame.size.width, containerHeight);
 }
 
 
