@@ -13,7 +13,6 @@
 //#import "SSADManager.h"
 //#import "NewsBaseDelegate.h"
 //#import "SSUserSettingManager.h"
-//#import "TTIntroduceViewTask.h"
 #import "TTAuthorizeManager.h"
 //#import "SettingView.h"
 #import "TTNotificationCenterDelegate.h"
@@ -29,7 +28,7 @@
 #import <TTAppRuntime/TTBackgroundModeTask.h>
 #import <TTAdSplashMediator.h>
 #import <TTAppRuntime/SSUserSettingManager.h>
-#import <TTAppRuntime/TTIntroduceViewTask.h>
+//#import <TTAppRuntime/TTIntroduceViewTask.h>
 #import <TTAppRuntime/TTStartupTasksTracker.h>
 #import <TTAppRuntime/TTProjectLogicManager.h>
 
@@ -154,7 +153,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // in case no callbacks are invoked through notification register
-    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:5.f];
+    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:1.f];
     [[TTNotificationCenterDelegate sharedNotificationCenterDelegate] applicationDidComeToForeground];
 }
 
@@ -300,7 +299,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
     }
     
     if ((shouldShowIntroductionView && !isTrying) && [SharedAppDelegate appTopNavigationController]) {
-        [TTIntroduceViewTask showIntroductionView];
+//        [TTIntroduceViewTask showIntroductionView];
     }
     
     [[self class] showRemoteNotificationAlertIfNeeded];

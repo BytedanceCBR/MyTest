@@ -9,6 +9,7 @@
 #import <JSONModel.h>
 #import "FHDetailBaseModel.h"
 #import "FHDetailNeighborhoodModel.h"
+#import <FHHouseBase/FHImageModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -230,6 +231,73 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *infoTitle;
 @end
 
+#pragma mark - extra info
+@interface FHDetailDataBaseExtraDetectiveDialogsModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *feedbackContent;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *subTitle;
+@property (nonatomic, copy , nullable) NSString *icon;
+@end
+
+@protocol FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel<NSObject>
+@end
+
+@interface FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *explainContent;
+@property (nonatomic, copy , nullable) NSString *subTitle;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
+@interface FHDetailDataBaseExtraDetectiveDetectiveInfoModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel> *detectiveList;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
+@interface FHDetailDataBaseExtraDetectiveModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDetectiveDetectiveInfoModel *detectiveInfo ;
+@property (nonatomic, copy , nullable) NSString *warnContent;
+@property (nonatomic, copy , nullable) NSString *icon;
+@property (nonatomic, copy , nullable) NSString *tips;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDialogsModel *dialogs ;
+
+@end
+
+
+@interface FHDetailDataBaseExtraOfficialAgencyModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *source;
+@property (nonatomic, copy , nullable) FHImageModel *logo;
+@property (nonatomic, copy , nullable) NSString *name;
+@property (nonatomic, copy , nullable) NSString *nameSubTitle;
+@property (nonatomic, copy , nullable) NSString *agencyId;
+
+@end
+
+@interface FHDetailDataBaseExtraOfficialModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *icon;
+@property (nonatomic, copy , nullable) NSString *agencyLogoUrl;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraOfficialAgencyModel *agency ;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDialogsModel *dialogs ;
+@end
+
+
+@interface FHDetailDataBaseExtraModel : JSONModel
+
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDetectiveModel *detective ;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraOfficialModel *official ;
+@end
+
+
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, assign) NSInteger status;
@@ -268,6 +336,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailOldDataComfortInfoModel *comfortInfo ;
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodPriceRangeModel *neighborhoodPriceRange ;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraModel *baseExtra;
 
 @end
 

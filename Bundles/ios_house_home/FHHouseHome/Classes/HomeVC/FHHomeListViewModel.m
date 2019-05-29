@@ -70,7 +70,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.dataSource.categoryView = self.categoryView;
         self.dataSource.showPlaceHolder = YES;
         
-   
+
+        [self configIconRowCountAndHeight];
+        
         
         [self updateCategoryViewSegmented:YES];
         self.tableViewV.delegate = self.dataSource;
@@ -140,6 +142,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             StrongSelf;
             self.isRequestFromSwitch = NO;
             
+            [self configIconRowCountAndHeight];
+            
+            self.dataSource.showOpDataListEntrance = [self checkIsHaveEntrancesList];
+            
             //切换城市先显示横条
             if([FHEnvContext sharedInstance].isRefreshFromCitySwitch)
             {
@@ -152,10 +158,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:configDataModel.houseTypeDefault];
                 self.currentHouseType = configDataModel.houseTypeDefault.integerValue;
             }
-//
-           
-            //切换城市先隐藏error页
-            [self.homeViewController.emptyView hideEmptyView];
             
             //更新切换
             [self updateCategoryViewSegmented:self.isFirstChange];
@@ -193,16 +195,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
                 [self resetAllOthersCacheData];
                 
-                
-                if ([self.tableViewV numberOfSections] > 0 && [self.tableViewV numberOfRowsInSection:0] > 0 && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
-                    NSIndexSet *indexSet=[[NSIndexSet alloc] initWithIndex:0];
-                    [UIView performWithoutAnimation:^{
-                        [self.tableViewV reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
-                    }];
-                }else
-                {
+//                [UIView performWithoutAnimation:^{
                     [self.tableViewV reloadData];
-                }
+//                }];
 
                 if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
                 {
@@ -319,6 +314,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             return @"be_null";
             break;
     }
+}
+
+- (void)configIconRowCountAndHeight
+{
+    [[FHHomeCellHelper sharedInstance] initFHHomeHeaderIconCountAndHeight];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -828,12 +828,30 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     return [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
 }
 
+- (BOOL)checkIsHaveEntrancesList
+{
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    //判断是否有新增样式入口
+    if ([dataModel.opData2list isKindOfClass:[NSArray class]] && [dataModel.opData2list.firstObject isKindOfClass:[FHConfigDataOpData2ListModel class]]) {
+        NSArray<FHConfigDataOpData2ItemsModel> *items = ((FHConfigDataOpData2ListModel *)dataModel.opData2list.firstObject).opDataList.items;
+        if (items.count > 0) {
+            return YES;
+        }
+        return NO;
+    }else
+    {
+        return NO;
+    }
+}
+
 //重载首页头部数据
 - (void)reloadHomeTableHeaderSection
 {
     self.dataSource.showPlaceHolder = YES;
     self.dataSource.currentHouseType = self.currentHouseType;
     self.dataSource.isHasFindHouseCategory = [self checkIsHasFindHouse];
+    self.dataSource.showOpDataListEntrance = [self checkIsHaveEntrancesList];
+    
     if (self.tableViewV.numberOfSections > kFHHomeListHeaderBaseViewSection) {
         [UIView performWithoutAnimation:^{
             [self.tableViewV reloadData];

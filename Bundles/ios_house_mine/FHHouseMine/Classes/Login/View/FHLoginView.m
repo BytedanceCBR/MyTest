@@ -98,14 +98,14 @@
     [_acceptCheckBox setImage:[UIImage imageNamed:@"checkbox-checked"] forState:UIControlStateSelected];
     [_acceptCheckBox setImage:[UIImage imageNamed:@"ic-filter-normal"] forState:UIControlStateNormal];
     [_acceptCheckBox addTarget:self action:@selector(acceptCheckBoxChange) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:_acceptCheckBox];
+    [self.scrollView addSubview:_acceptCheckBox];
     
     self.agreementLabel = [[YYLabel alloc] init];
     _agreementLabel.numberOfLines = 0;
     _agreementLabel.lineBreakMode = NSLineBreakByWordWrapping;
     _agreementLabel.textColor = [UIColor themeGray3];
     _agreementLabel.font = [UIFont themeFontRegular:13];
-    [self addSubview:_agreementLabel];
+    [self.scrollView addSubview:_agreementLabel];
 }
 
 - (void)initConstraints {
@@ -164,7 +164,7 @@
     }];
     
     [self.confirmBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.varifyCodeInput.mas_bottom).offset(40);
+        make.top.mas_equalTo(self.agreementLabel.mas_bottom).offset(20);
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(self.rightView);
         make.height.mas_equalTo(46);
@@ -173,10 +173,8 @@
     [self setAgreementContent];
     
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self);
-        make.bottom.mas_equalTo(self.agreementLabel.mas_top).offset(-20);
+        make.top.bottom.left.right.mas_equalTo(self);
     }];
-
 }
 
 - (void)setAgreementContent {
@@ -200,17 +198,12 @@
     
     CGFloat width = UIScreen.mainScreen.bounds.size.width - 45 - 3 - 30;
     CGSize size = [self.agreementLabel sizeThatFits:CGSizeMake(width, 1000)];
-    
-    CGFloat bottom = 25;
-    if (@available(iOS 11.0 , *)) {
-        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-    }
 
     [self.agreementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.acceptCheckBox.mas_right).offset(3);
+        make.top.mas_equalTo(self.singleLine2.mas_bottom).offset(20);
         make.right.mas_equalTo(self.rightView);
         make.height.mas_equalTo(size.height);
-        make.bottom.mas_equalTo(self).offset(-bottom);
     }];
     
     [self.acceptCheckBox mas_makeConstraints:^(MASConstraintMaker *make) {

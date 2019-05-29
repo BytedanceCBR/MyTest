@@ -14,7 +14,6 @@
 #import "UIView+CustomTimingFunction.h"
 #import "UIViewController+TabBarSnapShot.h"
 #import "AWEVideoDetailViewController.h"
-#import "TTHTSTabViewController.h"
 #import "ArticleTabBarStyleNewsListViewController.h"
 #import "TTVideoTabViewController.h"
 //#import "TTWeitoutiaoViewController.h"

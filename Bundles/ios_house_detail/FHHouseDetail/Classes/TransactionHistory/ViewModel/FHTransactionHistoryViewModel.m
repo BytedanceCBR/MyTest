@@ -17,6 +17,7 @@
 #import "FHRefreshCustomFooter.h"
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "TTReachability.h"
+#import "ToastManager.h"
 
 #define kCellId @"cell_id"
 
@@ -58,7 +59,12 @@
         __weak typeof(self) weakSelf = self;
         
         self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-            [weakSelf requestData:NO];
+            if (![TTReachability isNetworkConnected]) {
+                [[ToastManager manager] showToast:@"网络异常"];
+                [weakSelf updateTableViewWithMoreData:weakSelf.tableView.hasMore];
+            } else {
+                [weakSelf requestData:NO];
+            }
         }];
         [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
         self.tableView.mj_footer = self.refreshFooter;
@@ -72,7 +78,6 @@
 
 - (void)requestData:(BOOL)isHead {
     [self.requestTask cancel];
-    
     if(isHead) {
         self.page = 0;
         self.searchId = nil;
@@ -95,8 +100,7 @@
         }
         
         if (error && wself.dataList.count == 0) {
-            //TODO: show handle error
-            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             return;
         }
         

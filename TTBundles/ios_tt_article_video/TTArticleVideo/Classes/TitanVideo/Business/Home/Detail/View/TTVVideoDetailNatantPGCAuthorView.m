@@ -7,7 +7,6 @@
 //
 
 #import "TTVVideoDetailNatantPGCAuthorView.h"
-#import "PGCAccountManager.h"
 #import "TTVideoCommon.h"
 #import "TTRoute.h"
 #import "TTDeviceUIUtils.h"

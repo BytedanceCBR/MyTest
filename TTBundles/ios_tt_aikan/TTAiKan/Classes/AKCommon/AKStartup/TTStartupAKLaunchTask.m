@@ -6,7 +6,6 @@
 //
 
 #import "TTStartupAKLaunchTask.h"
-#import "AKRedPacketManager.h"
 #import "AKHelper.h"
 #import <SecGuard/SGMSafeGuardManager.h>
 #import <TTRoute.h>

@@ -219,7 +219,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     }
     NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    TRACK_EVENT(@"stay_tab", tracerDict);
+    TRACK_EVENT(@"stay_category", tracerDict);
 }
 
 - (NSDictionary *)categoryLogDict {

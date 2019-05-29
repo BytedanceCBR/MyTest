@@ -54,6 +54,10 @@
     
 }
 
+- (void)fh_willDisplayCell {
+    
+}
+
 @end
 
 // FHDetailBaseCollectionCell
