@@ -112,7 +112,6 @@
     if([TTAccount sharedAccount].isLogin){
         NSDictionary *fhSettings = [self fhSettings];
         NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
-        state = 2;
         if(state == 1){
             [[ToastManager manager] showToast:@"个人资料功能升级中，敬请期待"];
         }else if(state == 2){
