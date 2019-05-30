@@ -163,7 +163,7 @@
     
     FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)self.currentModel;
     if ([model.openUrl isKindOfClass:[NSString class]]) {
-        NSDictionary *info = @{@"url":model.openUrl,@"fhJSParams":@{},@"title":@""};
+        NSDictionary *info = @{@"url":model.openUrl,@"fhJSParams":@{},@"title":@" "};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://webview"] userInfo:userInfo];
     }

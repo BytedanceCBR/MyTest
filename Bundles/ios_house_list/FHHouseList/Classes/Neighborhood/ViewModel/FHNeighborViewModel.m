@@ -294,7 +294,7 @@
             BOOL isShowRealHouse = YES;
             
             if (isShowRealHouse) {
-                FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
+                FHSameNeighborhoodHouseDataModel *houseModel = (FHSameNeighborhoodHouseDataModel *)((FHSameNeighborhoodHouseResponse *)model).data;
 
                 FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
                 

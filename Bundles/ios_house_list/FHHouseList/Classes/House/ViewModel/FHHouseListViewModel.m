@@ -675,7 +675,7 @@
                         topInfoModel.enableFakeHouse = houseModel.externalSite.enableFakeHouse;
                         topInfoModel.searchId = houseModel.searchId;
                         topInfoModel.fakeTitle = houseModel.externalSite.fakeTitle;
-                        topInfoModel.totalTitle = houseModel.externalSite.houseTotal;
+                        topInfoModel.totalTitle = houseModel.externalSite.totalTitle;
                     }
 
                     if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
