@@ -193,17 +193,16 @@
 - (void)refreshUI:(JSONModel *)data
 {
     if ([data isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-        FHSugSubscribeDataDataSubscribeInfoModel *model = (FHSugSubscribeDataDataSubscribeInfoModel *)data;
+        FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)data;
         self.currentModel = model;
-        _titleLabel.text = @"订阅当前搜索条件";
-        _realHouseLabel.text = @"新上房源立刻通知";
+        
+        _titleLabel.text = model.totalTitle;
+        _realHouseLabel.text = model.trueTitle;
+        _realHouseNumLabel.text = [NSString stringWithFormat:@"  %@套",model.trueHouseTotal ? : @"0"];
+        _falseHouseLabel.text = model.fakeTitle;
+        _falseHouseNumLabel.text = [NSString stringWithFormat:@"  %@套",model.fakeHouseTotal ? : @"0"];;
     }
-    
-    _titleLabel.text = @"已为您找到50000000套全网房源";
-    _realHouseLabel.text = @"幸福里优选好房";
-    _realHouseNumLabel.text = @" 400万套";
-    _falseHouseLabel.text = @"已过滤虚假房源";
-    _falseHouseNumLabel.text = @" 100万套";
+
 }
 
 - (void)awakeFromNib {
