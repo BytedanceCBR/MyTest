@@ -13,7 +13,7 @@
 #import <TTPostBase/TTPostTask.h>
 #import <TTUGCFoundation/FRApiModel.h>
 #import <TTUGCFoundation/TTUGCDefine.h>
-#import <TTUGCService/TTRepostDefine.h>
+#import "TTRepostDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

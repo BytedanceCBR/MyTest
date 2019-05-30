@@ -16,11 +16,12 @@
 #import <BDWebImage/SDWebImageAdapter.h>
 #import <TTKitchen/TTKitchen.h>
 #import <TTUGCFoundation/FRUploadImageModel.h>
-#import <TTServiceProtocols/TTAccountProvider.h>
+//#import <TTServiceProtocols/TTAccountProvider.h>
 #import <TTServiceKit/TTServiceCenter.h>
 #import <TTBaseLib/TTBaseMacro.h>
-#import <BDMobileRuntime/BDMobileRuntime.h>
-#import <TTRegistry/TTRegistryDefines.h>
+//#import <BDMobileRuntime/BDMobileRuntime.h>
+//#import <TTRegistry/TTRegistryDefines.h>
+#import "TTAccount.h"
 
 #define kTTPostThreadTask @"TTPostThreadTask"
 
@@ -285,7 +286,8 @@ const CGFloat TTForumPostVideoThreadTaskBeforePostThreadProgress = 0.95f;
 }
 
 + (NSString *)taskInDiskPosition {
-    NSString *userID = [[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID];
+    NSString *userID = [[[TTAccount sharedAccount] userIdString] copy];
+    // NSString *userID = [[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID];
     if (isEmptyString(userID)) {
         return nil;
     }

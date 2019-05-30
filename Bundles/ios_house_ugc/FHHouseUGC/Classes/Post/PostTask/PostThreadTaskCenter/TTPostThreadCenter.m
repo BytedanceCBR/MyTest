@@ -10,28 +10,30 @@
 #import "TTPostThreadDefine.h"
 #import "TTPostThreadOperation.h"
 #import "TTPostThreadBridge.h"
-#import "TTRepostThreadModel.h"
+//#import "TTRepostThreadModel.h"
 #import "TTPostThreadKitchenConfig.h"
 
 #import <TTBaseLib/TTUIResponderHelper.h>
-#import <TTServiceProtocols/TTPostService.h>
+//#import <TTServiceProtocols/TTPostService.h>
 #import <TTReachability/TTReachability.h>
-#import <TTUGCDataService/TTUGCActionDataService.h>
+//#import <TTUGCDataService/TTUGCActionDataService.h>
 #import <TTPostBase/TTPostTaskCenter.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTUIWidget/TTThemedAlertController.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTServiceProtocols/TTAccountProvider.h>
+//#import <TTServiceProtocols/TTAccountProvider.h>
 #import "TTPostDraftManager.h"
 #import "SDWebImageAdapter.h"
 #import "UIImage+MultiFormat.h"
 #import "FLAnimatedImage.h"
-#import "TTUGCEditedThreadDefine.h"
-#import <BDMobileRuntime/BDMobileRuntime.h>
-#import <TTRegistry/TTRegistryDefines.h>
+//#import "TTUGCEditedThreadDefine.h"
+//#import <BDMobileRuntime/BDMobileRuntime.h>
+//#import <TTRegistry/TTRegistryDefines.h>
 #import <Heimdallr/HMDTTMonitor.h>
 #import <TTUGCFoundation/TTUGCMonitorDefine.h>
+#import "TTAccount.h"
+#import "TTAccountManager.h"
 
 NSString * const TTPostTaskBeginNotification = kTTForumPostingThreadNotification;
 NSString * const TTPostTaskResumeNotification = kTTForumResumeThreadNotification;
@@ -43,6 +45,19 @@ NSString * const TTPostTaskDeletedNotification = kTTForumDeleteFakeThreadNotific
 NSString * const TTPostTaskNotificationUserInfoKeyFakeID = kTTForumPostThreadFakeThreadID;
 NSString * const TTPostTaskNotificationUserInfoKeyConcernID = kTTForumPostThreadConcernID;
 NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPostThreadChallengeGroupID;
+
+//编辑完成
+#define kTTForumBeginPostEditedThreadNotification @"kTTForumBeginPostEditedThreadNotification"
+//编辑完成后发布成功
+#define kTTForumPostEditedThreadSuccessNotification @"kTTForumPostEditedThreadSuccessNotification"
+//编辑帖子发送失败
+#define kTTForumPostEditedThreadFailureNotification @"kTTForumPostEditedThreadFailureNotification"
+
+//帖子数据库更新完成
+#define kTTThreadEditedManagerDidUpdateThreadDatabaseNotification @"kTTThreadEditedManagerDidUpdateThreadDatabaseNotification"
+
+//取消发布中的被编辑帖子的发送任务
+#define kTTForumPostEditedThreadTaskCancelNotification @"kTTForumPostEditedThreadTaskCancelNotification"
 
 @interface TTPostThreadCenter ()
 @property (nonatomic, assign) BOOL isNetworkAlertShown;
@@ -69,8 +84,9 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
     self = [super init];
     if (self) {
         
-        id<TTPostService> operationQueue = [BDContextGet() findServiceByName:TTPostServiceName];
-        NSOperationQueue *sharedOperationQueue = [operationQueue sharedOperationQueue];
+//        id<TTPostService> operationQueue = [BDContextGet() findServiceByName:TTPostServiceName];
+        NSOperationQueue *sharedOperationQueue = [[NSOperationQueue alloc] init];
+        sharedOperationQueue.maxConcurrentOperationCount = 3;
         if (sharedOperationQueue) {
             self.postThreadOperationQueue = sharedOperationQueue;
         }
@@ -179,19 +195,20 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         //对于转发帖单独发一堆通知,并且对应的opt_id/fw_id的帖子转发数加1
         if (!isEmptyString(task.opt_id) && task.repostType != TTThreadRepostTypeNone) {
             // 转发的 opt_id 的 repostCount +1
-            id<TTUGCActionDataProtocol> optActionDataModel = [[BDContextGet() findServiceByName:TTUGCActionDataServiceName] modelWithUniqueID:task.opt_id];
-            optActionDataModel.repostCount = optActionDataModel.repostCount + 1;
-
-            // 评论并转发 opt_id 的 commentCount +1
-            if (task.repostToComment) {
-                optActionDataModel.commentCount = optActionDataModel.commentCount + 1;
-            }
-
-            // 转发的 fw_id 作为二级转发, repostCount +1
-            if (task.fw_id && ![task.fw_id isEqualToString:task.opt_id]) {
-                id<TTUGCActionDataProtocol> fwActionDataModel = [[BDContextGet() findServiceByName:TTUGCActionDataServiceName] modelWithUniqueID:task.fw_id];
-                fwActionDataModel.repostCount = fwActionDataModel.repostCount + 1;
-            }
+            // add by zyk 再看？？
+//            id<TTUGCActionDataProtocol> optActionDataModel = [[BDContextGet() findServiceByName:TTUGCActionDataServiceName] modelWithUniqueID:task.opt_id];
+//            optActionDataModel.repostCount = optActionDataModel.repostCount + 1;
+//
+//            // 评论并转发 opt_id 的 commentCount +1
+//            if (task.repostToComment) {
+//                optActionDataModel.commentCount = optActionDataModel.commentCount + 1;
+//            }
+//
+//            // 转发的 fw_id 作为二级转发, repostCount +1
+//            if (task.fw_id && ![task.fw_id isEqualToString:task.opt_id]) {
+//                id<TTUGCActionDataProtocol> fwActionDataModel = [[BDContextGet() findServiceByName:TTUGCActionDataServiceName] modelWithUniqueID:task.fw_id];
+//                fwActionDataModel.repostCount = fwActionDataModel.repostCount + 1;
+//            }
 
             //转发的逻辑(包括纯转发、转发并评论、转发并回复)
             [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumRePostThreadSuccessNotification object:task userInfo:userInfo];
@@ -211,9 +228,10 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         }
     
         [[TTPostTaskCenter sharedInstance] asyncRemoveTaskFromDiskByTaskID:task.taskID concernID:task.concernID];
-        if (isRepost) {
-            [[BDContextGet() findServiceByName:TTPostDraftManagerServiceName] clearRepostDraftWithFwID:task.fw_id optID:task.opt_id];
-        }
+        // add by zyk 删除草稿
+//        if (isRepost) {
+//            [[BDContextGet() findServiceByName:TTPostDraftManagerServiceName] clearRepostDraftWithFwID:task.fw_id optID:task.opt_id];
+//        }
         
         // 弹窗设置
         if ([resultModelDict isKindOfClass:[NSDictionary class]] && [[resultModelDict objectForKey:@"guide_info"] isKindOfClass:[NSDictionary class]]) {
@@ -280,7 +298,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         task.mentionUser = postThreadModel.mentionUsers;
         task.mentionConcern = postThreadModel.mentionConcerns;
         task.create_time = [[NSDate date] timeIntervalSince1970];
-        task.userID = [[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID];
+        task.userID = [[TTAccount sharedAccount] userIdString];//[[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID];
         task.concernID = postThreadModel.concernID;
         task.categoryID = postThreadModel.categoryID;
         [task addTaskImages:postThreadModel.taskImages thumbImages:postThreadModel.thumbImages];
@@ -326,7 +344,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         task.mentionUser = postThreadModel.mentionUsers;
         task.mentionConcern = postThreadModel.mentionConcerns;
         task.create_time = [[NSDate date] timeIntervalSince1970];
-        task.userID = [GET_SERVICE_BY_PROTOCOL(TTAccountProvider) userID];
+        task.userID = [[TTAccount sharedAccount] userIdString];//[GET_SERVICE_BY_PROTOCOL(TTAccountProvider) userID];
         task.postID = postThreadModel.postID;
         task.concernID = postThreadModel.concernID;
         task.categoryID = postThreadModel.categoryID;
@@ -448,31 +466,32 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         TTPostThreadTask *task = [[TTPostThreadTask alloc] initWithTaskType:TTPostTaskTypeThread];
-        task.userID = [[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID];
-        task.repostType = repostThreadModel.repost_type;
-        task.content = repostThreadModel.content;
-        task.contentRichSpans = repostThreadModel.content_rich_span;
-        task.mentionUser = repostThreadModel.mentionUsers;
-        task.coverUrl = repostThreadModel.cover_url;
-        task.mentionConcern = repostThreadModel.mentionConcerns;
-        task.create_time = [[NSDate date] timeIntervalSince1970];
-        task.fw_id = repostThreadModel.fw_id;
-        task.fw_id_type = repostThreadModel.fw_id_type;
-        task.opt_id = repostThreadModel.opt_id;
-        task.opt_id_type = repostThreadModel.opt_id_type;
-        task.fw_user_id = repostThreadModel.fw_user_id;
-        task.concernID = concernID;
-        task.categoryID = categoryID;
-        task.refer = refer;
-        task.extraTrack = extraTrack.copy;
-        task.repostTitle = repostThreadModel.repostTitle;
-        task.repostSchema = repostThreadModel.repostSchema;
-        task.repostToComment = repostThreadModel.repostToComment;
-        task.fw_native_schema = repostThreadModel.fw_native_schema;
-        task.fw_share_url = repostThreadModel.fw_share_url;
-        task.sdkParams = repostThreadModel.sdkParams;
-        task.forumNames = repostThreadModel.forumNames;
-        task.businessPayload = repostThreadModel.payload;
+        task.userID = [[TTAccount sharedAccount] userIdString];//[[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID];
+        // add by zyk
+//        task.repostType = repostThreadModel.repost_type;
+//        task.content = repostThreadModel.content;
+//        task.contentRichSpans = repostThreadModel.content_rich_span;
+//        task.mentionUser = repostThreadModel.mentionUsers;
+//        task.coverUrl = repostThreadModel.cover_url;
+//        task.mentionConcern = repostThreadModel.mentionConcerns;
+//        task.create_time = [[NSDate date] timeIntervalSince1970];
+//        task.fw_id = repostThreadModel.fw_id;
+//        task.fw_id_type = repostThreadModel.fw_id_type;
+//        task.opt_id = repostThreadModel.opt_id;
+//        task.opt_id_type = repostThreadModel.opt_id_type;
+//        task.fw_user_id = repostThreadModel.fw_user_id;
+//        task.concernID = concernID;
+//        task.categoryID = categoryID;
+//        task.refer = refer;
+//        task.extraTrack = extraTrack.copy;
+//        task.repostTitle = repostThreadModel.repostTitle;
+//        task.repostSchema = repostThreadModel.repostSchema;
+//        task.repostToComment = repostThreadModel.repostToComment;
+//        task.fw_native_schema = repostThreadModel.fw_native_schema;
+//        task.fw_share_url = repostThreadModel.fw_share_url;
+//        task.sdkParams = repostThreadModel.sdkParams;
+//        task.forumNames = repostThreadModel.forumNames;
+//        task.businessPayload = repostThreadModel.payload;
         
         if (!task) {
             return;
