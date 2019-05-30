@@ -431,6 +431,19 @@
                     }
                 }
                 
+                BOOL isShowRealHouse = YES;
+                
+                if (isShowRealHouse) {
+                    FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
+                    topInfoModel.fakeHouse = houseModel.fakeHouse;
+                    topInfoModel.totalHouse = houseModel.totalHouse;
+                    topInfoModel.openUrl = @"";
+                    topInfoModel.searchId = houseModel.searchId;
+                    
+                    if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                        [items insertObject:topInfoModel atIndex:0];
+                    }
+                }
             }
             
         }else if ([model isKindOfClass:[FHHouseRentModel class]]){ //租房大类页
@@ -478,7 +491,6 @@
                 FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
                 cellModel.secondModel = obj;
                 cellModel.isRecommendCell = NO;
-    
                 [self.houseList addObject:cellModel];
             }else if ([obj isKindOfClass:[FHHouseRentDataItemsModel class]]){
                 FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
@@ -489,6 +501,11 @@
                 FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
                 cellModel.subscribModel = obj;
                 cellModel.isSubscribCell = YES;
+                [self.houseList addObject:cellModel];
+            }else if ([obj isKindOfClass:[FHSugListRealHouseTopInfoModel class]]){
+                FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
+                cellModel.realHouseTopModel = obj;
+                cellModel.isRealHouseTopCell = YES;
                 [self.houseList addObject:cellModel];
             }else if ([obj isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]){
                 FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
@@ -1136,6 +1153,12 @@
             cellModel = self.sugesstHouseList[indexPath.row];
         }
         
+        if (cellModel.isRealHouseTopCell) {
+            if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                return 71;
+            }
+        }
+        
         if (cellModel.isSubscribCell) {
             if ([cellModel.subscribModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
                 return 121;
@@ -1710,6 +1733,15 @@
         self.subScribeShowDict = param;
         TRACK_EVENT(@"subscribe_show", param);
 
+    }else if (cellModel.isRealHouseTopCell) {
+        if ([cellModel.realHouseTopModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+            FHSugSubscribeDataDataSubscribeInfoModel *cellSubModel = (FHSugSubscribeDataDataSubscribeInfoModel *)cellModel.subscribModel;
+        
+        [param removeObjectForKey:@"impr_id"];
+        [param removeObjectForKey:@"group_id"];
+        self.subScribeShowDict = param;
+        TRACK_EVENT(@"subscribe_show", param);
+        }
     }else
     {
         TRACK_EVENT(@"house_show", param);
