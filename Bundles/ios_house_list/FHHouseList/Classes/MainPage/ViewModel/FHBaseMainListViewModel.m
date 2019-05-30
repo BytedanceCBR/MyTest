@@ -433,7 +433,7 @@
                 
                 BOOL isShowRealHouse = YES;
                 
-                if (isShowRealHouse) {
+                if (houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue) {
                     FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
                     
                     if ([houseModel.externalSite isKindOfClass:[FHSearchRealHouseExtModel class]]) {
