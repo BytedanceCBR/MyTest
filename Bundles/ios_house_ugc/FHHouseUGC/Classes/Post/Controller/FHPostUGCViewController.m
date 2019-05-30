@@ -27,6 +27,8 @@
 #import <KVOController/KVOController.h>
 #import "TTLocationManager.h"
 #import "TTGoogleMapGeocoder.h"
+#import "TTRichSpanText.h"
+#import "TTRichSpanText+Link.h"
 
 static CGFloat const kLeftPadding = 15.f;
 static CGFloat const kRightPadding = 15.f;
@@ -71,6 +73,14 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, strong) SSThemedLabel * tipLabel;
 
 @property (nonatomic, strong) SSThemedView * infoContainerView;
+@property (nonatomic, copy) NSString * postContentHint; //输入框占位文本
+@property (nonatomic, copy) NSString * postPreContent; //外部代入的输入框文本
+@property (nonatomic, copy) NSString * postPreContentRichSpan;//外部代入的输入框的富文本信息
+@property (nonatomic, copy) TTRichSpanText *outerInputRichSpanText; //编辑带入的文字信息
+
+@property (nonatomic, strong) TTRichSpanText *richSpanText;
+
+
 
 @end
 
@@ -93,6 +103,17 @@ static NSInteger const kMaxPostImageCount = 9;
              "show_et_status" = 8;
              }
              */
+            //Post hint
+            self.postContentHint = [params tt_stringValueForKey:@"post_content_hint"];
+            self.postPreContent = [params tt_stringValueForKey:@"post_content"];
+            self.postPreContentRichSpan = [params tt_stringValueForKey:@"post_content_rich_span"];
+            if (!isEmptyString(self.postPreContent) || !isEmptyString(self.postPreContentRichSpan)) {
+                self.postPreContent = self.postPreContent ?: @"";
+                self.richSpanText = [[[TTRichSpanText alloc] initWithText:self.postPreContent richSpansJSONString:self.postPreContentRichSpan] replaceWhitelistLinks];
+            } else {
+                self.richSpanText = [[TTRichSpanText alloc] initWithText:@"" richSpans:nil];
+            }
+            self.outerInputRichSpanText = self.richSpanText;
             
             // 添加google地图注册
             [[TTLocationManager sharedManager] registerReverseGeocoder:[TTGoogleMapGeocoder sharedGeocoder] forKey:NSStringFromClass([TTGoogleMapGeocoder class])];
@@ -109,6 +130,8 @@ static NSInteger const kMaxPostImageCount = 9;
     [self createComponent];
     [self addImagesViewSizeChanged];
     [self addObserverAndNoti];
+    // 等待构造完成之后初始化
+    self.inputTextView.richSpanText = self.richSpanText; // add by zyk  richSpanText要搞明白
 }
 
 - (void)setupNaviBar {
@@ -208,7 +231,11 @@ static NSInteger const kMaxPostImageCount = 9;
     internalTextView.minHeight = kTextViewHeight;
     internalTextView.maxNumberOfLines = 8;
     
-    internalTextView.placeholder = [NSString stringWithFormat:@"分享新鲜事"];
+    if (!isEmptyString(self.postContentHint)) {
+        internalTextView.placeholder = self.postContentHint;
+    } else {
+        internalTextView.placeholder = [NSString stringWithFormat:@"分享新鲜事"];
+    }
     
     
     internalTextView.backgroundColor = [UIColor clearColor];
@@ -512,6 +539,55 @@ static NSInteger const kMaxPostImageCount = 9;
 //            self.postButton.disabledTitleColorThemeKey = kColorText9;
 //        }
 //    }
+    //编辑发布器按钮刷新逻辑
+    if (([self textHasChanged] || [self imageHasChanged] || [self locationHasChanged]) && ![self emptyThread]) {
+        self.postButton.titleColorThemeKey = kColorText6;
+        self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
+        self.postButton.disabledTitleColorThemeKey = kColorText6;
+    } else {
+        self.postButton.titleColorThemeKey = kColorText9;
+        self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
+        self.postButton.disabledTitleColorThemeKey = kColorText9;
+    }
+}
+
+- (BOOL)textHasChanged {
+    // add by zyk 可能有问题
+    return ![self.richSpanText.text isEqualToString:self.outerInputRichSpanText.text];
+}
+
+- (BOOL)imageHasChanged {
+    if (self.addImagesView.selectedImageCacheTasks.count != self.outerInputAssets.count) {
+        return YES;
+    }
+    for (NSInteger index = 0; index < self.addImagesView.selectedImageCacheTasks.count; index++) {
+        TTUGCImageCompressTask *task = [self.addImagesView.selectedImageCacheTasks objectAtIndex:index];
+        if (![[self.outerInputAssets objectAtIndex:index] isEqual:task.assetModel]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (BOOL)locationHasChanged {
+    if (!self.addLocationView.selectedLocation.locationName) {
+        return !isEmptyString([self.position tt_stringValueForKey:@"position"]);
+    }else{
+        NSString *locationName = @"";
+        NSString *detail_pos = [self.position tt_stringValueForKey:@"position"];
+        NSRange blankRange = [detail_pos rangeOfString:@" "];
+        if (blankRange.location != NSNotFound) {
+            locationName = [detail_pos substringFromIndex:blankRange.location + 1];
+        }
+        return !([self.addLocationView.selectedLocation.locationName isEqualToString:locationName]);
+    }
+}
+
+- (BOOL)emptyThread {
+    TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
+    [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *inputText = richSpanText.text;
+    return isEmptyString(inputText) && self.addImagesView.selectedImageCacheTasks.count == 0;
 }
 
 #pragma mark - AddLocationViewDelegate
@@ -537,18 +613,7 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)textView:(TTUGCTextView *)textView willChangeHeight:(float)height withDiffHeight:(CGFloat)diffHeight {
-    // 图文发布器展示 add by zyk
-//    if (!(self.showEtStatus & FRShowEtStatusOfTitle)) {
-//        self.addImagesView.top = self.inputTextView.bottom + kAddImagesViewTopPadding;
-//        self.inputContainerView.height = self.postWithGoods ? self.goodsInfoView.bottom : self.addImagesView.bottom + kAddImagesViewBottomPadding;
-//        self.infoContainerView.top = self.inputContainerView.height + kMidPadding;
-//
-//        CGFloat targetHeight = self.infoContainerView.bottom + kMidPadding;
-//        CGFloat containerHeight = self.view.height - 64;
-//        containerHeight = containerHeight >= targetHeight ? containerHeight : targetHeight;
-//        containerHeight += kUGCToolbarHeight;
-//        self.containerView.contentSize = CGSizeMake(self.containerView.frame.size.width, containerHeight);
-//    }
+    // 图文发布器展示
     self.addImagesView.top = self.inputTextView.bottom + kAddImagesViewTopPadding;
     self.inputContainerView.height = self.addImagesView.bottom + kAddImagesViewBottomPadding;
     self.infoContainerView.top = self.inputContainerView.height + kMidPadding;
@@ -695,6 +760,40 @@ static NSInteger const kMaxPostImageCount = 9;
 //    _goodsItem = goodsItem;
 //    self.postWithGoods = goodsItem != nil;
 //}
+
+- (void)restoreDraft {
+//    if ([self draftEnable]) {
+//        NSArray *tasks = [TTPostThreadTask fetchTasksFromDiskForConcernID:[self draftConcernID]];
+//        TTPostThreadTask *task = [tasks lastObject];
+//        if ([task isKindOfClass:[TTPostThreadTask class]]) {
+//            if (!isEmptyString(task.content)) {
+//                self.richSpanText = [[[TTRichSpanText alloc] initWithText:task.content richSpansJSONString:task.contentRichSpans] replaceWhitelistLinks];
+//            }
+//
+//            FRLocationEntity *posEntity = [[FRLocationEntity alloc] init];
+//            posEntity.city = task.city;
+//            posEntity.locationName = task.detail_pos;
+//            posEntity.latitude = task.latitude;
+//            posEntity.longitude = task.longitude;
+//            posEntity.locationAddress = task.locationAddress;
+//            posEntity.locationType = task.locationType;
+//            if (isEmptyString(posEntity.locationAddress)
+//                && isEmptyString(posEntity.city)
+//                && isEmptyString(posEntity.locationName)) {
+//                //本地存储地址都未空，不恢复地址位置。
+//            } else {
+//                self.addLocationView.selectedLocation = posEntity;
+//                [self.addLocationView refresh];
+//            }
+//
+//            NSArray<FRUploadImageModel *> *imageModels = task.images;
+//            [self.addImagesView restoreDraft:imageModels];
+//
+//            self.selectedRange = task.selectedRange;
+//        }
+//        [self clearDraft];
+//    }
+}
 
 - (void)clearDraft {
     // add by zyk
