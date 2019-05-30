@@ -40,6 +40,9 @@
 @property(nonatomic , strong) UIView *containerView;
 @property(nonatomic , strong) UITableView *tableView;
 @property(nonatomic , strong) FHDetailHalfPopFooter *footer;
+@property(nonatomic , assign) CGFloat bgTop;
+@property(nonatomic , assign) CGFloat dragOffset;
+@property(nonatomic , assign) BOOL restrictScroll;
 @property(nonatomic , strong) id data;
 
 //for track
@@ -267,6 +270,41 @@
     
 }
 
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGPoint offset = scrollView.contentOffset;
+    if (scrollView.isTracking) {
+        if (offset.y < 0 || self.dragOffset > 0) {
+            self.dragOffset -= offset.y;
+            if (self.bgTop + self.dragOffset+self.bgView.height < self.height) {
+                self.dragOffset = self.height - self.bgView.height - self.bgTop;
+            }
+            self.bgView.top = self.bgTop + self.dragOffset;
+            scrollView.contentOffset = CGPointZero;
+        }
+        if (self.restrictScroll) {
+            scrollView.contentOffset = CGPointZero;
+        }
+        
+    }else{
+        self.dragOffset = 0;
+    }
+    
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (self.dragOffset + self.bgTop > self.height/2 && self.dragOffset > self.bgView.height/3) {
+        [self dismiss:YES];
+    }else{
+        [UIView animateWithDuration:0.3 animations:^{
+            self.bgView.top = self.bgTop;
+        }];
+        self.dragOffset = 0;
+    }
+    
+}
+
 #pragma mark - tableview delegate
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -413,9 +451,9 @@
         CGFloat minTop = (safeInsets.top > 0)?safeInsets.top+40:64;
         if (bgTop < minTop) {
             bgTop = minTop;
-            self.tableView.scrollEnabled = YES;
+            self.restrictScroll = NO;
         }else{
-            self.tableView.scrollEnabled = NO;
+            self.restrictScroll = YES;
         }
         
         [self.bgView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -434,7 +472,7 @@
         } completion:^(BOOL finished) {
             
         }];
-        
+        self.bgTop = bgTop;
     }
 }
 
