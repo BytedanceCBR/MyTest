@@ -33,6 +33,10 @@
 #import "TTIndicatorView.h"
 #import "TTReachability.h"
 #import "TTAccountManager.h"
+#import "TTPostThreadModel.h"
+#import "TTPostThreadCenter.h"
+#import "TTUGCEmojiParser.h"
+#import "TTUGCHashtagModel.h"
 
 static CGFloat const kLeftPadding = 15.f;
 static CGFloat const kRightPadding = 15.f;
@@ -541,7 +545,7 @@ static NSInteger const kMaxPostImageCount = 9;
 //    }
     
     // 注意 参数
-    [self sendThreadWithLoginState:1 withTitleText:@"titleText" inputText:inputText phoneText:@"15101086350"];
+    [self sendThreadWithLoginState:1 withTitleText:@"" inputText:inputText phoneText:@"15101086350"];
 }
 
 - (void)sendThreadWithLoginState:(NSInteger)loginState withTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
@@ -623,8 +627,9 @@ static NSInteger const kMaxPostImageCount = 9;
 //            [TTWeitoutiaoShareManager backWithSDKParams:self.sdkParamsDict result:TTWeitoutiaoShareResultOAuthFailed];
 //            return;
 //        }
-//    }
-    /*
+        //    }
+    }
+    
     TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
     [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
@@ -668,9 +673,9 @@ static NSInteger const kMaxPostImageCount = 9;
     
     double longitude = self.addLocationView.selectedLocation.longitude;
     double latitude = self.addLocationView.selectedLocation.latitude;
-    CGFloat rate = self.rateMovieView.rate;
+//    CGFloat rate = self.rateMovieView.rate;
     NSMutableDictionary *extraTrack = [NSMutableDictionary dictionary];
-    [extraTrack setValue:self.enterType forKey:@"enter_type"];
+//    [extraTrack setValue:self.enterType forKey:@"enter_type"];
     
     NSDictionary <NSString *, NSString *> *emojis = [TTUGCEmojiParser parseEmojis:inputText];
     [TTUGCEmojiParser markEmojisAsUsed:emojis];
@@ -682,9 +687,9 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 话题页发帖默认是带上了话题concern，如果在发布前用户手动删除话题，则将cid改回默认的，避免错误的召回到该话题下
     NSString *concernID = self.cid;
-    if (!isEmptyString(self.enterConcernID) && [self.enterConcernID isEqualToString:self.cid] && ![mentionConcerns containsObject:self.cid]) {
-        concernID = KTTFollowPageConcernID;
-    }
+//    if (!isEmptyString(self.enterConcernID) && [self.enterConcernID isEqualToString:self.cid] && ![mentionConcerns containsObject:self.cid]) {
+//        concernID = KTTFollowPageConcernID;
+//    }
     
     // 去掉links中fake的自建话题
     TTRichSpans *richSpans = richSpanText.richSpans;
@@ -705,7 +710,7 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.mentionConcerns = [mentionConcerns componentsJoinedByString:@","];
     postThreadModel.title = titleText;
     postThreadModel.phoneNumber = phoneText;
-    postThreadModel.fromWhere = self.fromWhere;
+//    postThreadModel.fromWhere = self.fromWhere;
     postThreadModel.concernID = concernID;
     postThreadModel.categoryID = self.categoryID;
     postThreadModel.taskImages = self.addImagesView.selectedImageCacheTasks;
@@ -715,16 +720,17 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.detailPos = self.addLocationView.selectedLocation.locationName;
     postThreadModel.longitude = longitude;
     postThreadModel.latitude = latitude;
-    postThreadModel.score = rate;
-    postThreadModel.refer = self.refer;
-    postThreadModel.communityID = self.communityID;
-    postThreadModel.postUGCEnterFrom = self.postUGCEnterFrom;
-    postThreadModel.forumNames = [createdConcerns tt_JSONRepresentation];
+//    postThreadModel.score = rate;
+//    postThreadModel.refer = self.refer;
+//    postThreadModel.communityID = self.communityID;
+//    postThreadModel.postUGCEnterFrom = self.postUGCEnterFrom;
+//    postThreadModel.forumNames = [createdConcerns tt_JSONRepresentation];
     postThreadModel.extraTrack = [extraTrack copy];
-    postThreadModel.syncToRocket = self.syncToRocketButton.selected;
-    postThreadModel.promotionId = self.goodsItem.promotion_id;
-    postThreadModel.insertMixCardID = self.insertMixCardID;
-    postThreadModel.relatedForumSubjectID = self.relatedForumSubjectID;
+//    postThreadModel.syncToRocket = self.syncToRocketButton.selected;
+//    postThreadModel.promotionId = self.goodsItem.promotion_id;
+//    postThreadModel.insertMixCardID = self.insertMixCardID;
+//    postThreadModel.relatedForumSubjectID = self.relatedForumSubjectID;
+    
 //    if (!SSIsEmptyDictionary(self.sdkParamsDict)) {
 //        @try {
 //            NSString *jsonString = [self.sdkParamsDict JSONRepresentation];
@@ -743,15 +749,66 @@ static NSInteger const kMaxPostImageCount = 9;
 //    } else {
 //        postThreadModel.payload = self.businessPayload;
 //    }
-    postThreadModel.payload = self.businessPayload;
+//    postThreadModel.payload = self.businessPayload;
     
     [[TTPostThreadCenter sharedInstance_tt] postThreadWithPostThreadModel:postThreadModel finishBlock:^(TTPostThreadTask *task) {
         [self postFinished:YES task:task];
     }];
-     
-     */
-    }
 }
+- (void)postFinished:(BOOL)hasSent {
+    [self postFinished:hasSent task:nil];
+}
+
+- (void)postFinished:(BOOL)hasSent task:(TTPostThreadTask *)task {
+    [self clearDraft];
+    // add by zyk
+//    if (hasSent && !isEmptyString(self.cid)) {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kForumPostThreadFinish object:nil userInfo:@{@"cid" : self.cid}];
+//    } else {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionCancelledNotification
+//                                                            object:nil
+//                                                          userInfo:nil];
+//    }
+//
+//    // 发帖跳关注频道
+//    [self dismissSelf];
+//
+//    if ([TTKitchen getBOOL:kTTKUGCPostToFollowPageEnable] && !isEmptyString(self.cid) && [self.cid isEqualToString:KTTFollowPageConcernID]) {
+//        if (hasSent) {
+//
+//            NSMutableDictionary *param = [NSMutableDictionary new];
+//            [param setValue:@(_postUGCEnterFrom) forKey:@"entrance"];
+//            [param setValue:self.cid forKey:@"cid"];
+//            [param setValue:@(self.stayCurrentPageAfterPost) forKey:@"stay_after_post"];
+//            [param setValue:self.categoryID forKey:@"category_id"];
+//
+//            if (task) {
+//                [param setValue:[NSString stringWithFormat:@"%lld", task.fakeThreadId] forKey:@"fakeThreadID"];
+//                [param setValue:self.enterConcernID forKey:@"concernID"];
+//            }
+//
+//            if ([[NSThread currentThread] isMainThread]) {
+//                [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionFinishNotification
+//                                                                    object:nil
+//                                                                  userInfo:param];
+//            } else {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionFinishNotification
+//                                                                        object:nil
+//                                                                      userInfo:param];
+//                });
+//            }
+//        }
+//    }
+//
+//    !self.postFinishCompletionBlock ?: self.postFinishCompletionBlock(hasSent);
+//
+//    if (!SSIsEmptyDictionary(self.sdkParamsDict)) {
+//        [TTWeitoutiaoShareManager backWithSDKParams:self.sdkParamsDict result:hasSent ? TTWeitoutiaoShareResultSuccess : TTWeitoutiaoShareResultCancel];
+//        return;
+//    }
+}
+
 
 - (BOOL)isValidateWithInputText:(NSString *)inputText{
     //Validate
