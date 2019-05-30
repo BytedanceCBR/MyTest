@@ -541,56 +541,216 @@ static NSInteger const kMaxPostImageCount = 9;
 //    }
     
     // 注意 参数
-    [self sendThreadWithLoginState:1 withTitleText:@"titleText" inputText:inputText phoneText:@"phoneText"];
+    [self sendThreadWithLoginState:1 withTitleText:@"titleText" inputText:inputText phoneText:@"15101086350"];
 }
 
 - (void)sendThreadWithLoginState:(NSInteger)loginState withTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
     if (self && [TTAccountManager isLogin]) {
         
-        if ([TTKitchen getBOOL:kTTKCommonUgcPostBindingPhoneNumberKey]) {
-            
-            self.view.userInteractionEnabled = NO;
-            TTIndicatorView * checkBoundPhoneIndicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView
-                                                                                               indicatorText:@"发布中..."
-                                                                                              indicatorImage:nil
-                                                                                              dismissHandler:nil];
-            checkBoundPhoneIndicatorView.autoDismiss = NO;
-            [checkBoundPhoneIndicatorView showFromParentView:self.view];
-            
-            WeakSelf;
-            [TTPostThreadManager checkPostNeedBindPhoneOrNotWithCompletion:^(FRPostBindCheckType checkType) {
-                
-                StrongSelf;
-                [checkBoundPhoneIndicatorView dismissFromParentView];
-                self.view.userInteractionEnabled = YES;
-                
-                if (checkType == FRPostBindCheckTypePostBindCheckTypeNeed) {
-                    
-                    WeakSelf;
-                    UIViewController *bindViewController = [[TTPostThreadBridge sharedInstance] pushBindPhoneNumberWhenPostThreadWithCompletion:^{
-                        StrongSelf;
-                        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-                    }];
-                    
-                    if (!bindViewController) {
-                        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-                    } else {
-                        if ([self.navigationController isKindOfClass:[UINavigationController class]] && bindViewController && [bindViewController isKindOfClass:[UIViewController class]]) {
-                            [self.navigationController pushViewController:bindViewController animated:YES];
-                        }
-                    }
-                } else {
-                    [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-                }
-            }];
-        } else {
-            [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-        }
+        // add by zyk 是否需要绑定手机号
+//        if ([TTKitchen getBOOL:kTTKCommonUgcPostBindingPhoneNumberKey]) {
+//
+//            self.view.userInteractionEnabled = NO;
+//            TTIndicatorView * checkBoundPhoneIndicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView
+//                                                                                               indicatorText:@"发布中..."
+//                                                                                              indicatorImage:nil
+//                                                                                              dismissHandler:nil];
+//            checkBoundPhoneIndicatorView.autoDismiss = NO;
+//            [checkBoundPhoneIndicatorView showFromParentView:self.view];
+//
+//            WeakSelf;
+//            [TTPostThreadManager checkPostNeedBindPhoneOrNotWithCompletion:^(FRPostBindCheckType checkType) {
+//
+//                StrongSelf;
+//                [checkBoundPhoneIndicatorView dismissFromParentView];
+//                self.view.userInteractionEnabled = YES;
+//
+//                if (checkType == FRPostBindCheckTypePostBindCheckTypeNeed) {
+//
+//                    WeakSelf;
+//                    UIViewController *bindViewController = [[TTPostThreadBridge sharedInstance] pushBindPhoneNumberWhenPostThreadWithCompletion:^{
+//                        StrongSelf;
+//                        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+//                    }];
+//
+//                    if (!bindViewController) {
+//                        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+//                    } else {
+//                        if ([self.navigationController isKindOfClass:[UINavigationController class]] && bindViewController && [bindViewController isKindOfClass:[UIViewController class]]) {
+//                            [self.navigationController pushViewController:bindViewController animated:YES];
+//                        }
+//                    }
+//                } else {
+//                    [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+//                }
+//            }];
+//        } else {
+//            [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+//        }
+        
+        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
     }
 }
 
 - (void)postThreadWithTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
     
+    if (!SSIsEmptyDictionary(self.sdkParamsDict)) {
+        // 鉴权
+//        if (self.oauthStatus == PostCheckOAuthStatusUnknown) {
+//
+//            self.view.userInteractionEnabled = NO;
+//            TTIndicatorView * checkBoundPhoneIndicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView
+//                                                                                               indicatorText:@"发布中..."
+//                                                                                              indicatorImage:nil
+//                                                                                              dismissHandler:nil];
+//            checkBoundPhoneIndicatorView.autoDismiss = NO;
+//            [checkBoundPhoneIndicatorView showFromParentView:self.view];
+//
+//            [self checkOAuthWithCompletionBlock:^(PostCheckOAuthStatus status) {
+//
+//                [checkBoundPhoneIndicatorView dismissFromParentView];
+//                self.view.userInteractionEnabled = YES;
+//
+//                if (self.oauthStatus == PostCheckOAuthStatusSucceed) {
+//                    [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+//                } else {
+//                    [TTWeitoutiaoShareManager backWithSDKParams:self.sdkParamsDict result:TTWeitoutiaoShareResultOAuthFailed];
+//                }
+//            }];
+//            return;
+//        } else if (self.oauthStatus == PostCheckOAuthStatusFailed) {
+//            // 第一次鉴权网络断开，第二次返回失败
+//            [TTWeitoutiaoShareManager backWithSDKParams:self.sdkParamsDict result:TTWeitoutiaoShareResultOAuthFailed];
+//            return;
+//        }
+//    }
+    /*
+    TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
+    [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    NSMutableArray *mentionUsers = [NSMutableArray arrayWithCapacity:richSpanText.richSpans.links.count];
+    for (TTRichSpanLink *link in richSpanText.richSpans.links) {
+        NSString *userId = [link.userInfo tt_stringValueForKey:@"user_id"];
+        if (!isEmptyString(userId)) {
+            [mentionUsers addObject:userId];
+        }
+    }
+    
+    NSMutableArray *mentionConcerns = [NSMutableArray arrayWithCapacity:richSpanText.richSpans.links.count];
+    NSMutableArray *hashtagNames = [NSMutableArray arrayWithCapacity:richSpanText.richSpans.links.count];
+    NSMutableArray *createdConcerns = [NSMutableArray arrayWithCapacity:richSpanText.richSpans.links.count];
+    for (TTRichSpanLink *link in richSpanText.richSpans.links) {
+        if ([link.link isEqualToString:TTUGCSelfCreateHashtagLinkURLString]) {
+            NSString *forumName = [link.userInfo tt_stringValueForKey:@"forum_name"];
+            if (!isEmptyString(forumName)) {
+                [createdConcerns addObject:forumName];
+            }
+        } else {
+            NSString *concernId = [link.userInfo tt_stringValueForKey:@"concern_id"];
+            if (!isEmptyString(concernId)) {
+                [mentionConcerns addObject:concernId];
+            }
+            
+            NSString *forumName = [link.userInfo tt_stringValueForKey:@"forum_name"];
+            if (!isEmptyString(forumName)) {
+                [hashtagNames addObject:forumName];
+            } else if (link.type == TTRichSpanLinkTypeHashtag && !isEmptyString(link.text)) {
+                [hashtagNames addObject:link.text];
+            }
+        }
+    }
+    
+    if (phoneText.length > 0) {
+        //telephone number is legal and save telephone number for next time
+        [[NSUserDefaults standardUserDefaults] setObject:phoneText forKey:kUserInputTelephoneKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
+    double longitude = self.addLocationView.selectedLocation.longitude;
+    double latitude = self.addLocationView.selectedLocation.latitude;
+    CGFloat rate = self.rateMovieView.rate;
+    NSMutableDictionary *extraTrack = [NSMutableDictionary dictionary];
+    [extraTrack setValue:self.enterType forKey:@"enter_type"];
+    
+    NSDictionary <NSString *, NSString *> *emojis = [TTUGCEmojiParser parseEmojis:inputText];
+    [TTUGCEmojiParser markEmojisAsUsed:emojis];
+    NSArray <NSString *> *emojiIds = emojis.allKeys;
+    [TTTrackerWrapper eventV3:@"emoticon_stats" params:@{
+                                                         @"with_emoticon_list" : (!emojiIds || emojiIds.count == 0) ? @"none" : [emojiIds componentsJoinedByString:@","],
+                                                         @"source" : @"post"
+                                                         }];
+    
+    // 话题页发帖默认是带上了话题concern，如果在发布前用户手动删除话题，则将cid改回默认的，避免错误的召回到该话题下
+    NSString *concernID = self.cid;
+    if (!isEmptyString(self.enterConcernID) && [self.enterConcernID isEqualToString:self.cid] && ![mentionConcerns containsObject:self.cid]) {
+        concernID = KTTFollowPageConcernID;
+    }
+    
+    // 去掉links中fake的自建话题
+    TTRichSpans *richSpans = richSpanText.richSpans;
+    if (!SSIsEmptyArray(createdConcerns)) {
+        NSMutableArray<TTRichSpanLink *> *links = [NSMutableArray arrayWithCapacity:richSpans.links.count];
+        [richSpans.links enumerateObjectsUsingBlock:^(TTRichSpanLink * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (![obj.link isEqualToString:TTUGCSelfCreateHashtagLinkURLString]) {
+                [links addObject:obj];
+            }
+        }];
+        richSpans = [[TTRichSpans alloc] initWithRichSpanLinks:[links copy] imageInfoModelsDict:richSpans.imageInfoModesDict];
+    }
+    
+    TTPostThreadModel *postThreadModel = [[TTPostThreadModel alloc] init];
+    postThreadModel.content = inputText;
+    postThreadModel.contentRichSpans = [TTRichSpans JSONStringForRichSpans:richSpans];
+    postThreadModel.mentionUsers = [mentionUsers componentsJoinedByString:@","];
+    postThreadModel.mentionConcerns = [mentionConcerns componentsJoinedByString:@","];
+    postThreadModel.title = titleText;
+    postThreadModel.phoneNumber = phoneText;
+    postThreadModel.fromWhere = self.fromWhere;
+    postThreadModel.concernID = concernID;
+    postThreadModel.categoryID = self.categoryID;
+    postThreadModel.taskImages = self.addImagesView.selectedImageCacheTasks;
+    postThreadModel.thumbImages = self.addImagesView.selectedThumbImages;
+    postThreadModel.needForward = 1;
+    postThreadModel.city = self.addLocationView.selectedLocation.city;
+    postThreadModel.detailPos = self.addLocationView.selectedLocation.locationName;
+    postThreadModel.longitude = longitude;
+    postThreadModel.latitude = latitude;
+    postThreadModel.score = rate;
+    postThreadModel.refer = self.refer;
+    postThreadModel.communityID = self.communityID;
+    postThreadModel.postUGCEnterFrom = self.postUGCEnterFrom;
+    postThreadModel.forumNames = [createdConcerns tt_JSONRepresentation];
+    postThreadModel.extraTrack = [extraTrack copy];
+    postThreadModel.syncToRocket = self.syncToRocketButton.selected;
+    postThreadModel.promotionId = self.goodsItem.promotion_id;
+    postThreadModel.insertMixCardID = self.insertMixCardID;
+    postThreadModel.relatedForumSubjectID = self.relatedForumSubjectID;
+//    if (!SSIsEmptyDictionary(self.sdkParamsDict)) {
+//        @try {
+//            NSString *jsonString = [self.sdkParamsDict JSONRepresentation];
+//            postThreadModel.sdkParams = jsonString;
+//        } @catch (NSException *exception) {
+//        } @finally {
+//        }
+//    }
+//    if (self.goodsItem) {
+//        NSMutableDictionary *businessPayloadDict = [NSMutableDictionary dictionary];
+//        NSDictionary *currentPayload = [NSJSONSerialization tt_dictionaryWithJSONString:self.businessPayload error:nil];
+//        [businessPayloadDict setValue:self.goodsItem.item_type forKey:@"ecom_type"];
+//        [businessPayloadDict setValue:self.goodsItem.promotion_id forKey:@"promotion_id"];
+//        [businessPayloadDict setValuesForKeysWithDictionary:currentPayload];
+//        postThreadModel.payload = [businessPayloadDict tt_JSONRepresentation];
+//    } else {
+//        postThreadModel.payload = self.businessPayload;
+//    }
+    postThreadModel.payload = self.businessPayload;
+    
+    [[TTPostThreadCenter sharedInstance_tt] postThreadWithPostThreadModel:postThreadModel finishBlock:^(TTPostThreadTask *task) {
+        [self postFinished:YES task:task];
+    }];
+     
+     */
+    }
 }
 
 - (BOOL)isValidateWithInputText:(NSString *)inputText{
