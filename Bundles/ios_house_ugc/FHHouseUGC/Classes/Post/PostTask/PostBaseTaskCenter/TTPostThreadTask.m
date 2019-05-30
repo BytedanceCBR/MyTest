@@ -15,7 +15,7 @@
 #import <SDWebImage/SDWebImageManager.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 #import <TTKitchen/TTKitchen.h>
-#import <TTUGCFoundation/FRUploadImageModel.h>
+#import <ios_house_im/FRUploadImageModel.h>
 //#import <TTServiceProtocols/TTAccountProvider.h>
 #import <TTServiceKit/TTServiceCenter.h>
 #import <TTBaseLib/TTBaseMacro.h>

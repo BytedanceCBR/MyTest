@@ -9,11 +9,12 @@
 #import "TTPostThreadDefine.h"
 
 #import <Foundation/Foundation.h>
-#import <TTUGCFoundation/FRUploadImageModel.h>
+#import <ios_house_im/FRUploadImageModel.h>
 #import <TTPostBase/TTPostTask.h>
 #import <TTUGCFoundation/FRApiModel.h>
 #import <TTUGCFoundation/TTUGCDefine.h>
 #import "TTRepostDefine.h"
+#import "TTUGCImageCompressManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

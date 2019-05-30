@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FRUploadImageModel.h"
+#import "TTUGCImageCompressManager.h"
 
 typedef void (^FRUploadImageManagerProgressBlock)(int expectCount, int receivedCount);
 typedef void (^FRUploadImageManagerFinishBlock)(NSError *error, NSArray<FRUploadImageModel *> * finishUpLoadModels);

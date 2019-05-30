@@ -136,7 +136,7 @@ def appPods
     ]
     
     #-----UGC Other-----
-    pod 'TTPostBase','0.1.14'
+    pod 'TTPostBase', :path => '../AKPlugins/TTPostBase', :inhibit_warnings => false
     pod 'TTSettingsManager','0.4.16',:subspecs => [
     'Core',
     'Performance'
