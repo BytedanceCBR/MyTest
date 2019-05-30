@@ -250,7 +250,7 @@ UITableViewDataSource>
     [infoDict setValue:selectCategory forKey:@"category"];
     [infoDict setValue:latitudeNum forKey:@"latitude"];
     [infoDict setValue:longitudeNum forKey:@"longitude"];
-    [infoDict setValue:self.dataModel.title forKey:@"title"];
+    [infoDict setValue:self.dataModel.mapCentertitle forKey:@"title"];
     
     
     

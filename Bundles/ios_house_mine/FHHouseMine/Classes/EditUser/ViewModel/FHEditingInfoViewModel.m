@@ -113,6 +113,10 @@
             if (!isEmptyString(userDesp) && !nameOrDesp) {
                 sself.userInfo.userDescription = userDesp;
             }
+            
+            if(userEntity.auditInfoSet.pgcUserAuditEntity){
+                self.userInfo.isAuditing = userEntity.auditInfoSet.pgcUserAuditEntity.auditing;
+            }
 
             [[ToastManager manager] showToast:@"修改成功"];
             
