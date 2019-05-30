@@ -167,13 +167,19 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)restoreData {
+    // 构建 richSpanText
+    if (self.richSpanText == nil) {
+        self.richSpanText = [[TTRichSpanText alloc] initWithText:@"" richSpans:nil];
+        self.outerInputRichSpanText = self.richSpanText;
+    }
+    
     // 加载草稿
     if (![self hasPresettingThreadContent]) {
         [self restoreDraft];
     }
     
     // 等待构造完成之后初始化
-    self.inputTextView.richSpanText = self.richSpanText; // add by zyk  richSpanText要搞明白
+    self.inputTextView.richSpanText = self.richSpanText;
     
     // 待richSpanText更新后，再更新光标位置
     if (self.selectedRange.location > 0 && self.inputTextView.text.length >= self.selectedRange.location) {
@@ -306,7 +312,6 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.inputContainerView addSubview:self.addImagesView];
   
     self.inputContainerView.height =  self.addImagesView.bottom + kAddImagesViewBottomPadding;
-//     self.inputContainerView.height = 500;
     
     // toolbar
     kUGCToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
@@ -486,9 +491,9 @@ static NSInteger const kMaxPostImageCount = 9;
     NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
     BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
-    if (![self textHasChanged] && ![self imageHasChanged]) {
-        shouldAlert = NO;
-    }
+//    if (![self textHasChanged] && ![self imageHasChanged]) {
+//        shouldAlert = NO;
+//    }
     
     if (!shouldAlert) {
         [self postFinished:NO];
@@ -1195,7 +1200,8 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (BOOL)draftEnable {
-    return [TTKitchen getBOOL:kTTKUGCPostThreadDraftEnable];
+    return NO; // 不支持草稿
+    // return [TTKitchen getBOOL:kTTKUGCPostThreadDraftEnable];
 }
 
 - (void)closeViewController:(NSNotification *)notification {
