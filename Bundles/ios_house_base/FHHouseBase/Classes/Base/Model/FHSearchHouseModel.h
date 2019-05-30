@@ -203,6 +203,25 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+@protocol FHSearchRealHouseExtModel<NSObject>
+
+@end
+
+@interface FHSearchRealHouseExtModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *fakeHouse;
+@property (nonatomic, copy , nullable) NSString *fakeTitle;
+@property (nonatomic, copy , nullable) NSString *enableFakeHouse;
+@property (nonatomic, copy , nullable) NSString *fakeHouseTotal;
+@property (nonatomic, copy , nullable) NSString *houseTotal;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *trueHouseTotal;
+@property (nonatomic, copy , nullable) NSString *trueTitle;
+@property (nonatomic, copy , nullable) NSString *totalTitle;
+
+@end
+
+
 @interface  FHSearchHouseDataModel  : JSONModel
 
 @property (nonatomic, assign) BOOL hasMore;
@@ -212,8 +231,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *mapFindHouseOpenUrl;
 @property (nonatomic, copy , nullable) NSString *total;
 @property (nonatomic, copy , nullable) NSString *searchId;
-@property (nonatomic, copy , nullable) NSString *totalHouse;
-@property (nonatomic, copy , nullable) NSString *fakeHouse;
+@property (nonatomic, strong , nullable) FHSearchRealHouseExtModel *externalSite;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic, strong, nullable) FHRecommendSecondhandHouseDataModel *recommendSearchModel;
 @property (nonatomic, strong, nullable) FHSugSubscribeDataDataSubscribeInfoModel *subscribeInfo;

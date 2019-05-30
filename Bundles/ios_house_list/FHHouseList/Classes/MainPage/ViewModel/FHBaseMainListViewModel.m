@@ -435,11 +435,20 @@
                 
                 if (isShowRealHouse) {
                     FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
-                    topInfoModel.fakeHouse = houseModel.fakeHouse;
-                    topInfoModel.totalHouse = houseModel.totalHouse;
-                    topInfoModel.openUrl = @"";
-                    topInfoModel.searchId = houseModel.searchId;
                     
+                    if ([houseModel.externalSite isKindOfClass:[FHSearchRealHouseExtModel class]]) {
+                        topInfoModel.fakeHouse = houseModel.externalSite.fakeHouse;
+                        topInfoModel.houseTotal = houseModel.externalSite.houseTotal;
+                        topInfoModel.openUrl = houseModel.externalSite.openUrl;
+                        topInfoModel.trueTitle = houseModel.externalSite.trueTitle;
+                        topInfoModel.fakeHouseTotal = houseModel.externalSite.fakeHouseTotal;
+                        topInfoModel.trueHouseTotal = houseModel.externalSite.trueHouseTotal;
+                        topInfoModel.enableFakeHouse = houseModel.externalSite.enableFakeHouse;
+                        topInfoModel.totalTitle = houseModel.externalSite.totalTitle;
+                        topInfoModel.searchId = houseModel.searchId;
+                        topInfoModel.fakeTitle = houseModel.externalSite.fakeTitle;
+                    }
+
                     if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
                         [items insertObject:topInfoModel atIndex:0];
                     }
@@ -1056,7 +1065,7 @@
                 
                 if (cellModel.isRealHouseTopCell) {
                     if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-                        FHSugListRealHouseTopInfoModel *realHouseInfo = (FHSugListRealHouseTopInfoModel *)cellModel.subscribModel;
+                        FHSugListRealHouseTopInfoModel *realHouseInfo = (FHSugListRealHouseTopInfoModel *)cellModel.realHouseTopModel;
                         FHSuggestionRealHouseTopCell *topRealCell = [tableView dequeueReusableCellWithIdentifier:kRealHouseMainPage];
                         if ([topRealCell respondsToSelector:@selector(refreshUI:)]) {
                             [topRealCell refreshUI:realHouseInfo];

@@ -111,6 +111,7 @@
  *  @param: searchId 请求id
  *  @param: sugParam  suggestion params 已废弃
  */
+
 +(TTHttpTask *)recommendErshouHouseList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion
 {
     NSString *queryPath = @"/f100/api/recommend_search";
