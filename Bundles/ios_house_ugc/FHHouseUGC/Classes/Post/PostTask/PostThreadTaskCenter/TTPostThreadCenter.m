@@ -83,8 +83,6 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
 - (instancetype)init {
     self = [super init];
     if (self) {
-        
-//        id<TTPostService> operationQueue = [BDContextGet() findServiceByName:TTPostServiceName];
         NSOperationQueue *sharedOperationQueue = [[NSOperationQueue alloc] init];
         sharedOperationQueue.maxConcurrentOperationCount = 3;
         if (sharedOperationQueue) {

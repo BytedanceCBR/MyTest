@@ -686,6 +686,7 @@ static NSInteger const kMaxPostImageCount = 9;
                                                          }];
     
     // 话题页发帖默认是带上了话题concern，如果在发布前用户手动删除话题，则将cid改回默认的，避免错误的召回到该话题下
+    self.cid = @"6454692306795629069";
     NSString *concernID = self.cid;
 //    if (!isEmptyString(self.enterConcernID) && [self.enterConcernID isEqualToString:self.cid] && ![mentionConcerns containsObject:self.cid]) {
 //        concernID = KTTFollowPageConcernID;
@@ -710,7 +711,7 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.mentionConcerns = [mentionConcerns componentsJoinedByString:@","];
     postThreadModel.title = titleText;
     postThreadModel.phoneNumber = phoneText;
-//    postThreadModel.fromWhere = self.fromWhere;
+    postThreadModel.fromWhere = FRFromWhereTypeAPP_TOUTIAO_IOS;
     postThreadModel.concernID = concernID;
     postThreadModel.categoryID = self.categoryID;
     postThreadModel.taskImages = self.addImagesView.selectedImageCacheTasks;

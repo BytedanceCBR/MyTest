@@ -34,7 +34,8 @@
 }
 
 + (NSString *)baseURL {
-    return [[TTURLDomainHelper shareInstance] domainFromType:TTURLDomainTypeNormal];
+    return @"https://is-hl.snssdk.com";
+//    return [[TTURLDomainHelper shareInstance] domainFromType:TTURLDomainTypeNormal];
 }
 
 + (NSString *)hotBoardUrl {
