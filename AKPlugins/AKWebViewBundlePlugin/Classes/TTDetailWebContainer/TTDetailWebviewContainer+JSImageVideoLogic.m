@@ -659,19 +659,11 @@ static NSString *const hasChoosenShowOriginImageKey = @"hasChoosenShowOriginImag
                  [num intValue] == 10 ||
                  [num intValue] == 20 ||
                  [num intValue] == 50) {
-            return [self enabledShowAlwaysOriginImageAlertRepeatly];
+            return YES;
         }
         
     }
     return NO;
-}
-
-+ (BOOL)enabledShowAlwaysOriginImageAlertRepeatly{
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults objectForKey:@"SSCommonLogicSettingShowAlwaysOriginImageAlertRepeatlyKey"]) {
-        return [[userDefaults objectForKey:@"SSCommonLogicSettingShowAlwaysOriginImageAlertRepeatlyKey"] boolValue];
-    }
-    return YES;
 }
 
 #pragma mark player delegate

@@ -17,7 +17,7 @@
 static const CGFloat kBtnW = 44;
 static const CGFloat kPrePlayBtnBottom = 10;
 extern NSInteger ttvs_isVideoShowOptimizeShare(void);
-extern BOOL ttvs_isVideoDetailPlayLastEnabled(void);
+
 
 @interface TTMoviePlayerControlFinishAction ()
 
@@ -129,10 +129,7 @@ extern BOOL ttvs_isVideoDetailPlayLastEnabled(void);
 
 - (TTAlphaThemedButton *)prePlayBtn {
     
-    if (!ttvs_isVideoDetailPlayLastEnabled()) {
-        
-        return nil;
-    }
+    return nil;
     
     if (!_prePlayBtn) {
         

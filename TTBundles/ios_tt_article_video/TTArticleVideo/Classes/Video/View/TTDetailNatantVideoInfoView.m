@@ -859,7 +859,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         }
         [self videoExtentActionlogV3];
     } if (sender == _shareButton){
-        [TTTrackerWrapper eventV3:@"share_icon_click" params:@{@"icon_type": @([SSCommonLogic shareIconStye]).stringValue}];
+        [TTTrackerWrapper eventV3:@"share_icon_click" params:@{@"icon_type": @"0"}];
         if ([self.delegate respondsToSelector:@selector(shareButton:clickedWithArticle:)]) {
             [self.delegate shareButton:(UIButton *)_shareButton clickedWithArticle:self.article];
         }
@@ -1181,23 +1181,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 }
 
 - (NSString *)_shareImageIcon {
-    switch ([SSCommonLogic shareIconStye]) {
-        case 1:
-            return @"tab_share";
-            break;
-        case 2:
-            return @"tab_share1";
-            break;
-        case 3:
-            return @"tab_share4";
-            break;
-        case 4:
-            return @"tab_share3";
-            break;
-        default:
-            return @"tab_share";
-            break;
-    }
+    return @"tab_share";
 }
 
 - (void)videoExtentActionlogV3{

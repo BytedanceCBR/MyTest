@@ -109,7 +109,9 @@
             [self.view endEditing:YES];
             self.viewModel.isHideKeyBoard = NO;
         }else{
-            self.viewModel.isHideKeyBoard = YES;
+            if(!self.viewModel.noDismissVC){
+                self.viewModel.isHideKeyBoard = YES;
+            }
         }
     }
 }

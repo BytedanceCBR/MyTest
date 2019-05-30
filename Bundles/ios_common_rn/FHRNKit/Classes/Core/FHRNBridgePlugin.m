@@ -57,7 +57,8 @@
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, open), @"app.open");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, alertTest), @"app.alertTest");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, toast), @"app.toast");
-    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, fetch), TTAppFetchBridgeName);
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, fetch), @"app.fetch");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, fetch), @"app.map");
 }
 
 - (void)toastWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
@@ -67,6 +68,11 @@
     if ([title isKindOfClass:[NSString class]] && title.length > 0) {
         [[ToastManager manager] showToast:title];
     }
+}
+
+- (void)mapWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    
 }
 
 - (void)appInfoWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
@@ -113,7 +119,7 @@
     [data setValue:idfaString forKey:@"idfa"];
     
     if (callback) {
-        callback(TTBridgeMsgSuccess, data);
+        callback(TTBridgeMsgSuccess, data,nil);
     }
 }
 
@@ -162,10 +168,10 @@
     if ([callParams[@"log_pb"] isKindOfClass:[NSString class]]) {
         callParams[@"log_pb"] = [FHUtils dictionaryWithJsonString:callParams[@"log_pb"]];
     }
-    
+    callParams[@"from"] = @"app_realtor_mainpage";
     if (!TTNetworkConnected() && !callParams[@"phone"]) {
         if (callback) {
-            callback(TTBridgeMsgSuccess, nil);
+            callback(TTBridgeMsgSuccess, nil,nil);
         }
     }else
     {
@@ -174,7 +180,7 @@
                 [[ToastManager manager] showToast:@"获取电话失败"];
             }
             if (callback) {
-                callback(TTBridgeMsgSuccess, nil);
+                callback(TTBridgeMsgSuccess, nil,nil);
             }
         }];
     }
@@ -236,16 +242,18 @@
 
 - (void)log_v3WithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
-    NSString *paramsEvent = [param tt_stringValueForKey:@"event"];
-    if (paramsEvent) {
-        NSString *paramsTrace = param[@"params"];
-        if ([paramsTrace isKindOfClass:[NSDictionary class]]) {
-            [FHEnvContext recordEvent:paramsTrace andEventKey:paramsEvent];
-        }else if ([paramsTrace isKindOfClass:[NSString class]]) {
-           NSDictionary *dictTrace =  [FHUtils dictionaryWithJsonString:paramsTrace];
-           if (dictTrace) {
-               [FHEnvContext recordEvent:dictTrace andEventKey:paramsEvent];
-           }
+    if ([param isKindOfClass:[NSDictionary class]]) {
+        NSString *paramsEvent = [param tt_stringValueForKey:@"event"];
+        if (paramsEvent) {
+            NSString *paramsTrace = param[@"params"];
+            if ([paramsTrace isKindOfClass:[NSDictionary class]]) {
+                [FHEnvContext recordEvent:paramsTrace andEventKey:paramsEvent];
+            }else if ([paramsTrace isKindOfClass:[NSString class]]) {
+                NSDictionary *dictTrace =  [FHUtils dictionaryWithJsonString:paramsTrace];
+                if (dictTrace) {
+                    [FHEnvContext recordEvent:dictTrace andEventKey:paramsEvent];
+                }
+            }
         }
     }
 }
@@ -261,7 +269,7 @@
     if (!TTNetworkConnected()) {
         NSString *stringRes = @"\{\"message\": \"failed\"\}";
         callback(TTBridgeMsgSuccess, @{ @"response": stringRes, @"status": @(0),
-                                           @"code":@(0)});
+                                           @"code":@(0)},nil);
         return;
     }
     
@@ -314,7 +322,7 @@
                                                           @"status": @(response.statusCode),
                                                           @"code": error?@(0): @(1),
                                                           @"beginReqNetTime": startTime
-                                                          });
+                                                          },nil);
             }
         }];
     }else
@@ -330,7 +338,7 @@
                                                           @"status": @(response.statusCode),
                                                           @"code": error?@(0): @(1),
                                                           @"beginReqNetTime":startTime
-                                                          });
+                                                          },nil);
             }
         }];
     }
@@ -376,7 +384,7 @@
         {
             [[TTRoute sharedRoute] openURLByViewController:openUrlResultUTF8 userInfo:nil];
         }
-        callback(TTBridgeMsgSuccess, @{@"code": @0});
+        callback(TTBridgeMsgSuccess, @{@"code": @0},nil);
         return;
     }
     

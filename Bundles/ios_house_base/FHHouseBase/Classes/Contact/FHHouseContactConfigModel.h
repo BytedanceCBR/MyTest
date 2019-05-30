@@ -44,6 +44,7 @@ typedef void(^FHHousePhoneCallCompletionBlock)(BOOL success,NSError *error);
 @property (nonatomic , copy) NSString *realtorPosition;
 @property (nonatomic , copy) NSString *conversationId;
 @property (nonatomic , copy) NSString *itemId;
+@property (nonatomic , copy) NSString *from;
 - (void)setTraceParams:(NSDictionary *)params;
 
 @end

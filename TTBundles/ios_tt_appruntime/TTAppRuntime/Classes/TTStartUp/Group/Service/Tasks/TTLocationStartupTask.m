@@ -24,16 +24,16 @@
 
 #pragma mark - UIApplicationDelegate Method
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    if (![SSCommonLogic shouldUseOptimisedLaunch]) {
-        //更新扩展的location
-        TTPlacemarkItem *locationItem = [TTLocationManager sharedManager].placemarkItem;
-        if (locationItem.coordinate.latitude * locationItem.coordinate.longitude > 0) {
-            [ExploreExtenstionDataHelper saveSharedLatitude:locationItem.coordinate.latitude];
-            [ExploreExtenstionDataHelper saveSharedLongitude:locationItem.coordinate.longitude];
-        }
-        [ExploreExtenstionDataHelper saveSharedUserCity:[TTLocationManager sharedManager].city];
-        [[TTCookieManager sharedManager] updateLocationCookie];
-    }
+//    if (![SSCommonLogic shouldUseOptimisedLaunch]) {
+//        //更新扩展的location
+//        TTPlacemarkItem *locationItem = [TTLocationManager sharedManager].placemarkItem;
+//        if (locationItem.coordinate.latitude * locationItem.coordinate.longitude > 0) {
+//            [ExploreExtenstionDataHelper saveSharedLatitude:locationItem.coordinate.latitude];
+//            [ExploreExtenstionDataHelper saveSharedLongitude:locationItem.coordinate.longitude];
+//        }
+//        [ExploreExtenstionDataHelper saveSharedUserCity:[TTLocationManager sharedManager].city];
+//        [[TTCookieManager sharedManager] updateLocationCookie];
+//    }
 }
 
 @end

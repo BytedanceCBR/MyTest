@@ -20,7 +20,7 @@
     // Configure the view for the selected state
 }
 
-- (void)updateCell:(NSDictionary *)dic {
+- (void)updateCell:(FHMineConfigDataIconOpDataModel *)model isFirst:(BOOL)isFirst {
     
 }
 

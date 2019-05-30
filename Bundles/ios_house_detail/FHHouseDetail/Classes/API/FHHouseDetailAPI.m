@@ -23,6 +23,8 @@
 #import "FHTransactionHistoryModel.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import <BDAgileLog.h>
+#import <FHHouseBase/FHMainApi.h>
+#import <TTInstallService/TTInstallIDManager.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -607,11 +609,52 @@
     attr[@"message"] = message;
     attr[@"house_id"] = houseId;
     attr[@"url"] = urlStr;
-    if (userInfo.count > 0 && [userInfo valueForKey:@"NSErrorFailingURLKey"]) {
-        NSString *str =[NSString stringWithFormat:@"%@",[userInfo valueForKey:@"NSErrorFailingURLKey"]];
-        BDALOG_WARN_TAG(@"house_detail",str);
-    }
+    // 字符串超长会有问题，鉴于这个log意义不大，先不加
+//    if (userInfo.count > 0 && [userInfo valueForKey:@"NSErrorFailingURLKey"]) {
+//        NSString *str =[NSString stringWithFormat:@"%@",[userInfo valueForKey:@"NSErrorFailingURLKey"]];
+//        BDALOG_WARN_TAG(@"house_detail",str);
+//    }
     [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_request_related_failed" status:status.integerValue extra:attr];
+}
+
+/*
+ - target_id 类型int64，房源id
+ - target_type 类型int，房源的类型 1 新房，2 二手房，3 租房，4 小区
+ - type 类型int，反馈类型（推荐该公司房源：1）
+ source 类型string，反馈来源（官方直验收：official）
+ - device_id 类型int64，设备的id
+ - agency_id 类型int64，经纪公司的id
+ - feed_back 类型int，反馈的结果：0表示空，1表示是，2表示否
+ */
+
++(TTHttpTask *)requstQualityFeedback:(NSString *)houseId houseType:(FHHouseType)houseType source:(NSString *)source feedBack:(NSInteger)feedType agencyId:(NSString *)agencyId completion:(void (^)(bool succss , NSError *error))completion
+{
+    NSString *path = @"/f100/user/quality_feedback";
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    
+    if ([source isEqualToString:@"official"]) {
+        path =  @"/f100/user/agency_feedback";
+        param[@"agency_id"] = @(agencyId.longLongValue);
+    }
+    
+    param[@"target_id"] = @(houseId.longLongValue);
+    param[@"target_type"] = @(houseType);
+    param[@"source"] = source;
+    param[@"device_id"] = @([[[TTInstallIDManager sharedInstance] deviceID] longLongValue]);
+    param[@"feed_back"] = @(feedType);
+    
+    return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
+        BOOL success = NO;
+        if (result) {
+            success = (result[@"status"] && [result[@"status"] integerValue] == 0);
+            if (!success) {
+                error = [NSError errorWithDomain:result[@"message"]?:@"请求失败" code:-1 userInfo:nil];
+            }
+        }
+        if (completion) {
+            completion(success , error);
+        }
+    }];
 }
 
 @end

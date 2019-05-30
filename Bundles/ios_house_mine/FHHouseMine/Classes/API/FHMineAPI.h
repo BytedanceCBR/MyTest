@@ -9,6 +9,7 @@
 #import <TTNetworkManager.h>
 #import "FHURLSettings.h"
 #import "FHMainApi.h"
+#import "TTAccountBusiness.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,6 +28,12 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)requestQuickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode completion:(void(^_Nullable)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completion;
 
 + (NSString *)errorMessageByErrorCode:(NSError *)error;
+
++ (TTHttpTask *)requestMineConfigWithClassName:(NSString *)className completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
+
++ (void)uploadUserPhoto:(UIImage *)image completion:(void (^)(NSString *imageURIString, NSError *error))completion;
+
++ (void)uploadUserProfileInfo:(NSDictionary *)params completion:(void (^)(TTAccountUserEntity *userEntity, NSError *error))completedBlock;
 
 @end
 

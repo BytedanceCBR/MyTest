@@ -45,9 +45,6 @@ NSString *const kChangeMainControlerNotification = @"kChangeMainControlerNotific
     if (self) {
         self.model = model;
         [self loadView];
-        if (![SSCommonLogic shouldUseOptimisedLaunch]) {
-            [[UIApplication sharedApplication] setStatusBarHidden:YES];
-        }
         [_splashView refreshModel:self.model];
     }
     return self;

@@ -11,7 +11,9 @@
 #import "FHHouseType.h"
 
 static const NSUInteger kFHHomeListHeaderBaseViewSection = 0;
+static const NSUInteger kFHHomeListHouseTypeBannerViewSection = 1;
 static const NSUInteger kFHHomeListHouseBaseViewSection = 1;
+
 static const NSUInteger kFHHomeHeaderViewSectionHeight = 37;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -22,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL showPlaceHolder;
 @property (nonatomic, assign) BOOL showNoDataErrorView;
 @property (nonatomic, assign) BOOL showRequestErrorView;
+@property (nonatomic, assign) BOOL showOpDataListEntrance;
 @property (nonatomic, assign) FHHouseType currentHouseType;
 @property (nonatomic, strong) NSString * originSearchId;
 @property (nonatomic,assign) BOOL isHasFindHouseCategory;

@@ -197,6 +197,23 @@
 }
 @end
 
+@implementation FHDetailDataBaseExtraDialogsModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"subTitle": @"sub_title",
+                           @"feedbackContent": @"feedback_content",
+                           @"reportUrl":@"report_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 
 

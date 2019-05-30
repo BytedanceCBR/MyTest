@@ -17,6 +17,7 @@
 #import <FHHouseBase/FHUserTracker.h>
 #import "FHHouseType.h"
 #import "FHMainApi+Contact.h"
+#import <FHCHousePush/FHPushAuthorizeManager.h>
 
 NSString *const kFHDetailFollowUpNotification = @"follow_up_did_changed";
 NSString *const kFHToastCountKey = @"kFHToastCountKey";
@@ -109,10 +110,16 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
             [[ToastManager manager] showToast:@"关注失败"];
         }else {
             if (model.status.integerValue == 0) {
-                if (model.data.followStatus == 0) {
-                    [[ToastManager manager] showToast:@"关注成功"];
+                if ([FHPushAuthorizeManager isFollowAlertEnabled]) {
+                    NSMutableDictionary *params = @{}.mutableCopy;
+                    params[@"page_type"] = configModel.pageType;
+                    [FHPushAuthorizeManager showFollowAlertIfNeeded:params];
                 }else {
-                    [[ToastManager manager] showToast:@"已经关注"];
+                    if (model.data.followStatus == 0) {
+                        [[ToastManager manager] showToast:@"关注成功"];
+                    }else {
+                        [[ToastManager manager] showToast:@"已经关注"];
+                    }
                 }
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
                 userInfo[@"followId"] = followId;

@@ -248,12 +248,7 @@ static ArticleShareManager * manager;
     NSString *weixinShareTitle = @"";
     if (!isEmptyString(article.mediaName)) {
         shareTitle = [NSString stringWithFormat:@"【%@】%@", article.mediaName, article.title];
-        if ([SSCommonLogic shouldArticleShareWithPGCName]) {
-            weixinShareTitle = shareTitle;
-        }
-        else {
-            weixinShareTitle = article.title;
-        }
+        weixinShareTitle = article.title;
     } else {
         shareTitle = article.title;
         weixinShareTitle = shareTitle;
