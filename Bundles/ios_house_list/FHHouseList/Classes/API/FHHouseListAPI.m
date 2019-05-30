@@ -104,6 +104,35 @@
 }
 
 /*
+ *  虚假房源列表请求
+ *  @param: query 筛选等请求
+ *  @param: param 其他请求参数
+ *  @param: offset 偏移
+ *  @param: searchId 请求id
+ *  @param: sugParam  suggestion params 已废弃
+ */
++(TTHttpTask *)searchFakeHouseList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion
+{
+    NSString *queryPath = @"/f100/api/search_fake_house";
+    
+    NSMutableDictionary *qparam = [NSMutableDictionary new];
+    if (query.length > 0) {
+        queryPath = [NSString stringWithFormat:@"%@?%@",queryPath,query];
+    }
+    if (param) {
+        [qparam addEntriesFromDictionary:param];
+    }
+    qparam[@"offset"] = @(offset);
+    qparam[@"search_id"] = searchId?:@"";
+    if (sugParam) {
+        qparam[@"suggestion_params"] = sugParam;
+    }
+    
+    return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
+    
+}
+
+/*
  *  二手房猜你想找列表请求
  *  @param: query 筛选等请求
  *  @param: param 其他请求参数
