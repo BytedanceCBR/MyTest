@@ -293,8 +293,12 @@
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateCancelled:
         {
-            self.bgView.top = self.bgTop;
-            self.dragOffset = 0;
+            if (self.dragOffset + self.bgTop > self.height/2 && self.dragOffset > self.bgView.height/3) {
+                [self dismiss:YES];
+            }else{
+                self.bgView.top = self.bgTop;
+                self.dragOffset = 0;
+            }
         }
             break;
         default:
