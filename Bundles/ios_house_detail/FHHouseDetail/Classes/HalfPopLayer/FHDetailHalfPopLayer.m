@@ -42,7 +42,8 @@
 @property(nonatomic , strong) FHDetailHalfPopFooter *footer;
 @property(nonatomic , assign) CGFloat bgTop;
 @property(nonatomic , assign) CGFloat dragOffset;
-@property(nonatomic , assign) BOOL restrictScroll;
+@property(nonatomic , assign) CGPoint panLocation;
+@property(nonatomic , strong) UIPanGestureRecognizer *panGesture;
 @property(nonatomic , strong) id data;
 
 //for track
@@ -111,6 +112,11 @@
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapAction:)];
         self.userInteractionEnabled = YES;
         [self addGestureRecognizer:tapGesture];
+        
+        UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
+        [self.bgView addGestureRecognizer:panGesture];
+        panGesture.enabled = NO;
+        self.panGesture = panGesture;
         
     }
     return self;
@@ -270,6 +276,32 @@
     
 }
 
+-(void)panAction:(UIPanGestureRecognizer *)pan
+{
+    switch (pan.state) {
+        case UIGestureRecognizerStateBegan:
+            self.panLocation = [pan locationInView:self];
+            break;
+        case UIGestureRecognizerStateChanged:{
+            CGPoint loc = [pan locationInView:self];
+            self.dragOffset = loc.y - self.panLocation.y;
+            if (self.dragOffset >= 0) {
+                self.bgView.top = self.bgTop + self.dragOffset;
+            }
+        }
+            break;
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled:
+        {
+            self.bgView.top = self.bgTop;
+            self.dragOffset = 0;
+        }
+            break;
+        default:
+            break;
+    }
+}
+
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGPoint offset = scrollView.contentOffset;
@@ -282,10 +314,6 @@
             self.bgView.top = self.bgTop + self.dragOffset;
             scrollView.contentOffset = CGPointZero;
         }
-        if (self.restrictScroll) {
-            scrollView.contentOffset = CGPointZero;
-        }
-        
     }else{
         self.dragOffset = 0;
     }
@@ -451,9 +479,11 @@
         CGFloat minTop = (safeInsets.top > 0)?safeInsets.top+40:64;
         if (bgTop < minTop) {
             bgTop = minTop;
-            self.restrictScroll = NO;
+            self.tableView.scrollEnabled = YES;
+            self.panGesture.enabled = NO;
         }else{
-            self.restrictScroll = YES;
+            self.tableView.scrollEnabled = NO;
+            self.panGesture.enabled = YES;
         }
         
         [self.bgView mas_updateConstraints:^(MASConstraintMaker *make) {
