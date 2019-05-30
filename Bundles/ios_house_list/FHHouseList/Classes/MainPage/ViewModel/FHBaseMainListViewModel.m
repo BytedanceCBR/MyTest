@@ -47,10 +47,12 @@
 #import "FHSuggestionSubscribCell.h"
 #import "FHHouseListAPI.h"
 #import "FHCommuteManager.h"
+#import "FHSuggestionRealHouseTopCell.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
 #define kSubscribMainPage @"kFHHouseListSubscribCellId"
+#define kRealHouseMainPage @"kRealHouseMainPageCellId"
 #define kSugCellId @"sug_cell_id"
 #define kFilterBarHeight 44
 #define MAX_ICON_COUNT 4
@@ -77,6 +79,7 @@
         tableView.dataSource = self;
         
         [_tableView registerClass:[FHSuggestionSubscribCell class] forCellReuseIdentifier:kSubscribMainPage];
+        [_tableView registerClass:[FHSuggestionRealHouseTopCell class] forCellReuseIdentifier:kRealHouseMainPage];
         [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kSingleCellId];
         [_tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kSugCellId];
         [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceCellId];
@@ -427,6 +430,20 @@
                         [items addObject:subscribeMode];
                     }
                 }
+                
+                BOOL isShowRealHouse = YES;
+                
+                if (isShowRealHouse) {
+                    FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
+                    topInfoModel.fakeHouse = houseModel.fakeHouse;
+                    topInfoModel.totalHouse = houseModel.totalHouse;
+                    topInfoModel.openUrl = @"";
+                    topInfoModel.searchId = houseModel.searchId;
+                    
+                    if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                        [items insertObject:topInfoModel atIndex:0];
+                    }
+                }
             }
             
         }else if ([model isKindOfClass:[FHHouseRentModel class]]){ //租房大类页
@@ -474,7 +491,6 @@
                 FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
                 cellModel.secondModel = obj;
                 cellModel.isRecommendCell = NO;
-    
                 [self.houseList addObject:cellModel];
             }else if ([obj isKindOfClass:[FHHouseRentDataItemsModel class]]){
                 FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
@@ -485,6 +501,16 @@
                 FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
                 cellModel.subscribModel = obj;
                 cellModel.isSubscribCell = YES;
+                [self.houseList addObject:cellModel];
+            }else if ([obj isKindOfClass:[FHSugListRealHouseTopInfoModel class]]){
+                FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
+                cellModel.realHouseTopModel = obj;
+                cellModel.isRealHouseTopCell = YES;
+                [self.houseList addObject:cellModel];
+            }else if ([obj isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]){
+                FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
+                cellModel.realHouseTopModel = obj;
+                cellModel.isRealHouseTopCell = YES;
                 [self.houseList addObject:cellModel];
             }
         }];
@@ -1028,6 +1054,25 @@
                     cellModel = self.houseList[indexPath.row];
                 }
                 
+                if (cellModel.isRealHouseTopCell) {
+                    if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                        FHSugListRealHouseTopInfoModel *realHouseInfo = (FHSugListRealHouseTopInfoModel *)cellModel.subscribModel;
+                        FHSuggestionRealHouseTopCell *topRealCell = [tableView dequeueReusableCellWithIdentifier:kRealHouseMainPage];
+                        if ([topRealCell respondsToSelector:@selector(refreshUI:)]) {
+                            [topRealCell refreshUI:realHouseInfo];
+                        }
+                        __weak typeof(self) weakSelf = self;
+                        topRealCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
+                            [weakSelf requestAddSubScribe:subscribeText];
+                        };
+                        
+                        topRealCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
+                            
+                        };
+                        return topRealCell;
+                    }
+                }
+                
                 if (cellModel.isSubscribCell) {
                     if ([cellModel.subscribModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
                         FHSugSubscribeDataDataSubscribeInfoModel *subscribModel = (FHSugSubscribeDataDataSubscribeInfoModel *)cellModel.subscribModel;
@@ -1106,6 +1151,12 @@
         } else {
             isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
             cellModel = self.sugesstHouseList[indexPath.row];
+        }
+        
+        if (cellModel.isRealHouseTopCell) {
+            if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                return 71;
+            }
         }
         
         if (cellModel.isSubscribCell) {
@@ -1682,6 +1733,15 @@
         self.subScribeShowDict = param;
         TRACK_EVENT(@"subscribe_show", param);
 
+    }else if (cellModel.isRealHouseTopCell) {
+        if ([cellModel.realHouseTopModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+            FHSugSubscribeDataDataSubscribeInfoModel *cellSubModel = (FHSugSubscribeDataDataSubscribeInfoModel *)cellModel.subscribModel;
+        
+        [param removeObjectForKey:@"impr_id"];
+        [param removeObjectForKey:@"group_id"];
+        self.subScribeShowDict = param;
+        TRACK_EVENT(@"subscribe_show", param);
+        }
     }else
     {
         TRACK_EVENT(@"house_show", param);

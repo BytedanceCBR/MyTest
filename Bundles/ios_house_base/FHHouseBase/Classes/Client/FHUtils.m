@@ -154,8 +154,8 @@
     //////// cornerRadius /////////
     view.layer.cornerRadius = cornerRadius;
     view.layer.masksToBounds = YES;
-    view.layer.shouldRasterize = YES;
-    view.layer.rasterizationScale = [UIScreen mainScreen].scale;
+//    view.layer.shouldRasterize = YES;
+//    view.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
     [view.superview.layer insertSublayer:shadowLayer below:view.layer];
 }

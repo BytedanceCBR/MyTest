@@ -8,6 +8,11 @@
 #import "FHBaseHouseListViewModel.h"
 #import <FHHouseSuggestionDelegate.h>
 
+typedef enum : NSUInteger {
+    FHHouseListSearchTypeDefault = 0,
+    FHHouseListSearchTypeNeighborhoodDeal, // 查成交
+} FHHouseListSearchType;
+
 @protocol FHMapSearchOpenUrlDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -21,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic , copy) NSString *houseListOpenUrl;
 @property (nonatomic , assign) FHHouseType houseType;
+@property (nonatomic , assign) FHHouseListSearchType searchType;
 
 @property (nonatomic , weak) UIViewController *listVC;
 

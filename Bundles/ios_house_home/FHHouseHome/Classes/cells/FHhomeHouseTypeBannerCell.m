@@ -103,7 +103,6 @@
             [containView addSubview:hotImage];
         }
         
-        
         UILabel *titleLabel = [UILabel new];
         titleLabel.text = itemModel.title;
         titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -113,11 +112,17 @@
         titleLabel.textAlignment = 0;
         [containView addSubview:titleLabel];
         
+        CGFloat titleAddLbaelWidth = 25;
+        
+        if (itemModel.title.length > 5) {
+            titleAddLbaelWidth = 20;
+        }
+        
         if (itemModel.addDescription) {
             UILabel *titleAddLabel = [UILabel new];
             titleAddLabel.text = itemModel.addDescription;
             titleAddLabel.textAlignment = NSTextAlignmentCenter;
-            [titleAddLabel setFrame:CGRectMake(titleLabel.text.length * 12 * [TTDeviceHelper scaleToScreen375], titleLabel.frame.origin.y + 8, 40, 10)];
+            [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth, titleLabel.frame.origin.y + 8, titleAddLbaelWidth, 10)];
             titleAddLabel.font = [UIFont themeFontRegular:6];
             titleAddLabel.textColor = [UIColor themeGray1];
             titleAddLabel.textAlignment = 0;

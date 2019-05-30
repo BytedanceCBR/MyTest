@@ -50,6 +50,7 @@ static NSMutableArray  * _Nullable identifierArr;
     dispatch_once(&onceToken, ^{
         manager = [[FHHomeCellHelper alloc] init];
         manager.traceShowCache = [NSMutableDictionary new];
+        [manager initFHHomeHeaderIconCountAndHeight];
     });
     return manager;
 }
@@ -193,12 +194,37 @@ static NSMutableArray  * _Nullable identifierArr;
     [self.traceShowCache removeAllObjects];
 }
 
+- (CGFloat)initFHHomeHeaderIconCountAndHeight
+{
+    self.kFHHomeIconRowCount = 4;
+    self.kFHHomeIconDefaultHeight = 57;
+    //下版本等实验结论再上
+    //    if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum isKindOfClass:[NSNumber class]]) {
+    //        if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum integerValue] == 5) {
+    //            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 5;
+    //            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 42;
+    //        }else
+    //        {
+    //            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
+    //            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
+    //        }
+    //    }else
+    //    {
+    //        [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
+    //        [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
+    //    }
+}
+
 - (CGFloat)heightForFHHomeHeaderCellViewType
 {
     //未开通城市返回
     if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
     {
         return 0;
+    }
+    
+    if (self.kFHHomeIconRowCount == 0 || self.kFHHomeIconDefaultHeight) {
+        [self initFHHomeHeaderIconCountAndHeight];
     }
     
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];

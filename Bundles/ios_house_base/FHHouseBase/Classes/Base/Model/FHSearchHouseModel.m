@@ -61,6 +61,8 @@
                            @"houseListOpenUrl": @"house_list_open_url",
                            @"recommendSearchModel": @"recommend_search",
                            @"subscribeInfo": @"subscribe_info",
+                           @"fakeHouse": @"fake_house",
+                           @"totalHouse": @"total_House",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -153,7 +153,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // in case no callbacks are invoked through notification register
-    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:5.f];
+    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:1.f];
     [[TTNotificationCenterDelegate sharedNotificationCenterDelegate] applicationDidComeToForeground];
 }
 

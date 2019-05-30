@@ -14,6 +14,7 @@
 
 #define kFHHouseListCellId @"kFHHouseListCellId"
 #define kFHHouseListSubscribCellId @"kFHHouseListSubscribCellId"
+#define kFHHouseListTopRealInfoCellId @"kFHHouseListTopRealInfoCellId"
 #define kBaseCellId @"kBaseCellId"
 #define kFHHouseListRecommendTitleCellId @"kFHHouseListRecommendTitleCellId"
 #define kFHHouseListPlaceholderCellId @"kFHHouseListPlaceholderCellId"

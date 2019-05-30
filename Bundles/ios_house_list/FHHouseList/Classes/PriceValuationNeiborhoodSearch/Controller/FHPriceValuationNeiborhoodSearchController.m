@@ -6,7 +6,6 @@
 //
 
 #import "FHPriceValuationNeiborhoodSearchController.h"
-#import "FHSuggestionListNavBar.h"
 #import "TTDeviceHelper.h"
 #import "FHHouseType.h"
 #import "FHHouseTypeManager.h"

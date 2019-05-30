@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
                           houseType:(FHHouseType)houseType
                            searchId:(NSString*)searchId
                              imprId:(NSString*)imprId
+                               from:(NSString*)fromStr
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 房源关注
