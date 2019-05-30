@@ -29,6 +29,7 @@
 #import "TTGoogleMapGeocoder.h"
 #import "TTRichSpanText.h"
 #import "TTRichSpanText+Link.h"
+#import "TTThemeManager.h"
 
 static CGFloat const kLeftPadding = 15.f;
 static CGFloat const kRightPadding = 15.f;
@@ -71,7 +72,8 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, copy) NSString * categoryID; //频道ID  add by zyk
 @property (nonatomic, copy) NSDictionary *sdkParamsDict;// 分享调起
 @property (nonatomic, strong) SSThemedLabel * tipLabel;
-
+@property (nonatomic, assign) UIStatusBarStyle originStatusBarStyle;
+@property (nonatomic, assign) BOOL firstAppear;
 @property (nonatomic, strong) SSThemedView * infoContainerView;
 @property (nonatomic, copy) NSString * postContentHint; //输入框占位文本
 @property (nonatomic, copy) NSString * postPreContent; //外部代入的输入框文本
@@ -126,6 +128,7 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.firstAppear = YES;
     [self setupNaviBar];
     [self createComponent];
     [self addImagesViewSizeChanged];
@@ -882,6 +885,43 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)textFiledEditDidChanged:(NSNotification *)notification {
   
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    // 避免视频详情页转发时，出现 statusBar 高度获取为 0 的情况
+    CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
+    self.containerView.frame = CGRectMake(0, top, self.view.width, self.view.height - top);
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [UIApplication sharedApplication].statusBarHidden = NO;
+    if (self.firstAppear) {
+        self.firstAppear = NO;
+        [self.inputTextView becomeFirstResponder];
+        // 图文发布器展示
+//        if (!(self.showEtStatus & FRShowEtStatusOfTitle) && self.publishMode != 1) {
+//            [self.inputTextView becomeFirstResponder];
+//        }
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.originStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+//    if ([TTThemeManager sharedInstance_tt].currentThemeMode == TTThemeModeDay) {
+//        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+//    } else {
+//        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+//    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[UIApplication sharedApplication] setStatusBarStyle:self.originStatusBarStyle];
 }
 
 - (void)viewDidEnterBackground {
