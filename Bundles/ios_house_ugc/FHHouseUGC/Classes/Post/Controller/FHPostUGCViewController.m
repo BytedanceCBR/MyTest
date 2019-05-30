@@ -30,6 +30,9 @@
 #import "TTRichSpanText.h"
 #import "TTRichSpanText+Link.h"
 #import "TTThemeManager.h"
+#import "TTIndicatorView.h"
+#import "TTReachability.h"
+#import "TTAccountManager.h"
 
 static CGFloat const kLeftPadding = 15.f;
 static CGFloat const kRightPadding = 15.f;
@@ -488,7 +491,140 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)sendPost:(id)sender {
+    // 未登陆的情况是否不能发布 add by zyk
+//    if ([[TTPostThreadBridge sharedInstance] shouldBindPhone]) {
+//        [[TTPostThreadBridge sharedInstance] jumpToBindPhonePageWithParams:nil];
+//        return;
+//    }
     
+    TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
+    [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *inputText = richSpanText.text;
+    
+    if (![self isValidateWithInputText:inputText]) {
+        return;
+    }
+    // iCloud 同步 不需要？
+//    if ([self hasUncompletedIcloudTask]) {
+//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+//                                  indicatorText:NSLocalizedString(@"iCloud同步中", nil)
+//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
+//                                    autoDismiss:YES
+//                                 dismissHandler:nil];
+//        return;
+//    }
+//    if ([self hasFailedIcloudTask]) {
+//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+//                                  indicatorText:NSLocalizedString(@"iCloud同步失败", nil)
+//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
+//                                    autoDismiss:YES
+//                                 dismissHandler:nil];
+//        return;
+//    }
+    
+    [self endEditing];
+    WeakSelf;
+    // add by zyk 判断是否登录
+//    if (![[BDContextGet() findServiceByName:TTAccountProviderServiceName] isLogin]) {
+//        [[TTPostThreadBridge sharedInstance] showLoginAlertWithSource:self.source
+//                                                            superView:self.navigationController.view
+//                                                           completion:^(BOOL tips) {
+//                                                               StrongSelf;
+//                                                               if (!tips) {
+//                                                                   [self sendThreadWithLoginState:1 withTitleText:titleText inputText:inputText phoneText:phoneText];
+//                                                               } else {
+//                                                                   [[TTPostThreadBridge sharedInstance] presentQuickLoginFromVC:self source:self.source];
+//                                                               }
+//                                                           }];
+//    }else {
+//        [self sendThreadWithLoginState:1 withTitleText:titleText inputText:inputText phoneText:phoneText];
+//    }
+    
+    // 注意 参数
+    [self sendThreadWithLoginState:1 withTitleText:@"titleText" inputText:inputText phoneText:@"phoneText"];
+}
+
+- (void)sendThreadWithLoginState:(NSInteger)loginState withTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
+    if (self && [TTAccountManager isLogin]) {
+        
+        if ([TTKitchen getBOOL:kTTKCommonUgcPostBindingPhoneNumberKey]) {
+            
+            self.view.userInteractionEnabled = NO;
+            TTIndicatorView * checkBoundPhoneIndicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView
+                                                                                               indicatorText:@"发布中..."
+                                                                                              indicatorImage:nil
+                                                                                              dismissHandler:nil];
+            checkBoundPhoneIndicatorView.autoDismiss = NO;
+            [checkBoundPhoneIndicatorView showFromParentView:self.view];
+            
+            WeakSelf;
+            [TTPostThreadManager checkPostNeedBindPhoneOrNotWithCompletion:^(FRPostBindCheckType checkType) {
+                
+                StrongSelf;
+                [checkBoundPhoneIndicatorView dismissFromParentView];
+                self.view.userInteractionEnabled = YES;
+                
+                if (checkType == FRPostBindCheckTypePostBindCheckTypeNeed) {
+                    
+                    WeakSelf;
+                    UIViewController *bindViewController = [[TTPostThreadBridge sharedInstance] pushBindPhoneNumberWhenPostThreadWithCompletion:^{
+                        StrongSelf;
+                        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+                    }];
+                    
+                    if (!bindViewController) {
+                        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+                    } else {
+                        if ([self.navigationController isKindOfClass:[UINavigationController class]] && bindViewController && [bindViewController isKindOfClass:[UIViewController class]]) {
+                            [self.navigationController pushViewController:bindViewController animated:YES];
+                        }
+                    }
+                } else {
+                    [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+                }
+            }];
+        } else {
+            [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+        }
+    }
+}
+
+- (void)postThreadWithTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
+    
+}
+
+- (BOOL)isValidateWithInputText:(NSString *)inputText{
+    //Validate
+    
+    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
+    
+    if (isEmptyString(inputText) && self.addImagesView.selectedImageCacheTasks.count == 0) {
+        [self endEditing];
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                  indicatorText:NSLocalizedString(@"说点什么...", nil)
+                                 indicatorImage:nil
+                                    autoDismiss:YES
+                                 dismissHandler:nil];
+        return NO;
+    }else if (inputText.length > maxTextCount) {
+        [self endEditing];
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                  indicatorText:[NSString stringWithFormat:@"字数超过%ld字，请调整后重试", maxTextCount]
+                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
+                                    autoDismiss:YES
+                                 dismissHandler:nil];
+        return NO;
+    }
+    
+    if (![TTReachability isNetworkConnected]) {
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                  indicatorText:NSLocalizedString(@"没有网络连接", nil)
+                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
+                                    autoDismiss:YES
+                                 dismissHandler:nil];
+        return NO;
+    }
+    return YES;
 }
 
 - (void)addImagesViewSizeChanged {
