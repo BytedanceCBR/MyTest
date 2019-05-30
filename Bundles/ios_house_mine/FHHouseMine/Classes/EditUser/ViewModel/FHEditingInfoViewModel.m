@@ -117,8 +117,10 @@
             if(userEntity.auditInfoSet.pgcUserAuditEntity){
                 self.userInfo.isAuditing = userEntity.auditInfoSet.pgcUserAuditEntity.auditing;
             }
-
-            [[ToastManager manager] showToast:@"修改成功"];
+            
+            if(!self.userInfo.isAuditing){
+                [[ToastManager manager] showToast:@"修改成功"];
+            }
             
             // 使用新的数据刷新
             [sself.viewController.navigationController popViewControllerAnimated:YES];

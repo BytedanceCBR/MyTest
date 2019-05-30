@@ -270,11 +270,13 @@
                     if (isEmptyString(hint)) hint = NSLocalizedString(@"头像修改失败，请稍后重试", nil);
                     [[ToastManager manager] showToast:hint];
                 } else {
-                    [[ToastManager manager] showToast:@"头像修改成功"];
-                    NSString *imageURL = [userEntity.auditInfoSet userAvatarURLString];
                     if(userEntity.auditInfoSet.pgcUserAuditEntity){
                         self.userInfo.isAuditing = userEntity.auditInfoSet.pgcUserAuditEntity.auditing;
                     }
+                    if(!self.userInfo.isAuditing){
+                        [[ToastManager manager] showToast:@"头像修改成功"];
+                    }
+                    NSString *imageURL = [userEntity.auditInfoSet userAvatarURLString];
                     
                     if (!isEmptyString(imageURL)) {
                         TTAccountUserEntity* user = [[TTAccount sharedAccount] user];
