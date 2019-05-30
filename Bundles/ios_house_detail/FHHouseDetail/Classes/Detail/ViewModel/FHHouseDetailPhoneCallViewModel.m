@@ -308,7 +308,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
         TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrlRn userInfo:userInfo];
         if (isPre) {
-             [[FHRNHelper sharedInstance] addCacheViewOpenUrl:openUrlRnStr andCacheKey:self.hash];
+             [[FHRNHelper sharedInstance] addCacheViewOpenUrl:openUrlRnStr andUserInfo:userInfo andCacheKey:self.hash];
             return nil;
         }else
         {

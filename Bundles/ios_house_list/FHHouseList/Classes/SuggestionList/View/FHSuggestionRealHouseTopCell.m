@@ -13,6 +13,7 @@
 #import <FHEnvContext.h>
 #import <ToastManager.h>
 #import <NSDictionary+TTAdditions.h>
+#import <TTRoute.h>
 
 @interface FHSuggestionRealHouseTopCell()
 @property (nonatomic, strong)FHSugSubscribeDataDataSubscribeInfoModel *currentModel;
@@ -139,7 +140,7 @@
     
     _allFalseHouseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_allFalseHouseBtn setImage:[UIImage imageNamed:@"house_list_real_arrow"] forState:UIControlStateNormal];
-    [_allFalseHouseBtn addTarget:self action:@selector(allWebHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_allFalseHouseBtn addTarget:self action:@selector(allFalseHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_allFalseHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     [segementContentView addSubview:_allFalseHouseBtn];
     
@@ -155,29 +156,22 @@
 
 - (void)allWebHouseBtnClick:(UIButton *)button
 {
-    
     if (![FHEnvContext isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
     
-    _allWebHouseBtn.userInteractionEnabled = NO;
-    if ([_allWebHouseBtn.titleLabel.text isEqualToString:@"订阅"]) {
-        //        [_allWebHouseBtn setTitle:@"已订阅" forState:UIControlStateNormal];
-        if(self.addSubscribeAction)
-        {
-            
-            self.addSubscribeAction(self.currentModel.text);
-        }
-    }else
-    {
-        if(self.deleteSubscribeAction)
-        {
-            self.deleteSubscribeAction(self.currentModel.subscribeId);
-        }
-        //        [_allWebHouseBtn setTitle:@"订阅" forState:UIControlStateNormal];
+    FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)self.currentModel;
+    if ([model.openUrl isKindOfClass:[NSString class]]) {
+        NSDictionary *info = @{@"url":model.openUrl,@"fhJSParams":@{},@"title":@""};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://webview"] userInfo:userInfo];
     }
-    [self performSelector:@selector(enabelSubscribBtn) withObject:nil afterDelay:1];
+}
+
+- (void)allFalseHouseBtnClick:(UIButton *)button
+{
+    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://house_fake_list"] userInfo:nil];
 }
 
 #pragma mark -

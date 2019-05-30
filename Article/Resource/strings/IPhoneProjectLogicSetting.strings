@@ -161,3 +161,6 @@
 
 //全/真房源新增web vc
 "house_real_web" = "FHHouseDetailWebViewController";
+"house_fake_list" = "FHFalseHouseListViewController";
+
+
