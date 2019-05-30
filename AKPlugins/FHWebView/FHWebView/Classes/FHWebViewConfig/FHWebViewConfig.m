@@ -32,7 +32,7 @@
     return FHAppVersionC;
 }
 
-- (void)showEmptyView:(UIView *)view {
+- (void)showEmptyView:(UIView *)view retryBlock:(void (^)(void))retryBlock {
     
 }
 

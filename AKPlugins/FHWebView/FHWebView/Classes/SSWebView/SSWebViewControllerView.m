@@ -41,6 +41,7 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import "FHWebViewConfig.h"
 
 #define toolBarHeight 40.f
 
@@ -103,17 +104,20 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         self.navigationBar.preferredItemWidth = 75;
         [backButton.backButton addTarget:self action:@selector(backWebViewActionFired:) forControlEvents:UIControlEventTouchUpInside];
         [backButton.closeButton addTarget:self action:@selector(backViewControllerActionFired:) forControlEvents:UIControlEventTouchUpInside];
+        if([FHWebViewConfig appVersion] == FHAppVersionB){
+            [backButton.backButton setImage:[UIImage imageNamed:@"nav_back_dark"] forState:UIControlStateNormal];
+        }
         navigationBar.leftBarView = backButton;
         self.backButtonView = backButton;
         
         /*
-        SSThemedButton *rightButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-        rightButton.frame = CGRectMake(0, 0, 76, 60);
-        [rightButton setImageEdgeInsets:UIEdgeInsetsMake(0, 40, 0, -6)];
-        rightButton.imageName = @"new_more_titlebar.png";
-        rightButton.highlightedImageName = @"new_more_titlebar_press.png";
-        [rightButton addTarget:self action:@selector(moreActionFired:) forControlEvents:UIControlEventTouchUpInside];
-        navigationBar.rightBarView = rightButton;
+         SSThemedButton *rightButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
+         rightButton.frame = CGRectMake(0, 0, 76, 60);
+         [rightButton setImageEdgeInsets:UIEdgeInsetsMake(0, 40, 0, -6)];
+         rightButton.imageName = @"new_more_titlebar.png";
+         rightButton.highlightedImageName = @"new_more_titlebar_press.png";
+         [rightButton addTarget:self action:@selector(moreActionFired:) forControlEvents:UIControlEventTouchUpInside];
+         navigationBar.rightBarView = rightButton;
          */
         //更多按钮自定义操作
         [self initMoreButtonActions];
@@ -123,14 +127,14 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         [_ssWebContainer setDisableTTUserAgent:_disableTTUserAgent];
         [_ssWebContainer hiddenProgressView:self.disableProgressView];
         [self addSubview:_ssWebContainer];
-  
+        
         if ([SSCommonLogic shouldClickJumpControlEnabled]) {
             self.webTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
             self.webTapGesture.delegate = self;
             self.webTapGesture.enabled = NO;
             [self.ssWebContainer.ssWebView addGestureRecognizer:self.webTapGesture];
         }
-
+        
         [self bringSubviewToFront:self.navigationBar];
         
         [self reloadThemeUI];
@@ -140,11 +144,11 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
 
 - (void)initShareButtonAcition
 {
-     SSThemedButton *rightButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-     rightButton.frame = CGRectMake(10, 0, 30, 30);
+    SSThemedButton *rightButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
+    rightButton.frame = CGRectMake(10, 0, 30, 30);
     [rightButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
     [rightButton setImage:[UIImage imageNamed:@"ic-navigation-share-dark"] forState:UIControlStateNormal];
-     [rightButton addTarget:self action:@selector(shareBtnClick)  forControlEvents:UIControlEventTouchUpInside];
+    [rightButton addTarget:self action:@selector(shareBtnClick)  forControlEvents:UIControlEventTouchUpInside];
     _navigationBar.rightBarView = rightButton;
 }
 
@@ -202,40 +206,40 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     }
     //执行js脚本后回调ToutiaoJSBridge.call('shareInfo',xxx),传回来title,desc,image,url
     [self.ssWebContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"(function(){function loadScript(url,callback){var head=document.head,script;script=document.createElement('script');script.async=false;script.type='text/javascript';script.charset='utf-8';script.src=url;head.insertBefore(script,head.firstChild);if(callback){script.addEventListener('load',callback,false)}}function sendMsg(argument){var min_image_size=100;var title='',desc='',icon='',title_ele=document.querySelector('title'),desc_ele=document.querySelector('meta[name=description]');if(title_ele){title=title_ele.innerText}if(desc_ele){desc=desc_ele.content}var imgs=document.querySelectorAll('body img');for(var i=0;i<imgs.length;i++){var img=imgs[i];if(img.naturalWidth>min_image_size&&img.naturalHeight>min_image_size){icon=img.src;break}}window.ToutiaoJSBridge.call('shareInfo',{'title':title,'desc':desc,'image':icon,'url':location.href})}if(!window.ToutiaoJSBridge){var protocol=location.protocol.indexOf('https')>-1?'https://':'http://';loadScript(protocol+'s2.pstatp.com/inapp/toutiao.js',sendMsg)}else{sendMsg()}})();"
-        completionHandler:nil];
+                                                        completionHandler:nil];
 }
 
 - (void)shareActionSheetFired
 {
-//    [_activityActionManager clearCondition];
-//    if (!_activityActionManager) {
-//        self.activityActionManager = [[TTActivityShareManager alloc] init];
-//        self.activityActionManager.forwardToWeitoutiao = self.isRepostWeitoutiaoFromWeb;
-//        if ([TTKitchen getBOOL:kKCUGCRepostLinkEnable]) {
-//            self.activityActionManager.forwardToWeitoutiao = YES;
-//        }
-//    }
-//    NSMutableArray * activityItems = [ArticleShareManager shareActivityManager:_activityActionManager setWapConditionWithTitle:self.shareTitle desc:self.shareDesc url:[self currentURLStr] imageUrl:self.shareImageUrl];
-//    if (self.navMoreShareView){
-//        self.navMoreShareView = nil;
-//    }
-//    self.navMoreShareView = [[SSActivityView alloc] init];
-//    [self.navMoreShareView refreshCancelButtonTitle:@"取消"];
-//    self.navMoreShareView.delegate = self;
-//    [self.navMoreShareView setActivityItemsWithFakeLayout:activityItems];
-//    if (!isEmptyString(self.ssWebContainer.adID)) {
-//        id<TTAdManagerProtocol> adManagerInstance = [[TTServiceCenter sharedInstance] getServiceByProtocol:@protocol(TTAdManagerProtocol)];
-//        [adManagerInstance share_showInAdPage:self.ssWebContainer.adID groupId:@"0"];
-//    }
-//    [self.navMoreShareView show];
-//    NSString *tag = [TTActivityShareManager tagNameForShareSourceObjectType:TTShareSourceObjectTypeWap];
-//    NSString *label = @"share_button";
-//    NSDictionary *extraDict;
-//    if (self.ssWebContainer.gdExtJsonDict) {
-//        tag = [self.ssWebContainer.gdExtJsonDict valueForKey:@"source"];
-//        extraDict = self.ssWebContainer.gdExtJsonDict;
-//    }
-//    wrapperTrackEventWithCustomKeys(tag, label, nil, nil, extraDict);
+    //    [_activityActionManager clearCondition];
+    //    if (!_activityActionManager) {
+    //        self.activityActionManager = [[TTActivityShareManager alloc] init];
+    //        self.activityActionManager.forwardToWeitoutiao = self.isRepostWeitoutiaoFromWeb;
+    //        if ([TTKitchen getBOOL:kKCUGCRepostLinkEnable]) {
+    //            self.activityActionManager.forwardToWeitoutiao = YES;
+    //        }
+    //    }
+    //    NSMutableArray * activityItems = [ArticleShareManager shareActivityManager:_activityActionManager setWapConditionWithTitle:self.shareTitle desc:self.shareDesc url:[self currentURLStr] imageUrl:self.shareImageUrl];
+    //    if (self.navMoreShareView){
+    //        self.navMoreShareView = nil;
+    //    }
+    //    self.navMoreShareView = [[SSActivityView alloc] init];
+    //    [self.navMoreShareView refreshCancelButtonTitle:@"取消"];
+    //    self.navMoreShareView.delegate = self;
+    //    [self.navMoreShareView setActivityItemsWithFakeLayout:activityItems];
+    //    if (!isEmptyString(self.ssWebContainer.adID)) {
+    //        id<TTAdManagerProtocol> adManagerInstance = [[TTServiceCenter sharedInstance] getServiceByProtocol:@protocol(TTAdManagerProtocol)];
+    //        [adManagerInstance share_showInAdPage:self.ssWebContainer.adID groupId:@"0"];
+    //    }
+    //    [self.navMoreShareView show];
+    //    NSString *tag = [TTActivityShareManager tagNameForShareSourceObjectType:TTShareSourceObjectTypeWap];
+    //    NSString *label = @"share_button";
+    //    NSDictionary *extraDict;
+    //    if (self.ssWebContainer.gdExtJsonDict) {
+    //        tag = [self.ssWebContainer.gdExtJsonDict valueForKey:@"source"];
+    //        extraDict = self.ssWebContainer.gdExtJsonDict;
+    //    }
+    //    wrapperTrackEventWithCustomKeys(tag, label, nil, nil, extraDict);
 }
 
 - (BOOL)clickJumpRecognized
@@ -323,122 +327,122 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
 }
 
 - (void)menuActionSheetFired:(UIButton *)sender {
-//    NSString *refreshTitle = NSLocalizedString(@"刷新", nil)?:@"刷新", *copyTitle = NSLocalizedString(@"复制链接", nil)?:@"复制链接", *safariTitle = NSLocalizedString(@"使用Safari打开", nil)?:@"使用Safari打开", *shareTitle = NSLocalizedString(@"分享页面", nil)?:@"分享页面", *cancelTitle = NSLocalizedString(@"取消", nil)?:@"取消";
-//    if (![TTDeviceHelper isPadDevice]) {
-//        TTThemedAlertController *actionSheet = [[TTThemedAlertController alloc] initWithTitle:nil message:nil preferredType:TTThemedAlertControllerTypeActionSheet];
-//        if (_shouldShowRefreshAction) {
-//            [actionSheet addActionWithTitle:refreshTitle actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-//                [self.ssWebContainer.ssWebView reload];
-//            }];
-//        }
-//        if (_shouldShowCopyAction) {
-//            [actionSheet addActionWithTitle:copyTitle actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-//                [TTActivityShareManager copyText:[self currentURLStr]];
-//            }];
-//        }
-//        if (_shouldShowSafariAction) {
-//            [actionSheet addActionWithTitle:safariTitle actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-//                [[UIApplication sharedApplication] openURL:[TTStringHelper URLWithURLString:[self currentURLStr]]];
-//            }];
-//        }
-//        if (_shouldShowShareAction) {
-//            __weak typeof(self) wself = self;
-//            [actionSheet addActionWithTitle:shareTitle actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-//                __strong typeof(wself) self = wself;
-//                [self shareActionSheetFired];
-//            }];
-//        }
-//        [actionSheet addActionWithTitle:cancelTitle actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
-//        [actionSheet showFrom:self.viewController animated:YES];
-//    } else {
-//        if([TTDeviceHelper OSVersionNumber] >= 8.0 && [TTDeviceHelper isPadDevice]) {
-//            UIViewController *topVC = [TTUIResponderHelper topViewControllerFor: self];
-//            UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-//            UIAlertAction *refreshAction = [UIAlertAction actionWithTitle:refreshTitle
-//                                                                    style:UIAlertActionStyleDefault
-//                                                                  handler:^(UIAlertAction * _Nonnull action) {
-//                                                                    [self.ssWebContainer.ssWebView reload];
-//                                                                }];
-//            if (_shouldShowRefreshAction) {
-//                [controller addAction:refreshAction];
-//            }
-//
-//            UIAlertAction *copyAction = [UIAlertAction actionWithTitle:copyTitle
-//                                                                    style:UIAlertActionStyleDefault
-//                                                                  handler:^(UIAlertAction * _Nonnull action) {
-//                                                                      [TTActivityShareManager copyText:[self currentURLStr]];
-//                                                                  }];
-//            if (_shouldShowCopyAction) {
-//                [controller addAction:copyAction];
-//            }
-//
-//            UIAlertAction *safariAction = [UIAlertAction actionWithTitle:safariTitle
-//                                                                   style:UIAlertActionStyleDefault
-//                                                                 handler:^(UIAlertAction * _Nonnull action) {
-//                                                                     [[UIApplication sharedApplication] openURL:[TTStringHelper URLWithURLString:[self currentURLStr]]];
-//                                                                 }];
-//            if (_shouldShowSafariAction) {
-//                [controller addAction:safariAction];
-//            }
-//
-//            UIAlertAction *shareAction = [UIAlertAction actionWithTitle:shareTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//                [self shareActionSheetFired];
-//                //to do
-//            }];
-//
-//            if (_shouldShowShareAction) {
-//                [controller addAction:shareAction];
-//            }
-//
-//            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-//            }];
-//
-//            [controller addAction:cancelAction];
-//            controller.popoverPresentationController.sourceView = sender;
-//            controller.popoverPresentationController.sourceRect = sender.bounds;
-//            controller.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
-//            [topVC presentViewController:controller animated:YES completion:nil];
-//        } else {
-//
-//            UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:nil
-//                                                                delegate:self
-//                                                       cancelButtonTitle:cancelTitle
-//                                                  destructiveButtonTitle:nil
-//                                                       otherButtonTitles:nil];
-//            if (_shouldShowRefreshAction){
-//                [sheet addButtonWithTitle:refreshTitle];
-//            }
-//            if (_shouldShowCopyAction) {
-//                [sheet addButtonWithTitle:copyTitle];
-//            }
-//            if (_shouldShowSafariAction) {
-//                [sheet addButtonWithTitle:safariTitle];
-//            }
-//            if (_shouldShowShareAction) {
-//                [sheet addButtonWithTitle:shareTitle];
-//            }
-//            sheet.tag = SSWebViewMoreActionSheetTag;
-//            [sheet showInView:self];
-//        }
-//    }
+    //    NSString *refreshTitle = NSLocalizedString(@"刷新", nil)?:@"刷新", *copyTitle = NSLocalizedString(@"复制链接", nil)?:@"复制链接", *safariTitle = NSLocalizedString(@"使用Safari打开", nil)?:@"使用Safari打开", *shareTitle = NSLocalizedString(@"分享页面", nil)?:@"分享页面", *cancelTitle = NSLocalizedString(@"取消", nil)?:@"取消";
+    //    if (![TTDeviceHelper isPadDevice]) {
+    //        TTThemedAlertController *actionSheet = [[TTThemedAlertController alloc] initWithTitle:nil message:nil preferredType:TTThemedAlertControllerTypeActionSheet];
+    //        if (_shouldShowRefreshAction) {
+    //            [actionSheet addActionWithTitle:refreshTitle actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+    //                [self.ssWebContainer.ssWebView reload];
+    //            }];
+    //        }
+    //        if (_shouldShowCopyAction) {
+    //            [actionSheet addActionWithTitle:copyTitle actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+    //                [TTActivityShareManager copyText:[self currentURLStr]];
+    //            }];
+    //        }
+    //        if (_shouldShowSafariAction) {
+    //            [actionSheet addActionWithTitle:safariTitle actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+    //                [[UIApplication sharedApplication] openURL:[TTStringHelper URLWithURLString:[self currentURLStr]]];
+    //            }];
+    //        }
+    //        if (_shouldShowShareAction) {
+    //            __weak typeof(self) wself = self;
+    //            [actionSheet addActionWithTitle:shareTitle actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+    //                __strong typeof(wself) self = wself;
+    //                [self shareActionSheetFired];
+    //            }];
+    //        }
+    //        [actionSheet addActionWithTitle:cancelTitle actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
+    //        [actionSheet showFrom:self.viewController animated:YES];
+    //    } else {
+    //        if([TTDeviceHelper OSVersionNumber] >= 8.0 && [TTDeviceHelper isPadDevice]) {
+    //            UIViewController *topVC = [TTUIResponderHelper topViewControllerFor: self];
+    //            UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    //            UIAlertAction *refreshAction = [UIAlertAction actionWithTitle:refreshTitle
+    //                                                                    style:UIAlertActionStyleDefault
+    //                                                                  handler:^(UIAlertAction * _Nonnull action) {
+    //                                                                    [self.ssWebContainer.ssWebView reload];
+    //                                                                }];
+    //            if (_shouldShowRefreshAction) {
+    //                [controller addAction:refreshAction];
+    //            }
+    //
+    //            UIAlertAction *copyAction = [UIAlertAction actionWithTitle:copyTitle
+    //                                                                    style:UIAlertActionStyleDefault
+    //                                                                  handler:^(UIAlertAction * _Nonnull action) {
+    //                                                                      [TTActivityShareManager copyText:[self currentURLStr]];
+    //                                                                  }];
+    //            if (_shouldShowCopyAction) {
+    //                [controller addAction:copyAction];
+    //            }
+    //
+    //            UIAlertAction *safariAction = [UIAlertAction actionWithTitle:safariTitle
+    //                                                                   style:UIAlertActionStyleDefault
+    //                                                                 handler:^(UIAlertAction * _Nonnull action) {
+    //                                                                     [[UIApplication sharedApplication] openURL:[TTStringHelper URLWithURLString:[self currentURLStr]]];
+    //                                                                 }];
+    //            if (_shouldShowSafariAction) {
+    //                [controller addAction:safariAction];
+    //            }
+    //
+    //            UIAlertAction *shareAction = [UIAlertAction actionWithTitle:shareTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    //                [self shareActionSheetFired];
+    //                //to do
+    //            }];
+    //
+    //            if (_shouldShowShareAction) {
+    //                [controller addAction:shareAction];
+    //            }
+    //
+    //            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+    //            }];
+    //
+    //            [controller addAction:cancelAction];
+    //            controller.popoverPresentationController.sourceView = sender;
+    //            controller.popoverPresentationController.sourceRect = sender.bounds;
+    //            controller.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
+    //            [topVC presentViewController:controller animated:YES completion:nil];
+    //        } else {
+    //
+    //            UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:nil
+    //                                                                delegate:self
+    //                                                       cancelButtonTitle:cancelTitle
+    //                                                  destructiveButtonTitle:nil
+    //                                                       otherButtonTitles:nil];
+    //            if (_shouldShowRefreshAction){
+    //                [sheet addButtonWithTitle:refreshTitle];
+    //            }
+    //            if (_shouldShowCopyAction) {
+    //                [sheet addButtonWithTitle:copyTitle];
+    //            }
+    //            if (_shouldShowSafariAction) {
+    //                [sheet addButtonWithTitle:safariTitle];
+    //            }
+    //            if (_shouldShowShareAction) {
+    //                [sheet addButtonWithTitle:shareTitle];
+    //            }
+    //            sheet.tag = SSWebViewMoreActionSheetTag;
+    //            [sheet showInView:self];
+    //        }
+    //    }
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-//    if (actionSheet.tag == SSWebViewMoreActionSheetTag) {
-//        if (buttonIndex == actionSheet.cancelButtonIndex) {
-//            return;
-//        }
-//        NSString * title = [actionSheet buttonTitleAtIndex:buttonIndex];
-//        if ([title isEqualToString:@"刷新"]) {
-//            [self.ssWebContainer.ssWebView reload];
-//        } else if ([title isEqualToString:@"复制链接"]) {
-//            [TTActivityShareManager copyText:[self currentURLStr]];
-//        } else if ([title isEqualToString:@"使用Safari打开"]) {
-//            [[UIApplication sharedApplication] openURL:self.ssWebContainer.ssWebView.request.URL];
-//        } else if ([title isEqualToString:@"分享页面"]) {
-//           [self shareActionSheetFired];
-//        }
-//    }
+    //    if (actionSheet.tag == SSWebViewMoreActionSheetTag) {
+    //        if (buttonIndex == actionSheet.cancelButtonIndex) {
+    //            return;
+    //        }
+    //        NSString * title = [actionSheet buttonTitleAtIndex:buttonIndex];
+    //        if ([title isEqualToString:@"刷新"]) {
+    //            [self.ssWebContainer.ssWebView reload];
+    //        } else if ([title isEqualToString:@"复制链接"]) {
+    //            [TTActivityShareManager copyText:[self currentURLStr]];
+    //        } else if ([title isEqualToString:@"使用Safari打开"]) {
+    //            [[UIApplication sharedApplication] openURL:self.ssWebContainer.ssWebView.request.URL];
+    //        } else if ([title isEqualToString:@"分享页面"]) {
+    //           [self shareActionSheetFired];
+    //        }
+    //    }
 }
 
 - (void)p_forwardToWeitoutiao{
@@ -449,7 +453,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     NSString *title = self.repostTitle;
     NSString *schema = self.repostSchema;
     NSInteger repostType = self.repostType;
-
+    
     if (self.isRepostWeitoutiaoFromWeb == NO
         && [TTKitchen getBOOL:kKCUGCRepostLinkEnable]) {
         
@@ -496,9 +500,9 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
 
 - (void)backWebViewActionFired:(id) sender {
     
-//    if (![self.backButtonView isCloseButtonShowing]) {
-        [self performSelector:@selector(showCloseButton) withObject:nil afterDelay:0.1];
-//    }
+    //    if (![self.backButtonView isCloseButtonShowing]) {
+    [self performSelector:@selector(showCloseButton) withObject:nil afterDelay:0.1];
+    //    }
     if ([self.ssWebContainer.ssWebView canGoBack] && !self.shouldDisableHistory) {
         [self.ssWebContainer.ssWebView goBack];
     } else {
@@ -576,15 +580,15 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
 
 - (CGRect)frameForWebViewContainer {
     return CGRectMake(0, 0,
-                          self.frame.size.width,
-                          self.frame.size.height);
+                      self.frame.size.width,
+                      self.frame.size.height);
 }
 
 - (NSString *)currentURLStr {
     if ([SSCommonLogic shouldAppendQueryStirngWithUrl:_ssWebContainer.ssWebView.currentURL]) {
         return [TTNetworkUtilities substringCutOffCommonParasStringFromURLString:[_ssWebContainer.ssWebView.currentURL absoluteString]];
     }
-//    return [_ssWebContainer.ssWebView.request.URL absoluteString];
+    //    return [_ssWebContainer.ssWebView.request.URL absoluteString];
     return _ssWebContainer.ssWebView.currentURL.absoluteString;
 }
 
@@ -620,7 +624,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
             urlString = [self _handleDayNightModeWithURL:requestURL];
         }
     }
-
+    
     NSDictionary *handledHeaders = [self _handleRequestHeader:requestHeaders];
     
     NSURL *url = [TTStringHelper URLWithURLString:urlString];
@@ -641,8 +645,8 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     BOOL isDayModel = [[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay;
     NSString *fontSizeType = [TTUserSettingsManager settedFontShortString];
     
-//    urlString = [SSWebViewUtil jointFragmentParamsDict:@{@"tt_daymode": isDayModel? @"1": @"0",
-//    @"tt_font": fontSizeType} toURL:origURL.absoluteString];
+    //    urlString = [SSWebViewUtil jointFragmentParamsDict:@{@"tt_daymode": isDayModel? @"1": @"0",
+    //    @"tt_font": fontSizeType} toURL:origURL.absoluteString];
     urlString = origURL.absoluteString;
     return urlString;
 }
@@ -680,14 +684,14 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     }
     
     //针对WKWebview 的下载做一个特殊处理 主动通过openURL去打开AppStore nick -5.6
-//    if ([ArticleWebViewToAppStoreManager isToAppStoreRequestURLStr:request.URL.absoluteString] && [webView isWKWebView]) {
-//        
-//        if ([[UIApplication sharedApplication] canOpenURL:request.URL]) {
-//            
-//            [[UIApplication sharedApplication] openURL:request.URL];
-//            return NO;
-//        }
-//    }
+    //    if ([ArticleWebViewToAppStoreManager isToAppStoreRequestURLStr:request.URL.absoluteString] && [webView isWKWebView]) {
+    //
+    //        if ([[UIApplication sharedApplication] canOpenURL:request.URL]) {
+    //
+    //            [[UIApplication sharedApplication] openURL:request.URL];
+    //            return NO;
+    //        }
+    //    }
     
     if (self.ssWebContainer.adID) {
         /// 如果是广告的，则需要统计连接跳转。需求说明一下，这是一个很蛋疼的统计，要统计广告落地页中，所有跳转的统计
@@ -717,10 +721,10 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         }
     }
     //暂时下掉about:blank拦截 @zengruihuan
-//    if ([[request.URL absoluteString] isEqualToString:@"about:blank"]) {
-//        return NO;
-//    }
-
+    //    if ([[request.URL absoluteString] isEqualToString:@"about:blank"]) {
+    //        return NO;
+    //    }
+    
     return result;
 }
 
