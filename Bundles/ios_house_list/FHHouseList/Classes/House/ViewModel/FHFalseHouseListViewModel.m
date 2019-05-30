@@ -19,6 +19,9 @@
 #import <FHUtils.h>
 #import <FHEnvContext.h>
 #import "FHFalseListTopHeaderView.h"
+#import "FHRefreshCustomFooter.h"
+#import <ToastManager.h>
+#import <UIScrollView+Refresh.h>
 
 #define kBaseCellId @"kBaseCellId"
 #define kBaseErrorCellId @"kErrorCell"
@@ -36,11 +39,13 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property(nonatomic , strong) NSString *searchId;
 @property(nonatomic , strong) FHFalseListTopHeaderView *topHeader;
 @property(nonatomic , weak) TTHttpTask * requestTask;
+@property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property (nonatomic, weak) FHFalseHouseListViewController *currentViewController;
 @property (nonatomic , strong) UIView *bottomView;
 @property (nonatomic , strong) UIButton *buttonOpenMore;
 @property(nonatomic , strong) FHTracerModel *tracerModel;
 @property (nonatomic , strong) NSMutableDictionary *houseSearchDic;
+@property(nonatomic , strong) NSString *requestSearchId;
 
 @end
 
@@ -64,6 +69,10 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         self.houseType = FHHouseTypeSecondHandHouse;
         self.houseSearchDic = [NSMutableDictionary new];
         
+        _requestSearchId = paramObj.allParams[@"searchId"];
+        
+        self.houseList = [NSMutableArray new];
+        
         NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
         if (tracerDict) {
             self.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDict];
@@ -71,13 +80,39 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         }
         
         
+        
+        WeakSelf;
+        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+            StrongSelf;
+            if ([FHEnvContext isNetworkConnected]) {
+                [self requestErshouHouseListData:YES query:nil offset:self.houseList.count searchId:self.requestSearchId];
+            }else
+            {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.tableView finishPullUpWithSuccess:YES];
+                    });
+                });
+                [self.tableView.mj_footer endRefreshing];
+                [[ToastManager manager] showToast:@"网络异常"];
+            }
+        }];
+        
+        self.refreshFooter.hidden = YES;
+        
+        self.tableView.mj_footer = self.refreshFooter;
+
         [self configBottomFooter];
         [self configTableView];
         
-        [self requestErshouHouseListData:YES query:nil offset:0 searchId:nil];
-        
+        [self requestErshouHouseListData:YES query:nil offset:self.houseList.count searchId:self.requestSearchId];
     }
     return self;
+}
+
+- (void)setSearchId:(NSString *)searchId
+{
+    _requestSearchId = searchId;
 }
 
 - (void)configBottomFooter
@@ -208,18 +243,14 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     NSMutableDictionary *paramsRequest = [NSMutableDictionary new];
     [paramsRequest setValue:@(self.houseType) forKey:@"house_type"];
     [paramsRequest setValue:@(50) forKey:@"count"];
-    [self.currentViewController startLoading];
+    if (_requestSearchId) {
+        [paramsRequest setValue:_requestSearchId forKey:@"searchId"];
+    }
     
-    self.houseList = [NSMutableArray array];
-    self.bottomView.hidden = YES;
+    if (offset == 0) {
+        [self.currentViewController startLoading];
+    }
 
-    [self.tableView reloadData];
-    
-    [self.tableView setContentOffset:CGPointMake(0, 0)];
-    //    if ([self.tableView numberOfSections] && [self.tableView numberOfRowsInSection:0]) {
-    //        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    //    }
-    
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseListAPI searchFakeHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
@@ -246,6 +277,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         itemArray = houseModel.items;
         self.searchId = houseModel.searchId;
         
+        
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
@@ -263,12 +295,19 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
                 self.searchId = houseModel.searchId;
             }
             
-            
-            
             [self addEnterCategoryLog];
             
             [self.tableView reloadData];
             self.bottomView.hidden = NO;
+            
+            if (hasMore) {
+                self.refreshFooter.hidden = NO;
+                self.tableView.mj_footer.hidden = NO;
+            }else
+            {
+                self.refreshFooter.hidden = YES;
+                self.tableView.mj_footer.hidden = YES;
+            }
             
             self.tableView.scrollEnabled = YES;
         }else
@@ -363,9 +402,12 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
     if (indexPath.row < self.houseList.count) {
         FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-        
         [cell refreshTopMargin: 20];
         [cell updateWithHouseCellModel:cellModel];
+        
+        if (cellModel.secondModel) {
+            [cell updateFakeHouseImageWithUrl:cellModel.secondModel.fakeReason.fakeReasonImage.url andSourceStr:cellModel.secondModel.externalInfo.externalName];
+        }
         return cell;
     }else
     {

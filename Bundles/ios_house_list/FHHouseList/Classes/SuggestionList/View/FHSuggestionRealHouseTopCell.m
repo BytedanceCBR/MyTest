@@ -171,7 +171,14 @@
 
 - (void)allFalseHouseBtnClick:(UIButton *)button
 {
-    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://house_fake_list"] userInfo:nil];
+    FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)self.currentModel;
+
+    if (model.searchId) {
+        NSDictionary *info = @{@"searchId":model.searchId};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://house_fake_list"] userInfo:userInfo];
+    }
+
 }
 
 #pragma mark -

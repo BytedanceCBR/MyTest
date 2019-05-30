@@ -21,7 +21,7 @@
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
-@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
+@property (nonatomic , strong) NSString *searchIdStr;
 
 @end
 
@@ -32,11 +32,8 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         _paramObj = paramObj;
-        NSDictionary *recommendHouseParam = paramObj.allParams[@"recommend_house"];
-        
-        if (recommendHouseParam && [recommendHouseParam isKindOfClass:[NSDictionary class]]) {
-            self.recommendModel = [[FHHouseFindRecommendDataModel alloc] initWithDictionary:recommendHouseParam error:nil];
-        }
+        NSDictionary *recommendHouseParam = paramObj.allParams[@"searchId"];
+        _searchIdStr = paramObj.allParams[@"searchId"];
         
         self.ttTrackStayEnable = YES;
     }

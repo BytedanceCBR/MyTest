@@ -380,14 +380,20 @@
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        TTCommonBridgeInfo *commonBrideInfo = (TTCommonBridgeInfo *)self.ttRNKit.bridgeInfos[_channelStr];
-        [commonBrideInfo.bridge invalidate];
-        self.ttRNKit.bridgeInfos = nil;
+        if (self.ttRNKit.bridgeInfos) {
+            TTCommonBridgeInfo *commonBrideInfo = (TTCommonBridgeInfo *)self.ttRNKit.bridgeInfos[_channelStr];
+            if (commonBrideInfo && commonBrideInfo.bridge ) {
+                [commonBrideInfo.bridge invalidate];
+                self.ttRNKit.bridgeInfos = nil;
+            }
+        }
         
 //        if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
             ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
             [self.ttRNKit clearRNResourceForChannel:_channelStr];
+        if (((RCTRootView *)_viewWrapper.rnView).bridge) {
             [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
+        }
 //        }
         [_container removeFromSuperview];
         self.container = nil;

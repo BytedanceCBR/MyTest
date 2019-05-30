@@ -166,7 +166,7 @@
             
             if (cellModel.isRealHouseTopCell) {
                 if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-                    FHSugListRealHouseTopInfoModel *realHouseInfo = (FHSugListRealHouseTopInfoModel *)cellModel.subscribModel;
+                    FHSugListRealHouseTopInfoModel *realHouseInfo = (FHSugListRealHouseTopInfoModel *)cellModel.realHouseTopModel;
                     FHSuggestionRealHouseTopCell *topRealCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHSuggestionRealHouseTopCell class])];
                     if ([topRealCell respondsToSelector:@selector(refreshUI:)]) {
                         [topRealCell refreshUI:realHouseInfo];

@@ -140,6 +140,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHSearchHouseDataItemsFakeReasonModel : JSONModel
+
+@property (nonatomic, copy , nullable) FHSearchHouseDataItemsNeighborhoodInfoImagesModel *fakeReasonImage;
+
+@end
+
+@interface FHSearchHouseDataItemsExternalModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *externalName;
+
+@end
+
 @interface FHHouseItemHouseVideo : JSONModel
 
 @property (nonatomic, assign)   BOOL   hasVideo;
@@ -163,6 +175,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *cellStyle;
 @property (nonatomic, copy , nullable) NSString *displayPrice;
+@property (nonatomic, copy , nullable) FHSearchHouseDataItemsFakeReasonModel *fakeReason;
+@property (nonatomic, copy , nullable) FHSearchHouseDataItemsExternalModel *externalInfo;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsBaseInfoMapModel *baseInfoMap ;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsCoreInfoModel> *coreInfo;
 @property (nonatomic, copy , nullable) NSString *status;
@@ -177,6 +191,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsHouseImageTagModel *houseImageTag ;
 @property (nonatomic, copy , nullable) NSString *originPrice;
 @property (nonatomic, strong) NSArray* bottomText;
+
 @end
 
 @protocol FHRecommendSecondhandHouseTitleModel<NSObject>

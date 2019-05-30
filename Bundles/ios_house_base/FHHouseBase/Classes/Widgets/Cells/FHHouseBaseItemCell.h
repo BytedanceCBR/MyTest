@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(CGFloat)recommendReasonHeight;
 
+- (void)updateFakeHouseImageWithUrl:(NSString *)urlStr andSourceStr:(NSString *)sourceStr;
+
 @end
 
 NS_ASSUME_NONNULL_END

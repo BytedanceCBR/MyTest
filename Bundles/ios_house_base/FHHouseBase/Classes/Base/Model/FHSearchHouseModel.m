@@ -53,6 +53,41 @@
 
 @end
 
+
+@implementation FHSearchHouseDataItemsExternalModel
+
++ (JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+                           @"externalName": @"external_name",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
+@implementation FHSearchHouseDataItemsFakeReasonModel
+
++ (JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+                           @"fakeReasonImage": @"fake_reason_image",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
 @implementation FHRecommendSecondhandHouseDataModel
 
 + (JSONKeyMapper *)keyMapper {
@@ -287,6 +322,8 @@
                            @"originPrice":@"origin_price",
                            @"subscribeInfo": @"subscribe_info",
                            @"bottomText": @"bottom_text",
+                           @"fakeReason": @"fake_reason",
+                           @"externalInfo": @"external_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
