@@ -56,20 +56,23 @@
                               @"cellId":@"imageCellId",
                               @"cellClassName":@"FHEditUserImageCell",
                               @"imageUrl":(self.userInfo.avatarURL ? self.userInfo.avatarURL : @""),
+                              @"isAuditing":(self.userInfo.isAuditing ? @"1" : @"0"),
                               },
                           @{
                               @"name":@"昵称",
                               @"key":@"userName",
                               @"cellId":@"textCellId",
                               @"cellClassName":@"FHEditUserTextCell",
-                              @"content":(self.userInfo.name ? self.userInfo.name : @"")
+                              @"content":(self.userInfo.name ? self.userInfo.name : @""),
+                              @"isAuditing":(self.userInfo.isAuditing ? @"1" : @"0"),
                               },
                           @{
                               @"name":@"介绍",
                               @"key":@"userDesc",
                               @"cellId":@"textCellId",
                               @"cellClassName":@"FHEditUserTextCell",
-                              @"content":(self.userInfo.userDescription ? self.userInfo.userDescription : @"")
+                              @"content":(self.userInfo.userDescription ? self.userInfo.userDescription : @""),
+                              @"isAuditing":(self.userInfo.isAuditing ? @"1" : @"0"),
                               },
                           ],
                       @[
@@ -88,16 +91,21 @@
     if ([TTAccountManager isLogin]) {
         __weak typeof(self) wself = self;
         
-        [TTAccount getUserInfoWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
+        [TTAccount getUserAuditInfoIgnoreDispatchWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
             __weak typeof(wself) sself = wself;
             if (!error) {
-                sself.userInfo.name        = userEntity.name;
-                sself.userInfo.avatarURL  = userEntity.avatarURL;
-                sself.userInfo.userDescription = userEntity.userDescription;
+                TTAccountUserAuditSet *newAuditInfo = [userEntity.auditInfoSet copy];
+                sself.userInfo.isAuditing  = [newAuditInfo isAuditing];
+                sself.userInfo.editEnabled = [newAuditInfo modifyUserInfoEnabled];
+                sself.userInfo.name        = [newAuditInfo username];
+                sself.userInfo.avatarURL  = [newAuditInfo userAvatarURLString];
+                sself.userInfo.userDescription = [newAuditInfo userDescription];
                 
                 [sself reloadViewModel];
             }
         }];
+        
+        
     }
 }
 
@@ -262,8 +270,14 @@
                     if (isEmptyString(hint)) hint = NSLocalizedString(@"头像修改失败，请稍后重试", nil);
                     [[ToastManager manager] showToast:hint];
                 } else {
-                    [[ToastManager manager] showToast:@"头像修改成功"];
+                    if(userEntity.auditInfoSet.pgcUserAuditEntity){
+                        self.userInfo.isAuditing = userEntity.auditInfoSet.pgcUserAuditEntity.auditing;
+                    }
+                    if(!self.userInfo.isAuditing){
+                        [[ToastManager manager] showToast:@"头像修改成功"];
+                    }
                     NSString *imageURL = [userEntity.auditInfoSet userAvatarURLString];
+                    
                     if (!isEmptyString(imageURL)) {
                         TTAccountUserEntity* user = [[TTAccount sharedAccount] user];
                         if (user != nil) {
@@ -330,9 +344,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-    
     NSArray *items = self.dataList[indexPath.section];
     NSDictionary *dic = items[indexPath.row];
+    if(dic[@"isAuditing"] && [dic[@"isAuditing"] boolValue]){
+        //审核中不可编辑
+        return;
+    }
     [self doOtherAction:dic[@"key"]];
 }
 
