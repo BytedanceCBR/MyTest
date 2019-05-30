@@ -34,6 +34,7 @@
 @property (nonatomic, strong) TTRouteUserInfo *realtorUserInfo;
 @property (nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 @property (nonatomic, copy) NSString *houseId;
+@property (nonatomic, copy) NSString *url;
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, assign) BOOL isShowTopTip;
 @end
@@ -45,15 +46,17 @@ static NSString *s_oldAgent = nil;
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.realtorUserInfo = paramObj.userInfo;
-        _houseId = paramObj.userInfo.allInfo[@"house_id"];
-        _houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
-        
-        if ([paramObj.userInfo.allInfo[@"house_type"] respondsToSelector:@selector(boolValue)]) {
-            _isShowTopTip = [paramObj.userInfo.allInfo[@"house_type"] boolValue];
+        _houseId = paramObj.allParams[@"house_id"];
+        _houseType = [paramObj.allParams[@"house_type"] integerValue];
+        _url = paramObj.allParams[@"url"];
+        if ([paramObj.userInfo.allInfo[@"showTopTip"] respondsToSelector:@selector(boolValue)]) {
+            _isShowTopTip = [paramObj.userInfo.allInfo[@"showTopTip"] boolValue];
         }else
         {
             _isShowTopTip = NO;
         }
+        
+        _isShowTopTip = YES;
         
         _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
     }
@@ -62,11 +65,12 @@ static NSString *s_oldAgent = nil;
 
 - (CGRect)frameForListView
 {
+    CGFloat topTipheight = _isShowTopTip ? 30 : 0 ;
     if (@available(iOS 11.0 , *)) {
-        CGRect rect = CGRectMake(0.0f, 44.f + self.view.tt_safeAreaInsets.top, self.view.bounds.size.width, self.view.bounds.size.height - (44.f + self.view.tt_safeAreaInsets.top));
+        CGRect rect = CGRectMake(0.0f, 44.f + self.view.tt_safeAreaInsets.top + topTipheight, self.view.bounds.size.width, self.view.bounds.size.height - (44.f + self.view.tt_safeAreaInsets.top));
         return rect;
     } else {
-        CGRect rect = CGRectMake(0.0f, 65.0f, self.view.bounds.size.width, self.view.bounds.size.height - 65.0f);
+        CGRect rect = CGRectMake(0.0f, 65.0f + topTipheight, self.view.bounds.size.width, self.view.bounds.size.height - 65.0f);
         return rect;
     }
 }
@@ -74,6 +78,20 @@ static NSString *s_oldAgent = nil;
 - (void)setupUI
 {
     [self setupDefaultNavBar:NO];
+    
+    if (_isShowTopTip) {
+        UIView *topTipView = [[UIView alloc] initWithFrame:CGRectMake(0, [self frameForListView].origin.y - 30, self.view.frame.size.width, 30)];
+        [topTipView setBackgroundColor:[UIColor themeRed2]];
+        
+        UILabel *tipLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, topTipView.frame.size.width, topTipView.frame.size.height)];
+        tipLabel.text = @"温馨提示：当前展示页面为外部链接";
+        tipLabel.textColor = [UIColor themeRed3];
+        tipLabel.font = [UIFont themeFontRegular:12];
+        tipLabel.textAlignment = NSTextAlignmentCenter;
+        [topTipView addSubview:tipLabel];
+        
+        [self.view addSubview:topTipView];
+    }
     
     self.webContainer = [[SSWebViewContainer alloc] initWithFrame:[self frameForListView]];
     [_webContainer.ssWebView addDelegate:self];
@@ -85,7 +103,9 @@ static NSString *s_oldAgent = nil;
     _webContainer.disableConnectCheck = YES;
     [self.view addSubview:_webContainer];
     
-    [_webContainer loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]]];
+    if (_url) {
+        [_webContainer loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_url]]];
+    }
     
     WeakSelf;
     NSString *loadingText = [SSCommonLogic isNewPullRefreshEnabled] ? nil : @"推荐中";
@@ -115,23 +135,18 @@ static NSString *s_oldAgent = nil;
     }
 }
 
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     [self setupUI];
     
     _startTime = [NSDate new].timeIntervalSince1970;
-    //    _delegate = [self.realtorUserInfo allInfo][@"delegate"];
     
     [FHUserTracker writeEvent:@"go_detail" params:[self goDetailParams]];
-    [self.webContainer.ssWebView setBackgroundColor:[UIColor redColor]];
+    [self.webContainer.ssWebView setBackgroundColor:[UIColor whiteColor]];
     [self.view setBackgroundColor:[UIColor redColor]];
     
-//    [self tt_startUpdate];
 }
-
 
 #pragma mark -- UIWebViewDelegate
 
