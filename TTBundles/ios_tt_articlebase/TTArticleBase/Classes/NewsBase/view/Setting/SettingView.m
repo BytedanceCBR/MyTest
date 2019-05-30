@@ -822,8 +822,8 @@ TTEditUserProfileViewControllerDelegate
                      @(SettingCellTypePrivacyProtocol)];
         case kTTSettingSectionTypeLogout:
             return @[@(SettingCellTypeLogout)];
-        case kTTSettingSectionTypeLogoutUnRegister:
-            return @[@(SettingCellTypeLogoutUnRegister)];
+//        case kTTSettingSectionTypeLogoutUnRegister:
+//            return @[@(SettingCellTypeLogoutUnRegister)];
         default:
             return @[];
     }

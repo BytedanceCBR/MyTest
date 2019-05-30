@@ -207,7 +207,7 @@ static NSTimeInterval midnightYYInterval;//今年1月1号0点0分0秒
 }
 
 + (NSString *)noTimeStringSince1970:(NSTimeInterval)timeInterval {
-    return [TTBusinessManager customtimeStringSince1970:timeInterval formateType:TTTimeFormatterNoTime];
+    return [TTBusinessManager customtimeStringSince1970:timeInterval formateType:TTTimeFormatterNormalNoTime];
 }
 
 + (NSString*)customtimeStringSince1970:(NSTimeInterval)timeInterval midnightInterval:(NSTimeInterval)midInterval formateType:(TTTimeFormatterType)type {

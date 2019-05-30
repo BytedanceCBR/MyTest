@@ -22,10 +22,15 @@
 #import "FHBubbleTipManager.h"
 #import "ReactiveObjC.h"
 #import "UIView+House.h"
+#import <FHCHousePush/FHPushMessageTipView.h>
+#import <FHCHousePush/FHPushAuthorizeManager.h>
+#import <FHCHousePush/FHPushAuthorizeHelper.h>
+#import <FHCHousePush/FHPushMessageTipView.h>
 
 @interface FHMessageViewController ()
 
 @property(nonatomic, strong) FHMessageViewModel *viewModel;
+@property(nonatomic, strong) FHPushMessageTipView *pushTipView;
 
 @end
 
@@ -42,7 +47,21 @@
     [self initConstraints];
     [self initViewModel];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 //     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
+}
+
+- (void)applicationDidBecomeActive
+{
+    BOOL isEnabled = [FHPushAuthorizeManager isMessageTipEnabled];
+    CGFloat pushTipHeight = isEnabled ? 36 : 0;
+    if (pushTipHeight > 0) {
+        [self addTipShowLog];
+    }
+    self.pushTipView.hidden = pushTipHeight > 0 ? NO : YES;
+    [self.pushTipView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(pushTipHeight);
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -50,6 +69,7 @@
 //    [self.viewModel viewWillAppear];
     [FHBubbleTipManager shareInstance].canShowTip = NO;
     [self startLoadData];
+    [self applicationDidBecomeActive];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -57,6 +77,27 @@
     [self addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
     [FHBubbleTipManager shareInstance].canShowTip = YES;
+}
+
+- (void)addTipShowLog
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"page_type"] = @"messagetab";
+    [FHUserTracker writeEvent:@"tip_show" params:params];
+
+}
+
+- (void)addTipClickLog:(FHPushMessageTipCompleteType)type
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"page_type"] = @"messagetab";
+    if (type == FHPushMessageTipCompleteTypeDone) {
+        params[@"click_type"] = @"confirm";
+    }else {
+        params[@"click_type"] = @"cancel";
+    }
+    [FHUserTracker writeEvent:@"tip_click" params:params];
+    
 }
 
 - (void)userInfoReload {
@@ -83,7 +124,17 @@
     } else {
         [_notNetHeader setHidden:NO];
     }
-    
+    __weak typeof(self)wself = self;
+    _pushTipView = [[FHPushMessageTipView alloc] initAuthorizeTipWithCompleted:^(FHPushMessageTipCompleteType type) {
+        [wself addTipClickLog:type];
+        if (type == FHPushMessageTipCompleteTypeDone) {
+            NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+            [[UIApplication sharedApplication] openURL:url];
+        } else if (type == FHPushMessageTipCompleteTypeCancel) {
+            [wself hidePushTip];
+        }
+    }];
+
     _tableView = [[UITableView alloc] init];
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -94,24 +145,41 @@
 
     [self.containerView addSubview:_tableView];
     [self.containerView addSubview:_notNetHeader];
-    
+    [self.containerView addSubview:_pushTipView];
+
     [self addDefaultEmptyViewFullScreen];
+}
+
+- (void)hidePushTip
+{
+    NSInteger lastTimeShowMessageTip = (NSInteger)[[NSDate date] timeIntervalSince1970];
+    [FHPushAuthorizeHelper setLastTimeShowMessageTip:lastTimeShowMessageTip];
+    self.pushTipView.hidden = YES;
+    [self.pushTipView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(0);
+    }];
 }
 
 - (void)networkStateChange:(NSNotification *)notification {
     if ([TTReachability isNetworkConnected]) {
         [_notNetHeader setHidden:YES];
+        [_notNetHeader mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
     } else {
         [_notNetHeader setHidden:NO];
+        [_notNetHeader mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(30);
+        }];
     }
-    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        if ([TTReachability isNetworkConnected]) {
-            make.top.left.right.bottom.mas_equalTo(self.containerView);
-        } else {
-            make.top.mas_equalTo(self.containerView).offset(30);
-            make.left.right.bottom.mas_equalTo(self.containerView);
-        }
-    }];
+//    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//        if ([TTReachability isNetworkConnected]) {
+//            make.top.left.right.bottom.mas_equalTo(self.containerView);
+//        } else {
+//            make.top.mas_equalTo(self.containerView).offset(30);
+//            make.left.right.bottom.mas_equalTo(self.containerView);
+//        }
+//    }];
 }
 
 
@@ -134,14 +202,25 @@
         make.left.right.equalTo(self.view);
         make.bottom.mas_equalTo(self.view).offset(-bottom);
     }];
-    
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.notNetHeader mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(0);
         if ([TTReachability isNetworkConnected]) {
-            make.top.left.right.bottom.mas_equalTo(self.containerView);
-        } else {
-            make.top.mas_equalTo(self.containerView).offset(30);
-            make.left.right.bottom.mas_equalTo(self.containerView);
+            make.height.mas_equalTo(0);
+        }else {
+            make.height.mas_equalTo(30);
         }
+    }];
+    BOOL isEnabled = [FHPushAuthorizeManager isMessageTipEnabled];
+    CGFloat pushTipHeight = isEnabled ? 36 : 0;
+    self.pushTipView.hidden = pushTipHeight > 0 ? NO : YES;
+    [self.pushTipView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.notNetHeader.mas_bottom);
+        make.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(pushTipHeight);
+    }];
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.pushTipView.mas_bottom);
+        make.left.right.bottom.mas_equalTo(self.containerView);
     }];
 }
 

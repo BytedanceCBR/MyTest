@@ -9,7 +9,7 @@
 #import <TTHttpTask.h>
 #import <TTRoute.h>
 #import "FHMineBaseCell.h"
-#import "FHMineFocusCell.h"
+#import "FHMineMutiItemCell.h"
 #import "FHMineAPI.h"
 #import "FHHouseType.h"
 #import "TTAccount.h"
@@ -17,28 +17,31 @@
 #import "ToastManager.h"
 #import "FHUserTracker.h"
 #import "TTReachability.h"
+#import "FHMineConfigModel.h"
+#import "FHMineMutiItemCell.h"
 
-@interface FHMineViewModel()<UITableViewDelegate,UITableViewDataSource,FHMineFocusCellDelegate>
+#define mutiItemCellId @"mutiItemCellId"
 
-@property(nonatomic, strong) NSMutableArray *dataList;
-@property(nonatomic, strong) NSArray *defaultList;
+@interface FHMineViewModel()<UITableViewDelegate,UITableViewDataSource,FHMineMutiItemCellDelegate>
+
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHMineViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
-@property(nonatomic, strong) NSMutableArray *focusItemTitles;
-@property (nonatomic , assign) BOOL hasLogin;
+@property(nonatomic, strong) NSDictionary *focusItemDic;
+@property(nonatomic, assign) BOOL hasLogin;
+@property(nonatomic, strong) FHMineMutiItemCell *focusCell;
+@property(nonatomic, assign) BOOL isFirstLoad;
 
 @end
 
 @implementation FHMineViewModel
 
--(instancetype)initWithTableView:(UITableView *)tableView controller:(FHMineViewController *)viewController
-{
+-(instancetype)initWithTableView:(UITableView *)tableView controller:(FHMineViewController *)viewController {
     self = [super init];
     if (self) {
         
         _dataList = [[NSMutableArray alloc] init];
-        _focusItemTitles = [[NSMutableArray alloc] init];
+        _isFirstLoad = YES;
         
         self.tableView = tableView;
         
@@ -47,66 +50,9 @@
         
         self.viewController = viewController;
         
-        [self initDefaultData];
+        [self.tableView registerClass:NSClassFromString(@"FHMineMutiItemCell") forCellReuseIdentifier:mutiItemCellId];
     }
     return self;
-}
-
-- (void)initDefaultData {
-    self.defaultList = @[
-                         @{
-                             @"name":@"我的关注",
-                             @"cellId":@"focusCellId",
-                             @"cellClassName":@"FHMineFocusCell"
-                             },
-                         @{
-                             @"name":@"我的收藏",
-                             @"url":@"snssdk1370://favorite?stay_id=favorite",
-                             @"cellId":@"settingCellId",
-                             @"cellClassName":@"FHMineSettingCell"
-                             },
-                         @{
-                             @"name":@"用户反馈",
-                             @"url":@"snssdk1370://feedback",
-                             @"cellId":@"settingCellId",
-                             @"cellClassName":@"FHMineSettingCell",
-                             @"click_minetab":@{
-                                        @"click_type":@"feedback",
-                                        @"page_type":@"minetab",
-                                     },
-                             @"go_detail":@{
-                                     @"enter_from":@"minetab",
-                                     @"page_type":@"feedback",
-                                     },
-                             },
-                         @{
-                             @"name":@"系统设置",
-                             @"url":@"snssdk1370://more",
-                             @"cellId":@"settingCellId",
-                             @"cellClassName":@"FHMineSettingCell",
-                             @"click_minetab":@{
-                                     @"click_type":@"setting",
-                                     @"page_type":@"minetab",
-                                     },
-                             @"go_detail":@{
-                                     @"enter_from":@"minetab",
-                                     @"page_type":@"setting",
-                                     },
-                             },
-//                         @{
-//                             @"name":@"视频测试",
-//                             @"url":@"snssdk1370://video_test",
-//                             @"cellId":@"settingCellId",
-//                             @"cellClassName":@"FHMineSettingCell",
-//                             },
-                         ];
-    [self.dataList addObjectsFromArray:self.defaultList];
-    
-    for (NSDictionary *dic in self.defaultList) {
-        NSString *cellId = dic[@"cellId"];
-        NSString *cellClassName = dic[@"cellClassName"];
-        [self.tableView registerClass:NSClassFromString(cellClassName) forCellReuseIdentifier:cellId];
-    }
 }
 
 - (void)requestData {
@@ -117,26 +63,52 @@
             [wself.tableView reloadData];
             return;
         }
-        
+
         if(response.count == 4){
-            [self.focusItemTitles removeAllObjects];
-            NSArray *typeArray = @[@(FHHouseTypeSecondHandHouse),@(FHHouseTypeRentHouse),@(FHHouseTypeNewHouse),@(FHHouseTypeNeighborhood)];
-            NSArray *nameArray = @[@"二手房",@"租房",@"新房",@"小区"];
+            self.focusItemDic = response;
             
-            for (NSInteger i = 0; i < typeArray.count; i++) {
-                NSInteger type = [typeArray[i] integerValue];
-                NSInteger count = [response[@(type)] integerValue];
-                NSString *title = [self getFocusItemTitle:nameArray[i] count:count];
-                [self.focusItemTitles addObject:title];
+            if(self.focusCell){
+                [self.focusCell setItemTitlesWithItemDic:self.focusItemDic];
             }
-            
+        }
+    }];
+}
+
+- (void)requestMineConfig {
+    __weak typeof(self) wself = self;
+    
+    if(self.isFirstLoad){
+        [self.viewController startLoading];
+    }
+    
+    [FHMineAPI requestMineConfigWithClassName:@"FHMineConfigModel" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        
+        if(self.isFirstLoad){
+            [self.viewController endLoading];
+        }
+        
+        wself.isFirstLoad = NO;
+        
+        if (error) {
+            //TODO: show handle error
+            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            wself.viewController.showenRetryButton = YES;
+            wself.tableView.bounces = NO;
+            return;
+        }
+        
+        wself.tableView.bounces = YES;
+        [wself.viewController.emptyView hideEmptyView];
+        
+        FHMineConfigModel *configModel = (FHMineConfigModel *)model;
+        if(configModel){
+            wself.dataList = configModel.data.iconOpData;
             [wself.tableView reloadData];
         }
     }];
 }
 
-- (void)showInfo
-{
+- (void)showInfo {
     if([TTAccount sharedAccount].isLogin){
         NSDictionary *fhSettings = [self fhSettings];
         NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
@@ -154,7 +126,7 @@
                                         };
             TRACK_EVENT(@"click_minetab", clickTrackDic);
             
-            NSURL* url = [NSURL URLWithString:@"snssdk1370://editUserProfile"];
+            NSURL* url = [NSURL URLWithString:@"sslocal://editUserProfile"];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
         }
     }else{
@@ -174,29 +146,31 @@
     }
 }
 
-- (void)updateHeaderView
-{
+- (void)updateHeaderView {
     NSString *avatar = [TTAccountManager avatarURLString];
     [self.viewController.headerView updateAvatar:avatar];
     
     NSString *name = [TTAccountManager userName];
     TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
     
+    NSDictionary *fhSettings = [self fhSettings];
+    NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
+
+    [self.viewController.headerView setUserInfoState:state];
+    
     if (userInfo != nil) {
         self.viewController.headerView.userNameLabel.text = name?:@"";
-        self.viewController.headerView.descLabel.text = @"查看并编辑个人资料";
-        self.viewController.headerView.editIcon.hidden = NO;
+        self.viewController.headerView.descLabel.text = @"查看并编辑个人信息";
+        if(state != 0){
+            self.viewController.headerView.editIcon.hidden = NO;
+        }
         _hasLogin = YES;
     } else {
-        self.viewController.headerView.userNameLabel.text = @"登录";
-        self.viewController.headerView.descLabel.text = @"登录后，关注房源永不丢失";
+        self.viewController.headerView.userNameLabel.text = @"登录/注册";
+        self.viewController.headerView.descLabel.text = @"关注房源永不丢失";
         self.viewController.headerView.editIcon.hidden = YES;
         _hasLogin = NO;
     }
-    
-    NSDictionary *fhSettings = [self fhSettings];
-    NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
-    [self.viewController.headerView setUserInfoState:state hasLogin:_hasLogin];
 }
 
 - (NSDictionary *)fhSettings {
@@ -207,75 +181,173 @@
     }
 }
 
-- (NSString *)getFocusItemTitle:(NSString *)name count:(NSInteger)count {
-    if([TTAccount sharedAccount].isLogin){
-        return [NSString stringWithFormat:@"%@ (%i)",name,count];
-    }else{
-        return [NSString stringWithFormat:@"%@ (*)",name];
+- (void)goToFeedback:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
+    NSString *goDetailTrackDic = @{
+                                   @"enter_from":@"minetab",
+                                   @"page_type":@"feedback",
+                                   };
+    TRACK_EVENT(@"go_detail", goDetailTrackDic);
+    NSString *clickTrackDic = @{
+                                @"click_type":@"feedback",
+                                @"page_type":@"minetab",
+                                };
+    TRACK_EVENT(@"click_minetab", clickTrackDic);
+    
+    NSURL* url = [NSURL URLWithString:model.openUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+}
+
+
+- (void)goToSystemSetting {
+    NSString *goDetailTrackDic = @{
+                                   @"enter_from":@"minetab",
+                                   @"page_type":@"setting",
+                                   };
+    TRACK_EVENT(@"go_detail", goDetailTrackDic);
+    NSString *clickTrackDic = @{
+                                @"click_type":@"setting",
+                                @"page_type":@"minetab",
+                                };
+    TRACK_EVENT(@"click_minetab", clickTrackDic);
+
+    NSURL* url = [NSURL URLWithString:@"sslocal://more"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+}
+
+- (void)callPhone {
+    NSString *phoneUrl = [NSString stringWithFormat:@"telprompt://%@",@"400-6124-360"];
+    NSURL *url = [NSURL URLWithString:phoneUrl];
+    [[UIApplication sharedApplication]openURL:url];
+}
+
+- (void)updateFocusTitles {
+    if(self.focusCell){
+        [self.focusCell updateFocusTitles];
     }
 }
 
-#pragma mark - FHMineFocusCellDelegate
+#pragma mark - FHMineMutiItemCellDelegate
 
-- (void)goToFocusDetail:(FHHouseType)type {
-    if ([TTReachability isNetworkConnected]) {
-        NSURL* url = [NSURL URLWithString:@"snssdk1370://myFavorite"];
-        
-        NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
-        tracerDict[@"enter_from"] = @"minetab";
-        tracerDict[@"enter_type"] = @"click";
-        tracerDict[@"element_from"] = @"be_null";
-        tracerDict[@"origin_from"] = [self focusOriginFrom:type];
-        
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"house_type"] = @(type);
-        dict[@"tracer"] = tracerDict;
-        
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    } else {
-        [[ToastManager manager] showToast:@"网络异常"];
-    }
+- (void)didItemClick:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
+     if ([TTReachability isNetworkConnected]) {
+         FHMineItemType type = [model.id integerValue];
+         if(type == FHMineItemTypeSugSubscribe || type == FHMineItemTypeFeedback){
+             [self jumpWithMoreAction:model];
+         }else{
+             //埋点
+             NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+             NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+             if (model.reportParams) {
+                 [tracer addEntriesFromDictionary:model.reportParams];
+             }
+             tracer[@"enter_type"] = @"click";
+             dict[@"tracer"] = tracer;
+             
+             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+             
+             NSURL* url = [NSURL URLWithString:model.openUrl];
+             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+         }
+     }else{
+         [[ToastManager manager] showToast:@"网络异常"];
+     }
 }
 
-- (NSString *)focusOriginFrom:(FHHouseType)type {
-    NSString *originFrom = @"be_null";
+- (void)jumpWithMoreAction:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
+    FHMineItemType type = [model.id integerValue];
     switch (type) {
-        case FHHouseTypeNewHouse:
-            originFrom = @"minetab_new";
+        case FHMineItemTypeSugSubscribe:
+            [self goToSugSubscribeList:model];
             break;
-        case FHHouseTypeRentHouse:
-            originFrom = @"minetab_rent";
+        case FHMineItemTypeFeedback:
+            [self goToFeedback:model];
             break;
-        case FHHouseTypeSecondHandHouse:
-            originFrom = @"minetab_old";
-            break;
-        case FHHouseTypeNeighborhood:
-            originFrom = @"minetab_neighborhood";
-            break;
-            
         default:
             break;
     }
-    return originFrom;
+}
+
+- (void)goToSugSubscribeList:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
+    NSHashTable *subscribeDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [subscribeDelegateTable addObject:self];
+    //埋点
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"tracer"] = model.reportParams;
+    dict[@"title"] = @"我订阅的搜索";
+    dict[@"subscribe_delegate"] = subscribeDelegateTable;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL* url = [NSURL URLWithString:model.openUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+}
+
+// 搜索订阅组合列表页cell点击：FHSugSubscribeListViewController
+- (void)cellSubscribeItemClick:(FHSugSubscribeDataDataItemsModel *)model {
+    NSString *enter_from = @"old_subscribe_list";
+    NSString *element_from = @"be_null";
+    [self jumpCategoryListVCFromSubscribeItem:model enterFrom:enter_from elementFrom:element_from];
+}
+
+- (void)jumpCategoryListVCFromSubscribeItem:(FHSugSubscribeDataDataItemsModel *)model enterFrom:(NSString *)enter_from elementFrom:(NSString *)element_from {
+    NSString *jumpUrl = model.openUrl;
+    if (jumpUrl.length > 0) {
+        NSString *queryType = @"subscribe"; // 订阅搜索
+        NSString *pageType = @"";
+        // 特殊埋点需求，此处enter_query和search_query都埋:be_null
+        NSDictionary *houseSearchParams = @{
+                                            @"enter_query":@"be_null",
+                                            @"search_query":@"be_null",
+                                            @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                            @"query_type":queryType
+                                            };
+        NSMutableDictionary *infos = [NSMutableDictionary new];
+        infos[@"houseSearch"] = houseSearchParams;
+        
+        NSMutableDictionary *tracer = [NSMutableDictionary new];
+        tracer[@"enter_type"] = @"click";
+        tracer[@"element_from"] = element_from.length > 0 ? element_from : @"be_null";
+        tracer[@"enter_from"] = enter_from.length > 0 ? enter_from : @"be_null";
+        infos[@"tracer"] = tracer;
+        
+        // 参数都在jumpUrl中
+        [self jumpToCategoryListVCByUrl:jumpUrl queryText:nil placeholder:nil infoDict:infos];
+    }
+}
+
+- (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString *)queryText placeholder:(NSString *)placeholder infoDict:(NSDictionary *)infos {
+    NSString *openUrl = jumpUrl;
+    if (openUrl.length <= 0) {
+        openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",FHHouseTypeSecondHandHouse,queryText,placeholder];
+    }
+    // 不需要回传sug数据，以及自己控制页面跳转和移除逻辑
+    NSMutableDictionary *tempInfos = [NSMutableDictionary dictionaryWithDictionary:infos];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:tempInfos];
+    
+    NSURL *url = [NSURL URLWithString:openUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
 #pragma mark - UITableViewDataSource
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [_dataList count];
 }
 
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *cellId = _dataList[indexPath.row][@"cellId"];
-    FHMineBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
-    [cell updateCell:_dataList[indexPath.row]];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    FHMineConfigDataIconOpDataModel *dataModel = _dataList[indexPath.row];
     
-    if([cell isKindOfClass:[FHMineFocusCell class]]){
-        FHMineFocusCell *focusCell = (FHMineFocusCell *)cell;
-        focusCell.delegate = self;
-        if(self.focusItemTitles.count == 4){
-            [focusCell setItemTitles:self.focusItemTitles];
+    FHMineBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:mutiItemCellId];
+    
+    [cell updateCell:dataModel isFirst:indexPath.row == 0];
+    
+    if([cell isKindOfClass:[FHMineMutiItemCell class]]){
+        FHMineMutiItemCell *mutiItemCell = (FHMineMutiItemCell *)cell;
+        mutiItemCell.delegate = self;
+        if([dataModel.myIconId integerValue] == FHMineModuleTypeHouseFocus){
+            self.focusCell = mutiItemCell;
+            if(self.focusItemDic.count == 4){
+                [mutiItemCell setItemTitlesWithItemDic:self.focusItemDic];
+            }
         }
     }
     
@@ -284,12 +356,8 @@
 
 #pragma mark - UITableViewDelegate
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *cellClassName = _dataList[indexPath.row][@"cellClassName"];
-    if([cellClassName isEqualToString:@"FHMineFocusCell"]){
-        return UITableViewAutomaticDimension;
-    }
-    return 50.0f;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewAutomaticDimension;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -301,26 +369,15 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-
-    NSDictionary *dic = _dataList[indexPath.row];
-    
-    NSString *clickTrackDic = dic[@"click_minetab"];
-    if(clickTrackDic){
-        TRACK_EVENT(@"click_minetab", clickTrackDic);
-    }
-    
-    NSString *goDetailTrackDic = dic[@"go_detail"];
-    if(clickTrackDic){
-        TRACK_EVENT(@"go_detail", goDetailTrackDic);
-    }
-    
-    NSString *urlStr = dic[@"url"];
-    if(urlStr){
-        NSURL* url = [NSURL URLWithString:urlStr];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-    }
 }
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.viewController refreshContentOffset:scrollView.contentOffset];
+}
+
+
 
 @end

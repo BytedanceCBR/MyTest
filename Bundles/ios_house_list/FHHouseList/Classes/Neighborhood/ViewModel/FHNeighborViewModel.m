@@ -18,6 +18,7 @@
 #import "UITableView+FDTemplateLayoutCell.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import <FHHouseBase/FHSingleImageInfoCellModel.h>
+#import "FHSuggestionRealHouseTopCell.h"
 
 
 #define kPlaceholderCellId @"placeholder_cell_id"
@@ -55,6 +56,7 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     
+    [_tableView registerClass:[FHSuggestionRealHouseTopCell class] forCellReuseIdentifier:NSStringFromClass([FHSuggestionRealHouseTopCell class])];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
     [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
 }
@@ -159,14 +161,35 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.listController.hasValidateData == YES) {
-        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
-        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-        id model = _houseList[indexPath.row];
-        FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-        [cell updateWithHouseCellModel:cellModel];
-        [cell refreshTopMargin: 20];
-        return cell;
+        if (self.houseList.count > indexPath.row) {
+            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            
+            if (cellModel.isRealHouseTopCell) {
+                if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                    FHSugListRealHouseTopInfoModel *realHouseInfo = (FHSugListRealHouseTopInfoModel *)cellModel.subscribModel;
+                    FHSuggestionRealHouseTopCell *topRealCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHSuggestionRealHouseTopCell class])];
+                    if ([topRealCell respondsToSelector:@selector(refreshUI:)]) {
+                        [topRealCell refreshUI:realHouseInfo];
+                    }
+                    __weak typeof(self) weakSelf = self;
+                    topRealCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
+                    };
+                    
+                    topRealCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
+                        
+                    };
+                    return topRealCell;
+                }
+            }
+            
+            FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
+            BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
+            id model = _houseList[indexPath.row];
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+            [cell updateWithHouseCellModel:cellModel];
+            [cell refreshTopMargin: 20];
+            return cell;
+        }
     } else {
         // PlaceholderCell
         FHPlaceHolderCell *cell = (FHPlaceHolderCell *)[tableView dequeueReusableCellWithIdentifier:kPlaceholderCellId];
@@ -195,6 +218,13 @@
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         if (indexPath.row < self.houseList.count) {
             FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            
+            if (cellModel.isRealHouseTopCell) {
+                if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                    return 71;
+                }
+            }
+            
             CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
             BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
             return (isLastCell ? 125 : 106)+reasonHeight;
@@ -229,6 +259,10 @@
     } else if ([obj isKindOfClass:[FHHouseRentDataItemsModel class]]) {
         FHHouseRentDataItemsModel *item = (FHHouseRentDataItemsModel *)obj;
         cellModel.rentModel = obj;
+    }else if ([obj isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+        
+        FHSugListRealHouseTopInfoModel *item = (FHSugListRealHouseTopInfoModel *)obj;
+        cellModel.realHouseTopModel = obj;
     }
     return cellModel;
 }
@@ -256,12 +290,48 @@
             self.searchId = searchId;
         }
         if (items.count > 0) {
+            
+            BOOL isShowRealHouse = YES;
+            
+            if (isShowRealHouse) {
+                FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
+
+                FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
+                
+                if ([houseModel.externalSite isKindOfClass:[FHSearchRealHouseExtModel class]]) {
+                    topInfoModel.fakeHouse = houseModel.externalSite.fakeHouse;
+                    topInfoModel.houseTotal = houseModel.externalSite.houseTotal;
+                    topInfoModel.openUrl = houseModel.externalSite.openUrl;
+                    topInfoModel.trueTitle = houseModel.externalSite.trueTitle;
+                    topInfoModel.fakeHouseTotal = houseModel.externalSite.fakeHouseTotal;
+                    topInfoModel.trueHouseTotal = houseModel.externalSite.trueHouseTotal;
+                    topInfoModel.enableFakeHouse = houseModel.externalSite.enableFakeHouse;
+                    topInfoModel.totalTitle = houseModel.externalSite.totalTitle;
+                    topInfoModel.fakeTitle = houseModel.externalSite.fakeTitle;
+                    topInfoModel.searchId = houseModel.searchId;
+                }
+                
+                NSMutableArray *itemArray = [NSMutableArray arrayWithArray:items];
+                if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                    [itemArray insertObject:topInfoModel atIndex:0];
+                }
+                items = itemArray;
+            }
+            
             self.listController.hasValidateData = YES;
             [self.listController.emptyView hideEmptyView];
             // 转换模型类型
             [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
                 if (cellModel) {
+                    
+                    if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                        cellModel.isRealHouseTopCell = YES;
+                    }else
+                    {
+                        cellModel.isRealHouseTopCell = NO;
+                    }
+                    
                     [self.houseList addObject:cellModel];
                 }
             }];

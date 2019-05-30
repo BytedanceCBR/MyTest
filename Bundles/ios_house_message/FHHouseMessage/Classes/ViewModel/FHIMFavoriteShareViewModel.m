@@ -14,6 +14,7 @@
 #import "FHHouseListModel.h"
 #import "FHDetailBaseModel.h"
 #import "TTSandBoxHelper.h"
+
 @interface FHIMFavoriteShareModel : NSObject
 @property (nonatomic, assign) NSInteger houseType;
 @property (nonatomic, copy) NSString* houseId;
@@ -83,11 +84,13 @@
         houseMsg.type = ChatMsgTypeHouseCard;
 
         NSString *houseTag = @"二手房";
+        
         if (obj.houseType == 1) {
             houseTag = @"新房";
         } else if (obj.houseType == 3) {
             houseTag = @"租房";
         }
+        NSString *channel = [TTSandBoxHelper getCurrentChannel];
         NSDictionary *extra = @{
                                 KSCHEMA_HOUSE_TAG: houseTag,
                                 KSCHEMA_HOUSE_COVER: obj.cover ? : @"",

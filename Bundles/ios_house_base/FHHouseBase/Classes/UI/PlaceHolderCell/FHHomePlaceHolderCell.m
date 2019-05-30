@@ -48,8 +48,8 @@
             make.left.mas_equalTo(HOR_MARGIN);
             make.width.mas_equalTo(70);
             make.height.mas_equalTo(54);
-            make.top.mas_equalTo(20);
-            make.bottom.mas_equalTo(self.contentView);
+            make.top.mas_equalTo(10);
+            make.bottom.mas_equalTo(self.contentView).offset(-10);
         }];
         
         [self.view1 mas_makeConstraints:^(MASConstraintMaker *make) {
