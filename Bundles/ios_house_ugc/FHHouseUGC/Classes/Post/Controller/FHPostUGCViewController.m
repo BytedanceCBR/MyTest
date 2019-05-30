@@ -86,9 +86,14 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, copy) NSString * postPreContent; //外部代入的输入框文本
 @property (nonatomic, copy) NSString * postPreContentRichSpan;//外部代入的输入框的富文本信息
 @property (nonatomic, copy) TTRichSpanText *outerInputRichSpanText; //编辑带入的文字信息
+@property (nonatomic, assign) NSRange selectedRange;
+@property (nonatomic, assign) BOOL useDraftFirst;//是否优先使用concern_id草稿，否则使用传入值（postPreContent || postPreContentRichSpan）
 
 @property (nonatomic, strong) TTRichSpanText *richSpanText;
+@property (nonatomic, copy) void (^postFinishCompletionBlock)(BOOL);
 
+@property (nonatomic, copy) NSString *entrance; //入口
+@property (nonatomic, copy) NSString *enterConcernID; //entrance为concern时有意义
 
 
 @end
@@ -111,7 +116,23 @@ static NSInteger const kMaxPostImageCount = 9;
              refer = 1;
              "show_et_status" = 8;
              }
+             
+             TTPostThreadViewController *postThreadVC = [[TTPostThreadViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(params)];
+             postThreadVC.enterConcernID = self.enterConcernID;
+             postThreadVC.entrance = self.entrance;
+             TTCustomAnimationNavigationController *nav = [[TTCustomAnimationNavigationController alloc] initWithRootViewController:postThreadVC animationStyle:TTCustomAnimationStyleUGCPostEntrance];
+             nav.ttDefaultNavBarStyle = @"White";
+             
              */
+            
+            //Concern id
+//            self.cid = [params tt_stringValueForKey:@"cid"] ?: KTTFollowPageConcernID;
+//
+//            //Category id
+//            self.categoryID = [params tt_stringValueForKey:@"category_id"] ?: kTTMainCategoryID;
+            
+            self.useDraftFirst = [params tt_boolValueForKey:@"use_draft_first"];
+            
             //Post hint
             self.postContentHint = [params tt_stringValueForKey:@"post_content_hint"];
             self.postPreContent = [params tt_stringValueForKey:@"post_content"];
@@ -123,6 +144,8 @@ static NSInteger const kMaxPostImageCount = 9;
                 self.richSpanText = [[TTRichSpanText alloc] initWithText:@"" richSpans:nil];
             }
             self.outerInputRichSpanText = self.richSpanText;
+            
+             self.postFinishCompletionBlock = [params tt_objectForKey:@"completionBlock"];
             
             // 添加google地图注册
             [[TTLocationManager sharedManager] registerReverseGeocoder:[TTGoogleMapGeocoder sharedGeocoder] forKey:NSStringFromClass([TTGoogleMapGeocoder class])];
@@ -140,8 +163,22 @@ static NSInteger const kMaxPostImageCount = 9;
     [self createComponent];
     [self addImagesViewSizeChanged];
     [self addObserverAndNoti];
+    [self restoreData];
+}
+
+- (void)restoreData {
+    // 加载草稿
+    if (![self hasPresettingThreadContent]) {
+        [self restoreDraft];
+    }
+    
     // 等待构造完成之后初始化
     self.inputTextView.richSpanText = self.richSpanText; // add by zyk  richSpanText要搞明白
+    
+    // 待richSpanText更新后，再更新光标位置
+    if (self.selectedRange.location > 0 && self.inputTextView.text.length >= self.selectedRange.location) {
+        self.inputTextView.selectedRange = self.selectedRange;
+    }
 }
 
 - (void)setupNaviBar {
@@ -445,23 +482,17 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)cancel:(id)sender {
     [self endEditing];
-    [self dismissSelf];
-    /*
-    NSString * titleText = [self.titleTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    NSString * phoneText = [self.phoneTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
-    BOOL shouldAlert = !(isEmptyString(titleText) && isEmptyString(phoneText) && isEmptyString(inputText) && self.addImagesView.selectedImageCacheTasks.count == 0);
-    if (self.postUGCEnterFrom == TTPostUGCEnterFromConcernHomepage && ![self textHasChanged] && ![self imageHasChanged]) { // 话题来的且未改变内容则不弹
+    NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
+    if (![self textHasChanged] && ![self imageHasChanged]) {
         shouldAlert = NO;
     }
     
     if (!shouldAlert) {
-        [self trackWithEvent:kPostTopicEventName label:@"cancel_none" containExtra:YES extraDictionary:nil];
         [self postFinished:NO];
     } else {
-        [self trackWithEvent:kPostTopicEventName label:@"cancel" containExtra:YES extraDictionary:nil];
-        
         if ([self draftEnable]) {
             TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"保存已输入的内容？" message:nil preferredType:TTThemedAlertControllerTypeAlert];
             WeakSelf;
@@ -473,7 +504,6 @@ static NSInteger const kMaxPostImageCount = 9;
             
             [alertController addActionWithTitle:@"保存" actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
                 StrongSelf;
-                [self trackWithEvent:kPostTopicEventName label:@"cancel_confirm" containExtra:YES extraDictionary:nil];
                 [self postFinished:NO];
                 [self saveDraft];
             }];
@@ -484,14 +514,11 @@ static NSInteger const kMaxPostImageCount = 9;
             WeakSelf;
             [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
                 StrongSelf;
-                [self trackWithEvent:kPostTopicEventName label:@"cancel_confirm" containExtra:YES extraDictionary:nil];
                 [self postFinished:NO];
             }];
             [alertController showFrom:self animated:YES];
         }
-        
     }
-     */
 }
 
 - (void)sendPost:(id)sender {
@@ -762,52 +789,18 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)postFinished:(BOOL)hasSent task:(TTPostThreadTask *)task {
     [self clearDraft];
-    // add by zyk
-//    if (hasSent && !isEmptyString(self.cid)) {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kForumPostThreadFinish object:nil userInfo:@{@"cid" : self.cid}];
-//    } else {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionCancelledNotification
-//                                                            object:nil
-//                                                          userInfo:nil];
-//    }
-//
-//    // 发帖跳关注频道
-//    [self dismissSelf];
-//
-//    if ([TTKitchen getBOOL:kTTKUGCPostToFollowPageEnable] && !isEmptyString(self.cid) && [self.cid isEqualToString:KTTFollowPageConcernID]) {
-//        if (hasSent) {
-//
-//            NSMutableDictionary *param = [NSMutableDictionary new];
-//            [param setValue:@(_postUGCEnterFrom) forKey:@"entrance"];
-//            [param setValue:self.cid forKey:@"cid"];
-//            [param setValue:@(self.stayCurrentPageAfterPost) forKey:@"stay_after_post"];
-//            [param setValue:self.categoryID forKey:@"category_id"];
-//
-//            if (task) {
-//                [param setValue:[NSString stringWithFormat:@"%lld", task.fakeThreadId] forKey:@"fakeThreadID"];
-//                [param setValue:self.enterConcernID forKey:@"concernID"];
-//            }
-//
-//            if ([[NSThread currentThread] isMainThread]) {
-//                [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionFinishNotification
-//                                                                    object:nil
-//                                                                  userInfo:param];
-//            } else {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionFinishNotification
-//                                                                        object:nil
-//                                                                      userInfo:param];
-//                });
-//            }
-//        }
-//    }
-//
-//    !self.postFinishCompletionBlock ?: self.postFinishCompletionBlock(hasSent);
-//
-//    if (!SSIsEmptyDictionary(self.sdkParamsDict)) {
-//        [TTWeitoutiaoShareManager backWithSDKParams:self.sdkParamsDict result:hasSent ? TTWeitoutiaoShareResultSuccess : TTWeitoutiaoShareResultCancel];
-//        return;
-//    }
+    if (hasSent && !isEmptyString(self.cid)) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kForumPostThreadFinish object:nil userInfo:@{@"cid" : self.cid}];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionCancelledNotification
+                                                            object:nil
+                                                          userInfo:nil];
+    }
+
+    // 发帖跳关注频道
+    [self dismissSelf];
+
+    !self.postFinishCompletionBlock ?: self.postFinishCompletionBlock(hasSent);
 }
 
 
@@ -1119,76 +1112,90 @@ static NSInteger const kMaxPostImageCount = 9;
 //}
 
 - (void)restoreDraft {
-//    if ([self draftEnable]) {
-//        NSArray *tasks = [TTPostThreadTask fetchTasksFromDiskForConcernID:[self draftConcernID]];
-//        TTPostThreadTask *task = [tasks lastObject];
-//        if ([task isKindOfClass:[TTPostThreadTask class]]) {
-//            if (!isEmptyString(task.content)) {
-//                self.richSpanText = [[[TTRichSpanText alloc] initWithText:task.content richSpansJSONString:task.contentRichSpans] replaceWhitelistLinks];
-//            }
-//
-//            FRLocationEntity *posEntity = [[FRLocationEntity alloc] init];
-//            posEntity.city = task.city;
-//            posEntity.locationName = task.detail_pos;
-//            posEntity.latitude = task.latitude;
-//            posEntity.longitude = task.longitude;
-//            posEntity.locationAddress = task.locationAddress;
-//            posEntity.locationType = task.locationType;
-//            if (isEmptyString(posEntity.locationAddress)
-//                && isEmptyString(posEntity.city)
-//                && isEmptyString(posEntity.locationName)) {
-//                //本地存储地址都未空，不恢复地址位置。
-//            } else {
-//                self.addLocationView.selectedLocation = posEntity;
-//                [self.addLocationView refresh];
-//            }
-//
-//            NSArray<FRUploadImageModel *> *imageModels = task.images;
-//            [self.addImagesView restoreDraft:imageModels];
-//
-//            self.selectedRange = task.selectedRange;
-//        }
-//        [self clearDraft];
-//    }
+    if ([self draftEnable]) {
+        NSArray *tasks = [TTPostThreadTask fetchTasksFromDiskForConcernID:[self draftConcernID]];
+        TTPostThreadTask *task = [tasks lastObject];
+        if ([task isKindOfClass:[TTPostThreadTask class]]) {
+            if (!isEmptyString(task.content)) {
+                self.richSpanText = [[[TTRichSpanText alloc] initWithText:task.content richSpansJSONString:task.contentRichSpans] replaceWhitelistLinks];
+            }
+
+            FRLocationEntity *posEntity = [[FRLocationEntity alloc] init];
+            posEntity.city = task.city;
+            posEntity.locationName = task.detail_pos;
+            posEntity.latitude = task.latitude;
+            posEntity.longitude = task.longitude;
+            posEntity.locationAddress = task.locationAddress;
+            posEntity.locationType = task.locationType;
+            if (isEmptyString(posEntity.locationAddress)
+                && isEmptyString(posEntity.city)
+                && isEmptyString(posEntity.locationName)) {
+                //本地存储地址都未空，不恢复地址位置。
+            } else {
+                self.addLocationView.selectedLocation = posEntity;
+                [self.addLocationView refresh];
+            }
+
+            NSArray<FRUploadImageModel *> *imageModels = task.images;
+            [self.addImagesView restoreDraft:imageModels];
+
+            self.selectedRange = task.selectedRange;
+        }
+        [self clearDraft];
+    }
 }
 
 - (void)clearDraft {
-    // add by zyk
-//    if ([self draftEnable]) {
-//        NSArray *tasks = [TTPostThreadTask fetchTasksFromDiskForConcernID:[self draftConcernID]];
-//        for (TTPostThreadTask *task in tasks) {
-//            [TTPostThreadTask removeTaskFromDiskByTaskID:task.taskID concernID:[self draftConcernID]];
-//        }
-//    }
+    if ([self draftEnable]) {
+        NSArray *tasks = [TTPostThreadTask fetchTasksFromDiskForConcernID:[self draftConcernID]];
+        for (TTPostThreadTask *task in tasks) {
+            [TTPostThreadTask removeTaskFromDiskByTaskID:task.taskID concernID:[self draftConcernID]];
+        }
+    }
 }
 
 - (void)saveDraft {
-     // add by zyk
-//    if ([self draftEnable]) {
-//        TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
-//        [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-//
-//        TTPostThreadTask *task = [[TTPostThreadTask alloc] initWithTaskType:TTPostTaskTypeThread];
-//
-//        task.content = richSpanText.text;
-//        task.contentRichSpans = [TTRichSpans JSONStringForRichSpans:richSpanText.richSpans];
-//        task.create_time = [[NSDate date] timeIntervalSince1970];
-//        task.userID = [[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID];
-//        task.concernID = [self draftConcernID];
-//        task.categoryID = [self draftConcernID];
-//        [task addTaskImages:self.addImagesView.selectedImageCacheTasks thumbImages:self.addImagesView.selectedThumbImages];
-//        task.latitude = self.addLocationView.selectedLocation.latitude;
-//        task.longitude = self.addLocationView.selectedLocation.longitude;
-//        task.city = self.addLocationView.selectedLocation.city;
-//        task.detail_pos = self.addLocationView.selectedLocation.locationName;
-//        task.locationType = self.addLocationView.selectedLocation.locationType;
-//        task.locationAddress = self.addLocationView.selectedLocation.locationAddress;
-//        task.selectedRange = self.inputTextView.selectedRange;
-//        if (isEmptyString(task.content) && self.addImagesView.selectedImageCacheTasks.count == 0)
-//            return;
-//
-//        [task saveToDisk];
-//    }
+    if ([self draftEnable]) {
+        TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
+        [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
+        TTPostThreadTask *task = [[TTPostThreadTask alloc] initWithTaskType:TTPostTaskTypeThread];
+
+        task.content = richSpanText.text;
+        task.contentRichSpans = [TTRichSpans JSONStringForRichSpans:richSpanText.richSpans];
+        task.create_time = [[NSDate date] timeIntervalSince1970];
+        task.userID = [[TTAccount sharedAccount] userIdString];
+        task.concernID = [self draftConcernID];
+        task.categoryID = [self draftConcernID];
+        [task addTaskImages:self.addImagesView.selectedImageCacheTasks thumbImages:self.addImagesView.selectedThumbImages];
+        task.latitude = self.addLocationView.selectedLocation.latitude;
+        task.longitude = self.addLocationView.selectedLocation.longitude;
+        task.city = self.addLocationView.selectedLocation.city;
+        task.detail_pos = self.addLocationView.selectedLocation.locationName;
+        task.locationType = self.addLocationView.selectedLocation.locationType;
+        task.locationAddress = self.addLocationView.selectedLocation.locationAddress;
+        task.selectedRange = self.inputTextView.selectedRange;
+        if (isEmptyString(task.content) && self.addImagesView.selectedImageCacheTasks.count == 0)
+            return;
+
+        [task saveToDisk];
+    }
+}
+
+- (BOOL)hasPresettingThreadContent {
+    if ((!isEmptyString(self.postPreContent) || !isEmptyString(self.postPreContentRichSpan) || self.outerInputAssets.count || self.outerInputImages.count) && (!self.useDraftFirst)) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (NSString *)draftConcernID {
+    return [NSString stringWithFormat:@"draft_%@", self.enterConcernID];
+}
+
+- (BOOL)draftEnable {
+    return [TTKitchen getBOOL:kTTKUGCPostThreadDraftEnable];
 }
 
 - (void)closeViewController:(NSNotification *)notification {
