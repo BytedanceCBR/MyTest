@@ -1743,14 +1743,15 @@
         TRACK_EVENT(@"subscribe_show", param);
 
     }else if (cellModel.isRealHouseTopCell) {
-        if ([cellModel.realHouseTopModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
-            FHSugSubscribeDataDataSubscribeInfoModel *cellSubModel = (FHSugSubscribeDataDataSubscribeInfoModel *)cellModel.subscribModel;
         
         [param removeObjectForKey:@"impr_id"];
         [param removeObjectForKey:@"group_id"];
-        self.subScribeShowDict = param;
-        TRACK_EVENT(@"subscribe_show", param);
-        }
+        [param removeObjectForKey:@"log_pb"];
+        [param removeObjectForKey:@"house_type"];
+        [param removeObjectForKey:@"rank"];
+        [param removeObjectForKey:@"card_type"];
+        
+        TRACK_EVENT(@"real_house_show", param);
     }else
     {
         TRACK_EVENT(@"house_show", param);

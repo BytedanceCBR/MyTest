@@ -442,6 +442,19 @@
     tracerDict[@"origin_search_id"] = origin_search_id ? : @"be_null";
     tracerDict[@"log_pb"] = logPb ? : @"be_null";
     
+    if (cellModel.isRealHouseTopCell) {
+        
+        [tracerDict removeObjectForKey:@"impr_id"];
+        [tracerDict removeObjectForKey:@"group_id"];
+        [tracerDict removeObjectForKey:@"log_pb"];
+        [tracerDict removeObjectForKey:@"house_type"];
+        [tracerDict removeObjectForKey:@"rank"];
+        [tracerDict removeObjectForKey:@"card_type"];
+        
+        [FHUserTracker writeEvent:@"real_house_show" params:tracerDict];
+        return;
+    }
+    
     [FHUserTracker writeEvent:@"house_show" params:tracerDict];
 }
 
