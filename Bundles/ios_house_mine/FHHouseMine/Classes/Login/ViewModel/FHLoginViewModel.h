@@ -15,9 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHLoginViewModel : NSObject
 
 //屏蔽TTNavigationViewController带来的键盘变化
-@property(nonatomic , assign) BOOL isHideKeyBoard;
-@property (nonatomic, strong)     TTAcountFLoginDelegate       *loginDelegate;
-@property (nonatomic, assign)   BOOL       needPopVC;
+@property(nonatomic, assign) BOOL isHideKeyBoard;
+@property(nonatomic, strong) TTAcountFLoginDelegate *loginDelegate;
+@property(nonatomic, assign) BOOL needPopVC;
+@property(nonatomic, assign) BOOL noDismissVC;
 
 - (instancetype)initWithView:(FHLoginView *)tableView controller:(FHLoginViewController *)viewController;
 

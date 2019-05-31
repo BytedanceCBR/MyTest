@@ -10,7 +10,6 @@
 #import <UIFont+House.h>
 #import <UIColor+Theme.h>
 #import "TTDeviceHelper.h"
-#import "FHSuggestionListNavBar.h"
 #import "FHExtendHotAreaButton.h"
 
 @implementation FHPriceValuationNSCell

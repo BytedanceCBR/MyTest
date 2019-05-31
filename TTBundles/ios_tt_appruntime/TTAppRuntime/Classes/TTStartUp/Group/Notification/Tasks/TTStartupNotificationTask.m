@@ -181,7 +181,7 @@ TTAccountMulticastProtocol
 }
 
 - (void)introductionViewControllerDismissed:(NSNotification*)notification {
-    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:5];
+    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:1];
 }
 
 - (void)shareToPlatformNeedEnterBackground:(NSNotification *)notification {

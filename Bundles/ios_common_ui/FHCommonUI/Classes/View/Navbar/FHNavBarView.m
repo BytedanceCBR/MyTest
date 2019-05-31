@@ -14,7 +14,6 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
 
 @property (nonatomic, strong) UIView    *rightView;
 @property (nonatomic, strong) NSMutableArray *rightViewsArray;
-@property (nonatomic, strong) UIView    *seperatorLine;
 
 @end
 
@@ -30,8 +29,8 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
 }
 
 - (void)setupUI {
-    _bgView = [[UIView alloc] init];
-    _bgView.alpha = 0.5;
+    _bgView = [[UIImageView alloc] init];
+    _bgView.backgroundColor = [UIColor whiteColor];
     [self addSubview:_bgView];
     [_bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self);
@@ -81,7 +80,7 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
         make.left.right.bottom.mas_equalTo(self);
     }];
     _rightViewsArray = [[NSMutableArray alloc] init];
-    self.backgroundColor = UIColor.whiteColor;
+//    self.backgroundColor = UIColor.whiteColor;
 }
 
 // 添加导航栏右边视图，移除之前视图，从右向左排列，默认第一个viewRightOffset：@18.0，NSNumber类型
@@ -150,18 +149,16 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
 
 - (void)setNaviBarTransparent:(BOOL)transparent {
     if(transparent){
-        self.backgroundColor = [UIColor clearColor];
         self.bgView.alpha = 0;
         self.seperatorLine.hidden = YES;
     }else{
-        self.backgroundColor = [UIColor whiteColor];
-        self.bgView.alpha = 0.5;
+        self.bgView.alpha = 1;
         self.seperatorLine.hidden = NO;
     }
 }
 
 - (void)refreshAlpha:(CGFloat)alpha {
-    self.backgroundColor = [UIColor colorWithWhite:1 alpha:alpha];
+    self.bgView.alpha = alpha;
     if (alpha >= 1) {
         self.seperatorLine.hidden = NO;
     }else {

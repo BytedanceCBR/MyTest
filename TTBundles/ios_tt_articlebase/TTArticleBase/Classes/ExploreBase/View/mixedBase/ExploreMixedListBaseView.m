@@ -171,11 +171,14 @@
 #import <FHLocManager.h>
 #import <FHHomeCellHelper.h>
 #import "SSCommonLogic.h"
+#import "TTSandBoxHelper.h"
+#import <FHUtils.h>
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
 #define kMaxLastReadLookupInterval      (24 * 60 * 60 * 1000)  //毫秒
 #define kShowOldLastReadMinThreshold    60      //超过60篇旧文章后才可能显示“以下为24小时前的文章”
+#define kCategoryRequestedKey       @"kCategoryRequestedKeyString"
 
 const NSUInteger ExploreMixedListBaseViewSectionFHouseCells = 0;
 //const NSUInteger ExploreMixedListBaseViewSectionFHouseCells = 0;
@@ -467,8 +470,6 @@ TTRefreshViewDelegate
         _listView.sectionHeaderHeight = 0;
         _listView.sectionFooterHeight = 0;
 //        _listView.contentInset = UIEdgeInsetsMake(35, 0, 0, 0);
-        
-        
         
         if (@available(iOS 11.0, *)) {
         _listView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -848,6 +849,8 @@ TTRefreshViewDelegate
     }
     
     [self setADRefreshView];
+    
+
 }
 
 - (void)setADRefreshView{
@@ -995,7 +998,7 @@ TTRefreshViewDelegate
 
     NSUInteger originalCount = [_fetchListManager.items count];
     [_fetchListManager refreshItemsForListType:_listType];
-
+    
     
 //    if ([self.categoryID isEqualToString:kTTFollowCategoryID] &&  [KitchenMgr getBOOL:kKUGCFollowCategoryClearUnFollowThreadEnable]) {
 //        [_fetchListManager checkFollowCategoryFollowStatus];
@@ -1019,7 +1022,7 @@ TTRefreshViewDelegate
     self.shouldReloadBackAfterLeaveCurrentCategory = [self shouldReloadBackAfterLeaveCurrentCategory];
     
     //唤醒后刷新
-    if ((self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) || ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate && [_fetchListManager items].count > 0) || [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse) {
+    if ((self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) || ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate && [_fetchListManager items].count > 0) || [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"]) {
         self.refreshShouldLastReadUpate = YES;
         self.refreshFromType = ListDataOperationReloadFromTypeAuto;
         [self pullAndRefresh];
@@ -2221,6 +2224,7 @@ TTRefreshViewDelegate
     ListDataOperationReloadFromType captureRefreshFromType = self.refreshFromType;
     self.refreshFromType = ListDataOperationReloadFromTypeNone;
     
+    BOOL isFindHouseRefresh = [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse;
     
     if (_accountChangedNeedReadloadList) {
         fromLocal = NO;
@@ -2635,6 +2639,7 @@ TTRefreshViewDelegate
                                              }
                                              
                                              if(isResponseFromRemote){
+                                                 
                                                  [weakSelf tt_endUpdataData:!isResponseFromRemote error:nil tip:tip duration:duration tipTouchBlock:^{
                                                      [weakSelf notifyBarAction:tipModel];
                                                      
@@ -2690,10 +2695,33 @@ TTRefreshViewDelegate
                                                  [weakSelf exploreMixedListTimeConsumingMonitorWithContext:operationContext];
                                                  
                                              }
+                                                                                          if (!isResponseFromRemote && weakSelf.listView.pullDownView.state == PULL_REFRESH_STATE_INIT && weakSelf.listView.customTopOffset != 0)
+                                                                                          {
+                                                                                              
+                                                                                          }
                                              
-//                                             if (!isResponseFromRemote && weakSelf.listView.pullDownView.state == PULL_REFRESH_STATE_INIT && weakSelf.listView.customTopOffset != 0) {
+                                             
+                                             
+                                             if (_categoryID) {
+                                                 NSString *requestRecord = [FHUtils contentForKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
+                                                 
+                                                 if (!requestRecord && !isLoadMore && (isFindHouseRefresh || [TTSandBoxHelper isAPPFirstLaunch])) {
+                                                     [weakSelf.listView setContentOffset:CGPointMake(0, weakSelf.listView.customTopOffset - weakSelf.listView.contentInset.top) animated:NO];
+                                                 }
+                                                 
+                                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                         [FHUtils setContent:@"1" forKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
+                                                     });
+                                                 });
+                                             }
+                                             
+                                             if (!isResponseFromRemote && weakSelf.listView.pullDownView.state == PULL_REFRESH_STATE_INIT && weakSelf.listView.customTopOffset != 0) {
                                                  [weakSelf.listView setContentOffset:CGPointMake(0, weakSelf.listView.customTopOffset - weakSelf.listView.contentInset.top) animated:NO];
-//                                             }
+                                             }
+                                             
+                                  
+                                             
                                              [weakSelf reportDelegateLoadFinish:isFinish isUserPull:weakSelf.listView.pullDownView.isUserPullAndRefresh isGetMore:getMore];
                                          }
                                          else {

@@ -6,14 +6,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHMineConfigModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMineBaseCell : UITableViewCell
 
-- (void)updateCell:(NSDictionary *)dic;
+- (void)updateCell:(FHMineConfigDataIconOpDataModel *)model isFirst:(BOOL)isFirst;
 
-@property(nonatomic, strong) NSDictionary *dic;
+@property(nonatomic, strong) FHMineConfigDataIconOpDataModel *model;
 
 @end
 

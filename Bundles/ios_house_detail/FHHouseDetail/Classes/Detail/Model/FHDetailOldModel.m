@@ -233,6 +233,105 @@
 }
 @end
 
+#pragma mark - base extra
+@implementation FHDetailDataBaseExtraDetectiveDetectiveInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"detectiveList": @"detective_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"explainContent": @"explain_content",
+                           @"subTitle": @"sub_title",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+
+@implementation FHDetailDataBaseExtraDetectiveModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"baseTitle": @"base_title",
+                           @"warnContent": @"warn_content",
+                           @"detectiveInfo": @"detective_info",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHDetailDataBaseExtraOfficialAgencyModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"logoUrl": @"logo_url",
+                           @"nameSubTitle": @"name_sub_title",
+                           @"agencyId":@"agency_id",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailDataBaseExtraOfficialModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"baseTitle": @"base_title",
+                           @"agencyLogoUrl":@"agency_logo_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailDataBaseExtraModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+
 @implementation FHDetailOldDataModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -264,7 +363,7 @@
                            @"neighborhoodPriceRange": @"neighborhood_price_range",
                            @"comfortInfo": @"comfort_info",
                            @"chooseAgencyList": @"choose_agency_list",
-                           
+                           @"baseExtra": @"base_extra",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

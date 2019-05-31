@@ -7,10 +7,13 @@
 
 #import <Foundation/Foundation.h>
 #import "FHMineViewController.h"
+#import "FHMineDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMineViewModel : NSObject
+
+@property(nonatomic, strong) NSMutableArray *dataList;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMineViewController *)viewController;
 
@@ -19,7 +22,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)showInfo;
 
 - (void)updateHeaderView;
-//-(void)addEnterUserProfileLog;
+
+- (void)goToSystemSetting;
+
+- (void)callPhone;
+
+- (void)requestMineConfig;
+
+- (void)updateFocusTitles;
 
 @end
 

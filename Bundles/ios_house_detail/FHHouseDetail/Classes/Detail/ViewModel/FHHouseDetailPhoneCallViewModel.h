@@ -28,9 +28,17 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 
 - (void)licenseActionWithPhone:(FHDetailContactModel *)contactPhone;
 
+
+- (void)generateImParams:(NSString *)houseId
+              houseTitle:(NSString *)houseTitle
+              houseCover:(NSString *)houseCover
+               houseType:(NSString *)houseType
+                houseDes:(NSString *)houseDes
+              housePrice:(NSString *)housePrice
+           houseAvgPrice:(NSString *)houseAvgPrice;
+
 - (void)imchatActionWithPhone:(FHDetailContactModel *)contactPhone realtorRank:(NSString *)rank extraDic:(NSDictionary *)extra ;
 
-- (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice;
 
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre;
 

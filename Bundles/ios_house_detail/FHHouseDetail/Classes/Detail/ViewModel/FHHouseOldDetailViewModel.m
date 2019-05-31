@@ -40,6 +40,7 @@
 #import "FHDetailMediaHeaderCell.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHMainApi+Contact.h>
+#import <FHHouseBase/FHUserTrackerDefine.h>
 #import "FHDetailNewModel.h"
 #import "FHDetailOldNearbyMapCell.h"
 #import "FHDetailOldEvaluateCell.h"
@@ -346,10 +347,11 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:priceChangeHistoryModel];
     }
     // 添加属性列表
-    if (model.data.baseInfo || model.data.certificate) {
+    if (model.data.baseInfo || model.data.certificate || model.data.baseExtra) {
         FHDetailPropertyListModel *propertyModel = [[FHDetailPropertyListModel alloc] init];
         propertyModel.baseInfo = model.data.baseInfo;
         propertyModel.certificate = model.data.certificate;
+        propertyModel.extraInfo = model.data.baseExtra;
         [self.items addObject:propertyModel];
     }
     
@@ -470,6 +472,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
         infoModel.title = model.data.neighborEval.title;
+        infoModel.mapCentertitle = model.data.neighborhoodInfo.name;
         infoModel.score = model.data.neighborEval.score;
         
         [self.items addObject:infoModel];
@@ -708,6 +711,73 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     } else {
         return nil;
     }
+}
+
+#pragma mark - poplayer
+- (void)onShowPoplayerNotification:(NSNotification *)notification
+{
+    UITableViewCell *cell = notification.userInfo[@"cell"];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    if (!indexPath) {
+        return;
+    }
+    
+    id model = notification.userInfo[@"model"];
+    
+    FHDetailPropertyListModel *propertyModel = nil;
+    for (id item in self.items) {
+        if ([item isKindOfClass:[FHDetailPropertyListModel class]]) {
+            propertyModel = (FHDetailPropertyListModel *)item;
+            break;
+        }
+    }
+    
+    if (!propertyModel) {
+        return;
+    }
+
+    NSMutableDictionary *trackInfo = [NSMutableDictionary new];
+    trackInfo[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE];
+    trackInfo[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM]?:UT_BE_NULL;
+    trackInfo[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];
+    trackInfo[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
+    trackInfo[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
+    trackInfo[@"rank"] = self.detailTracerDic[@"rank"];
+    
+    NSString *position = nil;
+    FHDetailHalfPopLayer *popLayer = [self popLayer];
+    if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
+        position = @"official_inspection";
+        trackInfo[UT_ENTER_FROM] = position;
+        [popLayer showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)model trackInfo:trackInfo];
+        
+    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
+        position = @"happiness_eye";
+        trackInfo[UT_ENTER_FROM] = position;
+        [popLayer showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)model trackInfo:trackInfo];
+        
+    }
+    [self addClickOptionLog:position];
+    self.tableView.scrollsToTop = NO;
+    [self enableController:NO];
+}
+
+-(void)addClickOptionLog:(NSString *)position
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+
+    param[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE];
+    param[UT_ENTER_FROM] = self.detailTracerDic[UT_ENTER_FROM];
+    param[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];
+    param[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
+    param[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
+    
+    param[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM]?:UT_BE_NULL;
+    
+    [param addEntriesFromDictionary:self.detailTracerDic];
+    param[@"click_position"] = position;
+    
+    TRACK_EVENT(@"click_options", param);
 }
 
 @end

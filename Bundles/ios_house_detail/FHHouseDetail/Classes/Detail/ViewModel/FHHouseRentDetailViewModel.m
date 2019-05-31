@@ -29,6 +29,7 @@
 #import "NSDictionary+TTAdditions.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHMainApi+Contact.h>
+#import <FHHouseBase/FHUserTrackerDefine.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -245,9 +246,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:coreInfoModel];
     }
     // 添加属性列表
-    if (model.data.baseInfo) {
+    if (model.data.baseInfo || model.data.baseExtra) {
         FHDetailPropertyListModel *propertyModel = [[FHDetailPropertyListModel alloc] init];
         propertyModel.baseInfo = model.data.baseInfo;
+        propertyModel.rentExtraInfo = model.data.baseExtra;
         [self.items addObject:propertyModel];
     }
     // 添加房屋配置
@@ -476,6 +478,72 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
 }
 
+- (void)onShowPoplayerNotification:(NSNotification *)notification
+{
+    UITableViewCell *cell = notification.userInfo[@"cell"];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    if (!indexPath) {
+        return;
+    }
+    
+    id model = notification.userInfo[@"model"];
+    
+    FHDetailPropertyListModel *propertyModel = nil;
+    for (id item in self.items) {
+        if ([item isKindOfClass:[FHDetailPropertyListModel class]]) {
+            propertyModel = (FHDetailPropertyListModel *)item;
+            break;
+        }
+    }
+    
+    if (!propertyModel) {
+        return;
+    }
+    
+    [self addClickOptionLog];
+    
+    NSMutableDictionary *trackInfo = [NSMutableDictionary new];
+    trackInfo[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE];
+    trackInfo[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM]?:UT_BE_NULL;
+    trackInfo[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];
+    trackInfo[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
+    trackInfo[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
+    trackInfo[@"rank"] = self.detailTracerDic[@"rank"];
+    trackInfo[UT_ENTER_FROM] = @"transaction_remind";
+    
+    FHDetailHalfPopLayer *popLayer = [self popLayer];
+    [popLayer showDealData:propertyModel.rentExtraInfo trackInfo:trackInfo];
+    
+    self.tableView.scrollsToTop = NO;
+    [self enableController:NO];
+}
+
+-(void)addClickOptionLog
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    /*
+     "1.event_type：house_app2c_v2
+     2.page_type（页面类型）：rent_detail（租房详情页）
+     3.click_position ：transaction_remind (交易提示)
+     4.enter_from：renting（租房）
+     5. origin_from
+     6. origin_search_id
+     7.log_pb
+     8.element_from ："
+     */
+    param[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE];
+    param[UT_ENTER_FROM] = @"renting";
+    param[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];
+    param[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
+    param[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
+    
+    param[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM]?:UT_BE_NULL;
+    
+    [param addEntriesFromDictionary:self.detailTracerDic];
+    param[@"click_position"] = @"transaction_remind";
+    
+    TRACK_EVENT(@"click_options", param);
+}
 
 @end
 
