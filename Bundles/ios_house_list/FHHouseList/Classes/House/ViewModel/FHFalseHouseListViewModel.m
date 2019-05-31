@@ -473,15 +473,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 0) {
-        if (indexPath.row < self.houseList.count) {
-            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-            if (cellModel) {
-                [self jump2HouseDetailPage:cellModel withRank:indexPath.row];
-            }
-        }
-    }
+
 }
 
 #pragma mark house_show log
