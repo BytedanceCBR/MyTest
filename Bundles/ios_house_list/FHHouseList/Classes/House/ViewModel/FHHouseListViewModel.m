@@ -66,6 +66,7 @@
 @property(nonatomic , strong) FHSearchFilterOpenUrlModel *filterOpenUrlMdodel;
 
 @property(nonatomic , assign) BOOL showPlaceHolder;
+@property(nonatomic , assign) BOOL showRealHouseTop;
 @property(nonatomic , assign) BOOL lastHasMore;
 
 @property (nonatomic , assign) BOOL isRefresh;
@@ -434,6 +435,10 @@
         }
     }
     
+    if (offset == 0) {
+        _showRealHouseTop = NO;
+    }
+    
     TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
@@ -786,6 +791,7 @@
                 
                 if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
                     cellModel.isRealHouseTopCell = YES;
+                    _showRealHouseTop = YES;
                 }else
                 {
                     cellModel.isRealHouseTopCell = NO;
@@ -1302,20 +1308,42 @@
         if (indexPath.row < self.houseList.count) {
             
             FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            
+            NSString *hashString = [NSString stringWithFormat:@"%ld",cellModel.hash];
+            
+            if (cellModel.isSubscribCell && !self.houseShowCache[hashString] ) {
+                [self addHouseShowLog:cellModel withRank:indexPath.row - (_showRealHouseTop ? 1 : 0)];
+                self.houseShowCache[hashString] = @"1";
+                return;
+            }
+            
+            if (cellModel.isRealHouseTopCell && !self.houseShowCache[hashString]) {
+                [self addHouseShowLog:cellModel withRank:indexPath.row];
+                self.houseShowCache[hashString] = @"1";
+                return;
+            }
+            
             if (cellModel.groupId.length > 0 && ![self.houseShowCache.allKeys containsObject:cellModel.groupId]) {
                 
-                [self addHouseShowLog:cellModel withRank:indexPath.row];
+                [self addHouseShowLog:cellModel withRank:indexPath.row - (_showRealHouseTop ? 1 : 0)];
                 self.houseShowCache[cellModel.groupId] = @"1";
             }
         }
     } else {
         if (indexPath.row > 0 && indexPath.row < self.sugesstHouseList.count) {
             FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
+            NSString *hashString = [NSString stringWithFormat:@"%ld",cellModel.hash];
+
             if (cellModel.groupId.length > 0 && ![self.houseShowCache.allKeys containsObject:cellModel.groupId]) {
         
-                [self addHouseShowLog:cellModel withRank:(indexPath.row - 1)];
+                [self addHouseShowLog:cellModel withRank:(indexPath.row)];
                 self.houseShowCache[cellModel.groupId] = @"1";
             }
+            
+//            if (cellModel.isRealHouseTopCell && !self.houseShowCache[hashString]) {
+//                [self addHouseShowLog:cellModel withRank:indexPath.row];
+//                self.houseShowCache[hashString] = @"1";
+//            }
         }
     }
 }
@@ -1693,8 +1721,15 @@
         [FHUserTracker writeEvent:@"subscribe_show" params:tracerDict];
     }else if(cellModel.isRealHouseTopCell)
     {
-        FHSugListRealHouseTopInfoModel *topInfoModel = (FHSugListRealHouseTopInfoModel *)cellModel.subscribModel;
-        [FHUserTracker writeEvent:@"subscribe_show" params:tracerDict];
+        
+        [tracerDict removeObjectForKey:@"impr_id"];
+        [tracerDict removeObjectForKey:@"group_id"];
+        [tracerDict removeObjectForKey:@"log_pb"];
+        [tracerDict removeObjectForKey:@"house_type"];
+        [tracerDict removeObjectForKey:@"rank"];
+        [tracerDict removeObjectForKey:@"card_type"];
+
+        [FHUserTracker writeEvent:@"real_house_show" params:tracerDict];
     }
     else
     {

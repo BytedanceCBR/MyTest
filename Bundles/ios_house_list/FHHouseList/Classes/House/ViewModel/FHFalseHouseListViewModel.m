@@ -46,6 +46,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property(nonatomic , strong) FHTracerModel *tracerModel;
 @property (nonatomic , strong) NSMutableDictionary *houseSearchDic;
 @property(nonatomic , strong) NSString *requestSearchId;
+@property(nonatomic , strong) NSString *bannerImageUrl;
 
 @end
 
@@ -276,7 +277,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         refreshTip = houseModel.refreshTip;
         itemArray = houseModel.items;
         self.searchId = houseModel.searchId;
-        
+        self.bannerImageUrl = houseModel.banner.url;
         
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
