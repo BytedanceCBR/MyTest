@@ -8,6 +8,7 @@
 #import "FHCommunityViewController.h"
 #import "FHPostUGCViewController.h"
 #import "TTNavigationController.h"
+#import "FHWDPostViewController.h"
 
 @interface FHCommunityViewController ()
 
