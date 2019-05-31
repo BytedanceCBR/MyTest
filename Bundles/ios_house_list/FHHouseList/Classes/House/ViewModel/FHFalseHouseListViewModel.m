@@ -47,6 +47,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property (nonatomic , strong) NSMutableDictionary *houseSearchDic;
 @property(nonatomic , strong) NSString *requestSearchId;
 @property(nonatomic , strong) NSString *bannerImageUrl;
+@property(nonatomic , strong) NSString *titleTopStr;
 
 @end
 
@@ -278,7 +279,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         itemArray = houseModel.items;
         self.searchId = houseModel.searchId;
         self.bannerImageUrl = houseModel.banner.url;
-        
+        self.titleTopStr = houseModel.topTip;
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
@@ -448,6 +449,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
+    if (self.bannerImageUrl) {
+        [_topHeader refreshUI:self.titleTopStr andImageUrl:[NSURL URLWithString:self.bannerImageUrl]];
+    }
     return _topHeader;
 }// custom view for header. will be adjusted to default or specified header height
 
@@ -459,7 +463,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 148;
+    return 168;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section

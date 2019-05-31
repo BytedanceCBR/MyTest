@@ -247,6 +247,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *mapFindHouseOpenUrl;
 @property (nonatomic, copy , nullable) NSString *total;
 @property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, copy , nullable) NSString *topTip;
 @property (nonatomic, copy , nullable) FHSearchHouseDataItemsNeighborhoodInfoImagesModel *banner;
 @property (nonatomic, strong , nullable) FHSearchRealHouseExtModel *externalSite;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;

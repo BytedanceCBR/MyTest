@@ -9,6 +9,7 @@
 #import <Masonry.h>
 #import <UIFont+House.h>
 #import <UIColor+Theme.h>
+#import <UIImageView+BDWebImage.h>
 
 @interface FHFalseListTopHeaderView ()
 
@@ -24,7 +25,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         _bannerImageView = [[UIImageView alloc] init];
-        [_bannerImageView setBackgroundColor:[UIColor redColor]];
         [self addSubview:_bannerImageView];
         
         [_bannerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -35,7 +35,6 @@
         _titleLabel = [UILabel new];
         _titleLabel.font = [UIFont themeFontRegular:18];
         _titleLabel.textColor = [UIColor themeGray1];
-        _titleLabel.text = @"已为您过滤200套问题房源";
         _titleLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:_titleLabel];
         [_titleLabel setBackgroundColor:[UIColor whiteColor]];
@@ -51,7 +50,8 @@
 
 - (void)refreshUI:(NSString *)title andImageUrl:(NSURL *)imageUrl
 {
-   
+    _titleLabel.text = title;
+    [_bannerImageView bd_setImageWithURL:imageUrl placeholder:[UIImage imageNamed:@"default_image"]];
 }
 
 /*
