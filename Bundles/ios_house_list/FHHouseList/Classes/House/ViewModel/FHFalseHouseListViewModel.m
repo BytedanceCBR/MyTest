@@ -22,6 +22,7 @@
 #import "FHRefreshCustomFooter.h"
 #import <ToastManager.h>
 #import <UIScrollView+Refresh.h>
+#import "UIViewController+Refresh_ErrorHandler.h"
 
 #define kBaseCellId @"kBaseCellId"
 #define kBaseErrorCellId @"kErrorCell"
@@ -81,9 +82,12 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             self.originFrom = self.tracerModel.originFrom;
         }
         
-        
-        
         WeakSelf;
+        self.currentViewController.emptyView.retryBlock = ^{
+            StrongSelf;
+            [self requestErshouHouseListData:YES query:nil offset:self.houseList.count searchId:self.requestSearchId];
+        };
+        
         self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
             StrongSelf;
             if ([FHEnvContext isNetworkConnected]) {
@@ -106,6 +110,10 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
         [self configBottomFooter];
         [self configTableView];
+        
+        [viewController tt_startUpdate];
+        
+        
         
         [self requestErshouHouseListData:YES query:nil offset:self.houseList.count searchId:self.requestSearchId];
     }
@@ -324,6 +332,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         [self.tableView reloadData];
         self.bottomView.hidden = YES;
         self.tableView.scrollEnabled = NO;
+        
+        self.currentViewController.emptyView.hidden = NO;
+        [self.currentViewController.emptyView showEmptyWithTip:@"网络异常请重试" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
     }
     
     [self addHouseSearchLog];
@@ -485,9 +496,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     NSString *originFrom = self.originFrom ? : @"be_null";
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"house_type"] = [self houseTypeString];
+    tracerDict[@"house_type"] = @"old";
     tracerDict[@"card_type"] = @"left_pic";
-    tracerDict[@"page_type"] = [self pageTypeString];
+    tracerDict[@"page_type"] = @"false_old_list";
     tracerDict[@"element_type"] = @"be_null";
     tracerDict[@"search_id"] = self.searchId ? : @"be_null";
     tracerDict[@"group_id"] = [cellModel groupId] ? : @"be_null";

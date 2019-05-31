@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFalseHouseListViewController : FHBaseViewController
 
+@property (nonatomic, strong) FHErrorView *emptyView;
+
 @end
 
 NS_ASSUME_NONNULL_END

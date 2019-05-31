@@ -53,6 +53,20 @@
     self.isViewDidDisapper = YES;
 }
 
+- (void)addDefaultEmptyViewFullScreen
+{
+    self.emptyView = [[FHErrorView alloc] init];
+    self.emptyView.hidden = YES;
+    [self.view addSubview:self.emptyView];
+    [self.emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+    __weak typeof(self) wself = self;
+    self.emptyView.retryBlock = ^{
+       
+    };
+}
+
 -(void)setupUI {
     [self initNavbar];
     
@@ -118,6 +132,8 @@
     self.errorMaskView.hidden = YES;
     
     [self startLoading];
+    
+    [self addDefaultEmptyViewFullScreen];
 }
 
 
