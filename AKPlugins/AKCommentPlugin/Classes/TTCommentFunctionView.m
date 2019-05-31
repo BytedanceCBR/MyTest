@@ -230,11 +230,12 @@
 }
 
 - (BOOL)shouldSetCheckedCommentRepostCheckButton {
-    return [TTKitchen getBOOL: @"repost_comment_repost_selected"];
+    return YES;
+//    return [TTKitchen getBOOL: @"repost_comment_repost_selected"];
 }
 
 - (void)setCommentRepostCheckButtonChecked:(BOOL)checked {
-    [TTKitchen setBOOL:checked forKey:@"repost_comment_repost_selected"];
+    // [TTKitchen setBOOL:checked forKey:@"repost_comment_repost_selected"];
 }
 
 @end
