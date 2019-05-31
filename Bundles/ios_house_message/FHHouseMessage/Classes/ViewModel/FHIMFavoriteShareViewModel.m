@@ -13,6 +13,7 @@
 #import "FHNewHouseItemModel.h"
 #import "FHHouseListModel.h"
 #import "FHDetailBaseModel.h"
+#import "TTSandBoxHelper.h"
 
 @interface FHIMFavoriteShareModel : NSObject
 @property (nonatomic, assign) NSInteger houseType;
@@ -83,11 +84,13 @@
         houseMsg.type = ChatMsgTypeHouseCard;
 
         NSString *houseTag = @"二手房";
+        
         if (obj.houseType == 1) {
             houseTag = @"新房";
         } else if (obj.houseType == 3) {
             houseTag = @"租房";
         }
+        NSString *channel = [TTSandBoxHelper getCurrentChannel];
         NSDictionary *extra = @{
                                 KSCHEMA_HOUSE_TAG: houseTag,
                                 KSCHEMA_HOUSE_COVER: obj.cover ? : @"",
@@ -96,11 +99,17 @@
                                 KSCHEMA_HOUSE_TITLE:obj.displayTitle ? : @"",
                                 KSCHEMA_HOUSE_DES:obj.displaySubTitle ? : @"",
                                 KSCHEMA_HOUSE_PRICE:obj.displayPrice ? : @"",
-                                KSCHEMA_HOUSE_AVG_PRICE:obj.displayPricePerSqm ? : @""
+                                KSCHEMA_HOUSE_AVG_PRICE:obj.displayPricePerSqm ? : @"",
+                                KSCHEMA_HOUSE_FROM:@"app_liked_house",
+                                KSCHEMA_HOUSE_CHANNEL:[self getChannel] ? : @"local_test",
                                 };
         houseMsg.extraDic = extra;
         [manager.messageService sendMessage:houseMsg ofConversationId:conversactionId];
     }];
+}
+
+-(NSString*)getChannel {
+    return [TTSandBoxHelper getCurrentChannel];
 }
 
 +(FHIMFavoriteShareModel*)convertCellModelToShareModel:(FHSingleImageInfoCellModel*)model {

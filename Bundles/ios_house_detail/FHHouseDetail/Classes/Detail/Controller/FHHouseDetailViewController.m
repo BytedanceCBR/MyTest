@@ -16,6 +16,7 @@
 #import "UIViewController+Track.h"
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
+#import <FHRNHelper.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -37,7 +38,6 @@
 @property (nonatomic, copy)   NSString* imprId;
 @property (nonatomic, assign)   BOOL isDisableGoDetail;
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
-@property (nonatomic, assign)   BOOL     isViewDidDisapper;
 
 @end
 
@@ -109,8 +109,6 @@
         }else {
             [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_schema_error" metric:nil category:@{@"status":@(0)} extra:nil];
         }
-        // add by zyk 测试视频房源id
-        // self.houseId = @"6671159225713950990";
     }
     return self;
 }

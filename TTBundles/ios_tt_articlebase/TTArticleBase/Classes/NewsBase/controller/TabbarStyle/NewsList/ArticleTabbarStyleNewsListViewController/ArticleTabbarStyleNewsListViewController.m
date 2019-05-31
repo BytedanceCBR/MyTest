@@ -38,14 +38,12 @@
 {
     self = [super init];
     if (self) {
-        if ([SSCommonLogic shouldUseOptimisedLaunch]) {
-            self.hidesBottomBarWhenPushed = NO;
-            self.statusBarStyle = SSViewControllerStatsBarDayBlackNightWhiteStyle;
-            self.ttStatusBarStyle = UIStatusBarStyleLightContent;
-            self.ttNavBarStyle = @"White";
-            self.ttHideNavigationBar = YES;
-            self.ttTrackStayEnable = YES;
-        }
+        self.hidesBottomBarWhenPushed = NO;
+        self.statusBarStyle = SSViewControllerStatsBarDayBlackNightWhiteStyle;
+        self.ttStatusBarStyle = UIStatusBarStyleLightContent;
+        self.ttNavBarStyle = @"White";
+        self.ttHideNavigationBar = YES;
+        self.ttTrackStayEnable = YES;
     }
     return self;
 }
@@ -79,7 +77,7 @@
         });
     }
     else{
-        if (mediator.adWillShow && [SSCommonLogic shouldUseOptimisedLaunch]) {
+        if (mediator.adWillShow) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.65 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self createMainVC];
             });
@@ -144,7 +142,7 @@
 {
     [super viewWillAppear:animated];
 
-    if (![TTAdSplashMediator shareInstance].adWillShow && [SSCommonLogic shouldUseOptimisedLaunch]) {
+    if (![TTAdSplashMediator shareInstance].adWillShow) {
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
     }
     

@@ -34,8 +34,7 @@ typedef enum : NSUInteger {
 + (TTVTrafficAlertShowTimes)trafficAlertShowTimes;
 + (BOOL)tt_play_image_enhancement;
 + (BOOL)tt_video_business_refactor;
-+ (BOOL)tt_video_detail_playlast_showtext;
-+ (BOOL)tt_video_detail_playlast_enable;
+
 + (BOOL)ttvs_isVideoNewRotateEnabled;
 + (NSInteger)ttvs_isVideoFeedCellHeightAjust;
 + (NSInteger)ttvs_isVideoShowOptimizeShare;

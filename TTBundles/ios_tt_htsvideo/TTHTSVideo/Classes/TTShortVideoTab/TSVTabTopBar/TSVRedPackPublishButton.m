@@ -185,21 +185,7 @@
 
 //小视频tab发布器红包样式图标
 + (NSString *)publishRedpackImageName {
-    NSString *publishRedpackImageName;
-    NSNumber *iconStyle = [[TTSettingsManager sharedManager] settingForKey:@"tt_short_video_publish_icon" defaultValue:@(0) freeze:YES];
-    switch (iconStyle.integerValue) {
-        case 0:
-            publishRedpackImageName = @"titlebar_video_redpack_camera";
-            break;
-        case 1:
-            publishRedpackImageName = @"short_video_publish_icon_camera";
-            break;
-        default:
-            publishRedpackImageName = @"titlebar_video_redpack_camera";
-            break;
-    }
-    
-    return publishRedpackImageName;
+    return @"titlebar_video_redpack_camera";
 }
 
 @end

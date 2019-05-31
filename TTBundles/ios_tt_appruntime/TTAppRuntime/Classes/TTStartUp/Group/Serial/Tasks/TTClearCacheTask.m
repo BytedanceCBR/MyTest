@@ -50,16 +50,9 @@
     /**
      *  定期清理数据库缓存
      */
-    if ([SSCommonLogic shouldUseOptimisedLaunch]) {
-        if ([ExploreLogicSetting isNeedCleanOldCache]) {
-            if(TTNetworkConnected())
-            {
-                [[TTMonitor shareManager] trackService:@"clean_old_cache" status:1 extra:nil];
-                [ExploreLogicSetting tryClearCoreDataCache];
-            }
-        }
-    }else{
-        if(TTNetworkConnected()){
+    if ([ExploreLogicSetting isNeedCleanOldCache]) {
+        if(TTNetworkConnected())
+        {
             [[TTMonitor shareManager] trackService:@"clean_old_cache" status:1 extra:nil];
             [ExploreLogicSetting tryClearCoreDataCache];
         }

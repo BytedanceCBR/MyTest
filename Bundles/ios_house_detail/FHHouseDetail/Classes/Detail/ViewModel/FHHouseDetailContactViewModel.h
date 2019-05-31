@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FHHouseDetailFollowUpViewModel;
 @class FHDetailImShareInfoModel;
+
 @interface FHHouseDetailContactViewModel : NSObject
 
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
@@ -32,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *fromStr;//floor_plan_detail:app_floor_plan
 @property (nonatomic, strong) FHDetailImShareInfoModel* imShareInfo;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
+
 
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar houseType:(FHHouseType)houseType houseId:(NSString *)houseId;

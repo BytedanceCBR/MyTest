@@ -12,10 +12,6 @@
 #import "YYCache.h"
 #import "FHLocManager.h"
 #import "TTInstallIDManager.h"
-#import <TTAccountSDK/TTAccount.h>
-#import <TTAccountSDK/TTAccountConfiguration.h>
-#import <TTNewsAccountBusiness/TTAccountService.h>
-#import <TTNewsAccountBusiness/SSCookieManager.h>
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "ToastManager.h"
@@ -322,9 +318,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if ([gCityName isKindOfClass:[NSString class]]){
         requestParam[@"city_name"] = gCityName;
         requestParam[@"city"] = gCityName;
-    }else
-    {
-        requestParam[@"city_name"] = nil;
     }
     
     self.commonRequestParam = requestParam;
@@ -346,6 +339,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
     //开始网络监听通知
     [self.reachability startNotifier];
 
+    
+    if (![FHEnvContext sharedInstance].refreshConfigRequestType) {
+        [FHEnvContext sharedInstance].refreshConfigRequestType = @"launch";
+    }
+
     //开始生成config缓存
     [self.generalBizConfig onStartAppGeneralCache];
 
@@ -355,39 +353,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     //检测是否需要打开城市列表
     [self check2CityList];
-
-
-    NSString * channelName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"];
-    if (!channelName) {
-        channelName = @"App Store";
-    }
-
-    [[TTInstallIDManager sharedInstance] startWithAppID:@"1370" channel:channelName finishBlock:^(NSString *deviceID, NSString *installID) {
-        
-        TTAccountConfiguration *conf = [TTAccount accountConf];
-        conf.domain = [FHURLSettings baseURL];
-        conf.appRequiredParamsHandler = ^NSDictionary * _Nonnull{
-            NSMutableDictionary *requiredDict = [NSMutableDictionary dictionaryWithCapacity:4];
-            [requiredDict setValue:installID forKey:TTAccountInstallIdKey];
-            [requiredDict setValue:deviceID forKey:TTAccountDeviceIdKey];
-            [requiredDict setValue:nil forKey:TTAccountSessionKeyKey];
-            [requiredDict setValue:@"1370" forKey:TTAccountSSAppIdKey];
-            return [requiredDict copy];
-        };
-
-        [TTAccount accountConf].networkParamsHandler = ^NSDictionary *() {
-            return [[TTNetworkUtilities commonURLParameters] copy]?:@{};
-        };
-        
-        [TTAccount accountConf].accountMessageFirstResponder = [TTAccountService sharedAccountService];
-        
-        //TODO: 待头条库下沉后替换成真正的类
-        id delegateImp = [[[FHHouseBridgeManager sharedInstance] accountBridge] accountLoggerImp];
-        [TTAccount accountConf].loggerDelegate  = delegateImp;
-        [TTAccount accountConf].monitorDelegate = delegateImp;
-        
-        [SSCookieManager setSessionIDToCookie:[[TTAccount sharedAccount] sessionKey]];
-    }];
 
     //更新公共参数
     [self updateRequestCommonParams];

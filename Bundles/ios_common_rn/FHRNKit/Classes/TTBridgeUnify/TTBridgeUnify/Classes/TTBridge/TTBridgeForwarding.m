@@ -12,6 +12,7 @@
 #import "TTBridgeAuthorization.h"
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
+#import "BDAssert.h"
 
 @interface TTBridgeForwarding ()
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *aliasDic;
@@ -37,39 +38,23 @@
 
 - (void)forwardWithCommand:(TTBridgeCommand *)command engine:(id<TTBridgeEngine>)engine completion:(TTBridgeCallback)completion {
     TTBridgeCommand *amendCommand = [self amendAliasWith:command];
-    
-    //为了兼容异步授权的逻辑, 所有invoke改为block形式
-    
-    //动态 别名
-    [self forwardPluginWithCommand:amendCommand engine:engine completion:^(TTBridgeMsg msg, NSDictionary *dic) {
-        if (msg != TTBridgeMsgNoHandler) {
-            if (completion) {
-                completion(msg, dic);
-            }
-            return;
+    [self forwardPluginWithCommand:amendCommand engine:engine completion:^(TTBridgeMsg msg, NSDictionary *dic, void (^resultBlock)(NSString *result)) {
+        if (completion) {
+            completion(msg, dic, resultBlock);
         }
-        //动态 原名
-        [self forwardPluginWithCommand:command engine:engine completion:completion];
     }];
 }
 
 - (void)forwardWithCommand:(TTBridgeCommand *)command weakEngine:(id<TTBridgeEngine>)engine completion:(TTBridgeCallback)completion {
     TTBridgeCommand *amendCommand = [self amendAliasWith:command];
-    
     id<TTBridgeEngine> __weak weakEngine = engine;
-    //为了兼容异步授权的逻辑, 所有invoke改为block形式
-    
-    //动态 别名
-    [self forwardPluginWithCommand:amendCommand engine:weakEngine completion:^(TTBridgeMsg msg, NSDictionary *dic) {
-        if (msg != TTBridgeMsgNoHandler) {
-            if (completion) {
-                completion(msg, dic);
-            }
-            return;
+    [self forwardPluginWithCommand:amendCommand engine:weakEngine completion:^(TTBridgeMsg msg, NSDictionary *dic, void (^resultBlock)(NSString *result)) {
+        if (completion) {
+            completion(msg, dic, resultBlock);
         }
-        //动态 原名
-        [self forwardPluginWithCommand:command engine:weakEngine completion:completion];
     }];
+    NSURL *url = engine.sourceURL;
+    NSString *bridgeURL = [[url host] stringByAppendingPathComponent:[url path]];
 }
 
 - (void)invoke:(TTBridgeCommand *)command completion:(TTBridgeCallback)completion engine:(id<TTBridgeEngine>)engine {
@@ -78,55 +63,55 @@
     
     TTBridgePlugin *plugin = [self _generatePluginWithCommand:command engine:engine];
     if (![plugin respondsToSelector:selector]) {
-        if (completion) {
-            completion(TTBridgeMsgNoHandler, nil);
+        if (completion && command.bridgeType == TTBridgeTypeCall) {
+            completion(TTBridgeMsgNoHandler, nil, nil);
         }
         return;
     }
-    
-    NSDictionary *params = command.params;
-    
     if (command.bridgeType == TTBridgeTypeOn) {
         [plugin setCallback:completion forSelector:selector];
     }
-
-    if (![plugin shoudHandleBridgeForMethod:command.methodName params:params callback:completion]) {
+    
+    NSDictionary *params = command.params;
+    if ([plugin hasExternalHandleForMethod:command.methodName params:params callback:completion]) {
         return;
     }
     
-    [plugin handleBridgeForMethod:command.methodName params:params callback:completion];
-    
-    if ([plugin respondsToSelector:selector]) {
-        NSMethodSignature *signature = [plugin methodSignatureForSelector:selector];
-        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-        invocation.target = plugin;
-        invocation.selector = selector;
-        
-        [invocation setArgument:&params atIndex:2];
-        [invocation setArgument:&completion atIndex:3];
-        [invocation setArgument:&engine atIndex:4];
-        NSLog(@"engine.sourceController = %@",engine.sourceController);
-        
-        UIViewController *source = engine.sourceController;
-        [invocation setArgument:&source atIndex:5];
-        [invocation invoke];
+    NSMethodSignature *signature = [plugin methodSignatureForSelector:selector];
+    // TTDynamicBridgePlugin 未重载 methodSignatureForSelector 方法会导致这里 signature 初始化失败
+    // bridge 通过了鉴权，但是未在当前 webview 上注册其实现，因此也当做 TTBridgeMsgNoHandler 来处理即可
+    if (!signature) {
+        if (completion) {
+            completion(TTBridgeMsgNoHandler, nil, nil);
+        }
+        return;
     }
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+    invocation.target = plugin;
+    invocation.selector = selector;
+    [invocation setArgument:&params atIndex:2];
+    [invocation setArgument:&completion atIndex:3];
+    [invocation setArgument:&engine atIndex:4];
+    UIViewController *source = engine.sourceController;
+    [invocation setArgument:&source atIndex:5];
+    [invocation invoke];
 }
 
 - (void)forwardPluginWithCommand:(TTBridgeCommand *)command engine:(id<TTBridgeEngine>)engine completion:(TTBridgeCallback)completion {
     if (isEmptyString(command.className) || isEmptyString(command.methodName)) {
         if (completion) {
-            completion(TTBridgeMsgNoHandler, nil);
+            completion(TTBridgeMsgNoHandler, nil, nil);
         }
         return;
     }
     
     __weak __typeof(self)weakSelf = self;
-    if ([engine respondsToSelector:@selector(authorization)] && [engine.authorization respondsToSelector:@selector(engine:isAuthorizedBridge:domain:completion:)]) {
+    if ([engine respondsToSelector:@selector(authorization)] &&
+        [engine.authorization respondsToSelector:@selector(engine:isAuthorizedBridge:domain:completion:)]) {
         [engine.authorization engine:engine isAuthorizedBridge:command domain:engine.sourceURL.host.lowercaseString completion:^(BOOL success) {
             if (!success) {
-                if (completion) {
-                    completion(TTBridgeMsgNoPermission, nil);
+                if (completion && command.bridgeType == TTBridgeTypeCall) {
+                    completion(TTBridgeMsgNoPermission, nil, nil);
                 }
             } else {
                 [weakSelf invoke:command completion:completion engine:engine];
@@ -171,18 +156,14 @@
 }
 
 #pragma mark - 别名相关
-//查找别名映射  appinfo -> TTUtil.appinfo
 - (TTBridgeCommand *)amendAliasWith:(TTBridgeCommand *)command {
     NSString *fullName = self.aliasDic[command.fullName];
-    
     if (isEmptyString(fullName)) {
         return command;
     }
-
-    TTBridgeCommand *amendCommand = [command copy];
-    amendCommand.origName = amendCommand.fullName;
-    amendCommand.fullName = fullName;
-    return amendCommand;
+    command.origName = command.fullName;
+    command.fullName = fullName;
+    return command;
 }
 
 - (void)registerAlias:(NSString *)alias for:(NSString *)orig {

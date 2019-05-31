@@ -31,8 +31,6 @@ typedef NS_ENUM(NSInteger, TSVDetailAvatarClickType){
 
 + (TSVDetailSlideUpViewType)slideUpViewType;
 
-+ (TSVDetailAvatarClickType)clickAvatarType;
-
 + (void)increaseVideoPlayCountForProfileSlideUp;
 
 @end

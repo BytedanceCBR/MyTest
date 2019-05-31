@@ -245,6 +245,7 @@
             tracerDic[@"word_type"] = [self wordType];
             tracerDic[@"page_type"] = [self pageType];
             tracerDic[@"rank"] = @(index);
+            tracerDic[@"origin_from"] = self.listController.tracerDict[@"origin_from"] ? self.listController.tracerDict[@"origin_from"] : @"be_null";
             [FHUserTracker writeEvent:@"subscribe_card_show" params:tracerDic];
         }
     }
@@ -260,6 +261,7 @@
             tracerDic[@"word_type"] = [self wordType];
             tracerDic[@"page_type"] = [self pageType];
             tracerDic[@"rank"] = @(index);
+            tracerDic[@"origin_from"] = self.listController.tracerDict[@"origin_from"] ? self.listController.tracerDict[@"origin_from"] : @"be_null";
             [FHUserTracker writeEvent:@"subscribe_card_click" params:tracerDic];
         }
     }
