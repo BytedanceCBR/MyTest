@@ -484,7 +484,22 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    if (indexPath.row < self.houseList.count) {
+        FHSingleImageInfoCellModel *cellModel  = nil;
+        BOOL isLastCell = NO;
+        
+        cellModel = self.houseList[indexPath.row];
+        
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[@"card_type"] = @"left_pic";
+        tracerDict[@"page_type"] = @"old_detail";
+        tracerDict[@"enter_from"] = @"false_old_list";
+        tracerDict[@"element_from"] = @"old_kind_list";
+        tracerDict[@"rank"] = @(indexPath.row);
+        tracerDict[@"origin_from"] = self.originFrom;
+        tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+        tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
+    }
 }
 
 #pragma mark house_show log
@@ -509,109 +524,6 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
     
     [FHUserTracker writeEvent:@"house_show" params:tracerDict];
-}
-
-- (NSString *)houseTypeString
-{
-    switch (self.houseType) {
-        case FHHouseTypeNewHouse:
-            return @"new";
-            break;
-        case FHHouseTypeSecondHandHouse:
-            return @"old";
-            break;
-        case FHHouseTypeRentHouse:
-            return @"rent";
-            break;
-        case FHHouseTypeNeighborhood:
-            return @"neighborhood";
-            break;
-        default:
-            return @"be_null";
-            break;
-    }
-}
-
-- (NSString *)pageTypeString
-{
-    switch (self.houseType) {
-        case FHHouseTypeNewHouse:
-            return @"new_list";
-            break;
-        case FHHouseTypeSecondHandHouse:
-            return @"old_list";
-            break;
-        case FHHouseTypeRentHouse:
-            return @"rent_list";
-            break;
-        case FHHouseTypeNeighborhood:
-            return @"neighborhood_list";
-            break;
-        default:
-            return @"be_null";
-            break;
-    }
-}
-
-#pragma mark - 详情页跳转
--(void)jump2HouseDetailPage:(FHSingleImageInfoCellModel *)cellModel withRank: (NSInteger) rank  {
-    NSMutableDictionary *traceParam = @{}.mutableCopy;
-    
-    traceParam[@"enter_from"] = [self pageTypeString];
-    traceParam[@"element_from"] = @"be_null";
-    traceParam[@"search_id"] = self.searchId;
-    traceParam[@"card_type"] = @"left_pic";
-    traceParam[@"log_pb"] = [cellModel logPb];
-    traceParam[@"origin_from"] = self.originFrom;
-    traceParam[@"origin_search_id"] = self.originSearchId;
-    traceParam[@"rank"] = @(rank);
-    NSDictionary *dict = @{@"house_type":@(self.houseType) ,
-                           @"tracer": traceParam
-                           };
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    NSString *urlStr;
-    
-    id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
-    [contextBridge setTraceValue:self.originFrom forKey:@"origin_from"];
-    [contextBridge setTraceValue:self.originSearchId forKey:@"origin_search_id"];
-    
-    switch (self.houseType) {
-        case FHHouseTypeNewHouse:
-            if (cellModel.houseModel) {
-                
-                FHNewHouseItemModel *theModel = cellModel.houseModel;
-                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId];
-            }
-            break;
-        case FHHouseTypeSecondHandHouse:
-            if (cellModel.secondModel) {
-                
-                FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
-                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
-            }
-            break;
-        case FHHouseTypeRentHouse:
-            if (cellModel.rentModel) {
-                
-                FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
-                urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id];
-            }
-            break;
-        case FHHouseTypeNeighborhood:
-            if (cellModel.neighborModel) {
-                
-                FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
-                urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id];
-            }
-            break;
-        default:
-            break;
-    }
-    
-    if (urlStr.length > 0) {
-        NSURL *url = [NSURL URLWithString:urlStr];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    }
 }
 
 #pragma mark - UIScrollViewDelegate
