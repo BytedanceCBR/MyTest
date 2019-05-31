@@ -491,9 +491,6 @@ static NSInteger const kMaxPostImageCount = 9;
     NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
     BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
-//    if (![self textHasChanged] && ![self imageHasChanged]) {
-//        shouldAlert = NO;
-//    }
     
     if (!shouldAlert) {
         [self postFinished:NO];
@@ -871,31 +868,8 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)refreshPostButtonUI {
-//    if (![self.enterType isEqualToString:@"edit_publish"]) {
-//        //发布器
-//        if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
-//            self.postButton.titleColorThemeKey = kColorText6;
-//            self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
-//            self.postButton.disabledTitleColorThemeKey = kColorText6;
-//        } else {
-//            self.postButton.titleColorThemeKey = kColorText9;
-//            self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
-//            self.postButton.disabledTitleColorThemeKey = kColorText9;
-//        }
-//    } else {
-//        //编辑发布器按钮刷新逻辑
-//        if (([self textHasChanged] || [self imageHasChanged] || [self locationHasChanged]) && ![self emptyThread]) {
-//            self.postButton.titleColorThemeKey = kColorText6;
-//            self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
-//            self.postButton.disabledTitleColorThemeKey = kColorText6;
-//        } else {
-//            self.postButton.titleColorThemeKey = kColorText9;
-//            self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
-//            self.postButton.disabledTitleColorThemeKey = kColorText9;
-//        }
-//    }
-    //编辑发布器按钮刷新逻辑
-    if (([self textHasChanged] || [self imageHasChanged] || [self locationHasChanged]) && ![self emptyThread]) {
+    //发布器
+    if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
         self.postButton.titleColorThemeKey = kColorText6;
         self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
         self.postButton.disabledTitleColorThemeKey = kColorText6;
@@ -907,7 +881,6 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (BOOL)textHasChanged {
-    // add by zyk 可能有问题
     return ![self.richSpanText.text isEqualToString:self.outerInputRichSpanText.text];
 }
 
@@ -1052,69 +1025,13 @@ static NSInteger const kMaxPostImageCount = 9;
 #pragma mark - TTUGCToolbarDelegate
 
 - (void)toolbarDidClickLongText {
-//    [TTTrackerWrapper eventV3:@"click_article_editor" params:@{@"uid":[[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID]?:@""}];
-//    if (![[BDContextGet() findServiceByName:TTAccountProviderServiceName] isLogin]) {
-//        [self endEditing];
-//        WeakSelf;
-//        [[TTPostThreadBridge sharedInstance] showLoginAlertWithSource:self.source superView:self.navigationController.view completion:^(BOOL tips) {
-//            StrongSelf;
-//            if (tips) {
-//                [[TTPostThreadBridge sharedInstance] presentQuickLoginFromVC:self source:self.source];
-//            }
-//        }];
-//    } else {
-//        [self handleLongTextRoute];
-//    }
-}
-
-- (void)handleLongTextRoute {
-    
+    // nothing
 }
 
 
 - (void)toolbarDidClickShoppingButton {
-//    [TTTrackerWrapper eventV3:@"xuanpin_button_click" params:@{@"source":@"post"}];
-//    if (![[BDContextGet() findServiceByName:TTBusinessAllianceServiceName] ba_isProtocolAccepted]) {
-//        WeakSelf;
-//        [[BDContextGet() findServiceByName:TTBusinessAllianceServiceName] ba_showProtocolAlertWithCompletionBlock:^{
-//            StrongSelf;
-//            FRUgcBusinessAllianceUpdateProtocolStatusRequestModel *requestModel = [FRUgcBusinessAllianceUpdateProtocolStatusRequestModel new];
-//            requestModel.user_id = [[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID];
-//            requestModel.status = @(1);
-//            [TTUGCRequestManager requestModel:requestModel callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, TTUGCRequestMonitorModel *monitorModel) {
-//                if (!error) {
-//                    FRUgcBusinessAllianceUserInfoResponseModel *response = (FRUgcBusinessAllianceUserInfoResponseModel *)responseModel;
-//                    if ([response.err_no integerValue] == 0) {
-//                        [[BDContextGet() findServiceByName:TTBusinessAllianceServiceName] ba_updateUserId:[[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID]
-//                                                                                         acceptedProtocol:YES
-//                                                                                                 showIcon:YES];
-//                        [self goToShoppingPage];
-//                    }
-//                }
-//            }];
-//        }];
-//    } else {
-//        [self goToShoppingPage];
-//    }
+    // nothing
 }
-
-- (void)goToShoppingPage {
-//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-//    [params setValue:[[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID] forKey:@"user_id"];
-//    [params setValue:[[BDContextGet() findServiceByName:TTAccountProviderServiceName] phoneNumber] forKey:@"phone_number"];
-//    [params setValue:@"/select_product_page" forKey:@"route"];
-//    [params setValue:[self.goodsItem toJSONString] forKey:@"product_info"];
-//    [params setValue:@"/business_alliance" forKey:@"url"];
-//    [params setValue:[NSString stringWithFormat:@"sslocal://webview?url=%@", [[KitchenMgr getString:kTTUGCBusinessAllianceChoiceProtocolUrl] URLEncodedString]] forKey:@"agreement_schema"];
-//
-//    NSString *url = [NSString stringWithFormat:@"sslocal://flutter?"];
-//    [[TTRoute sharedRoute] openURLByPresentViewController:[NSURL URLWithString:url] userInfo:TTRouteUserInfoWithDict(params)];
-}
-
-//- (void)setGoodsItem:(TTPostGoodsItem *)goodsItem {
-//    _goodsItem = goodsItem;
-//    self.postWithGoods = goodsItem != nil;
-//}
 
 - (void)restoreDraft {
     if ([self draftEnable]) {
@@ -1268,10 +1185,6 @@ static NSInteger const kMaxPostImageCount = 9;
     if (self.firstAppear) {
         self.firstAppear = NO;
         [self.inputTextView becomeFirstResponder];
-        // 图文发布器展示
-//        if (!(self.showEtStatus & FRShowEtStatusOfTitle) && self.publishMode != 1) {
-//            [self.inputTextView becomeFirstResponder];
-//        }
     }
 }
 
@@ -1279,11 +1192,6 @@ static NSInteger const kMaxPostImageCount = 9;
     [super viewDidAppear:animated];
     self.originStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-//    if ([TTThemeManager sharedInstance_tt].currentThemeMode == TTThemeModeDay) {
-//        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-//    } else {
-//        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-//    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
