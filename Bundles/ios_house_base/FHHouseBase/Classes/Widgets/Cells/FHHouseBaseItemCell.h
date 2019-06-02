@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateFakeHouseImageWithUrl:(NSString *)urlStr andSourceStr:(NSString *)sourceStr;
 
+- (void)updateThirdPartHouseSourceStr:(NSString *)sourceStr;
+
 @end
 
 NS_ASSUME_NONNULL_END

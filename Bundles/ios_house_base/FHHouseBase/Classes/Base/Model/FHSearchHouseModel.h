@@ -191,6 +191,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsHouseImageTagModel *houseImageTag ;
 @property (nonatomic, copy , nullable) NSString *originPrice;
 @property (nonatomic, strong) NSArray* bottomText;
+@property (nonatomic, copy , nullable) NSString *houseSourceType; //房子来源类型
+@property (nonatomic, copy , nullable) NSString *houseSourceName; //房子来源名称
+@property (nonatomic, copy , nullable) NSString *houseSourceUrl; //房子跳转来源url
 
 @end
 

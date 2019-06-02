@@ -1106,6 +1106,13 @@
     self.tagLabel.font = [UIFont themeFontRegular:12];
 }
 
+- (void)updateThirdPartHouseSourceStr:(NSString *)sourceStr
+{
+    self.tagLabel.text = sourceStr;
+    self.tagLabel.textColor = [UIColor themeGray3];
+    self.tagLabel.font = [UIFont themeFontRegular:12];
+}
+
 -(void)updateSamllTitlesLayout:(BOOL)showTags
 {
     if (self.tagLabel.yoga.isIncludedInLayout != showTags) {

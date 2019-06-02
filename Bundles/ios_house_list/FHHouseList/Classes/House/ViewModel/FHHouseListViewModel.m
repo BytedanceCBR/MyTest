@@ -795,6 +795,9 @@
                 {
                     cellModel.isRealHouseTopCell = NO;
                 }
+                cellModel.houseSourceUrl = @"https://www.toutiao.com";
+                cellModel.houseSourceName = @"来源：链家xxxxxx";
+                cellModel.houseSourceType = @"1";
                 
                 [self.houseList addObject:cellModel];
             }
@@ -1275,6 +1278,11 @@
                     
                     [cell refreshTopMargin: topMargin];
                     [cell updateWithHouseCellModel:cellModel];
+                    
+                    if ([cellModel.houseSourceType integerValue]) {
+                        [cell updateThirdPartHouseSourceStr:cellModel.houseSourceName];
+                    }
+                    
                 }
                 return cell;
             } else {
@@ -1515,7 +1523,10 @@
             break;
         case FHHouseTypeSecondHandHouse:
             if (cellModel.secondModel) {
-                
+                if ([cellModel.houseSourceType integerValue]) {
+                    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_real_web?url=%@",cellModel.houseSourceUrl]]];
+                    return ;
+                }
                 FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
                 urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
             }
