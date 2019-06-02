@@ -1108,7 +1108,7 @@
 
 - (void)updateThirdPartHouseSourceStr:(NSString *)sourceStr
 {
-    self.tagLabel.text = sourceStr;
+    self.tagLabel.text = [NSString stringWithFormat:@" %@",sourceStr];
     self.tagLabel.textColor = [UIColor themeGray3];
     self.tagLabel.font = [UIFont themeFontRegular:12];
 }

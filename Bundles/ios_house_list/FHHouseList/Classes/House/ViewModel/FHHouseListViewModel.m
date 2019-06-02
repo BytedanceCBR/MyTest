@@ -1524,8 +1524,8 @@
         case FHHouseTypeSecondHandHouse:
             if (cellModel.secondModel) {
                 if ([cellModel.houseSourceType integerValue]) {
-                    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_real_web?url=%@",cellModel.houseSourceUrl]]];
-                    return ;
+                    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_real_web?url=%@",cellModel.houseSourceUrl]] userInfo:userInfo];
+                    return;
                 }
                 FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
                 urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];

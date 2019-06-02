@@ -37,6 +37,7 @@
 @property (nonatomic, copy) NSString *url;
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, assign) BOOL isShowTopTip;
+@property (nonatomic, assign) NSDictionary *traceDict;
 @end
 
 @implementation FHHouseDetailWebViewController
@@ -49,6 +50,8 @@ static NSString *s_oldAgent = nil;
         _houseId = paramObj.allParams[@"house_id"];
         _houseType = [paramObj.allParams[@"house_type"] integerValue];
         _url = paramObj.allParams[@"url"];
+        _traceDict = paramObj.allParams[@"tracer"];
+        
         if ([paramObj.userInfo.allInfo[@"showTopTip"] respondsToSelector:@selector(boolValue)]) {
             _isShowTopTip = [paramObj.userInfo.allInfo[@"showTopTip"] boolValue];
         }else
@@ -170,7 +173,25 @@ static NSString *s_oldAgent = nil;
     return [params mutableCopy];
 }
 
+- (void)willMoveToParentViewController:(UIViewController*)parent{
+    [super willMoveToParentViewController:parent];
+    if(!parent){
+    }else
+    {
+       
+    }
+}
+- (void)didMoveToParentViewController:(UIViewController*)parent{
+    [super didMoveToParentViewController:parent];
+    if(!parent){
+      
+    }
+}
 
+- (NSString *)getUploadTraceUrlParams
+{
+    return @"";
+}
 
 static NSString * CFPropertyListRefToNSString1(CFPropertyListRef ref) {
     if (ref == NULL) {
