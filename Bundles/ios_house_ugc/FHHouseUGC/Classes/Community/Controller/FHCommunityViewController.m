@@ -11,6 +11,8 @@
 #import "FHWDPostViewController.h"
 #import "TTDeviceHelper.h"
 #import "FHCommunityViewModel.h"
+#import "FHTopicDetailViewController.h"
+#import "FHCommunityDetailViewController.h"
 
 @interface FHCommunityViewController ()
 
@@ -159,7 +161,7 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
     
-    FHPostUGCViewController *vc = [[FHPostUGCViewController alloc] init];
+    FHCommunityDetailViewController *vc = [[FHCommunityDetailViewController alloc] init];
     TTNavigationController *navVC = [[TTNavigationController alloc] initWithRootViewController:vc];
     [self presentViewController:navVC animated:YES completion:nil];
 }
