@@ -29,7 +29,7 @@
     // Configure the view for the selected state
 }
 
-- (void)refreshData:(id)data
+- (void)refreshData:(FHHouseType)houseType
 {
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     
@@ -45,7 +45,15 @@
         [view removeFromSuperview];
     }
     
-    NSArray<FHConfigDataOpData2ItemsModel> *items = ((FHConfigDataOpData2ListModel *)dataModel.opData2list.firstObject).opDataList.items;
+    NSArray<FHConfigDataOpData2ItemsModel> *items = nil;
+    
+    for (NSInteger i = 0; i < dataModel.opData2list.count; i ++) {
+        FHConfigDataOpData2ListModel *dataModelItem = dataModel.opData2list[i];
+        if (dataModelItem.opData2Type && [dataModelItem.opData2Type integerValue] == houseType && dataModelItem.opDataList && dataModelItem.opDataList.items.count > 0) {
+            items = dataModelItem.opDataList.items;
+        }
+    }
+    
     CGFloat viewWidth = ([UIScreen mainScreen].bounds.size.width - 28) / 4.0f;
     
     for (NSInteger i = 0; i < items.count; i++) {
@@ -54,7 +62,8 @@
         UIView *containView = [UIView new];
         [containView setFrame:CGRectMake( i * viewWidth + 14, 4.0f, viewWidth, 80)];
         [containView setBackgroundColor:[UIColor whiteColor]];
-
+        containView.layer.cornerRadius = 2;
+        containView.layer.masksToBounds = YES;
         
         UIImageView *backImage = [UIImageView new];
 

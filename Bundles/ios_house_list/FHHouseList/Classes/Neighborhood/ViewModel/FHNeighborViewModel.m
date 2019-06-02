@@ -289,10 +289,11 @@
         if (searchId.length > 0) {
             self.searchId = searchId;
         }
+        
         if (items.count > 0) {
             
             FHSameNeighborhoodHouseDataModel *houseModel = (FHSameNeighborhoodHouseDataModel *)((FHSameNeighborhoodHouseResponse *)model).data;
-
+            self.isShowRealHouseInfo = NO;
             if (houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue) {
 
                 FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
@@ -308,6 +309,7 @@
                     topInfoModel.totalTitle = houseModel.externalSite.totalTitle;
                     topInfoModel.fakeTitle = houseModel.externalSite.fakeTitle;
                     topInfoModel.searchId = houseModel.searchId;
+                    self.isShowRealHouseInfo = YES;
                 }
                 
                 NSMutableArray *itemArray = [NSMutableArray arrayWithArray:items];
@@ -437,7 +439,12 @@
     tracerDict[@"group_id"] = groupId ? : @"be_null";
     tracerDict[@"impr_id"] = imprId ? : @"be_null";
     tracerDict[@"search_id"] = self.searchId ? : @"";
-    tracerDict[@"rank"] = @(indexPath.row);
+    if (self.isShowRealHouseInfo) {
+        tracerDict[@"rank"] = @(indexPath.row - 1);
+    }else
+    {
+        tracerDict[@"rank"] = @(indexPath.row);
+    }
     tracerDict[@"origin_from"] = origin_from ? : @"be_null";
     tracerDict[@"origin_search_id"] = origin_search_id ? : @"be_null";
     tracerDict[@"log_pb"] = logPb ? : @"be_null";

@@ -319,6 +319,10 @@
         offset = _houseList.count;
     }
     
+    if (offset == 0) {
+        self.showRealHouseTop = NO;
+    }
+    
     if (isHead) {
         self.showPlaceHolder = YES;
     }
@@ -381,8 +385,10 @@
         [self.sugesstHouseList removeAllObjects];
         [self.tableView.mj_footer endRefreshing];
         [self.showHouseDict removeAllObjects];
+        
+        self.showRealHouseTop = NO;
     }
-    
+
     if (model) {
         
         NSMutableArray *items = nil;
@@ -430,9 +436,7 @@
                         [items addObject:subscribeMode];
                     }
                 }
-                
-                BOOL isShowRealHouse = YES;
-                
+                                
                 if (houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue) {
                     FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
                     
@@ -450,6 +454,7 @@
                     }
 
                     if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                        self.showRealHouseTop = YES;
                         [items insertObject:topInfoModel atIndex:0];
                     }
                 }
@@ -547,7 +552,7 @@
             [self.tableView.mj_footer endRefreshing];
         }
         
-        if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter) {
+        if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter && !self.showRealHouseTop) {
             [self showNotifyMessage:refreshTip];
         }
         
@@ -1707,7 +1712,12 @@
     param[@"group_id"] = cellModel.groupId;
     param[@"impr_id"] = cellModel.imprId;
     param[UT_SEARCH_ID] = self.searchId;
-    param[@"rank"] = @(indexPath.row);
+    if (self.showRealHouseTop) {
+        param[@"rank"] = @(indexPath.row - 1);
+    }else
+    {
+        param[@"rank"] = @(indexPath.row);
+    }
     param[UT_LOG_PB] = cellModel.logPb;
     param[UT_ORIGIN_FROM] = baseParam[UT_ORIGIN_FROM] ? : @"be_null";;
     param[UT_ORIGIN_SEARCH_ID] = self.viewController.tracerModel.originSearchId ? : @"be_null";;

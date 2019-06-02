@@ -151,6 +151,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 -(void)addEnterCategoryLog {
     
     [FHUserTracker writeEvent:@"enter_category" params:[self categoryLogDict]];
+
 }
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {
@@ -198,8 +199,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 }
 
 -(NSDictionary *)categoryLogDict {
-    
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    
     tracerDict[@"category_name"] = [self categoryName] ? : @"be_null";
     tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
     tracerDict[@"enter_type"] = @"click";
@@ -213,23 +214,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 -(NSString *)categoryName {
     
-    switch (self.houseType) {
-        case FHHouseTypeNewHouse:
-            return @"new_list";
-            break;
-        case FHHouseTypeSecondHandHouse:
-            return @"old_list";
-            break;
-        case FHHouseTypeRentHouse:
-            return @"rent_list";
-            break;
-        case FHHouseTypeNeighborhood:
-            return @"neighborhood_list";
-            break;
-        default:
-            return @"be_null";
-            break;
-    }
+    return @"false_old_list";
+    
 }
 
 - (void)openMoreClick

@@ -85,7 +85,7 @@
     }else if(indexPath.section == kFHHomeListHouseTypeBannerViewSection)
     {
         FHhomeHouseTypeBannerCell *bannerCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
-        [bannerCell refreshData:nil];
+        [bannerCell refreshData:self.currentHouseType];
         return bannerCell;
     }else
     {

@@ -89,7 +89,6 @@
 @property (nonatomic , strong) NSDictionary * subScribeShowDict;
 @property (nonatomic , assign) BOOL isShowSubscribeCell;
 
-
 @end
 
 
@@ -436,7 +435,7 @@
     }
     
     if (offset == 0) {
-        _showRealHouseTop = NO;
+       _showRealHouseTop = NO;
     }
     
     TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
@@ -823,7 +822,7 @@
             }
         }
 
-        if (self.isRefresh && self.viewModelDelegate && itemArray.count > 0) {
+        if (self.isRefresh && self.viewModelDelegate && itemArray.count > 0 && !_showRealHouseTop) {
             [self.viewModelDelegate showNotify:refreshTip inViewModel:self];
         }
         

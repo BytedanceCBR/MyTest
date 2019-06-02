@@ -196,8 +196,8 @@ static NSMutableArray  * _Nullable identifierArr;
 
 - (CGFloat)initFHHomeHeaderIconCountAndHeight
 {
-    self.kFHHomeIconRowCount = 4;
-    self.kFHHomeIconDefaultHeight = 57;
+    self.kFHHomeIconRowCount = 5;
+    self.kFHHomeIconDefaultHeight = 42;
     //下版本等实验结论再上
     //    if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum isKindOfClass:[NSNumber class]]) {
     //        if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum integerValue] == 5) {
@@ -400,6 +400,8 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     
     cellEntrance.boardView.clickedCallBack = ^(NSInteger clickIndex){
+//            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web?url=https://www.baidu.com"]];
+//        return ;
         if (model.items.count > clickIndex) {
             FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
             
