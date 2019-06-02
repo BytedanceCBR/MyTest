@@ -266,4 +266,5 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
 - (void)setIndexChangeBlock:(IndexChangeBlock)indexChangeBlock;
 - (void)setTitleFormatter:(HMTitleFormatterBlock)titleFormatter;
 - (CGFloat)totalSegmentedControlWidth;
+- (void)setScrollValue:(CGFloat)value isDirectionLeft:(BOOL)isDirectionLeft;
 @end
