@@ -97,6 +97,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) FHSearchFilterConfigOption *selectionStation;
 @property(nonatomic , strong) FHMapSubwayPickerView *subwayPicker;
 @property(nonatomic , strong) FHSearchFilterConfigOption *subwayData;
+@property(nonatomic , strong) NSArray *subwayLines;//地铁以一段一段的方式拼接
 
 @end
 
@@ -608,8 +609,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
         }
         wself.searchId = model.searchId;
-        if (model.path.length > 0) {
-            [wself addLinePathAndMoveMap:model.path];
+        if (model.path.count > 0) {
+            BOOL move= NO;
+            if ([wself.selectionStation.value isEqualToString:wself.selectedLine.value]) {
+                move = YES;
+            }
+            [wself addLinePathAndMoveMap:model.path move:move];
         }
         
         if (![wself.viewController isShowingMaskView]) {
@@ -732,57 +737,68 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 /*
  * 绘制地铁线路
  */
--(void)addLinePathAndMoveMap:(NSString *)path
+-(void)addLinePathAndMoveMap:(NSArray *)paths move:(BOOL)move
 {
-    if (path.length == 0) {
+    if (paths.count == 0) {
         return;
     }
     
-    NSArray *points = [path componentsSeparatedByString:@";"];
-    
+    NSMutableArray *lines = [[NSMutableArray alloc] initWithCapacity:paths.count];
     CLLocationCoordinate2D min = CLLocationCoordinate2DMake(INT_MAX, INT_MAX);
     CLLocationCoordinate2D max = CLLocationCoordinate2DMake(0, 0);
     
-    CLLocationCoordinate2D *coords = malloc(sizeof(CLLocationCoordinate2D)*points.count);
-    NSInteger count = 0;
-    for (NSString *point in points) {
-        NSArray *kv = [point componentsSeparatedByString:@","];
-        if (kv.count == 2) {
-            coords[count].longitude = [kv[0] floatValue];
-            coords[count].latitude = [kv[1] floatValue];
-            if (coords[count].longitude > max.longitude) {
-                max.longitude = coords[count].longitude;
+    for (NSString *path in paths) {
+        
+        NSArray *points = [path componentsSeparatedByString:@";"];
+        
+        CLLocationCoordinate2D *coords = malloc(sizeof(CLLocationCoordinate2D)*points.count);
+        NSInteger count = 0;
+        for (NSString *point in points) {
+            NSArray *kv = [point componentsSeparatedByString:@","];
+            if (kv.count == 2) {
+                coords[count].longitude = [kv[0] floatValue];
+                coords[count].latitude = [kv[1] floatValue];
+                if (coords[count].longitude > max.longitude) {
+                    max.longitude = coords[count].longitude;
+                }
+                if (coords[count].longitude < min.longitude) {
+                    min.longitude = coords[count].longitude;
+                }
+                if (coords[count].latitude > max.latitude) {
+                    max.latitude = coords[count].latitude;
+                }
+                if (coords[count].latitude < min.latitude) {
+                    min.latitude = coords[count].latitude;
+                }
+                
+                count++;
             }
-            if (coords[count].longitude < min.longitude) {
-                min.longitude = coords[count].longitude;
-            }
-            if (coords[count].latitude > max.latitude) {
-                max.latitude = coords[count].latitude;
-            }
-            if (coords[count].latitude < min.latitude) {
-                min.latitude = coords[count].latitude;
-            }
-            
-            count++;
         }
+        
+        MAPolyline *line = [MAPolyline polylineWithCoordinates:coords count:count];
+        [lines addObject:line];
+        free(coords);
     }
+        
+//    if (self.drawLayer) {
+//        [self.mapView removeOverlay:self.drawLayer];
+//    }
+//    [self.mapView addOverlay:line];
+//    self.drawLayer = line;
+    if (self.subwayLines) {
+        [self.mapView removeOverlays:self.subwayLines];
+    }    
+    [self.mapView addOverlays:lines];
+    self.subwayLines = lines;
     
-    MAPolyline *line = [MAPolyline polylineWithCoordinates:coords count:count];
-    
-    if (self.drawLayer) {
-        [self.mapView removeOverlay:self.drawLayer];
-    }
-    [self.mapView addOverlay:line];
-    self.drawLayer = line;
-    
-    free(coords);
-    
-    //move mapview
-    MACoordinateRegion region;
-    region.center = CLLocationCoordinate2DMake((min.latitude+max.latitude)/2 +((max.latitude - min.latitude)/self.viewController.view.height)*64, (min.longitude+max.longitude)/2);
-    region.span = MACoordinateSpanMake((max.latitude - min.latitude)*1.85 , (max.longitude - min.longitude)*1.05);
-    if (region.span.latitudeDelta > 0 && region.span.longitudeDelta > 0) {
-        [self.mapView setRegion:region animated:YES];
+    if (move) {
+        //move mapview
+        MACoordinateRegion region;
+        region.center = CLLocationCoordinate2DMake((min.latitude+max.latitude)/2 +((max.latitude - min.latitude)/self.viewController.view.height)*64, (min.longitude+max.longitude)/2);
+        region.span = MACoordinateSpanMake((max.latitude - min.latitude)*1.85 , (max.longitude - min.longitude)*1.05);
+        if (region.span.latitudeDelta > 0 && region.span.longitudeDelta > 0) {
+            [self.mapView setRegion:region animated:YES];
+        }
     }
 }
 
@@ -853,6 +869,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         if (zoomLevel > 20) {
             zoomLevel = 20;
+        }
+        
+        if (houseAnnotation.searchType == FHMapSearchTypeSegment || houseAnnotation.searchType == FHMapSearchTypeStation) {
+            self.selectionStation.value = houseAnnotation.houseData.nid;
+            self.selectionStation.text = houseAnnotation.houseData.name;
         }
         
         _movingToCenter = NO;
@@ -1547,6 +1568,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     [view removeFromSuperview];
     [self.mapView removeOverlay:self.drawLayer];
+    if (self.subwayLines) {
+        [self.mapView removeOverlays:self.subwayLines];
+    }
     self.showMode = FHMapSearchShowModeMap;
     self.lastShowMode = FHMapSearchShowModeMap;
     [self.viewController switchToNormalMode];
@@ -1672,9 +1696,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         FHMapSubwayPickerView *picker = [[FHMapSubwayPickerView alloc]initWithFrame:self.viewController.view.bounds];
         __weak typeof(self) wself = self;
         picker.chooseStation = ^(FHSearchFilterConfigOption * _Nonnull line, FHSearchFilterConfigOption * _Nonnull station) {
-            if (!wself.lastBubble) {
-                wself.lastBubble =  [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];
-            }
+            wself.lastBubble =  [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];
+            [wself.lastBubble overwriteFliter:self.filterConditionParams];
+            
             NSMutableDictionary *param = [NSMutableDictionary new];
             
             wself.selectedLine = line;
