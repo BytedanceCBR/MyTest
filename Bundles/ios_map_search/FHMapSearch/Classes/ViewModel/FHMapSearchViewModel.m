@@ -611,7 +611,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         wself.searchId = model.searchId;
         if (model.path.count > 0) {
             BOOL move= NO;
-            if ([wself.selectionStation.value isEqualToString:wself.selectedLine.value]) {
+            if (!byUser && [wself.selectionStation.value isEqualToString:wself.selectedLine.value]) {
                 move = YES;
             }
             [wself addLinePathAndMoveMap:model.path move:move];
@@ -669,11 +669,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (list.count > 0) {
         NSArray *cAnnotations = self.mapView.annotations;
         NSMutableDictionary *removeAnnotationDict = [[NSMutableDictionary alloc] initWithCapacity:cAnnotations.count];
+        NSMutableArray *currentHouseAnnotations = [[NSMutableArray alloc] initWithCapacity:cAnnotations.count];
         for (NSInteger i = 0 ; i < cAnnotations.count ;  i++) {
             id <MAAnnotation> annotation = cAnnotations[i];
             if ([annotation isKindOfClass:[FHHouseAnnotation class]]) {
                 FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)annotation;
                 removeAnnotationDict[houseAnnotation.houseData.nid] = annotation;
+                [currentHouseAnnotations addObject:annotation];//站点有重复的
             }
         }
 
@@ -701,6 +703,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 MAAnnotationView *annotationView = [self.mapView viewForAnnotation:houseAnnotation];
                 annotationView.annotation = houseAnnotation;
                 [removeAnnotationDict removeObjectForKey:info.nid];
+                [currentHouseAnnotations removeObject:houseAnnotation];
                 continue;
             }
 
@@ -724,7 +727,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [annotations addObject:houseAnnotation];
         }
         NSArray *needRemoveAnnotations = [removeAnnotationDict allValues];
-        [self.mapView removeAnnotations:needRemoveAnnotations];
+        [self.mapView removeAnnotations:currentHouseAnnotations];
         [self.mapView addAnnotations:annotations];
         if (selectedAnnoation) {
             [self.mapView selectAnnotation:selectedAnnoation animated:NO];
@@ -1031,7 +1034,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
             
             //设置中心点偏移，使得标注底部中间点成为经纬度对应点
-            annotationView.centerOffset = CGPointMake(0, -32);
+            annotationView.centerOffset = CGPointMake(0, 0);
             annotationView.canShowCallout = NO;
             return annotationView;
             

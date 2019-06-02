@@ -65,7 +65,7 @@
     
     CGFloat maxWidth = MIN(_contentLabel.width, 171);
     CGRect frame = self.frame;
-    frame.size = CGSizeMake(maxWidth+34, 38);
+    frame.size = CGSizeMake(maxWidth+48, 38);
     self.frame = frame;
     
 //    [self changeSelectMode:[(FHHouseAnnotation *)annotation type]];
@@ -96,8 +96,8 @@
     self.backgroundView.frame = self.bounds;
     CGFloat arrowWidth = 7;
     self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 30-arrowWidth/2, arrowWidth, arrowWidth);
-    self.contentLabel.frame = CGRectMake(24, 8, self.width-34, 17);
-    self.stationView.frame = CGRectMake(10, 11, 10, 11);
+    self.contentLabel.frame = CGRectMake(30, 8, self.width-48, 17);
+    self.stationView.frame = CGRectMake(17, 11, 10, 11);
     
 }
 

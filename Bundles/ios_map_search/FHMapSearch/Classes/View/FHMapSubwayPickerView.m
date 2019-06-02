@@ -24,6 +24,7 @@
 @property(nonatomic , strong) UIButton *okButton;
 @property(nonatomic , strong) UIView *bottomView;
 @property(nonatomic , strong) FHSearchFilterConfigOption *dataModel;
+@property(nonatomic , strong) FHSearchFilterConfigOption *configData;
 
 @end
 
@@ -142,25 +143,28 @@
 
 -(void)showWithSubwayData:(FHSearchFilterConfigOption *)data inView:(UIView *)view
 {
-    
-    FHSearchFilterConfigOption *option = [FHSearchFilterConfigOption new];
-    option.type = data.type;
-    option.text = data.text;
-    option.value = data.value;
-    
-    NSMutableArray *options = [[NSMutableArray alloc] initWithCapacity:data.options.count];
-    for (FHSearchFilterConfigOption *op in data.options) {
-        //去掉不限
-        if ([op.type isEqualToString:@"line"]) {
-            [options addObject:op];
+    if (data != _configData) {
+                
+        _configData = data;
+        
+        FHSearchFilterConfigOption *option = [FHSearchFilterConfigOption new];
+        option.type = data.type;
+        option.text = data.text;
+        option.value = data.value;
+        
+        NSMutableArray *options = [[NSMutableArray alloc] initWithCapacity:data.options.count];
+        for (FHSearchFilterConfigOption *op in data.options) {
+            //去掉不限
+            if ([op.type isEqualToString:@"line"]) {
+                [options addObject:op];
+            }
         }
+        option.options = options;
+        self.dataModel = option;
     }
-    option.options = options;
-    
-    
     [view addSubview:self];
     self.frame = view.bounds;
-    self.dataModel = option;
+    
     [_picker reloadAllComponents];
 }
 
