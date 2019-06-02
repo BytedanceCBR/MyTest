@@ -1733,11 +1733,14 @@
     {
         
         [tracerDict removeObjectForKey:@"impr_id"];
+        [tracerDict removeObjectForKey:@"search_id"];
         [tracerDict removeObjectForKey:@"group_id"];
         [tracerDict removeObjectForKey:@"log_pb"];
         [tracerDict removeObjectForKey:@"house_type"];
         [tracerDict removeObjectForKey:@"rank"];
         [tracerDict removeObjectForKey:@"card_type"];
+        [tracerDict setValue:@"be_null" forKey:@"element_from"];
+        [tracerDict setValue:@"filter_false_old" forKey:@"element_type"];
 
         [FHUserTracker writeEvent:@"real_house_show" params:tracerDict];
     }

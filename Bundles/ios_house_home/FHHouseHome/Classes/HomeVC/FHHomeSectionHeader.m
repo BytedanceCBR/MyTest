@@ -107,7 +107,18 @@ static const float kSegementedPadingTop = 10;
     
     
     if (titles.count == 1) {
-        leftPading = 6;
+        if ([titles.firstObject isKindOfClass:[NSString class]]) {
+            NSString *titleSeg = (NSString *)titles.firstObject;
+            if (titleSeg.length == 3) {
+                leftPading = 14;
+            }else
+            {
+                leftPading = 4;
+            }
+        }else
+        {
+            leftPading = 6;
+        }
     }
     
     if (titles.count == 2) {

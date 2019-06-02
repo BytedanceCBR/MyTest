@@ -1754,13 +1754,16 @@
 
     }else if (cellModel.isRealHouseTopCell) {
         
+        [param removeObjectForKey:@"search_id"];
         [param removeObjectForKey:@"impr_id"];
         [param removeObjectForKey:@"group_id"];
         [param removeObjectForKey:@"log_pb"];
         [param removeObjectForKey:@"house_type"];
         [param removeObjectForKey:@"rank"];
         [param removeObjectForKey:@"card_type"];
-        
+        [param setValue:@"be_null" forKey:@"element_from"];
+        [param setValue:@"filter_false_old" forKey:@"element_type"];
+
         TRACK_EVENT(@"real_house_show", param);
     }else
     {
