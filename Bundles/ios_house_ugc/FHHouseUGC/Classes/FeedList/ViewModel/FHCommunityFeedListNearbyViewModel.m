@@ -6,6 +6,7 @@
 //
 
 #import "FHCommunityFeedListNearbyViewModel.h"
+#import "FHUGCBaseCell.h"
 
 @interface FHCommunityFeedListNearbyViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -28,7 +29,9 @@
     [super requestData:isHead first:isFirst];
     
     for (NSInteger i = 0; i < 50; i++) {
-        [self.dataList addObject:[NSString stringWithFormat:@"附近的%li",(long)i]];
+        int x = arc4random() % 100;
+        int y = x % 2;
+        [self.dataList addObject:[NSString stringWithFormat:@"%i",y]];
     }
     [self.tableView reloadData];
 }
@@ -40,16 +43,20 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    
+    FHUGCFeedListCellType type = [self.dataList[indexPath.row] integerValue];
+    
+    NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:type data:nil]);
+    FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+        Class cellClass = NSClassFromString(cellIdentifier);
+        cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
     if(indexPath.row < self.dataList.count){
-        cell.textLabel.text = self.dataList[indexPath.row];
+        [cell refreshWithData:nil];
     }
     
     return cell;
@@ -58,7 +65,7 @@
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 50.0f;
+    return UITableViewAutomaticDimension;
 }
 
 @end

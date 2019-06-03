@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHCommunityFeedListController.h"
 #import <TTHttpTask.h>
+#import "FHUGCCellManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak) FHCommunityFeedListController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *dataList;
+@property(nonatomic, strong) FHUGCCellManager *cellManager;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
 

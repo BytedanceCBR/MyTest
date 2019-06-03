@@ -23,4 +23,10 @@ typedef NS_ENUM(NSInteger, FHCommunityCollectionCellType)
     FHCommunityCollectionCellTypeDiscovery,
 };
 
+typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
+{
+    FHUGCFeedListCellTypePureTitle = 0,                         //纯文本
+    FHUGCFeedListCellTypeSingleImage,                           //单图
+};
+
 #endif /* FHHouseUGCHeader_h */

@@ -16,6 +16,8 @@
         self.tableView = tableView;
         self.viewController = viewController;
         
+        self.cellManager = [[FHUGCCellManager alloc] init];
+        [self.cellManager registerAllCell:tableView];
 //        __weak typeof(self) weakSelf = self;
         
 //        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
