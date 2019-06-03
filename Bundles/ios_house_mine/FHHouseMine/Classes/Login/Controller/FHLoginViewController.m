@@ -18,7 +18,6 @@
 @property(nonatomic ,strong) FHLoginView *loginView;
 @property (nonatomic, strong)     TTAcountFLoginDelegate       *loginDelegate;
 @property (nonatomic, assign)   BOOL       needPopVC;
-@property (nonatomic, assign) BOOL isOneKeyLogin;
 
 @end
 
@@ -41,14 +40,8 @@
         if (params[@"need_pop_vc"]) {
             self.needPopVC = [params[@"need_pop_vc"] boolValue];
         }
-        [self addEnterCategoryLog];
     }
     return self;
-}
-
-- (void)addEnterCategoryLog {
-    NSMutableDictionary *tracerDict = [self.tracerModel logDict];
-    TRACK_EVENT(@"login_page", tracerDict);
 }
 
 - (void)viewDidLoad {

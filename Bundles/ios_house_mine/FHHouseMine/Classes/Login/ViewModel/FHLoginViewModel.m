@@ -88,6 +88,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)showOneKeyLoginView:(BOOL)isOneKeyLogin phoneNum:(NSString *)phoneNum
 {
+    self.fromOneKeyLogin = isOneKeyLogin;
     [self.view showOneKeyLoginView:isOneKeyLogin];
     [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin] showAcceptBox:!isOneKeyLogin];
     [self.view updateOneKeyLoginWithPhone:phoneNum service:isOneKeyLogin ? [self serviceNameStr] : nil];
@@ -95,6 +96,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self.view enableConfirmBtn:phoneNum.length > 0];
         [self.view enableSendVerifyCodeBtn:NO];
     }
+    [self addEnterCategoryLog];
 }
 
 - (void)getOneKeyLoginPhoneNum
@@ -197,6 +199,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     __weak typeof(self)wself = self;
     [[ToastManager manager] showToast:@"正在登录中"];
+    [self traceLogin];
     [TTAccount oneKeyLoginWithCompleted:^(NSError * _Nullable error) {
         [wself handleLoginResult:nil error:error];
     }];
@@ -277,6 +280,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 #pragma mark 其他方式登录
 - (void)otherLoginAction
 {
+    self.fromOtherLogin = YES;
     [self showOneKeyLoginView:NO phoneNum:nil];
 }
 
@@ -385,7 +389,23 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)traceLogin {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    if (self.fromOneKeyLogin) {
+        tracerDict[@"click_position"] = @"quick_login";
+    }
     TRACK_EVENT(@"click_login", tracerDict);
+}
+
+- (void)addEnterCategoryLog
+{
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    if (self.fromOneKeyLogin) {
+        tracerDict[@"login_type"] = @"quick_login";
+    }
+    if (self.fromOtherLogin) {
+        tracerDict[@"enter_from"] = @"quick_login";
+        tracerDict[@"enter_type"] = @"other_login";
+    }
+    TRACK_EVENT(@"login_page", tracerDict);
 }
 
 - (void)popViewController {
