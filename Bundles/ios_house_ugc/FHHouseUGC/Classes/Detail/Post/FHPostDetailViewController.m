@@ -10,9 +10,21 @@
 #import "SSCommonLogic.h"
 #import "TTUIResponderHelper.h"
 #import "UIViewAdditions.h"
-#import "FHCommentViewController.h"
+#import "TTCommentViewController.h"
 #import "TTDeviceHelper.h"
 #import "FHPostDetailViewModel.h"
+#import "TTCommentDataManager.h"
+#import "TTKitchen.h"
+#import "TTDetailModel.h"
+#import "TTCommentModelProtocol.h"
+#import "FHTraceEventUtils.h"
+#import "TTCommentDetailViewController.h"
+#import "TTModalContainerController.h"
+#import "TTRoute.h"
+#import "TTUGCTrackerHelper.h"
+#import "TTNetworkUtil.h"
+#import "TTTrackerWrapper.h"
+#import "AKHelper.h"
 
 @interface FHPostDetailViewController ()
 
@@ -20,6 +32,14 @@
 @property (nonatomic, strong)   FHExploreDetailToolbarView       *toolbarView;
 @property (nonatomic, strong)   UITableView       *tableView;
 @property (nonatomic, strong)   FHPostDetailViewModel       *viewModel;
+@property(nonatomic,  strong)   TTCommentViewController *commentViewController;
+
+@property (nonatomic,assign) double commentShowTimeTotal;
+@property (nonatomic,strong) NSDate *commentShowDate;
+@property (nonatomic, assign) BOOL beginShowComment;
+
+// test
+@property (nonatomic, strong) TTDetailModel *detailModel;
 
 @end
 
@@ -27,13 +47,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    [self setupData];
     [self setupUI];
 }
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)setupData {
+    self.beginShowComment = YES;
 }
 
 - (void)setupUI {
@@ -53,8 +77,8 @@
         make.top.mas_equalTo(self.view).offset(navOffset);
         make.bottom.mas_equalTo(self.toolbarView.mas_top);
     }];
-    // 是否有评论
-    
+    // 评论
+    [self p_buildCommentViewController];
 }
 
 - (void)setupNaviBar {
@@ -97,6 +121,30 @@
     self.toolbarView.frame = [self p_frameForToolBarView];
     self.toolbarView.hidden = NO;
     [self p_refreshToolbarView];
+}
+
+- (void)p_buildCommentViewController
+{
+    self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:[self p_contentVisableRect] dataSource:self delegate:self];
+    self.commentViewController.enableImpressionRecording = YES;
+    [self.commentViewController willMoveToParentViewController:self];
+    [self addChildViewController:self.commentViewController];
+    [self.commentViewController didMoveToParentViewController:self];
+    
+    self.tableView.tableFooterView = self.commentViewController.view;
+}
+
+//当前详情页可视范围标准rect(去掉顶部导航,且根据articleType判断是否去掉底部toolbar)
+- (CGRect)p_contentVisableRect
+{
+    CGFloat visableHeight = self.view.size.height;
+    visableHeight -= self.toolbarView.height;
+    
+    if (@available(iOS 11.0, *)) {
+        UIEdgeInsets safeInset = self.view.safeAreaInsets;
+        visableHeight += safeInset.bottom;
+    }
+    return CGRectMake(0, 0, [TTUIResponderHelper splitViewFrameForView:self.view].size.width, visableHeight);
 }
 
 #pragma mark - Toolbar actions
@@ -228,11 +276,6 @@
     //    }
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-    [self dismissSelf];
-}
-
 - (void)dismissSelf
 {
     if (self.navigationController.viewControllers.count>1) {
@@ -243,6 +286,194 @@
     } else {
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
+}
+
+#pragma mark - TTCommentDataSource & TTCommentDelegate
+
+- (void)tt_loadCommentsForMode:(TTCommentLoadMode)loadMode
+        possibleLoadMoreOffset:(NSNumber *)offset
+                       options:(TTCommentLoadOptions)options
+                   finishBlock:(TTCommentLoadFinishBlock)finishBlock
+{
+    TTCommentDataManager *commentDataManager = [[TTCommentDataManager alloc] init];
+    [commentDataManager startFetchCommentsWithGroupModel:self.detailModel.article.groupModel forLoadMode:loadMode  loadMoreOffset:offset loadMoreCount:@(TTCommentDefaultLoadMoreFetchCount) msgID:self.detailModel.msgID options:options finishBlock:finishBlock];
+}
+
+- (SSThemedView *)tt_commentHeaderView
+{
+    return nil;
+}
+
+- (TTGroupModel *)tt_groupModel
+{
+    return self.detailModel.article.groupModel;
+}
+
+- (NSInteger)tt_zzComments
+{
+    return self.detailModel.article.zzComments.count;
+}
+
+- (BOOL)tt_canDeleteComments
+{
+    return NO;
+}
+
+- (void)tt_commentViewControllerDidFetchCommentsWithError:(NSError *)error
+{
+    //点击评论进入文章时跳转到评论区
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self p_scrollToCommentIfNeeded];
+    });
+    
+    if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
+        NSString *userName = self.commentViewController.tt_defaultReplyCommentModel.userName;
+        [self.toolbarView.writeButton setTitle:isEmptyString(userName)? @"写评论": [NSString stringWithFormat:@"回复 %@：", userName] forState:UIControlStateNormal];
+    }
+    
+    // toolbar 禁表情
+    BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:kTTKCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
+    if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
+        self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
+    }
+}
+
+- (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController digCommentWithCommentModel:(id<TTCommentModelProtocol>)model
+{
+    if (!model.userDigged) {
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+        [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+        [params setValue:model.commentID.stringValue forKey:@"comment_id"];
+        [params setValue:model.userID.stringValue forKey:@"user_id"];
+        [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
+        [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
+        [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
+        [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
+    } else {
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+        [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+        [params setValue:model.commentID.stringValue forKey:@"comment_id"];
+        //        [params setValue:model.userID.stringValue forKey:@"user_id"];
+        [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
+        [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
+        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
+        [params setValue:@"comment" forKey:@"position"];
+        [TTTrackerWrapper eventV3:@"rt_like" params:params];
+    }
+}
+
+- (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController didClickCommentCellWithCommentModel:(id<TTCommentModelProtocol>)model
+{
+}
+
+- (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController didClickReplyButtonWithCommentModel:(nonnull id<TTCommentModelProtocol>)model
+{
+}
+
+- (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(id<TTCommentModelProtocol>)model
+{
+    
+}
+
+- (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController tappedWithUserID:(NSString *)userID {
+    if ([userID longLongValue] == 0) {
+        return;
+    }
+    NSString *userIDstr = [NSString stringWithFormat:@"%@", userID];
+    
+    NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://media_account?uid=%@", userIDstr];
+    
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:linkURLString]];
+    
+}
+
+- (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController startWriteComment:(id<TTCommentModelProtocol>)model
+{
+    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
+}
+
+- (void)tt_commentViewController:(id <TTCommentViewControllerProtocol>)ttController
+             scrollViewDidScroll:(nonnull UIScrollView *)scrollView{
+}
+
+- (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController didSelectWithInfo:(NSDictionary *)info {
+    NSMutableDictionary *mdict = info.mutableCopy;
+    [mdict setValue:@"detail_article_comment_dig" forKey:@"fromPage"];
+    [mdict setValue:self.detailModel.categoryID forKey:@"categoryName"];
+    [mdict setValue:self.detailModel.article.groupModel.groupID forKey:@"groupId"];
+    [mdict setValue:self.detailModel.article forKey:@"group"];
+    
+    [mdict setValue:self.detailModel.categoryID forKey:@"categoryID"];
+    [mdict setValue:self.detailModel.clickLabel forKey:@"enterFrom"];
+    [mdict setValue:self.detailModel.logPb forKey:@"logPb"];
+    
+    TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(mdict.copy)];
+    
+    detailRoot.categoryID = self.detailModel.categoryID;
+    detailRoot.enterFrom = self.detailModel.clickLabel;
+    detailRoot.logPb = self.detailModel.logPb;
+    
+    TTModalContainerController *navVC = [[TTModalContainerController alloc] initWithRootViewController:detailRoot];
+    navVC.containerDelegate = self;
+    if ([TTDeviceHelper OSVersionNumber] < 8.0f) {
+        self.commentViewController.view.window.rootViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
+        [self.commentViewController presentViewController:navVC animated:NO completion:nil];
+        self.commentViewController.view.window.rootViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+    }
+    else {
+        [self.commentViewController presentViewController:navVC animated:NO completion:nil];
+    }
+    
+    
+    //停止评论时间
+    if (self.commentShowDate) {
+        NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.commentShowDate];
+        self.commentShowTimeTotal += timeInterval*1000;
+        self.commentShowDate = nil;
+    }
+}
+
+- (void)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController
+             refreshCommentCount:(int)count
+{
+    self.detailModel.article.commentCount = count;
+    [self.detailModel.article save];
+}
+
+- (void)tt_commentViewControllerFooterCellClicked:(nonnull id<TTCommentViewControllerProtocol>)ttController
+{
+    NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
+    [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
+    wrapperTrackEventWithCustomKeys(@"fold_comment", @"click", self.detailModel.article.groupModel.groupID, nil, extra);
+    NSMutableDictionary *condition = [[NSMutableDictionary alloc] init];
+    [condition setValue:self.detailModel.article.groupModel.groupID forKey:@"groupID"];
+    [condition setValue:self.detailModel.article.groupModel.itemID forKey:@"itemID"];
+    [condition setValue:self.detailModel.article.aggrType forKey:@"aggrType"];
+    [condition setValue:[self.detailModel.article zzCommentsIDString] forKey:@"zzids"];
+    
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fold_comment"] userInfo:TTRouteUserInfoWithDict(condition)];
+}
+
+//
+- (void)p_willOpenWriteCommentViewWithReservedText:(NSString *)reservedText switchToEmojiInput:(BOOL)switchToEmojiInput  {
+    
+}
+
+- (void)p_scrollToCommentIfNeeded
+{
+    if (self.beginShowComment && [self p_needShowToolBarView]) {
+        [self toolBarButtonClicked:self.toolbarView.commentButton];
+    }
+}
+
+
+- (BOOL)p_needShowToolBarView
+{
+    return YES;
 }
 
 @end
