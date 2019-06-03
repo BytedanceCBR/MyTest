@@ -105,7 +105,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
                 [[ToastManager manager] showToast:@"网络异常"];
             }
         }];
-        
+        self.refreshFooter.hidden = YES;
         self.tableView.mj_footer = self.refreshFooter;
 
         [self configBottomFooter];
@@ -293,9 +293,17 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             
             [self addEnterCategoryLog];
             
+            if (hasMore) {
+                self.refreshFooter.hidden = NO;
+            }else
+            {
+                self.refreshFooter.hidden = YES;
+            }
+            
             self.bottomView.hidden = NO;
             
             self.tableView.hasMore = houseModel.hasMore;
+            [self.tableView.mj_footer endRefreshing];
             self.tableView.scrollEnabled = YES;
             [self.tableView reloadData];
         }else
@@ -449,6 +457,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 {
     if (self.refreshHasMore) {
         _bottomView.hidden = YES;
+        return nil;
     }
     return _bottomView;
 }

@@ -15,6 +15,11 @@
 #import "FHHouseBridgeManager.h"
 #import <TTRoute.h>
 #import <FHHomeConfigManager.h>
+#import <FHHomeCellHelper.h>
+
+@interface FHhomeHouseTypeBannerCell()
+@property(nonatomic,weak)FHConfigDataModel *cuurentDataModel;
+@end
 
 @implementation FHhomeHouseTypeBannerCell
 
@@ -68,10 +73,10 @@
 
         UIView *containView = [UIView new];
         if ([TTDeviceHelper isScreenWidthLarge320]) {
-            [containView setFrame:CGRectMake( i * viewWidth + 15, 4.0f, viewWidth, 80)];
+            [containView setFrame:CGRectMake( i * viewWidth + 15, 8.0f, viewWidth, 80)];
         }else
         {
-            [containView setFrame:CGRectMake( i * viewWidth + 20, 4.0f, viewWidth, 65)];
+            [containView setFrame:CGRectMake( i * viewWidth + 20, 8.0f, viewWidth, 65)];
         }
         [containView setBackgroundColor:[UIColor clearColor]];
         containView.layer.cornerRadius = 2;
@@ -124,7 +129,7 @@
                 [hotImage bd_setImageWithURL:[NSURL URLWithString:tagImageModel.url]];
             }
             [hotImage setBackgroundColor:[UIColor whiteColor]];
-            [hotImage setFrame:CGRectMake(backImage.frame.size.width - ([TTDeviceHelper isScreenWidthLarge320] ? 17 : 18.5), 4, 21, 10)];
+            [hotImage setFrame:CGRectMake(backImage.frame.size.width - ([TTDeviceHelper isScreenWidthLarge320] ? 17 : 18.5), 3.5, 21, 10)];
             [containView addSubview:hotImage];
         }
         
@@ -144,20 +149,25 @@
         [containView addSubview:titleLabel];
         
         CGFloat titleAddLbaelWidth = 25;
-        
+        CGFloat letftPading = 0;
         if (itemModel.title.length > 5) {
             titleAddLbaelWidth = 20;
+            letftPading = 5;
+        }
+        
+        if (itemModel.title.length == 4 && [TTDeviceHelper isScreenWidthLarge320]) {
+            titleAddLbaelWidth = 20;
+            letftPading = 15;
         }
         
         if (itemModel.addDescription) {
             UILabel *titleAddLabel = [UILabel new];
             titleAddLabel.text = itemModel.addDescription;
-            titleAddLabel.textAlignment = NSTextAlignmentCenter;
-            if ( [TTDeviceHelper isScreenWidthLarge320]) {
-                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth, titleLabel.frame.origin.y + 8, titleAddLbaelWidth, 10)];
+            if ([TTDeviceHelper isScreenWidthLarge320]) {
+                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth  - letftPading, titleLabel.frame.origin.y + 8, titleAddLbaelWidth, 10)];
             }else
             {
-                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth + 3, titleLabel.frame.origin.y + 8, titleAddLbaelWidth, 10)];
+                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth + 3 - letftPading, titleLabel.frame.origin.y + 5, titleAddLbaelWidth, 10)];
             }
             titleAddLabel.font = [UIFont themeFontRegular:6];
             titleAddLabel.textColor = [UIColor themeGray1];
@@ -168,11 +178,12 @@
         UILabel *subTitleLabel = [UILabel new];
         subTitleLabel.text = itemModel.descriptionStr;
         subTitleLabel.textAlignment = NSTextAlignmentCenter;
-        [subTitleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y + titleLabel.frame.size.height, titleLabel.frame.size.width, 20)];
         if ( [TTDeviceHelper isScreenWidthLarge320]) {
+            [subTitleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y + titleLabel.frame.size.height, titleLabel.frame.size.width, 20)];
             subTitleLabel.font = [UIFont themeFontRegular:11 * [TTDeviceHelper scaleToScreen375]];
         }else
         {
+            [subTitleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y + titleLabel.frame.size.height - 3, titleLabel.frame.size.width, 20)];
             subTitleLabel.font = [UIFont themeFontRegular:8];
         }
         subTitleLabel.textColor = [UIColor themeGray3];
@@ -180,6 +191,11 @@
         [containView addSubview:subTitleLabel];
         [self.contentView addSubview:containView];
     }
+    if (self.cuurentDataModel != dataModel) {
+        [FHHomeCellHelper sendBannerTypeCellShowTrace:houseType];
+    }
+    self.cuurentDataModel = dataModel;
+    
 }
 
 - (void)houseTypeBannerClick:(id)sender

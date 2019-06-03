@@ -14,9 +14,12 @@
 #import <ToastManager.h>
 #import <NSDictionary+TTAdditions.h>
 #import <TTRoute.h>
+#import "FHExtendHotAreaButton.h"
 
 @interface FHSuggestionRealHouseTopCell()
 @property (nonatomic, strong)FHSugSubscribeDataDataSubscribeInfoModel *currentModel;
+@property (nonatomic, strong)FHExtendHotAreaButton      *allFalseHouseBtn;
+
 @end
 
 @implementation FHSuggestionRealHouseTopCell
@@ -138,7 +141,8 @@
     }];
     
     
-    _allFalseHouseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _allFalseHouseBtn = [FHExtendHotAreaButton buttonWithType:UIButtonTypeCustom];
+    _allFalseHouseBtn.isExtend = YES;
     [_allFalseHouseBtn setImage:[UIImage imageNamed:@"house_list_real_arrow"] forState:UIControlStateNormal];
     [_allFalseHouseBtn addTarget:self action:@selector(allFalseHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_allFalseHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
@@ -204,6 +208,13 @@
         _realHouseNumLabel.text = [NSString stringWithFormat:@"  %@套",model.trueHouseTotal ? : @"0"];
         _falseHouseLabel.text = model.fakeTitle;
         _falseHouseNumLabel.text = [NSString stringWithFormat:@"  %@套",model.fakeHouseTotal ? : @"0"];;
+        if([model.fakeHouseTotal integerValue] == 0)
+        {
+            _allFalseHouseBtn.hidden = YES;
+        }else
+        {
+            _allFalseHouseBtn.hidden = NO;
+        }
     }
 
 }
