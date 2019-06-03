@@ -1075,6 +1075,7 @@
                         if ([topRealCell respondsToSelector:@selector(refreshUI:)]) {
                             [topRealCell refreshUI:realHouseInfo];
                         }
+                        topRealCell.tracerDict = self.stayTraceDict;
                         __weak typeof(self) weakSelf = self;
                         topRealCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
                             [weakSelf requestAddSubScribe:subscribeText];

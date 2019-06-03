@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UIButton      *allFalseHouseBtn;
 @property (nonatomic, strong)   UIView        *segementLine;
 @property (nonatomic, strong)   UIImageView   *backImageView;
+@property (nonatomic, strong)   NSDictionary   *tracerDict;
 
 @property (nonatomic, copy) void (^addSubscribeAction)(NSString *subscribeText);
 

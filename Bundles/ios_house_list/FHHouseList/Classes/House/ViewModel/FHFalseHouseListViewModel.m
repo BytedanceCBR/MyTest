@@ -37,7 +37,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property(nonatomic , strong) NSMutableDictionary *houseShowCache;
 @property(nonatomic , strong) NSString *originFrom;
 @property(nonatomic , strong) NSString *originSearchId;
-@property(nonatomic , strong) NSString *searchId;
+@property(nonatomic , copy) NSString *searchId;
 @property(nonatomic , strong) FHFalseListTopHeaderView *topHeader;
 @property(nonatomic , weak) TTHttpTask * requestTask;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
@@ -49,6 +49,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property(nonatomic , strong) NSString *requestSearchId;
 @property(nonatomic , strong) NSString *bannerImageUrl;
 @property(nonatomic , strong) NSString *titleTopStr;
+@property(nonatomic , strong) NSString *titleBottomStr;
+@property(nonatomic , assign) BOOL refreshHasMore;
 
 @end
 
@@ -113,16 +115,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         
         [viewController tt_startUpdate];
         
-        
-        
         [self requestErshouHouseListData:YES query:nil offset:self.houseList.count searchId:self.requestSearchId];
     }
     return self;
-}
-
-- (void)setSearchId:(NSString *)searchId
-{
-    _requestSearchId = searchId;
 }
 
 - (void)configBottomFooter
@@ -133,7 +128,13 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     self.bottomView.hidden = YES;
     
     _buttonOpenMore = [UIButton new];
-    [_buttonOpenMore setTitle:@"免责声明：所有数据基于幸福里大数据进行计算，结果仅供参考" forState:UIControlStateNormal];
+    if (self.titleBottomStr) {
+        [_buttonOpenMore setTitle:self.titleBottomStr forState:UIControlStateNormal];
+
+    }else
+    {
+        [_buttonOpenMore setTitle:@"免责声明：所有数据基于幸福里大数据进行计算，结果仅供参考" forState:UIControlStateNormal];
+    }
     [_buttonOpenMore setBackgroundColor:[UIColor themeGray7]];
     [_buttonOpenMore setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
     [_buttonOpenMore.titleLabel setFont:[UIFont themeFontRegular:10]];
@@ -202,10 +203,10 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     
     tracerDict[@"category_name"] = [self categoryName] ? : @"be_null";
-    tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
+    tracerDict[@"enter_from"] = self.tracerModel.categoryName ? : @"be_null";
     tracerDict[@"enter_type"] = @"click";
-    tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
-    tracerDict[@"search_id"] = self.searchId ? : @"be_null";
+    tracerDict[@"element_from"] = @"be_null";
+    tracerDict[@"search_id"] = self.requestSearchId ? : @"be_null";
     tracerDict[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
     tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
     
@@ -213,9 +214,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 }
 
 -(NSString *)categoryName {
-    
     return @"false_old_list";
-    
 }
 
 - (void)openMoreClick
@@ -274,6 +273,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         self.searchId = houseModel.searchId;
         self.bannerImageUrl = houseModel.banner.url;
         self.titleTopStr = houseModel.topTip;
+        self.titleBottomStr = houseModel.bottomTip;
+        self.refreshHasMore = hasMore;
+        
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
@@ -305,6 +307,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
                 self.tableView.mj_footer.hidden = YES;
             }
             
+            self.tableView.hasMore = houseModel.hasMore;
             self.tableView.scrollEnabled = YES;
         }else
         {
@@ -455,6 +458,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
+    if (self.refreshHasMore) {
+        _bottomView.hidden = YES;
+    }
     return _bottomView;
 }
 
@@ -465,6 +471,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
+    if (self.refreshHasMore) {
+        return 0;
+    }
     return 30;
 }
 
@@ -485,6 +494,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         tracerDict[@"origin_from"] = self.originFrom;
         tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
         tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
+        [FHUserTracker writeEvent:@"click_house" params:tracerDict];
+        
     }
 }
 
@@ -500,7 +511,6 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     tracerDict[@"house_type"] = @"old";
     tracerDict[@"card_type"] = @"left_pic";
     tracerDict[@"page_type"] = @"false_old_list";
-    tracerDict[@"element_type"] = @"be_null";
     tracerDict[@"search_id"] = self.searchId ? : @"be_null";
     tracerDict[@"group_id"] = [cellModel groupId] ? : @"be_null";
     tracerDict[@"impr_id"] = [cellModel imprId] ? : @"be_null";
