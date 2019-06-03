@@ -106,7 +106,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
 
-    // add by zjing for test 注意获取完手机号之后长期不登录的异常结果
+    // 注意获取完手机号之后长期不登录的异常结果
     [TTAccount getOneKeyLoginPhoneNumberCompleted:^(NSString * _Nullable phoneNumber, NSString * _Nullable serviceName, NSError * _Nullable error) {
         [wself updateLoadingState:NO];
         BOOL showOneKeyLogin = !error && phoneNumber.length > 0;
@@ -294,6 +294,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSMutableDictionary *info = @{}.mutableCopy;
     info[@"url"] = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     info[@"title"] = title;
+    NSString *jsCodeStr = [NSString stringWithFormat:@"var importStyle=function importStyle(b){var a=document.createElement(\"style\"),c=document;c.getElementsByTagName(\"head\")[0].appendChild(a);if(a.styleSheet){a.styleSheet.cssText=b}else{a.appendChild(c.createTextNode(b))}};importStyle('.ag-faq-lists { box-sizing: border-box;} .ag-faq-lists .faq-lists-li .icons-next { right:15px !important}')"];
+    info[@"extra_js"] = jsCodeStr;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
@@ -301,7 +303,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)goToUserProtocol
 {
     self.noDismissVC = YES;
-    NSString *urlStr = [NSString stringWithFormat:@"fschema://webview?url=%@/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1",[FHMineAPI host]];
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1",[FHMineAPI host]];
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
@@ -309,7 +311,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)goToSecretProtocol
 {
     self.noDismissVC = YES;
-    NSString *urlStr = [NSString stringWithFormat:@"fschema://webview?url=%@/f100/download/private_policy.html&title=隐私协议&hide_more=1",[FHMineAPI host]];
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/private_policy.html&title=隐私协议&hide_more=1",[FHMineAPI host]];
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
@@ -359,11 +361,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)handleLoginResult:(NSString *)phoneNumber error:(NSError *)error
 {
     if(!error){
-        // add by zjing for test
         [[ToastManager manager] showToast:@"登录成功"];
-        YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-        [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
-        [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
+        if (phoneNumber.length > 0) {
+            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
+            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
+        }
         if (self.needPopVC) {
             [self popViewController];
         }

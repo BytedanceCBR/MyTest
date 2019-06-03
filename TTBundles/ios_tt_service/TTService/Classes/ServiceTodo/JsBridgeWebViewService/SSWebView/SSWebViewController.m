@@ -83,6 +83,8 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 @property (nonatomic, assign) CGPoint keyBoardPoint;
 @property (nonatomic, assign)   BOOL       isFirstKeyBoardShow;/**/
 
+@property(nonatomic, copy) NSString *extraJS;
+
 @end
 
 @implementation SSWebViewController
@@ -307,6 +309,12 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         if ([[params allKeys] containsObject:@"hide_nav_bottom_line"]) {
             self.ttNeedHideBottomLine = [[NSString stringWithFormat:@"%@", params[@"hide_nav_bottom_line"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_nav_bottom_line"]] isEqualToString:@"true"];
         }
+        if ([[params allKeys]containsObject:@"extra_js"]) {
+            NSString *extraJS = [params objectForKey:@"extra_js"];
+            if ([extraJS isKindOfClass:[NSString class]] && extraJS.length > 0) {
+                self.extraJS = extraJS;
+            }
+        }
         
     }
     return self;
@@ -414,6 +422,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     self.ssWebView.ssWebContainer.gdExtJsonDict = self.gdExtJsonDict;
     self.ssWebView.shouldDisableHash = self.shouldDisableHash;
     self.ssWebView.ssWebContainer.ssWebView.disableNightBackground = self.nightModeDisable;
+    self.ssWebView.ssWebContainer.extraJS = self.extraJS;
     if (self.adID.longLongValue > 0) {
         _ssWebView.ssWebContainer.ssWebView.shouldInterceptUrls = [SSCommonLogic shouldInterceptAdJump];
     }

@@ -31,6 +31,8 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
 // 问答用的字段（到时候沉库后，问答可以继承而不污染这个类）
 @property (nonatomic, copy) NSDictionary *gdExtJsonDict;
 
+@property (nonatomic, copy) NSString *extraJS;// 需要额外j执行的js代码
+
 /**
  是否需要禁止头条UA, 默认为NO
  */

@@ -286,6 +286,9 @@
     self.webStayStat = SSWebViewStayStatLoadFinish;
     [self _sendStatEvent:SSWebViewStayStatLoadFinish error:nil];
     
+    if (self.extraJS.length > 0) {
+        [self.ssWebView stringByEvaluatingJavaScriptFromString:self.extraJS completionHandler:nil];
+    }
 }
 
 - (void)webView:(YSWebView *)webView didFailLoadWithError:(NSError *)error {
