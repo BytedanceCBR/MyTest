@@ -16,13 +16,11 @@
 
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , weak) FHCommunityViewController *viewController;
-@property(nonatomic , strong) NSMutableArray *dataArray;
 @property(nonatomic , strong) NSMutableArray *cellArray;
 @property(nonatomic , assign) NSInteger currentTabIndex;
 @property(nonatomic , assign) BOOL isFirstLoad;
 
 @property(nonatomic , assign) CGPoint beginOffSet;
-@property(nonatomic , assign) CGPoint tableviewBeginOffSet;
 @property(nonatomic , assign) CGFloat oldX;
 
 @end
@@ -32,13 +30,13 @@
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(UIViewController *)viewController {
     self = [super init];
     if (self) {
-        self.currentTabIndex = 2;
+        self.currentTabIndex = 1;
         self.isFirstLoad = YES;
         
         self.collectionView = collectionView;
         collectionView.delegate = self;
         collectionView.dataSource = self;
-//        [collectionView registerClass:[FHCommunityCollectionCell class] forCellWithReuseIdentifier:kCellId];
+
         self.viewController = (FHCommunityViewController *)viewController;
         
         [self initDataArray];
@@ -47,11 +45,9 @@
 }
 
 - (void)initDataArray {
-    self.dataArray = [NSMutableArray array];
     self.cellArray = [NSMutableArray array];
     
     for (NSInteger i = 0; i < maxCellCount; i++) {
-        [self.dataArray addObject:[NSNull null]];
         [self.cellArray addObject:[NSNull null]];
     }
 }

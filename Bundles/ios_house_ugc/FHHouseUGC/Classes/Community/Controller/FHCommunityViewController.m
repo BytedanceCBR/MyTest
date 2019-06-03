@@ -144,18 +144,10 @@
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.containerView);
     }];
-    
-//    [self.customerServiceBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.right.mas_equalTo(self.view).offset(-10);
-//        make.bottom.mas_equalTo(self.view).offset(-bottom-10);
-//        make.width.height.mas_equalTo(70);
-//    }];
-    
 }
 
 - (void)initViewModel {
     _viewModel = [[FHCommunityViewModel alloc] initWithCollectionView:self.collectionView controller:self];
-//    [self startLoadData];
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {

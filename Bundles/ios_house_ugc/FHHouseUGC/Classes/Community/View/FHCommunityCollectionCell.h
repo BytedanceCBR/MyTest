@@ -6,16 +6,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHHouseUGCHeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-typedef NS_ENUM(NSInteger, FHCommunityCollectionCellType)
-{
-    FHCommunityCollectionCellTypeNone = -1,
-    FHCommunityCollectionCellTypeNearby = 0,
-    FHCommunityCollectionCellTypeMyJoin,
-    FHCommunityCollectionCellTypeDiscovery,
-};
 
 @interface FHCommunityCollectionCell : UICollectionViewCell
 

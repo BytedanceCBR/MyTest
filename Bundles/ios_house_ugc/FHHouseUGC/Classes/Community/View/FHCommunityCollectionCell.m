@@ -7,8 +7,7 @@
 
 #import "FHCommunityCollectionCell.h"
 #import "ArticleTabbarStyleNewsListViewController.h"
-#import "FHNearbyViewController.h"
-#import "FHMyJoinViewController.h"
+#import "FHCommunityFeedListController.h"
 
 @interface FHCommunityCollectionCell ()
 
@@ -36,22 +35,23 @@
 }
 
 - (void)initViews {
-    switch (self.type) {
-        case FHCommunityCollectionCellTypeNearby:
-            self.vc = [[FHNearbyViewController alloc] init];
-            [self.contentView addSubview:_vc.view];
-            break;
-        case FHCommunityCollectionCellTypeMyJoin:
-            self.vc = [[FHMyJoinViewController alloc] init];
-            [self.contentView addSubview:_vc.view];
-            break;
-        case FHCommunityCollectionCellTypeDiscovery:
-            self.vc = [[ArticleTabBarStyleNewsListViewController alloc] init];
-            [self.contentView addSubview:_vc.view];
-            break;
-            
-        default:
-            break;
+    if(self.type == FHCommunityCollectionCellTypeNearby){
+        FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
+        vc.listType = FHCommunityFeedListTypeNearby;
+        self.vc = vc;
+    }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
+        FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
+        vc.listType = FHCommunityFeedListTypeMyJoin;
+        self.vc = vc;
+    }else if(self.type == FHCommunityCollectionCellTypeDiscovery){
+        self.vc = [[ArticleTabBarStyleNewsListViewController alloc] init];
+    }else{
+        
+    }
+    
+    if(self.vc){
+        self.vc.view.frame = self.bounds;
+        [self.contentView addSubview:self.vc.view];
     }
 }
 
