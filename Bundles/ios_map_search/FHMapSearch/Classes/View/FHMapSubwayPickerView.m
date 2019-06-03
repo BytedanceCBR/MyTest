@@ -141,6 +141,16 @@
 }
 
 
+-(void)layoutSubviews
+{
+    [super layoutSubviews];
+    for (UIView *v in self.picker.subviews) {
+        if (CGRectGetHeight(v.frame) < 1) {
+            v.backgroundColor = [UIColor themeGray6];
+        }
+    }
+}
+
 -(void)showWithSubwayData:(FHSearchFilterConfigOption *)data inView:(UIView *)view
 {
     if (data != _configData) {
@@ -206,13 +216,16 @@
     }else{
         NSInteger index = [pickerView selectedRowInComponent:0];
         FHSearchFilterConfigOption *line = self.dataModel.options[index];
-        FHSearchFilterConfigOption *station = line.options[row];
-        content = station.text;
+        if (row < line.options.count) {
+            FHSearchFilterConfigOption *station = line.options[row];
+            content = station.text;
+        }
     }
     
     if (content.length == 0) {
-        content = [NSString stringWithFormat:@"-%ld-%ld",component,row];
-        NSLog(@"[SUBWAY] error: %@",content);
+//        content = [NSString stringWithFormat:@"-%ld-%ld",component,row];
+//        NSLog(@"[SUBWAY] error: %@",content);
+        content = @"...";
     }
     
     return [[NSAttributedString alloc] initWithString:content attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16],NSForegroundColorAttributeName:[UIColor themeGray1]}];
@@ -224,6 +237,7 @@
     
     if (component == 0) {
         [pickerView reloadComponent:1];
+        [pickerView selectRow:0 inComponent:1 animated:YES];
     }
     
 }

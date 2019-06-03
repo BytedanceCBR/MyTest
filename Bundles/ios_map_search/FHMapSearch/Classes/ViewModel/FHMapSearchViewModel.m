@@ -798,7 +798,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         //move mapview
         MACoordinateRegion region;
         region.center = CLLocationCoordinate2DMake((min.latitude+max.latitude)/2 +((max.latitude - min.latitude)/self.viewController.view.height)*64, (min.longitude+max.longitude)/2);
-        region.span = MACoordinateSpanMake((max.latitude - min.latitude)*1.85 , (max.longitude - min.longitude)*1.05);
+        region.span = MACoordinateSpanMake((max.latitude - min.latitude)*2.05 , (max.longitude - min.longitude)*1.25);
         if (region.span.latitudeDelta > 0 && region.span.longitudeDelta > 0) {
             [self.mapView setRegion:region animated:YES];
         }
@@ -1159,8 +1159,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         return polygonRenderer;
     }else if ([overlay isKindOfClass:[MAPolyline class]]){
         MAPolylineRenderer *polygonRenderer = [[MAPolylineRenderer alloc] initWithPolyline:overlay];
-        polygonRenderer.lineWidth   = 6.f;
+        polygonRenderer.lineWidth   = 12.f;
         polygonRenderer.strokeColor = [UIColor themeRed1];
+        polygonRenderer.lineJoinType = kMALineJoinRound;
+        polygonRenderer.lineCapType  = kMALineCapRound;
         return polygonRenderer;
     }
     return nil;

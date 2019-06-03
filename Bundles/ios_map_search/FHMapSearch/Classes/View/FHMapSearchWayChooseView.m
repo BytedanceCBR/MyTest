@@ -62,7 +62,7 @@
     
     [button setBackgroundColor:[UIColor clearColor]];
     
-    button.imageEdgeInsets = UIEdgeInsetsMake(-3, -11, 0, 0);
+    button.imageEdgeInsets = UIEdgeInsetsMake(-4, -11, 0, 0);
     button.titleEdgeInsets = UIEdgeInsetsMake(-2, 8, 0, 0);
     
     return button;
@@ -91,7 +91,7 @@
     frame.origin.x = frame.size.width;
     _drawLineButton.frame = frame;
     
-    _splitLine.frame = CGRectMake(CGRectGetMidX(self.bounds), 21, ONE_PIXEL, 18);
+    _splitLine.frame = CGRectMake(CGRectGetMidX(self.bounds), 18, 1, 18);
     
 }
 
