@@ -7,10 +7,13 @@
 
 #import <Foundation/Foundation.h>
 #import "FHUGCBaseViewModel.h"
+#import "FHPostDetailViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPostDetailViewModel : FHUGCBaseViewModel
+
+-(instancetype)initWithController:(FHPostDetailViewController *)viewController tableView:(UITableView *)tableView;
 
 @end
 

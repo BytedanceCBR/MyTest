@@ -12,12 +12,14 @@
 #import "UIViewAdditions.h"
 #import "FHCommentViewController.h"
 #import "TTDeviceHelper.h"
+#import "FHPostDetailViewModel.h"
 
 @interface FHPostDetailViewController ()
 
 
 @property (nonatomic, strong)   FHExploreDetailToolbarView       *toolbarView;
 @property (nonatomic, strong)   UITableView       *tableView;
+@property (nonatomic, strong)   FHPostDetailViewModel       *viewModel;
 
 @end
 
@@ -38,6 +40,7 @@
     [self setupNaviBar];
     [self setupToolbarView];
     [self configTableView];
+    self.viewModel = [[FHPostDetailViewModel alloc] initWithController:self tableView:_tableView];
     [self.view addSubview:_tableView];
     CGFloat navOffset = 65;
     if (@available(iOS 11.0 , *)) {
@@ -68,6 +71,7 @@
     _tableView.estimatedRowHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
+    _tableView.backgroundColor = [UIColor grayColor];
     //    if ([TTDeviceHelper isIPhoneXDevice]) {
     //        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     //    }
