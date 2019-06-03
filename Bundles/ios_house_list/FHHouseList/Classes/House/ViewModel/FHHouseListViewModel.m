@@ -1447,7 +1447,6 @@
     NSString *openUrl = [urlStr stringByRemovingPercentEncoding];
     if (openUrl.length > 0) {
         openUrl = [openUrl stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-        // add by zjing for test
 //        openUrl = @"fschema://neighborhood_sales_list?&title_text=%e7%a2%a7%e6%a1%82%e5%9b%ad%e6%b5%b7%e6%98%8c%e5%a4%a9%e6%be%9c%e4%b8%89%e6%9c%9f(12)&neighborhood_id=6581416553890185480&element_from=house_deal";
         NSURL *theUrl = [NSURL URLWithString:openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:theUrl userInfo:userInfo];

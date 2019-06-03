@@ -18,6 +18,7 @@
 @property(nonatomic ,strong) FHLoginView *loginView;
 @property (nonatomic, strong)     TTAcountFLoginDelegate       *loginDelegate;
 @property (nonatomic, assign)   BOOL       needPopVC;
+@property (nonatomic, assign) BOOL isOneKeyLogin;
 
 @end
 

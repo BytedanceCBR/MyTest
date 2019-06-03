@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL needPopVC;
 @property(nonatomic, assign) BOOL noDismissVC;
 
-- (instancetype)initWithView:(FHLoginView *)tableView controller:(FHLoginViewController *)viewController;
+- (instancetype)initWithView:(FHLoginView *)view controller:(FHLoginViewController *)viewController;
 
 - (void)viewWillAppear;
 

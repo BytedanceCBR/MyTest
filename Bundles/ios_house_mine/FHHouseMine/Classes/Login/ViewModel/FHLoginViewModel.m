@@ -15,6 +15,8 @@
 #import "UIColor+Theme.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHEnvContext.h>
+#import <YYLabel.h>
+#import <YYText/NSAttributedString+YYText.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -28,6 +30,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property(nonatomic , assign) NSInteger verifyCodeRetryTime;
 //是否重新是重新发送验证码
 @property(nonatomic , assign) BOOL isVerifyCodeRetry;
+@property(nonatomic , copy) NSString *oneKeyPhone;
 
 @end
 
@@ -42,6 +45,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         _needPopVC = YES;
         _view = view;
         _viewController = viewController;
+        
+        [self startLoadData];
     }
     return self;
 }
@@ -59,6 +64,142 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }else{
         [self stopTimer];
     }
+}
+#pragma mark - 一键登录
+- (void)startLoadData
+{
+    if (![TTReachability isNetworkConnected]) {
+        [self showOneKeyLoginView:NO phoneNum:nil];
+        return;
+    }
+    [self updateLoadingState:YES];
+    [self getOneKeyLoginPhoneNum];
+}
+
+- (void)updateLoadingState:(BOOL)isLoading
+{
+    if (isLoading) {
+        [self.viewController startLoading];
+    }else {
+        [self.viewController endLoading];
+    }
+    [self.view updateLoadingState:isLoading];
+}
+
+- (void)showOneKeyLoginView:(BOOL)isOneKeyLogin phoneNum:(NSString *)phoneNum
+{
+    [self.view showOneKeyLoginView:isOneKeyLogin];
+    [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin] showAcceptBox:!isOneKeyLogin];
+    [self.view updateOneKeyLoginWithPhone:phoneNum service:isOneKeyLogin ? [self serviceNameStr] : nil];
+    if (isOneKeyLogin) {
+        [self.view enableConfirmBtn:phoneNum.length > 0];
+        [self.view enableSendVerifyCodeBtn:NO];
+    }
+}
+
+- (void)getOneKeyLoginPhoneNum
+{
+    __weak typeof(self)wself = self;
+    NSString *serviceName = [TTAccount sharedAccount].service;
+    if (serviceName.length < 1) {
+        [self otherLoginAction];
+        return;
+    }
+
+    // add by zjing for test 注意获取完手机号之后长期不登录的异常结果
+    [TTAccount getOneKeyLoginPhoneNumberCompleted:^(NSString * _Nullable phoneNumber, NSString * _Nullable serviceName, NSError * _Nullable error) {
+        [wself updateLoadingState:NO];
+        BOOL showOneKeyLogin = !error && phoneNumber.length > 0;
+        [wself showOneKeyLoginView:showOneKeyLogin phoneNum:phoneNumber];
+    }];
+}
+
+- (NSMutableAttributedString *)protocolAttrTextByIsOneKeyLogin:(BOOL)isOneKeyLogin
+{
+    __weak typeof(self)wself = self;
+    NSMutableAttributedString *attrText = [NSMutableAttributedString new];
+    NSRange serviceRange;
+    NSRange userProtocolRange;
+    NSRange privacyRange;
+    NSString *urlStr = nil;
+    NSDictionary *commonTextStyle = @{
+                    NSFontAttributeName : [UIFont themeFontRegular:13],
+                    NSForegroundColorAttributeName : [UIColor themeGray3],
+                    };
+    if (isOneKeyLogin) {
+        if ([[TTAccount sharedAccount].service isEqualToString:TTAccountMobile]) {
+            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国移动认证服务条款》以及《幸福里用户协议》和《隐私协议》"];
+            serviceRange = NSMakeRange(7, 10);
+            userProtocolRange = NSMakeRange(21, 7);
+            privacyRange = NSMakeRange(31, 4);
+            urlStr = [NSString stringWithFormat:@"https://wap.cmpassport.com/resources/html/contract.html"];
+        }else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountTelecom]) {
+            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国电信认证服务协议》以及《幸福里用户协议》和《隐私协议》"];
+            serviceRange = NSMakeRange(7, 10);
+            userProtocolRange = NSMakeRange(21, 7);
+            privacyRange = NSMakeRange(31, 4);
+            urlStr = [NSString stringWithFormat:@"https://e.189.cn/sdk/agreement/detail.do?hidetop=true"];
+        }else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountUnion]) {
+            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国联通服务与隐私协议》以及《幸福里用户协议》和《隐私协议》"];
+            serviceRange = NSMakeRange(7, 11);
+            userProtocolRange = NSMakeRange(22, 7);
+            privacyRange = NSMakeRange(32, 4);
+            urlStr = [NSString stringWithFormat:@"https://opencloud.wostore.cn/authz/resource/html/disclaimer.html?fromsdk=true"];
+        }
+        [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
+        YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
+        [attrText yy_setTextUnderline:decoration range:serviceRange];
+        [attrText yy_setTextUnderline:decoration range:userProtocolRange];
+        [attrText yy_setTextUnderline:decoration range:privacyRange];
+
+        [attrText yy_setTextHighlightRange:serviceRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+            [wself goToServiceProtocol:urlStr];
+        }];
+        [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+            [wself goToUserProtocol];
+        }];
+        [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+            [wself goToSecretProtocol];
+        }];
+    }else {
+        attrText = [[NSMutableAttributedString alloc] initWithString:@"我已阅读并同意 《幸福里用户协议》及《隐私协议》"];
+        [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
+        userProtocolRange = NSMakeRange(9, 7);
+        privacyRange = NSMakeRange(19, 4);
+        YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
+        [attrText yy_setTextUnderline:decoration range:userProtocolRange];
+        [attrText yy_setTextUnderline:decoration range:privacyRange];
+        [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+            [wself goToUserProtocol];
+        }];
+        [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+            [wself goToSecretProtocol];
+        }];
+    }
+    return attrText;
+}
+
+- (NSString *)serviceNameStr
+{
+    NSString *service = [TTAccount sharedAccount].service;
+    if ([service isEqualToString:TTAccountMobile]) {
+        return @"中国移动认证";
+    }else if ([service isEqualToString:TTAccountUnion]) {
+        return @"中国联通认证";
+    }else if ([service isEqualToString:TTAccountTelecom]) {
+        return @"中国电信认证";
+    }else {
+        return @"";
+    }
+}
+
+- (void)requestOneKeyLogin
+{
+    __weak typeof(self)wself = self;
+    [[ToastManager manager] showToast:@"正在登录中"];
+    [TTAccount oneKeyLoginWithCompleted:^(NSError * _Nullable error) {
+        [wself handleLoginResult:nil error:error];
+    }];
 }
 
 #pragma mark - 键盘通知
@@ -127,6 +268,36 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 #pragma mark -- FHLoginViewDelegate
 
+#pragma mark 一键登录
+- (void)oneKeyLoginAction
+{
+    [self requestOneKeyLogin];
+}
+
+#pragma mark 其他方式登录
+- (void)otherLoginAction
+{
+    [self showOneKeyLoginView:NO phoneNum:nil];
+}
+
+- (void)goToServiceProtocol:(NSString *)urlStr {
+    self.noDismissVC = YES;
+    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://webview?url=%@",urlStr]];
+    NSString *title = @"";
+    if ([[TTAccount sharedAccount].service isEqualToString:TTAccountMobile]) {
+        title = @"中国移动认证服务条款";
+    }else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountTelecom]) {
+        title = @"中国电信认证服务协议";
+    }else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountUnion]) {
+        title = @"中国联通服务与隐私协议";
+    }
+    NSMutableDictionary *info = @{}.mutableCopy;
+    info[@"url"] = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    info[@"title"] = title;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+}
+
 - (void)goToUserProtocol {
     self.noDismissVC = YES;
     NSString *urlStr = [NSString stringWithFormat:@"fschema://webview?url=%@/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1",[FHMineAPI host]];
@@ -179,21 +350,26 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self traceLogin];
     
     [FHMineAPI requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
-        if(!error){
-            __strong typeof(self) strongSelf = weakSelf;
-            [[ToastManager manager] showToast:@"登录成功"];
-            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
-            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
-            if (strongSelf.needPopVC) {
-                [strongSelf popViewController];
-            }
-            [strongSelf loginSuccessedWithPhoneNum:phoneNumber];
-        }else{
-            NSString *errorMessage = [FHMineAPI errorMessageByErrorCode:error];
-            [[ToastManager manager] showToast:errorMessage];
-        }
+        [weakSelf handleLoginResult:phoneNumber error:error];
     }];
+}
+
+- (void)handleLoginResult:(NSString *)phoneNumber error:(NSError *)error
+{
+    if(!error){
+        // add by zjing for test
+        [[ToastManager manager] showToast:@"登录成功"];
+        YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+        [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
+        [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
+        if (self.needPopVC) {
+            [self popViewController];
+        }
+        [self loginSuccessedWithPhoneNum:phoneNumber];
+    }else{
+        NSString *errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+        [[ToastManager manager] showToast:errorMessage];
+    }
 }
 
 - (void)loginSuccessedWithPhoneNum:(NSString *)phoneNumber {

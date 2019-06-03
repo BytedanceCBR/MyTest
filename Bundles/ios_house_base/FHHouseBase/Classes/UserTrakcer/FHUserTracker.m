@@ -8,6 +8,9 @@
 #import "FHUserTracker.h"
 #import <TTTracker.h>
 
+@interface FHUserTracker ()
+
+@end
 @implementation FHUserTracker
 
 +(NSDictionary *)basicParam
@@ -33,6 +36,11 @@
     [param addEntriesFromDictionary:[self basicParam]];
     [TTTracker eventV3:event params:param];
     
+}
+
+- (void)event:(NSString *)event params:(NSDictionary *)params
+{
+    [FHUserTracker writeEvent:event params:params];
 }
 
 @end
