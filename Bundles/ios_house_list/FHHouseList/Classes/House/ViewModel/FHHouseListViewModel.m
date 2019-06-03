@@ -1529,7 +1529,7 @@
                     [dictRealWeb setValue:cellModel.secondModel.externalInfo.backUrl forKey:@"backUrl"];
 
                     TTRouteUserInfo *userInfoReal = [[TTRouteUserInfo alloc] initWithInfo:dictRealWeb];
-                    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web"] userInfo:userInfo];
+                    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web"] userInfo:userInfoReal];
                     return;
                 }
                 FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;

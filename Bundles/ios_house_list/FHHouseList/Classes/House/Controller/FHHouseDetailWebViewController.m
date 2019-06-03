@@ -24,6 +24,8 @@
 #import <UIViewController+Refresh_ErrorHandler.h>
 #import <UIViewAdditions.h>
 #import "UIView+Refresh_ErrorHandler.h"
+#import <FHUtils.h>
+#import <FHMainApi.h>
 
 @interface FHHouseDetailWebViewController ()
 {
@@ -37,7 +39,8 @@
 @property (nonatomic, copy) NSString *url;
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, assign) BOOL isShowTopTip;
-@property (nonatomic, assign) NSDictionary *traceDict;
+@property (nonatomic, strong) NSDictionary *traceDict;
+@property (nonatomic, copy) NSString *backUrl;
 @end
 
 @implementation FHHouseDetailWebViewController
@@ -51,7 +54,21 @@ static NSString *s_oldAgent = nil;
         _houseType = [paramObj.allParams[@"house_type"] integerValue];
         _url = paramObj.allParams[@"url"];
         _traceDict = paramObj.allParams[@"tracer"];
-        
+        _backUrl = paramObj.allParams[@"backUrl"];
+
+        if ([_traceDict isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *paramsDict = [NSMutableDictionary dictionaryWithDictionary:_traceDict];
+            [paramsDict setValue:@"ios" forKey:@"os"];
+            [paramsDict setValue:@"app" forKey:@"source"];
+            [paramsDict removeObjectForKey:@"log_pb"];
+            [paramsDict removeObjectForKey:@"search_id"];
+            NSString *getParamStr = [FHUtils getUrlFormStrFromDict:paramsDict andFirstChar:YES];
+            if ([getParamStr isKindOfClass:[NSString class]]) {
+                _url = [NSString stringWithFormat:@"%@%@",_url,getParamStr];
+                _backUrl = [NSString stringWithFormat:@"%@%@",_backUrl,getParamStr];
+            }
+        }
+       
         if ([paramObj.userInfo.allInfo[@"showTopTip"] respondsToSelector:@selector(boolValue)]) {
             _isShowTopTip = [paramObj.userInfo.allInfo[@"showTopTip"] boolValue];
         }else
@@ -184,7 +201,9 @@ static NSString *s_oldAgent = nil;
 - (void)didMoveToParentViewController:(UIViewController*)parent{
     [super didMoveToParentViewController:parent];
     if(!parent){
-      
+        [FHMainApi getRequest:_backUrl query:nil params:nil completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
+            
+        }];
     }
 }
 

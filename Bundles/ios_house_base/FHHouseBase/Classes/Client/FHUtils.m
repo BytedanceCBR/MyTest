@@ -62,6 +62,23 @@
     return dic;
 }
 
++ (NSString *)getUrlFormStrFromDict:(NSDictionary *)dic andFirstChar:(BOOL)withFirst
+{
+    NSMutableString *resultStr = [NSMutableString new];
+    if (withFirst) {
+        [resultStr appendString:@"&"];
+    }
+    for (NSString * key in dic.allKeys) {
+        if ([dic[key] isKindOfClass:[NSString class]] || [dic[key] isKindOfClass:[NSNumber class]]) {
+            [resultStr appendString:[NSString stringWithFormat:@"&%@=%@",key,dic[key]]];
+        }else if([dic[key] isKindOfClass:[NSDictionary class]])
+        {
+            [resultStr appendString:[NSString stringWithFormat:@"&%@=%@",key,[FHUtils getJsonStrFrom:dic[key]]]];
+        }
+    }
+    return resultStr;
+}
+
 /**
  * @method
  *
