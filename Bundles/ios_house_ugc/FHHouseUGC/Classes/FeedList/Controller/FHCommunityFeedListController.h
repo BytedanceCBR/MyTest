@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHCommunityFeedListController : FHBaseViewController
 
 @property(nonatomic, assign) FHCommunityFeedListType listType;
+//附加在feed上面的自定义view
+@property(nonatomic, strong) UIView *tableHeaderView;
 
 @end
 

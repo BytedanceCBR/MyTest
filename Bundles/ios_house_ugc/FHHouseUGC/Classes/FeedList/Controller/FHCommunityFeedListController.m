@@ -7,9 +7,14 @@
 
 #import "FHCommunityFeedListController.h"
 #import "UIColor+Theme.h"
+#import "FHCommunityFeedListBaseViewModel.h"
+#import "FHCommunityFeedListNearbyViewModel.h"
+#import "FHCommunityFeedListMyJoinViewModel.h"
+#import "TTReachability.h"
 
-@interface FHCommunityFeedListController ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHCommunityFeedListController ()
 
+@property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic ,strong) UITableView *tableView;
 @property(nonatomic, strong) NSMutableArray *dataList;
 
@@ -20,15 +25,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    self.dataList = [[NSMutableArray alloc] init];
-    
-    for (NSInteger i = 0; i < 50; i++) {
-        [self.dataList addObject:[NSString stringWithFormat:@"%li",(long)i]];
-    }
-    
     [self initView];
     [self initConstraints];
+    [self initViewModel];
 }
 
 - (void)initView {
@@ -36,7 +35,7 @@
     _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+    UIView *headerView = self.tableHeaderView ? self.tableHeaderView : [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
     _tableView.tableHeaderView = headerView;
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
@@ -52,11 +51,8 @@
         self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     
-    _tableView.delegate = self;
-    _tableView.dataSource = self;
-    
     [self.view addSubview:_tableView];
-//    [self addDefaultEmptyViewFullScreen];
+    [self addDefaultEmptyViewFullScreen];
 }
 
 - (void)initConstraints {
@@ -65,31 +61,31 @@
     }];
 }
 
-#pragma mark - UITableViewDataSource
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.dataList count];
-}
-
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+- (void)initViewModel {
+    FHCommunityFeedListBaseViewModel *viewModel = nil;
     
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+    if(self.listType == FHCommunityFeedListTypeNearby){
+        viewModel = [[FHCommunityFeedListNearbyViewModel alloc] initWithTableView:_tableView controller:self];
+    }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
+        viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
     }
     
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
-    if(indexPath.row < self.dataList.count){
-        cell.textLabel.text = self.dataList[indexPath.row];
-    }
-    
-    return cell;
+    self.viewModel = viewModel;
+    [self startLoadData];
 }
 
-#pragma mark - UITableViewDelegate
+- (void)startLoadData {
+    if ([TTReachability isNetworkConnected]) {
+        [_viewModel requestData:YES first:YES];
+    } else {
+        if(!self.hasValidateData){
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        }
+    }
+}
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 50.0f;
+- (void)retryLoadData {
+    [self startLoadData];
 }
 
 

@@ -38,6 +38,10 @@
     if(self.type == FHCommunityCollectionCellTypeNearby){
         FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
         vc.listType = FHCommunityFeedListTypeNearby;
+        
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 100)];
+        view.backgroundColor = [UIColor redColor];
+        vc.tableHeaderView = view;
         self.vc = vc;
     }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
         FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
