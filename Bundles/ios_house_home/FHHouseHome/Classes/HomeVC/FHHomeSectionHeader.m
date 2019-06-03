@@ -53,11 +53,11 @@ static const float kSegementedPadingTop = 10;
     
     
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontRegular:16],NSFontAttributeName,
+                                     [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
                                      [UIColor themeGray3],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontMedium:16],NSFontAttributeName,
+                                     [UIFont themeFontMedium:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
                                       [UIColor themeRed1],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
@@ -125,7 +125,21 @@ static const float kSegementedPadingTop = 10;
         leftPading = 8;
     }
     
-    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count, kSegementedHeight);
+    if ([TTDeviceHelper isScreenWidthLarge320]) {
+        _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count, kSegementedHeight);
+    }else
+    {
+        if (titles.count < 3) {
+            leftPading = 8;
+        }else
+        {
+            leftPading = -3;
+        }
+        
+        CGFloat kSegementedOneWidth5s = 40;
+        _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth5s + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count, kSegementedHeight);
+    }
+
 }
 /*
  // Only override drawRect: if you perform custom drawing.

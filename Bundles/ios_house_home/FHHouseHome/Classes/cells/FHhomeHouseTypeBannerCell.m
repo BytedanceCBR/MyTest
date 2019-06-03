@@ -92,7 +92,7 @@
             }
         }
         
-        [backImage setBackgroundColor:[UIColor clearColor]];
+        [backImage setBackgroundColor:[UIColor whiteColor]];
         backImage.layer.cornerRadius = 2;
 //        backImage.layer.masksToBounds = YE
         // 因为shandowOffset默认为(0,3),此处需要修正下
@@ -142,7 +142,7 @@
         }else
         {
             titleLabel.font = [UIFont themeFontSemibold:12];
-            [titleLabel setFrame:CGRectMake(backImage.frame.origin.x + ([TTDeviceHelper isScreenWidthLarge320] ? 8 : 10), 12, backImage.frame.size.width - 10, 20)];
+            [titleLabel setFrame:CGRectMake(backImage.frame.origin.x + ([TTDeviceHelper isScreenWidthLarge320] ? 8 : 10), 14, backImage.frame.size.width - 10, 20)];
         }
         titleLabel.textColor = [UIColor themeGray1];
         titleLabel.textAlignment = 0;
@@ -155,9 +155,15 @@
             letftPading = 5;
         }
         
-        if (itemModel.title.length == 4 && [TTDeviceHelper isScreenWidthLarge320]) {
-            titleAddLbaelWidth = 20;
-            letftPading = 15;
+        if (itemModel.title.length == 4) {
+            if ([TTDeviceHelper isScreenWidthLarge320]) {
+                titleAddLbaelWidth = 20;
+                letftPading = 15;
+            }else
+            {
+                titleAddLbaelWidth = 20;
+                letftPading = 10;
+            }
         }
         
         if (itemModel.addDescription) {
@@ -178,12 +184,12 @@
         UILabel *subTitleLabel = [UILabel new];
         subTitleLabel.text = itemModel.descriptionStr;
         subTitleLabel.textAlignment = NSTextAlignmentCenter;
-        if ( [TTDeviceHelper isScreenWidthLarge320]) {
+        if ([TTDeviceHelper isScreenWidthLarge320]) {
             [subTitleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y + titleLabel.frame.size.height, titleLabel.frame.size.width, 20)];
             subTitleLabel.font = [UIFont themeFontRegular:11 * [TTDeviceHelper scaleToScreen375]];
         }else
         {
-            [subTitleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y + titleLabel.frame.size.height - 3, titleLabel.frame.size.width, 20)];
+            [subTitleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y + titleLabel.frame.size.height - 5, titleLabel.frame.size.width, 20)];
             subTitleLabel.font = [UIFont themeFontRegular:8];
         }
         subTitleLabel.textColor = [UIColor themeGray3];
@@ -194,6 +200,7 @@
     if (self.cuurentDataModel != dataModel) {
         [FHHomeCellHelper sendBannerTypeCellShowTrace:houseType];
     }
+    
     self.cuurentDataModel = dataModel;
     
 }
