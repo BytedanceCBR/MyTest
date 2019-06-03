@@ -32,12 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) JSONModel *realHouseTopModel;//头部真假房源视图
 
-@property (nonatomic, copy , nullable) NSString *houseSourceType; //房子来源类型
-
-@property (nonatomic, copy , nullable) NSString *houseSourceName; //房子来源名称
-
-@property (nonatomic, copy , nullable) NSString *houseSourceUrl; //房子跳转来源url
-
 @property (nonatomic, assign) CGSize titleSize;
 
 @property (nonatomic, strong , nullable, readonly) NSAttributedString *tagsAttrStr;

@@ -116,7 +116,6 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 0.001)]; //to do:设置header0.1，防止系统自动设置高度
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.bounces = YES;
     
     [_containerView addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {

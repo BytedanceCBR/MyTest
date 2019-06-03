@@ -106,8 +106,6 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             }
         }];
         
-        self.refreshFooter.hidden = YES;
-        
         self.tableView.mj_footer = self.refreshFooter;
 
         [self configBottomFooter];
@@ -295,20 +293,11 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             
             [self addEnterCategoryLog];
             
-            [self.tableView reloadData];
             self.bottomView.hidden = NO;
-            
-            if (hasMore) {
-                self.refreshFooter.hidden = NO;
-                self.tableView.mj_footer.hidden = NO;
-            }else
-            {
-                self.refreshFooter.hidden = YES;
-                self.tableView.mj_footer.hidden = YES;
-            }
             
             self.tableView.hasMore = houseModel.hasMore;
             self.tableView.scrollEnabled = YES;
+            [self.tableView reloadData];
         }else
         {
             [self.tableView reloadData];

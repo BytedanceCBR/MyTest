@@ -795,10 +795,7 @@
                 {
                     cellModel.isRealHouseTopCell = NO;
                 }
-                cellModel.houseSourceUrl = @"https://www.toutiao.com";
-                cellModel.houseSourceName = @"来源：链家xxxxxx";
-                cellModel.houseSourceType = @"1";
-                
+         
                 [self.houseList addObject:cellModel];
             }
 
@@ -1280,8 +1277,8 @@
                     [cell refreshTopMargin: topMargin];
                     [cell updateWithHouseCellModel:cellModel];
                     
-                    if ([cellModel.houseSourceType integerValue]) {
-                        [cell updateThirdPartHouseSourceStr:cellModel.houseSourceName];
+                    if (cellModel.secondModel.externalInfo) {
+                        [cell updateThirdPartHouseSourceStr:cellModel.secondModel.externalInfo.externalName];
                     }
                     
                 }
@@ -1524,8 +1521,15 @@
             break;
         case FHHouseTypeSecondHandHouse:
             if (cellModel.secondModel) {
-                if ([cellModel.houseSourceType integerValue]) {
-                    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_real_web?url=%@",cellModel.houseSourceUrl]] userInfo:userInfo];
+                if (cellModel.secondModel.externalInfo.externalUrl) {
+                    NSMutableDictionary * dictRealWeb = [NSMutableDictionary new];
+                    [dictRealWeb setValue:@(self.houseType) forKey:@"house_type"];
+                    [dictRealWeb setValue:traceParam forKey:@"tracer"];
+                    [dictRealWeb setValue:cellModel.secondModel.externalInfo.externalUrl forKey:@"url"];
+                    [dictRealWeb setValue:cellModel.secondModel.externalInfo.backUrl forKey:@"backUrl"];
+
+                    TTRouteUserInfo *userInfoReal = [[TTRouteUserInfo alloc] initWithInfo:dictRealWeb];
+                    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web"] userInfo:userInfo];
                     return;
                 }
                 FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
