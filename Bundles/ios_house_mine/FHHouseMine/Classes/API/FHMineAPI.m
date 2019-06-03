@@ -148,6 +148,9 @@
             break;
             
         default:
+            if ([error.userInfo[@"error_msg"] isKindOfClass:[NSString class]]) {
+                return error.userInfo[@"error_msg"];
+            }
             return error.localizedDescription;
             break;
     }

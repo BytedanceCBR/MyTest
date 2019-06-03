@@ -298,14 +298,16 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
-- (void)goToUserProtocol {
+- (void)goToUserProtocol
+{
     self.noDismissVC = YES;
     NSString *urlStr = [NSString stringWithFormat:@"fschema://webview?url=%@/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1",[FHMineAPI host]];
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
-- (void)goToSecretProtocol {
+- (void)goToSecretProtocol
+{
     self.noDismissVC = YES;
     NSString *urlStr = [NSString stringWithFormat:@"fschema://webview?url=%@/f100/download/private_policy.html&title=隐私协议&hide_more=1",[FHMineAPI host]];
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
