@@ -1233,7 +1233,17 @@
                             if ([topRealCell respondsToSelector:@selector(refreshUI:)]) {
                                 [topRealCell refreshUI:realHouseInfo];
                             }
-                            topRealCell.tracerDict = self.tracerModel.toDictionary;
+                            
+                            if ([self.tracerModel isKindOfClass:[JSONModel class]]) {
+                                NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
+                                NSDictionary *traceModelDict = self.tracerModel.toDictionary;
+                                if ([traceModelDict isKindOfClass:[NSDictionary class]]) {
+                                    [traceDictParams addEntriesFromDictionary:traceModelDict];
+                                }
+                                [traceDictParams setValue:@"old_list" forKey:@"category_name"];
+                                topRealCell.tracerDict = traceDictParams;
+                            }
+                          
                             __weak typeof(self) weakSelf = self;
                             topRealCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
                                 [weakSelf requestAddSubScribe:subscribeText];

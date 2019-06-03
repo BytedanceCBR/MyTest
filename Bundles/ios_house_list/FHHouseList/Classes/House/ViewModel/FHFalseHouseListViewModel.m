@@ -201,7 +201,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     
     tracerDict[@"category_name"] = [self categoryName] ? : @"be_null";
-    tracerDict[@"enter_from"] = self.tracerModel.categoryName ? : @"be_null";
+    tracerDict[@"enter_from"] = self.tracerModel.categoryName ? : @"old_list";
     tracerDict[@"enter_type"] = @"click";
     tracerDict[@"element_from"] = @"be_null";
     tracerDict[@"search_id"] = self.requestSearchId ? : @"be_null";

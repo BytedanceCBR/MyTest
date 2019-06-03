@@ -72,12 +72,7 @@
         FHConfigDataOpData2ItemsModel *itemModel = items[i];
 
         UIView *containView = [UIView new];
-        if ([TTDeviceHelper isScreenWidthLarge320]) {
-            [containView setFrame:CGRectMake( i * viewWidth + 15, 8.0f, viewWidth, 80)];
-        }else
-        {
-            [containView setFrame:CGRectMake( i * viewWidth + 20, 8.0f, viewWidth, 65)];
-        }
+        [containView setFrame:CGRectMake( i * viewWidth + 15, 8.0f, viewWidth, 80)];
         [containView setBackgroundColor:[UIColor clearColor]];
         containView.layer.cornerRadius = 2;
         
