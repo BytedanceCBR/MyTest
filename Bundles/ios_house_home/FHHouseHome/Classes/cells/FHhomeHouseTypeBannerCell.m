@@ -137,12 +137,19 @@
         titleLabel.text = itemModel.title;
         titleLabel.textAlignment = NSTextAlignmentCenter;
         [titleLabel setFrame:CGRectMake(backImage.frame.origin.x + ([TTDeviceHelper isScreenWidthLarge320] ? 8 : 10), 17, backImage.frame.size.width - 10, 20)];
+      
         if ([TTDeviceHelper isScreenWidthLarge320]) {
-            titleLabel.font = [UIFont themeFontSemibold:16 * [TTDeviceHelper scaleToScreen375]];
+            titleLabel.font = [UIFont themeFontSemibold:(titleLabel.text.length > 5 ? 14 : 16) * [TTDeviceHelper scaleToScreen375]];
         }else
         {
             titleLabel.font = [UIFont themeFontSemibold:12];
-            [titleLabel setFrame:CGRectMake(backImage.frame.origin.x + ([TTDeviceHelper isScreenWidthLarge320] ? 8 : 10), 14, backImage.frame.size.width - 10, 20)];
+            if(titleLabel.text.length > 5)
+            {
+                [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  5, 14, backImage.frame.size.width - 10, 20)];
+            }else
+            {
+                [titleLabel setFrame:CGRectMake(backImage.frame.origin.x + ([TTDeviceHelper isScreenWidthLarge320] ? 8 : 10), 14, backImage.frame.size.width - 10, 20)];
+            }
         }
         titleLabel.textColor = [UIColor themeGray1];
         titleLabel.textAlignment = 0;
@@ -210,7 +217,6 @@
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     
     if (!dataModel.opData2list || dataModel.opData2list.count == 0) {
-        NSLog(@"op Data = %@",dataModel.opData2list);
         return;
     }
     
