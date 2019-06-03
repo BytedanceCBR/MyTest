@@ -1,27 +1,26 @@
 //
-//  FHWenDaDetailViewController.m
+//  FHCommentViewController.m
 //  FHHouseUGC
 //
-//  Created by 张元科 on 2019/6/2.
+//  Created by 张元科 on 2019/6/3.
 //
 
-#import "FHWenDaDetailViewController.h"
 #import "FHCommentViewController.h"
 
-@interface FHWenDaDetailViewController ()
+@interface FHCommentViewController ()
 
 @end
 
-@implementation FHWenDaDetailViewController
+@implementation FHCommentViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor lightGrayColor];
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
-    [self dismissSelf];
+//    [self dismissSelf];
 }
 
 - (void)dismissSelf
@@ -35,6 +34,4 @@
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
 }
-
-
 @end

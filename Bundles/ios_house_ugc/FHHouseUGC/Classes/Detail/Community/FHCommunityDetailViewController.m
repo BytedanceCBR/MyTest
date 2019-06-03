@@ -10,10 +10,13 @@
 #import "SSCommonLogic.h"
 #import "TTUIResponderHelper.h"
 #import "UIViewAdditions.h"
+#import "FHCommentViewController.h"
+#import "TTDeviceHelper.h"
 
 @interface FHCommunityDetailViewController ()
 
 @property (nonatomic, strong)   FHExploreDetailToolbarView       *toolbarView;
+@property (nonatomic, strong)   UITableView       *tableView;
 
 @end
 
@@ -22,7 +25,51 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self setupUI];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)setupUI {
+    [self setupNaviBar];
     [self setupToolbarView];
+    [self configTableView];
+    [self.view addSubview:_tableView];
+    CGFloat navOffset = 65;
+    if (@available(iOS 11.0 , *)) {
+        navOffset = 44.f + self.view.tt_safeAreaInsets.top;
+    } else {
+        navOffset = 65;
+    }
+    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.view).offset(navOffset);
+        make.bottom.mas_equalTo(self.toolbarView.mas_top);
+    }];
+    // 是否有评论
+    
+}
+
+- (void)setupNaviBar {
+    [self setupDefaultNavBar:YES];
+    
+}
+
+- (void)configTableView {
+    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    if (@available(iOS 11.0 , *)) {
+        _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    _tableView.estimatedRowHeight = 0;
+    _tableView.estimatedSectionFooterHeight = 0;
+    _tableView.estimatedSectionHeaderHeight = 0;
+//    if ([TTDeviceHelper isIPhoneXDevice]) {
+//        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+//    }
 }
 
 - (void)setupToolbarView {
