@@ -7,11 +7,12 @@
 
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
+#import "FHCommentDetailViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 // 帖子详情页
-@interface FHPostDetailViewController : FHBaseViewController
+@interface FHPostDetailViewController : FHCommentDetailViewController
 
 @end
 
