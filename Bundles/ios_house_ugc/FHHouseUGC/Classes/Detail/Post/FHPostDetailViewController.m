@@ -25,10 +25,13 @@
 #import "TTNetworkUtil.h"
 #import "TTTrackerWrapper.h"
 #import "AKHelper.h"
+#import "FHCommonDefines.h"
 
-@interface FHPostDetailViewController ()
+TTDetailModel *tt_detailModel;// test add by zyk
 
+@interface FHPostDetailViewController ()<UIScrollViewDelegate>
 
+@property (nonatomic, strong)   UIScrollView       *mainScrollView;
 @property (nonatomic, strong)   FHExploreDetailToolbarView       *toolbarView;
 @property (nonatomic, strong)   UITableView       *tableView;
 @property (nonatomic, strong)   FHPostDetailViewModel       *viewModel;
@@ -37,6 +40,7 @@
 @property (nonatomic,assign) double commentShowTimeTotal;
 @property (nonatomic,strong) NSDate *commentShowDate;
 @property (nonatomic, assign) BOOL beginShowComment;
+@property (nonatomic, assign)   CGFloat       topContentOriginY;
 
 // test
 @property (nonatomic, strong) TTDetailModel *detailModel;
@@ -58,27 +62,41 @@
 
 - (void)setupData {
     self.beginShowComment = YES;
+    self.detailModel = tt_detailModel; // add by zyk
 }
 
 - (void)setupUI {
     [self setupNaviBar];
     [self setupToolbarView];
-    [self configTableView];
-    self.viewModel = [[FHPostDetailViewModel alloc] initWithController:self tableView:_tableView];
-    [self.view addSubview:_tableView];
+    _mainScrollView = [[UIScrollView alloc] init];
+    [self.view addSubview:_mainScrollView];
     CGFloat navOffset = 65;
     if (@available(iOS 11.0 , *)) {
         navOffset = 44.f + self.view.tt_safeAreaInsets.top;
     } else {
         navOffset = 65;
     }
-    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.view).offset(navOffset);
-        make.bottom.mas_equalTo(self.toolbarView.mas_top);
-    }];
+    _mainScrollView.frame = CGRectMake(0, navOffset, SCREEN_WIDTH, SCREEN_HEIGHT - navOffset - self.toolbarView.height);
+    _mainScrollView.delegate = self;
+    [self configTableView];
+    self.viewModel = [[FHPostDetailViewModel alloc] initWithController:self tableView:_tableView];
+    [self.mainScrollView addSubview:_tableView];
+    _tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 300);
     // 评论
     [self p_buildCommentViewController];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self test];
+    });
+}
+
+- (void)test {
+    _tableView.frame = CGRectMake(0, 0, _tableView.contentSize.width, _tableView.contentSize.height);
+    _topContentOriginY = _tableView.contentSize.height;
+    _tableView.scrollEnabled = NO;
+    self.commentViewController.view.frame = CGRectMake(0, _tableView.contentSize.height, self.view.width, _mainScrollView.frame.size.height);
+    self.commentViewController.commentTableView.scrollEnabled = NO;
+    
+    _mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
 }
 
 - (void)setupNaviBar {
@@ -125,13 +143,18 @@
 
 - (void)p_buildCommentViewController
 {
-    self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:[self p_contentVisableRect] dataSource:self delegate:self];
+//    self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:[self p_contentVisableRect] dataSource:self delegate:self];
+    self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:CGRectMake(0, 320, self.view.width, 200) dataSource:self delegate:self];
     self.commentViewController.enableImpressionRecording = YES;
     [self.commentViewController willMoveToParentViewController:self];
     [self addChildViewController:self.commentViewController];
     [self.commentViewController didMoveToParentViewController:self];
     
-    self.tableView.tableFooterView = self.commentViewController.view;
+    self.commentViewController.view.frame = CGRectMake(0, 320, self.view.width, 200);
+    [self.mainScrollView addSubview:self.commentViewController.view];
+//    self.tableView.tableFooterView = self.commentViewController.view;
+//    self.tableView.tableFooterView.frame = CGRectMake(0, 0, self.view.width, 200);
+    
 }
 
 //当前详情页可视范围标准rect(去掉顶部导航,且根据articleType判断是否去掉底部toolbar)
@@ -474,6 +497,29 @@
 - (BOOL)p_needShowToolBarView
 {
     return YES;
+}
+
+#pragma mark - UIScrollViewDelegate
+// mainScrollView
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (scrollView == _mainScrollView) {
+        CGFloat offsetY = scrollView.contentOffset.y;
+        if (offsetY > _topContentOriginY) {
+            self.commentViewController.view.frame = CGRectMake(0,  offsetY, self.view.width, _mainScrollView.frame.size.height);
+            //    self.commentViewController.commentTableView.scrollEnabled = NO;
+            CGFloat offset = offsetY - _topContentOriginY;
+            self.commentViewController.commentTableView.contentOffset = CGPointMake(0, offset);
+            
+            _mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
+        } else {
+            self.commentViewController.view.frame = CGRectMake(0, _tableView.contentSize.height, self.view.width, _mainScrollView.frame.size.height);
+            //    self.commentViewController.commentTableView.scrollEnabled = NO;
+            
+            self.commentViewController.commentTableView.contentOffset = CGPointMake(0, 0);
+            
+            _mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
+        }
+    }
 }
 
 @end
