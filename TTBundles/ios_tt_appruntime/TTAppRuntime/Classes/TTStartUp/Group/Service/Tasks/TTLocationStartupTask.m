@@ -11,6 +11,9 @@
 #import "TTLocationManager.h"
 #import "TTCookieManager.h"
 #import "SSCommonLogic.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTLocationStartupTask",FHTaskTypeService,TASK_PRIORITY_HIGH+5);
 
 @implementation TTLocationStartupTask
 

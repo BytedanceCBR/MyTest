@@ -11,6 +11,9 @@
 #import "TTSettingsManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTOpenURLFeedBackLogTask",FHTaskTypeOpenURL,TASK_PRIORITY_HIGH);
 
 @implementation TTOpenURLFeedBackLogTask
 

@@ -13,6 +13,9 @@
 #import "TTLaunchTracer.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTFetchBadgeTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+7);
 
 @implementation TTFetchBadgeTask
 

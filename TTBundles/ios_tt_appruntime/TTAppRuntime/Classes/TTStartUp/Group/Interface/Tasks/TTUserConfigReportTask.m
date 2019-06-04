@@ -16,6 +16,10 @@
 #import "CommonURLSetting.h"
 #import <TTBaseLib/TTBaseMacro.h>
 
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTUserConfigReportTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+4);
+
 @implementation TTUserConfigReportTask
 
 - (NSString *)taskIdentifier {

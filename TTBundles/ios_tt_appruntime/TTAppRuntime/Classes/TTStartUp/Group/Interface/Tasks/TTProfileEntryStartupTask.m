@@ -9,6 +9,9 @@
 #import "TTProfileEntryStartupTask.h"
 #import "TTSettingMineTabManager.h"
 #import "PGCAccountManager.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTProfileEntryStartupTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+10);
 
 @implementation TTProfileEntryStartupTask
 

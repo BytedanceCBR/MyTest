@@ -7,6 +7,9 @@
 //
 
 #import "TTURLCacheSettingTask.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTURLCacheSettingTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+9);
 
 @implementation TTURLCacheSettingTask
 

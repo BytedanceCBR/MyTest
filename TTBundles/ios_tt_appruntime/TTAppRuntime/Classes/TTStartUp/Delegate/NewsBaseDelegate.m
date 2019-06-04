@@ -78,6 +78,8 @@
 #import <TTDialogDirector/TTDialogDirector.h>
 #import <TTMonitor/TTExtensions.h>
 #import <Crashlytics/Crashlytics.h>
+#import "TTLaunchManager.h"
+
 ///...
 //#import "TVLManager.h"
 
@@ -234,17 +236,20 @@ static NSTimeInterval lastTime;
 //refactorLaunchProcess
 - (BOOL)application:(UIApplication *)application refactorLaunchProcessWithOptions:(NSDictionary *)launchOptions {
     [self trackCurrentIntervalInMainThreadWithTag:@"refactor start"];
-    [self didFinishSerialLaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishUILaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishNotificationLaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishSDKsLaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishServiceLaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishInterfaceLaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishOpenURLLaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishADLaunchingForApplication:application WithOptions:launchOptions];
-#ifdef DEBUG
-    [self didFinishDebugLaunchingForApplication:application WithOptions:launchOptions];
-#endif
+    
+    [[TTLaunchManager sharedInstance] launchWithApplication:application andOptions:launchOptions];
+    
+//    [self didFinishSerialLaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishUILaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishNotificationLaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishSDKsLaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishServiceLaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishInterfaceLaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishOpenURLLaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishADLaunchingForApplication:application WithOptions:launchOptions];
+//#ifdef DEBUG
+//    [self didFinishDebugLaunchingForApplication:application WithOptions:launchOptions];
+//#endif
     
     uint64_t mainEndTime = [NSObject currentUnixTime];
     dispatch_barrier_sync(self.barrierQueue, ^{

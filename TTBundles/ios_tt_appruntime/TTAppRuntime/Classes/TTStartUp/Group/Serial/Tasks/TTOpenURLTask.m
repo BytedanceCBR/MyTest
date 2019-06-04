@@ -11,6 +11,9 @@
 #import "SSADManager.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <FHEnvContext.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_MEDIUM);
 
 @implementation TTOpenURLTask
 

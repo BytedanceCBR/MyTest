@@ -9,6 +9,9 @@
 #import "TTMapperRegisterTask.h"
 #import "TTRelationshipMapper.h"
 #import "TTEditUserProfileMapper.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTMapperRegisterTask",FHTaskTypeService,TASK_PRIORITY_HIGH+2);
 
 @implementation TTMapperRegisterTask
 
