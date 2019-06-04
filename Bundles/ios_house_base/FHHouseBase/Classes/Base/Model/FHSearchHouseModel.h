@@ -157,6 +157,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *externalName;
 @property (nonatomic, copy , nullable) NSString *externalUrl;
 @property (nonatomic, copy , nullable) NSString *backUrl;
+@property (nonatomic, copy , nullable) NSString *isExternalSite;
 
 @end
 

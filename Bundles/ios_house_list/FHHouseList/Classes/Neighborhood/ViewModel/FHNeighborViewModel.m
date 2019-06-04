@@ -214,7 +214,7 @@
             [cell updateWithHouseCellModel:cellModel];
             [cell refreshTopMargin: 20];
             
-            if (cellModel.secondModel.externalInfo) {
+            if (cellModel.secondModel.externalInfo && cellModel.secondModel.externalInfo.isExternalSite.boolValue) {
                 [cell updateThirdPartHouseSourceStr:cellModel.secondModel.externalInfo.externalName];
             }
             return cell;

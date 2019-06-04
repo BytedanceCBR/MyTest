@@ -1123,7 +1123,7 @@
                 [scell updateWithHouseCellModel:cellModel];
             }
             
-            if (cellModel.secondModel.externalInfo) {
+            if (cellModel.secondModel.externalInfo && cellModel.secondModel.externalInfo.isExternalSite.boolValue) {
                 [scell updateThirdPartHouseSourceStr:cellModel.secondModel.externalInfo.externalName];
             }
             

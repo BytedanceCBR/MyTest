@@ -97,6 +97,7 @@
                            @"externalName": @"external_name",
                            @"externalUrl": @"external_url",
                            @"backUrl": @"back_url",
+                           @"isExternalSite":@"is_external_site",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
