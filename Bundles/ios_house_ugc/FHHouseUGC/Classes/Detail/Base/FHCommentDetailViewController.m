@@ -26,6 +26,7 @@
 #import "TTTrackerWrapper.h"
 #import "AKHelper.h"
 #import "FHCommonDefines.h"
+#import "FHCommentDetailViewModel.h"
 
 TTDetailModel *tt_detailModel;// test add by zyk
 
@@ -34,7 +35,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
 @property (nonatomic, strong)   UIScrollView       *mainScrollView;
 @property (nonatomic, strong)   FHExploreDetailToolbarView       *toolbarView;
 @property (nonatomic, strong)   UITableView       *tableView;
-@property (nonatomic, strong)   FHPostDetailViewModel       *viewModel;
+@property (nonatomic, strong)   FHCommentDetailViewModel       *viewModel;
 @property(nonatomic,  strong)   TTCommentViewController *commentViewController;
 
 @property (nonatomic,assign) double commentShowTimeTotal;
@@ -52,7 +53,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        
+
     }
     return self;
 }
@@ -69,6 +70,10 @@ TTDetailModel *tt_detailModel;// test add by zyk
 }
 
 - (void)setupData {
+    // 默认帖子
+    if (self.postType == 0) {
+        self.postType = FHUGCPostTypePost;
+    }
     self.beginShowComment = YES;
     self.detailModel = tt_detailModel; // add by zyk
 }
@@ -87,7 +92,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
     _mainScrollView.frame = CGRectMake(0, navOffset, SCREEN_WIDTH, SCREEN_HEIGHT - navOffset - self.toolbarView.height);
     _mainScrollView.delegate = self;
     [self configTableView];
-    self.viewModel = [[FHPostDetailViewModel alloc] initWithController:self tableView:_tableView];
+    self.viewModel = [FHCommentDetailViewModel createDetailViewModelWithPostType:self.postType withController:self tableView:_tableView];
     [self.mainScrollView addSubview:_tableView];
     _tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 300);
     // 评论

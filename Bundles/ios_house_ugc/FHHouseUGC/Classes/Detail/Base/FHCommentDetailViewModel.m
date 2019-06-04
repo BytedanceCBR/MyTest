@@ -11,17 +11,25 @@
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
-@property(nonatomic , weak) UITableView *tableView;
-@property(nonatomic , weak) FHCommentDetailViewController *listController;
-@property(nonatomic , weak) TTHttpTask *httpTask;
-
 @end
 
 @implementation FHCommentDetailViewModel
 
--(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView {
++(instancetype)createDetailViewModelWithPostType:(FHUGCPostType)postType withController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView {
+    FHCommentDetailViewModel *viewModel = NULL;
+    switch (postType) {
+        case FHUGCPostTypePost:
+            viewModel = [[FHCommentDetailViewModel alloc] initWithController:viewController tableView:tableView postType:postType];
+            break;
+    }
+    return viewModel;
+}
+
+-(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType{
     self = [super init];
     if (self) {
+        _items = [NSMutableArray new];
+        self.postType = postType;
         self.listController = viewController;
         self.tableView = tableView;
         [self configTableView];
@@ -34,7 +42,37 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     
-    [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
+    [self registerCellClasses];
+}
+
+#pragma mark - 需要子类实现的方法
+
+// 注册cell类型
+- (void)registerCellClasses {
+    // sub implements.........
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
+}
+// cell class
+- (Class)cellClassForEntity:(id)model {
+    // sub implements.........
+    // Donothing
+    return [FHUGCBaseCell class];
+}
+// cell identifier
+- (NSString *)cellIdentifierForEntity:(id)model {
+    // sub implements.........
+    // Donothing
+    return @"";
+}
+// 网络数据请求
+- (void)startLoadData {
+    // sub implements.........
+    // Donothing
+}
+
+// 刷新数据
+- (void)reloadData {
+    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
@@ -50,23 +88,18 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    if (self.listController.hasValidateData == YES) {
-//        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
-//        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-//        id model = _houseList[indexPath.row];
-//        FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-//        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-//        [cell updateWithHouseCellModel:cellModel];
-//        [cell refreshTopMargin: 20];
-//        return cell;
-//    } else {
-//        // PlaceholderCell
-//        FHPlaceHolderCell *cell = (FHPlaceHolderCell *)[tableView dequeueReusableCellWithIdentifier:kPlaceholderCellId];
-//        return cell;
-//    }
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
-    cell.textLabel.text = @"123";
-    return cell;
+    NSInteger row = indexPath.row;
+    if (row >= 0 && row < self.items.count) {
+        id data = self.items[row];
+        NSString *identifier = [self cellIdentifierForEntity:data];
+        if (identifier.length > 0) {
+            FHUGCBaseCell *cell = (FHUGCBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            cell.baseViewModel = self;
+            [cell refreshWithData:data];
+            return cell;
+        }
+    }
+    return [[UITableViewCell alloc] init];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -93,6 +126,10 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    FHUGCBaseCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (cell.didClickCellBlk) {
+        cell.didClickCellBlk();
+    }
 }
 
 

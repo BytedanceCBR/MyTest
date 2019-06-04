@@ -9,6 +9,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import <Masonry.h>
+#import "FHUGCBaseViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,6 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Cell点击事件，可以不用实现
 @property (nonatomic, copy)     dispatch_block_t       didClickCellBlk;
+
+// 详情页baseViewModel，可以从中拿到需要的数据(高效但是不美观)
+@property (nonatomic, weak)     FHUGCBaseViewModel       *baseViewModel;
 
 @end
 
