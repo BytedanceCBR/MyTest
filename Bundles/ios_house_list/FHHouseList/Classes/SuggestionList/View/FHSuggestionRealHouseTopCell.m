@@ -23,6 +23,7 @@
 @property (nonatomic, strong)FHExtendHotAreaButton      *allFalseHouseBtn;
 @property (nonatomic, strong)UIView *segementContentView;
 @property (nonatomic, strong)UIButton *maskBtn;
+@property (nonatomic, strong)UIButton *maskWebBtn;
 
 @end
 
@@ -168,6 +169,18 @@
         make.right.equalTo(self.contentView);
         make.height.mas_equalTo(30);
         make.width.mas_equalTo(120);
+    }];
+    
+    
+    _maskWebBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_maskWebBtn setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:_maskWebBtn];
+    [_maskWebBtn addTarget:self action:@selector(allWebHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_maskWebBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.allWebHouseBtn).offset(-5);
+        make.right.equalTo(self.allWebHouseBtn).offset(5);
+        make.height.mas_equalTo(40);
+        make.width.mas_equalTo(40);
     }];
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;

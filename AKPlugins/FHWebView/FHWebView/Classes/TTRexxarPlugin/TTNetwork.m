@@ -93,7 +93,7 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
     NSDictionary *params = nil;
     id tempParams = [param objectForKey:[method isEqualToString:@"GET"]? @"params": @"data"];
     if([tempParams isKindOfClass:[NSDictionary class]]){
-        param = tempParams;
+        params = tempParams;
     }else if ([tempParams isKindOfClass:[NSString class]]) {
         NSString *stringJson = (NSString *)tempParams;
         //json字符串
@@ -113,7 +113,10 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
         }
     }
     
-    BOOL needCommonParams = [param tt_boolValueForKey:@"needCommonParams"];
+    BOOL needCommonParams = YES;
+    if ([param isKindOfClass:[NSDictionary class]] && [param.allKeys containsObject:@"needCommonParams"]) {
+        needCommonParams = [param tt_boolValueForKey:@"needCommonParams"];
+    }
     
     if (!url.length) {
         TTBRIDGE_CALLBACK_WITH_MSG(FHBridgeMsgFailed, @"url不能为空");
