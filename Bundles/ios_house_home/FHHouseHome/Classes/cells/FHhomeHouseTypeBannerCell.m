@@ -69,6 +69,9 @@
     CGFloat imageHeight = viewWidth * 69 / 82 * scaleRatio;
     
     for (NSInteger i = 0; i < items.count; i++) {
+        if (i > 3) {
+            break;
+        }
         FHConfigDataOpData2ItemsModel *itemModel = items[i];
 
         UIView *containView = [UIView new];
@@ -135,6 +138,7 @@
       
         if ([TTDeviceHelper isScreenWidthLarge320]) {
             titleLabel.font = [UIFont themeFontSemibold:(titleLabel.text.length > 5 ? 14 : 16) * [TTDeviceHelper scaleToScreen375]];
+            [titleLabel setFrame:CGRectMake(backImage.frame.origin.x + 8, [TTDeviceHelper is667Screen] ? 16 : 20, backImage.frame.size.width - 10, 20)];
         }else
         {
             titleLabel.font = [UIFont themeFontSemibold:12];
@@ -143,9 +147,10 @@
                 [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  5, 14, backImage.frame.size.width - 10, 20)];
             }else
             {
-                [titleLabel setFrame:CGRectMake(backImage.frame.origin.x + ([TTDeviceHelper isScreenWidthLarge320] ? 8 : 10), 14, backImage.frame.size.width - 10, 20)];
+                [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  10, 14, backImage.frame.size.width - 10, 20)];
             }
         }
+        
         titleLabel.textColor = [UIColor themeGray1];
         titleLabel.textAlignment = 0;
         [containView addSubview:titleLabel];
@@ -187,7 +192,7 @@
         subTitleLabel.text = itemModel.descriptionStr;
         subTitleLabel.textAlignment = NSTextAlignmentCenter;
         if ([TTDeviceHelper isScreenWidthLarge320]) {
-            [subTitleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y + titleLabel.frame.size.height, titleLabel.frame.size.width, 20)];
+            [subTitleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y + titleLabel.frame.size.height + 1, titleLabel.frame.size.width, 20)];
             subTitleLabel.font = [UIFont themeFontRegular:11 * [TTDeviceHelper scaleToScreen375]];
         }else
         {
