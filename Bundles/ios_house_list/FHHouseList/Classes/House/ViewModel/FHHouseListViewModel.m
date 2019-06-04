@@ -1531,7 +1531,7 @@
             break;
         case FHHouseTypeSecondHandHouse:
             if (cellModel.secondModel) {
-                if (cellModel.secondModel.externalInfo.externalUrl) {
+                if (cellModel.secondModel.externalInfo.externalUrl &&  cellModel.secondModel.externalInfo.isExternalSite.boolValue) {
                     NSMutableDictionary * dictRealWeb = [NSMutableDictionary new];
                     [dictRealWeb setValue:@(self.houseType) forKey:@"house_type"];
                     [dictRealWeb setValue:traceParam forKey:@"tracer"];

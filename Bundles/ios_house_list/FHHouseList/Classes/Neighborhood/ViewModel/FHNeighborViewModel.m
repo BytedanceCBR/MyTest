@@ -130,7 +130,7 @@
             traceParam[@"search_id"] = self.searchId;
             traceParam[@"rank"] = @(indexPath.row);
             
-            if (cellModel.secondModel.externalInfo.externalUrl) {
+            if (cellModel.secondModel.externalInfo.externalUrl && cellModel.secondModel.externalInfo.isExternalSite.boolValue) {
                 NSMutableDictionary * dictRealWeb = [NSMutableDictionary new];
                 [dictRealWeb setValue:house_type forKey:@"house_type"];
                 [dictRealWeb setValue:traceParam forKey:@"tracer"];
@@ -342,7 +342,7 @@
                 }
                 
                 NSMutableArray *itemArray = [NSMutableArray arrayWithArray:items];
-                if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]] && self.houseList.count == 0) {
                     [itemArray insertObject:topInfoModel atIndex:0];
                 }
                 items = itemArray;
