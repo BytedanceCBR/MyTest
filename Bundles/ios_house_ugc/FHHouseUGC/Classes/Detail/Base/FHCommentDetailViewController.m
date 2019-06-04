@@ -130,7 +130,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
     }
     
     self.toolbarView.toolbarType = FHExploreDetailToolbarTypeArticleComment;
-    //    self.toolbarView.backgroundColorThemeKey = kColorBackground4;
+    
     [self.view addSubview:self.toolbarView];
     
     [self.toolbarView.collectButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -158,6 +158,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
 {
     // 详情内容高度改变-改变主scrollView的控件高度
     [self.tableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
+    [self.commentViewController.commentTableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
     
 //    if (!self.detailKVOHasAdd) {
 //        self.detailKVOHasAdd = YES;
@@ -174,6 +175,8 @@ TTDetailModel *tt_detailModel;// test add by zyk
 
 - (void)p_removeDetailViewKVO
 {
+    [self.tableView removeObserver:self forKeyPath:@"contentSize"];
+    [self.commentViewController.commentTableView removeObserver:self forKeyPath:@"contentSize"];
 //    if (self.detailKVOHasAdd) {
 //        self.detailKVOHasAdd = NO;
 //        [self.detailView.detailWebView removeObserver:self forKeyPath:@"footerStatus"];
@@ -192,6 +195,12 @@ TTDetailModel *tt_detailModel;// test add by zyk
             [self p_tableViewContentSizeChange];
         }
     }
+    // 评论列表
+    if (object == self.commentViewController.commentTableView) {
+        if ([keyPath isEqualToString:@"contentSize"]) {
+            [self p_tableViewContentSizeChange];
+        }
+    }
 }
 
 - (void)p_tableViewContentSizeChange {
@@ -200,9 +209,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
     _topTableViewContentHeight = _tableView.contentSize.height;
     _tableView.scrollEnabled = NO;
     CGFloat commentViewHeight = _mainScrollView.frame.size.height;
-    if (self.commentViewController.commentTableView.contentSize.height < commentViewHeight) {
-        commentViewHeight = self.commentViewController.commentTableView.contentSize.height;
-    }
+
     self.commentViewController.view.frame = CGRectMake(0, _tableView.contentSize.height, self.view.width, commentViewHeight);
     self.commentViewController.commentTableView.scrollEnabled = NO;
     
@@ -211,7 +218,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
 
 - (void)p_buildCommentViewController
 {
-    self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:CGRectMake(0, _mainScrollView.frame.size.height, self.view.width, _mainScrollView.frame.size.height + 1) dataSource:self delegate:self];
+    self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:CGRectMake(0, _mainScrollView.frame.size.height, self.view.width, _mainScrollView.frame.size.height) dataSource:self delegate:self];
     self.commentViewController.enableImpressionRecording = YES;
     [self.commentViewController willMoveToParentViewController:self];
     [self addChildViewController:self.commentViewController];
@@ -567,19 +574,16 @@ TTDetailModel *tt_detailModel;// test add by zyk
     if (scrollView == _mainScrollView) {
         CGFloat offsetY = scrollView.contentOffset.y;
         CGFloat commentViewHeight = _mainScrollView.frame.size.height;
-        if (self.commentViewController.commentTableView.contentSize.height < commentViewHeight) {
-            commentViewHeight = self.commentViewController.commentTableView.contentSize.height;
-        }
         if (offsetY > _topTableViewContentHeight) {
             self.commentViewController.view.frame = CGRectMake(0,  offsetY, self.view.width, commentViewHeight);
             CGFloat offset = offsetY - _topTableViewContentHeight;
             self.commentViewController.commentTableView.contentOffset = CGPointMake(0, offset);
             
-            _mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
+            self.mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
         } else {
             self.commentViewController.view.frame = CGRectMake(0, _tableView.contentSize.height, self.view.width, commentViewHeight);
             self.commentViewController.commentTableView.contentOffset = CGPointMake(0, 0);
-            _mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
+            self.mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
         }
     }
 }
