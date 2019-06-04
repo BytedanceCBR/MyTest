@@ -11,8 +11,15 @@
 
 @interface FHUGCSingleImageCell ()
 
+@property(nonatomic ,strong) UIImageView *icon;
+@property(nonatomic ,strong) UILabel *userName;
+@property(nonatomic ,strong) UILabel *descLabel;
 @property(nonatomic ,strong) UILabel *contentLabel;
 @property(nonatomic ,strong) UIImageView *singleImageView;
+@property(nonatomic ,strong) UIButton *moreBtn;
+@property(nonatomic ,strong) UILabel *position;
+@property(nonatomic ,strong) UIButton *likeBtn;
+@property(nonatomic ,strong) UIButton *commentBtn;
 
 @end
 
@@ -40,33 +47,75 @@
 }
 
 - (void)initViews {
+    
+    self.icon = [[UIImageView alloc] init];
+    _icon.backgroundColor = [UIColor themeGray7];
+    _icon.contentMode = UIViewContentModeScaleAspectFill;
+    _icon.layer.masksToBounds = YES;
+    _icon.layer.cornerRadius = 20;
+    [self.contentView addSubview:_icon];
+    
+    self.userName = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
+    [self.contentView addSubview:_userName];
+    
+    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    [self.contentView addSubview:_descLabel];
+    
+    self.moreBtn = [[UIButton alloc] init];
+    [_moreBtn setImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateNormal];
+//    [_evaluateBtn addTarget:self action:@selector(evaluate) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:_moreBtn];
+    
     self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeGray1]];
+    _contentLabel.numberOfLines = 2;
     [self.contentView addSubview:_contentLabel];
     
     self.singleImageView = [[UIImageView alloc] init];
     _singleImageView.clipsToBounds = YES;
     _singleImageView.contentMode = UIViewContentModeScaleAspectFill;
+    _singleImageView.backgroundColor = [UIColor themeGray7];
+    _singleImageView.layer.masksToBounds = YES;
+    _singleImageView.layer.cornerRadius = 4;
     [self.contentView addSubview:_singleImageView];
 }
 
 - (void)initConstraints {
+    [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentView).offset(20);
+        make.left.mas_equalTo(self.contentView).offset(20);
+        make.width.height.mas_equalTo(40);
+    }];
+    
+    [self.userName mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.icon);
+        make.left.mas_equalTo(self.icon.mas_right).offset(10);
+        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.height.mas_equalTo(22);
+    }];
+    
+    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.icon);
+        make.left.mas_equalTo(self.icon.mas_right).offset(10);
+        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.height.mas_equalTo(17);
+    }];
+    
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(10);
+        make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).offset(20);
         make.right.mas_equalTo(self.contentView).offset(-20);
-        make.height.mas_equalTo(50);
     }];
     
     [self.singleImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).offset(20);
-        make.width.mas_equalTo(150);
-        make.height.mas_equalTo(100);
+        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.height.mas_equalTo(self.singleImageView.mas_width).multipliedBy(251.0f/355.0f);
         make.bottom.mas_equalTo(self.contentView).offset(-10);
     }];
 }
 
--(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
+- (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
     label.textColor = textColor;
@@ -74,10 +123,22 @@
 }
 
 - (void)refreshWithData:(id)data {
-    self.contentLabel.text = @"据说经常看美女可以防止猝死";
-//    self.singleImageView.image = [UIImage imageNamed:@"fh_mine_avatar"];
+    FHFeedContentModel *model = (FHFeedContentModel *)data;
+    self.contentLabel.text = model.title;
+    NSString *imageUrl = model.middleImage.url;
     
-    [self.singleImageView bd_setImageWithURL:[NSURL URLWithString:@"http://dingyue.nosdn.127.net/ZhOMrnt0EI7KrfveuYBe96RC6jlGUWdKf0IVDx96qzzL31552910938719.jpeg"] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    CGFloat width = [model.middleImage.width floatValue];
+    CGFloat height = [model.middleImage.height floatValue];
+    [self.singleImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(self.singleImageView.mas_width).multipliedBy(height/width);
+    }];
+    
+    [self.singleImageView bd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholder:nil];
+    
+    self.userName.text = @"汤唯";
+    self.descLabel.text = @"今天 14:20";
+    
+//    [self.icon bd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
 }
 
 @end

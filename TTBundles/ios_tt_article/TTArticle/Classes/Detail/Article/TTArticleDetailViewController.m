@@ -2565,13 +2565,14 @@
 }
 
 #pragma mark - TTCommentDataSource & TTCommentDelegate
-
+extern  TTDetailModel *tt_detailModel;
 - (void)tt_loadCommentsForMode:(TTCommentLoadMode)loadMode
         possibleLoadMoreOffset:(NSNumber *)offset
                        options:(TTCommentLoadOptions)options
                    finishBlock:(TTCommentLoadFinishBlock)finishBlock
 {
     TTCommentDataManager *commentDataManager = [[TTCommentDataManager alloc] init];
+     tt_detailModel = self.detailModel;
     [commentDataManager startFetchCommentsWithGroupModel:self.detailModel.article.groupModel forLoadMode:loadMode  loadMoreOffset:offset loadMoreCount:@(TTCommentDefaultLoadMoreFetchCount) msgID:self.detailModel.msgID options:options finishBlock:finishBlock];
 }
 
