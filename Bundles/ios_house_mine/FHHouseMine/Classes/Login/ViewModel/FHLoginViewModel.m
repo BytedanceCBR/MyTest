@@ -104,7 +104,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     __weak typeof(self)wself = self;
     NSString *serviceName = [TTAccount sharedAccount].service;
     if (serviceName.length < 1) {
-        [self otherLoginAction];
+        [self showOneKeyLoginView:NO phoneNum:nil];
         return;
     }
 
@@ -130,19 +130,19 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                     };
     if (isOneKeyLogin) {
         if ([[TTAccount sharedAccount].service isEqualToString:TTAccountMobile]) {
-            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国移动认证服务条款》以及《幸福里用户协议》和《隐私协议》"];
+            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国移动认证服务条款》以及《幸福里用户协议》和《隐私政策》"];
             serviceRange = NSMakeRange(7, 10);
             userProtocolRange = NSMakeRange(21, 7);
             privacyRange = NSMakeRange(31, 4);
             urlStr = [NSString stringWithFormat:@"https://wap.cmpassport.com/resources/html/contract.html"];
         }else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountTelecom]) {
-            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国电信认证服务协议》以及《幸福里用户协议》和《隐私协议》"];
+            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国电信认证服务协议》以及《幸福里用户协议》和《隐私政策》"];
             serviceRange = NSMakeRange(7, 10);
             userProtocolRange = NSMakeRange(21, 7);
             privacyRange = NSMakeRange(31, 4);
             urlStr = [NSString stringWithFormat:@"https://e.189.cn/sdk/agreement/detail.do?hidetop=true"];
         }else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountUnion]) {
-            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国联通服务与隐私协议》以及《幸福里用户协议》和《隐私协议》"];
+            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国联通服务与隐私协议》以及《幸福里用户协议》和《隐私政策》"];
             serviceRange = NSMakeRange(7, 11);
             userProtocolRange = NSMakeRange(22, 7);
             privacyRange = NSMakeRange(32, 4);
@@ -164,7 +164,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [wself goToSecretProtocol];
         }];
     }else {
-        attrText = [[NSMutableAttributedString alloc] initWithString:@"我已阅读并同意 《幸福里用户协议》及《隐私协议》"];
+        attrText = [[NSMutableAttributedString alloc] initWithString:@"我已阅读并同意 《幸福里用户协议》及《隐私政策》"];
         [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
         userProtocolRange = NSMakeRange(9, 7);
         privacyRange = NSMakeRange(19, 4);
@@ -315,7 +315,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)goToSecretProtocol
 {
     self.noDismissVC = YES;
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/private_policy.html&title=隐私协议&hide_more=1",[FHMineAPI host]];
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/private_policy.html&title=隐私政策&hide_more=1",[FHMineAPI host]];
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
