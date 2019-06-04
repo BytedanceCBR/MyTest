@@ -1123,6 +1123,10 @@
                 [scell updateWithHouseCellModel:cellModel];
             }
             
+            if (cellModel.secondModel.externalInfo) {
+                [scell updateThirdPartHouseSourceStr:cellModel.secondModel.externalInfo.externalName];
+            }
+            
             cell = scell;
         }
         

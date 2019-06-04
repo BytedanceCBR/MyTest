@@ -204,6 +204,10 @@
             CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
             [cell updateWithHouseCellModel:cellModel];
             [cell refreshTopMargin: 20];
+            
+            if (cellModel.secondModel.externalInfo) {
+                [cell updateThirdPartHouseSourceStr:cellModel.secondModel.externalInfo.externalName];
+            }
             return cell;
         }
     } else {
