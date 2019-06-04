@@ -22,6 +22,7 @@
 @property (nonatomic, strong)FHSugSubscribeDataDataSubscribeInfoModel *currentModel;
 @property (nonatomic, strong)FHExtendHotAreaButton      *allFalseHouseBtn;
 @property (nonatomic, strong)UIView *segementContentView;
+@property (nonatomic, strong)UIButton *maskBtn;
 
 @end
 
@@ -158,6 +159,17 @@
         make.height.mas_equalTo(12);
     }];
     
+    _maskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_maskBtn setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:_maskBtn];
+    [_maskBtn addTarget:self action:@selector(allFalseHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_maskBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.falseHouseNumLabel).offset(-3);
+        make.right.equalTo(self.contentView);
+        make.height.mas_equalTo(30);
+        make.width.mas_equalTo(120);
+    }];
+    
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
@@ -189,7 +201,7 @@
 {
     FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)self.currentModel;
 
-    if (model.searchId) {
+    if (model.searchId && [model.fakeHouseTotal integerValue] > 0) {
         NSMutableDictionary *info = [NSMutableDictionary new];
         [info setValue:model.searchId forKey:@"searchId"];
         [info setValue:self.tracerDict forKey:@"tracer"];
