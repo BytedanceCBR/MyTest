@@ -13,6 +13,8 @@
 
 @end
 
+static int fh_count = 1;
+
 @implementation FHCommentDetailViewModel
 
 +(instancetype)createDetailViewModelWithPostType:(FHUGCPostType)postType withController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView {
@@ -31,6 +33,7 @@
         _items = [NSMutableArray new];
         self.postType = postType;
         self.listController = viewController;
+        fh_count += 2;
         self.tableView = tableView;
         [self configTableView];
     }
@@ -83,7 +86,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return fh_count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
