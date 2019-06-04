@@ -1104,6 +1104,8 @@
     self.tagLabel.text = [NSString stringWithFormat:@" %@",sourceStr];
     self.tagLabel.textColor = [UIColor themeGray3];
     self.tagLabel.font = [UIFont themeFontRegular:12];
+    
+    self.imageTagLabel.hidden = YES;
 }
 
 - (void)updateThirdPartHouseSourceStr:(NSString *)sourceStr
