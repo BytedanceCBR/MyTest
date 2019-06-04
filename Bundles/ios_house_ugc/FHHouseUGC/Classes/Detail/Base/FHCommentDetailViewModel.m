@@ -83,7 +83,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    return 3;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -99,7 +99,7 @@
             return cell;
         }
     }
-    return [[UITableViewCell alloc] init];
+    return [[FHUGCBaseCell alloc] init];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -131,6 +131,5 @@
         cell.didClickCellBlk();
     }
 }
-
 
 @end

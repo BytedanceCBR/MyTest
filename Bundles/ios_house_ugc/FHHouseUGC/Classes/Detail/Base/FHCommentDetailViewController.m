@@ -41,7 +41,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
 @property (nonatomic,assign) double commentShowTimeTotal;
 @property (nonatomic,strong) NSDate *commentShowDate;
 @property (nonatomic, assign) BOOL beginShowComment;
-@property (nonatomic, assign)   CGFloat       topContentOriginY;
+@property (nonatomic, assign)   CGFloat       topTableViewContentHeight;
 
 // test
 @property (nonatomic, strong) TTDetailModel *detailModel;
@@ -66,6 +66,8 @@ TTDetailModel *tt_detailModel;// test add by zyk
 
 - (void)dealloc
 {
+    [self p_removeDetailViewKVO];
+    [self p_removeObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -74,6 +76,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
     if (self.postType == 0) {
         self.postType = FHUGCPostTypePost;
     }
+    self.topTableViewContentHeight = 0;
     self.beginShowComment = YES;
     self.detailModel = tt_detailModel; // add by zyk
 }
@@ -94,27 +97,17 @@ TTDetailModel *tt_detailModel;// test add by zyk
     [self configTableView];
     self.viewModel = [FHCommentDetailViewModel createDetailViewModelWithPostType:self.postType withController:self tableView:_tableView];
     [self.mainScrollView addSubview:_tableView];
-    _tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 300);
+    _tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, _mainScrollView.frame.size.height);
     // 评论
     [self p_buildCommentViewController];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self test];
-    });
-}
-
-- (void)test {
-    _tableView.frame = CGRectMake(0, 0, _tableView.contentSize.width, _tableView.contentSize.height);
-    _topContentOriginY = _tableView.contentSize.height;
-    _tableView.scrollEnabled = NO;
-    self.commentViewController.view.frame = CGRectMake(0, _tableView.contentSize.height, self.view.width, _mainScrollView.frame.size.height);
-    self.commentViewController.commentTableView.scrollEnabled = NO;
-    
-    _mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
+    // 观察者
+    [self p_addObserver];
+    // KVO
+    [self p_addDetailViewKVO];
 }
 
 - (void)setupNaviBar {
     [self setupDefaultNavBar:YES];
-    
 }
 
 - (void)configTableView {
@@ -127,9 +120,6 @@ TTDetailModel *tt_detailModel;// test add by zyk
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
     _tableView.backgroundColor = [UIColor grayColor];
-    //    if ([TTDeviceHelper isIPhoneXDevice]) {
-    //        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-    //    }
 }
 
 - (void)setupToolbarView {
@@ -154,20 +144,79 @@ TTDetailModel *tt_detailModel;// test add by zyk
     [self p_refreshToolbarView];
 }
 
+#pragma mark - KVO
+
+- (void)p_addObserver {
+    
+}
+
+- (void)p_removeObserver {
+    
+}
+
+- (void)p_addDetailViewKVO
+{
+    // 详情内容高度改变-改变主scrollView的控件高度
+    [self.tableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
+    
+//    if (!self.detailKVOHasAdd) {
+//        self.detailKVOHasAdd = YES;
+//
+//        //webView footerStatus 相关KVO 由VC处理
+//        [self.detailView.detailWebView addObserver:self forKeyPath:@"footerStatus" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+//
+//        //article更新的KVO
+//        [self.detailModel.article addObserver:self forKeyPath:@"userLike" options:NSKeyValueObservingOptionNew context:NULL];
+//        [self.detailModel.article addObserver:self forKeyPath:@"userRepined" options:NSKeyValueObservingOptionNew context:NULL];
+//        [self.detailModel.article addObserver:self forKeyPath:@"actionDataModel.commentCount" options:NSKeyValueObservingOptionNew context:NULL];
+//    }
+}
+
+- (void)p_removeDetailViewKVO
+{
+//    if (self.detailKVOHasAdd) {
+//        self.detailKVOHasAdd = NO;
+//        [self.detailView.detailWebView removeObserver:self forKeyPath:@"footerStatus"];
+//        [self.detailModel.article removeObserver:self forKeyPath:@"userLike"];
+//        [self.detailModel.article removeObserver:self forKeyPath:@"userRepined"];
+//        [self.detailModel.article removeObserver:self forKeyPath:@"actionDataModel.commentCount"];
+//    }
+    
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+{
+    // 详情页列表
+    if (object == self.tableView) {
+        if ([keyPath isEqualToString:@"contentSize"]) {
+            [self p_tableViewContentSizeChange];
+        }
+    }
+}
+
+- (void)p_tableViewContentSizeChange {
+    // 改变tableView frame为内容高度
+    _tableView.frame = CGRectMake(0, 0, _tableView.contentSize.width, _tableView.contentSize.height);
+    _topTableViewContentHeight = _tableView.contentSize.height;
+    _tableView.scrollEnabled = NO;
+    CGFloat commentViewHeight = _mainScrollView.frame.size.height;
+    if (self.commentViewController.commentTableView.contentSize.height < commentViewHeight) {
+        commentViewHeight = self.commentViewController.commentTableView.contentSize.height;
+    }
+    self.commentViewController.view.frame = CGRectMake(0, _tableView.contentSize.height, self.view.width, commentViewHeight);
+    self.commentViewController.commentTableView.scrollEnabled = NO;
+    
+    _mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
+}
+
 - (void)p_buildCommentViewController
 {
-//    self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:[self p_contentVisableRect] dataSource:self delegate:self];
-    self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:CGRectMake(0, 320, self.view.width, 200) dataSource:self delegate:self];
+    self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:CGRectMake(0, _mainScrollView.frame.size.height, self.view.width, _mainScrollView.frame.size.height + 1) dataSource:self delegate:self];
     self.commentViewController.enableImpressionRecording = YES;
     [self.commentViewController willMoveToParentViewController:self];
     [self addChildViewController:self.commentViewController];
     [self.commentViewController didMoveToParentViewController:self];
-    
-    self.commentViewController.view.frame = CGRectMake(0, 320, self.view.width, 200);
     [self.mainScrollView addSubview:self.commentViewController.view];
-//    self.tableView.tableFooterView = self.commentViewController.view;
-//    self.tableView.tableFooterView.frame = CGRectMake(0, 0, self.view.width, 200);
-    
 }
 
 //当前详情页可视范围标准rect(去掉顶部导航,且根据articleType判断是否去掉底部toolbar)
@@ -517,19 +566,19 @@ TTDetailModel *tt_detailModel;// test add by zyk
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView == _mainScrollView) {
         CGFloat offsetY = scrollView.contentOffset.y;
-        if (offsetY > _topContentOriginY) {
-            self.commentViewController.view.frame = CGRectMake(0,  offsetY, self.view.width, _mainScrollView.frame.size.height);
-            //    self.commentViewController.commentTableView.scrollEnabled = NO;
-            CGFloat offset = offsetY - _topContentOriginY;
+        CGFloat commentViewHeight = _mainScrollView.frame.size.height;
+        if (self.commentViewController.commentTableView.contentSize.height < commentViewHeight) {
+            commentViewHeight = self.commentViewController.commentTableView.contentSize.height;
+        }
+        if (offsetY > _topTableViewContentHeight) {
+            self.commentViewController.view.frame = CGRectMake(0,  offsetY, self.view.width, commentViewHeight);
+            CGFloat offset = offsetY - _topTableViewContentHeight;
             self.commentViewController.commentTableView.contentOffset = CGPointMake(0, offset);
             
             _mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
         } else {
-            self.commentViewController.view.frame = CGRectMake(0, _tableView.contentSize.height, self.view.width, _mainScrollView.frame.size.height);
-            //    self.commentViewController.commentTableView.scrollEnabled = NO;
-            
+            self.commentViewController.view.frame = CGRectMake(0, _tableView.contentSize.height, self.view.width, commentViewHeight);
             self.commentViewController.commentTableView.contentOffset = CGPointMake(0, 0);
-            
             _mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
         }
     }
