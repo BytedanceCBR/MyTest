@@ -1391,6 +1391,17 @@
                 break;
                 case FHHouseTypeSecondHandHouse: {
                     if (cellModel.secondModel) {
+                        if (cellModel.secondModel.externalInfo.externalUrl) {
+                            NSMutableDictionary * dictRealWeb = [NSMutableDictionary new];
+                            [dictRealWeb setValue:@(self.houseType) forKey:@"house_type"];
+                            [dictRealWeb setValue:tracerParam forKey:@"tracer"];
+                            [dictRealWeb setValue:cellModel.secondModel.externalInfo.externalUrl forKey:@"url"];
+                            [dictRealWeb setValue:cellModel.secondModel.externalInfo.backUrl forKey:@"backUrl"];
+                            
+                            TTRouteUserInfo *userInfoReal = [[TTRouteUserInfo alloc] initWithInfo:dictRealWeb];
+                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web"] userInfo:userInfoReal];
+                            return;
+                        }
                         FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
                         urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
                     }

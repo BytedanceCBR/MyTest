@@ -106,6 +106,7 @@
         if (self.listController.houseType == FHHouseTypeSecondHandHouse) {
             // 二手房
             FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
+            
             if (theModel) {
                 urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
             }
@@ -130,9 +131,22 @@
             traceParam[@"search_id"] = self.searchId;
             traceParam[@"rank"] = @(indexPath.row);
             
+            if (cellModel.secondModel.externalInfo.externalUrl) {
+                NSMutableDictionary * dictRealWeb = [NSMutableDictionary new];
+                [dictRealWeb setValue:house_type forKey:@"house_type"];
+                [dictRealWeb setValue:traceParam forKey:@"tracer"];
+                [dictRealWeb setValue:cellModel.secondModel.externalInfo.externalUrl forKey:@"url"];
+                [dictRealWeb setValue:cellModel.secondModel.externalInfo.backUrl forKey:@"backUrl"];
+                
+                TTRouteUserInfo *userInfoReal = [[TTRouteUserInfo alloc] initWithInfo:dictRealWeb];
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web"] userInfo:userInfoReal];
+                return;
+            }
+            
             NSDictionary *dict = @{@"house_type":@(self.listController.houseType) ,
                                    @"tracer": traceParam
                                    };
+            
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             
             NSURL *url = [NSURL URLWithString:urlStr];
