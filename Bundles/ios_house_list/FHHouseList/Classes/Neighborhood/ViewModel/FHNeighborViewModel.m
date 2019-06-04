@@ -31,7 +31,6 @@
 @property(nonatomic , weak) TTHttpTask *httpTask;
 @property(nonatomic , assign) BOOL lastHasMore;
 @property(nonatomic , assign) BOOL hasEnterCategory;
-
 @end
 
 @implementation FHNeighborViewModel
@@ -185,7 +184,17 @@
                     if ([topRealCell respondsToSelector:@selector(refreshUI:)]) {
                         [topRealCell refreshUI:realHouseInfo];
                     }
-                    topRealCell.tracerDict = self.houseShowTracerDic;
+                    
+                    NSString *origin_from = self.listController.tracerDict[@"origin_from"];
+                    NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
+
+                    NSMutableDictionary *traceParam = @{}.mutableCopy;
+                    traceParam[@"category_name"] = @"same_neighborhood_list";
+                    traceParam[@"element_from"] = @"be_null";
+                    traceParam[@"origin_from"] = origin_from ? : @"be_null";
+                    traceParam[@"origin_search_id"] = origin_search_id ? : @"be_null";
+                    traceParam[@"search_id"] = self.searchId;
+                    topRealCell.tracerDict = traceParam;
                     
                     __weak typeof(self) weakSelf = self;
                     topRealCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
