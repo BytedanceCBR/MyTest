@@ -16,7 +16,6 @@
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic ,strong) UITableView *tableView;
-@property(nonatomic, strong) NSMutableArray *dataList;
 
 @end
 
