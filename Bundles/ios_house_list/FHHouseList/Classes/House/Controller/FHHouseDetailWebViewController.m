@@ -87,10 +87,10 @@ static NSString *s_oldAgent = nil;
 {
     CGFloat topTipheight = _isShowTopTip ? 30 : 0 ;
     if (@available(iOS 11.0 , *)) {
-        CGRect rect = CGRectMake(0.0f, 44.f + self.view.tt_safeAreaInsets.top + topTipheight, self.view.bounds.size.width, self.view.bounds.size.height - (44.f + self.view.tt_safeAreaInsets.top));
+        CGRect rect = CGRectMake(0.0f, 44.f + self.view.tt_safeAreaInsets.top + topTipheight, self.view.bounds.size.width, self.view.bounds.size.height - (44.f + self.view.tt_safeAreaInsets.top) - topTipheight);
         return rect;
     } else {
-        CGRect rect = CGRectMake(0.0f, 65.0f + topTipheight, self.view.bounds.size.width, self.view.bounds.size.height - 65.0f);
+        CGRect rect = CGRectMake(0.0f, 65.0f + topTipheight, self.view.bounds.size.width, self.view.bounds.size.height - 65.0f - topTipheight);
         return rect;
     }
 }

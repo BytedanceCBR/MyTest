@@ -92,12 +92,7 @@
         
         [backImage setBackgroundColor:[UIColor whiteColor]];
         backImage.layer.cornerRadius = 2;
-//        backImage.layer.masksToBounds = YE
-        // 因为shandowOffset默认为(0,3),此处需要修正下
         backImage.userInteractionEnabled = YES;
-//        backImage.layer.shadowOffset = CGSizeMake(0, 0);
-//        backImage.layer.shadowColor = [UIColor themeGray3].CGColor;
-//        backImage.layer.shadowOpacity = 0.2;
         backImage.layer.masksToBounds = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(houseTypeBannerClick:)];
         [backImage addGestureRecognizer:tapGesture];
@@ -134,11 +129,11 @@
         UILabel *titleLabel = [UILabel new];
         titleLabel.text = itemModel.title;
         titleLabel.textAlignment = NSTextAlignmentCenter;
-        [titleLabel setFrame:CGRectMake(backImage.frame.origin.x + ([TTDeviceHelper isScreenWidthLarge320] ? 8 : 10), 17, backImage.frame.size.width - 10, 20)];
-      
+
+        
         if ([TTDeviceHelper isScreenWidthLarge320]) {
             titleLabel.font = [UIFont themeFontSemibold:(titleLabel.text.length > 5 ? 14 : 16) * [TTDeviceHelper scaleToScreen375]];
-            [titleLabel setFrame:CGRectMake(backImage.frame.origin.x + 8, [TTDeviceHelper is667Screen] ? 16 : 20, backImage.frame.size.width - 10, 20)];
+            [titleLabel setFrame:CGRectMake(backImage.frame.origin.x + 8, 17 * [TTDeviceHelper scaleToScreen375], backImage.frame.size.width - 10, 20)];
         }else
         {
             titleLabel.font = [UIFont themeFontSemibold:12];
@@ -192,7 +187,7 @@
         subTitleLabel.text = itemModel.descriptionStr;
         subTitleLabel.textAlignment = NSTextAlignmentCenter;
         if ([TTDeviceHelper isScreenWidthLarge320]) {
-            [subTitleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y + titleLabel.frame.size.height + 1, titleLabel.frame.size.width, 20)];
+            [subTitleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y + titleLabel.frame.size.height , titleLabel.frame.size.width, 20)];
             subTitleLabel.font = [UIFont themeFontRegular:11 * [TTDeviceHelper scaleToScreen375]];
         }else
         {
