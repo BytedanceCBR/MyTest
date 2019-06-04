@@ -31,6 +31,7 @@
 @property(nonatomic , weak) TTHttpTask *httpTask;
 @property(nonatomic , assign) BOOL lastHasMore;
 @property(nonatomic , assign) BOOL hasEnterCategory;
+@property(nonatomic , strong) NSString * neiborHoorId;
 @end
 
 @implementation FHNeighborViewModel
@@ -203,6 +204,11 @@
                     topRealCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
                         
                     };
+                    NSString *stringQuery = [NSString stringWithFormat:@"neighborhood_id=%@",self.neiborHoorId];
+                    if (self.condition) {
+                        stringQuery = [stringQuery stringByAppendingString:self.condition];
+                    }
+                    topRealCell.searchQuery = stringQuery;
                     return topRealCell;
                 }
             }
@@ -399,6 +405,7 @@
         [self.httpTask cancel];
     }
     __weak typeof(self) wself = self;
+    self.neiborHoorId = neighborhoodId;
     self.httpTask = [FHHouseListAPI requestHouseInSameNeighborhoodQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHSameNeighborhoodHouseResponse class] completion:^(FHSameNeighborhoodHouseResponse * _Nonnull model, NSError * _Nonnull error) {
         [wself processQueryData:model error:error];
     }];

@@ -1084,6 +1084,7 @@
                         topRealCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
                             
                         };
+                        topRealCell.searchQuery = self.subScribeQuery;
                         return topRealCell;
                     }
                 }

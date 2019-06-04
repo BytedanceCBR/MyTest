@@ -47,6 +47,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property(nonatomic , strong) FHTracerModel *tracerModel;
 @property (nonatomic , strong) NSMutableDictionary *houseSearchDic;
 @property(nonatomic , strong) NSString *requestSearchId;
+@property(nonatomic , strong) NSString *requestSearchQuery;
 @property(nonatomic , strong) NSString *bannerImageUrl;
 @property(nonatomic , strong) NSString *titleTopStr;
 @property(nonatomic , strong) NSString *titleBottomStr;
@@ -75,6 +76,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         self.houseSearchDic = [NSMutableDictionary new];
         
         _requestSearchId = paramObj.allParams[@"searchId"];
+        _requestSearchQuery = paramObj.allParams[@"searchQuery"];
         
         self.houseList = [NSMutableArray new];
         
@@ -87,13 +89,13 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         WeakSelf;
         self.currentViewController.emptyView.retryBlock = ^{
             StrongSelf;
-            [self requestErshouHouseListData:YES query:nil offset:self.houseList.count searchId:self.requestSearchId];
+            [self requestErshouHouseListData:YES query:_requestSearchQuery offset:self.houseList.count searchId:self.requestSearchId];
         };
         
         self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
             StrongSelf;
             if ([FHEnvContext isNetworkConnected]) {
-                [self requestErshouHouseListData:YES query:nil offset:self.houseList.count searchId:self.requestSearchId];
+                [self requestErshouHouseListData:YES query:_requestSearchQuery offset:self.houseList.count searchId:self.requestSearchId];
             }else
             {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -113,7 +115,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         
         [viewController tt_startUpdate];
         
-        [self requestErshouHouseListData:YES query:nil offset:self.houseList.count searchId:self.requestSearchId];
+        [self requestErshouHouseListData:YES query:_requestSearchQuery offset:self.houseList.count searchId:self.requestSearchId];
     }
     return self;
 }
@@ -235,7 +237,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [_requestTask cancel];
     NSMutableDictionary *paramsRequest = [NSMutableDictionary new];
     [paramsRequest setValue:@(self.houseType) forKey:@"house_type"];
-    [paramsRequest setValue:@(50) forKey:@"count"];
+//    [paramsRequest setValue:@(50) forKey:@"count"];
     if (_requestSearchId) {
         [paramsRequest setValue:_requestSearchId forKey:@"searchId"];
     }
@@ -404,7 +406,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         [cell refreshTopMargin: 20];
         [cell updateWithHouseCellModel:cellModel];
         
-        if (cellModel.secondModel) {
+        if (cellModel.secondModel.externalInfo && cellModel.secondModel.externalInfo.isExternalSite) {
             [cell updateFakeHouseImageWithUrl:cellModel.secondModel.fakeReason.fakeReasonImage.url andSourceStr:cellModel.secondModel.externalInfo.externalName];
         }
         return cell;

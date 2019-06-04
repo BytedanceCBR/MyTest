@@ -85,6 +85,7 @@
 //subscribe
 @property (nonatomic , assign) NSInteger subScribeOffset;
 @property (nonatomic , strong) NSString * subScribeSearchId;
+@property (nonatomic , strong) NSString * queryStr;
 @property (nonatomic , strong) NSString * subScribeQuery;
 @property (nonatomic , strong) NSDictionary * subScribeShowDict;
 @property (nonatomic , assign) BOOL isShowSubscribeCell;
@@ -305,6 +306,7 @@
             if (isFromRecommend) {
                 [self requestRecommendErshouHouseListData:isRefresh query:query offset:offset searchId:self.recommendSearchId];
             } else {
+                self.query = query;
                 [self requestErshouHouseListData:isRefresh query:query offset:offset searchId:searchId];
             }
             break;
@@ -1230,6 +1232,7 @@
                         if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
                             FHSugListRealHouseTopInfoModel *realHouseInfo = (FHSugListRealHouseTopInfoModel *)cellModel.realHouseTopModel;
                             FHSuggestionRealHouseTopCell *topRealCell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListTopRealInfoCellId];
+                            topRealCell.searchQuery = self.query;
                             if ([topRealCell respondsToSelector:@selector(refreshUI:)]) {
                                 [topRealCell refreshUI:realHouseInfo];
                             }

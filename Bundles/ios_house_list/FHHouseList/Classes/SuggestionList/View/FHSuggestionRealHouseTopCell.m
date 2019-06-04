@@ -204,6 +204,7 @@
     if (model.searchId && [model.fakeHouseTotal integerValue] > 0) {
         NSMutableDictionary *info = [NSMutableDictionary new];
         [info setValue:model.searchId forKey:@"searchId"];
+        [info setValue:self.searchQuery forKey:@"searchQuery"];
         [info setValue:self.tracerDict forKey:@"tracer"];
         
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];

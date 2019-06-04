@@ -1101,7 +1101,7 @@
     
     [self.fakeImageView setFrame:CGRectMake((self.mainImageView.frame.size.width - 100) / 2, (self.mainImageView.frame.size.height - 39) / 2, 100, 39)];
     
-    self.tagLabel.text = sourceStr;
+    self.tagLabel.text = [NSString stringWithFormat:@" %@",sourceStr];
     self.tagLabel.textColor = [UIColor themeGray3];
     self.tagLabel.font = [UIFont themeFontRegular:12];
 }
