@@ -1106,6 +1106,7 @@
     self.tagLabel.font = [UIFont themeFontRegular:12];
     
     self.imageTagLabel.hidden = YES;
+    self.imageTagLabelBgView.hidden = YES;
 }
 
 - (void)updateThirdPartHouseSourceStr:(NSString *)sourceStr
