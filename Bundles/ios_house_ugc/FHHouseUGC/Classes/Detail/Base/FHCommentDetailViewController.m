@@ -546,10 +546,10 @@ TTDetailModel *tt_detailModel;// test add by zyk
     }
     
     // toolbar 禁表情
-    BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:kTTKCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
-    if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
-        self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
-    }
+    //    BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:kTTKCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
+    //    if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
+    //        self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
+    //    }
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController digCommentWithCommentModel:(id<TTCommentModelProtocol>)model
