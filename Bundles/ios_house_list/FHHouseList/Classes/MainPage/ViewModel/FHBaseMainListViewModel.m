@@ -552,10 +552,14 @@
             [self.tableView.mj_footer endRefreshing];
         }
         
+        if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter && _showRealHouseTop) {
+            self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
+        }
+        
         if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter && !self.showRealHouseTop) {
             [self showNotifyMessage:refreshTip];
         }
-        
+                
         if (self.houseList.count == 0 && self.sugesstHouseList.count == 0) {
             [self showErrorMask:YES tip:FHEmptyMaskViewTypeNoDataForCondition enableTap:NO ];
         } else {
@@ -778,7 +782,6 @@
     _redirectTipView.clickRightBlock = ^{
         [wself clickRedirectTip];
     };
-    
 }
 
 #pragma mark - top banner rent delegate

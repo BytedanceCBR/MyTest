@@ -824,9 +824,14 @@
             }
         }
 
+        if (self.isRefresh && itemArray.count > 0 && _showRealHouseTop) {
+            self.tableView.contentOffset = CGPointMake(0, 0);
+        }
+        
         if (self.isRefresh && self.viewModelDelegate && itemArray.count > 0 && !_showRealHouseTop) {
             [self.viewModelDelegate showNotify:refreshTip inViewModel:self];
         }
+     
         
         if (self.houseList.count == 0 && self.sugesstHouseList.count == 0) {
             [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];
