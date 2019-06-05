@@ -97,11 +97,26 @@
         make.height.equalTo(self.segementContentView);
     }];
     
+    _realHouseUnitLabel= [[UILabel alloc] init];
+    _realHouseUnitLabel.font = [UIFont themeFontDINAlternateBold:[TTDeviceHelper isScreenWidthLarge320] ? 15 : 11];
+    _realHouseUnitLabel.textColor = [UIColor themeRed3];
+    _realHouseUnitLabel.text = @"套";
+    _realHouseUnitLabel.textAlignment = NSTextAlignmentLeft;
+    [_segementContentView addSubview:_realHouseUnitLabel];
+    
+    
+    [_realHouseUnitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.realHouseNumLabel.mas_right).offset(0);
+        make.centerY.equalTo(self.segementContentView);
+        make.height.equalTo(self.segementContentView);
+    }];
+    
     _segementLine = [UIView new];
     [_segementLine setBackgroundColor:[UIColor themeGray6]];
     [_segementContentView addSubview:_segementLine];
     [_segementLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(self.segementContentView);
+        make.centerX.equalTo(self.realHouseUnitLabel.mas_right).offset(8);
+        make.centerY.equalTo(self.segementContentView);
         make.width.mas_equalTo(1);
         make.height.mas_equalTo(12);
     }];
@@ -113,7 +128,7 @@
     _falseHouseLabel.textAlignment = NSTextAlignmentLeft;
     [_segementContentView addSubview:_falseHouseLabel];
     [_falseHouseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(_segementLine).offset([TTDeviceHelper isScreenWidthLarge320] ? 18 : 14);
+        make.left.equalTo(_segementLine).offset(8);
         make.centerY.equalTo(self.segementContentView);
     }];
     
@@ -125,6 +140,20 @@
     
     [_falseHouseNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(_falseHouseLabel.mas_right).offset(0);
+        make.centerY.equalTo(self.segementContentView);
+        make.height.equalTo(self.segementContentView);
+    }];
+    
+    
+    _falseHouseUnitLabel = [[UILabel alloc] init];
+    _falseHouseUnitLabel.font = [UIFont themeFontDINAlternateBold:[TTDeviceHelper isScreenWidthLarge320] ? 15 : 11];
+    _falseHouseUnitLabel.textColor = [UIColor themeRed3];
+    _falseHouseUnitLabel.text = @"套";
+    _falseHouseUnitLabel.textAlignment = NSTextAlignmentLeft;
+    [_segementContentView addSubview:_falseHouseUnitLabel];
+    
+    [_falseHouseUnitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.falseHouseNumLabel.mas_right).offset(0);
         make.centerY.equalTo(self.segementContentView);
         make.height.equalTo(self.segementContentView);
     }];
@@ -243,9 +272,10 @@
         
         _titleLabel.text = model.totalTitle;
         _realHouseLabel.text = model.trueTitle;
-        _realHouseNumLabel.text = [NSString stringWithFormat:@"  %@套",model.trueHouseTotal ? : @"0"];
+      
+        _realHouseNumLabel.text = [NSString stringWithFormat:@" %@",model.trueHouseTotal ? : @"0"];
         _falseHouseLabel.text = model.fakeTitle;
-        _falseHouseNumLabel.text = [NSString stringWithFormat:@"  %@套",model.fakeHouseTotal ? : @"0"];;
+        _falseHouseNumLabel.text = [NSString stringWithFormat:@" %@",model.fakeHouseTotal ? : @"0"];;
         if([model.fakeHouseTotal integerValue] == 0)
         {
             _allFalseHouseBtn.hidden = YES;
@@ -254,30 +284,7 @@
             _allFalseHouseBtn.hidden = NO;
         }
         
-        if ([model.fakeHouseTotal integerValue] >= 99999) {
-            [_segementLine mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.centerX.equalTo(self.segementContentView).offset([TTDeviceHelper isScreenWidthLarge320] ? -10 : -13);
-                make.width.mas_equalTo(1);
-                make.height.mas_equalTo(12);
-            }];
-            
-            [_falseHouseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(_segementLine).offset([TTDeviceHelper isScreenWidthLarge320] ? 10 : 5);
-                make.centerY.equalTo(self.segementContentView);
-            }];
-        }else if([model.fakeHouseTotal integerValue] >= 9999 && ![TTDeviceHelper isScreenWidthLarge320])
-        {
-            [_segementLine mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.centerX.equalTo(self.segementContentView).offset(-8);
-                make.width.mas_equalTo(1);
-                make.height.mas_equalTo(12);
-            }];
-            
-            [_falseHouseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(_segementLine).offset(5);
-                make.centerY.equalTo(self.segementContentView);
-            }];
-        }
+        [self layoutIfNeeded];
     }
 }
 
