@@ -62,6 +62,8 @@ static NSString *s_oldAgent = nil;
             [paramsDict setValue:@"app" forKey:@"source"];
             [paramsDict removeObjectForKey:@"log_pb"];
             [paramsDict removeObjectForKey:@"search_id"];
+            [paramsDict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+
             NSString *getParamStr = [FHUtils getUrlFormStrFromDict:paramsDict andFirstChar:YES];
             if ([getParamStr isKindOfClass:[NSString class]]) {
                 _url = [NSString stringWithFormat:@"%@%@",_url,getParamStr];
