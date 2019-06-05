@@ -11,13 +11,18 @@
 
 @implementation FHHouseUGCAPI
 
++ (TTHttpTask *)requestTopicList:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/api/community/topics";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"community_id"] = communityId ?: @"";
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
 
-+ (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
-{
++ (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
 //    NSString *queryPath = @"/f100/api/v2/msg/system_list";
-    
+
     NSString *queryPath = [ArticleURLSetting encrpytionStreamUrlString];
-    
+
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"category"] = category;
     paramDic[@"count"] = @(20);
@@ -26,78 +31,78 @@
     paramDic[@"LBS_status"] = [TTLocationManager currentLBSStatus];
     paramDic[@"city"] = [TTLocationManager sharedManager].city;
     paramDic[@"loc_mode"] = @([TTLocationManager isLocationServiceEnabled]);
-    
+
     TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
-    if(placemarkItem.coordinate.longitude > 0) {
+    if (placemarkItem.coordinate.longitude > 0) {
         paramDic[@"latitude"] = @(placemarkItem.coordinate.latitude);
         paramDic[@"longitude"] = @(placemarkItem.coordinate.longitude);
-        paramDic[@"loc_time"] = @((long long)placemarkItem.timestamp);
+        paramDic[@"loc_time"] = @((long long) placemarkItem.timestamp);
     }
-    
+
     paramDic[@"language"] = [TTDeviceHelper currentLanguage];
     paramDic[@"refer"] = @(1);
-    if(behotTime){
+    if (behotTime) {
         paramDic[@"refer"] = @(1);
     }
-    
-    if(loadMore && behotTime){
+
+    if (loadMore && behotTime) {
         NSNumber *maxBehotTimeNumber = @(behotTime);
-        if(!maxBehotTimeNumber) maxBehotTimeNumber = [NSNumber numberWithInt:0];
+        if (!maxBehotTimeNumber) maxBehotTimeNumber = [NSNumber numberWithInt:0];
         paramDic[@"max_behot_time"] = maxBehotTimeNumber;
-    }else{
-        NSNumber * minBeHotTimeNumber = [NSNumber numberWithInt:0];
-        if (behotTime){
+    } else {
+        NSNumber *minBeHotTimeNumber = [NSNumber numberWithInt:0];
+        if (behotTime) {
             minBeHotTimeNumber = @(behotTime);
         }
         paramDic[@"min_behot_time"] = minBeHotTimeNumber;
     }
-    
+
     paramDic[@"strict"] = @(0);
     paramDic[@"list_count"] = @(listCount);
     paramDic[@"concern_id"] = @"";
     paramDic[@"cp"] = [self encreptTime:[[NSDate date] timeIntervalSince1970]];
-    
-    if(!loadMore){
+
+    if (!loadMore) {
         paramDic[@"refresh_reason"] = @(0);
     }
 //    "last_refresh_sub_entrance_interval" = 4459;
 //    "session_refresh_idx" = 5;
 //    "tt_from" = pull;
-    
+
     Class cls = NSClassFromString(@"FHFeedListModel");
-    
+
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:queryPath params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
         __block NSError *backError = error;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:obj class:cls error:&backError];
+            id <FHBaseModelProtocol> model = (id <FHBaseModelProtocol>) [FHMainApi generateModel:obj class:cls error:&backError];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(model,backError);
+                    completion(model, backError);
                 });
             }
         });
-        
+
     }];
-    
+
 //    return [FHMainApi queryData:queryPath params:paramDic class:nil completion:completion];
 }
 
-+ (NSString *)encreptTime:(double)time{
-    if (time<=0) {
++ (NSString *)encreptTime:(double)time {
+    if (time <= 0) {
         return nil;
     }
-    NSMutableString * returnStr;
-    NSString * str = [NSString stringWithFormat:@"%.0f",time];
-    NSString *hexedString = [NSString stringWithFormat:@"%lX",[str integerValue]];
-    NSString * md5Str = [str MD5HashString];
-    if (!hexedString || hexedString.length!=8) {
+    NSMutableString *returnStr;
+    NSString *str = [NSString stringWithFormat:@"%.0f", time];
+    NSString *hexedString = [NSString stringWithFormat:@"%lX", [str integerValue]];
+    NSString *md5Str = [str MD5HashString];
+    if (!hexedString || hexedString.length != 8) {
         return @"7E0AC8874BB0985";//(MD5('suspicious')后15位)，之后将通过日志分析找出相应的可疑 IP 进一步筛查。
     }
-    if (hexedString.length==8 && md5Str && md5Str.length>5) {
+    if (hexedString.length == 8 && md5Str && md5Str.length > 5) {
         returnStr = [[NSMutableString alloc] init];
-        for(int i=0; i<5; i++){
-            [returnStr appendFormat:@"%c",[hexedString characterAtIndex:i]];
-            [returnStr appendFormat:@"%c",[md5Str characterAtIndex:i]];
+        for (int i = 0; i < 5; i++) {
+            [returnStr appendFormat:@"%c", [hexedString characterAtIndex:i]];
+            [returnStr appendFormat:@"%c", [md5Str characterAtIndex:i]];
         }
         [returnStr appendString:[hexedString substringFromIndex:5]];
         [returnStr appendString:@"q1"];

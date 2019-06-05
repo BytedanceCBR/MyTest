@@ -7,12 +7,13 @@
 
 #import "FHCommunityFeedListNearbyViewModel.h"
 #import "FHUGCBaseCell.h"
+#import "FHTopicListModel.h"
 #import "FHHouseUGCAPI.h"
 #import "FHFeedListModel.h"
 #import <UIScrollView+Refresh.h>
 #import "FHFeedContentModel.h"
 
-@interface FHCommunityFeedListNearbyViewModel ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate, UITableViewDataSource>
 
 @end
 
@@ -22,7 +23,7 @@
     self = [super initWithTableView:tableView controller:viewController];
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
-    
+
         tableView.delegate = self;
         tableView.dataSource = self;
     }
@@ -31,7 +32,7 @@
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     [super requestData:isHead first:isFirst];
-    
+
 //    if(isFirst){
 //        [self.viewController startLoading];
 //
@@ -144,23 +145,22 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     FHFeedContentModel *model = self.dataList[indexPath.row];
     FHUGCFeedListCellType type = [self getFeedType:model];
 
     NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:type data:nil]);
     FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
+
     if (cell == nil) {
         Class cellClass = NSClassFromString(cellIdentifier);
         cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    
+
     if(indexPath.row < self.dataList.count){
         [cell refreshWithData:model];
     }
-    
+
     return cell;
 }
 
@@ -168,6 +168,17 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return UITableViewAutomaticDimension;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self jumpToTopicList];
+}
+
+//TODO 测试用的，后续去掉
+- (void)jumpToTopicList {
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://topic_list?community_id=%@", @"12345"];
+    NSURL *openUrl = [NSURL URLWithString:urlStr];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 @end
