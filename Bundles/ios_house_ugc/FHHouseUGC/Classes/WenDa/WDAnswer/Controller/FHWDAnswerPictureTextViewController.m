@@ -210,6 +210,11 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (void)createInputComponent {
     CGFloat y = 0;
     
+    //Input container view
+    self.inputContainerView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 0)];
+    self.inputContainerView.backgroundColorThemeKey = kColorBackground4;
+    [self.containerView addSubview:self.inputContainerView];
+    
     //Input view
     self.inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(kLeftPadding - 5, y + kInputViewTopPadding, self.view.width - kLeftPadding - kRightPadding + 10.f, kTextViewHeight)];
     self.inputTextView.richSpanText = [[TTRichSpanText alloc] initWithText:@"" richSpansJSONString:nil];
@@ -219,6 +224,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     HPGrowingTextView *internalTextView = self.inputTextView.internalGrowingTextView;
     internalTextView.minHeight = kTextViewHeight;
     internalTextView.maxHeight = INT_MAX;
+//    internalTextView.maxNumberOfLines = 8;
     internalTextView.placeholder = @"发点什么，分享你的真实经验";
     
     // 图文发布器展示
@@ -228,14 +234,16 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     internalTextView.internalTextView.placeHolderFont = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
     internalTextView.font = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
     internalTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
-    [self.containerView addSubview:self.inputTextView];
+    [self.inputContainerView addSubview:self.inputTextView];
     
     //add image view
     y += kAddImagesViewTopPadding;
     CGFloat kAddImagesViewHeight = floor((self.view.width - kLeftPadding - kRightPadding - 6 * 2) / 3);
-    self.addImagesView = [[FRAddMultiImagesView alloc] initWithFrame:CGRectMake(kLeftPadding, y, self.view.width - kLeftPadding - kRightPadding, kAddImagesViewHeight)];
-    self.addImagesView.hidden = YES;
-    self.addImagesView.hideAddImagesButtonWhenEmpty = YES; // 只有第一次添加图片后才显示
+    self.addImagesView = [[FRAddMultiImagesView alloc] initWithFrame:CGRectMake(kLeftPadding, y, self.view.width - kLeftPadding - kRightPadding, kAddImagesViewHeight)
+                                                              assets:self.outerInputAssets
+                                                              images:self.outerInputImages];
+    self.addImagesView.hidden = NO;
+    self.addImagesView.hideAddImagesButtonWhenEmpty = NO; // 只有第一次添加图片后才显示
     self.addImagesView.selectionLimit = 9;
     self.addImagesView.delegate = self;
     WeakSelf;
@@ -244,7 +252,10 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         [self.inputTextView resignFirstResponder];
     };
     
-    [self.containerView addSubview:self.addImagesView];
+//    [self.containerView addSubview:self.addImagesView];
+    [self.inputContainerView addSubview:self.addImagesView];
+    
+    self.inputContainerView.height =  self.addImagesView.bottom + kAddImagesViewBottomPadding;
     
     // toolbar
     // toolbar
@@ -260,7 +271,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 //    self.toolbar.leftItems = [self leftToolbarItems];
 //    self.toolbar.rightItems = [self rightToolbarItems];
 //    internalTextView.internalTextView.inputAccessoryView = self.toolbar;
-    self.toolbar.emojiInputView.source = @"post";
+    self.toolbar.emojiInputView.source = @"wenda";
     self.toolbar.banLongText = YES;
     
     [self.view addSubview:self.toolbar];
@@ -326,8 +337,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 #pragma mark - Action
 
 - (void)previousAction:(id)sender {
-//    [self.contentView resignAllResponser];
-//    [self.contentView hidekeyboardCoverView];
+    [self endEditing];
     [self dismissSelf];
 }
 
