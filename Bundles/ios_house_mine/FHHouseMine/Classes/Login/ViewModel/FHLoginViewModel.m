@@ -88,6 +88,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)showOneKeyLoginView:(BOOL)isOneKeyLogin phoneNum:(NSString *)phoneNum
 {
+    [self updateLoadingState:NO];
     self.fromOneKeyLogin = isOneKeyLogin;
     [self.view showOneKeyLoginView:isOneKeyLogin];
     [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin] showAcceptBox:!isOneKeyLogin];
@@ -110,7 +111,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
     // 注意获取完手机号之后长期不登录的异常结果
     [TTAccount getOneKeyLoginPhoneNumberCompleted:^(NSString * _Nullable phoneNumber, NSString * _Nullable serviceName, NSError * _Nullable error) {
-        [wself updateLoadingState:NO];
         BOOL showOneKeyLogin = !error && phoneNumber.length > 0;
         [wself showOneKeyLoginView:showOneKeyLogin phoneNum:phoneNumber];
     }];
