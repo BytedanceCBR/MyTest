@@ -1654,7 +1654,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     param[@"enter_from"] = @"mapfind";
     param[@"enter_type"] = @"click";
     param[@"click_type"] = @"list";
-    param[@"category_name"] = self.configModel.enterCategory?:@"be_null";//@"old_list";
+    param[@"category_name"] = self.configModel.enterCategory?:(self.configModel.houseType == FHHouseTypeSecondHandHouse ?@"old_list":@"rent_list");
     param[@"element_from"] = self.configModel.elementFrom ?: @"be_null";
     
     [FHUserTracker writeEvent:@"click_switch_mapfind" params:param];
