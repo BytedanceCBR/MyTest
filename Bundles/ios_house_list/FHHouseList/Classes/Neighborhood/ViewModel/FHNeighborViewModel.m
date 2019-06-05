@@ -134,9 +134,20 @@
             if (cellModel.secondModel.externalInfo.externalUrl && cellModel.secondModel.externalInfo.isExternalSite.boolValue) {
                 NSMutableDictionary * dictRealWeb = [NSMutableDictionary new];
                 [dictRealWeb setValue:house_type forKey:@"house_type"];
+                
+                if ([cellModel.secondModel.groupId isKindOfClass:[NSString class]] && cellModel.secondModel.groupId.length > 0) {
+                    [traceParam setValue:cellModel.secondModel.groupId forKey:@"group_id"];
+                }else
+                {
+                    [traceParam setValue:cellModel.secondModel.hid forKey:@"group_id"];
+                }
+                [traceParam setValue:cellModel.secondModel.imprId forKey:@"impr_id"];
+                
                 [dictRealWeb setValue:traceParam forKey:@"tracer"];
                 [dictRealWeb setValue:cellModel.secondModel.externalInfo.externalUrl forKey:@"url"];
                 [dictRealWeb setValue:cellModel.secondModel.externalInfo.backUrl forKey:@"backUrl"];
+                
+
                 
                 TTRouteUserInfo *userInfoReal = [[TTRouteUserInfo alloc] initWithInfo:dictRealWeb];
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web"] userInfo:userInfoReal];
@@ -195,7 +206,7 @@
                     traceParam[@"origin_from"] = origin_from ? : @"be_null";
                     traceParam[@"origin_search_id"] = origin_search_id ? : @"be_null";
                     traceParam[@"search_id"] = self.searchId;
-                    topRealCell.tracerDict = traceParam;
+                     topRealCell.tracerDict = traceParam;
                     
                     __weak typeof(self) weakSelf = self;
                     topRealCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
@@ -209,6 +220,7 @@
                         stringQuery = [stringQuery stringByAppendingString:self.condition];
                     }
                     topRealCell.searchQuery = stringQuery;
+                    
                     return topRealCell;
                 }
             }

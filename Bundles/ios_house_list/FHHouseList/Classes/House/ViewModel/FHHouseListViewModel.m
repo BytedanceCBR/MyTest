@@ -1243,13 +1243,20 @@
                                 if ([traceModelDict isKindOfClass:[NSDictionary class]]) {
                                     [traceDictParams addEntriesFromDictionary:traceModelDict];
                                 }
+                                if (cellModel.secondModel.groupId) {
+                                    [traceDictParams setValue:cellModel.secondModel.groupId forKey:@"group_id"];
+                                }else
+                                {
+                                    [traceDictParams setValue:cellModel.secondModel.hid forKey:@"group_id"];
+                                }
+                                [traceDictParams setValue:cellModel.secondModel.imprId forKey:@"impr_id"];
                                 [traceDictParams setValue:@"old_list" forKey:@"category_name"];
                                 topRealCell.tracerDict = traceDictParams;
                             }
                           
                             __weak typeof(self) weakSelf = self;
                             topRealCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
-                                [weakSelf requestAddSubScribe:subscribeText];
+                                
                             };
                        
                             topRealCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
@@ -1537,10 +1544,20 @@
                 if (cellModel.secondModel.externalInfo.externalUrl &&  cellModel.secondModel.externalInfo.isExternalSite.boolValue) {
                     NSMutableDictionary * dictRealWeb = [NSMutableDictionary new];
                     [dictRealWeb setValue:@(self.houseType) forKey:@"house_type"];
+                    
+                    if ([cellModel.secondModel.groupId isKindOfClass:[NSString class]] && cellModel.secondModel.groupId.length > 0) {
+                        [traceParam setValue:cellModel.secondModel.groupId forKey:@"group_id"];
+                    }else
+                    {
+                        [traceParam setValue:cellModel.secondModel.hid forKey:@"group_id"];
+                    }
+                    [traceParam setValue:cellModel.secondModel.imprId forKey:@"impr_id"];
+
                     [dictRealWeb setValue:traceParam forKey:@"tracer"];
                     [dictRealWeb setValue:cellModel.secondModel.externalInfo.externalUrl forKey:@"url"];
                     [dictRealWeb setValue:cellModel.secondModel.externalInfo.backUrl forKey:@"backUrl"];
 
+                    
                     TTRouteUserInfo *userInfoReal = [[TTRouteUserInfo alloc] initWithInfo:dictRealWeb];
                     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web"] userInfo:userInfoReal];
                     return;
