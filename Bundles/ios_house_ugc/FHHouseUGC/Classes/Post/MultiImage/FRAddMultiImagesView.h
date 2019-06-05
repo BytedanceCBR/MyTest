@@ -37,9 +37,11 @@
 @interface FRAddMultiImagesView : SSThemedView
 
 @property (nonatomic, assign) NSInteger selectionLimit;
+@property (nonatomic, assign) BOOL hideAddImagesButtonWhenEmpty; // 是否在没有图片时依然隐藏+号，通过代码添加有效图片后就恢复
 @property (nonatomic, readonly) NSMutableArray<TTUGCImageCompressTask *> *selectedImageCacheTasks;
 @property (nonatomic, readonly) NSMutableArray<UIImage *> *selectedThumbImages;
 @property (nonatomic, weak) id<FRAddMultiImagesViewDelegate> delegate;
+@property (nonatomic, copy) void(^shouldAddPictureHandle)(void);
 
 // Umeng Event Name
 @property (nonatomic, copy) NSString *eventName;

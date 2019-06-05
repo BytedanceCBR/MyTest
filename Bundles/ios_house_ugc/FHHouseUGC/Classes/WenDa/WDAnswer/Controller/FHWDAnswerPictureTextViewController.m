@@ -9,10 +9,76 @@
 #import "TTNavigationController.h"
 #import "SSNavigationBar.h"
 #import "TTDeviceHelper.h"
+#import "TTAdCanvasNavigationBar.h"
+#import "SSThemed.h"
+#import "TTDeviceHelper.h"
+#import "TTThemedAlertController.h"
+#import "TTUGCTextView.h"
+#import "UIView+TTFFrame.h"
+#import "UITextView+TTAdditions.h"
+#import "TTUGCTextViewMediator.h"
+#import "TTUGCToolbar.h"
+#import "NSObject+MultiDelegates.h"
+#import "UIViewAdditions.h"
+#import "FRAddMultiImagesView.h"
+#import "NSDictionary+TTAdditions.h"
+#import "NSString+URLEncoding.h"
+#import "TTKitchen.h"
+#import "TTPostThreadKitchenConfig.h"
+#import "FRPostThreadAddLocationView.h"
+#import <KVOController/KVOController.h>
+#import "TTLocationManager.h"
+#import "TTGoogleMapGeocoder.h"
+#import "TTRichSpanText.h"
+#import "TTRichSpanText+Link.h"
+#import "TTThemeManager.h"
+#import "TTIndicatorView.h"
+#import "TTReachability.h"
+#import "TTAccountManager.h"
+#import "TTPostThreadModel.h"
+#import "TTPostThreadCenter.h"
+#import "TTUGCEmojiParser.h"
+#import "TTUGCHashtagModel.h"
+#import "TTAdCanvasDefine.h"
+#import "WDSettingHelper.h"
 
-@interface FHWDAnswerPictureTextViewController ()
+static CGFloat const kLeftPadding = 15.f;
+static CGFloat const kRightPadding = 15.f;
+static CGFloat const kInputViewTopPadding = 8.f;
+static CGFloat const kTextViewHeight = 100.f;
+static CGFloat const kAddImagesViewTopPadding = 10.f;
+static CGFloat const kAddImagesViewBottomPadding = 18.f;
 
+static CGFloat kWenDaToolbarHeight = 80.f;
+
+@interface FHWDAnswerPictureTextViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate>
+
+@property (nonatomic, strong) SSThemedButton * cancelButton;
+@property (nonatomic, strong) SSThemedButton * postButton;
 @property (nonatomic, strong) TTNavigationBarItemContainerView *rightBarView;
+@property (nonatomic, strong) SSThemedScrollView * containerView;
+@property (nonatomic, strong) TTUGCTextView * inputTextView;
+@property (nonatomic, strong) SSThemedView * inputContainerView;
+@property (nonatomic, strong) FRAddMultiImagesView * addImagesView;
+@property (nonatomic, strong) TTUGCToolbar *toolbar;
+@property (nonatomic, strong) TTUGCTextViewMediator *textViewMediator;
+@property (nonatomic, strong) TTIndicatorView *sendingIndicatorView;
+@property (nonatomic, strong) SSThemedLabel * tipLabel;
+@property (nonatomic, assign) UIStatusBarStyle originStatusBarStyle;
+@property (nonatomic, assign) BOOL firstAppear;
+@property (nonatomic, strong) SSThemedView * infoContainerView;
+
+@property (nonatomic, copy) NSArray <TTAssetModel *> * outerInputAssets; //传入的assets
+@property (nonatomic, copy) NSArray <UIImage *> * outerInputImages; //传入的images
+@property (nonatomic, copy) TTRichSpanText *outerInputRichSpanText; //编辑带入的文字信息
+@property (nonatomic, assign) NSRange selectedRange;
+@property (nonatomic, assign) BOOL useDraftFirst;//是否优先使用concern_id草稿，否则使用传入值（postPreContent || postPreContentRichSpan）
+
+@property (nonatomic, strong) TTRichSpanText *richSpanText;
+
+@property (nonatomic, assign) CGRect keyboardEndFrame;
+@property (nonatomic, assign) BOOL keyboardVisibleBeforePresent; // 保存 present 页面之前的键盘状态，用于 Dismiss 之后恢复键盘
+@property (nonatomic, copy) NSString *enterConcernID; //entrance为concern时有意义
 
 @end
 
@@ -21,8 +87,31 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    [self setupNaviBar];
+    self.firstAppear = YES;
     [self setupUI];
+    [self addImagesViewSizeChanged];
+    // [self restoreData];
+}
+
+- (void)restoreData {
+    // 构建 richSpanText
+    if (self.richSpanText == nil) {
+        self.richSpanText = [[TTRichSpanText alloc] initWithText:@"" richSpans:nil];
+        self.outerInputRichSpanText = self.richSpanText;
+    }
+    
+    // 加载草稿
+    if (![self hasPresettingThreadContent]) {
+        [self restoreDraft];
+    }
+    
+    // 等待构造完成之后初始化
+    self.inputTextView.richSpanText = self.richSpanText;
+    
+    // 待richSpanText更新后，再更新光标位置
+    if (self.selectedRange.location > 0 && self.inputTextView.text.length >= self.selectedRange.location) {
+        self.inputTextView.selectedRange = self.selectedRange;
+    }
 }
 
 - (void)dealloc
@@ -39,20 +128,21 @@
     }
     leftView.button.titleColorThemeKey = kColorText1;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftView];
-    
-    self.rightBarView = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:NSLocalizedString(@"提问", nil) target:self action:@selector(postQuestionAction:)];
+    self.cancelButton = leftView.button;
+    self.rightBarView = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:NSLocalizedString(@"发布", nil) target:self action:@selector(postQuestionAction:)];
     self.rightBarView.button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.rightBarView];
-    
+    self.postButton = self.rightBarView.button;
     if ([TTDeviceHelper getDeviceType] == TTDeviceMode736) {
         self.rightBarView.button.contentEdgeInsets = UIEdgeInsetsMake(0.0f, 3.0f, 0, -3.0f);
     }
-//    self.rightBarView.button.titleColorThemeKey = [self.viewModel hasEnoughTitleText] ? kColorText6 : kColorText9;
 }
 
 - (void)setupUI {
     
     self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+    [self setupNaviBar];
+    [self createComponent];
 //    [self setTartgetView:self.contentView];
 //    [self.view addSubview:self.bannerWrapView];
 //    [self.bannerWrapView addSubview:self.bannerView];
@@ -61,6 +151,149 @@
 //    self.contentView.bannerWrapView = self.bannerWrapView;
 //    self.contentView.bannerView = self.bannerView;
 //    self.contentView.toolView = self.toolView;
+}
+
+#pragma mark - View
+
+- (void)createComponent {
+    //Container View
+    self.containerView = [[SSThemedScrollView alloc] initWithFrame:[self containerFrame]];
+    self.containerView.backgroundColorThemeKey = kColorBackground4;
+    self.containerView.alwaysBounceVertical = YES;
+    self.containerView.delegate = self;
+    [self.view addSubview:self.containerView];
+    
+    [self addObserverAndNoti];
+    
+    //Create input component
+    [self createInputComponent];
+    
+    [self createInfoComponent];
+}
+
+- (void)addObserverAndNoti {
+    WeakSelf;
+    [self.KVOController observe:self.addImagesView keyPath:@"frame" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
+        StrongSelf;
+        CGRect newFrame = [change[NSKeyValueChangeNewKey] CGRectValue];
+        CGRect oldFrame = [change[NSKeyValueChangeOldKey] CGRectValue];
+    }];
+    
+    [self addNotification];
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+    [self.containerView addGestureRecognizer:tapGestureRecognizer];
+}
+
+#pragma mark - Notification
+
+- (void)addNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(viewDidEnterBackground)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillChange:)
+                                                 name:UIKeyboardWillChangeFrameNotification
+                                               object:nil];
+}
+
+- (CGRect)containerFrame {
+    CGFloat yOffset = kNavigationBarHeight;
+    return CGRectMake(0, yOffset, self.view.width, self.view.height - yOffset);
+}
+
+- (void)createInputComponent {
+    CGFloat y = 0;
+    
+    //Input view
+    self.inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(kLeftPadding - 5, y + kInputViewTopPadding, self.view.width - kLeftPadding - kRightPadding + 10.f, kTextViewHeight)];
+    self.inputTextView.richSpanText = [[TTRichSpanText alloc] initWithText:@"" richSpansJSONString:nil];
+    self.inputTextView.contentInset = UIEdgeInsetsZero;
+    y = self.inputTextView.bottom;
+    
+    HPGrowingTextView *internalTextView = self.inputTextView.internalGrowingTextView;
+    internalTextView.minHeight = kTextViewHeight;
+    internalTextView.maxHeight = INT_MAX;
+    internalTextView.placeholder = @"发点什么，分享你的真实经验";
+    
+    // 图文发布器展示
+    internalTextView.backgroundColor = [UIColor clearColor];
+    internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
+    internalTextView.placeholderColor =  SSGetThemedColorWithKey(kColorText3);
+    internalTextView.internalTextView.placeHolderFont = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
+    internalTextView.font = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
+    internalTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+    [self.containerView addSubview:self.inputTextView];
+    
+    //add image view
+    y += kAddImagesViewTopPadding;
+    CGFloat kAddImagesViewHeight = floor((self.view.width - kLeftPadding - kRightPadding - 6 * 2) / 3);
+    self.addImagesView = [[FRAddMultiImagesView alloc] initWithFrame:CGRectMake(kLeftPadding, y, self.view.width - kLeftPadding - kRightPadding, kAddImagesViewHeight)];
+    self.addImagesView.hidden = YES;
+    self.addImagesView.hideAddImagesButtonWhenEmpty = YES; // 只有第一次添加图片后才显示
+    self.addImagesView.selectionLimit = 9;
+    self.addImagesView.delegate = self;
+    WeakSelf;
+    self.addImagesView.shouldAddPictureHandle = ^{
+        StrongSelf;
+        [self.inputTextView resignFirstResponder];
+    };
+    
+    [self.containerView addSubview:self.addImagesView];
+    
+    // toolbar
+    // toolbar
+//    kWenDaToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+//    self.toolbar = [[TTUGCToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - kWenDaToolbarHeight, self.view.width, kWenDaToolbarHeight)];
+//    self.toolbar.emojiInputView.source = @"post";
+//
+//    self.toolbar.banLongText = YES;
+//
+//    [self.view addSubview:self.toolbar];
+    kWenDaToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+    self.toolbar = [[TTUGCToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - kWenDaToolbarHeight, self.view.width, kWenDaToolbarHeight)];
+//    self.toolbar.leftItems = [self leftToolbarItems];
+//    self.toolbar.rightItems = [self rightToolbarItems];
+//    internalTextView.internalTextView.inputAccessoryView = self.toolbar;
+    self.toolbar.emojiInputView.source = @"post";
+    self.toolbar.banLongText = YES;
+    
+    [self.view addSubview:self.toolbar];
+    
+    // TextView and Toolbar Mediator
+//    self.textViewMediator = [[TTUGCTextViewMediator alloc] init];
+//    self.textViewMediator.textView = self.inputTextView;
+//    self.textViewMediator.toolbar = self.toolbar;
+//    self.inputTextView.delegate = self.textViewMediator;
+//    [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
+    
+    // TextView and Toolbar Mediator
+    self.textViewMediator = [[TTUGCTextViewMediator alloc] init];
+    self.textViewMediator.textView = self.inputTextView;
+    self.textViewMediator.toolbar = self.toolbar;
+    self.textViewMediator.showCanBeCreatedHashtag = YES;
+    self.toolbar.emojiInputView.delegate = self.inputTextView;
+    self.toolbar.delegate = self.textViewMediator;
+    [self.toolbar tt_addDelegate:self asMainDelegate:NO];
+    self.inputTextView.delegate = self.textViewMediator;
+    [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
+}
+
+- (void)createInfoComponent {
+    
+    //Info container view
+    self.infoContainerView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, self.inputContainerView.bottom + 10 , self.view.width, 0)];
+    self.infoContainerView.backgroundColorThemeKey = kColorBackground4;
+    [self.containerView addSubview:self.infoContainerView];
+    
+    CGFloat y = 0;
+    // 添加其他视图
+    self.infoContainerView.height = y;
 }
 
 - (void)dismissSelf
@@ -75,6 +308,20 @@
     }
 }
 
+- (void)endEditing {
+    [self.view endEditing:YES];
+    
+    [self.toolbar endEditing:YES];
+}
+
+- (void)tapAction:(UITapGestureRecognizer *)sender {
+    // 点击空白处可以收起或呼出键盘
+    if (self.inputTextView.isFirstResponder) {
+        [self.inputTextView resignFirstResponder];
+    } else {
+        [self.inputTextView becomeFirstResponder];
+    }
+}
 
 #pragma mark - Action
 
@@ -87,4 +334,317 @@
 - (void)postQuestionAction:(id)sender {
     
 }
+
+- (void)addImagesViewSizeChanged {
+    self.inputContainerView.height = self.addImagesView.bottom + kAddImagesViewBottomPadding;
+    self.infoContainerView.top = self.inputContainerView.height + 10;
+    
+    CGFloat targetHeight = self.infoContainerView.bottom + 10;
+    CGFloat containerHeight = self.view.height - 64;
+    containerHeight = containerHeight >= targetHeight ? containerHeight : targetHeight;
+    containerHeight += kWenDaToolbarHeight;
+    self.containerView.contentSize = CGSizeMake(self.containerView.frame.size.width, containerHeight);
+    [self refreshPostButtonUI];
+}
+
+- (void)refreshUI {
+    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
+    NSString *inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (inputText.length > maxTextCount) {
+        self.tipLabel.hidden = NO;
+        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
+        excludeCount = MIN(excludeCount, 9999);
+        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
+    } else {
+        self.tipLabel.hidden = YES;
+    }
+    
+    [self refreshPostButtonUI];
+}
+
+- (void)refreshPostButtonUI {
+    //发布器
+    if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
+        self.postButton.titleColorThemeKey = kColorText6;
+        self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
+        self.postButton.disabledTitleColorThemeKey = kColorText6;
+    } else {
+        self.postButton.titleColorThemeKey = kColorText9;
+        self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
+        self.postButton.disabledTitleColorThemeKey = kColorText9;
+    }
+}
+
+- (BOOL)textHasChanged {
+    return ![self.richSpanText.text isEqualToString:self.outerInputRichSpanText.text];
+}
+
+- (BOOL)imageHasChanged {
+    if (self.addImagesView.selectedImageCacheTasks.count != self.outerInputAssets.count) {
+        return YES;
+    }
+    for (NSInteger index = 0; index < self.addImagesView.selectedImageCacheTasks.count; index++) {
+        TTUGCImageCompressTask *task = [self.addImagesView.selectedImageCacheTasks objectAtIndex:index];
+        if (![[self.outerInputAssets objectAtIndex:index] isEqual:task.assetModel]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+#pragma mark - TTUGCTextViewDelegate
+
+- (void)textViewDidChange:(TTUGCTextView *)textView {
+    [self refreshUI];
+}
+
+- (void)textView:(TTUGCTextView *)textView willChangeHeight:(float)height withDiffHeight:(CGFloat)diffHeight {
+    // 图文发布器展示
+    self.addImagesView.top = self.inputTextView.bottom + kAddImagesViewTopPadding;
+    self.inputContainerView.height = self.addImagesView.bottom + kAddImagesViewBottomPadding;
+    self.infoContainerView.top = self.inputContainerView.height + 10;
+    
+    CGFloat targetHeight = self.infoContainerView.bottom + 10;
+    CGFloat containerHeight = self.view.height - 64;
+    containerHeight = containerHeight >= targetHeight ? containerHeight : targetHeight;
+    containerHeight += kWenDaToolbarHeight;
+    self.containerView.contentSize = CGSizeMake(self.containerView.frame.size.width, containerHeight);
+}
+
+
+#pragma mark - UITextFieldDelegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    self.toolbar.banAtInput = YES;
+    self.toolbar.banHashtagInput = YES;
+    self.toolbar.banEmojiInput = YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    self.toolbar.banAtInput = [TTKitchen getBOOL:kTTKUGCPostAndRepostBanAt];
+    self.toolbar.banHashtagInput = [TTKitchen getBOOL:kTTKUGCPostAndRepostBanHashtag];
+    self.toolbar.banEmojiInput = NO;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    return YES;
+}
+
+- (BOOL)textFieldShouldClear:(UITextField *)textField {
+    return YES;
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self endEditing];
+}
+
+
+#pragma mark - FRAddMultiImagesViewDelegate
+
+- (void)addImagesButtonDidClickedOfAddMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView {
+    self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
+    [self endEditing];
+}
+
+- (void)addMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView clickedImageAtIndex:(NSUInteger)index {
+    self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
+    [self endEditing];
+}
+
+- (void)addMultiImagesViewPresentedViewControllerDidDismiss {
+    // 如果选择定位位置之前，键盘是弹出状态，选择完之后恢复键盘状态
+    if (self.keyboardVisibleBeforePresent) {
+        [self.inputTextView becomeFirstResponder];
+    }
+}
+
+- (void)addMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView changeToSize:(CGSize)size {
+    [self addImagesViewSizeChanged];
+}
+
+- (void)addMultiImagesViewNeedEndEditing {
+    [self endEditing];
+}
+
+- (void)addMultiImageViewDidBeginDragging:(FRAddMultiImagesView *)addMultiImagesView {
+    self.cancelButton.enabled = NO;
+    self.postButton.enabled = NO;
+}
+
+- (void)addMultiImageViewDidFinishDragging:(FRAddMultiImagesView *)addMultiImagesView {
+    self.cancelButton.enabled = YES;
+    self.postButton.enabled = YES;
+    [self refreshPostButtonUI];
+}
+
+#pragma mark - TTUGCToolbarDelegate
+
+- (void)toolbarDidClickLongText {
+    // nothing
+}
+
+
+- (void)toolbarDidClickShoppingButton {
+    // nothing
+}
+
+- (void)restoreDraft {
+    if ([self draftEnable]) {
+        NSArray *tasks = [TTPostThreadTask fetchTasksFromDiskForConcernID:[self draftConcernID]];
+        TTPostThreadTask *task = [tasks lastObject];
+        if ([task isKindOfClass:[TTPostThreadTask class]]) {
+            if (!isEmptyString(task.content)) {
+                self.richSpanText = [[[TTRichSpanText alloc] initWithText:task.content richSpansJSONString:task.contentRichSpans] replaceWhitelistLinks];
+            }
+            
+            FRLocationEntity *posEntity = [[FRLocationEntity alloc] init];
+            posEntity.city = task.city;
+            posEntity.locationName = task.detail_pos;
+            posEntity.latitude = task.latitude;
+            posEntity.longitude = task.longitude;
+            posEntity.locationAddress = task.locationAddress;
+            posEntity.locationType = task.locationType;
+            
+            NSArray<FRUploadImageModel *> *imageModels = task.images;
+            [self.addImagesView restoreDraft:imageModels];
+            
+            self.selectedRange = task.selectedRange;
+        }
+        [self clearDraft];
+    }
+}
+
+- (void)clearDraft {
+    if ([self draftEnable]) {
+        NSArray *tasks = [TTPostThreadTask fetchTasksFromDiskForConcernID:[self draftConcernID]];
+        for (TTPostThreadTask *task in tasks) {
+            [TTPostThreadTask removeTaskFromDiskByTaskID:task.taskID concernID:[self draftConcernID]];
+        }
+    }
+}
+
+- (void)saveDraft {
+    if ([self draftEnable]) {
+        TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
+        [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+        TTPostThreadTask *task = [[TTPostThreadTask alloc] initWithTaskType:TTPostTaskTypeThread];
+        
+        task.content = richSpanText.text;
+        task.contentRichSpans = [TTRichSpans JSONStringForRichSpans:richSpanText.richSpans];
+        task.create_time = [[NSDate date] timeIntervalSince1970];
+        task.userID = [[TTAccount sharedAccount] userIdString];
+        task.concernID = [self draftConcernID];
+        task.categoryID = [self draftConcernID];
+        [task addTaskImages:self.addImagesView.selectedImageCacheTasks thumbImages:self.addImagesView.selectedThumbImages];
+        task.selectedRange = self.inputTextView.selectedRange;
+        if (isEmptyString(task.content) && self.addImagesView.selectedImageCacheTasks.count == 0)
+            return;
+        
+        [task saveToDisk];
+    }
+}
+
+- (BOOL)hasPresettingThreadContent {
+//    if ((!isEmptyString(self.postPreContent) || !isEmptyString(self.postPreContentRichSpan) || self.outerInputAssets.count || self.outerInputImages.count) && (!self.useDraftFirst)) {
+//        return YES;
+//    } else {
+//        return NO;
+//    }
+    return YES;
+}
+
+- (NSString *)draftConcernID {
+    return [NSString stringWithFormat:@"draft_%@", self.enterConcernID];
+}
+
+- (BOOL)draftEnable {
+    return NO; // 不支持草稿
+    // return [TTKitchen getBOOL:kTTKUGCPostThreadDraftEnable];
+}
+
+- (void)closeViewController:(NSNotification *)notification {
+    [self clearDraft];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)updateGoodsInfo:(NSNotification *)notification {
+    [self.inputTextView becomeFirstResponder];
+}
+
+#pragma mark - UIKeyboardNotification
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    if (!CGRectIsEmpty(self.keyboardEndFrame)) {
+        CGFloat offset = self.containerView.contentOffset.y - self.keyboardEndFrame.size.height;
+        if (offset < 0) {
+            offset = 0;
+        }
+        [self.containerView setContentOffset:CGPointMake(0, offset) animated:YES];
+        self.keyboardEndFrame = CGRectZero;
+    }
+}
+
+- (void)keyboardWillChange:(NSNotification *)notification {
+    UIView * firstResponder = nil;
+    if (self.inputTextView.isFirstResponder) {
+        firstResponder = self.inputTextView;
+    }
+    if (!firstResponder) {
+        return;
+    }
+    CGRect endFrame = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect firstResponderFrame = [firstResponder convertRect:firstResponder.bounds toView:self.containerView];
+    CGFloat offset = CGRectGetMinY(firstResponderFrame) - self.containerView.contentOffset.y;
+    if (offset < 0) {
+        self.keyboardEndFrame = endFrame;
+        [self.containerView setContentOffset:CGPointMake(0, fabs(self.containerView.contentOffset.y+offset)) animated:YES];
+        return;
+    }
+    offset = self.containerView.height - endFrame.size.height - (CGRectGetMaxY(firstResponderFrame) - self.containerView.contentOffset.y) - kWenDaToolbarHeight;
+    if (offset < 0) {
+        self.keyboardEndFrame = endFrame;
+        [self.containerView setContentOffset:CGPointMake(0, fabs(self.containerView.contentOffset.y-offset)) animated:YES];
+        return;
+    }
+}
+
+- (void)textFiledEditDidChanged:(NSNotification *)notification {
+    
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    // 避免视频详情页转发时，出现 statusBar 高度获取为 0 的情况
+    CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
+    self.containerView.frame = CGRectMake(0, top, self.view.width, self.view.height - top);
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [UIApplication sharedApplication].statusBarHidden = NO;
+    if (self.firstAppear) {
+        self.firstAppear = NO;
+        [self.inputTextView becomeFirstResponder];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.originStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[UIApplication sharedApplication] setStatusBarStyle:self.originStatusBarStyle];
+}
+
+- (void)viewDidEnterBackground {
+    [self saveDraft];
+}
+
 @end
