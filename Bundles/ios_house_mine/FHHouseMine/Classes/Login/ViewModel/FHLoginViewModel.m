@@ -201,7 +201,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [[ToastManager manager] showToast:@"正在登录中"];
     [self traceLogin];
     [TTAccount oneKeyLoginWithCompleted:^(NSError * _Nullable error) {
-        [wself handleLoginResult:nil error:error];
+        [wself handleLoginResult:nil error:error isOneKeyLogin:YES];
     }];
 }
 
@@ -358,11 +358,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self traceLogin];
     
     [FHMineAPI requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
-        [weakSelf handleLoginResult:phoneNumber error:error];
+        [weakSelf handleLoginResult:phoneNumber error:error isOneKeyLogin:NO];
     }];
 }
 
-- (void)handleLoginResult:(NSString *)phoneNumber error:(NSError *)error
+- (void)handleLoginResult:(NSString *)phoneNumber error:(NSError *)error isOneKeyLogin:(BOOL)isOneKeyLogin
 {
     if(!error){
         [[ToastManager manager] showToast:@"登录成功"];
@@ -376,7 +376,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
         [self loginSuccessedWithPhoneNum:phoneNumber];
     }else{
-        NSString *errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+        NSString *errorMessage = @"啊哦，服务器开小差了";
+        if (!isOneKeyLogin) {
+            errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+        }
         [[ToastManager manager] showToast:errorMessage];
     }
 }
