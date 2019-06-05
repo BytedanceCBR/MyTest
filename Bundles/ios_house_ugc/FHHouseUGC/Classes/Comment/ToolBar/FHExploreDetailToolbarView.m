@@ -56,7 +56,7 @@
         UIEdgeInsets toolBarButtonHitTestInsets = UIEdgeInsetsMake(-8.f, -12.f, -15.f, -12.f);
 
         TTAlphaThemedButton *emojiButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-//        [self addSubview:emojiButton];
+        [self addSubview:emojiButton];
         _emojiButton = emojiButton;
         _emojiButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
 
@@ -129,7 +129,7 @@
         [self addSubview:_shareLabel];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateWriteTitle:) name:@"TTCOMMENT_UPDATE_WRITETITLE" object:nil];
-        self.banEmojiInput = YES;
+        self.banEmojiInput = NO;
     }
     return self;
 }
@@ -184,10 +184,10 @@
         case FHExploreDetailToolbarTypeArticleComment: {
             _writeButton.hidden = NO;
             _emojiButton.hidden = NO;
-            _commentButton.hidden = NO;
-            _collectButton.hidden = NO;
+            _commentButton.hidden = YES;
+            _collectButton.hidden = YES;
             _shareButton.hidden = NO;
-            _digButton.hidden = YES;
+            _digButton.hidden = NO;
             self.toolbarLabelEnabled = [SSCommonLogic toolbarLabelEnabled];
             self.backgroundColorThemeKey = kColorBackground4;
         }
@@ -255,10 +255,10 @@
     } else if (self.toolbarType == FHExploreDetailToolbarTypeArticleComment) {
         //169是什么...
         writeFrame = CGRectMake(15 + leftInset, writeTopMargin, width - (169 + margin * 3) - hInset, writeButtonHeight);
-        emojiFrame = CGRectMake(CGRectGetMaxX(writeFrame) - 22 - 6, CGRectGetMinY(writeFrame) + (writeButtonHeight - 22) / 2, 22, 22);
+        emojiFrame = CGRectMake(CGRectGetMaxX(writeFrame) + 22 + margin, iconTopMargin, 24, 24);
         commentFrame = CGRectMake(CGRectGetMaxX(writeFrame) + 22 + margin, iconTopMargin, 24, 24);
         shareFrame = CGRectMake(width - 38 - rightInset, iconTopMargin, 24, 24);
-        collectFrame = CGRectMake(CGRectGetMinX(shareFrame) - 46 - margin, iconTopMargin, 24, 24);
+        digFrame = CGRectMake(CGRectGetMinX(shareFrame) - 46 - margin, iconTopMargin, 24, 24);
     } else if (self.toolbarType == FHExploreDetailToolbarTypePhotoComment) {
         writeFrame = CGRectMake(15 + leftInset, writeTopMargin, width - (169 + margin * 3) - hInset, writeButtonHeight);
         emojiFrame = CGRectMake(CGRectGetMaxX(writeFrame) - 22 - 6, CGRectGetMinY(writeFrame) + (writeButtonHeight - 22) / 2, 22, 22);
@@ -474,6 +474,9 @@
         _commentButton.imageName = @"tab_comment";
         _collectButton.imageName = @"tab_collect";
         _collectButton.selectedImageName = @"tab_collect_press";
+        _digButton.imageName = @"digup_tabbar";
+        _digButton.selectedImageName = @"digup_tabbar_press";
+        _digButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
         _shareButton.imageName = [self _shareIconName];
         _writeButton.borderColors = nil;
         _writeButton.borderColorThemeKey = kFHColorSilver2;
