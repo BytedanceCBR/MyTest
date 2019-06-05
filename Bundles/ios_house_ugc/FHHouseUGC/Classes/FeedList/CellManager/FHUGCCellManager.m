@@ -11,6 +11,9 @@
 #import "FHUGCSingleImageCell.h"
 #import "FHUGCMultiImageCell.h"
 #import "FHUGCTwoImageCell.h"
+#import "FHArticlePureTitleCell.h"
+#import "FHArticleSingleImageCell.h"
+#import "FHArticleMultiImageCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -34,8 +37,12 @@
                                 @"FHUGCSingleImageCell",
                                 @"FHUGCMultiImageCell",
                                 @"FHUGCTwoImageCell",
-
-                                 //可扩展
+                                @"FHArticlePureTitleCell",
+                                @"FHArticleSingleImageCell",
+                                @"FHArticleMultiImageCell",
+                                
+                                
+                                //可扩展
                                  ];
 }
 
@@ -60,6 +67,15 @@
             
         case FHUGCFeedListCellTypeMultiImage:
             return [FHUGCMultiImageCell class];
+            
+        case FHUGCFeedListCellTypeArticlePureTitle:
+            return [FHArticlePureTitleCell class];
+            
+        case FHUGCFeedListCellTypeArticleSingleImage:
+            return [FHArticleSingleImageCell class];
+            
+        case FHUGCFeedListCellTypeArticleMultiImage:
+            return [FHArticleMultiImageCell class];
 
         default:
             break;

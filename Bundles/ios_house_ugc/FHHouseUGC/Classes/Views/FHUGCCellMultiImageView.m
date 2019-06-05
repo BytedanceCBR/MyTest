@@ -16,6 +16,7 @@
 
 @property(nonatomic, assign) NSInteger count;
 @property(nonatomic, strong) NSMutableArray *imageViewList;
+@property(nonatomic, assign) CGFloat imageWidth;
 
 @end
 
@@ -43,7 +44,9 @@
         UIImageView *imageView = [[UIImageView alloc] init];
         imageView.clipsToBounds = YES;
         imageView.contentMode = UIViewContentModeScaleAspectFill;
-        imageView.backgroundColor = [UIColor themeGray7];
+        imageView.backgroundColor = [UIColor themeGray6];
+        imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
+        imageView.layer.borderWidth = 0.5;
         [self addSubview:imageView];
         
         [self.imageViewList addObject:imageView];
@@ -59,23 +62,40 @@
         }];
         
     }else if(self.count == 2){
+        _imageWidth = (self.bounds.size.width - itemPadding)/2;
         UIView *firstView = self;
         for (UIImageView *imageView in self.imageViewList) {
             [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.bottom.mas_equalTo(self);
+                make.top.mas_equalTo(self);
                 if(firstView == self){
                     make.left.mas_equalTo(firstView);
+                    make.bottom.mas_equalTo(firstView);
                 }else{
-                    make.left.mas_equalTo(firstView.mas_right);
+                    make.left.mas_equalTo(firstView.mas_right).offset(itemPadding);
                 }
-                make.width.mas_equalTo(self.mas_width).multipliedBy(0.5);
-                make.height.mas_equalTo(imageView.mas_width).multipliedBy(251.0f/355.0f);
+                make.width.mas_equalTo(self.imageWidth);
+                make.height.mas_equalTo(self.imageWidth * 124.0f/165.0f);
             }];
             firstView = imageView;
         }
         
     }else if(self.count >= 3){
-        
+        _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
+        UIView *firstView = self;
+        for (UIImageView *imageView in self.imageViewList) {
+            [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self);
+                if(firstView == self){
+                    make.left.mas_equalTo(firstView);
+                    make.bottom.mas_equalTo(firstView);
+                }else{
+                    make.left.mas_equalTo(firstView.mas_right).offset(itemPadding);
+                }
+                make.width.mas_equalTo(self.imageWidth);
+                make.height.mas_equalTo(self.imageWidth);
+            }];
+            firstView = imageView;
+        }
     }else{
         
     }
@@ -88,9 +108,9 @@
             CGFloat width = [imageModel.width floatValue];
             CGFloat height = [imageModel.height floatValue];
             UIImageView *imageView = self.imageViewList[i];
-            [imageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(imageView.mas_width).multipliedBy(height/width);
-            }];
+//            [imageView mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.height.mas_equalTo(self.imageWidth).multipliedBy(height/width);
+//            }];
             
             [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
         }
