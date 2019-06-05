@@ -48,7 +48,7 @@
         [self addSubview:_contentLabel];
         
         [self updateStyle];
-        [self updateWithAnnotation:annotation];
+        self.annotation = annotation;
     }
     return self;
 }
@@ -58,8 +58,9 @@
     return [img resizableImageWithCapInsets:UIEdgeInsetsMake(15, 30, 19, 30)];
 }
 
--(void)updateWithAnnotation:(id<MAAnnotation>) annotation
+-(void)setAnnotation:(id<MAAnnotation>)annotation
 {
+    [super setAnnotation:annotation];
     _contentLabel.text = annotation.title;
     [_contentLabel sizeToFit];
     
