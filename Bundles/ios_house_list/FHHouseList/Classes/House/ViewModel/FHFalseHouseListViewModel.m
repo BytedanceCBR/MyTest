@@ -312,9 +312,11 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             [self.tableView reloadData];
         }else
         {
+            [self.tableView.mj_footer endRefreshing];
+            self.bottomView.hidden = NO;
+            self.tableView.hasMore = houseModel.hasMore;
+            self.refreshFooter.hidden = YES;
             [self.tableView reloadData];
-            self.bottomView.hidden = YES;
-            self.tableView.scrollEnabled = NO;
         }
         
     }else
