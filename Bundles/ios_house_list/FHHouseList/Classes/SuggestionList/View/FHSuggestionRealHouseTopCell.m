@@ -74,7 +74,7 @@
     }];
     
     _realHouseLabel = [[UILabel alloc] init];
-    _realHouseLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 11 : 10];
+    _realHouseLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 12 : 10];
     _realHouseLabel.textColor = [UIColor themeGray3];
     _realHouseLabel.textAlignment = NSTextAlignmentLeft;
     [_segementContentView addSubview:_realHouseLabel];
@@ -98,7 +98,7 @@
     }];
     
     _realHouseUnitLabel= [[UILabel alloc] init];
-    _realHouseUnitLabel.font = [UIFont themeFontDINAlternateBold:[TTDeviceHelper isScreenWidthLarge320] ? 15 : 11];
+    _realHouseUnitLabel.font = [UIFont themeFontRegular:10];
     _realHouseUnitLabel.textColor = [UIColor themeRed3];
     _realHouseUnitLabel.text = @"套";
     _realHouseUnitLabel.textAlignment = NSTextAlignmentLeft;
@@ -106,7 +106,7 @@
     
     
     [_realHouseUnitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.realHouseNumLabel.mas_right).offset(0);
+        make.left.equalTo(self.realHouseNumLabel.mas_right).offset(2);
         make.centerY.equalTo(self.segementContentView);
         make.height.equalTo(self.segementContentView);
     }];
@@ -123,7 +123,7 @@
     
     
     _falseHouseLabel = [[UILabel alloc] init];
-    _falseHouseLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 11 : 10];
+    _falseHouseLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 12 : 10];
     _falseHouseLabel.textColor = [UIColor themeGray3];
     _falseHouseLabel.textAlignment = NSTextAlignmentLeft;
     [_segementContentView addSubview:_falseHouseLabel];
@@ -146,14 +146,14 @@
     
     
     _falseHouseUnitLabel = [[UILabel alloc] init];
-    _falseHouseUnitLabel.font = [UIFont themeFontDINAlternateBold:[TTDeviceHelper isScreenWidthLarge320] ? 15 : 11];
+    _falseHouseUnitLabel.font = [UIFont themeFontRegular:10];
     _falseHouseUnitLabel.textColor = [UIColor themeRed3];
     _falseHouseUnitLabel.text = @"套";
     _falseHouseUnitLabel.textAlignment = NSTextAlignmentLeft;
     [_segementContentView addSubview:_falseHouseUnitLabel];
     
     [_falseHouseUnitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.falseHouseNumLabel.mas_right).offset(0);
+        make.left.equalTo(self.falseHouseNumLabel.mas_right).offset(2);
         make.centerY.equalTo(self.segementContentView);
         make.height.equalTo(self.segementContentView);
     }];
