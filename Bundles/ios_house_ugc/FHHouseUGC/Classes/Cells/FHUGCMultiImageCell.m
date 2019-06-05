@@ -5,25 +5,25 @@
 //  Created by 谢思铭 on 2019/6/3.
 //
 
-#import "FHUGCSingleImageCell.h"
+#import "FHUGCMultiImageCell.h"
 #import <UIImageView+BDWebImage.h>
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"
-#import "FHUGCCellMultiImageView.h"
 
 
-@interface FHUGCSingleImageCell ()
+@interface FHUGCMultiImageCell ()
 
 @property(nonatomic ,strong) UILabel *contentLabel;
-@property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
+@property(nonatomic ,strong) UIImageView *singleImageView;
+
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) UIView *bottomSepView;
 
 @end
 
-@implementation FHUGCSingleImageCell
+@implementation FHUGCMultiImageCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -54,8 +54,13 @@
     _contentLabel.numberOfLines = 2;
     [self.contentView addSubview:_contentLabel];
     
-    self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectZero count:1];
-    [self.contentView addSubview:_multiImageView];
+    self.singleImageView = [[UIImageView alloc] init];
+    _singleImageView.clipsToBounds = YES;
+    _singleImageView.contentMode = UIViewContentModeScaleAspectFill;
+    _singleImageView.backgroundColor = [UIColor themeGray7];
+    _singleImageView.layer.masksToBounds = YES;
+    _singleImageView.layer.cornerRadius = 4;
+    [self.contentView addSubview:_singleImageView];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_bottomView];
@@ -78,14 +83,15 @@
         make.right.mas_equalTo(self.contentView).offset(-20);
     }];
     
-    [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.singleImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).offset(20);
         make.right.mas_equalTo(self.contentView).offset(-20);
+        make.height.mas_equalTo(self.singleImageView.mas_width).multipliedBy(251.0f/355.0f);
     }];
-
+    
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.singleImageView.mas_bottom).offset(10);
         make.left.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(30);
     }];
@@ -106,10 +112,17 @@
 
 - (void)refreshWithData:(id)data {
     FHFeedContentModel *model = (FHFeedContentModel *)data;
-    //内容
     self.contentLabel.text = model.title;
-    //图片
-    [self.multiImageView updateImageView:model.imageList];
+    NSString *imageUrl = model.middleImage.url;
+    
+    CGFloat width = [model.middleImage.width floatValue];
+    CGFloat height = [model.middleImage.height floatValue];
+    [self.singleImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(self.singleImageView.mas_width).multipliedBy(height/width);
+    }];
+    
+    [self.singleImageView bd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholder:nil];
+    
     //设置userInfo
     self.userInfoView.userName.text = @"汤唯";
     self.userInfoView.descLabel.text = @"今天 14:20";

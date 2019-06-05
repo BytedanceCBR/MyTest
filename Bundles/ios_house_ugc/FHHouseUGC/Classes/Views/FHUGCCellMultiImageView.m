@@ -1,0 +1,100 @@
+//
+//  FHUGCCellMultiImageView.m
+//  FHHouseUGC
+//
+//  Created by 谢思铭 on 2019/6/4.
+//
+
+#import "FHUGCCellMultiImageView.h"
+#import "UIColor+Theme.h"
+#import <Masonry.h>
+#import <UIImageView+BDWebImage.h>
+
+#define itemPadding 4
+
+@interface FHUGCCellMultiImageView ()
+
+@property(nonatomic, assign) NSInteger count;
+@property(nonatomic, strong) NSMutableArray *imageViewList;
+
+@end
+
+@implementation FHUGCCellMultiImageView
+
+- (instancetype)initWithFrame:(CGRect)frame count:(NSInteger)count {
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+        _imageViewList = [[NSMutableArray alloc] init];
+        _count = count;
+        
+        [self initViews];
+        [self initConstraints];
+    }
+    return self;
+}
+
+- (void)initViews {
+    
+    self.layer.masksToBounds = YES;
+    self.layer.cornerRadius = 4;
+    
+    for (NSInteger i = 0; i < self.count; i++) {
+        UIImageView *imageView = [[UIImageView alloc] init];
+        imageView.clipsToBounds = YES;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.backgroundColor = [UIColor themeGray7];
+        [self addSubview:imageView];
+        
+        [self.imageViewList addObject:imageView];
+    }
+}
+
+- (void)initConstraints {
+    if(self.count == 1){
+        UIImageView *imageView = [self.imageViewList firstObject];
+        [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.left.right.bottom.mas_equalTo(self);
+            make.height.mas_equalTo(imageView.mas_width).multipliedBy(251.0f/355.0f);
+        }];
+        
+    }else if(self.count == 2){
+        UIView *firstView = self;
+        for (UIImageView *imageView in self.imageViewList) {
+            [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.bottom.mas_equalTo(self);
+                if(firstView == self){
+                    make.left.mas_equalTo(firstView);
+                }else{
+                    make.left.mas_equalTo(firstView.mas_right);
+                }
+                make.width.mas_equalTo(self.mas_width).multipliedBy(0.5);
+                make.height.mas_equalTo(imageView.mas_width).multipliedBy(251.0f/355.0f);
+            }];
+            firstView = imageView;
+        }
+        
+    }else if(self.count >= 3){
+        
+    }else{
+        
+    }
+}
+
+- (void)updateImageView:(NSArray *)imageList {
+    if(self.imageViewList.count <= imageList.count){
+        for (NSInteger i = 0; i < self.imageViewList.count; i++) {
+            FHFeedContentImageListModel *imageModel = imageList[i];
+            CGFloat width = [imageModel.width floatValue];
+            CGFloat height = [imageModel.height floatValue];
+            UIImageView *imageView = self.imageViewList[i];
+            [imageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(imageView.mas_width).multipliedBy(height/width);
+            }];
+            
+            [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+        }
+    }
+}
+
+@end

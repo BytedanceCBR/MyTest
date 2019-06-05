@@ -5,7 +5,7 @@
 //  Created by 谢思铭 on 2019/6/3.
 //
 
-#import "FHUGCSingleImageCell.h"
+#import "FHUGCTwoImageCell.h"
 #import <UIImageView+BDWebImage.h>
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCCellUserInfoView.h"
@@ -13,7 +13,7 @@
 #import "FHUGCCellMultiImageView.h"
 
 
-@interface FHUGCSingleImageCell ()
+@interface FHUGCTwoImageCell ()
 
 @property(nonatomic ,strong) UILabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
@@ -23,7 +23,7 @@
 
 @end
 
-@implementation FHUGCSingleImageCell
+@implementation FHUGCTwoImageCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -54,7 +54,7 @@
     _contentLabel.numberOfLines = 2;
     [self.contentView addSubview:_contentLabel];
     
-    self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectZero count:1];
+    self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectZero count:2];
     [self.contentView addSubview:_multiImageView];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
@@ -83,7 +83,7 @@
         make.left.mas_equalTo(self.contentView).offset(20);
         make.right.mas_equalTo(self.contentView).offset(-20);
     }];
-
+    
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
         make.left.right.mas_equalTo(self.contentView);
@@ -122,3 +122,4 @@
 }
 
 @end
+

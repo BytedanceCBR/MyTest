@@ -9,6 +9,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import <Masonry.h>
+#import "FHFeedContentModel.h"
 #import "FHUGCBaseViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN

@@ -16,7 +16,6 @@
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic ,strong) UITableView *tableView;
-@property(nonatomic, strong) NSMutableArray *dataList;
 
 @end
 
@@ -33,7 +32,7 @@
 - (void)initView {
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.backgroundColor = [UIColor themeGray7];
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     UIView *headerView = self.tableHeaderView ? self.tableHeaderView : [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
     _tableView.tableHeaderView = headerView;

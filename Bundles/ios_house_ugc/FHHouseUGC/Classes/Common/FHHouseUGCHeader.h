@@ -27,6 +27,8 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
 {
     FHUGCFeedListCellTypePureTitle = 0,                         //纯文本
     FHUGCFeedListCellTypeSingleImage,                           //单图
+    FHUGCFeedListCellTypeTwoImage,                              //两图
+    FHUGCFeedListCellTypeMultiImage,                            //多图
 };
 
 #endif /* FHHouseUGCHeader_h */
