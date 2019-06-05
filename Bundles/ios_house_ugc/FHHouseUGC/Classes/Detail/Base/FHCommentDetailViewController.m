@@ -426,6 +426,44 @@ TTDetailModel *tt_detailModel;// test add by zyk
     // add by zyk 收藏
 }
 
+// 点赞
+- (void)p_digg {
+    self.detailModel.article.userLike = @(!self.detailModel.article.userLike.boolValue);
+    self.detailModel.article.likeCount = @(self.detailModel.article.userLike.boolValue ? ([self.detailModel.article.likeCount intValue] + 1) : MAX(0, ([self.detailModel.article.likeCount intValue] - 1)));
+    [self.detailModel.article save];
+    
+//    [self.rewardView updateDigButton];
+    [self changeRewardViewDiggButtonBorderColorWithSelectStatus:self.detailModel.article.userLike.boolValue];
+    
+//    if (!self.itemActionManager) {
+//        self.itemActionManager = [[ExploreItemActionManager alloc] init];
+//    }
+//    [self.itemActionManager sendActionForOriginalData:self.detailModel.article adID:nil actionType:self.detailModel.article.userLike.boolValue? DetailActionTypeLike: DetailActionTypeUnlike finishBlock:nil];
+//
+//    [self p_trackDiggEvent];
+}
+
+- (void)changeRewardViewDiggButtonBorderColorWithSelectStatus:(BOOL)isSelected {
+//    BOOL isDayMode = [[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay;
+//    NSString *borderColorKey;
+//    if (isDayMode) {
+//        borderColorKey = kTTkUGCDiggActionSelectedColorArticleBorderDayModeKey;
+//    } else {
+//        borderColorKey = kTTkUGCDiggActionSelectedColorArticleBorderNightModeKey;
+//    }
+//    WeakSelf;
+//    [[BDContextGet() findServiceByName:TTUGCDiggActionIconHelperServiceName] asyncGetDiggTitleSelectedColorWithActionIconKey:self.articleInfoManager.detailModel.article.diggIconConfigKey colorKey:borderColorKey completionBlock:^(UIColor * _Nullable color) {
+//        StrongSelf;
+//        if (color && isSelected) {
+//            self.rewardView.digButton.layer.borderColor = color.CGColor;
+//        } else {
+//            self.rewardView.digButton.borderColorThemeKey = kColorLine7;
+//            self.rewardView.digButton.selectedBorderColorThemeKey = kColorLine4;
+//        }
+//    }];
+    
+}
+
 - (void)p_willShowSharePannel {
     
 }
@@ -433,6 +471,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
 - (void)p_refreshToolbarView
 {
     self.toolbarView.collectButton.selected = self.detailModel.article.userRepined;
+    self.toolbarView.digButton.selected = [self.detailModel.article.userLike boolValue];
     self.toolbarView.commentBadgeValue = [@(self.detailModel.article.commentCount) stringValue];
 }
 
@@ -646,7 +685,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
     NSString *fwID = self.detailModel.article.groupModel.groupID;
     
     TTArticleReadQualityModel *qualityModel = [[TTArticleReadQualityModel alloc] init];
-    double readPct = [self.detailView.detailWebView readPCTValue];
+    double readPct = (self.mainScrollView.contentOffset.y + self.mainScrollView.frame.size.height) / self.mainScrollView.contentSize.height;
     NSInteger percent = MAX(0, MIN((NSInteger)(readPct * 100), 100));
     qualityModel.readPct = @(percent);
     qualityModel.stayTimeMs = @([self.detailModel.sharedDetailManager currentStayDuration]);
@@ -722,20 +761,6 @@ TTDetailModel *tt_detailModel;// test add by zyk
         NSMutableDictionary * data = [NSMutableDictionary dictionaryWithDictionary:[responseData objectForKey:@"data"]];
         [self.commentViewController tt_insertCommentWithDict:data];
         [self.commentViewController tt_markStickyCellNeedsAnimation];
-        
-        if ([self.detailView.detailWebView isNewWebviewContainer]) {
-            if (![self.detailView.detailWebView isNatantViewOnOpenStatus]) {
-                [self p_sendNatantViewVisableTrack];
-            }
-            [self.detailView.detailWebView openFirstCommentIfNeed];
-        } else {
-            [self.commentViewController tt_commentTableViewScrollToTop];
-            if (![self.detailView.detailWebView isNatantViewOnOpenStatus]) {
-                [self.detailView.detailWebView openFooterView:NO];
-                [self p_sendNatantViewVisableTrack];
-            }
-        }
-        
     }
 }
 
