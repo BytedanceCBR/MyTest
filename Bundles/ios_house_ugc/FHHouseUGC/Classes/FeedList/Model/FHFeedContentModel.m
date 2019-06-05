@@ -74,6 +74,13 @@
 }
 @end
 
+@implementation FHFeedContentImageListUrlListModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHFeedContentModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -82,6 +89,7 @@
     @"contentDecoration": @"content_decoration",
     @"mediaName": @"media_name",
     @"banComment": @"ban_comment",
+    @"imageList": @"image_list",
     @"readCount": @"read_count",
     @"isSubject": @"is_subject",
     @"articleType": @"article_type",
@@ -169,6 +177,22 @@
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
   }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentImageListModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"urlList": @"url_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
 }
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {

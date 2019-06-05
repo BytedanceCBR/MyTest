@@ -40,7 +40,7 @@
     NSInteger listCount = self.dataList.count;
     double behotTime = 0;
     
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:@"f_house_news" behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:@"f_wenda" behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         
@@ -127,8 +127,10 @@
     FHUGCFeedListCellType type = FHUGCFeedListCellTypePureTitle;
 //    NSInteger cellType = [model.cellType integerValue];
     
-    FHFeedContentMiddleImageModel *middleImage = model.middleImage;
-    if(middleImage){
+    NSArray *imageList = model.imageList;
+    if(imageList.count > 0){
+        type = FHUGCFeedListCellTypeTwoImage;
+    }else{
         type = FHUGCFeedListCellTypeSingleImage;
     }
     

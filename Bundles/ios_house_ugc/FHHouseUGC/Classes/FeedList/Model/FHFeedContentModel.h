@@ -7,6 +7,26 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *activity;
 @end
 
+@protocol FHFeedContentImageListModel<NSObject>
+@end
+
+@protocol FHFeedContentImageListUrlListModel<NSObject>
+@end
+
+@interface FHFeedContentImageListUrlListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@end
+
+@interface FHFeedContentImageListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *width;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListUrlListModel> *urlList;
+@property (nonatomic, copy , nullable) NSString *uri;
+@property (nonatomic, copy , nullable) NSString *height;
+@end
+
 @interface FHFeedContentForwardInfoModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *forwardCount;
@@ -184,7 +204,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *itemVersion;
 @property (nonatomic, strong , nullable) FHFeedContentMediaInfoModel *mediaInfo ;  
 @property (nonatomic, copy , nullable) NSString *groupId;
-@property (nonatomic, strong , nullable) FHFeedContentMiddleImageModel *middleImage ;  
+@property (nonatomic, strong , nullable) FHFeedContentMiddleImageModel *middleImage ;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *imageList;
 @end
 
 

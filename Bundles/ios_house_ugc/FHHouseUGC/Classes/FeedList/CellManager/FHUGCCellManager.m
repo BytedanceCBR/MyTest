@@ -9,6 +9,8 @@
 
 #import "FHUGCPureTitleCell.h"
 #import "FHUGCSingleImageCell.h"
+#import "FHUGCMultiImageCell.h"
+#import "FHUGCTwoImageCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -30,6 +32,8 @@
     self.supportCellTypeList = @[
                                 @"FHUGCPureTitleCell",
                                 @"FHUGCSingleImageCell",
+                                @"FHUGCMultiImageCell",
+                                @"FHUGCTwoImageCell",
 
                                  //可扩展
                                  ];
@@ -50,6 +54,12 @@
             
         case FHUGCFeedListCellTypeSingleImage:
             return [FHUGCSingleImageCell class];
+            
+        case FHUGCFeedListCellTypeTwoImage:
+            return [FHUGCTwoImageCell class];
+            
+        case FHUGCFeedListCellTypeMultiImage:
+            return [FHUGCMultiImageCell class];
 
         default:
             break;
