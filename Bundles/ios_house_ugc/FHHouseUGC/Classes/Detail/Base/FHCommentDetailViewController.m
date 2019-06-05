@@ -38,6 +38,7 @@
 #import "SSCommentInputHeader.h"
 #import "TTCommentWriteManager.h"
 #import "TTCommentWriteView.h"
+#import "ExploreItemActionManager.h"
 
 TTDetailModel *tt_detailModel;// test add by zyk
 
@@ -55,6 +56,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
 @property (nonatomic, assign)   CGFloat       topTableViewContentHeight;
 @property (nonatomic, assign)   BOOL       isAppearing;
 @property(nonatomic, strong) TTCommentWriteView *commentWriteView;
+@property (nonatomic, strong) ExploreItemActionManager *itemActionManager;
 
 // test
 @property (nonatomic, strong) TTDetailModel *detailModel;
@@ -177,6 +179,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
     [self.toolbarView.writeButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.toolbarView.emojiButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.toolbarView.commentButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.toolbarView.digButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.toolbarView.shareButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     self.toolbarView.frame = [self p_frameForToolBarView];
@@ -372,42 +375,9 @@ TTDetailModel *tt_detailModel;// test add by zyk
         }
         [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:YES];
     }
-    else if (sender == _toolbarView.commentButton) {
-
-//            [self p_sendNatantViewVisableTrack];
-//            if ([self.detailView.detailWebView isNatantViewOnOpenStatus]) {
-//                [self p_closeNatantView];
-//            }
-//            else {
-//                [self p_openNatantView];
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(([self.detailView.detailWebView isNewWebviewContainer]? 0.6: 0.3) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                    [[TTAuthorizeManager sharedManager].loginObj showAlertAtActionDetailComment:^{
-//
-//                        [TTAccountManager showLoginAlertWithType:TTAccountLoginAlertTitleTypeDefault source:nil completion:^(TTAccountAlertCompletionEventType type, NSString *phoneNum) {
-//                            if (type == TTAccountAlertCompletionEventTypeDone) {
-//                                if ([TTAccountManager isLogin]) {
-//                                    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
-//                                }
-//                            } else if (type == TTAccountAlertCompletionEventTypeTip) {
-//                                [TTAccountManager presentQuickLoginFromVC:[TTUIResponderHelper topNavigationControllerFor:self] type:TTAccountLoginDialogTitleTypeDefault source:nil completion:^(TTAccountLoginState state) {
-//
-//                                }];
-//                            }
-//                        }];
-//                    }];
-//                });
-//
-//                //added 5.3 无评论时引导用户发评论
-//                //与新版浮层动画冲突.延迟到0.6s执行
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(([self.detailView.detailWebView isNewWebviewContainer]? 0.6: 0.3) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                    if (!self.detailModel.article.commentCount) {
-//                        [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
-//                    }
-//                });
-//
-//                //added5.7:评论较少或无评论时，点击评论按钮弹起浮层时不会走scrollDidScroll，此处需强制调用一次检查浮层诸item是否需要发送show事件
-//                [self.natantContainerView sendNatantItemsShowEventWithContentOffset:0 isScrollUp:YES shouldSendShowTrack:YES];
-//            }
+    else if (sender == _toolbarView.digButton) {
+        // 点赞
+        [self p_digg];
     }
     else if (sender == _toolbarView.shareButton) {
         [self p_willShowSharePannel];
@@ -435,10 +405,10 @@ TTDetailModel *tt_detailModel;// test add by zyk
 //    [self.rewardView updateDigButton];
     [self changeRewardViewDiggButtonBorderColorWithSelectStatus:self.detailModel.article.userLike.boolValue];
     
-//    if (!self.itemActionManager) {
-//        self.itemActionManager = [[ExploreItemActionManager alloc] init];
-//    }
-//    [self.itemActionManager sendActionForOriginalData:self.detailModel.article adID:nil actionType:self.detailModel.article.userLike.boolValue? DetailActionTypeLike: DetailActionTypeUnlike finishBlock:nil];
+    if (!self.itemActionManager) {
+        self.itemActionManager = [[ExploreItemActionManager alloc] init];
+    }
+    [self.itemActionManager sendActionForOriginalData:self.detailModel.article adID:nil actionType:self.detailModel.article.userLike.boolValue? DetailActionTypeLike: DetailActionTypeUnlike finishBlock:nil];
 //
 //    [self p_trackDiggEvent];
 }
@@ -470,6 +440,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
 
 - (void)p_refreshToolbarView
 {
+    NSLog(@"---------:%@   %ld",self.detailModel.article.userLike,[self.detailModel.article.likeCount integerValue]);
     self.toolbarView.collectButton.selected = self.detailModel.article.userRepined;
     self.toolbarView.digButton.selected = [self.detailModel.article.userLike boolValue];
     self.toolbarView.commentBadgeValue = [@(self.detailModel.article.commentCount) stringValue];
@@ -699,7 +670,9 @@ TTDetailModel *tt_detailModel;// test add by zyk
     commentManager.categoryID = self.detailModel.categoryID;
     commentManager.logPb = self.detailModel.logPb;
     
-    self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
+    if (self.commentWriteView == nil) {
+        self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
+    }
     
     self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
     
