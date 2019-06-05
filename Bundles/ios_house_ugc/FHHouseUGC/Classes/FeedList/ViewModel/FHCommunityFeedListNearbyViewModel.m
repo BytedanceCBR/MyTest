@@ -41,7 +41,7 @@
     NSInteger listCount = self.dataList.count;
     double behotTime = 0;
     
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:@"f_wenda" behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:@"weitoutiao" behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         
@@ -126,13 +126,22 @@
 //用来根据model计算类型
 - (FHUGCFeedListCellType)getFeedType:(FHFeedContentModel *)model {
     FHUGCFeedListCellType type = FHUGCFeedListCellTypePureTitle;
-//    NSInteger cellType = [model.cellType integerValue];
+    NSInteger cellType = [model.cellType integerValue];
     
     NSArray *imageList = model.imageList;
+//    if(imageList.count >= 3){
+//        type = FHUGCFeedListCellTypeMultiImage;
+//    }else if(imageList.count == 2){
+//        type = FHUGCFeedListCellTypeTwoImage;
+//    }else if(imageList.count == 1){
+//        type = FHUGCFeedListCellTypeSingleImage;
+//    }else{
+        type = FHUGCFeedListCellTypeArticlePureTitle;
+//    }
     if(imageList.count > 0){
-        type = FHUGCFeedListCellTypeTwoImage;
+        type = FHUGCFeedListCellTypeArticleMultiImage;
     }else{
-        type = FHUGCFeedListCellTypeSingleImage;
+        type = FHUGCFeedListCellTypeArticlePureTitle;
     }
     
     return  type;

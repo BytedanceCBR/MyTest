@@ -12,6 +12,8 @@
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
 
+#define leftMargin 20
+#define rightMargin 20
 
 @interface FHUGCSingleImageCell ()
 
@@ -54,7 +56,7 @@
     _contentLabel.numberOfLines = 2;
     [self.contentView addSubview:_contentLabel];
     
-    self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectZero count:1];
+    self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:1];
     [self.contentView addSubview:_multiImageView];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
@@ -74,16 +76,16 @@
     
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(20);
-        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.left.mas_equalTo(self.contentView).offset(leftMargin);
+        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
     }];
     
     [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(20);
-        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.left.mas_equalTo(self.contentView).offset(leftMargin);
+        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
     }];
-
+    
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
         make.left.right.mas_equalTo(self.contentView);
@@ -122,3 +124,4 @@
 }
 
 @end
+
