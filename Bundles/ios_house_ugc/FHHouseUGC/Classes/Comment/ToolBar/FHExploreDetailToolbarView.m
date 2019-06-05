@@ -186,7 +186,7 @@
             _emojiButton.hidden = NO;
             _commentButton.hidden = YES;
             _collectButton.hidden = YES;
-            _shareButton.hidden = NO;
+            _shareButton.hidden = YES;
             _digButton.hidden = NO;
             self.toolbarLabelEnabled = [SSCommonLogic toolbarLabelEnabled];
             self.backgroundColorThemeKey = kColorBackground4;

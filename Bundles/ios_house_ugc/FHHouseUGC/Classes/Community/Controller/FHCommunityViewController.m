@@ -14,6 +14,7 @@
 #import "FHTopicDetailViewController.h"
 #import "FHCommunityDetailViewController.h"
 #import "FHPostDetailViewController.h"
+#import "FHWDAnswerPictureTextViewController.h"
 
 @interface FHCommunityViewController ()
 
@@ -154,7 +155,7 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
     
-    FHPostDetailViewController *vc = [[FHPostDetailViewController alloc] init];
+    FHWDAnswerPictureTextViewController *vc = [[FHWDAnswerPictureTextViewController alloc] init];
     TTNavigationController *navVC = [[TTNavigationController alloc] initWithRootViewController:vc];
     [self presentViewController:navVC animated:YES completion:nil];
 }
