@@ -127,6 +127,8 @@ typedef void(^WebViewLogHandler)(NSString * _Nullable msg);
 
 - (nullable JSContext *)jsContext;
 
+- (NSArray *)fhWebBlackWebList;
+
 @property (nullable, nonatomic, readonly, strong) NSURLRequest *request;
 
 @property (nullable, nonatomic, readonly, strong) NSURL *currentURL;
