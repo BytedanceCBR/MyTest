@@ -121,6 +121,7 @@ static NSString *s_oldAgent = nil;
     _webContainer.ssWebView.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
     _webContainer.disableEndRefresh = YES;
     _webContainer.disableConnectCheck = YES;
+    _webContainer.ssWebView.isCheckOpenUrlNameList = YES;
     [self.view addSubview:_webContainer];
     
     if (_url) {

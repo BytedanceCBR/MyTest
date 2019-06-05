@@ -266,6 +266,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         BOOL hasMore = NO;
         NSString *refreshTip;
         
+        [self.currentViewController.emptyView hideEmptyView];
+        
         FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
         hasMore = houseModel.hasMore;
         refreshTip = houseModel.refreshTip;

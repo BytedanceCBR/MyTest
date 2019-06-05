@@ -45,6 +45,7 @@ typedef void(^WebViewLogHandler)(NSString * _Nullable msg);
 
 @property (nonatomic, weak, nullable) id<YSWebViewDelegate> delegate;
 @property (nonatomic, readonly, weak, nullable) UIScrollView *scrollView;
+@property (nonatomic, assign) BOOL isCheckOpenUrlNameList;
 //@property (nonatomic, readonly, weak, nullable) id innerWebView;
 
 

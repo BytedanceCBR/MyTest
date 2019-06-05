@@ -142,6 +142,8 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
     //文档说 默认的isAccessibilityElement 是YES，但是实际不是
     self.isAccessibilityElement = YES;
 
+    self.isCheckOpenUrlNameList = NO;
+    
     self.innerWebViewDelegate = [[YSInnerWebViewDelegate alloc] init];
     self.innerWebViewDelegate.ysWebView = self;
     __weak __typeof(self)weakSelf = self;
@@ -758,6 +760,17 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    
+    if (self.ysWebView.isCheckOpenUrlNameList) {
+        if ([request.URL.absoluteString rangeOfString:@"schema=lianjia"].location != NSNotFound) { // 对应的scheme
+            return NO;
+        }
+        if ([request.URL.absoluteString rangeOfString:@"schema=lianjia"].location != NSNotFound) { // 对应的scheme
+            return NO;
+        }
+    }
+
+    
     if ([self.ysWebView.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
         return [self.ysWebView.delegate webView:self.ysWebView shouldStartLoadWithRequest:request navigationType:mapUIWebViewNavigationTypeToYSWebViewNavigationType(navigationType)];
     } else {
@@ -786,6 +799,17 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     //NSURL *url = navigationAction.request.URL;
+    
+    // WKWebView默认拦截scheme 需在下面方法手动打开
+    // 打开外部应用 Safari等操作
+    
+    NSLog(@"navigationAction.request.URL.absoluteString = %@",navigationAction.request.URL.absoluteString);
+    
+    if ([navigationAction.request.URL.absoluteString hasPrefix:@"xxx"]) { // 对应的scheme
+        [[UIApplication sharedApplication] openURL:navigationAction.request.URL];
+    }
+    
+
     if ([self.ysWebView.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
         if ([self.ysWebView.delegate webView:self.ysWebView shouldStartLoadWithRequest:navigationAction.request navigationType:mapWKNavigationTypeToYSWebViewNavigationType(navigationAction.navigationType)]) {
             decisionHandler(WKNavigationActionPolicyAllow);
