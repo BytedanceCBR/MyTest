@@ -6,10 +6,10 @@
 //
 
 #import "SSWebViewController.h"
-#import <FHBaseViewController.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHouseDetailWebViewController : FHBaseViewController
+@interface FHHouseDetailWebViewController : SSWebViewController
 
 @end
 
