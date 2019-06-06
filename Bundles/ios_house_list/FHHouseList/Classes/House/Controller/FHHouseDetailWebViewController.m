@@ -59,7 +59,7 @@
         [paramsDict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
         
         NSString *getParamStr = [FHUtils getUrlFormStrFromDict:paramsDict andFirstChar:YES];
-        if ([getParamStr isKindOfClass:[NSString class]]) {
+        if ([getParamStr isKindOfClass:[NSString class]] && _url && _backUrl) {
             _url = [NSString stringWithFormat:@"%@%@",_url,getParamStr];
             _backUrl = [NSString stringWithFormat:@"%@%@",_backUrl,getParamStr];
         }
@@ -110,68 +110,12 @@
         
         [self.view addSubview:self.topTipView];
     }
-    
-//    self.webContainer = [[UIWebView alloc] initWithFrame:[self frameForListView]];
-//    self.webContainer.delegate = self;
-////    [_webContainer.ssWebView addDelegate:self];
-////    [_webContainer hiddenProgressView:YES];
-////    _webContainer.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-////    _webContainer.ssWebView.opaque = NO;
-////    _webContainer.ssWebView.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
-////    _webContainer.disableEndRefresh = YES;
-////    _webContainer.disableConnectCheck = YES;
-////    _webContainer.ssWebView.isCheckOpenUrlNameList = YES;
-//    [self.view addSubview:_webContainer];
-//
-//    @try {
-//        // 可能会出现崩溃的代码
-//        [_webContainer loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_url]]];
-//    }
-//
-//    @catch (NSException *exception) {
-//        // 捕获到的异常exception
-//        if (exception) {
-//
-//        }
-//    }
-//    @finally {
-//        // 结果处理
-//    }
-//
-//    [self tt_startUpdate];
-    
-    
-    if (![FHEnvContext isNetworkConnected]) {
-        FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.7)];
-        //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
-        [self.view addSubview:noDataErrorView];
-        
-        __weak typeof(self) weakSelf = self;
-        FHErrorView * noDataErrorViewWeak = noDataErrorView;
-        noDataErrorView.retryBlock = ^{
-            [weakSelf.ssWebView.ssWebContainer.ssWebView reload];
-//            if (weakSelf.webContainer.ssWebView.request && [FHEnvContext isNetworkConnected]) {
-//                [noDataErrorViewWeak hideEmptyView];
-//                [weakSelf.webContainer.ssWebView loadRequest:weakSelf.webContainer.ssWebView.request];
-//            }
-        };
-        
-        [noDataErrorView showEmptyWithTip:@"网络异常,请检查网络链接" errorImageName:@"group-4"
-                                showRetry:YES];
-        noDataErrorView.retryButton.userInteractionEnabled = YES;
-        [noDataErrorView.retryButton setTitle:@"刷新" forState:UIControlStateNormal];
-        [noDataErrorView setBackgroundColor:self.view.backgroundColor];
-        [noDataErrorView.retryButton mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(104, 30));
-        }];
-    }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     [self setupUI];
-    
     
     self.ssWebView.ssWebContainer.ssWebView.isCheckOpenUrlNameList = YES;
 }
@@ -203,6 +147,7 @@
        
     }
 }
+
 - (void)didMoveToParentViewController:(UIViewController*)parent{
     [super didMoveToParentViewController:parent];
     if(!parent){
