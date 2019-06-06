@@ -41,6 +41,7 @@
 #import "TTUGCHashtagModel.h"
 #import "TTAdCanvasDefine.h"
 #import "WDSettingHelper.h"
+#import "WDAnswerService.h"
 
 static CGFloat const kLeftPadding = 15.f;
 static CGFloat const kRightPadding = 15.f;
@@ -344,6 +345,78 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (void)postQuestionAction:(id)sender {
     
 }
+
+- (void)postAnswerWithApiParam:(NSDictionary *)apiParam
+                        source:(NSString *)source
+                  listEntrance:(NSString *)listEntrance
+           imageUploadComplete:(void(^ __nullable)(void))uploadImageCompleteHandler
+                      complete:(void(^ __nullable)(NSError * __nullable error))block
+{
+    //先保存最新的快照
+    /*
+    typeof(self) __weak wSelf = self;
+    void(^sendAnswerBlock)(void) = ^{
+        
+        if (isEmptyString(wSelf.taskModel.content) && wSelf.taskModel.imageList.count == 0) {
+            return;
+        }
+        NSString *content = wSelf.taskModel.content;
+        NSString *richSpanTetxt = wSelf.taskModel.richSpanText;
+        NSArray<NSString *> *imageUris = [wSelf.taskModel remoteImgUris];
+        BOOL nowTaskValid = YES;
+        
+        if (!nowTaskValid) {
+            //图片上传异常或者沙盒中的压缩图片丢失
+            [wSelf.draftManager startAutoSave];
+            if (wSelf.boxImgMiss) {
+                if (block) {
+                    NSError *postError = [NSError errorWithDomain:kWDErrorDomain code:kWDPostErrorTypeLocalImageError userInfo:@{kWDErrorTipsKey : NSLocalizedString(@"图片加载失败，请检查后重试", nil)}];
+                    block(postError);
+                }
+            }else {
+                NSError *postError = [NSError errorWithDomain:kWDErrorDomain code:kWDPostErrorTypeUploadImageError userInfo:@{kWDErrorTipsKey : NSLocalizedString(@"图片上传失败，请重试", nil)}];
+                if (block) {
+                    block(postError);
+                }
+            }
+            return;
+        }
+        
+        if (uploadImageCompleteHandler) {
+            //通知vc图片上传过程完成
+            uploadImageCompleteHandler();
+        }
+        
+        if (wSelf.isPosting) {
+            return;
+        }
+        wSelf.isPosting = YES;
+        [WDAnswerService postAnswerWithQid:wSelf.qid answerType:WDAnswerTypePictureText content:content richSpanText:richSpanTetxt imageUris:imageUris videoID:nil videoCoverURI:nil videoDuration:nil isBanComment:wSelf.isForbidComment apiParameter:apiParam source:source listEntrance:listEntrance gdExtJson:[wSelf.gdExtJson tt_JSONRepresentation] finishBlock:^(WDWendaCommitPostanswerResponseModel * _Nullable responseModel, NSError * _Nullable error) {
+            NSString *tips;
+            NSError *postError;
+            
+            if (error) {
+                [wSelf.draftManager startAutoSave];
+                tips = [[error userInfo] objectForKey:@"description"];
+                postError = [NSError errorWithDomain:kWDErrorDomain code:kWDPostErrorTypePostAPIError userInfo:tips.length > 0?@{kWDErrorTipsKey : tips, kWDErrorCodeKey : @(error.code)}:nil];
+            }
+            
+            wSelf.answerSchema = responseModel.schema;
+            wSelf.ansid = responseModel.ansid;
+            wSelf.tipsModel = responseModel.tips;
+            
+            if (block) {
+                block(postError);
+            }
+            wSelf.isPosting = NO;
+        }];
+    };
+    
+    wSelf.sendAnswerBlock = sendAnswerBlock;
+    [wSelf.uploadImageManager uploadImages:wSelf.taskModel.imageList];
+     */
+}
+
 
 - (void)addImagesViewSizeChanged {
     self.inputContainerView.height = self.addImagesView.bottom + kAddImagesViewBottomPadding;
