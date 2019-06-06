@@ -13,6 +13,8 @@
 #import <TTRexxar/TTRWKWebView.h>
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import <Masonry/Masonry.h>
+#import <NSDictionary+TTAdditions.h>
+
 
 #define DESTROY_UIWEBVIEW_ARC(__WEBVIEW)   { __WEBVIEW.delegate = nil; [__WEBVIEW stopLoading]; __WEBVIEW = nil; }
 #define DESTROY_WKWEBVIEW_ARC(__WEBVIEW)   { __WEBVIEW.navigationDelegate = nil; __WEBVIEW.scrollView.delegate = nil; [__WEBVIEW stopLoading]; __WEBVIEW = nil; }
@@ -142,6 +144,8 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
     //文档说 默认的isAccessibilityElement 是YES，但是实际不是
     self.isAccessibilityElement = YES;
 
+    self.isCheckOpenUrlNameList = NO;
+    
     self.innerWebViewDelegate = [[YSInnerWebViewDelegate alloc] init];
     self.innerWebViewDelegate.ysWebView = self;
     __weak __typeof(self)weakSelf = self;
@@ -740,6 +744,25 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
     
     return NO;
 }
+
+- (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]){
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+    } else {
+        return nil;
+    }
+}
+
+- (NSArray *)fhWebBlackWebList
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    NSArray * f_gecko_channels = [fhSettings tt_arrayValueForKey:@"f_web_house_balck_name_list"];
+    if ([f_gecko_channels isKindOfClass:[NSArray class]]) {
+        return f_gecko_channels;
+    }
+    return @[];
+}
+
 @end
 
 @implementation YSInnerWebViewDelegate
@@ -758,6 +781,21 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    
+    if (self.ysWebView.isCheckOpenUrlNameList) {
+        NSArray *blackNameList = [self.ysWebView fhWebBlackWebList];
+        if ([blackNameList isKindOfClass:[NSArray class]] && blackNameList.count > 0) {
+            for (NSInteger i = 0; i < blackNameList.count; i++) {
+                NSString *blackName = blackNameList[i];
+                if ([blackName isKindOfClass:[NSString class]]) {
+                    if ([request.URL.absoluteString rangeOfString:blackName].location != NSNotFound) { // 对应的scheme
+                        return NO;
+                    }
+                }
+            }
+        }
+    }
+    
     if ([self.ysWebView.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
         return [self.ysWebView.delegate webView:self.ysWebView shouldStartLoadWithRequest:request navigationType:mapUIWebViewNavigationTypeToYSWebViewNavigationType(navigationType)];
     } else {
@@ -786,6 +824,17 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     //NSURL *url = navigationAction.request.URL;
+    
+    // WKWebView默认拦截scheme 需在下面方法手动打开
+    // 打开外部应用 Safari等操作
+    
+    NSLog(@"navigationAction.request.URL.absoluteString = %@",navigationAction.request.URL.absoluteString);
+    
+    if ([navigationAction.request.URL.absoluteString hasPrefix:@"xxx"]) { // 对应的scheme
+        [[UIApplication sharedApplication] openURL:navigationAction.request.URL];
+    }
+    
+
     if ([self.ysWebView.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
         if ([self.ysWebView.delegate webView:self.ysWebView shouldStartLoadWithRequest:navigationAction.request navigationType:mapWKNavigationTypeToYSWebViewNavigationType(navigationAction.navigationType)]) {
             decisionHandler(WKNavigationActionPolicyAllow);

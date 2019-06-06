@@ -31,7 +31,10 @@ static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 56;
 static const float kSegementedPadingTop = 5;
 
-@interface FHDetailNearbyMapCell () <AMapSearchDelegate,MAMapViewDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface FHDetailNearbyMapCell () <AMapSearchDelegate,
+MAMapViewDelegate,
+UITableViewDelegate,
+UITableViewDataSource>
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic , assign) NSInteger requestIndex;
@@ -53,6 +56,7 @@ static const float kSegementedPadingTop = 5;
 @property (nonatomic , strong) NSMutableDictionary *countCategoryDict;
 @property (nonatomic , strong) NSMutableDictionary *poiDatasDict;
 @property (nonatomic , strong) FHDetailNearbyMapModel *dataModel;
+@property (nonatomic, assign)  BOOL isFirstSnapshot;// 首次截屏
 
 @end
 
@@ -63,6 +67,7 @@ static const float kSegementedPadingTop = 5;
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        _isFirstSnapshot = YES;
         _isFirst = YES;
          self.searchCategory = @"交通";
         self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
@@ -171,42 +176,18 @@ static const float kSegementedPadingTop = 5;
     }];
 }
 
-- (void)setUpMapViewSetting:(BOOL)isRetry
-{
-    _mapView.delegate = self;
-    [_mapView forceRefresh];
-    
-    CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
-    WeakSelf;
-    [_mapView takeSnapshotInRect:mapRect withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
-        StrongSelf;
-        if (resultImage) {
-            self.mapImageView.image = resultImage;
-        }
-    }];
-    
-    if (self.centerPoint.latitude && self.centerPoint.longitude) {
-        [self.mapView setCenterCoordinate:self.centerPoint animated:NO];
-    }
-}
-
 - (void)setUpMapImageView
 {
     CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
     
     _mapView = [[FHDetailMapView sharedInstance] defaultMapViewWithFrame:mapRect];
     
-    //3秒如果截图失败则重试一次
-     __weak typeof(self) weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (weakSelf.mapImageView.image == nil) {
-                [weakSelf setUpMapViewSetting:YES];
-            }
-        });
+    CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 160);
+    __weak typeof(self) weakSelf = self;
+    // 延时绘制地图
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf snapshotMap];
     });
-    
-    [self setUpMapViewSetting:NO];
 
     _mapImageView = [[UIImageView alloc] initWithFrame:mapRect];
     _mapImageView.backgroundColor = [UIColor themeGray7];
@@ -382,7 +363,7 @@ static const float kSegementedPadingTop = 5;
     self.pointCenterAnnotation = userAnna;
     
     [self.mapView setCenterCoordinate:self.centerPoint];
-    [self snapShotAnnotationImage];
+    [self snapshotMap];
     //改变显示的tableview数据
     [self changePoiData];
 }
@@ -516,7 +497,7 @@ static const float kSegementedPadingTop = 5;
             titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
             backImageView.frame = CGRectMake(0, 0, titleLabel.text.length * 13 + 20, 35);
             
-            UIImage *imageAnna = [UIImage imageNamed:@"mapsearch_annotation_bg"];
+            UIImage *imageAnna = [UIImage imageNamed:@"mapsearch_detail_annotation_bg"];//mapsearch_annotation_bg
             
             CGFloat width = imageAnna.size.width > 0 ? imageAnna.size.width : 10;
             CGFloat height = imageAnna.size.height > 0 ? imageAnna.size.height : 10;
@@ -536,6 +517,7 @@ static const float kSegementedPadingTop = 5;
             titleLabel.textAlignment = NSTextAlignmentCenter;
             titleLabel.backgroundColor = [UIColor clearColor];
             [titleLabel sizeToFit];
+            backImageView.frame = CGRectMake(0, 0, titleLabel.frame.size.width + 40, 35);
             titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y - 1);
             
             UIImageView *bottomArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapsearch_annotation_arrow"]];
@@ -616,16 +598,48 @@ static const float kSegementedPadingTop = 5;
     NSLog(@"table cell click!!!");
 }
 
-- (void)snapShotAnnotationImage
-{
-    CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
-    WeakSelf;
-    [_mapView takeSnapshotInRect:mapRect withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
-        StrongSelf;
-        if (resultImage) {
-            self.mapImageView.image = resultImage;
+// 地图截屏
+- (void)snapshotMap {
+    // 截屏
+    __weak typeof(self) weakSelf = self;
+    CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 160);
+    [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
+        // 注意点，如果进入周边地图页面，截屏可能不正确
+        weakSelf.isFirstSnapshot = NO;
+        BOOL isVCDidDisappear = weakSelf.baseViewModel.detailController.isViewDidDisapper; // 是否 不可见
+        if (!isVCDidDisappear) {
+            weakSelf.mapImageView.image = resultImage;
         }
     }];
+    // 预处理
+    [self preShowMapviewSnapshot];
+}
+
+- (void)fh_willDisplayCell {
+    if (self.mapImageView.image == nil) {
+        [self snapshotMap];
+    }
+}
+
+// mapview 的 takeSnapshotInRect 方法有可能等很久（10s）才返回
+- (void)preShowMapviewSnapshot {
+    if (self.mapImageView.image == nil && self.isFirstSnapshot) {
+         __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (weakSelf.mapImageView.image == nil && !weakSelf.baseViewModel.detailController.isViewDidDisapper) {
+                weakSelf.mapView.hidden = NO;
+                [weakSelf.mapView forceRefresh];
+                weakSelf.mapImageView.image = [weakSelf getImageFromView:weakSelf.mapView];
+                weakSelf.mapView.hidden = YES;
+            }
+            weakSelf.isFirstSnapshot = NO;
+        });
+    } else {
+        self.mapView.hidden = NO;
+        [self.mapView forceRefresh];
+        self.mapImageView.image = [self getImageFromView:self.mapView];
+        self.mapView.hidden = YES;
+    }
 }
 
 - (UIImage *)getImageFromView:(UIView *)view
@@ -634,7 +648,7 @@ static const float kSegementedPadingTop = 5;
         return nil;
     }
     UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, [UIScreen mainScreen].scale);
-    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
     UIImage *imageResult = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return imageResult;

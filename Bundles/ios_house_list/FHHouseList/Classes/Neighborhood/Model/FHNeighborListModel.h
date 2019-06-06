@@ -9,6 +9,7 @@
 #import "JSONModel.h"
 #import "FHSearchHouseModel.h"
 #import "FHBaseModelProtocol.h"
+#import <FHSearchHouseModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsModel> *items;
 @property (nonatomic, copy , nullable) NSString *total;
 @property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, strong , nullable) FHSearchRealHouseExtModel *externalSite;
+
 @end
 
 @interface FHSameNeighborhoodHouseResponse : JSONModel <FHBaseModelProtocol>

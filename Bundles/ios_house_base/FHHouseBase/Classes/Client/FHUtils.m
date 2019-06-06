@@ -62,6 +62,25 @@
     return dic;
 }
 
++ (NSString *)getUrlFormStrFromDict:(NSDictionary *)dic andFirstChar:(BOOL)withFirst
+{
+    NSMutableString *resultStr = [NSMutableString new];
+    
+    for (NSString * key in dic.allKeys) {
+        if ([dic[key] isKindOfClass:[NSString class]] || [dic[key] isKindOfClass:[NSNumber class]]) {
+            [resultStr appendString:[NSString stringWithFormat:@"&%@=%@",key,dic[key]]];
+        }else if([dic[key] isKindOfClass:[NSDictionary class]])
+        {
+            [resultStr appendString:[NSString stringWithFormat:@"&%@=%@",key,[FHUtils getJsonStrFrom:dic[key]]]];
+        }
+    }
+    
+    if (!withFirst && resultStr.length > 1) {
+        resultStr = [resultStr substringFromIndex:1];
+    }
+    return resultStr;
+}
+
 /**
  * @method
  *
@@ -154,8 +173,8 @@
     //////// cornerRadius /////////
     view.layer.cornerRadius = cornerRadius;
     view.layer.masksToBounds = YES;
-    view.layer.shouldRasterize = YES;
-    view.layer.rasterizationScale = [UIScreen mainScreen].scale;
+//    view.layer.shouldRasterize = YES;
+//    view.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
     [view.superview.layer insertSublayer:shadowLayer below:view.layer];
 }

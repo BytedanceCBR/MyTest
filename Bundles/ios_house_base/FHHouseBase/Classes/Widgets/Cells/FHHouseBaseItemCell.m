@@ -53,7 +53,8 @@
 @property(nonatomic, strong) UILabel *originPriceLabel;
 @property(nonatomic, strong) UILabel *pricePerSqmLabel; // 价格/平米
 @property(nonatomic, strong) UILabel *distanceLabel; // 30 分钟到达
-
+@property(nonatomic, strong) UIImageView *fakeImageView;
+@property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
@@ -346,8 +347,8 @@
     
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.paddingTop = YGPointValue(3);
-        layout.marginLeft = YGPointValue(0);
+        layout.marginTop = YGPointValue(6);
+        layout.marginLeft = YGPointValue(-3);
         layout.height = YGPointValue(15);
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
     }];
@@ -500,7 +501,7 @@
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(0);
-        layout.marginLeft = YGPointValue(-6);
+        layout.marginLeft = YGPointValue(0);
         layout.height = YGPointValue(16);
         layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
     }];
@@ -641,7 +642,6 @@
     self.subTitleLabel.text = commonModel.displayDescription;
     NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:commonModel.tags];
     self.tagLabel.attributedText =  attributeString;
-    
     self.priceLabel.text = commonModel.displayPricePerSqm;
     //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
     FHSearchHouseDataItemsHouseImageModel *imageModel = commonModel.images.firstObject;
@@ -653,9 +653,9 @@
         self.subTitleLabel.text = commonModel.displaySubtitle;
         
         if ([TTDeviceHelper isScreenWidthLarge320]) {
-            _priceLabel.font = [UIFont themeFontSemibold:16];
+            _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
         }else {
-            _priceLabel.font = [UIFont themeFontSemibold:15];
+            _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
         }
         _pricePerSqmLabel.textColor = [UIColor themeGray3];
         
@@ -674,7 +674,6 @@
             self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
             self.imageTagLabelBgView.hidden = NO;
         }else {
-            
             self.imageTagLabelBgView.hidden = YES;
         }
         
@@ -685,12 +684,13 @@
         self.priceLabel.text = commonModel.pricingNum;
         self.pricePerSqmLabel.text = commonModel.pricingUnit;
         
+        
         if ([TTDeviceHelper isScreenWidthLarge320]) {
-            _priceLabel.font = [UIFont themeFontSemibold:16];
+            _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
             _pricePerSqmLabel.textColor = [UIColor themeRed1];
         }else {
-            _priceLabel.font = [UIFont themeFontSemibold:15];
+            _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
             _pricePerSqmLabel.textColor = [UIColor themeRed1];
         }
@@ -712,17 +712,29 @@
     } else {
         
         if ([TTDeviceHelper isScreenWidthLarge320]) {
-            _priceLabel.font = [UIFont themeFontSemibold:16];
+            _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
             _pricePerSqmLabel.textColor = [UIColor themeRed1];
         }else {
-            _priceLabel.font = [UIFont themeFontSemibold:15];
+            _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
             _pricePerSqmLabel.textColor = [UIColor themeRed1];
         }
         
         self.priceLabel.text = commonModel.pricePerSqmNum;
         self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
+        
+        
+        if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
+            
+            self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
+            self.imageTagLabel.text = commonModel.houseImageTag.text;
+            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
+            self.imageTagLabelBgView.hidden = NO;
+        }else {
+            
+            self.imageTagLabelBgView.hidden = YES;
+        }
     }
     
     [self hideRecommendReason];
@@ -914,6 +926,14 @@
     self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
     self.priceLabel.text = model.pricing;
     self.pricePerSqmLabel.text = nil;
+    self.originPriceLabel.text = nil;
+    if (!self.originPriceLabel.hidden) {
+        self.originPriceLabel.hidden = YES;
+        [self.originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.isIncludedInLayout = NO;
+        }];
+    }
+    
     
     NSArray *firstRow = [model.bottomText firstObject];
     NSDictionary *bottomText = nil;
@@ -1051,6 +1071,49 @@
         [self.priceBgView.yoga markDirty];
     }
 
+}
+
+- (void)updateFakeHouseImageWithUrl:(NSString *)urlStr andSourceStr:(NSString *)sourceStr
+{
+    if (self.fakeImageViewContainer) {
+        [self.fakeImageViewContainer removeFromSuperview];
+        self.fakeImageViewContainer = nil;
+    }
+    
+    if(self.fakeImageView)
+    {
+        [self.fakeImageView removeFromSuperview];
+        self.fakeImageView = nil;
+    }
+    
+    self.fakeImageViewContainer = [UIView new];
+    [self.fakeImageViewContainer setBackgroundColor:[UIColor whiteColor]];
+    self.fakeImageViewContainer.alpha = 0.5;
+    [self.fakeImageViewContainer setFrame:CGRectMake(0, 0, self.mainImageView.frame.size.width, self.mainImageView.frame.size.height)];
+    [self.mainImageView addSubview:self.fakeImageViewContainer];
+    
+    
+    self.fakeImageView = [UIImageView new];
+    if (urlStr) {
+        [self.fakeImageView bd_setImageWithURL:[NSURL URLWithString:urlStr]];
+    }
+    [self.mainImageView addSubview:self.fakeImageView];
+    
+    [self.fakeImageView setFrame:CGRectMake((self.mainImageView.frame.size.width - 100) / 2, (self.mainImageView.frame.size.height - 39) / 2, 100, 39)];
+    
+    self.tagLabel.text = [NSString stringWithFormat:@" %@",sourceStr];
+    self.tagLabel.textColor = [UIColor themeGray3];
+    self.tagLabel.font = [UIFont themeFontRegular:12];
+    
+    self.imageTagLabel.hidden = YES;
+    self.imageTagLabelBgView.hidden = YES;
+}
+
+- (void)updateThirdPartHouseSourceStr:(NSString *)sourceStr
+{
+    self.tagLabel.text = [NSString stringWithFormat:@" %@",sourceStr];
+    self.tagLabel.textColor = [UIColor themeGray3];
+    self.tagLabel.font = [UIFont themeFontRegular:12];
 }
 
 -(void)updateSamllTitlesLayout:(BOOL)showTags

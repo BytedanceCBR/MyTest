@@ -50,6 +50,7 @@ static NSMutableArray  * _Nullable identifierArr;
     dispatch_once(&onceToken, ^{
         manager = [[FHHomeCellHelper alloc] init];
         manager.traceShowCache = [NSMutableDictionary new];
+        [manager initFHHomeHeaderIconCountAndHeight];
     });
     return manager;
 }
@@ -188,9 +189,66 @@ static NSMutableArray  * _Nullable identifierArr;
     
 }
 
++ (void)sendBannerTypeCellShowTrace:(FHHouseType)houseType
+{
+    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHConfigDataOpData2Model *modelOpdata2 = currentDataModel.opData2;
+    FHConfigDataCityStatsModel *cityStatsModel = currentDataModel.cityStats;
+    
+    NSArray<FHConfigDataOpData2ItemsModel> *items = nil;
+    
+    for (NSInteger i = 0; i < currentDataModel.opData2list.count; i ++) {
+        FHConfigDataOpData2ListModel *dataModelItem = currentDataModel.opData2list[i];
+        if (dataModelItem.opData2Type && [dataModelItem.opData2Type integerValue] == houseType && dataModelItem.opDataList && dataModelItem.opDataList.items.count > 0) {
+            items = dataModelItem.opDataList.items;
+        }
+    }
+    
+    if (items > 0)
+    {
+        [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString *stringOpStyle = @"be_null";
+            FHConfigDataOpData2ItemsModel *item = (FHConfigDataOpData2ItemsModel *)obj;
+            NSMutableDictionary *dictTraceParams = [NSMutableDictionary dictionary];
+            
+            if ([item isKindOfClass:[FHConfigDataOpData2ItemsModel class]]) {
+                if ([item.logPb isKindOfClass:[NSDictionary class]]) {
+                    NSString *stringName =  item.logPb[@"operation_name"];
+                    [dictTraceParams setValue:stringName forKey:@"operation_name"];
+                }
+            }
+            [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+            [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
+            
+            [TTTracker eventV3:@"operation_show" params:dictTraceParams];
+        }];
+    }
+}
+
 - (void)clearShowCache
 {
     [self.traceShowCache removeAllObjects];
+}
+
+- (CGFloat)initFHHomeHeaderIconCountAndHeight
+{
+    self.kFHHomeIconRowCount = 5;
+    self.kFHHomeIconDefaultHeight = 42;
+    //下版本等实验结论再上
+    //    if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum isKindOfClass:[NSNumber class]]) {
+    //        if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum integerValue] == 5) {
+    //            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 5;
+    //            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 42;
+    //        }else
+    //        {
+    //            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
+    //            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
+    //        }
+    //    }else
+    //    {
+    //        [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
+    //        [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
+    //    }
 }
 
 - (CGFloat)heightForFHHomeHeaderCellViewType
@@ -199,6 +257,10 @@ static NSMutableArray  * _Nullable identifierArr;
     if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
     {
         return 0;
+    }
+    
+    if (self.kFHHomeIconRowCount == 0 || self.kFHHomeIconDefaultHeight) {
+        [self initFHHomeHeaderIconCountAndHeight];
     }
     
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -374,6 +436,8 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     
     cellEntrance.boardView.clickedCallBack = ^(NSInteger clickIndex){
+//            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web?url=https://www.baidu.com"]];
+//        return ;
         if (model.items.count > clickIndex) {
             FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
             

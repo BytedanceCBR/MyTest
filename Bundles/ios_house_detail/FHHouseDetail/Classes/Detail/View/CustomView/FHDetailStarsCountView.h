@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   CGFloat       starsSize;
 
 - (void)updateStarsCount:(NSInteger)scoreValue;
+- (void)updateStarsCountWithoutLabel:(NSInteger)scoreValue;
 
 @end
 

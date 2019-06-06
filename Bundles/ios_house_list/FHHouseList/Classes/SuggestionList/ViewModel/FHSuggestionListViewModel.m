@@ -151,8 +151,20 @@
     [subscribeDelegateTable addObject:self];
     
     NSString *openUrl = [NSString stringWithFormat:@"fschema://sug_subscribe_list?house_type=%ld",self.houseType];
+    NSMutableDictionary *tracer = [NSMutableDictionary new];
+    tracer[@"enter_type"] = @"click";
+    tracer[@"element_from"] = @"search_detail";
+    tracer[@"enter_from"] = @"search_detail";
+    if (self.listController.tracerDict[@"origin_from"]) {
+        tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
+    }
+    if (self.listController.tracerDict[@"origin_search_id"]) {
+        tracer[@"origin_search_id"] = self.listController.tracerDict[@"origin_search_id"];
+    }
     NSDictionary * infos = @{@"title":@"我订阅的搜索",
-                             @"subscribe_delegate":subscribeDelegateTable};
+                             @"subscribe_delegate":subscribeDelegateTable,
+                             @"tracer":tracer
+                             };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
     
     NSURL *url = [NSURL URLWithString:openUrl];

@@ -6,12 +6,13 @@
 //
 
 #import "FHHomeBaseTableCell.h"
+#import "FHHouseType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHhomeHouseTypeBannerCell : FHHomeBaseTableCell
 
-- (void)refreshData:(id)data;
+- (void)refreshData:(FHHouseType)houseType;
 
 @end
 

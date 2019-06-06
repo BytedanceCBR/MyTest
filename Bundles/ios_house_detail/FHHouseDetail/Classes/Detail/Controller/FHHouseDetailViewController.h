@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDetailViewController : FHBaseViewController
 
+//是否显示
+@property (nonatomic, assign)   BOOL     isViewDidDisapper;
+
 //设置状态栏
 - (void)refreshContentOffset:(CGPoint)contentOffset;
 

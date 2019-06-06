@@ -42,6 +42,16 @@ NS_ASSUME_NONNULL_BEGIN
 +(TTHttpTask *)searchErshouHouseList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion;
 
 /*
+ *  虚假房源列表请求
+ *  @param: query 筛选等请求
+ *  @param: param 其他请求参数
+ *  @param: offset 偏移
+ *  @param: searchId 请求id
+ *  @param: sugParam  suggestion params
+ */
++(TTHttpTask *)searchFakeHouseList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion;
+
+/*
  *  二手房相似房源请求
  *  @param: query 筛选等请求
  *  @param: param 其他请求参数
@@ -71,6 +81,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 +(TTHttpTask *)searchNeighborhoodList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion;
 
+/*
+ *  查成交请求
+ *  @param: sugParam  suggestion params
+ */
++(TTHttpTask *)searchNeighborhoodDealList:(NSString *_Nullable)query searchType:(NSString *)searchType offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion;
 
 // 搜索列表页网络请求
 // 猜你想搜
@@ -99,6 +114,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 //仅仅给小区使用的sug建议
 + (TTHttpTask *)requestSuggestionOnlyNeiborhoodCityId:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
+
+// 查成交小区搜索
++ (TTHttpTask *)requestDealSuggestionCityId:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query searchType:(NSString *)searchType class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
 
 @end
 

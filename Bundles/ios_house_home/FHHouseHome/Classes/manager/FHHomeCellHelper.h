@@ -10,6 +10,7 @@
 #import "FHHomeTableViewDelegate.h"
 #import "FHHomeConfigManager.h"
 #import "FHHomeScrollBannerCell.h"
+#import <FHHouseType.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -50,6 +51,12 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
  * 根据配置数据计算头部高度
  */
 - (CGFloat)heightForFHHomeHeaderCellViewType;
+
+
+/**
+ * 根据配置数据计算头部计算策略
+ */
+- (CGFloat)initFHHomeHeaderIconCountAndHeight;
 
 /**
  * 根据配置数据计算头部高度
@@ -92,6 +99,12 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
  * 清空showcache
  */
 - (void)clearShowCache;
+
+/**
+ * 上报新样式埋点
+ */
++ (void)sendBannerTypeCellShowTrace:(FHHouseType)houseType;
+
 
 @end 
 

@@ -32,6 +32,8 @@
 
 @property (nonatomic, weak)     id<FHSugSubscribeListDelegate>    subscribeDelegate; // 搜索组合订阅列表页的代理subscribe_delegate
 
+@property (nonatomic, strong)   NSMutableDictionary       *categoryLogDict;
+
 @end
 
 @implementation FHSugSubscribeListViewController
@@ -39,9 +41,21 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.categoryLogDict = [NSMutableDictionary new];
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         NSHashTable<FHSugSubscribeListDelegate> *subscribe_delegate = paramObj.allParams[@"subscribe_delegate"];
         self.subscribeDelegate = subscribe_delegate.anyObject;
+        
+        // 埋点数据
+        if (self.tracerDict.count > 0) {
+            [self.categoryLogDict addEntriesFromDictionary:self.tracerDict];
+        }
+        self.ttTrackStayEnable = YES;
+        // 添加固定埋点
+        self.categoryLogDict[@"category_name"] = @"search_subscribe";
+        self.categoryLogDict[@"enter_type"] = @"click";
+        self.categoryLogDict[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? self.tracerDict[@"origin_search_id"] : @"be_null";
+        self.categoryLogDict[@"search_id"] = self.tracerDict[@"search_id"] ? self.tracerDict[@"search_id"] : @"be_null";
     }
     return self;
 }
@@ -52,6 +66,12 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self setupUI];
     [self startLoadData];
+    [self addEnterCategoryLog];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self addStayCategoryLog];
 }
 
 - (void)setupUI {
@@ -125,6 +145,33 @@
             }
         }
     }
+}
+
+-(void)addEnterCategoryLog {
+    NSMutableDictionary *tracerDict = self.categoryLogDict.mutableCopy;
+    [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
+}
+
+-(void)addStayCategoryLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.categoryLogDict.mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_category" params:tracerDict];
+    [self tt_resetStayTime];
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayCategoryLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
 @end

@@ -85,7 +85,7 @@
     }else if(indexPath.section == kFHHomeListHouseTypeBannerViewSection)
     {
         FHhomeHouseTypeBannerCell *bannerCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
-        [bannerCell refreshData:nil];
+        [bannerCell refreshData:self.currentHouseType];
         return bannerCell;
     }else
     {
@@ -162,10 +162,15 @@
         return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }
     
-
     if (indexPath.section == kFHHomeListHouseTypeBannerViewSection) {
         if (self.showOpDataListEntrance) {
-            return 89;
+            //适配5s
+            if ([TTDeviceHelper isScreenWidthLarge320]) {
+                return 89;
+            }else
+            {
+                return 74;
+            }
         }
         return 0;
     }

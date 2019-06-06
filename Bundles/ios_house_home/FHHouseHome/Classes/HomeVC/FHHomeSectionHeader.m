@@ -13,7 +13,7 @@
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 35;
-static const float kSegementedPadingTop = 2;
+static const float kSegementedPadingTop = 10;
 
 @interface FHHomeSectionHeader ()
 @property (nonatomic, strong) UILabel * categoryLabel;
@@ -29,12 +29,12 @@ static const float kSegementedPadingTop = 2;
     self = [super initWithFrame:frame];
     if (self) {
         self.categoryLabel = [UILabel new];
-        self.categoryLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 14];
+        self.categoryLabel.font = [UIFont themeFontMedium:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 14];
         self.categoryLabel.textColor = [UIColor themeGray1];
         self.categoryLabel.text = @"为你推荐";
         self.backgroundColor = [UIColor clearColor];
         [self addSubview:self.categoryLabel];
-        self.categoryLabel.frame = CGRectMake(20, 13, 100, 20);
+        self.categoryLabel.frame = CGRectMake(20, 22, 100, 20);
         [self setUpSegmentedControl];
     }
     return self;
@@ -43,7 +43,7 @@ static const float kSegementedPadingTop = 2;
 - (void)setUpSegmentedControl
 {
     _segmentedControl = [HMSegmentedControl new];
-    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * 3, kSegementedPadingTop, kSegementedOneWidth * 3, kSegementedHeight);
+    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * 3, kSegementedPadingTop, (kSegementedOneWidth + 5) * 3, kSegementedHeight);
     _segmentedControl.sectionTitles = @[@"",@"",@""];
     _segmentedControl.selectionIndicatorHeight = 0;
     _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexString:@"#ff5869"];
@@ -51,12 +51,13 @@ static const float kSegementedPadingTop = 2;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentedControl.isNeedNetworkCheck = YES;
     
+    
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontRegular:14],NSFontAttributeName,
+                                     [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
                                      [UIColor themeGray3],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontMedium:14],NSFontAttributeName,
+                                     [UIFont themeFontMedium:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
                                       [UIColor themeRed1],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
@@ -76,9 +77,21 @@ static const float kSegementedPadingTop = 2;
     if (titles.count == 0) {
         return;
     }
+    
+    CGFloat leftPading = 2;
+    
+    
+    if (titles.count == 1) {
+        leftPading = 6;
+    }
+    
+    if (titles.count == 2) {
+        leftPading = 8;
+    }
+    
     _segmentedControl.sectionTitles = titles;
     _segmentedControl.selectedSegmentIndex = 0;
-    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - kSegementedOneWidth * titles.count - 10, kSegementedPadingTop, kSegementedOneWidth * titles.count, kSegementedHeight);
+    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count, kSegementedHeight);
 }
 
 - (void)updateSegementedTitles:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index
@@ -90,13 +103,43 @@ static const float kSegementedPadingTop = 2;
     {
         _segmentedControl.selectedSegmentIndex = _segmentedControl.selectedSegmentIndex;
     }
-    CGFloat leftPading = 0;
+    CGFloat leftPading = 2;
+    
     
     if (titles.count == 1) {
+        if ([titles.firstObject isKindOfClass:[NSString class]]) {
+            NSString *titleSeg = (NSString *)titles.firstObject;
+            if (titleSeg.length == 3) {
+                leftPading = 14;
+            }else
+            {
+                leftPading = 4;
+            }
+        }else
+        {
+            leftPading = 6;
+        }
+    }
+    
+    if (titles.count == 2) {
         leftPading = 8;
     }
     
-    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - kSegementedOneWidth * titles.count - (titles.count == 1 ? 20 : 10) + leftPading, kSegementedPadingTop, kSegementedOneWidth * titles.count, kSegementedHeight);
+    if ([TTDeviceHelper isScreenWidthLarge320]) {
+        _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count, kSegementedHeight);
+    }else
+    {
+        if (titles.count < 3) {
+            leftPading = 8;
+        }else
+        {
+            leftPading = -3;
+        }
+        
+        CGFloat kSegementedOneWidth5s = 40;
+        _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth5s + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count, kSegementedHeight);
+    }
+
 }
 /*
  // Only override drawRect: if you perform custom drawing.
