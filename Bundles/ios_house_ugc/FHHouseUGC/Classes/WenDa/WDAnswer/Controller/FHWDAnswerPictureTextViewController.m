@@ -360,6 +360,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         if (isEmptyString(wSelf.taskModel.content) && wSelf.taskModel.imageList.count == 0) {
             return;
         }
+//        task.content = richSpanText.text;
+//        task.contentRichSpans = [TTRichSpans JSONStringForRichSpans:richSpanText.richSpans];
         NSString *content = wSelf.taskModel.content;
         NSString *richSpanTetxt = wSelf.taskModel.richSpanText;
         NSArray<NSString *> *imageUris = [wSelf.taskModel remoteImgUris];
