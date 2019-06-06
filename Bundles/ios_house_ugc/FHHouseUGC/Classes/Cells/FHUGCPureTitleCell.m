@@ -147,78 +147,8 @@
         [self.bottomView.likeBtn setTitle:model.diggCount forState:UIControlStateNormal];
         [self.bottomView.commentBtn setTitle:model.commentCount forState:UIControlStateNormal];
         
-        
-//        TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
-//        TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:model.content richSpans:richSpans];
-//
-//        TTRichSpanText *threadContent = [[TTRichSpanText alloc] initWithText:@"" richSpanLinks:nil imageInfoModelDictionary:nil];
-//
-//        if (!isEmptyString(model.title)) {
-//            [threadContent appendText:[NSString stringWithFormat:@"【%@】",model.title]];
-//        }
-//        if (!isEmptyString(model.content)) {
-//            [threadContent appendRichSpanText:richContent];
-//        }
-//
-//        if (!isEmptyString(threadContent.text)) {
-//            NSUInteger numberOfLines = 5;
-//
-//            NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16];
-//            if (attrStr) {
-//                NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
-//                NSMutableDictionary *attributes = @{}.mutableCopy;
-//                [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
-//                [attributes setValue:[UIFont themeFontRegular:16] forKey:NSFontAttributeName];
-//
-//                [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
-//
-//                //内容
-//                self.contentLabel.attributedText = mutableAttributedString;
-//                self.contentLabel.attributedTruncationToken = [FHUGCCellHelper truncationFont:[attributes objectForKey:NSFontAttributeName]
-//                                                                       contentColor:attributes[NSForegroundColorAttributeName]
-//                                                                              color:[UIColor themeRed3]
-//                                                                            linkUrl:@"www.bytedance.contentTruncationLinkURLString"];
-//
-//            }
-//        }
-        
-        
-    }
-}
-
-- (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCContentModel *)model numberOfLines:(NSInteger)numberOfLines {
-    TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
-    TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:model.content richSpans:richSpans];
-    
-    TTRichSpanText *threadContent = [[TTRichSpanText alloc] initWithText:@"" richSpanLinks:nil imageInfoModelDictionary:nil];
-    
-    if (!isEmptyString(model.title)) {
-        [threadContent appendText:[NSString stringWithFormat:@"【%@】",model.title]];
-    }
-    if (!isEmptyString(model.content)) {
-        [threadContent appendRichSpanText:richContent];
-    }
-    
-    if (!isEmptyString(threadContent.text)) {
-        
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16];
-        if (attrStr) {
-            NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
-            NSMutableDictionary *attributes = @{}.mutableCopy;
-            [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
-            [attributes setValue:[UIFont themeFontRegular:16] forKey:NSFontAttributeName];
-            
-            [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
-            
-            //内容
-            label.numberOfLines = numberOfLines;
-            label.attributedText = mutableAttributedString;
-            label.attributedTruncationToken = [FHUGCCellHelper truncationFont:[attributes objectForKey:NSFontAttributeName]
-                                                                             contentColor:attributes[NSForegroundColorAttributeName]
-                                                                                    color:[UIColor themeRed3]
-                                                                                  linkUrl:@"www.bytedance.contentTruncationLinkURLString"];
-            
-        }
+        //内容
+        [FHUGCCellHelper setRichContent:self.contentLabel model:model numberOfLines:5];
     }
 }
 
