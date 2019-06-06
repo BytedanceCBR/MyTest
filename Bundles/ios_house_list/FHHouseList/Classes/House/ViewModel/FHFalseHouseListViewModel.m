@@ -519,6 +519,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     tracerDict[@"group_id"] = [cellModel groupId] ? : @"be_null";
     tracerDict[@"impr_id"] = [cellModel imprId] ? : @"be_null";
     tracerDict[@"rank"] = @(rank);
+    tracerDict[@"element_from"] = self.tracerModel.categoryName ? : @"old_kind_list";
     tracerDict[@"origin_from"] = originFrom;
     tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
     tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
