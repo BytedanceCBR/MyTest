@@ -1298,6 +1298,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (self.resetConditionBlock) {
         self.filterParam = paramObj.queryParams;
         self.resetConditionBlock(paramObj.queryParams);
+        self.filterConditionParams = self.getFilterConditionBlock();
     }
     
     if (self.conditionNoneFilterBlock) {
@@ -1581,6 +1582,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self.viewController switchToNormalMode];
     self.selectedLine = nil;
     self.selectionStation = nil;
+    [self.lastBubble removeQueryOfKey:@"line[]"];
+    [self.lastBubble removeQueryOfKey:@"station[]"];
     [self requestHouses:YES showTip:NO];
 }
 

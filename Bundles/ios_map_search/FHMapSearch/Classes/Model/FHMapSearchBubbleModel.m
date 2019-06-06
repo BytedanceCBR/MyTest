@@ -160,6 +160,11 @@
     
 }
 
+-(void)removeQueryOfKey:(NSString *)key
+{
+    [self.queryDict removeObjectForKey:key];
+}
+
 -(NSString *)query
 {
     NSMutableArray *queryItems = [NSMutableArray new];

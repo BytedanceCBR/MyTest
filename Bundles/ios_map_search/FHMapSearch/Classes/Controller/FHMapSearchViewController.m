@@ -294,6 +294,10 @@
         return [wself.houseFilterBridge getNoneFilterQueryParams:params];
     };
     
+    _viewModel.getFilterConditionBlock = ^NSString * _Nullable{
+        return [wself.houseFilterBridge getConditions];
+    };
+    
     if (self.configModel.mapOpenUrl.length > 0) {
         
         NSURL *url = [NSURL URLWithString:self.configModel.mapOpenUrl];
