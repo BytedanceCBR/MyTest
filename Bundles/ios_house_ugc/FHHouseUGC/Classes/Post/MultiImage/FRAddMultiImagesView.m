@@ -84,6 +84,26 @@
     return self;
 }
 
+- (void)setHideAddImagesButtonWhenEmpty:(BOOL)hideAddImagesButtonWhenEmpty
+{
+    if (!_hideAddImagesButtonWhenEmpty == hideAddImagesButtonWhenEmpty) {
+        _hideAddImagesButtonWhenEmpty = hideAddImagesButtonWhenEmpty;
+        [self hideAddImagesButtonIfNeed];
+    }
+}
+
+- (void)hideAddImagesButtonIfNeed
+{
+    // 通过数据来判断，而不是ImageView的个数，因为有动画
+    if (self.selectedImageCacheTasks.count >= self.selectionLimit) {
+        self.addImagesButton.hidden = YES;
+    } else if (self.hideAddImagesButtonWhenEmpty && self.selectedImageCacheTasks.count == 0) {
+        self.addImagesButton.hidden = YES;
+    } else {
+        self.addImagesButton.hidden = NO;
+    }
+}
+
 - (void)restoreDraft:(NSArray *)models {
     if (self.selectedImageCacheTasks.count > 0) {
         return;
@@ -191,6 +211,9 @@
             self.addImagesButton.hidden = NO;
             [self changeHeight:(_addImagesButton.bottom) notiy:YES];
         }
+        if (self.hideAddImagesButtonWhenEmpty && self.selectedImageCacheTasks.count == 0) {
+            self.addImagesButton.hidden = YES;
+        }
     }
     [self onDraggingLayout];
 }
@@ -203,6 +226,9 @@
 
 - (void)showImagePicker
 {
+    if (self.shouldAddPictureHandle) {
+        self.shouldAddPictureHandle();
+    }
     if (self.delegate && [self.delegate respondsToSelector:@selector(addImagesButtonDidClickedOfAddMultiImagesView:)]) {
         [self.delegate addImagesButtonDidClickedOfAddMultiImagesView:self];
     }
