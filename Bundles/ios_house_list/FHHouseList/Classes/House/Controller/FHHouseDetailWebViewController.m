@@ -54,6 +54,7 @@
         NSMutableDictionary *paramsDict = [NSMutableDictionary dictionaryWithDictionary:_traceDict];
         [paramsDict setValue:@"ios" forKey:@"os"];
         [paramsDict setValue:@"app" forKey:@"source"];
+        [paramsDict setValue:@"outside_detail" forKey:@"page_type"];
         [paramsDict removeObjectForKey:@"log_pb"];
         [paramsDict removeObjectForKey:@"search_id"];
         [paramsDict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
