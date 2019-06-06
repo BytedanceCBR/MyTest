@@ -29,6 +29,11 @@
     [self initViewModel];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self startLoadData];
+}
+
 - (void)initView {
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.backgroundColor = [UIColor themeGray7];
@@ -70,7 +75,7 @@
     }
     
     self.viewModel = viewModel;
-    [self startLoadData];
+//    [self startLoadData];
 }
 
 - (void)startLoadData {

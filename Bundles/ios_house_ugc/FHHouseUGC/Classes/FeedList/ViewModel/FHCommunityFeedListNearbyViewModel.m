@@ -12,6 +12,7 @@
 #import "FHFeedListModel.h"
 #import <UIScrollView+Refresh.h>
 #import "FHFeedContentModel.h"
+#import "FHFeedUGCContentModel.h"
 
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -99,36 +100,47 @@
         NSString *content = itemModel.content;
         NSData *jsonData = [content dataUsingEncoding:NSUTF8StringEncoding];
         
-        Class cls = [FHFeedContentModel class];
-        
-        __block NSError *backError = nil;
-        
-        id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:cls error:&backError];
-        if(!backError){
-            FHFeedContentModel *contentModel = (FHFeedContentModel *)model;
-            [resultArray addObject:contentModel];
+        NSError *err;
+        NSDictionary *dic = nil;
+        @try {
+            dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                  options:NSJSONReadingMutableContainers
+                                                    error:&err];
+        } @catch (NSException *exception) {
+            
+        } @finally {
+            
         }
         
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-//            id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:cls error:&backError];
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                if(!backError){
-//                    FHFeedContentModel *contentModel = (FHFeedContentModel *)model;
-//                    [resultArray addObject:contentModel];
-//                }
-//            });
-//        });
+        if(!err){
+            FHUGCFeedListCellType type = [dic[@"cell_type"] integerValue];
+            Class cls = nil;
+            if(type == FHUGCFeedListCellTypeUGC){
+                cls = [FHFeedUGCContentModel class];
+            }else{
+                cls = [FHFeedContentModel class];
+            }
+            
+            __block NSError *backError = nil;
+            
+            id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:cls error:&backError];
+            if(!backError){
+                [resultArray addObject:model];
+            }
+        }
+        
+
     }
     
     return resultArray;
 }
 
 //用来根据model计算类型
-- (FHUGCFeedListCellType)getFeedType:(FHFeedContentModel *)model {
-    FHUGCFeedListCellType type = FHUGCFeedListCellTypePureTitle;
-    NSInteger cellType = [model.cellType integerValue];
-    
-    NSArray *imageList = model.imageList;
+- (FHUGCFeedListCellSubType)getFeedType:(id<FHBaseModelProtocol>)model {
+    FHUGCFeedListCellSubType type = FHUGCFeedListCellSubTypePureTitle;
+//    NSInteger cellType = [model.cellType integerValue];
+    //文章是0， 帖子32
+//    NSArray *imageList = model.imageList;
 //    if(imageList.count >= 3){
 //        type = FHUGCFeedListCellTypeMultiImage;
 //    }else if(imageList.count == 2){
@@ -136,13 +148,13 @@
 //    }else if(imageList.count == 1){
 //        type = FHUGCFeedListCellTypeSingleImage;
 //    }else{
-        type = FHUGCFeedListCellTypeArticlePureTitle;
+        type = FHUGCFeedListCellSubTypePureTitle;
 //    }
-    if(imageList.count > 0){
-        type = FHUGCFeedListCellTypeArticleMultiImage;
-    }else{
-        type = FHUGCFeedListCellTypeArticlePureTitle;
-    }
+//    if(imageList.count > 0){
+//        type = FHUGCFeedListCellSubTypeArticleMultiImage;
+//    }else{
+//        type = FHUGCFeedListCellSubTypeArticlePureTitle;
+//    }
     
     return  type;
 }
@@ -154,8 +166,8 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHFeedContentModel *model = self.dataList[indexPath.row];
-    FHUGCFeedListCellType type = [self getFeedType:model];
+    id<FHBaseModelProtocol> model = self.dataList[indexPath.row];
+    FHUGCFeedListCellSubType type = [self getFeedType:model];
 
     NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:type data:nil]);
     FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];

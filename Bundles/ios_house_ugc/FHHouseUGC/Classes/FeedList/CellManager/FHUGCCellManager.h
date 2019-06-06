@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)registerAllCell:(UITableView *)tableView;
 
-- (Class)cellClassFromCellViewType:(FHUGCFeedListCellType)cellType data:(nullable id)data;
+- (Class)cellClassFromCellViewType:(FHUGCFeedListCellSubType)cellType data:(nullable id)data;
 
 @end
 

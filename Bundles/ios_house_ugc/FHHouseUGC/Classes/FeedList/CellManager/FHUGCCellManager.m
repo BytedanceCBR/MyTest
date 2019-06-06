@@ -52,29 +52,29 @@
     }
 }
 
-- (Class)cellClassFromCellViewType:(FHUGCFeedListCellType)cellType data:(nullable id)data {
+- (Class)cellClassFromCellViewType:(FHUGCFeedListCellSubType)cellType data:(nullable id)data {
     //这里这样写是为了以后一个key可能对应不同cell的变化
     switch (cellType) {
             
-        case FHUGCFeedListCellTypePureTitle:
+        case FHUGCFeedListCellSubTypePureTitle:
             return [FHUGCPureTitleCell class];
             
-        case FHUGCFeedListCellTypeSingleImage:
+        case FHUGCFeedListCellSubTypeSingleImage:
             return [FHUGCSingleImageCell class];
             
-        case FHUGCFeedListCellTypeTwoImage:
+        case FHUGCFeedListCellSubTypeTwoImage:
             return [FHUGCTwoImageCell class];
             
-        case FHUGCFeedListCellTypeMultiImage:
+        case FHUGCFeedListCellSubTypeMultiImage:
             return [FHUGCMultiImageCell class];
             
-        case FHUGCFeedListCellTypeArticlePureTitle:
+        case FHUGCFeedListCellSubTypeArticlePureTitle:
             return [FHArticlePureTitleCell class];
             
-        case FHUGCFeedListCellTypeArticleSingleImage:
+        case FHUGCFeedListCellSubTypeArticleSingleImage:
             return [FHArticleSingleImageCell class];
             
-        case FHUGCFeedListCellTypeArticleMultiImage:
+        case FHUGCFeedListCellSubTypeArticleMultiImage:
             return [FHArticleMultiImageCell class];
 
         default:

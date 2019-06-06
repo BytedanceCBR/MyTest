@@ -23,15 +23,21 @@ typedef NS_ENUM(NSInteger, FHCommunityCollectionCellType)
     FHCommunityCollectionCellTypeDiscovery,
 };
 
+typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
+{
+    FHUGCFeedListCellSubTypePureTitle = 0,                         //纯文本
+    FHUGCFeedListCellSubTypeSingleImage,                           //单图
+    FHUGCFeedListCellSubTypeTwoImage,                              //两图
+    FHUGCFeedListCellSubTypeMultiImage,                            //多图
+    FHUGCFeedListCellSubTypeArticlePureTitle,                      //文章纯文本
+    FHUGCFeedListCellSubTypeArticleSingleImage,                    //文章单图
+    FHUGCFeedListCellSubTypeArticleMultiImage,                     //文章多图
+};
+
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
 {
-    FHUGCFeedListCellTypePureTitle = 0,                         //纯文本
-    FHUGCFeedListCellTypeSingleImage,                           //单图
-    FHUGCFeedListCellTypeTwoImage,                              //两图
-    FHUGCFeedListCellTypeMultiImage,                            //多图
-    FHUGCFeedListCellTypeArticlePureTitle,                      //文章纯文本
-    FHUGCFeedListCellTypeArticleSingleImage,                    //文章单图
-    FHUGCFeedListCellTypeArticleMultiImage,                     //文章多图
+    FHUGCFeedListCellTypeArticle = 0,                        //文章
+    FHUGCFeedListCellTypeUGC = 32,                           //帖子
 };
 
 #endif /* FHHouseUGCHeader_h */

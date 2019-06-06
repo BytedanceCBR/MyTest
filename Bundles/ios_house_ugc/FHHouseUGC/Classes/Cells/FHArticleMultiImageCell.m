@@ -132,20 +132,22 @@
 }
 
 - (void)refreshWithData:(id)data {
-    FHFeedContentModel *model = (FHFeedContentModel *)data;
-    //内容
-    self.contentLabel.text = model.title;
-    self.bottomView.descLabel.text = @"信息来源";
-    
-    NSArray *imageList = model.imageList;
-    for (NSInteger i = 0; i < self.imageViewList.count; i++) {
-        UIImageView *imageView = self.imageViewList[i];
-        if(i < imageList.count){
-            FHFeedContentImageListModel *imageModel = imageList[i];
-            imageView.hidden = NO;
-            [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
-        }else{
-            imageView.hidden = YES;
+    if([data isKindOfClass:[FHFeedContentModel class]]){
+        FHFeedContentModel *model = (FHFeedContentModel *)data;
+        //内容
+        self.contentLabel.text = model.title;
+        self.bottomView.descLabel.text = @"信息来源";
+        
+        NSArray *imageList = model.imageList;
+        for (NSInteger i = 0; i < self.imageViewList.count; i++) {
+            UIImageView *imageView = self.imageViewList[i];
+            if(i < imageList.count){
+                FHFeedContentImageListModel *imageModel = imageList[i];
+                imageView.hidden = NO;
+                [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+            }else{
+                imageView.hidden = YES;
+            }
         }
     }
 }
