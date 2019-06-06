@@ -25,10 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   NSDictionary   *tracerDict;
 @property (nonatomic, strong)  NSString *searchQuery;
 
-@property (nonatomic, copy) void (^addSubscribeAction)(NSString *subscribeText);
-
-@property (nonatomic, copy) void (^deleteSubscribeAction)(NSString *subscribeId);
-
 - (void)refreshUI:(JSONModel *)data;
 
 @end

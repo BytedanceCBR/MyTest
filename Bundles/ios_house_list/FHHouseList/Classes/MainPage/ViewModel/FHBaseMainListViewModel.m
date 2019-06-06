@@ -222,8 +222,8 @@
     TTHttpTask *task = [FHHouseListAPI requestAddSugSubscribe:_subScribeQuery params:paramsDict offset:_subScribeOffset searchId:_subScribeSearchId sugParam:nil class:[FHSugSubscribeModel class] completion:^(id<FHBaseModelProtocol>  _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHSugSubscribeModel class]]) {
             FHSugSubscribeModel *infoModel = (FHSugSubscribeModel *)model;
-            if (infoModel.data.items.firstObject) {
-                FHSugSubscribeDataDataSubscribeInfoModel *subModel = (FHSugSubscribeDataDataSubscribeInfoModel *)infoModel.data.items.firstObject;
+            if ([infoModel.data.items.firstObject isKindOfClass:[FHSugSubscribeDataDataItemsModel class]]) {
+                FHSugSubscribeDataDataItemsModel *subModel = (FHSugSubscribeDataDataItemsModel *)infoModel.data.items.firstObject;
                 
                 NSMutableDictionary *dict = [NSMutableDictionary new];
                 [dict setValue:text forKey:@"text"];
@@ -1085,11 +1085,7 @@
                         
                         topRealCell.tracerDict = traceDictParams;
                         __weak typeof(self) weakSelf = self;
-                        topRealCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
-                        };
-                        
-                        topRealCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
-                        };
+            
                         topRealCell.searchQuery = self.subScribeQuery;
                         return topRealCell;
                     }

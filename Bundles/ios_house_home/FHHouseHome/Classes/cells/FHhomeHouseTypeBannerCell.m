@@ -132,11 +132,12 @@
 
         
         if ([TTDeviceHelper isScreenWidthLarge320]) {
-            titleLabel.font = [UIFont themeFontSemibold:(titleLabel.text.length > 5 ? 14 : 16) * [TTDeviceHelper scaleToScreen375]];
+    
+            titleLabel.font = [UIFont themeFontMedium:(titleLabel.text.length > 5 ? 14 * [TTDeviceHelper scaleToScreen375] : ([TTDeviceHelper is896Screen3X] ? 16 : 15))];
             [titleLabel setFrame:CGRectMake(backImage.frame.origin.x + 8, 17 * [TTDeviceHelper scaleToScreen375], backImage.frame.size.width - 10, 20)];
         }else
         {
-            titleLabel.font = [UIFont themeFontSemibold:12];
+            titleLabel.font = [UIFont themeFontMedium:12];
             if(titleLabel.text.length > 5)
             {
                 [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  5, 14, backImage.frame.size.width - 10, 20)];

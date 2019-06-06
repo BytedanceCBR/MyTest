@@ -209,12 +209,6 @@
                      topRealCell.tracerDict = traceParam;
                     
                     __weak typeof(self) weakSelf = self;
-                    topRealCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
-                    };
-                    
-                    topRealCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
-                        
-                    };
                     NSString *stringQuery = [NSString stringWithFormat:@"neighborhood_id=%@",self.neiborHoorId];
                     if (self.condition) {
                         stringQuery = [stringQuery stringByAppendingString:self.condition];
