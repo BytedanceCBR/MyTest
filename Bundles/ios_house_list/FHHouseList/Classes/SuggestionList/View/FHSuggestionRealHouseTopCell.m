@@ -223,7 +223,7 @@
     }
     
     FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)self.currentModel;
-    if ([model.openUrl isKindOfClass:[NSString class]]) {
+    if ([model isKindOfClass:[FHSugListRealHouseTopInfoModel class]] &&[model.openUrl isKindOfClass:[NSString class]]) {
         
         NSString *urlStr = nil;
         if ([self.tracerDict isKindOfClass:[NSDictionary class]] && model.openUrl) {

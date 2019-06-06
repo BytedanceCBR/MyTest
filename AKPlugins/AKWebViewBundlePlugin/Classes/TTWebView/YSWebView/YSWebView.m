@@ -828,13 +828,6 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
     // WKWebView默认拦截scheme 需在下面方法手动打开
     // 打开外部应用 Safari等操作
     
-    NSLog(@"navigationAction.request.URL.absoluteString = %@",navigationAction.request.URL.absoluteString);
-    
-    if ([navigationAction.request.URL.absoluteString hasPrefix:@"xxx"]) { // 对应的scheme
-        [[UIApplication sharedApplication] openURL:navigationAction.request.URL];
-    }
-    
-
     if ([self.ysWebView.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
         if ([self.ysWebView.delegate webView:self.ysWebView shouldStartLoadWithRequest:navigationAction.request navigationType:mapWKNavigationTypeToYSWebViewNavigationType(navigationAction.navigationType)]) {
             decisionHandler(WKNavigationActionPolicyAllow);
