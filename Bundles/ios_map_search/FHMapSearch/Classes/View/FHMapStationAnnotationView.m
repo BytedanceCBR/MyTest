@@ -49,6 +49,8 @@
         
         [self updateStyle];
         self.annotation = annotation;
+        self.enabled = NO;
+        self.userInteractionEnabled = NO;
     }
     return self;
 }

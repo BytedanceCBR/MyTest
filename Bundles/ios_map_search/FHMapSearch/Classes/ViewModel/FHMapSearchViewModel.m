@@ -1701,6 +1701,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         FHMapSubwayPickerView *picker = [[FHMapSubwayPickerView alloc]initWithFrame:self.viewController.view.bounds];
         __weak typeof(self) wself = self;
         picker.chooseStation = ^(FHSearchFilterConfigOption * _Nonnull line, FHSearchFilterConfigOption * _Nonnull station) {
+            
+            if (![TTReachability isNetworkConnected]) {
+                [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
+                return ;
+            }
+            
             wself.lastBubble =  [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];
             [wself.lastBubble overwriteFliter:self.filterConditionParams];
             
