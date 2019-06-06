@@ -564,7 +564,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSString *targetType = nil;
     if (_showMode == FHMapSearchShowModeDrawLine) {
         targetType = @"neighborhood";
-    }else if (_showMode == FHMapSearchShowModeSubway){
+    }else if (_showMode == FHMapSearchShowModeSubway || (_lastShowMode == FHMapSearchShowModeSubway && _showMode == FHMapSearchShowModeHalfHouseList)){
         extraParams = [NSMutableDictionary new];
         if (!(([query containsString:@"line"]||[query containsString:@"station"]))) {
             if ([self.selectionStation.value isEqualToString:self.selectedLine.value]) {
