@@ -27,6 +27,7 @@ typedef NS_ENUM(NSInteger, FHMineItemType)
     FHMineItemTypePriceValuation,
     FHMineItemTypeHouseLoanCalculation,
     FHMineItemTypeNeighborhoodDeal,
+    FHMineItemTypeCommonQuestion,
 };
 
 #endif /* FHMineDefine_h */
