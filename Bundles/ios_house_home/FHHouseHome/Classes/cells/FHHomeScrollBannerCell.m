@@ -272,6 +272,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
         if (self.totalCount == 1) {
             [self.bannerScrollView setLeftImage:self.imageURLs[0]];
             self.bannerScrollView.scrollEnabled = NO;
+            [self.bannerScrollView setContentOffset:CGPointMake(0, 0) animated:NO];
             self.indexView.hidden = YES;
             if (self.delegate != nil) {
                 [self.delegate currentIndexChanged:self.currentIndex];
