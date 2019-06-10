@@ -16,7 +16,9 @@
 #import <TTRoute.h>
 #import "TTAccount+NetworkTasks.h"
 #import "FHWebViewConfig.h"
+#import <TTAccountSDK/TTAccountAuthDefine.h>
 
+extern NSString * TTAccountPlatformDidAuthorizeCompletionNotification;
 @interface TTRLogin()<TTAccountMulticastProtocol>
 
 @property (nonatomic, weak) UIView<TTRexxarEngine> *webview;
