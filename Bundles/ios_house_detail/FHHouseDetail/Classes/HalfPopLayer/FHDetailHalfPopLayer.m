@@ -40,6 +40,10 @@
 @property(nonatomic , strong) UIView *containerView;
 @property(nonatomic , strong) UITableView *tableView;
 @property(nonatomic , strong) FHDetailHalfPopFooter *footer;
+@property(nonatomic , assign) CGFloat bgTop;
+@property(nonatomic , assign) CGFloat dragOffset;
+@property(nonatomic , assign) CGPoint panLocation;
+@property(nonatomic , strong) UIPanGestureRecognizer *panGesture;
 @property(nonatomic , strong) id data;
 
 //for track
@@ -108,6 +112,11 @@
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapAction:)];
         self.userInteractionEnabled = YES;
         [self addGestureRecognizer:tapGesture];
+        
+        UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
+        [self.bgView addGestureRecognizer:panGesture];
+        panGesture.enabled = NO;
+        self.panGesture = panGesture;
         
     }
     return self;
@@ -267,6 +276,67 @@
     
 }
 
+-(void)panAction:(UIPanGestureRecognizer *)pan
+{
+    switch (pan.state) {
+        case UIGestureRecognizerStateBegan:
+            self.panLocation = [pan locationInView:self];
+            break;
+        case UIGestureRecognizerStateChanged:{
+            CGPoint loc = [pan locationInView:self];
+            self.dragOffset = loc.y - self.panLocation.y;
+            if (self.dragOffset >= 0) {
+                self.bgView.top = self.bgTop + self.dragOffset;
+            }
+        }
+            break;
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled:
+        {
+            if (self.dragOffset + self.bgTop > self.height/2 && self.dragOffset > self.bgView.height/3) {
+                [self dismiss:YES];
+            }else{
+                self.bgView.top = self.bgTop;
+                self.dragOffset = 0;
+            }
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGPoint offset = scrollView.contentOffset;
+    if (scrollView.isTracking) {
+        if (offset.y < 0 || self.dragOffset > 0) {
+            self.dragOffset -= offset.y;
+            if (self.bgTop + self.dragOffset+self.bgView.height < self.height) {
+                self.dragOffset = self.height - self.bgView.height - self.bgTop;
+            }
+            self.bgView.top = self.bgTop + self.dragOffset;
+            scrollView.contentOffset = CGPointZero;
+        }
+    }else{
+        self.dragOffset = 0;
+    }
+    
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (self.dragOffset + self.bgTop > self.height/2 && self.dragOffset > self.bgView.height/3) {
+        [self dismiss:YES];
+    }else{
+        [UIView animateWithDuration:0.3 animations:^{
+            self.bgView.top = self.bgTop;
+        }];
+        self.dragOffset = 0;
+    }
+    
+}
+
 #pragma mark - tableview delegate
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -414,8 +484,10 @@
         if (bgTop < minTop) {
             bgTop = minTop;
             self.tableView.scrollEnabled = YES;
+            self.panGesture.enabled = NO;
         }else{
             self.tableView.scrollEnabled = NO;
+            self.panGesture.enabled = YES;
         }
         
         [self.bgView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -434,7 +506,7 @@
         } completion:^(BOOL finished) {
             
         }];
-        
+        self.bgTop = bgTop;
     }
 }
 

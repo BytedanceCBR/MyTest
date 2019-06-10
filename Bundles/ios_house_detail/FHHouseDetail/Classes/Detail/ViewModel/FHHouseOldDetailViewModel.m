@@ -472,6 +472,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
         infoModel.title = model.data.neighborEval.title;
+        infoModel.mapCentertitle = model.data.neighborhoodInfo.name;
         infoModel.score = model.data.neighborEval.score;
         
         [self.items addObject:infoModel];

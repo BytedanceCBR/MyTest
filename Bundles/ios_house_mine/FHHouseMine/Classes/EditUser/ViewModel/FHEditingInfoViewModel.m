@@ -113,8 +113,14 @@
             if (!isEmptyString(userDesp) && !nameOrDesp) {
                 sself.userInfo.userDescription = userDesp;
             }
-
-            [[ToastManager manager] showToast:@"修改成功"];
+            
+            if(userEntity.auditInfoSet.pgcUserAuditEntity){
+                self.userInfo.isAuditing = userEntity.auditInfoSet.pgcUserAuditEntity.auditing;
+            }
+            
+            if(!self.userInfo.isAuditing){
+                [[ToastManager manager] showToast:@"修改成功"];
+            }
             
             // 使用新的数据刷新
             [sself.viewController.navigationController popViewControllerAnimated:YES];
