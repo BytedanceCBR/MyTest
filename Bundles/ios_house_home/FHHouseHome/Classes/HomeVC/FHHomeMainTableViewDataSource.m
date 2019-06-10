@@ -136,7 +136,7 @@
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
         if (indexPath.row < self.modelsArray.count) {
             JSONModel *model = self.modelsArray[indexPath.row];
-            [cell refreshTopMargin: 0];
+            [cell refreshTopMargin:2];
             [cell updateHomeSmallImageHouseCellModel:model andType:self.currentHouseType];
         }
         return cell;
@@ -166,7 +166,7 @@
         if (self.showOpDataListEntrance) {
             //适配5s
             if ([TTDeviceHelper isScreenWidthLarge320]) {
-                return 89;
+                return 93;
             }else
             {
                 return 74;
