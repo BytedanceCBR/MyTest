@@ -860,6 +860,12 @@ typedef NS_ENUM(NSInteger, WDWendaListRequestType) {
 @property (nonatomic, strong) NSString<Optional> *list_entrance;
 @property (nonatomic, strong) NSString<Optional> *source;
 @property (nonatomic, strong) NSString<Optional> *gd_ext_json;
+@property (nonatomic, strong) NSNumber<Optional> *answer_type;
+@property (nonatomic, strong) NSString<Optional> *content_rich_span;
+@property (nonatomic, strong) NSString<Optional> *image_uris;
+@property (nonatomic, strong) NSString<Optional> *video_id;
+@property (nonatomic, strong) NSString<Optional> *video_poster;
+@property (nonatomic, strong) NSNumber<Optional> *video_duration;
 @end
 
 @interface  WDWendaCommitPostanswerResponseModel : TTResponseModel
