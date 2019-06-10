@@ -11,13 +11,15 @@
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
+#import "FHUGCCellHelper.h"
 
 #define leftMargin 20
 #define rightMargin 20
+#define maxLines 3
 
 @interface FHUGCMultiImageCell ()
 
-@property(nonatomic ,strong) UILabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
@@ -52,8 +54,7 @@
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_userInfoView];
     
-    self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeGray1]];
-    _contentLabel.numberOfLines = 2;
+    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_contentLabel];
     
     self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:3];
@@ -107,20 +108,21 @@
 }
 
 - (void)refreshWithData:(id)data {
-    FHFeedContentModel *model = (FHFeedContentModel *)data;
-    //内容
-    self.contentLabel.text = model.title;
-    //图片
-    [self.multiImageView updateImageView:model.imageList];
-    //设置userInfo
-    self.userInfoView.userName.text = @"汤唯";
-    self.userInfoView.descLabel.text = @"今天 14:20";
-    //    [self.icon bd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
-    
-    //设置底部
-    self.bottomView.position.text = @"左家庄";
-    [self.bottomView.likeBtn setTitle:@"178" forState:UIControlStateNormal];
-    [self.bottomView.commentBtn setTitle:@"24" forState:UIControlStateNormal];
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        //设置userInfo
+        self.userInfoView.userName.text = cellModel.user.name;
+        self.userInfoView.descLabel.text = cellModel.desc;
+        [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+        //设置底部
+        self.bottomView.position.text = @"左家庄";
+        [self.bottomView.likeBtn setTitle:cellModel.diggCount forState:UIControlStateNormal];
+        [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
+        //内容
+        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
+        //图片
+        [self.multiImageView updateImageView:cellModel.imageList];
+    }
 }
 
 @end

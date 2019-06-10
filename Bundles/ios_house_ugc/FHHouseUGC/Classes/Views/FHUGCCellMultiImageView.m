@@ -9,6 +9,7 @@
 #import "UIColor+Theme.h"
 #import <Masonry.h>
 #import <UIImageView+BDWebImage.h>
+#import "FHFeedUGCCellModel.h"
 
 #define itemPadding 4
 
@@ -47,6 +48,7 @@
         imageView.backgroundColor = [UIColor themeGray6];
         imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
         imageView.layer.borderWidth = 0.5;
+        imageView.hidden = YES;
         [self addSubview:imageView];
         
         [self.imageViewList addObject:imageView];
@@ -55,10 +57,12 @@
 
 - (void)initConstraints {
     if(self.count == 1){
+        _imageWidth = self.bounds.size.width;
         UIImageView *imageView = [self.imageViewList firstObject];
         [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.left.right.bottom.mas_equalTo(self);
-            make.height.mas_equalTo(imageView.mas_width).multipliedBy(251.0f/355.0f);
+            make.top.left.bottom.mas_equalTo(self);
+            make.width.mas_equalTo(self.imageWidth);
+            make.height.mas_equalTo(self.imageWidth * 251.0f/355.0f);
         }];
         
     }else if(self.count == 2){
@@ -102,17 +106,15 @@
 }
 
 - (void)updateImageView:(NSArray *)imageList {
-    if(self.imageViewList.count <= imageList.count){
-        for (NSInteger i = 0; i < self.imageViewList.count; i++) {
-            FHFeedContentImageListModel *imageModel = imageList[i];
+    for (NSInteger i = 0; i < self.imageViewList.count; i++) {
+        UIImageView *imageView = self.imageViewList[i];
+        if(i < imageList.count){
+            FHFeedUGCCellImageListModel *imageModel = imageList[i];
+            imageView.hidden = NO;
             CGFloat width = [imageModel.width floatValue];
-            CGFloat height = [imageModel.height floatValue];
-            UIImageView *imageView = self.imageViewList[i];
-//            [imageView mas_updateConstraints:^(MASConstraintMaker *make) {
-//                make.height.mas_equalTo(self.imageWidth).multipliedBy(height/width);
-//            }];
-            
             [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+        }else{
+            imageView.hidden = YES;
         }
     }
 }

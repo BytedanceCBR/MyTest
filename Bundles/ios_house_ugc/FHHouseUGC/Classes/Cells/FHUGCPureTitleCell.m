@@ -10,13 +10,11 @@
 #import "FHUGCCellBottomView.h"
 #import <UIImageView+BDWebImage.h>
 #import "TTUGCAttributedLabel.h"
-#import "TTRichSpanText.h"
-#import "TTBaseMacro.h"
-#import "TTUGCEmojiParser.h"
 #import "FHUGCCellHelper.h"
 
 #define leftMargin 20
 #define rightMargin 20
+#define maxLines 5
 
 @interface FHUGCPureTitleCell ()
 
@@ -54,7 +52,8 @@
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_userInfoView];
     
-    [self.contentView addSubview:self.contentLabel];
+    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    [self.contentView addSubview:_contentLabel];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_bottomView];
@@ -90,43 +89,7 @@
     }];
 }
 
-- (TTUGCAttributedLabel *)contentLabel {
-    if (!_contentLabel) {
-        _contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
-        _contentLabel.numberOfLines = 5;
-//        _contentLabel.font = [UIFont themeFontRegular:16];
-//        _contentLabel.textColor = [UIColor themeGray1];
-//        NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:@"升级代表同意"];
-//        [string addAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexString:@"999999"]} range:NSMakeRange(0, string.length)];
-//
-//        NSMutableAttributedString *link = [[NSMutableAttributedString alloc] initWithString:@"“飞聊通行证用户协议”"];
-//        [string appendAttributedString:link];
-//        [_contentLabel setText:string];
-//        _contentLabel.linkAttributes = @{NSUnderlineColorAttributeName:[UIColor clearColor],
-//                                         NSForegroundColorAttributeName:[UIColor colorWithHexString:@"3F6799"],
-//                                         };
-//        _contentLabel.activeLinkAttributes = @{NSUnderlineColorAttributeName:[UIColor clearColor],
-//                                               NSForegroundColorAttributeName:[UIColor colorWithHexString:@"3F6799"],
-//                                               };
-//        _contentLabel.delegate = self;
-//        _contentLabel.font = [UIFont systemFontOfSize:12.f];
-//        NSString *html = @"https://api.feiliao.com/fer/protocol/authorization";
-//        NSString *url = [NSString stringWithFormat:@"sslocal://webview?url=%@&hide_more=1", [html URLEncodedString]];
-//
-//        [_contentLabel addLinkToURL:[NSURL URLWithString:url] withRange:NSMakeRange(6, string.length - 6)];
-    }
-    return _contentLabel;
-}
-
-//- (TTRichSpanText *)richContent {
-//    if (!_richContent) {
-//        TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:self.contentRichSpanJSONString];
-//        _richContent = [[TTRichSpanText alloc] initWithText:self.content richSpans:richSpans];
-//    }
-//    return _richContent;
-//}
-
--(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
+- (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
     label.textColor = textColor;
@@ -134,21 +97,18 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if([data isKindOfClass:[FHFeedUGCContentModel class]]){
-        FHFeedUGCContentModel *model = (FHFeedUGCContentModel *)data;
-        
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         //设置userInfo
-        self.userInfoView.userName.text = model.user.name;
-        self.userInfoView.descLabel.text = @"今天 14:20";
-        [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:model.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
-
+        self.userInfoView.userName.text = cellModel.user.name;
+        self.userInfoView.descLabel.text = cellModel.desc;
+        [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
         //设置底部
         self.bottomView.position.text = @"左家庄";
-        [self.bottomView.likeBtn setTitle:model.diggCount forState:UIControlStateNormal];
-        [self.bottomView.commentBtn setTitle:model.commentCount forState:UIControlStateNormal];
-        
+        [self.bottomView.likeBtn setTitle:cellModel.diggCount forState:UIControlStateNormal];
+        [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
         //内容
-        [FHUGCCellHelper setRichContent:self.contentLabel model:model numberOfLines:5];
+        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
     }
 }
 

@@ -11,6 +11,7 @@
 #import "TTBaseMacro.h"
 #import "TTUGCEmojiParser.h"
 #import "FHFeedUGCContentModel.h"
+#import "FHFeedUGCCellModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSAttributedString *)truncationFont:(UIFont *)font contentColor:(UIColor *)contentColor color:(UIColor *)color linkUrl:(NSString *)linkUrl;
 
-+ (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCContentModel *)model numberOfLines:(NSInteger)numberOfLines;
++ (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model numberOfLines:(NSInteger)numberOfLines;
 
 @end
 

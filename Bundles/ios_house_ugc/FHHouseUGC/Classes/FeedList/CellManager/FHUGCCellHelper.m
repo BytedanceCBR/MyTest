@@ -32,7 +32,7 @@
     return truncationString.copy;
 }
 
-+ (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCContentModel *)model numberOfLines:(NSInteger)numberOfLines {
++ (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model numberOfLines:(NSInteger)numberOfLines {
     TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
     TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:model.content richSpans:richSpans];
     
@@ -46,7 +46,6 @@
     }
     
     if (!isEmptyString(threadContent.text)) {
-        
         NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16];
         if (attrStr) {
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
@@ -59,11 +58,12 @@
             //内容
             label.numberOfLines = numberOfLines;
             label.attributedText = mutableAttributedString;
-            label.attributedTruncationToken = [FHUGCCellHelper truncationFont:[attributes objectForKey:NSFontAttributeName]
+            if(model.showLookMore){
+                label.attributedTruncationToken = [FHUGCCellHelper truncationFont:[attributes objectForKey:NSFontAttributeName]
                                                                  contentColor:attributes[NSForegroundColorAttributeName]
                                                                         color:[UIColor themeRed3]
                                                                       linkUrl:@"www.bytedance.contentTruncationLinkURLString"];
-            
+            }
         }
     }
 }

@@ -11,8 +11,7 @@
 #import "FHHouseUGCAPI.h"
 #import "FHFeedListModel.h"
 #import <UIScrollView+Refresh.h>
-#import "FHFeedContentModel.h"
-#import "FHFeedUGCContentModel.h"
+#import "FHFeedUGCCellModel.h"
 
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -98,46 +97,20 @@
     
     for (FHFeedListDataModel *itemModel in feedList) {
         NSString *content = itemModel.content;
-        NSData *jsonData = [content dataUsingEncoding:NSUTF8StringEncoding];
-        
-        NSError *err;
-        NSDictionary *dic = nil;
-        @try {
-            dic = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                  options:NSJSONReadingMutableContainers
-                                                    error:&err];
-        } @catch (NSException *exception) {
-            
-        } @finally {
-            
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
+        if(cellModel){
+            [resultArray addObject:cellModel];
         }
-        
-        if(!err){
-            FHUGCFeedListCellType type = [dic[@"cell_type"] integerValue];
-            Class cls = nil;
-            if(type == FHUGCFeedListCellTypeUGC){
-                cls = [FHFeedUGCContentModel class];
-            }else{
-                cls = [FHFeedContentModel class];
-            }
-            
-            __block NSError *backError = nil;
-            
-            id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:cls error:&backError];
-            if(!backError){
-                [resultArray addObject:model];
-            }
-        }
-        
-
     }
     
     return resultArray;
 }
 
 //用来根据model计算类型
-- (FHUGCFeedListCellSubType)getFeedType:(id<FHBaseModelProtocol>)model {
+- (FHUGCFeedListCellSubType)getFeedType:(FHFeedUGCCellModel *)model {
     FHUGCFeedListCellSubType type = FHUGCFeedListCellSubTypePureTitle;
+    
+
 //    NSInteger cellType = [model.cellType integerValue];
     //文章是0， 帖子32
 //    NSArray *imageList = model.imageList;
@@ -148,7 +121,7 @@
 //    }else if(imageList.count == 1){
 //        type = FHUGCFeedListCellTypeSingleImage;
 //    }else{
-        type = FHUGCFeedListCellSubTypePureTitle;
+        type = FHUGCFeedListCellSubTypeSingleImage;
 //    }
 //    if(imageList.count > 0){
 //        type = FHUGCFeedListCellSubTypeArticleMultiImage;
@@ -166,10 +139,10 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    id<FHBaseModelProtocol> model = self.dataList[indexPath.row];
-    FHUGCFeedListCellSubType type = [self getFeedType:model];
+    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+//    FHUGCFeedListCellSubType type = [self getFeedType:cellModel];
 
-    NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:type data:nil]);
+    NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
     FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 
     if (cell == nil) {
@@ -179,7 +152,7 @@
     }
 
     if(indexPath.row < self.dataList.count){
-        [cell refreshWithData:model];
+        [cell refreshWithData:cellModel];
     }
 
     return cell;

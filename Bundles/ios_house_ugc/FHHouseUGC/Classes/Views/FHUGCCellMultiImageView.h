@@ -6,7 +6,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FHFeedContentModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
