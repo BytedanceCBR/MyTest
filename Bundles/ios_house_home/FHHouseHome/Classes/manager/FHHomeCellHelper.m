@@ -189,6 +189,42 @@ static NSMutableArray  * _Nullable identifierArr;
     
 }
 
++ (void)sendBannerTypeCellShowTrace:(FHHouseType)houseType
+{
+    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHConfigDataOpData2Model *modelOpdata2 = currentDataModel.opData2;
+    FHConfigDataCityStatsModel *cityStatsModel = currentDataModel.cityStats;
+    
+    NSArray<FHConfigDataOpData2ItemsModel> *items = nil;
+    
+    for (NSInteger i = 0; i < currentDataModel.opData2list.count; i ++) {
+        FHConfigDataOpData2ListModel *dataModelItem = currentDataModel.opData2list[i];
+        if (dataModelItem.opData2Type && [dataModelItem.opData2Type integerValue] == houseType && dataModelItem.opDataList && dataModelItem.opDataList.items.count > 0) {
+            items = dataModelItem.opDataList.items;
+        }
+    }
+    
+    if (items > 0)
+    {
+        [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString *stringOpStyle = @"be_null";
+            FHConfigDataOpData2ItemsModel *item = (FHConfigDataOpData2ItemsModel *)obj;
+            NSMutableDictionary *dictTraceParams = [NSMutableDictionary dictionary];
+            
+            if ([item isKindOfClass:[FHConfigDataOpData2ItemsModel class]]) {
+                if ([item.logPb isKindOfClass:[NSDictionary class]]) {
+                    NSString *stringName =  item.logPb[@"operation_name"];
+                    [dictTraceParams setValue:stringName forKey:@"operation_name"];
+                }
+            }
+            [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+            [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
+            
+            [TTTracker eventV3:@"operation_show" params:dictTraceParams];
+        }];
+    }
+}
+
 - (void)clearShowCache
 {
     [self.traceShowCache removeAllObjects];
@@ -196,8 +232,8 @@ static NSMutableArray  * _Nullable identifierArr;
 
 - (CGFloat)initFHHomeHeaderIconCountAndHeight
 {
-    self.kFHHomeIconRowCount = 4;
-    self.kFHHomeIconDefaultHeight = 57;
+    self.kFHHomeIconRowCount = 5;
+    self.kFHHomeIconDefaultHeight = 42;
     //下版本等实验结论再上
     //    if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum isKindOfClass:[NSNumber class]]) {
     //        if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum integerValue] == 5) {
@@ -400,6 +436,8 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     
     cellEntrance.boardView.clickedCallBack = ^(NSInteger clickIndex){
+//            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web?url=https://www.baidu.com"]];
+//        return ;
         if (model.items.count > clickIndex) {
             FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
             

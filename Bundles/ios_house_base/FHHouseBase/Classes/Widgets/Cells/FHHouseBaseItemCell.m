@@ -53,7 +53,8 @@
 @property(nonatomic, strong) UILabel *originPriceLabel;
 @property(nonatomic, strong) UILabel *pricePerSqmLabel; // 价格/平米
 @property(nonatomic, strong) UILabel *distanceLabel; // 30 分钟到达
-
+@property(nonatomic, strong) UIImageView *fakeImageView;
+@property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
@@ -1070,6 +1071,49 @@
         [self.priceBgView.yoga markDirty];
     }
 
+}
+
+- (void)updateFakeHouseImageWithUrl:(NSString *)urlStr andSourceStr:(NSString *)sourceStr
+{
+    if (self.fakeImageViewContainer) {
+        [self.fakeImageViewContainer removeFromSuperview];
+        self.fakeImageViewContainer = nil;
+    }
+    
+    if(self.fakeImageView)
+    {
+        [self.fakeImageView removeFromSuperview];
+        self.fakeImageView = nil;
+    }
+    
+    self.fakeImageViewContainer = [UIView new];
+    [self.fakeImageViewContainer setBackgroundColor:[UIColor whiteColor]];
+    self.fakeImageViewContainer.alpha = 0.5;
+    [self.fakeImageViewContainer setFrame:CGRectMake(0, 0, self.mainImageView.frame.size.width, self.mainImageView.frame.size.height)];
+    [self.mainImageView addSubview:self.fakeImageViewContainer];
+    
+    
+    self.fakeImageView = [UIImageView new];
+    if (urlStr) {
+        [self.fakeImageView bd_setImageWithURL:[NSURL URLWithString:urlStr]];
+    }
+    [self.mainImageView addSubview:self.fakeImageView];
+    
+    [self.fakeImageView setFrame:CGRectMake((self.mainImageView.frame.size.width - 100) / 2, (self.mainImageView.frame.size.height - 39) / 2, 100, 39)];
+    
+    self.tagLabel.text = [NSString stringWithFormat:@" %@",sourceStr];
+    self.tagLabel.textColor = [UIColor themeGray3];
+    self.tagLabel.font = [UIFont themeFontRegular:12];
+    
+    self.imageTagLabel.hidden = YES;
+    self.imageTagLabelBgView.hidden = YES;
+}
+
+- (void)updateThirdPartHouseSourceStr:(NSString *)sourceStr
+{
+    self.tagLabel.text = [NSString stringWithFormat:@" %@",sourceStr];
+    self.tagLabel.textColor = [UIColor themeGray3];
+    self.tagLabel.font = [UIFont themeFontRegular:12];
 }
 
 -(void)updateSamllTitlesLayout:(BOOL)showTags

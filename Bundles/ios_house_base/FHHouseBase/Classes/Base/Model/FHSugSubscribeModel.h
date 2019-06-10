@@ -3,6 +3,22 @@
 #import "FHBaseModelProtocol.h"
 NS_ASSUME_NONNULL_BEGIN
 
+// 搜索列表页面是否显示真假房源入口
+@interface FHSugListRealHouseTopInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *fakeHouse;
+@property (nonatomic, copy , nullable) NSString *fakeTitle;
+@property (nonatomic, copy , nullable) NSString *enableFakeHouse;
+@property (nonatomic, copy , nullable) NSString *fakeHouseTotal;
+@property (nonatomic, copy , nullable) NSString *houseTotal;
+@property (nonatomic, copy , nullable) NSString *totalTitle;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *trueHouseTotal;
+@property (nonatomic, copy , nullable) NSString *trueTitle;
+@property (nonatomic, copy , nullable) NSString *searchId;
+
+@end
+
 // 搜索列表页面返回的是否订阅模型
 @interface FHSugSubscribeDataDataSubscribeInfoModel : JSONModel
 
