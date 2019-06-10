@@ -9,12 +9,14 @@
 #import <Masonry/Masonry.h>
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
+#import "TTUserProfileCheckingView.h"
 
 @interface FHEditUserTextCell()
 
 @property (nonatomic, strong) UILabel* nameLabel;
 @property (nonatomic, strong) UILabel* contentLabel;
 @property (nonatomic, strong) UIImageView* indicatorView;
+@property (nonatomic, strong) TTUserProfileCheckingView *checkingView; //审核中
 
 @end
 
@@ -47,6 +49,10 @@
     _contentLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_contentLabel];
     
+    self.checkingView = [[TTUserProfileCheckingView alloc] init];
+    _checkingView.hidden = YES;
+    [self.contentView addSubview:_checkingView];
+    
 }
 
 - (void)initConstraints {
@@ -64,14 +70,25 @@
     
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentView);
-        make.left.mas_equalTo(self.nameLabel.mas_right).offset(20);
+        make.left.mas_equalTo(self.checkingView.mas_right).offset(15);
         make.right.mas_equalTo(self.indicatorView.mas_left).offset(-10);
+    }];
+    
+    CGSize size = [self.checkingView sizeForFit];
+    [self.checkingView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.nameLabel.mas_right).offset(-35);
+        make.centerY.equalTo(self.contentView);
+        make.size.mas_equalTo(size);
     }];
 }
 
 - (void)updateCell:(NSDictionary *)dic {
     self.nameLabel.text = dic[@"name"];
     self.contentLabel.text = dic[@"content"];
+    
+    if(dic[@"isAuditing"]){
+        self.checkingView.hidden = ![dic[@"isAuditing"] boolValue];
+    }
 }
 
 @end

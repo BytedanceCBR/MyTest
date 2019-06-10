@@ -508,7 +508,17 @@
         return;
     }
     
-    JSONModel *dataModel = self.detailData;
+    JSONModel *dataModel = nil;
+    if ([self.detailData isKindOfClass:[FHDetailOldModel class]]) {
+        dataModel = [(FHDetailOldModel*)self.detailData data];
+    }else if ([self.detailData isKindOfClass:[FHRentDetailResponseModel class]]){
+        dataModel = [(FHRentDetailResponseModel *)self.detailData data];
+    }else if([self.detailData respondsToSelector:@selector(data)]){
+        dataModel = [self.detailData performSelector:@selector(data)];
+    }else{
+        dataModel = self.detailData;
+    }
+    
     NSDictionary *jsonDic = [dataModel toDictionary];
     if (jsonDic) {
 
