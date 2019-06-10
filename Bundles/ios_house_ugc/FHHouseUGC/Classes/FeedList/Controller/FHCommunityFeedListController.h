@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 //附加在feed上面的自定义view
 @property(nonatomic, strong) UIView *tableHeaderView;
 
+- (void)showNotify:(NSString *)message;
+
 @end
 
 NS_ASSUME_NONNULL_END

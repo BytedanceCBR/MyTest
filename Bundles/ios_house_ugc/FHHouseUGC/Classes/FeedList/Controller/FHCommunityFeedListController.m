@@ -11,11 +11,15 @@
 #import "FHCommunityFeedListNearbyViewModel.h"
 #import "FHCommunityFeedListMyJoinViewModel.h"
 #import "TTReachability.h"
+#import "ArticleListNotifyBarView.h"
+#import <UIViewAdditions.h>
+#import "TTDeviceHelper.h"
 
 @interface FHCommunityFeedListController ()
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic ,strong) UITableView *tableView;
+@property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
 
 @end
 
@@ -29,10 +33,10 @@
     [self initViewModel];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self startLoadData];
-}
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
+//    [self startLoadData];
+//}
 
 - (void)initView {
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
@@ -55,13 +59,27 @@
         self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+    }
+    
     [self.view addSubview:_tableView];
+    
     [self addDefaultEmptyViewFullScreen];
+    
+    //notifyview
+    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
+    [self.view addSubview:self.notifyBarView];
 }
 
 - (void)initConstraints {
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
+    }];
+    
+    [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.tableView);
+        make.height.mas_equalTo(32);
     }];
 }
 
@@ -75,7 +93,7 @@
     }
     
     self.viewModel = viewModel;
-//    [self startLoadData];
+    [self startLoadData];
 }
 
 - (void)startLoadData {
@@ -90,6 +108,21 @@
 
 - (void)retryLoadData {
     [self startLoadData];
+}
+
+#pragma mark - show notify
+
+- (void)showNotify:(NSString *)message {
+    UIEdgeInsets inset = self.tableView.contentInset;
+    inset.top = self.notifyBarView.height;
+    self.tableView.contentInset = inset;
+    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.3 animations:^{
+            self.tableView.contentInset = UIEdgeInsetsZero;
+        }];
+    });
 }
 
 
