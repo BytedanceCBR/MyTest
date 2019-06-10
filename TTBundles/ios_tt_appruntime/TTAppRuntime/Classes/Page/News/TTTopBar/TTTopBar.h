@@ -29,6 +29,7 @@
 
 @property (nonatomic, weak) id<TTTopBarDelegate> delegate;
 @property (nonatomic, strong) NSString *tab;
+@property (nonatomic, assign) BOOL isShowTopSearchPanel;
 @property (nonatomic, strong) FHHomeSearchPanelView *pageSearchPanel;
 //@property (nonatomic, strong) HomePageSearchPanel *pageSearchPanel;
 

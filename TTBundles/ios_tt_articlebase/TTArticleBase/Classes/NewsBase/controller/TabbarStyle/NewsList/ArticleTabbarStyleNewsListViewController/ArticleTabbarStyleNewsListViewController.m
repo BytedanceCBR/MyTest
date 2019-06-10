@@ -39,6 +39,7 @@
     self = [super init];
     if (self) {
         self.hidesBottomBarWhenPushed = NO;
+        self.isShowTopSearchPanel = YES;
         self.statusBarStyle = SSViewControllerStatsBarDayBlackNightWhiteStyle;
         self.ttStatusBarStyle = UIStatusBarStyleLightContent;
         self.ttNavBarStyle = @"White";
@@ -196,7 +197,7 @@
         _mainVC.finishLoadingBlock = ^{
             [((TTTabbar *)wself.tabBarController.tabBar) setItemLoading:NO forIndex:0];
         };
-        
+        _mainVC.isShowTopSearchPanel = _isShowTopSearchPanel;
         __weak TTExploreMainViewController *weakMainVC = _mainVC;
         _mainVC.startLoadingBlock = ^{
             if (weakMainVC.isRefreshByClickTabBar) {

@@ -44,7 +44,9 @@
         vc.listType = FHCommunityFeedListTypeMyJoin;
         self.vc = vc;
     }else if(self.type == FHCommunityCollectionCellTypeDiscovery){
-        self.vc = [[ArticleTabBarStyleNewsListViewController alloc] init];
+        ArticleTabBarStyleNewsListViewController *ariticleListVC = [[ArticleTabBarStyleNewsListViewController alloc] init];
+        ariticleListVC.isShowTopSearchPanel = NO;
+        self.vc = ariticleListVC;
     }else{
         
     }
