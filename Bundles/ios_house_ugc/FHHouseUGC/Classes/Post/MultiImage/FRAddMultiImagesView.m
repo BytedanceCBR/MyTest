@@ -247,6 +247,30 @@
     [TTTrackerWrapper eventV3:@"click_add_image" params:nil];
 }
 
+// 发 问答 图片上传模型
+- (NSMutableArray<WDImageObjectUploadImageModel *> *)selectedImages {
+    if (self.selectedImageCacheTasks.count > 0) {
+        NSMutableArray *tempArray = [NSMutableArray array];
+        for (TTUGCImageCompressTask *task in self.selectedImageCacheTasks) {
+            if (task.assetModel.cacheImage) {
+                UIImage *image = task.assetModel.cacheImage;
+                WDImageObjectUploadImageModel *imageModel = [[WDImageObjectUploadImageModel alloc] initWithcompressImg:image];
+                [tempArray addObject:imageModel];
+            } else if (task.assetModel.imageURL) {
+                WDImageObjectUploadImageModel *imageModel = [[WDImageObjectUploadImageModel alloc] initWithcompressImg:nil];
+                [imageModel loadImageWithURL:task.assetModel.imageURL];
+                [tempArray addObject:imageModel];
+            } else {
+                UIImage *image = task.assetModel.thumbImage;
+                WDImageObjectUploadImageModel *imageModel = [[WDImageObjectUploadImageModel alloc] initWithcompressImg:image];
+                [tempArray addObject:imageModel];
+            }
+        }
+        return tempArray;
+    }
+    return nil;
+}
+
 #pragma mark - Add asset or image
 
 - (void)addAssets:(NSArray *)assets {

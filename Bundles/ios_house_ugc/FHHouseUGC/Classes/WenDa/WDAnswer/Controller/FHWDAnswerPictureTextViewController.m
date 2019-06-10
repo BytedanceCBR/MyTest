@@ -42,6 +42,8 @@
 #import "TTAdCanvasDefine.h"
 #import "WDSettingHelper.h"
 #import "WDAnswerService.h"
+#import "WDUploadImageManager.h"
+#import "WDPostAnswerTaskModel.h"
 
 static CGFloat const kLeftPadding = 15.f;
 static CGFloat const kRightPadding = 15.f;
@@ -52,7 +54,7 @@ static CGFloat const kAddImagesViewBottomPadding = 18.f;
 
 static CGFloat kWenDaToolbarHeight = 80.f;
 
-@interface FHWDAnswerPictureTextViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate>
+@interface FHWDAnswerPictureTextViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate ,WDUploadImageManagerDelegate>
 
 @property (nonatomic, strong) SSThemedButton * cancelButton;
 @property (nonatomic, strong) SSThemedButton * postButton;
@@ -81,17 +83,35 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 @property (nonatomic, assign) BOOL keyboardVisibleBeforePresent; // 保存 present 页面之前的键盘状态，用于 Dismiss 之后恢复键盘
 @property (nonatomic, copy) NSString *enterConcernID; //entrance为concern时有意义
 
+@property(nonatomic, strong) WDUploadImageManager *uploadImageManager;
+@property (nonatomic, copy) void(^sendAnswerBlock)(void);
+@property(nonatomic, strong) WDPostAnswerTaskModel * taskModel;
+
 @end
 
 @implementation FHWDAnswerPictureTextViewController
+
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+        
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.firstAppear = YES;
+    [self setupData];
     [self setupUI];
     [self addImagesViewSizeChanged];
     // [self restoreData];
+}
+
+- (void)setupData {
+    self.uploadImageManager = [[WDUploadImageManager alloc] init];
+    self.uploadImageManager.delegate = self;
 }
 
 - (void)restoreData {
@@ -416,7 +436,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     
     wSelf.sendAnswerBlock = sendAnswerBlock;
     [wSelf.uploadImageManager uploadImages:wSelf.taskModel.imageList];
-     */
+    */
 }
 
 
@@ -730,6 +750,27 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 
 - (void)viewDidEnterBackground {
     [self saveDraft];
+}
+
+#pragma mark - WDUploadImageManagerDelegate
+
+- (void)uploadManager:(WDUploadImageManager *)manager finishUploadImage:(id<WDUploadImageModelProtocol>)imageModel
+{
+
+}
+
+- (void)uploadManager:(WDUploadImageManager *)manager
+    failedUploadImage:(id<WDUploadImageModelProtocol>)imageModel
+                error:(NSError *)error
+{
+
+}
+
+- (void)uploadManagerTaskHasFinished:(WDUploadImageManager *)manager failedImageModels:(NSArray<id<WDUploadImageModelProtocol>> *)failedModels
+{
+    if (self.sendAnswerBlock) {
+        self.sendAnswerBlock();
+    }
 }
 
 @end
