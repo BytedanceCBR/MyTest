@@ -20,7 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, strong) FHUGCCellManager *cellManager;
-@property(nonatomic ,strong) FHRefreshCustomFooter *refreshFooter;
+@property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
+@property(nonatomic, strong) NSMutableDictionary *cellHeightCaches;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
 

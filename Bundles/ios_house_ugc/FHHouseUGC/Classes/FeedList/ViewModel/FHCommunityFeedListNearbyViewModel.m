@@ -23,9 +23,7 @@
     self = [super initWithTableView:tableView controller:viewController];
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
-        
         [self configTableView];
-        
     }
     
     return self;
@@ -40,12 +38,10 @@
     }];
     self.tableView.mj_footer = self.refreshFooter;
     self.refreshFooter.hidden = YES;
-    
     // 下拉刷新
     [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
         [wself requestData:YES first:NO];
     }];
-    
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -93,6 +89,9 @@
             NSArray *result = [wself convertModel:feedListModel.data];
             
             if(isHead){
+                if(result.count > 0){
+                    [wself.cellHeightCaches removeAllObjects];
+                }
                 [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
             }else{
                 [wself.dataList addObjectsFromArray:result];
@@ -104,11 +103,11 @@
             if(wself.dataList.count > 0){
                 wself.refreshFooter.hidden = NO;
                 [wself.viewController.emptyView hideEmptyView];
-                [wself.tableView reloadData];
             }else{
                 [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
                 wself.viewController.showenRetryButton = YES;
             }
+            [wself.tableView reloadData];
             
 //            if(isFirst){
 //                self.originSearchId = self.searchId;
@@ -184,6 +183,13 @@
     return [self.dataList count];
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
+    self.cellHeightCaches[tempKey] = cellHeight;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
 //    FHUGCFeedListCellSubType type = [self getFeedType:cellModel];
@@ -206,7 +212,16 @@
 
 #pragma mark - UITableViewDelegate
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    return UITableViewAutomaticDimension;
+//}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    NSNumber *cellHeight = self.cellHeightCaches[tempKey];
+    if (cellHeight) {
+        return [cellHeight floatValue];
+    }
     return UITableViewAutomaticDimension;
 }
 

@@ -43,12 +43,17 @@
     [_likeBtn setImage:[UIImage imageNamed:@"fh_ugc_like"] forState:UIControlStateNormal];
     [_likeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     _likeBtn.titleLabel.font = [UIFont themeFontRegular:14];
+    [_likeBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+    [_likeBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
+    
     [self addSubview:_likeBtn];
     
     self.commentBtn = [[UIButton alloc] init];
     [_commentBtn setImage:[UIImage imageNamed:@"fh_ugc_comment"] forState:UIControlStateNormal];
     [_commentBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     _commentBtn.titleLabel.font = [UIFont themeFontRegular:14];
+    [_commentBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+    [_commentBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
     [self addSubview:_commentBtn];
 }
 

@@ -12,11 +12,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface FHFeedUGCCellImageListUrlListModel : NSObject
+
+@property (nonatomic, copy , nullable) NSString *url;
+@end
+
 @interface FHFeedUGCCellImageListModel : NSObject
 
+@property (nonatomic, copy , nullable) NSString *uri;
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, copy , nullable) NSString *width;
 @property (nonatomic, copy , nullable) NSString *height;
+@property (nonatomic, strong , nullable) NSArray<FHFeedUGCCellImageListUrlListModel *> *urlList;
 @end
 
 @interface FHFeedUGCCellUserModel : NSObject
@@ -32,9 +39,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) FHUGCFeedListCellSubType cellSubType;
 //文章相关
 @property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, copy , nullable) NSString *desc;
-
+@property (nonatomic, copy , nullable) NSAttributedString *desc;
+//列表页小图
 @property (nonatomic, strong , nullable) NSArray<FHFeedUGCCellImageListModel *> *imageList;
+//点击小图放大后的大图
+@property (nonatomic, strong , nullable) NSArray<FHFeedUGCCellImageListModel *> *largeImageList;
 
 //帖子相关
 @property (nonatomic, strong , nullable) FHFeedUGCCellUserModel *user ;

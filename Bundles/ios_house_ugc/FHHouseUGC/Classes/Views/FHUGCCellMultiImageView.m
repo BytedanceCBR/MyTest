@@ -10,14 +10,18 @@
 #import <Masonry.h>
 #import <UIImageView+BDWebImage.h>
 #import "FHFeedUGCCellModel.h"
+#import "TTPhotoScrollViewController.h"
+#import "TTBaseMacro.h"
 
 #define itemPadding 4
+#define kMaxCount 9
 
 @interface FHUGCCellMultiImageView ()
 
 @property(nonatomic, assign) NSInteger count;
 @property(nonatomic, strong) NSMutableArray *imageViewList;
 @property(nonatomic, assign) CGFloat imageWidth;
+@property(nonatomic, strong) NSArray *largeImageList;
 
 @end
 
@@ -49,6 +53,9 @@
         imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
         imageView.layer.borderWidth = 0.5;
         imageView.hidden = YES;
+        imageView.tag = i;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTaped:)];
+        [imageView addGestureRecognizer:tap];
         [self addSubview:imageView];
         
         [self.imageViewList addObject:imageView];
@@ -105,7 +112,9 @@
     }
 }
 
-- (void)updateImageView:(NSArray *)imageList {
+- (void)updateImageView:(NSArray *)imageList largeImageList:(NSArray *)largeImageList {
+    self.largeImageList = largeImageList;
+    
     for (NSInteger i = 0; i < self.imageViewList.count; i++) {
         UIImageView *imageView = self.imageViewList[i];
         if(i < imageList.count){
@@ -120,7 +129,85 @@
         }else{
             imageView.hidden = YES;
         }
+        
+        //不传时不可点击
+        if(largeImageList){
+            imageView.userInteractionEnabled = YES;
+        }else{
+            imageView.userInteractionEnabled = NO;
+        }
     }
+}
+
+#pragma mark - 处理大图逻辑
+- (void)imageTaped:(UITapGestureRecognizer *)tap {
+    if(!self.largeImageList){
+        return;
+    }
+    
+    UIImageView *view = (UIImageView *)tap.view;
+    if (view.image == nil) {
+        return;
+    }
+    [self imageTouched:tap.view];
+}
+
+- (void)imageTouched:(UIView *)sender {
+    TTPhotoScrollViewController * controller = [[TTPhotoScrollViewController alloc] init];
+    NSInteger picCount = self.largeImageList.count;
+    if (picCount > kMaxCount) {
+        picCount = kMaxCount;
+    }
+    NSMutableArray * infoModels = [NSMutableArray arrayWithCapacity:10];
+    for (NSInteger i = 0; i < picCount; i++) {
+        FHFeedUGCCellImageListModel *imageModel = self.largeImageList[i];
+        NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:10];
+        [dict setValue:imageModel.uri forKey:kTTImageURIKey];
+        [dict setValue:imageModel.url forKey:TTImageInfosModelURL];
+        [dict setValue:imageModel.width forKey:kTTImageWidthKey];
+        [dict setValue:imageModel.height forKey:kTTImageHeightKey];
+        NSMutableArray * urls = [NSMutableArray arrayWithCapacity:10];
+        for (FHFeedUGCCellImageListUrlListModel *urlListModel in imageModel.urlList) {
+            if (!isEmptyString(urlListModel.url)) {
+                [urls addObject:@{TTImageInfosModelURL : urlListModel.url}];
+            }
+        }
+        [dict setValue:urls forKey:kTTImageURLListKey];
+        
+        TTImageInfosModel * iModel = [[TTImageInfosModel alloc] initWithDictionary:dict];
+        if (iModel) {
+            [infoModels addObject:iModel];
+        }
+    }
+    controller.imageInfosModels = infoModels;
+    [controller setStartWithIndex:sender.tag];
+    
+    NSMutableArray * frames = [NSMutableArray arrayWithCapacity:9];
+    for (UIImageView *view in self.imageViewList) {
+        CGRect frame = [view convertRect:view.bounds toView:nil];
+        [frames addObject:[NSValue valueWithCGRect:frame]];
+    }
+    controller.placeholderSourceViewFrames = frames;
+    controller.placeholders = [self photoObjs];
+    [controller presentPhotoScrollView];
+}
+
+- (NSArray *)photoObjs {
+    NSMutableArray *photoObjs = [NSMutableArray array];
+    NSInteger picCount = self.largeImageList.count;
+    if (picCount > kMaxCount) {
+        picCount = kMaxCount;
+    }
+    for (NSInteger i = 0; i < picCount; i++) {
+        if(i < self.imageViewList.count){
+            UIImageView *View = self.imageViewList[i];
+            //  此处需要优化
+            if (View.image) {
+                [photoObjs addObject:View.image];
+            }
+        }
+    }
+    return photoObjs;
 }
 
 @end

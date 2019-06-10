@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithFrame:(CGRect)frame count:(NSInteger)count;
 
-- (void)updateImageView:(NSArray *)imageList;
+- (void)updateImageView:(NSArray *)imageList largeImageList:(NSArray *)largeImageList;
 
 @end
 

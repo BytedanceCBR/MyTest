@@ -112,7 +112,7 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         //设置userInfo
         self.userInfoView.userName.text = cellModel.user.name;
-        self.userInfoView.descLabel.text = cellModel.desc;
+        self.userInfoView.descLabel.attributedText = cellModel.desc;
         [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
         //设置底部
         self.bottomView.position.text = @"左家庄";
@@ -121,7 +121,7 @@
         //内容
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
         //图片
-        [self.multiImageView updateImageView:cellModel.imageList];
+        [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     }
 }
 
