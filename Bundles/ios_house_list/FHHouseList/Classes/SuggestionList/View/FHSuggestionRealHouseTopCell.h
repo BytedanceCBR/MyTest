@@ -15,16 +15,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UILabel       *titleLabel;
 @property (nonatomic, strong)   UILabel       *realHouseLabel;
 @property (nonatomic, strong)   UILabel       *realHouseNumLabel;
+@property (nonatomic, strong)   UILabel       *realHouseUnitLabel;
 @property (nonatomic, strong)   UILabel       *falseHouseLabel;
 @property (nonatomic, strong)   UILabel       *falseHouseNumLabel;
+@property (nonatomic, strong)   UILabel       *falseHouseUnitLabel;
 @property (nonatomic, strong)   UIButton      *allWebHouseBtn;
-@property (nonatomic, strong)   UIButton      *allFalseHouseBtn;
 @property (nonatomic, strong)   UIView        *segementLine;
 @property (nonatomic, strong)   UIImageView   *backImageView;
-
-@property (nonatomic, copy) void (^addSubscribeAction)(NSString *subscribeText);
-
-@property (nonatomic, copy) void (^deleteSubscribeAction)(NSString *subscribeId);
+@property (nonatomic, strong)   NSDictionary   *tracerDict;
+@property (nonatomic, strong)  NSString *searchQuery;
 
 - (void)refreshUI:(JSONModel *)data;
 

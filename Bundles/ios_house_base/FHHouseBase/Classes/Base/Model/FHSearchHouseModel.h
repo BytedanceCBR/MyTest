@@ -140,9 +140,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHSearchHouseDataItemsFakeReasonModel : JSONModel
+
+@property (nonatomic, copy , nullable) FHSearchHouseDataItemsNeighborhoodInfoImagesModel *fakeReasonImage;
+
+@end
+
 @interface FHHouseItemHouseVideo : JSONModel
 
 @property (nonatomic, assign)   BOOL   hasVideo;
+
+@end
+
+@interface FHHouseItemHouseExternalModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *externalName;
+@property (nonatomic, copy , nullable) NSString *externalUrl;
+@property (nonatomic, copy , nullable) NSString *backUrl;
+@property (nonatomic, copy , nullable) NSString *isExternalSite;
 
 @end
 
@@ -163,6 +178,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *cellStyle;
 @property (nonatomic, copy , nullable) NSString *displayPrice;
+@property (nonatomic, strong, nullable) FHHouseItemHouseExternalModel *externalInfo;
+@property (nonatomic, copy , nullable) FHSearchHouseDataItemsFakeReasonModel *fakeReason;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsBaseInfoMapModel *baseInfoMap ;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsCoreInfoModel> *coreInfo;
 @property (nonatomic, copy , nullable) NSString *status;
@@ -177,6 +194,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsHouseImageTagModel *houseImageTag ;
 @property (nonatomic, copy , nullable) NSString *originPrice;
 @property (nonatomic, strong) NSArray* bottomText;
+
 @end
 
 @protocol FHRecommendSecondhandHouseTitleModel<NSObject>
@@ -188,6 +206,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsModel> *items;
 @property (nonatomic, copy , nullable) NSString *total;
 @property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, copy , nullable) FHSearchHouseDataItemsHouseImageModel *banner;
 @property (nonatomic, copy , nullable) NSString *recommendTitle;
 @property (nonatomic, copy , nullable) NSString *searchHint;
 @property (nonatomic, assign) BOOL hasMore;
@@ -231,6 +250,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *mapFindHouseOpenUrl;
 @property (nonatomic, copy , nullable) NSString *total;
 @property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, copy , nullable) NSString *topTip;
+@property (nonatomic, copy , nullable) NSString *bottomTip;
+@property (nonatomic, copy , nullable) FHSearchHouseDataItemsNeighborhoodInfoImagesModel *banner;
 @property (nonatomic, strong , nullable) FHSearchRealHouseExtModel *externalSite;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic, strong, nullable) FHRecommendSecondhandHouseDataModel *recommendSearchModel;

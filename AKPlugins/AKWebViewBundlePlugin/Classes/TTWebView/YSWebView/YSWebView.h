@@ -45,6 +45,7 @@ typedef void(^WebViewLogHandler)(NSString * _Nullable msg);
 
 @property (nonatomic, weak, nullable) id<YSWebViewDelegate> delegate;
 @property (nonatomic, readonly, weak, nullable) UIScrollView *scrollView;
+@property (nonatomic, assign) BOOL isCheckOpenUrlNameList;
 //@property (nonatomic, readonly, weak, nullable) id innerWebView;
 
 
@@ -125,6 +126,8 @@ typedef void(^WebViewLogHandler)(NSString * _Nullable msg);
 - (nullable NSString *)stringByEvaluatingJavaScriptFromString:(NSString * _Nullable)javaScriptString completionHandler:(void (^ __nullable)(__nullable id, NSError * __nullable error))completionHandler;
 
 - (nullable JSContext *)jsContext;
+
+- (NSArray *)fhWebBlackWebList;
 
 @property (nullable, nonatomic, readonly, strong) NSURLRequest *request;
 

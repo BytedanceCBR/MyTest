@@ -13,9 +13,18 @@
 #import <FHEnvContext.h>
 #import <ToastManager.h>
 #import <NSDictionary+TTAdditions.h>
+#import <TTRoute.h>
+#import "FHExtendHotAreaButton.h"
+#import <TTDeviceHelper.h>
+#import <FHUtils.h>
 
 @interface FHSuggestionRealHouseTopCell()
 @property (nonatomic, strong)FHSugSubscribeDataDataSubscribeInfoModel *currentModel;
+@property (nonatomic, strong)FHExtendHotAreaButton      *allFalseHouseBtn;
+@property (nonatomic, strong)UIView *segementContentView;
+@property (nonatomic, strong)UIButton *maskBtn;
+@property (nonatomic, strong)UIButton *maskWebBtn;
+
 @end
 
 @implementation FHSuggestionRealHouseTopCell
@@ -53,11 +62,11 @@
         make.height.mas_equalTo(20);
     }];
     
-    UIView *segementContentView = [UIView new];
-    segementContentView.backgroundColor = [UIColor clearColor];
-    [self.contentView addSubview:segementContentView];
+    _segementContentView = [UIView new];
+    _segementContentView.backgroundColor = [UIColor clearColor];
+    [self.contentView addSubview:_segementContentView];
     
-    [segementContentView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_segementContentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(14);
         make.right.mas_equalTo(-14);
         make.bottom.mas_equalTo(-10);
@@ -65,59 +74,88 @@
     }];
     
     _realHouseLabel = [[UILabel alloc] init];
-    _realHouseLabel.font = [UIFont themeFontRegular:11];
+    _realHouseLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 12 : 10];
     _realHouseLabel.textColor = [UIColor themeGray3];
     _realHouseLabel.textAlignment = NSTextAlignmentLeft;
-    [segementContentView addSubview:_realHouseLabel];
+    [_segementContentView addSubview:_realHouseLabel];
     
     [_realHouseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(segementContentView).offset(0);
-        make.centerY.equalTo(segementContentView);
-        make.height.equalTo(segementContentView);
+        make.left.equalTo(self.segementContentView).offset(0);
+        make.centerY.equalTo(self.segementContentView);
+        make.height.equalTo(self.segementContentView);
     }];
     
     _realHouseNumLabel = [[UILabel alloc] init];
-    _realHouseNumLabel.font = [UIFont themeFontDINAlternateBold:16];
+    _realHouseNumLabel.font = [UIFont themeFontDINAlternateBold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12];
     _realHouseNumLabel.textColor = [UIColor themeRed3];
     _realHouseNumLabel.textAlignment = NSTextAlignmentLeft;
-    [segementContentView addSubview:_realHouseNumLabel];
+    [_segementContentView addSubview:_realHouseNumLabel];
     
     [_realHouseNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(_realHouseLabel.mas_right).offset(0);
-        make.centerY.equalTo(segementContentView);
-        make.height.equalTo(segementContentView);
+        make.centerY.equalTo(self.segementContentView);
+        make.height.equalTo(self.segementContentView);
+    }];
+    
+    _realHouseUnitLabel= [[UILabel alloc] init];
+    _realHouseUnitLabel.font = [UIFont themeFontRegular:10];
+    _realHouseUnitLabel.textColor = [UIColor themeRed3];
+    _realHouseUnitLabel.text = @"套";
+    _realHouseUnitLabel.textAlignment = NSTextAlignmentLeft;
+    [_segementContentView addSubview:_realHouseUnitLabel];
+    
+    
+    [_realHouseUnitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.realHouseNumLabel.mas_right).offset(2);
+        make.centerY.equalTo(self.segementContentView);
+        make.height.equalTo(self.segementContentView);
     }];
     
     _segementLine = [UIView new];
-    [_segementLine setBackgroundColor:[UIColor themeGray3]];
-    [segementContentView addSubview:_segementLine];
+    [_segementLine setBackgroundColor:[UIColor themeGray6]];
+    [_segementContentView addSubview:_segementLine];
     [_segementLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(segementContentView);
+        make.centerX.equalTo(self.realHouseUnitLabel.mas_right).offset(8);
+        make.centerY.equalTo(self.segementContentView);
         make.width.mas_equalTo(1);
         make.height.mas_equalTo(12);
     }];
     
     
     _falseHouseLabel = [[UILabel alloc] init];
-    _falseHouseLabel.font = [UIFont themeFontRegular:11];
+    _falseHouseLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 12 : 10];
     _falseHouseLabel.textColor = [UIColor themeGray3];
     _falseHouseLabel.textAlignment = NSTextAlignmentLeft;
-    [segementContentView addSubview:_falseHouseLabel];
+    [_segementContentView addSubview:_falseHouseLabel];
     [_falseHouseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(_segementLine).offset(18);
-        make.centerY.equalTo(segementContentView);
+        make.left.equalTo(_segementLine).offset(8);
+        make.centerY.equalTo(self.segementContentView);
     }];
     
     _falseHouseNumLabel = [[UILabel alloc] init];
-    _falseHouseNumLabel.font = [UIFont themeFontDINAlternateBold:16];
+    _falseHouseNumLabel.font = [UIFont themeFontDINAlternateBold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12];
     _falseHouseNumLabel.textColor = [UIColor themeRed3];
     _falseHouseNumLabel.textAlignment = NSTextAlignmentLeft;
-    [segementContentView addSubview:_falseHouseNumLabel];
+    [_segementContentView addSubview:_falseHouseNumLabel];
     
     [_falseHouseNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(_falseHouseLabel.mas_right).offset(0);
-        make.centerY.equalTo(segementContentView);
-        make.height.equalTo(segementContentView);
+        make.centerY.equalTo(self.segementContentView);
+        make.height.equalTo(self.segementContentView);
+    }];
+    
+    
+    _falseHouseUnitLabel = [[UILabel alloc] init];
+    _falseHouseUnitLabel.font = [UIFont themeFontRegular:10];
+    _falseHouseUnitLabel.textColor = [UIColor themeRed3];
+    _falseHouseUnitLabel.text = @"套";
+    _falseHouseUnitLabel.textAlignment = NSTextAlignmentLeft;
+    [_segementContentView addSubview:_falseHouseUnitLabel];
+    
+    [_falseHouseUnitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.falseHouseNumLabel.mas_right).offset(2);
+        make.centerY.equalTo(self.segementContentView);
+        make.height.equalTo(self.segementContentView);
     }];
     
     
@@ -137,17 +175,41 @@
     }];
     
     
-    _allFalseHouseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _allFalseHouseBtn = [FHExtendHotAreaButton buttonWithType:UIButtonTypeCustom];
+    _allFalseHouseBtn.isExtend = YES;
     [_allFalseHouseBtn setImage:[UIImage imageNamed:@"house_list_real_arrow"] forState:UIControlStateNormal];
-    [_allFalseHouseBtn addTarget:self action:@selector(allWebHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_allFalseHouseBtn addTarget:self action:@selector(allFalseHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_allFalseHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    [segementContentView addSubview:_allFalseHouseBtn];
+    [_segementContentView addSubview:_allFalseHouseBtn];
     
     [_allFalseHouseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(segementContentView).offset(0);
+        make.right.equalTo(self.segementContentView).offset(0);
         make.centerY.equalTo(_falseHouseLabel);
         make.width.mas_equalTo(12);
         make.height.mas_equalTo(12);
+    }];
+    
+    _maskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_maskBtn setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:_maskBtn];
+    [_maskBtn addTarget:self action:@selector(allFalseHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_maskBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.falseHouseNumLabel).offset(-3);
+        make.right.equalTo(self.contentView);
+        make.height.mas_equalTo(30);
+        make.width.mas_equalTo(120);
+    }];
+    
+    
+    _maskWebBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_maskWebBtn setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:_maskWebBtn];
+    [_maskWebBtn addTarget:self action:@selector(allWebHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_maskWebBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.allWebHouseBtn).offset(-5);
+        make.right.equalTo(self.allWebHouseBtn).offset(5);
+        make.height.mas_equalTo(40);
+        make.width.mas_equalTo(40);
     }];
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -155,29 +217,41 @@
 
 - (void)allWebHouseBtnClick:(UIButton *)button
 {
-    
     if (![FHEnvContext isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
     
-    _allWebHouseBtn.userInteractionEnabled = NO;
-    if ([_allWebHouseBtn.titleLabel.text isEqualToString:@"订阅"]) {
-        //        [_allWebHouseBtn setTitle:@"已订阅" forState:UIControlStateNormal];
-        if(self.addSubscribeAction)
+    FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)self.currentModel;
+    if ([model isKindOfClass:[FHSugListRealHouseTopInfoModel class]] &&[model.openUrl isKindOfClass:[NSString class]]) {
+        
+        NSString *urlStr = nil;
+        if ([self.tracerDict isKindOfClass:[NSDictionary class]] && model.openUrl) {
+           urlStr = [NSString stringWithFormat:@"%@&report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:self.tracerDict]];
+        }else
         {
-            
-            self.addSubscribeAction(self.currentModel.text);
+            urlStr = model.openUrl;
         }
-    }else
-    {
-        if(self.deleteSubscribeAction)
-        {
-            self.deleteSubscribeAction(self.currentModel.subscribeId);
-        }
-        //        [_allWebHouseBtn setTitle:@"订阅" forState:UIControlStateNormal];
+        
+        NSDictionary *info = @{@"url":model.openUrl,@"fhJSParams":@{},@"title":@" "};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://webview"] userInfo:userInfo];
     }
-    [self performSelector:@selector(enabelSubscribBtn) withObject:nil afterDelay:1];
+}
+
+- (void)allFalseHouseBtnClick:(UIButton *)button
+{
+    FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)self.currentModel;
+
+    if (model.searchId && [model.fakeHouseTotal integerValue] > 0) {
+        NSMutableDictionary *info = [NSMutableDictionary new];
+        [info setValue:model.searchId forKey:@"searchId"];
+        [info setValue:self.searchQuery forKey:@"searchQuery"];
+        [info setValue:self.tracerDict forKey:@"tracer"];
+        
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://house_fake_list"] userInfo:userInfo];
+    }
 }
 
 #pragma mark -
@@ -198,11 +272,20 @@
         
         _titleLabel.text = model.totalTitle;
         _realHouseLabel.text = model.trueTitle;
-        _realHouseNumLabel.text = [NSString stringWithFormat:@"  %@套",model.trueHouseTotal ? : @"0"];
+      
+        _realHouseNumLabel.text = [NSString stringWithFormat:@" %@",model.trueHouseTotal ? : @"0"];
         _falseHouseLabel.text = model.fakeTitle;
-        _falseHouseNumLabel.text = [NSString stringWithFormat:@"  %@套",model.fakeHouseTotal ? : @"0"];;
+        _falseHouseNumLabel.text = [NSString stringWithFormat:@" %@",model.fakeHouseTotal ? : @"0"];;
+        if([model.fakeHouseTotal integerValue] == 0)
+        {
+            _allFalseHouseBtn.hidden = YES;
+        }else
+        {
+            _allFalseHouseBtn.hidden = NO;
+        }
+        
+        [self layoutIfNeeded];
     }
-
 }
 
 - (void)awakeFromNib {

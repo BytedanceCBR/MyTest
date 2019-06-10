@@ -144,7 +144,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             [self configIconRowCountAndHeight];
             
-            self.dataSource.showOpDataListEntrance = [self checkIsHaveEntrancesList];
             
             //切换城市先显示横条
             if([FHEnvContext sharedInstance].isRefreshFromCitySwitch)
@@ -158,6 +157,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:configDataModel.houseTypeDefault];
                 self.currentHouseType = configDataModel.houseTypeDefault.integerValue;
             }
+            
+            self.dataSource.showOpDataListEntrance = [self checkIsHaveEntrancesList];
             
             //更新切换
             [self updateCategoryViewSegmented:self.isFirstChange];
@@ -831,17 +832,18 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 - (BOOL)checkIsHaveEntrancesList
 {
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    //判断是否有新增样式入口
-    if ([dataModel.opData2list isKindOfClass:[NSArray class]] && [dataModel.opData2list.firstObject isKindOfClass:[FHConfigDataOpData2ListModel class]]) {
-        NSArray<FHConfigDataOpData2ItemsModel> *items = ((FHConfigDataOpData2ListModel *)dataModel.opData2list.firstObject).opDataList.items;
-        if (items.count > 0) {
-            return YES;
+
+    NSLog(@"house_type = %d", self.currentHouseType);
+    
+    BOOL isShowHouseBanner = NO;
+    
+    for (NSInteger i = 0; i < dataModel.opData2list.count; i ++) {
+        FHConfigDataOpData2ListModel *dataModelItem = dataModel.opData2list[i];
+        if (dataModelItem.opData2Type && [dataModelItem.opData2Type integerValue] == self.currentHouseType && dataModelItem.opDataList && dataModelItem.opDataList.items.count > 0) {
+            isShowHouseBanner = YES;
         }
-        return NO;
-    }else
-    {
-        return NO;
     }
+    return isShowHouseBanner;
 }
 
 //重载首页头部数据
@@ -892,9 +894,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     self.dataSource.modelsArray = models;
     self.dataSource.currentHouseType = self.currentHouseType;
     self.dataSource.isHasFindHouseCategory = [self checkIsHasFindHouse];
+    self.dataSource.showOpDataListEntrance = [self checkIsHaveEntrancesList];
     if (self.tableViewV.numberOfSections > kFHHomeListHouseBaseViewSection) {
         [self.tableViewV reloadData];
     }
+    
 }
 
 //重载当前缓存数据
@@ -903,6 +907,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     if (kIsNSArray(models)) {
         self.dataSource.currentHouseType = self.currentHouseType;
         self.dataSource.modelsArray = models;
+        self.dataSource.showOpDataListEntrance = [self checkIsHaveEntrancesList];
         [self.tableViewV reloadData];
     }
     [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
