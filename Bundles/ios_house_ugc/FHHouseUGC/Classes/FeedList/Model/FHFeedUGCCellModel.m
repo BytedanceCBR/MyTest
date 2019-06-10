@@ -40,8 +40,11 @@
         Class cls = nil;
         if(type == FHUGCFeedListCellTypeUGC){
             cls = [FHFeedUGCContentModel class];
-        }else{
+        }else if(type == FHUGCFeedListCellTypeArticle){
             cls = [FHFeedContentModel class];
+        }else{
+            //其他类型直接过滤掉
+            return cellModel;
         }
         
         __block NSError *backError = nil;
