@@ -9,6 +9,7 @@
 #import "FHCommunityFeedListController.h"
 #import <TTHttpTask.h>
 #import "FHUGCCellManager.h"
+#import <FHCommonUI/FHRefreshCustomFooter.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, strong) FHUGCCellManager *cellManager;
+@property(nonatomic ,strong) FHRefreshCustomFooter *refreshFooter;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
 
