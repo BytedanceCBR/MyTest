@@ -26,6 +26,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/UIImageAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import "SDImageCache.h"
 
 #define NumberOfImagesPerRow 3
 #define ImagesInterval 3.f
@@ -245,6 +246,40 @@
     [imgPick presentOn:self.viewController.navigationController];
     
     [TTTrackerWrapper eventV3:@"click_add_image" params:nil];
+}
+
+// 发 问答 图片上传模型
+- (NSMutableArray<WDImageObjectUploadImageModel *> *)selectedImages {
+    if (self.selectedImageCacheTasks.count > 0) {
+        NSMutableArray *tempArray = [NSMutableArray array];
+        for (TTUGCImageCompressTask *task in self.selectedImageCacheTasks) {
+            // 图片资源
+            if (task.preCompressFilePath.length > 0) {
+                NSData *uploadData = [NSData dataWithContentsOfFile:task.preCompressFilePath];
+                if (uploadData) {
+                    UIImage *uploadImage = [UIImage sd_imageWithData:uploadData];
+                    if (uploadImage) {
+                        WDImageObjectUploadImageModel *imageModel = [[WDImageObjectUploadImageModel alloc] initWithcompressImg:uploadImage];
+                        [tempArray addObject:imageModel];
+                    }
+                }
+            } else if (task.assetModel.cacheImage) {
+                UIImage *image = task.assetModel.cacheImage;
+                WDImageObjectUploadImageModel *imageModel = [[WDImageObjectUploadImageModel alloc] initWithcompressImg:image];
+                [tempArray addObject:imageModel];
+            } else if (task.assetModel.imageURL) {
+                WDImageObjectUploadImageModel *imageModel = [[WDImageObjectUploadImageModel alloc] initWithcompressImg:nil];
+                [imageModel loadImageWithURL:task.assetModel.imageURL];
+                [tempArray addObject:imageModel];
+            } else {
+                UIImage *image = task.assetModel.thumbImage;
+                WDImageObjectUploadImageModel *imageModel = [[WDImageObjectUploadImageModel alloc] initWithcompressImg:image];
+                [tempArray addObject:imageModel];
+            }
+        }
+        return tempArray;
+    }
+    return nil;
 }
 
 #pragma mark - Add asset or image

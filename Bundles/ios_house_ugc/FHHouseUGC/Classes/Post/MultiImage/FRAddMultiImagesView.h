@@ -10,6 +10,7 @@
 #import <TTThemed/SSThemed.h>
 #import <TTUGCFoundation/TTUGCImageCompressManager.h>
 #import <ios_house_im/FRUploadImageModel.h>
+#import "WDImageObjectUploadImageModel.h"
 
 @class FRAddMultiImagesView;
 @class ALAssetsLibrary;
@@ -39,6 +40,7 @@
 @property (nonatomic, assign) NSInteger selectionLimit;
 @property (nonatomic, assign) BOOL hideAddImagesButtonWhenEmpty; // 是否在没有图片时依然隐藏+号，通过代码添加有效图片后就恢复
 @property (nonatomic, readonly) NSMutableArray<TTUGCImageCompressTask *> *selectedImageCacheTasks;
+@property (nonatomic, readonly) NSMutableArray<WDImageObjectUploadImageModel *> *selectedImages; // 问答 所需模型数据
 @property (nonatomic, readonly) NSMutableArray<UIImage *> *selectedThumbImages;
 @property (nonatomic, weak) id<FRAddMultiImagesViewDelegate> delegate;
 @property (nonatomic, copy) void(^shouldAddPictureHandle)(void);

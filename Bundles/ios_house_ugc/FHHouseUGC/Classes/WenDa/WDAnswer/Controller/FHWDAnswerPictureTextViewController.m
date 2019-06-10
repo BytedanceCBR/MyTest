@@ -42,6 +42,10 @@
 #import "TTAdCanvasDefine.h"
 #import "WDSettingHelper.h"
 #import "WDAnswerService.h"
+#import "WDUploadImageManager.h"
+#import "WDPostAnswerTaskModel.h"
+#import "JSONAdditions.h"
+#import "WDMonitorManager.h"
 
 static CGFloat const kLeftPadding = 15.f;
 static CGFloat const kRightPadding = 15.f;
@@ -52,7 +56,16 @@ static CGFloat const kAddImagesViewBottomPadding = 18.f;
 
 static CGFloat kWenDaToolbarHeight = 80.f;
 
-@interface FHWDAnswerPictureTextViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate>
+@interface FHWDAnswerPictureTextViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate ,WDUploadImageManagerDelegate>
+
+@property(nonatomic, copy) NSString *qid;
+@property (nonatomic, copy) NSString *ansid;
+@property (nonatomic, copy) NSString *answerSchema;
+@property (nonatomic, assign) BOOL isForbidComment;
+@property (nonatomic, copy, nullable) NSDictionary *gdExtJson;
+@property (nonatomic,   copy) NSString *source;
+@property (nonatomic,   copy) NSString *listEntrance;
+@property (nonatomic, strong) NSDictionary *apiParam;
 
 @property (nonatomic, strong) SSThemedButton * cancelButton;
 @property (nonatomic, strong) SSThemedButton * postButton;
@@ -81,17 +94,48 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 @property (nonatomic, assign) BOOL keyboardVisibleBeforePresent; // 保存 present 页面之前的键盘状态，用于 Dismiss 之后恢复键盘
 @property (nonatomic, copy) NSString *enterConcernID; //entrance为concern时有意义
 
+@property(nonatomic, strong) WDUploadImageManager *uploadImageManager;
+@property (nonatomic, copy) void(^sendAnswerBlock)(void);
+@property(nonatomic, strong) WDPostAnswerTaskModel * taskModel;
+@property (nonatomic, assign) BOOL isPosting;
+
+@property (nonatomic, strong) NSDate *startDate;
+
 @end
 
 @implementation FHWDAnswerPictureTextViewController
+
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+        // add by zyk qid
+        self.qid = @"6667717867934318859";
+        self.ansid = @"";
+        self.answerSchema = @"";
+        self.isForbidComment = NO;
+        self.isPosting = NO;
+        self.gdExtJson = nil;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.firstAppear = YES;
+    [self setupData];
     [self setupUI];
     [self addImagesViewSizeChanged];
     // [self restoreData];
+    self.startDate = [NSDate date];
+}
+
+- (void)setupData {
+    self.qid = @"6667717867934318859";
+    WDPostAnswerTaskModel *taskModel = [[WDPostAnswerTaskModel alloc] initWithQid:self.qid content:nil contentRichSpan:nil imageList:nil];
+    self.taskModel = taskModel;
+    self.uploadImageManager = [[WDUploadImageManager alloc] init];
+    self.uploadImageManager.delegate = self;
 }
 
 - (void)restoreData {
@@ -342,8 +386,157 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     [self dismissSelf];
 }
 
-- (void)postQuestionAction:(id)sender {
+- (void)updateAnswer {
     
+    TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
+    [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *inputText = richSpanText.text;
+    TTRichSpans *richSpans = richSpanText.richSpans;
+    
+    _taskModel.answerType = WDPostAnswerTypePictureText;
+    _taskModel.content = inputText;
+    _taskModel.richSpanText = [TTRichSpans JSONStringForRichSpans:richSpans];;
+    _taskModel.imageList = (NSArray<id<WDUploadImageModelProtocol>>  *)self.addImagesView.selectedImages;
+}
+
+
+- (BOOL)isValidateWithInputText:(NSString *)inputText{
+    //Validate
+    
+//    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
+//
+//    if (isEmptyString(inputText) && self.addImagesView.selectedImageCacheTasks.count == 0) {
+//        [self endEditing];
+//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+//                                  indicatorText:NSLocalizedString(@"说点什么...", nil)
+//                                 indicatorImage:nil
+//                                    autoDismiss:YES
+//                                 dismissHandler:nil];
+//        return NO;
+//    }else if (inputText.length > maxTextCount) {
+//        [self endEditing];
+//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+//                                  indicatorText:[NSString stringWithFormat:@"字数超过%ld字，请调整后重试", maxTextCount]
+//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
+//                                    autoDismiss:YES
+//                                 dismissHandler:nil];
+//        return NO;
+//    }
+//
+//    if (![TTReachability isNetworkConnected]) {
+//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+//                                  indicatorText:NSLocalizedString(@"没有网络连接", nil)
+//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
+//                                    autoDismiss:YES
+//                                 dismissHandler:nil];
+//        return NO;
+//    }
+    return YES;
+}
+
+- (void)postQuestionAction:(id)sender {
+    TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
+    [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *inputText = richSpanText.text;
+    
+    if (![self isValidateWithInputText:inputText]) {
+        return;
+    }
+    [self endEditing];
+    // 更新答案
+    [self updateAnswer];
+    // 上报答案
+    [self sendAnswer];
+}
+
+- (void)cancelImageUpload {
+    [_uploadImageManager cancelUploadImage];
+    self.sendAnswerBlock = nil;
+    
+//    [_draftManager startAutoSave];
+}
+
+- (void)sendAnswer {
+    if (self && [TTAccountManager isLogin] && self.qid.length > 0) {
+//        BOOL containsImage = !SSIsEmptyArray(self.addImagesView.selectedImageCacheTasks);
+        self.sendingIndicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView indicatorText:NSLocalizedString(@"正在发送...", nil) indicatorImage:nil dismissHandler:^(BOOL isUserDismiss){
+            if (isUserDismiss) {
+                //点击取消按钮
+                [self cancelImageUpload];
+            }
+        }];
+        self.sendingIndicatorView.autoDismiss = NO;
+        self.sendingIndicatorView.showDismissButton = YES;
+        [self.sendingIndicatorView showFromParentView:nil];
+        __weak typeof(self) wself = self;
+        [self postAnswerWithApiParam:self.apiParam source:self.source listEntrance:self.listEntrance imageUploadComplete:^{
+            //图片上传成功，隐藏关闭按钮
+            [wself.sendingIndicatorView updateIndicatorWithText:NSLocalizedString(@"上传成功，加载中...", nil) shouldRemoveWaitingView:NO];
+            wself.sendingIndicatorView.showDismissButton = NO;
+        } complete:^(NSError * _Nullable error) {
+            
+            NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:wself.startDate];
+            NSMutableDictionary *diction = [NSMutableDictionary dictionary];
+            [diction setValue:@((NSInteger)timeInterval) forKey:@"timeInterval"];
+            
+            NSString *qid = wself.qid;
+            NSString *ansid = wself.ansid;
+            if (qid.length > 0 && ansid.length > 0) {
+//                [[NSNotificationCenter defaultCenter] postNotificationName:kWDDraftNeedRefreshNotification object:nil userInfo:nil];
+                
+//                wself.willEnterDetail = YES;
+//                [[TTMonitor shareManager] trackService:kWDPostAnswerService
+//                                                status:WDRequestNetworkStatusCompleted
+//                                                 extra:[WDMonitorManager extraDicWithInfo:diction error:error]];
+                
+                if ((wself.taskModel.pasteTimes > 0) && (wself.taskModel.pastLength > 0)) {
+//                    [[TTMonitor shareManager] trackService:kWDAnswerQualifyPasteService value:@(wself.taskModel.pasteTimes) extra:[WDMonitorManager extraDicWithInfo:@{kWDAnswerPasteLengthKey : @(wself.viewModel.taskModel.pastLength)} error:error]];
+                }
+                //回答发送成功
+                //埋点
+//                [wself sendTrackWhenAnswerPublishDoneWithAnsid:ansid];
+                [wself.sendingIndicatorView updateIndicatorWithText:[wself postAnswerSuccessText] shouldRemoveWaitingView:YES];
+                [wself.sendingIndicatorView updateIndicatorWithImage:[UIImage themedImageNamed:@"doneicon_popup_textpage"]];
+                wself.sendingIndicatorView.showDismissButton = NO;
+                //删除草稿
+//                [wself.viewModel deleteDraftWithCompleteHandler:^(BOOL success) {
+//                    //因为删除草稿操作在异步次线程中，保证在删除操作完成后执行其他操作
+//                    //否则，页面退出后，vm释放造成删除草稿失败
+//                    //跳到回答详情页
+//                    [wself navigateToAnswerSchema];
+//                }];
+            }else {
+                NSNumber *errorCode = [error.userInfo objectForKey:kWDErrorCodeKey];
+//                if (errorCode && [wself.viewModel isBusinessError:[errorCode integerValue]]) {
+//                    [[TTMonitor shareManager] trackService:kWDPostAnswerService
+//                                                    status:WDRequestNetworkStatusBusinessError
+//                                                     extra:[WDMonitorManager extraDicWithInfo:diction error:error]];
+//                } else {
+//                    [[TTMonitor shareManager] trackService:kWDPostAnswerService
+//                                                    status:WDRequestNetworkStatusFailed
+//                                                     extra:[WDMonitorManager extraDicWithInfo:diction error:error]];
+//                }
+                
+                
+                //回答发送失败
+                //埋点
+//                [wself sendTrackWhenAnswerPublishFail];
+                NSString *errorTips = [error.userInfo objectForKey:kWDErrorTipsKey];
+                if (errorTips.length == 0) {
+                    errorTips = NSLocalizedString(@"网络加载异常，请重试", nil);
+                }
+                [wself.sendingIndicatorView updateIndicatorWithText:errorTips shouldRemoveWaitingView:YES];
+                [wself.sendingIndicatorView updateIndicatorWithImage:[UIImage themedImageNamed:@"close_popup_textpage"]];
+                wself.sendingIndicatorView.showDismissButton = NO;
+            }
+            
+            [wself.sendingIndicatorView dismissFromParentView];
+        }];
+    }
+}
+
+- (NSString *)postAnswerSuccessText {
+    return NSLocalizedString(@"已发布", nil);
 }
 
 - (void)postAnswerWithApiParam:(NSDictionary *)apiParam
@@ -353,7 +546,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
                       complete:(void(^ __nullable)(NSError * __nullable error))block
 {
     //先保存最新的快照
-    /*
+    
     typeof(self) __weak wSelf = self;
     void(^sendAnswerBlock)(void) = ^{
         
@@ -365,24 +558,6 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         NSString *content = wSelf.taskModel.content;
         NSString *richSpanTetxt = wSelf.taskModel.richSpanText;
         NSArray<NSString *> *imageUris = [wSelf.taskModel remoteImgUris];
-        BOOL nowTaskValid = YES;
-        
-        if (!nowTaskValid) {
-            //图片上传异常或者沙盒中的压缩图片丢失
-            [wSelf.draftManager startAutoSave];
-            if (wSelf.boxImgMiss) {
-                if (block) {
-                    NSError *postError = [NSError errorWithDomain:kWDErrorDomain code:kWDPostErrorTypeLocalImageError userInfo:@{kWDErrorTipsKey : NSLocalizedString(@"图片加载失败，请检查后重试", nil)}];
-                    block(postError);
-                }
-            }else {
-                NSError *postError = [NSError errorWithDomain:kWDErrorDomain code:kWDPostErrorTypeUploadImageError userInfo:@{kWDErrorTipsKey : NSLocalizedString(@"图片上传失败，请重试", nil)}];
-                if (block) {
-                    block(postError);
-                }
-            }
-            return;
-        }
         
         if (uploadImageCompleteHandler) {
             //通知vc图片上传过程完成
@@ -398,14 +573,14 @@ static CGFloat kWenDaToolbarHeight = 80.f;
             NSError *postError;
             
             if (error) {
-                [wSelf.draftManager startAutoSave];
+//                [wSelf.draftManager startAutoSave];
                 tips = [[error userInfo] objectForKey:@"description"];
-                postError = [NSError errorWithDomain:kWDErrorDomain code:kWDPostErrorTypePostAPIError userInfo:tips.length > 0?@{kWDErrorTipsKey : tips, kWDErrorCodeKey : @(error.code)}:nil];
+                postError = [NSError errorWithDomain:kWDErrorDomain code:-1 userInfo:tips.length > 0?@{kWDErrorTipsKey : tips, kWDErrorCodeKey : @(error.code)}:nil];
             }
             
             wSelf.answerSchema = responseModel.schema;
             wSelf.ansid = responseModel.ansid;
-            wSelf.tipsModel = responseModel.tips;
+//            wSelf.tipsModel = responseModel.tips;
             
             if (block) {
                 block(postError);
@@ -416,7 +591,6 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     
     wSelf.sendAnswerBlock = sendAnswerBlock;
     [wSelf.uploadImageManager uploadImages:wSelf.taskModel.imageList];
-     */
 }
 
 
@@ -730,6 +904,27 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 
 - (void)viewDidEnterBackground {
     [self saveDraft];
+}
+
+#pragma mark - WDUploadImageManagerDelegate
+
+- (void)uploadManager:(WDUploadImageManager *)manager finishUploadImage:(id<WDUploadImageModelProtocol>)imageModel
+{
+
+}
+
+- (void)uploadManager:(WDUploadImageManager *)manager
+    failedUploadImage:(id<WDUploadImageModelProtocol>)imageModel
+                error:(NSError *)error
+{
+
+}
+
+- (void)uploadManagerTaskHasFinished:(WDUploadImageManager *)manager failedImageModels:(NSArray<id<WDUploadImageModelProtocol>> *)failedModels
+{
+    if (self.sendAnswerBlock) {
+        self.sendAnswerBlock();
+    }
 }
 
 @end

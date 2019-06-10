@@ -116,8 +116,8 @@
     [ExploreSubscribeDataListManager shareManager];
 
 //    [self showContactsGuideViewIfNeeded];
-
     [self setupTopBar];
+    
     [self tryGetCategories];
     
 //    self.adShow = [SSADManager shareInstance].adShow;
@@ -284,9 +284,14 @@
     {
         topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight ;
     }
-    
-    self.topInset = topPadding;
-    self.bottomInset = bottomPadding;
+    if (self.isShowTopSearchPanel) {
+        self.topInset = topPadding;
+        self.bottomInset = bottomPadding;
+    }else
+    {
+        self.topInset = 40;
+        self.bottomInset = 0;
+    }
 }
 
 - (void)setupTopBar {
@@ -745,6 +750,7 @@
 - (TTTopBar *)topBar {
     if (!_topBar) {
         _topBar = [[TTTopBar alloc] init];
+        _topBar.isShowTopSearchPanel = _isShowTopSearchPanel;
         _topBar.tab = @"home";
         [self.view addSubview:_topBar];
         [_topBar addTTCategorySelectorView:self.categorySelectorView delegate:self];
@@ -876,7 +882,7 @@
         self.topInset = safeInset.top;
         [self.topBar mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.top.right.equalTo(self.view);
-            make.height.mas_equalTo(self.topInset);
+            make.height.mas_equalTo(self.isShowTopSearchPanel ? self.topInset : 40);
         }];
     }
 }
