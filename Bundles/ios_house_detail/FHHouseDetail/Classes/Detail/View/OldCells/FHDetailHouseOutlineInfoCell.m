@@ -173,7 +173,7 @@
 // 二手房-房源问题反馈
 - (void)gotoReportVC {
     FHDetailHouseOutlineInfoModel *model = (FHDetailHouseOutlineInfoModel *)self.currentData;
-    FHDetailOldModel *ershouData = (FHDetailOldModel *)model.baseViewModel.detailData;
+    FHDetailOldDataModel *ershouData = [(FHDetailOldModel *)model.baseViewModel.detailData data];
     NSDictionary *jsonDic = [ershouData toDictionary];
     if (model && model.houseOverreview.reportUrl.length > 0 && jsonDic) {
         
