@@ -7,6 +7,11 @@
 
 #import "FHFeedUGCCellModel.h"
 #import "FHMainApi.h"
+#import "TTBusinessManager+StringUtils.h"
+
+@implementation FHFeedUGCCellImageListUrlListModel
+
+@end
 
 @implementation FHFeedUGCCellImageListModel
 
@@ -69,14 +74,24 @@
     cellModel.cellType = model.cellType;
     cellModel.title = model.title;
     cellModel.behotTime = model.behotTime;
-    cellModel.desc = @"信息来源";
+    cellModel.desc = [[NSAttributedString alloc] initWithString:@"信息来源"];
     
     NSMutableArray *cellImageList = [NSMutableArray array];
     for (FHFeedContentImageListModel *imageModel in model.imageList) {
         FHFeedUGCCellImageListModel *cellImageModel = [[FHFeedUGCCellImageListModel alloc] init];
+        cellImageModel.uri = imageModel.uri;
         cellImageModel.url = imageModel.url;
         cellImageModel.width = imageModel.width;
         cellImageModel.height = imageModel.height;
+        
+        NSMutableArray *cellImageModelUrlList = [NSMutableArray array];
+        for (FHFeedContentImageListUrlListModel *urlListModel in imageModel.urlList) {
+            FHFeedUGCCellImageListUrlListModel *cellUrlListModel = [[FHFeedUGCCellImageListUrlListModel alloc] init];
+            cellUrlListModel.url = urlListModel.url;
+            [cellImageModelUrlList addObject:cellUrlListModel];
+        }
+        cellImageModel.urlList = cellImageModelUrlList;
+        
         [cellImageList addObject:cellImageModel];
     }
     
@@ -102,7 +117,7 @@
     cellModel.contentRichSpan = model.contentRichSpan;
     cellModel.diggCount = model.diggCount;
     cellModel.commentCount = model.commentCount;
-    cellModel.desc = @"今天 14:00";
+    cellModel.desc = [self generateUGCDesc:model];
     
     FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
     user.name = model.user.name;
@@ -110,23 +125,42 @@
     cellModel.user = user;
     
     NSMutableArray *cellImageList = [NSMutableArray array];
-    
     if(model.ugcU13CutImageList.count > 0){
         //单图
         FHFeedUGCContentUgcU13CutImageListModel *imageModel = [model.ugcU13CutImageList firstObject];
         FHFeedUGCCellImageListModel *cellImageModel = [[FHFeedUGCCellImageListModel alloc] init];
+        cellImageModel.uri = imageModel.uri;
         cellImageModel.url = imageModel.url;
         cellImageModel.width = imageModel.width;
         cellImageModel.height = imageModel.height;
+        
+        NSMutableArray *cellImageModelUrlList = [NSMutableArray array];
+        for (FHFeedUGCContentUgcU13CutImageListUrlListModel *urlListModel in imageModel.urlList) {
+            FHFeedUGCCellImageListUrlListModel *cellUrlListModel = [[FHFeedUGCCellImageListUrlListModel alloc] init];
+            cellUrlListModel.url = urlListModel.url;
+            [cellImageModelUrlList addObject:cellUrlListModel];
+        }
+        cellImageModel.urlList = cellImageModelUrlList;
+        
         [cellImageList addObject:cellImageModel];
     }else{
         if(model.thumbImageList.count > 0){
             //多图
             for (FHFeedUGCContentThumbImageListModel *imageModel in model.thumbImageList) {
                 FHFeedUGCCellImageListModel *cellImageModel = [[FHFeedUGCCellImageListModel alloc] init];
+                cellImageModel.uri = imageModel.uri;
                 cellImageModel.url = imageModel.url;
                 cellImageModel.width = imageModel.width;
                 cellImageModel.height = imageModel.height;
+                
+                NSMutableArray *cellImageModelUrlList = [NSMutableArray array];
+                for (FHFeedUGCContentThumbImageListUrlListModel *urlListModel in imageModel.urlList) {
+                    FHFeedUGCCellImageListUrlListModel *cellUrlListModel = [[FHFeedUGCCellImageListUrlListModel alloc] init];
+                    cellUrlListModel.url = urlListModel.url;
+                    [cellImageModelUrlList addObject:cellUrlListModel];
+                }
+                cellImageModel.urlList = cellImageModelUrlList;
+                
                 [cellImageList addObject:cellImageModel];
             }
         }else{
@@ -137,6 +171,29 @@
     
     cellModel.imageList = cellImageList;
     
+    NSMutableArray *cellLargeImageList = [NSMutableArray array];
+    if(model.largeImageList.count > 0){
+        //大图
+        for (FHFeedUGCContentLargeImageListModel *imageModel in model.largeImageList) {
+            FHFeedUGCCellImageListModel *cellImageModel = [[FHFeedUGCCellImageListModel alloc] init];
+            cellImageModel.uri = imageModel.uri;
+            cellImageModel.url = imageModel.url;
+            cellImageModel.width = imageModel.width;
+            cellImageModel.height = imageModel.height;
+            
+            NSMutableArray *cellImageModelUrlList = [NSMutableArray array];
+            for (FHFeedUGCContentLargeImageListUrlListModel *urlListModel in imageModel.urlList) {
+                FHFeedUGCCellImageListUrlListModel *cellUrlListModel = [[FHFeedUGCCellImageListUrlListModel alloc] init];
+                cellUrlListModel.url = urlListModel.url;
+                [cellImageModelUrlList addObject:cellUrlListModel];
+            }
+            cellImageModel.urlList = cellImageModelUrlList;
+            
+            [cellLargeImageList addObject:cellImageModel];
+        }
+    }
+    cellModel.largeImageList = cellLargeImageList;
+    
     if(cellModel.imageList.count == 1){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
     }else if(cellModel.imageList.count > 1){
@@ -146,6 +203,31 @@
     }
     
     return cellModel;
+}
+
++ (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
+    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
+    double time = [model.behotTime doubleValue];
+    NSString *publishTime = [TTBusinessManager customtimeAndCustomdateStringSince1970:time];
+    
+    if(![publishTime isEqualToString:@""]){
+        NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
+        [desc appendAttributedString:publishTimeAStr];
+    }
+    
+    NSString *distance = @"   1.5km";
+    if(![distance isEqualToString:@""]){
+        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+        attachment.bounds = CGRectMake(8, 0, 8, 8);
+        attachment.image = [UIImage imageNamed:@"fh_ugc_location"];
+        NSAttributedString *attachmentAStr = [NSAttributedString attributedStringWithAttachment:attachment];
+        [desc appendAttributedString:attachmentAStr];
+        
+        NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:distance];
+        [desc appendAttributedString:distanceAStr];
+    }
+    
+    return desc;
 }
 
 @end

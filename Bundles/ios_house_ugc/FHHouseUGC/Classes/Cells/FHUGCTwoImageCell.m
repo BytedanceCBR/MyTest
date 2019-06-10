@@ -111,7 +111,7 @@
     //内容
     self.contentLabel.text = model.title;
     //图片
-    [self.multiImageView updateImageView:model.imageList];
+    [self.multiImageView updateImageView:model.imageList largeImageList:nil];
     //设置userInfo
     self.userInfoView.userName.text = @"汤唯";
     self.userInfoView.descLabel.text = @"今天 14:20";

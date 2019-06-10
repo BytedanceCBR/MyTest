@@ -18,6 +18,8 @@
         
         self.cellManager = [[FHUGCCellManager alloc] init];
         [self.cellManager registerAllCell:tableView];
+        
+        _cellHeightCaches = [NSMutableDictionary dictionary];
 //        __weak typeof(self) weakSelf = self;
         
 //        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
