@@ -109,7 +109,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         // add by zyk qid
-        self.qid = @"";
+        self.qid = @"6667717867934318859";
         self.ansid = @"";
         self.answerSchema = @"";
         self.isForbidComment = NO;
@@ -131,6 +131,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 }
 
 - (void)setupData {
+    self.qid = @"6667717867934318859";
     WDPostAnswerTaskModel *taskModel = [[WDPostAnswerTaskModel alloc] initWithQid:self.qid content:nil contentRichSpan:nil imageList:nil];
     self.taskModel = taskModel;
     self.uploadImageManager = [[WDUploadImageManager alloc] init];
@@ -456,7 +457,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 }
 
 - (void)sendAnswer {
-    if (self && [TTAccountManager isLogin]) {
+    if (self && [TTAccountManager isLogin] && self.qid.length > 0) {
 //        BOOL containsImage = !SSIsEmptyArray(self.addImagesView.selectedImageCacheTasks);
         self.sendingIndicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView indicatorText:NSLocalizedString(@"正在发送...", nil) indicatorImage:nil dismissHandler:^(BOOL isUserDismiss){
             if (isUserDismiss) {

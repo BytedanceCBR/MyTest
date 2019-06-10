@@ -26,6 +26,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/UIImageAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import "SDImageCache.h"
 
 #define NumberOfImagesPerRow 3
 #define ImagesInterval 3.f
@@ -252,7 +253,17 @@
     if (self.selectedImageCacheTasks.count > 0) {
         NSMutableArray *tempArray = [NSMutableArray array];
         for (TTUGCImageCompressTask *task in self.selectedImageCacheTasks) {
-            if (task.assetModel.cacheImage) {
+            // 图片资源
+            if (task.preCompressFilePath.length > 0) {
+                NSData *uploadData = [NSData dataWithContentsOfFile:task.preCompressFilePath];
+                if (uploadData) {
+                    UIImage *uploadImage = [UIImage sd_imageWithData:uploadData];
+                    if (uploadImage) {
+                        WDImageObjectUploadImageModel *imageModel = [[WDImageObjectUploadImageModel alloc] initWithcompressImg:uploadImage];
+                        [tempArray addObject:imageModel];
+                    }
+                }
+            } else if (task.assetModel.cacheImage) {
                 UIImage *image = task.assetModel.cacheImage;
                 WDImageObjectUploadImageModel *imageModel = [[WDImageObjectUploadImageModel alloc] initWithcompressImg:image];
                 [tempArray addObject:imageModel];
