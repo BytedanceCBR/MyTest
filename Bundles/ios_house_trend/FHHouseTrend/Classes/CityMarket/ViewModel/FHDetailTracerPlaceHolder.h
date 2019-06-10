@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSUInteger)sectionWithOffset:(NSIndexPath*)indexPath;
 -(NSIndexPath*)indexPathWithOffset:(NSIndexPath*)indexPath;
 -(void)traceElementShow:(NSDictionary*)params;
-
 @end
 
 NS_ASSUME_NONNULL_END

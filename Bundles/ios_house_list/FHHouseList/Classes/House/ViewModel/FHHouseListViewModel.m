@@ -37,10 +37,12 @@
 #import "TTInstallIDManager.h"
 #import "FHSugSubscribeModel.h"
 #import "FHSuggestionSubscribCell.h"
+#import <FHCommonUI/ToastManager.h>
 #import "FHCommutePOISearchViewController.h"
 #import "FHCommuteManager.h"
 #import <FHHouseBase/FHEnvContext.h>
 #import <AMapLocationKit/AMapLocationKit.h>
+#import <BDALog/BDAgileLog.h>
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
@@ -153,6 +155,8 @@
     
     if (self.redirectTips.openUrl.length > 0) {
 
+        [FHEnvContext sharedInstance].refreshConfigRequestType = @"switch_house";
+
         [FHEnvContext openSwitchCityURL:self.redirectTips.openUrl completion:^(BOOL isSuccess) {
             // 进历史
             if (isSuccess) {
@@ -189,7 +193,10 @@
             self.houseType = FHHouseTypeRentHouse;
             self.commute = YES;
         }
-        
+        if ([paramObj.host isEqualToString:@"neighborhood_deal_list"]) {
+            self.houseType = FHHouseTypeNeighborhood;
+            self.searchType = FHHouseListSearchTypeNeighborhoodDeal;
+        }
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
         NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
         if (tracerDict) {
@@ -306,7 +313,11 @@
             
         case FHHouseTypeNeighborhood:
             
-            [self requestNeiborhoodHouseListData:isRefresh query:query offset:offset searchId:searchId];
+            if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+                [self requestNeiborhoodDealListData:isRefresh query:query offset:offset searchId:searchId];
+            }else {
+                [self requestNeiborhoodHouseListData:isRefresh query:query offset:offset searchId:searchId];
+            }
             break;
             
         default:
@@ -351,6 +362,38 @@
     }];
     
     self.requestTask = task;
+}
+
+#pragma mark 查成交
+-(void)requestNeiborhoodDealListData:(BOOL)isRefresh query: (NSString *)query offset: (NSInteger)offset searchId: (NSString *)searchId
+{
+    [_requestTask cancel];
+    
+    __weak typeof(self) wself = self;
+    
+    TTHttpTask *task = [FHHouseListAPI searchNeighborhoodDealList:query searchType:[self searchTypeString] offset:offset searchId:searchId class:[FHHouseNeighborModel class] completion:^(FHHouseNeighborModel *  _Nullable model, NSError * _Nullable error) {
+        
+        if (!wself) {
+            return ;
+        }
+        
+        [wself processData:model error:error];
+    }];
+    
+    self.requestTask = task;
+}
+
+- (NSString *)searchTypeString
+{
+    switch (self.searchType) {
+        case FHHouseListSearchTypeNeighborhoodDeal:
+            return @"neighborhood_deal";
+            break;
+            
+        default:
+            break;
+    }
+    return nil;
 }
 
 
@@ -574,6 +617,7 @@
         NSString *refreshTip;
         FHSearchHouseDataRedirectTipsModel *redirectTips;
         FHRecommendSecondhandHouseDataModel *recommendHouseDataModel;
+        BOOL needUploadMapFindHouseUrlEvent = NO;
 
         if ([model isKindOfClass:[FHRecommendSecondhandHouseModel class]]) {
             recommendHouseDataModel = ((FHRecommendSecondhandHouseModel *)model).data;
@@ -621,6 +665,9 @@
             FHNewHouseListDataModel *houseModel = ((FHNewHouseListResponseModel *)model).data;
             self.searchId = houseModel.searchId;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
+            if (self.houseListOpenUrl.length <= 0) {
+                needUploadMapFindHouseUrlEvent = YES;
+            }
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
@@ -632,6 +679,9 @@
             self.searchId = houseModel.searchId;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
+            if (self.houseListOpenUrl.length <= 0) {
+                needUploadMapFindHouseUrlEvent = YES;
+            }
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
@@ -645,10 +695,34 @@
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
-            redirectTips = houseModel.redirectTips;
-
+            if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+            }else {
+                redirectTips = houseModel.redirectTips;
+            }
         }
         
+        // 二手房、租房应该有 houseListOpenUrl
+        /* 暂时无用 注释掉
+        if (needUploadMapFindHouseUrlEvent) {
+            if (self.houseListOpenUrl.length <= 0 && (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse)) {
+                // 上报事件
+                NSString *res = [NSString stringWithFormat:@"列表页地图openurl为空:%ld",self.houseType];
+                // device_id
+                NSString *did = [[TTInstallIDManager sharedInstance] deviceID];
+                if (did.length == 0) {
+                    did = @"null";
+                }
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_no_map_openurl"
+                                                        metric:@{@"device_id":did}
+                                                      category:@{@"status":@(0),@"desc":res}
+                                                         extra:@{@"device_id":did}];
+                // 上报Alog
+                if (self.condition.length > 0) {
+                    BDALOG_WARN_TAG(@"search_house_params", self.condition);
+                }
+            }
+        }
+         */
         if (self.isFirstLoad) {
             self.originSearchId = self.searchId;
    
@@ -880,8 +954,13 @@
         dictInfo[@"need_back_vc"] = tempTable;
     }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dictInfo];
-    
-    NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
+    NSString *urlStr = nil;
+    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+        urlStr = [NSString stringWithFormat:@"sslocal://house_search_deal_neighborhood"];
+    }else {
+       urlStr = @"sslocal://house_search";
+    }
+    NSURL *url = [NSURL URLWithString:urlStr];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     
 }
@@ -1160,6 +1239,9 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+        return;
+    }
     
     if (indexPath.section == 0) {
         if (indexPath.row < self.houseList.count) {
@@ -1246,6 +1328,16 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+        
+        if (indexPath.row < self.houseList.count) {
+
+            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            [self addDealGoDetailLog:cellModel withRank:indexPath.row];
+            [self jump2NeighborhoodDealPage:cellModel];
+        }
+        return;
+    }
     
     if (indexPath.section == 0) {
         if (indexPath.row < self.houseList.count) {
@@ -1265,6 +1357,39 @@
 }
 
 #pragma mark - 详情页跳转
+
+- (void)jump2NeighborhoodDealPage:(FHSingleImageInfoCellModel *)cellModel
+{
+    if (!cellModel.neighborModel.dealStatus) {
+        [[ToastManager manager]showToast:@"成交数据暂缺"];
+        return;
+    }
+    NSString *urlStr = cellModel.neighborModel.dealOpenUrl;
+    if (urlStr.length < 1) {
+        return;
+    }
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[@"card_type"] = @"left_pic";
+    traceParam[@"enter_from"] = [self pageTypeString];
+    traceParam[@"element_from"] = [self elementTypeString];
+    traceParam[@"search_id"] = self.searchId;
+    traceParam[@"log_pb"] = [cellModel logPb];
+    traceParam[@"origin_from"] = self.originFrom;
+    traceParam[@"origin_search_id"] = self.originSearchId;
+
+    NSDictionary *dict = @{@"tracer": traceParam};
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+
+    NSString *openUrl = [urlStr stringByRemovingPercentEncoding];
+    if (openUrl.length > 0) {
+        openUrl = [openUrl stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        // add by zjing for test
+//        openUrl = @"fschema://neighborhood_sales_list?&title_text=%e7%a2%a7%e6%a1%82%e5%9b%ad%e6%b5%b7%e6%98%8c%e5%a4%a9%e6%be%9c%e4%b8%89%e6%9c%9f(12)&neighborhood_id=6581416553890185480&element_from=house_deal";
+        NSURL *theUrl = [NSURL URLWithString:openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:theUrl userInfo:userInfo];
+    }
+}
+
 -(void)jump2HouseDetailPage:(FHSingleImageInfoCellModel *)cellModel withRank: (NSInteger) rank  {
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"card_type"] = @"left_pic";
@@ -1317,7 +1442,11 @@
             if (cellModel.neighborModel) {
                 
                 FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
-                urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id];
+                if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+                    urlStr = theModel.dealOpenUrl;
+                }else {
+                    urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id];
+                }
             }
             break;
         default:
@@ -1362,6 +1491,9 @@
             return @"rent_list";
             break;
         case FHHouseTypeNeighborhood:
+            if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+                return @"neighborhood_trade_list";
+            }
             return @"neighborhood_list";
             break;
         default:
@@ -1404,6 +1536,9 @@
             return @"rent_list";
             break;
         case FHHouseTypeNeighborhood:
+            if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+                return @"neighborhood_trade_list";
+            }
             return @"neighborhood_list";
             break;
         default:
@@ -1508,7 +1643,10 @@
 }
 
 -(void)addCategoryRefreshLog {
-
+    
+    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+        return;
+    }
     NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"refresh_type"] = @"pre_load_more";
     [FHUserTracker writeEvent:@"category_refresh" params:tracerDict];
@@ -1516,6 +1654,9 @@
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {
     
+    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+        return;
+    }
     NSTimeInterval duration = stayTime * 1000.0;
     if (duration == 0) {//当前页面没有在展示过
         return;
@@ -1535,6 +1676,7 @@
     }
     params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
+
     if (self.isCommute) {
         if (self.commutePoi.length == 0) {
             FHCommuteManager *manager = [FHCommuteManager sharedInstance];
@@ -1543,6 +1685,10 @@
         params[@"selected_word"] = self.commutePoi?:UT_BE_NULL;
     }else{
         params[@"hot_word"] = @"be_null";
+    }
+    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+        params[@"selected_word"] = nil;
+        params[@"hot_word"] = nil;
     }
     TRACK_EVENT(@"click_house_search",params);
 }
@@ -1601,6 +1747,9 @@
 
 -(void)addModifyCommuteLog:(BOOL)isShow
 {
+    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+        return;
+    }
     if (isShow) {
         [self addCommuteGoDetailLog];
     }
@@ -1650,6 +1799,30 @@
     param[UT_ORIGIN_SEARCH_ID] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
     
     TRACK_EVENT(@"go_detail", param);
+}
+
+- (void)addDealGoDetailLog:(FHSingleImageInfoCellModel *)cellModel withRank: (NSInteger) rank
+{
+    /*
+     "event_type": "house_app2c_v2",
+     "group_id"
+     "origin_from": "neighborhood_trade",
+     "origin_search_id"
+     "page_type": "neighborhood_trade_list",
+     "rank":
+     "search_id"
+     "log_pb": "
+     */
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_GROUP_ID] = cellModel.groupId ? : @"be_null";
+    param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ?: UT_BE_NULL;
+    param[UT_ORIGIN_SEARCH_ID] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    param[UT_PAGE_TYPE] = [self pageTypeString];
+    param[UT_RANK] = @(rank);
+    param[UT_SEARCH_ID] = cellModel.neighborModel.searchId ? : @"be_null";
+    param[UT_LOG_PB] = cellModel.logPb ? : @"be_null";
+    TRACK_EVENT(@"click_house_deal", param);
+    
 }
 
 -(NSDictionary *)categoryLogDict {

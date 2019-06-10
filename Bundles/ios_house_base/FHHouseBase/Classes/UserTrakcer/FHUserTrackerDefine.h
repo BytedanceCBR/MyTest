@@ -23,6 +23,8 @@ extern NSString *const UT_STAY_TIME; //@"stay_time"
 extern NSString *const UT_PAGE_TYPE; // @"page_type"
 extern NSString *const UT_LOG_PB ; // @"log_pb"
 extern NSString *const UT_HOUSE_TYPE ; // @"house_type"
+extern NSString *const UT_GROUP_ID ; // @"group_id"
+extern NSString *const UT_RANK; // @"rank"
 
 extern NSString *const UT_OF_RENTING_SEARCH; //@"renting_search"
 extern NSString *const UT_OF_RENTING_LIST; //@"renting_list"

@@ -26,11 +26,9 @@
 #import <TTArticleCategoryManager.h>
 #import <UIFont+House.h>
 #import "FHHomeScrollBannerCell.h"
-
-
-#define kFHHomeIconRowCount 4 //每行icon个数
-
-#define kFHHomeBannerRowCount 2 //每行banner个数
+#import <FHHouseList/FHCommuteManager.h>
+#import "FHhomeHouseTypeBannerCell.h"
+#import "FHHomePlaceHolderCell.h"
 
 static NSMutableArray  * _Nullable identifierArr;
 
@@ -52,6 +50,7 @@ static NSMutableArray  * _Nullable identifierArr;
     dispatch_once(&onceToken, ^{
         manager = [[FHHomeCellHelper alloc] init];
         manager.traceShowCache = [NSMutableDictionary new];
+        [manager initFHHomeHeaderIconCountAndHeight];
     });
     return manager;
 }
@@ -60,7 +59,7 @@ static NSMutableArray  * _Nullable identifierArr;
 {
     [tableView registerClass:[FHHomeHeaderTableViewCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeHeaderTableViewCell class])];
     
-    [tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseBaseItemCell class])];
+    [tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
     
     [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
     
@@ -68,11 +67,17 @@ static NSMutableArray  * _Nullable identifierArr;
     
     [tableView registerClass:[FHHomeEntrancesCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeEntrancesCell class])];
     
+    [tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
+    
+    [tableView registerClass:[FHhomeHouseTypeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
+    
     [tableView registerClass:[FHHomeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBannerCell class])];
     
     [tableView registerClass:[FHHomeScrollBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeScrollBannerCell class])];
     
     [tableView registerClass:[FHHomeCityTrendCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeCityTrendCell class])];
+    
+    [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
 }
 
 + (void)registerDelegate:(UITableView *)tableView andDelegate:(id)delegate
@@ -142,7 +147,9 @@ static NSMutableArray  * _Nullable identifierArr;
         [tableView reloadData];
     }
     
-    if ([FHHomeConfigManager sharedInstance].currentDataModel && dataModel.currentCityId && ![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
+    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+
+    if (currentDataModel && dataModel.currentCityId && ![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
         [FHHomeCellHelper sendCellShowTrace];
         [self.traceShowCache setValue:@"1" forKey:dataModel.currentCityId];
     }
@@ -150,9 +157,9 @@ static NSMutableArray  * _Nullable identifierArr;
 
 + (void)sendCellShowTrace
 {
-    
-    FHConfigDataOpData2Model *modelOpdata2 = [FHHomeConfigManager sharedInstance].currentDataModel.opData2;
-    FHConfigDataCityStatsModel *cityStatsModel = [FHHomeConfigManager sharedInstance].currentDataModel.cityStats;
+    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHConfigDataOpData2Model *modelOpdata2 = currentDataModel.opData2;
+    FHConfigDataCityStatsModel *cityStatsModel = currentDataModel.cityStats;
     
     if (modelOpdata2.items > 0)
     {
@@ -187,12 +194,37 @@ static NSMutableArray  * _Nullable identifierArr;
     [self.traceShowCache removeAllObjects];
 }
 
+- (CGFloat)initFHHomeHeaderIconCountAndHeight
+{
+    self.kFHHomeIconRowCount = 4;
+    self.kFHHomeIconDefaultHeight = 57;
+    //下版本等实验结论再上
+    //    if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum isKindOfClass:[NSNumber class]]) {
+    //        if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum integerValue] == 5) {
+    //            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 5;
+    //            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 42;
+    //        }else
+    //        {
+    //            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
+    //            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
+    //        }
+    //    }else
+    //    {
+    //        [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
+    //        [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
+    //    }
+}
+
 - (CGFloat)heightForFHHomeHeaderCellViewType
 {
     //未开通城市返回
     if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
     {
         return 0;
+    }
+    
+    if (self.kFHHomeIconRowCount == 0 || self.kFHHomeIconDefaultHeight) {
+        [self initFHHomeHeaderIconCountAndHeight];
     }
     
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -213,13 +245,13 @@ static NSMutableArray  * _Nullable identifierArr;
         NSInteger countValue = dataModel.opData.items.count;
         
         if (countValue > 0) {
-            if (countValue > 8)
+            if (countValue > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2)
             {
-                countValue = 8;
+                countValue = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
             }
 
             CGFloat heightPadding = 20;
-            height += ((countValue - 1)/kFHHomeIconRowCount + 1) * (kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375] + heightPadding);
+            height += ((countValue - 1)/[FHHomeCellHelper sharedInstance].kFHHomeIconRowCount + 1) * ([FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375] + heightPadding);
         }
         
         NSInteger opData2CountValue = dataModel.opData2.items.count;
@@ -300,15 +332,15 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     
     NSInteger countItems = model.items.count;
-    if (countItems > 8) {
-        countItems = 8;
+    if (countItems > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2) {
+        countItems = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
     }
     
     NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
     for (int index = 0; index < countItems; index++) {
         FHSpringboardIconItemView *itemView = nil;
         if (isNeedAllocNewItems) {
-            if (index < kFHHomeIconRowCount) {
+            if (index < [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount) {
                 itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-17];
             }else
             {
@@ -318,7 +350,7 @@ static NSMutableArray  * _Nullable identifierArr;
         {
             if (index < cellEntrance.boardView.currentItems.count && [cellEntrance.boardView.currentItems[index] isKindOfClass:[FHSpringboardIconItemView class]]) {
                 itemView = (FHSpringboardIconItemView *)cellEntrance.boardView.currentItems[index];
-                if (index < kFHHomeIconRowCount) {
+                if (index < [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount) {
                     itemView.iconBottomPadding = -17;
                 }else
                 {
@@ -339,13 +371,13 @@ static NSMutableArray  * _Nullable identifierArr;
 
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    if (index < kFHHomeIconRowCount) {
+                    if (index < [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount) {
                         make.top.mas_equalTo(8);
                     }else
                     {
                         make.top.mas_equalTo(5);
                     }
-                    make.width.height.mas_equalTo(kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375]);
+                    make.width.height.mas_equalTo([FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375]);
                 }];
             }
         }
@@ -355,7 +387,6 @@ static NSMutableArray  * _Nullable identifierArr;
             UIFont *font = [UIFont themeFontRegular:12];
             itemView.nameLabel.font = font;
             itemView.nameLabel.text = itemModel.title;
-            itemView.nameLabel.textColor = [UIColor themeGray2];
             
             [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(itemView.iconView.mas_bottom).mas_offset(0);
@@ -401,8 +432,10 @@ static NSMutableArray  * _Nullable identifierArr;
                     [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
                     [FHHomeConfigManager sharedInstance].isTraceClickIcon = YES;
                     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-                }else
-                {
+                }else if ([itemModel.openUrl containsString:@"://commute_list"]){
+                    //通勤找房
+                    [[FHCommuteManager sharedInstance] tryEnterCommutePage:itemModel.openUrl logParam:dictTrace];
+                }else{
                     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
                 }
             }
@@ -414,8 +447,8 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     
     [cellEntrance setNeedsLayout];
-    [cellEntrance layoutIfNeeded];
-    
+//    [cellEntrance layoutIfNeeded];
+
 }
 
 + (void)fillFHHomeBannerCell:(FHHomeBannerCell *)cell withModel:(FHConfigDataOpData2Model *)model
@@ -584,8 +617,8 @@ static NSMutableArray  * _Nullable identifierArr;
     //    }];
     
     [cellBanner setNeedsLayout];
-    [cellBanner layoutIfNeeded];
-    
+//    [cellBanner layoutIfNeeded];
+
 }
 
 // 首页轮播banner

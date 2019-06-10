@@ -16,6 +16,7 @@
 #import "UIViewController+Track.h"
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
+#import <FHRNHelper.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -37,7 +38,6 @@
 @property (nonatomic, copy)   NSString* imprId;
 @property (nonatomic, assign)   BOOL isDisableGoDetail;
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
-@property (nonatomic, assign)   BOOL     isViewDidDisapper;
 
 @end
 
@@ -142,6 +142,7 @@
     self.isViewDidDisapper = NO;
     [self refreshContentOffset:self.tableView.contentOffset];
     [self.view endEditing:YES];
+    [self.viewModel vc_viewDidAppear:animated];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -155,6 +156,7 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     self.isViewDidDisapper = YES;
+    [self.viewModel vc_viewDidDisappear:animated];
 }
 
 #pragma mark - for keyboard show
@@ -466,6 +468,34 @@
         return NO;
     }
     return YES;
+}
+
+#pragma mark 监听返回
+
+- (void)goBack
+{
+    UIViewController *popVC = [self.navigationController popViewControllerAnimated:YES];
+    if (nil == popVC) {
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+        }];
+    }
+}
+
+- (void)willMoveToParentViewController:(UIViewController*)parent{
+    [super willMoveToParentViewController:parent];
+}
+
+- (void)didMoveToParentViewController:(UIViewController*)parent{
+    [super didMoveToParentViewController:parent];
+    if (!parent) {
+        [self.viewModel.contactViewModel destroyRNPreLoadCache];
+    }
+}
+
+- (void)updateLoadFinish
+{
+    [self.viewModel.contactViewModel updateLoadFinish];
 }
 
 @end

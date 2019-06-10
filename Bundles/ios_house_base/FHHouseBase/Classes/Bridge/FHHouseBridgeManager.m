@@ -51,7 +51,8 @@
     return _cellsBridge;
 }
 
--(id<FHHouseSwitchCityDelegate>)cityListModelBridge {
+-(id<FHHouseSwitchCityDelegate>)cityListModelBridge
+{
     if (!_cityListBridge) {
         Class clazz = NSClassFromString(@"FHCityListViewModel");
         _cityListBridge = [[clazz alloc] init];

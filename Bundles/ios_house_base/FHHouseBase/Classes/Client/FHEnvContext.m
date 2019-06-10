@@ -12,8 +12,6 @@
 #import "YYCache.h"
 #import "FHLocManager.h"
 #import "TTInstallIDManager.h"
-#import "BDAccountConfiguration.h"
-#import "BDAccount+Configuration.h"
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "ToastManager.h"
@@ -25,6 +23,8 @@
 #import "FHMessageManager.h"
 #import <HMDTTMonitor.h>
 #import "FHIESGeckoManager.h"
+#import <TTDeviceHelper.h>
+#import <BDALog/BDAgileLog.h>
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -106,9 +106,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
                         retryGetLightCount--;
                         [[TTArticleCategoryManager sharedManager] startGetCategory];
                     }
+                    if ([[paramsExtra description] isKindOfClass:[NSString class]]) {
+                        BDALOG_WARN_TAG(@"get_light_error_reason", [paramsExtra description]);
+                    }
                 }];
                 
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:0 extra:paramsExtra];
+                
             }else
             {
                 if(completion)
@@ -120,6 +124,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
                 
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:1 extra:paramsExtra];
+                
+                if ([[paramsExtra description] isKindOfClass:[NSString class]]) {
+                    BDALOG_WARN_TAG(@"config_error_reason", [paramsExtra description]);
+                }
             }
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kArticleCategoryHasChangeNotification object:nil];
@@ -282,6 +290,17 @@ static NSInteger kGetLightRequestRetryCount = 3;
     NSString *gCityName = [FHLocManager sharedInstance].currentReGeocode.city;
     
     
+    CGFloat f_density = [UIScreen mainScreen].scale;
+    CGFloat f_memory = [TTDeviceHelper getTotalCacheSpace];
+
+    if (f_density) {
+        requestParam[@"f_density"] = @(f_density);
+    }
+    
+    if (f_memory) {
+        requestParam[@"f_memory"] = @(f_memory);
+    }
+    
     if (longitude != 0 && longitude != 0) {
         requestParam[@"gaode_lng"] = @(longitude);
         requestParam[@"gaode_lat"] = @(latitude);
@@ -299,9 +318,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if ([gCityName isKindOfClass:[NSString class]]){
         requestParam[@"city_name"] = gCityName;
         requestParam[@"city"] = gCityName;
-    }else
-    {
-        requestParam[@"city_name"] = nil;
     }
     
     self.commonRequestParam = requestParam;
@@ -322,46 +338,25 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     //开始网络监听通知
     [self.reachability startNotifier];
+
     
+    if (![FHEnvContext sharedInstance].refreshConfigRequestType) {
+        [FHEnvContext sharedInstance].refreshConfigRequestType = @"launch";
+    }
+
     //开始生成config缓存
     [self.generalBizConfig onStartAppGeneralCache];
-    
+
+
     //开始定位
     [self startLocation];
     
     //检测是否需要打开城市列表
     [self check2CityList];
-    
-    [self.messageManager startSyncMessage];
-    
-    NSString * channelName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"];
-    if (!channelName) {
-        channelName = @"App Store";
-    }
-    
-    [[TTInstallIDManager sharedInstance] startWithAppID:@"1370" channel:channelName finishBlock:^(NSString *deviceID, NSString *installID) {
-        
-        BDAccountConfiguration *conf = [BDAccountConfiguration defaultConfiguration];
-        conf.domain = [FHURLSettings baseURL];
-        conf.getDeviceIdBlock = ^NSString * _Nonnull{
-            return deviceID;
-        };
-        
-        conf.getInstallIdBlock = ^NSString * _Nonnull{
-            return installID;
-        };
-        
-        conf.SSAppId = @"1370";
-        
-        conf.networkParamsHandler = ^NSDictionary * _Nonnull{
-            return [NSDictionary new];
-        };
-        
-        [BDAccount sharedAccount].accountConf = conf;
-    }];
+
     //更新公共参数
     [self updateRequestCommonParams];
-    
+
     NSString *startFeedCatgegory = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getFeedStartCategoryName];
 
     if (![startFeedCatgegory isEqualToString:@"f_house_news"] && startFeedCatgegory != nil) {
@@ -369,18 +364,23 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
     }
     
-    
-    [FHIESGeckoManager configGeckoInfo];
-    [FHIESGeckoManager configIESWebFalcon];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [self.messageManager startSyncMessage];
+    });
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [FHIESGeckoManager configGeckoInfo];
+        [FHIESGeckoManager configIESWebFalcon];
+    });
+
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
 {
     if (configDict && [configDict isKindOfClass:[NSDictionary class]]) {
         FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
-        self.generalBizConfig.configCache = dataModel;
+//        self.generalBizConfig.configCache = dataModel;
         [FHEnvContext saveCurrentUserCityId:dataModel.currentCityId];
-        [self.generalBizConfig saveCurrentConfigDataCache:dataModel];
+//        [self.generalBizConfig saveCurrentConfigDataCache:dataModel];
         [self.configDataReplay sendNext:dataModel];
     }
 }
@@ -388,9 +388,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
 - (void)acceptConfigDataModel:(FHConfigDataModel *)configModel
 {
     if (configModel && [configModel isKindOfClass:[FHConfigDataModel class]]) {
-        self.generalBizConfig.configCache = configModel;
+//        self.generalBizConfig.configCache = configModel;
         [FHEnvContext saveCurrentUserCityId:configModel.currentCityId];
-        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
+//        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
         [self.configDataReplay sendNext:configModel];
     }
 }
@@ -447,7 +447,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
         return self.generalBizConfig.configCache;
     }else
     {
-        return [self readConfigFromLocal];
+        self.generalBizConfig.configCache = [self readConfigFromLocal];
+        return self.generalBizConfig.configCache;
     }
 }
 
@@ -473,6 +474,27 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
     
     return @"深圳";
+}
+
+
+//获取当前三位版本号
++ (NSString *)getToutiaoVersionCode
+{
+    NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+    NSString * buildVersionNew = [buildVersionRaw stringByReplacingOccurrencesOfString:@"." withString:@""];
+    
+    NSString * versionFirst = @"6";
+    NSString * versionMiddle = @"6";
+    NSString * versionEnd = @"6";
+    
+    if ([buildVersionNew isKindOfClass:[NSString class]] && buildVersionNew.length > 3) {
+        versionFirst = [buildVersionNew substringWithRange:NSMakeRange(0, 1)];
+        versionMiddle = [buildVersionNew substringWithRange:NSMakeRange(1, 1)];
+        versionEnd = [buildVersionNew substringWithRange:NSMakeRange(2, 1)];
+        
+    }
+    NSString *stringVersion = [NSString stringWithFormat:@"%@.%@.%@",versionFirst,versionMiddle,versionEnd];
+    return stringVersion;
 }
 
 //保存当前城市名称

@@ -17,8 +17,8 @@
 #import "FHUserTracker.h"
 #import "FHHouseType.h"
 #import <TTDeviceHelper.h>
-
-@interface FHMyFavoriteViewController ()<UIViewControllerErrorHandler,TTRouteInitializeProtocol>
+#import "IFHMyFavoriteController.h"
+@interface FHMyFavoriteViewController ()<UIViewControllerErrorHandler,TTRouteInitializeProtocol, IFHMyFavoriteController>
 
 @property(nonatomic, strong) FHMyFavoriteViewModel *viewModel;
 @property(nonatomic, assign) FHHouseType type;
@@ -32,6 +32,10 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.type = [paramObj.allParams[@"house_type"] integerValue];
+        
+        if(self.tracerDict){
+            self.tracerDict[@"enter_type"] = @"click";
+        }
     }
     return self;
 }

@@ -22,17 +22,13 @@
 #import "FHPlaceHolderCell.h"
 #import "FHUserTracker.h"
 #import "FHRefreshCustomFooter.h"
-
-
-#define kCellId @"cell_id"
-#define kFHFavoriteListPlaceholderCellId @"FHFavoriteListPlaceholderCellId"
+#import <FHHouseBase/FHMainApi+Contact.h>
+#import "IFHMyFavoriteController.h"
 
 extern NSString *const kFHDetailFollowUpNotification;
 
 @interface FHMyFavoriteViewModel()<UITableViewDelegate,UITableViewDataSource>
 
-@property(nonatomic, strong) UITableView *tableView;
-@property(nonatomic, weak) FHMyFavoriteViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, assign) FHHouseType type;
 @property(nonatomic, assign) NSInteger offset;
@@ -43,12 +39,13 @@ extern NSString *const kFHDetailFollowUpNotification;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
-
 @end
 
 @implementation FHMyFavoriteViewModel
 
--(instancetype)initWithTableView:(UITableView *)tableView controller:(FHMyFavoriteViewController *)viewController type:(FHHouseType)type
+-(instancetype)initWithTableView:(UITableView *)tableView
+                      controller:(id<IFHMyFavoriteController>)viewController
+                            type:(FHHouseType)type
 {
     self = [super init];
     if (self) {
@@ -57,29 +54,38 @@ extern NSString *const kFHDetailFollowUpNotification;
         _removedDataList = [NSMutableArray new];
         _limit = 10;
         _type = type;
-        _tableView = tableView;
         _showPlaceHolder = YES;
         _isFirstLoad = YES;
-        
-        [tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
-        [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHFavoriteListPlaceholderCellId];
-        
-        tableView.delegate = self;
-        tableView.dataSource = self;
-        
-        __weak typeof(self) weakSelf = self;
-        
-        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-            [weakSelf requestData:NO];
-        }];
-        self.tableView.mj_footer = self.refreshFooter;
-        
+        _isDisplay = YES;
+        if (tableView != nil) {
+            [self bindTableView:tableView];
+        }
+
         self.viewController = viewController;
         
         [self initNotification];
         
     }
     return self;
+}
+
+-(void)bindTableView:(UITableView*)tableView {
+    self.tableView = tableView;
+    [self registerCell:tableView];
+    tableView.delegate = self;
+    tableView.dataSource = self;
+
+    __weak typeof(self) weakSelf = self;
+
+    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+        [weakSelf requestData:NO];
+    }];
+    self.tableView.mj_footer = self.refreshFooter;
+}
+
+-(void)registerCell:(UITableView*)tableView {
+    [tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
+    [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHFavoriteListPlaceholderCellId];
 }
 
 - (void)dealloc {
@@ -113,7 +119,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 
         if (error && wself.dataList.count == 0) {
             //TODO: show handle error
-            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            [wself.viewController.emptyView showEmptyWithType:[self networkErrorType]];
             return;
         }
         
@@ -123,6 +129,10 @@ extern NSString *const kFHDetailFollowUpNotification;
             [wself handleSuccess:model isHead:isHead];
         }
     }];
+}
+
+-(FHEmptyMaskViewType)networkErrorType {
+    return FHEmptyMaskViewTypeNetWorkError;
 }
 
 - (void)handleSuccess:(id<FHBaseModelProtocol>  _Nonnull) model isHead:(BOOL)isHead {
@@ -209,7 +219,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     }
     NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    TRACK_EVENT(@"stay_tab", tracerDict);
+    TRACK_EVENT(@"stay_category", tracerDict);
 }
 
 - (NSDictionary *)categoryLogDict {
@@ -436,24 +446,37 @@ extern NSString *const kFHDetailFollowUpNotification;
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(!self.showPlaceHolder && indexPath.row < self.dataList.count){
-        FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
-        
-        if (!_clientShowDict) {
-            _clientShowDict = [NSMutableDictionary new];
-        }
-        
-        NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
-        NSString *followId = [self getFollowId:cellModel];
-        if(followId){
-            if (_clientShowDict[followId]) {
-                return;
-            }
-    
-            _clientShowDict[followId] = @(indexPath.row);
-            [self trackHouseShow:cellModel rank:indexPath.row];
-        }
+    if(!self.showPlaceHolder && indexPath.row < self.dataList.count && _isDisplay){
+        [self traceHouseShowAtIndexPath:indexPath];
     }
+}
+
+-(void)traceHouseShowAtIndexPath:(NSIndexPath*)indexPath {
+    if (indexPath.row >= self.dataList.count) {
+        return;
+    }
+    FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+
+    if (!_clientShowDict) {
+        _clientShowDict = [NSMutableDictionary new];
+    }
+
+    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+    NSString *followId = [self getFollowId:cellModel];
+    if(followId){
+        if (_clientShowDict[followId]) {
+            return;
+        }
+
+        _clientShowDict[followId] = @(indexPath.row);
+        [self trackHouseShow:cellModel rank:indexPath.row];
+    }
+}
+
+-(void)traceDisplayCell {
+    [[self.tableView indexPathsForVisibleRows] enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self traceHouseShowAtIndexPath:obj];
+    }];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -630,7 +653,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 
 - (void)cancelHouseFollow:(FHSingleImageInfoCellModel *)cellModel completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString *followId = [self getFollowId:cellModel];
-    [FHHouseDetailAPI requestCancelFollow:followId houseType:self.type actionType:self.type completion:completion];
+    [FHMainApi requestCancelFollow:followId houseType:self.type actionType:self.type completion:completion];
 }
 
 - (NSString *)getFollowId:(FHSingleImageInfoCellModel *)cellModel {

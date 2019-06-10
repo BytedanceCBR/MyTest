@@ -12,6 +12,8 @@
 #import "FHCommonDefines.h"
 #import <TTSandBoxHelper.h>
 #import "TTSandBoxHelper.h"
+#import "FHJSONHTTPRequestSerializer.h"
+#import "FHEnvContext.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -52,16 +54,25 @@
     
     if ([gCityName isKindOfClass:[NSString class]]){
         requestParam[@"city_name"] = gCityName;
-    }else
-    {
-        requestParam[@"city_name"] = nil;
     }
-    
+
     if ([TTSandBoxHelper isAPPFirstLaunchForAd]) {
         requestParam[@"app_first_start"] = @(1);
     }else
     {
         requestParam[@"app_first_start"] = @(0);
+    }
+    
+    NSString *lastCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if ([lastCityId isKindOfClass:[NSString class]]) {
+        requestParam[@"last_city_id"] = lastCityId;
+    }else
+    {
+        requestParam[@"last_city_id"] = @"";
+    }
+    
+    if ([FHEnvContext sharedInstance].refreshConfigRequestType) {
+        requestParam[@"request_type"] = [FHEnvContext sharedInstance].refreshConfigRequestType;
     }
 
     double longitude = location.longitude;
@@ -79,10 +90,17 @@
     }
     
     return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:requestParam method:GET needCommonParams:false callback:^(NSError *error, id obj) {
-        FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&error];
-        if (completion) {
-            completion(model,error);
-        }
+        __block NSError *backError = error;
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&backError];
+
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
     }];
     
 }
@@ -354,30 +372,30 @@
     }];
 }
 
-//+(TTHttpTask *_Nullable)postJsonRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion
-//{
-//    NSString *url = QURL(path);
-//
-//    if (!IS_EMPTY_STRING(query)) {
-//        url = [url stringByAppendingFormat:@"?%@",query];
-//    }
-//
-//    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:param method:POST needCommonParams:YES requestSerializer:[FHBJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
-//        if (completion) {
-//            NSDictionary *json = nil;
-//
-//            if (!error) {
-//                @try{
-//                    json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
-//                }
-//                @catch(NSException *e){
-//                    error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
-//                }
-//            }
-//            completion(json,error);
-//        }
-//    }];
-//}
++(TTHttpTask *_Nullable)postJsonRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion
+{
+    NSString *url = QURL(path);
+
+    if (!IS_EMPTY_STRING(query)) {
+        url = [url stringByAppendingFormat:@"?%@",query];
+    }
+
+    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:param method:POST needCommonParams:YES requestSerializer:[FHJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        if (completion) {
+            NSDictionary *json = nil;
+
+            if (!error) {
+                @try{
+                    json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                }
+                @catch(NSException *e){
+                    error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+                }
+            }
+            completion(json,error);
+        }
+    }];
+}
 
 
 @end

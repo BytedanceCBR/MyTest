@@ -37,7 +37,7 @@
     NSString * buildVersionNew = [buildVersionRaw stringByReplacingOccurrencesOfString:@"." withString:@""];
     //除非误操作info.plist文件，否则版本一直会有
     if (!buildVersionNew) {
-        buildVersionNew = @"66501";
+        buildVersionNew = @"66801";
     }
     return buildVersionNew;
 }
@@ -98,6 +98,37 @@
     return NO;
 }
 
+/**
+ *  f100发布版本号，在info.plist基础上+600，为了兼容主端
+ *
+ *  @return 可能为nil
+ */
++ (nullable NSString *)fhVersionCode
+{
+    /*
+     * 因为feed流要求版本与头条一致，当前为0.x.x 待后面正式后要注意更改对应关系
+     */
+    NSString *curVersion = [TTSandBoxHelper versionName];
+    NSArray<NSString *> *strArray = [curVersion componentsSeparatedByString:@"."];
+    NSInteger version = 0;
+    for (NSInteger i = 0; i < strArray.count; i += 1) {
+        NSString *tmp = strArray[i];
+        version = version * 10 + tmp.integerValue;
+    }
+    version += 600;
+    NSMutableArray *newStrArray = [NSMutableArray arrayWithCapacity:3];
+    for (NSInteger i = 0; i < 2; i += 1) {
+        NSInteger num = version % 10;
+        version /= 10;
+        NSString *tmp = [NSString stringWithFormat:@"%ld", num];
+        [newStrArray addObject:tmp];
+    }
+    NSString *tmp = [NSString stringWithFormat:@"%ld",version];
+    [newStrArray addObject:tmp];
+    NSString *newVersion = [[newStrArray reverseObjectEnumerator].allObjects componentsJoinedByString:@"."];
+    return newVersion;
+}
+
 @end
 
 @implementation TTSandBoxHelper (TTUserDefault)
@@ -127,20 +158,14 @@
 
 + (BOOL)isAPPFirstLaunchForAd {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *appBuild = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *key = [NSString stringWithFormat:@"ad_%@%@",appVersion,appBuild];
-    NSNumber * currentStatus = [defaults objectForKey:[NSString stringWithFormat:@"APP_LAUNCHED%@", key]];
+    NSNumber * currentStatus = [defaults objectForKey:@"isAPPFirstLaunchForAd_key"];
     return [currentStatus intValue] == 1 ? NO : YES;
     
 }
 
 + (void)setAppFirstLaunchForAd {
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    NSString *appBuild = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *key = [NSString stringWithFormat:@"ad_%@%@",appVersion,appBuild];
-    [defaults setObject:[NSNumber numberWithInt:1] forKey:[NSString stringWithFormat:@"APP_LAUNCHED%@", key]];
+    [defaults setObject:[NSNumber numberWithInt:1] forKey:@"isAPPFirstLaunchForAd_key"];
     [defaults synchronize];
 }
 

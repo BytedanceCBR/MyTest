@@ -9,16 +9,18 @@
 #import "FHDetailBottomBarView.h"
 #import "FHDetailNavBar.h"
 #import "FHHouseType.h"
+#import <FHHouseBase/FHHouseContactDefines.h>
+#import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class FHHouseDetailFollowUpViewModel;
 @class FHDetailImShareInfoModel;
+
 @interface FHHouseDetailContactViewModel : NSObject
 
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
 @property (nonatomic, strong) FHDetailShareInfoModel *shareInfo;
-@property (nonatomic, strong, readonly)FHHouseDetailFollowUpViewModel *followUpViewModel;
 @property (nonatomic, copy) NSString *searchId;
 @property (nonatomic, copy) NSString *imprId;
 @property (nonatomic, assign) NSInteger followStatus;
@@ -30,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *customHouseId;// floor_plan_detail:floor_plan_id
 @property (nonatomic, copy, nullable) NSString *fromStr;//floor_plan_detail:app_floor_plan
 @property (nonatomic, strong) FHDetailImShareInfoModel* imShareInfo;
+@property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
+
+
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar houseType:(FHHouseType)houseType houseId:(NSString *)houseId;
 // 在线联系点击
@@ -39,14 +44,24 @@ NS_ASSUME_NONNULL_BEGIN
 // 基本埋点数据
 - (NSDictionary *)baseParams;
 
-- (void)fillFormAction;
-- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
+- (void)fillFormActionWithActionType:(FHFollowActionType)actionType;
+
+// 关注
+- (void)followActionWithExtra:(NSDictionary *)extra;
+// 取消关注
+- (void)cancelFollowAction;
+
+// 携带埋点参数的分享
+- (void)shareActionWithShareExtra:(NSDictionary *)extra;
 
 //为IM提供房源卡片
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice;
 - (void)refreshMessageDot;
 - (void)hideFollowBtn;
 
+- (void)destroyRNPreLoadCache;
+
+- (void)updateLoadFinish;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -12,10 +12,9 @@
 #import "FHDetailPictureViewController.h"
 #import "FHUserTracker.h"
 #import "UIViewController+NavigationBarStyle.h"
+#import "FHMultiMediaVideoCell.h"
 
-#define kHEIGHT 300
-
-@interface FHDetailMediaHeaderCell ()<FHMultiMediaScrollViewDelegate>
+@interface FHDetailMediaHeaderCell ()<FHMultiMediaScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
 @property(nonatomic, strong) FHMultiMediaScrollView *mediaView;
 @property(nonatomic, strong) FHMultiMediaModel *model;
@@ -24,6 +23,9 @@
 @property(nonatomic, assign) BOOL isLarge;
 @property(nonatomic, assign) NSInteger currentIndex;
 @property(nonatomic, assign) NSTimeInterval enterTimestamp;
+@property (nonatomic, assign)   NSInteger       vedioCount;
+@property (nonatomic, assign)   CGFloat       photoCellHeight;
+@property (nonatomic, weak)     UIView       *vcParentView;
 
 @end
 
@@ -40,6 +42,25 @@
     // Configure the view for the selected state
 }
 
+- (void)dealloc {
+    if(self.vedioCount > 0){
+        [self.mediaView.videoVC close];
+    }
+}
+
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    if(self.vedioCount > 0){
+        return @"video";
+    }
+    return @"picture";
+}
+
++ (CGFloat)cellHeight {
+    CGFloat photoCellHeight = 300.0; // 默认300
+    photoCellHeight = [UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight;
+    return photoCellHeight;
+}
+
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailMediaHeaderModel class]]) {
         return;
@@ -50,6 +71,24 @@
     [self generateModel];
     [self.mediaView updateWithModel:self.model];
     
+    //有视频才传入埋点
+    if(self.vedioCount > 0){
+        self.mediaView.tracerDic = [self tracerDic];
+    }
+}
+
+- (NSDictionary *)tracerDic {
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    if(!dict){
+        dict = [NSMutableDictionary dictionary];
+    }
+    
+    if([dict isKindOfClass:[NSDictionary class]]){
+        [dict removeObjectsForKeys:@[@"card_type"]];        
+        return dict;
+    }else{
+        return nil;
+    }
 }
 
 
@@ -57,16 +96,17 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        _photoCellHeight = [FHDetailMediaHeaderCell cellHeight];
         _pictureShowDict = [NSMutableDictionary dictionary];
-        
+        _vedioCount = 0;
         _imageList = [[NSMutableArray alloc] init];
-        _mediaView = [[FHMultiMediaScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, kHEIGHT)];
+        _mediaView = [[FHMultiMediaScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _photoCellHeight)];
         _mediaView.delegate = self;
         [self.contentView addSubview:_mediaView];
         
         [_mediaView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.contentView);
-            make.height.mas_equalTo(kHEIGHT);
+            make.height.mas_equalTo(self.photoCellHeight);
         }];
     }
     return self;
@@ -77,7 +117,11 @@
     NSMutableArray *itemArray = [NSMutableArray array];
     
     NSArray *houseImageDict = ((FHDetailMediaHeaderModel *)self.currentData).houseImageDictList;
-
+    FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
+    if (vedioModel && vedioModel.videoID.length > 0) {
+        self.vedioCount = 1;
+        [itemArray addObject:vedioModel];
+    }
     for (FHDetailOldDataHouseImageDictListModel *listModel in houseImageDict) {
         if (listModel.houseImageTypeName.length > 0) {
             NSString *groupType = nil;
@@ -106,15 +150,66 @@
 -(void)showImagesWithCurrentIndex:(NSInteger)index
 {
     NSArray *images = self.imageList;
-    if (images.count == 0 || index < 0 || index >= images.count) {
+    if (index < 0 || index >= (images.count + self.vedioCount)) {
         return;
+    }
+    if (index < self.vedioCount) {
+        // 视频
+        if (self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStateStopped || self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStatePaused) {
+            // 第一次 非播放状态直接播放即可
+            [self.mediaView.videoVC play];
+            return;
+        }
     }
     __weak typeof(self) weakSelf = self;
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
     vc.topVC = self.baseViewModel.detailController;
+    // 获取图片需要的房源信息数据
+    if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
+        // 二手房数据
+        FHDetailOldModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
+        NSString *priceStr = @"";
+        NSString *infoStr = @"";
+        FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
+        if (vedioModel && vedioModel.videoID.length > 0) {
+            priceStr = vedioModel.infoTitle;
+            infoStr = vedioModel.infoSubTitle;
+        }
+        NSString *houseId = model.data.id;
+        vc.houseId = houseId;
+        vc.priceStr = priceStr;
+        vc.infoStr = infoStr;
+        vc.followStatus = self.baseViewModel.contactViewModel.followStatus;
+    }
+    // 分享
+    vc.shareActionBlock = ^{
+        NSString *v_id = @"be_null";
+        if (weakSelf.mediaView.videoVC.model.videoID.length > 0) {
+            v_id = weakSelf.mediaView.videoVC.model.videoID;
+        }
+        NSDictionary *dict = @{@"item_id":v_id,
+                               @"element_from":@"video"};
+        [weakSelf.baseViewModel.contactViewModel shareActionWithShareExtra:dict];
+    };
+    // 收藏
+    vc.collectActionBlock = ^(BOOL followStatus) {
+        if (followStatus) {
+            [weakSelf.baseViewModel.contactViewModel cancelFollowAction];
+        } else {
+            NSString *v_id = @"be_null";
+            if (weakSelf.mediaView.videoVC.model.videoID.length > 0) {
+                v_id = weakSelf.mediaView.videoVC.model.videoID;
+            }
+            NSDictionary *dict = @{@"item_id":v_id,
+                                   @"element_from":@"video"};
+            [weakSelf.baseViewModel.contactViewModel followActionWithExtra:dict];
+        }
+    };
     vc.dragToCloseDisabled = YES;
-    //    vc.mode = PhotosScrollViewSupportBrowse;
+    if(self.vedioCount > 0){
+        vc.videoVC = self.mediaView.videoVC;
+    }
     vc.startWithIndex = index;
     vc.albumImageBtnClickBlock = ^(NSInteger index){
         [weakSelf enterPictureShowPictureWithIndex:index];
@@ -123,36 +218,14 @@
         [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
     };
     
-    NSMutableArray *models = [NSMutableArray arrayWithCapacity:images.count];
-    for(id<FHDetailPhotoHeaderModelProtocol> imgModel in images)
-    {
-        NSMutableDictionary *dict = [[imgModel toDictionary] mutableCopy];
-        //change url_list from string array to dict array
-        NSMutableArray *dictUrlList = [[NSMutableArray alloc] initWithCapacity:imgModel.urlList.count];
-        for (NSString * url in imgModel.urlList) {
-            if ([url isKindOfClass:[NSString class]]) {
-                [dictUrlList addObject:@{@"url":url}];
-            }else{
-                [dictUrlList addObject:url];
-            }
-        }
-        dict[@"url_list"] = dictUrlList;
-        
-        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithDictionary:dict];
-        model.imageType = TTImageTypeLarge;
-        if (model) {
-            [models addObject:model];
-        }
-    }
-    vc.mediaHeaderModel = (FHDetailMediaHeaderModel *)self.currentData;
-    vc.imageInfosModels = models;// 图片展示模型
+    [vc setMediaHeaderModel:self.currentData mediaImages:images];
     
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
     UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
     CGRect frame = [self convertRect:self.bounds toView:window];
     NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:index+1];
     NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:images.count];
-    for (NSInteger i = 0 ; i < images.count; i++) {
+    for (NSInteger i = 0 ; i < images.count + self.vedioCount; i++) {
         [placeholders addObject:placeholder];
         NSValue *frameValue = [NSValue valueWithCGRect:frame];
         [frames addObject:frameValue];
@@ -166,10 +239,16 @@
             NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 inSection:0];
             [weakSelf.mediaView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
             [weakSelf.mediaView updateItemAndInfoLabel];
+            [weakSelf.mediaView updateVideoState];
         }
     };
-    
+    self.mediaView.isShowenPictureVC = YES;
     [vc presentPhotoScrollViewWithDismissBlock:^{
+        weakSelf.mediaView.isShowenPictureVC = NO;
+        if ([weakSelf.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
+            // 当前是视频
+            [weakSelf resetVideoCell:frame];
+        }
         weakSelf.isLarge = NO;
         [weakSelf trackPictureShowWithIndex:weakSelf.currentIndex];
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
@@ -182,6 +261,23 @@
     self.isLarge = YES;
     [self trackPictureShowWithIndex:index];
     self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+}
+
+// 重置视频view，注意状态以及是否是首屏幕图片
+- (void)resetVideoCell:(CGRect)frame {
+    CGRect bound = CGRectMake(0, 0, frame.size.width, frame.size.height);
+    __weak typeof(self) weakSelf = self;
+    if ([self.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
+        FHMultiMediaVideoCell *tempCell = self.mediaView.currentMediaCell;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            weakSelf.mediaView.videoVC.view.frame = bound;
+            weakSelf.mediaView.currentMediaCell.playerView = weakSelf.mediaView.videoVC.view;
+            weakSelf.mediaView.videoVC.model.isShowControl = NO;
+            weakSelf.mediaView.videoVC.model.isShowMiniSlider = YES;
+            weakSelf.mediaView.videoVC.model.isShowStartBtnWhenPause = YES;
+            [weakSelf.mediaView.videoVC updateData:weakSelf.mediaView.videoVC.model];
+        });
+    }
 }
 
 //埋点
@@ -275,6 +371,8 @@
             dict[@"click_position"] = @"picture";
         }else if([str isEqualToString:@"户型"]){
             dict[@"click_position"] = @"house_model";
+        }else if([str isEqualToString:@"视频"]){
+            dict[@"click_position"] = @"video";
         }
 
         dict[@"rank"] = @"be_null";
@@ -322,7 +420,7 @@
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
     // 图片逻辑
-    if (index >= 0 && index < self.imageList.count) {
+    if (index >= 0 && index < (self.imageList.count + self.vedioCount)) {
         [self showImagesWithCurrentIndex:index];
     }
 }
@@ -333,6 +431,42 @@
 
 - (void)selectItem:(NSString *)title {
     [self trackClickOptions:title];
+}
+
+#pragma mark - FHDetailScrollViewDidScrollProtocol
+
+- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
+   if (vcParentView && self.vedioCount > 0) {
+        self.vcParentView = vcParentView;
+        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+        CGFloat navBarHeight = ([TTDeviceHelper isIPhoneXDevice] ? 44 : 20) + 44.0;
+        CGFloat cellHei = [FHDetailMediaHeaderCell cellHeight];
+        if (-point.y + navBarHeight > cellHei) {
+            // 暂停播放
+            if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing) {
+                [self.mediaView.videoVC pause];
+            }
+        } else {
+            // 如果可以重新播放
+//            if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Paused) {
+//                [self.mediaView.videoVC play];
+//            }
+        }
+   }
+}
+
+#pragma mark - FHDetailVCViewLifeCycleProtocol
+
+- (void)vc_viewDidAppear:(BOOL)animated {
+//    if (self.vcParentView) {
+//        [self fhDetail_scrollViewDidScroll:self.vcParentView];
+//    }
+}
+
+- (void)vc_viewDidDisappear:(BOOL)animated {
+    if (self.vedioCount > 0 && self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing && !self.mediaView.videoVC.isFullScreen) {
+        [self.mediaView.videoVC pause];
+    }
 }
 
 @end

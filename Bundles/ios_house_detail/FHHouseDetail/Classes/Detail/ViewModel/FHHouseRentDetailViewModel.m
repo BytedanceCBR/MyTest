@@ -27,7 +27,9 @@
 #import "FHDetailHouseSubscribeCell.h"
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
-#import "FHHouseDetailFollowUpViewModel.h"
+#import <FHHouseBase/FHHouseFollowUpHelper.h>
+#import <FHHouseBase/FHMainApi+Contact.h>
+#import <FHHouseBase/FHUserTrackerDefine.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -166,7 +168,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
-        self.bottomStatusBar.text = @"停止出租";
+        self.bottomStatusBar.text = @"该房源已停止出租";
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
         [self.navBar showRightItems:NO];
@@ -196,10 +198,21 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
     //当前IM全是非B端注册经纪人
     model.data.contact.unregistered = YES;
-    self.contactViewModel.contactPhone = model.data.contact;
+    FHDetailContactModel *contactPhone = model.data.contact;
+    if (contactPhone.phone.length > 0) {
+        
+        if ([self isShowSubscribe]) {
+            contactPhone.isFormReport = YES;
+        }else {
+            contactPhone.isFormReport = NO;
+        }
+    }else {
+        contactPhone.isFormReport = YES;
+    }
+    self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
-    
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     self.detailData = model;
     if (model.data.status != -1) {
         [self addDetailCoreInfoExcetionLog];
@@ -207,11 +220,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
     // 清空数据源
     [self.items removeAllObjects];
+    FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
     if (model.data.houseImage) {
-        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
         headerCellModel.houseImage = model.data.houseImage;
-        [self.items addObject:headerCellModel];
+    }else{
+        //无图片时增加默认图
+        FHDetailHouseDataItemsHouseImageModel *imgModel = [FHDetailHouseDataItemsHouseImageModel new];
+        headerCellModel.houseImage = @[imgModel];
     }
+    [self.items addObject:headerCellModel];
+    
     // 添加标题
     if (model.data) {
         FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
@@ -228,9 +246,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:coreInfoModel];
     }
     // 添加属性列表
-    if (model.data.baseInfo) {
+    if (model.data.baseInfo || model.data.baseExtra) {
         FHDetailPropertyListModel *propertyModel = [[FHDetailPropertyListModel alloc] init];
         propertyModel.baseInfo = model.data.baseInfo;
+        propertyModel.rentExtraInfo = model.data.baseExtra;
         [self.items addObject:propertyModel];
     }
     // 添加房屋配置
@@ -410,7 +429,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     NSString *houseId = self.houseId;
     NSString *from = @"app_renthouse_subscription";
-    [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
@@ -427,7 +446,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         }
     }];
     // 静默关注功能
-    [self.contactViewModel.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (self.detailTracerDic) {
+        [params addEntriesFromDictionary:self.detailTracerDic];
+    }
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+    configModel.houseType = self.houseType;
+    configModel.followId = self.houseId;
+    configModel.actionType = self.houseType;
+    // 静默关注功能
+    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
 }
 
 - (BOOL)isShowSubscribe {
@@ -450,6 +478,72 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
 }
 
+- (void)onShowPoplayerNotification:(NSNotification *)notification
+{
+    UITableViewCell *cell = notification.userInfo[@"cell"];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    if (!indexPath) {
+        return;
+    }
+    
+    id model = notification.userInfo[@"model"];
+    
+    FHDetailPropertyListModel *propertyModel = nil;
+    for (id item in self.items) {
+        if ([item isKindOfClass:[FHDetailPropertyListModel class]]) {
+            propertyModel = (FHDetailPropertyListModel *)item;
+            break;
+        }
+    }
+    
+    if (!propertyModel) {
+        return;
+    }
+    
+    [self addClickOptionLog];
+    
+    NSMutableDictionary *trackInfo = [NSMutableDictionary new];
+    trackInfo[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE];
+    trackInfo[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM]?:UT_BE_NULL;
+    trackInfo[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];
+    trackInfo[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
+    trackInfo[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
+    trackInfo[@"rank"] = self.detailTracerDic[@"rank"];
+    trackInfo[UT_ENTER_FROM] = @"transaction_remind";
+    
+    FHDetailHalfPopLayer *popLayer = [self popLayer];
+    [popLayer showDealData:propertyModel.rentExtraInfo trackInfo:trackInfo];
+    
+    self.tableView.scrollsToTop = NO;
+    [self enableController:NO];
+}
+
+-(void)addClickOptionLog
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    /*
+     "1.event_type：house_app2c_v2
+     2.page_type（页面类型）：rent_detail（租房详情页）
+     3.click_position ：transaction_remind (交易提示)
+     4.enter_from：renting（租房）
+     5. origin_from
+     6. origin_search_id
+     7.log_pb
+     8.element_from ："
+     */
+    param[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE];
+    param[UT_ENTER_FROM] = @"renting";
+    param[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];
+    param[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
+    param[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
+    
+    param[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM]?:UT_BE_NULL;
+    
+    [param addEntriesFromDictionary:self.detailTracerDic];
+    param[@"click_position"] = @"transaction_remind";
+    
+    TRACK_EVENT(@"click_options", param);
+}
 
 @end
 

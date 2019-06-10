@@ -10,6 +10,7 @@
 #import "FHURLSettings.h"
 #import "FHHouseType.h"
 #import "FHMainApi.h"
+#import "FHHouseContactDefines.h"
 
 @class TTHttpTask,FHDetailNewModel,FHDetailNeighborhoodModel,FHDetailOldModel,FHRentDetailResponseModel,FHDetailFloorPanDetailInfoModel,FHDetailFloorPanListResponseModel;
 @class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel,FHDetailRelatedCourtModel,FHDetailNewTimeLineResponseModel,FHDetailNewCoreDetailModel;
@@ -18,15 +19,6 @@
 @class FHTransactionHistoryModel;
 
 NS_ASSUME_NONNULL_BEGIN
-
-typedef enum : NSUInteger {
-    FHFollowActionTypeNew = 1,
-    FHFollowActionTypeOld = 2,
-    FHFollowActionTypeRent = 3,
-    FHFollowActionTypeNeighborhood = 4,
-    FHFollowActionTypePriceChanged = 5,
-    FHFollowActionTypeFloorPan = 6,
-} FHFollowActionType;
 
 @interface FHHouseDetailAPI : NSObject
 
@@ -91,32 +83,6 @@ typedef enum : NSUInteger {
                                                              query:(NSString*)query
                                                              count:(NSInteger)count
                                                         completion:(void(^)(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model , NSError * _Nullable error))completion;
-
-// 详情页线索提交表单
-+ (TTHttpTask*)requestSendPhoneNumbserByHouseId:(NSString*)houseId
-                                          phone:(NSString*)phone
-                                           from:(NSString*)from
-                                     completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
-// 中介转接电话
-+ (TTHttpTask*)requestVirtualNumber:(NSString*)realtorId
-                            houseId:(NSString*)houseId
-                          houseType:(FHHouseType)houseType
-                           searchId:(NSString*)searchId
-                             imprId:(NSString*)imprId
-                         completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
-
-// 房源关注
-+ (TTHttpTask*)requestFollow:(NSString*)followId
-                   houseType:(FHHouseType)houseType
-                  actionType:(FHFollowActionType)actionType
-                  completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion;
-
-// 房源取消关注
-+ (TTHttpTask*)requestCancelFollow:(NSString*)followId
-                         houseType:(FHHouseType)houseType
-                        actionType:(FHFollowActionType)actionType
-                        completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion;
-
 // 新房-周边新盘
 +(TTHttpTask*)requestRelatedFloorSearch:(NSString*)houseId
                                  offset:(NSString *)offset
@@ -140,6 +106,14 @@ typedef enum : NSUInteger {
 // 新房-楼盘户型列表信息
 +(TTHttpTask*)requestFloorPanListSearch:(NSString*)courtId
                              completion:(void(^)(FHDetailFloorPanListResponseModel * _Nullable model , NSError * _Nullable error))completion;
+
+/*
+ * 用户反馈该内容是否有帮助
+ * @feedType: 0表示空，1表示是，2表示否
+ * @source: （幸福天眼: detective，安全贴士: safety_tips）
+ */
++(TTHttpTask *)requstQualityFeedback:(NSString *)houseId houseType:(FHHouseType)houseType source:(NSString *)source feedBack:(NSInteger)feedType agencyId:(NSString *)agencyId completion:(void (^)(bool succss , NSError *error))completion;
+
 @end
 
 

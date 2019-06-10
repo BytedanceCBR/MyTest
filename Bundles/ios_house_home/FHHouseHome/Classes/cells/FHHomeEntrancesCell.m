@@ -8,13 +8,14 @@
 #import "FHHomeEntrancesCell.h"
 #import "FHHomeCellHelper.h"
 #import <TTDeviceHelper.h>
+#import <FHHomeCellHelper.h>
 
 @implementation FHHomeEntrancesCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.boardView = [[FHRowsView alloc] initWithRowCount:4 withRowHight:kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375] + 10];
+        self.boardView = [[FHRowsView alloc] initWithRowCount:[FHHomeCellHelper sharedInstance].kFHHomeIconRowCount withRowHight:[FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375] + 10];
         [self setUpSubViews];
     }
     return self;
@@ -28,7 +29,6 @@
     [_boardView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.bottom.right.equalTo(self.contentView);
     }];
-
 }
 
 - (void)awakeFromNib {

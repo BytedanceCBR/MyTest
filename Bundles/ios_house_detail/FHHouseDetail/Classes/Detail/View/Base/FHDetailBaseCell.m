@@ -46,6 +46,18 @@
     return @{};
 }
 
+- (void)vc_viewDidAppear:(BOOL)animated {
+    
+}
+
+- (void)vc_viewDidDisappear:(BOOL)animated {
+    
+}
+
+- (void)fh_willDisplayCell {
+    
+}
+
 @end
 
 // FHDetailBaseCollectionCell

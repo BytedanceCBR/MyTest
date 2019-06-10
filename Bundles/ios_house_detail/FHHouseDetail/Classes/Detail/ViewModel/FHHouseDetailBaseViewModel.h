@@ -14,6 +14,7 @@
 #import <TTReachability.h>
 #import "FHDetailNavBar.h"
 #import <Heimdallr/HMDTTMonitor.h>
+#import "FHDetailHalfPopLayer.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,6 +23,8 @@ typedef enum : NSUInteger {
     FHDetailCoreInfoErrorTypeImage = 1 << 1,
     FHDetailCoreInfoErrorTypeCoreInfo = 1 << 2,
 } FHDetailCoreInfoErrorType;
+
+extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显示半屏弹窗
 
 @interface FHHouseDetailBaseViewModel : NSObject
 
@@ -49,8 +52,13 @@ typedef enum : NSUInteger {
 - (NSString *)cellIdentifierForEntity:(id)model;
 - (void)startLoadData;
 
+// 回调方法
+- (void)vc_viewDidAppear:(BOOL)animated;
+- (void)vc_viewDidDisappear:(BOOL)animated;
+
 // 刷新数据
 - (void)reloadData;
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView;
 
 // 二级页所需数据
 - (NSDictionary *)subPageParams;
@@ -66,6 +74,13 @@ typedef enum : NSUInteger {
 - (BOOL)isMissCoreInfo;
 - (void)addDetailRequestFailedLog:(NSInteger)status message:(NSString *)message;
 
+//半屏列表页
+- (void)addPopLayerNotification;
+- (void)removePopLayerNotification;
+- (void)onShowPoplayerNotification:(NSNotification *)notification;
+- (FHDetailHalfPopLayer *)popLayer;
+
+- (void)enableController:(BOOL)enabled;
 @end
 
 NS_ASSUME_NONNULL_END

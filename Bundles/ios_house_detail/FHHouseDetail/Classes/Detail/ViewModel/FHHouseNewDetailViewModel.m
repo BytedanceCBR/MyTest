@@ -154,14 +154,22 @@
 
     // 清空数据源
     [self.items removeAllObjects];
+    FHDetailContactModel *contactPhone = nil;
+    
     if (model.data.highlightedRealtor) {
-        self.contactViewModel.contactPhone = model.data.highlightedRealtor;
+        contactPhone = model.data.highlightedRealtor;
     }else {
-        self.contactViewModel.contactPhone = model.data.contact;
+        contactPhone = model.data.contact;
     }
+    if (contactPhone.phone.length > 0) {
+        contactPhone.isFormReport = NO;
+    }else {
+        contactPhone.isFormReport = YES;
+    }
+    self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
-
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     __weak typeof(self) wSelf = self;
     if (model.data) {
         [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHDetailRelatedCourtModel * _Nullable model, NSError * _Nullable error) {
@@ -170,8 +178,8 @@
         }];
     }
     
-    if (model.data.imageGroup) {
-        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+    FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+    if (model.data.imageGroup) {        
         NSMutableArray *arrayHouseImage = [NSMutableArray new];
         for (NSInteger i = 0; i < model.data.imageGroup.count; i++) {
             FHDetailNewDataImageGroupModel * groupModel = model.data.imageGroup[i];
@@ -183,8 +191,13 @@
         headerCellModel.isNewHouse = YES;
         headerCellModel.smallImageGroup = model.data.smallImageGroup;
         headerCellModel.houseImage = arrayHouseImage;
-        [self.items addObject:headerCellModel];
+        
+    }else{
+        //无图片时增加默认图
+        FHDetailHouseDataItemsHouseImageModel *imgModel = [FHDetailHouseDataItemsHouseImageModel new];
+        headerCellModel.houseImage = @[imgModel];
     }
+    [self.items addObject:headerCellModel];
     
     FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
     // 添加标题

@@ -24,4 +24,5 @@ FOUNDATION_EXPORT const unsigned char FHHouseBaseVersionString[];
 #import <FHHouseBase/FileUtils.h>
 #import <FHHouseBase/FHFilterNodeModel.h>
 #import <FHHouseBase/FHRealtorDetailWebViewControllerDelegate.h>
+#import <FHHouseBase/FHCHousePushDelegate.h>
 

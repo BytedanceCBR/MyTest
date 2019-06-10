@@ -46,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHouseNeighborDataItemsBaseInfoMapModel *baseInfoMap ;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *displaySubtitle;
+@property (nonatomic, assign) BOOL dealStatus;
+@property (nonatomic, copy , nullable) NSString *dealOpenUrl;
 
 @end
 

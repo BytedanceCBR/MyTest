@@ -12,12 +12,21 @@
 #import "FHHouseRentDetailViewModel.h"
 #import "FHDetailBaseCell.h"
 #import "UITableView+FDTemplateLayoutCell.h"
+#import <TTNewsAccountBusiness/TTAccountManager.h>
+#import <TTAccountLogin/TTAccountLoginManager.h>
+#import "FHDetailOldModel.h"
+#import "FHDetailRentModel.h"
+#import <FHHouseBase/FHEnvContext.h>
+#import <FHHouseBase/FHURLSettings.h>
+#import "FHHouseDetailAPI.h"
+#import <TTReachability/TTReachability.h>
 
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong)   NSMutableDictionary       *cellHeightCaches;
 @property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
 @property (nonatomic, strong)   NSHashTable               *weakedCellTable;
+@property (nonatomic, strong)   NSHashTable               *weakedVCLifeCycleCellTable;
 @property (nonatomic, assign)   CGPoint       lastPointOffset;
 
 @end
@@ -54,6 +63,7 @@
         _elementShowCaches = [NSMutableDictionary new];
         _lastPointOffset = CGPointZero;
         _weakedCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+        _weakedVCLifeCycleCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         self.houseType = houseType;
         self.detailController = viewController;
         self.tableView = tableView;
@@ -77,6 +87,35 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.tableView.frame = frame;
     });
+}
+
+// 回调方法
+- (void)vc_viewDidAppear:(BOOL)animated {
+    if (self.weakedVCLifeCycleCellTable.count > 0) {
+        NSArray *arr = self.weakedVCLifeCycleCellTable.allObjects;
+        [arr enumerateObjectsUsingBlock:^(FHDetailBaseCell *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[FHDetailBaseCell class]] && self.detailController) {
+                if ([obj conformsToProtocol:@protocol(FHDetailVCViewLifeCycleProtocol)]) {
+                    [((id<FHDetailVCViewLifeCycleProtocol>)obj) vc_viewDidAppear:animated];
+                }
+            }
+        }];
+    }
+    [self addPopLayerNotification];
+}
+
+- (void)vc_viewDidDisappear:(BOOL)animated {
+    if (self.weakedVCLifeCycleCellTable.count > 0) {
+        NSArray *arr = self.weakedVCLifeCycleCellTable.allObjects;
+        [arr enumerateObjectsUsingBlock:^(FHDetailBaseCell *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[FHDetailBaseCell class]] && self.detailController) {
+                if ([obj conformsToProtocol:@protocol(FHDetailVCViewLifeCycleProtocol)]) {
+                    [((id<FHDetailVCViewLifeCycleProtocol>)obj) vc_viewDidDisappear:animated];
+                }
+            }
+        }];
+    }
+    [self removePopLayerNotification];
 }
 
 #pragma mark - 需要子类实现的方法
@@ -162,8 +201,26 @@
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
+    
+    CGFloat originY = tableView.contentOffset.y;
+    CGFloat cellOriginY = cell.frame.origin.y;
+    CGFloat winH = [UIScreen mainScreen].bounds.size.height;
+    // 起始位置，超出屏幕时不上报 element_show 埋点
+    if (cellOriginY - originY > winH * 1.2 && originY <= 0) {
+        // 超出屏幕
+        return;
+    }
+    
     if ([cell conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)] && ![self.weakedCellTable containsObject:cell]) {
         [self.weakedCellTable addObject:cell];
+    }
+    if ([cell conformsToProtocol:@protocol(FHDetailVCViewLifeCycleProtocol)] && ![self.weakedVCLifeCycleCellTable containsObject:cell]) {
+        [self.weakedVCLifeCycleCellTable addObject:cell];
+    }
+    // will display
+    if ([cell isKindOfClass:[FHDetailBaseCell class]]) {
+        FHDetailBaseCell *tCell = (FHDetailBaseCell *)cell;
+        [tCell fh_willDisplayCell];
     }
     // 添加element_show埋点
     if (!self.elementShowCaches[tempKey]) {
@@ -207,20 +264,17 @@
     if (scrollView != self.tableView) {
         return;
     }
-    // 解决类似周边房源列表页的house_show问题
+    // 解决类似周边房源列表页的house_show问题，视频播放逻辑
     CGPoint offset = scrollView.contentOffset;
-    if (offset.y > self.lastPointOffset.y) {
-        // 向上滑动
-        if (self.weakedCellTable.count > 0) {
-            NSArray *arr = self.weakedCellTable.allObjects;
-            [arr enumerateObjectsUsingBlock:^(FHDetailBaseCell *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([obj isKindOfClass:[FHDetailBaseCell class]] && self.detailController) {
-                    if ([obj conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)]) {
-                        [((id<FHDetailScrollViewDidScrollProtocol>)obj) fhDetail_scrollViewDidScroll:self.detailController.view];
-                    }
+    if (self.weakedCellTable.count > 0) {
+        NSArray *arr = self.weakedCellTable.allObjects;
+        [arr enumerateObjectsUsingBlock:^(FHDetailBaseCell *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[FHDetailBaseCell class]] && self.detailController) {
+                if ([obj conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)]) {
+                    [((id<FHDetailScrollViewDidScrollProtocol>)obj) fhDetail_scrollViewDidScroll:self.detailController.view];
                 }
-            }];
-        }
+            }
+        }];
     }
     self.lastPointOffset = offset;
     
@@ -251,6 +305,9 @@
     }
     if (self.contactViewModel.contactPhone) {
         info[@"contact_phone"] = self.contactViewModel.contactPhone;
+    }
+    if (self.contactViewModel.chooseAgencyList) {
+        info[@"choose_agency_list"] = self.contactViewModel.chooseAgencyList;
     }
     info[@"house_type"] = @(self.houseType);
     switch (_houseType) {
@@ -349,4 +406,181 @@
     [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_request_failed" status:status extra:attr];
 }
 
+- (void)enableController:(BOOL)enabled
+{
+    TTNavigationController *nav = self.detailController.navigationController;
+    nav.panRecognizer.enabled = enabled;
+}
+#pragma mark - poplayer
+
+- (void)addPopLayerNotification
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onShowPoplayerNotification:) name:DETAIL_SHOW_POP_LAYER_NOTIFICATION object:nil];
+}
+- (void)removePopLayerNotification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:DETAIL_SHOW_POP_LAYER_NOTIFICATION object:nil];
+}
+- (void)onShowPoplayerNotification:(NSNotification *)notification
+{
+    
+}
+
+- (FHDetailHalfPopLayer *)popLayer
+{
+    FHDetailHalfPopLayer *poplayer = [[FHDetailHalfPopLayer alloc] initWithFrame:self.detailController.view.bounds];
+    __weak typeof(self) wself = self;
+    poplayer.reportBlock = ^(id  _Nonnull data) {
+        [wself popLayerReport:data];
+    };
+    poplayer.feedBack = ^(NSInteger type, id  _Nonnull data, void (^ _Nonnull compltion)(BOOL)) {
+        [wself poplayerFeedBack:data type:type completion:compltion];
+    };
+    poplayer.dismissBlock = ^{
+        [wself enableController:YES];
+        wself.tableView.scrollsToTop = YES;
+    };
+    
+    [self.detailController.view addSubview:poplayer];
+    return poplayer;
+}
+
+-(void)popLayerReport:(id)model
+{
+    
+    NSString *enterFrom = @"be_null";
+    if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
+        enterFrom = @"official_inspection";
+    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
+        enterFrom = @"happiness_eye";
+    }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
+        enterFrom = @"transaction_remind";
+    }
+    
+    NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
+    tracerDic[@"enter_from"] = enterFrom;
+    tracerDic[@"log_pb"] = self.listLogPB ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
+    if ([TTAccountManager isLogin]) {
+        [self gotoReportVC:model];
+    } else {
+        [self gotoLogin:model enterFrom:enterFrom];
+    }
+}
+
+- (void)gotoLogin:(id)model enterFrom:(NSString *)enterFrom
+{
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    
+    [params setObject:enterFrom forKey:@"enter_from"];
+    [params setObject:@"feedback" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(NO) forKey:@"need_pop_vc"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                [wSelf gotoReportVC:model];
+            }
+            // 移除登录页面
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [wSelf delayRemoveLoginVC];
+            });
+        }
+    }];
+}
+
+// 二手房-房源问题反馈
+- (void)gotoReportVC:(id)model
+{    
+    NSString *reportUrl = nil;
+    if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
+        reportUrl = [(FHDetailDataBaseExtraOfficialModel *)model dialogs].reportUrl;
+    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
+        reportUrl = [(FHDetailDataBaseExtraDetectiveModel *)model dialogs].reportUrl;
+    }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
+        reportUrl = [(FHRentDetailDataBaseExtraModel *)model securityInformation].dialogs.reportUrl;
+    }
+    
+    if(reportUrl.length == 0){
+        return;
+    }
+    
+    JSONModel *dataModel = nil;
+    if ([self.detailData isKindOfClass:[FHDetailOldModel class]]) {
+        dataModel = [(FHDetailOldModel*)self.detailData data];
+    }else if ([self.detailData isKindOfClass:[FHRentDetailResponseModel class]]){
+        dataModel = [(FHRentDetailResponseModel *)self.detailData data];
+    }else if([self.detailData respondsToSelector:@selector(data)]){
+        dataModel = [self.detailData performSelector:@selector(data)];
+    }else{
+        dataModel = self.detailData;
+    }
+    
+    NSDictionary *jsonDic = [dataModel toDictionary];
+    if (jsonDic) {
+
+        NSString *openUrl = @"sslocal://webview";
+        NSDictionary *pageData = @{@"data":jsonDic};
+        NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+        if (commonParams == nil) {
+            commonParams = @{};
+        }
+        NSDictionary *commonParamsData = @{@"data":commonParams};
+        NSDictionary *jsParams = @{@"requestPageData":pageData,
+                                   @"getNetCommonParams":commonParamsData
+                                   };
+        NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+        NSString *urlStr = [NSString stringWithFormat:@"%@%@",host,reportUrl];
+        NSDictionary *info = @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
+    }
+}
+
+- (void)delayRemoveLoginVC {
+    UINavigationController *navVC = self.detailController.navigationController;
+    NSInteger count = navVC.viewControllers.count;
+    if (navVC && count >= 2) {
+        NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:navVC.viewControllers];
+        if (vcs.count == count) {
+            [vcs removeObjectAtIndex:count - 2];
+            [self.detailController.navigationController setViewControllers:vcs];
+        }
+    }
+}
+
+-(void)poplayerFeedBack:(id)model type:(NSInteger)type completion:(void (^)(BOOL success))completion
+{
+    NSString *source = nil;
+    NSString *agencyId = nil;
+    if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
+        source = @"official";
+        agencyId = [(FHDetailDataBaseExtraOfficialModel *)model agency].agencyId;
+    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
+        source = @"detective";
+    }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
+        source = @"safety_tips";
+    }
+    
+    [FHHouseDetailAPI requstQualityFeedback:self.houseId houseType:self.houseType source:source feedBack:type agencyId:agencyId completion:^(bool succss, NSError * _Nonnull error) {
+      
+        if (succss) {
+            completion(succss);
+        }else{
+            if (![TTReachability isNetworkConnected]) {
+                SHOW_TOAST(@"网络异常");
+            }else{
+                SHOW_TOAST(error.domain);
+            }
+        }
+        
+    } ];
+    
+}
+
 @end
+
+NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION = @"_DETAIL_SHOW_POP_LAYER_NOTIFICATION_"; //详情页点击显示半屏弹窗

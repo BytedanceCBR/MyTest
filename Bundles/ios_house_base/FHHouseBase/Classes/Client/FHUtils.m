@@ -27,6 +27,22 @@
     }
 }
 
++ (NSString *)getJsonStrFrom:(NSDictionary *)dic
+{
+    if (![dic isKindOfClass:[NSDictionary class]]) {
+        return @"";
+    }
+    
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONReadingAllowFragments error:&error];
+    if (data && !error) {
+        NSString *temp = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        temp = [temp stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        return temp;
+    }
+    return @"";
+}
+
 + (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString
 {
     if (jsonString == nil) {
@@ -138,8 +154,8 @@
     //////// cornerRadius /////////
     view.layer.cornerRadius = cornerRadius;
     view.layer.masksToBounds = YES;
-    view.layer.shouldRasterize = YES;
-    view.layer.rasterizationScale = [UIScreen mainScreen].scale;
+//    view.layer.shouldRasterize = YES;
+//    view.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
     [view.superview.layer insertSublayer:shadowLayer below:view.layer];
 }

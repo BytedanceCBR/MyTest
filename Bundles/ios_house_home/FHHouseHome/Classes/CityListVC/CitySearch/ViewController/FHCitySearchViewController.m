@@ -12,7 +12,6 @@
 #import "FHPopupMenuView.h"
 #import "FHEnvContext.h"
 #import "ToastManager.h"
-#import "FHCitySearchNavBarView.h"
 #import "TTNavigationController.h"
 #import "FHCitySearchViewModel.h"
 #import "FHCitySearchItemCell.h"
@@ -73,7 +72,8 @@
 
 - (void)setupNaviBar {
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
-    _naviBar = [[FHCitySearchNavBarView alloc] init];
+    _naviBar = [[FHSearchBar alloc] init];
+    [_naviBar setSearchPlaceHolderText:@"请输入城市名称"];
     [self.view addSubview:_naviBar];
     CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
     [_naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -86,9 +86,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
-- (FHCitySearchTableView *)createTableView {
+- (FHHouseBaseTableView *)createTableView {
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
-    FHCitySearchTableView *tableView = [[FHCitySearchTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    FHHouseBaseTableView *tableView = [[FHHouseBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     __weak typeof(self) weakSelf = self;
     tableView.handleTouch = ^{
         [weakSelf.view endEditing:YES];
@@ -122,6 +122,13 @@
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    UITextRange *selectedRange = [self.naviBar.searchInput markedTextRange];
+    //获取高亮部分
+    UITextPosition *position = [self.naviBar.searchInput positionFromPosition:selectedRange.start offset:0];
+    // 没有高亮选择的字，说明不是拼音输入
+    if (position) {
         return;
     }
     if (self.naviBar.searchInput.markedTextRange == NULL) {

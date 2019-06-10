@@ -40,6 +40,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 是否上报house_show
 - (NSDictionary *)elementHouseShowUpload;
 
+// 即将显示cell
+- (void)fh_willDisplayCell;
+
 // 详情页baseViewModel，可以从中拿到需要的数据(高效但是不美观)
 @property (nonatomic, weak)     FHHouseDetailBaseViewModel       *baseViewModel;
 
@@ -66,6 +69,14 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHDetailScrollViewDidScrollProtocol <NSObject>
 
 - (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView;
+
+@end
+
+// cell 需要知道VC页面是否消失时的代理
+@protocol FHDetailVCViewLifeCycleProtocol <NSObject>
+
+- (void)vc_viewDidAppear:(BOOL)animated;
+- (void)vc_viewDidDisappear:(BOOL)animated;
 
 @end
 

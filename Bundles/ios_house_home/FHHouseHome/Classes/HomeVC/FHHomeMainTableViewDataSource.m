@@ -21,6 +21,10 @@
 #import "TTRoute.h"
 #import "FHHomeConfigManager.h"
 #import "TTArticleCategoryManager.h"
+#import <FHErrorView.h>
+#import <TTDeviceHelper.h>
+#import "FHHomePlaceHolderCell.h"
+#import "FHhomeHouseTypeBannerCell.h"
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)NSMutableDictionary *traceRecordDict;
@@ -41,13 +45,26 @@
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == kFHHomeListHeaderBaseViewSection) {
         return 1;
     }
+    
+    if (section == kFHHomeListHouseTypeBannerViewSection) {
+        if (self.showOpDataListEntrance) {
+            return 1;
+        }
+        return 0;
+    }
+    
+    if (self.showNoDataErrorView || self.showRequestErrorView)
+    {
+        return 1;
+    }
+
     if (self.showPlaceHolder) {
         return 10;
     }
@@ -65,22 +82,75 @@
         FHHomeBaseTableCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         [FHHomeCellHelper configureHomeListCell:cell withJsonModel:model];
         return cell;
+    }else if(indexPath.section == kFHHomeListHouseTypeBannerViewSection)
+    {
+        FHhomeHouseTypeBannerCell *bannerCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
+        [bannerCell refreshData:nil];
+        return bannerCell;
     }else
     {
+        
+        if (self.showNoDataErrorView) {
+
+            UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+            for (UIView *subView in cellError.contentView.subviews) {
+                [subView removeFromSuperview];
+            }
+            cellError.selectionStyle = UITableViewCellSelectionStyleNone;
+            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [self getHeightShowNoData])];
+            //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
+            [cellError.contentView addSubview:noDataErrorView];
+            
+            [noDataErrorView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImageName:@"group-9"
+                                    showRetry:NO];
+            return cellError;
+        }
+        
+        if (self.showRequestErrorView) {
+            UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
+            for (UIView *subView in cellError.contentView.subviews) {
+                [subView removeFromSuperview];
+            }
+            cellError.selectionStyle = UITableViewCellSelectionStyleNone;
+            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [self getHeightShowNoData])];
+            //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
+            [cellError.contentView addSubview:noDataErrorView];
+            
+            [noDataErrorView showEmptyWithTip:@"数据走丢了" errorImageName:@"group-9"
+                                    showRetry:YES];
+            __weak typeof(self) weakSelf = self;
+            noDataErrorView.retryBlock = ^{
+                if (weakSelf.requestErrorRetry) {
+                    weakSelf.requestErrorRetry();
+                }
+            };
+            return cellError;
+        }
+        
         if (self.showPlaceHolder) {
-            FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
+            FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
             return cell;
         }
+        
         //to do 房源cell
-        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHouseBaseItemCell class])];
-        BOOL isFirstCell = (indexPath.row == 0);
-        BOOL isLastCell = (indexPath.row == self.modelsArray.count - 1);
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
         if (indexPath.row < self.modelsArray.count) {
             JSONModel *model = self.modelsArray[indexPath.row];
-            [cell refreshTopMargin: 20];
-            [cell updateHomeHouseCellModel:model andType:self.currentHouseType];            
+            [cell refreshTopMargin: 0];
+            [cell updateHomeSmallImageHouseCellModel:model andType:self.currentHouseType];
         }
         return cell;
+    }
+}
+
+- (CGFloat)getHeightShowNoData
+{
+    if([TTDeviceHelper isScreenWidthLarge320])
+    {
+        return [UIScreen mainScreen].bounds.size.height * 0.45;
+    }else
+    {
+        return [UIScreen mainScreen].bounds.size.height * 0.65;
     }
 }
 
@@ -92,13 +162,36 @@
         return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }
     
-    if (self.showPlaceHolder) {
-        return 105;
+
+    if (indexPath.section == kFHHomeListHouseTypeBannerViewSection) {
+        if (self.showOpDataListEntrance) {
+            return 89;
+        }
+        return 0;
     }
-    return 105;
+    
+    if (self.showNoDataErrorView || self.showRequestErrorView)
+    {
+        return [self getHeightShowNoData];
+    }
+    
+    if (self.showPlaceHolder) {
+        return 75;
+    }
+    
+    return 75;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.section == kFHHomeListHeaderBaseViewSection) {
+        return ;
+    }
+    
+    if (indexPath.section == kFHHomeListHouseTypeBannerViewSection) {
+        return;
+    }
+    
     if (_modelsArray.count <= indexPath.row) {
         return;
     }
@@ -144,7 +237,12 @@
     if (section == kFHHomeListHeaderBaseViewSection) {
         return nil;
     }
-    return self.categoryView;
+    
+    if (section == kFHHomeListHouseTypeBannerViewSection) {
+        return self.categoryView;
+    }
+    
+    return nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -152,7 +250,12 @@
     if (section == kFHHomeListHeaderBaseViewSection) {
         return 0;
     }
-    return kFHHomeHeaderViewSectionHeight;
+    
+    if (section == kFHHomeListHouseTypeBannerViewSection) {
+        return kFHHomeHeaderViewSectionHeight;
+    }
+    
+    return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section

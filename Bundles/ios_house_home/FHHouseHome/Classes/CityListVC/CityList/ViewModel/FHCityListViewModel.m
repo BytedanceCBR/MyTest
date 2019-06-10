@@ -56,6 +56,10 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
     return [self initWithController:nil tableView:nil];
 }
 
+- (void)setCityList:(NSArray<FHConfigDataCityListModel> *)cityList {
+    _cityList = cityList;
+}
+
 -(void)configTableView
 {
     _tableView.delegate = self;
@@ -354,6 +358,8 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 // 切换城市
 - (void)switchCityByCityId:(NSString *)cityId switchCompletion:(void(^)(BOOL isSuccess))switchCompletion {
     if (cityId.length > 0) {
+        [FHEnvContext sharedInstance].refreshConfigRequestType = @"switch";
+
         NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",cityId];
         [FHEnvContext openSwitchCityURL:url completion:^(BOOL isSuccess) {
             // 进历史

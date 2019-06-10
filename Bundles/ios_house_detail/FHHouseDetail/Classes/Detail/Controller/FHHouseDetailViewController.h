@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDetailViewController : FHBaseViewController
 
+//是否显示
+@property (nonatomic, assign)   BOOL     isViewDidDisapper;
+
 //设置状态栏
 - (void)refreshContentOffset:(CGPoint)contentOffset;
 
@@ -28,6 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 埋点数据处理:1、paramObj.allParams中的"tracer"字段，2、allParams中的origin_from、report_params等字段
 - (void)processTracerData:(NSDictionary *)allParams;
+
+//更新
+- (void)updateLoadFinish;
 
 @end
 

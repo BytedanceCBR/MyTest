@@ -31,4 +31,9 @@
 *  @return 字节数
 */
 - (NSUInteger)limitedLengthOfMaxCount:(NSUInteger)maxCount;
+
+- (NSUInteger)limitedIndexOfMaxCount:(NSUInteger)maxCount;
+
+- (NSUInteger)tt_lengthOfBytesIncludeOnlyBlank;
+
 @end
