@@ -91,7 +91,7 @@
         CGRect rect = CGRectMake(0.0f, 44.f + self.view.tt_safeAreaInsets.top + topTipheight, self.view.bounds.size.width, self.view.bounds.size.height - (44.f + self.view.tt_safeAreaInsets.top) - topTipheight);
         return rect;
     } else {
-        CGRect rect = CGRectMake(0.0f,topTipheight, self.view.bounds.size.width, self.view.bounds.size.height - 65.0f - topTipheight);
+        CGRect rect = CGRectMake(0.0f,topTipheight + 65.0f, self.view.bounds.size.width, self.view.bounds.size.height - 65.0f - topTipheight);
         return rect;
     }
 }
