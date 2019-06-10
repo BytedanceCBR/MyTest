@@ -20,6 +20,7 @@
     NSDictionary *dict = @{
                            @"hasMore": @"has_more",
                            @"searchId": @"search_id",
+                           @"externalSite": @"external_site",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

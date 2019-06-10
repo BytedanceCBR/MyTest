@@ -85,7 +85,7 @@
     }else if(indexPath.section == kFHHomeListHouseTypeBannerViewSection)
     {
         FHhomeHouseTypeBannerCell *bannerCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
-        [bannerCell refreshData:nil];
+        [bannerCell refreshData:self.currentHouseType];
         return bannerCell;
     }else
     {
@@ -136,7 +136,7 @@
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
         if (indexPath.row < self.modelsArray.count) {
             JSONModel *model = self.modelsArray[indexPath.row];
-            [cell refreshTopMargin: 0];
+            [cell refreshTopMargin:[TTDeviceHelper is896Screen3X] ? 5 : 0];
             [cell updateHomeSmallImageHouseCellModel:model andType:self.currentHouseType];
         }
         return cell;
@@ -162,10 +162,15 @@
         return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }
     
-
     if (indexPath.section == kFHHomeListHouseTypeBannerViewSection) {
         if (self.showOpDataListEntrance) {
-            return 89;
+            //适配5s
+            if ([TTDeviceHelper isScreenWidthLarge320]) {
+                return 89;
+            }else
+            {
+                return 74;
+            }
         }
         return 0;
     }

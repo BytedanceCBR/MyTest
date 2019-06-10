@@ -233,26 +233,28 @@
 
 - (void)addItemShowTracer:(FHSugSubscribeDataDataItemsModel* )item index:(NSInteger)index {
     if (item) {
-        NSString *subscribe_id = item.subscribeId;
-        if (subscribe_id.length > 0) {
-            if (self.tracerCacheDic[subscribe_id]) {
-                return;
+        if ([item isKindOfClass:[FHSugSubscribeDataDataItemsModel class]]) {
+            NSString *subscribe_id = item.subscribeId;
+            if (subscribe_id.length > 0) {
+                if (self.tracerCacheDic[subscribe_id]) {
+                    return;
+                }
+                self.tracerCacheDic[subscribe_id] = @"1";
+                NSMutableDictionary *tracerDic = @{@"subscribe_id":subscribe_id}.mutableCopy;
+                tracerDic[@"title"] = item.title.length > 0 ? item.title : @"be_null";
+                tracerDic[@"text"] = item.text.length > 0 ? item.text : @"be_null";
+                tracerDic[@"word_type"] = [self wordType];
+                tracerDic[@"page_type"] = [self pageType];
+                tracerDic[@"rank"] = @(index);
+                tracerDic[@"origin_from"] = self.listController.tracerDict[@"origin_from"] ? self.listController.tracerDict[@"origin_from"] : @"be_null";
+                [FHUserTracker writeEvent:@"subscribe_card_show" params:tracerDic];
             }
-            self.tracerCacheDic[subscribe_id] = @"1";
-            NSMutableDictionary *tracerDic = @{@"subscribe_id":subscribe_id}.mutableCopy;
-            tracerDic[@"title"] = item.title.length > 0 ? item.title : @"be_null";
-            tracerDic[@"text"] = item.text.length > 0 ? item.text : @"be_null";
-            tracerDic[@"word_type"] = [self wordType];
-            tracerDic[@"page_type"] = [self pageType];
-            tracerDic[@"rank"] = @(index);
-            tracerDic[@"origin_from"] = self.listController.tracerDict[@"origin_from"] ? self.listController.tracerDict[@"origin_from"] : @"be_null";
-            [FHUserTracker writeEvent:@"subscribe_card_show" params:tracerDic];
         }
     }
 }
 
 - (void)addItemClickTracer:(FHSugSubscribeDataDataItemsModel* )item index:(NSInteger)index {
-    if (item) {
+    if ([item isKindOfClass:[FHSugSubscribeDataDataItemsModel class]]) {
         NSString *subscribe_id = item.subscribeId;
         if (subscribe_id.length > 0) {
             NSMutableDictionary *tracerDic = @{@"subscribe_id":subscribe_id}.mutableCopy;
