@@ -112,7 +112,11 @@
             FHFeedUGCCellImageListModel *imageModel = imageList[i];
             imageView.hidden = NO;
             CGFloat width = [imageModel.width floatValue];
+            CGFloat height = [imageModel.height floatValue];
             [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+            [imageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(self.imageWidth * height/width);
+            }];
         }else{
             imageView.hidden = YES;
         }

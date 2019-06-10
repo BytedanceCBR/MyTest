@@ -33,15 +33,20 @@
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     [super requestData:isHead first:isFirst];
 
-//    if(isFirst){
-//        [self.viewController startLoading];
-//
+    if(isFirst){
+        [self.viewController startLoading];
+    }
+
     __weak typeof(self) wself = self;
     
     NSInteger listCount = self.dataList.count;
     double behotTime = 0;
     
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:@"weitoutiao" behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        
+        if(isFirst){
+            [self.viewController endLoading];
+        }
         
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         
