@@ -875,6 +875,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         
         if (houseAnnotation.searchType == FHMapSearchTypeSegment || houseAnnotation.searchType == FHMapSearchTypeStation) {
+            self.selectionStation = [self.selectionStation copy];
             self.selectionStation.value = houseAnnotation.houseData.nid;
             self.selectionStation.text = houseAnnotation.houseData.name;
         }
@@ -996,8 +997,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
  */
 - (void)mapView:(MAMapView *)mapView mapDidZoomByUser:(BOOL)wasUserAction
 {
-    [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeZoomMap currentLevel:mapView.zoomLevel];
-    
+    if (wasUserAction) {
+        [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeZoomMap currentLevel:mapView.zoomLevel];
+    }
+        
     if ( !wasUserAction) {
         //only send request by user
         return;
@@ -1600,14 +1603,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     self.selectionStation = nil;
     
     //FHHouseAnnotation
-    NSMutableArray *houseAnnotations = [NSMutableArray new];
-    for (id annotation in self.mapView.annotations) {
-        if ([annotation isKindOfClass:[FHHouseAnnotation class]]) {
-            [houseAnnotations addObject:annotation];
-        }
-    }
-    [self.mapView removeAnnotations:houseAnnotations];
-    
     [self.viewController enterSubwayMode];
     
     [self showSubwayPicker];
@@ -1756,7 +1751,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(BOOL)suportSubway
 {
-    return self.subwayData;
+    return self.subwayData != NULL;
 }
 
 -(FHSearchFilterConfigOption *)loadSubwayData
@@ -1864,6 +1859,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
     param[@"view_level"] = viewTypeStr;
     param[UT_ELEMENT_FROM] = @"map";
+    param[@"trigger_type"] = triger;
     if (self.showMode == FHMapSearchShowModeDrawLine) {
         param[UT_ENTER_FROM] = @"mapfind";
         TRACK_EVENT(@"circlefind_view", param);
@@ -1871,7 +1867,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         param[UT_ENTER_FROM] = @"mapfind";
         TRACK_EVENT(@"subwayfind_view", param);
     }else{
-        param[@"trigger_type"] = triger;
         [FHUserTracker writeEvent:@"mapfind_view" params:param];
     }
 }
@@ -1914,6 +1909,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         event = @"subwayfind_click_bubble";
     }
     
+    if (self.showMode != FHMapSearchShowModeMap) {
+        param[UT_ENTER_FROM] = @"mapfind";
+    }
+        
     [FHUserTracker writeEvent:event params:param];
 }
 
