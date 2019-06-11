@@ -1938,7 +1938,6 @@
     param[UT_ORIGIN_SEARCH_ID] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
     
     TRACK_EVENT(isShow?@"click_modification":@"click_close", param);
-    
 }
 
 -(void)addCommuteSearchLog

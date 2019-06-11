@@ -83,6 +83,21 @@
     
 }
 
+- (void)jumpToTabbarSecond
+{
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:kFHHouseMixedCategoryID withShow:NO];
+    [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
+    //    [[EnvContext shared].client.messageManager startSyncCategoryBadge];
+    if ([TTTabBarManager sharedTTTabBarManager].tabItems.count > 1) {
+        NSString *secondTabItemIdentifier = [TTTabBarManager sharedTTTabBarManager].tabItems[1].identifier;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:({
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+            [userInfo setValue:secondTabItemIdentifier forKey:@"tag"];
+            [userInfo copy];
+        })];
+    }
+}
+
 - (BOOL)isCurrentTabFirst
 {
     if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey]) {
