@@ -285,12 +285,12 @@
         topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight ;
     }
     if (self.isShowTopSearchPanel) {
-        self.topInset = topPadding - kTopSearchButtonHeight - kSelectorViewHeight;
+        self.topInset = topPadding - 40;
         self.bottomInset = 0;
     }else
     {
         self.topInset = 40;
-        self.bottomInset = 0;
+        self.bottomInset = bottomPadding;
     }
 }
 
@@ -879,14 +879,14 @@
 - (void)viewSafeAreaInsetsDidChange
 {
     [super viewSafeAreaInsetsDidChange];
-    UIEdgeInsets safeInset = self.view.safeAreaInsets;
-    if (safeInset.top > self.topInset){
-        self.topInset = safeInset.top;
-        [self.topBar mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.top.right.equalTo(self.view);
-            make.height.mas_equalTo(self.isShowTopSearchPanel ? self.topInset : 40);
-        }];
-    }
+//    UIEdgeInsets safeInset = self.view.safeAreaInsets;
+//    if (safeInset.top > self.topInset){
+//        self.topInset = safeInset.top;
+//        [self.topBar mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.left.top.right.equalTo(self.view);
+//            make.height.mas_equalTo(self.isShowTopSearchPanel ? self.topInset : 40);
+//        }];
+//    }
 }
 
 - (UIEdgeInsets)additionalSafeAreaInsets

@@ -37,6 +37,7 @@
 #import "SSCommonLogic.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <FHHouseUGC/FHCommunityViewController.h>
+#import <FHHomeViewController.h>
 
 NSString *kTTMiddleTabDidChangeNotification = @"kTTMiddleTabDidChangeNotification";
 
@@ -72,6 +73,7 @@ static NSString *lastTabIdentifier;
 + (UIViewController *)rootVCForIdentifier:(NSString *)identifier {
     if ([identifier isEqualToString:kTTTabHomeTabKey]) {
         UIViewController *homeVC;
+//        homeVC = [[FHHomeViewController alloc] init];
         homeVC = [[ArticleTabBarStyleNewsListViewController alloc] init];
         return homeVC;
     } else if ([identifier isEqualToString:kTTTabVideoTabKey]) {
