@@ -79,6 +79,8 @@
         topPadding = 64 + 44;
     }
     self.houseListViewController = [[FHHomeViewController alloc] init];
+    self.houseListViewController.isMainTabVC = NO;
+    
 //    self.houseListViewController.delegate = self;
     UIViewController *viewController = self.sourceViewController;
     [viewController addChildViewController:self.houseListViewController];

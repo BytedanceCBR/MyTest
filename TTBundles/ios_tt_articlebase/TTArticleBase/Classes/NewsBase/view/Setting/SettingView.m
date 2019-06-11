@@ -151,7 +151,7 @@ typedef NS_ENUM(NSUInteger, TTSettingCellType) {
     
     SettingCellTypeAbout,                   // 关于我们
     SettingCellTypeUserProtocol,            // 用户协议
-    SettingCellTypePrivacyProtocol,         // 隐私协议
+    SettingCellTypePrivacyProtocol,         // 隐私政策
     SettingCellTypeLogoutUnRegister         // 注销登录
 
 };
@@ -745,7 +745,7 @@ TTEditUserProfileViewControllerDelegate
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (cellType == SettingCellTypePrivacyProtocol) {
-        cell.textLabel.text = @"隐私协议";
+        cell.textLabel.text = @"隐私政策";
         UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -1343,7 +1343,7 @@ TTEditUserProfileViewControllerDelegate
             [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]]];
         }
     } else if (cellType == SettingCellTypePrivacyProtocol) {
-        // 隐私协议
+        // 隐私政策
         NSString *urlStr = [[NSString stringWithFormat:@"%@&hide_more=1",[ArticleURLSetting userPrivateProtocolURLString]]stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
         if (urlStr.length > 0) {
             [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]]];
