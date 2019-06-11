@@ -111,17 +111,20 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
             }
         }
     }
-    [_bannerView setURLs:imageUrls];
     [self.tracerDic removeAllObjects];
+    [_bannerView setURLs:imageUrls];
 }
 
 - (void)addTracerShow:(FHConfigDataRentOpDataItemsModel *)opData index:(NSInteger)index {
-    NSString *opId = opData.id;
-    if (opId.length > 0) {
-        if (self.tracerDic[opId]) {
+    NSString *opTitle = opData.title;
+    if (opTitle.length > 0) {
+        if (self.tracerDic[opTitle]) {
             return;
         }
-        self.tracerDic[opId] = @(1);
+        self.tracerDic[opTitle] = @(1);
+    }
+    NSString *opId = opData.id;
+    if (opId.length > 0) {
     } else {
         opId = @"be_null";
     }
@@ -138,7 +141,6 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
         origin_from = opData.logPb[@"origin_from"];
     }
     params[@"origin_from"] = origin_from;
-  
     [FHUserTracker writeEvent:@"banner_show" params:params];
 }
 
