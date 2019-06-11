@@ -29,6 +29,7 @@
 #import <TTUIResponderHelper.h>
 #import "TTTabBarController.h"
 #import <TTTopBar.h>
+#import <FHHomeSearchPanelViewModel.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -43,6 +44,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
 @property (nonatomic) BOOL adColdHadJump;
 @property (nonatomic, strong) TTTopBar *topBar;
+@property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
 
 @end
 
@@ -61,8 +63,13 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if (_mainTableView) {
+    if (_isMainTabVC) {
         [self.view addSubview:self.topBar];
+        
+        FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
+        //    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
+        panelVM.viewController = self;
+        self.panelVM = panelVM;
     }
     
     self.isRefreshing = NO;

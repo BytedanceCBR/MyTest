@@ -211,6 +211,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
                 
+        
+                //切换城市显示房源默认
+                if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
+                    [self.homeViewController pullAndRefresh];
+                }
                 return;
             }
             
@@ -513,7 +518,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
         
             //过滤多余tip提示
-        if ((model.data.refreshTip && (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) && !self.isRequestFromSwitch) {
+        if (model.data.refreshTip) {
             [self.homeViewController showNotify:model.data.refreshTip];
             self.tableViewV.contentOffset = CGPointMake(0, 0);
             [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
