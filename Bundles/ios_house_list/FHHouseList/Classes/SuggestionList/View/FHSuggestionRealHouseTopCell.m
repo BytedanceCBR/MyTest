@@ -232,7 +232,12 @@
                 [reprotParams addEntriesFromDictionary:self.tracerDict];
             }
             [reprotParams setValue:self.tracerDict[@"category_name"] forKey:@"enter_from"];
-            urlStr = [NSString stringWithFormat:@"%@&report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
+            if ([model.openUrl containsString:@"?"]) {
+                urlStr = [NSString stringWithFormat:@"%@&report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
+            }else
+            {
+                urlStr = [NSString stringWithFormat:@"%@?report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
+            }
         }else
         {
             urlStr = model.openUrl;
