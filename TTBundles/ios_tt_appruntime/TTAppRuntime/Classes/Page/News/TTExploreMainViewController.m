@@ -125,12 +125,12 @@
 
     self.ttStatusBarStyle = UIStatusBarStyleDefault;
     
-    //如果是inhouse的，弹升级弹窗
-    if ([TTSandBoxHelper isInHouseApp]) {
-//#if INHOUSE
-        [self checkLocalTestUpgradeVersionAlert];
-//#endif
-    }
+//    //如果是inhouse的，弹升级弹窗
+//    if ([TTSandBoxHelper isInHouseApp]) {
+////#if INHOUSE
+//        [self checkLocalTestUpgradeVersionAlert];
+////#endif
+//    }
     
 }
 
@@ -143,26 +143,26 @@
 
 - (void)checkLocalTestUpgradeVersionAlert
 {
-    //内测弹窗
-    NSString * iidValue = [[TTInstallIDManager sharedInstance] installID];
-    NSString * didValue = [[TTInstallIDManager sharedInstance] deviceID];
-    NSString * channelValue = [[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"];
-    NSString * aidValue = @"1370";
-    NSString * baseUrl = [CommonURLSetting baseURL];
-//    NSString * baseUrl = @"https://i.snssdk.com";
-    
-    [TTAppUpdateHelper sharedInstance].delegate = self;
-    [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
-        [self.view addSubview:view];
-    } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
-//        if (!downloadUrl) {
-//            return;
-//        }
-//        NSURL *url = [NSURL URLWithString:downloadUrl];
-//        [[UIApplication sharedApplication] openURL:url];
-    } closeBlock:^{
-        
-    }];
+//    //内测弹窗
+//    NSString * iidValue = [[TTInstallIDManager sharedInstance] installID];
+//    NSString * didValue = [[TTInstallIDManager sharedInstance] deviceID];
+//    NSString * channelValue = [[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"];
+//    NSString * aidValue = @"1370";
+//    NSString * baseUrl = [CommonURLSetting baseURL];
+////    NSString * baseUrl = @"https://i.snssdk.com";
+//
+//    [TTAppUpdateHelper sharedInstance].delegate = self;
+//    [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
+//        [self.view addSubview:view];
+//    } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
+////        if (!downloadUrl) {
+////            return;
+////        }
+////        NSURL *url = [NSURL URLWithString:downloadUrl];
+////        [[UIApplication sharedApplication] openURL:url];
+//    } closeBlock:^{
+//
+//    }];
 }
 
 - (void)dealloc
@@ -194,50 +194,51 @@
     [TTPushAlertManager enterFeedPage:TTPushWeakAlertPageTypeMainFeed];
     
     //开屏广告启动不会展示，保留逻辑代码
-    if(self.adShow && [TTSandBoxHelper isAPPFirstLaunchForAd])
-    {
-        [TTAdSplashMediator shareInstance].adShowCompletion = ^(BOOL isClicked) {
-            if (!isClicked) {
-                if (!self.adColdHadJump) {
-                    self.adColdHadJump = YES;
-                    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-                    if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
-                        [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
-                        if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
-                            //通勤找房
-                            [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
-                        }else
-                        {
-                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
-                        }
-                    }
-                }
-            }
-        };
-    }else
-    {
-        if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
-            self.adColdHadJump = YES;
-            FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-            if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
-                TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
-                            [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
-                            if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
-                                //通勤找房
-                                [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
-                            }else
-                            {
-                                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
-                            }
-                        }
-                    });
-                });
-            }
-        }
-    }
+//    if(self.adShow && [TTSandBoxHelper isAPPFirstLaunchForAd])
+//    {
+//        [TTAdSplashMediator shareInstance].adShowCompletion = ^(BOOL isClicked) {
+//            if (!isClicked) {
+//                if (!self.adColdHadJump) {
+//                    self.adColdHadJump = YES;
+//                    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+//                    if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
+//                        [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
+//                        if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
+//                            //通勤找房
+//                            [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
+//                        }else
+//                        {
+//                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+//                        }
+//                    }
+//                }
+//            }
+//        };
+//    }else
+//    {
+//        if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
+//            self.adColdHadJump = YES;
+//            FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+//            if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
+//                TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
+//                            [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
+//                            if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
+//                                //通勤找房
+//                                [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
+//                            }else
+//                            {
+//                                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+//                            }
+//                        }
+//                    });
+//                });
+//            }
+//        }
+//    }
+    
 }
 
 - (void)traceJump2AdEvent:(NSString *)urlString
@@ -286,11 +287,11 @@
     }
     if (self.isShowTopSearchPanel) {
         self.topInset = topPadding - 40;
-        self.bottomInset = bottomPadding;
+        self.bottomInset = 0;
     }else
     {
         self.topInset = 40;
-        self.bottomInset = 0;
+        self.bottomInset = bottomPadding;
     }
 }
 
@@ -879,14 +880,14 @@
 - (void)viewSafeAreaInsetsDidChange
 {
     [super viewSafeAreaInsetsDidChange];
-    UIEdgeInsets safeInset = self.view.safeAreaInsets;
-    if (safeInset.top > self.topInset){
-        self.topInset = safeInset.top;
-        [self.topBar mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.top.right.equalTo(self.view);
-            make.height.mas_equalTo(self.isShowTopSearchPanel ? self.topInset : 40);
-        }];
-    }
+//    UIEdgeInsets safeInset = self.view.safeAreaInsets;
+//    if (safeInset.top > self.topInset){
+//        self.topInset = safeInset.top;
+//        [self.topBar mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.left.top.right.equalTo(self.view);
+//            make.height.mas_equalTo(self.isShowTopSearchPanel ? self.topInset : 40);
+//        }];
+//    }
 }
 
 - (UIEdgeInsets)additionalSafeAreaInsets

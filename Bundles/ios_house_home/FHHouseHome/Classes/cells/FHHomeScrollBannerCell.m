@@ -116,12 +116,13 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 }
 
 - (void)addTracerShow:(FHConfigDataRentOpDataItemsModel *)opData index:(NSInteger)index {
-    NSString *opTitle = opData.title;
-    if (opTitle.length > 0) {
-        if (self.tracerDic[opTitle]) {
+    // banner show 唯一性判断(地址)
+    NSString *tracerKey = [NSString stringWithFormat:@"_%p_",opData];
+    if (tracerKey.length > 0) {
+        if (self.tracerDic[tracerKey]) {
             return;
         }
-        self.tracerDic[opTitle] = @(1);
+        self.tracerDic[tracerKey] = @(1);
     }
     NSString *opId = opData.id;
     if (opId.length > 0) {

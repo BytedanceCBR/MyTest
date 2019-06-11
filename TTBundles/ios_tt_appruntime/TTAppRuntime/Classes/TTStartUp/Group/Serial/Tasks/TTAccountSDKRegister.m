@@ -21,6 +21,11 @@
 #import "TTAccountTestSettings.h"
 #import "CommonURLSetting.h"
 #import <FHHouseBase/FHURLSettings.h>
+#import <FHHouseBase/FHUserTracker.h>
+#import <FHHouseBase/FHMonitor.h>
+#import <BDUGTrackerInterface/BDUGTrackerInterface.h>
+#import <BDUGMonitorInterface/BDUGMonitorInterface.h>
+
 //#import <BDSDKApi+CompanyProduct.h>
 
 
@@ -35,6 +40,10 @@
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions
 {
     [super startWithApplication:application options:launchOptions];
+    
+    // 需要业务方通过注入的方式，实现打点上报和监控功能
+    BDUG_BIND_CLASS_PROTOCOL([FHUserTracker class], BDUGTrackerInterface);
+    BDUG_BIND_CLASS_PROTOCOL([FHMonitor class], BDUGMonitorInterface);
     
     [self.class startAccountService];
     [self.class configureAccountSDK];
@@ -102,6 +111,19 @@
     NSString *hotsoonAppID = TTLogicString(@"hotsoonOAuthAppID", @"bdefc41a8703eae8ce"); // 默认值是普通版appId
     NSString *awemeAppID = TTLogicString(@"awemeOAuthAppID", @"bd3ffc36cf30e111d0"); // 默认值是普通版appId
     
+    //  https://bytedance.feishu.cn/space/doc/doccnmfRT2HS5OmN6LlbtI
+    NSString *mobileAppID = [TTSandBoxHelper isInHouseApp] ? @"300011896473" : @"300011896471";
+    NSString *mobileAppKey = [TTSandBoxHelper isInHouseApp] ? @"AA0160CB47BC4EC6A87EB2E3CA0DB90B" : @"BD739FE2A70F6C5DF69484BD7B21B758";
+    NSString *telecomAppID = @"8025208701";
+    NSString *telecomAppKey = @"OIXQNHzyNMdD5s7fwrrNJmvTrvL4qJcq";
+    NSString *unicomAppID = @"99166000000000000371";
+    NSString *unicomAppKey = @"bf4ca042fafec19a84737211d6f80e49";
+    BOOL isTestChannel = [TTSandBoxHelper isInHouseApp];
+
+    // 注册运营商一键登录
+    [TTAccount registerOneKeyLoginService:TTAccountMobile appId:mobileAppID appKey:mobileAppKey isTestChannel:isTestChannel];
+    [TTAccount registerOneKeyLoginService:TTAccountUnion appId:unicomAppID appKey:unicomAppKey isTestChannel:isTestChannel];
+    [TTAccount registerOneKeyLoginService:TTAccountTelecom appId:telecomAppID appKey:telecomAppKey isTestChannel:isTestChannel];
     TTAccountPlatformConfiguration *wechatConf = [TTAccountPlatformConfiguration new];
     wechatConf.platformType = TTAccountAuthTypeWeChat;
     wechatConf.consumerKey  = WXAppID;

@@ -174,7 +174,7 @@
         NSString *selectCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
         AMapLocationReGeocode * currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
         
-        if ([FHEnvContext isSameLocCityToUserSelect] && currentReGeocode &&([currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:currentReGeocode.city])) {
+        if ([FHEnvContext isSameLocCityToUserSelect] && currentReGeocode.city &&([currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:currentReGeocode.city])) {
             AMapLocationReGeocode *currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
             self.chooseLocation = [FHLocManager sharedInstance].currentLocaton;
             if (currentReGeocode && self.chooseLocation) {
