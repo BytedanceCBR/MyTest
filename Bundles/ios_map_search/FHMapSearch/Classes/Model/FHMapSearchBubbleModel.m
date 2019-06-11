@@ -39,7 +39,7 @@
     self = [super init];
     if (self) {
         
-        _components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:YES];
+        _components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
         
         [self configContents];
         

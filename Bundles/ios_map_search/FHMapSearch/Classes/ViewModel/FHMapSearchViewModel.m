@@ -1328,6 +1328,29 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(NSString *)backHouseListOpenUrl
 {
+    if (self.configModel.mapOpenUrl) {        
+        FHMapSearchBubbleModel *bubble = [FHMapSearchBubbleModel bubbleFromUrl:self.configModel.mapOpenUrl];
+        NSRange range = [self.houseListOpenUrl rangeOfString:@"?"];
+        if (range.location != NSNotFound) {
+            FHMapSearchBubbleModel *cbubble = [FHMapSearchBubbleModel bubbleFromUrl:self.houseListOpenUrl];
+            NSMutableDictionary *addDict = [NSMutableDictionary new];
+            for (NSString *key in bubble.queryDict.allKeys) {
+                if ([key isEqualToString:@"area[]"] || [key isEqualToString:@"district[]"] || [key isEqualToString:@"line[]"]
+                    || [key isEqualToString:@"station[]"] || [key isEqualToString:NEIGHBORHOOD_IDS]) {
+                    addDict[key] = bubble.queryDict[key];
+                }
+            }
+            
+            [cbubble removeQueryOfKey:@"line[]"];
+            [cbubble removeQueryOfKey:@"station[]"];
+            [cbubble removeQueryOfKey:NEIGHBORHOOD_IDS];
+            
+            [cbubble addQueryParams:addDict];
+            NSString *query = [cbubble query];
+            return [[self.houseListOpenUrl substringToIndex:range.location+range.length] stringByAppendingString:query];
+        }
+
+    }
     return self.houseListOpenUrl;
 }
 
@@ -1670,12 +1693,20 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     logParam[UT_ELEMENT_FROM] = @"bottom_district";
     logParam[UT_CATEGORY_NAME] = @"circlefind_list";//(self.configModel.houseType == FHHouseTypeRentHouse)?@"rent_list":@"old_list";
     
+    FHMapSearchBubbleModel *bubble = [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];
+    [bubble addQueryParams:self.lastBubble.queryDict];
+    [bubble removeQueryOfKey:@"district[]"];
+    [bubble removeQueryOfKey:@"area[]"];
+    [bubble removeQueryOfKey:@"line[]"];
+    [bubble removeQueryOfKey:@"station[]"];
+    [bubble removeQueryOfKey:NEIGHBORHOOD_IDS];
+    
     
     NSURL *url = [NSURL URLWithString:@"sslocal://mapfind_area_house_list"];
     NSDictionary *userInfoDict = @{COORDINATE_ENCLOSURE:[self drawLineCoordinates]?:@"",
                                    NEIGHBORHOOD_IDS:[self drawLineNeighborIds]?:@"",
                                    HOUSE_TYPE_KEY:@(self.configModel.houseType),
-                                   @"filter":self.lastBubble.query?:@"",
+                                   @"filter":bubble.query?:@"",
                                    @"title":[NSString stringWithFormat:@"共找到%d套房源",self->onSaleHouseCount],
                                    TRACER_KEY:logParam
                                    };

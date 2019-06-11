@@ -206,8 +206,40 @@
     return 0;
 }
 
-- (nullable NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
+//- (nullable NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
+//{
+//
+//    NSString *content = nil;
+//    if (component == 0) {
+//        FHSearchFilterConfigOption *line = self.dataModel.options[row];
+//        content = line.text;
+//    }else{
+//        NSInteger index = [pickerView selectedRowInComponent:0];
+//        FHSearchFilterConfigOption *line = self.dataModel.options[index];
+//        if (row < line.options.count) {
+//            FHSearchFilterConfigOption *station = line.options[row];
+//            content = station.text;
+//        }
+//    }
+//
+//    if (content.length == 0) {
+////        content = [NSString stringWithFormat:@"-%ld-%ld",component,row];
+////        NSLog(@"[SUBWAY] error: %@",content);
+//        content = @"...";
+//    }
+//
+//    return [[NSAttributedString alloc] initWithString:content attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16],NSForegroundColorAttributeName:[UIColor themeGray1]}];
+//
+//}
+
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(nullable UIView *)view
 {
+    UILabel *label = [[UILabel alloc] init];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.font = [UIFont themeFontRegular:16];
+    label.textColor = [UIColor themeGray1];
+    label.adjustsFontSizeToFitWidth = YES;
+    
     
     NSString *content = nil;
     if (component == 0) {
@@ -223,12 +255,14 @@
     }
     
     if (content.length == 0) {
-//        content = [NSString stringWithFormat:@"-%ld-%ld",component,row];
-//        NSLog(@"[SUBWAY] error: %@",content);
+        //        content = [NSString stringWithFormat:@"-%ld-%ld",component,row];
+        //        NSLog(@"[SUBWAY] error: %@",content);
         content = @"...";
     }
+
+    label.text = content;
     
-    return [[NSAttributedString alloc] initWithString:content attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16],NSForegroundColorAttributeName:[UIColor themeGray1]}];
+    return label;
     
 }
 
