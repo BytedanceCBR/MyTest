@@ -6,6 +6,7 @@
 //
 
 #import "FHMyJoinViewController.h"
+#import "FHCommunityFeedListController.h"
 
 @interface FHMyJoinViewController ()
 
@@ -16,17 +17,22 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor yellowColor];
+    [self initView];
+    [self initConstraints];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)initView {
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    FHCommunityFeedListController *vc =[[FHCommunityFeedListController alloc] init];
+    vc.listType = FHCommunityFeedListTypeMyJoin;
+    vc.view.frame = self.view.bounds;
+    [self addChildViewController:vc];
+    [self.view addSubview:vc.view];
 }
-*/
+
+- (void)initConstraints {
+    
+}
 
 @end

@@ -140,7 +140,6 @@
 
 - (NSArray *)convertModel:(NSArray *)feedList {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    
     for (FHFeedListDataModel *itemModel in feedList) {
         NSString *content = itemModel.content;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
@@ -148,7 +147,6 @@
             [resultArray addObject:cellModel];
         }
     }
-    
     return resultArray;
 }
 
@@ -193,8 +191,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-//    FHUGCFeedListCellSubType type = [self getFeedType:cellModel];
-
     NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
     FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 
@@ -213,10 +209,6 @@
 
 #pragma mark - UITableViewDelegate
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    return UITableViewAutomaticDimension;
-//}
-
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = self.cellHeightCaches[tempKey];
@@ -227,14 +219,17 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self jumpToTopicList];
+    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+    [self jumpToPostDetail:cellModel];
 }
 
-//TODO 测试用的，后续去掉
-- (void)jumpToTopicList {
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://topic_list?community_id=%@", @"12345"];
-    NSURL *openUrl = [NSURL URLWithString:urlStr];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"data"] = cellModel;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_detail"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 @end

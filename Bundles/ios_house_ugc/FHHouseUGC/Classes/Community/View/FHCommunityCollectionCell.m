@@ -8,6 +8,8 @@
 #import "FHCommunityCollectionCell.h"
 #import "ArticleTabbarStyleNewsListViewController.h"
 #import "FHCommunityFeedListController.h"
+#import "FHNearbyViewController.h"
+#import "FHMyJoinViewController.h"
 
 @interface FHCommunityCollectionCell ()
 
@@ -36,12 +38,10 @@
 
 - (void)initViews {
     if(self.type == FHCommunityCollectionCellTypeNearby){
-        FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
-        vc.listType = FHCommunityFeedListTypeNearby;
+        FHNearbyViewController *vc = [[FHNearbyViewController alloc] init];
         self.vc = vc;
     }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
-        FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
-        vc.listType = FHCommunityFeedListTypeMyJoin;
+        FHMyJoinViewController *vc = [[FHMyJoinViewController alloc] init];
         self.vc = vc;
     }else if(self.type == FHCommunityCollectionCellTypeDiscovery){
         ArticleTabBarStyleNewsListViewController *ariticleListVC = [[ArticleTabBarStyleNewsListViewController alloc] init];
