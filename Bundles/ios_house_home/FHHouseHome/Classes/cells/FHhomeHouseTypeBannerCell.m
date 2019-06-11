@@ -122,7 +122,7 @@
                 [hotImage bd_setImageWithURL:[NSURL URLWithString:tagImageModel.url]];
             }
             [hotImage setBackgroundColor:[UIColor whiteColor]];
-            [hotImage setFrame:CGRectMake(backImage.frame.size.width - ([TTDeviceHelper isScreenWidthLarge320] ? 17 : 18.5), 3.5, 21, 10)];
+            [hotImage setFrame:CGRectMake(backImage.frame.size.width - ([TTDeviceHelper isScreenWidthLarge320] ? 17 : 18.5), 3.5, 21, 11)];
             [containView addSubview:hotImage];
         }
         

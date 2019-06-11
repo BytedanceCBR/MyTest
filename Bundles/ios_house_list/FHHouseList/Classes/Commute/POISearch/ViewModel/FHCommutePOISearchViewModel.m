@@ -85,7 +85,7 @@
         NSString *selectCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
         _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
         
-        if ([FHEnvContext isSameLocCityToUserSelect] && _currentReGeocode &&([_currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:_currentReGeocode.city])) {
+        if ([FHEnvContext isSameLocCityToUserSelect] && _currentReGeocode.city &&([_currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:_currentReGeocode.city])) {
             //定位地和选择地是同一城市才选择
             self.locationHeaderView.location = _currentReGeocode.AOIName;
             tableView.tableHeaderView = _locationHeaderView;

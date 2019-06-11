@@ -40,14 +40,8 @@
         if (params[@"need_pop_vc"]) {
             self.needPopVC = [params[@"need_pop_vc"] boolValue];
         }
-        [self addEnterCategoryLog];
     }
     return self;
-}
-
-- (void)addEnterCategoryLog {
-    NSMutableDictionary *tracerDict = [self.tracerModel logDict];
-    TRACK_EVENT(@"login_page", tracerDict);
 }
 
 - (void)viewDidLoad {
