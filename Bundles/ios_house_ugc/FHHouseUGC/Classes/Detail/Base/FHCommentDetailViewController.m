@@ -46,8 +46,6 @@ TTDetailModel *tt_detailModel;// test add by zyk
 
 @property (nonatomic, strong)   UIScrollView       *mainScrollView;
 @property (nonatomic, strong)   FHExploreDetailToolbarView       *toolbarView;
-@property (nonatomic, strong)   UITableView       *tableView;
-@property (nonatomic, strong)   FHCommentDetailViewModel       *viewModel;
 @property(nonatomic,  strong)   TTCommentViewController *commentViewController;
 
 @property (nonatomic,assign) double commentShowTimeTotal;
@@ -158,7 +156,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    _tableView.estimatedRowHeight = 0;
+    _tableView.estimatedRowHeight = 100;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
     _tableView.backgroundColor = [UIColor grayColor];

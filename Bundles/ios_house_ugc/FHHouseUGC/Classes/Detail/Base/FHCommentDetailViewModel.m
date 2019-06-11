@@ -8,12 +8,13 @@
 #import "FHCommentDetailViewModel.h"
 #import "FHHouseUGCAPI.h"
 #import "TTHttpTask.h"
+#import "FHPostDetailViewModel.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
-@end
+@property (nonatomic, strong)   NSMutableDictionary       *cellHeightCaches;
 
-static int fh_count = 1;
+@end
 
 @implementation FHCommentDetailViewModel
 
@@ -21,7 +22,7 @@ static int fh_count = 1;
     FHCommentDetailViewModel *viewModel = NULL;
     switch (postType) {
         case FHUGCPostTypePost:
-            viewModel = [[FHCommentDetailViewModel alloc] initWithController:viewController tableView:tableView postType:postType];
+            viewModel = [[FHPostDetailViewModel alloc] initWithController:viewController tableView:tableView postType:postType];
             break;
     }
     return viewModel;
@@ -30,10 +31,10 @@ static int fh_count = 1;
 -(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType{
     self = [super init];
     if (self) {
+        _cellHeightCaches = [NSMutableDictionary new];
         _items = [NSMutableArray new];
         self.postType = postType;
         self.listController = viewController;
-        fh_count += 2;
         self.tableView = tableView;
         [self configTableView];
     }
@@ -86,7 +87,7 @@ static int fh_count = 1;
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return fh_count;
+    return self.items.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -107,14 +108,24 @@ static int fh_count = 1;
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
+    self.cellHeightCaches[tempKey] = cellHeight;
 }
 
 // 返回计算后的固定高度
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return 105;
+//}
 
-    return 105;
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    NSNumber *cellHeight = self.cellHeightCaches[tempKey];
+    if (cellHeight) {
+        return [cellHeight floatValue];
+    }
+    return UITableViewAutomaticDimension;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
