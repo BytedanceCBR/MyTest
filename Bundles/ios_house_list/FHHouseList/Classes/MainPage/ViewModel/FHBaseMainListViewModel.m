@@ -521,11 +521,6 @@
                 cellModel.realHouseTopModel = obj;
                 cellModel.isRealHouseTopCell = YES;
                 [self.houseList addObject:cellModel];
-            }else if ([obj isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]){
-                FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
-                cellModel.realHouseTopModel = obj;
-                cellModel.isRealHouseTopCell = YES;
-                [self.houseList addObject:cellModel];
             }
         }];
         
