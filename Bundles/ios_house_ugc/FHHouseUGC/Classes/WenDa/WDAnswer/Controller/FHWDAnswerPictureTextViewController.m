@@ -46,6 +46,7 @@
 #import "WDPostAnswerTaskModel.h"
 #import "JSONAdditions.h"
 #import "WDMonitorManager.h"
+#import "FHWenDaToolbar.h"
 
 static CGFloat const kLeftPadding = 15.f;
 static CGFloat const kRightPadding = 15.f;
@@ -74,7 +75,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 @property (nonatomic, strong) TTUGCTextView * inputTextView;
 @property (nonatomic, strong) SSThemedView * inputContainerView;
 @property (nonatomic, strong) FRAddMultiImagesView * addImagesView;
-@property (nonatomic, strong) TTUGCToolbar *toolbar;
+@property (nonatomic, strong) FHWenDaToolbar *toolbar;
 @property (nonatomic, strong) TTUGCTextViewMediator *textViewMediator;
 @property (nonatomic, strong) TTIndicatorView *sendingIndicatorView;
 @property (nonatomic, strong) SSThemedLabel * tipLabel;
@@ -312,7 +313,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 //
 //    [self.view addSubview:self.toolbar];
     kWenDaToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
-    self.toolbar = [[TTUGCToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - kWenDaToolbarHeight, self.view.width, kWenDaToolbarHeight)];
+    self.toolbar = [[FHWenDaToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - kWenDaToolbarHeight, self.view.width, kWenDaToolbarHeight)];
 //    self.toolbar.leftItems = [self leftToolbarItems];
 //    self.toolbar.rightItems = [self rightToolbarItems];
 //    internalTextView.internalTextView.inputAccessoryView = self.toolbar;
