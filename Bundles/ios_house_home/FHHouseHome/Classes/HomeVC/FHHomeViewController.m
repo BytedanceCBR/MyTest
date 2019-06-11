@@ -22,25 +22,48 @@
 #import "TTArticleCategoryManager.h"
 #import "FHHomeScrollBannerCell.h"
 #import <TTDeviceHelper.h>
+#import <TTAppUpdateHelper.h>
+#import <TTInstallIDManager.h>
+#import <CommonURLSetting.h>
+#import <FHCommuteManager.h>
+#import <TTUIResponderHelper.h>
+#import "TTTabBarController.h"
+#import <TTTopBar.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
 static CGFloat const kSectionHeaderHeight = 38;
 
-@interface FHHomeViewController ()
+@interface FHHomeViewController ()<TTAppUpdateHelperProtocol>
 
 @property (nonatomic, strong) FHHomeListViewModel *homeListViewModel;
 @property (nonatomic, assign) BOOL isClickTab;
 @property (nonatomic, assign) BOOL isRefreshing;
 @property (nonatomic, assign) BOOL isShowToasting;
 @property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
+@property (nonatomic) BOOL adColdHadJump;
+@property (nonatomic, strong) TTTopBar *topBar;
 
 @end
 
 @implementation FHHomeViewController
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _isMainTabVC = YES;
+    }
+    return self;
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (_mainTableView) {
+        [self.view addSubview:self.topBar];
+    }
     
     self.isRefreshing = NO;
     
@@ -62,17 +85,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
     self.mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    if ([TTDeviceHelper isIPhoneXDevice]) {
-        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.view);
-        }];
-    }else
-    {
-        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.left.right.equalTo(self.view);
-            make.bottom.equalTo(self.view).offset(-40);
-        }];
-    }
+    [self setUpMainTableConstraints];
 
     [FHHomeCellHelper registerCells:self.mainTableView];
     
@@ -99,9 +112,74 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    //如果是inhouse的，弹升级弹窗
+    if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
+        //#if INHOUSE
+        [self checkLocalTestUpgradeVersionAlert];
+        //#endif
+    }
+    
+    if (_isMainTabVC) {
+        [self.view bringSubviewToFront:self.topBar];
+    }
 }
 
+- (void)setUpMainTableConstraints
+{
+    if (_isMainTabVC) {
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.topBar.mas_bottom);
+                make.bottom.left.right.equalTo(self.view);
+            }];
+        }else
+        {
+            [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.topBar.mas_bottom);
+                make.left.right.equalTo(self.view);
+                make.bottom.equalTo(self.view).offset(-40);
+            }];
+        }
+    }else
+    {
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.edges.equalTo(self.view);
+            }];
+        }else
+        {
+            [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.left.right.equalTo(self.view);
+                make.bottom.equalTo(self.view).offset(-40);
+            }];
+        }
+    }
+}
 
+- (void)setupTopBarConstraints
+{
+    [self.topBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo([TTDeviceHelper isIPhoneXSeries] ? 44 : 20);
+        make.left.right.equalTo(self.view);
+        make.height.mas_equalTo(64);
+    }];
+}
+
+- (TTTopBar *)topBar {
+    if (!_topBar) {
+        _topBar = [[TTTopBar alloc] init];
+        _topBar.isShowTopSearchPanel = YES;
+        _topBar.tab = @"home";
+        [self.view addSubview:_topBar];
+        [self setupTopBarConstraints];
+        _topBar.delegate = self;
+        [_topBar setupSubviews];
+    }
+    return _topBar;
+}
+
+#pragma mark  埋点
 - (void)applicationDidEnterBackground:(NSNotification *)notification {
     self.homeListViewModel.stayTime = 0;
 }
@@ -112,7 +190,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 -(void)showNotify:(NSString *)message
 {
-    
     [self hideImmediately];
     
     UIEdgeInsets inset = self.mainTableView.contentInset;
@@ -230,6 +307,44 @@ static CGFloat const kSectionHeaderHeight = 38;
     [super viewWillDisappear:animated];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (self.isMainTabVC) {
+        //开屏广告启动不会展示，保留逻辑代码
+        if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
+            self.adColdHadJump = YES;
+            FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+            if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
+                TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
+                            [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
+                            if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
+                                //通勤找房
+                                [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
+                            }else
+                            {
+                                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                            }
+                        }
+                    });
+                });
+            }
+        }
+    }
+}
+
+- (void)traceJump2AdEvent:(NSString *)urlString
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:4];
+    [dict setValue:@"1" forKey:@"result"];
+    [dict setValue:urlString forKey:@"url"];
+    [FHEnvContext recordEvent:dict andEventKey:@"link_jump"];
+}
+
 - (void)pullAndRefresh
 {
     self.homeListViewModel.reloadType = _reloadFromType;
@@ -293,5 +408,80 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+#pragma mark 内测弹窗
+- (void)checkLocalTestUpgradeVersionAlert
+{
+    //内测弹窗
+    NSString * iidValue = [[TTInstallIDManager sharedInstance] installID];
+    NSString * didValue = [[TTInstallIDManager sharedInstance] deviceID];
+    NSString * channelValue = [[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"];
+    NSString * aidValue = @"1370";
+    NSString * baseUrl = [CommonURLSetting baseURL];
+    //    NSString * baseUrl = @"https://i.snssdk.com";
+    
+    [TTAppUpdateHelper sharedInstance].delegate = self;
+    [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
+        [self.view addSubview:view];
+    } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
+        //        if (!downloadUrl) {
+        //            return;
+        //        }
+        //        NSURL *url = [NSURL URLWithString:downloadUrl];
+        //        [[UIApplication sharedApplication] openURL:url];
+    } closeBlock:^{
+        
+    }];
+}
+
+/** 通知代理对象已获取到弹窗升级Title和具体升级内容,如果自定义弹窗，必须实现此方法
+ @params title 弹窗升级title,ex: 6.x.x内测更新了..
+ @param content 更新具体内容
+ @params tipVersion 弹窗升级版本号,ex: 6.7.8
+ @param downloadUrl TF弹窗下载地址
+ */
+//- (void)showUpdateTipTitle:(NSString *)title content:(NSString *)content tipVersion:(NSString *)tipVersion updateButtonText:(NSString *)text downloadUrl:(NSString *)downloadUrl error:(NSError * _Nullable)error
+//{
+//
+//}
+
+/** 通知代理对象弹窗需要remove
+ *  代理对象需要在此方法里面将弹窗remove掉
+ */
+- (void)dismissTipView
+{
+    
+}
+
+///*
+// 判断是否是内测包，当打包注入与头条主工程不一致时
+// 可以实现自行进行判断，默认与头条判断方式相同
+// 通过检查bundleID是否有inHouse字段进行判断
+// */
+- (BOOL)decideIsInhouseApp
+{
+    return YES;
+}
+//
+///*
+// 判断是否是LR包，当打包注入与头条主工程不一致时
+// 可以实现自行进行判断，默认与头条判断方式相同
+// 通过检查buildinfo字段进行判断
+// 注意：只有lr包才弹内测弹窗，如果业务方没有
+// lr包的概念，则返回YES即可
+// */
+- (BOOL)decideIsLrPackage
+{
+    return YES;
+}
+//
+///*
+// 判断是否需要上报用户did，主要用来上报用户是否安装tTestFlight
+// 的情况，业务方可以自行通过开关控制
+// */
+//- (BOOL)decideShouldReportDid
+//{
+//
+//}
 
 @end

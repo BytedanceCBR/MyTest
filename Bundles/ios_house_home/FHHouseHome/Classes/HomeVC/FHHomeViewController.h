@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)NSString *baseView;
 @property (nonatomic, strong) UITableView *mainTableView;
 @property (nonatomic, assign) TTReloadType reloadFromType;
+@property (nonatomic, assign) BOOL isMainTabVC;
 
 - (void)pullAndRefresh;
 
