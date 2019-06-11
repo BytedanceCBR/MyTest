@@ -410,7 +410,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         [cell refreshTopMargin: 20];
         [cell updateWithHouseCellModel:cellModel];
         
-        if (cellModel.secondModel.externalInfo && cellModel.secondModel.externalInfo.isExternalSite) {
+        if (cellModel.secondModel.fakeReason) {
             [cell updateFakeHouseImageWithUrl:cellModel.secondModel.fakeReason.fakeReasonImage.url andSourceStr:cellModel.secondModel.externalInfo.externalName];
         }
         return cell;

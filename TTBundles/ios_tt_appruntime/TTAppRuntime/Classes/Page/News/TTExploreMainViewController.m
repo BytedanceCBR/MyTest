@@ -285,7 +285,7 @@
         topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight ;
     }
     if (self.isShowTopSearchPanel) {
-        self.topInset = topPadding;
+        self.topInset = topPadding - 40;
         self.bottomInset = bottomPadding;
     }else
     {
@@ -753,7 +753,9 @@
         _topBar.isShowTopSearchPanel = _isShowTopSearchPanel;
         _topBar.tab = @"home";
         [self.view addSubview:_topBar];
-        [_topBar addTTCategorySelectorView:self.categorySelectorView delegate:self];
+        if (!self.isShowTopSearchPanel) {
+            [_topBar addTTCategorySelectorView:self.categorySelectorView delegate:self];
+        }
         [self setupTopBarConstraints];
         _topBar.delegate = self;
         [_topBar setupSubviews];

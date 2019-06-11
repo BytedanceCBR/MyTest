@@ -227,15 +227,22 @@
         
         NSString *urlStr = nil;
         if ([self.tracerDict isKindOfClass:[NSDictionary class]] && model.openUrl) {
-           urlStr = [NSString stringWithFormat:@"%@&report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:self.tracerDict]];
+            NSMutableDictionary *reprotParams = [NSMutableDictionary new];
+            if ([self.tracerDict isKindOfClass:[NSMutableDictionary class]]) {
+                [reprotParams addEntriesFromDictionary:self.tracerDict];
+            }
+            [reprotParams setValue:self.tracerDict[@"category_name"] forKey:@"enter_from"];
+            urlStr = [NSString stringWithFormat:@"%@&report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
         }else
         {
             urlStr = model.openUrl;
         }
         
-        NSDictionary *info = @{@"url":model.openUrl,@"fhJSParams":@{},@"title":@" "};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://webview"] userInfo:userInfo];
+        if ([urlStr isKindOfClass:[NSString class]]) {
+            NSDictionary *info = @{@"url":urlStr,@"fhJSParams":@{},@"title":@" "};
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://webview"] userInfo:userInfo];
+        }
     }
 }
 
