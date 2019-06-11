@@ -285,8 +285,8 @@
         topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight ;
     }
     if (self.isShowTopSearchPanel) {
-        self.topInset = topPadding - 40;
-        self.bottomInset = bottomPadding;
+        self.topInset = topPadding - kTopSearchButtonHeight - kSelectorViewHeight;
+        self.bottomInset = 0;
     }else
     {
         self.topInset = 40;
