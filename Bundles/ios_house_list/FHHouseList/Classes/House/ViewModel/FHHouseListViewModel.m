@@ -201,14 +201,46 @@
         }
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
         NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
+        
+        NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
         if (tracerDict) {
-            self.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDict];
+            [traceDictParams addEntriesFromDictionary:tracerDict];
+        }
+        
+        NSString *report_params = paramObj.allParams[@"report_params"];
+        if ([report_params isKindOfClass:[NSString class]]) {
+            NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+            if (report_params_dic) {
+                [traceDictParams addEntriesFromDictionary:report_params_dic];
+            }
+        }
+        
+        if (traceDictParams) {
+            self.tracerModel = [FHTracerModel makerTracerModelWithDic:traceDictParams];
             self.originFrom = self.tracerModel.originFrom;
         }
+        
+
+        
         [self configTableView];
 
     }
     return self;
+}
+
+- (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
+    NSMutableDictionary *retDic = nil;
+    if (jsonString.length > 0) {
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        retDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+        if ([retDic isKindOfClass:[NSDictionary class]] && error == nil) {
+            return retDic;
+        } else {
+            return nil;
+        }
+    }
+    return retDic;
 }
 
 -(void)configTableView
