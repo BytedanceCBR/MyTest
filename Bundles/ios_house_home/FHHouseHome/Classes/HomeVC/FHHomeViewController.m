@@ -301,12 +301,9 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewWillAppear:animated];
     
-    [self scrollToTopEnable:YES];
+    [self.homeListViewModel checkCityStatus];
     
-    if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue && [FHEnvContext sharedInstance].isRefreshFromCitySwitch)
-    {
-        [self.emptyView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
-    }
+    [self scrollToTopEnable:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -318,6 +315,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewDidAppear:animated];
     
+
     if (self.isMainTabVC) {
         //开屏广告启动不会展示，保留逻辑代码
         if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {

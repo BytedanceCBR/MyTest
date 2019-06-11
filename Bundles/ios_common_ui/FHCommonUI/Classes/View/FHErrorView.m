@@ -133,6 +133,12 @@
     return theImage;
 }
 
+- (void)setUpHomeRedBtn
+{
+    [_retryButton setBackgroundImage:[self createImageWithColor:[UIColor themeRed1]] forState:UIControlStateNormal];
+    [_retryButton setBackgroundImage:[self createImageWithColor:[[UIColor themeRed1] colorWithAlphaComponent:0.1]] forState:UIControlStateHighlighted];
+}
+
 - (void)showEmptyWithTip:(NSString *)tips errorImageName:(NSString *)imageName showRetry:(BOOL)showen {
     UIImage *image = [UIImage imageNamed:imageName];
     [self showEmptyWithTip:tips errorImage:image showRetry:showen];

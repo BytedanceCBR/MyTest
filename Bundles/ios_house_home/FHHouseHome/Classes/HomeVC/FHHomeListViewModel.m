@@ -136,7 +136,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         //       __block NSString *previousCityId = configDataModel.currentCityId;
         //订阅config变化发送网络请求
-        __block BOOL isShowLocalTest = NO;
         [FHHomeCellHelper sharedInstance].isFirstLanuch = YES;
         [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
@@ -189,7 +188,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
             
             //非首次只刷新头部
-            if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch && !isShowLocalTest) {
+            if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 [FHHomeCellHelper sharedInstance].isFirstLanuch = NO;
 
                 [TTSandBoxHelper setAppFirstLaunchForAd];
@@ -200,15 +199,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                     [self.tableViewV reloadData];
 //                }];
 
-                if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
-                {
-                    [self.homeViewController.emptyView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
-                    isShowLocalTest = YES;
-                }else
-                {
-                    isShowLocalTest = NO;
-                }
-                
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
                 
         
@@ -614,7 +604,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                         [self reloadCityEnbaleAndNoHouseData:NO];
                     }else
                     {
-                        [self.homeViewController.emptyView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+                        [self checkCityStatus];
                     }
                 }else
                 {
@@ -825,7 +815,16 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self reloadCityEnbaleAndNoHouseData:YES];
     }else
     {
-        [self.homeViewController.emptyView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+        [self.homeViewController.emptyView.retryButton setTitle:@"先逛逛发现" forState:UIControlStateNormal];
+        
+        self.homeViewController.emptyView.retryBlock = ^{
+            
+        };
+        
+        [self.homeViewController.emptyView.retryButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.homeViewController.emptyView showEmptyWithTip:@"房产资讯、大咖观点、问答百科、攻略指南" errorImage:[UIImage imageNamed:@"group-9"] showRetry:YES];
+        [self.homeViewController.emptyView.retryButton setBackgroundColor:[UIColor themeRed1]];
+        [self.homeViewController.emptyView setUpHomeRedBtn];
     }
 }
 
