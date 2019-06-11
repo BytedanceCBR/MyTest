@@ -7,6 +7,7 @@
 
 #import "FHUGCCellMultiImageView.h"
 #import "UIColor+Theme.h"
+#import "UIFont+House.h"
 #import <Masonry.h>
 #import <UIImageView+BDWebImage.h>
 #import "FHFeedUGCCellModel.h"
@@ -23,6 +24,7 @@
 @property(nonatomic, strong) NSMutableArray *imageViewList;
 @property(nonatomic, assign) CGFloat imageWidth;
 @property(nonatomic, strong) NSArray *largeImageList;
+@property(nonatomic, strong) UILabel *infoLabel;
 
 @end
 
@@ -61,9 +63,25 @@
         
         [self.imageViewList addObject:imageView];
     }
+    
+    self.infoLabel = [[UILabel alloc] init];
+    _infoLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
+    _infoLabel.textAlignment = NSTextAlignmentCenter;
+    _infoLabel.font = [UIFont themeFontRegular:10];
+    _infoLabel.textColor = [UIColor whiteColor];
+    _infoLabel.layer.cornerRadius = 4;
+    _infoLabel.layer.masksToBounds = YES;
+    _infoLabel.hidden = YES;
+    [self addSubview:_infoLabel];
 }
 
 - (void)initConstraints {
+    [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.bottom.mas_equalTo(self).offset(-4);
+        make.width.mas_equalTo(38);
+        make.height.mas_equalTo(22);
+    }];
+    
     if(self.count == 1){
         _imageWidth = self.bounds.size.width;
         UIImageView *imageView = [self.imageViewList firstObject];
@@ -72,7 +90,6 @@
             make.width.mas_equalTo(self.imageWidth);
             make.height.mas_equalTo(self.imageWidth * 251.0f/355.0f);
         }];
-        
     }else if(self.count == 2){
         _imageWidth = (self.bounds.size.width - itemPadding)/2;
         UIView *firstView = self;
@@ -90,23 +107,25 @@
             }];
             firstView = imageView;
         }
-        
     }else if(self.count >= 3){
         _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
-        UIView *firstView = self;
-        for (UIImageView *imageView in self.imageViewList) {
+        UIView *topView = self;
+        for (NSInteger i = 0; i < self.imageViewList.count; i++) {
+            UIImageView *imageView = self.imageViewList[i];
+            NSInteger row = i/3; // 0,1,2
+            NSInteger column = i%3; //0,1,2
+            CGFloat topMargin = row * _imageWidth + itemPadding * row;
+            CGFloat leftMargin = column * _imageWidth + itemPadding * column;
             [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self);
-                if(firstView == self){
-                    make.left.mas_equalTo(firstView);
-                    make.bottom.mas_equalTo(firstView);
-                }else{
-                    make.left.mas_equalTo(firstView.mas_right).offset(itemPadding);
-                }
+                make.top.mas_equalTo(self).offset(topMargin);
+                make.left.mas_equalTo(self).offset(leftMargin);
                 make.width.mas_equalTo(self.imageWidth);
                 make.height.mas_equalTo(self.imageWidth);
+                //整个view的高度到最后一个imageView的底部
+                if(i == self.imageViewList.count - 1){
+                    make.bottom.mas_equalTo(self);
+                }
             }];
-            firstView = imageView;
         }
     }else{
         
@@ -124,9 +143,12 @@
             CGFloat width = [imageModel.width floatValue];
             CGFloat height = [imageModel.height floatValue];
             [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
-            [imageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(self.imageWidth * height/width);
-            }];
+            //只对单图做重新布局，多图都是1：1
+            if(self.count == 1){
+                [imageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.height.mas_equalTo(self.imageWidth * height/width);
+                }];
+            }
         }else{
             imageView.hidden = YES;
         }
@@ -136,6 +158,13 @@
             imageView.userInteractionEnabled = YES;
         }else{
             imageView.userInteractionEnabled = NO;
+        }
+        
+        if(imageList.count > self.count){
+            self.infoLabel.hidden = NO;
+            self.infoLabel.text = [NSString stringWithFormat:@"共%i张",imageList.count];
+        }else{
+            self.infoLabel.hidden = YES;
         }
     }
 }

@@ -165,3 +165,7 @@
 "house_real_web" = "FHHouseDetailWebViewController";
 "house_fake_list" = "FHFalseHouseListViewController";
 
+//UGC相关
+"ugc_post" = "FHPostUGCViewController";
+"ugc_post_detail" = "FHPostDetailViewController";
+
