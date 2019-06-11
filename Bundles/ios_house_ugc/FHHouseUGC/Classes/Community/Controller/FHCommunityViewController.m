@@ -160,4 +160,11 @@
     [self presentViewController:navVC animated:YES completion:nil];
 }
 
+- (void)hideSegmentControl {
+    self.segmentControl.hidden = YES;
+    [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(0);
+    }];
+}
+
 @end
