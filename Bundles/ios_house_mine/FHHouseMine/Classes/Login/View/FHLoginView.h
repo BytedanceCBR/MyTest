@@ -11,15 +11,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHLoginViewDelegate <NSObject>
 
+- (void)confirm;
+- (void)sendVerifyCode;
+
+@optional
 - (void)goToUserProtocol;
 
+@optional
 - (void)goToSecretProtocol;
 
-- (void)confirm;
-
+@optional
 - (void)acceptCheckBoxChange:(BOOL)selected;
 
-- (void)sendVerifyCode;
+@optional
+- (void)otherLoginAction;
+
+@optional
+- (void)oneKeyLoginAction;
 
 @end
 
@@ -39,6 +47,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)enableConfirmBtn:(BOOL)enabled;
 
 - (void)enableSendVerifyCodeBtn:(BOOL)enabled;
+- (void)showOneKeyLoginView:(BOOL)isOneKeyLogin;
+- (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service;
+- (void)updateLoadingState:(BOOL)isLoading;
+- (void)setAgreementContent:(NSAttributedString *)attrText showAcceptBox:(BOOL)showAcceptBox;
 
 @end
 

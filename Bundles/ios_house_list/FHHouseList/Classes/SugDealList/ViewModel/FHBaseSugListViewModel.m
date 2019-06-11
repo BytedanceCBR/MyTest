@@ -287,8 +287,7 @@
 {
     NSMutableString *content = [[NSMutableString alloc] initWithString:textField.text];
     [content replaceCharactersInRange:range withString:string];
-     // add by zjing for test
-    NSLog(@"zjing---textField:%@,content:%@,string:%@",textField.text,content,string);
+//    NSLog(@"zjing---textField:%@,content:%@,string:%@",textField.text,content,string);
     if (content.length > MAX_INPUT) {
         return NO;
     }
