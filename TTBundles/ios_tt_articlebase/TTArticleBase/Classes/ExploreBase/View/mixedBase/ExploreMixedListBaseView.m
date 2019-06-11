@@ -2700,20 +2700,21 @@ TTRefreshViewDelegate
                                                                                           }
                                              
                                              
+//
+//                                             if (_categoryID) {
+//                                                 NSString *requestRecord = [FHUtils contentForKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
+//
+//                                                 if (!requestRecord && !isLoadMore && (isFindHouseRefresh || [TTSandBoxHelper isAPPFirstLaunch])) {
+//                                                     [weakSelf.listView setContentOffset:CGPointMake(0, weakSelf.listView.customTopOffset - weakSelf.listView.contentInset.top) animated:NO];
+//                                                 }
+//
+//                                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                                                     dispatch_async(dispatch_get_main_queue(), ^{
+//                                                         [FHUtils setContent:@"1" forKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
+//                                                     });
+//                                                 });
+//                                             }
                                              
-                                             if (_categoryID) {
-                                                 NSString *requestRecord = [FHUtils contentForKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
-                                                 
-                                                 if (!requestRecord && !isLoadMore && (isFindHouseRefresh || [TTSandBoxHelper isAPPFirstLaunch])) {
-                                                     [weakSelf.listView setContentOffset:CGPointMake(0, weakSelf.listView.customTopOffset - weakSelf.listView.contentInset.top) animated:NO];
-                                                 }
-                                                 
-                                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         [FHUtils setContent:@"1" forKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
-                                                     });
-                                                 });
-                                             }
                                              
                                              if (!isResponseFromRemote && weakSelf.listView.pullDownView.state == PULL_REFRESH_STATE_INIT && weakSelf.listView.customTopOffset != 0) {
                                                  [weakSelf.listView setContentOffset:CGPointMake(0, weakSelf.listView.customTopOffset - weakSelf.listView.contentInset.top) animated:NO];
