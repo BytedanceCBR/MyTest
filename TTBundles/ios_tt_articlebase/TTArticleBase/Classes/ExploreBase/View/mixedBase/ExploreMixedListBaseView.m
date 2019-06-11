@@ -2694,12 +2694,13 @@ TTRefreshViewDelegate
                                                  [weakSelf exploreMixedListTimeConsumingMonitorWithContext:operationContext];
                                                  
                                              }
-                                                                                          if (!isResponseFromRemote && weakSelf.listView.pullDownView.state == PULL_REFRESH_STATE_INIT && weakSelf.listView.customTopOffset != 0)
-                                                                                          {
-                                                                                              
-                                                                                          }
                                              
-                                             
+//                                                                                          if (!isResponseFromRemote && weakSelf.listView.pullDownView.state == PULL_REFRESH_STATE_INIT && weakSelf.listView.customTopOffset != 0)
+//                                                                                          {
+//
+//                                                                                          }
+//
+//
 //
 //                                             if (_categoryID) {
 //                                                 NSString *requestRecord = [FHUtils contentForKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
