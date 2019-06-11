@@ -402,10 +402,11 @@ def appPods
 #    ]
 
     #-----TTAccountSDK-----
-    pod 'TTAccountSDK', '4.2.0', :inhibit_warnings => false, :subspecs => [
+    pod 'TTAccountSDK', '4.5.3', :inhibit_warnings => false, :subspecs => [
         'Account',
         'Logger',
         'WeChatAccount',
+        'OneKeyLogin',
         'ThirdPartyAccountFoundation'
     #    'SinaWeiboAccount',
     #    'TencentQQAccount',
@@ -415,6 +416,13 @@ def appPods
     #    'TTAwemeAccount',
     #    'TTHotsoonAccount'
     ]
+    pod 'BDUGContainer', '1.1.2'
+    pod 'BDUGTrackerInterface', '1.1.1'
+    pod 'BDUGMonitorInterface', '1.0.0'
+    pod_binary 'TYRZApiSDK', '1.2.0'
+    pod_binary 'EAccountApiSDK', '1.1.1'
+    pod_binary 'BDUGUnionSDK', '0.1.2'
+
     #-----账号登录UI库-----
     pod 'TTAccountLogin', :path => '../AKPlugins/AKAccountLogin', :inhibit_warnings => false
     #-----账号的业务库----

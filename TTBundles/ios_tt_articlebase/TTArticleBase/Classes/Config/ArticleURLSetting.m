@@ -353,7 +353,7 @@
 }
 
 + (NSString*)userPrivateProtocolURLString {
-    return [NSString stringWithFormat:@"%@/f100/download/private_policy.html&title=隐私协议",[FHURLSettings baseURL]];
+    return [NSString stringWithFormat:@"%@/f100/download/private_policy.html&title=隐私政策",[FHURLSettings baseURL]];
 }
 
 + (NSString*)protectedProtocolURLString {
