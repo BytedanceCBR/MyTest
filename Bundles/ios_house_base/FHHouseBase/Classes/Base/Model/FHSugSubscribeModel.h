@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *trueHouseTotal;
 @property (nonatomic, copy , nullable) NSString *trueTitle;
 @property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, copy , nullable) NSString *subscribeId;
 
 @end
 
