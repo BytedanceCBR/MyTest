@@ -74,8 +74,9 @@
     cellModel.cellType = model.cellType;
     cellModel.title = model.title;
     cellModel.behotTime = model.behotTime;
-    cellModel.desc = [[NSAttributedString alloc] initWithString:@"信息来源"];
-    
+    cellModel.openUrl = model.openUrl;
+    cellModel.desc = [self generateArticleDesc:model];
+    cellModel.detailScheme = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
     NSMutableArray *cellImageList = [NSMutableArray array];
     for (FHFeedContentImageListModel *imageModel in model.imageList) {
         FHFeedUGCCellImageListModel *cellImageModel = [[FHFeedUGCCellImageListModel alloc] init];
@@ -225,6 +226,37 @@
         
         NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:distance];
         [desc appendAttributedString:distanceAStr];
+    }
+    
+    return desc;
+}
+
++ (NSAttributedString *)generateArticleDesc:(FHFeedContentModel *)model {
+    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
+    
+    if(model.source && ![model.source isEqualToString:@""]){
+        NSAttributedString *sourceAStr = [[NSAttributedString alloc] initWithString:model.source];
+        [desc appendAttributedString:sourceAStr];
+    }
+    
+    if(model.commentCount && ![model.commentCount isEqualToString:@""]){
+        NSString *comment = [NSString stringWithFormat:@"%@评论",model.commentCount];
+        if(desc.length > 0){
+            comment = [NSString stringWithFormat:@" %@",comment];
+        }
+        NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:comment];
+        [desc appendAttributedString:publishTimeAStr];
+    }
+    
+    double time = [model.behotTime doubleValue];
+    NSString *publishTime = [TTBusinessManager customtimeAndCustomdateStringSince1970:time];
+    
+    if(![publishTime isEqualToString:@""]){
+        if(desc.length > 0){
+            publishTime = [NSString stringWithFormat:@" %@",publishTime];
+        }
+        NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
+        [desc appendAttributedString:publishTimeAStr];
     }
     
     return desc;

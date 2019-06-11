@@ -206,6 +206,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, strong , nullable) FHFeedContentMiddleImageModel *middleImage ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *imageList;
+@property (nonatomic, copy , nullable) NSString *openUrl;
 @end
 
 

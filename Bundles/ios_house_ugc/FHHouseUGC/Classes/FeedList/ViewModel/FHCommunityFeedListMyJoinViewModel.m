@@ -1,13 +1,21 @@
 //
-//  FHCommunityFeedListMyJoinViewModel.m
+//  FHCommunityFeedListNearbyViewModel.m
 //  FHHouseUGC
 //
 //  Created by 谢思铭 on 2019/6/3.
 //
 
 #import "FHCommunityFeedListMyJoinViewModel.h"
+#import "FHUGCBaseCell.h"
+#import "FHTopicListModel.h"
+#import "FHHouseUGCAPI.h"
+#import "FHFeedListModel.h"
+#import <UIScrollView+Refresh.h>
+#import "FHFeedUGCCellModel.h"
+#import "TTBaseMacro.h"
+#import "TTStringHelper.h"
 
-@interface FHCommunityFeedListMyJoinViewModel ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHCommunityFeedListMyJoinViewModel () <UITableViewDelegate, UITableViewDataSource>
 
 @end
 
@@ -17,21 +25,131 @@
     self = [super initWithTableView:tableView controller:viewController];
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
-        
-        tableView.delegate = self;
-        tableView.dataSource = self;
+        [self configTableView];
     }
+    
     return self;
+}
+
+- (void)configTableView {
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    __weak typeof(self) wself = self;
+    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+        [wself requestData:NO first:NO];
+    }];
+    self.tableView.mj_footer = self.refreshFooter;
+    self.refreshFooter.hidden = YES;
+    // 下拉刷新
+    [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
+        [wself requestData:YES first:NO];
+    }];
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     [super requestData:isHead first:isFirst];
     
-    for (NSInteger i = 50; i < 100; i++) {
-        [self.dataList addObject:[NSString stringWithFormat:@"我加入的%li",(long)i]];
+    if(isFirst){
+        [self.viewController startLoading];
     }
     
-    [self.tableView reloadData];
+    __weak typeof(self) wself = self;
+    
+    NSInteger listCount = self.dataList.count;
+    double behotTime = 0;
+    
+    if(!isHead && listCount > 0){
+        FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
+        behotTime = [cellModel.behotTime doubleValue];
+    }
+    
+    //    @"weitoutiao" @"f_wenda"
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        
+        if(isFirst){
+            [self.viewController endLoading];
+        }
+        
+        [self.tableView finishPullDownWithSuccess:YES];
+        
+        FHFeedListModel *feedListModel = (FHFeedListModel *)model;
+        
+        if (!wself) {
+            return;
+        }
+        
+        if (error) {
+            //TODO: show handle error
+            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            wself.viewController.showenRetryButton = YES;
+            return;
+        }
+        
+        if(model){
+            if (isHead && feedListModel.hasMore) {
+                [wself.dataList removeAllObjects];
+            }
+            NSArray *result = [wself convertModel:feedListModel.data];
+            
+            if(isHead){
+                if(result.count > 0){
+                    [wself.cellHeightCaches removeAllObjects];
+                }
+                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
+            }else{
+                [wself.dataList addObjectsFromArray:result];
+            }
+            wself.tableView.hasMore = feedListModel.hasMore;
+            [wself updateTableViewWithMoreData:feedListModel.hasMore];
+            wself.viewController.hasValidateData = wself.dataList.count > 0;
+            
+            if(wself.dataList.count > 0){
+                wself.refreshFooter.hidden = NO;
+                [wself.viewController.emptyView hideEmptyView];
+            }else{
+                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                wself.viewController.showenRetryButton = YES;
+            }
+            [wself.tableView reloadData];
+            
+            //            if(isFirst){
+            //                self.originSearchId = self.searchId;
+            //                [self addEnterCategoryLog];
+            //            }
+            
+            NSString *refreshTip = feedListModel.tips.displayInfo;
+            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""]){
+                [self.viewController showNotify:refreshTip];
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            }
+            
+            //            if(!isHead){
+            //                [self addRefreshLog];
+            //            }
+        }
+    }];
+}
+
+- (void)updateTableViewWithMoreData:(BOOL)hasMore {
+    self.tableView.mj_footer.hidden = NO;
+    if (hasMore) {
+        [self.tableView.mj_footer endRefreshing];
+    }else {
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }
+}
+
+- (NSArray *)convertModel:(NSArray *)feedList {
+    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+    for (FHFeedListDataModel *itemModel in feedList) {
+        NSString *content = itemModel.content;
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
+        if(cellModel){
+            [resultArray addObject:cellModel];
+        }
+    }
+    return resultArray;
 }
 
 #pragma mark - UITableViewDataSource
@@ -40,17 +158,25 @@
     return [self.dataList count];
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
+    self.cellHeightCaches[tempKey] = cellHeight;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+    NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
+    FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+        Class cellClass = NSClassFromString(cellIdentifier);
+        cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
     if(indexPath.row < self.dataList.count){
-        cell.textLabel.text = self.dataList[indexPath.row];
+        [cell refreshWithData:cellModel];
     }
     
     return cell;
@@ -58,8 +184,45 @@
 
 #pragma mark - UITableViewDelegate
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 50.0f;
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    NSNumber *cellHeight = self.cellHeightCaches[tempKey];
+    if (cellHeight) {
+        return [cellHeight floatValue];
+    }
+    return UITableViewAutomaticDimension;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+    [self jumpToDetail:cellModel];
+}
+
+- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel {
+    if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle){
+        BOOL canOpenURL = NO;
+        if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
+            NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
+            if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                canOpenURL = YES;
+                [[UIApplication sharedApplication] openURL:url];
+            }
+            else if([[TTRoute sharedRoute] canOpenURL:url]){
+                canOpenURL = YES;
+                
+//                if ([article isImageSubject] && ![SSCommonLogic appGalleryTileSwitchOn] && [SSCommonLogic appGallerySlideOutSwitchOn]) {
+//
+//                    [statParams setValue:@(0) forKey:@"animated"];
+//                }
+                //问答
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            }
+        }else{
+            //文章
+            NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        }
+    }
 }
 
 @end

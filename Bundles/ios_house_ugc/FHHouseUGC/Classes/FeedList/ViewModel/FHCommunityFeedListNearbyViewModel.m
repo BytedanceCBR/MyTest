@@ -62,7 +62,7 @@
     }
     
 //    @"weitoutiao" @"f_wenda"
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:@"weitoutiao" behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(isFirst){
             [self.viewController endLoading];
@@ -150,40 +150,13 @@
     return resultArray;
 }
 
-//用来根据model计算类型
-- (FHUGCFeedListCellSubType)getFeedType:(FHFeedUGCCellModel *)model {
-    FHUGCFeedListCellSubType type = FHUGCFeedListCellSubTypePureTitle;
-    
-
-//    NSInteger cellType = [model.cellType integerValue];
-    //文章是0， 帖子32
-//    NSArray *imageList = model.imageList;
-//    if(imageList.count >= 3){
-//        type = FHUGCFeedListCellTypeMultiImage;
-//    }else if(imageList.count == 2){
-//        type = FHUGCFeedListCellTypeTwoImage;
-//    }else if(imageList.count == 1){
-//        type = FHUGCFeedListCellTypeSingleImage;
-//    }else{
-        type = FHUGCFeedListCellSubTypeSingleImage;
-//    }
-//    if(imageList.count > 0){
-//        type = FHUGCFeedListCellSubTypeArticleMultiImage;
-//    }else{
-//        type = FHUGCFeedListCellSubTypeArticlePureTitle;
-//    }
-    
-    return  type;
-}
-
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.dataList count];
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
