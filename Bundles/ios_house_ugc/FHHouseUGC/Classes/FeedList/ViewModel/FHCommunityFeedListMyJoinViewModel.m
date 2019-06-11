@@ -209,11 +209,6 @@
             }
             else if([[TTRoute sharedRoute] canOpenURL:url]){
                 canOpenURL = YES;
-                
-//                if ([article isImageSubject] && ![SSCommonLogic appGalleryTileSwitchOn] && [SSCommonLogic appGallerySlideOutSwitchOn]) {
-//
-//                    [statParams setValue:@(0) forKey:@"animated"];
-//                }
                 //问答
                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
             }
