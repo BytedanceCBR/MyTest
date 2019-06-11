@@ -15,17 +15,15 @@
 
 #define leftMargin 20
 #define rightMargin 20
-#define maxLines 3
+#define kFHMaxLines 0
 
 @interface FHPostDetailCell ()
 
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
-@property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) UIView *bottomSepView;
-
-@property (nonatomic, assign)   NSInteger       imageCount;
+@property(nonatomic ,assign) NSInteger       imageCount;
 
 @end
 
@@ -34,7 +32,6 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
-    [self initUIs];
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -46,12 +43,12 @@
     return self;
 }
 
-- (void)initUIs {
-    [self initViews];
-    [self initConstraints];
+- (void)setupUIs {
+    [self setupViews];
+    [self setupConstraints];
 }
 
-- (void)initViews {
+- (void)setupViews {
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_userInfoView];
     
@@ -61,15 +58,12 @@
     self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:self.imageCount];
     [self.contentView addSubview:_multiImageView];
     
-    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
-    [self.contentView addSubview:_bottomView];
-    
     self.bottomSepView = [[UIView alloc] init];
-    _bottomSepView.backgroundColor = [UIColor themeGray7];
+    _bottomSepView.backgroundColor = [UIColor themeGray6];
     [self.contentView addSubview:_bottomSepView];
 }
 
-- (void)initConstraints {
+- (void)setupConstraints {
     [self.userInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentView).offset(20);
         make.left.right.mas_equalTo(self.contentView);
@@ -87,17 +81,13 @@
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
     }];
-    
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(30);
-    }];
-    
+
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.bottomView.mas_bottom).offset(20);
-        make.bottom.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(5);
+        make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(20);
+        make.left.mas_equalTo(self.contentView).offset(leftMargin);
+        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        make.bottom.mas_equalTo(self.contentView).offset(-20);
+        make.height.mas_equalTo(1);
     }];
 }
 
@@ -119,17 +109,13 @@
     }
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
     self.imageCount = cellModel.largeImageList.count;
-    [self initUIs];
+    [self setupUIs];
     // 设置userInfo
     self.userInfoView.userName.text = cellModel.user.name;
     self.userInfoView.descLabel.attributedText = cellModel.desc;
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
-    // 设置底部
-    self.bottomView.position.text = @"左家庄";
-    [self.bottomView.likeBtn setTitle:cellModel.diggCount forState:UIControlStateNormal];
-    [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
     // 内容
-    [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
+    [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:kFHMaxLines];
     // 图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
 }
