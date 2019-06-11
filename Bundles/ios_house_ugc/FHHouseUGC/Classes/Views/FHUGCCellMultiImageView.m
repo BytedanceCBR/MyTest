@@ -12,6 +12,7 @@
 #import "FHFeedUGCCellModel.h"
 #import "TTPhotoScrollViewController.h"
 #import "TTBaseMacro.h"
+#import "TTInteractExitHelper.h"
 
 #define itemPadding 4
 #define kMaxCount 9
@@ -154,6 +155,7 @@
 
 - (void)imageTouched:(UIView *)sender {
     TTPhotoScrollViewController * controller = [[TTPhotoScrollViewController alloc] init];
+    controller.finishBackView = [TTInteractExitHelper getSuitableFinishBackViewWithCurrentContext];
     NSInteger picCount = self.largeImageList.count;
     if (picCount > kMaxCount) {
         picCount = kMaxCount;
