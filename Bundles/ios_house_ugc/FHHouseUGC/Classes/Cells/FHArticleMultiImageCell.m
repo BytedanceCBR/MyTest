@@ -150,6 +150,25 @@
             }
         }
     }
+    
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        //内容
+        self.contentLabel.text = cellModel.title;
+        self.bottomView.descLabel.attributedText = cellModel.desc;
+        //图片
+        NSArray *imageList = cellModel.imageList;
+        for (NSInteger i = 0; i < self.imageViewList.count; i++) {
+            UIImageView *imageView = self.imageViewList[i];
+            if(i < imageList.count){
+                FHFeedUGCCellImageListModel *imageModel = imageList[i];
+                imageView.hidden = NO;
+                [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+            }else{
+                imageView.hidden = YES;
+            }
+        }
+    }
 }
 
 @end

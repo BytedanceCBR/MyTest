@@ -98,13 +98,13 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if([data isKindOfClass:[FHFeedContentModel class]]){
-        FHFeedContentModel *model = (FHFeedContentModel *)data;
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         //内容
-        self.contentLabel.text = model.title;
-        self.bottomView.descLabel.text = @"信息来源";
-        
-        FHFeedContentImageListModel *imageModel = [model.imageList firstObject];
+        self.contentLabel.text = cellModel.title;
+        self.bottomView.descLabel.attributedText = cellModel.desc;
+        //图片
+        FHFeedUGCCellImageListModel *imageModel = [cellModel.imageList firstObject];
         if(imageModel){
             [self.singleImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
         }

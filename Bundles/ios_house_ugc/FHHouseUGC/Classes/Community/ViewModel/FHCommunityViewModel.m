@@ -8,6 +8,7 @@
 #import "FHCommunityViewModel.h"
 #import "FHCommunityViewController.h"
 #import "FHCommunityCollectionCell.h"
+#import "FHHouseUGCHeader.h"
 
 #define kCellId @"cellId"
 #define maxCellCount 3
@@ -17,6 +18,7 @@
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , weak) FHCommunityViewController *viewController;
 @property(nonatomic , strong) NSMutableArray *cellArray;
+@property(nonatomic , strong) NSArray *dataArray;
 @property(nonatomic , assign) NSInteger currentTabIndex;
 @property(nonatomic , assign) BOOL isFirstLoad;
 
@@ -40,8 +42,18 @@
         self.viewController = (FHCommunityViewController *)viewController;
         
         [self initDataArray];
+        //临时版本使用，UGC上线后去掉
+//        [self initForTempVersion];
     }
     return self;
+}
+
+- (void)initForTempVersion {
+    self.currentTabIndex = 0;
+    self.dataArray = @[
+                       @(FHCommunityCollectionCellTypeDiscovery)
+                       ];
+    [self.viewController hideSegmentControl];
 }
 
 - (void)initDataArray {
@@ -50,6 +62,12 @@
     for (NSInteger i = 0; i < maxCellCount; i++) {
         [self.cellArray addObject:[NSNull null]];
     }
+    
+    self.dataArray = @[
+                       @(FHCommunityCollectionCellTypeMyJoin),
+                       @(FHCommunityCollectionCellTypeNearby),
+                       @(FHCommunityCollectionCellTypeDiscovery)
+                       ];
 }
 
 - (void)selectCurrentTabIndex {
@@ -72,7 +90,7 @@
 - (void)initCell {
     if([self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
         FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
-        cell.type = self.currentTabIndex;
+        cell.type = [self.dataArray[self.currentTabIndex] integerValue];
     }
 }
 
@@ -86,7 +104,7 @@
 
 //每个section的item个数
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return maxCellCount;
+    return self.dataArray.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
