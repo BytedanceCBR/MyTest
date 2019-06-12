@@ -11,12 +11,13 @@
 
 #define cellId @"cellId"
 
-@interface FHMyJoinViewModel ()<UICollectionViewDelegate,UICollectionViewDataSource>
+@interface FHMyJoinViewModel ()<UICollectionViewDelegate,UICollectionViewDataSource,FHMyJoinNeighbourhoodViewDelegate>
 
 @property(nonatomic, strong) UICollectionView *collectionView;
 @property(nonatomic, weak) FHMyJoinViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *dataList;
+@property(nonatomic, assign) BOOL isShowMessage;
 
 @end
 
@@ -42,6 +43,34 @@
         [self.dataList addObject:[NSString stringWithFormat:@"小区%li",(long)i]];
     }
     [self.collectionView reloadData];
+}
+
+- (void)refreshMessage {
+    [self.viewController.neighbourhoodView.messageView refreshWithUrl:@"http://p1.pstatp.com/thumb/fea7000014edee1159ac" messageCount:2];
+}
+
+- (void)showMessageView {
+    self.isShowMessage = YES;
+    self.viewController.neighbourhoodView.messageView.hidden = NO;
+    
+    CGRect frame = self.viewController.neighbourhoodView.frame;
+    frame.size.height = 258;
+    self.viewController.neighbourhoodView.frame = frame;
+    
+    self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
+    
+    [self refreshMessage];
+}
+
+- (void)hideMessageView {
+    self.isShowMessage = NO;
+    self.viewController.neighbourhoodView.messageView.hidden = YES;
+    
+    CGRect frame = self.viewController.neighbourhoodView.frame;
+    frame.size.height = 200;
+    self.viewController.neighbourhoodView.frame = frame;
+    
+    self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
 }
 
 #pragma mark - collection
@@ -80,6 +109,16 @@
 //    if (self.displayCellBlk) {
 //        self.displayCellBlk(indexPath.row);
 //    }
+}
+
+#pragma mark - FHMyJoinNeighbourhoodViewDelegate
+
+- (void)gotoMore {
+    if(self.isShowMessage){
+        [self hideMessageView];
+    }else{
+        [self showMessageView];
+    }
 }
 
 @end
