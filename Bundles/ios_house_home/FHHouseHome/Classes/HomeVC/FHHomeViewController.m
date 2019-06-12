@@ -30,6 +30,7 @@
 #import "TTTabBarController.h"
 #import <TTTopBar.h>
 #import <FHHomeSearchPanelViewModel.h>
+#import <ExploreLogicSetting.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -82,6 +83,8 @@ static CGFloat const kSectionHeaderHeight = 38;
     } else {
         // Fallback on earlier versions
     }
+    
+    [self registerNotifications];
         
     self.mainTableView.sectionFooterHeight = 0;
     self.mainTableView.sectionHeaderHeight = 0;
@@ -130,6 +133,18 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (_isMainTabVC) {
         [self.view bringSubviewToFront:self.topBar];
     }
+}
+
+#pragma mark - notifications
+- (void)registerNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainTabbarClicked:) name:kMainTabbarKeepClickedNotification object:nil];
+}
+
+- (void)mainTabbarClicked:(NSNotification *)notification
+{
+    self.homeListViewModel.reloadType = TTReloadTypeTab;
+    [self pullAndRefresh];
 }
 
 - (void)setUpMainTableConstraints

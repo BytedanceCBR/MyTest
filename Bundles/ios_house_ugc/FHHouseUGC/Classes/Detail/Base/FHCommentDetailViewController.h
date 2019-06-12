@@ -16,10 +16,14 @@ typedef NS_ENUM (NSInteger , FHUGCPostType){
     FHUGCPostTypeWenDa      = 2, // 问答
 };
 
+@class FHCommentDetailViewModel;
+
 // 带有评论的 详情页基类
 @interface FHCommentDetailViewController : FHBaseViewController
 
 @property (nonatomic, assign)   FHUGCPostType       postType;
+@property (nonatomic, strong)   UITableView       *tableView;
+@property (nonatomic, strong)   FHCommentDetailViewModel       *viewModel;
 
 @end
 
