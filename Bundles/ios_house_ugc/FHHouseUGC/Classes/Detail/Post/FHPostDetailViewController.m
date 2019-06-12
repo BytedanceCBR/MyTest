@@ -59,15 +59,7 @@
     self.weakViewModel.forumID = self.fid;
     self.weakViewModel.category = @"test";// add by zyk
     // 全部评论
-    NSString *commentStr = @"全部评论";
-    if (self.comment_count > 0) {
-        commentStr = [NSString stringWithFormat:@"全部评论(%ld)",self.comment_count];
-    } else {
-        commentStr = [NSString stringWithFormat:@"全部评论(0)"];
-    }
-    self.commentAllFooter = [[FHDetailCommentAllFooter alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 52)];
-    self.commentAllFooter.allCommentLabel.text = commentStr;
-    self.tableView.tableFooterView = self.commentAllFooter;
+    [self commentCountChanged];
     // 列表页数据
     if (self.detailData) {
         [self.viewModel.items addObject:self.detailData];
@@ -97,6 +89,10 @@
 }
 
 - (void)commentCountChanged {
+    if (self.commentAllFooter == nil) {
+        self.commentAllFooter = [[FHDetailCommentAllFooter alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 52)];
+        self.tableView.tableFooterView = self.commentAllFooter;
+    }
     // 全部评论
     NSString *commentStr = @"全部评论";
     if (self.comment_count > 0) {

@@ -694,9 +694,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
 //    commentManager.categoryID = self.detailModel.categoryID;
 //    commentManager.logPb = self.detailModel.logPb;
     
-    if (self.commentWriteView == nil) {
-        self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
-    }
+    self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
     
     self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
     
@@ -723,6 +721,17 @@ TTDetailModel *tt_detailModel;// test add by zyk
 - (BOOL)p_needShowToolBarView
 {
     return YES;
+}
+
+#pragma mark - TTModalContainerDelegate
+
+- (void)didDismissModalContainerController:(TTModalContainerController *)container {
+    if ([self.commentViewController respondsToSelector:@selector(tt_reloadData)]) {
+        [self.commentViewController tt_reloadData];
+    }
+    [self scrollViewDidScroll:self.mainScrollView];
+    // 续上评论列表时间
+    self.commentShowDate = [NSDate date];
 }
 
 #pragma mark - UIScrollViewDelegate
