@@ -202,14 +202,16 @@
     dict[@"data"] = cellModel;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     FHFeedUGCContentModel *contentModel = cellModel.originData;
-//    TTGroupModel *gr = [TTGroupModel alloc] initWithGroupID:cellModel itemID:<#(NSString *)#> impressionID:<#(NSString *)#> aggrType:<#(NSInteger)#>
     NSString *routeUrl = @"sslocal://ugc_post_detail";
     if (contentModel && [contentModel isKindOfClass:[FHFeedUGCContentModel class]]) {
         NSString *schema = contentModel.schema;
         if (schema.length > 0) {
             routeUrl = [schema stringByReplacingOccurrencesOfString:@"sslocal://thread_detail" withString:@"sslocal://ugc_post_detail"];
         }
+        // 记得 如果是push 和 url要添加评论数 点赞数以及自己是否点赞
+        routeUrl = [NSString stringWithFormat:@"%@&comment_count=%@&digg_count=%@&user_digg=%@",routeUrl,contentModel.commentCount,contentModel.diggCount,contentModel.userDigg];
     }
+    
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }

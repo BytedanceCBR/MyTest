@@ -17,7 +17,7 @@
 @property (nonatomic, assign) int64_t tid; //帖子ID
 @property (nonatomic, assign) int64_t fid; //话题ID
 @property (nonatomic, copy) NSString *cid; //关心ID
-
+// 列表页数据
 @property (nonatomic, strong)   FHFeedUGCCellModel       *detailData;
 @property (nonatomic, strong)   FHDetailCommentAllFooter       *commentAllFooter;
 @property (nonatomic, weak)     FHPostDetailViewModel       *weakViewModel;
@@ -34,12 +34,18 @@
         NSDictionary *params = paramObj.allParams;
         int64_t tid = [[paramObj.allParams objectForKey:@"tid"] longLongValue];
         int64_t fid = [[paramObj.allParams objectForKey:@"fid"] longLongValue];
-        
-//        TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:[NSString stringWithFormat:@"%lld", self.uniqueID] itemID:self.itemID impressionID:nil aggrType:[self.aggrType integerValue]];
-        
+        // 帖子id
         self.tid = tid;
         self.fid = fid;
-        self.detailData = params[@"data"];// 列表页数据
+        TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:[NSString stringWithFormat:@"%lld", tid] itemID:[NSString stringWithFormat:@"%lld", tid] impressionID:nil aggrType:1];
+        self.groupModel = groupModel;
+        // 评论数 点赞数等
+        self.comment_count = [[paramObj.allParams objectForKey:@"comment_count"] integerValue];
+        self.digg_count = [[paramObj.allParams objectForKey:@"digg_count"] integerValue];
+        self.user_digg = [[paramObj.allParams objectForKey:@"user_digg"] integerValue];
+        // 列表页数据
+        self.detailData = params[@"data"];
+        // add by zyk 注意埋点
     }
     return self;
 }
@@ -54,8 +60,8 @@
     self.weakViewModel.category = @"test";// add by zyk
     // 全部评论
     NSString *commentStr = @"全部评论";
-    if ([self.detailData.commentCount integerValue] > 0) {
-        commentStr = [NSString stringWithFormat:@"全部评论(%@)",self.detailData.commentCount];
+    if (self.comment_count > 0) {
+        commentStr = [NSString stringWithFormat:@"全部评论(%ld)",self.comment_count];
     } else {
         commentStr = [NSString stringWithFormat:@"全部评论(0)"];
     }

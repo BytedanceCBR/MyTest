@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
+#import "Article.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,6 +25,10 @@ typedef NS_ENUM (NSInteger , FHUGCPostType){
 @property (nonatomic, assign)   FHUGCPostType       postType;
 @property (nonatomic, strong)   UITableView       *tableView;
 @property (nonatomic, strong)   FHCommentDetailViewModel       *viewModel;
+@property (nonatomic, strong)   TTGroupModel       *groupModel;
+@property (nonatomic, assign)   NSInteger       comment_count;// 评论数
+@property (nonatomic, assign)   NSInteger       digg_count;// 点赞数
+@property (nonatomic, assign)   NSInteger       user_digg;// 当前用户是否点赞
 
 @end
 
