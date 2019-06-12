@@ -23,7 +23,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self initView];
-    [self initConstraints];
+    [self initViewModel];
 }
 
 - (void)initView {
@@ -40,8 +40,14 @@
     [self.view addSubview:vc.view];
 }
 
-- (void)initConstraints {
-    
+- (void)initViewModel {
+    FHMyJoinViewModel *viewModel = [[FHMyJoinViewModel alloc] initWithCollectionView:self.neighbourhoodView.collectionView controller:self];
+    self.viewModel = viewModel;
+    [self startLoadData];
+}
+
+- (void)startLoadData {
+    [self.viewModel requestData];
 }
 
 @end

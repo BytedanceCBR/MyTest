@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMyJoinNeighbourhoodView : UIView
 
+@property(nonatomic, strong) UICollectionView *collectionView;
+
 @end
 
 NS_ASSUME_NONNULL_END
