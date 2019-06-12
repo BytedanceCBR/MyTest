@@ -1086,24 +1086,29 @@
         self.fakeImageView = nil;
     }
     
-    self.fakeImageViewContainer = [UIView new];
-    [self.fakeImageViewContainer setBackgroundColor:[UIColor whiteColor]];
-    self.fakeImageViewContainer.alpha = 0.5;
-    [self.fakeImageViewContainer setFrame:CGRectMake(0, 0, self.mainImageView.frame.size.width, self.mainImageView.frame.size.height)];
-    [self.mainImageView addSubview:self.fakeImageViewContainer];
-    
-    
-    self.fakeImageView = [UIImageView new];
-    if (urlStr) {
-        [self.fakeImageView bd_setImageWithURL:[NSURL URLWithString:urlStr]];
+    if(urlStr)
+    {
+        self.fakeImageViewContainer = [UIView new];
+        [self.fakeImageViewContainer setBackgroundColor:[UIColor whiteColor]];
+        self.fakeImageViewContainer.alpha = 0.5;
+        [self.fakeImageViewContainer setFrame:CGRectMake(0, 0, self.mainImageView.frame.size.width, self.mainImageView.frame.size.height)];
+        [self.mainImageView addSubview:self.fakeImageViewContainer];
+        
+        
+        self.fakeImageView = [UIImageView new];
+        if (urlStr) {
+            [self.fakeImageView bd_setImageWithURL:[NSURL URLWithString:urlStr]];
+        }
+        [self.mainImageView addSubview:self.fakeImageView];
+        
+        [self.fakeImageView setFrame:CGRectMake((self.mainImageView.frame.size.width - 100) / 2, (self.mainImageView.frame.size.height - 39) / 2, 100, 39)];
     }
-    [self.mainImageView addSubview:self.fakeImageView];
     
-    [self.fakeImageView setFrame:CGRectMake((self.mainImageView.frame.size.width - 100) / 2, (self.mainImageView.frame.size.height - 39) / 2, 100, 39)];
-    
-    self.tagLabel.text = [NSString stringWithFormat:@" %@",sourceStr];
-    self.tagLabel.textColor = [UIColor themeGray3];
-    self.tagLabel.font = [UIFont themeFontRegular:12];
+    if (sourceStr) {
+        self.tagLabel.text = [NSString stringWithFormat:@" %@",sourceStr];
+        self.tagLabel.textColor = [UIColor themeGray3];
+        self.tagLabel.font = [UIFont themeFontRegular:12];
+    }
     
     self.imageTagLabel.hidden = YES;
     self.imageTagLabelBgView.hidden = YES;

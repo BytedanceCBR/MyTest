@@ -136,7 +136,7 @@
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
         if (indexPath.row < self.modelsArray.count) {
             JSONModel *model = self.modelsArray[indexPath.row];
-            [cell refreshTopMargin: 0];
+            [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
             [cell updateHomeSmallImageHouseCellModel:model andType:self.currentHouseType];
         }
         return cell;

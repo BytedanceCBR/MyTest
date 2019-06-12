@@ -183,7 +183,7 @@
     [_segementContentView addSubview:_allFalseHouseBtn];
     
     [_allFalseHouseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.segementContentView).offset(0);
+        make.left.equalTo(self.falseHouseUnitLabel.mas_right).offset(3);
         make.centerY.equalTo(_falseHouseLabel);
         make.width.mas_equalTo(12);
         make.height.mas_equalTo(12);
@@ -223,19 +223,31 @@
     }
     
     FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)self.currentModel;
-    if ([model.openUrl isKindOfClass:[NSString class]]) {
+    if ([model isKindOfClass:[FHSugListRealHouseTopInfoModel class]] &&[model.openUrl isKindOfClass:[NSString class]]) {
         
         NSString *urlStr = nil;
         if ([self.tracerDict isKindOfClass:[NSDictionary class]] && model.openUrl) {
-           urlStr = [NSString stringWithFormat:@"%@&report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:self.tracerDict]];
+            NSMutableDictionary *reprotParams = [NSMutableDictionary new];
+            if ([self.tracerDict isKindOfClass:[NSMutableDictionary class]]) {
+                [reprotParams addEntriesFromDictionary:self.tracerDict];
+            }
+            [reprotParams setValue:self.tracerDict[@"category_name"] forKey:@"enter_from"];
+            if ([model.openUrl containsString:@"?"]) {
+                urlStr = [NSString stringWithFormat:@"%@&report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
+            }else
+            {
+                urlStr = [NSString stringWithFormat:@"%@?report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
+            }
         }else
         {
             urlStr = model.openUrl;
         }
         
-        NSDictionary *info = @{@"url":model.openUrl,@"fhJSParams":@{},@"title":@" "};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://webview"] userInfo:userInfo];
+        if ([urlStr isKindOfClass:[NSString class]]) {
+            NSDictionary *info = @{@"url":urlStr,@"fhJSParams":@{},@"title":@" "};
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://webview"] userInfo:userInfo];
+        }
     }
 }
 

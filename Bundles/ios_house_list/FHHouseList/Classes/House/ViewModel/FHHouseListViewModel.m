@@ -202,14 +202,46 @@
         }
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
         NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
+        
+        NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
         if (tracerDict) {
-            self.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDict];
+            [traceDictParams addEntriesFromDictionary:tracerDict];
+        }
+        
+        NSString *report_params = paramObj.allParams[@"report_params"];
+        if ([report_params isKindOfClass:[NSString class]]) {
+            NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+            if (report_params_dic) {
+                [traceDictParams addEntriesFromDictionary:report_params_dic];
+            }
+        }
+        
+        if (traceDictParams) {
+            self.tracerModel = [FHTracerModel makerTracerModelWithDic:traceDictParams];
             self.originFrom = self.tracerModel.originFrom;
         }
+        
+
+        
         [self configTableView];
 
     }
     return self;
+}
+
+- (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
+    NSMutableDictionary *retDic = nil;
+    if (jsonString.length > 0) {
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        retDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+        if ([retDic isKindOfClass:[NSDictionary class]] && error == nil) {
+            return retDic;
+        } else {
+            return nil;
+        }
+    }
+    return retDic;
 }
 
 -(void)configTableView
@@ -307,6 +339,12 @@
             if (isFromRecommend) {
                 [self requestRecommendErshouHouseListData:isRefresh query:query offset:offset searchId:self.recommendSearchId];
             } else {
+                if ([query isKindOfClass:[NSString class]] && query.length > 0) {
+                    query = [query stringByAppendingString:@"&channel_id=94349530167"];
+                }else
+                {
+                    query = @"channel_id=94349530167";
+                }
                 self.query = query;
                 [self requestErshouHouseListData:isRefresh query:query offset:offset searchId:searchId];
             }
@@ -1502,7 +1540,6 @@
     NSString *openUrl = [urlStr stringByRemovingPercentEncoding];
     if (openUrl.length > 0) {
         openUrl = [openUrl stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-        // add by zjing for test
 //        openUrl = @"fschema://neighborhood_sales_list?&title_text=%e7%a2%a7%e6%a1%82%e5%9b%ad%e6%b5%b7%e6%98%8c%e5%a4%a9%e6%be%9c%e4%b8%89%e6%9c%9f(12)&neighborhood_id=6581416553890185480&element_from=house_deal";
         NSURL *theUrl = [NSURL URLWithString:openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:theUrl userInfo:userInfo];
