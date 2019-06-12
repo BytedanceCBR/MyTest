@@ -30,6 +30,8 @@ typedef NS_ENUM (NSInteger , FHUGCPostType){
 @property (nonatomic, assign)   NSInteger       digg_count;// 点赞数
 @property (nonatomic, assign)   NSInteger       user_digg;// 当前用户是否点赞
 
+- (void)commentCountChanged;
+
 @end
 
 NS_ASSUME_NONNULL_END

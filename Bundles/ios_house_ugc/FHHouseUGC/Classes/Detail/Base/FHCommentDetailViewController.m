@@ -203,6 +203,10 @@ TTDetailModel *tt_detailModel;// test add by zyk
                                                object:nil];
 }
 
+- (void)commentCountChanged {
+    
+}
+
 - (void)p_removeObserver {
     
 }
@@ -272,9 +276,9 @@ TTDetailModel *tt_detailModel;// test add by zyk
         }
     }
     // article
-    if ([object isKindOfClass:[Article class]]) {
-        [self p_refreshToolbarView];
-    }
+//    if ([object isKindOfClass:[Article class]]) {
+//        [self p_refreshToolbarView];
+//    }
 }
 
 - (void)p_tableViewContentSizeChange {
@@ -530,6 +534,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController digCommentWithCommentModel:(id<TTCommentModelProtocol>)model
 {
+    // 对评论 点赞
     if (!model.userDigged) {
 //        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
 //        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
@@ -646,8 +651,8 @@ TTDetailModel *tt_detailModel;// test add by zyk
 - (void)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController
              refreshCommentCount:(int)count
 {
-//    self.detailModel.article.commentCount = count;
-//    [self.detailModel.article save];
+    self.comment_count = count;
+    [self commentCountChanged];
 }
 
 - (void)tt_commentViewControllerFooterCellClicked:(nonnull id<TTCommentViewControllerProtocol>)ttController
@@ -748,9 +753,8 @@ TTDetailModel *tt_detailModel;// test add by zyk
     self.commentViewController.hasSelfShown = YES;
     if(![responseData objectForKey:@"error"])  {
         [commentView dismissAnimated:YES];
-//        Article *article = self.detailModel.article;
-//        article.commentCount = article.commentCount + 1;
         self.comment_count += 1;
+        [self commentCountChanged];
         NSMutableDictionary * data = [NSMutableDictionary dictionaryWithDictionary:[responseData objectForKey:@"data"]];
         [self.commentViewController tt_insertCommentWithDict:data];
         [self.commentViewController tt_markStickyCellNeedsAnimation];

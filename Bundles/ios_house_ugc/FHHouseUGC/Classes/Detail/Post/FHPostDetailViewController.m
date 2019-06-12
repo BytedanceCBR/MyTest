@@ -95,6 +95,17 @@
         [self startLoadData];
     }
 }
+
+- (void)commentCountChanged {
+    // 全部评论
+    NSString *commentStr = @"全部评论";
+    if (self.comment_count > 0) {
+        commentStr = [NSString stringWithFormat:@"全部评论(%ld)",self.comment_count];
+    } else {
+        commentStr = [NSString stringWithFormat:@"全部评论(0)"];
+    }
+    self.commentAllFooter.allCommentLabel.text = commentStr;
+}
 /*
  
  
