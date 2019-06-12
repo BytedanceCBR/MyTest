@@ -12,6 +12,7 @@
 #import "FHFeedListModel.h"
 #import <UIScrollView+Refresh.h>
 #import "FHFeedUGCCellModel.h"
+#import "Article.h"
 
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -200,8 +201,16 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"data"] = cellModel;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_detail"];
+    FHFeedUGCContentModel *contentModel = cellModel.originData;
+//    TTGroupModel *gr = [TTGroupModel alloc] initWithGroupID:cellModel itemID:<#(NSString *)#> impressionID:<#(NSString *)#> aggrType:<#(NSInteger)#>
+    NSString *routeUrl = @"sslocal://ugc_post_detail";
+    if (contentModel && [contentModel isKindOfClass:[FHFeedUGCContentModel class]]) {
+        NSString *schema = contentModel.schema;
+        if (schema.length > 0) {
+            routeUrl = [schema stringByReplacingOccurrencesOfString:@"sslocal://thread_detail" withString:@"sslocal://ugc_post_detail"];
+        }
+    }
+    NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 

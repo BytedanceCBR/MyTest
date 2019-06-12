@@ -24,6 +24,7 @@
 #import "TTImageView.h"
 #import "JSONAdditions.h"
 #import "NSDictionary+TTAdditions.h"
+#import "Article.h"
 
 @interface FHPostDetailViewModel ()
 
@@ -57,8 +58,6 @@
     if (self) {
         self.threadID = threadID;
         self.forumID = forumID;
-//        self.repostOriginType = TTThreadRepostOriginTypeNone;
-//        [self firstInitWithDatabaseAndCache];
     }
     return self;
 }
@@ -69,6 +68,19 @@
 }
 
 - (void)dealloc {
+}
+
+// startLoadData
+- (void)startLoadData {
+    __weak typeof(self) wSelf = self;
+    [self requestV3InfoWithCompletion:^(NSError *error, uint64_t networkConsume) {
+        [wSelf.detailController endLoading];
+        if (error) {
+            
+        } else {
+            
+        }
+    }];
 }
 
 #pragma mark - Public
@@ -96,7 +108,10 @@
                     } else {
                         NSError *jsonParseError;
                         NSDictionary *threadDict = [NSString tt_objectWithJSONString:dataStr error:&jsonParseError];
-                        
+//                        Article *art = [Article objectWithDictionary:threadDict];
+////                        [art updateWithDictionary:threadDict];
+//                        TTGroupModel *mod =  art.groupModel;
+                        int i = 0;
                         //如果用户点进详情页时候，该条帖子被主人编辑过了，这个时候详情页的帖子内容和外部不一样，所以发送这个通知，将外面出现的旧帖子内容进行更新
 //                        if ([self.thread.versionCode integerValue] < [threadDict tt_intValueForKey:@"version"]) {
 //                            NSMutableDictionary *info = [NSMutableDictionary dictionary];
@@ -130,6 +145,9 @@
                 completion(error,total);
             }
         }];
+    } else {
+        [self.detailController endLoading];
+        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
     }
 }
 

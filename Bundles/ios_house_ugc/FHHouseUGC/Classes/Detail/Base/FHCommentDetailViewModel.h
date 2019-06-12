@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   FHUGCPostType postType; // 帖子类型
 
 @property(nonatomic , weak) UITableView *tableView;
-@property(nonatomic , weak) FHCommentDetailViewController *listController;
+@property(nonatomic , weak) FHCommentDetailViewController *detailController;
 @property (nonatomic, strong) NSMutableArray *items;// 子类维护的数据源
 @property(nonatomic , weak) TTHttpTask *httpTask;
 
