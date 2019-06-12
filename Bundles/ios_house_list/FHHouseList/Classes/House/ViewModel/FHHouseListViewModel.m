@@ -44,6 +44,7 @@
 #import <AMapLocationKit/AMapLocationKit.h>
 #import <BDALog/BDAgileLog.h>
 #import "FHSuggestionRealHouseTopCell.h"
+#import <TTBaseLib/NSString+URLEncoding.h>
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
@@ -1195,9 +1196,16 @@
 #pragma mark - map url delegate
 -(void)handleHouseListCallback:(NSString *)openUrl {
     
-    if ([self.houseListOpenUrl isEqualToString:openUrl]) {
+    if ([self.houseListOpenUrl isEqualToString:openUrl] ) {
         return;
     }
+    
+    NSString *houseListDecode = [self.houseListOpenUrl URLDecodedString];
+    NSString *openUrlDecode = [openUrl URLDecodedString];
+    if ([houseListDecode isEqualToString:openUrlDecode]) {
+        return;
+    }
+    
     
     if (self.houseListOpenUrlUpdateBlock) {
         

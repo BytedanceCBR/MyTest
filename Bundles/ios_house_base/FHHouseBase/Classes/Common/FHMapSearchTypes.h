@@ -15,6 +15,11 @@ typedef NS_ENUM(NSInteger , FHMapSearchType) {
     FHMapSearchTypeNeighborhood = 4, //地图拖放到小区级别
     FHMapSearchTypeDistrict = 5, // 地图显示 区县级别
     FHMapSearchTypeArea = 6 , // 地图显示 商圈等级别
+    FHMapSearchTypeCity = 7 ,
+    FHMapSearchTypeSegment = 8 , //地铁某段
+    FHMapSearchTypeStation = 9 , //地铁站点
+    
+    FHMapSearchTypeFakeStation = 1234, //只是展示的地铁站点 不响应点击
 };
 
 #endif /* FHMapSearchTypes_h */
