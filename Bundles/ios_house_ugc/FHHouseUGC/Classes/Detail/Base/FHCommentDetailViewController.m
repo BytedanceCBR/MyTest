@@ -164,13 +164,9 @@
     self.toolbarView.toolbarType = FHExploreDetailToolbarTypeArticleComment;
     
     [self.view addSubview:self.toolbarView];
-    
-    [self.toolbarView.collectButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+
     [self.toolbarView.writeButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.toolbarView.emojiButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.toolbarView.commentButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.toolbarView.digButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.toolbarView.shareButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     self.toolbarView.frame = [self p_frameForToolBarView];
     self.toolbarView.hidden = NO;
@@ -297,23 +293,7 @@
 
 - (void)toolBarButtonClicked:(id)sender
 {
-    if (sender == self.toolbarView.collectButton) {
-        self.toolbarView.collectButton.imageView.contentMode = UIViewContentModeCenter;
-        self.toolbarView.collectButton.imageView.transform = CGAffineTransformMakeScale(1.f, 1.f);
-        self.toolbarView.collectButton.alpha = 1.f;
-        [UIView animateWithDuration:0.1f delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
-            self.toolbarView.collectButton.imageView.transform = CGAffineTransformMakeScale(0.6f, 0.6f);
-            self.toolbarView.collectButton.alpha = 0.f;
-        } completion:^(BOOL finished){
-            [self p_willChangeArticleFavoriteState];
-            [UIView animateWithDuration:0.2f delay:0.f options:UIViewAnimationOptionCurveEaseIn animations:^{
-                self.toolbarView.collectButton.imageView.transform = CGAffineTransformMakeScale(1.f, 1.f);
-                self.toolbarView.collectButton.alpha = 1.f;
-            } completion:^(BOOL finished){
-            }];
-        }];
-    }
-    else if (sender == self.toolbarView.writeButton) {
+    if (sender == self.toolbarView.writeButton) {
         if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
             [self tt_commentViewController:self.commentViewController didSelectWithInfo:({
                 NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
@@ -332,31 +312,9 @@
         }
         [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
     }
-    else if (sender == self.toolbarView.emojiButton) {
-        if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
-            [self tt_commentViewController:self.commentViewController didSelectWithInfo:({
-                NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
-                [baseCondition setValue:self.groupModel forKey:@"groupModel"];
-                [baseCondition setValue:@(1) forKey:@"from"];
-                [baseCondition setValue:@(YES) forKey:@"writeComment"];
-                [baseCondition setValue:self.commentViewController.tt_defaultReplyCommentModel forKey:@"commentModel"];
-                [baseCondition setValue:@(ArticleMomentSourceTypeArticleDetail) forKey:@"sourceType"];
-                baseCondition;
-            })];
-            if ([self.commentViewController respondsToSelector:@selector(tt_clearDefaultReplyCommentModel)]) {
-                [self.commentViewController tt_clearDefaultReplyCommentModel];
-            }
-            [self.toolbarView.writeButton setTitle:@"写评论" forState:UIControlStateNormal];
-            return;
-        }
-        [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:YES];
-    }
     else if (sender == _toolbarView.digButton) {
         // 点赞
         [self p_digg];
-    }
-    else if (sender == _toolbarView.shareButton) {
-        [self p_willShowSharePannel];
     }
 }
 
@@ -624,7 +582,7 @@
 - (void)p_scrollToCommentIfNeeded
 {
     if (self.beginShowComment && [self p_needShowToolBarView]) {
-        [self toolBarButtonClicked:self.toolbarView.commentButton];
+        // 跳转到评论 区域
     }
 }
 
