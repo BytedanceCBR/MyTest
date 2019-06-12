@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCCellHeaderView : UIView
 
+@property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, strong) UIButton *moreBtn;
+
 @end
 
 NS_ASSUME_NONNULL_END

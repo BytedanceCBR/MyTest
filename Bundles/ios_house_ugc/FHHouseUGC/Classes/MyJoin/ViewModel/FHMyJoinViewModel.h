@@ -6,10 +6,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHMyJoinViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMyJoinViewModel : NSObject
+
+- (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(FHMyJoinViewController *)viewController;
+
+- (void)requestData;
 
 @end
 
