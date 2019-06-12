@@ -62,7 +62,7 @@
     }
     
 //    @"weitoutiao" @"f_wenda"
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:@"weitoutiao" behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(isFirst){
             [self.viewController endLoading];
@@ -140,7 +140,6 @@
 
 - (NSArray *)convertModel:(NSArray *)feedList {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    
     for (FHFeedListDataModel *itemModel in feedList) {
         NSString *content = itemModel.content;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
@@ -148,34 +147,7 @@
             [resultArray addObject:cellModel];
         }
     }
-    
     return resultArray;
-}
-
-//用来根据model计算类型
-- (FHUGCFeedListCellSubType)getFeedType:(FHFeedUGCCellModel *)model {
-    FHUGCFeedListCellSubType type = FHUGCFeedListCellSubTypePureTitle;
-    
-
-//    NSInteger cellType = [model.cellType integerValue];
-    //文章是0， 帖子32
-//    NSArray *imageList = model.imageList;
-//    if(imageList.count >= 3){
-//        type = FHUGCFeedListCellTypeMultiImage;
-//    }else if(imageList.count == 2){
-//        type = FHUGCFeedListCellTypeTwoImage;
-//    }else if(imageList.count == 1){
-//        type = FHUGCFeedListCellTypeSingleImage;
-//    }else{
-        type = FHUGCFeedListCellSubTypeSingleImage;
-//    }
-//    if(imageList.count > 0){
-//        type = FHUGCFeedListCellSubTypeArticleMultiImage;
-//    }else{
-//        type = FHUGCFeedListCellSubTypeArticlePureTitle;
-//    }
-    
-    return  type;
 }
 
 #pragma mark - UITableViewDataSource
@@ -184,8 +156,7 @@
     return [self.dataList count];
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
@@ -193,8 +164,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-//    FHUGCFeedListCellSubType type = [self getFeedType:cellModel];
-
     NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
     FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 
@@ -213,10 +182,6 @@
 
 #pragma mark - UITableViewDelegate
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    return UITableViewAutomaticDimension;
-//}
-
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = self.cellHeightCaches[tempKey];
@@ -227,14 +192,17 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self jumpToTopicList];
+    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+    [self jumpToPostDetail:cellModel];
 }
 
-//TODO 测试用的，后续去掉
-- (void)jumpToTopicList {
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://topic_list?community_id=%@", @"12345"];
-    NSURL *openUrl = [NSURL URLWithString:urlStr];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"data"] = cellModel;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_detail"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 @end

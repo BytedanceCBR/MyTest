@@ -12,17 +12,20 @@
 #import "TTDeviceHelper.h"
 #import "YYLabel.h"
 #import "NSAttributedString+YYText.h"
+#import <TTBaseLib/UIViewAdditions.h>
 
 @interface FHLoginView()
 
 @property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, strong) UILabel *serviceLabel;
 @property(nonatomic, strong) UILabel *subTitleLabel;
 @property(nonatomic, strong) UIView *rightView;
 @property(nonatomic, strong) UIView *singleLine;
 @property(nonatomic, strong) UIView *singleLine2;
 @property(nonatomic, strong) UIButton *confirmBtn;
+@property(nonatomic, strong) UIButton *otherLoginBtn;
 @property(nonatomic, strong) YYLabel *agreementLabel;
-
+@property(nonatomic, assign) BOOL isOneKeyLogin;
 @end
 
 @implementation FHLoginView
@@ -46,6 +49,10 @@
     self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:30] textColor:[UIColor themeGray1]];
     _titleLabel.text = @"手机快捷登录";
     [self.scrollView addSubview:_titleLabel];
+    
+    self.serviceLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
+    self.serviceLabel.hidden = YES;
+    [self.scrollView addSubview:self.serviceLabel];
     
     self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
     _subTitleLabel.text = @"未注册手机验证后自动注册";
@@ -88,11 +95,19 @@
     self.confirmBtn = [[UIButton alloc] init];
     _confirmBtn.backgroundColor = [UIColor themeRed1];
     _confirmBtn.alpha = 0.6;
-    _confirmBtn.layer.cornerRadius = 23;
+    _confirmBtn.layer.cornerRadius = 4;
     _confirmBtn.enabled = NO;
     [_confirmBtn addTarget:self action:@selector(confirm) forControlEvents:UIControlEventTouchUpInside];
     [self setButtonContent:@"登录" font:[UIFont themeFontRegular:16] color:[UIColor whiteColor] state:UIControlStateNormal btn:_confirmBtn];
     [self.scrollView addSubview:_confirmBtn];
+    
+    self.otherLoginBtn = [[UIButton alloc] init];
+    [self setButtonContent:@"其他方式登录" font:[UIFont themeFontRegular:14] color:[UIColor themeGray2] state:UIControlStateNormal btn:self.otherLoginBtn];
+    [self setButtonContent:@"其他方式登录" font:[UIFont themeFontRegular:14] color:[UIColor themeGray2] state:UIControlStateHighlighted btn:self.otherLoginBtn];
+    [self.scrollView addSubview:self.otherLoginBtn];
+    [self.otherLoginBtn addTarget:self action:@selector(otherLoginBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    self.otherLoginBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -5, -5, -5);
+    self.otherLoginBtn.hidden = YES;
     
     self.acceptCheckBox = [[UIButton alloc] init];
     [_acceptCheckBox setImage:[UIImage imageNamed:@"checkbox-checked"] forState:UIControlStateSelected];
@@ -108,12 +123,63 @@
     [self.scrollView addSubview:_agreementLabel];
 }
 
+
+- (void)showOneKeyLoginView:(BOOL)isOneKeyLogin
+{
+    _isOneKeyLogin = isOneKeyLogin;
+    if (isOneKeyLogin) {
+        self.titleLabel.text = @"一键登录";
+        self.subTitleLabel.text = @"登录幸福里，关注好房永不丢失";
+        self.serviceLabel.hidden = NO;
+        self.otherLoginBtn.hidden = NO;
+        self.acceptCheckBox.hidden = YES;
+        self.varifyCodeInput.hidden = YES;
+        self.singleLine2.hidden = YES;
+        self.sendVerifyCodeBtn.hidden = YES;
+        self.phoneInput.enabled = NO;
+        [self.agreementLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.singleLine.mas_bottom).offset(20);
+        }];
+
+    }else {
+        self.titleLabel.text = @"手机快捷登录";
+        self.subTitleLabel.text = @"未注册手机验证后自动注册";
+        self.serviceLabel.hidden = YES;
+        self.otherLoginBtn.hidden = YES;
+        self.acceptCheckBox.hidden = NO;
+        self.varifyCodeInput.hidden = NO;
+        self.singleLine2.hidden = NO;
+        self.sendVerifyCodeBtn.hidden = NO;
+        self.phoneInput.enabled = YES;
+        [self.agreementLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.singleLine.mas_bottom).offset(20 + 60);
+        }];
+    }
+}
+
+- (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service
+{
+    self.phoneInput.text = phoneNum;
+    self.serviceLabel.text = service;
+    [self enableConfirmBtn:phoneNum.length > 0];
+}
+
+- (void)updateLoadingState:(BOOL)isLoading
+{
+    self.scrollView.hidden = isLoading;
+}
+
 - (void)initConstraints {
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.scrollView).offset(40);
         make.left.mas_equalTo(self.scrollView).offset(30);
         make.height.mas_equalTo(42);
+    }];
+    
+    [self.serviceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.singleLine);
+        make.centerY.mas_equalTo(self.phoneInput);
     }];
     
     [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -170,46 +236,39 @@
         make.height.mas_equalTo(46);
     }];
     
-    [self setAgreementContent];
+    [self.otherLoginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.confirmBtn);
+        make.top.mas_equalTo(self.confirmBtn.mas_bottom).mas_offset(20);
+        make.height.mas_equalTo(20);
+    }];
     
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.left.right.mas_equalTo(self);
     }];
 }
 
-- (void)setAgreementContent {
-    __weak typeof(self) weakSelf = self;
+- (void)setAgreementContent:(NSAttributedString *)attrText showAcceptBox:(BOOL)showAcceptBox
+{
     self.acceptCheckBox.selected = YES;
-    NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:@"我已阅读并同意 《幸福里用户使用协议》及《隐私协议》"];
-    [attrText addAttributes:[self commonTextStyle] range:NSMakeRange(0, attrText.length)];
-    [attrText yy_setTextHighlightRange:NSMakeRange(8, 11) color:[UIColor themeRed1] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-        if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(goToUserProtocol)]) {
-            [self.delegate goToUserProtocol];
-        }
-    }];
-    
-    [attrText yy_setTextHighlightRange:NSMakeRange(20, 6) color:[UIColor themeRed1] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-        if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(goToSecretProtocol)]) {
-            [self.delegate goToSecretProtocol];
-        }
-    }];
-    
     self.agreementLabel.attributedText = attrText;
-    
+    CGFloat boxWidth = showAcceptBox ? 15 : 0;
+    CGFloat boxOffset = showAcceptBox ? 3 : 0;
+    CGFloat topOffset = showAcceptBox ? 60 : 0;
     CGFloat width = UIScreen.mainScreen.bounds.size.width - 45 - 3 - 30;
     CGSize size = [self.agreementLabel sizeThatFits:CGSizeMake(width, 1000)];
+    self.acceptCheckBox.hidden = !showAcceptBox;
 
-    [self.agreementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.acceptCheckBox.mas_right).offset(3);
-        make.top.mas_equalTo(self.singleLine2.mas_bottom).offset(20);
+    [self.agreementLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.acceptCheckBox.mas_right).offset(boxOffset);
+        make.top.mas_equalTo(self.singleLine.mas_bottom).offset(20 + topOffset);
         make.right.mas_equalTo(self.rightView);
         make.height.mas_equalTo(size.height);
     }];
     
-    [self.acceptCheckBox mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.acceptCheckBox mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(30);
         make.top.mas_equalTo(self.agreementLabel).offset(1.5);
-        make.width.height.mas_equalTo(15);
+        make.width.height.mas_equalTo(boxWidth);
     }];
 }
 
@@ -239,8 +298,21 @@
 }
 
 - (void)confirm {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(confirm)]) {
-        [self.delegate confirm];
+    if (self.isOneKeyLogin) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(oneKeyLoginAction)]) {
+            [self.delegate oneKeyLoginAction];
+        }
+    }else {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(confirm)]) {
+            [self.delegate confirm];
+        }
+    }
+}
+
+- (void)otherLoginBtnDidClick:(UIButton *)btn
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(otherLoginAction)]) {
+        [self.delegate otherLoginAction];
     }
 }
 

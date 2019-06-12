@@ -14,12 +14,14 @@
 #import "ArticleListNotifyBarView.h"
 #import <UIViewAdditions.h>
 #import "TTDeviceHelper.h"
+#import <TTRoute.h>
 
 @interface FHCommunityFeedListController ()
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
-@property(nonatomic ,strong) UITableView *tableView;
-@property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
+@property(nonatomic, strong) UITableView *tableView;
+@property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
+@property(nonatomic, strong) UIButton *publishBtn;
 
 @end
 
@@ -39,6 +41,14 @@
 //}
 
 - (void)initView {
+    [self initTableView];
+    [self initNotifyBarView];
+    [self initPublishBtn];
+    
+    [self addDefaultEmptyViewFullScreen];
+}
+
+- (void)initTableView {
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -64,12 +74,18 @@
     }
     
     [self.view addSubview:_tableView];
-    
-    [self addDefaultEmptyViewFullScreen];
-    
-    //notifyview
+}
+
+- (void)initNotifyBarView {
     self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:self.notifyBarView];
+}
+
+- (void)initPublishBtn {
+    self.publishBtn = [[UIButton alloc] init];
+    [_publishBtn setImage:[UIImage imageNamed:@"fh_ugc_publish"] forState:UIControlStateNormal];
+    [_publishBtn addTarget:self action:@selector(goToPublish) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_publishBtn];
 }
 
 - (void)initConstraints {
@@ -81,15 +97,23 @@
         make.top.left.right.mas_equalTo(self.tableView);
         make.height.mas_equalTo(32);
     }];
+    
+    [self.publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.view);
+        make.right.mas_equalTo(self.view).offset(-12);
+        make.width.height.mas_equalTo(64);
+    }];
 }
 
 - (void)initViewModel {
     FHCommunityFeedListBaseViewModel *viewModel = nil;
-    
+
     if(self.listType == FHCommunityFeedListTypeNearby){
         viewModel = [[FHCommunityFeedListNearbyViewModel alloc] initWithTableView:_tableView controller:self];
+        viewModel.categoryId = @"weitoutiao";
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
+        viewModel.categoryId = @"f_wenda";
     }
     
     self.viewModel = viewModel;
@@ -108,6 +132,12 @@
 
 - (void)retryLoadData {
     [self startLoadData];
+}
+
+- (void)goToPublish {
+    //跳转到发布器
+    NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
 #pragma mark - show notify

@@ -33,6 +33,8 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 
 - (void)updateCategoryViewSegmented:(BOOL)isFirstChange;
 
+- (void)checkCityStatus;
+
 @end
 
 NS_ASSUME_NONNULL_END

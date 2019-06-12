@@ -26,6 +26,8 @@
 
 - (void)jumpToTabbarFirst;
 
+- (void)jumpToTabbarSecond;
+
 - (BOOL)isCurrentTabFirst;
 
 - (BOOL)isNeedSwitchCityCompare;

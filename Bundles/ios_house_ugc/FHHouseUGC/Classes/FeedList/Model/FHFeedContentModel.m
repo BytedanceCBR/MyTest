@@ -141,6 +141,8 @@
     @"mediaInfo": @"media_info",
     @"groupId": @"group_id",
     @"middleImage": @"middle_image",
+    @"openUrl": @"open_url",
+    
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

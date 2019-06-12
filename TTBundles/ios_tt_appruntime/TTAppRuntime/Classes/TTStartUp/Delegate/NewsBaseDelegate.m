@@ -674,8 +674,17 @@ static NSTimeInterval lastTime;
     TTNavigationController * navigationController = (TTNavigationController*)(rootTabController.viewControllers.firstObject);
     
     ArticleTabBarStyleNewsListViewController * tabbarNewsVC = navigationController.viewControllers.firstObject;
-    
-    return tabbarNewsVC.mainVC;
+    if ([tabbarNewsVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
+        return tabbarNewsVC.mainVC;
+    } else {
+        if (navigationController.viewControllers.count > 1) {
+            ArticleTabBarStyleNewsListViewController * tabbarNewsVC = navigationController.viewControllers[1];
+            return tabbarNewsVC.mainVC;
+        }else
+        {
+            return nil;
+        }
+    }
 }
 
 - (void)trackCurrentIntervalInMainThreadWithTag:(NSString *)tag {
