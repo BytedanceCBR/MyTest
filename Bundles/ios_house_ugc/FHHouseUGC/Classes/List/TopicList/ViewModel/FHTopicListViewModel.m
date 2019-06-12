@@ -17,7 +17,7 @@
 
 @interface FHTopicListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
-@property(nonatomic, strong) UITableView *tableView;
+@property(nonatomic, weak) UITableView *tableView;
 @property(nonatomic, weak) FHTopicListController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *dataList;

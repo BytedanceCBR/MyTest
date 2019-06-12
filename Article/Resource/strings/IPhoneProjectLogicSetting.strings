@@ -160,7 +160,6 @@
 "house_agency_list" = "FHHouseAgencyListViewController";
 
 
-"topic_list" = "FHTopicListController";
 //全/真房源新增web vc
 "house_real_web" = "FHHouseDetailWebViewController";
 "house_fake_list" = "FHFalseHouseListViewController";
@@ -168,4 +167,7 @@
 //UGC相关
 "ugc_post" = "FHPostUGCViewController";
 "ugc_post_detail" = "FHPostDetailViewController";
+"ugc_post_topic_list" = "FHTopicListController";
+"ugc_post_community_detail" = "FHCommunityDetailViewController";
+
 

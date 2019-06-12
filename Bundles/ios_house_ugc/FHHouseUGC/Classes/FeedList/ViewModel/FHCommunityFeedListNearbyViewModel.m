@@ -201,7 +201,7 @@
     dict[@"data"] = cellModel;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_detail"];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_community_detail"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
