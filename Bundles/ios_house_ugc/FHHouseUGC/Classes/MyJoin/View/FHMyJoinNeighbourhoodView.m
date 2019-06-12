@@ -33,7 +33,8 @@
     self.backgroundColor = [UIColor themeGray7];
     
     self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
-    [self.headerView.moreBtn addTarget:self action:@selector(goToMore) forControlEvents:UIControlEventTouchUpInside];
+    _headerView.titleLabel.text = @"我加入的小区";
+    [_headerView.moreBtn addTarget:self action:@selector(goToMore) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_headerView];
     
     [self initCollectionView];

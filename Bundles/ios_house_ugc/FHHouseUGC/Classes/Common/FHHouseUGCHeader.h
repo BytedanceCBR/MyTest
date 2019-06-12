@@ -32,12 +32,14 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
     FHUGCFeedListCellSubTypeArticlePureTitle,                      //文章纯文本
     FHUGCFeedListCellSubTypeArticleSingleImage,                    //文章单图
     FHUGCFeedListCellSubTypeArticleMultiImage,                     //文章多图
+    FHUGCFeedListCellSubTypeUGCRecommend,                          //小区推荐
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
 {
     FHUGCFeedListCellTypeArticle = 0,                        //文章
     FHUGCFeedListCellTypeUGC = 32,                           //帖子
+    FHUGCFeedListCellTypeUGCRecommend = 60,                           //小区推荐
 };
 
 #endif /* FHHouseUGCHeader_h */

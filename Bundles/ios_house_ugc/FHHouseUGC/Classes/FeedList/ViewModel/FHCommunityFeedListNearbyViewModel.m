@@ -140,6 +140,9 @@
 
 - (NSArray *)convertModel:(NSArray *)feedList {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+    if(feedList.count > 0){
+        [resultArray addObject:[FHFeedUGCCellModel modelFromFakeData]];
+    }
     for (FHFeedListDataModel *itemModel in feedList) {
         NSString *content = itemModel.content;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
