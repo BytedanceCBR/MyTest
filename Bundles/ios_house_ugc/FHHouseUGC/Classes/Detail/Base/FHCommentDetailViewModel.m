@@ -113,12 +113,6 @@
     self.cellHeightCaches[tempKey] = cellHeight;
 }
 
-// 返回计算后的固定高度
-//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return 105;
-//}
-
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = self.cellHeightCaches[tempKey];

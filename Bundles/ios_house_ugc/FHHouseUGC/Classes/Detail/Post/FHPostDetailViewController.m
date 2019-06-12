@@ -8,10 +8,12 @@
 #import "FHPostDetailViewController.h"
 #import "FHFeedUGCCellModel.h"
 #import "FHPostDetailViewModel.h"
+#import "FHDetailCommentAllFooter.h"
 
 @interface FHPostDetailViewController ()
 
 @property (nonatomic, strong)   FHFeedUGCCellModel       *detailData;
+@property (nonatomic, strong)   FHDetailCommentAllFooter       *commentAllFooter;
 
 @end
 
@@ -34,6 +36,16 @@
     if (self.detailData) {
         [self.viewModel.items addObject:self.detailData];
     }
+    // 全部评论
+    NSString *commentStr = @"全部评论";
+    if ([self.detailData.commentCount integerValue] > 0) {
+        commentStr = [NSString stringWithFormat:@"全部评论(%@)",self.detailData.commentCount];
+    } else {
+        commentStr = [NSString stringWithFormat:@"全部评论(0)"];
+    }
+    self.commentAllFooter = [[FHDetailCommentAllFooter alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 52)];
+    self.commentAllFooter.allCommentLabel.text = commentStr;
+    self.tableView.tableFooterView = self.commentAllFooter;
     // 刷新数据
     [self.viewModel reloadData];
 }

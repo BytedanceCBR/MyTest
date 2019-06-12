@@ -40,6 +40,12 @@ PODS:
   - BDTExploreOrderedData (0.1.7)
   - BDTFactoryConfigurator (0.1.0.1-binary)
   - BDTSharedHeaders (0.1.0)
+  - BDUGContainer (1.1.2)
+  - BDUGMonitorInterface (1.0.0):
+    - BDUGMonitorInterface/Core (= 1.0.0)
+  - BDUGMonitorInterface/Core (1.0.0)
+  - BDUGTrackerInterface (1.1.1)
+  - BDUGUnionSDK (0.1.2.1-binary)
   - BDWebImage/Core (0.2.2.1-binary)
   - BDWebImage/Decoder (0.2.2.1-binary)
   - BDWebImage/Download (0.2.2.1-binary):
@@ -66,6 +72,7 @@ PODS:
   - CocoaLumberjack/Default (3.4.2.1-binary)
   - CocoaLumberjack/Extensions (3.4.2.1-binary)
   - Crashlytics (3.12.0.1-binary)
+  - EAccountApiSDK (1.1.1.1-binary)
   - Fabric (1.9.0.1-binary)
   - FHCHousePush (0.1.0)
   - FHCommonUI (0.1.0)
@@ -254,14 +261,15 @@ PODS:
   - TTAccountLogin (0.1.0):
     - TTAccountLogin/AccountLoginUIKit (= 0.1.0)
   - TTAccountLogin/AccountLoginUIKit (0.1.0)
-  - TTAccountSDK/Account (4.2.0)
-  - TTAccountSDK/Logger (4.2.0)
-  - TTAccountSDK/ThirdPartyAccountFoundation (4.2.0):
-    - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (= 4.2.0)
-    - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (= 4.2.0)
-  - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (4.2.0)
-  - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (4.2.0)
-  - TTAccountSDK/WeChatAccount (4.2.0)
+  - TTAccountSDK/Account (4.5.3)
+  - TTAccountSDK/Logger (4.5.3)
+  - TTAccountSDK/OneKeyLogin (4.5.3)
+  - TTAccountSDK/ThirdPartyAccountFoundation (4.5.3):
+    - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (= 4.5.3)
+    - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (= 4.5.3)
+  - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (4.5.3)
+  - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (4.5.3)
+  - TTAccountSDK/WeChatAccount (4.5.3)
   - TTAD (0.1.0)
   - TTAddressBookService (0.1.4.1-binary):
     - TTAddressBookService/AddressBook (= 0.1.4.1-binary)
@@ -535,6 +543,7 @@ PODS:
   - TTVTableViewProtocolInterceptor/Core (0.1.2.1-binary)
   - TTVTableViewProtocolInterceptor/UIViewControllerCategory (0.1.2.1-binary)
   - TTVTLIndexPathTools (0.4.4.1-binary)
+  - TYRZApiSDK (1.2.0.1-binary)
   - UITableView+FDTemplateLayoutCell (1.6.1-binary)
   - UMengAnalytics (4.1.4.1-binary)
   - WCDB (1.0.7.5.1-binary)
@@ -572,6 +581,10 @@ DEPENDENCIES:
   - BDTExploreOrderedData (from `../AKPlugins/BDTExploreOrderedData`)
   - BDTFactoryConfigurator (= 0.1.0.1-binary)
   - BDTSharedHeaders (from `../Vendor/BDTSharedHeaders`)
+  - BDUGContainer (= 1.1.2)
+  - BDUGMonitorInterface (= 1.0.0)
+  - BDUGTrackerInterface (= 1.1.1)
+  - BDUGUnionSDK (= 0.1.2.1-binary)
   - BDWebImage/Core (= 0.2.2.1-binary)
   - BDWebImage/Decoder (= 0.2.2.1-binary)
   - BDWebImage/Download (= 0.2.2.1-binary)
@@ -585,6 +598,7 @@ DEPENDENCIES:
   - CHTCollectionViewWaterfallLayout (= 0.9.5.1-binary)
   - CocoaLumberjack (= 3.4.2.1-binary)
   - Crashlytics (= 3.12.0.1-binary)
+  - EAccountApiSDK (= 1.1.1.1-binary)
   - Fabric (= 1.9.0.1-binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
   - FHCommonUI (from `../Bundles/ios_common_ui`)
@@ -683,10 +697,11 @@ DEPENDENCIES:
   - TSVToolkit (= 0.1.2.1-binary)
   - TTABManager (= 0.0.7.1-binary)
   - TTAccountLogin (from `../AKPlugins/AKAccountLogin`)
-  - TTAccountSDK/Account (= 4.2.0)
-  - TTAccountSDK/Logger (= 4.2.0)
-  - TTAccountSDK/ThirdPartyAccountFoundation (= 4.2.0)
-  - TTAccountSDK/WeChatAccount (= 4.2.0)
+  - TTAccountSDK/Account (= 4.5.3)
+  - TTAccountSDK/Logger (= 4.5.3)
+  - TTAccountSDK/OneKeyLogin (= 4.5.3)
+  - TTAccountSDK/ThirdPartyAccountFoundation (= 4.5.3)
+  - TTAccountSDK/WeChatAccount (= 4.5.3)
   - TTAD (from `../TTBundles/ios_tt_ad`)
   - TTAddressBookService (= 0.1.4.1-binary)
   - TTAdModule (from `../AKPlugins/TTAdModule`)
@@ -799,6 +814,7 @@ DEPENDENCIES:
   - TTVTableViewItem (= 0.1.0.1-binary)
   - TTVTableViewProtocolInterceptor (= 0.1.2.1-binary)
   - TTVTLIndexPathTools (= 0.4.4.1-binary)
+  - TYRZApiSDK (= 1.2.0.1-binary)
   - UITableView+FDTemplateLayoutCell (= 1.6.1-binary)
   - UMengAnalytics (= 4.1.4.1-binary)
   - WCDB (= 1.0.7.5.1-binary)
@@ -983,12 +999,17 @@ SPEC CHECKSUMS:
   BDTExploreOrderedData: 96bb150a05e560a5e927a7ee53bda56690571a61
   BDTFactoryConfigurator: c14af7870fcd1fa9c52142d0c01635775543e42d
   BDTSharedHeaders: 7ce2d05979120782a343993b31287684065e06a8
+  BDUGContainer: 28193629e67c7c9244f5d5836bfed611bf631321
+  BDUGMonitorInterface: e64b2d5bcb2a3283af8f83daeaa0599a160351f1
+  BDUGTrackerInterface: c41760f7de16c6f4b84395e71e85875a4cd87611
+  BDUGUnionSDK: 837abef87c8d0f8cce87fb945dc18f2317d3d838
   BDWebImage: cb9435b175d994f7156ffdc736477d794db576dd
   Bolts: 1432a62b82e8d832c6fceaa3cce9ddbc18d91893
   boringssl: 8ea6d11d670e5e18687bc53a5d6f02741bdd5967
   CHTCollectionViewWaterfallLayout: 8a33ea9e60a246d71a3b04d4350c70de4caf1d24
   CocoaLumberjack: c0d821ecf553b7ee2a8da704cb4543027f3d0c5e
   Crashlytics: bf08c2834d9231328142ef5588ee1ae5b78229a9
+  EAccountApiSDK: 29385b846225d7ef532237b4a71aa10647914f35
   Fabric: ecf0d69c8b5cd1c6330c8cd7ae413e6d4aa12af2
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
   FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
@@ -1045,7 +1066,7 @@ SPEC CHECKSUMS:
   TSVToolkit: deb654f65a887a0c314aa70183681f25a8b0d75d
   TTABManager: b22ef5bd7f829192b72ec71d6e5f761e66428b5d
   TTAccountLogin: d064f182eccc55ebef79216feff43dd2b8c9decf
-  TTAccountSDK: cf30d5473af172a54279d2c22937ab3b3f0f33ab
+  TTAccountSDK: b7e328ef125dd87c395baf1c3c24f6f23784a126
   TTAD: 313a03c77994b6f073932f9bc19912a1ff3224af
   TTAddressBookService: dd811a1a2e57ea21a21a5006761eb1e7e1cef2ad
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
@@ -1124,6 +1145,7 @@ SPEC CHECKSUMS:
   TTVTableViewItem: edf61da588fddd2f8dcc6e1ed0796b764241fcfd
   TTVTableViewProtocolInterceptor: b40445eb84a3de5ded2f9869c4f6c946df4898e7
   TTVTLIndexPathTools: 2f6c23b4990f3aee6e7ceb867f632d4d02ea5384
+  TYRZApiSDK: 67e06aee48215f1d0058cf11ea99fa99b1745fc9
   UITableView+FDTemplateLayoutCell: a2662e078962600e17f9e090cc09b5f49f3e4762
   UMengAnalytics: 03d571efddd70d2a64a58f35c23dcf9732344b5b
   WCDB: f443005ee9bc01706ff0f67bb1ad890e875d6f8c
@@ -1135,6 +1157,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 6d1a665b4d44bdc24c73f9bfdcdfecc3f23ba40b
+PODFILE CHECKSUM: 2812cccce8e4c94552525551f3bc93d18ec4921f
 
 COCOAPODS: 1.4.0

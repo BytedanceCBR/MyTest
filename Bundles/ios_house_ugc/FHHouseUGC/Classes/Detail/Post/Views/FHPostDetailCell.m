@@ -86,8 +86,8 @@
         make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(20);
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-        make.bottom.mas_equalTo(self.contentView).offset(-20);
-        make.height.mas_equalTo(1);
+        make.bottom.mas_equalTo(self.contentView).offset(0);
+        make.height.mas_equalTo(0.5);
     }];
 }
 
