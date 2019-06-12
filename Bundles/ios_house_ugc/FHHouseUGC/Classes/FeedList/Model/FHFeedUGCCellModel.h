@@ -57,6 +57,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL showLookMore;
 //跳转详情页的scheme
 @property (nonatomic, copy , nullable) NSString *detailScheme;
+//原始数据
+@property (nonatomic, strong , nullable) id originData;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 
