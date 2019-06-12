@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPostDetailViewModel : FHCommentDetailViewModel
 
-@property (nonatomic, assign) int64_t threadID;
-@property (nonatomic, assign) int64_t forumID;
+@property (nonatomic, assign) int64_t threadID;// 帖子id
+@property (nonatomic, assign) int64_t forumID; // 暂时无用
 @property (nonatomic, copy) NSString *category;
 
 @end
