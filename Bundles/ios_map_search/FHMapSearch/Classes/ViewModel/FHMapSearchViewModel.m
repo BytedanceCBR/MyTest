@@ -1341,13 +1341,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 }
             }
             
-            [cbubble removeQueryOfKey:@"line[]"];
-            [cbubble removeQueryOfKey:@"station[]"];
-            [cbubble removeQueryOfKey:NEIGHBORHOOD_IDS];
+            NSArray *removeKeys = @[@"line[]",@"station[]",NEIGHBORHOOD_IDS,@"resize_level",@"center_latitude",@"center_longitude"];
+            for (NSString *key in removeKeys) {
+                [cbubble removeQueryOfKey:key];
+            }
+
             
             [cbubble addQueryParams:addDict];
             NSString *query = [cbubble query];
-            return [[self.houseListOpenUrl substringToIndex:range.location+range.length] stringByAppendingString:query];
+            return  [[self.houseListOpenUrl substringToIndex:range.location+range.length] stringByAppendingString:query];
         }
 
     }
