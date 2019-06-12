@@ -33,6 +33,11 @@
 #import "FHMapSearchLevelPopLayer.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <BDALog/BDAgileLog.h>
+#import "FHMainApi+MapSearch.h"
+#import "FHMapSubwayPickerView.h"
+#import <FHHouseBase/FHEnvContext.h>
+#import "FHMapStationAnnotationView.h"
+
 
 #define kTipDuration 3
 
@@ -80,28 +85,23 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , assign) BOOL configUserLocationLayer;
 @property(nonatomic , assign) BOOL mapViewRegionSuccess;
 
-@property(nonatomic , strong) MAPolygon *drawLayer;//画圈图层
+@property(nonatomic , strong) MAPolygon *drawLayer;//画圈图层 画地铁线路图层
 @property(nonatomic , strong) NSArray *drawLineXCoords;
 @property(nonatomic , strong) NSArray *drawLineYCoords;
 @property(nonatomic , strong) NSArray *drawLineNeighbors;
 @property(nonatomic , strong) NSDate *enterDrawLineTime;
 @property(nonatomic , assign) FHMapSearchShowMode lastShowMode;//画圈使用
 @property(nonatomic , strong) NSDictionary *filterParam;
+//@property(nonatomic , strong) FHMapSubwayDataModel *subwayModel;
+@property(nonatomic , strong) FHSearchFilterConfigOption *selectedLine;
+@property(nonatomic , strong) FHSearchFilterConfigOption *selectionStation;
+@property(nonatomic , strong) FHMapSubwayPickerView *subwayPicker;
+@property(nonatomic , strong) FHSearchFilterConfigOption *subwayData;
+@property(nonatomic , strong) NSArray *subwayLines;//地铁以一段一段的方式拼接
 
 @end
 
 @implementation FHMapSearchViewModel
-
-//+(void)load
-//{
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        
-//        for (int i = 0 ; i < 100; i++) {
-//            [[HMDTTMonitor defaultManager] hmdTrackService:@"map_location_failed" attributes:@{@"longitude":@(0),@"latitude":@(0)}];
-//        }
-//        
-//    });
-//}
 
 -(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel viewController:(FHMapSearchViewController *)viewController
 {
@@ -167,6 +167,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         self.houseTypeName = title;
         
+        if (self.configModel.houseType == FHHouseTypeSecondHandHouse) {
+            self.subwayData = [self loadSubwayData];
+        }
         
 //        if (self.configModel.originSearchId.length == 0 || [self.configModel.originSearchId isEqualToString:@"be_null"]) {
 //            //从租房或者city market 进入时没有origin search id 使用map search返回的search id
@@ -337,7 +340,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _houseListViewController.willSwipeDownDismiss = ^(CGFloat duration , FHMapSearchBubbleModel *fromBubble) {
             if (wself) {
                 if (wself.lastShowMode == FHMapSearchShowModeDrawLine || wself.lastShowMode == FHMapSearchShowModeSubway) {
-                    [wself changeNavbarAppear:NO];
+                    if (wself.lastShowMode == FHMapSearchShowModeDrawLine) {
+                        [wself changeNavbarAppear:NO];
+                    }
                     wself.showMode = wself.lastShowMode;
                     //恢复筛选器
                     if (wself.resetConditionBlock && wself.filterParam) {
@@ -370,9 +375,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                     wself.showMode = FHMapSearchShowModeDrawLine;                    
                 }else{
                     [wself changeNavbarAppear:YES];
-                    wself.showMode = FHMapSearchShowModeMap;
+                    if (wself.lastShowMode == FHMapSearchShowModeSubway){
+                        wself.showMode = FHMapSearchShowModeSubway;
+                    }else{
+                        wself.showMode = FHMapSearchShowModeMap;
+                    }
                 }
-                
             }
         };
         _houseListViewController.moveToTop = ^{
@@ -552,14 +560,27 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }else{
         query = self.filterConditionParams;
     }
-    
+    NSMutableDictionary *extraParams = nil;
     NSString *targetType = nil;
     if (_showMode == FHMapSearchShowModeDrawLine) {
         targetType = @"neighborhood";
+    }else if (_showMode == FHMapSearchShowModeSubway || (_lastShowMode == FHMapSearchShowModeSubway && _showMode == FHMapSearchShowModeHalfHouseList)){
+        extraParams = [NSMutableDictionary new];
+        if (!(([query containsString:@"line"]||[query containsString:@"station"]))) {
+            if ([self.selectionStation.value isEqualToString:self.selectedLine.value]) {
+//                targetType = @"segment";
+                extraParams[@"line[]"] = self.selectedLine.value;
+            }else{
+//                targetType = @"station";
+                extraParams[@"station[]"] = self.selectionStation.value;
+                extraParams[@"line[]"] = self.selectedLine.value;
+            }
+        }
+        extraParams[CHANNEL_ID] = CHANNEL_ID_SUBWAY_SEARCH;
     }
     
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseSearcher mapSearch:houseType searchId:self.searchId query:query maxLocation:CLLocationCoordinate2DMake(maxLat, maxLong) minLocation:CLLocationCoordinate2DMake(minLat, minLong) resizeLevel:_mapView.zoomLevel targetType:targetType suggestionParams:nil callback:^(NSError * _Nullable error, FHMapSearchDataModel * _Nullable model) {
+    TTHttpTask *task = [FHHouseSearcher mapSearch:houseType searchId:self.searchId query:query maxLocation:CLLocationCoordinate2DMake(maxLat, maxLong) minLocation:CLLocationCoordinate2DMake(minLat, minLong) resizeLevel:_mapView.zoomLevel targetType:targetType suggestionParams:nil extraParams:extraParams callback:^(NSError * _Nullable error, FHMapSearchDataModel * _Nullable model) {
         
         if (!wself) {
             return ;
@@ -588,6 +609,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
         }
         wself.searchId = model.searchId;
+        if (model.path.count > 0) {
+            BOOL move= NO;
+            if (!byUser && [wself.selectionStation.value isEqualToString:wself.selectedLine.value]) {
+                move = YES;
+            }
+            [wself addLinePathAndMoveMap:model.path move:move];
+        }
+        
         if (![wself.viewController isShowingMaskView]) {
             //只有不展示maskview时才显示
             [wself addAnnotations:model.list];
@@ -640,11 +669,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (list.count > 0) {
         NSArray *cAnnotations = self.mapView.annotations;
         NSMutableDictionary *removeAnnotationDict = [[NSMutableDictionary alloc] initWithCapacity:cAnnotations.count];
+        NSMutableArray *currentHouseAnnotations = [[NSMutableArray alloc] initWithCapacity:cAnnotations.count];
         for (NSInteger i = 0 ; i < cAnnotations.count ;  i++) {
             id <MAAnnotation> annotation = cAnnotations[i];
             if ([annotation isKindOfClass:[FHHouseAnnotation class]]) {
                 FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)annotation;
                 removeAnnotationDict[houseAnnotation.houseData.nid] = annotation;
+                [currentHouseAnnotations addObject:annotation];//站点有重复的
             }
         }
 
@@ -652,10 +683,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
         FHHouseAnnotation *selectedAnnoation = nil;
         
+        BOOL inSubwayMode = self.showMode == FHMapSearchShowModeSubway || self.lastShowMode == FHMapSearchShowModeSubway;
+        
         for (FHMapSearchDataListModel *info in list) {
             FHHouseAnnotation *houseAnnotation = removeAnnotationDict[info.nid];
-            
-            if (houseAnnotation) {
+            if (!inSubwayMode && houseAnnotation) {
                 if ([info.nid isEqualToString:self.currentSelectHouseData.nid]) {
                     houseAnnotation.type = FHHouseAnnotationTypeSelected;
                     selectedAnnoation = houseAnnotation;
@@ -671,6 +703,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 MAAnnotationView *annotationView = [self.mapView viewForAnnotation:houseAnnotation];
                 annotationView.annotation = houseAnnotation;
                 [removeAnnotationDict removeObjectForKey:info.nid];
+                [currentHouseAnnotations removeObject:houseAnnotation];
                 continue;
             }
 
@@ -694,7 +727,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [annotations addObject:houseAnnotation];
         }
         NSArray *needRemoveAnnotations = [removeAnnotationDict allValues];
-        [self.mapView removeAnnotations:needRemoveAnnotations];
+        [self.mapView removeAnnotations:currentHouseAnnotations];
         [self.mapView addAnnotations:annotations];
         if (selectedAnnoation) {
             [self.mapView selectAnnotation:selectedAnnoation animated:NO];
@@ -704,6 +737,73 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
 
 }
+/*
+ * 绘制地铁线路
+ */
+-(void)addLinePathAndMoveMap:(NSArray *)paths move:(BOOL)move
+{
+    if (paths.count == 0) {
+        return;
+    }
+    
+    NSMutableArray *lines = [[NSMutableArray alloc] initWithCapacity:paths.count];
+    CLLocationCoordinate2D min = CLLocationCoordinate2DMake(INT_MAX, INT_MAX);
+    CLLocationCoordinate2D max = CLLocationCoordinate2DMake(0, 0);
+    
+    for (NSString *path in paths) {
+        
+        NSArray *points = [path componentsSeparatedByString:@";"];
+        
+        CLLocationCoordinate2D *coords = malloc(sizeof(CLLocationCoordinate2D)*points.count);
+        NSInteger count = 0;
+        for (NSString *point in points) {
+            NSArray *kv = [point componentsSeparatedByString:@","];
+            if (kv.count == 2) {
+                coords[count].longitude = [kv[0] floatValue];
+                coords[count].latitude = [kv[1] floatValue];
+                if (coords[count].longitude > max.longitude) {
+                    max.longitude = coords[count].longitude;
+                }
+                if (coords[count].longitude < min.longitude) {
+                    min.longitude = coords[count].longitude;
+                }
+                if (coords[count].latitude > max.latitude) {
+                    max.latitude = coords[count].latitude;
+                }
+                if (coords[count].latitude < min.latitude) {
+                    min.latitude = coords[count].latitude;
+                }
+                
+                count++;
+            }
+        }
+        
+        MAPolyline *line = [MAPolyline polylineWithCoordinates:coords count:count];
+        [lines addObject:line];
+        free(coords);
+    }
+        
+//    if (self.drawLayer) {
+//        [self.mapView removeOverlay:self.drawLayer];
+//    }
+//    [self.mapView addOverlay:line];
+//    self.drawLayer = line;
+    if (self.subwayLines) {
+        [self.mapView removeOverlays:self.subwayLines];
+    }    
+    [self.mapView addOverlays:lines];
+    self.subwayLines = lines;
+    
+    if (move) {
+        //move mapview
+        MACoordinateRegion region;
+        region.center = CLLocationCoordinate2DMake((min.latitude+max.latitude)/2 +((max.latitude - min.latitude)/self.viewController.view.height)*64, (min.longitude+max.longitude)/2);
+        region.span = MACoordinateSpanMake((max.latitude - min.latitude)*2.05 , (max.longitude - min.longitude)*1.25);
+        if (region.span.latitudeDelta > 0 && region.span.longitudeDelta > 0) {
+            [self.mapView setRegion:region animated:YES];
+        }
+    }
+}
 
 -(void)handleSelect:(MAAnnotationView *)annotationView
 {
@@ -711,7 +811,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         return;
     }
     FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)annotationView.annotation;
-    if (houseAnnotation.searchType == FHMapSearchTypeDistrict || houseAnnotation.searchType == FHMapSearchTypeArea) {
+    if (houseAnnotation.searchType == FHMapSearchTypeFakeStation) {
+        //地铁站不响应
+        return;
+    }
+    
+    [self addClickBubbleLog:houseAnnotation];
+    
+    if (houseAnnotation.searchType == FHMapSearchTypeDistrict || houseAnnotation.searchType == FHMapSearchTypeArea || houseAnnotation.searchType == FHMapSearchTypeSegment || houseAnnotation.searchType == FHMapSearchTypeStation) {
         
         if (![TTReachability isNetworkConnected]) {
             [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
@@ -730,7 +837,16 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         self.lastBubble = [FHMapSearchBubbleModel bubbleFromUrl:model.mapFindHouseOpenUrl];
         if (self.lastBubble) {
             zoomLevel = self.lastBubble.resizeLevel;
-            moveCenter = CLLocationCoordinate2DMake(self.lastBubble.centerLatitude, self.lastBubble.centerLongitude);
+            if (zoomLevel < 1 || zoomLevel > 20) {
+                if (houseAnnotation.searchType == FHMapSearchTypeSegment) {
+                    zoomLevel = 13.5;
+                }else if (houseAnnotation.searchType == FHMapSearchTypeStation){
+                    zoomLevel = 16.5;
+                }
+            }
+            if (self.lastBubble.centerLatitude > 0 && self.lastBubble.centerLongitude > 0) {
+                moveCenter = CLLocationCoordinate2DMake(self.lastBubble.centerLatitude, self.lastBubble.centerLongitude);
+            }
         }else{
             /*
              *  zoomlevel 与显示对应关系
@@ -738,7 +854,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
              *  商圈 13 - 15
              *  小区 15 - 20
              */
-            if (zoomLevel < 10) {
+            if (houseAnnotation.searchType == FHMapSearchTypeSegment) {
+                zoomLevel = 13.5;
+            }else if (houseAnnotation.searchType == FHMapSearchTypeStation){
+                zoomLevel = 16.5;
+            }else if (zoomLevel < 10) {
                 //BY PM qiuruixiang
                 zoomLevel = 10;
             }else if (zoomLevel < 13) {
@@ -748,9 +868,16 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }else{
                 zoomLevel += 1;
             }
+            
         }
         if (zoomLevel > 20) {
             zoomLevel = 20;
+        }
+        
+        if (houseAnnotation.searchType == FHMapSearchTypeSegment || houseAnnotation.searchType == FHMapSearchTypeStation) {
+            self.selectionStation = [self.selectionStation copy];
+            self.selectionStation.value = houseAnnotation.houseData.nid;
+            self.selectionStation.text = houseAnnotation.houseData.name;
         }
         
         _movingToCenter = NO;
@@ -776,8 +903,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         self.currentSelectHouseData = houseAnnotation.houseData;
         [self showNeighborHouseList:houseAnnotation.houseData];
     }
-    
-    [self addClickBubbleLog:houseAnnotation];
 }
 
 -(void)moveAnnotationToCenter:(FHMapSearchDataListModel *)model animated:(BOOL)animated
@@ -828,7 +953,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //是否忽略 用户地图 点击、缩放等操作
 -(BOOL)shouldIgnoreUserMapOperation
 {
-    if (self.showMode == FHMapSearchShowModeDrawLine || self.showMode == FHMapSearchShowModeSubway || (self.showMode == FHMapSearchShowModeHalfHouseList && ([self.houseListViewController.viewModel enterShowMode] == FHMapSearchShowModeDrawLine || [self.houseListViewController.viewModel enterShowMode] == FHMapSearchShowModeSubway))) {
+    if (self.showMode == FHMapSearchShowModeDrawLine  || (self.showMode == FHMapSearchShowModeHalfHouseList && ([self.houseListViewController.viewModel enterShowMode] == FHMapSearchShowModeDrawLine ))) {
+        //|| [self.houseListViewController.viewModel enterShowMode] == FHMapSearchShowModeSubway
+        //|| self.showMode == FHMapSearchShowModeSubway
         return YES;
     }
     return NO;
@@ -870,8 +997,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
  */
 - (void)mapView:(MAMapView *)mapView mapDidZoomByUser:(BOOL)wasUserAction
 {
-    [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeZoomMap currentLevel:mapView.zoomLevel];
-    
+    if (wasUserAction) {
+        [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeZoomMap currentLevel:mapView.zoomLevel];
+    }
+        
     if ( !wasUserAction) {
         //only send request by user
         return;
@@ -896,7 +1025,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if ([annotation isKindOfClass:[FHHouseAnnotation class]])
     {
         FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)annotation;
-        if (houseAnnotation.searchType == FHMapSearchTypeDistrict || houseAnnotation.searchType == FHMapSearchTypeArea) {
+        if (houseAnnotation.searchType == FHMapSearchTypeDistrict || houseAnnotation.searchType == FHMapSearchTypeArea || houseAnnotation.searchType == FHMapSearchTypeSegment || houseAnnotation.searchType == FHMapSearchTypeStation) {
             static NSString *reuseIndetifier = @"DistrictAnnotationIndetifier";
             FHDistrictAreaAnnotationView *annotationView = (FHDistrictAreaAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:reuseIndetifier];
             if (annotationView == nil)
@@ -908,9 +1037,22 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
             
             //设置中心点偏移，使得标注底部中间点成为经纬度对应点
-            annotationView.centerOffset = CGPointMake(0, -32);
+            annotationView.centerOffset = CGPointMake(0, 0);
             annotationView.canShowCallout = NO;
             return annotationView;
+            
+        }else if (houseAnnotation.searchType == FHMapSearchTypeFakeStation){
+            static NSString *reuseIndetifier = @"StationAnnotationIndetifier";
+            FHMapStationAnnotationView *stationView = (FHMapStationAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:reuseIndetifier];
+            if (!stationView) {
+                stationView = [[FHMapStationAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:reuseIndetifier];
+            }else{
+                stationView.annotation = houseAnnotation;
+            }
+            //设置中心点偏移，使得标注底部中间点成为经纬度对应点
+            stationView.centerOffset = CGPointMake(0, -22);
+            stationView.canShowCallout = NO;
+            return stationView;
             
         }else{
             static NSString *reuseIndetifier = @"HouseAnnotationIndetifier";
@@ -1017,6 +1159,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         polygonRenderer.strokeColor = [UIColor themeRed1];
         polygonRenderer.fillColor   = RGBA(0xff, 0x58, 0x69,0.2);
         
+        return polygonRenderer;
+    }else if ([overlay isKindOfClass:[MAPolyline class]]){
+        MAPolylineRenderer *polygonRenderer = [[MAPolylineRenderer alloc] initWithPolyline:overlay];
+        polygonRenderer.lineWidth   = 12.f;
+        polygonRenderer.strokeColor = [UIColor themeRed1];
+        polygonRenderer.lineJoinType = kMALineJoinRound;
+        polygonRenderer.lineCapType  = kMALineCapRound;
         return polygonRenderer;
     }
     return nil;
@@ -1152,6 +1301,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (self.resetConditionBlock) {
         self.filterParam = paramObj.queryParams;
         self.resetConditionBlock(paramObj.queryParams);
+        self.filterConditionParams = self.getFilterConditionBlock();
     }
     
     if (self.conditionNoneFilterBlock) {
@@ -1178,6 +1328,31 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(NSString *)backHouseListOpenUrl
 {
+    if (self.configModel.mapOpenUrl) {        
+        FHMapSearchBubbleModel *bubble = [FHMapSearchBubbleModel bubbleFromUrl:self.configModel.mapOpenUrl];
+        NSRange range = [self.houseListOpenUrl rangeOfString:@"?"];
+        if (range.location != NSNotFound) {
+            FHMapSearchBubbleModel *cbubble = [FHMapSearchBubbleModel bubbleFromUrl:self.houseListOpenUrl];
+            NSMutableDictionary *addDict = [NSMutableDictionary new];
+            for (NSString *key in bubble.queryDict.allKeys) {
+                if ([key isEqualToString:@"area[]"] || [key isEqualToString:@"district[]"] || [key isEqualToString:@"line[]"]
+                    || [key isEqualToString:@"station[]"] || [key isEqualToString:NEIGHBORHOOD_IDS]) {
+                    addDict[key] = bubble.queryDict[key];
+                }
+            }
+            
+            NSArray *removeKeys = @[@"line[]",@"station[]",NEIGHBORHOOD_IDS,@"resize_level",@"center_latitude",@"center_longitude"];
+            for (NSString *key in removeKeys) {
+                [cbubble removeQueryOfKey:key];
+            }
+
+            
+            [cbubble addQueryParams:addDict];
+            NSString *query = [cbubble query];
+            return  [[self.houseListOpenUrl substringToIndex:range.location+range.length] stringByAppendingString:query];
+        }
+
+    }
     return self.houseListOpenUrl;
 }
 
@@ -1187,6 +1362,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSString *enterFrom =  @"mapfind";
     if (fromBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
         enterFrom = @"circlefind";
+    }else if (fromBubble.lastShowMode == FHMapSearchShowModeSubway){
+        enterFrom = @"subwayfind";
     }
     
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@",model.hid];
@@ -1214,7 +1391,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSString *enterFrom =  @"mapfind";
     if (fromBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
         enterFrom = @"circlefind";
+    }else if (fromBubble.lastShowMode == FHMapSearchShowModeSubway){
+        enterFrom = @"subwayfind";
     }
+    
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?neighborhood_id=%@",neighborModel.nid];
     NSMutableDictionary *tracerDic = [NSMutableDictionary new];
     [tracerDic addEntriesFromDictionary:self.logBaseParams];
@@ -1245,6 +1425,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSString *enterFrom =  @"mapfind";
     if (fromBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
         enterFrom = @"circlefind";
+    }else if (fromBubble.lastShowMode == FHMapSearchShowModeSubway){
+        enterFrom = @"subwayfind";
     }
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://rent_detail?house_id=%@&card_type=left_pic&enter_from=mapfind&element_from=half_category&rank=%ld",model.id,rank];
     TTRouteUserInfo *userInfo = nil;
@@ -1420,15 +1602,37 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     [view removeFromSuperview];
     [self.mapView removeOverlay:self.drawLayer];
+    if (self.subwayLines) {
+        [self.mapView removeOverlays:self.subwayLines];
+    }
     self.showMode = FHMapSearchShowModeMap;
     self.lastShowMode = FHMapSearchShowModeMap;
     [self.viewController switchToNormalMode];
+    self.selectedLine = nil;
+    self.selectionStation = nil;
+    [self.lastBubble removeQueryOfKey:@"line[]"];
+    [self.lastBubble removeQueryOfKey:@"station[]"];
     [self requestHouses:YES showTip:NO];
 }
 
 
 -(void)chooseSubWay
 {
+    self.selectionStation = nil;
+    
+    [self.tipView removeFromSuperview];
+    self.showMode = FHMapSearchShowModeSubway;
+    self.lastShowMode = self.showMode;
+//    [self.viewController enterMapDrawMode];
+    self.selectedLine = nil;
+    self.selectionStation = nil;
+    
+    //FHHouseAnnotation
+    [self.viewController enterSubwayMode];
+    
+    [self showSubwayPicker];
+    [self addClickDrawLineOrSubwayLog:@"click_subwayfind" clickType:@"subwayfind"];
+//    [self addEnterDrawOrSubwayLog:@"enter_subwayfind"];
     
 }
 
@@ -1441,8 +1645,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     [self.requestHouseTask cancel];
     
-    [self addClickDrawLineLog];
-    [self addEnterCircleFindLog];
+    [self addClickDrawLineOrSubwayLog:@"click_circlefind" clickType:@"circlefind"];
+    [self addEnterDrawOrSubwayLog:@"enter_circlefind"];
     [self.tipView removeFromSuperview];
     self.showMode = FHMapSearchShowModeDrawLine;
     self.lastShowMode = self.showMode;
@@ -1473,7 +1677,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //退出画圈找房
 -(void)closeBottomBar
 {
-    [self addStayCircelFineLog];
+    [self addStayCircelFindLog];
     
     [self userExit:nil];
 }
@@ -1491,12 +1695,20 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     logParam[UT_ELEMENT_FROM] = @"bottom_district";
     logParam[UT_CATEGORY_NAME] = @"circlefind_list";//(self.configModel.houseType == FHHouseTypeRentHouse)?@"rent_list":@"old_list";
     
+    FHMapSearchBubbleModel *bubble = [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];
+    [bubble addQueryParams:self.lastBubble.queryDict];
+    [bubble removeQueryOfKey:@"district[]"];
+    [bubble removeQueryOfKey:@"area[]"];
+    [bubble removeQueryOfKey:@"line[]"];
+    [bubble removeQueryOfKey:@"station[]"];
+    [bubble removeQueryOfKey:NEIGHBORHOOD_IDS];
+    
     
     NSURL *url = [NSURL URLWithString:@"sslocal://mapfind_area_house_list"];
     NSDictionary *userInfoDict = @{COORDINATE_ENCLOSURE:[self drawLineCoordinates]?:@"",
                                    NEIGHBORHOOD_IDS:[self drawLineNeighborIds]?:@"",
                                    HOUSE_TYPE_KEY:@(self.configModel.houseType),
-                                   @"filter":self.lastBubble.query?:@"",
+                                   @"filter":bubble.query?:@"",
                                    @"title":[NSString stringWithFormat:@"共找到%d套房源",self->onSaleHouseCount],
                                    TRACER_KEY:logParam
                                    };
@@ -1507,9 +1719,96 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)showSubwayInBottombar:(FHMapSearchBottomBar *)bottomBar
 {
+
+//    [bottomBar showSubway:self.selectedLine.text];
+    [self showSubwayPicker];
     
 }
 
+#pragma mark - subway
+-(void)showSubwayPicker
+{
+    if (!_subwayPicker) {
+        FHMapSubwayPickerView *picker = [[FHMapSubwayPickerView alloc]initWithFrame:self.viewController.view.bounds];
+        __weak typeof(self) wself = self;
+        picker.chooseStation = ^(FHSearchFilterConfigOption * _Nonnull line, FHSearchFilterConfigOption * _Nonnull station) {
+            
+            if (![TTReachability isNetworkConnected]) {
+                [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
+                return ;
+            }
+            
+            wself.lastBubble =  [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];
+            [wself.lastBubble overwriteFliter:self.filterConditionParams];
+            
+            NSMutableDictionary *param = [NSMutableDictionary new];
+            
+            wself.selectedLine = line;
+            wself.selectionStation = station;
+            if (station.centerLatitude.floatValue > 0 && station.centerLongitude.floatValue > 0) {
+                wself.mapView.centerCoordinate = CLLocationCoordinate2DMake(station.centerLatitude.floatValue, station.centerLongitude.floatValue);
+                wself.lastBubble.centerLongitude = station.centerLongitude.floatValue;
+                wself.lastBubble.centerLatitude = station.centerLatitude.floatValue;
+            }
+            CGFloat zoomLevel = station.resizeLevel.floatValue;
+            if (zoomLevel < 1) {
+                if ([line.value isEqualToString:station.value]) {
+                    //不限
+                    zoomLevel = 10;
+                }else{
+                    zoomLevel = 16.5;
+                }
+            }
+
+            wself.mapView.zoomLevel = zoomLevel;
+            wself.lastBubble.resizeLevel = zoomLevel;
+
+            [wself requestHouses:NO showTip:NO];
+            [wself.bottomBar showSubway:line.text];
+            wself.bottomBar.hidden = NO;
+            [wself addSubwayConfirmLog];
+            [wself addEnterDrawOrSubwayLog:@"enter_subwayfind"];
+        };
+        picker.dismissBlock = ^{
+            if (!wself.selectedLine) {
+                [wself userExit:nil];
+            }
+//            wself.showMode = FHMapSearchShowModeMap;
+//            [wself requestHouses:YES showTip:NO];
+        };
+        _subwayPicker = picker;
+    }
+    [self.subwayPicker showWithSubwayData:self.subwayData inView:self.viewController.view];
+    
+}
+
+-(BOOL)suportSubway
+{
+    return self.subwayData != NULL;
+}
+
+-(FHSearchFilterConfigOption *)loadSubwayData
+{
+    
+    FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    NSArray<FHSearchFilterConfigItem> *filter = configModel.filter;
+
+    FHSearchFilterConfigOption *subway = nil;
+    for (FHSearchFilterConfigItem *item in filter) {
+        if (item.tabId.integerValue == 1) {
+            //区域
+            for (FHSearchFilterConfigOption *option in item.options) {
+                if ([option.type isEqualToString:@"subway"]) {
+                    subway = option;
+                    return subway;
+                }
+            }
+
+        }
+    }
+    
+    return nil;
+}
 
 #pragma mark log
 -(NSMutableDictionary *)logBaseParams
@@ -1593,11 +1892,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
     param[@"view_level"] = viewTypeStr;
     param[UT_ELEMENT_FROM] = @"map";
+    param[@"trigger_type"] = triger;
     if (self.showMode == FHMapSearchShowModeDrawLine) {
         param[UT_ENTER_FROM] = @"mapfind";
         TRACK_EVENT(@"circlefind_view", param);
+    }else if (self.showMode == FHMapSearchShowModeSubway){
+        param[UT_ENTER_FROM] = @"mapfind";
+        TRACK_EVENT(@"subwayfind_view", param);
     }else{
-        param[@"trigger_type"] = triger;
         [FHUserTracker writeEvent:@"mapfind_view" params:param];
     }
 }
@@ -1617,6 +1919,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         case FHMapSearchTypeNeighborhood:
             clickType = @"neighborhood";
             break;
+        case FHMapSearchTypeStation:
+            clickType = @"station";
+            break;
+        case FHMapSearchTypeSegment:
+            clickType = @"segment";
+            break;
         default:
             return;
     }
@@ -1634,6 +1942,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         event = @"subwayfind_click_bubble";
     }
     
+    if (self.showMode != FHMapSearchShowModeMap) {
+        param[UT_ENTER_FROM] = @"mapfind";
+    }
+        
     [FHUserTracker writeEvent:event params:param];
 }
 
@@ -1654,50 +1966,29 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     param[@"enter_from"] = @"mapfind";
     param[@"enter_type"] = @"click";
     param[@"click_type"] = @"list";
-    param[@"category_name"] = self.configModel.enterCategory?:@"be_null";//@"old_list";
+    param[@"category_name"] = self.configModel.enterCategory?:(self.configModel.houseType == FHHouseTypeSecondHandHouse ?@"old_list":@"rent_list");
     param[@"element_from"] = self.configModel.elementFrom ?: @"be_null";
     
     [FHUserTracker writeEvent:@"click_switch_mapfind" params:param];
 }
 
 #pragma mark - 画圈找房 埋点
--(void)addClickDrawLineLog
+-(void)addClickDrawLineOrSubwayLog:(NSString *)key clickType:(NSString *)clickType
 {
-    /*
-     click_circlefind    "从地图找房入口进入
-     点击画圈找房button
-     "    "首页/租房列表页点击地图找房button
-     点击进入画圈找房button
-     
-     "    "1. event_type：house_app2c_v2
-     2. click_type: 点击类型,{'画圈找房': 'circlefind'}
-     4. enter_from：{'主页地图找房页面进入': 'maintab'，租房列表页地图找房进入renting_mapfind}
-     5. enter_type：进入category方式,{'点击': 'click'}
-     6. element_from：组件入口,{'首页搜索': 'maintab_search', '首页icon': 'maintab_icon', '找房tab开始找房': 'findtab_find', '找房tab搜索': 'findtab_search'}
-     7. log_pb
-     8. origin_from
-     9. origin_search_id"
-     
-     param[@"enter_from"] = self.configModel.enterFrom?: @"be_null";
-     param[@"search_id"] = self.searchId?:@"be_null";
-     param[@"origin_from"] = self.configModel.originFrom?:@"be_null";
-     param[@"origin_search_id"] = self.configModel.originSearchId ?: @"be_null";
-     
-     */
     
     NSMutableDictionary *param = [self logBaseParams];
     FHTracerModel *tracer = self.viewController.tracerModel;
     
-    param[@"click_type"] = @"circlefind";
+    param[@"click_type"] = clickType;// @"circlefind";
     param[UT_ENTER_FROM] = @"mapfind";
     param[UT_ENTER_TYPE] = @"click";
     param[UT_ELEMENT_FROM] = nil;
     param[UT_LOG_PB] = tracer.logPb?:UT_BE_NULL;
     
-    TRACK_EVENT(@"click_circlefind", param);
+    TRACK_EVENT(key, param);
 }
 
--(void)addEnterCircleFindLog
+-(void)addEnterDrawOrSubwayLog:(NSString *)key
 {
     /*
      enter_circlefind    进入画圈找房页    "从地图找房
@@ -1715,10 +2006,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     param[UT_LOG_PB] = tracer.logPb?:UT_BE_NULL;
     param[UT_ENTER_FROM] = @"mapfind";
     
-    TRACK_EVENT(@"enter_circlefind", param);
+    TRACK_EVENT(key, param);
 }
 
--(void)addStayCircelFineLog
+-(void)addStayCircelFindLog
 {
     NSMutableDictionary *param = [self logBaseParams];
     FHTracerModel *tracer = self.viewController.tracerModel;
@@ -1727,7 +2018,34 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     param[UT_ENTER_FROM] = @"mapfind";
     param[UT_STAY_TIME] = [NSString stringWithFormat:@"%.0f",[[NSDate date]timeIntervalSinceDate:self.enterDrawLineTime]*1000];
     
-    TRACK_EVENT(@"stay_circlefind", param);
+    NSString *key = (self.showMode == FHMapSearchShowModeDrawLine)?@"stay_circlefind":@"stay_subwayfind";
+    
+    TRACK_EVENT(key, param);
+}
+
+#pragma mark - 地铁找房埋点
+-(void)addSubwayConfirmLog
+{
+    /*
+     subway_confirm
+     "1. event_type：house_app2c_v2
+     2. click_type: 点击类型,,{'地铁找房': 'subwayfind'}
+     4. enter_from：mapfind
+     5. enter_type：进入category方式,{'点击': 'click'}
+     8. origin_from
+     9. origin_search_id
+     10.log_pb"
+     */
+    NSMutableDictionary *param = [self logBaseParams];
+    FHTracerModel *tracer = self.viewController.tracerModel;
+    
+    param[@"click_type"] = @"subwayfind";
+    param[UT_ENTER_FROM] = @"mapfind";
+    param[UT_ENTER_TYPE] = @"click";
+    param[UT_ELEMENT_FROM] = nil;
+    param[UT_LOG_PB] = tracer.logPb?:UT_BE_NULL;
+    
+    TRACK_EVENT(@"subway_confirm", param);
 }
 
 #pragma mark - network changed

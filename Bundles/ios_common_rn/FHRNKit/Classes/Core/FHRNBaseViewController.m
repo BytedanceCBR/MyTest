@@ -308,6 +308,7 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:0 extra:nil];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -380,21 +381,36 @@
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        TTCommonBridgeInfo *commonBrideInfo = (TTCommonBridgeInfo *)self.ttRNKit.bridgeInfos[_channelStr];
-        [commonBrideInfo.bridge invalidate];
-        self.ttRNKit.bridgeInfos = nil;
+        if (self.ttRNKit.bridgeInfos) {
+            TTCommonBridgeInfo *commonBrideInfo = (TTCommonBridgeInfo *)self.ttRNKit.bridgeInfos[_channelStr];
+            if (commonBrideInfo && commonBrideInfo.bridge && [commonBrideInfo.bridge respondsToSelector:@selector(invalidate)] ) {
+                [commonBrideInfo.bridge invalidate];
+                self.ttRNKit.bridgeInfos = nil;
+            }
+        }
         
 //        if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
-            ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
+        ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
+        if (self.ttRNKit) {
             [self.ttRNKit clearRNResourceForChannel:_channelStr];
+        }
+        if (((RCTRootView *)_viewWrapper.rnView).bridge && [((RCTRootView *)_viewWrapper.rnView).bridge respondsToSelector:@selector(invalidate)]) {
             [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
+        }
 //        }
-        [_container removeFromSuperview];
-        self.container = nil;
-        [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
-        _viewWrapper.rnView = nil;
-        [_viewWrapper removeFromSuperview];
-         self.viewWrapper = nil;
+        if (_container) {
+            [_container removeFromSuperview];
+            self.container = nil;
+        }
+
+        if ((RCTRootView *)_viewWrapper.rnView) {
+            [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
+            _viewWrapper.rnView = nil;
+        }
+        if (_viewWrapper) {
+            [_viewWrapper removeFromSuperview];
+            self.viewWrapper = nil;
+        }
     });
 }
 
@@ -463,13 +479,13 @@
     [self sendEventName:@"host_resume" andParams:[self getHashDict]];
 }
 
-#pragma mark
-
-#pragma mark - DebugProtocol
+#pragma mark AddRNView
 - (void)addViewWrapper:(TTRNKitViewWrapper *)viewWrapper
 {
     if (![_container.subviews containsObject:viewWrapper]) {
         [_container addSubview:viewWrapper];
+//        TTRNBridgeEngine *bridgeEngine = ((RCTRootView *)_viewWrapper.rnView).bridge.tt_engine;
+//        bridgeEngine.sourceController = self;
         [viewWrapper setFrame:self.container.bounds];
     }
 }
@@ -496,6 +512,7 @@
             [self addViewWrapper:wrapper];
         }
         _viewWrapper = wrapper;
+
     } else if (specialHost) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:specialHost message:nil preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , copy) NSString *condition; // 过滤条件
 @property (nonatomic, strong)   NSMutableDictionary       *houseShowTracerDic; // 埋点key记录
 @property (nonatomic, assign)   BOOL       firstRequestData;
+@property (nonatomic, assign)   BOOL       isShowRealHouseInfo;
 
 -(instancetype)initWithController:(FHNeighborListViewController *)viewController tableView:(UITableView *)tableView;
 

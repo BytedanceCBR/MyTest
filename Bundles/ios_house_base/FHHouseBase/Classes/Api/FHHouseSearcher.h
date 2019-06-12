@@ -20,7 +20,7 @@ extern NSString const *HOUSE_TYPE_KEY ;
 extern NSString const *SUGGESTION_PARAMS_KEY;
 extern NSString const *CHANNEL_ID ;
 extern NSString const *CHANNEL_ID_CIRCEL_SEARCH ;
-
+extern NSString const *CHANNEL_ID_SUBWAY_SEARCH;
 
 @interface FHHouseSearcher : NSObject
 
@@ -45,7 +45,7 @@ extern NSString const *CHANNEL_ID_CIRCEL_SEARCH ;
         line 地铁线
         station 地铁站
  */
-+(TTHttpTask *_Nullable)mapSearch:(FHMapSearchType)houseType searchId:(NSString *_Nullable)searchId query:(NSString *_Nullable)query maxLocation:(CLLocationCoordinate2D)maxLocation minLocation:(CLLocationCoordinate2D)minLocation resizeLevel:(CGFloat)reizeLevel targetType:(NSString *_Nullable)targetType  suggestionParams:(NSString *_Nullable)suggestionParams callback:(void(^_Nullable)(NSError *_Nullable error , FHMapSearchDataModel *_Nullable model))callback;
++(TTHttpTask *_Nullable)mapSearch:(FHMapSearchType)houseType searchId:(NSString *_Nullable)searchId query:(NSString *_Nullable)query maxLocation:(CLLocationCoordinate2D)maxLocation minLocation:(CLLocationCoordinate2D)minLocation resizeLevel:(CGFloat)reizeLevel targetType:(NSString *_Nullable)targetType  suggestionParams:(NSString *_Nullable)suggestionParams extraParams:(NSDictionary *_Nullable)extraParams callback:(void(^_Nullable)(NSError *_Nullable error , FHMapSearchDataModel *_Nullable model))callback;
 
 @end
 
