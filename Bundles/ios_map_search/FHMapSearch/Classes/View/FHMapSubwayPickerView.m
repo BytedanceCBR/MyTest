@@ -90,7 +90,13 @@
 {
     NSInteger mainIndex = [self.picker selectedRowInComponent:0];
     NSInteger subIndex = [self.picker selectedRowInComponent:1];
+    if (mainIndex >= self.dataModel.options.count) {
+        return;
+    }
     FHSearchFilterConfigOption *line = self.dataModel.options[mainIndex];
+    if (subIndex >= line.options.count) {
+        return;
+    }
     FHSearchFilterConfigOption *station = line.options[subIndex];
     if (self.chooseStation) {
         self.chooseStation(line, station);
