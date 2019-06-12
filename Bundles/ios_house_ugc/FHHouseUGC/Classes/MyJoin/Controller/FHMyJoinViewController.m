@@ -7,8 +7,13 @@
 
 #import "FHMyJoinViewController.h"
 #import "FHCommunityFeedListController.h"
+#import "FHMyJoinViewModel.h"
+#import "FHMyJoinNeighbourhoodView.h"
 
 @interface FHMyJoinViewController ()
+
+@property(nonatomic, strong) FHMyJoinNeighbourhoodView *neighbourhoodView;
+@property(nonatomic, strong) FHMyJoinViewModel *viewModel;
 
 @end
 
@@ -26,6 +31,10 @@
     
     FHCommunityFeedListController *vc =[[FHCommunityFeedListController alloc] init];
     vc.listType = FHCommunityFeedListTypeMyJoin;
+    
+    self.neighbourhoodView = [[FHMyJoinNeighbourhoodView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200)];
+    vc.tableHeaderView = self.neighbourhoodView;
+    
     vc.view.frame = self.view.bounds;
     [self addChildViewController:vc];
     [self.view addSubview:vc.view];
