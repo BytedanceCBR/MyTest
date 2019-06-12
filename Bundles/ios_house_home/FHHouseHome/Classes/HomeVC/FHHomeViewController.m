@@ -301,8 +301,10 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewWillAppear:animated];
     
-    [self.homeListViewModel checkCityStatus];
-    
+    if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+        [self.homeListViewModel checkCityStatus];
+    }
+
     [self scrollToTopEnable:YES];
 }
 

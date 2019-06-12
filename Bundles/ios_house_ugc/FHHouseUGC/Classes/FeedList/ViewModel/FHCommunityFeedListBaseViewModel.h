@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHUGCCellManager *cellManager;
 @property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic, strong) NSMutableDictionary *cellHeightCaches;
+@property(nonatomic, copy) NSString *categoryId;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
 

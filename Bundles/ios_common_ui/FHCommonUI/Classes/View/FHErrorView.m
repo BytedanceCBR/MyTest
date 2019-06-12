@@ -135,6 +135,7 @@
 
 - (void)setUpHomeRedBtn
 {
+    _retryButton.titleLabel.font = [UIFont themeFontMedium:14];
     [_retryButton setBackgroundImage:[self createImageWithColor:[UIColor themeRed1]] forState:UIControlStateNormal];
     [_retryButton setBackgroundImage:[self createImageWithColor:[[UIColor themeRed1] colorWithAlphaComponent:0.1]] forState:UIControlStateHighlighted];
 }

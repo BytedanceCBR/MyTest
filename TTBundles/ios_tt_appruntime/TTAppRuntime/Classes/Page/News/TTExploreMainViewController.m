@@ -238,6 +238,7 @@
 //            }
 //        }
 //    }
+    
 }
 
 - (void)traceJump2AdEvent:(NSString *)urlString

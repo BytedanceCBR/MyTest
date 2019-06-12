@@ -40,11 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
 //文章相关
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSAttributedString *desc;
+//问答跳转链接，优先使用这个值跳转
+@property (nonatomic, copy , nullable) NSString *openUrl;
 //列表页小图
 @property (nonatomic, strong , nullable) NSArray<FHFeedUGCCellImageListModel *> *imageList;
 //点击小图放大后的大图
 @property (nonatomic, strong , nullable) NSArray<FHFeedUGCCellImageListModel *> *largeImageList;
-
 //帖子相关
 @property (nonatomic, strong , nullable) FHFeedUGCCellUserModel *user ;
 @property (nonatomic, copy , nullable) NSString *diggCount;
@@ -54,6 +55,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *behotTime;
 //是否显示查看全文
 @property (nonatomic, assign) BOOL showLookMore;
+//跳转详情页的scheme
+@property (nonatomic, copy , nullable) NSString *detailScheme;
+//原始数据
+@property (nonatomic, strong , nullable) id originData;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

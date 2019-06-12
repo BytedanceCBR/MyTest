@@ -818,7 +818,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self.homeViewController.emptyView.retryButton setTitle:@"先逛逛发现" forState:UIControlStateNormal];
         
         self.homeViewController.emptyView.retryBlock = ^{
-            
+            [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarSecond];
         };
         
         [self.homeViewController.emptyView.retryButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -836,8 +836,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 - (BOOL)checkIsHaveEntrancesList
 {
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-
-    NSLog(@"house_type = %d", self.currentHouseType);
     
     BOOL isShowHouseBanner = NO;
     
@@ -847,6 +845,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             isShowHouseBanner = YES;
         }
     }
+    
     return isShowHouseBanner;
 }
 
