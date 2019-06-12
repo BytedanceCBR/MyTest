@@ -40,8 +40,6 @@
 #import "TTCommentWriteView.h"
 #import "ExploreItemActionManager.h"
 
-TTDetailModel *tt_detailModel;// test add by zyk
-
 @interface FHCommentDetailViewController ()<UIScrollViewDelegate>
 
 @property (nonatomic, strong)   UIScrollView       *mainScrollView;
@@ -55,9 +53,6 @@ TTDetailModel *tt_detailModel;// test add by zyk
 @property (nonatomic, assign)   BOOL       isAppearing;
 @property(nonatomic, strong) TTCommentWriteView *commentWriteView;
 @property (nonatomic, strong) ExploreItemActionManager *itemActionManager;
-
-// test
-//@property (nonatomic, strong) TTDetailModel *detailModel;
 
 @end
 
@@ -99,8 +94,6 @@ TTDetailModel *tt_detailModel;// test add by zyk
     }
     
     NSDictionary *commentDic = @{@"stay_comment_time":[[NSNumber numberWithDouble:round(self.commentShowTimeTotal)] stringValue]};
-//    [self.detailModel.sharedDetailManager extraTrackerDic:commentDic];
-//    [self.detailModel.sharedDetailManager endStayTracker];
     _isAppearing = NO;
 }
 
@@ -118,7 +111,6 @@ TTDetailModel *tt_detailModel;// test add by zyk
     }
     self.topTableViewContentHeight = 0;
     self.beginShowComment = YES;
-//    self.detailModel = tt_detailModel; // add by zyk
 }
 
 - (void)setupUI {
@@ -220,15 +212,13 @@ TTDetailModel *tt_detailModel;// test add by zyk
             self.commentShowDate = nil;
         }
         NSDictionary *commentDic = @{@"stay_comment_time":[[NSNumber numberWithDouble:round(self.commentShowTimeTotal)] stringValue]};
-//        [self.detailModel.sharedDetailManager extraTrackerDic:commentDic];
-//        [self.detailModel.sharedDetailManager endStayTracker];
         self.commentShowTimeTotal = 0;
     }
 }
 
 - (void)pn_applicationWillEnterForeground:(NSNotification *)notification {
     if (_isAppearing) {
-//        [self.detailModel.sharedDetailManager startStayTracker];
+        
     }
     
     self.commentShowDate = [NSDate date];
@@ -243,22 +233,12 @@ TTDetailModel *tt_detailModel;// test add by zyk
     // 详情内容高度改变-改变主scrollView的控件高度
     [self.tableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
     [self.commentViewController.commentTableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
-    
-    //article更新的KVO
-//    [self.detailModel.article addObserver:self forKeyPath:@"userLike" options:NSKeyValueObservingOptionNew context:NULL];
-//    [self.detailModel.article addObserver:self forKeyPath:@"userRepined" options:NSKeyValueObservingOptionNew context:NULL];
-//    [self.detailModel.article addObserver:self forKeyPath:@"actionDataModel.commentCount" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)p_removeDetailViewKVO
 {
     [self.tableView removeObserver:self forKeyPath:@"contentSize"];
     [self.commentViewController.commentTableView removeObserver:self forKeyPath:@"contentSize"];
-
-    // article
-//    [self.detailModel.article removeObserver:self forKeyPath:@"userLike"];
-//    [self.detailModel.article removeObserver:self forKeyPath:@"userRepined"];
-//    [self.detailModel.article removeObserver:self forKeyPath:@"actionDataModel.commentCount"];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
@@ -275,10 +255,6 @@ TTDetailModel *tt_detailModel;// test add by zyk
             [self p_tableViewContentSizeChange];
         }
     }
-    // article
-//    if ([object isKindOfClass:[Article class]]) {
-//        [self p_refreshToolbarView];
-//    }
 }
 
 - (void)p_tableViewContentSizeChange {
@@ -304,7 +280,7 @@ TTDetailModel *tt_detailModel;// test add by zyk
     [self.mainScrollView addSubview:self.commentViewController.view];
 }
 
-//当前详情页可视范围标准rect(去掉顶部导航,且根据articleType判断是否去掉底部toolbar)
+// 当前详情页可视范围标准rect(去掉顶部导航,且根据articleType判断是否去掉底部toolbar)
 - (CGRect)p_contentVisableRect
 {
     CGFloat visableHeight = self.view.size.height;
@@ -346,7 +322,6 @@ TTDetailModel *tt_detailModel;// test add by zyk
                 [baseCondition setValue:@(YES) forKey:@"writeComment"];
                 [baseCondition setValue:self.commentViewController.tt_defaultReplyCommentModel forKey:@"commentModel"];
                 [baseCondition setValue:@(ArticleMomentSourceTypeArticleDetail) forKey:@"sourceType"];
-//                [baseCondition setValue:self.detailModel.article forKey:@"group"]; //竟然带了article.....
                 baseCondition;
             })];
             if ([self.commentViewController respondsToSelector:@selector(tt_clearDefaultReplyCommentModel)]) {
@@ -366,7 +341,6 @@ TTDetailModel *tt_detailModel;// test add by zyk
                 [baseCondition setValue:@(YES) forKey:@"writeComment"];
                 [baseCondition setValue:self.commentViewController.tt_defaultReplyCommentModel forKey:@"commentModel"];
                 [baseCondition setValue:@(ArticleMomentSourceTypeArticleDetail) forKey:@"sourceType"];
-//                [baseCondition setValue:self.detailModel.article forKey:@"group"]; //竟然带了article.....
                 baseCondition;
             })];
             if ([self.commentViewController respondsToSelector:@selector(tt_clearDefaultReplyCommentModel)]) {
@@ -402,10 +376,6 @@ TTDetailModel *tt_detailModel;// test add by zyk
 - (void)p_digg {
     self.user_digg = (self.user_digg == 1) ? 0 : 1;
     self.digg_count = @(self.user_digg == 1 ? (self.digg_count + 1) : MAX(0, (self.digg_count - 1)));
-//    [self.detailModel.article save];
-    
-//    [self.rewardView updateDigButton];
-    [self changeRewardViewDiggButtonBorderColorWithSelectStatus:self.user_digg == 1];
     
     if (!self.itemActionManager) {
         self.itemActionManager = [[ExploreItemActionManager alloc] init];
@@ -418,29 +388,6 @@ TTDetailModel *tt_detailModel;// test add by zyk
     
     [self.itemActionManager sendActionForOriginalData:article adID:nil actionType:(self.user_digg == 1) ? DetailActionTypeLike: DetailActionTypeUnlike finishBlock:nil];
     [self p_refreshToolbarView];
-//
-//    [self p_trackDiggEvent];
-}
-
-- (void)changeRewardViewDiggButtonBorderColorWithSelectStatus:(BOOL)isSelected {
-//    BOOL isDayMode = [[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay;
-//    NSString *borderColorKey;
-//    if (isDayMode) {
-//        borderColorKey = kTTkUGCDiggActionSelectedColorArticleBorderDayModeKey;
-//    } else {
-//        borderColorKey = kTTkUGCDiggActionSelectedColorArticleBorderNightModeKey;
-//    }
-//    WeakSelf;
-//    [[BDContextGet() findServiceByName:TTUGCDiggActionIconHelperServiceName] asyncGetDiggTitleSelectedColorWithActionIconKey:self.articleInfoManager.detailModel.article.diggIconConfigKey colorKey:borderColorKey completionBlock:^(UIColor * _Nullable color) {
-//        StrongSelf;
-//        if (color && isSelected) {
-//            self.rewardView.digButton.layer.borderColor = color.CGColor;
-//        } else {
-//            self.rewardView.digButton.borderColorThemeKey = kColorLine7;
-//            self.rewardView.digButton.selectedBorderColorThemeKey = kColorLine4;
-//        }
-//    }];
-    
 }
 
 - (void)p_willShowSharePannel {
@@ -449,9 +396,8 @@ TTDetailModel *tt_detailModel;// test add by zyk
 
 - (void)p_refreshToolbarView
 {
-//    NSLog(@"---------:%@   %ld",self.detailModel.article.userLike,[self.detailModel.article.likeCount integerValue]);
-//    self.toolbarView.collectButton.selected = self.detailModel.article.userRepined;
     self.toolbarView.digButton.selected = self.user_digg == 1;
+    // 点赞 个数 add by zyk
 //    self.toolbarView.commentBadgeValue = [@(self.detailModel.article.commentCount) stringValue];
 }
 
@@ -459,15 +405,6 @@ TTDetailModel *tt_detailModel;// test add by zyk
 {
     self.toolbarView.height = FHExploreDetailGetToolbarHeight() + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     return CGRectMake(0, self.view.height - self.toolbarView.height, self.view.width, self.toolbarView.height);
-    
-    //    CGFloat toolbarOriginY = [self p_frameForDetailView].size.height - self.toolbarView.height;
-    //    if ([TTDeviceHelper isPadDevice]) {
-    //        CGSize windowSize = [TTUIResponderHelper windowSize];
-    //        return CGRectMake(0, toolbarOriginY, windowSize.width, self.toolbarView.height);
-    //    }
-    //    else {
-    //        return CGRectMake(0, [self p_contentVisableRect].size.height, [self p_frameForDetailView].size.width, self.toolbarView.height);
-    //    }
 }
 
 - (void)dismissSelf
@@ -524,40 +461,15 @@ TTDetailModel *tt_detailModel;// test add by zyk
         NSString *userName = self.commentViewController.tt_defaultReplyCommentModel.userName;
         [self.toolbarView.writeButton setTitle:isEmptyString(userName)? @"写评论": [NSString stringWithFormat:@"回复 %@：", userName] forState:UIControlStateNormal];
     }
-    
-    // toolbar 禁表情
-    //    BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:kTTKCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
-    //    if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
-    //        self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
-    //    }
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController digCommentWithCommentModel:(id<TTCommentModelProtocol>)model
 {
     // 对评论 点赞
     if (!model.userDigged) {
-//        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
-//        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
-//        [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
-//        [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
-//        [params setValue:model.commentID.stringValue forKey:@"comment_id"];
-//        [params setValue:model.userID.stringValue forKey:@"user_id"];
-//        [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
-//        [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
-//        [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
-//        [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
+
     } else {
-//        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
-//        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
-//        [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
-//        [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
-//        [params setValue:model.commentID.stringValue forKey:@"comment_id"];
-//        //        [params setValue:model.userID.stringValue forKey:@"user_id"];
-//        [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
-//        [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
-//        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
-//        [params setValue:@"comment" forKey:@"position"];
-//        [TTTrackerWrapper eventV3:@"rt_like" params:params];
+
     }
 }
 
@@ -669,7 +581,6 @@ TTDetailModel *tt_detailModel;// test add by zyk
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fold_comment"] userInfo:TTRouteUserInfoWithDict(condition)];
 }
 
-//
 - (void)p_willOpenWriteCommentViewWithReservedText:(NSString *)reservedText switchToEmojiInput:(BOOL)switchToEmojiInput  {
     
     NSMutableDictionary *condition = [NSMutableDictionary dictionaryWithCapacity:10];
