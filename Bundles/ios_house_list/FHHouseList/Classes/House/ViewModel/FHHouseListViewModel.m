@@ -338,6 +338,12 @@
             if (isFromRecommend) {
                 [self requestRecommendErshouHouseListData:isRefresh query:query offset:offset searchId:self.recommendSearchId];
             } else {
+                if ([query isKindOfClass:[NSString class]] && query.length > 0) {
+                    query = [query stringByAppendingString:@"&channel_id=94349530167"];
+                }else
+                {
+                    query = @"channel_id=94349530167";
+                }
                 self.query = query;
                 [self requestErshouHouseListData:isRefresh query:query offset:offset searchId:searchId];
             }
