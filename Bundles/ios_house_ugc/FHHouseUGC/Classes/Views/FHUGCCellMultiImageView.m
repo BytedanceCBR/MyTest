@@ -44,10 +44,6 @@
 }
 
 - (void)initViews {
-    
-    self.layer.masksToBounds = YES;
-    self.layer.cornerRadius = 4;
-    
     for (NSInteger i = 0; i < self.count; i++) {
         UIImageView *imageView = [[UIImageView alloc] init];
         imageView.clipsToBounds = YES;
@@ -55,6 +51,8 @@
         imageView.backgroundColor = [UIColor themeGray6];
         imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
         imageView.layer.borderWidth = 0.5;
+        imageView.layer.masksToBounds = YES;
+        imageView.layer.cornerRadius = 4;
         imageView.hidden = YES;
         imageView.tag = i;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTaped:)];

@@ -111,6 +111,7 @@
 
 + (FHFeedUGCCellModel *)modelFromFeedUGCContent:(FHFeedUGCContentModel *)model {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.originData = model;
     cellModel.cellType = model.cellType;
     cellModel.title = model.title;
     cellModel.behotTime = model.behotTime;
