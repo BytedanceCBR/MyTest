@@ -12,6 +12,10 @@
 
 @interface FHPostDetailViewController ()
 
+@property (nonatomic, assign) int64_t tid; //帖子ID
+@property (nonatomic, assign) int64_t fid; //话题ID
+@property (nonatomic, copy) NSString *cid; //关心ID
+
 @property (nonatomic, strong)   FHFeedUGCCellModel       *detailData;
 @property (nonatomic, strong)   FHDetailCommentAllFooter       *commentAllFooter;
 
@@ -25,7 +29,9 @@
         // 帖子
         self.postType = FHUGCPostTypePost;
         NSDictionary *params = paramObj.allParams;
-        self.detailData = params[@"data"];
+        int64_t tid = [[paramObj.allParams objectForKey:@"tid"] longLongValue];
+        int64_t fid = [[paramObj.allParams objectForKey:@"fid"] longLongValue];
+        self.detailData = params[@"data"];// 列表页数据
     }
     return self;
 }
@@ -49,5 +55,25 @@
     // 刷新数据
     [self.viewModel reloadData];
 }
+
+/*
+ - (FRThreadSmartDetailViewModel *)viewModel {
+ if (_viewModel == nil) {
+ _viewModel = [[FRThreadSmartDetailViewModel alloc] initWithThreadID:self.tid forumID:self.fid];
+ if ([self isAdContent]) {
+ [_viewModel setupAdInfoWithAdId:self.adId logExtra:self.logExtra];
+ }
+ _viewModel.dataSource = self;
+ _viewModel.threadDetailController = self;
+ _viewModel.category = [self.extraTracks tt_stringValueForKey:@"category_id"];
+ _viewModel.thread.gComposition = self.personalHomeGroupComposition;
+ _viewModel.thread.gSource = self.personalHomeGroupSource;
+ _viewModel.thread.personalHomeGroupId = self.personalHomeGroupId;
+ }
+ 
+ return _viewModel;
+ }
+
+ */
 
 @end
