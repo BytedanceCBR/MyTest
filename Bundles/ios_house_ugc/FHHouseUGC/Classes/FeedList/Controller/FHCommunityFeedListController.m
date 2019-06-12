@@ -76,6 +76,13 @@
     [self.view addSubview:_tableView];
 }
 
+- (void)setTableHeaderView:(UIView *)tableHeaderView {
+    _tableHeaderView = tableHeaderView;
+    if(self.tableView){
+        self.tableView.tableHeaderView = tableHeaderView;
+    }
+}
+
 - (void)initNotifyBarView {
     self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:self.notifyBarView];

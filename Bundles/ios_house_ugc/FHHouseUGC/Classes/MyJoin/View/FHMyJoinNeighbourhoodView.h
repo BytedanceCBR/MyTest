@@ -6,10 +6,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHUGCMessageView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHMyJoinNeighbourhoodViewDelegate <NSObject>
+
+- (void)gotoMore;
+
+@end
+
 @interface FHMyJoinNeighbourhoodView : UIView
+
+@property(nonatomic, strong) UICollectionView *collectionView;
+@property(nonatomic, strong) FHUGCMessageView *messageView;
+
+@property(nonatomic , weak) id<FHMyJoinNeighbourhoodViewDelegate> delegate;
 
 @end
 

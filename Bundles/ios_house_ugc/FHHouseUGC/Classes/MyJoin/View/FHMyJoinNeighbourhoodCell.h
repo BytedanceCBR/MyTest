@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMyJoinNeighbourhoodCell : UICollectionViewCell
 
+- (void)refreshWithData:(id)data;
+
 @end
 
 NS_ASSUME_NONNULL_END

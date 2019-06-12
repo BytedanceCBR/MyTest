@@ -6,13 +6,10 @@
 //
 
 #import "FHMyJoinViewController.h"
-#import "FHCommunityFeedListController.h"
 #import "FHMyJoinViewModel.h"
-#import "FHMyJoinNeighbourhoodView.h"
 
 @interface FHMyJoinViewController ()
 
-@property(nonatomic, strong) FHMyJoinNeighbourhoodView *neighbourhoodView;
 @property(nonatomic, strong) FHMyJoinViewModel *viewModel;
 
 @end
@@ -23,7 +20,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self initView];
-    [self initConstraints];
+    [self initViewModel];
 }
 
 - (void)initView {
@@ -38,10 +35,18 @@
     vc.view.frame = self.view.bounds;
     [self addChildViewController:vc];
     [self.view addSubview:vc.view];
+    _feedListVC = vc;
 }
 
-- (void)initConstraints {
-    
+- (void)initViewModel {
+    FHMyJoinViewModel *viewModel = [[FHMyJoinViewModel alloc] initWithCollectionView:self.neighbourhoodView.collectionView controller:self];
+    self.neighbourhoodView.delegate = viewModel;
+    self.viewModel = viewModel;
+    [self startLoadData];
+}
+
+- (void)startLoadData {
+    [self.viewModel requestData];
 }
 
 @end
