@@ -11,6 +11,8 @@
 #import "FHDetailCommentAllFooter.h"
 #import "TTReachability.h"
 #import "Article.h"
+#import "FHPostDetailNavHeaderView.h"
+#import "FHCommonDefines.h"
 
 @interface FHPostDetailViewController ()
 
@@ -21,6 +23,9 @@
 @property (nonatomic, strong)   FHFeedUGCCellModel       *detailData;
 @property (nonatomic, strong)   FHDetailCommentAllFooter       *commentAllFooter;
 @property (nonatomic, weak)     FHPostDetailViewModel       *weakViewModel;
+
+@property (nonatomic, strong)   FHPostDetailNavHeaderView       *naviHeaderView;
+@property (nonatomic, strong)   UIButton       *followButton;// 关注
 
 @end
 
@@ -58,7 +63,8 @@
     self.weakViewModel.threadID = self.tid;
     self.weakViewModel.forumID = self.fid;
     self.weakViewModel.category = @"test";// add by zyk
-    self.title = @"详情";
+    // 导航栏
+    [self setupDetailNaviBar];
     // 全部评论
     [self commentCountChanged];
     // 列表页数据
@@ -70,6 +76,40 @@
     [self addDefaultEmptyViewFullScreen];
     // 请求 详情页数据
     [self startLoadData];
+}
+
+- (void)setupDetailNaviBar {
+    self.customNavBarView.title.text = @"详情";
+    // 关注按钮
+    self.followButton = [[UIButton alloc] init];
+    _followButton.layer.masksToBounds = YES;
+    _followButton.layer.cornerRadius = 4;
+    _followButton.layer.borderColor = [[UIColor themeRed1] CGColor];
+    _followButton.layer.borderWidth = 0.5;
+    [_followButton setTitle:@"关注" forState:UIControlStateNormal];
+    [_followButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    _followButton.titleLabel.font = [UIFont themeFontRegular:12];
+    [self.customNavBarView addSubview:_followButton];
+    [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(58);
+        make.right.mas_equalTo(-20);
+        make.height.mas_equalTo(24);
+        make.bottom.mas_equalTo(-10);
+    }];
+    
+    self.naviHeaderView = [[FHPostDetailNavHeaderView alloc] init];
+    [self.customNavBarView addSubview:_naviHeaderView];
+    [self.naviHeaderView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(35);
+        make.centerX.mas_equalTo(self.customNavBarView);
+        make.bottom.mas_equalTo(self.customNavBarView.mas_bottom).offset(-3.5);
+        make.width.mas_equalTo(SCREEN_WIDTH - 78 * 2 - 10);
+    }];
+    self.naviHeaderView.hidden = YES;
+    self.followButton.hidden = YES;
+    // test
+    self.naviHeaderView.titleLabel.text = @"世纪城";
+    self.naviHeaderView.descLabel.text = @"10000成员。488z帖子";
 }
 
 - (void)startLoadData {
@@ -103,14 +143,20 @@
     }
     self.commentAllFooter.allCommentLabel.text = commentStr;
 }
-/*
- 
- 
- data = "<FHFeedUGCCellModel: 0x2816942d0>";
- fid = 6564242300;
- "gd_ext_json" = "{\"category_id\":\"weitoutiao\",\"enter_from\":\"click_weitoutiao\",\"group_type\":\"forum_post\",\"log_pb\":\"{\\\"from_gid\\\":0,\\\"impr_id\\\":\\\"2019061215225301000806301252119F6\\\",\\\"post_gid\\\":1636117814370308,\\\"recommend_type\\\":\\\"\\\",\\\"repost_gid\\\":0,\\\"with_quote\\\":0}\",\"refer\":\"1\"}";
- tid = 1636117814370308;
- }
- 
- */
+
+// 子类滚动方法
+- (void)sub_scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.weakViewModel.detailHeaderModel) {
+        // 有头部数据
+        CGFloat offsetY = scrollView.contentOffset.y;
+        if (offsetY > 78) {
+            self.naviHeaderView.hidden = NO;
+            self.followButton.hidden = NO;
+        } else {
+            self.naviHeaderView.hidden = YES;
+            self.followButton.hidden = YES;
+        }
+    }
+}
+
 @end

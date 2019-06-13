@@ -142,7 +142,7 @@
 }
 
 - (void)setupNaviBar {
-    [self setupDefaultNavBar:YES];
+    [self setupDefaultNavBar:NO];
 }
 
 - (void)configTableView {
@@ -627,6 +627,7 @@
 // mainScrollView
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView == _mainScrollView) {
+        [self sub_scrollViewDidScroll:scrollView];
         CGFloat offsetY = scrollView.contentOffset.y;
         CGFloat commentViewHeight = _mainScrollView.frame.size.height;
         if (offsetY > _topTableViewContentHeight) {
@@ -641,6 +642,11 @@
             self.mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
         }
     }
+}
+
+// 子类滚动方法
+- (void)sub_scrollViewDidScroll:(UIScrollView *)scrollView {
+    // donothing
 }
 
 #pragma mark - TTWriteCommentViewDelegate

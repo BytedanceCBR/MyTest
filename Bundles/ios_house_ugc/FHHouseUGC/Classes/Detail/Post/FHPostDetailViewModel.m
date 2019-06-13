@@ -109,6 +109,7 @@
         //
         FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
         [self.items addObject:headerModel];
+        self.detailHeaderModel = headerModel;
         //
         FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
