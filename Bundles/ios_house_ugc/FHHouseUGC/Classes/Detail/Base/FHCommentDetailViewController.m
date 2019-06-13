@@ -333,7 +333,7 @@
 // 点赞
 - (void)p_digg {
     self.user_digg = (self.user_digg == 1) ? 0 : 1;
-    self.digg_count = @(self.user_digg == 1 ? (self.digg_count + 1) : MAX(0, (self.digg_count - 1)));
+    self.digg_count = self.user_digg == 1 ? (self.digg_count + 1) : MAX(0, (self.digg_count - 1));
     
     if (!self.itemActionManager) {
         self.itemActionManager = [[ExploreItemActionManager alloc] init];
@@ -355,8 +355,7 @@
 - (void)p_refreshToolbarView
 {
     self.toolbarView.digButton.selected = self.user_digg == 1;
-    // 点赞 个数 add by zyk
-//    self.toolbarView.commentBadgeValue = [@(self.detailModel.article.commentCount) stringValue];
+    self.toolbarView.digCountValue = [NSString stringWithFormat:@"%ld",self.digg_count];
 }
 
 - (CGRect)p_frameForToolBarView

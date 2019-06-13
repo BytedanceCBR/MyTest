@@ -41,11 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) FHExploreDetailToolbarFromView fromView;
 
-@property (nullable, nonatomic, copy) NSString *commentBadgeValue;
+@property (nullable, nonatomic, copy) NSString *digCountValue;
 
 @property (nonatomic, assign) BOOL banEmojiInput; // 是否支持表情输入
-
-- (void)relayoutItems;
 
 @end
 

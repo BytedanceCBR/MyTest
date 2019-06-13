@@ -28,9 +28,6 @@
 
 @interface FHExploreDetailToolbarView ()
 
-@property (nonatomic, strong) SSThemedLabel *commentLabel;
-@property (nonatomic, strong) SSThemedLabel *collectLabel;
-@property (nonatomic, strong) SSThemedLabel *shareLabel;
 @property (nonatomic, assign) BOOL toolbarLabelEnabled;
 
 @end
@@ -54,21 +51,26 @@
         writeButton.titleLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:writeButton];
         _writeButton = writeButton;
+        
+        _writeButton.titleLabel.textColor = [UIColor themeGray3];
+        _writeButton.layer.cornerRadius = 4;
+        _writeButton.backgroundColor = [UIColor themeGray7];
+        _writeButton.layer.masksToBounds = YES;
 
         UIEdgeInsets toolBarButtonHitTestInsets = UIEdgeInsetsMake(-8.f, -12.f, -15.f, -12.f);
 
         self.digCountLabel = [[SSThemedLabel alloc] init];
-        self.digCountLabel.backgroundColorThemeKey = kFHColorCoral;
-        self.digCountLabel.textColorThemeKey = kColorText8;
-        self.digCountLabel.font = [UIFont systemFontOfSize:8];
-        self.digCountLabel.layer.cornerRadius = 5;
-        self.digCountLabel.layer.masksToBounds = YES;
+        self.digCountLabel.textColor = [UIColor themeGray1];
+        self.digCountLabel.font = [UIFont systemFontOfSize:12];
         self.digCountLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:self.digCountLabel];
         
         TTAlphaThemedButton *digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _digButton = digButton;
         _digButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
+        _digButton.imageName = @"fh_ugc_toolbar_like_normal";
+        _digButton.selectedImageName = @"fh_ugc_toolbar_like_selected";
+        _digButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
         [self addSubview:digButton];
         
         _separatorView = [[SSThemedView alloc] init];
@@ -81,8 +83,28 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateWriteTitle:) name:@"TTCOMMENT_UPDATE_WRITETITLE" object:nil];
         self.banEmojiInput = NO;
+        [self setupConstraints];
     }
     return self;
+}
+
+- (void)setupConstraints {
+    [_writeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self).offset(20);
+        make.height.mas_equalTo(32);
+        make.top.mas_equalTo(8);
+        make.right.mas_equalTo(self.digButton.mas_left).offset(-15);
+    }];
+    [self.digButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.writeButton);
+        make.width.height.mas_equalTo(24);
+    }];
+    [_digCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(20);
+        make.right.mas_equalTo(-20);
+        make.height.mas_equalTo(13);
+        make.left.mas_equalTo(self.digButton.mas_right).offset(3);
+    }];
 }
 
 - (void)updateWriteTitle:(NSNotification *)notification {
@@ -101,16 +123,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    CGFloat leftInset = self.tt_safeAreaInsets.left;
-    CGFloat rightInset = self.tt_safeAreaInsets.right;
-    CGFloat hInset = leftInset + rightInset;//水平缩进
-    CGFloat bottomSafeInset = self.tt_safeAreaInsets.bottom;
-    CGFloat writeButtonHeight = [TTDeviceHelper isPadDevice] ? 36 : [TTDeviceUIUtils tt_newPadding:32];
-    CGFloat writeTopMargin = ((NSInteger)self.height - writeButtonHeight - bottomSafeInset) / 2;
-    CGFloat iconTopMargin = ((NSInteger)self.height - 24 - bottomSafeInset) / 2;
-    CGRect writeFrame = CGRectZero, emojiFrame = CGRectZero, commentFrame = CGRectZero, shareFrame = CGRectZero, collectFrame = CGRectZero, digFrame = CGRectZero;
-    CGFloat width = self.width;
-
 }
 
 - (void)safeAreaInsetsDidChange
@@ -143,45 +155,18 @@
     _viewStyle = viewStyle;
     
     self.backgroundColorThemeKey = kColorBackground4;
-    
-//    _emojiButton.imageName = @"input_emoji";
-//    _commentButton.imageName = @"tab_comment";
-//    _collectButton.imageName = @"tab_collect";
-//    _collectButton.selectedImageName = @"tab_collect_press";
-    _digButton.imageName = @"digup_tabbar";
-    _digButton.selectedImageName = @"digup_tabbar_press";
-    _digButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
-//    _shareButton.imageName = [self _shareIconName];
-    _writeButton.borderColors = nil;
-    _writeButton.borderColorThemeKey = kFHColorSilver2;
-    _writeButton.layer.borderWidth = 0;
-    _writeButton.titleLabel.textColor = [UIColor themeGray3];
-    _writeButton.layer.cornerRadius = 4;
-    _writeButton.backgroundColor = [UIColor themeGray7];
-    _writeButton.layer.masksToBounds = YES;
-    
-    //        [_writeButton setImageName:@"write_new"];
-    //        _writeButton.tintColor = [UIColor themeGray3];//[UIColor tt_themedColorForKey:kColorText1];
 }
 
-- (void)setCommentBadgeValue:(NSString *)commentBadgeValue {
+- (void)setDigCountValue:(NSString *)commentBadgeValue {
     int64_t value = [commentBadgeValue longLongValue];
     commentBadgeValue = [TTBusinessManager formatCommentCount:value];
     if ([commentBadgeValue integerValue] == 0) {
         commentBadgeValue = nil;
     }
-    _commentBadgeValue = commentBadgeValue;
+    _digCountValue = commentBadgeValue;
     self.digCountLabel.text = commentBadgeValue;
-    if (isEmptyString(commentBadgeValue)) {
-        self.digCountLabel.hidden = YES;
-    } else {
-        self.digCountLabel.hidden = NO;
-        [self.digCountLabel sizeToFit];
-        self.digCountLabel.width += 8;
-        self.digCountLabel.width = MAX(self.digCountLabel.width, 15);
-        self.digCountLabel.height = 10;
-        self.digCountLabel.origin = CGPointMake(11, 0);
-    }
+    [self.digCountLabel sizeToFit];
+    [self layoutIfNeeded];
 }
 
 - (void)setBanEmojiInput:(BOOL)banEmojiInput {
@@ -204,9 +189,6 @@
 
 - (void)setToolbarLabelEnabled:(BOOL)toolbarLabelEnabled {
     _toolbarLabelEnabled = toolbarLabelEnabled;
-    _commentLabel.hidden = !toolbarLabelEnabled;
-    _collectLabel.hidden = !toolbarLabelEnabled;
-    _shareLabel.hidden = !toolbarLabelEnabled;
 }
 
 - (NSString *)_shareIconName {
