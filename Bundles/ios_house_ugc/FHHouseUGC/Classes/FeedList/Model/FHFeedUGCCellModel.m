@@ -213,6 +213,12 @@
     cellModel.cellType =@"60";
     cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
     
+    NSMutableArray *sourceList = [NSMutableArray array];
+    for (NSInteger i = 0; i < 20; i++) {
+        [sourceList addObject:[NSString stringWithFormat:@"小区%li",(long)i]];
+    }
+    cellModel.interestNeighbourhoodList = sourceList;
+    
     return cellModel;
 }
 

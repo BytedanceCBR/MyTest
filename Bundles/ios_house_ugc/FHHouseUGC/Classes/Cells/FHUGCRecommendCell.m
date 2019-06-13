@@ -13,12 +13,16 @@
 #define rightMargin 20
 #define cellId @"cellId"
 
-@interface FHUGCRecommendCell ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHUGCRecommendCell ()<UITableViewDelegate,UITableViewDataSource,FHUGCRecommendSubCellDelegate>
 
 @property(nonatomic ,strong) FHUGCCellHeaderView *headerView;
 @property(nonatomic ,strong) UITableView *tableView;
 @property(nonatomic ,strong) UIView *bottomSepView;
+@property(nonatomic ,strong) NSMutableArray *sourceList;
 @property(nonatomic ,strong) NSMutableArray *dataList;
+@property(nonatomic ,assign) NSInteger currentIndex;
+@property(nonatomic ,strong) FHFeedUGCCellModel *model;
+@property(nonatomic ,assign) CGFloat tableViewHeight;
 
 @end
 
@@ -35,6 +39,8 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         _dataList = [NSMutableArray array];
+        _sourceList = [NSMutableArray array];
+        _tableViewHeight = 180.0f;
         [self initUIs];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -51,6 +57,7 @@
     _headerView.titleLabel.text = @"你可能感兴趣的小区";
     _headerView.bottomLine.hidden = NO;
     _headerView.refreshBtn.hidden = NO;
+    [_headerView.refreshBtn addTarget:self action:@selector(changeData) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_headerView];
 
     self.bottomSepView = [[UIView alloc] init];
@@ -62,7 +69,7 @@
 
 - (void)initTableView {
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    _tableView.backgroundColor = [UIColor greenColor];
+    _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
@@ -97,7 +104,7 @@
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom).offset(5);
         make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(180);
+        make.height.mas_equalTo(self.tableViewHeight);
     }];
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -115,11 +122,77 @@
 }
 
 - (void)refreshWithData:(id)data {
-    [self.dataList removeAllObjects];
-    for (NSInteger i = 0; i < 3; i++) {
-        [self.dataList addObject:[NSString stringWithFormat:@"小区%li",(long)i]];
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        _model = (FHFeedUGCCellModel *)data;
+        self.sourceList = _model.interestNeighbourhoodList;
+        [self refreshData];
     }
+}
+
+- (void)refreshData {
+    [self generateDataList:self.sourceList];
     [self.tableView reloadData];
+    //更新高度
+    [self updateCellConstraints];
+}
+
+- (void)updateCellConstraints {
+    CGFloat height = 0;
+    if(self.dataList.count < 3){
+        height = 60 * self.dataList.count;
+    }else{
+        height = 180;
+    }
+    
+    //没有变化不做处理
+    if(height == self.tableViewHeight){
+        return;
+    }
+    
+    self.tableViewHeight = height;
+    
+    if(height == 0){
+        if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
+            [self.delegate deleteCell:self.model];
+        }
+    }else{
+        [_model.tableView beginUpdates];
+        [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.headerView.mas_bottom).offset(5);
+            make.left.right.mas_equalTo(self.contentView);
+            make.height.mas_equalTo(self.tableViewHeight);
+        }];
+        [self setNeedsUpdateConstraints];
+        [_model.tableView endUpdates];
+    }
+}
+
+- (void)generateDataList:(NSMutableArray *)sourceList {
+    [self.dataList removeAllObjects];
+    if(sourceList.count <= 3){
+        [self.dataList addObjectsFromArray:self.sourceList];
+    }else{
+        NSInteger index = self.currentIndex;
+        for (NSInteger i = index; i < index + 3; i++) {
+            NSInteger k = 0;
+            if(i < self.sourceList.count){
+                k = i;
+            }else{
+                k = i - self.sourceList.count;
+            }
+            [self.dataList addObject:self.sourceList[k]];
+        }
+    }
+}
+
+- (void)changeData {
+    self.currentIndex = self.currentIndex + 3;
+    
+    if(self.currentIndex >= self.sourceList.count){
+        self.currentIndex = self.currentIndex - self.sourceList.count;
+    }
+    
+    [self refreshData];
 }
 
 #pragma mark - UITableViewDataSource
@@ -137,6 +210,8 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
+    cell.delegate = self;
+    
     if(indexPath.row < self.dataList.count){
         [cell refreshWithData:str];
     }
@@ -148,6 +223,32 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 60.0f;
+}
+
+#pragma mark - FHUGCRecommendSubCellDelegate
+
+- (void)joinIn:(id)model {
+    //调用加入的接口
+    
+    //加入成功后
+    if(_sourceList.count > 3){
+        NSInteger current = [_sourceList indexOfObject:model];
+        NSInteger next = self.currentIndex + 3;
+        if(next >= _sourceList.count){
+            next = next - self.sourceList.count;
+        }
+        
+        if(next < self.currentIndex) {
+            self.currentIndex = self.currentIndex - 1;
+        }
+        
+        [_sourceList replaceObjectAtIndex:current withObject:_sourceList[next]];
+        [_sourceList removeObjectAtIndex:next];
+    }else{
+        [_sourceList removeObject:model];
+    }
+    
+    [self refreshData];
 }
 
 @end

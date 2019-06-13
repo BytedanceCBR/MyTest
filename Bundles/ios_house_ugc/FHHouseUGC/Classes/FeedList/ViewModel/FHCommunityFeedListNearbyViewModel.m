@@ -14,7 +14,7 @@
 #import "FHFeedUGCCellModel.h"
 #import "Article.h"
 
-@interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate, UITableViewDataSource>
+@interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
 @end
 
@@ -142,7 +142,9 @@
 - (NSArray *)convertModel:(NSArray *)feedList {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     if(feedList.count > 0){
-        [resultArray addObject:[FHFeedUGCCellModel modelFromFakeData]];
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFakeData];
+        cellModel.tableView = self.tableView;
+        [resultArray addObject:cellModel];
     }
     for (FHFeedListDataModel *itemModel in feedList) {
         NSString *content = itemModel.content;
@@ -176,6 +178,8 @@
         cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
+    
+    cell.delegate = self;
 
     if(indexPath.row < self.dataList.count){
         [cell refreshWithData:cellModel];
@@ -217,6 +221,17 @@
     
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+}
+
+#pragma mark - FHUGCBaseCellDelegate
+
+- (void)deleteCell:(FHFeedUGCCellModel *)cellModel {
+    NSInteger row = [self.dataList indexOfObject:cellModel];
+    if(row < self.dataList.count && row >= 0){
+        [self.dataList removeObject:cellModel];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+    }
 }
 
 @end

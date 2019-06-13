@@ -9,7 +9,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHUGCRecommendSubCellDelegate <NSObject>
+
+- (void)joinIn:(id)model;
+
+@end
+
 @interface FHUGCRecommendSubCell : UITableViewCell
+
+@property(nonatomic , weak) id<FHUGCRecommendSubCellDelegate> delegate;
 
 - (void)refreshWithData:(id)data;
 
