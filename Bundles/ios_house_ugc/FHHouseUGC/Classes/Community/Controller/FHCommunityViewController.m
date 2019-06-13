@@ -73,7 +73,7 @@
 }
 
 - (void)setupSetmentedControl {
-    _segmentControl =  [[HMSegmentedControl alloc] initWithSectionTitles:@[@"我加入的",@"附近",@"发现"]];
+    _segmentControl =  [[HMSegmentedControl alloc] initWithSectionTitles:@[@"我关注的",@"附近",@"发现"]];
     
     NSDictionary* titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:14],
                                           NSForegroundColorAttributeName: [UIColor themeGray3]};

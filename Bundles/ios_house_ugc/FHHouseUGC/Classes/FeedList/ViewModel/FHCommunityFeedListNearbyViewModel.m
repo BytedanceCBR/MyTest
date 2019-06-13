@@ -14,7 +14,7 @@
 #import "FHFeedUGCCellModel.h"
 #import "Article.h"
 
-@interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate, UITableViewDataSource>
+@interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
 @end
 
@@ -39,10 +39,13 @@
     }];
     self.tableView.mj_footer = self.refreshFooter;
     self.refreshFooter.hidden = YES;
-    // 下拉刷新
-    [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
-        [wself requestData:YES first:NO];
-    }];
+    
+    if(self.viewController.tableViewNeedPullDown){
+        // 下拉刷新
+        [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
+            [wself requestData:YES first:NO];
+        }];
+    }
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -117,7 +120,7 @@
 //            }
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""]){
+            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
                 [self.viewController showNotify:refreshTip];
                 [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
             }
@@ -142,7 +145,9 @@
 - (NSArray *)convertModel:(NSArray *)feedList {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     if(feedList.count > 0){
-        [resultArray addObject:[FHFeedUGCCellModel modelFromFakeData]];
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFakeData];
+        cellModel.tableView = self.tableView;
+        [resultArray addObject:cellModel];
     }
     for (FHFeedListDataModel *itemModel in feedList) {
         NSString *content = itemModel.content;
@@ -176,6 +181,8 @@
         cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
+    
+    cell.delegate = self;
 
     if(indexPath.row < self.dataList.count){
         [cell refreshWithData:cellModel];
@@ -217,6 +224,17 @@
     
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+}
+
+#pragma mark - FHUGCBaseCellDelegate
+
+- (void)deleteCell:(FHFeedUGCCellModel *)cellModel {
+    NSInteger row = [self.dataList indexOfObject:cellModel];
+    if(row < self.dataList.count && row >= 0){
+        [self.dataList removeObject:cellModel];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+    }
 }
 
 @end

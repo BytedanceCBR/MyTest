@@ -13,12 +13,12 @@
 #import <UIScrollView+Refresh.h>
 #import <TTHttpTask.h>
 #import "FHHomeRequestAPI.h"
-
-typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
-    FHHomePullTriggerTypePullUp = 1, //上拉刷新
-    FHHomePullTriggerTypePullDown = 2  //下拉刷新
-};
-
+#import <FHHomePlaceHolderCell.h>
+#import "FHhomeHouseTypeBannerCell.h"
+#import "TTDeviceHelper.h"
+#import <FHHouseBaseItemCell.h>
+#import <FHHomeCellHelper.h>
+#import <FHPlaceHolderCell.h>
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -51,6 +51,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     
     [self.view addSubview:self.tableView];
     
+    [FHHomeCellHelper registerCells:self.tableView];
+    
     _itemCount = 30;
     
     WeakSelf;
@@ -77,8 +79,26 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }
     }];
     
-    
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+
     self.tableView.mj_footer = self.refreshFooter;
+    
+    [self registerCells];
+    
+    [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+}
+
+- (void)registerCells
+{
+    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
+    
+    [self.tableView  registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
+    
+    [self.tableView  registerClass:[FHHomeBaseTableCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBaseTableCell class])];
+    
+    [self.tableView  registerClass:[FHhomeHouseTypeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
+    
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
 }
 
 - (BOOL)checkIsHaveEntrancesList
@@ -108,6 +128,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
 #pragma mark reload data
 
+- (void)showPlaceHolderCells
+{
+    self.showPlaceHolder = YES;
+    [self.tableView reloadData];
+}
 //城市开通，且无房源时显示error页
 - (void)reloadCityEnbaleAndNoHouseData:(BOOL)isNoData
 {
@@ -210,7 +235,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }
         [self reloadHomeTableHouseSection];
         
-        
         self.tableView.hasMore = model.data.hasMore;
         [self updateTableViewWithMoreData:model.data.hasMore];
         
@@ -218,11 +242,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         if (model.data.refreshTip && pullType == FHHomePullTriggerTypePullDown) {
             [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
-//            [self.homeViewController showNotify:model.data.refreshTip];
             self.tableView.contentOffset = CGPointMake(0, 0);
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
         
+        if (self.requestCallBack) {
+            self.requestCallBack(pullType, self.houseType, YES, model);
+        }
     }];
 }
 
@@ -304,6 +329,17 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     
 }
 
+- (CGFloat)getHeightShowNoData
+{
+    if([TTDeviceHelper isScreenWidthLarge320])
+    {
+        return [UIScreen mainScreen].bounds.size.height * 0.45;
+    }else
+    {
+        return [UIScreen mainScreen].bounds.size.height * 0.65;
+    }
+}
+
 #pragma mark delegte
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -324,17 +360,90 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }
         return 0;
     }
-    return self.itemCount;
+    
+    if (self.showPlaceHolder) {
+        return 10;
+    }
+    return self.houseDataItemsModel.count;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0) {
+        if ([self checkIsHaveEntrancesList]) {
+            //适配5s
+            if ([TTDeviceHelper isScreenWidthLarge320]) {
+                return 89;
+            }else
+            {
+                return 74;
+            }
+        }
+        return 0;
+    }else
+    {
+        return 75;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *ID = @"cell_2";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
+    if(indexPath.section == kFHHomeHouseTypeBannerViewSection)
+    {
+        FHhomeHouseTypeBannerCell *bannerCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
+        [bannerCell refreshData:self.houseType];
+        return bannerCell;
+    }else
+    {
+        
+        if (self.showNoDataErrorView) {
+            
+            UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+            for (UIView *subView in cellError.contentView.subviews) {
+                [subView removeFromSuperview];
+            }
+            cellError.selectionStyle = UITableViewCellSelectionStyleNone;
+            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [self getHeightShowNoData])];
+            //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
+            [cellError.contentView addSubview:noDataErrorView];
+            
+            [noDataErrorView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImageName:@"group-9"
+                                    showRetry:NO];
+            return cellError;
+        }
+        
+        if (self.showRequestErrorView) {
+            UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+            for (UIView *subView in cellError.contentView.subviews) {
+                [subView removeFromSuperview];
+            }
+            cellError.selectionStyle = UITableViewCellSelectionStyleNone;
+            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [self getHeightShowNoData])];
+            //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
+            [cellError.contentView addSubview:noDataErrorView];
+            
+            [noDataErrorView showEmptyWithTip:@"数据走丢了" errorImageName:@"group-9"
+                                    showRetry:YES];
+            __weak typeof(self) weakSelf = self;
+            noDataErrorView.retryBlock = ^{
+                [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+            };
+            return cellError;
+        }
+        
+        if (self.showPlaceHolder) {
+            FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
+            return cell;
+        }
+        
+        //to do 房源cell
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
+        if (indexPath.row < self.houseDataItemsModel.count) {
+            JSONModel *model = self.houseDataItemsModel[indexPath.row];
+            [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
+            [cell updateHomeSmallImageHouseCellModel:model andType:self.houseType];
+        }
+        return cell;
     }
-    cell.textLabel.text = [NSString stringWithFormat:@"第%zd行",indexPath.row];
-    return cell;
 }
 
 - (UITableView *)tableView {

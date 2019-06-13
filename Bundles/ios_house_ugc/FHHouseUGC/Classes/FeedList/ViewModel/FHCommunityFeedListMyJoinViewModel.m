@@ -40,10 +40,13 @@
     }];
     self.tableView.mj_footer = self.refreshFooter;
     self.refreshFooter.hidden = YES;
-    // 下拉刷新
-    [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
-        [wself requestData:YES first:NO];
-    }];
+    
+    if(self.viewController.tableViewNeedPullDown){
+        // 下拉刷新
+        [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
+            [wself requestData:YES first:NO];
+        }];
+    }
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -118,7 +121,7 @@
             //            }
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""]){
+            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
                 [self.viewController showNotify:refreshTip];
                 [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
             }

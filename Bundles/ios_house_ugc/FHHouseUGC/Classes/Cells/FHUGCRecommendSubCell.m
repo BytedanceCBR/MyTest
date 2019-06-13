@@ -21,6 +21,8 @@
 @property(nonatomic, strong) UIImageView *icon;
 @property(nonatomic, strong) UIButton *joinBtn;
 
+@property(nonatomic, strong) id model;
+
 @end
 
 @implementation FHUGCRecommendSubCell
@@ -47,6 +49,7 @@
 }
 
 - (void)refreshWithData:(id)data {
+    _model = data;
     if([data isKindOfClass:[NSString class]]){
         _titleLabel.text = data;
         _descLabel.text = @"88热帖·9221人";
@@ -77,9 +80,10 @@
     _joinBtn.layer.cornerRadius = 4;
     _joinBtn.layer.borderColor = [[UIColor themeRed1] CGColor];
     _joinBtn.layer.borderWidth = 0.5;
-    [_joinBtn setTitle:@"加入" forState:UIControlStateNormal];
+    [_joinBtn setTitle:@"关注" forState:UIControlStateNormal];
     [_joinBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     _joinBtn.titleLabel.font = [UIFont themeFontRegular:12];
+    [_joinBtn addTarget:self action:@selector(joinIn) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_joinBtn];
 }
 
@@ -124,6 +128,12 @@
     label.font = font;
     label.textColor = textColor;
     return label;
+}
+
+- (void)joinIn {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
+        [self.delegate joinIn:self.model cell:self];
+    }
 }
 
 @end
