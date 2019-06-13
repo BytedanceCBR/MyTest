@@ -5,10 +5,11 @@
 #import <Foundation/Foundation.h>
 
 @class FHCommunityDetailViewController;
+@class FHCommunityDetailHeaderView;
 
 
-@interface FHCommunityDetailViewModel : NSObject
-- (instancetype)initWithController:(FHCommunityDetailViewController *)viewController tableView:(UITableView *)tableView;
+@interface FHCommunityDetailViewModel : NSObject <UIScrollViewDelegate>
+- (instancetype)initWithController:(FHCommunityDetailViewController *)viewController;
 
 - (void)requestData;
 @end

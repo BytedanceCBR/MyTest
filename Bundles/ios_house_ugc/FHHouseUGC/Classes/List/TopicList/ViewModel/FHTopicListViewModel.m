@@ -38,17 +38,10 @@
     return self;
 }
 
-- (void)onNetWorkError:(BOOL)showEmptyView {
-    if (showEmptyView) {
-        self.tableView.hidden = YES;
-        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-    }
-    [[ToastManager manager] showToast:@"网络不给力,请稍后重试"];
-}
-
 - (void)requestData:(BOOL)isRefresh {
     if (![TTReachability isNetworkConnected]) {
-        [self onNetWorkError:isRefresh];
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        [[ToastManager manager] showToast:@"网络不给力,请稍后重试"];
         return;
     }
 
@@ -67,12 +60,16 @@
             wself.tableView.hidden = NO;
             [wself.tableView reloadData];
         } else {
-            [wself onNetWorkError:isRefresh];
             if (isRefresh) {
                 [wself.tableView finishPullDownWithSuccess:NO];
             } else {
                 [wself.tableView.mj_footer endRefreshing];
             }
+            if (isRefresh) {
+                self.tableView.hidden = YES;
+                [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            }
+            [[ToastManager manager] showToast:@"网络不给力,请稍后重试"];
         }
     }];
 }

@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 //附加在feed上面的自定义view
 @property(nonatomic, strong) UIView *tableHeaderView;
 
+@property(nonatomic, weak) id<UIScrollViewDelegate> scrollViewDelegate;
+@property(nonatomic) BOOL customPullRefresh;
 - (void)showNotify:(NSString *)message;
 
 @end
