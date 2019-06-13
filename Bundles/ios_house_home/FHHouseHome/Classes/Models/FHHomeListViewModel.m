@@ -79,7 +79,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.dataSource.categoryView = self.categoryView;
         self.dataSource.showPlaceHolder = YES;
         
-        
 
         [self configIconRowCountAndHeight];
         
@@ -100,28 +99,28 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subTableViewDidScroll:) name:@"FHHomeSubTableViewDidScroll" object:nil];
         
     
-        UIViewController *oneVC = [[FHHomeItemViewController alloc] init];
-        UIViewController *twoVC = [[FHHomeItemViewController alloc] init];
-        UIViewController *threeVC = [[FHHomeItemViewController alloc] init];
-        UIViewController *fourVC = [[FHHomeItemViewController alloc] init];
-        
+        FHHomeItemViewController *oneVC = [[FHHomeItemViewController alloc] init];
+        oneVC.houseType = FHHouseTypeSecondHandHouse;
+        FHHomeItemViewController *twoVC = [[FHHomeItemViewController alloc] init];
+        twoVC.houseType = FHHouseTypeRentHouse;
+        FHHomeItemViewController *threeVC = [[FHHomeItemViewController alloc] init];
+        threeVC.houseType = FHHouseTypeNewHouse;
+
         // 添加4个子控制器
         [self.homeViewController addChildViewController:oneVC];
         [self.homeViewController addChildViewController:twoVC];
         [self.homeViewController addChildViewController:threeVC];
-        [self.homeViewController addChildViewController:fourVC];
-        // 先将第一个子控制的view添加到scrollView上去        
+        // 先将第一个子控制的view添加到scrollView上去
         
         [self.homeViewController.scrollView addSubview:oneVC.view];
         [self.homeViewController.scrollView addSubview:twoVC.view];
         [self.homeViewController.scrollView addSubview:threeVC.view];
-        [self.homeViewController.scrollView addSubview:fourVC.view];
+        [self.homeViewController.scrollView setContentSize:CGSizeMake(KFHScreenWidth * 3, self.homeViewController.scrollView.frame.size.height)];
         
         
         oneVC.view.frame = CGRectMake(0, 0, KFHScreenWidth, KFHScreenHeight);
         twoVC.view.frame = CGRectMake([UIScreen mainScreen].bounds.size.width, 0, KFHScreenWidth, KFHScreenHeight);
         threeVC.view.frame = CGRectMake([UIScreen mainScreen].bounds.size.width * 2, 0, [UIScreen mainScreen].bounds.size.width, KFHScreenHeight);
-        fourVC.view.frame = CGRectMake([UIScreen mainScreen].bounds.size.width * 3, 0, [UIScreen mainScreen].bounds.size.width, KFHScreenHeight);
         
         //*************
         self.tableViewV.hasMore = YES;

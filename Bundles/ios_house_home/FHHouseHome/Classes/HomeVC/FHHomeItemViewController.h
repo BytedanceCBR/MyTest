@@ -12,6 +12,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static const NSUInteger kFHHomeHouseTypeBannerViewSection = 0;
+static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
+
 @interface FHHomeItemViewController : UIViewController
 
 @property (nonatomic,assign)FHHouseType houseType;
