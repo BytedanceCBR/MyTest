@@ -85,7 +85,8 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     self.mainTableView.showsVerticalScrollIndicator = NO;
 
-    
+    self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
+
     [self registerNotifications];
         
     self.mainTableView.sectionFooterHeight = 0;
@@ -101,7 +102,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 
     [FHHomeCellHelper registerCells:self.mainTableView];
     
-    self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
         // Do any additional setup after loading the view.
     
     self.view.backgroundColor = [UIColor whiteColor];
@@ -437,7 +437,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (!_scrollView) {
         _scrollView = [[UIScrollView alloc] init];
         _scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 200);
-        _scrollView.delegate = self;
         _scrollView.pagingEnabled = YES;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.showsHorizontalScrollIndicator = NO;

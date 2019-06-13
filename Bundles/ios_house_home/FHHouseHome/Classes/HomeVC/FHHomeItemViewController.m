@@ -20,12 +20,6 @@
 #import <FHHomeCellHelper.h>
 #import <FHPlaceHolderCell.h>
 
-typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
-    FHHomePullTriggerTypePullUp = 1, //上拉刷新
-    FHHomePullTriggerTypePullDown = 2  //下拉刷新
-};
-
-
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
@@ -134,6 +128,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
 #pragma mark reload data
 
+- (void)showPlaceHolderCells
+{
+    self.showPlaceHolder = YES;
+    [self.tableView reloadData];
+}
 //城市开通，且无房源时显示error页
 - (void)reloadCityEnbaleAndNoHouseData:(BOOL)isNoData
 {
@@ -246,6 +245,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             self.tableView.contentOffset = CGPointMake(0, 0);
         }
         
+        if (self.requestCallBack) {
+            self.requestCallBack(pullType, self.houseType, YES, model);
+        }
     }];
 }
 
@@ -357,6 +359,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             return 1;
         }
         return 0;
+    }
+    
+    if (self.showPlaceHolder) {
+        return 10;
     }
     return self.houseDataItemsModel.count;
 }
