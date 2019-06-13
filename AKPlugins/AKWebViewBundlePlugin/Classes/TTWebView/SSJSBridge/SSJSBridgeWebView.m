@@ -176,8 +176,14 @@ NSString *const TTWebViewRequestKey = @"request";
                 }
             }
         }
+
+        if ([request.URL.absoluteString containsString:@"tel:"]) {
+            [[UIApplication sharedApplication] openURL:request.URL];
+            return YES;
+        }
     }
     
+
     if ([URL.scheme isEqualToString:@"bytedance"] &&
         ([host isEqualToString:@"custom_event"] ||
          [host isEqualToString:@"log_event"] || [host isEqualToString:@"log_event_v3"])) {
