@@ -25,6 +25,8 @@
 #import "JSONAdditions.h"
 #import "NSDictionary+TTAdditions.h"
 #import "Article.h"
+#import "FHUGCDetailGrayLineCell.h"
+#import "FHPostDetailHeaderCell.h"
 
 @interface FHPostDetailViewModel ()
 
@@ -35,13 +37,23 @@
 // 注册cell类型
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHPostDetailCell class] forCellReuseIdentifier:NSStringFromClass([FHPostDetailCell class])];
+    [self.tableView registerClass:[FHUGCDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHUGCDetailGrayLineCell class])];
+    [self.tableView registerClass:[FHPostDetailHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHPostDetailHeaderCell class])];
 }
 
 // cell class
 - (Class)cellClassForEntity:(id)model {
-    // 兼容旧版本 头部滑动图片
+    // 帖子头部
+    if ([model isKindOfClass:[FHPostDetailHeaderModel class]]) {
+        return [FHPostDetailHeaderCell class];
+    }
+    // 帖子详情cell
     if ([model isKindOfClass:[FHFeedUGCCellModel class]]) {
         return [FHPostDetailCell class];
+    }
+    // 分割线
+    if ([model isKindOfClass:[FHUGCDetailGrayLineModel class]]) {
+        return [FHUGCDetailGrayLineCell class];
     }
     return [FHUGCBaseCell class];
 }
@@ -68,6 +80,7 @@
 }
 
 - (void)dealloc {
+    
 }
 
 // startLoadData
@@ -81,6 +94,10 @@
             
         }
     }];
+}
+
+- (void)processData {
+    
 }
 
 #pragma mark - Public
