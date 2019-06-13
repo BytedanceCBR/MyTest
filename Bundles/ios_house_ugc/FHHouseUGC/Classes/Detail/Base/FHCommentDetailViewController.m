@@ -39,6 +39,7 @@
 #import "TTCommentWriteManager.h"
 #import "TTCommentWriteView.h"
 #import "ExploreItemActionManager.h"
+#import "FHPostDetailCommentWriteView.h"
 
 @interface FHCommentDetailViewController ()<UIScrollViewDelegate>
 
@@ -51,8 +52,9 @@
 @property (nonatomic, assign) BOOL beginShowComment;
 @property (nonatomic, assign)   CGFloat       topTableViewContentHeight;
 @property (nonatomic, assign)   BOOL       isAppearing;
-@property(nonatomic, strong) TTCommentWriteView *commentWriteView;
+@property(nonatomic, strong) FHPostDetailCommentWriteView *commentWriteView;
 @property (nonatomic, strong) ExploreItemActionManager *itemActionManager;
+@property (nonatomic, assign)   BOOL       hasLoadedComment;
 
 @end
 
@@ -109,6 +111,7 @@
     if (self.postType == 0) {
         self.postType = FHUGCPostTypePost;
     }
+    self.hasLoadedComment = NO;
     self.topTableViewContentHeight = 0;
     self.beginShowComment = YES;
 }
@@ -164,13 +167,9 @@
     self.toolbarView.toolbarType = FHExploreDetailToolbarTypeArticleComment;
     
     [self.view addSubview:self.toolbarView];
-    
-    [self.toolbarView.collectButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+
     [self.toolbarView.writeButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.toolbarView.emojiButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.toolbarView.commentButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.toolbarView.digButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.toolbarView.shareButton addTarget:self action:@selector(toolBarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     self.toolbarView.frame = [self p_frameForToolBarView];
     self.toolbarView.hidden = NO;
@@ -263,8 +262,9 @@
     _topTableViewContentHeight = _tableView.contentSize.height;
     _tableView.scrollEnabled = NO;
     CGFloat commentViewHeight = _mainScrollView.frame.size.height;
-
-    self.commentViewController.view.frame = CGRectMake(0, _tableView.contentSize.height, self.view.width, commentViewHeight);
+    if (_mainScrollView.contentOffset.y <= 1 && !self.hasLoadedComment) {
+        self.commentViewController.view.frame = CGRectMake(0, _tableView.contentSize.height, self.view.width, commentViewHeight);
+    }
     self.commentViewController.commentTableView.scrollEnabled = NO;
     
     _mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
@@ -297,23 +297,7 @@
 
 - (void)toolBarButtonClicked:(id)sender
 {
-    if (sender == self.toolbarView.collectButton) {
-        self.toolbarView.collectButton.imageView.contentMode = UIViewContentModeCenter;
-        self.toolbarView.collectButton.imageView.transform = CGAffineTransformMakeScale(1.f, 1.f);
-        self.toolbarView.collectButton.alpha = 1.f;
-        [UIView animateWithDuration:0.1f delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
-            self.toolbarView.collectButton.imageView.transform = CGAffineTransformMakeScale(0.6f, 0.6f);
-            self.toolbarView.collectButton.alpha = 0.f;
-        } completion:^(BOOL finished){
-            [self p_willChangeArticleFavoriteState];
-            [UIView animateWithDuration:0.2f delay:0.f options:UIViewAnimationOptionCurveEaseIn animations:^{
-                self.toolbarView.collectButton.imageView.transform = CGAffineTransformMakeScale(1.f, 1.f);
-                self.toolbarView.collectButton.alpha = 1.f;
-            } completion:^(BOOL finished){
-            }];
-        }];
-    }
-    else if (sender == self.toolbarView.writeButton) {
+    if (sender == self.toolbarView.writeButton) {
         if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
             [self tt_commentViewController:self.commentViewController didSelectWithInfo:({
                 NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
@@ -327,36 +311,14 @@
             if ([self.commentViewController respondsToSelector:@selector(tt_clearDefaultReplyCommentModel)]) {
                 [self.commentViewController tt_clearDefaultReplyCommentModel];
             }
-            [self.toolbarView.writeButton setTitle:@"写评论" forState:UIControlStateNormal];
+            [self.toolbarView.writeButton setTitle:@"说点什么..." forState:UIControlStateNormal];
             return;
         }
         [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
     }
-    else if (sender == self.toolbarView.emojiButton) {
-        if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
-            [self tt_commentViewController:self.commentViewController didSelectWithInfo:({
-                NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
-                [baseCondition setValue:self.groupModel forKey:@"groupModel"];
-                [baseCondition setValue:@(1) forKey:@"from"];
-                [baseCondition setValue:@(YES) forKey:@"writeComment"];
-                [baseCondition setValue:self.commentViewController.tt_defaultReplyCommentModel forKey:@"commentModel"];
-                [baseCondition setValue:@(ArticleMomentSourceTypeArticleDetail) forKey:@"sourceType"];
-                baseCondition;
-            })];
-            if ([self.commentViewController respondsToSelector:@selector(tt_clearDefaultReplyCommentModel)]) {
-                [self.commentViewController tt_clearDefaultReplyCommentModel];
-            }
-            [self.toolbarView.writeButton setTitle:@"写评论" forState:UIControlStateNormal];
-            return;
-        }
-        [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:YES];
-    }
     else if (sender == _toolbarView.digButton) {
         // 点赞
         [self p_digg];
-    }
-    else if (sender == _toolbarView.shareButton) {
-        [self p_willShowSharePannel];
     }
 }
 
@@ -375,7 +337,7 @@
 // 点赞
 - (void)p_digg {
     self.user_digg = (self.user_digg == 1) ? 0 : 1;
-    self.digg_count = @(self.user_digg == 1 ? (self.digg_count + 1) : MAX(0, (self.digg_count - 1)));
+    self.digg_count = self.user_digg == 1 ? (self.digg_count + 1) : MAX(0, (self.digg_count - 1));
     
     if (!self.itemActionManager) {
         self.itemActionManager = [[ExploreItemActionManager alloc] init];
@@ -397,8 +359,7 @@
 - (void)p_refreshToolbarView
 {
     self.toolbarView.digButton.selected = self.user_digg == 1;
-    // 点赞 个数 add by zyk
-//    self.toolbarView.commentBadgeValue = [@(self.detailModel.article.commentCount) stringValue];
+    self.toolbarView.digCountValue = [NSString stringWithFormat:@"%ld",self.digg_count];
 }
 
 - (CGRect)p_frameForToolBarView
@@ -453,13 +414,15 @@
 - (void)tt_commentViewControllerDidFetchCommentsWithError:(NSError *)error
 {
     //点击评论进入文章时跳转到评论区
+    __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self p_scrollToCommentIfNeeded];
+        [weakSelf p_scrollToCommentIfNeeded];
+        weakSelf.hasLoadedComment = YES;
     });
     
     if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
         NSString *userName = self.commentViewController.tt_defaultReplyCommentModel.userName;
-        [self.toolbarView.writeButton setTitle:isEmptyString(userName)? @"写评论": [NSString stringWithFormat:@"回复 %@：", userName] forState:UIControlStateNormal];
+        [self.toolbarView.writeButton setTitle:isEmptyString(userName)? @"说点什么...": [NSString stringWithFormat:@"回复 %@：", userName] forState:UIControlStateNormal];
     }
 }
 
@@ -605,18 +568,20 @@
 //    commentManager.categoryID = self.detailModel.categoryID;
 //    commentManager.logPb = self.detailModel.logPb;
     
-    self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
+    self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
     
     self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
     
-    // writeCommentView 禁表情
-    if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
-        self.commentWriteView.banEmojiInput = self.commentViewController.tt_banEmojiInput;
-    }
     
-    if ([self.commentViewController respondsToSelector:@selector(tt_writeCommentViewPlaceholder)]) {
-        [self.commentWriteView setTextViewPlaceholder:self.commentViewController.tt_writeCommentViewPlaceholder];
-    }
+    
+    // writeCommentView 禁表情
+//    if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
+//        self.commentWriteView.banEmojiInput = self.commentViewController.tt_banEmojiInput;
+//    }
+    
+//    if ([self.commentViewController respondsToSelector:@selector(tt_writeCommentViewPlaceholder)]) {
+//        [self.commentWriteView setTextViewPlaceholder:self.commentViewController.tt_writeCommentViewPlaceholder];
+//    }
     
     [self.commentWriteView showInView:self.view animated:YES];
 }
@@ -624,7 +589,20 @@
 - (void)p_scrollToCommentIfNeeded
 {
     if (self.beginShowComment && [self p_needShowToolBarView]) {
-        [self toolBarButtonClicked:self.toolbarView.commentButton];
+        // 跳转到评论 区域
+        CGFloat totalHeight = self.tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height;
+        
+        CGFloat offset = self.topTableViewContentHeight - SCREEN_HEIGHT / 3;
+        if (offset <= 0) {
+            offset = 0;
+        } else {
+            CGFloat frameHeight = self.mainScrollView.bounds.size.height;
+            if (totalHeight - offset < frameHeight) {
+                offset = totalHeight - frameHeight - 1;
+            }
+        }
+        
+        [self.mainScrollView setContentOffset:CGPointMake(0, offset) animated:YES];
     }
 }
 
@@ -666,6 +644,10 @@
 }
 
 #pragma mark - TTWriteCommentViewDelegate
+
+- (void)commentView:(TTCommentWriteView *) commentView cancelledWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager {
+    commentWriteManager.delegate = nil;
+}
 
 - (void)commentView:(TTCommentWriteView *) commentView sucessWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager responsedData:(NSDictionary *)responseData
 {

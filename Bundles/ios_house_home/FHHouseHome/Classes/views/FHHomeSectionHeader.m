@@ -19,7 +19,7 @@ static const float kSegementedPadingTop = 10;
 @property (nonatomic, strong) UILabel * categoryLabel;
 @property (nonatomic, strong) NSArray <NSString *> * sectionTitleArray;
 @property (nonatomic, assign) NSInteger currentIndex;
-
+@property (nonatomic, strong) UIView *topStyleContainer;
 @end
 
 @implementation FHHomeSectionHeader
@@ -70,6 +70,22 @@ static const float kSegementedPadingTop = 10;
         }
     };
     [self addSubview:self.segmentedControl];
+    
+    _topStyleContainer = [[UIView alloc] initWithFrame:self.frame];
+    [_topStyleContainer setBackgroundColor:[UIColor redColor]];
+    [self addSubview:_topStyleContainer];
+}
+
+- (void)showOriginStyle:(BOOL)isOrigin
+{
+    if (isOrigin) {
+        _topStyleContainer.hidden = YES;
+        [self sendSubviewToBack:_topStyleContainer];
+    }else
+    {
+        _topStyleContainer.hidden = NO;
+        [self bringSubviewToFront:_topStyleContainer];
+    }
 }
 
 - (void)updateSegementedTitles:(NSArray <NSString *> *)titles

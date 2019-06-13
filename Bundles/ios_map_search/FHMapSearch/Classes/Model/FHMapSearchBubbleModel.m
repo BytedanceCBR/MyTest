@@ -6,6 +6,7 @@
 //
 
 #import "FHMapSearchBubbleModel.h"
+#import <FHHouseBase/FHCommonDefines.h>
 
 #define RESIZE_LEVEL @"resize_level"
 #define CENTER_LATITUDE @"center_latitude"
@@ -27,6 +28,9 @@
 
 -(instancetype) initWithUrl:(NSString *)strUrl
 {
+    if (IS_EMPTY_STRING(strUrl)) {
+        return nil;
+    }
     NSURL *url = [NSURL URLWithString:strUrl];
     if (!url) {
         return nil;
@@ -35,7 +39,7 @@
     self = [super init];
     if (self) {
         
-        _components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:YES];
+        _components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
         
         [self configContents];
         
@@ -154,6 +158,11 @@
         }
     }
     
+}
+
+-(void)removeQueryOfKey:(NSString *)key
+{
+    [self.queryDict removeObjectForKey:key];
 }
 
 -(NSString *)query

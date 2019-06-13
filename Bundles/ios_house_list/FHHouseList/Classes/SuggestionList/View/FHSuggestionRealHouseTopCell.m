@@ -197,7 +197,7 @@
         make.top.equalTo(self.falseHouseNumLabel).offset(-3);
         make.right.equalTo(self.contentView);
         make.height.mas_equalTo(30);
-        make.width.mas_equalTo(120);
+        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width * 0.65);
     }];
     
     
@@ -206,7 +206,7 @@
     [self.contentView addSubview:_maskWebBtn];
     [_maskWebBtn addTarget:self action:@selector(allWebHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_maskWebBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.allWebHouseBtn).offset(-5);
+        make.top.equalTo(self.allWebHouseBtn).offset(-8);
         make.right.equalTo(self.allWebHouseBtn).offset(5);
         make.height.mas_equalTo(40);
         make.width.mas_equalTo(40);

@@ -44,6 +44,8 @@ typedef  void (^_Nullable HouseListOpenUrlCallback)(NSString *openUrl);
 
 -(void)enterMapDrawMode;
 
+-(void)enterSubwayMode;
+
 -(void)switchToNormalMode;
 
 -(BOOL)isShowingMaskView;

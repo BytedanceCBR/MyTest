@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)addQueryParams:(NSDictionary *)params;
 
+-(void)removeQueryOfKey:(NSString *)key;
+
 -(BOOL)validCenter;
 
 -(BOOL)validResizeLevel;

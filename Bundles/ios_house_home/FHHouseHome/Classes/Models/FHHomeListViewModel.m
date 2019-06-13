@@ -24,13 +24,18 @@
 #import <TTArticleCategoryManager.h>
 #import "FHHomeCellHelper.h"
 #import <TTSandBoxHelper.h>
+#import "FHHomeItemViewController.h"
 
 typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     FHHomePullTriggerTypePullUp = 1, //上拉刷新
     FHHomePullTriggerTypePullDown = 2  //下拉刷新
 };
 
-@interface FHHomeListViewModel()
+#define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
+#define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
+#define KFHHomeSectionHeight 45
+
+@interface FHHomeListViewModel()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableViewV;
 @property (nonatomic, assign) BOOL showPlaceHolder;
@@ -53,6 +58,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, assign) BOOL isRequestFromSwitch; //左右切换房源类型
 @property(nonatomic, weak)   NSTimer *timer;
 
+@property (nonatomic, strong) UIScrollView *childVCScrollView;
+@property (nonatomic, assign) BOOL isSelectIndex;
+@property (nonatomic, assign) NSInteger headerHeight;
+
 @end
 
 @implementation FHHomeListViewModel
@@ -63,25 +72,58 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     if (self) {
         [self initItemsCaches];
         
-        self.categoryView = [[FHHomeSectionHeader alloc] initWithFrame:CGRectMake(0.0, 0.0, [UIScreen mainScreen].bounds.size.width, 40)];
+        self.categoryView = [[FHHomeSectionHeader alloc] initWithFrame:CGRectMake(0.0, 0.0, [UIScreen mainScreen].bounds.size.width, KFHHomeSectionHeight)];
         self.tableViewV = tableView;
         self.homeViewController = homeVC;
         self.dataSource = [FHHomeMainTableViewDataSource new];
         self.dataSource.categoryView = self.categoryView;
         self.dataSource.showPlaceHolder = YES;
         
+        
 
         [self configIconRowCountAndHeight];
         
         
         [self updateCategoryViewSegmented:YES];
-        self.tableViewV.delegate = self.dataSource;
-        self.tableViewV.dataSource = self.dataSource;
+        self.tableViewV.delegate = self;
+        self.tableViewV.dataSource = self;
         self.hasShowedData = NO;
         self.isHasCallBackForFirstTime = NO;
         self.isFirstChange = YES;
         self.isRequestFromSwitch = NO;
         
+        //**************
+        self.isSelectIndex = YES;
+        self.headerHeight =  [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
+
+        // 监听子控制器发出的通知
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subTableViewDidScroll:) name:@"FHHomeSubTableViewDidScroll" object:nil];
+        
+    
+        UIViewController *oneVC = [[FHHomeItemViewController alloc] init];
+        UIViewController *twoVC = [[FHHomeItemViewController alloc] init];
+        UIViewController *threeVC = [[FHHomeItemViewController alloc] init];
+        UIViewController *fourVC = [[FHHomeItemViewController alloc] init];
+        
+        // 添加4个子控制器
+        [self.homeViewController addChildViewController:oneVC];
+        [self.homeViewController addChildViewController:twoVC];
+        [self.homeViewController addChildViewController:threeVC];
+        [self.homeViewController addChildViewController:fourVC];
+        // 先将第一个子控制的view添加到scrollView上去        
+        
+        [self.homeViewController.scrollView addSubview:oneVC.view];
+        [self.homeViewController.scrollView addSubview:twoVC.view];
+        [self.homeViewController.scrollView addSubview:threeVC.view];
+        [self.homeViewController.scrollView addSubview:fourVC.view];
+        
+        
+        oneVC.view.frame = CGRectMake(0, 0, KFHScreenWidth, KFHScreenHeight);
+        twoVC.view.frame = CGRectMake([UIScreen mainScreen].bounds.size.width, 0, KFHScreenWidth, KFHScreenHeight);
+        threeVC.view.frame = CGRectMake([UIScreen mainScreen].bounds.size.width * 2, 0, [UIScreen mainScreen].bounds.size.width, KFHScreenHeight);
+        fourVC.view.frame = CGRectMake([UIScreen mainScreen].bounds.size.width * 3, 0, [UIScreen mainScreen].bounds.size.width, KFHScreenHeight);
+        
+        //*************
         self.tableViewV.hasMore = YES;
         self.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
         
@@ -107,7 +149,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             [self requestOriginData:NO];
         };
         
-        self.tableViewV.mj_footer = self.refreshFooter;
+//        self.tableViewV.mj_footer = self.refreshFooter;
         
         // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
@@ -143,6 +185,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             [self configIconRowCountAndHeight];
             
+            self.headerHeight =  [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
             
             //切换城市先显示横条
             if([FHEnvContext sharedInstance].isRefreshFromCitySwitch)
@@ -901,7 +944,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     if (self.tableViewV.numberOfSections > kFHHomeListHouseBaseViewSection) {
         [self.tableViewV reloadData];
     }
-    
 }
 
 //重载当前缓存数据
@@ -979,5 +1021,125 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     }
     
 }
+
+#pragma mark tableView delegate
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 3;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == kFHHomeListHeaderBaseViewSection) {
+        JSONModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
+        if (!model) {
+            model = [[FHEnvContext sharedInstance] readConfigFromLocal];
+        }
+        NSString *identifier = [FHHomeCellHelper configIdentifier:model];
+        
+        FHHomeBaseTableCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        [FHHomeCellHelper configureHomeListCell:cell withJsonModel:model];
+        return cell;
+    }
+    
+    if (indexPath.row == kFHHomeListHouseTypeBannerViewSection) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"cell"];
+        }
+        // 添加分页菜单
+        [cell.contentView addSubview:self.categoryView];
+        return cell;
+    }
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"cell"];
+    }
+    // 添加分页菜单
+    [cell.contentView addSubview:self.homeViewController.scrollView];
+    [cell.contentView setBackgroundColor:[UIColor blueColor]];
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.row == kFHHomeListHeaderBaseViewSection) {
+        [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForFindHouse;
+        return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
+    }
+    
+    if (indexPath.row == kFHHomeListHouseTypeBannerViewSection) {
+        if (self.categoryView.segmentedControl.sectionTitles.count <= 1) {
+            self.headerHeight += KFHHomeSectionHeight;
+        }else
+        {
+            self.headerHeight += 1;
+        }
+        return KFHHomeSectionHeight;
+    }
+    
+    return [UIScreen mainScreen].bounds.size.height - 200;
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if (scrollView == self.homeViewController.scrollView) {
+        self.isSelectIndex = NO;
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+    if (self.tableViewV == scrollView) {
+        NSLog(@"table !!!!!!!!");
+
+        if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight)) {
+            NSLog(@"table header!!!!");
+            [self.categoryView showOriginStyle:NO];
+            self.tableViewV.contentOffset = CGPointMake(0, self.headerHeight);
+        }else
+        {
+            [self.categoryView showOriginStyle:YES];
+        }
+        
+        CGFloat offSetY = scrollView.contentOffset.y;
+        
+        if (offSetY < self.headerHeight) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"headerViewToTop" object:nil];
+        }
+    } else if (scrollView == self.homeViewController.scrollView) {
+        NSLog(@"scrollView !!!!!!!!");
+
+        self.tableViewV.scrollEnabled = NO;
+    }
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    self.tableViewV.scrollEnabled = YES;
+}
+
+- (void)subTableViewDidScroll:(NSNotification *)noti {
+    NSLog(@"subTableView !!!!!!!!");
+
+    UIScrollView *scrollView = noti.object;
+    self.childVCScrollView = scrollView;
+    if (self.tableViewV.contentOffset.y < self.headerHeight) {
+        scrollView.contentOffset = CGPointZero;
+        scrollView.showsVerticalScrollIndicator = NO;
+    } else {
+        //        self.tableView.contentOffset = CGPointMake(0, HeaderViewH);
+        scrollView.showsVerticalScrollIndicator = YES;
+    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 
 @end

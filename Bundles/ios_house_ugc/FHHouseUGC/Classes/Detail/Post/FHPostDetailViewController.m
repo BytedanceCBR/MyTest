@@ -58,6 +58,7 @@
     self.weakViewModel.threadID = self.tid;
     self.weakViewModel.forumID = self.fid;
     self.weakViewModel.category = @"test";// add by zyk
+    self.title = @"详情";
     // 全部评论
     [self commentCountChanged];
     // 列表页数据
