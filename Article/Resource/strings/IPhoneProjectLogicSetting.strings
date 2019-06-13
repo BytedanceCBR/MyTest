@@ -168,4 +168,5 @@
 //UGC相关
 "ugc_post" = "FHPostUGCViewController";
 "ugc_post_detail" = "FHPostDetailViewController";
+"ugc_my_interest" = "FHUGCMyInterestedController";
 
