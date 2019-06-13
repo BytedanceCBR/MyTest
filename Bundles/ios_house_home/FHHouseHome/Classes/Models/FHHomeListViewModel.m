@@ -33,6 +33,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
+#define KFHHomeSectionHeight 45
 
 @interface FHHomeListViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -57,8 +58,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, assign) BOOL isRequestFromSwitch; //左右切换房源类型
 @property(nonatomic, weak)   NSTimer *timer;
 
-//
-
 @property (nonatomic, strong) UIScrollView *childVCScrollView;
 @property (nonatomic, assign) BOOL isSelectIndex;
 @property (nonatomic, assign) NSInteger headerHeight;
@@ -73,7 +72,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     if (self) {
         [self initItemsCaches];
         
-        self.categoryView = [[FHHomeSectionHeader alloc] initWithFrame:CGRectMake(0.0, 0.0, [UIScreen mainScreen].bounds.size.width, 40)];
+        self.categoryView = [[FHHomeSectionHeader alloc] initWithFrame:CGRectMake(0.0, 0.0, [UIScreen mainScreen].bounds.size.width, KFHHomeSectionHeight)];
         self.tableViewV = tableView;
         self.homeViewController = homeVC;
         self.dataSource = [FHHomeMainTableViewDataSource new];
@@ -1026,11 +1025,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 #pragma mark tableView delegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    return 3;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
+    if (indexPath.row == kFHHomeListHeaderBaseViewSection) {
         JSONModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
         if (!model) {
             model = [[FHEnvContext sharedInstance] readConfigFromLocal];
@@ -1041,12 +1040,22 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [FHHomeCellHelper configureHomeListCell:cell withJsonModel:model];
         return cell;
     }
+    
+    if (indexPath.row == kFHHomeListHouseTypeBannerViewSection) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"cell"];
+        }
+        // 添加分页菜单
+        [cell.contentView addSubview:self.categoryView];
+        return cell;
+    }
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"cell"];
     }
     // 添加分页菜单
-    [cell.contentView addSubview:self.categoryView];
     [cell.contentView addSubview:self.homeViewController.scrollView];
     [cell.contentView setBackgroundColor:[UIColor blueColor]];
     return cell;
@@ -1057,6 +1066,16 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     if (indexPath.row == kFHHomeListHeaderBaseViewSection) {
         [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForFindHouse;
         return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
+    }
+    
+    if (indexPath.row == kFHHomeListHouseTypeBannerViewSection) {
+        if (self.categoryView.segmentedControl.sectionTitles.count <= 1) {
+            self.headerHeight += KFHHomeSectionHeight;
+        }else
+        {
+            self.headerHeight += 1;
+        }
+        return KFHHomeSectionHeight;
     }
     
     return [UIScreen mainScreen].bounds.size.height - 200;
@@ -1072,8 +1091,14 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     
     if (self.tableViewV == scrollView) {
         NSLog(@"table !!!!!!!!");
+
         if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight)) {
+            NSLog(@"table header!!!!");
+            [self.categoryView showOriginStyle:NO];
             self.tableViewV.contentOffset = CGPointMake(0, self.headerHeight);
+        }else
+        {
+            [self.categoryView showOriginStyle:YES];
         }
         
         CGFloat offSetY = scrollView.contentOffset.y;

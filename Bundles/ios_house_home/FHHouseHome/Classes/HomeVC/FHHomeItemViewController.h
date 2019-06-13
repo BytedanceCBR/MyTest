@@ -6,10 +6,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <FHHouseType.h>
+#import <FHTracerModel.h>
+#import "FHHomeListViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeItemViewController : UIViewController
+
+@property (nonatomic,assign)FHHouseType houseType;
+@property (nonatomic, assign) BOOL showNoDataErrorView;
+@property (nonatomic, assign) BOOL showRequestErrorView;
+@property (nonatomic, assign) BOOL showPlaceHolder;
+@property(nonatomic , strong) FHTracerModel *tracerModel;
+@property (nonatomic, assign) TTReloadType reloadType; //当前enterType，用于enter_category
 
 @end
 
