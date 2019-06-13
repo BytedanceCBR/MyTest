@@ -64,6 +64,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (FHFeedUGCCellModel *)modelFromFakeData;
 
++ (FHFeedUGCCellModel *)modelFromFeedUGCContent:(FHFeedUGCContentModel *)model;
+
 @end
 
 NS_ASSUME_NONNULL_END
