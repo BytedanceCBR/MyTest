@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UIButton *moreBtn;
+@property(nonatomic, strong) UIView *bottomLine;
+@property(nonatomic, strong) UIButton *refreshBtn;
 
 @end
 

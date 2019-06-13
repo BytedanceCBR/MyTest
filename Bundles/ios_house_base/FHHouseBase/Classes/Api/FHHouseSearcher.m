@@ -28,7 +28,7 @@
 }
 
 
-+(TTHttpTask *_Nullable)mapSearch:(FHMapSearchType)houseType searchId:(NSString *_Nullable)searchId query:(NSString *_Nullable)query maxLocation:(CLLocationCoordinate2D)maxLocation minLocation:(CLLocationCoordinate2D)minLocation resizeLevel:(CGFloat)reizeLevel targetType:(NSString *_Nullable)targetType  suggestionParams:(NSString *_Nullable)suggestionParams callback:(void(^_Nullable)(NSError *_Nullable error , FHMapSearchDataModel *_Nullable model))callback
++(TTHttpTask *_Nullable)mapSearch:(FHMapSearchType)houseType searchId:(NSString *_Nullable)searchId query:(NSString *_Nullable)query maxLocation:(CLLocationCoordinate2D)maxLocation minLocation:(CLLocationCoordinate2D)minLocation resizeLevel:(CGFloat)reizeLevel targetType:(NSString *_Nullable)targetType  suggestionParams:(NSString *_Nullable)suggestionParams extraParams:(NSDictionary *_Nullable)extraParams callback:(void(^_Nullable)(NSError *_Nullable error , FHMapSearchDataModel *_Nullable model))callback
 {
     NSString *host = [[FHURLSettings baseURL] stringByAppendingString:@"/f100/api/map_search?"];
     NSMutableDictionary *param = [NSMutableDictionary new];
@@ -66,6 +66,9 @@
     if (!IS_EMPTY_STRING(targetType)) {
         param[@"target_type"] = targetType;
     }
+    if (extraParams) {
+        [param addEntriesFromDictionary:extraParams];
+    }
     
     return [[TTNetworkManager shareInstance]requestForBinaryWithURL:host params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
         if (!callback) {
@@ -95,3 +98,4 @@ NSString const *SUGGESTION_PARAMS_KEY = @"suggestion_params";
 
 NSString const *CHANNEL_ID = @"channel_id";
 NSString const *CHANNEL_ID_CIRCEL_SEARCH = @"94349537358";
+NSString const *CHANNEL_ID_SUBWAY_SEARCH = @"94349537423";

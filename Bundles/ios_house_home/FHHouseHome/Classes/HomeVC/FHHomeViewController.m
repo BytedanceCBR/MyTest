@@ -75,7 +75,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     self.isRefreshing = NO;
     
-    self.mainTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    self.mainTableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     if (@available(iOS 7.0, *)) {
         self.mainTableView.estimatedSectionFooterHeight = 0;
         self.mainTableView.estimatedSectionHeaderHeight = 0;
@@ -83,6 +83,8 @@ static CGFloat const kSectionHeaderHeight = 38;
     } else {
         // Fallback on earlier versions
     }
+    self.mainTableView.showsVerticalScrollIndicator = NO;
+
     
     [self registerNotifications];
         
@@ -429,6 +431,21 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark init views
+- (UIScrollView *)scrollView {
+    if (!_scrollView) {
+        _scrollView = [[UIScrollView alloc] init];
+        _scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 200);
+        _scrollView.delegate = self;
+        _scrollView.pagingEnabled = YES;
+        _scrollView.showsVerticalScrollIndicator = NO;
+        _scrollView.showsHorizontalScrollIndicator = NO;
+        _scrollView.contentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width*4, 0);
+        _scrollView.backgroundColor = [UIColor orangeColor];
+    }
+    return _scrollView;
 }
 
 #pragma mark 内测弹窗

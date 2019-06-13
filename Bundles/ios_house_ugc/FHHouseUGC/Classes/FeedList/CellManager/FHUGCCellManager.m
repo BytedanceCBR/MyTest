@@ -14,6 +14,7 @@
 #import "FHArticlePureTitleCell.h"
 #import "FHArticleSingleImageCell.h"
 #import "FHArticleMultiImageCell.h"
+#import "FHUGCRecommendCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -40,6 +41,7 @@
                                 @"FHArticlePureTitleCell",
                                 @"FHArticleSingleImageCell",
                                 @"FHArticleMultiImageCell",
+                                @"FHUGCRecommendCell",
                                 
                                 
                                 //可扩展
@@ -76,6 +78,9 @@
             
         case FHUGCFeedListCellSubTypeArticleMultiImage:
             return [FHArticleMultiImageCell class];
+            
+        case FHUGCFeedListCellSubTypeUGCRecommend:
+            return [FHUGCRecommendCell class];
 
         default:
             break;

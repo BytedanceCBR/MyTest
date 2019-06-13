@@ -207,6 +207,15 @@
     return cellModel;
 }
 
+//推荐假数据
++ (FHFeedUGCCellModel *)modelFromFakeData {
+    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.cellType =@"60";
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
+    
+    return cellModel;
+}
+
 + (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [model.behotTime doubleValue];

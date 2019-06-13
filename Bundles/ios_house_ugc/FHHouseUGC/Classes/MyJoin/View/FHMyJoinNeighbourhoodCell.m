@@ -37,7 +37,7 @@
     _titleLabel.text = @"弘善家园";
     _descLabel.text = @"88热帖·9221人";
     
-//    [self.icon bd_setImageWithURL:[NSURL URLWithString:avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    [self.icon bd_setImageWithURL:[NSURL URLWithString:@"http://p1.pstatp.com/thumb/fea7000014edee1159ac"] placeholder:nil];
 }
 
 - (void)initView {

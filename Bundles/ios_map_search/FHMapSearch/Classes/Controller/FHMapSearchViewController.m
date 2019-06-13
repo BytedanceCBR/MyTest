@@ -178,7 +178,7 @@
 
 -(void)backAction
 {
-    if (self.viewModel.showMode == FHMapSearchShowModeMap) {
+    if (self.viewModel.showMode == FHMapSearchShowModeMap || self.viewModel.showMode == FHMapSearchShowModeSubway) {
         [self.navigationController popViewControllerAnimated:YES];
         [self tryCallbackOpenUrl];
     }else{
@@ -294,6 +294,10 @@
         return [wself.houseFilterBridge getNoneFilterQueryParams:params];
     };
     
+    _viewModel.getFilterConditionBlock = ^NSString * _Nullable{
+        return [wself.houseFilterBridge getConditions];
+    };
+    
     if (self.configModel.mapOpenUrl.length > 0) {
         
         NSURL *url = [NSURL URLWithString:self.configModel.mapOpenUrl];
@@ -310,12 +314,17 @@
     
     if (showDraw) {
         _chooseView = [[FHMapSearchWayChooseView alloc]initWithFrame:CGRectZero];
+        if (![self.viewModel suportSubway]) {
+            //无地铁只显示画圈找房
+            _chooseView.type = FHMapSearchWayChooseViewTypeDraw;
+        }
         _chooseView.delegate = _viewModel;
         _viewModel.chooseView = _chooseView;
         
         _bottomBar = [[FHMapSearchBottomBar alloc] init];
         _bottomBar.delegate = _viewModel;
         _bottomBar.hidden = YES;
+       
         _viewModel.bottomBar = _bottomBar;
     }
         
@@ -430,8 +439,11 @@
     
     [self.chooseView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.view).offset(bottomMargin);
-        make.centerX.mas_equalTo(self.view);
-        make.size.mas_equalTo(CGSizeMake(160, 58));
+        make.left.mas_equalTo(9);
+        make.right.mas_equalTo(-9);
+        make.height.mas_equalTo(58);
+//        make.centerX.mas_equalTo(self.view);
+//        make.size.mas_equalTo(CGSizeMake(160, 58));
     }];
     
     [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -536,6 +548,13 @@
     [self.view addSubview:self.drawMaskView];
     TTNavigationController *navController = (TTNavigationController *)self.navigationController;
     navController.panRecognizer.enabled = NO;
+}
+
+-(void)enterSubwayMode
+{
+    [self.houseFilterBridge closeConditionFilterPanel];
+    self.chooseView.hidden = YES;
+    self.bottomBar.hidden = YES;
 }
 
 -(BOOL)isShowingMaskView
