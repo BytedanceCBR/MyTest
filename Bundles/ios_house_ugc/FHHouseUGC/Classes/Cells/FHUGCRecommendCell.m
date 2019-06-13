@@ -23,6 +23,9 @@
 @property(nonatomic ,assign) NSInteger currentIndex;
 @property(nonatomic ,strong) FHFeedUGCCellModel *model;
 @property(nonatomic ,assign) CGFloat tableViewHeight;
+@property(nonatomic ,assign) BOOL isReplace;
+@property(nonatomic ,strong) FHUGCRecommendSubCell *joinedCell;
+@property(nonatomic ,assign) NSInteger joinedCellRow;
 
 @end
 
@@ -123,6 +126,7 @@
 
 - (void)refreshWithData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        self.isReplace = NO;
         _model = (FHFeedUGCCellModel *)data;
         self.sourceList = _model.interestNeighbourhoodList;
         [self refreshData];
@@ -131,9 +135,33 @@
 
 - (void)refreshData {
     [self generateDataList:self.sourceList];
-    [self.tableView reloadData];
+    //刷新列表
+    [self reloadNewData];
     //更新高度
     [self updateCellConstraints];
+}
+
+- (void)reloadNewData {
+    if(self.isReplace){
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_joinedCellRow inSection:0];
+        _joinedCell.hidden = YES;
+        [self.tableView performBatchUpdates:^{
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        } completion:^(BOOL finished) {
+            _joinedCell.hidden = NO;
+            //如果不重置，在某些特殊情况下新出的cell并没有被系统还原正确大小
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _joinedCell.transform = CGAffineTransformIdentity;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.4f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof UITableViewCell * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        obj.transform = CGAffineTransformIdentity;
+                    }];
+                });
+            });
+        }];
+    }else{
+        [self.tableView reloadData];
+    }
 }
 
 - (void)updateCellConstraints {
@@ -192,6 +220,8 @@
         self.currentIndex = self.currentIndex - self.sourceList.count;
     }
     
+    self.isReplace = NO;
+    
     [self refreshData];
 }
 
@@ -225,11 +255,23 @@
     return 60.0f;
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(self.isReplace){
+        //缩放
+        cell.layer.transform = CATransform3DMakeScale(0.2, 0.2, 1);
+        [UIView animateWithDuration:0.5 animations:^{
+            cell.layer.transform = CATransform3DMakeScale(1, 1, 1);
+        }];
+    }
+}
+    
+
 #pragma mark - FHUGCRecommendSubCellDelegate
 
-- (void)joinIn:(id)model {
+- (void)joinIn:(id)model cell:(nonnull FHUGCRecommendSubCell *)cell {
     //调用加入的接口
-    
+    _joinedCell = cell;
+    _joinedCellRow = [self.dataList indexOfObject:model];
     //加入成功后
     if(_sourceList.count > 3){
         NSInteger current = [_sourceList indexOfObject:model];
@@ -244,8 +286,10 @@
         
         [_sourceList replaceObjectAtIndex:current withObject:_sourceList[next]];
         [_sourceList removeObjectAtIndex:next];
+        self.isReplace = YES;
     }else{
         [_sourceList removeObject:model];
+        self.isReplace = NO;
     }
     
     [self refreshData];

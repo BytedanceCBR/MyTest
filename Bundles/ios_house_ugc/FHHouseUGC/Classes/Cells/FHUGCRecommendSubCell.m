@@ -131,8 +131,8 @@
 }
 
 - (void)joinIn {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:)]){
-        [self.delegate joinIn:self.model];
+    if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
+        [self.delegate joinIn:self.model cell:self];
     }
 }
 

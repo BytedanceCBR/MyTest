@@ -9,9 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHUGCRecommendSubCell;
+
 @protocol FHUGCRecommendSubCellDelegate <NSObject>
 
-- (void)joinIn:(id)model;
+- (void)joinIn:(id)model cell:(FHUGCRecommendSubCell *)cell;
 
 @end
 
