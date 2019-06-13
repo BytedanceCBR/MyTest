@@ -30,6 +30,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self initVars];
     [self initView];
     [self initConstraints];
     [self initViewModel];
@@ -39,6 +40,10 @@
 //    [super viewWillAppear:animated];
 //    [self startLoadData];
 //}
+
+- (void)initVars {
+    self.tableViewNeedPullDown = YES;
+}
 
 - (void)initView {
     [self initTableView];
