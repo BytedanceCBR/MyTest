@@ -583,6 +583,11 @@ static struct timeval kFHCommentTimeval;
     }
 }
 
+- (void)setEmojiInputViewVisible:(BOOL)emojiInputViewVisible {
+    _emojiInputViewVisible = emojiInputViewVisible;
+    self.emojButton.selected = emojiInputViewVisible;
+}
+
 
 #pragma mark -- getter & setter method
 
@@ -694,7 +699,9 @@ static struct timeval kFHCommentTimeval;
         _emojButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         _emojButton.hitTestEdgeInsets = UIEdgeInsetsMake(-8, -6, -8, -6);
 //        [_emojButton setTitle:@"表情" forState:UIControlStateNormal];
-        _emojButton.backgroundImageName = @"fh_ugc_toolbar_emoj_normal";
+//        _emojButton.backgroundImageName = @"fh_ugc_toolbar_emoj_normal";
+        _emojButton.imageName = @"fh_ugc_toolbar_emoj_normal";
+        _emojButton.selectedImageName = @"fh_ugc_toolbar_keyboard_normal";
 //        _emojButton.titleLabel.font = [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]];
 //        [_emojButton sizeToFit];
         _emojButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
