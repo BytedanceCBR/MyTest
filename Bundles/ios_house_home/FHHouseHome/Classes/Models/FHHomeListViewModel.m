@@ -1046,7 +1046,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"cell"];
     }
     // 添加分页菜单
-    [cell.contentView addSubview:[UIView new]];
+    [cell.contentView addSubview:self.categoryView];
     [cell.contentView addSubview:self.homeViewController.scrollView];
     [cell.contentView setBackgroundColor:[UIColor blueColor]];
     return cell;
