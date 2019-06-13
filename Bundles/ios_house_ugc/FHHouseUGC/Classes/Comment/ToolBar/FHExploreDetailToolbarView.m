@@ -47,12 +47,13 @@
         writeButton.height = [TTDeviceHelper isPadDevice] ? 36 : [TTDeviceUIUtils tt_newPadding:32];
         writeButton.titleLabel.font = [UIFont systemFontOfSize:(_isIPad ? 18 : 14)];
         writeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 16, 0, 0);
+        writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 8, 0, 0);
         writeButton.titleLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:writeButton];
         _writeButton = writeButton;
         
-        _writeButton.titleLabel.textColor = [UIColor themeGray3];
+        [_writeButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [_writeButton setTitleColor:[UIColor themeGray3] forState:UIControlStateHighlighted];
         _writeButton.layer.cornerRadius = 4;
         _writeButton.backgroundColor = [UIColor themeGray7];
         _writeButton.layer.masksToBounds = YES;

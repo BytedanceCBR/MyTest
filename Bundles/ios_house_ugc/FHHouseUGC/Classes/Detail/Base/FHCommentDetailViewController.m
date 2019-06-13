@@ -39,6 +39,7 @@
 #import "TTCommentWriteManager.h"
 #import "TTCommentWriteView.h"
 #import "ExploreItemActionManager.h"
+#import "FHPostDetailCommentWriteView.h"
 
 @interface FHCommentDetailViewController ()<UIScrollViewDelegate>
 
@@ -51,7 +52,7 @@
 @property (nonatomic, assign) BOOL beginShowComment;
 @property (nonatomic, assign)   CGFloat       topTableViewContentHeight;
 @property (nonatomic, assign)   BOOL       isAppearing;
-@property(nonatomic, strong) TTCommentWriteView *commentWriteView;
+@property(nonatomic, strong) FHPostDetailCommentWriteView *commentWriteView;
 @property (nonatomic, strong) ExploreItemActionManager *itemActionManager;
 
 @end
@@ -307,7 +308,7 @@
             if ([self.commentViewController respondsToSelector:@selector(tt_clearDefaultReplyCommentModel)]) {
                 [self.commentViewController tt_clearDefaultReplyCommentModel];
             }
-            [self.toolbarView.writeButton setTitle:@"写评论" forState:UIControlStateNormal];
+            [self.toolbarView.writeButton setTitle:@"说点什么..." forState:UIControlStateNormal];
             return;
         }
         [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
@@ -410,13 +411,14 @@
 - (void)tt_commentViewControllerDidFetchCommentsWithError:(NSError *)error
 {
     //点击评论进入文章时跳转到评论区
+    __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self p_scrollToCommentIfNeeded];
+        [weakSelf p_scrollToCommentIfNeeded];
     });
     
     if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
         NSString *userName = self.commentViewController.tt_defaultReplyCommentModel.userName;
-        [self.toolbarView.writeButton setTitle:isEmptyString(userName)? @"写评论": [NSString stringWithFormat:@"回复 %@：", userName] forState:UIControlStateNormal];
+        [self.toolbarView.writeButton setTitle:isEmptyString(userName)? @"说点什么...": [NSString stringWithFormat:@"回复 %@：", userName] forState:UIControlStateNormal];
     }
 }
 
@@ -562,18 +564,20 @@
 //    commentManager.categoryID = self.detailModel.categoryID;
 //    commentManager.logPb = self.detailModel.logPb;
     
-    self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
+    self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
     
     self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
     
-    // writeCommentView 禁表情
-    if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
-        self.commentWriteView.banEmojiInput = self.commentViewController.tt_banEmojiInput;
-    }
     
-    if ([self.commentViewController respondsToSelector:@selector(tt_writeCommentViewPlaceholder)]) {
-        [self.commentWriteView setTextViewPlaceholder:self.commentViewController.tt_writeCommentViewPlaceholder];
-    }
+    
+    // writeCommentView 禁表情
+//    if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
+//        self.commentWriteView.banEmojiInput = self.commentViewController.tt_banEmojiInput;
+//    }
+    
+//    if ([self.commentViewController respondsToSelector:@selector(tt_writeCommentViewPlaceholder)]) {
+//        [self.commentWriteView setTextViewPlaceholder:self.commentViewController.tt_writeCommentViewPlaceholder];
+//    }
     
     [self.commentWriteView showInView:self.view animated:YES];
 }
@@ -623,6 +627,10 @@
 }
 
 #pragma mark - TTWriteCommentViewDelegate
+
+- (void)commentView:(TTCommentWriteView *) commentView cancelledWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager {
+    commentWriteManager.delegate = nil;
+}
 
 - (void)commentView:(TTCommentWriteView *) commentView sucessWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager responsedData:(NSDictionary *)responseData
 {
