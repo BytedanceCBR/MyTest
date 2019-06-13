@@ -10,15 +10,17 @@
 #import "UIView+Refresh_ErrorHandler.h"
 #import "UIScrollView+Refresh.h"
 #import "UIViewController+Track.h"
+#import "FHHomeBaseTableView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeViewController : FHBaseViewController <UIViewControllerErrorHandler>
 
 @property (nonatomic, strong)NSString *baseView;
-@property (nonatomic, strong) UITableView *mainTableView;
+@property (nonatomic, strong) FHHomeBaseTableView *mainTableView;
 @property (nonatomic, assign) TTReloadType reloadFromType;
 @property (nonatomic, assign) BOOL isMainTabVC;
+@property (nonatomic, strong) UIScrollView *scrollView;
 
 - (void)pullAndRefresh;
 

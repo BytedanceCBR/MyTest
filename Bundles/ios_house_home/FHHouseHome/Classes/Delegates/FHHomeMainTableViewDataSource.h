@@ -18,7 +18,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 45;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHomeMainTableViewDataSource : JSONModel
+@interface FHHomeMainTableViewDataSource : NSObject
 @property(nonatomic,strong) NSArray <JSONModel *>*modelsArray;
 @property (nonatomic, strong) FHHomeSectionHeader *categoryView;
 @property (nonatomic, assign) BOOL showPlaceHolder;
