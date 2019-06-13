@@ -59,14 +59,7 @@
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         StrongSelf;
         if ([FHEnvContext isNetworkConnected]) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.itemCount += 30;
-                    [self.tableView reloadData];
-                    [self.tableView.mj_footer endRefreshing];
-                    [self.tableView finishPullUpWithSuccess:YES];
-                });
-            });
+            [self requestDataForRefresh:FHHomePullTriggerTypePullUp andIsFirst:NO];
         }else
         {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -85,6 +78,8 @@
     
     [self registerCells];
     
+    [self showPlaceHolderCells];
+    
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
 }
 
@@ -92,7 +87,7 @@
 {
     [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
     
-    [self.tableView  registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
+    [self.tableView  registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
     
     [self.tableView  registerClass:[FHHomeBaseTableCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBaseTableCell class])];
     
@@ -243,6 +238,10 @@
         if (model.data.refreshTip && pullType == FHHomePullTriggerTypePullDown) {
             [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
             self.tableView.contentOffset = CGPointMake(0, 0);
+        }
+        
+        if (pullType == FHHomePullTriggerTypePullUp) {
+            [self.tableView finishPullUpWithSuccess:YES];
         }
         
         if (self.requestCallBack) {
