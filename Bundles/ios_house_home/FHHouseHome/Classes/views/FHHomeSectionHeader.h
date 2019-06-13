@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateSegementedTitles:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index;
 
+- (void)showOriginStyle:(BOOL)isOrigin;
+
 @end
 
 NS_ASSUME_NONNULL_END
