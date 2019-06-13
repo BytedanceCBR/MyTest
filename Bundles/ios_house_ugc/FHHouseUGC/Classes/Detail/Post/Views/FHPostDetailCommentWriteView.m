@@ -23,6 +23,7 @@
 #import "TTCommentTransparentView.h"
 #import "TTCommentDetailReplyWriteManager.h"
 #import "TTCommentDefines.h"
+#import "UIColor+Theme.h"
 
 #define PUBLISHBUTTON_WIDTH [TTDeviceUIUtils tt_newPadding:33.f]
 #define PUBLISHBUTTON_HEIGHT [TTDeviceUIUtils tt_newPadding:22.5f]
@@ -647,6 +648,7 @@ static struct timeval kFHCommentTimeval;
         internalTextView.placeholder = @"说点什么...";
         internalTextView.backgroundColor = [UIColor clearColor];
         internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
+        internalTextView.tintColor = [UIColor themeRed];
         internalTextView.placeholderColor = SSGetThemedColorWithKey(kFHColorCoolGrey3);
         internalTextView.internalTextView.placeHolderFont = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:14.f]];
         _inputTextView.layer.cornerRadius = 4;

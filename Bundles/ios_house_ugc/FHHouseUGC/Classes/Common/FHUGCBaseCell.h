@@ -16,6 +16,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHUGCBaseCellDelegate <NSObject>
+
+@optional
+- (void)deleteCell:(FHFeedUGCCellModel *)cellModel;
+
+@end
+
 @interface FHUGCBaseCell : UITableViewCell
 
 // 当前cell的模型数据
@@ -32,6 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 详情页baseViewModel，可以从中拿到需要的数据(高效但是不美观)
 @property (nonatomic, weak)     FHUGCBaseViewModel       *baseViewModel;
+
+@property(nonatomic , weak) id<FHUGCBaseCellDelegate> delegate;
 
 @end
 
