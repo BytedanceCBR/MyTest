@@ -113,7 +113,7 @@
     }
     self.hasLoadedComment = NO;
     self.topTableViewContentHeight = 0;
-    self.beginShowComment = YES;
+    self.beginShowComment = NO;
 }
 
 - (void)setupUI {
