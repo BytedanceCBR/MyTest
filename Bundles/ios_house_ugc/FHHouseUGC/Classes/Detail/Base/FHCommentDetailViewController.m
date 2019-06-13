@@ -54,6 +54,7 @@
 @property (nonatomic, assign)   BOOL       isAppearing;
 @property(nonatomic, strong) FHPostDetailCommentWriteView *commentWriteView;
 @property (nonatomic, strong) ExploreItemActionManager *itemActionManager;
+@property (nonatomic, assign)   BOOL       hasLoadedComment;
 
 @end
 
@@ -110,6 +111,7 @@
     if (self.postType == 0) {
         self.postType = FHUGCPostTypePost;
     }
+    self.hasLoadedComment = NO;
     self.topTableViewContentHeight = 0;
     self.beginShowComment = YES;
 }
@@ -260,8 +262,9 @@
     _topTableViewContentHeight = _tableView.contentSize.height;
     _tableView.scrollEnabled = NO;
     CGFloat commentViewHeight = _mainScrollView.frame.size.height;
-
-    self.commentViewController.view.frame = CGRectMake(0, _tableView.contentSize.height, self.view.width, commentViewHeight);
+    if (_mainScrollView.contentOffset.y <= 1 && !self.hasLoadedComment) {
+        self.commentViewController.view.frame = CGRectMake(0, _tableView.contentSize.height, self.view.width, commentViewHeight);
+    }
     self.commentViewController.commentTableView.scrollEnabled = NO;
     
     _mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, _tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height);
@@ -414,6 +417,7 @@
     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf p_scrollToCommentIfNeeded];
+        weakSelf.hasLoadedComment = YES;
     });
     
     if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
@@ -586,6 +590,19 @@
 {
     if (self.beginShowComment && [self p_needShowToolBarView]) {
         // 跳转到评论 区域
+        CGFloat totalHeight = self.tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height;
+        
+        CGFloat offset = self.topTableViewContentHeight - SCREEN_HEIGHT / 3;
+        if (offset <= 0) {
+            offset = 0;
+        } else {
+            CGFloat frameHeight = self.mainScrollView.bounds.size.height;
+            if (totalHeight - offset < frameHeight) {
+                offset = totalHeight - frameHeight - 1;
+            }
+        }
+        
+        [self.mainScrollView setContentOffset:CGPointMake(0, offset) animated:YES];
     }
 }
 
