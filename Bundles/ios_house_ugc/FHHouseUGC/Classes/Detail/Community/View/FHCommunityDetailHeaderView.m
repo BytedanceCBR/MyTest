@@ -52,8 +52,8 @@
     [self.labelContainer addSubview:self.nameLabel];
     [self.labelContainer addSubview:self.subtitleLabel];
 
-    self.joniButton = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero];
-    self.joniButton.followed = NO;
+    self.followButton = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero];
+    self.followButton.followed = NO;
 
     self.publicationsLabel = [UILabel createLabel:@"公告" textColor:@"" fontSize:13];
     self.publicationsLabel.textColor = [UIColor themeRed1];
@@ -79,7 +79,7 @@
     [self addSubview:self.topBack];
     [self addSubview:self.avatar];
     [self addSubview:self.labelContainer];
-    [self addSubview:self.joniButton];
+    [self addSubview:self.followButton];
     [self addSubview:self.publicationsContainer];
 }
 
@@ -92,7 +92,7 @@
         make.width.height.mas_equalTo(50);
     }];
 
-    [self.joniButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.avatar);
         make.height.mas_equalTo(26);
         make.width.mas_equalTo(56);
@@ -103,7 +103,7 @@
         make.centerY.mas_equalTo(self.avatar);
         make.height.mas_equalTo(44);
         make.left.mas_equalTo(self.avatar.mas_right).offset(8);
-        make.right.mas_equalTo(self.joniButton.mas_left).offset(-8);
+        make.right.mas_equalTo(self.followButton.mas_left).offset(-8);
     }];
 
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {

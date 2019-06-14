@@ -10,7 +10,7 @@
 @property(nonatomic, copy) NSString *id;
 @property(nonatomic, copy) NSString *name;
 @property(nonatomic, copy) NSString *subtitle;
-@property(nonatomic) BOOL hasJoin;
+@property(nonatomic) BOOL followed;
 @property(nonatomic, copy) NSString *avatar;
 @property(nonatomic, copy) NSString *publications;
 @end

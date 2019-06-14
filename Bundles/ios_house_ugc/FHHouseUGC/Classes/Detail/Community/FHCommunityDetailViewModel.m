@@ -14,9 +14,10 @@
 #import "UIImageView+BDWebImage.h"
 #import "UILabel+House.h"
 #import "FHUGCFollowButton.h"
+#import "FHUGCFollowHelper.h"
 
 
-@interface FHCommunityDetailViewModel ()
+@interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
 
 @property(nonatomic, weak) FHCommunityDetailViewController *viewController;
 @property(nonatomic, strong) FHCommunityFeedListController *feedListController;
@@ -41,11 +42,11 @@
 }
 
 - (void)initView {
-
     [self initNavBar];
-    [self.rightBtn addTarget:self action:@selector(joinBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.rightBtn addTarget:self action:@selector(followClicked) forControlEvents:UIControlEventTouchUpInside];
 
     self.feedListController = [[FHCommunityFeedListController alloc] init];
+    self.feedListController.publishBtnBottomHeight = 10;
     self.feedListController.tableViewNeedPullDown = NO;
     self.feedListController.scrollViewDelegate = self;
     self.feedListController.listType = FHCommunityFeedListTypeMyJoin;
@@ -126,14 +127,18 @@
     }];
 }
 
-- (void)refreshContentOffset:(CGPoint)contentOffset hasJoin:(BOOL)hasJoin {
+- (void)followClicked {
+
+}
+
+- (void)refreshContentOffset:(CGPoint)contentOffset {
     CGFloat offsetY = contentOffset.y;
     CGFloat alpha = offsetY / (80.0f);
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
-    [self updateNavBarWithAlpha:alpha showJoin:!hasJoin];
+    [self updateNavBarWithAlpha:alpha];
 }
 
-- (void)updateNavBarWithAlpha:(CGFloat)alpha showJoin:(BOOL)showJoin {
+- (void)updateNavBarWithAlpha:(CGFloat)alpha {
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     if (alpha <= 0.1f) {
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
@@ -181,7 +186,7 @@
     } else {
         self.headerView.publicationsContentLabel.text = data.publications;
     }
-    [self updateJoinUI:data.hasJoin];
+    [self updateJoinUI:data.followed];
     self.titleLabel.text = isEmptyString(data.name) ? @"" : data.name;
     self.subTitleLabel.text = isEmptyString(data.subtitle) ? @"" : data.subtitle;
 
@@ -189,17 +194,17 @@
     self.feedListController.tableHeaderView = self.headerView;
 }
 
-- (void)updateJoinUI:(BOOL)hasJoin {
-    self.headerView.joniButton.followed = hasJoin;
-    self.rightBtn.followed = hasJoin;
-    [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha showJoin:!hasJoin];
+- (void)updateJoinUI:(BOOL)followed {
+    self.headerView.followButton.followed = followed;
+    self.rightBtn.followed = followed;
+    [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
 }
 
 #pragma UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self resizeHeader:scrollView.contentOffset];
-    [self refreshContentOffset:scrollView.contentOffset hasJoin:self.data.hasJoin];
+    [self refreshContentOffset:scrollView.contentOffset];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
