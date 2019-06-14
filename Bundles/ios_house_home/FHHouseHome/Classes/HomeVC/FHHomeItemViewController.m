@@ -59,14 +59,7 @@
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         StrongSelf;
         if ([FHEnvContext isNetworkConnected]) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.itemCount += 30;
-                    [self.tableView reloadData];
-                    [self.tableView.mj_footer endRefreshing];
-                    [self.tableView finishPullUpWithSuccess:YES];
-                });
-            });
+            [self requestDataForRefresh:FHHomePullTriggerTypePullUp andIsFirst:NO];
         }else
         {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -85,6 +78,8 @@
     
     [self registerCells];
     
+    [self showPlaceHolderCells];
+    
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
 }
 
@@ -92,7 +87,7 @@
 {
     [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
     
-    [self.tableView  registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
+    [self.tableView  registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
     
     [self.tableView  registerClass:[FHHomeBaseTableCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBaseTableCell class])];
     
@@ -193,18 +188,18 @@
         if (pullType == FHHomePullTriggerTypePullDown) {
             //请求无错误,无错误
             if (model.data.items.count == 0 && !error && isFirst) {
-                if (!self.isRetryedPullDownRefresh) {
-                    self.isRetryedPullDownRefresh = YES;
-                    [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
-                    return;
-                }
-                
                 [self checkCityStatus];
+                if (self.requestCallBack) {
+                    self.requestCallBack(pullType, self.houseType, NO, nil);
+                }
                 return;
             }
             
             if (error && [error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
                 [self reloadCityEnbaleAndNoHouseData:NO];
+                if (self.requestCallBack) {
+                    self.requestCallBack(pullType, self.houseType, NO, nil);
+                }
                 return ;
             }
         }else
@@ -243,6 +238,10 @@
         if (model.data.refreshTip && pullType == FHHomePullTriggerTypePullDown) {
             [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
             self.tableView.contentOffset = CGPointMake(0, 0);
+        }
+        
+        if (pullType == FHHomePullTriggerTypePullUp) {
+            [self.tableView finishPullUpWithSuccess:YES];
         }
         
         if (self.requestCallBack) {
@@ -361,6 +360,10 @@
         return 0;
     }
     
+    if (self.showNoDataErrorView || self.showRequestErrorView) {
+        return 1;
+    }
+    
     if (self.showPlaceHolder) {
         return 10;
     }
@@ -382,6 +385,10 @@
         return 0;
     }else
     {
+        if (self.showNoDataErrorView || self.showRequestErrorView) {
+            return [self getHeightShowNoData];
+        }
+        
         return 75;
     }
 }
