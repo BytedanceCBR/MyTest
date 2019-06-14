@@ -186,9 +186,7 @@
         self.requestTask = nil;
         
         [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
-        
-        [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
-        
+                
         //判断下拉刷新
         if (pullType == FHHomePullTriggerTypePullDown) {
             //请求无错误,无错误

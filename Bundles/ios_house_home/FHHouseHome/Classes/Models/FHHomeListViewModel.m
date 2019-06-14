@@ -125,6 +125,8 @@
             self.isRequestFromSwitch = NO;
             FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
 
+            self.isSelectIndex = YES;
+
             [self configIconRowCountAndHeight];
             
             self.headerHeight =  [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
@@ -278,6 +280,7 @@
         }
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
     }
+    
     [self.homeViewController.emptyView hideEmptyView];
 }
 
