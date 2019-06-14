@@ -95,7 +95,7 @@ static const NSInteger kTopScrollViewTag = 100;
     
     NSInteger scrollIndex = (NSInteger)((offsetX + MAIN_SCREEN_WIDTH/2)/MAIN_SCREEN_WIDTH);
     
-    if (_segmentedControl.sectionTitles.count > scrollIndex) {     
+    if (_segmentedControl.sectionTitles.count > scrollIndex) {
         UILabel *labelCurrent = [self getTopScrollLabelFromIndex:scrollIndex];
         if (self.currentLabel != labelCurrent) {
             [self.currentLabel setFont:[UIFont themeFontRegular:16]];
@@ -207,7 +207,7 @@ static const NSInteger kTopScrollViewTag = 100;
     if (titles.count != 0) {
         CGFloat lableWidth = MAIN_SCREEN_WIDTH / titles.count;
         for (NSInteger i = 0; i < titles.count; i++) {
-            UILabel *sectionLabel = [[UILabel alloc] initWithFrame:CGRectMake(i * lableWidth, 0, lableWidth, 32)];
+            UILabel *sectionLabel = [[UILabel alloc] initWithFrame:CGRectMake(i * lableWidth, 9, lableWidth, 24)];
             sectionLabel.text = titles[i];
             sectionLabel.tag = kTopScrollViewTag + i;
             if (i == 0) {
@@ -229,13 +229,39 @@ static const NSInteger kTopScrollViewTag = 100;
                 sectionLabel.textColor = [UIColor themeGray3];
             }
            
-            NSLog(@"center x  = %f",sectionLabel.centerX - _topStyleBottomLineImage.centerX);
+            sectionLabel.userInteractionEnabled = YES;
+            UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollSectionLabelClick:)];
+            [sectionLabel addGestureRecognizer:tapGes];
             sectionLabel.textAlignment = NSTextAlignmentCenter;
             [_topStyleContainer addSubview:sectionLabel];
         }
     }
     
     self.totalCenterXWidth = self.rightCenterX - self.leftCenterX;
+}
+
+- (void)scrollSectionLabelClick:(UITapGestureRecognizer *)tap
+{
+    UIView *tapView = tap.view;
+    NSInteger scrollIndex = tapView.tag - kTopScrollViewTag;
+    if (_segmentedControl.sectionTitles.count > scrollIndex) {
+        
+        UILabel *labelCurrent = [self getTopScrollLabelFromIndex:scrollIndex];
+        if (self.currentLabel != labelCurrent) {
+            [self.currentLabel setFont:[UIFont themeFontRegular:16]];
+            [self.currentLabel setTextColor:[UIColor themeGray3]];
+        }
+        
+        [labelCurrent setFont:[UIFont themeFontMedium:16]];
+        [labelCurrent setTextColor:[UIColor themeGray1]];
+        self.currentLabel = labelCurrent;
+        
+        _topStyleBottomLineImage.centerX = labelCurrent.centerX;
+        
+        if (self.clickIndexCallBack) {
+            self.clickIndexCallBack(scrollIndex);
+        }
+    }
 }
 
 - (UILabel *)getTopScrollLabelFromIndex:(NSInteger)index
