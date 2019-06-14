@@ -45,6 +45,7 @@
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
 @property (nonatomic, assign) BOOL isFirstChange;
 @property (nonatomic, assign) BOOL isRequestFromSwitch; //左右切换房源类型
+@property (nonatomic, assign) BOOL isResetingOffsetZero;
 @property(nonatomic, weak)   NSTimer *timer;
 
 @property (nonatomic, strong) UIScrollView *childVCScrollView;
@@ -65,6 +66,7 @@
         self.tableViewV = tableView;
         self.homeViewController = homeVC;
         self.isSelectIndex = YES;
+        self.isResetingOffsetZero = NO;
         _itemsVCArray = [NSMutableArray new];
         
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -219,24 +221,30 @@
 
 - (void)setUpTableScrollOffsetZero
 {
+//    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+//    NSInteger currentSelectIndex = self.categoryView.segmentedControl.selectedSegmentIndex;
+//
+//    if (configDataModel.houseTypeList.count > currentSelectIndex && self.itemsVCArray.count > currentSelectIndex) {
+//        FHHomeItemViewController *itemVC = self.itemsVCArray[currentSelectIndex];
+//
+//        itemVC.tableView.contentOffset = CGPointMake(0, 0);
+//        if (itemVC.tableView.numberOfSections > 0 && [itemVC.tableView numberOfRowsInSection:0] > 0) {
+//            [itemVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+//        }
+//    }
     
-    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    NSInteger currentSelectIndex = self.categoryView.segmentedControl.selectedSegmentIndex;
-    
-    if (configDataModel.houseTypeList.count > currentSelectIndex && self.itemsVCArray.count > currentSelectIndex) {
-        FHHomeItemViewController *itemVC = self.itemsVCArray[currentSelectIndex];
-        
-        itemVC.tableView.contentOffset = CGPointMake(0, 0);
-        if (itemVC.tableView.numberOfSections > 0 && [itemVC.tableView numberOfRowsInSection:0] > 0) {
-            [itemVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-        }
-    }
-    
+    self.isResetingOffsetZero = YES;
     self.tableViewV.contentOffset = CGPointMake(0, 0);
     if (self.tableViewV.numberOfSections > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
         [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     }
-
+    
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.isResetingOffsetZero = NO;
+        });
+    });
 }
 
 - (void)setUpSubtableViewContrllers
@@ -298,7 +306,17 @@
     }
     [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
     [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-    [self.homeViewController.emptyView hideEmptyView];
+    
+    [self checkLoadingAndEmpty];
+}
+
+//检测加载情况，去除圆圈loading
+- (void)checkLoadingAndEmpty
+{
+    if ([self.homeViewController respondsToSelector:@selector(tt_endUpdataData)]) {
+        [self.homeViewController.emptyView hideEmptyView];
+        [self.homeViewController tt_endUpdataData];
+    }
 }
 
 -(NSString *)pageTypeString {
@@ -578,7 +596,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"cell"];
     }
     // 添加分页菜单
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone; 
     [cell.contentView addSubview:self.homeViewController.scrollView];
     [cell.contentView setBackgroundColor:[UIColor whiteColor]];
     return cell;
@@ -605,6 +623,8 @@
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.homeViewController hideImmediately];
+    self.isResetingOffsetZero = NO;
     if (scrollView == self.homeViewController.scrollView) {
         self.isSelectIndex = NO;
         self.tableViewV.scrollEnabled = NO;
@@ -615,7 +635,14 @@
     if (self.tableViewV == scrollView) {
         if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight)) {
             [self.categoryView showOriginStyle:NO];
-            self.tableViewV.contentOffset = CGPointMake(0, self.headerHeight);
+
+            if (!self.isResetingOffsetZero) {
+                [self.homeViewController hideImmediately];
+                self.tableViewV.contentOffset = CGPointMake(0, self.headerHeight);
+            }else
+            {
+                [self.categoryView showOriginStyle:YES];
+            }
         }else
         {
             [self.categoryView showOriginStyle:YES];

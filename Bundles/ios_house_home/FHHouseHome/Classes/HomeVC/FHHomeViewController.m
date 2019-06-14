@@ -108,7 +108,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.mainTableView.backgroundColor = [UIColor whiteColor];
     FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!configModel) {
-        self.mainTableView.hidden = YES;
         [self tt_startUpdate];
     }
 
