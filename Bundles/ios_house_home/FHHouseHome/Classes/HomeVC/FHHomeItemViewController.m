@@ -188,18 +188,18 @@
         if (pullType == FHHomePullTriggerTypePullDown) {
             //请求无错误,无错误
             if (model.data.items.count == 0 && !error && isFirst) {
-                if (!self.isRetryedPullDownRefresh) {
-                    self.isRetryedPullDownRefresh = YES;
-                    [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
-                    return;
-                }
-                
                 [self checkCityStatus];
+                if (self.requestCallBack) {
+                    self.requestCallBack(pullType, self.houseType, NO, nil);
+                }
                 return;
             }
             
             if (error && [error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
                 [self reloadCityEnbaleAndNoHouseData:NO];
+                if (self.requestCallBack) {
+                    self.requestCallBack(pullType, self.houseType, NO, nil);
+                }
                 return ;
             }
         }else
@@ -360,6 +360,10 @@
         return 0;
     }
     
+    if (self.showNoDataErrorView || self.showRequestErrorView) {
+        return 1;
+    }
+    
     if (self.showPlaceHolder) {
         return 10;
     }
@@ -381,6 +385,10 @@
         return 0;
     }else
     {
+        if (self.showNoDataErrorView || self.showRequestErrorView) {
+            return [self getHeightShowNoData];
+        }
+        
         return 75;
     }
 }

@@ -221,6 +221,10 @@
         [subView removeFromSuperview];
     }
     
+    for (UIViewController *subController in self.homeViewController.childViewControllers) {
+        [subController removeFromParentViewController];
+    }
+    
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSMutableArray *itemVCArray = [NSMutableArray new];
     for (int i = 0; i < configDataModel.houseTypeList.count; i++) {
@@ -256,12 +260,16 @@
 
 - (void)processRequestData:(FHHomePullTriggerType)refreshType andHouseType:(FHHouseType)houseType andIsSucees:(BOOL)isSuccess andDataModel:(JSONModel * _Nonnull) dataModel
 {
-    if (refreshType == FHHomePullTriggerTypePullDown && [dataModel isKindOfClass:[FHHomeHouseModel class]] && self.houseType == houseType) {
+    if (refreshType == FHHomePullTriggerTypePullDown  && self.houseType == houseType) {
         [self.tableViewV finishPullDownWithSuccess:YES];
-        FHHomeHouseModel *houseData = (FHHomeHouseModel *)dataModel;
-        [self.homeViewController showNotify:houseData.data.refreshTip];
-        self.tableViewV.contentOffset = CGPointMake(0, 0);
-        [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        if([dataModel isKindOfClass:[FHHomeHouseModel class]] && isSuccess)
+        {
+            FHHomeHouseModel *houseData = (FHHomeHouseModel *)dataModel;
+            [self.homeViewController showNotify:houseData.data.refreshTip];
+            self.tableViewV.contentOffset = CGPointMake(0, 0);
+            [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }
+        [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
     }
 }
 
