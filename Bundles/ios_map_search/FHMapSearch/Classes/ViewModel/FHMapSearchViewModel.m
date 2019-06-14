@@ -287,7 +287,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)changeNavbarAppear:(BOOL)show
 {
-    [self.viewController showNavTopViews:show?1:0 animated:YES];
+    BOOL hideLocation = (self.showMode == FHMapSearchShowModeSubway || self.lastShowMode == FHMapSearchShowModeSubway);
+    [self.viewController showNavTopViews:show?1:0 animated:YES hideLocation:hideLocation];
 }
 
 -(void)changeNavbarAlpha:(BOOL)animated
@@ -298,7 +299,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }else if (alpha > 1){
         alpha = 1;
     }
-    [self.viewController showNavTopViews:alpha animated:animated];
+    BOOL hideLocation = (self.showMode == FHMapSearchShowModeSubway || self.lastShowMode == FHMapSearchShowModeSubway);
+    [self.viewController showNavTopViews:alpha animated:animated hideLocation:hideLocation];
     
 }
 
@@ -1140,7 +1142,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         //画圈找房 不做处理
     }else{
         //强制显示导航栏，增加保护
-        [self.viewController showNavTopViews:1 animated:NO];        
+        [self.viewController showNavTopViews:1 animated:NO hideLocation:NO];
     }    
 }
 
