@@ -60,12 +60,14 @@
 
     WeakSelf;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-        [wself loadData:NO];
+        StrongSelf;
+        [self loadData:NO];
     }];
     self.tableView.mj_footer = self.refreshFooter;
 
     [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
-        [wself loadData:YES];
+        StrongSelf;
+        [self loadData:YES];
     }];
 
     [self addDefaultEmptyViewFullScreen];

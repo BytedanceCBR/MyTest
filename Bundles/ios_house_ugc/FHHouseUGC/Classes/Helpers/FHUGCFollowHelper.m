@@ -28,8 +28,7 @@ SINGLETON_GCD(FHUGCFollowHelper)
     [[FHUGCFollowHelper sharedFHUGCFollowHelper].observers removeObject:observer];
 }
 
-//TODO api接入
-+ (void)followCommunity:(NSString *)communityId userInfo:(NSDictionary *)userInfo {
++ (void)followCommunity:(NSString *)communityId userInfo:(NSDictionary *)userInfo followBlock:(FollowBlock)block {
 
 }
 

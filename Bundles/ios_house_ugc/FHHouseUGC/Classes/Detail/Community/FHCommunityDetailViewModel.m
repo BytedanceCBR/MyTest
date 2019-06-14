@@ -2,6 +2,7 @@
 // Created by zhulijun on 2019-06-12.
 //
 
+#import <TTBaseLib/UIButton+TTAdditions.h>
 #import "FHCommunityDetailViewModel.h"
 #import "FHCommunityDetailViewController.h"
 #import "FHCommunityFeedListController.h"
@@ -15,6 +16,7 @@
 #import "UILabel+House.h"
 #import "FHUGCFollowButton.h"
 #import "FHUGCFollowHelper.h"
+#import "TTThemedAlertController.h"
 
 
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
@@ -56,6 +58,11 @@
     [self.viewController addChildViewController:self.feedListController];
     [self.feedListController didMoveToParentViewController:self.viewController];
     [self.viewController.view addSubview:self.feedListController.view];
+    WeakSelf;
+    self.feedListController.publishBlock = ^() {
+        StrongSelf;
+        [self goPosDetail];
+    };
 }
 
 - (void)initNavBar {
@@ -103,7 +110,7 @@
     }];
 }
 
-- (void)requestData {
+- (void)requestData:(BOOL)refreshFeed {
     if (![TTReachability isNetworkConnected]) {
         self.feedListController.view.hidden = YES;
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -112,9 +119,8 @@
     }
 
     WeakSelf;
-    [self.viewController startLoading];
     [FHHouseUGCAPI requestCommunityDetail:@"1234" class:FHCommunityDetailModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
-        [wself.viewController endLoading];
+        StrongSelf;
         if (model && (error == nil)) {
             FHCommunityDetailModel *responseModel = model;
             [wself updateUIWithData:responseModel.data];
@@ -125,10 +131,43 @@
             return;
         }
     }];
+    if(refreshFeed){
+        [self.feedListController startLoadData];
+    }
 }
 
 - (void)followClicked {
+    if (self.data.followed) {
+        WeakSelf;
+        TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"确定退出？" message:nil preferredType:TTThemedAlertControllerTypeAlert];
+        [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
+        [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+            StrongSelf;
+            [FHUGCFollowHelper followCommunity:wself.data.id userInfo:nil followBlock:nil];
+        }];
+        [alertController showFrom:self.viewController animated:YES];
+    }
+}
 
+- (void)goPosDetail {
+    if (!self.data.followed) {
+        WeakSelf;
+        TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"先关注该小区才能发布哦" message:nil preferredType:TTThemedAlertControllerTypeAlert];
+        [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
+        [alertController addActionWithTitle:NSLocalizedString(@"关注", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+            StrongSelf;
+            [FHUGCFollowHelper followCommunity:wself.data.id userInfo:nil followBlock:^(){
+                //跳转发布器
+                NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            }];
+        }];
+        [alertController showFrom:self.viewController animated:YES];
+        return;
+    }
+    //跳转发布器
+    NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
 - (void)refreshContentOffset:(CGPoint)contentOffset {
@@ -221,7 +260,7 @@
     if (offsetY > -60.0f) {
         return;
     }
-    [self requestData];
+    [self requestData:YES];
 }
 
 @end
