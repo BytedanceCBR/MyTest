@@ -619,7 +619,7 @@
         return KFHHomeSectionHeight;
     }
     
-    return [UIScreen mainScreen].bounds.size.height - 200;
+    return [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {

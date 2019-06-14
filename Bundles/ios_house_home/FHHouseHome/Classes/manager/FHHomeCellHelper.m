@@ -251,6 +251,17 @@ static NSMutableArray  * _Nullable identifierArr;
     //    }
 }
 
+- (CGFloat)heightForFHHomeListHouseSectionHeight
+{
+    // 108: topbar   49:tahbar  45:sectionHeader
+    if ([TTDeviceHelper isIPhoneXSeries]) {
+        return MAIN_SCREENH_HEIGHT - 108 - 49 - 45;
+    }else
+    {
+        return MAIN_SCREENH_HEIGHT - 84 - 49 - 45;
+    }
+}
+
 - (CGFloat)heightForFHHomeHeaderCellViewType
 {
     //未开通城市返回

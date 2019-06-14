@@ -115,7 +115,7 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    self.tableView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 200);
+    self.tableView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
 }
 
 #pragma mark reload data
@@ -187,7 +187,7 @@
         //判断下拉刷新
         if (pullType == FHHomePullTriggerTypePullDown) {
             //请求无错误,无错误
-            if (model.data.items.count == 0 && !error && isFirst) {
+            if (model.data.items.count == 0 && !error) {
                 [self checkCityStatus];
                 if (self.requestCallBack) {
                     self.requestCallBack(pullType, self.houseType, NO, nil);

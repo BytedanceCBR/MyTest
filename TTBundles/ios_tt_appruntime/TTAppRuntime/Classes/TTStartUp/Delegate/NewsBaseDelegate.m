@@ -679,7 +679,11 @@ static NSTimeInterval lastTime;
     } else {
         if (navigationController.viewControllers.count > 1) {
             ArticleTabBarStyleNewsListViewController * tabbarNewsVC = navigationController.viewControllers[1];
-            return tabbarNewsVC.mainVC;
+            if ([tabbarNewsVC respondsToSelector:@selector(mainVC)]) {
+                return tabbarNewsVC.mainVC;
+            }
+            NSLog(@"exxxx plaore   !!!!!!");
+            return nil;
         }else
         {
             return nil;

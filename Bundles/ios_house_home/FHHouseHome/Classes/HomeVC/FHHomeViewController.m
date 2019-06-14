@@ -422,7 +422,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
         _scrollView = [[UIScrollView alloc] init];
-        _scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 200);
+        _scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
         _scrollView.pagingEnabled = YES;
         _scrollView.bounces = NO;
         _scrollView.showsVerticalScrollIndicator = NO;

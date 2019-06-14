@@ -1292,16 +1292,18 @@ TTRefreshViewDelegate
             return 0;
         }
         if ([_categoryID isEqualToString:@"f_house_news"]) {
-            BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+//            BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
             
-            if (_fetchListManager.items.count > 0 && !isHasFindHouseCategory) {
-                //修改头部类型
-                [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForNews;
-                return 1;
-            }else
-            {
-                return 0;
-            }
+//            if (_fetchListManager.items.count > 0 && !isHasFindHouseCategory) {
+//                //修改头部类型
+//                [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForNews;
+//                return 1;
+//            }else
+//            {
+//                return 0;
+//            }
+            
+            return 0;
         }
         return 0;
     }else
@@ -1320,7 +1322,7 @@ TTRefreshViewDelegate
 //    }else {
     
     if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-        return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
+        return 0;
     }else
     {
         if (indexPath.row < [self listViewMaxModelIndex]) {

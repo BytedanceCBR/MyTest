@@ -228,12 +228,21 @@ static const NSInteger kTopScrollViewTag = 100;
                 sectionLabel.font = [UIFont themeFontRegular:16];
                 sectionLabel.textColor = [UIColor themeGray3];
             }
-           
+            
             sectionLabel.userInteractionEnabled = YES;
             UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollSectionLabelClick:)];
             [sectionLabel addGestureRecognizer:tapGes];
             sectionLabel.textAlignment = NSTextAlignmentCenter;
             [_topStyleContainer addSubview:sectionLabel];
+            
+            UIView *maskView = [UIView new];
+            [maskView setFrame:CGRectMake(sectionLabel.frame.origin.x, 0.0f, sectionLabel.frame.size.width, 45)];
+            [maskView setBackgroundColor:[UIColor clearColor]];
+            maskView.tag = kTopScrollViewTag * 2 + i;
+            maskView.userInteractionEnabled = YES;
+            [_topStyleContainer addSubview:maskView];
+            UITapGestureRecognizer *tapMaskGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollSectionLabelClick:)];
+            [maskView addGestureRecognizer:tapMaskGes];
         }
     }
     
@@ -244,12 +253,21 @@ static const NSInteger kTopScrollViewTag = 100;
 {
     UIView *tapView = tap.view;
     NSInteger scrollIndex = tapView.tag - kTopScrollViewTag;
+    
+    if (tapView.tag >= (2 * kTopScrollViewTag)) {
+        scrollIndex = tapView.tag - kTopScrollViewTag * 2;
+    }
+        
     if (_segmentedControl.sectionTitles.count > scrollIndex) {
         
         UILabel *labelCurrent = [self getTopScrollLabelFromIndex:scrollIndex];
         if (self.currentLabel != labelCurrent) {
             [self.currentLabel setFont:[UIFont themeFontRegular:16]];
             [self.currentLabel setTextColor:[UIColor themeGray3]];
+        }else
+        {
+            //如果已经选中
+            return;
         }
         
         [labelCurrent setFont:[UIFont themeFontMedium:16]];
