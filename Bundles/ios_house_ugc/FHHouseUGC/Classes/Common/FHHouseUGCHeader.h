@@ -42,4 +42,12 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
     FHUGCFeedListCellTypeUGCRecommend = 60,                           //小区推荐
 };
 
+typedef NS_ENUM(NSInteger, FHUGCMyInterestedType)
+{
+    FHUGCMyInterestedTypeMore = 0,                            //更多
+    FHUGCMyInterestedTypeEmpty,                               //空页面
+};
+
+
+
 #endif /* FHHouseUGCHeader_h */

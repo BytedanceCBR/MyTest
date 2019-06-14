@@ -6,10 +6,13 @@
 //
 
 #import "FHBaseViewController.h"
+#import "FHHouseUGCHeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCMyInterestedController : FHBaseViewController
+
+@property(nonatomic, assign) FHUGCMyInterestedType type;
 
 @end
 

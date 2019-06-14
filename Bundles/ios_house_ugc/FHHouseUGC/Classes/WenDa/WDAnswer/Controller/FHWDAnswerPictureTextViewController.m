@@ -109,6 +109,10 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        NSDictionary *params = paramObj.allParams;
+        NSString *qid = [paramObj.allParams objectForKey:@"qid"];
+        NSString *ansid = [paramObj.allParams objectForKey:@"ansid"];
+       
         // add by zyk qid
         self.qid = @"6667717867934318859";
         self.ansid = @"";
