@@ -24,6 +24,8 @@
 }
 
 - (void)initView {
+    //刘海平多出24
+    self.headerBackHeight = [TTDeviceHelper isIPhoneXSeries] ? 214 : 190;
     self.backgroundColor = [UIColor themeGray7];
 
     self.topBack = [[UIImageView alloc] init];
@@ -31,6 +33,10 @@
     self.topBack.contentMode = UIViewContentModeScaleAspectFill;
 
     self.avatar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"default_avatar"]];
+    self.avatar.layer.borderWidth = 0.5;
+    self.avatar.layer.borderColor = [UIColor themeGray6].CGColor;
+    self.avatar.layer.cornerRadius = 25;
+    self.avatar.clipsToBounds = YES;
 
     self.nameLabel = [UILabel createLabel:@"世纪城" textColor:@"" fontSize:16];
     self.nameLabel.textColor = [UIColor themeWhite];
@@ -83,7 +89,7 @@
 - (void)initConstraints {
     [self.topBack mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self);
-        make.height.mas_equalTo(190);
+        make.height.mas_equalTo(self.headerBackHeight);
     }];
 
     [self.avatar mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -27,6 +27,14 @@
 
 @implementation FHCommunityFeedListController
 
+-(instancetype)init{
+    self = [super init];
+    if(self){
+        self.tableViewNeedPullDown = YES;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -34,11 +42,6 @@
     [self initConstraints];
     [self initViewModel];
 }
-
-//- (void)viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
-//    [self startLoadData];
-//}
 
 - (void)initView {
     [self initTableView];
@@ -74,6 +77,13 @@
     }
     
     [self.view addSubview:_tableView];
+}
+
+- (void)setTableHeaderView:(UIView *)tableHeaderView {
+    _tableHeaderView = tableHeaderView;
+    if(self.tableView){
+        self.tableView.tableHeaderView = tableHeaderView;
+    }
 }
 
 - (void)initNotifyBarView {

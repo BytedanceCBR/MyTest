@@ -75,7 +75,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     self.isRefreshing = NO;
     
-    self.mainTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    self.mainTableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     if (@available(iOS 7.0, *)) {
         self.mainTableView.estimatedSectionFooterHeight = 0;
         self.mainTableView.estimatedSectionHeaderHeight = 0;
@@ -83,7 +83,10 @@ static CGFloat const kSectionHeaderHeight = 38;
     } else {
         // Fallback on earlier versions
     }
-    
+    self.mainTableView.showsVerticalScrollIndicator = NO;
+
+    self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
+
     [self registerNotifications];
         
     self.mainTableView.sectionFooterHeight = 0;
@@ -99,7 +102,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 
     [FHHomeCellHelper registerCells:self.mainTableView];
     
-    self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
         // Do any additional setup after loading the view.
     
     self.view.backgroundColor = [UIColor whiteColor];
@@ -332,7 +334,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewDidAppear:animated];
     
-
     if (self.isMainTabVC) {
         //开屏广告启动不会展示，保留逻辑代码
         if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
@@ -429,6 +430,20 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark init views
+- (UIScrollView *)scrollView {
+    if (!_scrollView) {
+        _scrollView = [[UIScrollView alloc] init];
+        _scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 200);
+        _scrollView.pagingEnabled = YES;
+        _scrollView.showsVerticalScrollIndicator = NO;
+        _scrollView.showsHorizontalScrollIndicator = NO;
+        _scrollView.contentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width*4, 0);
+        _scrollView.backgroundColor = [UIColor orangeColor];
+    }
+    return _scrollView;
 }
 
 #pragma mark 内测弹窗

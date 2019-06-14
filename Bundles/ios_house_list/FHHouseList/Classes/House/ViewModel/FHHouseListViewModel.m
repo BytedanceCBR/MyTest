@@ -44,6 +44,7 @@
 #import <AMapLocationKit/AMapLocationKit.h>
 #import <BDALog/BDAgileLog.h>
 #import "FHSuggestionRealHouseTopCell.h"
+#import <TTBaseLib/NSString+URLEncoding.h>
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
@@ -338,6 +339,12 @@
             if (isFromRecommend) {
                 [self requestRecommendErshouHouseListData:isRefresh query:query offset:offset searchId:self.recommendSearchId];
             } else {
+                if ([query isKindOfClass:[NSString class]] && query.length > 0) {
+                    query = [query stringByAppendingString:@"&channel_id=94349530167"];
+                }else
+                {
+                    query = @"channel_id=94349530167";
+                }
                 self.query = query;
                 [self requestErshouHouseListData:isRefresh query:query offset:offset searchId:searchId];
             }
@@ -1189,9 +1196,16 @@
 #pragma mark - map url delegate
 -(void)handleHouseListCallback:(NSString *)openUrl {
     
-    if ([self.houseListOpenUrl isEqualToString:openUrl]) {
+    if ([self.houseListOpenUrl isEqualToString:openUrl] ) {
         return;
     }
+    
+    NSString *houseListDecode = [self.houseListOpenUrl URLDecodedString];
+    NSString *openUrlDecode = [openUrl URLDecodedString];
+    if ([houseListDecode isEqualToString:openUrlDecode]) {
+        return;
+    }
+    
     
     if (self.houseListOpenUrlUpdateBlock) {
         

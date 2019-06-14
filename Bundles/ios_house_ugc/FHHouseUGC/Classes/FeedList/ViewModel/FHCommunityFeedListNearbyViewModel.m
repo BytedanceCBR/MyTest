@@ -12,8 +12,9 @@
 #import "FHFeedListModel.h"
 #import <UIScrollView+Refresh.h>
 #import "FHFeedUGCCellModel.h"
+#import "Article.h"
 
-@interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate, UITableViewDataSource>
+@interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
 @end
 
@@ -38,10 +39,13 @@
     }];
     self.tableView.mj_footer = self.refreshFooter;
     self.refreshFooter.hidden = YES;
-    // 下拉刷新
-    [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
-        [wself requestData:YES first:NO];
-    }];
+    
+    if(self.viewController.tableViewNeedPullDown){
+        // 下拉刷新
+        [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
+            [wself requestData:YES first:NO];
+        }];
+    }
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -116,7 +120,7 @@
 //            }
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""]){
+            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
                 [self.viewController showNotify:refreshTip];
                 [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
             }
@@ -140,6 +144,11 @@
 
 - (NSArray *)convertModel:(NSArray *)feedList {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+    if(feedList.count > 0){
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFakeData];
+        cellModel.tableView = self.tableView;
+        [resultArray addObject:cellModel];
+    }
     for (FHFeedListDataModel *itemModel in feedList) {
         NSString *content = itemModel.content;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
@@ -172,6 +181,8 @@
         cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
+    
+    cell.delegate = self;
 
     if(indexPath.row < self.dataList.count){
         [cell refreshWithData:cellModel];
@@ -200,9 +211,31 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"data"] = cellModel;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    FHFeedUGCContentModel *contentModel = cellModel.originData;
+    NSString *routeUrl = @"sslocal://ugc_post_detail";
+    if (contentModel && [contentModel isKindOfClass:[FHFeedUGCContentModel class]]) {
+        NSString *schema = contentModel.schema;
+        if (schema.length > 0) {
+            routeUrl = [schema stringByReplacingOccurrencesOfString:@"sslocal://thread_detail" withString:@"sslocal://ugc_post_detail"];
+        }
+        // 记得 如果是push 和 url要添加评论数 点赞数以及自己是否点赞
+        routeUrl = [NSString stringWithFormat:@"%@&comment_count=%@&digg_count=%@&user_digg=%@",routeUrl,contentModel.commentCount,contentModel.diggCount,contentModel.userDigg];
+    }
     
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_community_detail"];
+//    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_community_detail"];
+    NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+}
+
+#pragma mark - FHUGCBaseCellDelegate
+
+- (void)deleteCell:(FHFeedUGCCellModel *)cellModel {
+    NSInteger row = [self.dataList indexOfObject:cellModel];
+    if(row < self.dataList.count && row >= 0){
+        [self.dataList removeObject:cellModel];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+    }
 }
 
 @end

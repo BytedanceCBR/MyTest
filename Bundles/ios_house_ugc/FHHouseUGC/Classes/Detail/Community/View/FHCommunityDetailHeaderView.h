@@ -15,6 +15,7 @@
 @property(nonatomic, strong) UIView *publicationsContainer;
 @property(nonatomic, strong) UILabel *publicationsLabel;
 @property(nonatomic, strong) UILabel *publicationsContentLabel;
+@property(nonatomic) CGFloat headerBackHeight;
 
 - (void)resize;
 

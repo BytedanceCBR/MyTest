@@ -9,6 +9,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import <Masonry.h>
+#import "TTDeviceHelper.h"
 
 @interface FHUGCCellHeaderView ()
 
@@ -27,7 +28,6 @@
 
 - (void)initViews {
     self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:15] textColor:[UIColor themeGray1]];
-    _titleLabel.text = @"我加入的小区";
     [self addSubview:_titleLabel];
     
     self.moreBtn = [[UIButton alloc] init];
@@ -44,6 +44,25 @@
     //设置按钮内容靠右
     _moreBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
     [self addSubview:_moreBtn];
+    
+    self.refreshBtn = [[UIButton alloc] init];
+    _refreshBtn.hidden = YES;
+    _refreshBtn.layer.masksToBounds = YES;
+    _refreshBtn.layer.cornerRadius = 4;
+    _refreshBtn.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
+    [_refreshBtn setImage:[UIImage imageNamed:@"fh_ugc_refresh"] forState:UIControlStateNormal];
+    [_refreshBtn setTitle:@"换一批" forState:UIControlStateNormal];
+    [_refreshBtn setTitleColor:[UIColor themeRed3] forState:UIControlStateNormal];
+    _refreshBtn.titleLabel.font = [UIFont themeFontRegular:12];
+    _refreshBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -marginGay/2, 0, marginGay/2);
+    _refreshBtn.titleEdgeInsets = UIEdgeInsetsMake(0, marginGay/2, 0, -marginGay/2);
+    [self addSubview:_refreshBtn];
+    
+    self.bottomLine = [[UIView alloc] init];
+    _bottomLine.hidden = YES;
+    _bottomLine.backgroundColor = [UIColor themeGray6];
+    [self addSubview:_bottomLine];
+    
 }
 
 - (void)initConstraints {
@@ -56,6 +75,20 @@
     [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self);
         make.right.mas_equalTo(self).offset(-19);
+        make.width.mas_equalTo(38);
+        make.height.mas_equalTo(20);
+    }];
+    
+    [self.refreshBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self);
+        make.right.mas_equalTo(self.moreBtn.mas_left).offset(-8);
+        make.width.mas_equalTo(60);
+        make.height.mas_equalTo(20);
+    }];
+    
+    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.left.right.mas_equalTo(self);
+        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
     }];
 }
 

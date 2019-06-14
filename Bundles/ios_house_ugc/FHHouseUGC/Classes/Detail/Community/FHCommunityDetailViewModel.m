@@ -13,6 +13,7 @@
 #import "TTReachability.h"
 #import "UIImageView+BDWebImage.h"
 #import "UIViewAdditions.h"
+#import "UILabel+House.h"
 
 
 @interface FHCommunityDetailViewModel ()
@@ -22,6 +23,9 @@
 @property(nonatomic, strong) FHCommunityDetailDataModel *data;
 @property(nonatomic, strong) FHCommunityDetailHeaderView *headerView;
 @property(nonatomic, strong) UIButton *rightBtn;
+@property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, strong) UILabel *subTitleLabel;
+@property(nonatomic, strong) UIView *titleContainer;
 
 @end
 
@@ -38,6 +42,24 @@
 
 - (void)initView {
 
+    [self initNavBar];
+    [self.rightBtn addTarget:self action:@selector(joinBtnClick) forControlEvents:UIControlEventTouchUpInside];
+
+    self.feedListController = [[FHCommunityFeedListController alloc] init];
+    self.feedListController.tableViewNeedPullDown = NO;
+    self.feedListController.scrollViewDelegate = self;
+    self.feedListController.listType = FHCommunityFeedListTypeMyJoin;
+    self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
+    self.feedListController.tableHeaderView = self.headerView;
+
+    [self.viewController addChildViewController:self.feedListController];
+    [self.feedListController didMoveToParentViewController:self.viewController];
+    self.feedListController.view.frame = self.viewController.view.bounds;
+    [self.viewController.view addSubview:self.feedListController.view];
+}
+
+-(void)initNavBar{
+    FHNavBarView *naveBarView = self.viewController.customNavBarView;
     self.rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.rightBtn.backgroundColor = [UIColor themeWhite];
     [self.rightBtn.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
@@ -50,21 +72,43 @@
     self.rightBtn.layer.cornerRadius = 4.0f;
     self.rightBtn.hidden = YES;
 
-    [self.rightBtn addTarget:self action:@selector(joinBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.viewController.customNavBarView addRightViews:@[self.rightBtn] viewsWidth:@[@58] viewsHeight:@[@24] viewsRightOffset:@[@20]];
+    self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.titleLabel.textColor = [UIColor themeGray1];
 
-    self.feedListController = [[FHCommunityFeedListController alloc] init];
-    self.feedListController.customPullRefresh = YES;
-    self.feedListController.scrollViewDelegate = self;
-    self.feedListController.listType = FHCommunityFeedListTypeMyJoin;
-    self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.viewController.view.bounds.size.width, 240)];
-    self.feedListController.tableHeaderView = self.headerView;
+    self.subTitleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:10];
+    self.subTitleLabel.textAlignment = NSTextAlignmentCenter;
+    self.subTitleLabel.textColor = [UIColor themeGray3];
 
-    [self.viewController addChildViewController:self.feedListController];
-    [self.feedListController didMoveToParentViewController:self];
-    CGFloat topOffset = (@available(iOS 11.0, *)) ? self.viewController.view.tt_safeAreaInsets.top : 0;
-    self.feedListController.view.frame = CGRectMake(self.viewController.view.bounds.origin.x, self.viewController.view.bounds.origin.y + topOffset, self.viewController.view.bounds.size.width, self.viewController.view.bounds.size.height - topOffset);
-    [self.viewController.view addSubview:self.feedListController.view];
+    self.titleContainer = [[UIView alloc] init];
+    [self.titleContainer addSubview:self.titleLabel];
+    [self.titleContainer addSubview:self.subTitleLabel];
+    [naveBarView addSubview:self.titleContainer];
+    [naveBarView addSubview:self.rightBtn];
+
+    [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(naveBarView.leftBtn.mas_centerY);
+        make.right.mas_equalTo(naveBarView).offset(-18.0f);
+        make.width.mas_equalTo(58);
+        make.height.mas_equalTo(24);
+    }];
+
+    [self.titleContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(naveBarView.leftBtn.mas_centerY);
+        make.left.mas_equalTo(naveBarView.leftBtn.mas_right).offset(10.0f);
+        make.right.mas_equalTo(self.rightBtn.mas_left).offset(-10);
+        make.height.mas_equalTo(34);
+    }];
+
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.titleContainer);
+        make.height.mas_equalTo(20);
+    }];
+
+    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self.titleContainer);
+        make.height.mas_equalTo(14);
+    }];
 }
 
 - (void)requestData {
@@ -93,9 +137,6 @@
 
 - (void)refreshContentOffset:(CGPoint)contentOffset hasJoin:(BOOL)hasJoin {
     CGFloat offsetY = contentOffset.y;
-    if (offsetY < 0) {
-        return;
-    }
     CGFloat alpha = offsetY / 88;
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     [self updateNavBarWithAlpha:alpha showJoin:!hasJoin];
@@ -106,19 +147,19 @@
     if (alpha <= 0.1f) {
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
-        self.viewController.customNavBarView.title.hidden = YES;
+        self.titleContainer.hidden = YES;
         self.rightBtn.hidden = YES;
-    } else if (alpha > 0.1f && alpha < 1.0f) {
+    } else if (alpha > 0.1f && alpha < 0.9f) {
         self.viewController.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
-        self.viewController.customNavBarView.title.hidden = YES;
+        self.titleContainer.hidden = YES;
         self.rightBtn.hidden = YES;
     } else {
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
         if (showJoin) {
-            self.viewController.customNavBarView.title.hidden = NO;
+            self.titleContainer.hidden = NO;
             self.rightBtn.hidden = NO;
         }
     }
@@ -132,7 +173,7 @@
     }
     CGRect rect = self.headerView.topBack.frame;
     rect.origin.y = contentOffset.y;
-    rect.size.height = 190 - offsetY;
+    rect.size.height = self.headerView.headerBackHeight - offsetY;
     self.self.headerView.topBack.frame = rect;
 }
 
@@ -154,7 +195,8 @@
         self.headerView.publicationsContentLabel.text = data.publications;
     }
     [self updateJoinUI:data.hasJoin];
-    [self.viewController setTitle:isEmptyString(data.name) ? @"" : data.name];
+    self.titleLabel.text = isEmptyString(data.name) ? @"" : data.name;
+    self.subTitleLabel.text = isEmptyString(data.subtitle) ? @"" : data.subtitle;
 
     [self.headerView resize];
     self.feedListController.tableHeaderView = self.headerView;
@@ -162,7 +204,7 @@
 
 - (void)updateJoinUI:(BOOL)hasJoin {
     [self.headerView updateWithJoinStatus:hasJoin];
-    [self updateNavBarWithAlpha:self.viewController.customNavBarView.alpha showJoin:!hasJoin];
+    [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha showJoin:!hasJoin];
 }
 
 #pragma UIScrollViewDelegate

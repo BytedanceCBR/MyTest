@@ -12,13 +12,13 @@
 
 static const NSUInteger kFHHomeListHeaderBaseViewSection = 0;
 static const NSUInteger kFHHomeListHouseTypeBannerViewSection = 1;
-static const NSUInteger kFHHomeListHouseBaseViewSection = 1;
+static const NSUInteger kFHHomeListHouseBaseViewSection = 2;
 
 static const NSUInteger kFHHomeHeaderViewSectionHeight = 45;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHomeMainTableViewDataSource : JSONModel
+@interface FHHomeMainTableViewDataSource : NSObject
 @property(nonatomic,strong) NSArray <JSONModel *>*modelsArray;
 @property (nonatomic, strong) FHHomeSectionHeader *categoryView;
 @property (nonatomic, assign) BOOL showPlaceHolder;

@@ -6,10 +6,15 @@
 //
 
 #import "FHBaseViewController.h"
+#import "FHMyJoinNeighbourhoodView.h"
+#import "FHCommunityFeedListController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMyJoinViewController : FHBaseViewController
+
+@property(nonatomic, strong) FHMyJoinNeighbourhoodView *neighbourhoodView;
+@property(nonatomic, strong) FHCommunityFeedListController *feedListVC;
 
 @end
 

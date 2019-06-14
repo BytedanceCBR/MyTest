@@ -207,6 +207,21 @@
     return cellModel;
 }
 
+//推荐假数据
++ (FHFeedUGCCellModel *)modelFromFakeData {
+    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.cellType =@"60";
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
+    
+    NSMutableArray *sourceList = [NSMutableArray array];
+    for (NSInteger i = 0; i < 20; i++) {
+        [sourceList addObject:[NSString stringWithFormat:@"小区%li",(long)i]];
+    }
+    cellModel.interestNeighbourhoodList = sourceList;
+    
+    return cellModel;
+}
+
 + (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [model.behotTime doubleValue];

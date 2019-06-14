@@ -169,5 +169,5 @@
 "ugc_post_detail" = "FHPostDetailViewController";
 "ugc_post_topic_list" = "FHTopicListController";
 "ugc_post_community_detail" = "FHCommunityDetailViewController";
-
+"ugc_my_interest" = "FHUGCMyInterestedController";
 

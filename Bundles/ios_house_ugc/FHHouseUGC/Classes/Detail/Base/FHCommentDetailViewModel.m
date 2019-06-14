@@ -34,7 +34,7 @@
         _cellHeightCaches = [NSMutableDictionary new];
         _items = [NSMutableArray new];
         self.postType = postType;
-        self.listController = viewController;
+        self.detailController = viewController;
         self.tableView = tableView;
         [self configTableView];
     }

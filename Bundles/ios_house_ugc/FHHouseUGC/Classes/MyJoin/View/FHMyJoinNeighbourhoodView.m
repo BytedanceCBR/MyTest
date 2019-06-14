@@ -33,10 +33,15 @@
     self.backgroundColor = [UIColor themeGray7];
     
     self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
-    [self.headerView.moreBtn addTarget:self action:@selector(goToMore) forControlEvents:UIControlEventTouchUpInside];
+    _headerView.titleLabel.text = @"我加入的小区";
+    [_headerView.moreBtn addTarget:self action:@selector(goToMore) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_headerView];
     
     [self initCollectionView];
+    
+    self.messageView = [[FHUGCMessageView alloc] initWithFrame:CGRectZero];
+    _messageView.hidden = YES;
+    [self addSubview:_messageView];
 }
 
 - (void)initCollectionView {
@@ -64,6 +69,13 @@
         make.left.right.mas_equalTo(self);
         make.height.mas_equalTo(135);
     }];
+    
+    [self.messageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.collectionView.mas_bottom).offset(15);
+        make.centerX.mas_equalTo(self);
+        make.width.mas_equalTo(180);
+        make.height.mas_equalTo(42);
+    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -73,9 +85,19 @@
     return label;
 }
 
+- (void)showMessageView {
+    self.messageView.hidden = NO;
+}
+
+- (void)hideMessageView {
+    self.messageView.hidden = YES;
+}
+
 //跳转到更多小区页面
 - (void)goToMore {
-    
+    if(self.delegate && [self.delegate respondsToSelector:@selector(gotoMore)]){
+        [self.delegate gotoMore];
+    }
 }
 
 @end
