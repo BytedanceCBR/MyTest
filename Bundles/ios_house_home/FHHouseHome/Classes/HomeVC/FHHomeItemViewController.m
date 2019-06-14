@@ -22,7 +22,6 @@
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
 
-@property (nonatomic, strong) UITableView *tableView;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic , assign) NSInteger itemCount;
 @property(nonatomic , assign) FHHomePullTriggerType currentPullType;

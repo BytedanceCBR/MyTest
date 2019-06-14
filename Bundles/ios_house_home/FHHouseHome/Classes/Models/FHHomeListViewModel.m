@@ -217,6 +217,28 @@
     }
 }
 
+- (void)setUpTableScrollOffsetZero
+{
+    
+    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    NSInteger currentSelectIndex = self.categoryView.segmentedControl.selectedSegmentIndex;
+    
+    if (configDataModel.houseTypeList.count > currentSelectIndex && self.itemsVCArray.count > currentSelectIndex) {
+        FHHomeItemViewController *itemVC = self.itemsVCArray[currentSelectIndex];
+        
+        itemVC.tableView.contentOffset = CGPointMake(0, 0);
+        if (itemVC.tableView.numberOfSections > 0 && [itemVC.tableView numberOfRowsInSection:0] > 0) {
+            [itemVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }
+    }
+    
+    self.tableViewV.contentOffset = CGPointMake(0, 0);
+    if (self.tableViewV.numberOfSections > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
+        [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    }
+
+}
+
 - (void)setUpSubtableViewContrllers
 {
     for (UIView *subView in self.homeViewController.scrollView.subviews) {
@@ -270,8 +292,7 @@
         {
             FHHomeHouseModel *houseData = (FHHomeHouseModel *)dataModel;
             [self.homeViewController showNotify:houseData.data.refreshTip];
-            self.tableViewV.contentOffset = CGPointMake(0, 0);
-            [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            [self setUpTableScrollOffsetZero];
         }
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
     }
@@ -634,7 +655,6 @@
 }
 
 - (void)subTableViewDidScroll:(NSNotification *)noti {
-    NSLog(@"subTableView !!!!!!!!");
     self.tableViewV.scrollEnabled = YES;
     UIScrollView *scrollView = noti.object;
     self.childVCScrollView = scrollView;

@@ -29,6 +29,7 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic, assign) BOOL showPlaceHolder;
 @property (nonatomic , strong) FHTracerModel *tracerModel;
 @property (nonatomic, assign) TTReloadType reloadType; //当前enterType，用于enter_category
+@property (nonatomic, strong) UITableView *tableView;
 
 @property (nonatomic, copy) void (^requestCallBack)(FHHomePullTriggerType refreshType,FHHouseType houseType,BOOL isSuccess,JSONModel *dataModel);
 

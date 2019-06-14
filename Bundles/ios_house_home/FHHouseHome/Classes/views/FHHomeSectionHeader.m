@@ -27,6 +27,7 @@ static const NSInteger kTopScrollViewTag = 100;
 @property (nonatomic, assign) CGFloat leftCenterX;
 @property (nonatomic, assign) CGFloat rightCenterX;
 @property (nonatomic, assign) CGFloat totalCenterXWidth;
+@property (nonatomic, strong) UILabel * currentLabel;
 @end
 
 @implementation FHHomeSectionHeader
@@ -86,8 +87,26 @@ static const NSInteger kTopScrollViewTag = 100;
 
 - (void)refreshSelectionIconFromOffsetX:(CGFloat)offsetX
 {
+    if (_segmentedControl.sectionTitles.count <= 1) {
+        return;
+    }
     CGFloat ratio = offsetX / (MAIN_SCREEN_WIDTH * (_segmentedControl.sectionTitles.count - 1));
     _topStyleBottomLineImage.centerX = ratio * self.totalCenterXWidth + self.leftCenterX;
+    
+    NSInteger scrollIndex = (NSInteger)((offsetX + MAIN_SCREEN_WIDTH/2)/MAIN_SCREEN_WIDTH);
+    
+    if (_segmentedControl.sectionTitles.count > scrollIndex) {     
+        UILabel *labelCurrent = [self getTopScrollLabelFromIndex:scrollIndex];
+        if (self.currentLabel != labelCurrent) {
+            [self.currentLabel setFont:[UIFont themeFontRegular:16]];
+            [self.currentLabel setTextColor:[UIColor themeGray3]];
+        }
+        
+        [labelCurrent setFont:[UIFont themeFontMedium:16]];
+        [labelCurrent setTextColor:[UIColor themeGray1]];
+        self.currentLabel = labelCurrent;
+    }
+
 }
 
 - (void)showOriginStyle:(BOOL)isOrigin
@@ -203,6 +222,7 @@ static const NSInteger kTopScrollViewTag = 100;
                 sectionLabel.font = [UIFont themeFontMedium:16];
                 sectionLabel.textColor = [UIColor themeGray1];
                 _topStyleBottomLineImage.centerX = sectionLabel.centerX;
+                self.currentLabel = sectionLabel;
             }else
             {
                 sectionLabel.font = [UIFont themeFontRegular:16];
