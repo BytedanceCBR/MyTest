@@ -241,6 +241,7 @@
     
     self.cellBottomView.width = SSScreenWidth;
     self.cellBottomView.height = [WDListCellLayoutModel answerReadCountsLineHeight];
+    self.cellBottomView.ansEntity = self.cellViewModel.ansEntity;
 }
 
 - (void)refreshDiggCount {

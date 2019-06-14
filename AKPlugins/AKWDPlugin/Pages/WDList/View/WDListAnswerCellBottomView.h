@@ -13,10 +13,14 @@
 #import "TTImageView.h"
 #import <KVOController/NSObject+FBKVOController.h>
 #import <TTUIWidget/TTIndicatorView.h>
+#import "WDWendaListCell.h"
+#import "WDAnswerEntity.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface WDListAnswerCellBottomView : UIView
+
+@property (nonatomic, strong) WDAnswerEntity *ansEntity;
 
 @end
 

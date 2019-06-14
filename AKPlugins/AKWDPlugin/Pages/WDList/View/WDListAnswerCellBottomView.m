@@ -59,6 +59,22 @@
     }];
 }
 
+- (void)setAnsEntity:(WDAnswerEntity *)ansEntity {
+    _ansEntity = ansEntity;
+    if (ansEntity) {
+        self.commentBtn.textLabel.text = [NSString stringWithFormat:@"%lld",[ansEntity.commentCount longLongValue]];
+        self.followBtn.textLabel.text = [NSString stringWithFormat:@"%lld",[ansEntity.diggCount longLongValue]];
+        if (ansEntity.isDigg) {
+            self.followBtn.followed = YES;
+            self.followBtn.icon.image = [UIImage imageNamed:@"f_ask_favorite_selected"];//
+        } else {
+            self.followBtn.followed = NO;
+            self.followBtn.icon.image = [UIImage imageNamed:@"f_ask_favorite_noraml"];// f_ask_favorite_selected
+        }
+    }
+    [self layoutIfNeeded];
+}
+
 @end
 
 // WDListAnswerCellBottomButton
