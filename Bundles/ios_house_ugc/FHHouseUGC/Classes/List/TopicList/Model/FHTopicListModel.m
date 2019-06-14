@@ -9,7 +9,7 @@
 
 + (JSONKeyMapper *)keyMapper {
     NSDictionary *dict = @{
-            @"communityId": @"community_id",
+            @"communityId": @"communityId",
             @"title": @"title",
             @"subtitle": @"subtitle",
             @"des": @"des",

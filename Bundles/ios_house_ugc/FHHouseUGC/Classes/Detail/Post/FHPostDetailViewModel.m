@@ -25,6 +25,11 @@
 #import "JSONAdditions.h"
 #import "NSDictionary+TTAdditions.h"
 #import "Article.h"
+#import "FHUGCDetailGrayLineCell.h"
+#import "FHPostDetailHeaderCell.h"
+#import "FHMainApi.h"
+#import "FHBaseModelProtocol.h"
+#import "FHFeedContentModel.h"
 
 @interface FHPostDetailViewModel ()
 
@@ -35,13 +40,23 @@
 // 注册cell类型
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHPostDetailCell class] forCellReuseIdentifier:NSStringFromClass([FHPostDetailCell class])];
+    [self.tableView registerClass:[FHUGCDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHUGCDetailGrayLineCell class])];
+    [self.tableView registerClass:[FHPostDetailHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHPostDetailHeaderCell class])];
 }
 
 // cell class
 - (Class)cellClassForEntity:(id)model {
-    // 兼容旧版本 头部滑动图片
+    // 帖子头部
+    if ([model isKindOfClass:[FHPostDetailHeaderModel class]]) {
+        return [FHPostDetailHeaderCell class];
+    }
+    // 帖子详情cell
     if ([model isKindOfClass:[FHFeedUGCCellModel class]]) {
         return [FHPostDetailCell class];
+    }
+    // 分割线
+    if ([model isKindOfClass:[FHUGCDetailGrayLineModel class]]) {
+        return [FHUGCDetailGrayLineCell class];
     }
     return [FHUGCBaseCell class];
 }
@@ -68,6 +83,7 @@
 }
 
 - (void)dealloc {
+    
 }
 
 // startLoadData
@@ -76,11 +92,31 @@
     [self requestV3InfoWithCompletion:^(NSError *error, uint64_t networkConsume) {
         [wSelf.detailController endLoading];
         if (error) {
-            
+            if (wSelf.items.count <= 0) {
+                // 显示空页面
+                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }
         } else {
-            
+            [wSelf reloadData];
         }
     }];
+}
+
+// 处理数据
+- (void)processWithData:(FHFeedUGCContentModel *)model {
+    if (model && [model isKindOfClass:[FHFeedUGCContentModel class]]) {
+        [self.items removeAllObjects];
+        //
+        FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
+        [self.items addObject:headerModel];
+        self.detailHeaderModel = headerModel;
+        //
+        FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        //
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+        [self.items addObject:cellModel];
+    }
 }
 
 #pragma mark - Public
@@ -100,44 +136,19 @@
             if (!error) {
                 NSDictionary *dataDict = [jsonObj isKindOfClass:[NSDictionary class]]? jsonObj: nil;
                 if ([dataDict tt_longValueForKey:@"err_no"] == 0) {
-//                    self.ad_string = [dataDict tt_stringValueForKey:@"ad"];
-//                    self.recommend_sponsor = [dataDict tt_dictionaryValueForKey:@"recommend_sponsor"];
                     NSString *dataStr = [dataDict tt_stringValueForKey:@"data"];
                     if (isEmptyString(dataStr)) {
                         //不该出现这种情况
                     } else {
                         NSError *jsonParseError;
-                        NSDictionary *threadDict = [NSString tt_objectWithJSONString:dataStr error:&jsonParseError];
-//                        Article *art = [Article objectWithDictionary:threadDict];
-////                        [art updateWithDictionary:threadDict];
-//                        TTGroupModel *mod =  art.groupModel;
-                        int i = 0;
-                        //如果用户点进详情页时候，该条帖子被主人编辑过了，这个时候详情页的帖子内容和外部不一样，所以发送这个通知，将外面出现的旧帖子内容进行更新
-//                        if ([self.thread.versionCode integerValue] < [threadDict tt_intValueForKey:@"version"]) {
-//                            NSMutableDictionary *info = [NSMutableDictionary dictionary];
-//                            [info setValue:threadDict forKey:@"repostModel"];
-//                            [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadSuccessNotification object:nil userInfo:info];
-//                        }
-                        
-//                        NSString * threadIdStr = [threadDict tt_stringValueForKey:@"thread_id"];
-//                        self.thread = [Thread updateWithDictionary:threadDict threadId:threadIdStr parentPrimaryKey:nil];
-//                        [self.thread save];
-//                        //单独处理推荐理由字段
-//                        NSDictionary *ugc_recommend = [threadDict tt_dictionaryValueForKey:@"ugc_recommend"];
-//                        self.ugcRecommendReason = [ugc_recommend tt_stringValueForKey:@"reason"];
-//
-//                        NSString *threadID = self.thread.threadId;
-//                        if (threadID && threadID.longLongValue != 0) {
-//                            [[NSNotificationCenter defaultCenter] postNotificationName:kExploreOriginalDataUpdateNotification
-//                                                                                object:nil
-//                                                                              userInfo:@{@"uniqueID":threadID}];
-//                        }
-//                        NSString *originThreadID = self.thread.originThread.threadId;
-//                        if (originThreadID && originThreadID.longLongValue != 0) {
-//                            [[NSNotificationCenter defaultCenter] postNotificationName:kExploreOriginalDataUpdateNotification
-//                                                                                object:nil
-//                                                                              userInfo:@{@"uniqueID":originThreadID}];
-//                        }
+                        NSData *jsonData = [dataStr dataUsingEncoding:NSUTF8StringEncoding];
+                        if (jsonData) {
+                            Class cls = [FHFeedUGCContentModel class];
+                            FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
+                            if (model && jsonParseError == nil) {
+                                [self processWithData:model];
+                            }
+                        }
                     }
                 }
             }

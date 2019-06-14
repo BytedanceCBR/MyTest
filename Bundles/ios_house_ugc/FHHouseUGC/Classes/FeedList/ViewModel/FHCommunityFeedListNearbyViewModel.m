@@ -222,6 +222,7 @@
         routeUrl = [NSString stringWithFormat:@"%@&comment_count=%@&digg_count=%@&user_digg=%@",routeUrl,contentModel.commentCount,contentModel.diggCount,contentModel.userDigg];
     }
     
+//    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_community_detail"];
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }

@@ -18,6 +18,21 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
++ (TTHttpTask *)requestCommunityDetail:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/api/community/detail";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"community_id"] = communityId ?: @"";
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)joinCommunity:(NSString *)communityId join:(BOOL)join :(id)class :(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/api/community/join";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"community_id"] = communityId ?: @"";
+    paramDic[@"join"] = @(join);
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
 //    NSString *queryPath = @"/f100/api/v2/msg/system_list";
 

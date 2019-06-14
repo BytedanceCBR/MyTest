@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 //发布按钮距离底部的高度,默认为0
 @property(nonatomic, assign) CGFloat publishBtnBottomHeight;
 
+@property(nonatomic, weak) id<UIScrollViewDelegate> scrollViewDelegate;
 - (void)showNotify:(NSString *)message;
 //下拉刷新数据
 - (void)startLoadData;

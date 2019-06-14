@@ -26,22 +26,20 @@
 
 @implementation FHCommunityFeedListController
 
+-(instancetype)init{
+    self = [super init];
+    if(self){
+        self.tableViewNeedPullDown = YES;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self initVars];
     [self initView];
     [self initConstraints];
     [self initViewModel];
-}
-
-//- (void)viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
-//    [self startLoadData];
-//}
-
-- (void)initVars {
-    self.tableViewNeedPullDown = YES;
 }
 
 - (void)initView {
