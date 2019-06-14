@@ -6,6 +6,8 @@
 #import "FHBaseModelProtocol.h"
 #import "JSONModel.h"
 
+@protocol FHTopicListResponseItemModel;
+
 @interface FHTopicListResponseItemModel : JSONModel
 
 @property(nonatomic, copy, nullable) NSString *communityId;
@@ -18,7 +20,7 @@
 
 @interface FHTopicListResponseDataModel : JSONModel
 
-@property(nonatomic, strong, nullable) NSArray<FHTopicListResponseItemModel *> *items;
+@property(nonatomic, strong, nullable) NSArray<FHTopicListResponseItemModel> *items;
 
 @end
 

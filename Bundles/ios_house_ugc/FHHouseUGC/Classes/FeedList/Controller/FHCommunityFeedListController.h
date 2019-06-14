@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 //是否需要下拉刷新，默认为YES
 @property(nonatomic, assign) BOOL tableViewNeedPullDown;
 
+@property(nonatomic, weak) id<UIScrollViewDelegate> scrollViewDelegate;
 - (void)showNotify:(NSString *)message;
 
 @end

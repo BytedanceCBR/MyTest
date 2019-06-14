@@ -201,6 +201,24 @@
     [self jumpToDetail:cellModel];
 }
 
+#pragma UISCrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.viewController.scrollViewDelegate scrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.viewController.scrollViewDelegate scrollViewWillBeginDragging:scrollView];
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    [self.viewController.scrollViewDelegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [self.viewController.scrollViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+}
+
 - (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel {
     if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle){
         BOOL canOpenURL = NO;
