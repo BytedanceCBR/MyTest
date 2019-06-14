@@ -20,4 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface WDListAnswerCellBottomButton : UIButton
+
+@property(nonatomic, strong) UIImageView *icon;
+@property(nonatomic, strong) UILabel *textLabel;
+@property (nonatomic, assign)   BOOL       followed;
+
+@end
+
 NS_ASSUME_NONNULL_END
