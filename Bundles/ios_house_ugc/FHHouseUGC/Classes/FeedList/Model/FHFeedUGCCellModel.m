@@ -8,6 +8,7 @@
 #import "FHFeedUGCCellModel.h"
 #import "FHMainApi.h"
 #import "TTBusinessManager+StringUtils.h"
+#import "TTBaseMacro.h"
 
 @implementation FHFeedUGCCellImageListUrlListModel
 
@@ -75,7 +76,12 @@
     cellModel.title = model.title;
     cellModel.behotTime = model.behotTime;
     cellModel.openUrl = model.openUrl;
-    cellModel.desc = [self generateArticleDesc:model];
+    if(!isEmptyString(model.openUrl) && !isEmptyString(model.sourceDesc)){
+        //针对问答的情况
+        cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
+    }else{
+        cellModel.desc = [self generateArticleDesc:model];
+    }
     cellModel.detailScheme = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
     NSMutableArray *cellImageList = [NSMutableArray array];
     for (FHFeedContentImageListModel *imageModel in model.imageList) {

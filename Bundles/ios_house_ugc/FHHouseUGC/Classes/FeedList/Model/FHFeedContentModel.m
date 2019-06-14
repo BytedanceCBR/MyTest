@@ -142,6 +142,7 @@
     @"groupId": @"group_id",
     @"middleImage": @"middle_image",
     @"openUrl": @"open_url",
+    @"sourceDesc": @"source_desc",
     
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
