@@ -64,14 +64,12 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if (_isMainTabVC) {
-        [self.view addSubview:self.topBar];
-        
-        FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
-        //    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
-        panelVM.viewController = self;
-        self.panelVM = panelVM;
-    }
+    [self.view addSubview:self.topBar];
+    
+    FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
+    //    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
+    panelVM.viewController = self;
+    self.panelVM = panelVM;
     
     self.isRefreshing = NO;
     
@@ -85,7 +83,9 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     self.mainTableView.showsVerticalScrollIndicator = NO;
 
-    self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
+    if (_isMainTabVC) {
+        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
+    }
 
     [self registerNotifications];
         
@@ -125,14 +125,18 @@ static CGFloat const kSectionHeaderHeight = 38;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
     //如果是inhouse的，弹升级弹窗
-    if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
+    if ([TTSandBoxHelper isInHouseApp]) {
         //#if INHOUSE
         [self checkLocalTestUpgradeVersionAlert];
         //#endif
     }
     
-    if (_isMainTabVC) {
-        [self.view bringSubviewToFront:self.topBar];
+    [self.view bringSubviewToFront:self.topBar];
+    
+    if (!_isMainTabVC) {
+        [self.topBar removeFromSuperview];
+        [self.mainTableView removeFromSuperview];
+        [self.emptyView showEmptyWithTip:@"功能暂未开通" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
     }
 }
 
@@ -150,33 +154,18 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)setUpMainTableConstraints
 {
-    if (_isMainTabVC) {
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(self.topBar.mas_bottom);
-                make.bottom.left.right.equalTo(self.view);
-            }];
-        }else
-        {
-            [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(self.topBar.mas_bottom);
-                make.left.right.equalTo(self.view);
-                make.bottom.equalTo(self.view).offset(-40);
-            }];
-        }
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.topBar.mas_bottom);
+            make.bottom.left.right.equalTo(self.view);
+        }];
     }else
     {
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.edges.equalTo(self.view);
-            }];
-        }else
-        {
-            [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.left.right.equalTo(self.view);
-                make.bottom.equalTo(self.view).offset(-40);
-            }];
-        }
+        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.topBar.mas_bottom);
+            make.left.right.equalTo(self.view);
+            make.bottom.equalTo(self.view).offset(-40);
+        }];
     }
 }
 
@@ -333,28 +322,26 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewDidAppear:animated];
     
-    if (self.isMainTabVC) {
-        //开屏广告启动不会展示，保留逻辑代码
-        if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
-            self.adColdHadJump = YES;
-            FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-            if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
-                TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
-                            [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
-                            if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
-                                //通勤找房
-                                [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
-                            }else
-                            {
-                                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
-                            }
+    //开屏广告启动不会展示，保留逻辑代码
+    if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
+        self.adColdHadJump = YES;
+        FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+        if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
+            TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
+                        [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
+                        if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
+                            //通勤找房
+                            [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
+                        }else
+                        {
+                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
                         }
-                    });
+                    }
                 });
-            }
+            });
         }
     }
 }

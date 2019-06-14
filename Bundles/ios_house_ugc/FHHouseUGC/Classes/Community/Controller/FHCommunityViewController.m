@@ -162,6 +162,9 @@
 
 - (void)hideSegmentControl {
     self.segmentControl.hidden = YES;
+    self.bottomLineView.hidden = YES;
+    self.topView.hidden = YES;
+    _collectionView.backgroundColor = [UIColor whiteColor];
     [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(0);
     }];
