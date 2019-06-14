@@ -13,6 +13,7 @@
 #import "Article.h"
 #import "FHPostDetailNavHeaderView.h"
 #import "FHCommonDefines.h"
+#import "FHUGCFollowButton.h"
 
 @interface FHPostDetailViewController ()
 
@@ -25,7 +26,7 @@
 @property (nonatomic, weak)     FHPostDetailViewModel       *weakViewModel;
 
 @property (nonatomic, strong)   FHPostDetailNavHeaderView       *naviHeaderView;
-@property (nonatomic, strong)   UIButton       *followButton;// 关注
+@property (nonatomic, strong)   FHUGCFollowButton       *followButton;// 关注
 
 @end
 
@@ -81,14 +82,9 @@
 - (void)setupDetailNaviBar {
     self.customNavBarView.title.text = @"详情";
     // 关注按钮
-    self.followButton = [[UIButton alloc] init];
-    _followButton.layer.masksToBounds = YES;
-    _followButton.layer.cornerRadius = 4;
-    _followButton.layer.borderColor = [[UIColor themeRed1] CGColor];
-    _followButton.layer.borderWidth = 0.5;
-    [_followButton setTitle:@"关注" forState:UIControlStateNormal];
-    [_followButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    _followButton.titleLabel.font = [UIFont themeFontRegular:12];
+    self.followButton = [[FHUGCFollowButton alloc] init];
+    [self.followButton addTarget:self action:@selector(followButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    self.followButton.followed = YES;
     [self.customNavBarView addSubview:_followButton];
     [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(58);
@@ -110,6 +106,10 @@
     // test
     self.naviHeaderView.titleLabel.text = @"世纪城";
     self.naviHeaderView.descLabel.text = @"10000成员。488z帖子";
+}
+
+- (void)followButtonClick:(UIControl *)control {
+    
 }
 
 - (void)startLoadData {
