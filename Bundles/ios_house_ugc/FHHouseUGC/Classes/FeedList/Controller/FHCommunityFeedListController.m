@@ -19,7 +19,6 @@
 @interface FHCommunityFeedListController ()
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
-@property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 @property(nonatomic, strong) UIButton *publishBtn;
 
