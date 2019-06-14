@@ -616,6 +616,7 @@
                 }
             }
         }
+        [self.categoryView refreshSelectionIconFromOffsetX:scrollView.contentOffset.x];
     }
 }
 

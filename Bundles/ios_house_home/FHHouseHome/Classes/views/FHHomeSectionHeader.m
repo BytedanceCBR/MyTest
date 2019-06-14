@@ -10,16 +10,23 @@
 #import "TTDeviceHelper.h"
 #import "UIColor+Theme.h"
 #import "FHEnvContext.h"
+#import <UIViewAdditions.h>
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 35;
 static const float kSegementedPadingTop = 10;
+
+static const NSInteger kTopScrollViewTag = 100;
 
 @interface FHHomeSectionHeader ()
 @property (nonatomic, strong) UILabel * categoryLabel;
 @property (nonatomic, strong) NSArray <NSString *> * sectionTitleArray;
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, strong) UIView *topStyleContainer;
+@property (nonatomic, strong) UIImageView *topStyleBottomLineImage;
+@property (nonatomic, assign) CGFloat leftCenterX;
+@property (nonatomic, assign) CGFloat rightCenterX;
+@property (nonatomic, assign) CGFloat totalCenterXWidth;
 @end
 
 @implementation FHHomeSectionHeader
@@ -72,8 +79,15 @@ static const float kSegementedPadingTop = 10;
     [self addSubview:self.segmentedControl];
     
     _topStyleContainer = [[UIView alloc] initWithFrame:self.frame];
-    [_topStyleContainer setBackgroundColor:[UIColor redColor]];
+    [_topStyleContainer setBackgroundColor:[UIColor whiteColor]];
     [self addSubview:_topStyleContainer];
+    
+}
+
+- (void)refreshSelectionIconFromOffsetX:(CGFloat)offsetX
+{
+    CGFloat ratio = offsetX / (MAIN_SCREEN_WIDTH * (_segmentedControl.sectionTitles.count - 1));
+    _topStyleBottomLineImage.centerX = ratio * self.totalCenterXWidth + self.leftCenterX;
 }
 
 - (void)showOriginStyle:(BOOL)isOrigin
@@ -96,7 +110,6 @@ static const float kSegementedPadingTop = 10;
     
     CGFloat leftPading = 2;
     
-    
     if (titles.count == 1) {
         leftPading = 6;
     }
@@ -108,6 +121,8 @@ static const float kSegementedPadingTop = 10;
     _segmentedControl.sectionTitles = titles;
     _segmentedControl.selectedSegmentIndex = 0;
     _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count, kSegementedHeight);
+    
+    [self addScrollTopSection:titles andSelectIndex:0];
 }
 
 - (void)updateSegementedTitles:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index
@@ -155,7 +170,58 @@ static const float kSegementedPadingTop = 10;
         CGFloat kSegementedOneWidth5s = 40;
         _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth5s + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count, kSegementedHeight);
     }
+    
+    [self addScrollTopSection:titles andSelectIndex:index];
+}
 
+- (void)addScrollTopSection:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index
+{
+    
+    for (UIView *subView in _topStyleContainer.subviews) {
+        [subView removeFromSuperview];
+    }
+    
+    _topStyleBottomLineImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"home_top_scroll_selection"]];
+    [_topStyleBottomLineImage setFrame:CGRectMake(0.0f, 32, 24, 13)];
+    [_topStyleContainer addSubview:_topStyleBottomLineImage];
+    
+    if (titles.count != 0) {
+        CGFloat lableWidth = MAIN_SCREEN_WIDTH / titles.count;
+        for (NSInteger i = 0; i < titles.count; i++) {
+            UILabel *sectionLabel = [[UILabel alloc] initWithFrame:CGRectMake(i * lableWidth, 0, lableWidth, 32)];
+            sectionLabel.text = titles[i];
+            sectionLabel.tag = kTopScrollViewTag + i;
+            if (i == 0) {
+                self.leftCenterX = sectionLabel.centerX;
+            }
+            
+            if (i == titles.count - 1) {
+                self.rightCenterX = sectionLabel.centerX;
+            }
+            
+            if (index == i) {
+                sectionLabel.font = [UIFont themeFontMedium:16];
+                sectionLabel.textColor = [UIColor themeGray1];
+                _topStyleBottomLineImage.centerX = sectionLabel.centerX;
+            }else
+            {
+                sectionLabel.font = [UIFont themeFontRegular:16];
+                sectionLabel.textColor = [UIColor themeGray3];
+            }
+           
+            NSLog(@"center x  = %f",sectionLabel.centerX - _topStyleBottomLineImage.centerX);
+            sectionLabel.textAlignment = NSTextAlignmentCenter;
+            [_topStyleContainer addSubview:sectionLabel];
+        }
+    }
+    
+    self.totalCenterXWidth = self.rightCenterX - self.leftCenterX;
+}
+
+- (UILabel *)getTopScrollLabelFromIndex:(NSInteger)index
+{
+    UIView *labelView = [_topStyleContainer viewWithTag:index + kTopScrollViewTag];
+    return labelView;
 }
 /*
  // Only override drawRect: if you perform custom drawing.
