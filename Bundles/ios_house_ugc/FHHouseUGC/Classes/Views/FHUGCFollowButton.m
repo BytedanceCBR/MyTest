@@ -36,12 +36,10 @@
         self.layer.borderColor = [[UIColor themeGray4] CGColor];
         self.titleLabel.textColor = [UIColor themeGray4];
         self.titleLabel.text = @"已关注";
-        self.enabled = NO;
     } else {
         self.layer.borderColor = [[UIColor themeRed1] CGColor];
         self.titleLabel.textColor = [UIColor themeRed1];
         self.titleLabel.text = @"关注";
-        self.enabled = YES;
     }
 }
 

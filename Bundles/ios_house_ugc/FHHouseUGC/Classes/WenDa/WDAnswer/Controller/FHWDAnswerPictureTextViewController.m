@@ -59,7 +59,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 
 @interface FHWDAnswerPictureTextViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate ,WDUploadImageManagerDelegate>
 
-@property(nonatomic, copy) NSString *qid;
+@property (nonatomic, copy) NSString *qid;
 @property (nonatomic, copy) NSString *ansid;
 @property (nonatomic, copy) NSString *answerSchema;
 @property (nonatomic, assign) BOOL isForbidComment;
@@ -114,8 +114,10 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         NSString *ansid = [paramObj.allParams objectForKey:@"ansid"];
        
         // add by zyk qid
-        self.qid = @"6667717867934318859";
-        self.ansid = @"";
+//        self.qid = @"6667717867934318859";
+//        self.ansid = @"";
+        self.qid = qid;
+        self.ansid = ansid;
         self.answerSchema = @"";
         self.isForbidComment = NO;
         self.isPosting = NO;
@@ -136,7 +138,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 }
 
 - (void)setupData {
-    self.qid = @"6667717867934318859";
+//    self.qid = @"6667717867934318859";
     WDPostAnswerTaskModel *taskModel = [[WDPostAnswerTaskModel alloc] initWithQid:self.qid content:nil contentRichSpan:nil imageList:nil];
     self.taskModel = taskModel;
     self.uploadImageManager = [[WDUploadImageManager alloc] init];
