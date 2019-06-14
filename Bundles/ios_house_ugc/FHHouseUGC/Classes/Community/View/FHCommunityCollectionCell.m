@@ -33,6 +33,8 @@
     if(_type == FHCommunityCollectionCellTypeNone){
         _type = type;
         [self initViews];
+    }else{
+        [self.vc viewWillAppear:NO];
     }
 }
 

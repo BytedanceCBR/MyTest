@@ -13,6 +13,7 @@ typedef NS_ENUM(NSInteger, FHCommunityFeedListType)
 {
     FHCommunityFeedListTypeNearby = 0,
     FHCommunityFeedListTypeMyJoin,
+    FHCommunityFeedListTypePostDetail,
 };
 
 typedef NS_ENUM(NSInteger, FHCommunityCollectionCellType)
@@ -46,6 +47,12 @@ typedef NS_ENUM(NSInteger, FHUGCMyInterestedType)
 {
     FHUGCMyInterestedTypeMore = 0,                            //更多
     FHUGCMyInterestedTypeEmpty,                               //空页面
+};
+
+typedef NS_ENUM(NSInteger, FHUGCMyJoinType)
+{
+    FHUGCMyJoinTypeFeed = 1,                            //信息流列表
+    FHUGCMyJoinTypeEmpty,                               //空页面
 };
 
 
