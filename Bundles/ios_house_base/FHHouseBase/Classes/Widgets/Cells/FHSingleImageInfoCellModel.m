@@ -251,6 +251,7 @@
                 if (reulstString.length * 10 > ([UIScreen mainScreen].bounds.size.width  - 40 - 72 - 90)) {
                     
                     NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
+                    
                     for (NSInteger i = 0; i < paramsArrary.count; i++) {
                         reulstString = [self cutStringFromString:reulstString];
                         

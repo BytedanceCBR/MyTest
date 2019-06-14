@@ -111,17 +111,21 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
             }
         }
     }
-    [_bannerView setURLs:imageUrls];
     [self.tracerDic removeAllObjects];
+    [_bannerView setURLs:imageUrls];
 }
 
 - (void)addTracerShow:(FHConfigDataRentOpDataItemsModel *)opData index:(NSInteger)index {
-    NSString *opId = opData.id;
-    if (opId.length > 0) {
-        if (self.tracerDic[opId]) {
+    // banner show 唯一性判断(地址)
+    NSString *tracerKey = [NSString stringWithFormat:@"_%p_",opData];
+    if (tracerKey.length > 0) {
+        if (self.tracerDic[tracerKey]) {
             return;
         }
-        self.tracerDic[opId] = @(1);
+        self.tracerDic[tracerKey] = @(1);
+    }
+    NSString *opId = opData.id;
+    if (opId.length > 0) {
     } else {
         opId = @"be_null";
     }
@@ -138,7 +142,6 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
         origin_from = opData.logPb[@"origin_from"];
     }
     params[@"origin_from"] = origin_from;
-  
     [FHUserTracker writeEvent:@"banner_show" params:params];
 }
 
@@ -272,6 +275,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
         if (self.totalCount == 1) {
             [self.bannerScrollView setLeftImage:self.imageURLs[0]];
             self.bannerScrollView.scrollEnabled = NO;
+            [self.bannerScrollView setContentOffset:CGPointMake(0, 0) animated:NO];
             self.indexView.hidden = YES;
             if (self.delegate != nil) {
                 [self.delegate currentIndexChanged:self.currentIndex];

@@ -846,6 +846,9 @@
                            @"isEmpty": @"is_empty",
                            @"rankType": @"rank_type",
                            @"isNoLimit": @"is_no_limit",
+                           @"centerLatitude":@"center_latitude",
+                           @"centerLongitude":@"center_longitude",
+                           @"resizeLevel":@"resize_level",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

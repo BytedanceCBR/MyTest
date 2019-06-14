@@ -413,6 +413,10 @@
         return ;
     }
     
+    if (self.currentBubble.lastShowMode == FHMapSearchShowModeSubway) {
+        param[CHANNEL_ID] = CHANNEL_ID_SUBWAY_SEARCH;
+    }
+    
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.houseList.count needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
         
@@ -670,6 +674,8 @@
 {
     if (self.currentBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
         return @"circlefind";
+    }else if (self.currentBubble.lastShowMode == FHMapSearchShowModeSubway){
+        return @"subwayfind";
     }
     return @"mapfind";
 }
@@ -813,6 +819,9 @@
     if (self.currentBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
         param[UT_ENTER_FROM] = @"mapfind";
         TRACK_EVENT(@"circlefind_half_category", param);
+    }else if (self.currentBubble.lastShowMode == FHMapSearchShowModeSubway){
+        param[UT_ENTER_FROM] = @"mapfind";
+        TRACK_EVENT(@"subwayfind_half_category", param);
     }else{
         TRACK_EVENT(@"mapfind_half_category", param);
     }

@@ -163,6 +163,27 @@ NSString *const TTWebViewRequestKey = @"request";
     BOOL result = YES;
     NSURL *URL = request.URL;
     NSString *host = [URL.host copy];
+    
+    if (webView.isCheckOpenUrlNameList) {
+        NSArray *blackNameList = [webView fhWebBlackWebList];
+        if ([blackNameList isKindOfClass:[NSArray class]] && blackNameList.count > 0) {
+            for (NSInteger i = 0; i < blackNameList.count; i++) {
+                NSString *blackName = blackNameList[i];
+                if ([blackName isKindOfClass:[NSString class]]) {
+                    if ([request.URL.absoluteString rangeOfString:blackName].location != NSNotFound) { // 对应的scheme
+                        return NO;
+                    }
+                }
+            }
+        }
+
+        if ([request.URL.absoluteString containsString:@"tel:"]) {
+            [[UIApplication sharedApplication] openURL:request.URL];
+            return YES;
+        }
+    }
+    
+
     if ([URL.scheme isEqualToString:@"bytedance"] &&
         ([host isEqualToString:@"custom_event"] ||
          [host isEqualToString:@"log_event"] || [host isEqualToString:@"log_event_v3"])) {
