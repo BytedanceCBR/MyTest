@@ -34,6 +34,7 @@
 #import "WDShareUtilsHelper.h"
 #import "WDUIHelper.h"
 #import <BDTBasePlayer/TTVFullscreenProtocol.h>
+#import "WDListAnswerCellBottomView.h"
 
 @interface WDWendaListLightLargeVideoCell ()<WDWendaListCellUserHeaderViewDelegate,WDWendaListCellActionFooterViewDelegate,WDVideoPlayerTransferReceiver,TTVFullscreenCellProtocol,TTShareManagerDelegate>
 
@@ -63,6 +64,8 @@
 @property (nonatomic, assign) BOOL isViewHighlighted;
 @property (nonatomic, assign) BOOL isSelfFollow;
 @property (nonatomic, assign) BOOL needSendRedPackFlag;
+
+@property (nonatomic, strong)   WDListAnswerCellBottomView       *cellBottomView;
 
 @end
 
@@ -209,6 +212,7 @@
 - (CGFloat)refreshBottomViewContentAndLayout:(CGFloat)top {
     [self refreshBottomLabelContent];
     self.bottomLabel.top = top + self.cellLayoutModel.bottomLabelTopPadding;
+    self.cellBottomView.top = top + self.cellLayoutModel.bottomLabelTopPadding;
     CGFloat bottomOriginX = kWDCellLeftPadding;
     self.rewardIconImageView.hidden = YES;
     self.rewardLabel.hidden = !self.cellViewModel.isAnswerGetReward;
@@ -276,6 +280,10 @@
     [self.bottomLabel sizeToFit];
     self.bottomLabel.width = ceilf(self.bottomLabel.width);
     self.bottomLabel.height = [WDListCellLayoutModel answerReadCountsLineHeight];
+    self.bottomLabel.hidden = YES;
+    
+    self.cellBottomView.width = SSScreenWidth;
+    self.cellBottomView.height = [WDListCellLayoutModel answerReadCountsLineHeight];
 }
 
 - (void)refreshDiggCount {
@@ -300,6 +308,7 @@
     [self.contentView addSubview:self.rewardIconImageView];
     [self.contentView addSubview:self.rewardLabel];
     [self.contentView addSubview:self.bottomLabel];
+    [self.contentView addSubview:self.cellBottomView];
 //    [self.contentView addSubview:self.actionView];
     [self.contentView addSubview:self.footerView];
 }
@@ -728,6 +737,13 @@
         _bottomLabel.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
     }
     return _bottomLabel;
+}
+
+- (WDListAnswerCellBottomView *)cellBottomView {
+    if (!_cellBottomView) {
+        _cellBottomView = [[WDListAnswerCellBottomView alloc] initWithFrame:CGRectZero];
+    }
+    return _cellBottomView;
 }
 
 - (SSThemedView *)footerView {
