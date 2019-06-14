@@ -165,7 +165,12 @@
     [requestDictonary setValue:[FHEnvContext getCurrentSelectCityIdFromLocal] forKey:@"city_id"];
     NSInteger offsetValue = self.houseDataItemsModel.count;
     
-    [requestDictonary setValue:@(offsetValue) forKey:@"offset"];
+    if (isFirst) {
+        [requestDictonary setValue:@(0) forKey:@"offset"];
+    }else
+    {
+        [requestDictonary setValue:@(offsetValue) forKey:@"offset"];
+    }
     [requestDictonary setValue:@(self.houseType) forKey:@"house_type"];
     [requestDictonary setValue:@(20) forKey:@"count"];
     

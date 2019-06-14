@@ -129,11 +129,18 @@
             
             self.headerHeight =  [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
             
+            
+            if (xConfigDataModel.cityAvailability.enable.boolValue)
+            {
+                [self.homeViewController.emptyView hideEmptyView];
+            }
+            
             //更新冷启动默认选项
             if (configDataModel.houseTypeDefault && (configDataModel.houseTypeDefault.integerValue > 0) &&  [FHHomeCellHelper sharedInstance].isFirstLanuch) {
                 [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:configDataModel.houseTypeDefault];
                 self.houseType = configDataModel.houseTypeDefault.integerValue;
             }
+            
             
             //如果启动时 类型没有变
             if ([configDataModel.houseTypeList containsObject:@(self.houseType)] && [configDataModel.houseTypeList isEqualToArray:xConfigDataModel.houseTypeList] && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch && [FHHomeCellHelper sharedInstance].isFirstLanuch) {
@@ -260,8 +267,8 @@
 
 - (void)processRequestData:(FHHomePullTriggerType)refreshType andHouseType:(FHHouseType)houseType andIsSucees:(BOOL)isSuccess andDataModel:(JSONModel * _Nonnull) dataModel
 {
+    [self.tableViewV finishPullDownWithSuccess:YES];
     if (refreshType == FHHomePullTriggerTypePullDown  && self.houseType == houseType) {
-        [self.tableViewV finishPullDownWithSuccess:YES];
         if([dataModel isKindOfClass:[FHHomeHouseModel class]] && isSuccess)
         {
             FHHomeHouseModel *houseData = (FHHomeHouseModel *)dataModel;
@@ -271,6 +278,7 @@
         }
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
     }
+    [self.homeViewController.emptyView hideEmptyView];
 }
 
 -(NSString *)pageTypeString {
@@ -613,7 +621,9 @@
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    
+    if (scrollView == self.homeViewController.scrollView) {
+       
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
