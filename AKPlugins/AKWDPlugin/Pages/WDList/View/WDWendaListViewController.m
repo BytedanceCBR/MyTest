@@ -88,6 +88,8 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 
 @property (nonatomic, strong)   WDListBottomButton       *bottomButton;
 @property (nonatomic, assign)   CGFloat       bottomButtonHeight;
+@property (nonatomic, copy)   NSString *       qid;
+@property (nonatomic, copy)   NSString *       ansid;
 
 @end
 
@@ -169,7 +171,11 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         self.viewModel = [[WDListViewModel alloc] initWithQid:qID gdExtJson:baseCondition apiParameter:apiParameter needReturn:needReturn];
         _readAnswerArray = @[].mutableCopy;
         _rid = [rid copy];
-
+        self.qid = qID;
+        self.ansid = [baseCondition tt_stringValueForKey:@"ansid"];
+        if (self.qid.length <= 0) {
+            self.qid = [baseCondition tt_stringValueForKey:@"qid"];
+        }
         WeakSelf;
         self.viewModel.editBlock = ^(void){
             StrongSelf;
@@ -368,7 +374,17 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 
 // 写答案
 - (void)writeAnswer {
-    
+    NSString *routeUrl = @"sslocal://ugc_post_wd_answer";
+    NSURL *openUrl = [NSURL URLWithString:routeUrl];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    if (self.qid.length > 0) {
+        dict[@"qid"] = self.qid;
+    }
+    if (self.ansid.length > 0) {
+        dict[@"ansid"] = self.ansid;
+    }
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 - (void)firstLoadContent

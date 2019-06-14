@@ -37,6 +37,7 @@
     [self addSubview:self.sepLine];
     self.buttonView = [[WDListBottomButtonView alloc] init];
     [self addSubview:self.buttonView];
+    self.buttonView.userInteractionEnabled = NO;
     [self setupConstraints];
 }
 
