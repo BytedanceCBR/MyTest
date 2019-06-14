@@ -43,7 +43,6 @@
 @property (nonatomic, strong) TTHttpTask * requestOriginTask;
 @property (nonatomic, strong) TTHttpTask * requestRefreshTask;
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
-@property (nonatomic, assign) BOOL isRetryedPullDownRefresh;
 @property (nonatomic, assign) BOOL isFirstChange;
 @property (nonatomic, assign) BOOL isRequestFromSwitch; //左右切换房源类型
 @property(nonatomic, weak)   NSTimer *timer;
@@ -66,7 +65,8 @@
         self.tableViewV = tableView;
         self.homeViewController = homeVC;
         self.isSelectIndex = YES;
-
+        _itemsVCArray = [NSMutableArray new];
+        
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         
         //更新冷启动默认选项
@@ -99,6 +99,8 @@
         // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
             StrongSelf;
+            
+            
             if (![FHEnvContext isNetworkConnected]) {
                 [[ToastManager manager] showToast:@"网络异常"];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -108,12 +110,11 @@
                 });
                 return ;
             }
-            
+
             if (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                 [self requestOriginData:self.isFirstChange isShowPlaceHolder:[FHEnvContext sharedInstance].isRefreshFromCitySwitch];
             }
 
-            self.isRetryedPullDownRefresh = YES;
         }];
         
  
@@ -160,12 +161,6 @@
                 [[FHHomeCellHelper sharedInstance] clearShowCache];
             }
             
-            if ([FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
-                //请求推荐房源
-                [self.homeViewController pullAndRefresh];
-                return ;
-            }
-            
             //非首次只刷新头部
             if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 [FHHomeCellHelper sharedInstance].isFirstLanuch = NO;
@@ -176,10 +171,6 @@
 
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
                 
-//                //切换城市显示房源默认
-//                if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
-//                    [self.homeViewController pullAndRefresh];
-//                }
                 return;
             }
             
@@ -220,7 +211,9 @@
     
     if (configDataModel.houseTypeList.count > currentSelectIndex && self.itemsVCArray.count > currentSelectIndex) {
         FHHomeItemViewController *itemVC = self.itemsVCArray[currentSelectIndex];
-        [itemVC requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+        if ([itemVC respondsToSelector:@selector(requestDataForRefresh:andIsFirst:)]) {
+            [itemVC requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:NO];
+        }
     }
 }
 
@@ -235,7 +228,7 @@
     }
     
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    NSMutableArray *itemVCArray = [NSMutableArray new];
+    NSMutableArray *itemVCArrayTmp = [NSMutableArray new];
     for (int i = 0; i < configDataModel.houseTypeList.count; i++) {
         NSNumber *houseTypeNum = configDataModel.houseTypeList[i];
         if ([houseTypeNum isKindOfClass:[NSNumber class]]) {
@@ -251,11 +244,11 @@
         
             itemVC.view.frame = CGRectMake(KFHScreenWidth * i, 0, KFHScreenWidth, KFHScreenHeight);
             
-            [itemVCArray addObject:itemVC];
+            [itemVCArrayTmp addObject:itemVC];
         }
     }
     self.homeViewController.scrollView.delegate = self;
-    self.itemsVCArray = itemVCArray;
+    self.itemsVCArray = itemVCArrayTmp;
     [self.homeViewController.scrollView setContentSize:CGSizeMake(KFHScreenWidth * configDataModel.houseTypeList.count, self.homeViewController.scrollView.frame.size.height)];
     NSInteger currentSelectIndex = self.categoryView.segmentedControl.selectedSegmentIndex;
     [self setUpSubtableIndex:currentSelectIndex];
@@ -270,6 +263,8 @@
 - (void)processRequestData:(FHHomePullTriggerType)refreshType andHouseType:(FHHouseType)houseType andIsSucees:(BOOL)isSuccess andDataModel:(JSONModel * _Nonnull) dataModel
 {
     [self.tableViewV finishPullDownWithSuccess:YES];
+    [self.tableViewV finishPullUpWithSuccess:YES];
+    
     if (refreshType == FHHomePullTriggerTypePullDown  && self.houseType == houseType) {
         if([dataModel isKindOfClass:[FHHomeHouseModel class]] && isSuccess)
         {
@@ -280,7 +275,8 @@
         }
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
     }
-    
+    [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
+    [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
     [self.homeViewController.emptyView hideEmptyView];
 }
 

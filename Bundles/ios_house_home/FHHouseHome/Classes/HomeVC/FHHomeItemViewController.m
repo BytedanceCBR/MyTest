@@ -78,8 +78,6 @@
     
     [self registerCells];
     
-    [self showPlaceHolderCells];
-    
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
 }
 
@@ -161,11 +159,16 @@
 - (void)requestDataForRefresh:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst
 {
     self.currentPullType = pullType;
+    
+    if (isFirst) {
+        [self showPlaceHolderCells];
+    }
+    
     NSMutableDictionary *requestDictonary = [NSMutableDictionary new];
     [requestDictonary setValue:[FHEnvContext getCurrentSelectCityIdFromLocal] forKey:@"city_id"];
     NSInteger offsetValue = self.houseDataItemsModel.count;
     
-    if (isFirst) {
+    if (isFirst || pullType == FHHomePullTriggerTypePullDown) {
         [requestDictonary setValue:@(0) forKey:@"offset"];
     }else
     {
@@ -174,19 +177,14 @@
     [requestDictonary setValue:@(self.houseType) forKey:@"house_type"];
     [requestDictonary setValue:@(20) forKey:@"count"];
     
-    if ([self.requestTask isKindOfClass:[TTHttpTask class]]) {
-        [self.requestTask cancel];
-        self.requestTask = nil;
-    }
+    self.requestTask = nil;
     
     WeakSelf;
     self.requestTask = [FHHomeRequestAPI requestRecommendForLoadMore:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         
-        self.requestTask = nil;
-        
-        [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
-                
+        [self.tableView finishPullUpWithSuccess:YES];
+                        
         //判断下拉刷新
         if (pullType == FHHomePullTriggerTypePullDown) {
             //请求无错误,无错误
@@ -218,16 +216,13 @@
         
         self.isRetryedPullDownRefresh = NO;
         
-        [self.tableView finishPullDownWithSuccess:YES];
-        [self.tableView finishPullUpWithSuccess:YES];
-        
         
         if (pullType == FHHomePullTriggerTypePullDown) {
             self.originSearchId = model.data.searchId;
             self.houseDataItemsModel = [NSMutableArray arrayWithArray:model.data.items];
         }else
         {
-            if (model.data.items) {
+            if (model.data.items && self.houseDataItemsModel && model.data.items.count != 0) {
               self.houseDataItemsModel = [self.houseDataItemsModel arrayByAddingObjectsFromArray:model.data.items];
             }
         }
@@ -237,16 +232,7 @@
         [self updateTableViewWithMoreData:model.data.hasMore];
         
         [self sendTraceEvent:FHHomeCategoryTraceTypeRefresh];
-        
-        if (model.data.refreshTip && pullType == FHHomePullTriggerTypePullDown) {
-            [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
-            self.tableView.contentOffset = CGPointMake(0, 0);
-        }
-        
-        if (pullType == FHHomePullTriggerTypePullUp) {
-            [self.tableView finishPullUpWithSuccess:YES];
-        }
-        
+
         if (self.requestCallBack) {
             self.requestCallBack(pullType, self.houseType, YES, model);
         }
