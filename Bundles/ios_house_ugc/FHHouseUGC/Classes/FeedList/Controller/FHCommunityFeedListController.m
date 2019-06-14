@@ -19,9 +19,7 @@
 @interface FHCommunityFeedListController ()
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
-@property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
-@property(nonatomic, strong) UIButton *publishBtn;
 
 @end
 
@@ -109,7 +107,7 @@
     }];
     
     [self.publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.view).offset(-self.publishBtnBottomHeight);
         make.right.mas_equalTo(self.view).offset(-12);
         make.width.height.mas_equalTo(64);
     }];

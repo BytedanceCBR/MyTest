@@ -8,6 +8,7 @@
 #import "FHUGCRecommendCell.h"
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCRecommendSubCell.h"
+#import <TTRoute.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -61,6 +62,7 @@
     _headerView.bottomLine.hidden = NO;
     _headerView.refreshBtn.hidden = NO;
     [_headerView.refreshBtn addTarget:self action:@selector(changeData) forControlEvents:UIControlEventTouchUpInside];
+    [_headerView.moreBtn addTarget:self action:@selector(moreData) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_headerView];
 
     self.bottomSepView = [[UIView alloc] init];
@@ -223,6 +225,11 @@
     self.isReplace = NO;
     
     [self refreshData];
+}
+
+- (void)moreData {
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_my_interest"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 #pragma mark - UITableViewDataSource

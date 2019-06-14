@@ -6,10 +6,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHUGCMyInterestedController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCMyInterestedViewModel : NSObject
+
+@property(nonatomic, strong) NSMutableArray *dataList;
+
+- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHUGCMyInterestedController *)viewController;
+
+- (void)requestData:(BOOL)isHead;
 
 @end
 
