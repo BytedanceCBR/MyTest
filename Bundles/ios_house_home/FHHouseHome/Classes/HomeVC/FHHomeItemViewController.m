@@ -442,6 +442,65 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (!self.showPlaceHolder) {
+        [self jumpToDetailPage:indexPath];
+    }
+}
+
+#pragma mark - 详情页跳转
+-(void)jumpToDetailPage:(NSIndexPath *)indexPath {
+    if (self.houseDataItemsModel.count > indexPath.row) {
+        FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
+        NSMutableDictionary *traceParam = [NSMutableDictionary new];
+        traceParam[@"enter_from"] = [self pageTypeString];
+        traceParam[@"log_pb"] = theModel.logPb;
+        traceParam[@"origin_from"] = [self pageTypeString];
+        traceParam[@"card_type"] = @"left_pic";
+        traceParam[@"rank"] = @(indexPath.row);
+        traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+        traceParam[@"element_from"] = @"maintab_list";
+        traceParam[@"enter_from"] = @"maintab";
+        
+        NSInteger houseType = 0;
+        if ([theModel.houseType isKindOfClass:[NSString class]]) {
+            houseType = [theModel.houseType integerValue];
+        }
+        
+        if (houseType != 0) {
+            if (houseType != self.houseType) {
+                return;
+            }
+        }else
+        {
+            houseType = self.houseType;
+        }
+        
+        
+        NSDictionary *dict = @{@"house_type":@(houseType),
+                               @"tracer": traceParam
+                               };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *jumpUrl = nil;
+        
+        if (houseType == FHHouseTypeSecondHandHouse) {
+            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.idx]];
+        }else if(houseType == FHHouseTypeNewHouse)
+        {
+            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.idx]];
+        }else if(houseType == FHHouseTypeRentHouse)
+        {
+            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.idx]];
+        }
+        
+        if (jumpUrl != nil) {
+            [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+        }
+    }
+}
+
 - (UITableView *)tableView {
     
     if (!_tableView) {
