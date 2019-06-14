@@ -11,6 +11,7 @@
 #import <UIImageView+BDWebImage.h>
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
+#import "WDAnswerService.h"
 
 @interface WDListAnswerCellBottomView ()
 
@@ -36,11 +37,13 @@
     self.commentBtn = [[WDListAnswerCellBottomButton alloc] init];
     self.commentBtn.icon.image = [UIImage imageNamed:@"f_ask_message_noraml"];
     self.commentBtn.textLabel.text = @"0";
+    [self.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.commentBtn];
     // 点赞
     self.followBtn = [[WDListAnswerCellBottomButton alloc] init];
     self.followBtn.icon.image = [UIImage imageNamed:@"f_ask_favorite_noraml"];// f_ask_favorite_selected
     self.followBtn.textLabel.text = @"0";
+    [self.followBtn addTarget:self action:@selector(followBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.followBtn];
     
     [self setupConstraints];
@@ -73,6 +76,25 @@
         }
     }
     [self layoutIfNeeded];
+}
+
+- (void)commentBtnClick {
+    
+}
+
+- (void)followBtnClick {
+    if (self.followBtn.followed) {
+        // 取消点赞
+        self.ansEntity.isDigg = NO;
+        self.ansEntity.diggCount = (self.ansEntity.diggCount.longLongValue >= 1) ? @(self.ansEntity.diggCount.longLongValue - 1) : @0;
+        [WDAnswerService digWithAnswerID:self.ansEntity.ansid diggType:WDDiggTypeUnDigg enterFrom:@"wenda_list" apiParam:self.apiParams finishBlock:nil];
+    } else {
+        // 点赞
+        self.ansEntity.isDigg = YES;
+        self.ansEntity.diggCount = @(self.ansEntity.diggCount.longLongValue + 1);
+        [WDAnswerService digWithAnswerID:self.ansEntity.ansid diggType:WDDiggTypeDigg enterFrom:@"wenda_list" apiParam:self.apiParams finishBlock:nil];
+    }
+    self.ansEntity = self.ansEntity;
 }
 
 @end

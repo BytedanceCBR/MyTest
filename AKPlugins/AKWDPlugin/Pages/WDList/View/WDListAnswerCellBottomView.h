@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface WDListAnswerCellBottomView : UIView
 
 @property (nonatomic, strong) WDAnswerEntity *ansEntity;
+@property (nonatomic, copy) NSDictionary *gdExtJson;
+@property (nonatomic, copy) NSDictionary *apiParams;
 
 @end
 
