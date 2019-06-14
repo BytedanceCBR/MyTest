@@ -580,7 +580,7 @@
     // 添加分页菜单
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell.contentView addSubview:self.homeViewController.scrollView];
-    [cell.contentView setBackgroundColor:[UIColor blueColor]];
+    [cell.contentView setBackgroundColor:[UIColor whiteColor]];
     return cell;
 }
 
