@@ -131,6 +131,11 @@
     self.stayTime = [self getCurrentTime];
     
     [self uploadFirstScreenHouseShow];
+    
+    if (self.traceRecordDict && self.houseType == _listModel.houseType && !self.traceRecordDict[@(self.houseType)]) {
+        [self.traceRecordDict setValue:@"" forKey:@(self.houseType)];
+        [FHHomeCellHelper sendBannerTypeCellShowTrace:_houseType];
+    }
 }
 
 - (void)currentViewIsDisappeared
@@ -548,6 +553,10 @@
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.section == kFHHomeHouseTypeBannerViewSection) {
+        if (self.houseType == _listModel.houseType && ![self.traceRecordDict objectForKey:@(self.houseType)] ) {
+            [self.traceRecordDict setValue:@"" forKey:@(self.houseType)];
+            [FHHomeCellHelper sendBannerTypeCellShowTrace:_houseType];
+        }
         return ;
     }
   
