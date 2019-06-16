@@ -15,6 +15,7 @@
 #import "FHCommunityDetailViewController.h"
 #import "FHPostDetailViewController.h"
 #import "FHWDAnswerPictureTextViewController.h"
+#import "FHUGCFollowListController.h"
 
 @interface FHCommunityViewController ()
 
@@ -155,7 +156,7 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
     
-    FHWDAnswerPictureTextViewController *vc = [[FHWDAnswerPictureTextViewController alloc] init];
+    FHUGCFollowListController *vc = [[FHUGCFollowListController alloc] init];
     TTNavigationController *navVC = [[TTNavigationController alloc] initWithRootViewController:vc];
     [self presentViewController:navVC animated:YES completion:nil];
 }
