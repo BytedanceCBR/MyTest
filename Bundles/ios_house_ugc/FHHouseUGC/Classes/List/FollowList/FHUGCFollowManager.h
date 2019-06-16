@@ -6,12 +6,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHUGCModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCFollowManager : NSObject
 
 + (instancetype)sharedInstance;
+
+@property (nonatomic, strong)   FHUGCModel       *followData;
 
 @end
 

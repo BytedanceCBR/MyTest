@@ -17,9 +17,11 @@
 #import "UIViewController+NavbarItem.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "TTDeviceHelper.h"
+#import "FHUGCFollowManager.h"
 
 @interface FHUGCFollowListController ()<UITableViewDelegate,UITableViewDataSource>
 
+@property (nonatomic, assign)   FHUGCFollowVCType       vcType;
 @property (nonatomic, strong) UITableView *tableView;
 
 @end
@@ -29,7 +31,14 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        
+        // 我关注的小区列表 默认
+        self.vcType = FHUGCFollowVCTypeList;
+        // 根据host区分页面
+        if ([paramObj.host isEqualToString:@"ugc_follow_list"]) {
+            self.vcType = FHUGCFollowVCTypeList;
+        } else if ([paramObj.host isEqualToString:@"ugc_follow_select_list"]) {
+            self.vcType = FHUGCFollowVCTypeSelectList;
+        }
     }
     return self;
 }
@@ -44,12 +53,26 @@
 }
 
 - (void)setupData {
-    
-//    [self.emptyView showEmptyWithTip:@"你还没有关注任何小区" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
-//    [self.emptyView.retryButton setTitle:@"关注小区" forState:UIControlStateNormal];
-    
-    [self.emptyView showEmptyWithTip:@"你还没有关注任何小区" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
-    [self.emptyView.retryButton setTitle:@"关注小区" forState:UIControlStateNormal];
+    // title
+    if (self.vcType == FHUGCFollowVCTypeList) {
+        self.title = @"我关注的小区";
+    } else if (self.vcType == FHUGCFollowVCTypeSelectList)  {
+        self.title = @"选择小区";
+    }
+    // 是否有数据
+    if ([FHUGCFollowManager sharedInstance].followData && [FHUGCFollowManager sharedInstance].followData.data.userFollowSocialGroups.count > 0) {
+        // 有数据
+        [self.emptyView hideEmptyView];
+        [self.tableView reloadData];
+    } else {
+        // 暂时没有数据
+        if (self.vcType == FHUGCFollowVCTypeList) {
+            [self.emptyView showEmptyWithTip:@"你还没有关注任何小区" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        } else if (self.vcType == FHUGCFollowVCTypeSelectList)  {
+            [self.emptyView showEmptyWithTip:@"你还没有关注任何小区" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
+            [self.emptyView.retryButton setTitle:@"关注小区" forState:UIControlStateNormal];
+        }
+    }
 }
 
 - (void)setupUI {
@@ -94,6 +117,9 @@
 
 - (void)retryLoadData {
     // 关注小区 按钮点击
+    if (self.vcType == FHUGCFollowVCTypeSelectList) {
+        
+    }
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource

@@ -171,4 +171,8 @@
 "ugc_post_community_detail" = "FHCommunityDetailViewController";
 "ugc_my_interest" = "FHUGCMyInterestedController";
 "ugc_post_wd_answer" = "FHWDAnswerPictureTextViewController";
+// 选择小区列表
+"ugc_follow_select_list" = "FHUGCFollowListController";
+// 已关注的小区列表
+"ugc_follow_list" = "FHUGCFollowListController";
 

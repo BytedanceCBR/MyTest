@@ -156,9 +156,12 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
     
-    FHUGCFollowListController *vc = [[FHUGCFollowListController alloc] init];
-    TTNavigationController *navVC = [[TTNavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:navVC animated:YES completion:nil];
+//    FHUGCFollowListController *vc = [[FHUGCFollowListController alloc] init];
+//    TTNavigationController *navVC = [[TTNavigationController alloc] initWithRootViewController:vc];
+//    [self presentViewController:navVC animated:YES completion:nil];
+    
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_list"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 - (void)hideSegmentControl {
