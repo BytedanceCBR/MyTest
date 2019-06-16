@@ -30,11 +30,10 @@
 @property (nonatomic, strong) NSMutableArray *houseDataItemsModel;
 @property (nonatomic, assign) BOOL isRetryedPullDownRefresh;
 @property (nonatomic, assign) BOOL hasMore;
-@property (nonatomic, strong) NSString *enterType; //当前enterType，用于enter_category
 @property (nonatomic, strong) NSString *originSearchId;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, strong) NSMutableDictionary *traceRecordDict;
-@property (nonatomic, assign) BOOL isShowingFirstScreen;
+@property (nonatomic, assign) BOOL isOriginRequest;
 @end
 
 @implementation FHHomeItemViewController
@@ -46,14 +45,14 @@
     self.houseDataItemsModel = [NSMutableArray new];
     self.isRetryedPullDownRefresh = NO;
     self.hasMore = YES;
-    self.isShowingFirstScreen = YES;
+    self.isOriginRequest = YES;
     self.traceNeedUploadCache = [NSMutableArray new];
+    self.traceEnterCategoryCache = [NSMutableDictionary new];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pageTitleViewToTop) name:@"headerViewToTop" object:nil];
     
     [self.view addSubview:self.tableView];
-    self.traceRecordDict = [NSMutableDictionary new];
-    
+     self.traceRecordDict = [NSMutableDictionary new];
     
     [FHHomeCellHelper registerCells:self.tableView];
     
@@ -98,18 +97,11 @@
 
 - (void)currentViewIsShowing
 {
-    if (self.traceNeedUploadCache && self.isShowingFirstScreen) {
-        [self uploadFirstScreenHouseShow];
+    if (self.traceEnterCategoryCache.allKeys.count > 0 && self.isOriginShowSelf) {
+        [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
     }
     
-    if (self.isShowingFirstScreen) {
-        [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
-    }else
-    {
-        [self sendTraceEvent:FHHomeCategoryTraceTypeRefresh];
-    }
-    
-    self.isShowingFirstScreen = NO;
+    [self uploadFirstScreenHouseShow];
 }
 
 - (void)currentViewIsDisappeared
@@ -211,6 +203,10 @@
         [self showPlaceHolderCells];
     }
     
+    if (pullType == FHHomePullTriggerTypePullDown) {
+        self.traceRecordDict = [NSMutableDictionary new];
+    }
+    
     NSMutableDictionary *requestDictonary = [NSMutableDictionary new];
     [requestDictonary setValue:[FHEnvContext getCurrentSelectCityIdFromLocal] forKey:@"city_id"];
     NSInteger offsetValue = self.houseDataItemsModel.count;
@@ -279,11 +275,20 @@
         self.tableView.hasMore = model.data.hasMore;
         [self updateTableViewWithMoreData:model.data.hasMore];
     
+        
+        if (self.isOriginRequest || [FHEnvContext sharedInstance].isRefreshFromCitySwitch || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
+            [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
+        }else
+        {
+            [self sendTraceEvent:FHHomeCategoryTraceTypeRefresh];
+        }
+        
 
         if (self.requestCallBack) {
             self.requestCallBack(pullType, self.houseType, YES, model);
         }
         
+        self.isOriginRequest = NO;
     }];
 }
 
@@ -315,7 +320,10 @@
         [FHEnvContext recordEvent:houseShowTrace andEventKey:@"house_show"];
     }
     
-    [self.traceNeedUploadCache removeAllObjects];
+    if (self.traceNeedUploadCache.count > 0) {
+        [self.traceNeedUploadCache removeAllObjects];
+        self.isOriginShowSelf = YES;
+    }
 }
 
 - (NSTimeInterval)getCurrentTime
@@ -339,7 +347,11 @@
     
     
     if (traceType == FHHomeCategoryTraceTypeEnter) {
-        [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+        if (self.isOriginShowSelf) {
+            [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+        }
+        
+        self.traceEnterCategoryCache = tracerDict;
     }else if (traceType == FHHomeCategoryTraceTypeStay)
     {
         NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
@@ -356,12 +368,11 @@
         if (self.reloadType == TTReloadTypeClickCategory) {
             stringReloadType = @"click";
         }
-        tracerDict[@"refresh_type"] = (self.currentPullType == FHHomePullTriggerTypePullUp ? @"pre_load_more" : stringReloadType);
+        tracerDict[@"refresh_type"] = (self.currentPullType == FHHomePullTriggerTypePullUp ? @"pre_load_more" :  stringReloadType);
         [FHEnvContext recordEvent:tracerDict andEventKey:@"category_refresh"];
         
         self.reloadType = nil;
     }
-    
 }
 
 #pragma mark 计算高度
@@ -536,7 +547,7 @@
             tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
             [tracerDict removeObjectForKey:@"element_from"];
             
-            if (self.isShowingFirstScreen && tracerDict) {
+            if (tracerDict && !self.isOriginShowSelf) {
                 [self.traceNeedUploadCache addObject:tracerDict];
             }else
             {

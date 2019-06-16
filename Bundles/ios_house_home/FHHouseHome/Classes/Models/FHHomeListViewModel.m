@@ -37,6 +37,7 @@
 @property (nonatomic, strong) FHHomeViewController *homeViewController;
 @property (nonatomic, strong) FHHomeSectionHeader *categoryView;
 @property (nonatomic, assign) FHHouseType houseType;
+@property (nonatomic, assign) FHHouseType previousHouseType;
 @property (nonatomic, assign) FHHomePullTriggerType currentPullType;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property (nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
@@ -265,6 +266,14 @@
         if ([houseTypeNum isKindOfClass:[NSNumber class]]) {
             FHHomeItemViewController *itemVC = [[FHHomeItemViewController alloc] init];
             itemVC.houseType = [houseTypeNum integerValue];
+            
+            if (houseTypeNum.integerValue == self.houseType) {
+                itemVC.isOriginShowSelf = YES;
+            }else
+            {
+                itemVC.isOriginShowSelf = NO;
+            }
+            
             // 添加子控制器
             [self.homeViewController addChildViewController:itemVC];
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
@@ -281,6 +290,7 @@
             [itemVCArrayTmp addObject:itemVC];
         }
     }
+    
     self.homeViewController.scrollView.delegate = self;
     self.itemsVCArray = itemVCArrayTmp;
     [self.homeViewController.scrollView setContentSize:CGSizeMake(KFHScreenWidth * configDataModel.houseTypeList.count, self.homeViewController.scrollView.frame.size.height)];
@@ -292,7 +302,7 @@
 {
     [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
     self.homeViewController.scrollView.contentOffset = CGPointMake(KFHScreenWidth * index, 0);
-    [self uploadFirstScreenHouseShow:index];
+    [self uploadFirstScreenHouseShow:self.categoryView.segmentedControl.selectedSegmentIndex andEnterType:@"switch"];
 }
 
 - (void)processRequestData:(FHHomePullTriggerType)refreshType andHouseType:(FHHouseType)houseType andIsSucees:(BOOL)isSuccess andDataModel:(JSONModel * _Nonnull) dataModel
@@ -460,10 +470,11 @@
     return  [[NSDate date] timeIntervalSince1970];
 }
 
-- (void)uploadFirstScreenHouseShow:(NSInteger)index
+- (void)uploadFirstScreenHouseShow:(NSInteger)index andEnterType:(NSString *)enterType
 {
     if (self.itemsVCArray.count > index) {
         FHHomeItemViewController *itemVC = self.itemsVCArray[index];
+        itemVC.enterType = enterType;
         [itemVC currentViewIsShowing];
     }
 }
@@ -629,6 +640,7 @@
     if (scrollView == self.homeViewController.scrollView) {
         self.isSelectIndex = NO;
         self.tableViewV.scrollEnabled = NO;
+        self.previousHouseType = self.houseType;
     }
 }
 
@@ -666,7 +678,6 @@
                     self.houseType = [[[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList[scrollIndex] integerValue];
                     [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
                     self.categoryView.segmentedControl.selectedSegmentIndex = scrollIndex;
-                    [self uploadFirstScreenHouseShow:scrollIndex];
                 }
             }
         }
@@ -684,6 +695,11 @@
     if (scrollView == self.homeViewController.scrollView) {
         self.isSelectIndex = YES;
         self.tableViewV.scrollEnabled = YES;
+        
+        if (self.previousHouseType != self.houseType) {
+            NSInteger scrollIndex = (NSInteger)((scrollView.contentOffset.x + KFHScreenWidth/2)/KFHScreenWidth);
+            [self uploadFirstScreenHouseShow:self.categoryView.segmentedControl.selectedSegmentIndex andEnterType:@"switch"];
+        }
     }
 }
 
