@@ -182,7 +182,7 @@
         //切换推荐房源类型
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             StrongSelf;
-        
+            
             //上报stay埋点
             [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
             
@@ -221,6 +221,7 @@
 
 - (void)setUpTableScrollOffsetZero
 {
+    
 //    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
 //    NSInteger currentSelectIndex = self.categoryView.segmentedControl.selectedSegmentIndex;
 //
@@ -269,6 +270,9 @@
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
                 [self processRequestData:refreshType andHouseType:houseType andIsSucees:isSuccess andDataModel:dataModel];
             };
+            itemVC.requestNetworkUnAvalableRetryCallBack = ^{
+                [self.homeViewController retryLoadData];
+            };
             //将子控制的view添加到scrollView上去
             [self.homeViewController.scrollView addSubview:itemVC.view];
         
@@ -288,6 +292,7 @@
 {
     [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
     self.homeViewController.scrollView.contentOffset = CGPointMake(KFHScreenWidth * index, 0);
+    [self uploadFirstScreenHouseShow:index];
 }
 
 - (void)processRequestData:(FHHomePullTriggerType)refreshType andHouseType:(FHHouseType)houseType andIsSucees:(BOOL)isSuccess andDataModel:(JSONModel * _Nonnull) dataModel
@@ -295,6 +300,10 @@
     [self.tableViewV finishPullDownWithSuccess:YES];
     [self.tableViewV finishPullUpWithSuccess:YES];
     
+    if (isSuccess && !self.hasShowedData) {
+        self.hasShowedData = YES;
+    }
+
     if (refreshType == FHHomePullTriggerTypePullDown  && self.houseType == houseType) {
         if([dataModel isKindOfClass:[FHHomeHouseModel class]] && isSuccess)
         {
@@ -319,27 +328,6 @@
     }
 }
 
--(NSString *)pageTypeString {
-    
-    switch (self.houseType) {
-        case FHHouseTypeNewHouse:
-            return @"new_list";
-            break;
-        case FHHouseTypeSecondHandHouse:
-            return @"old_list";
-            break;
-        case FHHouseTypeRentHouse:
-            return @"rent_list";
-            break;
-        case FHHouseTypeNeighborhood:
-            return @"neighborhood_list";
-            break;
-        default:
-            return @"be_null";
-            break;
-    }
-}
-
 - (void)configIconRowCountAndHeight
 {
     [[FHHomeCellHelper sharedInstance] initFHHomeHeaderIconCountAndHeight];
@@ -353,29 +341,6 @@
     }else {
         [self.tableViewV.mj_footer endRefreshing];
     }
-}
-
-
-- (NSTimeInterval)getCurrentTime
-{
-    return  [[NSDate date] timeIntervalSince1970];
-}
-
-- (NSString *)getCurrentHouseTypeChacheKey
-{
-    return [self matchHouseString:self.houseType];
-}
-
-
-- (void)startTimeOutTimer
-{
-    if (self.timer) {
-        [self.timer invalidate];
-        self.timer = nil;
-    }
-
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:16 target:self selector:@selector(checkoutRequestRefreshPullDown) userInfo:nil repeats:NO];
-    self.timer = timer;
 }
 
 //更新房源切换选择器
@@ -427,36 +392,6 @@
     return titleArrays;
 }
 
-- (NSString *)matchHouseString:(FHHouseType)houseType
-{
-    switch (houseType) {
-        case FHHouseTypeNewHouse:
-        {
-            return @"新房";
-        }
-            break;
-        case FHHouseTypeRentHouse:
-        {
-            return @"租房";
-        }
-            break;
-        case FHHouseTypeNeighborhood:
-        {
-            return @"小区";
-        }
-            break;
-        case FHHouseTypeSecondHandHouse:
-        {
-            return @"二手房";
-        }
-            break;
-            
-        default:
-            return @"";
-            break;
-    }
-}
-
 - (void)checkCityStatus
 {
     if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
@@ -496,6 +431,72 @@
     return isShowHouseBanner;
 }
 
+
+#pragma mark 埋点相关
+
+-(NSString *)pageTypeString {
+    
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return @"new_list";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_list";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent_list";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_list";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
+- (NSTimeInterval)getCurrentTime
+{
+    return  [[NSDate date] timeIntervalSince1970];
+}
+
+- (void)uploadFirstScreenHouseShow:(NSInteger)index
+{
+    if (self.itemsVCArray.count > index) {
+        FHHomeItemViewController *itemVC = self.itemsVCArray[index];
+        [itemVC currentViewIsShowing];
+    }
+}
+
+- (NSString *)matchHouseString:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+        {
+            return @"新房";
+        }
+            break;
+        case FHHouseTypeRentHouse:
+        {
+            return @"租房";
+        }
+            break;
+        case FHHouseTypeNeighborhood:
+        {
+            return @"小区";
+        }
+            break;
+        case FHHouseTypeSecondHandHouse:
+        {
+            return @"二手房";
+        }
+            break;
+            
+        default:
+            return @"";
+            break;
+    }
+}
 
 - (void)sendSwitchButtonClickTrace
 {
@@ -561,7 +562,7 @@
 //
 }
 
-#pragma mark tableView delegate
+#pragma mark tableView 代理
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return 3;
@@ -656,7 +657,7 @@
         }else
         {
             [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
-        }        
+        }
     } else if (scrollView == self.homeViewController.scrollView) {
         if (!self.isSelectIndex) {
             NSInteger scrollIndex = (NSInteger)((scrollView.contentOffset.x + KFHScreenWidth/2)/KFHScreenWidth);
@@ -665,6 +666,7 @@
                     self.houseType = [[[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList[scrollIndex] integerValue];
                     [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
                     self.categoryView.segmentedControl.selectedSegmentIndex = scrollIndex;
+                    [self uploadFirstScreenHouseShow:scrollIndex];
                 }
             }
         }

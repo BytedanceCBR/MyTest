@@ -31,11 +31,19 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic, assign) TTReloadType reloadType; //当前enterType，用于enter_category
 @property (nonatomic, strong) UITableView *tableView;
 
+@property (nonatomic, strong) NSMutableArray *traceNeedUploadCache;
+
+
 @property (nonatomic, copy) void (^requestCallBack)(FHHomePullTriggerType refreshType,FHHouseType houseType,BOOL isSuccess,JSONModel *dataModel);
+@property (nonatomic, copy) void (^requestNetworkUnAvalableRetryCallBack)(void);
 
 - (void)requestDataForRefresh:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst;
 
 - (void)showPlaceHolderCells;
+
+- (void)currentViewIsShowing;
+
+- (void)currentViewIsDisappeared;
 
 @end
 

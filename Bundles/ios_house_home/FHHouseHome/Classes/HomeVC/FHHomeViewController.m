@@ -269,7 +269,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configDataModel) {
         [self.homeListViewModel updateCategoryViewSegmented:NO];
-        [self.homeListViewModel requestOriginData:YES];
     }
     
     [FHEnvContext sharedInstance].refreshConfigRequestType = @"refresh_config";
@@ -291,6 +290,7 @@ static CGFloat const kSectionHeaderHeight = 38;
             [[ToastManager manager] showToast:@"网络异常"];
         }else
         {
+            [self.view bringSubviewToFront:self.emptyView];
             [self.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
         }
     }
