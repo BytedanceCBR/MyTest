@@ -1,0 +1,91 @@
+//
+//  FHFeedOperationView.h
+//  FHHouseUGC
+//
+//  Created by 谢思铭 on 2019/6/14.
+//
+
+#import "TTFeedPopupView.h"
+#import "TTFeedDislikeConfig.h"
+#import "TTFeedDislikeOption.h"
+
+//NS_ASSUME_NONNULL_BEGIN
+//
+//@interface FHFeedOperationView : NSObject
+//
+//@end
+//
+//NS_ASSUME_NONNULL_END
+
+NS_ASSUME_NONNULL_BEGIN
+
+@class FHFeedOperationView;
+@class TTFeedDislikeWord;
+
+typedef void (^TTFeedDislikeBlock)(FHFeedOperationView * view);
+typedef void (^TTFeedDislikeOptionBlock)(FHFeedOperationView * view, TTFeedDislikeOptionType dislikeType);
+typedef void (^TTFeedDislikeCommandBlock)(TTFeedDislikeWord *word);
+
+typedef NS_ENUM(NSInteger, TTFeedDislikeViewPushFrom) {
+    TTFeedDislikeViewPushFromRight,
+    TTFeedDislikeViewPushFromLeft,
+};
+
+@protocol TTFeedDislikeCommand <NSObject>
+- (void)execute;
+@end
+
+@interface FHFeedOperationViewModel : NSObject {
+    NSArray<NSDictionary *> *_keywords;
+}
+
+@property (nonatomic, copy, nullable) NSArray<NSDictionary *> *keywords;
+@property (nonatomic, strong, nullable) NSString *groupID;
+@property (nonatomic, strong, nullable) NSString *adID;
+@property (nonatomic, strong, nullable) NSString *videoID;
+@property (nonatomic, strong, nullable) NSString *categoryID;
+@property (nonatomic, copy, nullable) NSString *logExtra;
+@property (nonatomic, copy, nullable) NSString *source;
+@property (nonatomic, strong, nullable) NSDictionary *extrasDict;
+@property (nonatomic, strong, nullable) NSDictionary *trackExtraDict; // 埋点透传字段(modern模式使用)
+@property (nonatomic, assign)           BOOL dislikeFilterFlag;  //https://wiki.bytedance.net/pages/viewpage.action?pageId=175543655
+@property (nonatomic, copy) NSArray<id<TTFeedDislikeCommand>> *commnads;
+@end
+
+//------------------------------------------------------------------
+
+@interface FHFeedOperationView : TTFeedPopupView
+
+- (void)refreshWithModel:(nullable FHFeedOperationViewModel *)model;
+
+- (nonnull NSArray<NSDictionary *> *)selectedWords;
+
+- (void)showAtPoint:(CGPoint)arrowPoint
+           fromView:(UIView *)fromView
+    didDislikeBlock:(TTFeedDislikeBlock)didDislikeBlock;
+
+- (void)showAtPoint:(CGPoint)arrowPoint
+           fromView:(UIView *)fromView
+didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock;
+
+- (void)showAtPoint:(CGPoint)arrowPoint
+           fromView:(UIView *)fromView
+    didDislikeBlock:(TTFeedDislikeBlock)didDislikeBlock
+           pushFrom:(TTFeedDislikeViewPushFrom)pushFrom;
+
++ (void)dismissIfVisible;
+
++ (void)enable;
+
++ (void)disable;
+
++ (BOOL)isFeedDislikeRefactorEnabled;
+
+/** 在Pod库外使用TTFeedDislikeView的相关图片资源，需要传入此bundle来获取 */
++ (NSBundle *)resourceBundle;
+
+@end
+
+NS_ASSUME_NONNULL_END
+
+

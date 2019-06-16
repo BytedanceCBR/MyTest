@@ -24,6 +24,7 @@
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) UIView *bottomSepView;
+@property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 @end
 
@@ -61,6 +62,7 @@
     [self.contentView addSubview:_multiImageView];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
+    [_bottomView.likeBtn addTarget:self action:@selector(like) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
     self.bottomSepView = [[UIView alloc] init];
@@ -110,6 +112,7 @@
 - (void)refreshWithData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        _cellModel = cellModel;
         //设置userInfo
         self.userInfoView.userName.text = cellModel.user.name;
         self.userInfoView.descLabel.attributedText = cellModel.desc;
@@ -123,6 +126,11 @@
         //图片
         [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     }
+}
+
+//点赞
+- (void)like {
+    //处理点赞请求
 }
 
 @end
