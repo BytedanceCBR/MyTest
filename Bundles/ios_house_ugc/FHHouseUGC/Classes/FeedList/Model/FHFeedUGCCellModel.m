@@ -125,6 +125,7 @@
     cellModel.contentRichSpan = model.contentRichSpan;
     cellModel.diggCount = model.diggCount;
     cellModel.commentCount = model.commentCount;
+    cellModel.userDigg = model.userDigg;
     cellModel.desc = [self generateUGCDesc:model];
     
     FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
