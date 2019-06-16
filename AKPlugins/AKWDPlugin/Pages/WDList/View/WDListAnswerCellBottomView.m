@@ -79,7 +79,13 @@
 }
 
 - (void)commentBtnClick {
+    if (isEmptyString(self.ansEntity.answerSchema)) {
+        return;
+    }
     
+    NSDictionary *dict = @{@"is_jump_comment":@(YES)};
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:self.ansEntity.answerSchema] userInfo:userInfo];
 }
 
 - (void)followBtnClick {
