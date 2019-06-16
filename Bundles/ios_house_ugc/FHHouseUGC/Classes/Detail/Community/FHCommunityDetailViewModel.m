@@ -2,6 +2,7 @@
 // Created by zhulijun on 2019-06-12.
 //
 
+#import <TTBaseLib/UIButton+TTAdditions.h>
 #import "FHCommunityDetailViewModel.h"
 #import "FHCommunityDetailViewController.h"
 #import "FHCommunityFeedListController.h"
@@ -12,17 +13,19 @@
 #import "ToastManager.h"
 #import "TTReachability.h"
 #import "UIImageView+BDWebImage.h"
-#import "UIViewAdditions.h"
 #import "UILabel+House.h"
+#import "FHUGCFollowButton.h"
+#import "FHUGCFollowHelper.h"
+#import "TTThemedAlertController.h"
 
 
-@interface FHCommunityDetailViewModel ()
+@interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
 
 @property(nonatomic, weak) FHCommunityDetailViewController *viewController;
 @property(nonatomic, strong) FHCommunityFeedListController *feedListController;
 @property(nonatomic, strong) FHCommunityDetailDataModel *data;
 @property(nonatomic, strong) FHCommunityDetailHeaderView *headerView;
-@property(nonatomic, strong) UIButton *rightBtn;
+@property(nonatomic, strong) FHUGCFollowButton *rightBtn;
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *subTitleLabel;
 @property(nonatomic, strong) UIView *titleContainer;
@@ -41,11 +44,11 @@
 }
 
 - (void)initView {
-
     [self initNavBar];
-    [self.rightBtn addTarget:self action:@selector(joinBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.rightBtn addTarget:self action:@selector(followClicked) forControlEvents:UIControlEventTouchUpInside];
 
     self.feedListController = [[FHCommunityFeedListController alloc] init];
+    self.feedListController.publishBtnBottomHeight = 10;
     self.feedListController.tableViewNeedPullDown = NO;
     self.feedListController.scrollViewDelegate = self;
     self.feedListController.listType = FHCommunityFeedListTypeMyJoin;
@@ -54,22 +57,18 @@
 
     [self.viewController addChildViewController:self.feedListController];
     [self.feedListController didMoveToParentViewController:self.viewController];
-    self.feedListController.view.frame = self.viewController.view.bounds;
     [self.viewController.view addSubview:self.feedListController.view];
+    WeakSelf;
+    self.feedListController.publishBlock = ^() {
+        StrongSelf;
+        [self goPosDetail];
+    };
 }
 
--(void)initNavBar{
+- (void)initNavBar {
     FHNavBarView *naveBarView = self.viewController.customNavBarView;
-    self.rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.rightBtn = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero];
     self.rightBtn.backgroundColor = [UIColor themeWhite];
-    [self.rightBtn.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
-    [self.rightBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    [self.rightBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
-    [self.rightBtn setTitle:@"加入" forState:UIControlStateNormal];
-    [self.rightBtn setTitle:@"加入" forState:UIControlStateHighlighted];
-    self.rightBtn.layer.borderColor = [UIColor themeRed1].CGColor;
-    self.rightBtn.layer.borderWidth = 0.5f;
-    self.rightBtn.layer.cornerRadius = 4.0f;
     self.rightBtn.hidden = YES;
 
     self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
@@ -111,7 +110,7 @@
     }];
 }
 
-- (void)requestData {
+- (void)requestData:(BOOL)refreshFeed {
     if (![TTReachability isNetworkConnected]) {
         self.feedListController.view.hidden = YES;
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -120,9 +119,8 @@
     }
 
     WeakSelf;
-    [self.viewController startLoading];
     [FHHouseUGCAPI requestCommunityDetail:@"1234" class:FHCommunityDetailModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
-        [wself.viewController endLoading];
+        StrongSelf;
         if (model && (error == nil)) {
             FHCommunityDetailModel *responseModel = model;
             [wself updateUIWithData:responseModel.data];
@@ -133,16 +131,53 @@
             return;
         }
     }];
+    if(refreshFeed){
+        [self.feedListController startLoadData];
+    }
 }
 
-- (void)refreshContentOffset:(CGPoint)contentOffset hasJoin:(BOOL)hasJoin {
+- (void)followClicked {
+    if (self.data.followed) {
+        WeakSelf;
+        TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"确定退出？" message:nil preferredType:TTThemedAlertControllerTypeAlert];
+        [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
+        [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+            StrongSelf;
+            [FHUGCFollowHelper followCommunity:wself.data.id userInfo:nil followBlock:nil];
+        }];
+        [alertController showFrom:self.viewController animated:YES];
+    }
+}
+
+- (void)goPosDetail {
+    if (!self.data.followed) {
+        WeakSelf;
+        TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"先关注该小区才能发布哦" message:nil preferredType:TTThemedAlertControllerTypeAlert];
+        [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
+        [alertController addActionWithTitle:NSLocalizedString(@"关注", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+            StrongSelf;
+            [FHUGCFollowHelper followCommunity:wself.data.id userInfo:nil followBlock:^(){
+                //跳转发布器
+                NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            }];
+        }];
+        [alertController showFrom:self.viewController animated:YES];
+        return;
+    }
+    //跳转发布器
+    NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+}
+
+- (void)refreshContentOffset:(CGPoint)contentOffset {
     CGFloat offsetY = contentOffset.y;
-    CGFloat alpha = offsetY / 88;
+    CGFloat alpha = offsetY / (80.0f);
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
-    [self updateNavBarWithAlpha:alpha showJoin:!hasJoin];
+    [self updateNavBarWithAlpha:alpha];
 }
 
-- (void)updateNavBarWithAlpha:(CGFloat)alpha showJoin:(BOOL)showJoin {
+- (void)updateNavBarWithAlpha:(CGFloat)alpha {
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     if (alpha <= 0.1f) {
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
@@ -158,10 +193,8 @@
     } else {
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
-        if (showJoin) {
-            self.titleContainer.hidden = NO;
-            self.rightBtn.hidden = NO;
-        }
+        self.titleContainer.hidden = NO;
+        self.rightBtn.hidden = NO;
     }
     [self.viewController.customNavBarView refreshAlpha:alpha];
 }
@@ -172,9 +205,7 @@
         return;
     }
     CGRect rect = self.headerView.topBack.frame;
-    rect.origin.y = contentOffset.y;
-    rect.size.height = self.headerView.headerBackHeight - offsetY;
-    self.self.headerView.topBack.frame = rect;
+    self.headerView.topBack.frame = CGRectMake(0, offsetY, rect.size.width, self.headerView.headerBackHeight - offsetY);
 }
 
 - (void)updateUIWithData:(FHCommunityDetailDataModel *)data {
@@ -194,7 +225,7 @@
     } else {
         self.headerView.publicationsContentLabel.text = data.publications;
     }
-    [self updateJoinUI:data.hasJoin];
+    [self updateJoinUI:data.followed];
     self.titleLabel.text = isEmptyString(data.name) ? @"" : data.name;
     self.subTitleLabel.text = isEmptyString(data.subtitle) ? @"" : data.subtitle;
 
@@ -202,16 +233,17 @@
     self.feedListController.tableHeaderView = self.headerView;
 }
 
-- (void)updateJoinUI:(BOOL)hasJoin {
-    [self.headerView updateWithJoinStatus:hasJoin];
-    [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha showJoin:!hasJoin];
+- (void)updateJoinUI:(BOOL)followed {
+    self.headerView.followButton.followed = followed;
+    self.rightBtn.followed = followed;
+    [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
 }
 
 #pragma UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self resizeHeader:scrollView.contentOffset];
-    [self refreshContentOffset:scrollView.contentOffset hasJoin:self.data.hasJoin];
+    [self refreshContentOffset:scrollView.contentOffset];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -228,7 +260,7 @@
     if (offsetY > -60.0f) {
         return;
     }
-    [self requestData];
+    [self requestData:YES];
 }
 
 @end

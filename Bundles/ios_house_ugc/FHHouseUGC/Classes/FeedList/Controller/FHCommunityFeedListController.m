@@ -19,7 +19,6 @@
 @interface FHCommunityFeedListController ()
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
-@property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 
 @end
@@ -144,6 +143,10 @@
 }
 
 - (void)goToPublish {
+    if(self.publishBlock){
+        self.publishBlock();
+        return;
+    }
     //跳转到发布器
     NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];

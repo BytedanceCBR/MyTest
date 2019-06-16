@@ -11,5 +11,5 @@
 @interface FHCommunityDetailViewModel : NSObject <UIScrollViewDelegate>
 - (instancetype)initWithController:(FHCommunityDetailViewController *)viewController;
 
-- (void)requestData;
+- (void)requestData:(BOOL) refreshFeed;
 @end

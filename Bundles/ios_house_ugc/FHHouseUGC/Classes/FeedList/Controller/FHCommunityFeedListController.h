@@ -15,8 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) FHCommunityFeedListType listType;
 //发布按钮
 @property(nonatomic, strong) UIButton *publishBtn;
+@property(nonatomic, copy) void(^publishBlock)(void);
 //附加在feed上面的自定义view
 @property(nonatomic, strong) UIView *tableHeaderView;
+@property(nonatomic, strong) UITableView *tableView;
 //是否需要下拉刷新，默认为YES
 @property(nonatomic, assign) BOOL tableViewNeedPullDown;
 //发布按钮距离底部的高度,默认为0

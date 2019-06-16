@@ -9,6 +9,8 @@
 #import "UIButton+TTAdditions.h"
 #import "WDDefines.h"
 #import "UIImageView+BDWebImage.h"
+#import "IMConsDefine.h"
+#import "FHUGCFollowButton.h"
 
 @interface FHCommunityDetailHeaderView ()
 @end
@@ -50,13 +52,8 @@
     [self.labelContainer addSubview:self.nameLabel];
     [self.labelContainer addSubview:self.subtitleLabel];
 
-    self.joniButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.joniButton setTitle:@"加入" forState:UIControlStateNormal];
-    [self.joniButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    self.joniButton.backgroundColor = [UIColor themeWhite];
-    self.joniButton.titleLabel.font = [UIFont systemFontOfSize:12.0];
-    [self.joniButton.layer setCornerRadius:4.0f];
-    self.joniButton.hitTestEdgeInsets = UIEdgeInsetsMake(-8, -8, -8, -8);
+    self.followButton = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero];
+    self.followButton.followed = NO;
 
     self.publicationsLabel = [UILabel createLabel:@"公告" textColor:@"" fontSize:13];
     self.publicationsLabel.textColor = [UIColor themeRed1];
@@ -82,15 +79,12 @@
     [self addSubview:self.topBack];
     [self addSubview:self.avatar];
     [self addSubview:self.labelContainer];
-    [self addSubview:self.joniButton];
+    [self addSubview:self.followButton];
     [self addSubview:self.publicationsContainer];
 }
 
 - (void)initConstraints {
-    [self.topBack mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self);
-        make.height.mas_equalTo(self.headerBackHeight);
-    }];
+    self.topBack.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight);
 
     [self.avatar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.topBack).offset(20);
@@ -98,7 +92,7 @@
         make.width.height.mas_equalTo(50);
     }];
 
-    [self.joniButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.avatar);
         make.height.mas_equalTo(26);
         make.width.mas_equalTo(56);
@@ -109,7 +103,7 @@
         make.centerY.mas_equalTo(self.avatar);
         make.height.mas_equalTo(44);
         make.left.mas_equalTo(self.avatar.mas_right).offset(8);
-        make.right.mas_equalTo(self.joniButton.mas_left).offset(-8);
+        make.right.mas_equalTo(self.followButton.mas_left).offset(-8);
     }];
 
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -143,26 +137,6 @@
 
     [self resize];
 }
-
-- (void)updateWithJoinStatus:(BOOL)join {
-    self.joniButton.hidden = join;
-    if (join) {
-        [self.labelContainer mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(self.avatar);
-            make.height.mas_equalTo(44);
-            make.left.mas_equalTo(self.avatar.mas_right).offset(8);
-            make.right.mas_equalTo(self.topBack).offset(-20);
-        }];
-        return;
-    }
-    [self.labelContainer mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.avatar);
-        make.height.mas_equalTo(44);
-        make.left.mas_equalTo(self.avatar.mas_right).offset(8);
-        make.right.mas_equalTo(self.joniButton.mas_left).offset(-8);
-    }];
-}
-
 
 - (void)resize {
     [self layoutIfNeeded];
