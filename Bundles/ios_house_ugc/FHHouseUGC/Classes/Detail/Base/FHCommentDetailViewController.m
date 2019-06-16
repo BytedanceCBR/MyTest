@@ -63,7 +63,10 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-
+        self.beginShowComment = NO;
+        if(paramObj.allParams[@"begin_show_comment"]) {
+            self.beginShowComment = [paramObj.allParams[@"beginShowComment"] boolValue];
+        }
     }
     return self;
 }
@@ -113,7 +116,6 @@
     }
     self.hasLoadedComment = NO;
     self.topTableViewContentHeight = 0;
-    self.beginShowComment = NO;
 }
 
 - (void)setupUI {
