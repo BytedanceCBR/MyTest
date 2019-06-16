@@ -311,6 +311,12 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
 
     [self scrollToTopEnable:YES];
+    
+    
+    self.homeListViewModel.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
+    if (self.mainTableView.contentOffset.y > MAIN_SCREENH_HEIGHT) {
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated

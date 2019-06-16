@@ -225,6 +225,8 @@
               self.houseDataItemsModel = [self.houseDataItemsModel arrayByAddingObjectsFromArray:model.data.items];
             }
         }
+        self.currentSearchId = model.data.searchId;
+        
         [self reloadHomeTableHouseSection];
         
         self.tableView.hasMore = model.data.hasMore;

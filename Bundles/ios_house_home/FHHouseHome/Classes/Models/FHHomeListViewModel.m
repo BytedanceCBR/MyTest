@@ -652,7 +652,11 @@
         
         if (offSetY < self.headerHeight) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"headerViewToTop" object:nil];
-        }
+            [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
+        }else
+        {
+            [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
+        }        
     } else if (scrollView == self.homeViewController.scrollView) {
         if (!self.isSelectIndex) {
             NSInteger scrollIndex = (NSInteger)((scrollView.contentOffset.x + KFHScreenWidth/2)/KFHScreenWidth);
