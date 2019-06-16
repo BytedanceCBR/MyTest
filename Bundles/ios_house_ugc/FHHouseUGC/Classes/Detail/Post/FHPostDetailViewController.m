@@ -79,6 +79,13 @@
     [self startLoadData];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (self.detailData) {
+        
+    }
+}
+
 - (void)setupDetailNaviBar {
     self.customNavBarView.title.text = @"详情";
     // 关注按钮

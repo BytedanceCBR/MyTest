@@ -364,6 +364,10 @@
     
 }
 
+- (void)refreshToolbarView {
+    [self p_refreshToolbarView];
+}
+
 - (void)p_refreshToolbarView
 {
     self.toolbarView.digButton.selected = self.user_digg == 1;
