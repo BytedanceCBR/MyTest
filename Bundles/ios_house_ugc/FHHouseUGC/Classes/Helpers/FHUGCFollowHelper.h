@@ -4,6 +4,8 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void (^FollowBlock)(void);
+
 @protocol FHUGCFollowObserver
 
 @optional
@@ -17,6 +19,6 @@
 
 +(void)unregisterFollowStatusObserver:(id<FHUGCFollowObserver>) observer;
 
-+(void)followCommunity:(NSString *)communityId userInfo:(NSDictionary *)userInfo;
++(void)followCommunity:(NSString *)communityId userInfo:(NSDictionary *)userInfo followBlock:(FollowBlock) block;
 @end
 

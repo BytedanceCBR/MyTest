@@ -47,23 +47,24 @@
 
     WeakSelf;
     [FHHouseUGCAPI requestTopicList:@"1234" class:FHTopicListResponseModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+        StrongSelf;
         if (model && (error == nil)) {
             if (isRefresh) {
-                [wself.dataList removeAllObjects];
-                [wself.tableView finishPullDownWithSuccess:YES];
+                [self.dataList removeAllObjects];
+                [self.tableView finishPullDownWithSuccess:YES];
             } else {
-                [wself.tableView.mj_footer endRefreshing];
+                [self.tableView.mj_footer endRefreshing];
             }
 
             FHTopicListResponseModel *responseModel = model;
-            [wself.dataList addObjectsFromArray:responseModel.data.items];
-            wself.tableView.hidden = NO;
-            [wself.tableView reloadData];
+            [self.dataList addObjectsFromArray:responseModel.data.items];
+            self.tableView.hidden = NO;
+            [self.tableView reloadData];
         } else {
             if (isRefresh) {
-                [wself.tableView finishPullDownWithSuccess:NO];
+                [self.tableView finishPullDownWithSuccess:NO];
             } else {
-                [wself.tableView.mj_footer endRefreshing];
+                [self.tableView.mj_footer endRefreshing];
             }
             if (isRefresh) {
                 self.tableView.hidden = YES;

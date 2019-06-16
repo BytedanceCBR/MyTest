@@ -52,7 +52,7 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHCommunityDetailViewModel alloc] initWithController:self];
-    [self.viewModel requestData];
+    [self loadData];
 }
 
 - (void)retryLoadData {
@@ -60,7 +60,7 @@
 }
 
 - (void)loadData {
-    [self.viewModel requestData];
+    [self.viewModel requestData:NO];
 }
 
 @end

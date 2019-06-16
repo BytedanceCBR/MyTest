@@ -143,6 +143,10 @@
 }
 
 - (void)goToPublish {
+    if(self.publishBlock){
+        self.publishBlock();
+        return;
+    }
     //跳转到发布器
     NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
