@@ -19,6 +19,7 @@
 #import <FHHouseBaseItemCell.h>
 #import <FHHomeCellHelper.h>
 #import <FHPlaceHolderCell.h>
+#import "FHHomeListViewModel.h"
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -34,10 +35,20 @@
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, strong) NSMutableDictionary *traceRecordDict;
 @property (nonatomic, assign) BOOL isOriginRequest;
+@property (nonatomic, assign) BOOL isDisAppeared;
+@property (nonatomic, weak) FHHomeListViewModel *listModel;
 @end
 
 @implementation FHHomeItemViewController
 
+- (instancetype)initItemWith:(FHHomeListViewModel *)listModel
+{
+    self = [super init];
+    if (self) {
+        _listModel = listModel;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -46,6 +57,7 @@
     self.isRetryedPullDownRefresh = NO;
     self.hasMore = YES;
     self.isOriginRequest = YES;
+    self.isDisAppeared = NO;
     self.traceNeedUploadCache = [NSMutableArray new];
     self.traceEnterCategoryCache = [NSMutableDictionary new];
     
@@ -87,12 +99,27 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    self.stayTime = [self getCurrentTime];
+    
+    //进入其他页面，返回上报
+    if (self.isDisAppeared && self.houseType == _listModel.houseType) {
+        if (self.traceEnterCategoryCache.allKeys.count > 0 && self.isOriginShowSelf) {
+            [self.traceEnterCategoryCache setValue:@"click" forKey:@"enter_type"];
+            [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
+        }
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    [self currentViewIsDisappeared];
+    
+    if (self.houseType == _listModel.houseType) {
+        [self currentViewIsDisappeared];
+    }
+    
+    self.isDisAppeared = YES;
 }
 
 - (void)currentViewIsShowing
@@ -100,6 +127,8 @@
     if (self.traceEnterCategoryCache.allKeys.count > 0 && self.isOriginShowSelf) {
         [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
     }
+    
+    self.stayTime = [self getCurrentTime];
     
     [self uploadFirstScreenHouseShow];
 }
@@ -339,7 +368,7 @@
     
     tracerDict[@"category_name"] = [self pageTypeString] ? : @"be_null";
     tracerDict[@"enter_from"] = @"maintab";
-    tracerDict[@"enter_type"] = self.enterType ? : @"be_null";
+    tracerDict[@"enter_type"] = self.enterType ? : @"click";
     tracerDict[@"element_from"] = @"maintab_list";
     tracerDict[@"search_id"] = self.currentSearchId ? : @"be_null";
     tracerDict[@"origin_from"] = [self pageTypeString]  ? : @"be_null";
@@ -348,6 +377,7 @@
     
     if (traceType == FHHomeCategoryTraceTypeEnter) {
         if (self.isOriginShowSelf) {
+            tracerDict[@"enter_type"] = @"click";
             [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
         }
         

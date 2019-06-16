@@ -40,7 +40,11 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic, copy) void (^requestCallBack)(FHHomePullTriggerType refreshType,FHHouseType houseType,BOOL isSuccess,JSONModel *dataModel);
 @property (nonatomic, copy) void (^requestNetworkUnAvalableRetryCallBack)(void);
 
+- (instancetype)initItemWith:(FHHomeListViewModel *)listModel;
+
 - (void)requestDataForRefresh:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst;
+
+- (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType;
 
 - (void)showPlaceHolderCells;
 

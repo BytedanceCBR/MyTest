@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 #import "FHHomeViewController.h"
+#import "FHHouseType.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
@@ -20,6 +22,7 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 @property (nonatomic, strong) NSString *enterType; //当前enterType，用于enter_category
 @property (nonatomic, assign) TTReloadType reloadType; //当前enterType，用于enter_category
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
+@property (nonatomic, assign) FHHouseType houseType;
 
 - (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC;
 

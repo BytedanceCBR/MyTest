@@ -11,7 +11,6 @@
 #import "FHHomeSectionHeader.h"
 #import "FHEnvContext.h"
 #import "FHHomeRequestAPI.h"
-#import "FHHouseType.h"
 #import <FHHomeHouseModel.h>
 #import "TTURLUtils.h"
 #import "FHTracerModel.h"
@@ -36,7 +35,6 @@
 @property (nonatomic, assign) BOOL showPlaceHolder;
 @property (nonatomic, strong) FHHomeViewController *homeViewController;
 @property (nonatomic, strong) FHHomeSectionHeader *categoryView;
-@property (nonatomic, assign) FHHouseType houseType;
 @property (nonatomic, assign) FHHouseType previousHouseType;
 @property (nonatomic, assign) FHHomePullTriggerType currentPullType;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
@@ -201,6 +199,12 @@
             
             self.isRequestFromSwitch = YES;
             
+            for (FHHomeItemViewController *vc in self.itemsVCArray) {
+                if ([vc isKindOfClass:[FHHomeItemViewController class]] && vc.houseType == self.previousHouseType) {
+                    [vc sendTraceEvent:FHHomeCategoryTraceTypeStay];
+                }
+            }
+            
             [self setUpSubtableIndex:indexValue];
         };
     }
@@ -264,11 +268,12 @@
     for (int i = 0; i < configDataModel.houseTypeList.count; i++) {
         NSNumber *houseTypeNum = configDataModel.houseTypeList[i];
         if ([houseTypeNum isKindOfClass:[NSNumber class]]) {
-            FHHomeItemViewController *itemVC = [[FHHomeItemViewController alloc] init];
+            FHHomeItemViewController *itemVC = [[FHHomeItemViewController alloc] initItemWith:self];
             itemVC.houseType = [houseTypeNum integerValue];
             
             if (houseTypeNum.integerValue == self.houseType) {
                 itemVC.isOriginShowSelf = YES;
+                self.previousHouseType = self.houseType;
             }else
             {
                 itemVC.isOriginShowSelf = NO;
@@ -697,8 +702,16 @@
         self.tableViewV.scrollEnabled = YES;
         
         if (self.previousHouseType != self.houseType) {
+            for (FHHomeItemViewController *vc in self.itemsVCArray) {
+                if ([vc isKindOfClass:[FHHomeItemViewController class]] && vc.houseType == self.previousHouseType) {
+                    [vc sendTraceEvent:FHHomeCategoryTraceTypeStay];
+                }
+            }
+            
             NSInteger scrollIndex = (NSInteger)((scrollView.contentOffset.x + KFHScreenWidth/2)/KFHScreenWidth);
             [self uploadFirstScreenHouseShow:self.categoryView.segmentedControl.selectedSegmentIndex andEnterType:@"switch"];
+            
+            self.previousHouseType = self.houseType;
         }
     }
 }
