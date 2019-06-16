@@ -18,8 +18,12 @@
     }
     paramDic[@"group_type"] = @(group_type);
     paramDic[@"action"] = @(action);
-    
-    return [FHMainApi queryData:queryPath params:paramDic class:[FHDetailDiggModel class] completion:completion];
+    NSString *query = [NSString stringWithFormat:@"group_id=%@&group_type=%ld&action=%ld",group_id,group_type,action];
+    return [FHMainApi postRequest:queryPath query:query params:paramDic jsonClass:[FHDetailDiggModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        if (completion) {
+            completion(model,error);
+        }
+    }];
 }
 
 @end
