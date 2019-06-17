@@ -269,14 +269,14 @@ static NSTimeInterval lastTime;
     [self startRegisterRemoteNotificationAfterDelay:.5];
 }
 
-+ (void)startRegisterRemoteNotificationAfterDelay:(int)secs
++ (void)startRegisterRemoteNotificationAfterDelay:(float)secs
 {
     [[TTAuthorizeManager sharedManager].pushObj filterAuthorizeStrategyWithCompletionHandler:^{
         [self startRegisterRemoteNotificationAfterAuthorizeWithDelay:secs];
     } sysAuthFlag:0]; //显示系统弹窗前显示自有弹窗的逻辑下掉，0代表直接显示系统弹窗，1代表先自有弹窗，再系统弹窗
 }
 
-+ (void)startRegisterRemoteNotificationAfterAuthorizeWithDelay:(int)secs{
++ (void)startRegisterRemoteNotificationAfterAuthorizeWithDelay:(float)secs{
     if(secs > 0)
     {
         int64_t delayInSeconds = secs;
@@ -679,7 +679,11 @@ static NSTimeInterval lastTime;
     } else {
         if (navigationController.viewControllers.count > 1) {
             ArticleTabBarStyleNewsListViewController * tabbarNewsVC = navigationController.viewControllers[1];
-            return tabbarNewsVC.mainVC;
+            if ([tabbarNewsVC respondsToSelector:@selector(mainVC)]) {
+                return tabbarNewsVC.mainVC;
+            }
+            NSLog(@"exxxx plaore   !!!!!!");
+            return nil;
         }else
         {
             return nil;

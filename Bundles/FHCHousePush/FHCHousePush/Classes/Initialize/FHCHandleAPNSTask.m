@@ -102,6 +102,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
             [[ArticleAPNsManager sharedManager] handleRemoteNotification:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]];
         });
     }
+    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:0.5];
 }
 
 #pragma mark - APNsManagerDelegate
@@ -153,7 +154,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // in case no callbacks are invoked through notification register
-    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:1.f];
+    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:5.f];
     [[TTNotificationCenterDelegate sharedNotificationCenterDelegate] applicationDidComeToForeground];
 }
 
