@@ -70,7 +70,7 @@
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         
         //更新冷启动默认选项
-        if (configDataModel.houseTypeDefault && (configDataModel.houseTypeDefault.integerValue > 0) &&  [FHHomeCellHelper sharedInstance].isFirstLanuch) {
+        if (configDataModel.houseTypeDefault && (configDataModel.houseTypeDefault.integerValue > 0)) {
             [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:configDataModel.houseTypeDefault];
             self.houseType = configDataModel.houseTypeDefault.integerValue;
         }
@@ -139,9 +139,9 @@
             }
             
             //更新冷启动默认选项
-            if (configDataModel.houseTypeDefault && (configDataModel.houseTypeDefault.integerValue > 0) &&  [FHHomeCellHelper sharedInstance].isFirstLanuch) {
-                [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:configDataModel.houseTypeDefault];
-                self.houseType = configDataModel.houseTypeDefault.integerValue;
+            if (xConfigDataModel.houseTypeDefault && (xConfigDataModel.houseTypeDefault.integerValue > 0) && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
+                [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:xConfigDataModel.houseTypeDefault];
+                self.houseType = xConfigDataModel.houseTypeDefault.integerValue;
             }
             
             //如果启动时 类型没有变
@@ -658,6 +658,7 @@
     if (self.tableViewV == scrollView) {
         if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight)) {
             [self.categoryView showOriginStyle:NO];
+            NSLog(@"scrolldid scroll y = %ld,h=%ld",((NSInteger)self.tableViewV.contentOffset.y),self.headerHeight);
             
             if (!self.isResetingOffsetZero) {
                 [self.homeViewController hideImmediately];
