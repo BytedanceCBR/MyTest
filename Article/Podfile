@@ -48,7 +48,7 @@ def appPods
 
     pod 'FHWebView', :path => '../AKPlugins/FHWebView'
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '3a474b838c23bca0e722d2de3312653e80c60320' #:branch => 'feature/develop'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '898fbc9d6beb4e7e9094487eea1b2ffeb16f618b' #:branch => 'feature/develop'
 #    pod 'ios_house_im' , :path => '../../../f_pods/ios_house_im'
 
     pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
