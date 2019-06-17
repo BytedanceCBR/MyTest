@@ -366,7 +366,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)pullAndRefresh
 {
-    self.homeListViewModel.reloadType = _reloadFromType;
     [self.mainTableView triggerPullDown];
 }
 

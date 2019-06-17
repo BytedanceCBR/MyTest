@@ -277,6 +277,7 @@ static const NSInteger kTopScrollViewTag = 100;
         _topStyleBottomLineImage.centerX = labelCurrent.centerX;
         
         if (self.clickIndexCallBack) {
+            self.segmentedControl.selectedSegmentIndex = scrollIndex;
             self.clickIndexCallBack(scrollIndex);
         }
     }
