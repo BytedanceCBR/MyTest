@@ -11,6 +11,7 @@
 #import "UIColor+Theme.h"
 #import "FHEnvContext.h"
 #import <UIViewAdditions.h>
+#import <ToastManager.h>
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 35;
@@ -252,6 +253,12 @@ static const NSInteger kTopScrollViewTag = 100;
 
 - (void)scrollSectionLabelClick:(UITapGestureRecognizer *)tap
 {
+    
+    if (![FHEnvContext isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    
     UIView *tapView = tap.view;
     NSInteger scrollIndex = tapView.tag - kTopScrollViewTag;
     
