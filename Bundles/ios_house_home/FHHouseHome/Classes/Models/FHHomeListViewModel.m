@@ -256,6 +256,8 @@
         [subController removeFromParentViewController];
     }
     
+    self.homeViewController.scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
+    
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSMutableArray *itemVCArrayTmp = [NSMutableArray new];
     for (int i = 0; i < configDataModel.houseTypeList.count; i++) {

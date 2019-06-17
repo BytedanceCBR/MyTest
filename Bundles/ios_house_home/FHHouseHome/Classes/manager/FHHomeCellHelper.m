@@ -253,12 +253,16 @@ static NSMutableArray  * _Nullable identifierArr;
 
 - (CGFloat)heightForFHHomeListHouseSectionHeight
 {
+    CGFloat padding = 0;
+    if ([[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList.count <= 1) {
+        padding = 90;
+    }
     // 108: topbar   49:tahbar  45:sectionHeader
     if ([TTDeviceHelper isIPhoneXSeries]) {
-        return MAIN_SCREENH_HEIGHT - 108 - 49 - 45;
+        return MAIN_SCREENH_HEIGHT - 108 - 49 - 45 + padding;
     }else
     {
-        return MAIN_SCREENH_HEIGHT - 84 - 49 - 45;
+        return MAIN_SCREENH_HEIGHT - 84 - 49 - 45 + padding;
     }
 }
 
