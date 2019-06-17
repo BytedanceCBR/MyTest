@@ -66,9 +66,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqualToString:@"0"]) {
                     if (follow) {
-                        [[ToastManager manager] showToast:@"关注成功"];
+                        // [[ToastManager manager] showToast:@"关注成功"];
                     } else {
-                        [[ToastManager manager] showToast:@"取消关注成功"];
+                        // [[ToastManager manager] showToast:@"取消关注成功"];
                     }
                     // 关注或者取消关注后 重新拉取 关注列表
                     [self loadFollowData];
@@ -86,9 +86,9 @@
             });
         } else {
             if (follow) {
-                [[ToastManager manager] showToast:@"关注失败"];
+                // [[ToastManager manager] showToast:@"关注失败"];
             } else {
-                [[ToastManager manager] showToast:@"取消关注失败"];
+                // [[ToastManager manager] showToast:@"取消关注失败"];
             }
             if (completion) {
                 completion(NO);

@@ -61,6 +61,13 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFollowDataFinished:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    if (self.items.count > 0) {
+        [self.tableView reloadData];
+    }
+}
+
 - (void)loadFollowDataFinished:(NSNotification *)noti {
     [self setupData];
 }
@@ -126,7 +133,8 @@
 
 - (void)retryLoadData {
     // 关注小区 按钮点击
-    
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_my_interest"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
@@ -177,7 +185,5 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
-
 
 @end
