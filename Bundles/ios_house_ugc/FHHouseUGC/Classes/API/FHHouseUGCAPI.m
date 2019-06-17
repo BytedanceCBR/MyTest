@@ -125,4 +125,11 @@
     return returnStr;
 }
 
++ (TTHttpTask *)requestFollowListByType:(NSInteger)type class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/user_follows";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"type"] = @(type);
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end
