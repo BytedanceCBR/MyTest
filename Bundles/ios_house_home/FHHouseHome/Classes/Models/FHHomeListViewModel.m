@@ -100,8 +100,6 @@
         // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
             StrongSelf;
-            
-            
             if (![FHEnvContext isNetworkConnected]) {
                 [[ToastManager manager] showToast:@"网络异常"];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -111,14 +109,12 @@
                 });
                 return ;
             }
-
+            
             if (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                 [self requestOriginData:self.isFirstChange isShowPlaceHolder:[FHEnvContext sharedInstance].isRefreshFromCitySwitch];
             }
-
         }];
         
- 
         //       __block NSString *previousCityId = configDataModel.currentCityId;
         //订阅config变化发送网络请求
         [FHHomeCellHelper sharedInstance].isFirstLanuch = YES;
@@ -126,13 +122,12 @@
             StrongSelf;
             self.isRequestFromSwitch = NO;
             FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
-
+            
             self.isSelectIndex = YES;
-
+            
             [self configIconRowCountAndHeight];
             
             self.headerHeight =  [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
-            
             
             if (xConfigDataModel.cityAvailability.enable.boolValue)
             {
@@ -145,7 +140,6 @@
                 self.houseType = configDataModel.houseTypeDefault.integerValue;
             }
             
-            
             //如果启动时 类型没有变
             if ([configDataModel.houseTypeList containsObject:@(self.houseType)] && [configDataModel.houseTypeList isEqualToArray:xConfigDataModel.houseTypeList] && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch && [FHHomeCellHelper sharedInstance].isFirstLanuch) {
                 //更新切换
@@ -154,7 +148,6 @@
             {
                 [self updateCategoryViewSegmented:YES];
             }
-            
             
             //清空首页show埋点
             if(!self.isFirstChange && [FHEnvContext sharedInstance].isRefreshFromCitySwitch)
@@ -165,11 +158,11 @@
             //非首次只刷新头部
             if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 [FHHomeCellHelper sharedInstance].isFirstLanuch = NO;
-
+                
                 [TTSandBoxHelper setAppFirstLaunchForAd];
                 
                 [self.tableViewV reloadData];
-
+                
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
                 
                 return;
@@ -227,17 +220,17 @@
 - (void)setUpTableScrollOffsetZero
 {
     
-//    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-//    NSInteger currentSelectIndex = self.categoryView.segmentedControl.selectedSegmentIndex;
-//
-//    if (configDataModel.houseTypeList.count > currentSelectIndex && self.itemsVCArray.count > currentSelectIndex) {
-//        FHHomeItemViewController *itemVC = self.itemsVCArray[currentSelectIndex];
-//
-//        itemVC.tableView.contentOffset = CGPointMake(0, 0);
-//        if (itemVC.tableView.numberOfSections > 0 && [itemVC.tableView numberOfRowsInSection:0] > 0) {
-//            [itemVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-//        }
-//    }
+    //    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    //    NSInteger currentSelectIndex = self.categoryView.segmentedControl.selectedSegmentIndex;
+    //
+    //    if (configDataModel.houseTypeList.count > currentSelectIndex && self.itemsVCArray.count > currentSelectIndex) {
+    //        FHHomeItemViewController *itemVC = self.itemsVCArray[currentSelectIndex];
+    //
+    //        itemVC.tableView.contentOffset = CGPointMake(0, 0);
+    //        if (itemVC.tableView.numberOfSections > 0 && [itemVC.tableView numberOfRowsInSection:0] > 0) {
+    //            [itemVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    //        }
+    //    }
     
     self.isResetingOffsetZero = YES;
     self.tableViewV.contentOffset = CGPointMake(0, 0);
@@ -289,7 +282,7 @@
             };
             //将子控制的view添加到scrollView上去
             [self.homeViewController.scrollView addSubview:itemVC.view];
-        
+            
             itemVC.view.frame = CGRectMake(KFHScreenWidth * i, 0, KFHScreenWidth, KFHScreenHeight);
             
             [itemVCArrayTmp addObject:itemVC];
@@ -318,7 +311,7 @@
     if (isSuccess && !self.hasShowedData) {
         self.hasShowedData = YES;
     }
-
+    
     if (refreshType == FHHomePullTriggerTypePullDown  && self.houseType == houseType) {
         if([dataModel isKindOfClass:[FHHomeHouseModel class]] && isSuccess)
         {
@@ -382,7 +375,7 @@
             self.houseType = FHHouseTypeSecondHandHouse;
         }
     }
-
+    
     [self.categoryView updateSegementedTitles:[self matchHouseSegmentedTitleArray]  andSelectIndex:indexValue];
     
     if (isNeedCreateScroll) {
@@ -539,43 +532,43 @@
 
 - (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType
 {
-//    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-//    self.homeViewController.tracerModel.enterFrom = @"maintab";
-//    self.homeViewController.tracerModel.elementFrom = @"maintab_list";
-//
-//    tracerDict[@"category_name"] = [self.dataSource pageTypeString] ? : @"be_null";
-//    tracerDict[@"enter_from"] = @"maintab";
-//    tracerDict[@"enter_type"] = self.enterType ? : @"be_null";
-//    tracerDict[@"element_from"] = @"maintab_list";
-//    tracerDict[@"search_id"] = self.itemsSearchIdCache[[self matchHouseString:self.currentHouseType]] ? : @"be_null";
-//    tracerDict[@"origin_from"] = [self.dataSource pageTypeString]  ? : @"be_null";
-//    tracerDict[@"origin_search_id"] = self.originSearchIdCache[[self matchHouseString:self.currentHouseType]] ? : @"be_null";
-//
-//
-//    if (traceType == FHHomeCategoryTraceTypeEnter) {
-//        [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
-//    }else if (traceType == FHHomeCategoryTraceTypeStay)
-//    {
-//        NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
-//        if (duration) {
-//            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
-//        }
-//        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
-//    }else if (traceType == FHHomeCategoryTraceTypeRefresh)
-//    {
-//        NSString *stringReloadType = @"pull";
-//        if (self.reloadType == TTReloadTypeTab) {
-//            stringReloadType = @"tab";
-//        }
-//        if (self.reloadType == TTReloadTypeClickCategory) {
-//            stringReloadType = @"click";
-//        }
-//        tracerDict[@"refresh_type"] = (self.currentPullType == FHHomePullTriggerTypePullUp ? @"pre_load_more" : stringReloadType);
-//        [FHEnvContext recordEvent:tracerDict andEventKey:@"category_refresh"];
-//
-//        self.reloadType = nil;
-//    }
-//
+    //    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    //    self.homeViewController.tracerModel.enterFrom = @"maintab";
+    //    self.homeViewController.tracerModel.elementFrom = @"maintab_list";
+    //
+    //    tracerDict[@"category_name"] = [self.dataSource pageTypeString] ? : @"be_null";
+    //    tracerDict[@"enter_from"] = @"maintab";
+    //    tracerDict[@"enter_type"] = self.enterType ? : @"be_null";
+    //    tracerDict[@"element_from"] = @"maintab_list";
+    //    tracerDict[@"search_id"] = self.itemsSearchIdCache[[self matchHouseString:self.currentHouseType]] ? : @"be_null";
+    //    tracerDict[@"origin_from"] = [self.dataSource pageTypeString]  ? : @"be_null";
+    //    tracerDict[@"origin_search_id"] = self.originSearchIdCache[[self matchHouseString:self.currentHouseType]] ? : @"be_null";
+    //
+    //
+    //    if (traceType == FHHomeCategoryTraceTypeEnter) {
+    //        [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+    //    }else if (traceType == FHHomeCategoryTraceTypeStay)
+    //    {
+    //        NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
+    //        if (duration) {
+    //            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
+    //        }
+    //        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
+    //    }else if (traceType == FHHomeCategoryTraceTypeRefresh)
+    //    {
+    //        NSString *stringReloadType = @"pull";
+    //        if (self.reloadType == TTReloadTypeTab) {
+    //            stringReloadType = @"tab";
+    //        }
+    //        if (self.reloadType == TTReloadTypeClickCategory) {
+    //            stringReloadType = @"click";
+    //        }
+    //        tracerDict[@"refresh_type"] = (self.currentPullType == FHHomePullTriggerTypePullUp ? @"pre_load_more" : stringReloadType);
+    //        [FHEnvContext recordEvent:tracerDict andEventKey:@"category_refresh"];
+    //
+    //        self.reloadType = nil;
+    //    }
+    //
 }
 
 #pragma mark tableView 代理
@@ -613,7 +606,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"cell"];
     }
     // 添加分页菜单
-    cell.selectionStyle = UITableViewCellSelectionStyleNone; 
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell.contentView addSubview:self.homeViewController.scrollView];
     [cell.contentView setBackgroundColor:[UIColor whiteColor]];
     return cell;
@@ -653,7 +646,7 @@
     if (self.tableViewV == scrollView) {
         if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight)) {
             [self.categoryView showOriginStyle:NO];
-
+            
             if (!self.isResetingOffsetZero) {
                 [self.homeViewController hideImmediately];
                 self.tableViewV.contentOffset = CGPointMake(0, self.headerHeight);
@@ -692,7 +685,7 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (scrollView == self.homeViewController.scrollView) {
-       
+        
     }
 }
 

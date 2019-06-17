@@ -208,9 +208,9 @@ static CGFloat const kSectionHeaderHeight = 38;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
     
-    [self.notifyBar showMessage:message actionButtonTitle:@"" delayHide:YES duration:1.3 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
+    [self.notifyBar showMessage:message actionButtonTitle:@"" delayHide:YES duration:2 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
             UIEdgeInsets inset = self.mainTableView.contentInset;
             inset.top = 0;

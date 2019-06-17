@@ -64,7 +64,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pageTitleViewToTop) name:@"headerViewToTop" object:nil];
     
     [self.view addSubview:self.tableView];
-     self.traceRecordDict = [NSMutableDictionary new];
+    self.traceRecordDict = [NSMutableDictionary new];
     
     [FHHomeCellHelper registerCells:self.tableView];
     
@@ -88,7 +88,7 @@
     }];
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-
+    
     self.tableView.mj_footer = self.refreshFooter;
     
     [self registerCells];
@@ -261,7 +261,7 @@
         StrongSelf;
         
         [self.tableView finishPullUpWithSuccess:YES];
-                        
+        
         //判断下拉刷新
         if (pullType == FHHomePullTriggerTypePullDown) {
             //请求无错误,无错误
@@ -299,7 +299,7 @@
         }else
         {
             if (model.data.items && self.houseDataItemsModel && model.data.items.count != 0) {
-              self.houseDataItemsModel = [self.houseDataItemsModel arrayByAddingObjectsFromArray:model.data.items];
+                self.houseDataItemsModel = [self.houseDataItemsModel arrayByAddingObjectsFromArray:model.data.items];
             }
         }
         self.currentSearchId = model.data.searchId;
@@ -308,7 +308,7 @@
         
         self.tableView.hasMore = model.data.hasMore;
         [self updateTableViewWithMoreData:model.data.hasMore];
-    
+        
         
         if (self.isOriginRequest || [FHEnvContext sharedInstance].isRefreshFromCitySwitch || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
             [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
@@ -317,7 +317,7 @@
             [self sendTraceEvent:FHHomeCategoryTraceTypeRefresh];
         }
         
-
+        
         if (self.requestCallBack) {
             self.requestCallBack(pullType, self.houseType, YES, model);
         }
@@ -530,7 +530,7 @@
                     }
                 };
             }
-           
+            
             return cellError;
         }
         
@@ -559,7 +559,7 @@
         }
         return ;
     }
-  
+    
     if (self.houseDataItemsModel.count <= indexPath.row) {
         return;
     }
