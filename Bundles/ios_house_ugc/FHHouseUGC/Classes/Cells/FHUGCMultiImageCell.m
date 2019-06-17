@@ -12,6 +12,7 @@
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
+#import "FHCommonApi.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -66,7 +67,8 @@
     [self.contentView addSubview:_multiImageView];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
-    [_bottomView.likeBtn addTarget:self action:@selector(like) forControlEvents:UIControlEventTouchUpInside];
+    [_bottomView.likeBtn addTarget:self action:@selector(likeBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
     self.bottomSepView = [[UIView alloc] init];
@@ -133,9 +135,25 @@
     }
 }
 
-//点赞
-- (void)like {
-    //处理点赞请求
+// 点赞
+- (void)likeBtnClick {
+    // 网络
+    // 登录
+    // 点赞
+    
+    //    self.user_digg = (self.user_digg == 1) ? 0 : 1;
+    //    self.digg_count = self.user_digg == 1 ? (self.digg_count + 1) : MAX(0, (self.digg_count - 1));
+    FHFeedUGCContentModel *contentModel = self.cellModel.originData;
+    NSInteger user_digg = [self.cellModel.userDigg integerValue];
+    user_digg = (user_digg == 1) ? 0 : 1;
+    [FHCommonApi requestCommonDigg:contentModel.threadId groupType:FHDetailDiggTypeTHREAD action:user_digg completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        
+    }];
+    // 刷新UI
+}
+
+- (void)commentBtnClick {
+    // 评论点击
 }
 
 - (void)deleteCell {

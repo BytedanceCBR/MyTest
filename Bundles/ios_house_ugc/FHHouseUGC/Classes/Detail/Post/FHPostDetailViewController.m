@@ -79,6 +79,16 @@
     [self startLoadData];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (self.detailData) {
+        // 修改列表页数据
+        self.detailData.commentCount = [NSString stringWithFormat:@"%lld",self.comment_count];
+        self.detailData.userDigg = [NSString stringWithFormat:@"%ld",self.user_digg];
+        self.detailData.diggCount = [NSString stringWithFormat:@"%lld",self.digg_count];
+    }
+}
+
 - (void)setupDetailNaviBar {
     self.customNavBarView.title.text = @"详情";
     // 关注按钮

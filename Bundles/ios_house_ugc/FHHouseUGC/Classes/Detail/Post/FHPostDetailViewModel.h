@@ -12,6 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 帖子详情ViewModel
 @interface FHPostDetailViewModel : FHCommentDetailViewModel
 
 @property (nonatomic, assign) int64_t threadID;// 帖子id

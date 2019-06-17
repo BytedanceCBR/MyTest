@@ -125,4 +125,33 @@
     return returnStr;
 }
 
++ (TTHttpTask *)requestFollowListByType:(NSInteger)type class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/user_follows";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"type"] = @(type);
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestFollow:(NSString *)group_id action:(NSInteger)action completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/follow";
+    if (action == 0) {
+        // 取消关注
+        queryPath = @"/f100/ugc/unfollow";
+    } else if (action == 1) {
+        // 取消关注
+        queryPath = @"/f100/ugc/follow";
+    }
+        
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (group_id.length > 0 ) {
+        paramDic[@"social_group_id"] = group_id;
+    }
+    NSString *query = [NSString stringWithFormat:@"social_group_id=%@",group_id];
+    return [FHMainApi postRequest:queryPath query:query params:paramDic jsonClass:[FHCommonModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+}
+
 @end

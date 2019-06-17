@@ -126,6 +126,7 @@
     cellModel.contentRichSpan = model.contentRichSpan;
     cellModel.diggCount = model.diggCount;
     cellModel.commentCount = model.commentCount;
+    cellModel.userDigg = model.userDigg;
     cellModel.desc = [self generateUGCDesc:model];
     cellModel.groupId = model.threadId;
     

@@ -49,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 //帖子相关
 @property (nonatomic, strong , nullable) FHFeedUGCCellUserModel *user ;
 @property (nonatomic, copy , nullable) NSString *diggCount;
+@property (nonatomic, copy , nullable) NSString *userDigg;
 @property (nonatomic, copy , nullable) NSString *commentCount;
 @property (nonatomic, copy , nullable) NSString *contentRichSpan;
 @property (nonatomic, copy , nullable) NSString *content;
