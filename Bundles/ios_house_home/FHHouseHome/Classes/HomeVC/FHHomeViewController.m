@@ -64,14 +64,12 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if (_isMainTabVC) {
-        [self.view addSubview:self.topBar];
-        
-        FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
-        //    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
-        panelVM.viewController = self;
-        self.panelVM = panelVM;
-    }
+    [self.view addSubview:self.topBar];
+    
+    FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
+    //    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
+    panelVM.viewController = self;
+    self.panelVM = panelVM;
     
     self.isRefreshing = NO;
     
@@ -85,7 +83,9 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     self.mainTableView.showsVerticalScrollIndicator = NO;
 
-    self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
+    if (_isMainTabVC) {
+        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
+    }
 
     [self registerNotifications];
         
@@ -108,7 +108,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.mainTableView.backgroundColor = [UIColor whiteColor];
     FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!configModel) {
-        self.mainTableView.hidden = YES;
         [self tt_startUpdate];
     }
 
@@ -126,14 +125,18 @@ static CGFloat const kSectionHeaderHeight = 38;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
     //如果是inhouse的，弹升级弹窗
-    if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
+    if ([TTSandBoxHelper isInHouseApp]) {
         //#if INHOUSE
         [self checkLocalTestUpgradeVersionAlert];
         //#endif
     }
     
-    if (_isMainTabVC) {
-        [self.view bringSubviewToFront:self.topBar];
+    [self.view bringSubviewToFront:self.topBar];
+    
+    if (!_isMainTabVC) {
+        [self.topBar removeFromSuperview];
+        [self.mainTableView removeFromSuperview];
+        [self.emptyView showEmptyWithTip:@"功能暂未开通" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
     }
 }
 
@@ -151,33 +154,18 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)setUpMainTableConstraints
 {
-    if (_isMainTabVC) {
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(self.topBar.mas_bottom);
-                make.bottom.left.right.equalTo(self.view);
-            }];
-        }else
-        {
-            [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(self.topBar.mas_bottom);
-                make.left.right.equalTo(self.view);
-                make.bottom.equalTo(self.view).offset(-40);
-            }];
-        }
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.topBar.mas_bottom);
+            make.bottom.left.right.equalTo(self.view);
+        }];
     }else
     {
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.edges.equalTo(self.view);
-            }];
-        }else
-        {
-            [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.left.right.equalTo(self.view);
-                make.bottom.equalTo(self.view).offset(-40);
-            }];
-        }
+        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.topBar.mas_bottom);
+            make.left.right.equalTo(self.view);
+            make.bottom.equalTo(self.view).offset(-40);
+        }];
     }
 }
 
@@ -220,15 +208,16 @@ static CGFloat const kSectionHeaderHeight = 38;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
     
-    [self.notifyBar showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
+    [self.notifyBar showMessage:message actionButtonTitle:@"" delayHide:YES duration:1.8 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
             UIEdgeInsets inset = self.mainTableView.contentInset;
             inset.top = 0;
+//            self.homeListViewModel
             self.mainTableView.contentInset = inset;
             [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-     
+            self.homeListViewModel.isResetingOffsetZero = NO;
 //    [self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }];
 //        [UIView animateWithDuration:0.3 animations:^{
@@ -281,7 +270,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configDataModel) {
         [self.homeListViewModel updateCategoryViewSegmented:NO];
-        [self.homeListViewModel requestOriginData:YES];
     }
     
     [FHEnvContext sharedInstance].refreshConfigRequestType = @"refresh_config";
@@ -303,6 +291,7 @@ static CGFloat const kSectionHeaderHeight = 38;
             [[ToastManager manager] showToast:@"网络异常"];
         }else
         {
+            [self.view bringSubviewToFront:self.emptyView];
             [self.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
         }
     }
@@ -323,39 +312,47 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
 
     [self scrollToTopEnable:YES];
+    
+    self.homeListViewModel.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
+    
+    if (self.mainTableView.contentOffset.y > [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType]) {
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    if(_isMainTabVC)
+    {
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    if (self.isMainTabVC) {
-        //开屏广告启动不会展示，保留逻辑代码
-        if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
-            self.adColdHadJump = YES;
-            FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-            if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
-                TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
-                            [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
-                            if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
-                                //通勤找房
-                                [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
-                            }else
-                            {
-                                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
-                            }
+    //开屏广告启动不会展示，保留逻辑代码
+    if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
+        self.adColdHadJump = YES;
+        FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+        if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
+            TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
+                        [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
+                        if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
+                            //通勤找房
+                            [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
+                        }else
+                        {
+                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
                         }
-                    });
+                    }
                 });
-            }
+            });
         }
     }
 }
@@ -370,7 +367,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)pullAndRefresh
 {
-    self.homeListViewModel.reloadType = _reloadFromType;
     [self.mainTableView triggerPullDown];
 }
 
@@ -436,8 +432,9 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
         _scrollView = [[UIScrollView alloc] init];
-        _scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 200);
+        _scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
         _scrollView.pagingEnabled = YES;
+        _scrollView.bounces = NO;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.contentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width*4, 0);

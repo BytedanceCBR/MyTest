@@ -117,7 +117,9 @@ extern UIColor *tt_ttuisettingHelper_detailViewCommentReplyUserNameColor(void);
         [replyAttrString addAttributes:attributes range:NSMakeRange(0, replyAttrString.length)];
         self.replyContentRange = NSMakeRange(attrString.length, replyAttrString.length);
         
-        [attrString appendAttributedString:replyAttrString];
+        if (replyAttrString) {
+            [attrString appendAttributedString:replyAttrString];
+        }
     }
     
     self.userRoleIconRange = NSMakeRange(NSNotFound, 0);

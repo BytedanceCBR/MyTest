@@ -43,7 +43,7 @@
         
         [self initDataArray];
         //临时版本使用，UGC上线后去掉
-//        [self initForTempVersion];
+        [self initForTempVersion];
     }
     return self;
 }

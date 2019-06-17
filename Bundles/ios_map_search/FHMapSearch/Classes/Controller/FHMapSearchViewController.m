@@ -476,7 +476,7 @@
     [self.navBar setTitle:self.title];
 }
 
--(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated
+-(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated hideLocation:(BOOL)hideLocation
 {
     if(ratio < 0 || ratio > 1){
         return;
@@ -485,7 +485,7 @@
     if (!animated) {
         self.filterPanel.alpha =  alpha;
         self.navBar.alpha =  alpha;
-        if (!self.locationButton.hidden) {
+        if (!hideLocation && !self.locationButton.hidden) {
             self.locationButton.alpha = alpha;
         }
     
@@ -495,7 +495,7 @@
     [UIView animateWithDuration:0.3 animations:^{
         self.filterPanel.alpha =  alpha;
         self.navBar.alpha =  alpha;
-        if (!self.locationButton.hidden) {
+        if (!hideLocation && !self.locationButton.hidden) {
             self.locationButton.alpha = alpha;
         }
     }completion:^(BOOL finished) {
@@ -520,7 +520,7 @@
     self.bottomBar.hidden = YES;
     self.chooseView.hidden = NO;
     [self switchNavbarMode:FHMapSearchShowModeMap];
-    [self showNavTopViews:1 animated:NO];
+    [self showNavTopViews:1 animated:NO hideLocation:NO];
     [self enablePan:YES];
 }
 
@@ -539,7 +539,7 @@
 -(void)enterMapDrawMode
 {
     [self switchNavbarMode:FHMapSearchShowModeMap];
-    [self showNavTopViews:0 animated:NO];
+    [self showNavTopViews:0 animated:NO hideLocation:YES];
     [self.houseFilterBridge closeConditionFilterPanel];
     self.chooseView.hidden = YES;
     self.bottomBar.hidden = YES;
@@ -555,6 +555,8 @@
     [self.houseFilterBridge closeConditionFilterPanel];
     self.chooseView.hidden = YES;
     self.bottomBar.hidden = YES;
+    
+    self.locationButton.alpha = 0;
 }
 
 -(BOOL)isShowingMaskView
