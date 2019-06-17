@@ -18,11 +18,13 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "TTDeviceHelper.h"
 #import "FHUGCFollowManager.h"
+#import "FHUGCFollowListCell.h"
 
 @interface FHUGCFollowListController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, assign)   FHUGCFollowVCType       vcType;
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong)   NSMutableArray       *items;
 
 @end
 
@@ -43,13 +45,24 @@
     return self;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.items = [NSMutableArray new];
     [self setupUI];
     [self setupData];
     [self startLoadData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFollowDataFinished:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+}
+
+- (void)loadFollowDataFinished:(NSNotification *)noti {
+    [self setupData];
 }
 
 - (void)setupData {
@@ -59,19 +72,17 @@
     } else if (self.vcType == FHUGCFollowVCTypeSelectList)  {
         self.title = @"选择小区";
     }
+    [self.items removeAllObjects];
     // 是否有数据
     if ([FHUGCFollowManager sharedInstance].followData && [FHUGCFollowManager sharedInstance].followData.data.userFollowSocialGroups.count > 0) {
         // 有数据
+        [self.items addObjectsFromArray:[FHUGCFollowManager sharedInstance].followData.data.userFollowSocialGroups];
         [self.emptyView hideEmptyView];
         [self.tableView reloadData];
     } else {
         // 暂时没有数据
-        if (self.vcType == FHUGCFollowVCTypeList) {
-            [self.emptyView showEmptyWithTip:@"你还没有关注任何小区" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
-        } else if (self.vcType == FHUGCFollowVCTypeSelectList)  {
-            [self.emptyView showEmptyWithTip:@"你还没有关注任何小区" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
-            [self.emptyView.retryButton setTitle:@"关注小区" forState:UIControlStateNormal];
-        }
+        [self.emptyView showEmptyWithTip:@"你还没有关注任何小区" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
+        [self.emptyView.retryButton setTitle:@"关注小区" forState:UIControlStateNormal];
     }
 }
 
@@ -84,6 +95,7 @@
     [self.view addSubview:_tableView];
     _tableView.dataSource = self;
     _tableView.delegate = self;
+    [_tableView registerClass:[FHUGCFollowListCell class] forCellReuseIdentifier:@"FHUGCFollowListCell"];
     [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
@@ -96,10 +108,11 @@
 - (void)configTableView {
     _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _tableView.backgroundColor = [UIColor whiteColor];
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    _tableView.estimatedRowHeight = 0;
+    _tableView.estimatedRowHeight = 70;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
     if ([TTDeviceHelper isIPhoneXDevice]) {
@@ -108,18 +121,12 @@
 }
 
 - (void)startLoadData {
-    if ([TTReachability isNetworkConnected]) {
-        // 重新加载数据
-        
-        // 有数据 隐藏 空页面
-    }
+    [[FHUGCFollowManager sharedInstance] loadFollowData];
 }
 
 - (void)retryLoadData {
     // 关注小区 按钮点击
-    if (self.vcType == FHUGCFollowVCTypeSelectList) {
-        
-    }
+    
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
@@ -130,13 +137,21 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    return self.items.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   
-    return [[UITableViewCell alloc] init];
+    FHUGCFollowListCell *cell = (FHUGCFollowListCell *)[tableView dequeueReusableCellWithIdentifier:@"FHUGCFollowListCell" forIndexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    NSInteger row = indexPath.row;
+    if (row >= 0 && row < self.items.count) {
+        id data = self.items[row];
+        [cell refreshWithData:data];
+    }
+    
+    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -146,8 +161,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    return 105;
+    return 70;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
