@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)segmentViewIndexChanged:(NSInteger)index;
 
+- (void)viewWillAppear;
+
 @end
 
 NS_ASSUME_NONNULL_END

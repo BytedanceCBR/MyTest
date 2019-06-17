@@ -35,10 +35,12 @@
     
     if(!_isEmpty){
         [self initFeedListVC];
+        [self.feedListVC viewWillAppear];
         [self startLoadData];
     }else{
         [self initMyInterestListVC];
     }
+    
     
 //    _isEmpty = !_isEmpty;
 }

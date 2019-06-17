@@ -12,6 +12,7 @@
 #import "FHFeedListModel.h"
 #import <UIScrollView+Refresh.h>
 #import "FHFeedUGCCellModel.h"
+#import "Article.h"
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
 
@@ -201,6 +202,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+    self.currentCellModel = cellModel;
+    self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
     [self jumpToDetail:cellModel];
 }
 
@@ -241,7 +244,30 @@
             NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
         }
+    }else if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeUGC){
+        [self jumpToPostDetail:cellModel];
     }
+}
+
+- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"data"] = cellModel;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    FHFeedUGCContentModel *contentModel = cellModel.originData;
+    NSString *routeUrl = @"sslocal://ugc_post_detail";
+    if (contentModel && [contentModel isKindOfClass:[FHFeedUGCContentModel class]]) {
+        NSString *schema = contentModel.schema;
+        if (schema.length > 0) {
+            routeUrl = [schema stringByReplacingOccurrencesOfString:@"sslocal://thread_detail" withString:@"sslocal://ugc_post_detail"];
+        }
+        // 记得 如果是push 和 url要添加评论数 点赞数以及自己是否点赞
+        routeUrl = [NSString stringWithFormat:@"%@&comment_count=%@&digg_count=%@&user_digg=%@",routeUrl,contentModel.commentCount,contentModel.diggCount,contentModel.userDigg];
+    }
+    
+    //    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_community_detail"];
+    NSURL *openUrl = [NSURL URLWithString:routeUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    self.needRefreshCell = YES;
 }
 
 #pragma mark - FHUGCBaseCellDelegate

@@ -12,7 +12,6 @@
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
-#import "FHCommonApi.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -67,7 +66,6 @@
     [self.contentView addSubview:_multiImageView];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
-    [_bottomView.likeBtn addTarget:self action:@selector(likeBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
@@ -125,31 +123,15 @@
         self.userInfoView.descLabel.attributedText = cellModel.desc;
         [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
         //设置底部
+        self.bottomView.cellModel = cellModel;
         self.bottomView.position.text = @"左家庄";
-        [self.bottomView.likeBtn setTitle:cellModel.diggCount forState:UIControlStateNormal];
         [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
+        [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
         //内容
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
         //图片
         [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     }
-}
-
-// 点赞
-- (void)likeBtnClick {
-    // 网络
-    // 登录
-    // 点赞
-    
-    //    self.user_digg = (self.user_digg == 1) ? 0 : 1;
-    //    self.digg_count = self.user_digg == 1 ? (self.digg_count + 1) : MAX(0, (self.digg_count - 1));
-    FHFeedUGCContentModel *contentModel = self.cellModel.originData;
-    NSInteger user_digg = [self.cellModel.userDigg integerValue];
-    user_digg = (user_digg == 1) ? 0 : 1;
-    [FHCommonApi requestCommonDigg:contentModel.threadId groupType:FHDetailDiggTypeTHREAD action:user_digg completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        
-    }];
-    // 刷新UI
 }
 
 - (void)commentBtnClick {

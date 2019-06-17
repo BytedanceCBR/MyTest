@@ -37,6 +37,11 @@
     [self initViewModel];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.viewModel viewWillAppear];
+}
+
 - (void)initView {
     self.view.backgroundColor = [UIColor whiteColor];
     

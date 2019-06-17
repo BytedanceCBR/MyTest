@@ -111,9 +111,10 @@
         self.userInfoView.descLabel.attributedText = cellModel.desc;
         [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
         //设置底部
+        self.bottomView.cellModel = cellModel;
         self.bottomView.position.text = @"左家庄";
-        [self.bottomView.likeBtn setTitle:cellModel.diggCount forState:UIControlStateNormal];
         [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
+        [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
         //内容
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
     }

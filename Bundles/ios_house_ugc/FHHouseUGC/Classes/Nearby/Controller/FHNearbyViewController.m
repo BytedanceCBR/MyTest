@@ -13,6 +13,8 @@
 
 @interface FHNearbyViewController ()
 
+@property(nonatomic ,strong) FHCommunityFeedListController *feedVC;
+
 @end
 
 @implementation FHNearbyViewController
@@ -22,21 +24,21 @@
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self initView];
-    [self initConstraints];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.feedVC viewWillAppear];
 }
 
 - (void)initView {
     self.view.backgroundColor = [UIColor whiteColor];
 
-    FHCommunityFeedListController *vc =[[FHCommunityFeedListController alloc] init];
-    vc.listType = FHCommunityFeedListTypeNearby;
-    vc.view.frame = self.view.bounds;
-    [self addChildViewController:vc];
-    [self.view addSubview:vc.view];
-}
-
-- (void)initConstraints {
-
+    self.feedVC =[[FHCommunityFeedListController alloc] init];
+    _feedVC.listType = FHCommunityFeedListTypeNearby;
+    _feedVC.view.frame = self.view.bounds;
+    [self addChildViewController:_feedVC];
+    [self.view addSubview:_feedVC.view];
 }
 
 @end

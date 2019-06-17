@@ -10,6 +10,8 @@
 #import <TTHttpTask.h>
 #import "FHUGCCellManager.h"
 #import <FHCommonUI/FHRefreshCustomFooter.h>
+#import "FHUGCBaseCell.h"
+#import "FHFeedUGCCellModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,10 +25,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic, strong) NSMutableDictionary *cellHeightCaches;
 @property(nonatomic, copy) NSString *categoryId;
+@property(nonatomic, strong) FHUGCBaseCell *currentCell;
+@property(nonatomic, strong) FHFeedUGCCellModel *currentCellModel;
+@property(nonatomic, assign) BOOL needRefreshCell;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst;
+
+- (void)refreshCurrentCell;
 
 @end
 

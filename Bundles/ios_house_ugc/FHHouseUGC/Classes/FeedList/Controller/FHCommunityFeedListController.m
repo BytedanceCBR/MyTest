@@ -41,6 +41,10 @@
     [self initViewModel];
 }
 
+- (void)viewWillAppear {
+    [self.viewModel refreshCurrentCell];
+}
+
 - (void)initView {
     [self initTableView];
     [self initNotifyBarView];

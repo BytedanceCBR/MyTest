@@ -13,6 +13,8 @@
 #import <UIScrollView+Refresh.h>
 #import "FHFeedUGCCellModel.h"
 #import "Article.h"
+#import "TTBaseMacro.h"
+#import "TTStringHelper.h"
 
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
@@ -205,7 +207,33 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    [self jumpToPostDetail:cellModel];
+    self.currentCellModel = cellModel;
+    self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
+    [self jumpToDetail:cellModel];
+}
+
+- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel {
+    if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle){
+        BOOL canOpenURL = NO;
+        if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
+            NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
+            if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                canOpenURL = YES;
+                [[UIApplication sharedApplication] openURL:url];
+            }
+            else if([[TTRoute sharedRoute] canOpenURL:url]){
+                canOpenURL = YES;
+                //问答
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            }
+        }else{
+            //文章
+            NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        }
+    }else if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeUGC){
+        [self jumpToPostDetail:cellModel];
+    }
 }
 
 - (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel {
@@ -226,6 +254,7 @@
 //    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_community_detail"];
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    self.needRefreshCell = YES;
 }
 
 #pragma mark - FHUGCBaseCellDelegate

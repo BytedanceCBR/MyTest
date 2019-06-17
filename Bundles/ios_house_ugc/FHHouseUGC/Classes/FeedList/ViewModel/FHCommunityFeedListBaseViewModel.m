@@ -36,4 +36,11 @@
     [self.requestTask cancel];
 }
 
+- (void)refreshCurrentCell {
+    if(self.needRefreshCell){
+        self.needRefreshCell = NO;
+        [self.currentCell refreshWithData:self.currentCellModel];
+    }
+}
+
 @end

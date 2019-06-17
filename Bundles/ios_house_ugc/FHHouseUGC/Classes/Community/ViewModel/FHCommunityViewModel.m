@@ -48,6 +48,12 @@
     return self;
 }
 
+- (void)viewWillAppear {
+    if(!self.isFirstLoad){
+        [self initCell];
+    }
+}
+
 - (void)initForTempVersion {
     self.currentTabIndex = 0;
     self.dataArray = @[

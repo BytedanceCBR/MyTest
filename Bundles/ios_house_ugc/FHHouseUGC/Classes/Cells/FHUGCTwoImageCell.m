@@ -119,7 +119,7 @@
     
     //设置底部
     self.bottomView.position.text = @"左家庄";
-    [self.bottomView.likeBtn setTitle:@"178" forState:UIControlStateNormal];
+//    [self.bottomView.likeBtn setTitle:@"178" forState:UIControlStateNormal];
     [self.bottomView.commentBtn setTitle:@"24" forState:UIControlStateNormal];
 }
 

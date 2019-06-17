@@ -158,12 +158,17 @@
             imageView.userInteractionEnabled = NO;
         }
         
-        if(imageList.count > self.count){
-            self.infoLabel.hidden = NO;
-            self.infoLabel.text = [NSString stringWithFormat:@"共%i张",imageList.count];
-        }else{
-            self.infoLabel.hidden = YES;
+        //三图模式下多余三张图，最后一张图不能点击进入大图，直接进详情页
+        if(self.count == 3 && imageList.count > self.count && i == 2){
+            imageView.userInteractionEnabled = NO;
         }
+    }
+    
+    if(imageList.count > self.count){
+        self.infoLabel.hidden = NO;
+        self.infoLabel.text = [NSString stringWithFormat:@"共%i张",imageList.count];
+    }else{
+        self.infoLabel.hidden = YES;
     }
 }
 

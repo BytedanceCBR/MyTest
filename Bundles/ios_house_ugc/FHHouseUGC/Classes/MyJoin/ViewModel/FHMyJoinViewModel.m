@@ -114,11 +114,13 @@
 #pragma mark - FHMyJoinNeighbourhoodViewDelegate
 
 - (void)gotoMore {
-    if(self.isShowMessage){
-        [self hideMessageView];
-    }else{
-        [self showMessageView];
-    }
+//    if(self.isShowMessage){
+//        [self hideMessageView];
+//    }else{
+//        [self showMessageView];
+//    }
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_list"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 @end
