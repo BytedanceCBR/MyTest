@@ -23,6 +23,7 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 @property (nonatomic, assign) TTReloadType reloadType; //当前enterType，用于enter_category
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) FHHouseType houseType;
+@property (nonatomic, assign) BOOL isResetingOffsetZero;
 
 - (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC;
 

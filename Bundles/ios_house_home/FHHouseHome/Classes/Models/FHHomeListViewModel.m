@@ -44,7 +44,6 @@
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
 @property (nonatomic, assign) BOOL isFirstChange;
 @property (nonatomic, assign) BOOL isRequestFromSwitch; //左右切换房源类型
-@property (nonatomic, assign) BOOL isResetingOffsetZero;
 @property(nonatomic, weak)   NSTimer *timer;
 
 @property (nonatomic, strong) UIScrollView *childVCScrollView;
@@ -243,12 +242,6 @@
         [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     }
     
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.isResetingOffsetZero = NO;
-        });
-    });
 }
 
 - (void)setUpSubtableViewContrllers
