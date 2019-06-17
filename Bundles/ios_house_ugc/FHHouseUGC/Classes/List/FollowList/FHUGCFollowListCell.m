@@ -19,6 +19,7 @@
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *descLabel;
 @property(nonatomic, strong) UIImageView *icon;
+@property(nonatomic ,strong) UIView *bottomSepView;
 
 @end
 
@@ -74,6 +75,10 @@
     self.descLabel = [self labelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self.contentView addSubview:_descLabel];
     
+    self.bottomSepView = [[UIView alloc] init];
+    _bottomSepView.backgroundColor = [UIColor themeGray6];
+    [self.contentView addSubview:_bottomSepView];
+    
     [self setupConstraints];
 }
 
@@ -97,6 +102,13 @@
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(self.titleLabel);
         make.height.mas_equalTo(17);
+    }];
+    
+    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView).offset(20);
+        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.bottom.mas_equalTo(self.contentView).offset(0);
+        make.height.mas_equalTo(0.5);
     }];
 }
 
