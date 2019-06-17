@@ -7,6 +7,8 @@
 
 #import "FHUGCFollowManager.h"
 #import "FHHouseUGCAPI.h"
+#import "TTReachability.h"
+#import "ToastManager.h"
 
 @interface FHUGCFollowManager ()
 
@@ -44,7 +46,14 @@
 }
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
-- (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow {
+- (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow completion:(void (^ _Nullable)(BOOL isSuccess))completion {
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        if (completion) {
+            completion(NO);
+        }
+        return;
+    }
     NSInteger action = 1;
     if (follow) {
         action = 1;
@@ -55,14 +64,35 @@
         if (model && error == nil) {
             // 请求成功
             dispatch_async(dispatch_get_main_queue(), ^{
+                if ([model.status isEqualToString:@"0"]) {
+                    if (follow) {
+                        [[ToastManager manager] showToast:@"关注成功"];
+                    } else {
+                        [[ToastManager manager] showToast:@"取消关注成功"];
+                    }
+                    // 关注或者取消关注后 重新拉取 关注列表
+                    [self loadFollowData];
+                }
+                if (completion) {
+                    completion(YES);
+                }
                 NSMutableDictionary *dict = [NSMutableDictionary new];
                 dict[@"social_group_id"] = social_group_id;
-                // 是否成功？？
-                [dict setValue:@"1" forKey:@"status"];
-                [dict setValue:@"message" forKey:@"message"];
-                
+                dict[@"followStatus"] = @(action);// 0 取消关注 1 关注
+                [dict setValue:model.status forKey:@"status"];
+                [dict setValue:model.message forKey:@"message"];
+                // 发送通知
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFollowNotification object:nil userInfo:dict];
             });
+        } else {
+            if (follow) {
+                [[ToastManager manager] showToast:@"关注失败"];
+            } else {
+                [[ToastManager manager] showToast:@"取消关注失败"];
+            }
+            if (completion) {
+                completion(NO);
+            }
         }
     }];
   
