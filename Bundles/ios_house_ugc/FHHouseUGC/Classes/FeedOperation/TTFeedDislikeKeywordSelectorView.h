@@ -6,13 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TTFeedDislikeOption.h"
+#import "FHFeedOperationOption.h"
 
 extern NSString *const FeedDislikeNeedReportNotification;
 
 @class TTFeedDislikeKeywordSelectorView;
 
 @interface TTFeedDislikeKeywordSelectorView : UIView
-@property (nonatomic, copy) void (^selectionFinished)(TTFeedDislikeWord *keyword);
-- (void)refreshWithOption:(TTFeedDislikeOption *)option;
+@property (nonatomic, copy) void (^selectionFinished)(FHFeedOperationWord *keyword);
+- (void)refreshWithOption:(FHFeedOperationOption *)option;
 @end

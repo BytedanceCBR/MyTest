@@ -6,14 +6,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TTFeedDislikeOption.h"
+#import "FHFeedOperationOption.h"
 #import "SSThemed.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TTFeedDislikeOptionCell : UITableViewCell
 @property (nonatomic, strong) SSThemedView *separator;
-- (void)configWithOption:(TTFeedDislikeOption *)option showSeparator:(BOOL)showSeparator;
+- (void)configWithOption:(FHFeedOperationOption *)option showSeparator:(BOOL)showSeparator;
 @end
 
 NS_ASSUME_NONNULL_END

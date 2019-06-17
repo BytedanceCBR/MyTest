@@ -76,6 +76,7 @@
     cellModel.title = model.title;
     cellModel.behotTime = model.behotTime;
     cellModel.openUrl = model.openUrl;
+    cellModel.groupId = model.groupId;
     if(!isEmptyString(model.openUrl) && !isEmptyString(model.sourceDesc)){
         //针对问答的情况
         cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
@@ -126,6 +127,7 @@
     cellModel.diggCount = model.diggCount;
     cellModel.commentCount = model.commentCount;
     cellModel.desc = [self generateUGCDesc:model];
+    cellModel.groupId = model.threadId;
     
     FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
     user.name = model.user.name;

@@ -53,6 +53,10 @@
 
 - (void)initViews {
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
+    __weak typeof(self) wself = self;
+    _userInfoView.deleteCellBlock = ^{
+        [wself deleteCell];
+    };
     [self.contentView addSubview:_userInfoView];
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
@@ -114,6 +118,7 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         _cellModel = cellModel;
         //设置userInfo
+        self.userInfoView.cellModel = cellModel;
         self.userInfoView.userName.text = cellModel.user.name;
         self.userInfoView.descLabel.attributedText = cellModel.desc;
         [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
@@ -131,6 +136,12 @@
 //点赞
 - (void)like {
     //处理点赞请求
+}
+
+- (void)deleteCell {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
+        [self.delegate deleteCell:self.cellModel];
+    }
 }
 
 @end

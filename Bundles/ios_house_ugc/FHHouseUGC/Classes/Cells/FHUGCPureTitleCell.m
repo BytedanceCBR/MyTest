@@ -22,6 +22,7 @@
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) UIView *bottomSepView;
+@property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 @end
 
@@ -50,6 +51,10 @@
 
 - (void)initViews {
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
+    __weak typeof(self) wself = self;
+    _userInfoView.deleteCellBlock = ^{
+        [wself deleteCell];
+    };
     [self.contentView addSubview:_userInfoView];
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
@@ -99,7 +104,9 @@
 - (void)refreshWithData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        self.cellModel = cellModel;
         //设置userInfo
+        self.userInfoView.cellModel = cellModel;
         self.userInfoView.userName.text = cellModel.user.name;
         self.userInfoView.descLabel.attributedText = cellModel.desc;
         [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
@@ -109,6 +116,12 @@
         [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
         //内容
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
+    }
+}
+
+- (void)deleteCell {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
+        [self.delegate deleteCell:self.cellModel];
     }
 }
 

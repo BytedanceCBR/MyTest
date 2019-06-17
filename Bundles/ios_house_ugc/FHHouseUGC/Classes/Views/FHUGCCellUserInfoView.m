@@ -10,6 +10,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHFeedOperationView.h"
+#import "UIButton+TTAdditions.h"
 
 @implementation FHUGCCellUserInfoView
 
@@ -39,6 +40,7 @@
     self.moreBtn = [[UIButton alloc] init];
     [_moreBtn setImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateNormal];
     [_moreBtn addTarget:self action:@selector(moreOperation) forControlEvents:UIControlEventTouchUpInside];
+    _moreBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -5, -5, -5);
     [self addSubview:_moreBtn];
 }
 
@@ -80,37 +82,33 @@
 - (void)moreOperation {
     FHFeedOperationView *dislikeView = [[FHFeedOperationView alloc] init];
     FHFeedOperationViewModel *viewModel = [[FHFeedOperationViewModel alloc] init];
-    
-    NSMutableArray *keywords = [NSMutableArray array];
-    NSDictionary *operation1 = @{
-                                @"id": @"7:",
-                                @"is_selected": @(0),
-                                @"name": @"举报"
-                                };
-    
-//    NSDictionary *operation2 = @{
-//                                @"id": @"7:",
-//                                @"is_selected": @(0),
-//                                @"name": @"举报"
-//                                };
-    
-    [keywords addObject:operation1];
-//    [keywords addObject:operation2];
-    
-//    viewModel.keywords = keywords;
-    viewModel.keywords = @[@"1"];
-//    viewModel.commnads = self.orderedData.raw_ad.dislikeCommands;
-//    viewModel.groupID = [NSString stringWithFormat:@"%lld", self.orderedData.card.uniqueID];
-//    viewModel.categoryID = self.orderedData.categoryID;
-//    viewModel.adID = self.orderedData.raw_ad.ad_id;
-//    viewModel.logExtra = self.orderedData.log_extra;
+
+    if(self.cellModel){
+        viewModel.groupID = self.cellModel.groupId;
+        viewModel.categoryID = self.cellModel.categoryId;
+    }
+
     [dislikeView refreshWithModel:viewModel];
     CGPoint point = _moreBtn.center;
     [dislikeView showAtPoint:point
                     fromView:_moreBtn
              didDislikeBlock:^(FHFeedOperationView * _Nonnull view) {
-//                 [self exploreDislikeViewOKBtnClicked:view];
+                 [self handleItemselected:view];
              }];
+}
+
+- (void)handleItemselected:(FHFeedOperationView *) view {
+    if(view.selectdWord.type == FHFeedOperationWordTypeReport){
+        //举报
+        if(self.deleteCellBlock){
+            self.deleteCellBlock();
+        }
+    }else if(view.selectdWord.type == FHFeedOperationWordTypeDelete){
+        //调用删除接口
+        if(self.deleteCellBlock){
+            self.deleteCellBlock();
+        }
+    }
 }
 
 @end

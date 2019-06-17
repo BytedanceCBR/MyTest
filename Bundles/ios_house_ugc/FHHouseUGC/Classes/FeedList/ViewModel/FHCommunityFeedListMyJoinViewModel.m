@@ -148,6 +148,7 @@
     for (FHFeedListDataModel *itemModel in feedList) {
         NSString *content = itemModel.content;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
+        cellModel.categoryId = self.categoryId;
         if(cellModel){
             [resultArray addObject:cellModel];
         }
@@ -177,6 +178,8 @@
         cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
+    
+    cell.delegate = self;
     
     if(indexPath.row < self.dataList.count){
         [cell refreshWithData:cellModel];
@@ -238,6 +241,17 @@
             NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
         }
+    }
+}
+
+#pragma mark - FHUGCBaseCellDelegate
+
+- (void)deleteCell:(FHFeedUGCCellModel *)cellModel {
+    NSInteger row = [self.dataList indexOfObject:cellModel];
+    if(row < self.dataList.count && row >= 0){
+        [self.dataList removeObject:cellModel];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
     }
 }
 

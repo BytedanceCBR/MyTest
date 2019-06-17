@@ -152,6 +152,7 @@
     for (FHFeedListDataModel *itemModel in feedList) {
         NSString *content = itemModel.content;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
+        cellModel.categoryId = self.categoryId;
         if(cellModel){
             [resultArray addObject:cellModel];
         }

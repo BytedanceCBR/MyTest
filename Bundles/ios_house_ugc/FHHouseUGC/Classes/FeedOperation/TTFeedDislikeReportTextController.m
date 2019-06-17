@@ -29,6 +29,8 @@
 
 #import "UIImage+TTThemeExtension.h"
 #import "FHFeedOperationView.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
 
 @interface TTFeedDislikeReportTextController ()<UITextViewDelegate>
 
@@ -137,6 +139,7 @@ static UIWindow *alertWindow;
         [v setTitle:@"发布" forState:UIControlStateNormal];
         v.disabledTitleColorThemeKey = kColorText9;
         v.titleColorThemeKey = kColorBlueTextColor;
+        [v setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
         v.titleLabel.font = [UIFont systemFontOfSize:16.0];
         [v addTarget:self action:@selector(onFinishButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         v;

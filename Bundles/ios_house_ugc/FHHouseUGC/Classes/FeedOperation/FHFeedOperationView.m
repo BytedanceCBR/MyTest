@@ -7,7 +7,7 @@
 
 #import "FHFeedOperationView.h"
 #import "TTFeedDislikeKeywordsView.h"
-#import "TTFeedDislikeWord.h"
+#import "FHFeedOperationWord.h"
 #import "SSThemed.h"
 
 #import "TTThemeConst.h"
@@ -24,7 +24,7 @@
 #import "TTFeedDislikeOptionSelectorView.h"
 #import "TTFeedPopupController.h"
 #import "extobjc.h"
-#import "TTFeedDislikeOption.h"
+#import "FHFeedOperationOption.h"
 #import "TTGroupModel.h"
 #import "TTReportManager.h"
 #import "TTReportContentModel.h"
@@ -32,6 +32,7 @@
 #import "TTFeedDislikeKeywordSelectorView.h"
 #import "TTReportDefine.h"
 #import "UIView+CustomTimingFunction.h"
+#import "TTFeedDislikeConfig.h"
 
 #define kMaskViewTag 20141209
 
@@ -62,8 +63,6 @@ static FHFeedOperationView *__visibleDislikeView;
 @property (nonatomic, strong) TTFeedDislikeBlock didDislikeBlock;
 @property (nonatomic, copy) TTFeedDislikeOptionBlock didDislikeWithOptionBlock;
 @property (nonatomic, assign)TTFeedDislikeViewPushFrom pushFrom;
-@property (nonatomic, strong) TTFeedDislikeWord *unfollowWord;
-@property (nonatomic, assign) BOOL dislikeFilterFlag;    // setting开关是否打开
 @property (nonatomic, assign) BOOL showUnFollowBtnFlag;  //红色确认按钮title是否显示取消关注
 @property (nonatomic, strong) FHFeedOperationViewModel *viewModel;
 
@@ -72,7 +71,6 @@ static FHFeedOperationView *__visibleDislikeView;
 @property (nonatomic, strong) TTFeedPopupController *navController;
 @property (nonatomic) BOOL isArrowOnTop;
 @property (nonatomic) BOOL forceHiddeArrow;
-@property (nonatomic, strong) TTFeedDislikeWord *selectdWord;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *commonTrackingParameters;
 
 @end
@@ -86,167 +84,14 @@ static FHFeedOperationView *__visibleDislikeView;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    if ([self enableModernMode]) {
-        return [self initWithFrame_modern:frame];
-    } else {
-        return [self initWithFrame_legacy:frame];
-    }
-}
-
-- (instancetype)initWithFrame_legacy:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        UIWindow *window = SSGetMainWindow();
-        if ([FHFeedOperationView isFeedDislikeRefactorEnabled]) {
-            self.layer.cornerRadius = 0;
-            if ([TTDeviceHelper isPadDevice]) {
-                self.width = MIN(window.frame.size.width - 30, 400);
-            }
-            else {
-                self.width = window.frame.size.width;
-            }
-        }
-        else {
-            self.layer.cornerRadius = 6.f;
-            UIWindow *window = SSGetMainWindow();
-            self.width = MIN(window.frame.size.width - 30, 400);
-        }
-        self.clipsToBounds = YES;
-        self.backgroundColor = [UIColor clearColor];
-        
-        if (!__lastDislikedWords) {
-            __lastDislikedWords = [NSMutableArray arrayWithCapacity:10];
-        }
-        self.dislikeWords = [NSMutableArray arrayWithCapacity:10];
-        
-        self.arrowBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, 0)];
-        _arrowBgView.backgroundColor = [UIColor clearColor];
-        [self addSubview:_arrowBgView];
-        
-        self.contentBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, 0)];
-        [self addSubview:_contentBgView];
-        
-        self.okBtn = [[SSThemedButton alloc] initWithFrame:CGRectMake(0, 0, [self buttonWidth], [self buttonHeight])];
-        
-        _okBtn.backgroundColorThemeKey = kColorBackground7;
-        _okBtn.highlightedBackgroundColorThemeKey = kColorBackground7Highlighted;
-        [_okBtn addTarget:self action:@selector(okBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [_contentBgView addSubview:_okBtn];
-        
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _titleLabel.backgroundColor = [UIColor clearColor];
-        
-        self.titleLabel.text = NSLocalizedString(@"可选理由，精准屏蔽", nil);
-        [_titleLabel sizeToFit];
-        [_contentBgView addSubview:_titleLabel];
-        
-        self.keywordsView = [[TTFeedDislikeKeywordsView alloc] initWithFrame:CGRectMake(0, 0, self.width, 0)];
-        self.keywordsView.backgroundColor = [UIColor clearColor];
-        self.keywordsView.delegate = self;
-        [_contentBgView addSubview:_keywordsView];
-        
-        self.dislikeBtn = [[SSThemedButton alloc] initWithFrame:CGRectMake(0, 0, [self dislikeButtonWidth], [self dislikeButtonHeight])];
-        [_dislikeBtn.titleLabel setFont:[UIFont systemFontOfSize:[self fontSizeForDislikeButton]]];
-        _dislikeBtn.highlightedTitleColorThemeKey = kColorText7Highlighted;
-        _dislikeBtn.backgroundColorThemeKey = kColorBackground7;
-        _dislikeBtn.highlightedBackgroundColorThemeKey = kColorBackground7Highlighted;
-        
-        [_dislikeBtn addTarget:self action:@selector(okBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        _dislikeBtn.layer.cornerRadius = [self dislikeButtonHeight] / 2;
-        [self addSubview:_dislikeBtn];
-        
-        [self reloadThemeUI];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rootViewWillTransitionToSize:) name:@"kRootViewWillTransitionToSize" object:nil];
-        
-        self.adLogExtra = @"";
-        
-        if ([FHFeedOperationView isFeedDislikeRefactorEnabled]) {
-            [_okBtn.titleLabel setFont:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:14.f]]];
-            _okBtn.titleColorThemeKey = kColorText12;
-            [_okBtn setTitle:NSLocalizedString(@"不喜欢", nil) forState:UIControlStateNormal];
-            [_titleLabel setFont:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:14.f]]];
-            [_dislikeBtn setTitle:NSLocalizedString(@"不喜欢", nil) forState:UIControlStateNormal];
-        }
-        else {
-            _contentBgView.layer.cornerRadius = 6.f;
-            _contentBgView.clipsToBounds = YES;
-            [_okBtn.titleLabel setFont:[UIFont systemFontOfSize:[self fontSizeForButton]]];
-            _okBtn.titleColorThemeKey = kColorText7;
-            [_okBtn setTitle:NSLocalizedString(@"不感兴趣", nil) forState:UIControlStateNormal];
-            [_dislikeBtn setTitle:NSLocalizedString(@"不感兴趣", nil) forState:UIControlStateNormal];
-            _dislikeBtn.titleColorThemeKey = kColorText7;
-            _okBtn.layer.cornerRadius = [self buttonHeight] / 2;
-        }
-        
-    }
-    return self;
+    return [self initWithFrame_modern:frame];
 }
 
 - (void)refreshWithModel:(nullable FHFeedOperationViewModel *)model {
-    if ([self enableModernMode]) {
-        [self modern_refreshWithModel:model];
-    } else {
-        [self legacy_refreshWithModel:model];
-    }
+    [self modern_refreshWithModel:model];
 }
 
-- (void)legacy_refreshWithModel:(nullable FHFeedOperationViewModel *)model {
-    self.viewModel = model;
-    NSString *groupID = model.groupID;
-    self.adLogExtra = model.logExtra;
-    self.dislikeFilterFlag = model.dislikeFilterFlag;
-    NSArray *keywords;
-    
-    if (self.dislikeFilterFlag) {
-        keywords = [self keywordsWithFilterWords:model.keywords];
-    } else {
-        keywords = model.keywords;
-    }
-    
-    if (keywords != nil && keywords.count > 0) {
-        // 如果上次已选择过，使用上次的选择，理论上应该全量比较__lastDislikedWords和keywords，关键词完全一致才能使用之前缓存的
-        if ([__lastGroupID isEqualToString:groupID] && __lastDislikedWords.count == keywords.count) {
-            self.dislikeWords = __lastDislikedWords;
-        } else {
-            [self.dislikeWords removeAllObjects];
-            [__lastDislikedWords removeAllObjects];
-            
-            for (NSDictionary *dict in keywords) {
-                if ([dict isKindOfClass:[NSDictionary class]]) {
-                    TTFeedDislikeWord *word = [[TTFeedDislikeWord alloc] initWithDict:dict];
-                    [self.dislikeWords addObject:word];
-                }
-            }
-        }
-        
-        __lastGroupID = groupID;
-        
-        _keywordsView.width = self.width;
-        NSMutableArray<TTFeedDislikeWord *> *items = @[].mutableCopy;
-        [items addObjectsFromArray:self.dislikeWords];
-        if (model.commnads) {
-            [items addObjectsFromArray:model.commnads];
-        }
-        [_keywordsView refreshWithData:items];
-    }
-    
-    
-    NSMutableDictionary *extValueDic = [NSMutableDictionary dictionary];
-    if (self.adLogExtra) {
-        extValueDic[@"log_extra"] = self.adLogExtra;
-    }
-    
-    if (model.extrasDict) {
-        [extValueDic addEntriesFromDictionary:model.extrasDict];
-    }
-    
-    NSString *source = model.source;
-    ttTrackEventWithCustomKeys(@"dislike", keywords.count > 0 ? @"menu_with_reason" : @"menu_no_reason", __lastGroupID, source, extValueDic);
-}
-
-- (void)refreshArrowUI
-{
+- (void)refreshArrowUI {
     if ([FHFeedOperationView isFeedDislikeRefactorEnabled]) {
         NSString *imageName = @"ugc_pop_corner";
         [self.arrowImageView removeFromSuperview];
@@ -379,78 +224,7 @@ static FHFeedOperationView *__visibleDislikeView;
 
 //["id1", "id2", ...]
 - (NSArray<NSString *> *)selectedWords {
-    if ([self enableModernMode]) {
-        return [self modern_selectedWords];
-    } else {
-        return [self legacy_selectedWords];
-    }
-}
-
-//["id1", "id2", ...]
-- (NSArray<NSString *> *)legacy_selectedWords {
-    NSMutableArray *array = [NSMutableArray array];
-    if (self.showUnFollowBtnFlag) {
-        [array addObject:self.unfollowWord.ID];
-    } else {
-        for (TTFeedDislikeWord *word in self.dislikeWords) {
-            if (word.isSelected && !isEmptyString(word.ID)) {
-                [array addObject:word.ID];
-            }
-        }
-    }
-    return array;
-}
-
-#pragma mark - private methods
-
-- (NSDictionary *)getUnFollowKeywordsWithFilterWords:(NSArray<NSDictionary *> *)filterWords {
-    for (NSDictionary *keywordDict in filterWords) {
-        if ([keywordDict objectForKey:@"name"]) {
-            NSString *name = [NSString stringWithFormat:@"%@", [keywordDict objectForKey:@"name"]];
-            NSRange range = [name rangeOfString:@"取消关注"];
-            if (range.location != NSNotFound) {
-                return [keywordDict copy];
-            }
-        }
-    }
-    return nil;
-}
-
-- (NSArray<NSDictionary *> *)removeUnFollowDictFromFilterWords:(NSArray<NSDictionary *> *)filterWords {
-    NSMutableArray *result = [NSMutableArray arrayWithCapacity:filterWords.count - 1];
-    for (NSDictionary *keywordDict in filterWords) {
-        if ([keywordDict objectForKey:@"name"]) {
-            NSString *name = [NSString stringWithFormat:@"%@", [keywordDict objectForKey:@"name"]];
-            NSRange range = [name rangeOfString:@"取消关注"];
-            if (range.location == NSNotFound) {
-                [result addObject:keywordDict];
-            }
-        }
-    }
-    return [result copy];
-}
-
-- (NSArray<NSDictionary *> *)keywordsWithFilterWords:(NSArray<NSDictionary *> *)filterWords {
-    NSDictionary *unFollowDict = [self getUnFollowKeywordsWithFilterWords:filterWords];
-    NSArray *result = filterWords;
-    if (unFollowDict != nil) {
-        NSString *str = [NSString stringWithFormat:@"%@", [unFollowDict objectForKey:@"id"]];
-        NSRange range = [str rangeOfString:@":"];
-        NSString *uid = [str substringFromIndex:range.location + range.length];
-        TTFriendRelationQueryResult followState = [[TTFriendRelationService sharedInstance] queryFollowingStateUser:uid];
-        if (followState == TTFriendRelationQueryResultTrue) {
-            self.showUnFollowBtnFlag = YES;
-            result = nil;
-            self.unfollowWord = [[TTFeedDislikeWord alloc] initWithDict:unFollowDict];
-            [self.dislikeWords removeAllObjects];
-            [__lastDislikedWords removeAllObjects];
-            [self refreshOKBtn];
-        } else {
-            self.showUnFollowBtnFlag = NO;
-            result = [self removeUnFollowDictFromFilterWords:filterWords];
-        }
-    }
-    return result;
+    return [self modern_selectedWords];
 }
 
 #pragma mark - TTFeedDislikeKeywordsViewDelegate
@@ -1119,22 +893,11 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
         _optionSelectorView =({
             TTFeedDislikeOptionSelectorView *v = [TTFeedDislikeOptionSelectorView new];
             @weakify(self);
-            [v setSelectionFinished:^(TTFeedDislikeWord * _Nonnull keyword, TTFeedDislikeOptionType optionType) {
+            [v setSelectionFinished:^(FHFeedOperationWord * _Nonnull keyword, FHFeedOperationOptionType optionType) {
                 @strongify(self);
-                [self trackActionForKeyword:keyword optionType:optionType];
-                
-                if ([keyword conformsToProtocol:@protocol(TTFeedDislikeCommand)]) {
-                    [self dismiss:NO];
-                    [(id<TTFeedDislikeCommand>)keyword execute];
-                } else if ([keyword isKindOfClass:[TTFeedReportWord class]]) {
-                    [self reportingWithType:keyword.ID criticism:nil];
-                    [self finishSelectionAnimated:YES];
-                    if (self.didDislikeWithOptionBlock) self.didDislikeWithOptionBlock(self, optionType);
-                } else {
-                    self.selectdWord = keyword;
-                    [self finishSelectionAnimated:YES];
-                    if (self.didDislikeWithOptionBlock) self.didDislikeWithOptionBlock(self, optionType);
-                }
+                self.selectdWord = keyword;
+                [self finishSelectionAnimated:YES];
+                if (self.didDislikeWithOptionBlock) self.didDislikeWithOptionBlock(self, optionType);
             }];
             v;
         });
@@ -1153,8 +916,7 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
     self.viewModel = model;
     NSString *groupID = model.groupID;
     self.adLogExtra = model.logExtra;
-    self.dislikeFilterFlag = model.dislikeFilterFlag;
-    
+
     NSMutableDictionary<NSString *, NSString *> *commonTrackingParameters = self.commonTrackingParameters;
     commonTrackingParameters[@"position"] = @"list";
     commonTrackingParameters[@"group_id"] = groupID;
@@ -1168,52 +930,35 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
         [commonTrackingParameters addEntriesFromDictionary:model.trackExtraDict];
     }
     
-    NSArray *keywords;
+//    NSArray *keywords = model.keywords;
     
-    if (self.dislikeFilterFlag) {
-        keywords = [self keywordsWithFilterWords:model.keywords];
-    } else {
-        keywords = model.keywords;
-    }
-    
-    if (keywords != nil && keywords.count > 0) {
+//    if (keywords != nil && keywords.count > 0) {
         // 如果上次已选择过，使用上次的选择，理论上应该全量比较__lastDislikedWords和keywords，关键词完全一致才能使用之前缓存的
-        if ([__lastGroupID isEqualToString:groupID] && __lastDislikedWords.count == keywords.count) {
-            self.dislikeWords = __lastDislikedWords;
-        } else {
-            [self.dislikeWords removeAllObjects];
-            [__lastDislikedWords removeAllObjects];
-            
-            for (NSDictionary *dict in keywords) {
-                if ([dict isKindOfClass:[NSDictionary class]]) {
-                    TTFeedDislikeWord *word = [[TTFeedDislikeWord alloc] initWithDict:dict];
-                    [self.dislikeWords addObject:word];
-                }
-            }
-        }
-        
-        __lastGroupID = groupID;
-        
-        NSMutableArray<TTFeedDislikeWord *> *items = @[].mutableCopy;
-        [items addObjectsFromArray:self.dislikeWords];
-//        if (model.commnads) {
-//            [items addObjectsFromArray:model.commnads];
+//        if ([__lastGroupID isEqualToString:groupID] && __lastDislikedWords.count == keywords.count) {
+//            self.dislikeWords = __lastDislikedWords;
+//        } else {
+//            [self.dislikeWords removeAllObjects];
+//            [__lastDislikedWords removeAllObjects];
+
+//            for (NSDictionary *dict in keywords) {
+//                if ([dict isKindOfClass:[NSDictionary class]]) {
+//                    FHFeedOperationWord *word = [[FHFeedOperationWord alloc] initWithDict:dict];
+//                    [self.dislikeWords addObject:word];
+//                }
+//            }
 //        }
-        TTFeedDislikeWord *word = [[TTFeedDislikeWord alloc] init];
-        word.ID = @"7:";
-        word.name = @"test";
-        [items addObject:word];
-        
-        self.optionSelectorView.commonTrackingParameters = commonTrackingParameters;
-        [self.optionSelectorView refreshWithkeywords:items];
-    } else {
-        // 处理不感兴趣和取消关注
-        if (self.showUnFollowBtnFlag && self.unfollowWord) {
-            [self.optionSelectorView refreshWithkeywords:@[self.unfollowWord]];
-        } else {
-            [self.optionSelectorView refreshWithkeywords:@[]];
-        }
-    }
+//
+//        __lastGroupID = groupID;
+
+//        NSMutableArray<FHFeedOperationWord *> *items = @[].mutableCopy;
+//        [items addObjectsFromArray:self.dislikeWords];
+//    }
+    
+    
+    self.optionSelectorView.commonTrackingParameters = commonTrackingParameters;
+    
+    NSArray<FHFeedOperationWord *> *items = [TTFeedDislikeConfig operationWordList];
+    [self.optionSelectorView refreshWithkeywords:items];
 }
 
 - (void)modern_showAtPoint:(CGPoint)p
@@ -1311,6 +1056,20 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
 
 - (void)finishSelectionAnimated:(BOOL)animated {
     [self dismiss:animated];
+    
+    if(self.selectdWord.type == FHFeedOperationWordTypeReport){
+        //举报
+        NSString *reportType = nil;
+        if([self.selectdWord.ID containsString:@":"]){
+            NSUInteger index = [self.selectdWord.ID rangeOfString:@":"].location;
+            if(index < self.selectdWord.ID.length){
+                reportType = [self.selectdWord.ID substringFromIndex:([self.selectdWord.ID rangeOfString:@":"].location + 1)];
+            }
+        }
+        
+        [self reportingWithType:reportType criticism:nil];
+    }
+    
     if (self.didDislikeBlock) self.didDislikeBlock(self);
 }
 
@@ -1390,7 +1149,7 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
     if (isEmptyString(type) && isEmptyString(criticism) || isEmptyString(groupID)) return;
     
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
-    if (self.adLogExtra) extraDic[@"extra"] = self.adLogExtra;
+//    if (self.adLogExtra) extraDic[@"extra"] = self.adLogExtra;
     
     TTReportContentModel *model = [[TTReportContentModel alloc] init];
     model.groupID = groupID;
@@ -1401,39 +1160,6 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
     NSString *reportFrom = [NSString stringWithFormat:@"%@_cell", TTReportFromByEnterFromAndCategory(nil, categoryID)];
     
     [[TTReportManager shareInstance] startReportContentWithType:type inputText:criticism contentType:nil reportFrom:reportFrom contentModel:model extraDic:extraDic animated:NO];
-}
-
-- (void)trackActionForKeyword:(TTFeedDislikeWord *)keyword optionType:(TTFeedDislikeOptionType)optionType {
-    NSString *event = nil;
-    NSMutableDictionary  *parameters = [NSMutableDictionary dictionary];
-    switch (optionType) {
-        case TTFeedDislikeOptionTypeReport: {
-            event = @"rt_report";
-            parameters[@"reason"] = keyword.name;
-        }
-            break;
-        case TTFeedDislikeOptionTypeUninterest: {
-            event = @"rt_dislike";
-            parameters[@"dislike_type"]  = @"no_interest";
-        }
-            break;
-        case TTFeedDislikeOptionTypeSource: {
-            event = @"rt_dislike";
-            parameters[@"dislike_type"]  = @"block";
-            parameters[@"filter_words"] = keyword.ID;
-        }
-            break;
-        case TTFeedDislikeOptionTypeShield: {
-            event = @"rt_dislike";
-            parameters[@"dislike_type"]  = @"shielding";
-            parameters[@"filter_words"] = keyword.ID;
-        }
-            break;
-    }
-    
-    if (event) {
-        [self trackEvent:event extraParameters:parameters];
-    }
 }
 
 - (void)trackEvent:(NSString *)event extraParameters:(NSDictionary *)extraParameters {

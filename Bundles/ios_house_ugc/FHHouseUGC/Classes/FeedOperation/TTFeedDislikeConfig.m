@@ -6,6 +6,7 @@
 //
 
 #import "TTFeedDislikeConfig.h"
+#import "TTReportManager.h"
 
 static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_options";
 @implementation TTFeedDislikeConfig
@@ -38,6 +39,61 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
         return dict;
     }
     return nil;
+}
+
++ (NSArray *)operationList {
+    NSArray *operationList = @[
+                               @{
+                                   @"id": @"1",
+                                   @"title": @"举报",
+                                   @"subTitle": @"广告、低俗、重复、过时",
+                                   },
+                               @{
+                                   @"id": @"2",
+                                   @"title": @"删除"
+                                   }
+                               ];
+    return operationList;
+}
+
++ (NSArray<FHFeedOperationWord *> *)operationWordList {
+    NSMutableArray<FHFeedOperationWord *> *items = @[].mutableCopy;
+    
+    NSArray *operationList = [self operationList];
+    
+    for (NSDictionary *dict in operationList) {
+        if ([dict isKindOfClass:[NSDictionary class]]) {
+            FHFeedOperationWord *word = [[FHFeedOperationWord alloc] initWithDict:dict];
+            
+            if(word.type == FHFeedOperationWordTypeReport){
+                word.items = [self fetchReportOptions:word.ID];
+            }else{
+                word.items = @[word];
+            }
+            [items addObject:word];
+            
+        }
+    }
+    return items;
+}
+
++ (NSArray *)fetchReportOptions:(NSString *)reportId {
+    NSArray *options = [TTReportManager fetchReportArticleOptions];
+    
+    NSMutableArray<FHFeedOperationWord *> *items = [NSMutableArray array];
+    for (NSDictionary *option in options) {
+        if ([option isKindOfClass:[NSDictionary class]]) {
+            NSInteger type = [option[@"type"] integerValue];
+            if(type != 0){
+                FHFeedOperationWord *word = [[FHFeedOperationWord alloc] init];
+                word.ID = [NSString stringWithFormat:@"%@:%@",reportId,option[@"type"]];
+                word.title = option[@"text"];
+                [items addObject:word];
+            }
+        }
+    }
+    
+    return items;
 }
 
 @end

@@ -7,7 +7,7 @@
 
 #import "TTFeedPopupView.h"
 #import "TTFeedDislikeConfig.h"
-#import "TTFeedDislikeOption.h"
+#import "FHFeedOperationOption.h"
 
 //NS_ASSUME_NONNULL_BEGIN
 //
@@ -20,11 +20,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FHFeedOperationView;
-@class TTFeedDislikeWord;
+@class FHFeedOperationWord;
 
 typedef void (^TTFeedDislikeBlock)(FHFeedOperationView * view);
-typedef void (^TTFeedDislikeOptionBlock)(FHFeedOperationView * view, TTFeedDislikeOptionType dislikeType);
-typedef void (^TTFeedDislikeCommandBlock)(TTFeedDislikeWord *word);
+typedef void (^TTFeedDislikeOptionBlock)(FHFeedOperationView * view, FHFeedOperationOptionType dislikeType);
+typedef void (^TTFeedDislikeCommandBlock)(FHFeedOperationWord *word);
 
 typedef NS_ENUM(NSInteger, TTFeedDislikeViewPushFrom) {
     TTFeedDislikeViewPushFromRight,
@@ -49,12 +49,13 @@ typedef NS_ENUM(NSInteger, TTFeedDislikeViewPushFrom) {
 @property (nonatomic, strong, nullable) NSDictionary *extrasDict;
 @property (nonatomic, strong, nullable) NSDictionary *trackExtraDict; // 埋点透传字段(modern模式使用)
 @property (nonatomic, assign)           BOOL dislikeFilterFlag;  //https://wiki.bytedance.net/pages/viewpage.action?pageId=175543655
-@property (nonatomic, copy) NSArray<id<TTFeedDislikeCommand>> *commnads;
 @end
 
 //------------------------------------------------------------------
 
 @interface FHFeedOperationView : TTFeedPopupView
+
+@property (nonatomic, strong) FHFeedOperationWord *selectdWord;
 
 - (void)refreshWithModel:(nullable FHFeedOperationViewModel *)model;
 

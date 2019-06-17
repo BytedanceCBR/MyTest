@@ -13,12 +13,14 @@
 #import "UIImage+TTThemeExtension.h"
 #import "TTFeedDislikeConfig.h"
 #import "FHFeedOperationView.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
 
 NSString *const FeedDislikeNeedReportNotification = @"FeedDislikeNeedReportNotification";
 
 @interface TTFeedDislikeKeywordSelectorView ()
 
-@property (nonatomic, strong) TTFeedDislikeOption *option;
+@property (nonatomic, strong) FHFeedOperationOption *option;
 @property (nonatomic, strong) NSDictionary *textStrings;
 
 @property (nonatomic, strong) SSThemedView *backgroundView;
@@ -40,17 +42,19 @@ NSString *const FeedDislikeNeedReportNotification = @"FeedDislikeNeedReportNotif
         
         _backgroundView = ({
             SSThemedView *v = [[SSThemedView alloc] init];
-            v.backgroundColorThemeKey = kColorBackground4;
+            v.backgroundColor = [UIColor whiteColor];
             v;
         });
         [self addSubview:_backgroundView];
         
         _backButton = ({
-            SSThemedButton *v = [SSThemedButton buttonWithType:UIButtonTypeSystem];
+            UIButton *v = [[UIButton alloc] init];
             [v setTitle:@"返回" forState:UIControlStateNormal];
-            [v setImage:[UIImage themedImageNamed:@"feed_dislike_arrow_left" inBundle:FHFeedOperationView.resourceBundle] forState:UIControlStateNormal];
-            v.tintColorThemeKey = kColorText1;
-            v.titleLabel.font = [UIFont systemFontOfSize:16.0];
+            [v setImage:[UIImage imageNamed:@"fh_ugc_arrow_left"] forState:UIControlStateNormal];
+            [v setTitleColor:[UIColor themeGray3]  forState:UIControlStateNormal];
+            v.titleLabel.font = [UIFont themeFontRegular:16];
+            [v setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+            [v setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
             [v addTarget:self action:@selector(onBackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             v;
         });
@@ -58,8 +62,8 @@ NSString *const FeedDislikeNeedReportNotification = @"FeedDislikeNeedReportNotif
         
         _titleLabel = ({
             SSThemedLabel *v = [SSThemedLabel new];
-            v.font = [UIFont systemFontOfSize:16.0];
-            v.textColorThemeKey = kColorText1;
+            v.font = [UIFont themeFontRegular:16.0];
+            v.textColor = [UIColor themeGray1];
             v.accessibilityTraits = UIAccessibilityTraitHeader;
             v;
         });
@@ -67,7 +71,7 @@ NSString *const FeedDislikeNeedReportNotification = @"FeedDislikeNeedReportNotif
         
         _topSepartor = ({
             SSThemedView *v = [SSThemedView new];
-            v.backgroundColorThemeKey = kColorLine1;
+            v.backgroundColor = [UIColor themeGray6];
             v;
         });
         [self addSubview:_topSepartor];
@@ -80,19 +84,16 @@ NSString *const FeedDislikeNeedReportNotification = @"FeedDislikeNeedReportNotif
     return  self;
 }
 
-- (void)refreshWithOption:(TTFeedDislikeOption *)option {
+- (void)refreshWithOption:(FHFeedOperationOption *)option {
     self.option = option;
     self.titleLabel.text = [self titleStrForOptionType:option.type];
-    for (TTFeedDislikeWord *kw in option.words) {
+    for (FHFeedOperationWord *kw in option.words) {
         SSThemedButton *b = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         [b addTarget:self action:@selector(onKeywordButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        NSString *name = kw.name;
-        if (option.type == TTFeedDislikeOptionTypeShield) {
-            name = [self replacePrefixStrForShieldTypeKeywordName:name];
-        }
+        NSString *name = kw.title;
         [b setTitle:name forState:UIControlStateNormal];
-        b.titleLabel.font = [UIFont systemFontOfSize:16.0];
-        b.titleColorThemeKey = kColorText1;
+        b.titleLabel.font = [UIFont themeFontRegular:16.0];
+        [b setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
         b.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         b.contentEdgeInsets = UIEdgeInsetsMake(0.0, 16.0, 0.0, 0.0);
         [self addSubview:b];
@@ -101,18 +102,7 @@ NSString *const FeedDislikeNeedReportNotification = @"FeedDislikeNeedReportNotif
     [self setNeedsLayout];
 }
 
-- (NSString *)replacePrefixStrForShieldTypeKeywordName:(NSString *)name {
-    NSString *header = @"不想看:";
-    NSRange r = [name rangeOfString:header];
-    if (r.location == 0) {
-        name = [name stringByReplacingCharactersInRange:r withString:[NSString stringWithFormat:@"%@:", self.textStrings[@"new_dislike_nosee_pre"]]];
-    }
-    return name;
-}
-
-- (NSString *)titleStrForOptionType:(TTFeedDislikeOptionType)type {
-    if (type == TTFeedDislikeOptionTypeFeedback) return @"反馈";
-    if (type == TTFeedDislikeOptionTypeShield) return self.textStrings[@"new_dislike_nosee_title"];
+- (NSString *)titleStrForOptionType:(FHFeedOperationOptionType)type {
     return  @"选择";
 }
 
@@ -124,14 +114,15 @@ NSString *const FeedDislikeNeedReportNotification = @"FeedDislikeNeedReportNotif
     }];
     [self.tempViews removeAllObjects];
     
-    CGFloat padding = 15.0;
-    CGFloat offsetTop = padding;
+    CGFloat padding = 20.0;
+    CGFloat offsetTop = 14.0;
     
     self.backgroundView.frame = self.bounds;
     
     [self.titleLabel sizeToFit];
     self.titleLabel.top = offsetTop;
     self.titleLabel.centerX = self.width / 2.0;
+    self.titleLabel.height = 22.0;
     offsetTop = self.titleLabel.bottom;
     
     [self.backButton sizeToFit];
@@ -139,7 +130,7 @@ NSString *const FeedDislikeNeedReportNotification = @"FeedDislikeNeedReportNotif
     self.backButton.left = padding;
     
     self.topSepartor.size = CGSizeMake(self.width, [TTDeviceHelper ssOnePixel]);
-    self.topSepartor.top = offsetTop + 16.0;
+    self.topSepartor.top = self.titleLabel.bottom + 14.0;
     self.topSepartor.left = 0.0;
     offsetTop = self.topSepartor.bottom;
 
@@ -150,10 +141,10 @@ NSString *const FeedDislikeNeedReportNotification = @"FeedDislikeNeedReportNotif
         
         offsetTop = b.bottom;
 
-        if (b != self.keywordButtons.lastObject || self.option.type == TTFeedDislikeOptionTypeShield) {
+        if (b != self.keywordButtons.lastObject) {
             UIView *separator = ({
                 SSThemedView *v = [SSThemedView new];
-                v.backgroundColorThemeKey = kColorLine1;
+                v.backgroundColor = [UIColor themeGray6];
                 v;
             });
             [self addSubview:separator];
@@ -166,31 +157,31 @@ NSString *const FeedDislikeNeedReportNotification = @"FeedDislikeNeedReportNotif
         }
     }
     
-    if (self.option.type == TTFeedDislikeOptionTypeShield) {
-        SSThemedButton *reportBTN = ({
-            SSThemedButton *b = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-            [b addTarget:self action:@selector(onReportButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-            [b setImage:[UIImage themedImageNamed:@"write_new" inBundle:FHFeedOperationView.resourceBundle] forState:UIControlStateNormal];
-            [b setTitle:@"我要吐槽" forState:UIControlStateNormal];
-            b.titleLabel.font = [UIFont systemFontOfSize:16.0];
-            b.titleColorThemeKey = kColorText1;
-            b.tintColorThemeKey = kColorText1;
-            b.backgroundColorThemeKey = kColorBackground3;
-            b.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-            b.contentEdgeInsets = UIEdgeInsetsMake(0.0, 6.0, 0.0, 0.0);
-            b.layer.cornerRadius = 16.0;
-            b.layer.borderWidth = 0.5;
-            b.borderColorThemeKey = kColorLine1;
-            b;
-        });
-        [self.tempViews addObject:reportBTN];
-        [self addSubview:reportBTN];
-        reportBTN.width = self.width - 2 * padding;
-        reportBTN.height = 32.0;
-        reportBTN.top = offsetTop + 6.5;
-        reportBTN.left = padding;
-        offsetTop = reportBTN.bottom + 7.5;
-    }
+//    if (self.option.type == FHFeedOperationOptionTypeReport) {
+//        SSThemedButton *reportBTN = ({
+//            SSThemedButton *b = [SSThemedButton buttonWithType:UIButtonTypeCustom];
+//            [b addTarget:self action:@selector(onReportButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+//            [b setImage:[UIImage themedImageNamed:@"write_new" inBundle:FHFeedOperationView.resourceBundle] forState:UIControlStateNormal];
+//            [b setTitle:@"我要吐槽" forState:UIControlStateNormal];
+//            b.titleLabel.font = [UIFont systemFontOfSize:16.0];
+//            b.titleColorThemeKey = kColorText1;
+//            b.tintColorThemeKey = kColorText1;
+//            b.backgroundColorThemeKey = kColorBackground3;
+//            b.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+//            b.contentEdgeInsets = UIEdgeInsetsMake(0.0, 6.0, 0.0, 0.0);
+//            b.layer.cornerRadius = 16.0;
+//            b.layer.borderWidth = 0.5;
+//            b.borderColorThemeKey = kColorLine1;
+//            b;
+//        });
+//        [self.tempViews addObject:reportBTN];
+//        [self addSubview:reportBTN];
+//        reportBTN.width = self.width - 2 * padding;
+//        reportBTN.height = 32.0;
+//        reportBTN.top = offsetTop + 6.5;
+//        reportBTN.left = padding;
+//        offsetTop = reportBTN.bottom + 7.5;
+//    }
     
     self.contentSizeInPopup = CGSizeMake(self.width, offsetTop);
 }

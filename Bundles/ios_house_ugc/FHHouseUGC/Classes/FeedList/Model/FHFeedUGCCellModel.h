@@ -63,6 +63,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) UITableView *tableView;
 //感兴趣的小区
 @property (nonatomic, strong , nullable) NSMutableArray *interestNeighbourhoodList;
+//唯一Id
+@property (nonatomic, copy , nullable) NSString *groupId;
+//频道Id
+@property (nonatomic, copy , nullable) NSString *categoryId;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 
