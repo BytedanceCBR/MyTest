@@ -301,6 +301,10 @@
     [self.homeViewController.scrollView setContentSize:CGSizeMake(KFHScreenWidth * configDataModel.houseTypeList.count, self.homeViewController.scrollView.frame.size.height)];
     NSInteger currentSelectIndex = self.categoryView.segmentedControl.selectedSegmentIndex;
     [self setUpSubtableIndex:currentSelectIndex];
+    
+    if (![FHEnvContext isNetworkConnected]) {
+        self.homeViewController.scrollView.scrollEnabled = NO;
+    }
 }
 
 - (void)setUpSubtableIndex:(NSInteger)index
@@ -316,6 +320,10 @@
 {
     [self.tableViewV finishPullDownWithSuccess:YES];
     [self.tableViewV finishPullUpWithSuccess:YES];
+    
+    if (isSuccess) {
+        self.homeViewController.scrollView.scrollEnabled = YES;
+    }
     
     if (isSuccess && !self.hasShowedData) {
         self.hasShowedData = YES;

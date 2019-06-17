@@ -81,6 +81,7 @@ static const NSInteger kTopScrollViewTag = 100;
     
     _topStyleContainer = [[UIView alloc] initWithFrame:self.frame];
     [_topStyleContainer setBackgroundColor:[UIColor whiteColor]];
+    _topStyleContainer.hidden = YES; 
     [self addSubview:_topStyleContainer];
     
 }
