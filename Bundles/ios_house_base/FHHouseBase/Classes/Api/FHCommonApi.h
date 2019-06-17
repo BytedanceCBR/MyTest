@@ -31,6 +31,14 @@ typedef enum FHDetailDiggType{
 
 @end
 
+// 当需要返回的数据只是 status & message
+@interface  FHCommonModel  : JSONModel <FHBaseModelProtocol>
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+
+@end
+
 @class TTHttpTask;
 
 @interface FHCommonApi : NSObject

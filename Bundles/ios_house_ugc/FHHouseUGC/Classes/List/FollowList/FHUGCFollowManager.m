@@ -43,4 +43,29 @@
     }];
 }
 
+// 关注 & 取消关注 follow ：YES为关注 NO为取消关注
+- (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow {
+    NSInteger action = 1;
+    if (follow) {
+        action = 1;
+    } else {
+        action = 0;
+    }
+    [FHHouseUGCAPI requestFollow:social_group_id action:action completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        if (model && error == nil) {
+            // 请求成功
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSMutableDictionary *dict = [NSMutableDictionary new];
+                dict[@"social_group_id"] = social_group_id;
+                // 是否成功？？
+                [dict setValue:@"1" forKey:@"status"];
+                [dict setValue:@"message" forKey:@"message"];
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFollowNotification object:nil userInfo:dict];
+            });
+        }
+    }];
+  
+}
+
 @end

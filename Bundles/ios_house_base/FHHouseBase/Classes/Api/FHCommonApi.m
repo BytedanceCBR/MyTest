@@ -36,3 +36,12 @@
 }
 
 @end
+
+@implementation FHCommonModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
