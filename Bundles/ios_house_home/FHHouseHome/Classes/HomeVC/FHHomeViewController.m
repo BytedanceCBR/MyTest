@@ -312,10 +312,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 
     [self scrollToTopEnable:YES];
     
-    
     self.homeListViewModel.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
     
-    NSLog(@"y = %f",self.mainTableView.contentOffset.y);
     if (self.mainTableView.contentOffset.y > [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType]) {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
     }
@@ -324,6 +322,10 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    if(_isMainTabVC)
+    {
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
