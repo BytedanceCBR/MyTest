@@ -305,7 +305,9 @@
 
 - (void)setUpSubtableIndex:(NSInteger)index
 {
-    [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
+    if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+        [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
+    }
     self.homeViewController.scrollView.contentOffset = CGPointMake(KFHScreenWidth * index, 0);
     [self uploadFirstScreenHouseShow:self.categoryView.segmentedControl.selectedSegmentIndex andEnterType:@"switch"];
 }
@@ -326,7 +328,9 @@
             [self.homeViewController showNotify:houseData.data.refreshTip];
             [self setUpTableScrollOffsetZero];
         }
-        [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
+        if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+            [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
+        }
     }
     [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
     [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
@@ -681,7 +685,9 @@
             if ([[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList.count > scrollIndex) {
                 if ([[[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList[scrollIndex] respondsToSelector:@selector(integerValue)]) {
                     self.houseType = [[[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList[scrollIndex] integerValue];
-                    [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
+                    if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+                        [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
+                    }
                     self.categoryView.segmentedControl.selectedSegmentIndex = scrollIndex;
                 }
             }
