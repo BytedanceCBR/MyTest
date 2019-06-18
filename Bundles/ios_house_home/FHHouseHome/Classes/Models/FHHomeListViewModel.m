@@ -99,11 +99,12 @@
         // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
             StrongSelf;
+            
+            if (self.reloadType == TTReloadTypeTab) {
+                [self setUpTableScrollOffsetZero];
+            }
+            
             if (![FHEnvContext isNetworkConnected]) {
-                
-                if (self.reloadType == TTReloadTypeTab) {
-                    [self setUpTableScrollOffsetZero];
-                }
                 
                 [[ToastManager manager] showToast:@"网络异常"];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -114,6 +115,7 @@
                 return ;
             }
             
+          
             if (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                 [self requestOriginData:self.isFirstChange isShowPlaceHolder:[FHEnvContext sharedInstance].isRefreshFromCitySwitch];
             }
