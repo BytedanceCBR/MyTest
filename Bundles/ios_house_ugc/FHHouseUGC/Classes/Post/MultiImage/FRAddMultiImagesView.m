@@ -29,8 +29,8 @@
 #import "SDImageCache.h"
 
 #define NumberOfImagesPerRow 3
-#define ImagesInterval 3.f
-#define kImageHeightInterval 3.f
+#define ImagesInterval 4.f
+#define kImageHeightInterval 4.f
 
 @interface FRAddMultiImagesView() <FRPostAssetViewColumnDelegate, UIActionSheetDelegate,TTImagePickerControllerDelegate,TTImagePreviewViewControllerDelegate>
 {
@@ -150,6 +150,8 @@
 
 - (void)appendAssetViewColumnByImage:(UIImage *)image task:(TTUGCImageCompressTask *)task {
     FRPostAssetViewColumn * assetViewColumn = [[FRPostAssetViewColumn alloc] initWithFrame:self.addImagesButton.frame];
+    assetViewColumn.layer.cornerRadius = 4;
+    assetViewColumn.clipsToBounds = YES;
     assetViewColumn.modeChangeActionType = ModeChangeActionTypeMask;
     
     if (image) {
