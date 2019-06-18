@@ -246,6 +246,11 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
 @property (nonatomic, readwrite) UIEdgeInsets selectionIndicatorEdgeInsets;
 
 /**
+ 设置indicator为图片。需要同时设置width和height才能生效
+ */
+@property (nonatomic, readwrite) UIImage *selectionIndicatorImage;
+
+/**
  Inset left and right edges of segments.
  
  Default is UIEdgeInsetsMake(0, 5, 0, 5)
