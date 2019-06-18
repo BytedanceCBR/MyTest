@@ -7,6 +7,7 @@
 
 #import "FHBaseViewController.h"
 #import "FHHouseUGCHeader.h"
+#import <CoreLocation/CoreLocation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL tableViewNeedPullDown;
 //发布按钮距离底部的高度,默认为0
 @property(nonatomic, assign) CGFloat publishBtnBottomHeight;
+//当前定位的位置
+@property(nonatomic, strong) CLLocation *currentLocaton;
 
 @property(nonatomic, weak) id<UIScrollViewDelegate> scrollViewDelegate;
 - (void)showNotify:(NSString *)message;
