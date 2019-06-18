@@ -40,6 +40,7 @@
 #import "TTCommentWriteView.h"
 #import "ExploreItemActionManager.h"
 #import "FHPostDetailCommentWriteView.h"
+#import "FHCommonApi.h"
 
 @interface FHCommentDetailViewController ()<UIScrollViewDelegate>
 
@@ -63,7 +64,10 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-
+        self.beginShowComment = NO;
+        if(paramObj.allParams[@"begin_show_comment"]) {
+            self.beginShowComment = [paramObj.allParams[@"begin_show_comment"] boolValue];
+        }
     }
     return self;
 }
@@ -113,7 +117,6 @@
     }
     self.hasLoadedComment = NO;
     self.topTableViewContentHeight = 0;
-    self.beginShowComment = NO;
 }
 
 - (void)setupUI {
@@ -342,18 +345,27 @@
     if (!self.itemActionManager) {
         self.itemActionManager = [[ExploreItemActionManager alloc] init];
     }
-    Article *article = [[Article alloc] init];
-    article.groupType = TTCommentsGroupTypeArticle;
-    article.uniqueID = [self.groupModel.groupID longLongValue];
-    article.itemID = self.groupModel.itemID;
-    article.aggrType = @(self.groupModel.aggrType);
+//    Article *article = [[Article alloc] init];
+//    article.groupType = TTCommentsGroupTypeArticle;// add by zyk 是否要修改为帖子类型
+//    article.uniqueID = [self.groupModel.groupID longLongValue];
+//    article.itemID = self.groupModel.itemID;
+//    article.aggrType = @(self.groupModel.aggrType);
+//
+//    [self.itemActionManager sendActionForOriginalData:article adID:nil actionType:(self.user_digg == 1) ? DetailActionTypeLike: DetailActionTypeUnlike finishBlock:nil];
     
-    [self.itemActionManager sendActionForOriginalData:article adID:nil actionType:(self.user_digg == 1) ? DetailActionTypeLike: DetailActionTypeUnlike finishBlock:nil];
+    [FHCommonApi requestCommonDigg:self.groupModel.groupID groupType:FHDetailDiggTypeTHREAD action:self.user_digg completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        NSLog(@"%@",model);
+    }];
+    
     [self p_refreshToolbarView];
 }
 
 - (void)p_willShowSharePannel {
     
+}
+
+- (void)refreshToolbarView {
+    [self p_refreshToolbarView];
 }
 
 - (void)p_refreshToolbarView

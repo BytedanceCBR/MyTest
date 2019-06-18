@@ -13,6 +13,8 @@
 #import <UIScrollView+Refresh.h>
 #import "FHFeedUGCCellModel.h"
 #import "Article.h"
+#import "TTBaseMacro.h"
+#import "TTStringHelper.h"
 
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
@@ -148,10 +150,14 @@
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFakeData];
         cellModel.tableView = self.tableView;
         [resultArray addObject:cellModel];
+
+        [resultArray addObject:[FHFeedUGCCellModel modelFromFakeData2]];
     }
     for (FHFeedListDataModel *itemModel in feedList) {
         NSString *content = itemModel.content;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
+        cellModel.categoryId = self.categoryId;
+        cellModel.feedVC = self.viewController;
         if(cellModel){
             [resultArray addObject:cellModel];
         }
@@ -204,12 +210,39 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    [self jumpToPostDetail:cellModel];
+    self.currentCellModel = cellModel;
+    self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
+    [self jumpToDetail:cellModel];
 }
 
-- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel {
+- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel {
+    if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle){
+        BOOL canOpenURL = NO;
+        if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
+            NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
+            if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                canOpenURL = YES;
+                [[UIApplication sharedApplication] openURL:url];
+            }
+            else if([[TTRoute sharedRoute] canOpenURL:url]){
+                canOpenURL = YES;
+                //问答
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            }
+        }else{
+            //文章
+            NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        }
+    }else if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeUGC){
+        [self jumpToPostDetail:cellModel showComment:NO];
+    }
+}
+
+- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment {
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"data"] = cellModel;
+    dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     FHFeedUGCContentModel *contentModel = cellModel.originData;
     NSString *routeUrl = @"sslocal://ugc_post_detail";
@@ -222,9 +255,9 @@
         routeUrl = [NSString stringWithFormat:@"%@&comment_count=%@&digg_count=%@&user_digg=%@",routeUrl,contentModel.commentCount,contentModel.diggCount,contentModel.userDigg];
     }
     
-//    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_community_detail"];
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    self.needRefreshCell = YES;
 }
 
 #pragma mark - FHUGCBaseCellDelegate
@@ -236,6 +269,10 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
     }
+}
+
+- (void)commentClicked:(FHFeedUGCCellModel *)cellModel {
+    [self jumpToPostDetail:cellModel showComment:YES];
 }
 
 @end

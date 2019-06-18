@@ -22,6 +22,7 @@
 @property(nonatomic ,strong) UIView *bottomSepView;
 @property(nonatomic ,assign) CGFloat imageWidth;
 @property(nonatomic ,assign) CGFloat imageHeight;
+@property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 @end
 
@@ -61,6 +62,10 @@
     [self.contentView addSubview:_imageViewContainer];
     
     self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectZero];
+    __weak typeof(self) wself = self;
+    _bottomView.deleteCellBlock = ^{
+        [wself deleteCell];
+    };
     [self.contentView addSubview:_bottomView];
     
     self.bottomSepView = [[UIView alloc] init];
@@ -100,6 +105,7 @@
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.imageViewContainer.mas_bottom).offset(10);
         make.left.right.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(24);
     }];
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -132,30 +138,13 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if([data isKindOfClass:[FHFeedContentModel class]]){
-        FHFeedContentModel *model = (FHFeedContentModel *)data;
-        //内容
-        self.contentLabel.text = model.title;
-        self.bottomView.descLabel.text = @"信息来源";
-        
-        NSArray *imageList = model.imageList;
-        for (NSInteger i = 0; i < self.imageViewList.count; i++) {
-            UIImageView *imageView = self.imageViewList[i];
-            if(i < imageList.count){
-                FHFeedContentImageListModel *imageModel = imageList[i];
-                imageView.hidden = NO;
-                [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
-            }else{
-                imageView.hidden = YES;
-            }
-        }
-    }
-    
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        self.cellModel= cellModel;
         //内容
         self.contentLabel.text = cellModel.title;
         self.bottomView.descLabel.attributedText = cellModel.desc;
+        self.bottomView.position.text = @"左家庄";
         //图片
         NSArray *imageList = cellModel.imageList;
         for (NSInteger i = 0; i < self.imageViewList.count; i++) {
@@ -168,6 +157,12 @@
                 imageView.hidden = YES;
             }
         }
+    }
+}
+
+- (void)deleteCell {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
+        [self.delegate deleteCell:self.cellModel];
     }
 }
 

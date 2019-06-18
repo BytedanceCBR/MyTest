@@ -913,11 +913,11 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
             indicator.showDismissButton = NO;
             indicator.autoDismiss = NO;
             [indicator showFromParentView:window];
-            [[TTLocationManager sharedManager] regeocodeWithCompletionHandler:^(NSArray *placemarks) {
-                [self.tableView reloadData];
-                [indicator dismissFromParentView];
-                [pickerViewController.navigationController popViewControllerAnimated:YES];
-            }];
+//            [[TTLocationManager sharedManager] regeocodeWithCompletionHandler:^(NSArray *placemarks) {
+//                [self.tableView reloadData];
+//                [indicator dismissFromParentView];
+//                [pickerViewController.navigationController popViewControllerAnimated:YES];
+//            }];
         } else {
             [pickerViewController.navigationController popViewControllerAnimated:YES];
         }

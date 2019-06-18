@@ -9,7 +9,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHPostUGCMainView : UIView
+// 选择小区 类名懒得改了
+@interface FHPostUGCMainView : UIControl
+
+@property (nonatomic, copy)     NSString       *communityName;// 小区名称
 
 @end
 

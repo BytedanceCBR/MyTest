@@ -287,7 +287,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)changeNavbarAppear:(BOOL)show
 {
-    [self.viewController showNavTopViews:show?1:0 animated:YES];
+    BOOL hideLocation = (self.showMode == FHMapSearchShowModeSubway || self.lastShowMode == FHMapSearchShowModeSubway);
+    [self.viewController showNavTopViews:show?1:0 animated:YES hideLocation:hideLocation];
 }
 
 -(void)changeNavbarAlpha:(BOOL)animated
@@ -298,7 +299,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }else if (alpha > 1){
         alpha = 1;
     }
-    [self.viewController showNavTopViews:alpha animated:animated];
+    BOOL hideLocation = (self.showMode == FHMapSearchShowModeSubway || self.lastShowMode == FHMapSearchShowModeSubway);
+    [self.viewController showNavTopViews:alpha animated:animated hideLocation:hideLocation];
     
 }
 
@@ -339,10 +341,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         __weak typeof(self) wself = self;
         _houseListViewController.willSwipeDownDismiss = ^(CGFloat duration , FHMapSearchBubbleModel *fromBubble) {
             if (wself) {
-                if (wself.lastShowMode == FHMapSearchShowModeDrawLine || wself.lastShowMode == FHMapSearchShowModeSubway) {
-                    if (wself.lastShowMode == FHMapSearchShowModeDrawLine) {
-                        [wself changeNavbarAppear:NO];
-                    }
+                if (wself.lastShowMode == FHMapSearchShowModeDrawLine ) {
+                    
+                    [wself changeNavbarAppear:NO];
+                    
                     wself.showMode = wself.lastShowMode;
                     //恢复筛选器
                     if (wself.resetConditionBlock && wself.filterParam) {
@@ -387,6 +389,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [wself changeNavbarAppear:YES];
             wself.showMode = FHMapSearchShowModeHouseList;
             [wself.viewController switchNavbarMode:FHMapSearchShowModeHouseList];
+            if (wself.lastShowMode == FHMapSearchShowModeDrawLine ) {
+                
+                if (wself.resetConditionBlock && wself.filterParam) {
+                    wself.resetConditionBlock(wself.filterParam);
+                }
+                
+            }
         };
         _houseListViewController.moveDock = ^{
             wself.showMode = FHMapSearchShowModeHalfHouseList;
@@ -395,7 +404,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             if (nid.length > 0) {
                 wself.selectedAnnotations[nid] = nid;
             }
-            if (wself.lastShowMode != FHMapSearchShowModeDrawLine && wself.lastShowMode != FHMapSearchShowModeSubway) {
+            if (wself.lastShowMode != FHMapSearchShowModeDrawLine) {
                 [wself checkNeedRequest];
             }
         };
@@ -1133,7 +1142,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         //画圈找房 不做处理
     }else{
         //强制显示导航栏，增加保护
-        [self.viewController showNavTopViews:1 animated:NO];        
+        [self.viewController showNavTopViews:1 animated:NO hideLocation:NO];
     }    
 }
 
@@ -1248,7 +1257,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)onConditionChanged:(NSString *)condition
 {
     BOOL mapViewFilterShouldChange = NO;
-    if (!(self.showMode == FHMapSearchShowModeHouseList && (self.lastShowMode == FHMapSearchShowModeDrawLine || self.lastShowMode == FHMapSearchShowModeSubway))) {
+    if (!(self.showMode == FHMapSearchShowModeHouseList && (self.lastShowMode == FHMapSearchShowModeDrawLine))) {
         //在非画圈找房进入列表页时才更新
         mapViewFilterShouldChange = YES;
     }

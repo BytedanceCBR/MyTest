@@ -10,6 +10,8 @@
 #import "FHFeedUGCContentModel.h"
 #import "FHHouseUGCHeader.h"
 
+@class FHCommunityFeedListController;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFeedUGCCellImageListUrlListModel : NSObject
@@ -30,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *userId;
 
 @end
 
@@ -49,6 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 //帖子相关
 @property (nonatomic, strong , nullable) FHFeedUGCCellUserModel *user ;
 @property (nonatomic, copy , nullable) NSString *diggCount;
+@property (nonatomic, copy , nullable) NSString *userDigg;
 @property (nonatomic, copy , nullable) NSString *commentCount;
 @property (nonatomic, copy , nullable) NSString *contentRichSpan;
 @property (nonatomic, copy , nullable) NSString *content;
@@ -61,14 +65,22 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) id originData;
 //tableview
 @property (nonatomic, weak) UITableView *tableView;
+//feedVC
+@property (nonatomic, weak) FHCommunityFeedListController *feedVC;
 //感兴趣的小区
 @property (nonatomic, strong , nullable) NSMutableArray *interestNeighbourhoodList;
+//唯一Id
+@property (nonatomic, copy , nullable) NSString *groupId;
+//频道Id
+@property (nonatomic, copy , nullable) NSString *categoryId;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 
-+ (FHFeedUGCCellModel *)modelFromFakeData;
-
 + (FHFeedUGCCellModel *)modelFromFeedUGCContent:(FHFeedUGCContentModel *)model;
+
+//临时假数据
++ (FHFeedUGCCellModel *)modelFromFakeData;
++ (FHFeedUGCCellModel *)modelFromFakeData2;
 
 @end
 

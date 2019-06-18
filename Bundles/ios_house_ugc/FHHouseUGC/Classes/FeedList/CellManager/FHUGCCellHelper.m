@@ -23,9 +23,11 @@
     }
     NSMutableAttributedString * truncationString = [[NSMutableAttributedString alloc] initWithString:moreStr attributes:attrDic];
     // TODO 其实这里使用了错误的方式来修复点击无效的 bug，暂且如此
-    [truncationString addAttribute:NSLinkAttributeName  // 修复点击问题的bug 强制加一个无用action
-                             value:[NSURL URLWithString:linkUrl ?: @"www.bytedance.contentTruncationLinkURLString"]
-                             range:NSMakeRange(0, moreStr.length)];
+    if(linkUrl){
+        [truncationString addAttribute:NSLinkAttributeName  // 修复点击问题的bug 强制加一个无用action
+                                 value:[NSURL URLWithString:linkUrl ?: @"www.bytedance.contentTruncationLinkURLString"]
+                                 range:NSMakeRange(0, moreStr.length)];
+    }
     if (contentColor) {
         [truncationString addAttribute:NSForegroundColorAttributeName value:contentColor range:NSMakeRange(0, @"...".length)];
     }
@@ -62,7 +64,7 @@
                 label.attributedTruncationToken = [FHUGCCellHelper truncationFont:[attributes objectForKey:NSFontAttributeName]
                                                                  contentColor:attributes[NSForegroundColorAttributeName]
                                                                         color:[UIColor themeRed3]
-                                                                      linkUrl:@"www.bytedance.contentTruncationLinkURLString"];
+                                                                      linkUrl:nil];
             }
         }
     }

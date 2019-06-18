@@ -12,4 +12,7 @@
 - (instancetype)initWithController:(FHCommunityDetailViewController *)viewController;
 
 - (void)requestData:(BOOL) refreshFeed;
+
+- (void)viewWillAppear;
+
 @end

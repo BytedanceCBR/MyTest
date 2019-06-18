@@ -30,6 +30,11 @@
     [self initViewModel];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.viewModel viewWillAppear];
+}
+
 - (void)initView {
     [self setupDefaultNavBar:NO];
     [self setNavBar:NO];

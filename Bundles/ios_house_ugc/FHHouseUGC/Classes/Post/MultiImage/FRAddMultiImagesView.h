@@ -60,3 +60,8 @@
 - (void)showImagePicker;
 
 @end
+
+// + 按钮
+@interface FHAddPhotoButton : UIButton
+
+@end

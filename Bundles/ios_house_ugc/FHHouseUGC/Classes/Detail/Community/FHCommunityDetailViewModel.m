@@ -110,6 +110,10 @@
     }];
 }
 
+- (void)viewWillAppear {
+    [self.feedListController viewWillAppear];
+}
+
 - (void)requestData:(BOOL)refreshFeed {
     if (![TTReachability isNetworkConnected]) {
         self.feedListController.view.hidden = YES;

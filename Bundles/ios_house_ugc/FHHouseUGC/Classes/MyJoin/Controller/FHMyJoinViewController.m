@@ -35,10 +35,12 @@
     
     if(!_isEmpty){
         [self initFeedListVC];
+        [self.feedListVC viewWillAppear];
         [self startLoadData];
     }else{
         [self initMyInterestListVC];
     }
+    
     
 //    _isEmpty = !_isEmpty;
 }
@@ -102,7 +104,7 @@
 
 - (FHMyJoinNeighbourhoodView *)neighbourhoodView {
     if(!_neighbourhoodView){
-        _neighbourhoodView = [[FHMyJoinNeighbourhoodView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200)];
+        _neighbourhoodView = [[FHMyJoinNeighbourhoodView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 194)];
     }
     return _neighbourhoodView;
 }

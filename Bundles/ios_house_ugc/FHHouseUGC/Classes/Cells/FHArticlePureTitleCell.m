@@ -13,6 +13,7 @@
 @property(nonatomic ,strong) UILabel *contentLabel;
 @property(nonatomic ,strong) FHArticleCellBottomView *bottomView;
 @property(nonatomic ,strong) UIView *bottomSepView;
+@property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 @end
 
@@ -45,6 +46,10 @@
     [self.contentView addSubview:_contentLabel];
     
     self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectZero];
+    __weak typeof(self) wself = self;
+    _bottomView.deleteCellBlock = ^{
+        [wself deleteCell];
+    };
     [self.contentView addSubview:_bottomView];
     
     self.bottomSepView = [[UIView alloc] init];
@@ -62,6 +67,7 @@
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
         make.left.right.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(24);
     }];
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -81,8 +87,16 @@
 - (void)refreshWithData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        self.cellModel = cellModel;
         self.contentLabel.text = cellModel.title;
         self.bottomView.descLabel.attributedText = cellModel.desc;
+        self.bottomView.position.text = @"左家庄";
+    }
+}
+
+- (void)deleteCell {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
+        [self.delegate deleteCell:self.cellModel];
     }
 }
 

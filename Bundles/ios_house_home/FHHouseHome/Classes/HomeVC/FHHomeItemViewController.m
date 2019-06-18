@@ -19,26 +19,36 @@
 #import <FHHouseBaseItemCell.h>
 #import <FHHomeCellHelper.h>
 #import <FHPlaceHolderCell.h>
+#import "FHHomeListViewModel.h"
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
 
-@property (nonatomic, strong) UITableView *tableView;
-@property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
-@property(nonatomic , assign) NSInteger itemCount;
-@property(nonatomic , assign) FHHomePullTriggerType currentPullType;
-@property(nonatomic, strong) TTHttpTask * requestTask;
-@property(nonatomic, strong) NSString *currentSearchId;
-@property(nonatomic, strong) NSMutableArray *houseDataItemsModel;
-@property(nonatomic, assign) BOOL isRetryedPullDownRefresh;
-@property(nonatomic, assign) BOOL hasMore;
-@property(nonatomic, strong) NSString *enterType; //当前enterType，用于enter_category
-@property(nonatomic, strong) NSString *originSearchId;
+@property (nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
+@property (nonatomic , assign) NSInteger itemCount;
+@property (nonatomic , assign) FHHomePullTriggerType currentPullType;
+@property (nonatomic, strong) TTHttpTask * requestTask;
+@property (nonatomic, strong) NSString *currentSearchId;
+@property (nonatomic, strong) NSMutableArray *houseDataItemsModel;
+@property (nonatomic, assign) BOOL isRetryedPullDownRefresh;
+@property (nonatomic, assign) BOOL hasMore;
+@property (nonatomic, strong) NSString *originSearchId;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
-
+@property (nonatomic, strong) NSMutableDictionary *traceRecordDict;
+@property (nonatomic, assign) BOOL isOriginRequest;
+@property (nonatomic, assign) BOOL isDisAppeared;
+@property (nonatomic, weak) FHHomeListViewModel *listModel;
 @end
 
 @implementation FHHomeItemViewController
 
+- (instancetype)initItemWith:(FHHomeListViewModel *)listModel
+{
+    self = [super init];
+    if (self) {
+        _listModel = listModel;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -46,10 +56,15 @@
     self.houseDataItemsModel = [NSMutableArray new];
     self.isRetryedPullDownRefresh = NO;
     self.hasMore = YES;
+    self.isOriginRequest = YES;
+    self.isDisAppeared = NO;
+    self.traceNeedUploadCache = [NSMutableArray new];
+    self.traceEnterCategoryCache = [NSMutableDictionary new];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pageTitleViewToTop) name:@"headerViewToTop" object:nil];
     
     [self.view addSubview:self.tableView];
+    self.traceRecordDict = [NSMutableDictionary new];
     
     [FHHomeCellHelper registerCells:self.tableView];
     
@@ -73,14 +88,59 @@
     }];
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-
+    
     self.tableView.mj_footer = self.refreshFooter;
     
     [self registerCells];
     
-    [self showPlaceHolderCells];
-    
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.stayTime = [self getCurrentTime];
+    
+    //进入其他页面，返回上报
+    if (self.isDisAppeared && self.houseType == _listModel.houseType) {
+        if (self.traceEnterCategoryCache.allKeys.count > 0 && self.isOriginShowSelf) {
+            [self.traceEnterCategoryCache setValue:@"click" forKey:@"enter_type"];
+            [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
+        }
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    if (self.houseType == _listModel.houseType) {
+        [self currentViewIsDisappeared];
+    }
+    
+    self.isDisAppeared = YES;
+}
+
+- (void)currentViewIsShowing
+{
+    if (self.traceEnterCategoryCache.allKeys.count > 0 && self.isOriginShowSelf) {
+        [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
+    }
+    
+    self.stayTime = [self getCurrentTime];
+    
+    [self uploadFirstScreenHouseShow];
+    
+    if (self.traceRecordDict && self.houseType == _listModel.houseType && !self.traceRecordDict[@(self.houseType)]) {
+        [self.traceRecordDict setValue:@"" forKey:@(self.houseType)];
+        [FHHomeCellHelper sendBannerTypeCellShowTrace:_houseType];
+    }
+}
+
+- (void)currentViewIsDisappeared
+{
+    [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
 }
 
 - (void)registerCells
@@ -96,6 +156,7 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
 }
 
+//判断是否有运营位
 - (BOOL)checkIsHaveEntrancesList
 {
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -118,10 +179,10 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    self.tableView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 200);
+    self.tableView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
 }
 
-#pragma mark reload data
+#pragma mark 刷新列表
 
 - (void)showPlaceHolderCells
 {
@@ -156,38 +217,55 @@
     [self reloadCityEnbaleAndNoHouseData:[[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue];
 }
 
-#pragma mark request
+- (void)updateTableViewWithMoreData:(BOOL)hasMore {
+    self.tableView.mj_footer.hidden = NO;
+    if (hasMore == NO) {
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:3];
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }else {
+        [self.tableView.mj_footer endRefreshing];
+    }
+}
+
+#pragma mark 网络请求
 //请求推荐刷新数据，包括上拉和下拉
 - (void)requestDataForRefresh:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst
 {
     self.currentPullType = pullType;
+    
+    if (isFirst) {
+        [self showPlaceHolderCells];
+    }
+    
+    if (pullType == FHHomePullTriggerTypePullDown) {
+        self.traceRecordDict = [NSMutableDictionary new];
+    }
+    
     NSMutableDictionary *requestDictonary = [NSMutableDictionary new];
     [requestDictonary setValue:[FHEnvContext getCurrentSelectCityIdFromLocal] forKey:@"city_id"];
     NSInteger offsetValue = self.houseDataItemsModel.count;
     
-    [requestDictonary setValue:@(offsetValue) forKey:@"offset"];
+    if (isFirst || pullType == FHHomePullTriggerTypePullDown) {
+        [requestDictonary setValue:@(0) forKey:@"offset"];
+    }else
+    {
+        [requestDictonary setValue:@(offsetValue) forKey:@"offset"];
+    }
     [requestDictonary setValue:@(self.houseType) forKey:@"house_type"];
     [requestDictonary setValue:@(20) forKey:@"count"];
     
-    if ([self.requestTask isKindOfClass:[TTHttpTask class]]) {
-        [self.requestTask cancel];
-        self.requestTask = nil;
-    }
+    self.requestTask = nil;
     
     WeakSelf;
     self.requestTask = [FHHomeRequestAPI requestRecommendForLoadMore:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         
-        self.requestTask = nil;
-        
-        [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
-        
-        [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
+        [self.tableView finishPullUpWithSuccess:YES];
         
         //判断下拉刷新
         if (pullType == FHHomePullTriggerTypePullDown) {
             //请求无错误,无错误
-            if (model.data.items.count == 0 && !error && isFirst) {
+            if (model.data.items.count == 0 && !error) {
                 [self checkCityStatus];
                 if (self.requestCallBack) {
                     self.requestCallBack(pullType, self.houseType, NO, nil);
@@ -215,49 +293,37 @@
         
         self.isRetryedPullDownRefresh = NO;
         
-        [self.tableView finishPullDownWithSuccess:YES];
-        [self.tableView finishPullUpWithSuccess:YES];
-        
-        
         if (pullType == FHHomePullTriggerTypePullDown) {
             self.originSearchId = model.data.searchId;
             self.houseDataItemsModel = [NSMutableArray arrayWithArray:model.data.items];
         }else
         {
-            if (model.data.items) {
-              self.houseDataItemsModel = [self.houseDataItemsModel arrayByAddingObjectsFromArray:model.data.items];
+            if (model.data.items && self.houseDataItemsModel && model.data.items.count != 0) {
+                self.houseDataItemsModel = [self.houseDataItemsModel arrayByAddingObjectsFromArray:model.data.items];
             }
         }
+        self.currentSearchId = model.data.searchId;
+        
         [self reloadHomeTableHouseSection];
         
         self.tableView.hasMore = model.data.hasMore;
         [self updateTableViewWithMoreData:model.data.hasMore];
         
-        [self sendTraceEvent:FHHomeCategoryTraceTypeRefresh];
         
-        if (model.data.refreshTip && pullType == FHHomePullTriggerTypePullDown) {
-            [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
-            self.tableView.contentOffset = CGPointMake(0, 0);
+        if (self.isOriginRequest || [FHEnvContext sharedInstance].isRefreshFromCitySwitch || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
+            [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
+        }else
+        {
+            [self sendTraceEvent:FHHomeCategoryTraceTypeRefresh];
         }
         
-        if (pullType == FHHomePullTriggerTypePullUp) {
-            [self.tableView finishPullUpWithSuccess:YES];
-        }
         
         if (self.requestCallBack) {
             self.requestCallBack(pullType, self.houseType, YES, model);
         }
+        
+        self.isOriginRequest = NO;
     }];
-}
-
-- (void)updateTableViewWithMoreData:(BOOL)hasMore {
-    self.tableView.mj_footer.hidden = NO;
-    if (hasMore == NO) {
-        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:3];
-        [self.tableView.mj_footer endRefreshingWithNoMoreData];
-    }else {
-        [self.tableView.mj_footer endRefreshing];
-    }
 }
 
 #pragma mark 埋点
@@ -282,6 +348,18 @@
     }
 }
 
+- (void)uploadFirstScreenHouseShow
+{
+    for (NSMutableDictionary *houseShowTrace in self.traceNeedUploadCache) {
+        [FHEnvContext recordEvent:houseShowTrace andEventKey:@"house_show"];
+    }
+    
+    if (self.traceNeedUploadCache.count > 0) {
+        [self.traceNeedUploadCache removeAllObjects];
+        self.isOriginShowSelf = YES;
+    }
+}
+
 - (NSTimeInterval)getCurrentTime
 {
     return  [[NSDate date] timeIntervalSince1970];
@@ -295,7 +373,7 @@
     
     tracerDict[@"category_name"] = [self pageTypeString] ? : @"be_null";
     tracerDict[@"enter_from"] = @"maintab";
-    tracerDict[@"enter_type"] = self.enterType ? : @"be_null";
+    tracerDict[@"enter_type"] = self.enterType ? : @"click";
     tracerDict[@"element_from"] = @"maintab_list";
     tracerDict[@"search_id"] = self.currentSearchId ? : @"be_null";
     tracerDict[@"origin_from"] = [self pageTypeString]  ? : @"be_null";
@@ -303,7 +381,12 @@
     
     
     if (traceType == FHHomeCategoryTraceTypeEnter) {
-        [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+        if (self.isOriginShowSelf) {
+            tracerDict[@"enter_type"] = @"click";
+            [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+        }
+        
+        self.traceEnterCategoryCache = tracerDict;
     }else if (traceType == FHHomeCategoryTraceTypeStay)
     {
         NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
@@ -320,13 +403,14 @@
         if (self.reloadType == TTReloadTypeClickCategory) {
             stringReloadType = @"click";
         }
-        tracerDict[@"refresh_type"] = (self.currentPullType == FHHomePullTriggerTypePullUp ? @"pre_load_more" : stringReloadType);
+        tracerDict[@"refresh_type"] = (self.currentPullType == FHHomePullTriggerTypePullUp ? @"pre_load_more" :  stringReloadType);
         [FHEnvContext recordEvent:tracerDict andEventKey:@"category_refresh"];
         
         self.reloadType = nil;
     }
-    
 }
+
+#pragma mark 计算高度
 
 - (CGFloat)getHeightShowNoData
 {
@@ -339,7 +423,7 @@
     }
 }
 
-#pragma mark delegte
+#pragma mark tableview等回调
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // 滚动时发出通知
@@ -428,12 +512,25 @@
             //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
             [cellError.contentView addSubview:noDataErrorView];
             
-            [noDataErrorView showEmptyWithTip:@"数据走丢了" errorImageName:@"group-9"
-                                    showRetry:YES];
-            __weak typeof(self) weakSelf = self;
-            noDataErrorView.retryBlock = ^{
-                [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
-            };
+            if ([FHEnvContext isNetworkConnected]) {
+                [noDataErrorView showEmptyWithTip:@"数据走丢了" errorImageName:@"group-9"
+                                        showRetry:YES];
+                __weak typeof(self) weakSelf = self;
+                noDataErrorView.retryBlock = ^{
+                    [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+                };
+            }else
+            {
+                [noDataErrorView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:@"group-9"
+                                        showRetry:YES];
+                __weak typeof(self) weakSelf = self;
+                noDataErrorView.retryBlock = ^{
+                    if (weakSelf.requestNetworkUnAvalableRetryCallBack) {
+                        weakSelf.requestNetworkUnAvalableRetryCallBack();
+                    }
+                };
+            }
+            
             return cellError;
         }
         
@@ -450,6 +547,111 @@
             [cell updateHomeSmallImageHouseCellModel:model andType:self.houseType];
         }
         return cell;
+    }
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.section == kFHHomeHouseTypeBannerViewSection) {
+        if (self.houseType == _listModel.houseType && ![self.traceRecordDict objectForKey:@(self.houseType)] ) {
+            [self.traceRecordDict setValue:@"" forKey:@(self.houseType)];
+            [FHHomeCellHelper sendBannerTypeCellShowTrace:_houseType];
+        }
+        return ;
+    }
+    
+    if (self.houseDataItemsModel.count <= indexPath.row) {
+        return;
+    }
+    
+    FHHomeHouseDataItemsModel *cellModel = [_houseDataItemsModel objectAtIndex:indexPath.row];
+    if (cellModel.idx && ![self.traceRecordDict objectForKey:cellModel.idx])
+    {
+        if (cellModel.idx) {
+            [self.traceRecordDict setValue:@"" forKey:cellModel.idx];
+            
+            NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
+            
+            NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+            tracerDict[@"house_type"] = [self pageTypeString] ? : @"be_null";
+            tracerDict[@"card_type"] = @"left_pic";
+            tracerDict[@"page_type"] = [self pageTypeString];
+            tracerDict[@"element_type"] = @"maintab_list";
+            tracerDict[@"group_id"] = cellModel.idx ? : @"be_null";
+            tracerDict[@"impr_id"] = cellModel.imprId ? : @"be_null";
+            tracerDict[@"search_id"] = cellModel.searchId ? : @"";
+            tracerDict[@"rank"] = @(indexPath.row);
+            tracerDict[@"origin_from"] = [self pageTypeString];
+            tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+            tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
+            [tracerDict removeObjectForKey:@"element_from"];
+            
+            if (tracerDict && !self.isOriginShowSelf) {
+                [self.traceNeedUploadCache addObject:tracerDict];
+            }else
+            {
+                [FHEnvContext recordEvent:tracerDict andEventKey:@"house_show"];
+            }
+        }
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (!self.showPlaceHolder) {
+        [self jumpToDetailPage:indexPath];
+    }
+}
+
+#pragma mark - 详情页跳转
+-(void)jumpToDetailPage:(NSIndexPath *)indexPath {
+    if (self.houseDataItemsModel.count > indexPath.row) {
+        FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
+        NSMutableDictionary *traceParam = [NSMutableDictionary new];
+        traceParam[@"enter_from"] = [self pageTypeString];
+        traceParam[@"log_pb"] = theModel.logPb;
+        traceParam[@"origin_from"] = [self pageTypeString];
+        traceParam[@"card_type"] = @"left_pic";
+        traceParam[@"rank"] = @(indexPath.row);
+        traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+        traceParam[@"element_from"] = @"maintab_list";
+        traceParam[@"enter_from"] = @"maintab";
+        
+        NSInteger houseType = 0;
+        if ([theModel.houseType isKindOfClass:[NSString class]]) {
+            houseType = [theModel.houseType integerValue];
+        }
+        
+        if (houseType != 0) {
+            if (houseType != self.houseType) {
+                return;
+            }
+        }else
+        {
+            houseType = self.houseType;
+        }
+        
+        
+        NSDictionary *dict = @{@"house_type":@(houseType),
+                               @"tracer": traceParam
+                               };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *jumpUrl = nil;
+        
+        if (houseType == FHHouseTypeSecondHandHouse) {
+            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.idx]];
+        }else if(houseType == FHHouseTypeNewHouse)
+        {
+            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.idx]];
+        }else if(houseType == FHHouseTypeRentHouse)
+        {
+            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.idx]];
+        }
+        
+        if (jumpUrl != nil) {
+            [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+        }
     }
 }
 

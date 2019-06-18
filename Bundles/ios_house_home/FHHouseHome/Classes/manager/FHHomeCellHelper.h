@@ -54,6 +54,11 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 
 
 /**
+ * 根据首页房源列表高度
+ */
+- (CGFloat)heightForFHHomeListHouseSectionHeight;
+
+/**
  * 根据配置数据计算头部计算策略
  */
 - (CGFloat)initFHHomeHeaderIconCountAndHeight;

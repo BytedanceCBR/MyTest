@@ -6,13 +6,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHFeedUGCCellModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHArticleCellBottomView : UIView
 
+@property(nonatomic ,strong) UILabel *position;
 @property(nonatomic ,strong) UILabel *descLabel;
 @property(nonatomic ,strong) UIButton *moreBtn;
+
+@property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
+@property(nonatomic, copy) void(^deleteCellBlock)(void);
 
 @end
 

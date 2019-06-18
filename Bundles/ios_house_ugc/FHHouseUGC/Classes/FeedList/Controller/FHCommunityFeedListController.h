@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 //下拉刷新数据
 - (void)startLoadData;
 
+- (void)viewWillAppear;
 
 @end
 

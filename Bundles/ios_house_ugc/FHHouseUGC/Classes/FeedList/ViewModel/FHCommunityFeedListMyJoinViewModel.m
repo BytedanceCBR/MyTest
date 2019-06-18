@@ -12,6 +12,7 @@
 #import "FHFeedListModel.h"
 #import <UIScrollView+Refresh.h>
 #import "FHFeedUGCCellModel.h"
+#import "Article.h"
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
 
@@ -148,6 +149,8 @@
     for (FHFeedListDataModel *itemModel in feedList) {
         NSString *content = itemModel.content;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
+        cellModel.categoryId = self.categoryId;
+        cellModel.feedVC = self.viewController;
         if(cellModel){
             [resultArray addObject:cellModel];
         }
@@ -178,6 +181,8 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
+    cell.delegate = self;
+    
     if(indexPath.row < self.dataList.count){
         [cell refreshWithData:cellModel];
     }
@@ -198,6 +203,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+    self.currentCellModel = cellModel;
+    self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
     [self jumpToDetail:cellModel];
 }
 
@@ -238,7 +245,45 @@
             NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
         }
+    }else if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeUGC){
+        [self jumpToPostDetail:cellModel showComment:NO];
     }
+}
+
+- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"data"] = cellModel;
+    dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    FHFeedUGCContentModel *contentModel = cellModel.originData;
+    NSString *routeUrl = @"sslocal://ugc_post_detail";
+    if (contentModel && [contentModel isKindOfClass:[FHFeedUGCContentModel class]]) {
+        NSString *schema = contentModel.schema;
+        if (schema.length > 0) {
+            routeUrl = [schema stringByReplacingOccurrencesOfString:@"sslocal://thread_detail" withString:@"sslocal://ugc_post_detail"];
+        }
+        // 记得 如果是push 和 url要添加评论数 点赞数以及自己是否点赞
+        routeUrl = [NSString stringWithFormat:@"%@&comment_count=%@&digg_count=%@&user_digg=%@",routeUrl,contentModel.commentCount,contentModel.diggCount,contentModel.userDigg];
+    }
+    
+    NSURL *openUrl = [NSURL URLWithString:routeUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    self.needRefreshCell = YES;
+}
+
+#pragma mark - FHUGCBaseCellDelegate
+
+- (void)deleteCell:(FHFeedUGCCellModel *)cellModel {
+    NSInteger row = [self.dataList indexOfObject:cellModel];
+    if(row < self.dataList.count && row >= 0){
+        [self.dataList removeObject:cellModel];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+    }
+}
+
+- (void)commentClicked:(FHFeedUGCCellModel *)cellModel {
+    [self jumpToPostDetail:cellModel showComment:YES];
 }
 
 @end

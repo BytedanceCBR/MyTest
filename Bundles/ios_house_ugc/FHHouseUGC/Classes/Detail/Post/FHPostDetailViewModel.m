@@ -116,6 +116,15 @@
         //
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
         [self.items addObject:cellModel];
+        
+        // 更新点赞以及评论数
+        if (cellModel) {
+            self.detailController.comment_count = [cellModel.commentCount longLongValue];
+            self.detailController.user_digg = [cellModel.userDigg integerValue];
+            self.detailController.digg_count = [cellModel.diggCount longLongValue];
+            [self.detailController refreshToolbarView];
+            [self.detailController commentCountChanged];
+        }
     }
 }
 

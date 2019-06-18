@@ -24,6 +24,7 @@
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) UIView *bottomSepView;
+@property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 @end
 
@@ -52,6 +53,10 @@
 
 - (void)initViews {
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
+    __weak typeof(self) wself = self;
+    _userInfoView.deleteCellBlock = ^{
+        [wself deleteCell];
+    };
     [self.contentView addSubview:_userInfoView];
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
@@ -61,6 +66,7 @@
     [self.contentView addSubview:_multiImageView];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
+    [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
     self.bottomSepView = [[UIView alloc] init];
@@ -110,18 +116,34 @@
 - (void)refreshWithData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        self.cellModel = cellModel;
         //设置userInfo
+        self.userInfoView.cellModel = cellModel;
         self.userInfoView.userName.text = cellModel.user.name;
         self.userInfoView.descLabel.attributedText = cellModel.desc;
         [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
         //设置底部
+        self.bottomView.cellModel = cellModel;
         self.bottomView.position.text = @"左家庄";
-        [self.bottomView.likeBtn setTitle:cellModel.diggCount forState:UIControlStateNormal];
         [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
+        [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
         //内容
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
         //图片
         [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
+    }
+}
+
+- (void)deleteCell {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
+        [self.delegate deleteCell:self.cellModel];
+    }
+}
+
+// 评论点击
+- (void)commentBtnClick {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:)]){
+        [self.delegate commentClicked:self.cellModel];
     }
 }
 
