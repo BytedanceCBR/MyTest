@@ -107,8 +107,9 @@ static const NSInteger kTopScrollViewTag = 100;
         [labelCurrent setFont:[UIFont themeFontMedium:16]];
         [labelCurrent setTextColor:[UIColor themeGray1]];
         self.currentLabel = labelCurrent;
+        self.segmentedControl.selectedSegmentIndex = scrollIndex;
     }
-
+    
 }
 
 - (void)showOriginStyle:(BOOL)isOrigin
