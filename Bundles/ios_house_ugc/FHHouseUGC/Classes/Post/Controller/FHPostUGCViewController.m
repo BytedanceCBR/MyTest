@@ -338,14 +338,14 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.toolbar addSubview:self.addLocationView];
     
     //Tip label
-    CGFloat tipLabelWidth = 70.0;
-    self.tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(self.view.width - tipLabelWidth - kRightPadding, 0, tipLabelWidth, 36.f)];
+    CGFloat tipLabelWidth = 100.0;
+    self.tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(self.view.width - tipLabelWidth - kRightPadding, 11, tipLabelWidth, 25.f)];
     
-    self.tipLabel.font = [UIFont systemFontOfSize:12];
+    self.tipLabel.font = [UIFont systemFontOfSize:11];
     self.tipLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
     self.tipLabel.textAlignment = NSTextAlignmentRight;
     self.tipLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
-    self.tipLabel.textColorThemeKey = kColorText4;
+    [self.tipLabel setTextColor:[UIColor themeGray4]];
     self.tipLabel.hidden = NO;
     [self.toolbar addSubview:self.tipLabel];
     
@@ -859,14 +859,16 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)refreshUI {
     NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
     NSString *inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if (inputText.length > maxTextCount) {
-        self.tipLabel.hidden = NO;
-        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
-        excludeCount = MIN(excludeCount, 9999);
-        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
-    } else {
-        self.tipLabel.hidden = YES;
-    }
+//    if (inputText.length > maxTextCount) {
+//        self.tipLabel.hidden = NO;
+//        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
+//        excludeCount = MIN(excludeCount, 9999);
+//        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
+//    } else {
+//        self.tipLabel.hidden = YES;
+//    }
+    self.tipLabel.hidden = NO;
+    self.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",inputText.length, maxTextCount];
     
     [self refreshPostButtonUI];
 }
