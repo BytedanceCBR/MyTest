@@ -37,11 +37,12 @@
 #import "TTPostThreadCenter.h"
 #import "TTUGCEmojiParser.h"
 #import "TTUGCHashtagModel.h"
+#import "FHPostUGCMainView.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
 static CGFloat const kMidPadding = 10.f;
-static CGFloat const kInputViewTopPadding = 8.f;
+static CGFloat const kInputViewTopPadding = 10.f;
 static CGFloat const kRateMovieViewHeight = 100.f;
 static CGFloat const kTextViewHeight = 100.f;
 static CGFloat const kUserInfoViewHeight = 44.f;
@@ -95,6 +96,7 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, copy) NSString *entrance; //入口
 @property (nonatomic, copy) NSString *enterConcernID; //entrance为concern时有意义
 
+@property (nonatomic, strong)   FHPostUGCMainView       *selectView;
 
 @end
 
@@ -270,6 +272,11 @@ static NSInteger const kMaxPostImageCount = 9;
     self.inputContainerView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 0)];
     self.inputContainerView.backgroundColorThemeKey = kColorBackground4;
     [self.containerView addSubview:self.inputContainerView];
+    
+    // select view
+    self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 44)];
+    [self.inputContainerView addSubview:self.selectView];
+    y += 44;
     
     //Input view
     self.inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(kLeftPadding - 5, y + kInputViewTopPadding, self.view.width - kLeftPadding - kRightPadding + 10.f, kTextViewHeight)];
