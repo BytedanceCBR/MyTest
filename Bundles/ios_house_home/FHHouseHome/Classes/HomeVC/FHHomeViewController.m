@@ -75,14 +75,14 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.isRefreshing = NO;
     self.adColdHadJump = NO;
     
-    self.mainTableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
-    if (@available(iOS 7.0, *)) {
-        self.mainTableView.estimatedSectionFooterHeight = 0;
-        self.mainTableView.estimatedSectionHeaderHeight = 0;
-        self.mainTableView.estimatedRowHeight = 0;
-    } else {
-        // Fallback on earlier versions
-    }
+    self.mainTableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+//    if (@available(iOS 7.0, *)) {
+//        self.mainTableView.estimatedSectionFooterHeight = 0;
+//        self.mainTableView.estimatedSectionHeaderHeight = 0;
+//        self.mainTableView.estimatedRowHeight = 0;
+//    } else {
+//        // Fallback on earlier versions
+//    }
     self.mainTableView.showsVerticalScrollIndicator = NO;
 
     if (_isMainTabVC) {
@@ -91,10 +91,10 @@ static CGFloat const kSectionHeaderHeight = 38;
 
     [self registerNotifications];
         
-    self.mainTableView.sectionFooterHeight = 0;
-    self.mainTableView.sectionHeaderHeight = 0;
-    self.mainTableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
-    self.mainTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
+//    self.mainTableView.sectionFooterHeight = 0;
+//    self.mainTableView.sectionHeaderHeight = 0;
+//    self.mainTableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
+//    self.mainTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
 
     [self.view addSubview:self.mainTableView];
 
@@ -117,7 +117,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
     self.notifyBar = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:self.notifyBar];
-    
+
     [self.notifyBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.equalTo(self.mainTableView);
         make.height.mas_equalTo(32);
@@ -157,18 +157,24 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)setUpMainTableConstraints
 {
     if ([TTDeviceHelper isIPhoneXDevice]) {
-        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.topBar.mas_bottom);
-            make.bottom.left.right.equalTo(self.view);
-        }];
+        [self.mainTableView setFrame:CGRectMake(0.0f, 64 + 44, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 44 - 49)];
     }else
     {
-        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.topBar.mas_bottom);
-            make.left.right.equalTo(self.view);
-            make.bottom.equalTo(self.view).offset(-40);
-        }];
+        [self.mainTableView setFrame:CGRectMake(0.0f, 64 + 20, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 20 - 49)];
     }
+//    if ([TTDeviceHelper isIPhoneXDevice]) {
+//        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.equalTo(self.topBar.mas_bottom);
+//            make.bottom.left.right.equalTo(self.view);
+//        }];
+//    }else
+//    {
+//        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.equalTo(self.topBar.mas_bottom);
+//            make.left.right.equalTo(self.view);
+//            make.bottom.equalTo(self.view).offset(-40);
+//        }];
+//    }
 }
 
 - (void)setupTopBarConstraints
@@ -429,7 +435,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom
 {
-    self.mainTableView.ttContentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
+//    self.mainTableView.ttContentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
 //    self.mainTableView.scrollIndicatorInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
 }
 
