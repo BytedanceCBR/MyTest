@@ -630,7 +630,7 @@
     
     if (indexPath.row == kFHHomeListHeaderBaseViewSection) {
         [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForFindHouse;
-        return self.headerHeight;
+        return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType] ;
     }
     
     if (indexPath.row == kFHHomeListHouseTypeBannerViewSection) {

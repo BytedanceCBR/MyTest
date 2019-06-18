@@ -225,6 +225,11 @@
     }else {
         [self.tableView.mj_footer endRefreshing];
     }
+    
+    if (self.houseDataItemsModel.count < 10 && !self.tableView.hasMore) {
+        self.tableView.mj_footer.hidden = YES;
+    }
+    
 }
 
 #pragma mark 网络请求
