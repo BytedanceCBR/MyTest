@@ -38,6 +38,7 @@
 #import "TTUGCEmojiParser.h"
 #import "TTUGCHashtagModel.h"
 #import "FHPostUGCMainView.h"
+#import "FHUGCFollowListController.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -58,7 +59,7 @@ NSString * const kForumPostThreadFinish = @"ForumPostThreadFinish";
 
 static NSInteger const kMaxPostImageCount = 9;
 
-@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate,FRPostThreadAddLocationViewDelegate>
+@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate,FRPostThreadAddLocationViewDelegate,FHUGCFollowListDelegate>
 
 @property (nonatomic, strong) SSThemedButton * cancelButton;
 @property (nonatomic, strong) SSThemedButton * postButton;
@@ -380,6 +381,9 @@ static NSInteger const kMaxPostImageCount = 9;
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"title"] = @"选择小区";
     dict[@"action_type"] = @(1);
+    NSHashTable *ugcDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [ugcDelegateTable addObject:self];
+    dict[@"ugc_delegate"] = ugcDelegateTable;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
@@ -1279,6 +1283,15 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 移除google地图注册
     [[TTLocationManager sharedManager] unregisterReverseGeocoderForKey:NSStringFromClass([TTGoogleMapGeocoder class])];
+}
+
+#pragma mark - FHUGCFollowListDelegate
+- (void)selectedItem:(FHUGCDataUserFollowSocialGroupsModel *)item {
+    // 选择 小区圈子
+    if (item) {
+        self.selectView.groupId = item.socialGroupId;
+        self.selectView.communityName = item.name;
+    }
 }
 
 @end

@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHPostUGCMainView : UIControl
 
 @property (nonatomic, copy)     NSString       *communityName;// 小区名称
+@property (nonatomic, copy)     NSString       *groupId;// 小区圈 id
 
 @end
 
