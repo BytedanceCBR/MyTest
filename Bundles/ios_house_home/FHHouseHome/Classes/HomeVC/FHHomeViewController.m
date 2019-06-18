@@ -46,6 +46,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic) BOOL adColdHadJump;
 @property (nonatomic, strong) TTTopBar *topBar;
 @property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
+@property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 
 @end
 
@@ -319,6 +320,8 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (self.mainTableView.contentOffset.y > [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType]) {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
     }
+    
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -328,6 +331,8 @@ static CGFloat const kSectionHeaderHeight = 38;
     {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
     }
+    
+    [self addStayCategoryLog:self.ttTrackStayTime];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -360,6 +365,23 @@ static CGFloat const kSectionHeaderHeight = 38;
     [TTSandBoxHelper setAppFirstLaunchForAd];
 }
 
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] -  self.stayTime) * 1000.0;
+    //        if (duration) {
+    //            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
+    //        }
+    [tracerDict setValue:@"main" forKey:@"tab_name"];
+    [tracerDict setValue:@(0) forKey:@"with_tips"];
+    [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
+    tracerDict[@"stay_time"] = @((int)duration);
+    
+    if (((int)duration) > 0) {
+        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
+    }
+}
+
+
 - (void)traceJump2AdEvent:(NSString *)urlString
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:4];
@@ -386,6 +408,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)didAppear
 {
     self.homeListViewModel.stayTime = [[NSDate date] timeIntervalSince1970];
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
+
     [[FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell.bannerView resetTimer];
 }
 

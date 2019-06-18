@@ -15,12 +15,14 @@
 #import "FHCommunityDetailViewController.h"
 #import "FHPostDetailViewController.h"
 #import "FHWDAnswerPictureTextViewController.h"
+#import <FHEnvContext.h>
 
 @interface FHCommunityViewController ()
 
 @property(nonatomic , strong) FHCommunityViewModel *viewModel;
 @property(nonatomic , strong) UIView *bottomLineView;
 @property(nonatomic , strong) UIView *topView;
+@property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 
 @end
 
@@ -53,6 +55,37 @@
     [self setupCollectionView];
     [self setupSetmentedControl];
 }
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self addStayCategoryLog:self.stayTime];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
+}
+
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
+    //        if (duration) {
+    //            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
+    //        }
+    [tracerDict setValue:@"main" forKey:@"tab_name"];
+    [tracerDict setValue:@(0) forKey:@"with_tips"];
+    [tracerDict setValue:@"click_tab" forKey:@"enter_type"];
+    tracerDict[@"stay_time"] = @((int)duration);
+    
+    if (((int)duration) > 0) {
+        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
+    }
+}
+
 
 - (void)setupCollectionView {
     self.automaticallyAdjustsScrollViewInsets = NO;

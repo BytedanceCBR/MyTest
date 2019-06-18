@@ -1674,6 +1674,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     }
 //    [[EnvContext shared].tracer writeEvent:TraceEventName.stay_tab params:logv3Dic];
     self.isClickTab = YES;
+    
+    
+    [FHEnvContext sharedInstance].isClickTab = self.isClickTab;
 
 //    if ([selectedTabName isEqualToString:@"f_hotsoon_video"]) {//小视频tab 该埋点必须发
 ////        [TTTrackerWrapper eventV3:@"stay_tab" params:logv3Dic];

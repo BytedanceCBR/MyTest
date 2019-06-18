@@ -46,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isSendConfigFromFirstRemote;
 @property (nonatomic, assign) BOOL isRefreshFromAlertCitySwitch;
 @property (nonatomic, assign) BOOL isRefreshFromCitySwitch;
+@property (nonatomic, assign) BOOL isClickTab;
 @property (nonatomic, copy) NSString * refreshConfigRequestType;
 
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
