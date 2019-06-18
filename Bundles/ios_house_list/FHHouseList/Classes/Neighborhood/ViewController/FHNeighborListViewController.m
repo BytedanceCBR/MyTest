@@ -27,6 +27,7 @@
 @property (nonatomic, copy) NSString *houseId;
 
 @property (nonatomic, strong) FHNeighborViewModel *viewModel;
+@property (nonatomic, strong) TTRouteParamObj *paramObj;
 
 @property (nonatomic, assign) FHNeighborListVCType neighborListVCType;
 
@@ -56,6 +57,7 @@
          element_from:same_neighborhood（同小区房源），related（周边房源），house_renting（在租房源）,）'在售房源': 'house_onsale',
          $$ search_id:外部的searchId无用，每次使用网络返回的searchId
          */
+        _paramObj = paramObj;
         self.neighborhoodId = paramObj.allParams[@"neighborhood_id"];
         self.houseId = paramObj.allParams[@"house_id"];
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
@@ -164,6 +166,7 @@
     _viewModel.conditionNoneFilterBlock = ^NSString * _Nullable(NSDictionary * _Nonnull params) {
         return [wself.houseFilterBridge getNoneFilterQueryParams:params];
     };
+    [self.houseFilterViewModel setFilterConditions:_paramObj.queryParams];
     [self.houseFilterBridge setViewModel:self.houseFilterViewModel withDelegate:self];
 }
 
