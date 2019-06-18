@@ -276,6 +276,7 @@ static NSInteger const kMaxPostImageCount = 9;
     // select view
     self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 44)];
     [self.inputContainerView addSubview:self.selectView];
+    [self.selectView addTarget:self action:@selector(selectCommunityViewClick) forControlEvents:UIControlEventTouchUpInside];
     y += 44;
     
     //Input view
@@ -371,6 +372,15 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.toolbar tt_addDelegate:self asMainDelegate:NO];
     self.inputTextView.delegate = self.textViewMediator;
     [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
+}
+
+- (void)selectCommunityViewClick {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"title"] = @"选择小区";
+    dict[@"action_type"] = @(1);
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 - (void)parseOutInputImagesWithParamDic:(NSDictionary *)params {
