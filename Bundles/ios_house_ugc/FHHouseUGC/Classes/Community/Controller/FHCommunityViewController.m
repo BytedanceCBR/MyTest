@@ -180,8 +180,12 @@
 //    TTNavigationController *navVC = [[TTNavigationController alloc] initWithRootViewController:vc];
 //    [self presentViewController:navVC animated:YES completion:nil];
     
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"title"] = @"选择小区";
+    dict[@"action_type"] = @(1);
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 - (void)hideSegmentControl {
