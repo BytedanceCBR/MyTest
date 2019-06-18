@@ -72,6 +72,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.panelVM = panelVM;
     
     self.isRefreshing = NO;
+    self.adColdHadJump = NO;
     
     self.mainTableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     if (@available(iOS 7.0, *)) {
@@ -355,6 +356,8 @@ static CGFloat const kSectionHeaderHeight = 38;
             });
         }
     }
+    
+    [TTSandBoxHelper setAppFirstLaunchForAd];
 }
 
 - (void)traceJump2AdEvent:(NSString *)urlString

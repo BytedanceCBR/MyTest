@@ -161,9 +161,7 @@
             //非首次只刷新头部
             if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 [FHHomeCellHelper sharedInstance].isFirstLanuch = NO;
-                
-                [TTSandBoxHelper setAppFirstLaunchForAd];
-                
+                                
                 [self.tableViewV reloadData];
                 
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
