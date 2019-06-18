@@ -20,6 +20,7 @@
 #import <FHHomeCellHelper.h>
 #import <FHPlaceHolderCell.h>
 #import "FHHomeListViewModel.h"
+#import "TTSandBoxHelper.h"
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -518,7 +519,7 @@
             [cellError.contentView addSubview:noDataErrorView];
             
             if ([FHEnvContext isNetworkConnected]) {
-                [noDataErrorView showEmptyWithTip:@"数据走丢了" errorImageName:@"group-9"
+                [noDataErrorView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:@"group-9"
                                         showRetry:YES];
                 __weak typeof(self) weakSelf = self;
                 noDataErrorView.retryBlock = ^{
@@ -530,8 +531,15 @@
                                         showRetry:YES];
                 __weak typeof(self) weakSelf = self;
                 noDataErrorView.retryBlock = ^{
-                    if (weakSelf.requestNetworkUnAvalableRetryCallBack) {
-                        weakSelf.requestNetworkUnAvalableRetryCallBack();
+                    if ([FHEnvContext isNetworkConnected]) {
+                        if ([TTSandBoxHelper isAPPFirstLaunch]) {
+                            if (weakSelf.requestNetworkUnAvalableRetryCallBack) {
+                                weakSelf.requestNetworkUnAvalableRetryCallBack();
+                            }
+                        }else
+                        {
+                            [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+                        }
                     }
                 };
             }
