@@ -124,7 +124,7 @@
 
 - (void)changeHeight:(CGFloat)height notiy:(BOOL)notify {
     self.height = height;
-    
+    [self hideAddImagesButtonIfNeed];
     if (notify && self.delegate && [self.delegate respondsToSelector:@selector(addMultiImagesView:changeToSize:)]) {
         [self.delegate addMultiImagesView:self changeToSize:self.frame.size];
     }
