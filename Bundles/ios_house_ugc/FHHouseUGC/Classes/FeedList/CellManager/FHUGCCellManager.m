@@ -10,7 +10,6 @@
 #import "FHUGCPureTitleCell.h"
 #import "FHUGCSingleImageCell.h"
 #import "FHUGCMultiImageCell.h"
-#import "FHUGCTwoImageCell.h"
 #import "FHArticlePureTitleCell.h"
 #import "FHArticleSingleImageCell.h"
 #import "FHArticleMultiImageCell.h"
@@ -37,7 +36,6 @@
                                 @"FHUGCPureTitleCell",
                                 @"FHUGCSingleImageCell",
                                 @"FHUGCMultiImageCell",
-                                @"FHUGCTwoImageCell",
                                 @"FHArticlePureTitleCell",
                                 @"FHArticleSingleImageCell",
                                 @"FHArticleMultiImageCell",
@@ -63,9 +61,6 @@
             
         case FHUGCFeedListCellSubTypeSingleImage:
             return [FHUGCSingleImageCell class];
-            
-        case FHUGCFeedListCellSubTypeTwoImage:
-            return [FHUGCTwoImageCell class];
             
         case FHUGCFeedListCellSubTypeMultiImage:
             return [FHUGCMultiImageCell class];

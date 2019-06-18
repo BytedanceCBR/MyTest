@@ -13,6 +13,7 @@
 #import "ToastManager.h"
 #import "TTReachability.h"
 #import "TTAccountManager.h"
+#import "UIButton+TTAdditions.h"
 
 @interface FHUGCCellBottomView ()
 
@@ -53,6 +54,7 @@
     _commentBtn.titleLabel.font = [UIFont themeFontRegular:14];
     [_commentBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
     [_commentBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
+    _commentBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [self addSubview:_commentBtn];
     
     self.likeView = [[UIView alloc] init];

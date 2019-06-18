@@ -957,7 +957,7 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
     
     self.optionSelectorView.commonTrackingParameters = commonTrackingParameters;
     
-    NSArray<FHFeedOperationWord *> *items = [TTFeedDislikeConfig operationWordList];
+    NSArray<FHFeedOperationWord *> *items = [TTFeedDislikeConfig operationWordList:self.viewModel.userID];
     [self.optionSelectorView refreshWithkeywords:items];
 }
 

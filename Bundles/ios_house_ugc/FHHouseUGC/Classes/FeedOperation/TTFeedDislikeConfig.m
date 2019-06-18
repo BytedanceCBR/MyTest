@@ -7,6 +7,7 @@
 
 #import "TTFeedDislikeConfig.h"
 #import "TTReportManager.h"
+#import "TTAccountManager.h"
 
 static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_options";
 @implementation TTFeedDislikeConfig
@@ -56,22 +57,30 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
     return operationList;
 }
 
-+ (NSArray<FHFeedOperationWord *> *)operationWordList {
++ (NSArray<FHFeedOperationWord *> *)operationWordList:(NSString *)userId {
     NSMutableArray<FHFeedOperationWord *> *items = @[].mutableCopy;
     
     NSArray *operationList = [self operationList];
     
+    BOOL isShowDelete = [TTAccountManager isLogin] && [[TTAccountManager userID] isEqualToString:userId];
+    
     for (NSDictionary *dict in operationList) {
         if ([dict isKindOfClass:[NSDictionary class]]) {
             FHFeedOperationWord *word = [[FHFeedOperationWord alloc] initWithDict:dict];
-            
             if(word.type == FHFeedOperationWordTypeReport){
                 word.items = [self fetchReportOptions:word.ID];
             }else{
                 word.items = @[word];
             }
-            [items addObject:word];
             
+            //显示删除就不会显示举报
+            if(word.type == FHFeedOperationWordTypeReport && !isShowDelete){
+                [items addObject:word];
+            }
+            
+            if(word.type == FHFeedOperationWordTypeDelete && isShowDelete){
+                [items addObject:word];
+            }
         }
     }
     return items;

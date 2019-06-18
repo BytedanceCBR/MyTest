@@ -134,13 +134,16 @@
     }
 }
 
-- (void)commentBtnClick {
-    // 评论点击
-}
-
 - (void)deleteCell {
     if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
         [self.delegate deleteCell:self.cellModel];
+    }
+}
+
+// 评论点击
+- (void)commentBtnClick {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:)]){
+        [self.delegate commentClicked:self.cellModel];
     }
 }
 

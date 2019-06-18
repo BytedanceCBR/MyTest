@@ -66,6 +66,7 @@
     [self.contentView addSubview:_multiImageView];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
+    [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
     self.bottomSepView = [[UIView alloc] init];
@@ -136,6 +137,13 @@
 - (void)deleteCell {
     if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
         [self.delegate deleteCell:self.cellModel];
+    }
+}
+
+// 评论点击
+- (void)commentBtnClick {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:)]){
+        [self.delegate commentClicked:self.cellModel];
     }
 }
 
