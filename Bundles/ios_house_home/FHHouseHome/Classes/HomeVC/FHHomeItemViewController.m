@@ -129,6 +129,11 @@
         [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
     }
     
+    if (self.showRequestErrorView) {
+        [self showPlaceHolderCells];
+        [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+    }
+    
     self.stayTime = [self getCurrentTime];
     
     [self uploadFirstScreenHouseShow];
@@ -187,6 +192,8 @@
 
 - (void)showPlaceHolderCells
 {
+    self.showNoDataErrorView = NO;
+    self.showRequestErrorView = NO;
     self.showPlaceHolder = YES;
     [self.tableView reloadData];
 }
