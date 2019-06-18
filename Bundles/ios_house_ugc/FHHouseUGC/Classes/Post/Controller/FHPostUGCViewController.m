@@ -522,7 +522,7 @@ static NSInteger const kMaxPostImageCount = 9;
     
     NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
-    BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
+    BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0 || self.selectView.communityName.length > 0;
     
     if (!shouldAlert) {
         [self postFinished:NO];
@@ -543,13 +543,13 @@ static NSInteger const kMaxPostImageCount = 9;
             }];
             [alertController showFrom:self animated:YES];
         } else {
-            TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"确定退出？" message:nil preferredType:TTThemedAlertControllerTypeAlert];
-            [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
+            TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"编辑未完成" message:@"退出后编辑的内容将不被保存" preferredType:TTThemedAlertControllerTypeAlert];
             WeakSelf;
-            [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+            [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
                 StrongSelf;
                 [self postFinished:NO];
             }];
+            [alertController addActionWithTitle:NSLocalizedString(@"继续编辑", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:nil];
             [alertController showFrom:self animated:YES];
         }
     }
