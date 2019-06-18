@@ -108,7 +108,17 @@
                 wself.originSearchId = wself.searchId;
                 [wself.dataList removeAllObjects];
             }
-            [wself.dataList addObjectsFromArray:msgModel.data.items];
+            for (FHHouseMsgDataItemsModel *item in msgModel.data.items) {
+                BOOL isSoldout = YES;
+                for (FHHouseMsgDataItemsItemsModel *houseItem in item.items) {
+                    if (houseItem.status == 0) {
+                        isSoldout = NO;
+                        break;
+                    }
+                }
+                item.isSoldout = isSoldout;
+                [wself.dataList addObject:item];
+            }
             wself.tableView.hasMore = msgModel.data.hasMore;
             [wself updateTableViewWithMoreData:msgModel.data.hasMore];
             wself.viewController.hasValidateData = wself.dataList.count > 0;
@@ -257,6 +267,11 @@
     FHHouseMsgDataItemsModel *model = self.dataList[section];
     headerView.dateLabel.text = model.dateStr;
     headerView.contentLabel.text = model.title;
+    if (model.isSoldout) {
+        headerView.contentLabel.textColor = [UIColor themeGray3];
+    }else {
+        headerView.contentLabel.textColor = [UIColor themeGray1];
+    }
     return headerView;
 }
 
