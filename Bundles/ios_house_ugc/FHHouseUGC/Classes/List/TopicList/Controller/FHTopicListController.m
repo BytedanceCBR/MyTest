@@ -61,7 +61,7 @@
     WeakSelf;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         StrongSelf;
-        [self loadData:NO];
+        [wself loadData:NO];
     }];
     self.tableView.mj_footer = self.refreshFooter;
 

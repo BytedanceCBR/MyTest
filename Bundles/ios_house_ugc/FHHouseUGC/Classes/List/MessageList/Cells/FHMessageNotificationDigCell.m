@@ -1,0 +1,170 @@
+//
+//  FHMessageNotificationDigCell.m
+//  Article
+//
+//  Created by zhulijun.2539 on 2019/6/17.
+//
+//
+
+#import "FHMessageNotificationDigCell.h"
+#import "TTMessageNotificationModel.h"
+#import "TTImageView.h"
+#import "FHMessageNotificationCellHelper.h"
+#import <TTBaseLib/UIViewAdditions.h>
+
+NS_INLINE CGFloat kDigImageViewWidth(){
+    return [FHMessageNotificationCellHelper tt_newPadding:19.f];
+}
+
+NS_INLINE CGFloat kDigImageViewHeight(){
+    return [FHMessageNotificationCellHelper tt_newPadding:18.5f];
+}
+
+NS_INLINE CGFloat kDigImageViewTopPadding(){
+    return [FHMessageNotificationCellHelper tt_newPadding:8.f];
+}
+
+NS_INLINE CGFloat kDigImageViewLeftPadding(){
+    return [FHMessageNotificationCellHelper tt_newPadding:63.f];
+}
+
+@implementation FHMessageNotificationDigCell
+
++ (Class)cellViewClass{
+    return [FHMessageNotificationDigCellView class];
+}
+
+@end
+
+@interface FHMessageNotificationDigCellView()
+
+@property (nonatomic, strong) SSThemedImageView *digImageView;
+
+@end
+
+@implementation FHMessageNotificationDigCellView
+
++ (CGFloat)heightForData:(TTMessageNotificationModel *)data cellWidth:(CGFloat)width{
+    if ([data.cachedHeight floatValue] > 0){
+        return [data.cachedHeight floatValue];
+    }
+    CGFloat height = 0.f;
+    
+    height += FHMNRoleInfoViewTopPadding();
+    height += FHMNRoleInfoViewHeight();
+    
+    if(!isEmptyString(data.user.contactInfo)){
+        height += FHMNContactInfoLabelTopPadding();
+        height += FHMNContactInfoLabelHeight();
+    }
+    
+    height += kDigImageViewTopPadding();
+    
+    height += kDigImageViewHeight();
+    
+    height += FHMNTimeLabelTopPadding();
+    
+    height += FHMNTimeLabelHeight();
+    
+    if([data.style integerValue]== TTMessageNotificationStyleDigMerge){
+        height += FHMNMultiTextViewTopPadding();
+        height += FHMNMultiTextViewHeight();
+    }
+    
+    height = MAX(height, FHMNAvatarImageViewSize() + FHMNAvatarImageViewTopPadding());
+    //判断右边显示的是图片还是文字
+    if(!isEmptyString(data.content.refThumbUrl)){
+        height = MAX(height, FHMNRefTopPadding() + FHMNRefImageViewSize());
+    }
+    else{
+        height = MAX(height, FHMNRefTopPadding() + [self heightForRefTextLabelWithData:data maxWidth:FHMNRefTextLabelWidth()]);
+    }
+    
+    height += FHMNTimeLabelBottomPadding();
+    
+    data.cachedHeight = @(height);
+    
+    return height;
+}
+
+
+- (SSThemedImageView *)digImageView{
+    if(!_digImageView){
+        _digImageView = [[SSThemedImageView alloc] initWithFrame:CGRectZero];
+        _digImageView.contentMode = UIViewContentModeScaleAspectFill;
+        _digImageView.imageName = @"noticeicon_like";
+        [self addSubview:_digImageView];
+    }
+    return _digImageView;
+}
+
+- (void)refreshWithData:(TTMessageNotificationModel *)data{
+    self.messageModel = data;
+    
+    if(self.messageModel){
+        [self updateAvatarImageView];
+        
+        if(!isEmptyString(self.messageModel.user.contactInfo)){
+            [self updateContactInfoLabel];
+        }
+        
+        if(!isEmptyString(self.messageModel.content.refThumbUrl)){
+            [self updateRefImageView];
+        }
+        else{
+            [self updateRefTextLabel];
+        }
+        
+        if([self.messageModel.style integerValue] == TTMessageNotificationStyleDigMerge){
+            [self updateMultiTextView];
+        }
+        
+        [self updateTimeLabel];
+    }
+}
+
+- (void)refreshUI{
+    [self layoutAvatarImageView];
+    
+    CGFloat maxRoleInfoViewWidth = self.width - FHMNRoleInfoViewLeftPadding() - FHMNRoleInfoViewRightPaddingWithRef();
+    [self updateRoleInfoViewForMaxWidth:maxRoleInfoViewWidth];
+    [self layoutRoleInfoView];
+    
+    if(!isEmptyString(self.messageModel.user.contactInfo)){
+        self.contactInfoLabel.hidden = NO;
+        
+        [self layoutContactInfoLabelWithOrigin:CGPointMake(FHMNContactInfoLabelLeftPadding(), self.roleInfoView.bottom + FHMNContactInfoLabelTopPadding()) maxWitdh:self.width - FHMNContactInfoLabelLeftPadding() - FHMNContactInfoLabelRightPaddingWithRef()];
+
+        self.digImageView.frame = CGRectMake(kDigImageViewLeftPadding(), self.contactInfoLabel.bottom + kDigImageViewTopPadding(), kDigImageViewWidth(), kDigImageViewHeight());
+    }
+    else{
+        self.contactInfoLabel.hidden = YES;
+        self.digImageView.frame = CGRectMake(kDigImageViewLeftPadding(), self.roleInfoView.bottom + kDigImageViewTopPadding(), kDigImageViewWidth(), kDigImageViewHeight());
+    }
+    
+    [self layoutTimeLabelWithOrigin:CGPointMake(FHMNTimeLabelLeftPadding(), self.digImageView.bottom + FHMNTimeLabelTopPadding()) maxWidth:self.width - FHMNTimeLabelLeftPadding() - FHMNTimeLabelRightPaddingWithRef()];
+    
+    if([self.messageModel.style integerValue] == TTMessageNotificationStyleDigMerge){
+        self.multiTextView.hidden = NO;
+        
+        [self layoutMultiTextViewWithOrigin:CGPointMake(FHMNMultiTextViewLeftPadding(), self.timeLabel.bottom + FHMNMultiTextViewTopPadding()) maxWitdh:self.width - FHMNMultiTextViewLeftPadding() - FHMNMultiTextViewRightPaddingWithRef()];
+    }
+    else{
+        self.multiTextView.hidden = YES;
+    }
+    
+    if(!isEmptyString(self.messageModel.content.refThumbUrl)){
+        self.refTextLabel.hidden = YES;
+        self.refImageView.hidden = NO;
+        [self layoutRefImageView];
+    }
+    else{
+        self.refImageView.hidden = YES;
+        self.refTextLabel.hidden = NO;
+        [self layoutRefTextLabel];
+    }
+
+    [self layoutBottomLine];
+}
+
+@end

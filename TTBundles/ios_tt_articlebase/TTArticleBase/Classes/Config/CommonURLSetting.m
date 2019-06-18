@@ -1262,13 +1262,13 @@ static CommonURLSetting *_sharedInstance = nil;
 // 新消息通知列表
 + (NSString *)messageNotificationListURLString
 {
-    return [NSString stringWithFormat:@"%@/api/msg/v3/list/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/api/msg/v7/list/", [self baseURL]];
 }
 
 // 新消息通知未读提示
 + (NSString*)messageNotificationUnreadURLString
 {
-    return [NSString stringWithFormat:@"%@/api/msg/v1/unread/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/api/msg/v7/unread/", [self baseURL]];
 }
 
 @end
