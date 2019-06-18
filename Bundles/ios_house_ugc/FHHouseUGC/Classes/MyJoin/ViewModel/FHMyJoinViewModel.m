@@ -39,6 +39,7 @@
 }
 
 - (void)requestData {
+    [self.dataList removeAllObjects];
     for (NSInteger i = 0; i < 10; i++) {
         [self.dataList addObject:[NSString stringWithFormat:@"小区%li",(long)i]];
     }
@@ -54,7 +55,7 @@
     self.viewController.neighbourhoodView.messageView.hidden = NO;
     
     CGRect frame = self.viewController.neighbourhoodView.frame;
-    frame.size.height = 258;
+    frame.size.height = 252;
     self.viewController.neighbourhoodView.frame = frame;
     
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
@@ -67,7 +68,7 @@
     self.viewController.neighbourhoodView.messageView.hidden = YES;
     
     CGRect frame = self.viewController.neighbourhoodView.frame;
-    frame.size.height = 200;
+    frame.size.height = 194;
     self.viewController.neighbourhoodView.frame = frame;
     
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
