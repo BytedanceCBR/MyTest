@@ -279,8 +279,13 @@
     
     self.selectionIndicatorArrowLayer.backgroundColor = self.selectionIndicatorColor.CGColor;
     
-    self.selectionIndicatorStripLayer.backgroundColor = self.selectionIndicatorColor.CGColor;
-    self.selectionIndicatorStripLayer.cornerRadius = self.selectionIndicatorCornerRadius;
+    if(self.selectionIndicatorImage){
+        self.selectionIndicatorStripLayer.contents = (__bridge id)self.selectionIndicatorImage.CGImage;
+        self.selectionIndicatorStripLayer.contentsGravity = kCAGravityResizeAspect;
+    }else{
+        self.selectionIndicatorStripLayer.backgroundColor = self.selectionIndicatorColor.CGColor;
+        self.selectionIndicatorStripLayer.cornerRadius = self.selectionIndicatorCornerRadius;
+    }
     
     self.selectionIndicatorBoxLayer.backgroundColor = self.selectionIndicatorBoxColor.CGColor;
     self.selectionIndicatorBoxLayer.borderColor = self.selectionIndicatorBoxColor.CGColor;
