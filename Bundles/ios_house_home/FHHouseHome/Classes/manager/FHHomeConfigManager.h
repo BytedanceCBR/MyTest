@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, FHHomeHeaderCellPositionType) {
-    FHHomeHeaderCellPositionTypeForNews,  //首页推荐频道排序
+//    FHHomeHeaderCellPositionTypeForNews,  //首页推荐频道排序
     FHHomeHeaderCellPositionTypeForFindHouse //找房频道排序
 };
 

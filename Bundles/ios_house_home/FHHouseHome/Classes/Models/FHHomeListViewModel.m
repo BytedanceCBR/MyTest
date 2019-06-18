@@ -87,8 +87,6 @@
         self.isRequestFromSwitch = NO;
         
         //**************
-        self.headerHeight =  [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
-        
         // 监听子控制器发出的通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subTableViewDidScroll:) name:@"FHHomeSubTableViewDidScroll" object:nil];
         
@@ -133,7 +131,6 @@
             
             [self configIconRowCountAndHeight];
             
-            self.headerHeight =  [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
             
             if (xConfigDataModel.cityAvailability.enable.boolValue)
             {
@@ -629,14 +626,19 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.row == kFHHomeListHeaderBaseViewSection) {
-        [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForFindHouse;
-        return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType] ;
+        return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }
     
     if (indexPath.row == kFHHomeListHouseTypeBannerViewSection) {
+        self.headerHeight = [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
+        
         if (self.categoryView.segmentedControl.sectionTitles.count <= 1) {
             self.headerHeight += KFHHomeSectionHeight;
+        }else
+        {
+            self.headerHeight += 1;
         }
+        
         return KFHHomeSectionHeight;
     }
     
