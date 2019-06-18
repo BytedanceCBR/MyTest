@@ -119,7 +119,7 @@
 //    }else{
 //        [self showMessageView];
 //    }
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_list"];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 

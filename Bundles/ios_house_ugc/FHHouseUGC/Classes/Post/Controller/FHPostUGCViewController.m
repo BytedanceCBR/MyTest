@@ -38,8 +38,8 @@
 #import "TTUGCEmojiParser.h"
 #import "TTUGCHashtagModel.h"
 
-static CGFloat const kLeftPadding = 15.f;
-static CGFloat const kRightPadding = 15.f;
+static CGFloat const kLeftPadding = 20.f;
+static CGFloat const kRightPadding = 20.f;
 static CGFloat const kMidPadding = 10.f;
 static CGFloat const kInputViewTopPadding = 8.f;
 static CGFloat const kRateMovieViewHeight = 100.f;
@@ -189,15 +189,16 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)setupNaviBar {
     [self setupDefaultNavBar:YES];
+    [self setTitle:@"发帖"];
     TTNavigationBarItemContainerView * leftBarItem = nil;
     leftBarItem = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfLeft
                                                                                            withTitle:NSLocalizedString(@"取消", nil)
                                                                                               target:self
                                                                                               action:@selector(cancel:)];
     if ([leftBarItem isKindOfClass:[TTNavigationBarItemContainerView class]]) {
-        leftBarItem.button.titleColorThemeKey = kColorText1;
+        [leftBarItem.button setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+        [leftBarItem.button setTitleColor:[UIColor themeGray1] forState:UIControlStateDisabled];
         leftBarItem.button.highlightedTitleColorThemeKey = kColorText1Highlighted;
-        leftBarItem.button.disabledTitleColorThemeKey = kColorText1;
         if ([TTDeviceHelper is736Screen]) {
             // Plus上bar button item的左边距会多4.3个点（13px），调整到间距为30px
             [leftBarItem.button setTitleEdgeInsets:UIEdgeInsetsMake(0, -4.3, 0, 4.3)];
@@ -215,7 +216,7 @@ static NSInteger const kMaxPostImageCount = 9;
                                                                                                action:@selector(sendPost:)];
     
     if ([rightBarItem isKindOfClass:[TTNavigationBarItemContainerView class]]) {
-        rightBarItem.button.titleColorThemeKey = kColorText6;
+        [rightBarItem.button setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         rightBarItem.button.highlightedTitleColorThemeKey = kColorText6Highlighted;
         rightBarItem.button.titleLabel.font = [UIFont boldSystemFontOfSize:16.f];
         if ([TTDeviceHelper is736Screen]) {
@@ -287,12 +288,12 @@ static NSInteger const kMaxPostImageCount = 9;
     if (!isEmptyString(self.postContentHint)) {
         internalTextView.placeholder = self.postContentHint;
     } else {
-        internalTextView.placeholder = [NSString stringWithFormat:@"分享新鲜事"];
+        internalTextView.placeholder = [NSString stringWithFormat:@"新鲜事"];
     }
-    
     
     internalTextView.backgroundColor = [UIColor clearColor];
     internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
+    internalTextView.tintColor = [UIColor themeRed1];
     internalTextView.placeholderColor =  SSGetThemedColorWithKey(kColorText3);
     internalTextView.internalTextView.placeHolderFont = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
     internalTextView.font = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
@@ -307,11 +308,12 @@ static NSInteger const kMaxPostImageCount = 9;
     self.addImagesView.eventName = kPostTopicEventName;
     self.addImagesView.delegate = self;
     self.addImagesView.ssTrackDict = self.trackDict;
+    self.addImagesView.hideAddImagesButtonWhenEmpty = YES;
     [self.addImagesView startTrackImagepicker];
     
     [self.inputContainerView addSubview:self.addImagesView];
   
-    self.inputContainerView.height =  self.addImagesView.bottom + kAddImagesViewBottomPadding;
+    self.inputContainerView.height = self.addImagesView.bottom + kAddImagesViewBottomPadding;
     
     // toolbar
     kUGCToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
@@ -323,6 +325,7 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.view addSubview:self.toolbar];
     
     //Location view
+    
     self.addLocationView = [[FRPostThreadAddLocationView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 36.f) andShowEtStatus:self.showEtStatus];
     if (!isEmptyString([self.position tt_stringValueForKey:@"position"])) {
         self.addLocationView.selectedLocation = [self generateLocationEntity];
@@ -331,18 +334,19 @@ static NSInteger const kMaxPostImageCount = 9;
     self.addLocationView.categotyID = self.categoryID;
     self.addLocationView.trackDic = self.trackDict;
     self.addLocationView.delegate = self;
+    self.addLocationView.hidden = YES;
     [self.toolbar addSubview:self.addLocationView];
     
     //Tip label
-    CGFloat tipLabelWidth = 70.0;
-    self.tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(self.view.width - tipLabelWidth - kRightPadding, 0, tipLabelWidth, 36.f)];
+    CGFloat tipLabelWidth = 100.0;
+    self.tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(self.view.width - tipLabelWidth - kRightPadding, 11, tipLabelWidth, 25.f)];
     
-    self.tipLabel.font = [UIFont systemFontOfSize:12];
+    self.tipLabel.font = [UIFont systemFontOfSize:11];
     self.tipLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
     self.tipLabel.textAlignment = NSTextAlignmentRight;
     self.tipLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
-    self.tipLabel.textColorThemeKey = kColorText4;
-    self.tipLabel.hidden = YES;
+    [self.tipLabel setTextColor:[UIColor themeGray4]];
+    self.tipLabel.hidden = NO;
     [self.toolbar addSubview:self.tipLabel];
     
     // TextView and Toolbar Mediator
@@ -855,14 +859,16 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)refreshUI {
     NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
     NSString *inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if (inputText.length > maxTextCount) {
-        self.tipLabel.hidden = NO;
-        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
-        excludeCount = MIN(excludeCount, 9999);
-        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
-    } else {
-        self.tipLabel.hidden = YES;
-    }
+//    if (inputText.length > maxTextCount) {
+//        self.tipLabel.hidden = NO;
+//        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
+//        excludeCount = MIN(excludeCount, 9999);
+//        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
+//    } else {
+//        self.tipLabel.hidden = YES;
+//    }
+    self.tipLabel.hidden = NO;
+    self.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",inputText.length, maxTextCount];
     
     [self refreshPostButtonUI];
 }
@@ -870,13 +876,13 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)refreshPostButtonUI {
     //发布器
     if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
-        self.postButton.titleColorThemeKey = kColorText6;
         self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
-        self.postButton.disabledTitleColorThemeKey = kColorText6;
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
     } else {
-        self.postButton.titleColorThemeKey = kColorText9;
         self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
-        self.postButton.disabledTitleColorThemeKey = kColorText9;
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
     }
 }
 

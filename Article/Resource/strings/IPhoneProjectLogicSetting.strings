@@ -174,5 +174,5 @@
 // 选择小区列表
 "ugc_follow_select_list" = "FHUGCFollowListController";
 // 已关注的小区列表
-"ugc_follow_list" = "FHUGCFollowListController";
+"ugc_follow_communitys" = "FHUGCFollowListController";
 

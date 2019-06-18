@@ -35,12 +35,18 @@
     if (self) {
         // 我关注的小区列表 默认
         self.vcType = FHUGCFollowVCTypeList;
-        // 根据host区分页面
-        if ([paramObj.host isEqualToString:@"ugc_follow_list"]) {
-            self.vcType = FHUGCFollowVCTypeList;
-        } else if ([paramObj.host isEqualToString:@"ugc_follow_select_list"]) {
-            self.vcType = FHUGCFollowVCTypeSelectList;
+        // 根据action_type区分页面
+        if (paramObj.allParams[@"action_type"]) {
+            NSInteger action_type = [[paramObj.allParams objectForKey:@"action_type"] integerValue];
+            self.vcType = (FHUGCFollowVCType)action_type;
         }
+        // action_type
+        
+//        if ([paramObj.host isEqualToString:@"ugc_follow_communitys"]) {
+//            self.vcType = FHUGCFollowVCTypeList;
+//        } else if ([paramObj.host isEqualToString:@"ugc_follow_select_list"]) {
+//            self.vcType = FHUGCFollowVCTypeSelectList;
+//        }
     }
     return self;
 }

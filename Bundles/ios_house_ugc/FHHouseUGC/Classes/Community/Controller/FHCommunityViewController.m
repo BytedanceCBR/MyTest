@@ -165,7 +165,7 @@
 //    TTNavigationController *navVC = [[TTNavigationController alloc] initWithRootViewController:vc];
 //    [self presentViewController:navVC animated:YES completion:nil];
     
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_list"];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
