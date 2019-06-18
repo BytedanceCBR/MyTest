@@ -12,6 +12,7 @@
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 #import "FHUGCFollowButton.h"
+#import "FHUGCFollowManager.h"
 
 @interface FHPostDetailHeaderCell ()
 
@@ -81,7 +82,10 @@
 }
 
 - (void)followButtonClick:(UIControl *)control {
-    
+//    NSString *gId = @"6703403081570189582";
+//    [[FHUGCFollowManager sharedInstance] followUGCBy:gId isFollow:NO completion:^(BOOL isSuccess) {
+//
+//    }];
 }
 
 - (void)setupConstraints {

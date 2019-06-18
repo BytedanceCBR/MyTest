@@ -38,6 +38,7 @@
 #import "TTUGCEmojiParser.h"
 #import "TTUGCHashtagModel.h"
 #import "FHPostUGCMainView.h"
+#import "FHUGCFollowListController.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -58,7 +59,7 @@ NSString * const kForumPostThreadFinish = @"ForumPostThreadFinish";
 
 static NSInteger const kMaxPostImageCount = 9;
 
-@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate,FRPostThreadAddLocationViewDelegate>
+@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate,FRPostThreadAddLocationViewDelegate,FHUGCFollowListDelegate>
 
 @property (nonatomic, strong) SSThemedButton * cancelButton;
 @property (nonatomic, strong) SSThemedButton * postButton;
@@ -276,6 +277,9 @@ static NSInteger const kMaxPostImageCount = 9;
     // select view
     self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 44)];
     [self.inputContainerView addSubview:self.selectView];
+    self.selectView.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];
+    [self.selectView addGestureRecognizer:tapGestureRecognizer];
     y += 44;
     
     //Input view
@@ -371,6 +375,18 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.toolbar tt_addDelegate:self asMainDelegate:NO];
     self.inputTextView.delegate = self.textViewMediator;
     [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
+}
+
+- (void)selectCommunityViewClick:(UITapGestureRecognizer *)sender {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"title"] = @"选择小区";
+    dict[@"action_type"] = @(1);
+    NSHashTable *ugcDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [ugcDelegateTable addObject:self];
+    dict[@"ugc_delegate"] = ugcDelegateTable;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 - (void)parseOutInputImagesWithParamDic:(NSDictionary *)params {
@@ -506,7 +522,7 @@ static NSInteger const kMaxPostImageCount = 9;
     
     NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
-    BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
+    BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0 || [self.selectView hasValidData];
     
     if (!shouldAlert) {
         [self postFinished:NO];
@@ -527,13 +543,13 @@ static NSInteger const kMaxPostImageCount = 9;
             }];
             [alertController showFrom:self animated:YES];
         } else {
-            TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"确定退出？" message:nil preferredType:TTThemedAlertControllerTypeAlert];
-            [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
+            TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"编辑未完成" message:@"退出后编辑的内容将不被保存" preferredType:TTThemedAlertControllerTypeAlert];
             WeakSelf;
-            [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+            [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
                 StrongSelf;
                 [self postFinished:NO];
             }];
+            [alertController addActionWithTitle:NSLocalizedString(@"继续编辑", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:nil];
             [alertController showFrom:self animated:YES];
         }
     }
@@ -888,6 +904,7 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)refreshPostButtonUI {
     //发布器
     if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
+        self.postButton.enabled = YES;
         self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
         [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
         [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
@@ -895,6 +912,7 @@ static NSInteger const kMaxPostImageCount = 9;
         self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
+        self.postButton.enabled = NO;
     }
 }
 
@@ -1267,6 +1285,16 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 移除google地图注册
     [[TTLocationManager sharedManager] unregisterReverseGeocoderForKey:NSStringFromClass([TTGoogleMapGeocoder class])];
+}
+
+#pragma mark - FHUGCFollowListDelegate
+- (void)selectedItem:(FHUGCDataUserFollowSocialGroupsModel *)item {
+    // 选择 小区圈子
+    if (item) {
+        self.selectView.groupId = item.socialGroupId;
+        self.selectView.communityName = item.name;
+        [self refreshPostButtonUI];
+    }
 }
 
 @end

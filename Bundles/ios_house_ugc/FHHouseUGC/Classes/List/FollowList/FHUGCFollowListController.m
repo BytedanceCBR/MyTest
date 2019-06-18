@@ -25,6 +25,7 @@
 @property (nonatomic, assign)   FHUGCFollowVCType       vcType;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong)   NSMutableArray       *items;
+@property (nonatomic, weak)     id<FHUGCFollowListDelegate>   ugc_delegate;
 
 @end
 
@@ -40,6 +41,8 @@
             NSInteger action_type = [[paramObj.allParams objectForKey:@"action_type"] integerValue];
             self.vcType = (FHUGCFollowVCType)action_type;
         }
+        NSHashTable<FHUGCFollowListDelegate> *ugc_delegate = paramObj.allParams[@"ugc_delegate"];
+        self.ugc_delegate = ugc_delegate.anyObject;
     }
     return self;
 }
@@ -183,6 +186,33 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSInteger row = indexPath.row;
+    if (row >= 0 && row < self.items.count) {
+        FHUGCDataUserFollowSocialGroupsModel* data = self.items[row];
+        if (self.vcType == FHUGCFollowVCTypeList) {
+            // 我关注的小区
+            // 点击进入下个页面
+        } else if (self.vcType == FHUGCFollowVCTypeSelectList)  {
+            // 选择小区
+            if (self.ugc_delegate) {
+                [self.ugc_delegate selectedItem:data];
+                [self dismissSelf];
+            }
+        }
+    }
+}
+
+// pop
+- (void)dismissSelf
+{
+    if (self.navigationController.viewControllers.count>1) {
+        NSArray *viewControllers = self.navigationController.viewControllers;
+        if (viewControllers && viewControllers.count > 1) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    } else {
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }
 }
 
 @end

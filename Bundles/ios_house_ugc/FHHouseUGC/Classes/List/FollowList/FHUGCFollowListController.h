@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
+#import "FHUGCModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,6 +16,13 @@ typedef enum FHUGCFollowVCType {
     FHUGCFollowVCTypeList = 0,          // ugc_follow_communitys ：已关注小区列表 action_type = 0
     FHUGCFollowVCTypeSelectList = 1   // ugc_follow_communitys：选择小区列表 action_type = 1
 }FHUGCFollowVCType;
+
+@protocol FHUGCFollowListDelegate <NSObject>
+
+@optional
+- (void)selectedItem:(FHUGCDataUserFollowSocialGroupsModel *)item;
+
+@end
 
 @interface FHUGCFollowListController : FHBaseViewController
 
