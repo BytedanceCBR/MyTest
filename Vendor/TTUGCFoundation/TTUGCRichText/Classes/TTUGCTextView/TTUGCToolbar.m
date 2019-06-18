@@ -158,11 +158,11 @@
 
 - (void)keyboardAction:(id)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(toolbarDidClickKeyboardButton:)]) {
-        BOOL switchToInput = [self.keyboardButton.imageName isEqualToString:@"toolbar_icon_keyboard_up"]; // 这里折衷一下
+        BOOL switchToInput = [self.keyboardButton.imageName isEqualToString:@"fh_ugc_toolbar_keyboard_selected"]; // 这里折衷一下
         [self.delegate toolbarDidClickKeyboardButton:switchToInput];
-        self.keyboardButton.imageName = switchToInput ? @"toolbar_icon_keyboard_down" : @"toolbar_icon_keyboard_up";
+        self.keyboardButton.imageName = switchToInput ? @"fh_ugc_toolbar_keyboard_normal" : @"fh_ugc_toolbar_keyboard_selected";
         self.keyboardButton.accessibilityLabel = switchToInput ? @"收起键盘" : @"弹出键盘";
-        self.emojiButton.imageName = @"toolbar_icon_emoji";
+        self.emojiButton.imageName = @"fh_ugc_toolbar_emoj_normal";
         self.emojiButton.accessibilityLabel = @"表情";
     }
 }
@@ -194,9 +194,9 @@
 - (void)emojiAction:(id)sender {
     if (self.emojiInputViewVisible) {
         self.emojiInputViewVisible = NO;
-        self.keyboardButton.imageName = @"toolbar_icon_keyboard_up";
+        self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_selected";
         self.keyboardButton.accessibilityLabel = @"弹出键盘";
-        self.emojiButton.imageName = @"toolbar_icon_emoji";
+        self.emojiButton.imageName = @"fh_ugc_toolbar_emoj_normal";
         self.emojiButton.accessibilityLabel = @"表情";
         if (self.delegate && [self.delegate respondsToSelector:@selector(toolbarDidClickEmojiButton:)]) {
             [self.delegate toolbarDidClickEmojiButton:NO];
@@ -204,9 +204,9 @@
     } else {
         self.emojiInputViewVisible = YES;
         self.emojiInputView.hidden = NO;
-        self.keyboardButton.imageName = @"toolbar_icon_keyboard_down";
+        self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_normal";
         self.keyboardButton.accessibilityLabel = @"收起键盘";
-        self.emojiButton.imageName = @"toolbar_icon_keyboard";
+        self.emojiButton.imageName = @"fh_ugc_toolbar_keyboard_selected";
         self.emojiButton.accessibilityLabel = @"收起表情选择框";
         if (self.delegate && [self.delegate respondsToSelector:@selector(toolbarDidClickEmojiButton:)]) {
             [self.delegate toolbarDidClickEmojiButton:YES];
@@ -257,9 +257,9 @@
         
         // 提前显示表情选择器
         self.emojiInputView.hidden = !self.emojiInputViewVisible;
-        self.keyboardButton.imageName = @"toolbar_icon_keyboard_down";
+        self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_normal";
         self.keyboardButton.accessibilityLabel = @"收起键盘";
-        self.emojiButton.imageName = @"toolbar_icon_keyboard";
+        self.emojiButton.imageName = @"fh_ugc_toolbar_keyboard_selected";
         self.emojiButton.accessibilityLabel = @"收起表情选择框";
     } else { // 直接收起键盘
         [self endEditing:YES];
@@ -311,9 +311,9 @@
         self.emojiInputViewVisible = NO;
     }
     
-    self.keyboardButton.imageName = @"toolbar_icon_keyboard_down";
+    self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_normal";
     self.keyboardButton.accessibilityLabel = @"收起键盘";
-    self.emojiButton.imageName = @"toolbar_icon_emoji";
+    self.emojiButton.imageName = @"fh_ugc_toolbar_emoj_normal";
     self.emojiButton.accessibilityLabel = @"表情";
     
     frame.origin.y = targetY;
@@ -336,9 +336,9 @@
     };
 
     void (^completion)(BOOL) = ^(BOOL finished) {
-        self.keyboardButton.imageName = @"toolbar_icon_keyboard_up";
+        self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_selected";
         self.keyboardButton.accessibilityLabel = @"弹出键盘";
-        self.emojiButton.imageName = @"toolbar_icon_emoji";
+        self.emojiButton.imageName = @"fh_ugc_toolbar_emoj_normal";
         self.emojiButton.accessibilityLabel = @"表情";
 
         if (self.emojiInputViewVisible) {
@@ -403,9 +403,9 @@
 }
 
 - (void)markKeyboardAsVisible {
-    self.keyboardButton.imageName = @"toolbar_icon_keyboard_down";
+    self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_normal";
     self.keyboardButton.accessibilityLabel = @"收起键盘";
-    self.emojiButton.imageName = @"toolbar_icon_emoji";
+    self.emojiButton.imageName = @"fh_ugc_toolbar_emoj_normal";
     self.emojiButton.accessibilityLabel = @"表情";
 }
 
@@ -432,7 +432,7 @@
 - (SSThemedButton *)keyboardButton {
     if (!_keyboardButton) {
         _keyboardButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-        _keyboardButton.imageName = @"toolbar_icon_keyboard_up";
+        _keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_selected";
         _keyboardButton.accessibilityLabel = @"弹出键盘";
         [_keyboardButton addTarget:self action:@selector(keyboardAction:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -488,7 +488,7 @@
 - (SSThemedButton *)emojiButton {
     if (!_emojiButton) {
         _emojiButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-        _emojiButton.imageName = @"toolbar_icon_emoji";
+        _emojiButton.imageName = @"fh_ugc_toolbar_emoj_normal";
         _emojiButton.accessibilityLabel = @"表情";
         [_emojiButton addTarget:self action:@selector(emojiAction:) forControlEvents:UIControlEventTouchUpInside];
     }
