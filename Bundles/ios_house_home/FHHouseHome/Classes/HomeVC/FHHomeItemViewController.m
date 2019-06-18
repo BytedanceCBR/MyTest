@@ -125,8 +125,12 @@
 
 - (void)currentViewIsShowing
 {
+    [self.traceEnterCategoryCache setValue:@"switch" forKey:@"enter_type"];
+    
     if (self.traceEnterCategoryCache.allKeys.count > 0 && self.isOriginShowSelf) {
-        [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
+        if (self.traceEnterCategoryCache && self.traceEnterCategoryCache[@"category_name"]) {
+            [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
+        }
     }
     
     if (self.showRequestErrorView) {
@@ -386,7 +390,7 @@
     
     tracerDict[@"category_name"] = [self pageTypeString] ? : @"be_null";
     tracerDict[@"enter_from"] = @"maintab";
-    tracerDict[@"enter_type"] = self.enterType ? : @"click";
+    tracerDict[@"enter_type"] = self.enterType ? : @"switch";
     tracerDict[@"element_from"] = @"maintab_list";
     tracerDict[@"search_id"] = self.currentSearchId ? : @"be_null";
     tracerDict[@"origin_from"] = [self pageTypeString]  ? : @"be_null";
