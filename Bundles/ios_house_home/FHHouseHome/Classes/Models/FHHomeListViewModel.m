@@ -254,6 +254,8 @@
     }
     
     self.homeViewController.scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
+    self.tableViewV.scrollEnabled = NO;
+    
     
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSMutableArray *itemVCArrayTmp = [NSMutableArray new];
@@ -297,6 +299,8 @@
     if (![FHEnvContext isNetworkConnected]) {
         self.homeViewController.scrollView.scrollEnabled = NO;
     }
+    
+    self.tableViewV.scrollEnabled = YES;
 }
 
 - (void)setUpSubtableIndex:(NSInteger)index
