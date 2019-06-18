@@ -60,7 +60,7 @@
         make.top.mas_equalTo(self.contentView).offset(20);
         make.left.mas_equalTo(self.contentView).offset(20);
         make.right.mas_equalTo(self.contentView).offset(-20);
-        make.height.mas_equalTo(58);
+        make.height.mas_equalTo(100);
     }];
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {

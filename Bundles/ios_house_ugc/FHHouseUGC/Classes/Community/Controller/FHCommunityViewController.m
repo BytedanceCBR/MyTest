@@ -6,16 +6,8 @@
 //
 
 #import "FHCommunityViewController.h"
-#import "FHPostUGCViewController.h"
-#import "TTNavigationController.h"
-#import "FHWDPostViewController.h"
 #import "TTDeviceHelper.h"
 #import "FHCommunityViewModel.h"
-#import "FHTopicDetailViewController.h"
-#import "FHCommunityDetailViewController.h"
-#import "FHPostDetailViewController.h"
-#import "FHWDAnswerPictureTextViewController.h"
-#import "FHUGCFollowListController.h"
 #import "UIButton+TTAdditions.h"
 
 @interface FHCommunityViewController ()
@@ -105,7 +97,6 @@
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _segmentControl.selectionIndicatorWidth = 24.0f;
     _segmentControl.selectionIndicatorHeight = 12.0f;
-//    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -5, 0);
     _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
     
     [self.topView addSubview:_segmentControl];
@@ -154,7 +145,7 @@
     [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.topView);
         make.width.mas_equalTo([self.segmentControl totalSegmentedControlWidth]);
-        make.top.mas_equalTo(self.topView).offset(10);
+        make.top.mas_equalTo(self.topView).offset(11);
         make.bottom.mas_equalTo(self.topView).offset(-4);
     }];
     
@@ -171,21 +162,6 @@
 
 - (void)initViewModel {
     _viewModel = [[FHCommunityViewModel alloc] initWithCollectionView:self.collectionView controller:self];
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-    
-//    FHUGCFollowListController *vc = [[FHUGCFollowListController alloc] init];
-//    TTNavigationController *navVC = [[TTNavigationController alloc] initWithRootViewController:vc];
-//    [self presentViewController:navVC animated:YES completion:nil];
-    
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"title"] = @"选择小区";
-    dict[@"action_type"] = @(1);
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 - (void)hideSegmentControl {
