@@ -232,6 +232,15 @@
     return cellModel;
 }
 
+//运营位假数据
++ (FHFeedUGCCellModel *)modelFromFakeData2 {
+    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.cellType =@"61";
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBanner;
+    
+    return cellModel;
+}
+
 + (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [model.behotTime doubleValue];

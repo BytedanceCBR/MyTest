@@ -34,7 +34,8 @@
 }
 
 - (void)refreshWithData:(id)data {
-    _titleLabel.text = @"弘善家园";
+    NSString *text = @"望京家园壹号院";
+    _titleLabel.text = [self titleString:text];
     _descLabel.text = @"88热帖·9221人";
     
     [self.icon bd_setImageWithURL:[NSURL URLWithString:@"http://p1.pstatp.com/thumb/fea7000014edee1159ac"] placeholder:nil];
@@ -53,32 +54,32 @@
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
     _titleLabel.textAlignment = NSTextAlignmentCenter;
+    _titleLabel.numberOfLines = 2;
     [self.contentView addSubview:_titleLabel];
     
-    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor themeGray3]];
     _descLabel.textAlignment = NSTextAlignmentCenter;
     [self.contentView addSubview:_descLabel];
 }
 
 - (void)initConstains {
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(20);
+        make.top.mas_equalTo(self.contentView).offset(18);
         make.centerX.mas_equalTo(self.contentView);
         make.width.height.mas_equalTo(iconWidth);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(5);
-        make.right.mas_equalTo(self.contentView).offset(-5);
-        make.height.mas_equalTo(20);
+        make.left.mas_equalTo(self.contentView).offset(10);
+        make.right.mas_equalTo(self.contentView).offset(-10);
     }];
     
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(4);
-        make.left.mas_equalTo(self.contentView).offset(5);
-        make.right.mas_equalTo(self.contentView).offset(-5);
-        make.height.mas_equalTo(17);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom);
+        make.left.mas_equalTo(self.contentView).offset(10);
+        make.right.mas_equalTo(self.contentView).offset(-10);
+        make.height.mas_equalTo(14);
     }];
 }
 
@@ -87,6 +88,23 @@
     label.font = font;
     label.textColor = textColor;
     return label;
+}
+
+//针对小区的标题显示做特殊处理
+- (NSString *)titleString:(NSString *)text {
+    NSMutableString *str = [text mutableCopy];
+    if(str.length <= 6){
+        return str;
+    }
+    
+    NSInteger topLength = str.length - str.length/2;
+    if(topLength > 7){
+        topLength = 7;
+    }
+    
+    [str insertString:@"\n" atIndex:topLength];
+    
+    return str;
 }
 
 @end
