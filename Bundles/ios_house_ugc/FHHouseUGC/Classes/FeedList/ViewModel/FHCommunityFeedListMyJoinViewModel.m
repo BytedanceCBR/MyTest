@@ -150,6 +150,7 @@
         NSString *content = itemModel.content;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         cellModel.categoryId = self.categoryId;
+        cellModel.feedVC = self.viewController;
         if(cellModel){
             [resultArray addObject:cellModel];
         }
@@ -245,13 +246,14 @@
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
         }
     }else if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeUGC){
-        [self jumpToPostDetail:cellModel];
+        [self jumpToPostDetail:cellModel showComment:NO];
     }
 }
 
-- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel {
+- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment {
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"data"] = cellModel;
+    dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     FHFeedUGCContentModel *contentModel = cellModel.originData;
     NSString *routeUrl = @"sslocal://ugc_post_detail";
@@ -264,7 +266,6 @@
         routeUrl = [NSString stringWithFormat:@"%@&comment_count=%@&digg_count=%@&user_digg=%@",routeUrl,contentModel.commentCount,contentModel.diggCount,contentModel.userDigg];
     }
     
-    //    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_community_detail"];
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     self.needRefreshCell = YES;
@@ -279,6 +280,10 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
     }
+}
+
+- (void)commentClicked:(FHFeedUGCCellModel *)cellModel {
+    [self jumpToPostDetail:cellModel showComment:YES];
 }
 
 @end

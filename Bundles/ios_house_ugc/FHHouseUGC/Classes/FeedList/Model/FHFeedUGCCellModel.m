@@ -133,6 +133,7 @@
     FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
     user.name = model.user.name;
     user.avatarUrl = model.user.avatarUrl;
+    user.userId = model.user.userId;
     cellModel.user = user;
     
     NSMutableArray *cellImageList = [NSMutableArray array];

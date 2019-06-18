@@ -11,6 +11,7 @@
 #import "UIFont+House.h"
 #import "FHFeedOperationView.h"
 #import "UIButton+TTAdditions.h"
+#import "FHCommunityFeedListController.h"
 
 @interface FHArticleCellBottomView ()
 
@@ -110,11 +111,34 @@
             self.deleteCellBlock();
         }
     }else if(view.selectdWord.type == FHFeedOperationWordTypeDelete){
-        //调用删除接口
-        if(self.deleteCellBlock){
-            self.deleteCellBlock();
-        }
+        //二次弹窗提醒
+        [self showDeleteAlert];
     }
+}
+
+- (void)showDeleteAlert {
+    __weak typeof(self) wself = self;
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"是否确认要删除"
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction * _Nonnull action) {
+                                                             // 点击取消按钮，调用此block
+                                                         }];
+    [alert addAction:cancelAction];
+    
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"确定删除"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * _Nonnull action) {
+                                                              // 点击按钮，调用此block
+                                                              //调用删除接口
+                                                              if(wself.deleteCellBlock){
+                                                                  wself.deleteCellBlock();
+                                                              }
+                                                          }];
+    [alert addAction:defaultAction];
+    [self.cellModel.feedVC presentViewController:alert animated:YES completion:nil];
 }
 
 @end

@@ -19,6 +19,7 @@
 
 + (NSArray *)operationList;
 
-+ (NSArray<FHFeedOperationWord *> *)operationWordList;
+//根据userId获取对应的操作列表
++ (NSArray<FHFeedOperationWord *> *)operationWordList:(NSString *)userId;
 
 @end

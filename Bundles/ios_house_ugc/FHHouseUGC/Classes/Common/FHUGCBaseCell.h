@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 - (void)deleteCell:(FHFeedUGCCellModel *)cellModel;
 
+- (void)commentClicked:(FHFeedUGCCellModel *)cellModel;
+
 @end
 
 @interface FHUGCBaseCell : UITableViewCell

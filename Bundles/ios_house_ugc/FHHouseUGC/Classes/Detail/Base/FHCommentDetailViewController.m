@@ -66,7 +66,7 @@
     if (self) {
         self.beginShowComment = NO;
         if(paramObj.allParams[@"begin_show_comment"]) {
-            self.beginShowComment = [paramObj.allParams[@"beginShowComment"] boolValue];
+            self.beginShowComment = [paramObj.allParams[@"begin_show_comment"] boolValue];
         }
     }
     return self;

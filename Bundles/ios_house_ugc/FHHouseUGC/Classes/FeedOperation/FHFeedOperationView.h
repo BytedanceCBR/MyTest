@@ -41,6 +41,7 @@ typedef NS_ENUM(NSInteger, TTFeedDislikeViewPushFrom) {
 
 @property (nonatomic, copy, nullable) NSArray<NSDictionary *> *keywords;
 @property (nonatomic, strong, nullable) NSString *groupID;
+@property (nonatomic, strong, nullable) NSString *userID;
 @property (nonatomic, strong, nullable) NSString *adID;
 @property (nonatomic, strong, nullable) NSString *videoID;
 @property (nonatomic, strong, nullable) NSString *categoryID;

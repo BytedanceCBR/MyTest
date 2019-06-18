@@ -10,6 +10,8 @@
 #import "FHFeedUGCContentModel.h"
 #import "FHHouseUGCHeader.h"
 
+@class FHCommunityFeedListController;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFeedUGCCellImageListUrlListModel : NSObject
@@ -30,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *userId;
 
 @end
 
@@ -62,6 +65,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) id originData;
 //tableview
 @property (nonatomic, weak) UITableView *tableView;
+//feedVC
+@property (nonatomic, weak) FHCommunityFeedListController *feedVC;
 //感兴趣的小区
 @property (nonatomic, strong , nullable) NSMutableArray *interestNeighbourhoodList;
 //唯一Id
