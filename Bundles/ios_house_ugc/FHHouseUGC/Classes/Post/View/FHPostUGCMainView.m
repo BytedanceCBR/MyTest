@@ -84,4 +84,11 @@
     }
 }
 
+- (BOOL)hasValidData {
+    if (self.communityName.length > 0 && self.groupId.length > 0) {
+        return YES;
+    }
+    return NO;
+}
+
 @end

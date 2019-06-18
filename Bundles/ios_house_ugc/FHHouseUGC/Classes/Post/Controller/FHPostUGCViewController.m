@@ -522,7 +522,7 @@ static NSInteger const kMaxPostImageCount = 9;
     
     NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
-    BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0 || self.selectView.communityName.length > 0;
+    BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0 || [self.selectView hasValidData];
     
     if (!shouldAlert) {
         [self postFinished:NO];
@@ -904,6 +904,7 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)refreshPostButtonUI {
     //发布器
     if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
+        self.postButton.enabled = YES;
         self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
         [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
         [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
@@ -911,6 +912,7 @@ static NSInteger const kMaxPostImageCount = 9;
         self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
+        self.postButton.enabled = NO;
     }
 }
 
@@ -1291,6 +1293,7 @@ static NSInteger const kMaxPostImageCount = 9;
     if (item) {
         self.selectView.groupId = item.socialGroupId;
         self.selectView.communityName = item.name;
+        [self refreshPostButtonUI];
     }
 }
 

@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy)     NSString       *communityName;// 小区名称
 @property (nonatomic, copy)     NSString       *groupId;// 小区圈 id
+@property (nonatomic, assign)   BOOL       hasValidData;// 是否有效
 
 @end
 
