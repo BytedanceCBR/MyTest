@@ -31,6 +31,7 @@
 @property (nonatomic, strong) SSThemedButton *shoppingButton;
 @property (nonatomic, strong) SSThemedButton *hashtagButton;
 @property (nonatomic, strong) SSThemedButton *emojiButton;
+@property (nonatomic, strong) SSThemedButton *picButton;
 @property (nonatomic, strong) TTUGCEmojiInputView *emojiInputView;
 
 @property (nonatomic, assign) CGPoint toolbarViewOrigin;
@@ -51,6 +52,7 @@
         [self.toolbarView addSubview:self.atButton];
         [self.toolbarView addSubview:self.hashtagButton];
         [self.toolbarView addSubview:self.emojiButton];
+        [self.toolbarView addSubview:self.picButton];
         [self.toolbarView addSubview:self.shoppingButton];
 
         self.keyboardButton.width = kTTUGCToolbarButtonSize;
@@ -76,6 +78,10 @@
         self.emojiButton.width = kTTUGCToolbarButtonSize;
         self.emojiButton.height = kTTUGCToolbarButtonSize;
         self.emojiButton.bottom = self.toolbarView.height;
+        
+        self.picButton.width = kTTUGCToolbarButtonSize;
+        self.picButton.height = kTTUGCToolbarButtonSize;
+        self.picButton.bottom = self.toolbarView.height;
 
         [self.containerView addSubview:self.emojiInputView];
 
@@ -102,39 +108,50 @@
 }
 
 - (void)refreshButtonsUI {
-    self.keyboardButton.left = 5;
+    self.emojiButton.hidden = NO;
+    self.hashtagButton.hidden = YES;
+    self.atButton.hidden = YES;
+    self.shoppingButton.hidden = YES;
     
-    self.longTextButton.left = self.keyboardButton.right + 5;
+    self.emojiButton.left = 10;
+    
+    self.longTextButton.right = 0;
+    self.picButton.left = self.emojiButton.right - 5;
 
-    CGFloat right = self.toolbarView.width - 5;
+    CGFloat right = self.toolbarView.width - 10;
     
-    if (!self.emojiButton.hidden) {
-        self.emojiButton.right = right;
-        right -= kTTUGCToolbarButtonSize + 10;
+    if (!self.keyboardButton.hidden) {
+        self.keyboardButton.right = right;
+        right -= kTTUGCToolbarButtonSize + 5;
     } else {
-        self.emojiButton.right = 0;
+        self.keyboardButton.right = 0;
     }
-
+    // 隐藏
+    self.hashtagButton.right = 0;
+    self.atButton.right = 0;
+    self.shoppingButton.right = 0;
+    /*
     if (!self.hashtagButton.hidden) {
         self.hashtagButton.right = right;
-        right -= kTTUGCToolbarButtonSize + 10;
+        right -= kTTUGCToolbarButtonSize + 5;
     } else {
         self.hashtagButton.right = 0;
     }
 
     if (!self.atButton.hidden) {
         self.atButton.right = right;
-        right -= kTTUGCToolbarButtonSize + 10;
+        right -= kTTUGCToolbarButtonSize + 5;
     } else {
         self.atButton.right = right;
     }
     
     if (!self.shoppingButton.hidden) {
         self.shoppingButton.right = right;
-        right -= kTTUGCToolbarButtonSize + 10;
+        right -= kTTUGCToolbarButtonSize + 5;
     } else {
         self.shoppingButton.right = right;
     }
+     */
 }
 
 #pragma mark - actions
@@ -198,6 +215,12 @@
                 self.top = self.toolbarViewOrigin.y - EMOJI_INPUT_VIEW_HEIGHT;
             } completion:nil];
         }
+    }
+}
+
+- (void)picAction:(id)sender {
+    if (self.picButtonClkBlk) {
+        self.picButtonClkBlk();
     }
 }
 
@@ -471,6 +494,17 @@
     }
 
     return _emojiButton;
+}
+
+- (SSThemedButton *)picButton {
+    if (!_picButton) {
+        _picButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
+        _picButton.imageName = @"fh_ugc_toolbar_pic_normal";
+        _picButton.accessibilityLabel = @"图片";
+        [_picButton addTarget:self action:@selector(picAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    return _picButton;
 }
 
 - (TTUGCEmojiInputView *)emojiInputView {

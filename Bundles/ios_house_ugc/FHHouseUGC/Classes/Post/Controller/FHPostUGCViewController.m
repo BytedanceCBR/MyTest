@@ -321,6 +321,11 @@ static NSInteger const kMaxPostImageCount = 9;
     self.toolbar.emojiInputView.source = @"post";
     
     self.toolbar.banLongText = YES;
+    __weak typeof(self) weakSelf = self;
+    self.toolbar.picButtonClkBlk = ^{
+        // 添加图片
+        [weakSelf.addImagesView showImagePicker];
+    };
     
     [self.view addSubview:self.toolbar];
     
