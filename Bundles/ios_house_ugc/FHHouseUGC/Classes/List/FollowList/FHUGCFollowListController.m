@@ -40,13 +40,6 @@
             NSInteger action_type = [[paramObj.allParams objectForKey:@"action_type"] integerValue];
             self.vcType = (FHUGCFollowVCType)action_type;
         }
-        // action_type
-        
-//        if ([paramObj.host isEqualToString:@"ugc_follow_communitys"]) {
-//            self.vcType = FHUGCFollowVCTypeList;
-//        } else if ([paramObj.host isEqualToString:@"ugc_follow_select_list"]) {
-//            self.vcType = FHUGCFollowVCTypeSelectList;
-//        }
     }
     return self;
 }
@@ -81,9 +74,9 @@
 - (void)setupData {
     // title
     if (self.vcType == FHUGCFollowVCTypeList) {
-        self.title = @"我关注的小区";
+        // self.title = @"我关注的小区";
     } else if (self.vcType == FHUGCFollowVCTypeSelectList)  {
-        self.title = @"选择小区";
+        // self.title = @"选择小区";
     }
     [self.items removeAllObjects];
     // 是否有数据

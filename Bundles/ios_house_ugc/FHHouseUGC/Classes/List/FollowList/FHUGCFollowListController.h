@@ -12,8 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 关注小区列表 选择小区
 typedef enum FHUGCFollowVCType {
-    FHUGCFollowVCTypeList = 0,          // ugc_follow_communitys ：已关注小区列表
-    FHUGCFollowVCTypeSelectList = 1   // ugc_follow_select_list：选择小区列表
+    FHUGCFollowVCTypeList = 0,          // ugc_follow_communitys ：已关注小区列表 action_type = 0
+    FHUGCFollowVCTypeSelectList = 1   // ugc_follow_communitys：选择小区列表 action_type = 1
 }FHUGCFollowVCType;
 
 @interface FHUGCFollowListController : FHBaseViewController

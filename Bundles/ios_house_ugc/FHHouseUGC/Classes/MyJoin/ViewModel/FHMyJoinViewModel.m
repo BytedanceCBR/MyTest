@@ -119,8 +119,12 @@
 //    }else{
 //        [self showMessageView];
 //    }
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"title"] = @"我关注的小区";
+    dict[@"action_type"] = @(0);
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 @end
