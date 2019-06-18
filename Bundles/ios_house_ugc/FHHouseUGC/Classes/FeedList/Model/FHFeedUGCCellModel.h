@@ -76,9 +76,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 
-+ (FHFeedUGCCellModel *)modelFromFakeData;
-
 + (FHFeedUGCCellModel *)modelFromFeedUGCContent:(FHFeedUGCContentModel *)model;
+
+//临时假数据
++ (FHFeedUGCCellModel *)modelFromFakeData;
++ (FHFeedUGCCellModel *)modelFromFakeData2;
 
 @end
 

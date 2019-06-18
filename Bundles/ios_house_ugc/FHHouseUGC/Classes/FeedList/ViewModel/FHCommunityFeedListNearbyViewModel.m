@@ -150,6 +150,8 @@
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFakeData];
         cellModel.tableView = self.tableView;
         [resultArray addObject:cellModel];
+
+        [resultArray addObject:[FHFeedUGCCellModel modelFromFakeData2]];
     }
     for (FHFeedListDataModel *itemModel in feedList) {
         NSString *content = itemModel.content;
