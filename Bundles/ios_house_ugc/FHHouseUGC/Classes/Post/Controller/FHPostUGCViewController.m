@@ -276,7 +276,9 @@ static NSInteger const kMaxPostImageCount = 9;
     // select view
     self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 44)];
     [self.inputContainerView addSubview:self.selectView];
-    [self.selectView addTarget:self action:@selector(selectCommunityViewClick) forControlEvents:UIControlEventTouchUpInside];
+    self.selectView.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];
+    [self.selectView addGestureRecognizer:tapGestureRecognizer];
     y += 44;
     
     //Input view
@@ -374,7 +376,7 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
 }
 
-- (void)selectCommunityViewClick {
+- (void)selectCommunityViewClick:(UITapGestureRecognizer *)sender {
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"title"] = @"选择小区";
     dict[@"action_type"] = @(1);
