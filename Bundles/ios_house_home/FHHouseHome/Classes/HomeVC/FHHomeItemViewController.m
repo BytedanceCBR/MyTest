@@ -290,7 +290,7 @@
                 return;
             }
             
-            if (error && [error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+            if ((error && [error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) || !model || error) {
                 [self reloadCityEnbaleAndNoHouseData:NO];
                 if (self.requestCallBack) {
                     self.requestCallBack(pullType, self.houseType, NO, nil);
@@ -536,7 +536,7 @@
             [cellError.contentView addSubview:noDataErrorView];
             
             if ([FHEnvContext isNetworkConnected]) {
-                [noDataErrorView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:@"group-9"
+                [noDataErrorView showEmptyWithTip:@"数据走丢了" errorImageName:@"group-9"
                                         showRetry:YES];
                 __weak typeof(self) weakSelf = self;
                 noDataErrorView.retryBlock = ^{

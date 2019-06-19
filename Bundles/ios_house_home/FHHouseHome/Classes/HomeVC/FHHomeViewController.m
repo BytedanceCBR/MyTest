@@ -321,8 +321,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (self.mainTableView.contentOffset.y > [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType]) {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
     }
-    
-    [self.view bringSubviewToFront:self.topBar];
 
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 }

@@ -307,7 +307,7 @@
     if (![FHEnvContext isNetworkConnected]) {
         self.homeViewController.scrollView.scrollEnabled = NO;
     }
-    [self.tableViewV reloadData];
+//    [self.tableViewV reloadData];
 //    self.tableViewV.scrollEnabled = YES;
 }
 
