@@ -170,19 +170,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     {
         [self.mainTableView setFrame:CGRectMake(0.0f, 64 + 20, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 20 - 49)];
     }
-//    if ([TTDeviceHelper isIPhoneXDevice]) {
-//        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.equalTo(self.topBar.mas_bottom);
-//            make.bottom.left.right.equalTo(self.view);
-//        }];
-//    }else
-//    {
-//        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.equalTo(self.topBar.mas_bottom);
-//            make.left.right.equalTo(self.view);
-//            make.bottom.equalTo(self.view).offset(-40);
-//        }];
-//    }
 }
 
 - (void)setupTopBarConstraints
