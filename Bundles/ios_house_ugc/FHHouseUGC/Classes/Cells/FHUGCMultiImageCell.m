@@ -69,6 +69,9 @@
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
+    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
+    [self.bottomView.positionView addGestureRecognizer:tap];
+    
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:_bottomSepView];
@@ -144,6 +147,13 @@
 - (void)commentBtnClick {
     if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:)]){
         [self.delegate commentClicked:self.cellModel];
+    }
+}
+
+//进入圈子详情
+- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
+        [self.delegate goToCommunityDetail:self.cellModel];
     }
 }
 
