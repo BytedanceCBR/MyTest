@@ -30,6 +30,7 @@
 #import "FHMainApi.h"
 #import "FHBaseModelProtocol.h"
 #import "FHFeedContentModel.h"
+#import "FHUGCScialGroupModel.h"
 
 @interface FHPostDetailViewModel ()
 
@@ -103,13 +104,15 @@
 }
 
 // 处理数据
-- (void)processWithData:(FHFeedUGCContentModel *)model {
+- (void)processWithData:(FHFeedUGCContentModel *)model socialGroup:(FHUGCScialGroupDataModel *)socialGroupModel {
     if (model && [model isKindOfClass:[FHFeedUGCContentModel class]]) {
         [self.items removeAllObjects];
         //
         FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
+        headerModel.socialGroupModel = socialGroupModel;
         [self.items addObject:headerModel];
         self.detailHeaderModel = headerModel;
+        [self.detailController headerInfoChanged];
         //
         FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
@@ -138,7 +141,10 @@
         [param setValue:self.category forKey:@"category"];
         uint64_t startTime = [NSObject currentUnixTime];
         WeakSelf;
-        [TTUGCRequestManager requestForJSONWithURL:[FRCommonURLSetting ugcThreadDetailV3InfoURL] params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
+        NSString *host = [FHURLSettings baseURL];
+        host = @"http://10.224.14.218:6789";
+        NSString *urlStr = [NSString stringWithFormat:@"%@/f100/ugc/thread",host];
+        [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
             StrongSelf;
             uint64_t endTime = [NSObject currentUnixTime];
             uint64_t total = [NSObject machTimeToSecs:endTime - startTime] * 1000;
@@ -155,7 +161,11 @@
                             Class cls = [FHFeedUGCContentModel class];
                             FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
                             if (model && jsonParseError == nil) {
-                                [self processWithData:model];
+                                // 继续解析小区头部
+                                NSDictionary *social_group = [dataDict tt_dictionaryValueForKey:@"social_group"];
+                                NSError *groupError = nil;
+                                FHUGCScialGroupDataModel * groupData = [[FHUGCScialGroupDataModel alloc] initWithDictionary:social_group error:&groupError];
+                                [self processWithData:model socialGroup:groupData];
                             }
                         }
                     }

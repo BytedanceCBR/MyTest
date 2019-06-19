@@ -113,9 +113,6 @@
     }];
     self.naviHeaderView.hidden = YES;
     self.followButton.hidden = YES;
-    // test
-    self.naviHeaderView.titleLabel.text = @"世纪城";
-    self.naviHeaderView.descLabel.text = @"10000成员。488z帖子";
 }
 
 - (void)followButtonClick:(UIControl *)control {
@@ -152,6 +149,15 @@
         commentStr = [NSString stringWithFormat:@"全部评论(0)"];
     }
     self.commentAllFooter.allCommentLabel.text = commentStr;
+}
+
+- (void)headerInfoChanged {
+    if (self.weakViewModel.detailHeaderModel) {
+        self.naviHeaderView.titleLabel.text = self.weakViewModel.detailHeaderModel.socialGroupModel.socialGroupName;
+        self.naviHeaderView.descLabel.text = self.weakViewModel.detailHeaderModel.socialGroupModel.countText;
+        // 关注按钮
+        self.followButton.followed = [self.weakViewModel.detailHeaderModel.socialGroupModel.hasFollow boolValue];
+    }
 }
 
 // 子类滚动方法

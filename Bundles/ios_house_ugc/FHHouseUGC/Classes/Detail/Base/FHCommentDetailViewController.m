@@ -201,6 +201,10 @@
     
 }
 
+- (void)headerInfoChanged {
+    
+}
+
 - (void)p_removeObserver {
     
 }
