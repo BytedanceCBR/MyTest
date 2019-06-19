@@ -79,6 +79,7 @@
                 [itemView.avator bd_setImageWithURL:[NSURL URLWithString:obj.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
             }
             FHDetailContactImageTagModel *tag = obj.imageTag;
+            [self refreshIdentifyView:itemView.identifyView withUrl:tag.imageUrl];
             if (tag.imageUrl.length > 0) {
                 [itemView.identifyView bd_setImageWithURL:[NSURL URLWithString:tag.imageUrl]];
                 itemView.identifyView.hidden = NO;
@@ -113,6 +114,30 @@
         }];
     }
     [self updateItems:NO];
+}
+
+- (void)refreshIdentifyView:(UIImageView *)identifyView withUrl:(NSString *)imageUrl
+{
+    if (!identifyView) {
+        return;
+    }
+    if (imageUrl.length > 0) {
+        [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:imageUrl] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+            if (!error && image) {
+                identifyView.image = image;
+                CGFloat ratio = 0;
+                if (image.size.height > 0) {
+                    ratio = image.size.width / image.size.height;
+                }
+                [identifyView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(14 * ratio);
+                }];
+            }
+        }];
+        identifyView.hidden = NO;
+    }else {
+        identifyView.hidden = YES;
+    }
 }
 
 // cell点击
@@ -371,9 +396,12 @@
         make.top.mas_equalTo(20);
         make.bottom.mas_equalTo(self);
     }];
+    CGFloat ratio = 0;
     [self.identifyView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.avator).mas_offset(2);
         make.centerX.mas_equalTo(self.avator);
+        make.height.mas_equalTo(14);
+        make.width.mas_equalTo(14 * ratio);
     }];
     [self.name mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avator.mas_right).offset(14);
@@ -403,6 +431,7 @@
         make.centerY.mas_equalTo(self.avator);
     }];
 }
+
 
 - (UIImageView *)identifyView
 {
