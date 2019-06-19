@@ -95,7 +95,7 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
     //跳转到圈子详情页
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_community_detail"];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 

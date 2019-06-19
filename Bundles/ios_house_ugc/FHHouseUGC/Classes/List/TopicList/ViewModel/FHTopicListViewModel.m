@@ -50,25 +50,25 @@
         StrongSelf;
         if (model && (error == nil)) {
             if (isRefresh) {
-                [self.dataList removeAllObjects];
-                [self.tableView finishPullDownWithSuccess:YES];
+                [wself.dataList removeAllObjects];
+                [wself.tableView finishPullDownWithSuccess:YES];
             } else {
-                [self.tableView.mj_footer endRefreshing];
+                [wself.tableView.mj_footer endRefreshing];
             }
 
             FHTopicListResponseModel *responseModel = model;
-            [self.dataList addObjectsFromArray:responseModel.data.items];
-            self.tableView.hidden = NO;
-            [self.tableView reloadData];
+            [wself.dataList addObjectsFromArray:responseModel.data.items];
+            wself.tableView.hidden = NO;
+            [wself.tableView reloadData];
         } else {
             if (isRefresh) {
-                [self.tableView finishPullDownWithSuccess:NO];
+                [wself.tableView finishPullDownWithSuccess:NO];
             } else {
-                [self.tableView.mj_footer endRefreshing];
+                [wself.tableView.mj_footer endRefreshing];
             }
             if (isRefresh) {
-                self.tableView.hidden = YES;
-                [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+                wself.tableView.hidden = YES;
+                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
             }
             [[ToastManager manager] showToast:@"网络不给力,请稍后重试"];
         }
