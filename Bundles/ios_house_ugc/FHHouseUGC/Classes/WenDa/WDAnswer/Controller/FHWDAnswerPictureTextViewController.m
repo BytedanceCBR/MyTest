@@ -286,6 +286,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
                                                               assets:self.outerInputAssets
                                                               images:self.outerInputImages];
     self.addImagesView.hidden = NO;
+    self.addImagesView.dragEnable = NO;
     self.addImagesView.hideAddImagesButtonWhenEmpty = YES; // 只有第一次添加图片后才显示
     self.addImagesView.selectionLimit = 9;
     self.addImagesView.delegate = self;

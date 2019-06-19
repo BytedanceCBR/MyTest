@@ -66,6 +66,7 @@
     self = [super initWithFrame:frame];
     if (self)
     {
+        _dragEnable = YES;
         _imageSize = (self.width - (NumberOfImagesPerRow - 1) * ImagesInterval) / NumberOfImagesPerRow;
         self.backgroundColor = [UIColor clearColor];
         self.selectionLimit = DefaultImagesSelectionLimit;
@@ -150,6 +151,7 @@
 
 - (void)appendAssetViewColumnByImage:(UIImage *)image task:(TTUGCImageCompressTask *)task {
     FRPostAssetViewColumn * assetViewColumn = [[FRPostAssetViewColumn alloc] initWithFrame:self.addImagesButton.frame];
+    assetViewColumn.dragEnable = self.dragEnable;
     assetViewColumn.layer.cornerRadius = 4;
     assetViewColumn.clipsToBounds = YES;
     assetViewColumn.modeChangeActionType = ModeChangeActionTypeMask;
