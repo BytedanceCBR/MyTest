@@ -256,7 +256,8 @@
     self.homeViewController.scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
 //    self.tableViewV.scrollEnabled = NO;
     
-    
+    _childVCScrollView.contentOffset = CGPointMake(0, 0);
+
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSMutableArray *itemVCArrayTmp = [NSMutableArray new];
     for (int i = 0; i < configDataModel.houseTypeList.count; i++) {
@@ -304,7 +305,6 @@
     if (![FHEnvContext isNetworkConnected]) {
         self.homeViewController.scrollView.scrollEnabled = NO;
     }
-    
     [self.tableViewV reloadData];
 //    self.tableViewV.scrollEnabled = YES;
 }
@@ -345,7 +345,7 @@
     }
     [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
     [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-    
+    self.tableViewV.scrollEnabled = YES;
     [self checkLoadingAndEmpty];
 }
 
