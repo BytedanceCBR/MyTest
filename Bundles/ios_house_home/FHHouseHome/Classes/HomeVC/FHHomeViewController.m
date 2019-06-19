@@ -78,6 +78,8 @@ static CGFloat const kSectionHeaderHeight = 38;
     [self registerNotifications];
 
     [self resetMaintableView];
+    
+    self.automaticallyAdjustsScrollViewInsets = NO;
   
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -407,12 +409,12 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)scrollToTopEnable:(BOOL)enable
 {
-    self.mainTableView.scrollsToTop = enable;
+//    self.mainTableView.scrollsToTop = enable;
 }
 
 - (void)scrollToTopAnimated:(BOOL)animated
 {
-    self.mainTableView.contentOffset = CGPointMake(0, 0);
+//    self.mainTableView.contentOffset = CGPointMake(0, 0);
 }
 
 - (void)didAppear
