@@ -44,6 +44,7 @@
 @property (nonatomic, readonly) NSMutableArray<UIImage *> *selectedThumbImages;
 @property (nonatomic, weak) id<FRAddMultiImagesViewDelegate> delegate;
 @property (nonatomic, copy) void(^shouldAddPictureHandle)(void);
+@property (nonatomic, assign)   BOOL       dragEnable;// 默认是YES
 
 // Umeng Event Name
 @property (nonatomic, copy) NSString *eventName;
