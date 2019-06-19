@@ -98,6 +98,8 @@ static CGFloat const kSectionHeaderHeight = 38;
         [self.mainTableView removeFromSuperview];
         [self.emptyView showEmptyWithTip:@"功能暂未开通" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
     }
+    
+    [self.view bringSubviewToFront:self.topBar];
 }
 
 - (void)resetMaintableView
