@@ -23,7 +23,7 @@
 @property(nonatomic , strong) UIView *bottomLineView;
 @property(nonatomic , strong) UIView *topView;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
-
+@property (nonatomic, assign) BOOL hasShowDots;
 @end
 
 @implementation FHCommunityViewController
@@ -32,7 +32,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
+    self.hasShowDots = NO;
+
     [self initView];
     [self initConstraints];
     [self initViewModel];
@@ -68,6 +69,12 @@
     [super viewWillAppear:animated];
     
     self.stayTime = [[NSDate date] timeIntervalSince1970];
+    
+    if(!self.hasShowDots)
+    {
+        [FHEnvContext hideFindTabRedDots];
+        self.hasShowDots = YES;
+    }
 }
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {

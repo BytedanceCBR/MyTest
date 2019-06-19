@@ -281,12 +281,9 @@
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
                 [self processRequestData:refreshType andHouseType:houseType andIsSucees:isSuccess andDataModel:dataModel];
             };
+            
             itemVC.scrollDidEnd = ^{
-//                self.homeViewController.scrollView.contentOffset = CGPointMake(self.homeViewController.scrollView.contentOffset.x, 0);
-//                [self scrollViewWillBeginDragging:self.homeViewController.scrollView];
-//                [self scrollViewDidScroll:self.homeViewController.scrollView];
-//                [self scrollViewDidEndDecelerating:self.homeViewController.scrollView];
-//                self.tableViewV.scrollEnabled = YES;
+
             };
             
             itemVC.requestNetworkUnAvalableRetryCallBack = ^{
