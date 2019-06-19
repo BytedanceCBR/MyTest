@@ -378,7 +378,7 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
     if (!_multiTextArrow) {
         _multiTextArrow = [[UIImageView alloc] initWithFrame:CGRectZero];
         _multiTextArrow.contentMode = UIViewContentModeCenter;
-        _multiTextArrow.image = [UIImage imageNamed:@"fh_ugc_message_item_merge_arrow"];
+        _multiTextArrow.image = [UIImage imageNamed:@"message_merge_arrow"];
     }
     return _multiTextArrow;
 }
