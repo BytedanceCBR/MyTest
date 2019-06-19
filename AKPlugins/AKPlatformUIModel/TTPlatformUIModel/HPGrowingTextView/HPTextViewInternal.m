@@ -146,8 +146,7 @@
 {
     NSRange range = self.selectedRange;
     NSAttributedString *attributedText = [self.attributedText attributedSubstringFromRange:range];
-
-    [UIPasteboard generalPasteboard].string = [self stringify:attributedText];
+    [UIPasteboard generalPasteboard].string = [self stringify:attributedText ignoreCustomEmojis:YES];
 }
 
 - (void)paste:(id)sender
@@ -190,12 +189,21 @@
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
     [param setValue:text forKey:@"stringifyText"];
     [[TTModuleBridge sharedInstance_tt] triggerAction:@"TTUGCEmojiParser.stringify" object:nil withParams:param complete:^(id  _Nullable result) {
-        if ([result isKindOfClass:[NSString class]]) {
-            string = result;
-        }
+        string = result;
     }];
     return isEmptyString(string)? @"": string;
     
+}
+
+- (NSString *)stringify:(NSAttributedString *)text ignoreCustomEmojis:(BOOL)ignoreCustomEmojis {
+    __block NSString *string = nil;
+    NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+    [param setValue:text forKey:@"stringifyText"];
+    [param setValue:@(ignoreCustomEmojis) forKey:@"ignoreCustomEmojis"];
+    [[TTModuleBridge sharedInstance_tt] triggerAction:@"TTUGCEmojiParser.stringify.ignoreCustomEmojis" object:nil withParams:param complete:^(id  _Nullable result) {
+        string = result;
+    }];
+    return isEmptyString(string)? @"": string;
 }
 
 - (NSAttributedString *)parseInTextKitContext:(NSString *)text
@@ -205,9 +213,7 @@
     [param setValue:text forKey:@"text"];
     [param setValue:@(self.font.pointSize) forKey:@"fontSize"];
     [[TTModuleBridge sharedInstance_tt] triggerAction:@"TTUGCEmojiParser.parseInTextKitContext" object:nil withParams:param complete:^(id  _Nullable result) {
-        if ([result isKindOfClass:[NSString class]]) {
-            string = result;
-        }
+        string = result;
     }];
     return string;
 }
