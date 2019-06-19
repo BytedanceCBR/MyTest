@@ -280,6 +280,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     internalTextView.minHeight = kTextViewHeight;
     internalTextView.maxHeight = INT_MAX;
 //    internalTextView.maxNumberOfLines = 8;
+    internalTextView.tintColor = [UIColor themeRed1];
     internalTextView.placeholder = @"分享你身边的新鲜事";
     
     // 图文发布器展示
@@ -298,7 +299,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
                                                               assets:self.outerInputAssets
                                                               images:self.outerInputImages];
     self.addImagesView.hidden = NO;
-    self.addImagesView.hideAddImagesButtonWhenEmpty = NO; // 只有第一次添加图片后才显示
+    self.addImagesView.hideAddImagesButtonWhenEmpty = YES; // 只有第一次添加图片后才显示
     self.addImagesView.selectionLimit = 9;
     self.addImagesView.delegate = self;
     WeakSelf;
@@ -327,6 +328,11 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 //    self.toolbar.rightItems = [self rightToolbarItems];
 //    internalTextView.internalTextView.inputAccessoryView = self.toolbar;
     self.toolbar.emojiInputView.source = @"wenda";
+    __weak typeof(self) weakSelf = self;
+    self.toolbar.picButtonClkBlk = ^{
+        // 添加图片
+        [weakSelf.addImagesView showImagePicker];
+    };
     self.toolbar.banLongText = YES;
     
     [self.view addSubview:self.toolbar];

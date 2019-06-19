@@ -107,15 +107,15 @@
 }
 
 - (void)refreshButtonsUI {
-    self.emojiButton.hidden = NO;
+    self.emojiButton.hidden = YES;
     self.hashtagButton.hidden = YES;
     self.atButton.hidden = YES;
     self.shoppingButton.hidden = YES;
     
-    self.emojiButton.left = 10;
+    self.emojiButton.right = 0;
     
     self.longTextButton.right = 0;
-    self.picButton.left = self.emojiButton.right - 5;
+    self.picButton.left = 10;
     
     CGFloat right = self.toolbarView.width - 10;
     
