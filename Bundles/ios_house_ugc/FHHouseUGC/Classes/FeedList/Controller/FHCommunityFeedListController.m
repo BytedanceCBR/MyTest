@@ -142,6 +142,10 @@
     }
 }
 
+- (void)reLoadData {
+    
+}
+
 - (void)retryLoadData {
     [self startLoadData];
 }
