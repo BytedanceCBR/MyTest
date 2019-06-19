@@ -893,13 +893,6 @@
 
 - (void)setSelectedSegmentIndex:(NSUInteger)index animated:(BOOL)animated notify:(BOOL)notify {
     
-    if (self.isNeedNetworkCheck) {
-        if (![FHEnvContext isNetworkConnected]) {
-            [[ToastManager manager] showToast:@"网络异常"];
-            return;
-        }
-    }
-    
     _selectedSegmentIndex = index;
     [self setNeedsDisplay];
     

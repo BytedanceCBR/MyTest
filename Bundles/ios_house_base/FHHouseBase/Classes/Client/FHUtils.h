@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSDate *)dateFromString:(NSString *)dateStr;
 
++ (NSString *)stringFromNSDateDay:(NSDate *)date;
+
 + (NSString *)stringFromNSDate:(NSDate *)date;
 
 /*

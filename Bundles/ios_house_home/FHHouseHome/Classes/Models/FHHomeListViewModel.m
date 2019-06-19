@@ -149,6 +149,9 @@
                 [self updateCategoryViewSegmented:NO];
             }else
             {
+                //收起tip
+                [self.homeViewController hideImmediately];
+//                [self.homeViewController resetMaintableView];
                 [self updateCategoryViewSegmented:YES];
             }
             
@@ -161,9 +164,7 @@
             //非首次只刷新头部
             if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 [FHHomeCellHelper sharedInstance].isFirstLanuch = NO;
-                
-                [TTSandBoxHelper setAppFirstLaunchForAd];
-                
+                                
                 [self.tableViewV reloadData];
                 
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
@@ -236,11 +237,12 @@
     //    }
     
     self.isResetingOffsetZero = YES;
+
     self.tableViewV.contentOffset = CGPointMake(0, 0);
-    if (self.tableViewV.numberOfSections > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
-        [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-    }
     
+    if (self.tableViewV.numberOfSections > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
+        [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:NO];
+    }
 }
 
 - (void)setUpSubtableViewContrllers
@@ -254,9 +256,10 @@
     }
     
     self.homeViewController.scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
-    self.tableViewV.scrollEnabled = NO;
+//    self.tableViewV.scrollEnabled = NO;
     
-    
+    _childVCScrollView.contentOffset = CGPointMake(0, 0);
+
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSMutableArray *itemVCArrayTmp = [NSMutableArray new];
     for (int i = 0; i < configDataModel.houseTypeList.count; i++) {
@@ -278,13 +281,18 @@
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
                 [self processRequestData:refreshType andHouseType:houseType andIsSucees:isSuccess andDataModel:dataModel];
             };
+            
+            itemVC.scrollDidEnd = ^{
+
+            };
+            
             itemVC.requestNetworkUnAvalableRetryCallBack = ^{
                 [self.homeViewController retryLoadData];
             };
             //将子控制的view添加到scrollView上去
             [self.homeViewController.scrollView addSubview:itemVC.view];
             
-            itemVC.view.frame = CGRectMake(KFHScreenWidth * i, 0, KFHScreenWidth, KFHScreenHeight);
+            itemVC.view.frame = CGRectMake(KFHScreenWidth * i, 0, KFHScreenWidth, self.homeViewController.scrollView.frame.size.height);
             
             [itemVCArrayTmp addObject:itemVC];
         }
@@ -299,8 +307,8 @@
     if (![FHEnvContext isNetworkConnected]) {
         self.homeViewController.scrollView.scrollEnabled = NO;
     }
-    
-    self.tableViewV.scrollEnabled = YES;
+    [self.tableViewV reloadData];
+//    self.tableViewV.scrollEnabled = YES;
 }
 
 - (void)setUpSubtableIndex:(NSInteger)index
@@ -310,6 +318,7 @@
     }
     self.homeViewController.scrollView.contentOffset = CGPointMake(KFHScreenWidth * index, 0);
     [self uploadFirstScreenHouseShow:self.categoryView.segmentedControl.selectedSegmentIndex andEnterType:@"switch"];
+    self.previousHouseType = self.houseType;
 }
 
 - (void)processRequestData:(FHHomePullTriggerType)refreshType andHouseType:(FHHouseType)houseType andIsSucees:(BOOL)isSuccess andDataModel:(JSONModel * _Nonnull) dataModel
@@ -338,7 +347,7 @@
     }
     [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
     [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-    
+    self.tableViewV.scrollEnabled = YES;
     [self checkLoadingAndEmpty];
 }
 
@@ -646,7 +655,7 @@
         return KFHHomeSectionHeight;
     }
     
-    return [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight];
+    return [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight] + 45;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
