@@ -554,6 +554,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 //                    //跳到回答详情页
 //                    [wself navigateToAnswerSchema];
 //                }];
+                [wself dismissSelf];
             }else {
                 NSNumber *errorCode = [error.userInfo objectForKey:kWDErrorCodeKey];
 //                if (errorCode && [wself.viewModel isBusinessError:[errorCode integerValue]]) {

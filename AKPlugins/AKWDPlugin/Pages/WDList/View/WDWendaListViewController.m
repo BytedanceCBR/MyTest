@@ -52,6 +52,7 @@
 #import <TTImpression/TTRelevantDurationTracker.h>
 #import <TTVideoService/TTFFantasyTracker.h>
 #import "WDListBottomButton.h"
+#import "TTAccountManager.h"
 
 #define kListBottomBarHeight (self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44)
 
@@ -374,6 +375,14 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 
 // 写答案
 - (void)writeAnswer {
+    if ([TTAccountManager isLogin]) {
+        [self gotoPostWDAnswer];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoPostWDAnswer {
     NSString *routeUrl = @"sslocal://ugc_post_wd_answer";
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     NSMutableDictionary *dict = @{}.mutableCopy;
@@ -385,6 +394,40 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    // add by zyk 记得修改埋点
+    [params setObject:@"rent_feedback" forKey:@"enter_from"];
+    [params setObject:@"feedback" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(NO) forKey:@"need_pop_vc"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                [wSelf gotoPostWDAnswer];
+            }
+            // 移除登录页面
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [wSelf delayRemoveLoginVC];
+            });
+        }
+    }];
+}
+
+- (void)delayRemoveLoginVC {
+    UINavigationController *navVC = self.navigationController;
+    NSInteger count = navVC.viewControllers.count;
+    if (navVC && count >= 1) {
+        NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:navVC.viewControllers];
+        if (vcs.count == count) {
+            [vcs removeLastObject];
+            [self.navigationController setViewControllers:vcs];
+        }
+    }
 }
 
 - (void)firstLoadContent
