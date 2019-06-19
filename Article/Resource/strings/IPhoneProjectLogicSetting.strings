@@ -173,4 +173,5 @@
 "ugc_post_wd_answer" = "FHWDAnswerPictureTextViewController";
 // 已关注的小区列表
 "ugc_follow_communitys" = "FHUGCFollowListController";
+"ugc_search_list" = "FHUGCSearchListController";
 

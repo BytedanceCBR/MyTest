@@ -7,11 +7,14 @@
 
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
+#import "FHUGCSearchBar.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 // UGC 搜索
 @interface FHUGCSearchListController : FHBaseViewController
+
+@property (nonatomic, strong)     FHUGCSearchBar     *naviBar;
 
 @end
 

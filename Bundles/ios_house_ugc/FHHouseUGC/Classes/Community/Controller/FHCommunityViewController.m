@@ -207,7 +207,9 @@
 
 //进入搜索页
 - (void)goToSearch {
-    
+    NSString *routeUrl = @"sslocal://ugc_search_list";
+    NSURL *openUrl = [NSURL URLWithString:routeUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 @end
