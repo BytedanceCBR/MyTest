@@ -107,7 +107,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     
     self.mainTableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    
+    self.mainTableView.decelerationRate = 0.5;
     self.mainTableView.showsVerticalScrollIndicator = NO;
     
     if (_isMainTabVC) {
