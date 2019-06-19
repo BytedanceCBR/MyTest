@@ -149,6 +149,8 @@
                 [self updateCategoryViewSegmented:NO];
             }else
             {
+                //收起tip
+                [self.homeViewController hideImmediately];
 //                [self.homeViewController resetMaintableView];
                 [self updateCategoryViewSegmented:YES];
             }
