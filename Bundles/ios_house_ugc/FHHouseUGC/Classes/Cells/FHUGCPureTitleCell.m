@@ -50,8 +50,9 @@
 }
 
 - (void)initViews {
-    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
     __weak typeof(self) wself = self;
+    
+    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
     _userInfoView.deleteCellBlock = ^{
         [wself deleteCell];
     };
@@ -63,6 +64,9 @@
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
+    
+    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
+    [self.bottomView.positionView addGestureRecognizer:tap];
     
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
@@ -131,6 +135,13 @@
 - (void)commentBtnClick {
     if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:)]){
         [self.delegate commentClicked:self.cellModel];
+    }
+}
+
+//进入圈子详情
+- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
+        [self.delegate goToCommunityDetail:self.cellModel];
     }
 }
 

@@ -8,7 +8,6 @@
 #ifndef FHHouseUGCHeader_h
 #define FHHouseUGCHeader_h
 
-
 typedef NS_ENUM(NSInteger, FHCommunityFeedListType)
 {
     FHCommunityFeedListTypeNearby = 0,
@@ -35,6 +34,7 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
     FHUGCFeedListCellSubTypeArticleMultiImage,                     //文章多图
     FHUGCFeedListCellSubTypeUGCRecommend,                          //小区推荐
     FHUGCFeedListCellSubTypeUGCBanner,                             //运营位
+    FHUGCFeedListCellSubTypeUGCGuide,                              //初次进入引导页
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)

@@ -15,8 +15,6 @@
 
 @interface FHArticleCellBottomView ()
 
-@property(nonatomic ,strong) UIView *positionView;
-
 @end
 
 @implementation FHArticleCellBottomView

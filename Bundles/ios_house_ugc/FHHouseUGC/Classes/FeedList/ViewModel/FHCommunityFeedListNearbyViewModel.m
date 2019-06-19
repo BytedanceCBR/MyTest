@@ -15,8 +15,11 @@
 #import "Article.h"
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
+#import "FHUGCGuideHelper.h"
 
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
+
+@property(nonatomic, strong) FHFeedUGCCellModel *guideCellModel;
 
 @end
 
@@ -111,10 +114,15 @@
             if(wself.dataList.count > 0){
                 wself.refreshFooter.hidden = NO;
                 [wself.viewController.emptyView hideEmptyView];
+                
+                if(isFirst){
+                    [wself insertGuideCell];
+                }
             }else{
                 [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
                 wself.viewController.showenRetryButton = YES;
             }
+            
             [wself.tableView reloadData];
             
 //            if(isFirst){
@@ -164,6 +172,33 @@
         }
     }
     return resultArray;
+}
+
+- (void)insertGuideCell {
+    if([FHUGCGuideHelper shouldShowFeedGuide]){
+        //符合引导页显示条件时
+        for (NSInteger i = 0; i < self.dataList.count; i++) {
+            FHFeedUGCCellModel *cellModel = self.dataList[i];
+            if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle || [cellModel.cellType integerValue] == FHUGCFeedListCellTypeUGC){
+                self.guideCellModel = [FHFeedUGCCellModel guideCellModel];
+                [self.dataList insertObject:self.guideCellModel atIndex:(i + 1)];
+                //显示以后次数加1
+                [FHUGCGuideHelper addFeedGuideCount];
+                return;
+            }
+        }
+    }
+}
+
+- (void)deleteGuideCell {
+    if(self.guideCellModel){
+        NSInteger row = [self.dataList indexOfObject:self.guideCellModel];
+        if(row < self.dataList.count && row >= 0){
+            [self.dataList removeObject:self.guideCellModel];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        }
+    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -270,10 +305,20 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
     }
+    
+    if(cellModel == self.guideCellModel){
+        [FHUGCGuideHelper hideFeedGuide];
+    }
 }
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel {
     [self jumpToPostDetail:cellModel showComment:YES];
+}
+
+- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
+    //关闭引导cell
+    [self deleteGuideCell];
+    [FHUGCGuideHelper hideFeedGuide];
 }
 
 @end

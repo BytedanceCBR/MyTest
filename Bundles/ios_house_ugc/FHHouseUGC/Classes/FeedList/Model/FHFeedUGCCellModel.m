@@ -241,6 +241,14 @@
     return cellModel;
 }
 
+//引导页数据
++ (FHFeedUGCCellModel *)guideCellModel {
+    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCGuide;
+    
+    return cellModel;
+}
+
 + (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [model.behotTime doubleValue];

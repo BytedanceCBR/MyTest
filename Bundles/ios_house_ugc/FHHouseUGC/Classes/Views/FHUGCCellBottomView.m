@@ -17,8 +17,6 @@
 
 @interface FHUGCCellBottomView ()
 
-@property(nonatomic ,strong) UIView *positionView;
-
 @property(nonatomic ,strong) UIView *likeView;
 @property(nonatomic ,strong) UIImageView *likeImageView;
 @property(nonatomic ,strong) UILabel *likeLabel;
@@ -42,6 +40,7 @@
     _positionView.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
     _positionView.layer.masksToBounds= YES;
     _positionView.layer.cornerRadius = 4;
+    _positionView.userInteractionEnabled = YES;
     [self addSubview:_positionView];
     
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeRed3]];
