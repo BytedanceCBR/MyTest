@@ -691,7 +691,7 @@
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
-//        _tableView.decelerationRate = 0.1;
+        //        _tableView.decelerationRate = 0.1;
         _tableView.showsVerticalScrollIndicator = NO;
     }
     return _tableView;
