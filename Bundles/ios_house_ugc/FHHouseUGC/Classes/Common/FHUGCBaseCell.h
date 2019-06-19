@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel;
 
+- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel;
+
 @end
 
 @interface FHUGCBaseCell : UITableViewCell

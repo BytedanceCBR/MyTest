@@ -38,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)hideImmediately;
 
+- (void)resetMaintableView;
+
 @end
 
 NS_ASSUME_NONNULL_END

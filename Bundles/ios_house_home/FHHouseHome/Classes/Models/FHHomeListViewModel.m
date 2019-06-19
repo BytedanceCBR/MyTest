@@ -70,7 +70,7 @@
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         
         //更新冷启动默认选项
-        if (configDataModel.houseTypeDefault && (configDataModel.houseTypeDefault.integerValue > 0) &&  [FHHomeCellHelper sharedInstance].isFirstLanuch) {
+        if (configDataModel.houseTypeDefault && (configDataModel.houseTypeDefault.integerValue > 0)) {
             [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:configDataModel.houseTypeDefault];
             self.houseType = configDataModel.houseTypeDefault.integerValue;
         }
@@ -87,8 +87,6 @@
         self.isRequestFromSwitch = NO;
         
         //**************
-        self.headerHeight =  [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
-        
         // 监听子控制器发出的通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subTableViewDidScroll:) name:@"FHHomeSubTableViewDidScroll" object:nil];
         
@@ -99,11 +97,12 @@
         // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
             StrongSelf;
+            
+            if (self.reloadType == TTReloadTypeTab) {
+                [self setUpTableScrollOffsetZero];
+            }
+            
             if (![FHEnvContext isNetworkConnected]) {
-                
-                if (self.reloadType == TTReloadTypeTab) {
-                    [self setUpTableScrollOffsetZero];
-                }
                 
                 [[ToastManager manager] showToast:@"网络异常"];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -114,6 +113,7 @@
                 return ;
             }
             
+          
             if (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                 [self requestOriginData:self.isFirstChange isShowPlaceHolder:[FHEnvContext sharedInstance].isRefreshFromCitySwitch];
             }
@@ -131,7 +131,6 @@
             
             [self configIconRowCountAndHeight];
             
-            self.headerHeight =  [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
             
             if (xConfigDataModel.cityAvailability.enable.boolValue)
             {
@@ -139,9 +138,9 @@
             }
             
             //更新冷启动默认选项
-            if (configDataModel.houseTypeDefault && (configDataModel.houseTypeDefault.integerValue > 0) &&  [FHHomeCellHelper sharedInstance].isFirstLanuch) {
-                [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:configDataModel.houseTypeDefault];
-                self.houseType = configDataModel.houseTypeDefault.integerValue;
+            if (xConfigDataModel.houseTypeDefault && (xConfigDataModel.houseTypeDefault.integerValue > 0) && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
+                [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:xConfigDataModel.houseTypeDefault];
+                self.houseType = xConfigDataModel.houseTypeDefault.integerValue;
             }
             
             //如果启动时 类型没有变
@@ -150,6 +149,7 @@
                 [self updateCategoryViewSegmented:NO];
             }else
             {
+//                [self.homeViewController resetMaintableView];
                 [self updateCategoryViewSegmented:YES];
             }
             
@@ -162,9 +162,7 @@
             //非首次只刷新头部
             if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 [FHHomeCellHelper sharedInstance].isFirstLanuch = NO;
-                
-                [TTSandBoxHelper setAppFirstLaunchForAd];
-                
+                                
                 [self.tableViewV reloadData];
                 
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
@@ -237,11 +235,12 @@
     //    }
     
     self.isResetingOffsetZero = YES;
+
     self.tableViewV.contentOffset = CGPointMake(0, 0);
-    if (self.tableViewV.numberOfSections > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
-        [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-    }
     
+    if (self.tableViewV.numberOfSections > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
+        [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:NO];
+    }
 }
 
 - (void)setUpSubtableViewContrllers
@@ -255,7 +254,10 @@
     }
     
     self.homeViewController.scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
+//    self.tableViewV.scrollEnabled = NO;
     
+    _childVCScrollView.contentOffset = CGPointMake(0, 0);
+
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSMutableArray *itemVCArrayTmp = [NSMutableArray new];
     for (int i = 0; i < configDataModel.houseTypeList.count; i++) {
@@ -277,13 +279,18 @@
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
                 [self processRequestData:refreshType andHouseType:houseType andIsSucees:isSuccess andDataModel:dataModel];
             };
+            itemVC.scrollDidEnd = ^{
+                [self scrollViewWillBeginDragging:self.homeViewController.scrollView];
+                [self scrollViewDidEndDecelerating:self.homeViewController.scrollView];
+            };
+            
             itemVC.requestNetworkUnAvalableRetryCallBack = ^{
                 [self.homeViewController retryLoadData];
             };
             //将子控制的view添加到scrollView上去
             [self.homeViewController.scrollView addSubview:itemVC.view];
             
-            itemVC.view.frame = CGRectMake(KFHScreenWidth * i, 0, KFHScreenWidth, KFHScreenHeight);
+            itemVC.view.frame = CGRectMake(KFHScreenWidth * i, 0, KFHScreenWidth, self.homeViewController.scrollView.frame.size.height);
             
             [itemVCArrayTmp addObject:itemVC];
         }
@@ -298,6 +305,8 @@
     if (![FHEnvContext isNetworkConnected]) {
         self.homeViewController.scrollView.scrollEnabled = NO;
     }
+    [self.tableViewV reloadData];
+//    self.tableViewV.scrollEnabled = YES;
 }
 
 - (void)setUpSubtableIndex:(NSInteger)index
@@ -307,6 +316,7 @@
     }
     self.homeViewController.scrollView.contentOffset = CGPointMake(KFHScreenWidth * index, 0);
     [self uploadFirstScreenHouseShow:self.categoryView.segmentedControl.selectedSegmentIndex andEnterType:@"switch"];
+    self.previousHouseType = self.houseType;
 }
 
 - (void)processRequestData:(FHHomePullTriggerType)refreshType andHouseType:(FHHouseType)houseType andIsSucees:(BOOL)isSuccess andDataModel:(JSONModel * _Nonnull) dataModel
@@ -335,7 +345,7 @@
     }
     [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
     [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-    
+    self.tableViewV.scrollEnabled = YES;
     [self checkLoadingAndEmpty];
 }
 
@@ -627,17 +637,19 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.row == kFHHomeListHeaderBaseViewSection) {
-        [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForFindHouse;
         return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }
     
     if (indexPath.row == kFHHomeListHouseTypeBannerViewSection) {
+        self.headerHeight = [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
+        
         if (self.categoryView.segmentedControl.sectionTitles.count <= 1) {
             self.headerHeight += KFHHomeSectionHeight;
         }else
         {
             self.headerHeight += 1;
         }
+        
         return KFHHomeSectionHeight;
     }
     
@@ -658,6 +670,7 @@
     if (self.tableViewV == scrollView) {
         if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight)) {
             [self.categoryView showOriginStyle:NO];
+            NSLog(@"scrolldid scroll y = %ld,h=%ld",((NSInteger)self.tableViewV.contentOffset.y),self.headerHeight);
             
             if (!self.isResetingOffsetZero) {
                 [self.homeViewController hideImmediately];

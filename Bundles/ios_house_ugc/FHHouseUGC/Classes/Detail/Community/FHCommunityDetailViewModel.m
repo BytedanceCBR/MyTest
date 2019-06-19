@@ -163,7 +163,7 @@
             [FHUGCFollowHelper followCommunity:wself.data.id userInfo:nil followBlock:^(){
                 //跳转发布器
                 NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
-                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:nil];
             }];
         }];
         [alertController showFrom:self.viewController animated:YES];
@@ -171,7 +171,7 @@
     }
     //跳转发布器
     NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:nil];
 }
 
 - (void)refreshContentOffset:(CGPoint)contentOffset {

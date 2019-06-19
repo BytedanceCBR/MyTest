@@ -9,6 +9,10 @@
 #import "FHBaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+// 发布回答成功 通知
+#define kFHWDAnswerPictureTextPostSuccessNotification @"kFHWDAnswerPictureTextPostSuccessNotification"
+
 // 回答：图文
 @interface FHWDAnswerPictureTextViewController : FHBaseViewController
 

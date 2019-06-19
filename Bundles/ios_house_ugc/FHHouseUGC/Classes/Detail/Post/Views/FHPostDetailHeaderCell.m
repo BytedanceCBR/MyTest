@@ -12,6 +12,7 @@
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 #import "FHUGCFollowButton.h"
+#import "FHUGCFollowManager.h"
 
 @interface FHPostDetailHeaderCell ()
 
@@ -41,11 +42,14 @@
         return;
     }
     self.currentData = data;
-//    CGFloat height = ((FHPostDetailHeaderModel *)data).lineHeight;
+
+    FHPostDetailHeaderModel *headerModel = (FHPostDetailHeaderModel *)self.currentData;
     
-    _titleLabel.text = @"世纪城";
-    _descLabel.text = @"88热帖·9221人";
-    [self.icon bd_setImageWithURL:[NSURL URLWithString:@"http://p1.pstatp.com/thumb/fea7000014edee1159ac"] placeholder:nil];
+    _titleLabel.text = headerModel.socialGroupModel.socialGroupName;
+    _descLabel.text = headerModel.socialGroupModel.countText;
+    [self.icon bd_setImageWithURL:[NSURL URLWithString:headerModel.socialGroupModel.avatar] placeholder:nil];
+    BOOL isFollowed = [headerModel.socialGroupModel.hasFollow boolValue];
+    self.joinBtn.followed = isFollowed;
 }
 
 
@@ -81,7 +85,10 @@
 }
 
 - (void)followButtonClick:(UIControl *)control {
-    
+//    NSString *gId = @"6703403081570189582";
+//    [[FHUGCFollowManager sharedInstance] followUGCBy:gId isFollow:NO completion:^(BOOL isSuccess) {
+//
+//    }];
 }
 
 - (void)setupConstraints {

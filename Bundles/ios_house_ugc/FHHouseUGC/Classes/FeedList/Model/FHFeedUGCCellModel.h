@@ -81,6 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
 //临时假数据
 + (FHFeedUGCCellModel *)modelFromFakeData;
 + (FHFeedUGCCellModel *)modelFromFakeData2;
++ (FHFeedUGCCellModel *)guideCellModel;
 
 @end
 

@@ -48,9 +48,9 @@
 #import "WDMonitorManager.h"
 #import "FHWenDaToolbar.h"
 
-static CGFloat const kLeftPadding = 15.f;
-static CGFloat const kRightPadding = 15.f;
-static CGFloat const kInputViewTopPadding = 8.f;
+static CGFloat const kLeftPadding = 20.f;
+static CGFloat const kRightPadding = 20.f;
+static CGFloat const kInputViewTopPadding = 10.f;
 static CGFloat const kTextViewHeight = 100.f;
 static CGFloat const kAddImagesViewTopPadding = 10.f;
 static CGFloat const kAddImagesViewBottomPadding = 18.f;
@@ -113,9 +113,6 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         NSString *qid = [paramObj.allParams objectForKey:@"qid"];
         NSString *ansid = [paramObj.allParams objectForKey:@"ansid"];
        
-        // add by zyk qid
-//        self.qid = @"6667717867934318859";
-//        self.ansid = @"";
         self.qid = qid;
         self.ansid = ansid;
         self.answerSchema = @"";
@@ -133,12 +130,11 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     [self setupData];
     [self setupUI];
     [self addImagesViewSizeChanged];
-    // [self restoreData];
+    [self refreshUI];
     self.startDate = [NSDate date];
 }
 
 - (void)setupData {
-//    self.qid = @"6667717867934318859";
     WDPostAnswerTaskModel *taskModel = [[WDPostAnswerTaskModel alloc] initWithQid:self.qid content:nil contentRichSpan:nil imageList:nil];
     self.taskModel = taskModel;
     self.uploadImageManager = [[WDUploadImageManager alloc] init];
@@ -181,6 +177,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     leftView.button.titleColorThemeKey = kColorText1;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftView];
     self.cancelButton = leftView.button;
+    [self.cancelButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    [self.cancelButton setTitleColor:[UIColor themeGray1] forState:UIControlStateDisabled];
     self.rightBarView = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:NSLocalizedString(@"发布", nil) target:self action:@selector(postQuestionAction:)];
     self.rightBarView.button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.rightBarView];
@@ -195,14 +193,6 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
     [self setupNaviBar];
     [self createComponent];
-//    [self setTartgetView:self.contentView];
-//    [self.view addSubview:self.bannerWrapView];
-//    [self.bannerWrapView addSubview:self.bannerView];
-//    [self.view addSubview:self.toolView];
-//    [self.view addSubview:self.characterNumberLabel];
-//    self.contentView.bannerWrapView = self.bannerWrapView;
-//    self.contentView.bannerView = self.bannerView;
-//    self.contentView.toolView = self.toolView;
 }
 
 #pragma mark - View
@@ -277,7 +267,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     internalTextView.minHeight = kTextViewHeight;
     internalTextView.maxHeight = INT_MAX;
 //    internalTextView.maxNumberOfLines = 8;
-    internalTextView.placeholder = @"发点什么，分享你的真实经验";
+    internalTextView.tintColor = [UIColor themeRed1];
+    internalTextView.placeholder = @"分享你身边的新鲜事";
     
     // 图文发布器展示
     internalTextView.backgroundColor = [UIColor clearColor];
@@ -295,7 +286,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
                                                               assets:self.outerInputAssets
                                                               images:self.outerInputImages];
     self.addImagesView.hidden = NO;
-    self.addImagesView.hideAddImagesButtonWhenEmpty = NO; // 只有第一次添加图片后才显示
+    self.addImagesView.hideAddImagesButtonWhenEmpty = YES; // 只有第一次添加图片后才显示
     self.addImagesView.selectionLimit = 9;
     self.addImagesView.delegate = self;
     WeakSelf;
@@ -310,30 +301,29 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     self.inputContainerView.height =  self.addImagesView.bottom + kAddImagesViewBottomPadding;
     
     // toolbar
-    // toolbar
-//    kWenDaToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
-//    self.toolbar = [[TTUGCToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - kWenDaToolbarHeight, self.view.width, kWenDaToolbarHeight)];
-//    self.toolbar.emojiInputView.source = @"post";
-//
-//    self.toolbar.banLongText = YES;
-//
-//    [self.view addSubview:self.toolbar];
     kWenDaToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     self.toolbar = [[FHWenDaToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - kWenDaToolbarHeight, self.view.width, kWenDaToolbarHeight)];
-//    self.toolbar.leftItems = [self leftToolbarItems];
-//    self.toolbar.rightItems = [self rightToolbarItems];
-//    internalTextView.internalTextView.inputAccessoryView = self.toolbar;
     self.toolbar.emojiInputView.source = @"wenda";
+    __weak typeof(self) weakSelf = self;
+    self.toolbar.picButtonClkBlk = ^{
+        // 添加图片
+        [weakSelf.addImagesView showImagePicker];
+    };
     self.toolbar.banLongText = YES;
     
     [self.view addSubview:self.toolbar];
     
-    // TextView and Toolbar Mediator
-//    self.textViewMediator = [[TTUGCTextViewMediator alloc] init];
-//    self.textViewMediator.textView = self.inputTextView;
-//    self.textViewMediator.toolbar = self.toolbar;
-//    self.inputTextView.delegate = self.textViewMediator;
-//    [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
+    //Tip label
+    CGFloat tipLabelWidth = 100.0;
+    self.tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(self.view.width - tipLabelWidth - kRightPadding, 11, tipLabelWidth, 25.f)];
+    
+    self.tipLabel.font = [UIFont systemFontOfSize:11];
+    self.tipLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
+    self.tipLabel.textAlignment = NSTextAlignmentRight;
+    self.tipLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
+    [self.tipLabel setTextColor:[UIColor themeGray4]];
+    self.tipLabel.hidden = NO;
+    [self.toolbar addSubview:self.tipLabel];
     
     // TextView and Toolbar Mediator
     self.textViewMediator = [[TTUGCTextViewMediator alloc] init];
@@ -389,8 +379,29 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 #pragma mark - Action
 
 - (void)previousAction:(id)sender {
+    self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
     [self endEditing];
-    [self dismissSelf];
+    NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
+    
+    if (!shouldAlert) {
+        [self dismissSelf];
+    } else {
+        TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"编辑未完成" message:@"退出后编辑的内容将不被保存" preferredType:TTThemedAlertControllerTypeAlert];
+        WeakSelf;
+        [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+            StrongSelf;
+            [self dismissSelf];
+        }];
+        [alertController addActionWithTitle:NSLocalizedString(@"继续编辑", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+            StrongSelf;
+            if (self.keyboardVisibleBeforePresent) {
+                [self.inputTextView becomeFirstResponder];
+            }
+        }];
+        [alertController showFrom:self animated:YES];
+    }
 }
 
 - (void)updateAnswer {
@@ -410,34 +421,34 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (BOOL)isValidateWithInputText:(NSString *)inputText{
     //Validate
     
-//    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
-//
-//    if (isEmptyString(inputText) && self.addImagesView.selectedImageCacheTasks.count == 0) {
-//        [self endEditing];
-//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                  indicatorText:NSLocalizedString(@"说点什么...", nil)
-//                                 indicatorImage:nil
-//                                    autoDismiss:YES
-//                                 dismissHandler:nil];
-//        return NO;
-//    }else if (inputText.length > maxTextCount) {
-//        [self endEditing];
-//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                  indicatorText:[NSString stringWithFormat:@"字数超过%ld字，请调整后重试", maxTextCount]
-//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
-//                                    autoDismiss:YES
-//                                 dismissHandler:nil];
-//        return NO;
-//    }
-//
-//    if (![TTReachability isNetworkConnected]) {
-//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                  indicatorText:NSLocalizedString(@"没有网络连接", nil)
-//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
-//                                    autoDismiss:YES
-//                                 dismissHandler:nil];
-//        return NO;
-//    }
+    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
+
+    if (isEmptyString(inputText) && self.addImagesView.selectedImageCacheTasks.count == 0) {
+        [self endEditing];
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                  indicatorText:NSLocalizedString(@"说点什么...", nil)
+                                 indicatorImage:nil
+                                    autoDismiss:YES
+                                 dismissHandler:nil];
+        return NO;
+    }else if (inputText.length > maxTextCount) {
+        [self endEditing];
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                  indicatorText:[NSString stringWithFormat:@"字数超过%ld字，请调整后重试", maxTextCount]
+                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
+                                    autoDismiss:YES
+                                 dismissHandler:nil];
+        return NO;
+    }
+
+    if (![TTReachability isNetworkConnected]) {
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                  indicatorText:NSLocalizedString(@"没有网络连接", nil)
+                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
+                                    autoDismiss:YES
+                                 dismissHandler:nil];
+        return NO;
+    }
     return YES;
 }
 
@@ -459,8 +470,6 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (void)cancelImageUpload {
     [_uploadImageManager cancelUploadImage];
     self.sendAnswerBlock = nil;
-    
-//    [_draftManager startAutoSave];
 }
 
 - (void)sendAnswer {
@@ -489,45 +498,22 @@ static CGFloat kWenDaToolbarHeight = 80.f;
             NSString *qid = wself.qid;
             NSString *ansid = wself.ansid;
             if (qid.length > 0 && ansid.length > 0) {
-//                [[NSNotificationCenter defaultCenter] postNotificationName:kWDDraftNeedRefreshNotification object:nil userInfo:nil];
-                
-//                wself.willEnterDetail = YES;
-//                [[TTMonitor shareManager] trackService:kWDPostAnswerService
-//                                                status:WDRequestNetworkStatusCompleted
-//                                                 extra:[WDMonitorManager extraDicWithInfo:diction error:error]];
-                
-                if ((wself.taskModel.pasteTimes > 0) && (wself.taskModel.pastLength > 0)) {
-//                    [[TTMonitor shareManager] trackService:kWDAnswerQualifyPasteService value:@(wself.taskModel.pasteTimes) extra:[WDMonitorManager extraDicWithInfo:@{kWDAnswerPasteLengthKey : @(wself.viewModel.taskModel.pastLength)} error:error]];
-                }
                 //回答发送成功
-                //埋点
-//                [wself sendTrackWhenAnswerPublishDoneWithAnsid:ansid];
                 [wself.sendingIndicatorView updateIndicatorWithText:[wself postAnswerSuccessText] shouldRemoveWaitingView:YES];
                 [wself.sendingIndicatorView updateIndicatorWithImage:[UIImage themedImageNamed:@"doneicon_popup_textpage"]];
                 wself.sendingIndicatorView.showDismissButton = NO;
-                //删除草稿
-//                [wself.viewModel deleteDraftWithCompleteHandler:^(BOOL success) {
-//                    //因为删除草稿操作在异步次线程中，保证在删除操作完成后执行其他操作
-//                    //否则，页面退出后，vm释放造成删除草稿失败
-//                    //跳到回答详情页
-//                    [wself navigateToAnswerSchema];
-//                }];
+                NSMutableDictionary *userInfoDict = [NSMutableDictionary dictionary];
+                [userInfoDict setValue:qid forKey:@"qid"];
+                [userInfoDict setValue:ansid forKey:@"ansid"];
+                if (wself.answerSchema.length > 0) {
+                    [userInfoDict setValue:wself.answerSchema forKey:@"scheme"];
+                }
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHWDAnswerPictureTextPostSuccessNotification object:nil userInfo:userInfoDict];
+                
+                [wself dismissSelf];
             }else {
                 NSNumber *errorCode = [error.userInfo objectForKey:kWDErrorCodeKey];
-//                if (errorCode && [wself.viewModel isBusinessError:[errorCode integerValue]]) {
-//                    [[TTMonitor shareManager] trackService:kWDPostAnswerService
-//                                                    status:WDRequestNetworkStatusBusinessError
-//                                                     extra:[WDMonitorManager extraDicWithInfo:diction error:error]];
-//                } else {
-//                    [[TTMonitor shareManager] trackService:kWDPostAnswerService
-//                                                    status:WDRequestNetworkStatusFailed
-//                                                     extra:[WDMonitorManager extraDicWithInfo:diction error:error]];
-//                }
-                
-                
                 //回答发送失败
-                //埋点
-//                [wself sendTrackWhenAnswerPublishFail];
                 NSString *errorTips = [error.userInfo objectForKey:kWDErrorTipsKey];
                 if (errorTips.length == 0) {
                     errorTips = NSLocalizedString(@"网络加载异常，请重试", nil);
@@ -560,8 +546,6 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         if (isEmptyString(wSelf.taskModel.content) && wSelf.taskModel.imageList.count == 0) {
             return;
         }
-//        task.content = richSpanText.text;
-//        task.contentRichSpans = [TTRichSpans JSONStringForRichSpans:richSpanText.richSpans];
         NSString *content = wSelf.taskModel.content;
         NSString *richSpanTetxt = wSelf.taskModel.richSpanText;
         NSArray<NSString *> *imageUris = [wSelf.taskModel remoteImgUris];
@@ -580,14 +564,12 @@ static CGFloat kWenDaToolbarHeight = 80.f;
             NSError *postError;
             
             if (error) {
-//                [wSelf.draftManager startAutoSave];
                 tips = [[error userInfo] objectForKey:@"description"];
                 postError = [NSError errorWithDomain:kWDErrorDomain code:-1 userInfo:tips.length > 0?@{kWDErrorTipsKey : tips, kWDErrorCodeKey : @(error.code)}:nil];
             }
             
             wSelf.answerSchema = responseModel.schema;
             wSelf.ansid = responseModel.ansid;
-//            wSelf.tipsModel = responseModel.tips;
             
             if (block) {
                 block(postError);
@@ -616,14 +598,9 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (void)refreshUI {
     NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
     NSString *inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if (inputText.length > maxTextCount) {
-        self.tipLabel.hidden = NO;
-        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
-        excludeCount = MIN(excludeCount, 9999);
-        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
-    } else {
-        self.tipLabel.hidden = YES;
-    }
+    
+    self.tipLabel.hidden = NO;
+    self.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",inputText.length, maxTextCount];
     
     [self refreshPostButtonUI];
 }
@@ -631,13 +608,15 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (void)refreshPostButtonUI {
     //发布器
     if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
-        self.postButton.titleColorThemeKey = kColorText6;
+        self.postButton.enabled = YES;
         self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
-        self.postButton.disabledTitleColorThemeKey = kColorText6;
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
     } else {
-        self.postButton.titleColorThemeKey = kColorText9;
         self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
-        self.postButton.disabledTitleColorThemeKey = kColorText9;
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
+        self.postButton.enabled = NO;
     }
 }
 

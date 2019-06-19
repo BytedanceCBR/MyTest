@@ -6,17 +6,14 @@
 //
 
 #import "FHCommunityViewController.h"
-#import "FHPostUGCViewController.h"
-#import "TTNavigationController.h"
-#import "FHWDPostViewController.h"
 #import "TTDeviceHelper.h"
 #import "FHCommunityViewModel.h"
+#import "UIButton+TTAdditions.h"
 #import "FHTopicDetailViewController.h"
 #import "FHCommunityDetailViewController.h"
 #import "FHPostDetailViewController.h"
 #import "FHWDAnswerPictureTextViewController.h"
-#import "FHUGCFollowListController.h"
-#import "UIButton+TTAdditions.h"
+#import <FHEnvContext.h>
 
 @interface FHCommunityViewController ()
 
@@ -24,6 +21,7 @@
 @property(nonatomic , strong) UIView *bottomLineView;
 @property(nonatomic , strong) UIView *topView;
 @property(nonatomic , strong) UIButton *searchBtn;
+@property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 
 @end
 
@@ -42,6 +40,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear];
+     self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)initView {
@@ -67,6 +66,30 @@
     [self setupCollectionView];
     [self setupSetmentedControl];
 }
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self addStayCategoryLog:self.stayTime];
+}
+
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
+    //        if (duration) {
+    //            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
+    //        }
+    [tracerDict setValue:@"main" forKey:@"tab_name"];
+    [tracerDict setValue:@(0) forKey:@"with_tips"];
+    [tracerDict setValue:@"click_tab" forKey:@"enter_type"];
+    tracerDict[@"stay_time"] = @((int)duration);
+    
+    if (((int)duration) > 0) {
+        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
+    }
+}
+
 
 - (void)setupCollectionView {
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -105,7 +128,6 @@
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _segmentControl.selectionIndicatorWidth = 24.0f;
     _segmentControl.selectionIndicatorHeight = 12.0f;
-//    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -5, 0);
     _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
     
     [self.topView addSubview:_segmentControl];
@@ -154,7 +176,7 @@
     [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.topView);
         make.width.mas_equalTo([self.segmentControl totalSegmentedControlWidth]);
-        make.top.mas_equalTo(self.topView).offset(10);
+        make.top.mas_equalTo(self.topView).offset(11);
         make.bottom.mas_equalTo(self.topView).offset(-4);
     }];
     
@@ -173,21 +195,6 @@
     _viewModel = [[FHCommunityViewModel alloc] initWithCollectionView:self.collectionView controller:self];
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-    
-//    FHUGCFollowListController *vc = [[FHUGCFollowListController alloc] init];
-//    TTNavigationController *navVC = [[TTNavigationController alloc] initWithRootViewController:vc];
-//    [self presentViewController:navVC animated:YES completion:nil];
-    
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"title"] = @"选择小区";
-    dict[@"action_type"] = @(1);
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-}
-
 - (void)hideSegmentControl {
     self.segmentControl.hidden = YES;
     self.bottomLineView.hidden = YES;
@@ -200,7 +207,9 @@
 
 //进入搜索页
 - (void)goToSearch {
-    
+    NSString *routeUrl = @"sslocal://ugc_search_list";
+    NSURL *openUrl = [NSURL URLWithString:routeUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 @end

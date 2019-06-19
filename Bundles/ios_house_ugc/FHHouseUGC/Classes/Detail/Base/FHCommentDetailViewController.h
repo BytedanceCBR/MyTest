@@ -31,6 +31,7 @@ typedef NS_ENUM (NSInteger , FHUGCPostType){
 @property (nonatomic, assign)   NSInteger       user_digg;// 当前用户是否点赞
 
 - (void)commentCountChanged;
+- (void)headerInfoChanged;
 - (void)refreshToolbarView;
 
 @end

@@ -52,6 +52,8 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 //停止轮询红点
 - (void)stopCategoryRedDotRefresh;
 
+- (BOOL)isHaveLocationAuthorization;
+
 @end
 
 

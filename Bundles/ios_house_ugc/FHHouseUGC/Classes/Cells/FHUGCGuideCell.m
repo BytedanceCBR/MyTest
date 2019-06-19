@@ -1,23 +1,22 @@
 //
-//  FHUGCBannerCell.m
+//  FHUGCGuideCell.m
 //  FHHouseUGC
 //
-//  Created by 谢思铭 on 2019/6/18.
+//  Created by 谢思铭 on 2019/6/19.
 //
 
-#import "FHUGCBannerCell.h"
-#import "FHArticleCellBottomView.h"
-#import <UIImageView+BDWebImage.h>
+#import "FHUGCGuideCell.h"
 
-@interface FHUGCBannerCell ()
+@interface FHUGCGuideCell ()
 
-@property(nonatomic ,strong) UIImageView *bannerImageView;
+@property(nonatomic ,strong) UILabel *contentLabel;
 @property(nonatomic ,strong) UIView *bottomSepView;
+@property(nonatomic ,strong) UIButton *closeBtn;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 @end
 
-@implementation FHUGCBannerCell
+@implementation FHUGCGuideCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -41,14 +40,18 @@
 }
 
 - (void)initViews {
-
-    self.bannerImageView = [[UIImageView alloc] init];
-    _bannerImageView.clipsToBounds = YES;
-    _bannerImageView.contentMode = UIViewContentModeScaleAspectFill;
-    _bannerImageView.backgroundColor = [UIColor themeGray6];
-    _bannerImageView.layer.masksToBounds = YES;
-    _bannerImageView.layer.cornerRadius = 4;
-    [self.contentView addSubview:_bannerImageView];
+    self.contentView.backgroundColor = [UIColor themeGray7];
+    
+    self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
+    _contentLabel.numberOfLines = 2;
+    _contentLabel.text = @"点击✌️关联小区，进入小区圈查看更多有趣的新鲜事";
+    [self.contentView addSubview:_contentLabel];
+    
+    self.closeBtn = [[UIButton alloc] init];
+    [_closeBtn setImage:[UIImage imageNamed:@"detail_alert_closed"] forState:UIControlStateNormal];
+    [_closeBtn addTarget:self action:@selector(deleteCell) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:_closeBtn];
+    
     
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
@@ -56,15 +59,20 @@
 }
 
 - (void)initConstraints {
-    [self.bannerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(20);
-        make.left.mas_equalTo(self.contentView).offset(20);
+    [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.contentLabel);
         make.right.mas_equalTo(self.contentView).offset(-20);
-        make.height.mas_equalTo(100);
+        make.width.height.mas_equalTo(20);
+    }];
+    
+    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentView);
+        make.left.mas_equalTo(self.contentView).offset(20);
+        make.right.mas_equalTo(self.closeBtn.mas_left).offset(-20);
     }];
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.bannerImageView.mas_bottom).offset(20);
+        make.top.mas_equalTo(self.contentLabel.mas_bottom);
         make.bottom.left.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(5);
     }];
@@ -81,11 +89,6 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         self.cellModel = cellModel;
-        //图片
-//        FHFeedUGCCellImageListModel *imageModel = [cellModel.imageList firstObject];
-//        if(imageModel){
-            [self.bannerImageView bd_setImageWithURL:[NSURL URLWithString:@"http://t11.baidu.com/it/u=1311525232,1138951251&fm=175&app=25&f=JPEG?w=640&h=400&s=F69B15C594B265961C3465270300D043"] placeholder:nil];
-//        }
     }
 }
 

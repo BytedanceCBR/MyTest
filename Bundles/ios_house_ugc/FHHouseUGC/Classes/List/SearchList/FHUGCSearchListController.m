@@ -49,8 +49,24 @@
     // 是否有数据
 }
 
+- (void)setupNaviBar {
+    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+    _naviBar = [[FHUGCSearchBar alloc] initWithFrame:CGRectZero];
+    [_naviBar setSearchPlaceHolderText:@"搜索小区圈"];
+    [self.view addSubview:_naviBar];
+    CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
+    [_naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.view);
+        make.height.mas_equalTo(naviHeight);
+    }];
+    [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    _naviBar.searchInput.delegate = self;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
+}
+
 - (void)setupUI {
-    [self setupDefaultNavBar:YES];
+    [self setupNaviBar];
     
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
@@ -64,7 +80,6 @@
         make.top.mas_equalTo(self.view).offset(height);
         make.bottom.mas_equalTo(self.view);
     }];
-    [self addDefaultEmptyViewFullScreen];
 }
 
 - (void)configTableView {
@@ -89,6 +104,47 @@
 
 - (void)retryLoadData {
     
+}
+// 文本框文字变化，进行sug请求
+- (void)textFiledTextChangeNoti:(NSNotification *)noti {
+    NSInteger maxCount = 80;
+    NSString *text = self.naviBar.searchInput.text;
+    UITextRange *selectedRange = [self.naviBar.searchInput markedTextRange];
+    //获取高亮部分
+    UITextPosition *position = [self.naviBar.searchInput positionFromPosition:selectedRange.start offset:0];
+    // 没有高亮选择的字，说明不是拼音输入
+    if (position) {
+        return;
+    }
+    if (text.length > maxCount) {
+        text = [text substringToIndex:maxCount];
+        self.naviBar.searchInput.text = text;
+    }
+    BOOL hasText = text.length > 0;
+    if (hasText) {
+        //[self requestSuggestion:text];
+    } else {
+        // 清空sug列表数据
+        //[self.viewModel clearSugTableView];
+    }
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    return YES;
+}
+
+// 输入框执行搜索
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    NSString *userInputText = self.naviBar.searchInput.text;
+}
+
+#pragma mark - dealloc
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource

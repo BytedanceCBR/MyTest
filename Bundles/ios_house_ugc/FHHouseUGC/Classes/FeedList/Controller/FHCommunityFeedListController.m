@@ -142,6 +142,10 @@
     }
 }
 
+- (void)reLoadData {
+    
+}
+
 - (void)retryLoadData {
     [self startLoadData];
 }
@@ -153,7 +157,7 @@
     }
     //跳转到发布器
     NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:nil];
 }
 
 #pragma mark - show notify
