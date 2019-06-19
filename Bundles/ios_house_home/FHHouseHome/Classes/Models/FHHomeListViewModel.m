@@ -672,7 +672,6 @@
     if (self.tableViewV == scrollView) {
         if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight)) {
             [self.categoryView showOriginStyle:NO];
-            NSLog(@"scrolldid scroll y = %ld,h=%ld",((NSInteger)self.tableViewV.contentOffset.y),self.headerHeight);
             
             if (!self.isResetingOffsetZero) {
                 [self.homeViewController hideImmediately];
