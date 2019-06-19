@@ -554,6 +554,14 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 //                    //跳到回答详情页
 //                    [wself navigateToAnswerSchema];
 //                }];
+                NSMutableDictionary *userInfoDict = [NSMutableDictionary dictionary];
+                [userInfoDict setValue:qid forKey:@"qid"];
+                [userInfoDict setValue:ansid forKey:@"ansid"];
+                if (wself.answerSchema.length > 0) {
+                    [userInfoDict setValue:wself.answerSchema forKey:@"scheme"];
+                }
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHWDAnswerPictureTextPostSuccessNotification object:nil userInfo:userInfoDict];
+                
                 [wself dismissSelf];
             }else {
                 NSNumber *errorCode = [error.userInfo objectForKey:kWDErrorCodeKey];

@@ -91,6 +91,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 @property (nonatomic, assign)   CGFloat       bottomButtonHeight;
 @property (nonatomic, copy)   NSString *       qid;
 @property (nonatomic, copy)   NSString *       ansid;
+@property (nonatomic, assign)   BOOL       needReloadData;
 
 @end
 
@@ -172,6 +173,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         self.viewModel = [[WDListViewModel alloc] initWithQid:qID gdExtJson:baseCondition apiParameter:apiParameter needReturn:needReturn];
         _readAnswerArray = @[].mutableCopy;
         _rid = [rid copy];
+        self.needReloadData = NO;
         self.qid = qID;
         self.ansid = [baseCondition tt_stringValueForKey:@"ansid"];
         if (self.qid.length <= 0) {
@@ -269,6 +271,10 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 {
     [super viewDidAppear:animated];
     self.lastStatusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
+    if (self.needReloadData) {
+        [self.answerListView setContentOffset:CGPointZero animated:NO];
+        [self firstLoadContent];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -321,8 +327,28 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     UIBarButtonItem *moreButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self moreButton]];
     self.navigationItem.rightBarButtonItems = @[moreButtonItem];
  
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postAnswerSuccess:) name:@"kFHWDAnswerPictureTextPostSuccessNotification" object:nil];
+    
     [self firstLoadContent];
     [self reloadThemeUI];
+}
+
+- (void)postAnswerSuccess:(NSNotification *)noti {
+    NSDictionary *userInfo = noti.userInfo;
+    NSString *qid = [userInfo tt_stringValueForKey:@"qid"];
+    // NSString *ansid = [userInfo tt_stringValueForKey:@"ansid"];
+    NSString *scheme = [userInfo tt_stringValueForKey:@"scheme"];
+    if ([qid isEqualToString:self.qid] && scheme.length > 0) {
+        // 先跳转详情页，之后返回刷新
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            weakSelf.needReloadData = YES;
+            NSURL *openUrl = [NSURL URLWithString:scheme];
+            if (openUrl) {
+                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+            }
+        });
+    }
 }
 
 - (void)addSubviewsIfNeeded {
