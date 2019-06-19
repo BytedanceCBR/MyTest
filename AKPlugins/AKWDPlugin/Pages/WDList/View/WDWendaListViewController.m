@@ -384,7 +384,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         dict[@"ansid"] = self.ansid;
     }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
 }
 
 - (void)firstLoadContent
