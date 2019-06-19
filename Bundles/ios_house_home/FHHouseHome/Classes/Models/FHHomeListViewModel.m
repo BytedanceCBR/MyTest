@@ -223,21 +223,7 @@
 
 - (void)setUpTableScrollOffsetZero
 {
-    
-    //    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    //    NSInteger currentSelectIndex = self.categoryView.segmentedControl.selectedSegmentIndex;
-    //
-    //    if (configDataModel.houseTypeList.count > currentSelectIndex && self.itemsVCArray.count > currentSelectIndex) {
-    //        FHHomeItemViewController *itemVC = self.itemsVCArray[currentSelectIndex];
-    //
-    //        itemVC.tableView.contentOffset = CGPointMake(0, 0);
-    //        if (itemVC.tableView.numberOfSections > 0 && [itemVC.tableView numberOfRowsInSection:0] > 0) {
-    //            [itemVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-    //        }
-    //    }
-    
     self.isResetingOffsetZero = YES;
-
     self.tableViewV.contentOffset = CGPointMake(0, 0);
     
     if (self.tableViewV.numberOfSections > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
@@ -556,43 +542,7 @@
 
 - (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType
 {
-    //    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-    //    self.homeViewController.tracerModel.enterFrom = @"maintab";
-    //    self.homeViewController.tracerModel.elementFrom = @"maintab_list";
-    //
-    //    tracerDict[@"category_name"] = [self.dataSource pageTypeString] ? : @"be_null";
-    //    tracerDict[@"enter_from"] = @"maintab";
-    //    tracerDict[@"enter_type"] = self.enterType ? : @"be_null";
-    //    tracerDict[@"element_from"] = @"maintab_list";
-    //    tracerDict[@"search_id"] = self.itemsSearchIdCache[[self matchHouseString:self.currentHouseType]] ? : @"be_null";
-    //    tracerDict[@"origin_from"] = [self.dataSource pageTypeString]  ? : @"be_null";
-    //    tracerDict[@"origin_search_id"] = self.originSearchIdCache[[self matchHouseString:self.currentHouseType]] ? : @"be_null";
-    //
-    //
-    //    if (traceType == FHHomeCategoryTraceTypeEnter) {
-    //        [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
-    //    }else if (traceType == FHHomeCategoryTraceTypeStay)
-    //    {
-    //        NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
-    //        if (duration) {
-    //            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
-    //        }
-    //        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
-    //    }else if (traceType == FHHomeCategoryTraceTypeRefresh)
-    //    {
-    //        NSString *stringReloadType = @"pull";
-    //        if (self.reloadType == TTReloadTypeTab) {
-    //            stringReloadType = @"tab";
-    //        }
-    //        if (self.reloadType == TTReloadTypeClickCategory) {
-    //            stringReloadType = @"click";
-    //        }
-    //        tracerDict[@"refresh_type"] = (self.currentPullType == FHHomePullTriggerTypePullUp ? @"pre_load_more" : stringReloadType);
-    //        [FHEnvContext recordEvent:tracerDict andEventKey:@"category_refresh"];
-    //
-    //        self.reloadType = nil;
-    //    }
-    //
+
 }
 
 #pragma mark tableView 代理
