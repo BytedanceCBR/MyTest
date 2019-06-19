@@ -447,6 +447,12 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeSubTableViewDidScroll" object:scrollView];
 }
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (self.scrollDidEnd) {
+        self.scrollDidEnd();
+    }
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {

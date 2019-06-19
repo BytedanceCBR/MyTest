@@ -75,54 +75,10 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.isRefreshing = NO;
     self.adColdHadJump = NO;
     
-    self.mainTableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-//    if (@available(iOS 7.0, *)) {
-//        self.mainTableView.estimatedSectionFooterHeight = 0;
-//        self.mainTableView.estimatedSectionHeaderHeight = 0;
-//        self.mainTableView.estimatedRowHeight = 0;
-//    } else {
-//        // Fallback on earlier versions
-//    }
-    self.mainTableView.showsVerticalScrollIndicator = NO;
-
-    if (_isMainTabVC) {
-        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
-    }
-
     [self registerNotifications];
-        
-//    self.mainTableView.sectionFooterHeight = 0;
-//    self.mainTableView.sectionHeaderHeight = 0;
-//    self.mainTableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
-//    self.mainTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
 
-    [self.view addSubview:self.mainTableView];
-
-    self.mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
-    [self setUpMainTableConstraints];
-
-    [FHHomeCellHelper registerCells:self.mainTableView];
-    
-        // Do any additional setup after loading the view.
-    
-    self.view.backgroundColor = [UIColor whiteColor];
-    self.mainTableView.backgroundColor = [UIColor whiteColor];
-    FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if (!configModel) {
-        [self tt_startUpdate];
-    }
-
-    [self addDefaultEmptyViewFullScreen];
-
-    self.notifyBar = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:self.notifyBar];
-
-    [self.notifyBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.equalTo(self.mainTableView);
-        make.height.mas_equalTo(32);
-    }];
-    
+    [self resetMaintableView];
+  
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
@@ -133,13 +89,61 @@ static CGFloat const kSectionHeaderHeight = 38;
         //#endif
     }
     
-    [self.view bringSubviewToFront:self.topBar];
+    [self addDefaultEmptyViewFullScreen];
     
     if (!_isMainTabVC) {
         [self.topBar removeFromSuperview];
         [self.mainTableView removeFromSuperview];
         [self.emptyView showEmptyWithTip:@"功能暂未开通" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
     }
+}
+
+- (void)resetMaintableView
+{
+    if (self.mainTableView) {
+        [self.mainTableView removeFromSuperview];
+    }
+    
+    self.mainTableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    
+    self.mainTableView.showsVerticalScrollIndicator = NO;
+    
+    if (_isMainTabVC) {
+        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
+    }
+    
+    [self.view addSubview:self.mainTableView];
+    
+    self.mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    [self setUpMainTableConstraints];
+    
+    [FHHomeCellHelper registerCells:self.mainTableView];
+    
+    // Do any additional setup after loading the view.
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.mainTableView.backgroundColor = [UIColor whiteColor];
+    FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (!configModel) {
+        [self tt_startUpdate];
+    }
+    
+    
+    if (self.notifyBar) {
+        [self.notifyBar removeFromSuperview];
+    }
+    
+    self.notifyBar = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
+    [self.view addSubview:self.notifyBar];
+    
+    [self.notifyBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.equalTo(self.mainTableView);
+        make.height.mas_equalTo(32);
+    }];
+    
+    
+    [self.view bringSubviewToFront:self.topBar];
 }
 
 #pragma mark - notifications

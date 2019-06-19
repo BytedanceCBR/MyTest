@@ -149,6 +149,7 @@
                 [self updateCategoryViewSegmented:NO];
             }else
             {
+//                [self.homeViewController resetMaintableView];
                 [self updateCategoryViewSegmented:YES];
             }
             
@@ -234,11 +235,12 @@
     //    }
     
     self.isResetingOffsetZero = YES;
+
     self.tableViewV.contentOffset = CGPointMake(0, 0);
+    
     if (self.tableViewV.numberOfSections > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
         [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:NO];
     }
-    
 }
 
 - (void)setUpSubtableViewContrllers
@@ -252,7 +254,7 @@
     }
     
     self.homeViewController.scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
-    self.tableViewV.scrollEnabled = NO;
+//    self.tableViewV.scrollEnabled = NO;
     
     
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -276,6 +278,11 @@
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
                 [self processRequestData:refreshType andHouseType:houseType andIsSucees:isSuccess andDataModel:dataModel];
             };
+            itemVC.scrollDidEnd = ^{
+                [self scrollViewWillBeginDragging:self.homeViewController.scrollView];
+                [self scrollViewDidEndDecelerating:self.homeViewController.scrollView];
+            };
+            
             itemVC.requestNetworkUnAvalableRetryCallBack = ^{
                 [self.homeViewController retryLoadData];
             };
@@ -298,7 +305,8 @@
         self.homeViewController.scrollView.scrollEnabled = NO;
     }
     
-    self.tableViewV.scrollEnabled = YES;
+    [self.tableViewV reloadData];
+//    self.tableViewV.scrollEnabled = YES;
 }
 
 - (void)setUpSubtableIndex:(NSInteger)index
