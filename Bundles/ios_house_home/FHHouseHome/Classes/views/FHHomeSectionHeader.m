@@ -60,7 +60,6 @@ static const NSInteger kTopScrollViewTag = 100;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentedControl.isNeedNetworkCheck = YES;
     
-    
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
                                      [UIColor themeGray3],NSForegroundColorAttributeName,nil];
@@ -107,8 +106,9 @@ static const NSInteger kTopScrollViewTag = 100;
         [labelCurrent setFont:[UIFont themeFontMedium:16]];
         [labelCurrent setTextColor:[UIColor themeGray1]];
         self.currentLabel = labelCurrent;
+        self.segmentedControl.selectedSegmentIndex = scrollIndex;
     }
-
+    
 }
 
 - (void)showOriginStyle:(BOOL)isOrigin
@@ -253,11 +253,6 @@ static const NSInteger kTopScrollViewTag = 100;
 
 - (void)scrollSectionLabelClick:(UITapGestureRecognizer *)tap
 {
-    
-    if (![FHEnvContext isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
-        return;
-    }
     
     UIView *tapView = tap.view;
     NSInteger scrollIndex = tapView.tag - kTopScrollViewTag;
