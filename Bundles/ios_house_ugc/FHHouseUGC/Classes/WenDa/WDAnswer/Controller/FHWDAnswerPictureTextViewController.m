@@ -410,8 +410,29 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 #pragma mark - Action
 
 - (void)previousAction:(id)sender {
+    self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
     [self endEditing];
-    [self dismissSelf];
+    NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
+    
+    if (!shouldAlert) {
+        [self dismissSelf];
+    } else {
+        TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"编辑未完成" message:@"退出后编辑的内容将不被保存" preferredType:TTThemedAlertControllerTypeAlert];
+        WeakSelf;
+        [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+            StrongSelf;
+            [self dismissSelf];
+        }];
+        [alertController addActionWithTitle:NSLocalizedString(@"继续编辑", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+            StrongSelf;
+            if (self.keyboardVisibleBeforePresent) {
+                [self.inputTextView becomeFirstResponder];
+            }
+        }];
+        [alertController showFrom:self animated:YES];
+    }
 }
 
 - (void)updateAnswer {
@@ -431,34 +452,34 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (BOOL)isValidateWithInputText:(NSString *)inputText{
     //Validate
     
-//    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
-//
-//    if (isEmptyString(inputText) && self.addImagesView.selectedImageCacheTasks.count == 0) {
-//        [self endEditing];
-//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                  indicatorText:NSLocalizedString(@"说点什么...", nil)
-//                                 indicatorImage:nil
-//                                    autoDismiss:YES
-//                                 dismissHandler:nil];
-//        return NO;
-//    }else if (inputText.length > maxTextCount) {
-//        [self endEditing];
-//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                  indicatorText:[NSString stringWithFormat:@"字数超过%ld字，请调整后重试", maxTextCount]
-//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
-//                                    autoDismiss:YES
-//                                 dismissHandler:nil];
-//        return NO;
-//    }
-//
-//    if (![TTReachability isNetworkConnected]) {
-//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                  indicatorText:NSLocalizedString(@"没有网络连接", nil)
-//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
-//                                    autoDismiss:YES
-//                                 dismissHandler:nil];
-//        return NO;
-//    }
+    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
+
+    if (isEmptyString(inputText) && self.addImagesView.selectedImageCacheTasks.count == 0) {
+        [self endEditing];
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                  indicatorText:NSLocalizedString(@"说点什么...", nil)
+                                 indicatorImage:nil
+                                    autoDismiss:YES
+                                 dismissHandler:nil];
+        return NO;
+    }else if (inputText.length > maxTextCount) {
+        [self endEditing];
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                  indicatorText:[NSString stringWithFormat:@"字数超过%ld字，请调整后重试", maxTextCount]
+                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
+                                    autoDismiss:YES
+                                 dismissHandler:nil];
+        return NO;
+    }
+
+    if (![TTReachability isNetworkConnected]) {
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                  indicatorText:NSLocalizedString(@"没有网络连接", nil)
+                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
+                                    autoDismiss:YES
+                                 dismissHandler:nil];
+        return NO;
+    }
     return YES;
 }
 
