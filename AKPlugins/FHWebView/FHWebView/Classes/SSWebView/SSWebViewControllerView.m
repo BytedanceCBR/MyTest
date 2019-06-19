@@ -503,9 +503,15 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     
     //    if (![self.backButtonView isCloseButtonShowing]) {
     [self performSelector:@selector(showCloseButton) withObject:nil afterDelay:0.1];
-    //    }
+    //    }    
     if ([self.ssWebContainer.ssWebView canGoBack] && !self.shouldDisableHistory) {
-        [self.ssWebContainer.ssWebView goBack];
+        if (self.isWebControl) {
+            [self.ssWebContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"ToutiaoJSBridge.trigger('close');"
+                                                                completionHandler:nil];
+            
+        }else{
+            [self.ssWebContainer.ssWebView goBack];
+        }
     } else {
         
         if (self.isWebControl) {
