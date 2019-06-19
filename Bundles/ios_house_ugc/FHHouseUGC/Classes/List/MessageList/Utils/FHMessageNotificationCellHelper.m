@@ -2,36 +2,25 @@
 //  FHMessageNotificationCellHelper.m
 //  Article
 //
-//  Created by 邱鑫玥 on 2017/4/10.
+//  Created by zhulijun.2539 on 2019/6/17.
 //
 //
 
 #import "FHMessageNotificationCellHelper.h"
 #import "TTMessageNotificationModel.h"
-#import "FHMessageNotificationNormalCell.h"
 #import "FHMessageNotificationInteractiveCell.h"
-#import "FHMessageNotificationFollowCell.h"
 #import "FHMessageNotificationDigCell.h"
 #import "TTDeviceHelper.h"
 #import "TTMessageNotificationManager.h"
-#import "TTMessageNotificationWDInviteCell.h"
 
 @implementation FHMessageNotificationCellHelper
 
 + (Class)cellClassForData:(TTMessageNotificationModel *)data{
     switch ([data.style integerValue]) {
-        case TTMessageNotificationStyleRawText:
-            return [FHMessageNotificationNormalCell class];
-        case TTMessageNotificationStyleJump:
-            return [FHMessageNotificationNormalCell class];
         case TTMessageNotificationStyleInteractive:
             return [FHMessageNotificationInteractiveCell class];
         case TTMessageNotificationStyleInteractiveMerge:
             return [FHMessageNotificationInteractiveCell class];
-        case TTMessageNotificationStyleFollow:
-            return [FHMessageNotificationFollowCell class];
-        case TTMessageNotificationStyleFollowMerge:
-            return [FHMessageNotificationFollowCell class];
         case TTMessageNotificationStyleDig:
             return [FHMessageNotificationDigCell class];
         case TTMessageNotificationStyleDigMerge:
@@ -42,9 +31,7 @@
 }
 
 + (void)registerAllCellClassWithTableView:(UITableView *)tableView{
-    [tableView registerClass:[FHMessageNotificationNormalCell class] forCellReuseIdentifier:NSStringFromClass([FHMessageNotificationNormalCell class])];
     [tableView registerClass:[FHMessageNotificationInteractiveCell class] forCellReuseIdentifier:NSStringFromClass([FHMessageNotificationInteractiveCell class])];
-    [tableView registerClass:[FHMessageNotificationFollowCell class] forCellReuseIdentifier:NSStringFromClass([FHMessageNotificationFollowCell class])];
     [tableView registerClass:[FHMessageNotificationDigCell class] forCellReuseIdentifier:NSStringFromClass([FHMessageNotificationDigCell class])];
 }
 

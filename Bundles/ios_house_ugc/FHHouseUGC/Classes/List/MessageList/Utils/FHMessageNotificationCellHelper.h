@@ -2,7 +2,7 @@
 //  FHMessageNotificationCellHelper.h
 //  Article
 //
-//  Created by 邱鑫玥 on 2017/4/10.
+//  Created by zhulijun.2539  on 2019/6/17.
 //
 //
 

@@ -38,15 +38,8 @@
     
     height += FHMNRoleInfoViewTopPadding();
     height += FHMNRoleInfoViewHeight();
-    
-    if(!isEmptyString(data.user.contactInfo)){
-        height += FHMNContactInfoLabelTopPadding();
-        height += FHMNContactInfoLabelHeight();
-    }
-    
     height += FHMNBodyTextLabelTopPadding();
     height += [self heightForBodyTextLabelWithData:data maxWidth:width - FHMNBodyTextLabelLeftPadding() - FHMNBodyTextLabelRightPaddingWithRef()];
-    
     height += FHMNTimeLabelTopPadding();
     height += FHMNTimeLabelHeight();
     
@@ -77,13 +70,6 @@
     
     if(self.messageModel){
         [self updateAvatarImageView];
-        
-        [self updateActionTextLabel];
-        
-        if(!isEmptyString(self.messageModel.user.contactInfo)){
-            [self updateContactInfoLabel];
-        }
-        
         [self updateBodyTextLabel];
         
         if(!isEmptyString(self.messageModel.content.refThumbUrl)){
@@ -103,29 +89,8 @@
 
 - (void)refreshUI{
     [self layoutAvatarImageView];
-    CGFloat maxRoleInfoViewWidth = self.width - FHMNRoleInfoViewLeftPadding() - FHMNRoleInfoViewRightPaddingWithRef();
-    [self updateRoleInfoViewForMaxWidth:maxRoleInfoViewWidth];
     [self layoutRoleInfoView];
-    
-    if(!isEmptyString(self.messageModel.user.contactInfo)){
-        self.contactInfoLabel.hidden = NO;
-        
-        [self layoutContactInfoLabelWithOrigin:CGPointMake(FHMNContactInfoLabelLeftPadding(), self.roleInfoView.bottom + FHMNContactInfoLabelTopPadding()) maxWitdh:self.width - FHMNContactInfoLabelLeftPadding() - FHMNContactInfoLabelRightPaddingWithRef()];
-        
-        [self layoutBodyTextLabelWithOrigin:CGPointMake(FHMNBodyTextLabelLeftPadding(), self.contactInfoLabel.bottom + FHMNBodyTextLabelTopPadding()) maxWidth:self.width - FHMNBodyTextLabelLeftPadding() - FHMNBodyTextLabelRightPaddingWithRef()];
-    }
-    else{
-        self.contactInfoLabel.hidden = YES;
-        [self layoutBodyTextLabelWithOrigin:CGPointMake(FHMNBodyTextLabelLeftPadding(), self.roleInfoView.bottom + FHMNBodyTextLabelTopPadding()) maxWidth:self.width - FHMNBodyTextLabelLeftPadding() - FHMNBodyTextLabelRightPaddingWithRef()];
-    }
-    
-    if (!isEmptyString(self.messageModel.content.actionText)) {
-        [self.actionTextLabel sizeToFit];
-        self.actionTextLabel.width = MIN(maxRoleInfoViewWidth, self.actionTextLabel.width);
-        self.roleInfoView.width = maxRoleInfoViewWidth < self.roleInfoView.width + self.actionTextLabel.width + ACTION_TEXT_LABEL_LEFT_PADDING ? maxRoleInfoViewWidth - self.actionTextLabel.width - ACTION_TEXT_LABEL_LEFT_PADDING : self.roleInfoView.width;
-        self.actionTextLabel.left = self.roleInfoView.right + ACTION_TEXT_LABEL_LEFT_PADDING;
-        self.actionTextLabel.top = self.roleInfoView.top;
-    }
+    [self layoutBodyTextLabelWithOrigin:CGPointMake(FHMNBodyTextLabelLeftPadding(), self.roleInfoView.bottom + FHMNBodyTextLabelTopPadding()) maxWidth:self.width - FHMNBodyTextLabelLeftPadding() - FHMNBodyTextLabelRightPaddingWithRef()];
     
     [self layoutTimeLabelWithOrigin:CGPointMake(FHMNTimeLabelLeftPadding(), self.bodyTextLabel.bottom + FHMNTimeLabelTopPadding()) maxWidth:self.width - FHMNTimeLabelLeftPadding() - FHMNTimeLabelRightPaddingWithRef()];
     
@@ -163,15 +128,5 @@
     }
     return _actionTextLabel;
 }
-
-- (void)updateActionTextLabel{
-    if(!isEmptyString(self.messageModel.content.actionText)){
-        self.actionTextLabel.text = self.messageModel.content.actionText;
-    }
-    else{
-        self.actionTextLabel.text = nil;
-    }
-}
-
 @end
 

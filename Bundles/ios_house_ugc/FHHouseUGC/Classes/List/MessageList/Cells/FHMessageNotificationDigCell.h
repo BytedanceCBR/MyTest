@@ -2,7 +2,7 @@
 //  TTMessageNotificationDigCell.h
 //  Article
 //
-//  Created by zhulijun.2539 on 2017/4/11.
+//  Created by zhulijun.2539 on on 2019/6/17.
 //
 //
 
