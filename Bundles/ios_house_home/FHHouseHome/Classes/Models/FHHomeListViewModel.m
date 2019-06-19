@@ -281,9 +281,9 @@
             };
             itemVC.scrollDidEnd = ^{
 //                self.homeViewController.scrollView.contentOffset = CGPointMake(self.homeViewController.scrollView.contentOffset.x, 0);
-                [self scrollViewWillBeginDragging:self.homeViewController.scrollView];
-                [self scrollViewDidScroll:self.homeViewController.scrollView];
-                [self scrollViewDidEndDecelerating:self.homeViewController.scrollView];
+//                [self scrollViewWillBeginDragging:self.homeViewController.scrollView];
+//                [self scrollViewDidScroll:self.homeViewController.scrollView];
+//                [self scrollViewDidEndDecelerating:self.homeViewController.scrollView];
 //                self.tableViewV.scrollEnabled = YES;
             };
             
