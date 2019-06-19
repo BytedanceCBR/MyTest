@@ -27,11 +27,12 @@
     if (self) {
         self.layer.cornerRadius = 4;
         self.layer.masksToBounds = YES;
-        self.backgroundColor = RGB(0xf4, 0xf5, 0xf6);
+        
         
         _placeHolderLabel = [[UILabel alloc] init];
         _textView = [[UITextView alloc] initWithFrame:self.bounds];
         
+        _textView.backgroundColor = RGB(0xf4, 0xf5, 0xf6);
         _textView.delegate = self;
         
         [self addSubview:_textView];

@@ -232,13 +232,18 @@
     
     NSDictionary *userInfo = notification.userInfo;
     CGRect keyboardScreenFrame = [[userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    keyboardScreenFrame = [self.view convertRect:keyboardScreenFrame toView:self.bgView];
+//    keyboardScreenFrame = [self.view convertRect:keyboardScreenFrame toView:self.bgView];
+    if (CGRectGetHeight(keyboardScreenFrame) == 0) {
+        //sougou 
+        return;
+    }
     
     CGRect submitFrame = [self.containerView convertRect:self.submitButton.frame toView:self.bgView];
+    submitFrame.origin.y += self.scrollView.frame.origin.y;
     
 //    NSLog(@"keyboard info is: %@ convert frame is: %@  submit frame is: %@",userInfo,NSStringFromCGRect(keyboardScreenFrame),NSStringFromCGRect(submitFrame));
 //    NSLog(@"bgview is: %@",self.bgView);
-//    
+//
     CGFloat delta = CGRectGetMaxY(submitFrame) - CGRectGetMinY(keyboardScreenFrame);
     if (delta < 0) {
         return;
