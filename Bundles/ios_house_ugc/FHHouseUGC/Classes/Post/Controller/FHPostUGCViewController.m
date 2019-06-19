@@ -378,6 +378,8 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)selectCommunityViewClick:(UITapGestureRecognizer *)sender {
+    self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
+    [self endEditing];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"title"] = @"选择小区";
     dict[@"action_type"] = @(1);
@@ -1218,16 +1220,24 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [UIApplication sharedApplication].statusBarHidden = NO;
-    if (self.firstAppear) {
-        self.firstAppear = NO;
-        [self.inputTextView becomeFirstResponder];
-    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     self.originStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    if (self.firstAppear) {
+        self.firstAppear = NO;
+        [self.inputTextView becomeFirstResponder];
+    } else {
+        // 选择小区圈子
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (weakSelf.keyboardVisibleBeforePresent) {
+                [weakSelf.inputTextView becomeFirstResponder];
+            }
+        });
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
