@@ -113,9 +113,6 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         NSString *qid = [paramObj.allParams objectForKey:@"qid"];
         NSString *ansid = [paramObj.allParams objectForKey:@"ansid"];
        
-        // add by zyk qid
-//        self.qid = @"6667717867934318859";
-//        self.ansid = @"";
         self.qid = qid;
         self.ansid = ansid;
         self.answerSchema = @"";
@@ -133,13 +130,11 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     [self setupData];
     [self setupUI];
     [self addImagesViewSizeChanged];
-    // [self restoreData];
     [self refreshUI];
     self.startDate = [NSDate date];
 }
 
 - (void)setupData {
-//    self.qid = @"6667717867934318859";
     WDPostAnswerTaskModel *taskModel = [[WDPostAnswerTaskModel alloc] initWithQid:self.qid content:nil contentRichSpan:nil imageList:nil];
     self.taskModel = taskModel;
     self.uploadImageManager = [[WDUploadImageManager alloc] init];
@@ -198,14 +193,6 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
     [self setupNaviBar];
     [self createComponent];
-//    [self setTartgetView:self.contentView];
-//    [self.view addSubview:self.bannerWrapView];
-//    [self.bannerWrapView addSubview:self.bannerView];
-//    [self.view addSubview:self.toolView];
-//    [self.view addSubview:self.characterNumberLabel];
-//    self.contentView.bannerWrapView = self.bannerWrapView;
-//    self.contentView.bannerView = self.bannerView;
-//    self.contentView.toolView = self.toolView;
 }
 
 #pragma mark - View
@@ -314,19 +301,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     self.inputContainerView.height =  self.addImagesView.bottom + kAddImagesViewBottomPadding;
     
     // toolbar
-    // toolbar
-//    kWenDaToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
-//    self.toolbar = [[TTUGCToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - kWenDaToolbarHeight, self.view.width, kWenDaToolbarHeight)];
-//    self.toolbar.emojiInputView.source = @"post";
-//
-//    self.toolbar.banLongText = YES;
-//
-//    [self.view addSubview:self.toolbar];
     kWenDaToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     self.toolbar = [[FHWenDaToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - kWenDaToolbarHeight, self.view.width, kWenDaToolbarHeight)];
-//    self.toolbar.leftItems = [self leftToolbarItems];
-//    self.toolbar.rightItems = [self rightToolbarItems];
-//    internalTextView.internalTextView.inputAccessoryView = self.toolbar;
     self.toolbar.emojiInputView.source = @"wenda";
     __weak typeof(self) weakSelf = self;
     self.toolbar.picButtonClkBlk = ^{
@@ -348,13 +324,6 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     [self.tipLabel setTextColor:[UIColor themeGray4]];
     self.tipLabel.hidden = NO;
     [self.toolbar addSubview:self.tipLabel];
-    
-    // TextView and Toolbar Mediator
-//    self.textViewMediator = [[TTUGCTextViewMediator alloc] init];
-//    self.textViewMediator.textView = self.inputTextView;
-//    self.textViewMediator.toolbar = self.toolbar;
-//    self.inputTextView.delegate = self.textViewMediator;
-//    [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
     
     // TextView and Toolbar Mediator
     self.textViewMediator = [[TTUGCTextViewMediator alloc] init];
@@ -501,8 +470,6 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (void)cancelImageUpload {
     [_uploadImageManager cancelUploadImage];
     self.sendAnswerBlock = nil;
-    
-//    [_draftManager startAutoSave];
 }
 
 - (void)sendAnswer {
@@ -531,29 +498,10 @@ static CGFloat kWenDaToolbarHeight = 80.f;
             NSString *qid = wself.qid;
             NSString *ansid = wself.ansid;
             if (qid.length > 0 && ansid.length > 0) {
-//                [[NSNotificationCenter defaultCenter] postNotificationName:kWDDraftNeedRefreshNotification object:nil userInfo:nil];
-                
-//                wself.willEnterDetail = YES;
-//                [[TTMonitor shareManager] trackService:kWDPostAnswerService
-//                                                status:WDRequestNetworkStatusCompleted
-//                                                 extra:[WDMonitorManager extraDicWithInfo:diction error:error]];
-                
-                if ((wself.taskModel.pasteTimes > 0) && (wself.taskModel.pastLength > 0)) {
-//                    [[TTMonitor shareManager] trackService:kWDAnswerQualifyPasteService value:@(wself.taskModel.pasteTimes) extra:[WDMonitorManager extraDicWithInfo:@{kWDAnswerPasteLengthKey : @(wself.viewModel.taskModel.pastLength)} error:error]];
-                }
                 //回答发送成功
-                //埋点
-//                [wself sendTrackWhenAnswerPublishDoneWithAnsid:ansid];
                 [wself.sendingIndicatorView updateIndicatorWithText:[wself postAnswerSuccessText] shouldRemoveWaitingView:YES];
                 [wself.sendingIndicatorView updateIndicatorWithImage:[UIImage themedImageNamed:@"doneicon_popup_textpage"]];
                 wself.sendingIndicatorView.showDismissButton = NO;
-                //删除草稿
-//                [wself.viewModel deleteDraftWithCompleteHandler:^(BOOL success) {
-//                    //因为删除草稿操作在异步次线程中，保证在删除操作完成后执行其他操作
-//                    //否则，页面退出后，vm释放造成删除草稿失败
-//                    //跳到回答详情页
-//                    [wself navigateToAnswerSchema];
-//                }];
                 NSMutableDictionary *userInfoDict = [NSMutableDictionary dictionary];
                 [userInfoDict setValue:qid forKey:@"qid"];
                 [userInfoDict setValue:ansid forKey:@"ansid"];
@@ -565,20 +513,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
                 [wself dismissSelf];
             }else {
                 NSNumber *errorCode = [error.userInfo objectForKey:kWDErrorCodeKey];
-//                if (errorCode && [wself.viewModel isBusinessError:[errorCode integerValue]]) {
-//                    [[TTMonitor shareManager] trackService:kWDPostAnswerService
-//                                                    status:WDRequestNetworkStatusBusinessError
-//                                                     extra:[WDMonitorManager extraDicWithInfo:diction error:error]];
-//                } else {
-//                    [[TTMonitor shareManager] trackService:kWDPostAnswerService
-//                                                    status:WDRequestNetworkStatusFailed
-//                                                     extra:[WDMonitorManager extraDicWithInfo:diction error:error]];
-//                }
-                
-                
                 //回答发送失败
-                //埋点
-//                [wself sendTrackWhenAnswerPublishFail];
                 NSString *errorTips = [error.userInfo objectForKey:kWDErrorTipsKey];
                 if (errorTips.length == 0) {
                     errorTips = NSLocalizedString(@"网络加载异常，请重试", nil);
@@ -611,8 +546,6 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         if (isEmptyString(wSelf.taskModel.content) && wSelf.taskModel.imageList.count == 0) {
             return;
         }
-//        task.content = richSpanText.text;
-//        task.contentRichSpans = [TTRichSpans JSONStringForRichSpans:richSpanText.richSpans];
         NSString *content = wSelf.taskModel.content;
         NSString *richSpanTetxt = wSelf.taskModel.richSpanText;
         NSArray<NSString *> *imageUris = [wSelf.taskModel remoteImgUris];
@@ -631,14 +564,12 @@ static CGFloat kWenDaToolbarHeight = 80.f;
             NSError *postError;
             
             if (error) {
-//                [wSelf.draftManager startAutoSave];
                 tips = [[error userInfo] objectForKey:@"description"];
                 postError = [NSError errorWithDomain:kWDErrorDomain code:-1 userInfo:tips.length > 0?@{kWDErrorTipsKey : tips, kWDErrorCodeKey : @(error.code)}:nil];
             }
             
             wSelf.answerSchema = responseModel.schema;
             wSelf.ansid = responseModel.ansid;
-//            wSelf.tipsModel = responseModel.tips;
             
             if (block) {
                 block(postError);
@@ -667,14 +598,6 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (void)refreshUI {
     NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
     NSString *inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-//    if (inputText.length > maxTextCount) {
-//        self.tipLabel.hidden = NO;
-//        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
-//        excludeCount = MIN(excludeCount, 9999);
-//        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
-//    } else {
-//        self.tipLabel.hidden = YES;
-//    }
     
     self.tipLabel.hidden = NO;
     self.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",inputText.length, maxTextCount];
