@@ -48,9 +48,9 @@
 #import "WDMonitorManager.h"
 #import "FHWenDaToolbar.h"
 
-static CGFloat const kLeftPadding = 15.f;
-static CGFloat const kRightPadding = 15.f;
-static CGFloat const kInputViewTopPadding = 8.f;
+static CGFloat const kLeftPadding = 20.f;
+static CGFloat const kRightPadding = 20.f;
+static CGFloat const kInputViewTopPadding = 10.f;
 static CGFloat const kTextViewHeight = 100.f;
 static CGFloat const kAddImagesViewTopPadding = 10.f;
 static CGFloat const kAddImagesViewBottomPadding = 18.f;
@@ -134,6 +134,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     [self setupUI];
     [self addImagesViewSizeChanged];
     // [self restoreData];
+    [self refreshUI];
     self.startDate = [NSDate date];
 }
 
@@ -181,6 +182,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     leftView.button.titleColorThemeKey = kColorText1;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftView];
     self.cancelButton = leftView.button;
+    [self.cancelButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    [self.cancelButton setTitleColor:[UIColor themeGray1] forState:UIControlStateDisabled];
     self.rightBarView = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:NSLocalizedString(@"发布", nil) target:self action:@selector(postQuestionAction:)];
     self.rightBarView.button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.rightBarView];
@@ -277,7 +280,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     internalTextView.minHeight = kTextViewHeight;
     internalTextView.maxHeight = INT_MAX;
 //    internalTextView.maxNumberOfLines = 8;
-    internalTextView.placeholder = @"发点什么，分享你的真实经验";
+    internalTextView.tintColor = [UIColor themeRed1];
+    internalTextView.placeholder = @"分享你身边的新鲜事";
     
     // 图文发布器展示
     internalTextView.backgroundColor = [UIColor clearColor];
@@ -295,7 +299,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
                                                               assets:self.outerInputAssets
                                                               images:self.outerInputImages];
     self.addImagesView.hidden = NO;
-    self.addImagesView.hideAddImagesButtonWhenEmpty = NO; // 只有第一次添加图片后才显示
+    self.addImagesView.hideAddImagesButtonWhenEmpty = YES; // 只有第一次添加图片后才显示
     self.addImagesView.selectionLimit = 9;
     self.addImagesView.delegate = self;
     WeakSelf;
@@ -324,9 +328,26 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 //    self.toolbar.rightItems = [self rightToolbarItems];
 //    internalTextView.internalTextView.inputAccessoryView = self.toolbar;
     self.toolbar.emojiInputView.source = @"wenda";
+    __weak typeof(self) weakSelf = self;
+    self.toolbar.picButtonClkBlk = ^{
+        // 添加图片
+        [weakSelf.addImagesView showImagePicker];
+    };
     self.toolbar.banLongText = YES;
     
     [self.view addSubview:self.toolbar];
+    
+    //Tip label
+    CGFloat tipLabelWidth = 100.0;
+    self.tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(self.view.width - tipLabelWidth - kRightPadding, 11, tipLabelWidth, 25.f)];
+    
+    self.tipLabel.font = [UIFont systemFontOfSize:11];
+    self.tipLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
+    self.tipLabel.textAlignment = NSTextAlignmentRight;
+    self.tipLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
+    [self.tipLabel setTextColor:[UIColor themeGray4]];
+    self.tipLabel.hidden = NO;
+    [self.toolbar addSubview:self.tipLabel];
     
     // TextView and Toolbar Mediator
 //    self.textViewMediator = [[TTUGCTextViewMediator alloc] init];
@@ -389,8 +410,29 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 #pragma mark - Action
 
 - (void)previousAction:(id)sender {
+    self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
     [self endEditing];
-    [self dismissSelf];
+    NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
+    
+    if (!shouldAlert) {
+        [self dismissSelf];
+    } else {
+        TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"编辑未完成" message:@"退出后编辑的内容将不被保存" preferredType:TTThemedAlertControllerTypeAlert];
+        WeakSelf;
+        [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+            StrongSelf;
+            [self dismissSelf];
+        }];
+        [alertController addActionWithTitle:NSLocalizedString(@"继续编辑", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+            StrongSelf;
+            if (self.keyboardVisibleBeforePresent) {
+                [self.inputTextView becomeFirstResponder];
+            }
+        }];
+        [alertController showFrom:self animated:YES];
+    }
 }
 
 - (void)updateAnswer {
@@ -410,34 +452,34 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (BOOL)isValidateWithInputText:(NSString *)inputText{
     //Validate
     
-//    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
-//
-//    if (isEmptyString(inputText) && self.addImagesView.selectedImageCacheTasks.count == 0) {
-//        [self endEditing];
-//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                  indicatorText:NSLocalizedString(@"说点什么...", nil)
-//                                 indicatorImage:nil
-//                                    autoDismiss:YES
-//                                 dismissHandler:nil];
-//        return NO;
-//    }else if (inputText.length > maxTextCount) {
-//        [self endEditing];
-//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                  indicatorText:[NSString stringWithFormat:@"字数超过%ld字，请调整后重试", maxTextCount]
-//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
-//                                    autoDismiss:YES
-//                                 dismissHandler:nil];
-//        return NO;
-//    }
-//
-//    if (![TTReachability isNetworkConnected]) {
-//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                  indicatorText:NSLocalizedString(@"没有网络连接", nil)
-//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
-//                                    autoDismiss:YES
-//                                 dismissHandler:nil];
-//        return NO;
-//    }
+    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
+
+    if (isEmptyString(inputText) && self.addImagesView.selectedImageCacheTasks.count == 0) {
+        [self endEditing];
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                  indicatorText:NSLocalizedString(@"说点什么...", nil)
+                                 indicatorImage:nil
+                                    autoDismiss:YES
+                                 dismissHandler:nil];
+        return NO;
+    }else if (inputText.length > maxTextCount) {
+        [self endEditing];
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                  indicatorText:[NSString stringWithFormat:@"字数超过%ld字，请调整后重试", maxTextCount]
+                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
+                                    autoDismiss:YES
+                                 dismissHandler:nil];
+        return NO;
+    }
+
+    if (![TTReachability isNetworkConnected]) {
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                  indicatorText:NSLocalizedString(@"没有网络连接", nil)
+                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
+                                    autoDismiss:YES
+                                 dismissHandler:nil];
+        return NO;
+    }
     return YES;
 }
 
@@ -616,14 +658,17 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (void)refreshUI {
     NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
     NSString *inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if (inputText.length > maxTextCount) {
-        self.tipLabel.hidden = NO;
-        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
-        excludeCount = MIN(excludeCount, 9999);
-        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
-    } else {
-        self.tipLabel.hidden = YES;
-    }
+//    if (inputText.length > maxTextCount) {
+//        self.tipLabel.hidden = NO;
+//        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
+//        excludeCount = MIN(excludeCount, 9999);
+//        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
+//    } else {
+//        self.tipLabel.hidden = YES;
+//    }
+    
+    self.tipLabel.hidden = NO;
+    self.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",inputText.length, maxTextCount];
     
     [self refreshPostButtonUI];
 }
@@ -631,13 +676,15 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (void)refreshPostButtonUI {
     //发布器
     if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
-        self.postButton.titleColorThemeKey = kColorText6;
+        self.postButton.enabled = YES;
         self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
-        self.postButton.disabledTitleColorThemeKey = kColorText6;
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
     } else {
-        self.postButton.titleColorThemeKey = kColorText9;
         self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
-        self.postButton.disabledTitleColorThemeKey = kColorText9;
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
+        self.postButton.enabled = NO;
     }
 }
 

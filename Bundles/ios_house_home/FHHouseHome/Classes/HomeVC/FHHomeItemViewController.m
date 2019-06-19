@@ -20,6 +20,7 @@
 #import <FHHomeCellHelper.h>
 #import <FHPlaceHolderCell.h>
 #import "FHHomeListViewModel.h"
+#import "TTSandBoxHelper.h"
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -124,8 +125,17 @@
 
 - (void)currentViewIsShowing
 {
+    [self.traceEnterCategoryCache setValue:@"switch" forKey:@"enter_type"];
+    
     if (self.traceEnterCategoryCache.allKeys.count > 0 && self.isOriginShowSelf) {
-        [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
+        if (self.traceEnterCategoryCache && self.traceEnterCategoryCache[@"category_name"]) {
+            [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
+        }
+    }
+    
+    if (self.showRequestErrorView) {
+        [self showPlaceHolderCells];
+        [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
     }
     
     self.stayTime = [self getCurrentTime];
@@ -186,6 +196,8 @@
 
 - (void)showPlaceHolderCells
 {
+    self.showNoDataErrorView = NO;
+    self.showRequestErrorView = NO;
     self.showPlaceHolder = YES;
     [self.tableView reloadData];
 }
@@ -225,6 +237,11 @@
     }else {
         [self.tableView.mj_footer endRefreshing];
     }
+    
+    if (self.houseDataItemsModel.count < 10 && !self.tableView.hasMore) {
+        self.tableView.mj_footer.hidden = YES;
+    }
+    
 }
 
 #pragma mark 网络请求
@@ -373,7 +390,7 @@
     
     tracerDict[@"category_name"] = [self pageTypeString] ? : @"be_null";
     tracerDict[@"enter_from"] = @"maintab";
-    tracerDict[@"enter_type"] = self.enterType ? : @"click";
+    tracerDict[@"enter_type"] = self.enterType ? : @"switch";
     tracerDict[@"element_from"] = @"maintab_list";
     tracerDict[@"search_id"] = self.currentSearchId ? : @"be_null";
     tracerDict[@"origin_from"] = [self pageTypeString]  ? : @"be_null";
@@ -430,6 +447,12 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeSubTableViewDidScroll" object:scrollView];
 }
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (self.scrollDidEnd) {
+        self.scrollDidEnd();
+    }
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -513,7 +536,7 @@
             [cellError.contentView addSubview:noDataErrorView];
             
             if ([FHEnvContext isNetworkConnected]) {
-                [noDataErrorView showEmptyWithTip:@"数据走丢了" errorImageName:@"group-9"
+                [noDataErrorView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:@"group-9"
                                         showRetry:YES];
                 __weak typeof(self) weakSelf = self;
                 noDataErrorView.retryBlock = ^{
@@ -525,8 +548,15 @@
                                         showRetry:YES];
                 __weak typeof(self) weakSelf = self;
                 noDataErrorView.retryBlock = ^{
-                    if (weakSelf.requestNetworkUnAvalableRetryCallBack) {
-                        weakSelf.requestNetworkUnAvalableRetryCallBack();
+                    if ([FHEnvContext isNetworkConnected]) {
+                        if ([TTSandBoxHelper isAPPFirstLaunch]) {
+                            if (weakSelf.requestNetworkUnAvalableRetryCallBack) {
+                                weakSelf.requestNetworkUnAvalableRetryCallBack();
+                            }
+                        }else
+                        {
+                            [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+                        }
                     }
                 };
             }
@@ -658,7 +688,7 @@
 - (UITableView *)tableView {
     
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
         _tableView.showsVerticalScrollIndicator = NO;
