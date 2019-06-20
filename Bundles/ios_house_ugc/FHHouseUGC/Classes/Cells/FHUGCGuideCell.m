@@ -48,7 +48,7 @@
     [self.contentView addSubview:_contentLabel];
     
     self.closeBtn = [[UIButton alloc] init];
-    [_closeBtn setImage:[UIImage imageNamed:@"detail_alert_closed"] forState:UIControlStateNormal];
+    [_closeBtn setImage:[UIImage imageNamed:@"fh_ugc_feed_guide_close"] forState:UIControlStateNormal];
     [_closeBtn addTarget:self action:@selector(deleteCell) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_closeBtn];
     
@@ -61,7 +61,7 @@
 - (void)initConstraints {
     [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentLabel);
-        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.right.mas_equalTo(self.contentView).offset(-6);
         make.width.height.mas_equalTo(20);
     }];
     

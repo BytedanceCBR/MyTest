@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define kFHUGCShowFeedGuideCount @"kFHUGCShowFeedGuideCount"
 #define kFHUGCShowSecondTabGuide @"kFHUGCShowSecondTabGuide"
 #define kFHUGCShowSearchGuide @"kFHUGCShowSearchGuide"
+#define kFHUGCShowUgcDetailGuide @"kFHUGCShowUgcDetailGuide"
 
 @interface FHUGCGuideHelper : NSObject
 
@@ -35,6 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)hideSearchGuide;
 
++ (BOOL)shouldShowUgcDetailGuide;
+
++ (void)hideUgcDetailGuide;
 
 @end
 

@@ -95,6 +95,9 @@
 #import "ExploreLogicSetting.h"
 #import "Log.h"
 
+#import "FHUGCGuideHelper.h"
+#import "FHUGCGuideView.h"
+
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
 extern NSString *const kFRHadShowFirstForumLikeTips;
@@ -145,6 +148,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //@property (nonatomic, strong) LOTAnimationView *animationView1;
 
 @property (nonatomic, assign) BOOL isClickTab;
+
+@property(nonatomic, strong) FHUGCGuideView *guideView;
+@property(nonatomic, assign) BOOL isAlreadyShowedGuideView;
 
 @end
 
@@ -231,6 +237,23 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [[TSVTabTipManager sharedManager] setupShortVideoTabRedDotWhenStartupIfNeeded];
     
     [self addClientABTestLog];
+}
+
+- (void)addUgcGuide {
+    if([FHUGCGuideHelper shouldShowSecondTabGuide] && !self.isAlreadyShowedGuideView){
+        self.isAlreadyShowedGuideView = YES;
+        [self.guideView show:self.view dismissDelayTime:5.0f];
+    }
+}
+
+- (FHUGCGuideView *)guideView {
+    CGFloat width = 163.0f;
+    CGFloat height = 40.0f;
+    CGFloat x = self.view.frame.size.width * 9/24 - width/2;
+    if(!_guideView){
+        _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(x, self.view.frame.size.height - self.tabbarHeight - height + 3, width, height) andType:FHUGCGuideViewTypeSecondTab];
+    }
+    return _guideView;
 }
 
 // add by zjing 测试客户端AB分流清空
@@ -586,6 +609,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [logv3Dic setValue:self.autoEnterTab?@1:@0 forKey:@"is_auto"];
     [logv3Dic setValue:@"default" forKey:@"enter_type"];
     [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
+    
+    //显示ugc新人引导
+//    [self addUgcGuide];
 }
 
 - (BOOL)isShowingConcernOrForumTab
@@ -684,6 +710,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
                 wrapperTrackEvent(@"video", @"video_tip_leave");
             }
         }];
+        //隐藏ugc引导
+        [self.guideView hide];
         //跳转后隐藏消息通知
         [[TTMessageNotificationTipsManager sharedManager] forceRemoveTipsView];
         [[NSNotificationCenter defaultCenter] postNotificationName:kExploreTopVCChangeNotification object:self];
@@ -695,6 +723,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     if (navigationController.viewControllers.count == 1 && NO == [TTAdSplashMediator shareInstance].isAdShowing) {
         //回到tabbar controller某个导航控制器的栈底，并且没有开屏广告
         [self showTipViewIfNeeded];
+        [self addUgcGuide];
         [self showMessageNotificationTips:nil];
     }
 }
@@ -1111,6 +1140,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //
 //    }
     else if ([[self currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
+        //隐藏引导提示
+        [self.guideView hide];
+        [FHUGCGuideHelper hideSecondTabGuide];
         
         [self trackBadgeWithTabBarTag:kFHouseFindTabKey enter_type:@"click_tab"];
         
@@ -1373,6 +1405,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     if ([nav isKindOfClass:[UINavigationController class]]
         && nav.viewControllers.count == 1) {
         [self showTipViewIfNeeded];
+        
+        [self addUgcGuide];
     }
 }
 

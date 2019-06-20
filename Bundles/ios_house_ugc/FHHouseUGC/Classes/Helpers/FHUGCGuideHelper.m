@@ -17,7 +17,8 @@
                      kFHUGCShowFeedGuide:@(1),
                      kFHUGCShowFeedGuideCount:@(0),
                      kFHUGCShowSecondTabGuide:@(1),
-                     kFHUGCShowSearchGuide:@(1)
+                     kFHUGCShowSearchGuide:@(1),
+                     kFHUGCShowUgcDetailGuide:@(1)
                      };
         [[NSUserDefaults standardUserDefaults] setObject:guideDic forKey:kFHUGCGuideKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -75,6 +76,44 @@
     
     NSMutableDictionary *dic = [guideDic mutableCopy];
     dic[kFHUGCShowSecondTabGuide] = @(0);
+    [[NSUserDefaults standardUserDefaults] setObject:dic forKey:kFHUGCGuideKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++ (BOOL)shouldShowSearchGuide {
+    NSDictionary *guideDic = [self ugcGuideSetting];
+    BOOL showGuide = [guideDic[kFHUGCShowSearchGuide] boolValue];
+    if(!showGuide){
+        return NO;
+    }
+    return YES;
+}
+
++ (void)hideSearchGuide {
+    //设置key值为0
+    NSDictionary *guideDic = [self ugcGuideSetting];
+    
+    NSMutableDictionary *dic = [guideDic mutableCopy];
+    dic[kFHUGCShowSearchGuide] = @(0);
+    [[NSUserDefaults standardUserDefaults] setObject:dic forKey:kFHUGCGuideKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++ (BOOL)shouldShowUgcDetailGuide {
+    NSDictionary *guideDic = [self ugcGuideSetting];
+    BOOL showGuide = [guideDic[kFHUGCShowUgcDetailGuide] boolValue];
+    if(!showGuide){
+        return NO;
+    }
+    return YES;
+}
+
++ (void)hideUgcDetailGuide {
+    //设置key值为0
+    NSDictionary *guideDic = [self ugcGuideSetting];
+    
+    NSMutableDictionary *dic = [guideDic mutableCopy];
+    dic[kFHUGCShowUgcDetailGuide] = @(0);
     [[NSUserDefaults standardUserDefaults] setObject:dic forKey:kFHUGCGuideKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
