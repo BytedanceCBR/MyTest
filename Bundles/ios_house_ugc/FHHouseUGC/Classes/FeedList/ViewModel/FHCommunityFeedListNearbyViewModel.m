@@ -175,7 +175,7 @@
 }
 
 - (void)insertGuideCell {
-    if([FHUGCGuideHelper shouldShowFeedGuide]){
+//    if([FHUGCGuideHelper shouldShowFeedGuide]){
         //符合引导页显示条件时
         for (NSInteger i = 0; i < self.dataList.count; i++) {
             FHFeedUGCCellModel *cellModel = self.dataList[i];
@@ -187,7 +187,7 @@
                 return;
             }
         }
-    }
+//    }
 }
 
 - (void)deleteGuideCell {

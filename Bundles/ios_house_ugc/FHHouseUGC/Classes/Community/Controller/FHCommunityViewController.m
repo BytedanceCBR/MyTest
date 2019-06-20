@@ -14,6 +14,8 @@
 #import "FHPostDetailViewController.h"
 #import "FHWDAnswerPictureTextViewController.h"
 #import <FHEnvContext.h>
+#import "FHUGCGuideHelper.h"
+#import "FHUGCGuideView.h"
 
 @interface FHCommunityViewController ()
 
@@ -22,6 +24,7 @@
 @property(nonatomic , strong) UIView *topView;
 @property(nonatomic , strong) UIButton *searchBtn;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
+@property(nonatomic, strong) FHUGCGuideView *guideView;
 
 @end
 
@@ -35,6 +38,33 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    
+    [self addUgcGuide];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)addUgcGuide {
+    if([FHUGCGuideHelper shouldShowSearchGuide]){
+        [self.guideView show:self.view dismissDelayTime:5.0f];
+    }
+}
+
+- (FHUGCGuideView *)guideView {
+    [self.view layoutIfNeeded];
+    if(!_guideView){
+        _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 186, CGRectGetMaxY(self.topView.frame) - 7, 176, 42) andType:FHUGCGuideViewTypeSearch];
+    }
+    return _guideView;
+    
+}
+
+- (void)topVCChange:(NSNotification *)notification {
+    [self.guideView hide];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -67,14 +97,12 @@
     [self setupSetmentedControl];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    
     [self addStayCategoryLog:self.stayTime];
 }
 
--(void)addStayCategoryLog:(NSTimeInterval)stayTime {
+- (void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
     //        if (duration) {
@@ -207,6 +235,9 @@
 
 //进入搜索页
 - (void)goToSearch {
+    [self.guideView hide];
+    [FHUGCGuideHelper hideSearchGuide];
+    
     
 }
 
