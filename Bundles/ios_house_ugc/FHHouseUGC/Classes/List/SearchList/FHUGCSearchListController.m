@@ -23,10 +23,11 @@
 #import "TTNavigationController.h"
 #import "FHEnvContext.h"
 #import "FHUGCModel.h"
+#import "ToastManager.h"
 
 @interface FHUGCSearchListController ()<UITableViewDelegate,UITableViewDataSource>
 
-@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) FHUGCSuggectionTableView *tableView;
 @property (nonatomic, strong)   NSMutableArray       *items;
 @property(nonatomic , weak) TTHttpTask *sugHttpTask;
 
@@ -52,6 +53,7 @@
     self.panBeginAction = ^{
         [weakSelf.naviBar.searchInput resignFirstResponder];
     };
+    [self startLoadData];
 }
 
 - (void)setupData {
@@ -92,8 +94,13 @@
 }
 
 - (void)configTableView {
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView = [[FHUGCSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    __weak typeof(self) weakSelf = self;
+    _tableView.handleTouch = ^{
+        [weakSelf.view endEditing:YES];
+    };
+    _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
@@ -106,8 +113,13 @@
 }
 
 - (void)startLoadData {
-    if ([TTReachability isNetworkConnected]) {
-
+    if (![TTReachability isNetworkConnected]) {
+         [[ToastManager manager] showToast:@"网络异常"];
+    } else {
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf.naviBar.searchInput becomeFirstResponder];
+        });
     }
 }
 
@@ -147,9 +159,13 @@
         [self.sugHttpTask cancel];
     }
     __weak typeof(self) weakSelf = self;
-    self.sugHttpTask = [FHHouseUGCAPI requestSocialSearchByText:text class:[FHUGCModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.sugHttpTask = [FHHouseUGCAPI requestSocialSearchByText:text class:[FHUGCSearchModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
             [weakSelf.items removeAllObjects];
+            FHUGCSearchModel *tModel = model;
+            if (tModel.data.searchSocialGroups.count > 0) {
+                [weakSelf.items addObjectsFromArray:tModel.data.searchSocialGroups];
+            }
             [weakSelf.tableView reloadData];
         }
     }];
