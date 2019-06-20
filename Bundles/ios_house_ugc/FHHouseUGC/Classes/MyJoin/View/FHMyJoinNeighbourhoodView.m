@@ -31,6 +31,8 @@
 - (void)initViews {
     
     self.backgroundColor = [UIColor themeGray7];
+    self.progressView = [FHPostUGCProgressView sharedInstance];
+    [self addSubview:self.progressView];
     
     self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
     _headerView.titleLabel.text = @"我关注的小区圈";
@@ -60,7 +62,8 @@
 
 - (void)initConstraints {
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self);
+        make.top.mas_equalTo(self.progressView.mas_bottom);
+        make.left.right.mas_equalTo(self);
         make.height.mas_equalTo(50);
     }];
     

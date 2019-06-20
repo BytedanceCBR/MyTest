@@ -16,6 +16,7 @@
 #import <FHEnvContext.h>
 #import "FHUGCGuideHelper.h"
 #import "FHUGCGuideView.h"
+#import "TTForumPostThreadStatusViewModel.h"
 
 @interface FHCommunityViewController ()
 
@@ -42,6 +43,8 @@
     [self addUgcGuide];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
+    
+    [TTForumPostThreadStatusViewModel sharedInstance_tt];
 }
 
 - (void)dealloc {

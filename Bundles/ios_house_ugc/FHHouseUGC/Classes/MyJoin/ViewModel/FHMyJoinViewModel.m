@@ -33,6 +33,10 @@
         _collectionView.delegate = self;
         
         [_collectionView registerClass:[FHMyJoinNeighbourhoodCell class] forCellWithReuseIdentifier:cellId];
+        __weak typeof(self) weakSelf = self;
+        self.viewController.neighbourhoodView.progressView.refreshViewBlk = ^{
+            [weakSelf updateJoinProgressView];
+        };
     }
     
     return self;
@@ -43,6 +47,7 @@
     for (NSInteger i = 0; i < 10; i++) {
         [self.dataList addObject:[NSString stringWithFormat:@"小区%li",(long)i]];
     }
+    [self updateJoinProgressView];
     [self.collectionView reloadData];
 }
 
@@ -69,6 +74,19 @@
     
     CGRect frame = self.viewController.neighbourhoodView.frame;
     frame.size.height = 194;
+    self.viewController.neighbourhoodView.frame = frame;
+    
+    self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
+}
+
+// 更新发帖进度视图
+- (void)updateJoinProgressView {
+    CGFloat neighbourhoodViewHeight = 194;
+    if (self.isShowMessage) {
+        neighbourhoodViewHeight = 252;
+    }
+    CGRect frame = self.viewController.neighbourhoodView.frame;
+    frame.size.height = self.viewController.neighbourhoodView.progressView.viewHeight + neighbourhoodViewHeight;
     self.viewController.neighbourhoodView.frame = frame;
     
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
