@@ -63,7 +63,6 @@
         _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 186, CGRectGetMaxY(self.topView.frame) - 7, 176, 42) andType:FHUGCGuideViewTypeSearch];
     }
     return _guideView;
-    
 }
 
 - (void)topVCChange:(NSNotification *)notification {
