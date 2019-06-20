@@ -298,10 +298,10 @@
 - (void)setupTopBar {
     [self.view addSubview:self.topBar];
     
-    FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
-//    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
-    panelVM.viewController = self;
-    self.panelVM = panelVM;
+//    FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
+////    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
+//    panelVM.viewController = self;
+//    self.panelVM = panelVM;
     
 //    if (kIsNSString([FHEnvContext getCurrentSelectCityIdFromLocal]))
 //    {
