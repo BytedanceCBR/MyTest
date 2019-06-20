@@ -37,16 +37,16 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHUGCDataUserFollowSocialGroupsModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHUGCScialGroupDataModel class]]) {
         return;
     }
     self.currentData = data;
     
-    FHUGCDataUserFollowSocialGroupsModel *model = self.currentData;
-    if ([model isKindOfClass:[FHUGCDataUserFollowSocialGroupsModel class]]) {
-        self.titleLabel.text = model.name;
-        self.descLabel.text = [NSString stringWithFormat:@"%@成员·%@热帖",model.followCount ,model.contentCount];
-        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar.url] placeholder:nil];
+    FHUGCScialGroupDataModel *model = self.currentData;
+    if ([model isKindOfClass:[FHUGCScialGroupDataModel class]]) {
+        self.titleLabel.text = model.socialGroupName;
+        self.descLabel.text = model.countText;
+        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
     }
 }
 

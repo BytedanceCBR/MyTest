@@ -238,7 +238,9 @@
     [self.guideView hide];
     [FHUGCGuideHelper hideSearchGuide];
     
-    
+    NSString *routeUrl = @"sslocal://ugc_search_list";
+    NSURL *openUrl = [NSURL URLWithString:routeUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 @end

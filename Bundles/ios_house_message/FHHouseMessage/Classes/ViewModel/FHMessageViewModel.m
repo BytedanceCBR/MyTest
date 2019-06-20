@@ -88,10 +88,8 @@
 
 -(void)requestData {
     [self.requestTask cancel];
-    
-//    [self trackRefresh];
     __weak typeof(self) wself = self;
-    
+
     if(self.isFirstLoad){
         [self.viewController startLoading];
     }

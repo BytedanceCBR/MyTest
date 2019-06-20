@@ -52,6 +52,7 @@
 #import <TTImpression/TTRelevantDurationTracker.h>
 #import <TTVideoService/TTFFantasyTracker.h>
 #import "WDListBottomButton.h"
+#import "TTAccountManager.h"
 
 #define kListBottomBarHeight (self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44)
 
@@ -90,6 +91,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 @property (nonatomic, assign)   CGFloat       bottomButtonHeight;
 @property (nonatomic, copy)   NSString *       qid;
 @property (nonatomic, copy)   NSString *       ansid;
+@property (nonatomic, assign)   BOOL       needReloadData;
 
 @end
 
@@ -171,6 +173,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         self.viewModel = [[WDListViewModel alloc] initWithQid:qID gdExtJson:baseCondition apiParameter:apiParameter needReturn:needReturn];
         _readAnswerArray = @[].mutableCopy;
         _rid = [rid copy];
+        self.needReloadData = NO;
         self.qid = qID;
         self.ansid = [baseCondition tt_stringValueForKey:@"ansid"];
         if (self.qid.length <= 0) {
@@ -268,6 +271,10 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 {
     [super viewDidAppear:animated];
     self.lastStatusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
+    if (self.needReloadData) {
+        [self.answerListView setContentOffset:CGPointZero animated:NO];
+        [self firstLoadContent];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -320,8 +327,28 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     UIBarButtonItem *moreButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self moreButton]];
     self.navigationItem.rightBarButtonItems = @[moreButtonItem];
  
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postAnswerSuccess:) name:@"kFHWDAnswerPictureTextPostSuccessNotification" object:nil];
+    
     [self firstLoadContent];
     [self reloadThemeUI];
+}
+
+- (void)postAnswerSuccess:(NSNotification *)noti {
+    NSDictionary *userInfo = noti.userInfo;
+    NSString *qid = [userInfo tt_stringValueForKey:@"qid"];
+    // NSString *ansid = [userInfo tt_stringValueForKey:@"ansid"];
+    NSString *scheme = [userInfo tt_stringValueForKey:@"scheme"];
+    if ([qid isEqualToString:self.qid] && scheme.length > 0) {
+        // 先跳转详情页，之后返回刷新
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            weakSelf.needReloadData = YES;
+            NSURL *openUrl = [NSURL URLWithString:scheme];
+            if (openUrl) {
+                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+            }
+        });
+    }
 }
 
 - (void)addSubviewsIfNeeded {
@@ -374,6 +401,14 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 
 // 写答案
 - (void)writeAnswer {
+    if ([TTAccountManager isLogin]) {
+        [self gotoPostWDAnswer];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoPostWDAnswer {
     NSString *routeUrl = @"sslocal://ugc_post_wd_answer";
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     NSMutableDictionary *dict = @{}.mutableCopy;
@@ -385,6 +420,40 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    // add by zyk 记得修改埋点
+    [params setObject:@"rent_feedback" forKey:@"enter_from"];
+    [params setObject:@"feedback" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(NO) forKey:@"need_pop_vc"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                [wSelf gotoPostWDAnswer];
+            }
+            // 移除登录页面
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [wSelf delayRemoveLoginVC];
+            });
+        }
+    }];
+}
+
+- (void)delayRemoveLoginVC {
+    UINavigationController *navVC = self.navigationController;
+    NSInteger count = navVC.viewControllers.count;
+    if (navVC && count >= 1) {
+        NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:navVC.viewControllers];
+        if (vcs.count == count) {
+            [vcs removeLastObject];
+            [self.navigationController setViewControllers:vcs];
+        }
+    }
 }
 
 - (void)firstLoadContent

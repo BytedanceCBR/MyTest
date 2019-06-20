@@ -20,7 +20,7 @@ typedef enum FHUGCFollowVCType {
 @protocol FHUGCFollowListDelegate <NSObject>
 
 @optional
-- (void)selectedItem:(FHUGCDataUserFollowSocialGroupsModel *)item;
+- (void)selectedItem:(FHUGCScialGroupDataModel *)item;
 
 @end
 

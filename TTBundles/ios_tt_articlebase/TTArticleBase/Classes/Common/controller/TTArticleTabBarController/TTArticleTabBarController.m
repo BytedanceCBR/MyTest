@@ -1142,7 +1142,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     else if ([[self currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
         //隐藏引导提示
         [self.guideView hide];
-//        [FHUGCGuideHelper hideSecondTabGuide];
+        [FHUGCGuideHelper hideSecondTabGuide];
         
         [self trackBadgeWithTabBarTag:kFHouseFindTabKey enter_type:@"click_tab"];
         
