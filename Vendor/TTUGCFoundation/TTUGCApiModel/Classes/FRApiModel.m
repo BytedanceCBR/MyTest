@@ -7916,7 +7916,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [FRCommonURLSetting baseURL];
-        self._uri = @"/ugc/publish/post/v5/commit";
+        self._uri = @"/f100/ugc/post_publish";//@"/ugc/publish/post/v5/commit";
         self._response = @"FRUgcPublishPostV5CommitResponseModel";
     }
 
@@ -7949,6 +7949,7 @@
     [params setValue:_promotion_id forKey:@"promotion_id"];
     [params setValue:_flipchat_sync forKey:@"flipchat_sync"];
     [params setValue:_sdk_params forKey:@"sdk_params"];
+    [params setValue:_social_group_id forKey:@"social_group_id"];
 
     return params;
 }

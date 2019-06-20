@@ -788,6 +788,10 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.detailPos = self.addLocationView.selectedLocation.locationName;
     postThreadModel.longitude = longitude;
     postThreadModel.latitude = latitude;
+    
+    self.selectView.groupId = @"1636215424527368";
+    postThreadModel.social_group_id = self.selectView.groupId;
+    NSLog(@"social_group_id:%@",self.selectView.groupId);
 //    postThreadModel.score = rate;
 //    postThreadModel.refer = self.refer;
 //    postThreadModel.communityID = self.communityID;

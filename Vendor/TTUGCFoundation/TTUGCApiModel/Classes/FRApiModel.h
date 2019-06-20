@@ -3772,6 +3772,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *promotion_id;
 @property (strong, nonatomic) NSNumber<Optional> *flipchat_sync;
 @property (strong, nonatomic) NSString<Optional> *sdk_params;
+@property (nonatomic, copy)     NSString<Optional>       *social_group_id;
 @end
 
 @interface  FRUgcPublishPostV5CommitResponseModel : JSONModel<TTResponseModelProtocol>
