@@ -15,12 +15,12 @@
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTThemeManager.h"
 #import "PGCAccountManager.h"
-#import "TTMessageNotificationTipsManager.h"
+#import "FHMessageNotificationTipsManager.h"
 //#import "TTPLManager.h"
 #import "TTBadgeTrackerHelper.h"
 #import "TTRoute.h"
 
-#import "TTMessageNotificationMacro.h"
+#import "FHMessageNotificationMacro.h"
 #import <Crashlytics/Crashlytics.h>
 //#import "TTCommonwealManager.h"
 #import "TTURLUtils.h"
@@ -249,7 +249,7 @@
 + (instancetype)messageEntry {
     TTSettingMineTabEntry *entry = [[TTSettingMineTabEntry alloc] init];
     
-    TTMessageNotificationTipsManager *manager = [TTMessageNotificationTipsManager sharedManager];
+    FHMessageNotificationTipsManager *manager = [FHMessageNotificationTipsManager sharedManager];
     NSUInteger number = manager.unreadNumber;
     
     entry.key = @"mine_notification";
@@ -485,7 +485,7 @@
                 }else {
                     wrapperTrackEventWithCustomKeys(@"message_list", @"click_without_badge", nil, nil, kTTMessageNotificationTrackExtra(weakEntry.actionType));
                 }
-                [[TTMessageNotificationTipsManager sharedManager] clearTipsModel];
+                [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
             
                 [self openURLForEntry:weakEntry clearHint:NO];
                 [self extraStatisticsForEntry:weakEntry];
@@ -515,7 +515,7 @@
     if ([entry.key isEqualToString:@"mine_notification"]) {
         entry.update = ^BOOL{
             [weakEntry setModified:NO];
-            TTMessageNotificationTipsManager *manager = [TTMessageNotificationTipsManager sharedManager];
+            FHMessageNotificationTipsManager *manager = [FHMessageNotificationTipsManager sharedManager];
             NSUInteger unreadNumber = manager.unreadNumber;
             weakEntry.hintStyle = unreadNumber > 0 ? TTSettingHintStyleNumber : TTSettingHintStyleNone;
             weakEntry.hintCount = unreadNumber;

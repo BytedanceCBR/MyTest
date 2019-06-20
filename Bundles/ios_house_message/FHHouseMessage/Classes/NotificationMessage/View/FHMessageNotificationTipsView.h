@@ -1,5 +1,5 @@
 //
-//  TTMessageNotificationTipsView.h
+//  FHMessageNotificationTipsView.h
 //  Article
 //
 //  Created by lizhuoli on 17/3/24.
@@ -14,7 +14,7 @@
 #define kTTMessageNotificationTipsViewBottom (44 + [TTDeviceUIUtils tt_padding:8])
 
 @class TTMessageNotificationTipsModel;
-@interface TTMessageNotificationTipsView : UIView
+@interface FHMessageNotificationTipsView : UIView
 
 @property (nonatomic, strong, readonly) TTAsyncCornerImageView *avatarView;
 @property (nonatomic, strong, readonly) SSThemedLabel *nameLabel;

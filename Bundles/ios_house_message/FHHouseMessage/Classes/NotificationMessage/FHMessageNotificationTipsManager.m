@@ -1,17 +1,17 @@
 //
-//  TTMessageNotificationTipsManager.m
+//  FHMessageNotificationTipsManager.m
 //  Article
 //
 //  Created by lizhuoli on 17/3/24.
 //
 //
 
-#import "TTMessageNotificationTipsManager.h"
+#import "FHMessageNotificationTipsManager.h"
 #import "TTMessageNotificationTipsModel.h"
-#import "TTMessageNotificationTipsView.h"
+#import "FHMessageNotificationTipsView.h"
 
 #import "TTRoute.h"
-#import "TTMessageNotificationMacro.h"
+#import "FHMessageNotificationMacro.h"
 
 #import "UIView+CustomTimingFunction.h"
 
@@ -29,8 +29,8 @@ NSString * const kTTMessageNotificationLastListMaxCursorSaveKey = @"kTTMessageNo
 NSString * const kTTMessageNotificationTipsDialogKey = @"kTTMessageNotificationTipsDialogKey";
 NSString * const kTTMessageNotificationTipsDialogLocationKey = @"kTTMessageNotificationTipsDialogLocationKey";
 
-@interface TTMessageNotificationTipsManager ()
-@property (nonatomic, strong) TTMessageNotificationTipsView *tipsView;
+@interface FHMessageNotificationTipsManager ()
+@property (nonatomic, strong) FHMessageNotificationTipsView *tipsView;
 @property (nonatomic, strong) TTMessageNotificationTipsModel *tipsModel;//保存当前正在展示的model
 @property (nonatomic, assign, readwrite) BOOL isShowingTips;
 
@@ -47,14 +47,14 @@ NSString * const kTTMessageNotificationTipsDialogLocationKey = @"kTTMessageNotif
 @property (nonatomic, strong) NSDictionary *context;
 @end
 
-@implementation TTMessageNotificationTipsManager
+@implementation FHMessageNotificationTipsManager
 
 + (instancetype)sharedManager
 {
-    static TTMessageNotificationTipsManager *manager;
+    static FHMessageNotificationTipsManager *manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        manager = [[TTMessageNotificationTipsManager alloc] init];
+        manager = [[FHMessageNotificationTipsManager alloc] init];
     });
     
     return manager;
@@ -220,7 +220,7 @@ NSString * const kTTMessageNotificationTipsDialogLocationKey = @"kTTMessageNotif
     
     CGFloat padding = [TTUIResponderHelper paddingForViewWidth:0];
     CGRect frame = CGRectMake(padding, CGRectGetMaxY(view.bounds) - kTTMessageNotificationTipsViewHeight - kTTMessageNotificationTipsViewBottom - [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom, CGRectGetWidth(view.bounds) - 2 * padding, kTTMessageNotificationTipsViewHeight);
-    self.tipsView = [[TTMessageNotificationTipsView alloc] initWithFrame:frame tabCenterX:centerX];
+    self.tipsView = [[FHMessageNotificationTipsView alloc] initWithFrame:frame tabCenterX:centerX];
     UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tipsViewTouched:)];
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(tipsViewMoved:)];
     [self.tipsView addGestureRecognizer:gesture];

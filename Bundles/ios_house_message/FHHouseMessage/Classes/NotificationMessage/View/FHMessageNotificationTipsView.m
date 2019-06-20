@@ -1,14 +1,14 @@
 //
-//  TTMessageNotificationTipsView.m
+//  FHMessageNotificationTipsView.m
 //  Article
 //
 //  Created by lizhuoli on 17/3/24.
 //
 //
 
-#import "TTMessageNotificationTipsView.h"
+#import "FHMessageNotificationTipsView.h"
 #import "TTMessageNotificationTipsModel.h"
-#import "TTMessageNotificationManager.h"
+#import "FHMessageNotificationManager.h"
 #import "TTRoute.h"
 #import "TTUGCEmojiParser.h"
 #import <TTBaseLib/TTDeviceUIUtils.h>
@@ -24,7 +24,7 @@
 #define kTTMessageNotificationTipsViewTitleAvatarHorizontalSpacing [TTDeviceUIUtils tt_padding:14]
 #define kTTMessageNotificationTipsViewTitleAvatarBaselineSpacing [TTDeviceUIUtils tt_padding:2]
 
-@interface TTMessageNotificationTipsView ()
+@interface FHMessageNotificationTipsView ()
 
 @property (nonatomic, strong, readwrite) TTAsyncCornerImageView *avatarView;
 @property (nonatomic, strong, readwrite) SSThemedLabel *nameLabel;
@@ -36,7 +36,7 @@
 
 @end
 
-@implementation TTMessageNotificationTipsView
+@implementation FHMessageNotificationTipsView
 
 - (instancetype)initWithFrame:(CGRect)frame tabCenterX:(CGFloat)centerX
 {

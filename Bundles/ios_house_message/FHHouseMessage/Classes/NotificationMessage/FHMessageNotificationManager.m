@@ -1,13 +1,13 @@
 //
-//  TTMessageNotificationManager.m
+//  FHMessageNotificationManager.m
 //  Article
 //
 //  Created by lizhuoli on 17/3/23.
 //
 //
 
-#import "TTMessageNotificationManager.h"
-#import "TTMessageNotificationTipsManager.h"
+#import "FHMessageNotificationManager.h"
+#import "FHMessageNotificationTipsManager.h"
 #import "TTMessageNotificationTipsModel.h"
 #import "TTMessageNotificationModel.h"
 
@@ -22,21 +22,21 @@
 
 static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNotificationCheckIntervalKey";
 
-@interface TTMessageNotificationManager ()
+@interface FHMessageNotificationManager ()
 
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) NSTimeInterval lastInterval;
 
 @end
 
-@implementation TTMessageNotificationManager
+@implementation FHMessageNotificationManager
 
 + (instancetype)sharedManager
 {
-    static TTMessageNotificationManager *manager;
+    static FHMessageNotificationManager *manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        manager = [[TTMessageNotificationManager alloc] init];
+        manager = [[FHMessageNotificationManager alloc] init];
     });
     
     return manager;
@@ -107,26 +107,26 @@ static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageN
         params[@"from"] = channel;
     }
     
-//    [[TTNetworkManager shareInstance] requestForJSONWithURL:[CommonURLSetting messageNotificationUnreadURLString] params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-//        if (error || ![jsonObj isKindOfClass:[NSDictionary class]] || [jsonObj tt_intValueForKey:@"error_code"] != 0) {
-//            return;
-//        }
-//        NSDictionary *response = [(NSDictionary *)jsonObj tt_objectForKey:@"data"];
-//        TTMessageNotificationTipsModel *tipsModel = [[TTMessageNotificationTipsModel alloc] initWithDictionary:response error:nil];
-//        if (tipsModel) {
-//            LOGD(@"%@", tipsModel);
-//            dispatch_main_async_safe(^{
-//                [[TTMessageNotificationTipsManager sharedManager] updateTipsWithModel:tipsModel];
-//                if([tipsModel.interval doubleValue] != self.lastInterval){
-//                    [self setNewMessageNotificationCheckInterval:[tipsModel.interval doubleValue]];
-//
-//                    [self stopPeriodicalFetchUnreadMessageNumber];
-//
-//                    self.timer = [NSTimer scheduledTimerWithTimeInterval:[self fetchUnreadTimeInterval] target:self selector:@selector(periodicalFetchUnreadMessage:) userInfo:nil repeats:YES];
-//                }
-//            });
-//        }
-//    }];
+    [[TTNetworkManager shareInstance] requestForJSONWithURL:[CommonURLSetting messageNotificationUnreadURLString] params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        if (error || ![jsonObj isKindOfClass:[NSDictionary class]] || [jsonObj tt_intValueForKey:@"error_code"] != 0) {
+            return;
+        }
+        NSDictionary *response = [(NSDictionary *)jsonObj tt_objectForKey:@"data"];
+        TTMessageNotificationTipsModel *tipsModel = [[TTMessageNotificationTipsModel alloc] initWithDictionary:response error:nil];
+        if (tipsModel) {
+            LOGD(@"%@", tipsModel);
+            dispatch_main_async_safe(^{
+                [[FHMessageNotificationTipsManager sharedManager] updateTipsWithModel:tipsModel];
+                if([tipsModel.interval doubleValue] != self.lastInterval){
+                    [self setNewMessageNotificationCheckInterval:[tipsModel.interval doubleValue]];
+
+                    [self stopPeriodicalFetchUnreadMessageNumber];
+
+                    self.timer = [NSTimer scheduledTimerWithTimeInterval:[self fetchUnreadTimeInterval] target:self selector:@selector(periodicalFetchUnreadMessage:) userInfo:nil repeats:YES];
+                }
+            });
+        }
+    }];
 }
 
 #pragma mark - 拉取消息通知列表

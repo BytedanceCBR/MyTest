@@ -54,8 +54,8 @@
 #import "NSObject+FBKVOController.h"
 #import "TTBadgeTrackerHelper.h"
 #import "TTRoute.h"
-#import "TTMessageNotificationTipsManager.h"
-#import "TTMessageNotificationMacro.h"
+#import "FHMessageNotificationTipsManager.h"
+#import "FHMessageNotificationMacro.h"
 //#import "TTPLManager.h"
 #import <TTTracker.h>
 //#import "TTCommonwealManager.h"
@@ -188,7 +188,7 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
         [self refreshUserInfoView];
     }
     
-    TTMessageNotificationTipsManager *manager = [TTMessageNotificationTipsManager sharedManager];
+    FHMessageNotificationTipsManager *manager = [FHMessageNotificationTipsManager sharedManager];
     [manager saveLastImportantMessageID];
     //切换到我的tab时
     if([[TTSettingMineTabManager sharedInstance_tt] getEntryForType:TTSettingMineTabEntyTypeMessage]){

@@ -9,7 +9,6 @@
 #import "FHMessageNotificationBaseCell.h"
 #import "TTMessageNotificationModel.h"
 #import "FHMessageNotificationBaseCellView.h"
-#import "TTMessageNotificationBaseCellView.h"
 #import "TTUIResponderHelper.h"
 #import <FHCommonUI/UIColor+Theme.h>
 
@@ -50,7 +49,7 @@
     return [self class];
 }
 
-- (TTMessageNotificationBaseCellView *)createCellView
+- (FHMessageNotificationBaseCellView *)createCellView
 {
     Class cellViewCls = [[self class] cellViewClass];
     return [[cellViewCls alloc] initWithFrame:[TTUIResponderHelper splitViewFrameForView:self]];

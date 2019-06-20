@@ -1,5 +1,5 @@
 //
-//  TTMessageNotificationManager.h
+//  FHMessageNotificationManager.h
 //  Article
 //
 //  Created by lizhuoli on 17/3/23.
@@ -7,9 +7,9 @@
 //
 
 #import "TTMessageNotificationModel.h"
-#import "TTMessageNotificationMacro.h"
+#import "FHMessageNotificationMacro.h"
 
-@interface TTMessageNotificationManager : NSObject
+@interface FHMessageNotificationManager : NSObject
 
 + (instancetype)sharedManager;
 

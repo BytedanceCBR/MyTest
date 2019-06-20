@@ -1,5 +1,5 @@
 //
-//  TTMessageNotificationTipsManager.h
+//  FHMessageNotificationTipsManager.h
 //  Article
 //
 //  Created by lizhuoli on 17/3/24.
@@ -40,7 +40,7 @@ typedef NS_ENUM(NSUInteger, TTMessageNotificationTipsMoveDirection){
 NS_ASSUME_NONNULL_BEGIN
 
 @class TTMessageNotificationTipsModel;
-@interface TTMessageNotificationTipsManager : NSObject
+@interface FHMessageNotificationTipsManager : NSObject
 
 @property (nonatomic, assign, readonly) NSUInteger unreadNumber; //新消息通知的消息未读数
 @property (nonatomic, copy, readonly) NSString *tips; //新消息通知tips

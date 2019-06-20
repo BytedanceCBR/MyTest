@@ -8,10 +8,10 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHHouseUGCAPI.h"
-#import "TTMessageNotificationManager.h"
+#import "FHMessageNotificationManager.h"
 #import "TTBaseMacro.h"
 #import "FHRefreshCustomFooter.h"
-#import "TTMessageNotificationTipsManager.h"
+#import "FHMessageNotificationTipsManager.h"
 #import "FHMessageNotificationCellHelper.h"
 #import "FHMessageNotificationBaseCell.h"
 #import "TTUIResponderHelper.h"
@@ -60,13 +60,13 @@
     }
 
     if (!loadMore) {
-        [[TTMessageNotificationTipsManager sharedManager] clearTipsModel];
-        [[TTMessageNotificationManager sharedManager] fetchUnreadMessageWithChannel:nil];
+        [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
+        [[FHMessageNotificationManager sharedManager] fetchUnreadMessageWithChannel:nil];
     }
 
     NSNumber *cursor = loadMore ? @(self.messageModels.count) : @(0);
     WeakSelf;
-    [[TTMessageNotificationManager sharedManager] fetchMessageListWithChannel:nil cursor:cursor completionBlock:^(NSError *error, TTMessageNotificationResponseModel *response) {
+    [[FHMessageNotificationManager sharedManager] fetchMessageListWithChannel:nil cursor:cursor completionBlock:^(NSError *error, TTMessageNotificationResponseModel *response) {
         StrongSelf;
         if (response && (error == nil)) {
             if (!loadMore) {
