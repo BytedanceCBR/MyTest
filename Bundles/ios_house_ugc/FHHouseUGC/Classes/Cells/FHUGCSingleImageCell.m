@@ -23,7 +23,6 @@
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
-@property(nonatomic ,strong) UIView *bottomSepView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 @end
@@ -67,14 +66,11 @@
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
     UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
     [self.bottomView.positionView addGestureRecognizer:tap];
-    
-    self.bottomSepView = [[UIView alloc] init];
-    _bottomSepView.backgroundColor = [UIColor themeGray7];
-    [self.contentView addSubview:_bottomSepView];
 }
 
 - (void)initConstraints {
@@ -98,14 +94,9 @@
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
+        make.height.mas_equalTo(49);
         make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(30);
-    }];
-    
-    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.bottomView.mas_bottom).offset(20);
-        make.bottom.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(5);
+        make.bottom.mas_equalTo(self.contentView).priorityLow();
     }];
 }
 
@@ -134,7 +125,33 @@
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
         //图片
         [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
+        
+        [self showGuideView];
     }
+}
+
+- (void)showGuideView {
+    if(_cellModel.isInsertGuideCell){
+        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(66);
+        }];
+    }else{
+        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(49);
+        }];
+    }
+}
+
+- (void)closeGuideView {
+    self.cellModel.isInsertGuideCell = NO;
+    [self.cellModel.tableView beginUpdates];
+    
+    [self showGuideView];
+    self.bottomView.cellModel = self.cellModel;
+    
+    [self setNeedsUpdateConstraints];
+    
+    [self.cellModel.tableView endUpdates];
 }
 
 - (void)deleteCell {

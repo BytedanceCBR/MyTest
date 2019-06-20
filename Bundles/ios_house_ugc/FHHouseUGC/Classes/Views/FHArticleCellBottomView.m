@@ -15,6 +15,8 @@
 
 @interface FHArticleCellBottomView ()
 
+@property(nonatomic ,strong) UIView *bottomSepView;
+
 @end
 
 @implementation FHArticleCellBottomView
@@ -49,12 +51,25 @@
     [_moreBtn addTarget:self action:@selector(moreOperation) forControlEvents:UIControlEventTouchUpInside];
     _moreBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -5, -5, -5);
     [self addSubview:_moreBtn];
+    
+    self.bottomSepView = [[UIView alloc] init];
+    _bottomSepView.backgroundColor = [UIColor themeGray7];
+    [self addSubview:_bottomSepView];
+}
+
+- (FHUGCFeedGuideView *)guideView {
+    if(!_guideView){
+        _guideView = [[FHUGCFeedGuideView alloc] init];
+        [self addSubview:_guideView];
+    }
+    return _guideView;
 }
 
 - (void)initConstraints {
     [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(20);
-        make.top.bottom.mas_equalTo(self);
+        make.top.mas_equalTo(self);
+        make.height.mas_equalTo(24);
     }];
     
     [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -66,14 +81,20 @@
     
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.positionView.mas_right).offset(6);
-        make.centerY.mas_equalTo(self);
+        make.centerY.mas_equalTo(self.positionView);
         make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
     }];
     
     [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(16);
-        make.centerY.mas_equalTo(self);
+        make.centerY.mas_equalTo(self.positionView);
         make.right.mas_equalTo(self).offset(-18);
+    }];
+    
+    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.positionView.mas_bottom).offset(10);
+        make.left.right.mas_equalTo(self);
+        make.height.mas_equalTo(5);
     }];
 }
 
@@ -82,6 +103,21 @@
     label.font = font;
     label.textColor = textColor;
     return label;
+}
+
+- (void)setCellModel:(FHFeedUGCCellModel *)cellModel {
+    _cellModel = cellModel;
+    //设置是否显示引导
+    if(cellModel.isInsertGuideCell){
+        self.guideView.hidden = NO;
+        [self.guideView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.positionView.mas_bottom);
+            make.left.right.mas_equalTo(self);
+            make.height.mas_equalTo(42);
+        }];
+    }else{
+        self.guideView.hidden = YES;
+    }
 }
 
 - (void)moreOperation {

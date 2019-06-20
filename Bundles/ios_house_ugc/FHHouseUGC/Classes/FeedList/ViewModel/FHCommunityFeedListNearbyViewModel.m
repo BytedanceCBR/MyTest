@@ -167,6 +167,7 @@
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         cellModel.categoryId = self.categoryId;
         cellModel.feedVC = self.viewController;
+        cellModel.tableView = self.tableView;
         if(cellModel){
             [resultArray addObject:cellModel];
         }
@@ -175,19 +176,18 @@
 }
 
 - (void)insertGuideCell {
-//    if([FHUGCGuideHelper shouldShowFeedGuide]){
+    if([FHUGCGuideHelper shouldShowFeedGuide]){
         //符合引导页显示条件时
         for (NSInteger i = 0; i < self.dataList.count; i++) {
             FHFeedUGCCellModel *cellModel = self.dataList[i];
             if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle || [cellModel.cellType integerValue] == FHUGCFeedListCellTypeUGC){
-                self.guideCellModel = [FHFeedUGCCellModel guideCellModel];
-                [self.dataList insertObject:self.guideCellModel atIndex:(i + 1)];
+                cellModel.isInsertGuideCell = YES;
                 //显示以后次数加1
                 [FHUGCGuideHelper addFeedGuideCount];
                 return;
             }
         }
-//    }
+    }
 }
 
 - (void)deleteGuideCell {

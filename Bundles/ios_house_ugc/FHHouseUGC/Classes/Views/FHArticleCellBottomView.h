@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHFeedUGCCellModel.h"
+#import "FHUGCFeedGuideView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic ,strong) UILabel *descLabel;
 @property(nonatomic ,strong) UIButton *moreBtn;
 @property(nonatomic ,strong) UIView *positionView;
+@property(nonatomic ,strong) FHUGCFeedGuideView *guideView;
 
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic, copy) void(^deleteCellBlock)(void);
