@@ -9,6 +9,9 @@
 #import "TTMessageNotificationModel.h"
 #import "FHMessageNotificationMacro.h"
 
+@class TTMessageNotificationTipsModel;
+@class FHUnreadMsgDataUnreadModel;
+
 @interface FHMessageNotificationManager : NSObject
 
 + (instancetype)sharedManager;
@@ -22,7 +25,7 @@
 - (void)stopPeriodicalFetchUnreadMessageNumber;
 
 /** 手动拉取未读消息通知，在拉取到消息后会发出Notification */
-- (void)fetchUnreadMessageWithChannel:(NSString *)channel;
+- (void)fetchUnreadMessageWithChannel:(NSString *)channel callback:(void(^)(FHUnreadMsgDataUnreadModel *))callback;
 
 - (void)fetchMessageListWithChannel:(NSString *)channel // 如果为nil默认为all
                              cursor:(NSNumber *)cursor // 如果为nil默认为0

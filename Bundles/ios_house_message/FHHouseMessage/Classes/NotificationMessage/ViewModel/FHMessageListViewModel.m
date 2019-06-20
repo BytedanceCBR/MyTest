@@ -11,7 +11,6 @@
 #import "FHMessageNotificationManager.h"
 #import "TTBaseMacro.h"
 #import "FHRefreshCustomFooter.h"
-#import "FHMessageNotificationTipsManager.h"
 #import "FHMessageNotificationCellHelper.h"
 #import "FHMessageNotificationBaseCell.h"
 #import "TTUIResponderHelper.h"
@@ -60,8 +59,9 @@
     }
 
     if (!loadMore) {
-        [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
-        [[FHMessageNotificationManager sharedManager] fetchUnreadMessageWithChannel:nil];
+//        [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
+        //TODO zlj
+        [[FHMessageNotificationManager sharedManager] fetchUnreadMessageWithChannel:nil callback:nil];
     }
 
     NSNumber *cursor = loadMore ? @(self.messageModels.count) : @(0);
