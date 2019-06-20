@@ -1,6 +1,11 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 NS_ASSUME_NONNULL_BEGIN
+
+@protocol FHUGCScialGroupDataModel <NSObject>
+
+@end
+
 @interface FHUGCScialGroupDataModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *announcement;

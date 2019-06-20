@@ -30,6 +30,9 @@ NS_ASSUME_NONNULL_BEGIN
 // action 0 取消关注 1 关注
 + (TTHttpTask *)requestFollow:(NSString *)group_id action:(NSInteger)action completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
 
+// 小区搜索
++ (TTHttpTask *)requestSocialSearchByText:(NSString *)text class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

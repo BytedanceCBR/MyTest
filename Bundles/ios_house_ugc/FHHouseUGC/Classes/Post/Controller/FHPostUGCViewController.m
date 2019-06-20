@@ -167,6 +167,10 @@ static NSInteger const kMaxPostImageCount = 9;
     [self addImagesViewSizeChanged];
     [self addObserverAndNoti];
     [self restoreData];
+//    __weak typeof(self) weakSelf = self;
+//    self.panBeginAction = ^{
+//        [weakSelf.naviBar.searchInput resignFirstResponder];
+//    };
 }
 
 - (void)restoreData {
@@ -784,6 +788,10 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.detailPos = self.addLocationView.selectedLocation.locationName;
     postThreadModel.longitude = longitude;
     postThreadModel.latitude = latitude;
+    
+    self.selectView.groupId = @"1636215424527368";
+    postThreadModel.social_group_id = self.selectView.groupId;
+    NSLog(@"social_group_id:%@",self.selectView.groupId);
 //    postThreadModel.score = rate;
 //    postThreadModel.refer = self.refer;
 //    postThreadModel.communityID = self.communityID;
@@ -1298,11 +1306,11 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 #pragma mark - FHUGCFollowListDelegate
-- (void)selectedItem:(FHUGCDataUserFollowSocialGroupsModel *)item {
+- (void)selectedItem:(FHUGCScialGroupDataModel *)item {
     // 选择 小区圈子
     if (item) {
         self.selectView.groupId = item.socialGroupId;
-        self.selectView.communityName = item.name;
+        self.selectView.communityName = item.socialGroupName;
         [self refreshPostButtonUI];
     }
 }

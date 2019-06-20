@@ -17,6 +17,8 @@
 #import "FHUGCFollowButton.h"
 #import "FHUGCFollowHelper.h"
 #import "TTThemedAlertController.h"
+#import "FHUGCGuideView.h"
+#import "FHUGCGuideHelper.h"
 
 
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
@@ -29,6 +31,8 @@
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *subTitleLabel;
 @property(nonatomic, strong) UIView *titleContainer;
+
+@property(nonatomic, strong) FHUGCGuideView *guideView;
 
 @end
 
@@ -110,6 +114,31 @@
     }];
 }
 
+- (void)addUgcGuide {
+    if([FHUGCGuideHelper shouldShowUgcDetailGuide]){
+        [self.guideView show:self.viewController.view dismissDelayTime:0.0f];
+    }
+}
+
+- (FHUGCGuideView *)guideView {
+    if(!_guideView){
+        WeakSelf;
+        _guideView = [[FHUGCGuideView alloc] initWithFrame:self.viewController.view.bounds andType:FHUGCGuideViewTypeDetail];
+        [self.viewController.view layoutIfNeeded];
+        CGRect rect = [self.headerView convertRect:self.headerView.followButton.frame toView:self.viewController.view];
+        _guideView.focusBtnTopY = rect.origin.y;
+        _guideView.clickBlock = ^{
+            [wself hideGuideView];
+        };
+    }
+    return _guideView;
+}
+
+- (void)hideGuideView {
+    [self.guideView hide];
+    [FHUGCGuideHelper hideUgcDetailGuide];
+}
+
 - (void)viewWillAppear {
     [self.feedListController viewWillAppear];
 }
@@ -128,6 +157,11 @@
         if (model && (error == nil)) {
             FHCommunityDetailModel *responseModel = model;
             [wself updateUIWithData:responseModel.data];
+            
+            //仅仅在未关注时显示引导页
+            if(!responseModel.data.followed){
+                [self addUgcGuide];
+            }
         } else {
             wself.feedListController.view.hidden = YES;
             [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];

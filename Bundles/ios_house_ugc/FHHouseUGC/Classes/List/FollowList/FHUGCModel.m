@@ -16,25 +16,6 @@
 }
 @end
 
-@implementation FHUGCDataUserFollowSocialGroupsModel
-+ (JSONKeyMapper*)keyMapper
-{
-  NSDictionary *dict = @{
-    @"socialGroupId": @"social_group_id",
-    @"contentCount": @"content_count",
-    @"followCount": @"follow_count",
-    @"forumId": @"forum_id",
-  };
-  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-     return dict[keyName]?:keyName;
-  }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
 @implementation FHUGCModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
@@ -42,17 +23,23 @@
 }
 @end
 
-@implementation FHUGCDataUserFollowSocialGroupsAvatarModel
+@implementation FHUGCSearchDataModel
 + (JSONKeyMapper*)keyMapper
 {
-  NSDictionary *dict = @{
-    @"imageType": @"image_type",
-    @"urlList": @"url_list",
-  };
-  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-     return dict[keyName]?:keyName;
-  }];
+    NSDictionary *dict = @{
+                           @"searchSocialGroups": @"search_social_groups",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
 }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHUGCSearchModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

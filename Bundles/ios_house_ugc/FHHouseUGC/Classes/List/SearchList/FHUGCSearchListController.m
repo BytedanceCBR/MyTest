@@ -18,10 +18,18 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "TTDeviceHelper.h"
 #import "FHUGCFollowManager.h"
+#import "FHUGCSearchListCell.h"
+#import "FHHouseUGCAPI.h"
+#import "TTNavigationController.h"
+#import "FHEnvContext.h"
+#import "FHUGCModel.h"
+#import "ToastManager.h"
 
 @interface FHUGCSearchListController ()<UITableViewDelegate,UITableViewDataSource>
 
-@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) FHUGCSuggectionTableView *tableView;
+@property (nonatomic, strong)   NSMutableArray       *items;
+@property(nonatomic , weak) TTHttpTask *sugHttpTask;
 
 @end
 
@@ -41,12 +49,15 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     [self setupData];
+    __weak typeof(self) weakSelf = self;
+    self.panBeginAction = ^{
+        [weakSelf.naviBar.searchInput resignFirstResponder];
+    };
     [self startLoadData];
 }
 
 - (void)setupData {
-    // title
-    // 是否有数据
+    self.items = [NSMutableArray new];
 }
 
 - (void)setupNaviBar {
@@ -74,7 +85,7 @@
     [self.view addSubview:_tableView];
     _tableView.dataSource = self;
     _tableView.delegate = self;
-    [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
+    [_tableView registerClass:[FHUGCSearchListCell class] forCellReuseIdentifier:@"FHUGCSearchListCell"];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.view).offset(height);
@@ -83,12 +94,17 @@
 }
 
 - (void)configTableView {
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView = [[FHUGCSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    __weak typeof(self) weakSelf = self;
+    _tableView.handleTouch = ^{
+        [weakSelf.view endEditing:YES];
+    };
+    _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    _tableView.estimatedRowHeight = 0;
+    _tableView.estimatedRowHeight = 70;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
     if ([TTDeviceHelper isIPhoneXDevice]) {
@@ -97,14 +113,20 @@
 }
 
 - (void)startLoadData {
-    if ([TTReachability isNetworkConnected]) {
-
+    if (![TTReachability isNetworkConnected]) {
+         [[ToastManager manager] showToast:@"网络异常"];
+    } else {
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf.naviBar.searchInput becomeFirstResponder];
+        });
     }
 }
 
 - (void)retryLoadData {
     
 }
+
 // 文本框文字变化，进行sug请求
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {
     NSInteger maxCount = 80;
@@ -122,11 +144,31 @@
     }
     BOOL hasText = text.length > 0;
     if (hasText) {
-        //[self requestSuggestion:text];
+        [self requestSuggestion:text];
     } else {
         // 清空sug列表数据
-        //[self.viewModel clearSugTableView];
+        [self.items removeAllObjects];
+        [self.tableView reloadData];
     }
+}
+
+// sug建议
+- (void)requestSuggestion:(NSString *)text {
+    // NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    if (self.sugHttpTask) {
+        [self.sugHttpTask cancel];
+    }
+    __weak typeof(self) weakSelf = self;
+    self.sugHttpTask = [FHHouseUGCAPI requestSocialSearchByText:text class:[FHUGCSearchModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        if (model != NULL && error == NULL) {
+            [weakSelf.items removeAllObjects];
+            FHUGCSearchModel *tModel = model;
+            if (tModel.data.searchSocialGroups.count > 0) {
+                [weakSelf.items addObjectsFromArray:tModel.data.searchSocialGroups];
+            }
+            [weakSelf.tableView reloadData];
+        }
+    }];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -137,7 +179,7 @@
 
 // 输入框执行搜索
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    NSString *userInputText = self.naviBar.searchInput.text;
+   //  NSString *userInputText = self.naviBar.searchInput.text;
 }
 
 #pragma mark - dealloc
@@ -155,13 +197,21 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    return self.items.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   
-    return [[UITableViewCell alloc] init];
+    FHUGCSearchListCell *cell = (FHUGCSearchListCell *)[tableView dequeueReusableCellWithIdentifier:@"FHUGCSearchListCell" forIndexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    NSInteger row = indexPath.row;
+    if (row >= 0 && row < self.items.count) {
+        id data = self.items[row];
+        [cell refreshWithData:data];
+    }
+    
+    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -171,8 +221,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    return 105;
+    return 70;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -188,7 +237,5 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
-
 
 @end

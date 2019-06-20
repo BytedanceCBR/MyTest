@@ -154,4 +154,13 @@
     }];
 }
 
++ (TTHttpTask *)requestSocialSearchByText:(NSString *)text class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/search";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (text.length > 0) {
+        paramDic[@"text"] = text;
+    }
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end

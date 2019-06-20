@@ -188,7 +188,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSInteger row = indexPath.row;
     if (row >= 0 && row < self.items.count) {
-        FHUGCDataUserFollowSocialGroupsModel* data = self.items[row];
+        FHUGCScialGroupDataModel* data = self.items[row];
         if (self.vcType == FHUGCFollowVCTypeList) {
             // 我关注的小区
             // 点击进入下个页面

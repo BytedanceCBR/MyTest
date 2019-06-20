@@ -14,7 +14,6 @@
 @property(nonatomic ,strong) UILabel *contentLabel;
 @property(nonatomic ,strong) UIImageView *singleImageView;
 @property(nonatomic ,strong) FHArticleCellBottomView *bottomView;
-@property(nonatomic ,strong) UIView *bottomSepView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 @end
@@ -66,10 +65,6 @@
     
     UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
     [self.bottomView.positionView addGestureRecognizer:tap];
-    
-    self.bottomSepView = [[UIView alloc] init];
-    _bottomSepView.backgroundColor = [UIColor themeGray7];
-    [self.contentView addSubview:_bottomSepView];
 }
 
 - (void)initConstraints {
@@ -88,14 +83,8 @@
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.singleImageView.mas_bottom).offset(10);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(24);
-    }];
-    
-    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.bottomView.mas_bottom).offset(10);
-        make.bottom.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(5);
+        make.height.mas_equalTo(39);
+        make.left.right.bottom.mas_equalTo(self.contentView);
     }];
 }
 
@@ -112,6 +101,8 @@
         self.cellModel = cellModel;
         //内容
         self.contentLabel.text = cellModel.title;
+        
+        self.bottomView.cellModel = cellModel;
         self.bottomView.descLabel.attributedText = cellModel.desc;
         self.bottomView.position.text = @"左家庄";
         //图片
@@ -119,6 +110,20 @@
         if(imageModel){
             [self.singleImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
         }
+        
+        [self showGuideView];
+    }
+}
+
+- (void)showGuideView {
+    if(_cellModel.isInsertGuideCell){
+        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(66);
+        }];
+    }else{
+        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(39);
+        }];
     }
 }
 
