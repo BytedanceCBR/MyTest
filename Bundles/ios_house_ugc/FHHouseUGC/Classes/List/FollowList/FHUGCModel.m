@@ -23,3 +23,26 @@
 }
 @end
 
+@implementation FHUGCSearchDataModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"searchSocialGroups": @"search_social_groups",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHUGCSearchModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+

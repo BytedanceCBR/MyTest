@@ -15,6 +15,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHUGCDataModel *data ;  
 @end
 
+// 搜索model
+@interface FHUGCSearchDataModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHUGCScialGroupDataModel> *searchSocialGroups;
+@end
+
+@interface FHUGCSearchModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHUGCSearchDataModel *data ;
+@end
 
 NS_ASSUME_NONNULL_END
 //END OF HEADER

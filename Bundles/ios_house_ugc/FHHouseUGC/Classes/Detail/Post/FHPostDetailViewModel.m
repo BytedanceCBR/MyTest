@@ -142,7 +142,7 @@
         uint64_t startTime = [NSObject currentUnixTime];
         WeakSelf;
         NSString *host = [FHURLSettings baseURL];
-        host = @"http://10.224.14.218:6789";
+//        host = @"http://10.224.14.218:6789";
         NSString *urlStr = [NSString stringWithFormat:@"%@/f100/ugc/thread",host];
         [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
             StrongSelf;

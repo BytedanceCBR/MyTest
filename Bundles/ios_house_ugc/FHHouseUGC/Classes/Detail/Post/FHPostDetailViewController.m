@@ -17,7 +17,7 @@
 
 @interface FHPostDetailViewController ()
 
-@property (nonatomic, assign) int64_t tid; //帖子ID
+@property (nonatomic, assign) int64_t tid; //帖子ID--必须
 @property (nonatomic, assign) int64_t fid; //话题ID
 @property (nonatomic, copy) NSString *cid; //关心ID
 // 列表页数据
