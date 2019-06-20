@@ -54,7 +54,7 @@
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)data;
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
-        CGFloat vHeight = 66.0;
+        CGFloat vHeight = 62.0;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] init];
             // 添加事件
@@ -266,12 +266,12 @@
         }
         if (model.isFold) {
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(66 * 3);
+                make.height.mas_equalTo(62 * 3);
             }];
             realtorShowCount = 3;
         } else {
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(66 * model.recommendedRealtors.count);
+                make.height.mas_equalTo(62 * model.recommendedRealtors.count);
             }];
             realtorShowCount = model.recommendedRealtors.count;
             [self addRealtorClickMore];
@@ -282,7 +282,7 @@
         }
     } else if (model.recommendedRealtors.count > 0) {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(66 * model.recommendedRealtors.count);
+            make.height.mas_equalTo(62 * model.recommendedRealtors.count);
         }];
         realtorShowCount = model.recommendedRealtors.count;
     } else {
@@ -356,7 +356,7 @@
 
 - (void)setupUI {
     _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_default_avatar"]];
-    _avator.layer.cornerRadius = 23;
+    _avator.layer.cornerRadius = 21;
     _avator.contentMode = UIViewContentModeScaleAspectFill;
     _avator.clipsToBounds = YES;
     [self addSubview:_avator];
