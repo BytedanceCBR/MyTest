@@ -85,7 +85,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
     //如果是inhouse的，弹升级弹窗
-    if ([TTSandBoxHelper isInHouseApp]) {
+    if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
         //#if INHOUSE
         [self checkLocalTestUpgradeVersionAlert];
         //#endif
