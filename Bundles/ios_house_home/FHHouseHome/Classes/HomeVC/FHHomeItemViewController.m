@@ -290,7 +290,7 @@
                 return;
             }
             
-            if (error && [error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+            if ((error && [error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) || !model || error) {
                 [self reloadCityEnbaleAndNoHouseData:NO];
                 if (self.requestCallBack) {
                     self.requestCallBack(pullType, self.houseType, NO, nil);
@@ -447,6 +447,12 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeSubTableViewDidScroll" object:scrollView];
 }
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (self.scrollDidEnd) {
+        self.scrollDidEnd();
+    }
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -530,7 +536,7 @@
             [cellError.contentView addSubview:noDataErrorView];
             
             if ([FHEnvContext isNetworkConnected]) {
-                [noDataErrorView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:@"group-9"
+                [noDataErrorView showEmptyWithTip:@"数据走丢了" errorImageName:@"group-9"
                                         showRetry:YES];
                 __weak typeof(self) weakSelf = self;
                 noDataErrorView.retryBlock = ^{
@@ -685,6 +691,7 @@
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
+        //        _tableView.decelerationRate = 0.1;
         _tableView.showsVerticalScrollIndicator = NO;
     }
     return _tableView;
