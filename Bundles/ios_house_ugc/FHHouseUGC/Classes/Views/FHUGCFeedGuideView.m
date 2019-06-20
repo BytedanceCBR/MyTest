@@ -41,15 +41,12 @@
     [self addSubview:_contentView];
     
     self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray2]];
-    _contentLabel.numberOfLines = 2;
-    [_contentLabel sizeToFit];
-    _contentLabel.text = @"点击✌️进入小区圈，查看更多新鲜事";
+    _contentLabel.attributedText = [self generateText];
     [_contentLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     [self.contentView addSubview:_contentLabel];
     
     self.closeBtn = [[UIButton alloc] init];
     [_closeBtn setImage:[UIImage imageNamed:@"fh_ugc_feed_guide_close"] forState:UIControlStateNormal];
-//    [_closeBtn addTarget:self action:@selector(deleteCell) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_closeBtn];
 }
 
@@ -74,10 +71,10 @@
     }];
     
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(9);
-        make.bottom.mas_equalTo(self.contentView).offset(-9);
+        make.centerY.mas_equalTo(self.contentView);
         make.left.mas_equalTo(self.contentView).offset(20);
         make.right.mas_equalTo(self.closeBtn.mas_left).offset(-20);
+        make.height.mas_equalTo(17);
     }];
 }
 
@@ -88,8 +85,20 @@
     return label;
 }
 
-- (void)deleteCell {
-
+- (NSAttributedString *)generateText {
+//    @"点击✌️进入小区圈，查看更多新鲜事";
+    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@"点击"];
+    
+    NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+    attachment.bounds = CGRectMake(0, -3.5, 16, 16);
+    attachment.image = [UIImage imageNamed:@"fh_ugc_finger_up"];
+    NSAttributedString *attachmentAStr = [NSAttributedString attributedStringWithAttachment:attachment];
+    [desc appendAttributedString:attachmentAStr];
+    
+    NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:@"进入小区圈，查看更多新鲜事"];
+    [desc appendAttributedString:distanceAStr];
+    
+    return desc;
 }
 
 @end
