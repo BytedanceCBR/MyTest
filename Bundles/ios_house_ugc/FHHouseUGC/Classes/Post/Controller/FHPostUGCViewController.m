@@ -1298,11 +1298,11 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 #pragma mark - FHUGCFollowListDelegate
-- (void)selectedItem:(FHUGCDataUserFollowSocialGroupsModel *)item {
+- (void)selectedItem:(FHUGCScialGroupDataModel *)item {
     // 选择 小区圈子
     if (item) {
         self.selectView.groupId = item.socialGroupId;
-        self.selectView.communityName = item.name;
+        self.selectView.communityName = item.socialGroupName;
         [self refreshPostButtonUI];
     }
 }
