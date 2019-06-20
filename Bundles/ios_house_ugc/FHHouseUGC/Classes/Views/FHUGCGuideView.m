@@ -9,6 +9,7 @@
 #import <Masonry.h>
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
+#import "UIViewAdditions.h"
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
@@ -19,6 +20,9 @@
 
 @property(nonatomic, strong) UIImageView *imageView;
 @property(nonatomic, strong) UILabel *contentLabel;
+
+@property(nonatomic, strong) UILabel *focusLabel;
+@property(nonatomic, strong) UILabel *knowLabel;
 
 @end
 
@@ -48,13 +52,19 @@
 }
 
 - (void)initViews {
-//    self.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.7];
-    self.userInteractionEnabled = NO;
-    
     if(self.type == FHUGCGuideViewTypeSearch){
+        self.userInteractionEnabled = NO;
         [self initSearchView];
     }else if(self.type == FHUGCGuideViewTypeSecondTab){
+        self.userInteractionEnabled = NO;
         [self initSecondTabView];
+    }else{
+        self.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6];
+        self.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click)];
+        [self addGestureRecognizer:tapGesture];
+        
+        [self initDetailView];
     }
 }
 
@@ -80,6 +90,63 @@
     _contentLabel.textColor = [UIColor whiteColor];
     _contentLabel.font = [UIFont themeFontMedium:13];
     [self addSubview:_contentLabel];
+}
+
+- (void)initDetailView {
+    
+    UIImageView *knowBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 110, 36)];
+    knowBgView.image = [UIImage imageNamed:@"fh_ugc_guide_kown_bg"];
+    [self addSubview:knowBgView];
+    
+    knowBgView.bottom = self.bottom - 100;
+    knowBgView.centerX = self.centerX;
+    
+    self.knowLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 56, 20)];
+    _knowLabel.text = @"我知道了";
+    _knowLabel.textAlignment = NSTextAlignmentCenter;
+    _knowLabel.textColor = [UIColor whiteColor];
+    _knowLabel.font = [UIFont themeFontRegular:14];
+    [self addSubview:_knowLabel];
+    
+    _knowLabel.centerY = knowBgView.centerY;
+    _knowLabel.centerX = knowBgView.centerX;
+    
+    self.focusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 58, 26)];
+    _focusLabel.backgroundColor = [UIColor whiteColor];
+    _focusLabel.text = @"关注";
+    _focusLabel.textColor = [UIColor themeRed1];
+    _focusLabel.font = [UIFont themeFontRegular:12];
+    _focusLabel.textAlignment = NSTextAlignmentCenter;
+    _focusLabel.layer.masksToBounds =YES;
+    _focusLabel.layer.cornerRadius = 4;
+    [self addSubview:_focusLabel];
+    
+    self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 202, 42)];
+    _imageView.image = [UIImage imageNamed:@"fh_ugc_guide_bg_detail_up"];
+    [self addSubview:_imageView];
+    
+    self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 182, 18)];
+    _contentLabel.text = @"关注小区圈，不错过小区新鲜事";
+    _contentLabel.textColor = [UIColor whiteColor];
+    _contentLabel.font = [UIFont themeFontMedium:13];
+    [self addSubview:_contentLabel];
+}
+
+- (void)setFocusBtnTopY:(CGFloat)focusBtnTopY {
+    _focusLabel.right = self.right - 20;
+    _focusLabel.top = self.top + focusBtnTopY;
+    
+    _imageView.top = _focusLabel.bottom + 10;
+    _imageView.right = self.right - 10;
+    
+    _contentLabel.top = _imageView.top + 15;
+    _contentLabel.left = _imageView.left + 10;
+}
+
+- (void)click {
+    if(self.clickBlock){
+        self.clickBlock();
+    }
 }
 
 @end

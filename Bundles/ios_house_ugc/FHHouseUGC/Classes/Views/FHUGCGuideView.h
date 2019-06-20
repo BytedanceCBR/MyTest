@@ -23,6 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)hide;
 
+//仅仅是详情页需要传入 关注按钮 距离顶部的距离
+@property(nonatomic, assign) CGFloat focusBtnTopY;
+@property(nonatomic, copy) void(^clickBlock)(void);
+
 @end
 
 NS_ASSUME_NONNULL_END
