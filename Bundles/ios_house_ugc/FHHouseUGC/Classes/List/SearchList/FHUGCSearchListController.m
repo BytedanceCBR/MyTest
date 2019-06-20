@@ -18,10 +18,12 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "TTDeviceHelper.h"
 #import "FHUGCFollowManager.h"
+#import "FHUGCSearchListCell.h"
 
 @interface FHUGCSearchListController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong)   NSMutableArray       *items;
 
 @end
 
@@ -45,8 +47,7 @@
 }
 
 - (void)setupData {
-    // title
-    // 是否有数据
+    self.items = [NSMutableArray new];
 }
 
 - (void)setupNaviBar {
@@ -74,7 +75,7 @@
     [self.view addSubview:_tableView];
     _tableView.dataSource = self;
     _tableView.delegate = self;
-    [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
+    [_tableView registerClass:[FHUGCSearchListCell class] forCellReuseIdentifier:@"FHUGCSearchListCell"];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.view).offset(height);
@@ -88,7 +89,7 @@
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    _tableView.estimatedRowHeight = 0;
+    _tableView.estimatedRowHeight = 70;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
     if ([TTDeviceHelper isIPhoneXDevice]) {
@@ -155,13 +156,21 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    return self.items.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   
-    return [[UITableViewCell alloc] init];
+    FHUGCSearchListCell *cell = (FHUGCSearchListCell *)[tableView dequeueReusableCellWithIdentifier:@"FHUGCSearchListCell" forIndexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    NSInteger row = indexPath.row;
+    if (row >= 0 && row < self.items.count) {
+        id data = self.items[row];
+        [cell refreshWithData:data];
+    }
+    
+    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -171,8 +180,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    return 105;
+    return 70;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

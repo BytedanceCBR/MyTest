@@ -268,7 +268,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     internalTextView.maxHeight = INT_MAX;
 //    internalTextView.maxNumberOfLines = 8;
     internalTextView.tintColor = [UIColor themeRed1];
-    internalTextView.placeholder = @"分享你身边的新鲜事";
+    internalTextView.placeholder = @"分享你的观点";
     
     // 图文发布器展示
     internalTextView.backgroundColor = [UIColor clearColor];
