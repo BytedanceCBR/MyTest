@@ -19,11 +19,16 @@
 #import "TTDeviceHelper.h"
 #import "FHUGCFollowManager.h"
 #import "FHUGCSearchListCell.h"
+#import "FHHouseUGCAPI.h"
+#import "TTNavigationController.h"
+#import "FHEnvContext.h"
+#import "FHUGCModel.h"
 
 @interface FHUGCSearchListController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong)   NSMutableArray       *items;
+@property(nonatomic , weak) TTHttpTask *sugHttpTask;
 
 @end
 
@@ -43,7 +48,10 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     [self setupData];
-    [self startLoadData];
+    __weak typeof(self) weakSelf = self;
+    self.panBeginAction = ^{
+        [weakSelf.naviBar.searchInput resignFirstResponder];
+    };
 }
 
 - (void)setupData {
@@ -106,6 +114,7 @@
 - (void)retryLoadData {
     
 }
+
 // 文本框文字变化，进行sug请求
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {
     NSInteger maxCount = 80;
@@ -123,11 +132,27 @@
     }
     BOOL hasText = text.length > 0;
     if (hasText) {
-        //[self requestSuggestion:text];
+        [self requestSuggestion:text];
     } else {
         // 清空sug列表数据
-        //[self.viewModel clearSugTableView];
+        [self.items removeAllObjects];
+        [self.tableView reloadData];
     }
+}
+
+// sug建议
+- (void)requestSuggestion:(NSString *)text {
+    // NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    if (self.sugHttpTask) {
+        [self.sugHttpTask cancel];
+    }
+    __weak typeof(self) weakSelf = self;
+    self.sugHttpTask = [FHHouseUGCAPI requestSocialSearchByText:text class:[FHUGCModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        if (model != NULL && error == NULL) {
+            [weakSelf.items removeAllObjects];
+            [weakSelf.tableView reloadData];
+        }
+    }];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -138,7 +163,7 @@
 
 // 输入框执行搜索
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    NSString *userInputText = self.naviBar.searchInput.text;
+   //  NSString *userInputText = self.naviBar.searchInput.text;
 }
 
 #pragma mark - dealloc
@@ -196,7 +221,5 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
-
 
 @end

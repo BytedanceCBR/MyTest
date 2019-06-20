@@ -167,6 +167,10 @@ static NSInteger const kMaxPostImageCount = 9;
     [self addImagesViewSizeChanged];
     [self addObserverAndNoti];
     [self restoreData];
+//    __weak typeof(self) weakSelf = self;
+//    self.panBeginAction = ^{
+//        [weakSelf.naviBar.searchInput resignFirstResponder];
+//    };
 }
 
 - (void)restoreData {
