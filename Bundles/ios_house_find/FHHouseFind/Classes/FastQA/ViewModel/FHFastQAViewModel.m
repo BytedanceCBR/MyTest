@@ -176,25 +176,25 @@
     param[@"phone"] = self.phoneNum?:@"";
     param[@"question"] = self.questionView.text;
     if (self.selectedModel) {
-        NSDictionary *guess = @{@"id":self.selectedModel.id?:@"",@"type":@(self.selectedModel.type).description?:@""};
+        NSDictionary *guess = @{@"id":self.selectedModel.id?:@"",@"type":@(self.selectedModel.type)};
         param[@"guess"] = guess;
     }
-    
-    /*
-     - phone ，类型 string ，手机号，必填项
-     - question ，类型 string ，问题，可选项
-     - guess 类型 object ，可选项
-     - id 类型 string (int64)
-     - type 类型 integer ，小区 1 商圈 2
-     */
-    
-    
+        
     __weak typeof(self) wself = self;
     [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
         
         if (!wself) {
             return ;
         }
+        
+        BOOL success = NO;
+        if (result) {
+            success = (result[@"status"] && [result[@"status"] integerValue] == 0);
+            if (!success) {
+                error = [NSError errorWithDomain:result[@"message"]?:@"请求失败" code:-1 userInfo:nil];
+            }
+        }
+        
         if (error) {
             SHOW_TOAST(@"网络异常，请稍后重试");
             return ;
