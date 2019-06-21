@@ -9,7 +9,7 @@
 
 @interface FHRoundShadowView ()
 
-@property(nonatomic , strong) UIView *contentView;
+@property(nonatomic , strong) UIControl *contentView;
 
 @end
 
@@ -20,11 +20,12 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        _contentView = [[UIView alloc] initWithFrame:self.bounds];//CGRectMake(0, 0, 1, 1)
+        _contentView = [[UIControl alloc] initWithFrame:self.bounds];//CGRectMake(0, 0, 1, 1)
         _contentView.layer.cornerRadius = 4;
         _contentView.layer.masksToBounds = YES;
         _contentView.backgroundColor = [UIColor whiteColor];
         _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        [_contentView addTarget:self action:@selector(onTapAction:) forControlEvents:UIControlEventTouchUpInside];
         
         [self addSubview:_contentView];
         
@@ -70,6 +71,13 @@
 -(CGFloat)shadowOpacity
 {
     return self.layer.shadowOpacity;
+}
+
+-(void)onTapAction:(id)sender
+{
+    if (self.tapBlankBlock) {
+        self.tapBlankBlock();
+    }
 }
 
 /*

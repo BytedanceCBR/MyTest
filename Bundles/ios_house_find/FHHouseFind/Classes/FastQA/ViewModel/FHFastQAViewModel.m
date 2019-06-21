@@ -167,6 +167,7 @@
         SHOW_TOAST(@"网络异常");
         return;
     }
+    self.submitMsg = nil;
     
     self.requestSubmitDone = NO;
     self.requestCallReportDone = NO;
@@ -200,7 +201,11 @@
             return ;
         }
         
-        wself.submitMsg = result[@"message"];
+        NSDictionary *data = result[@"data"];
+        if ([data isKindOfClass:[NSDictionary class]]) {
+             wself.submitMsg = data[@"toast"];
+        }
+       
         wself.requestSubmitDone = YES;
         [wself requestDone];
        
@@ -260,9 +265,16 @@
 
 -(void)selectView:(FHFastQAGuessQuestionView *)view atIndex:(NSInteger)index
 {
-    if (index >= self.guessData.data.count) {
+    if (index>= 0 && index >= self.guessData.data.count) {
         return;
     }
+    if (index < 0) {
+        //反选
+        self.selectedModel = nil;
+        self.questionView.text = nil;
+        return;
+    }
+    
     FHGuessYouWantResponseDataDataModel *model = self.guessData.data[index];
     if (model.type == WORD_TYPE_NEIGHBORHOOD){
        self.questionView.text =  [NSString stringWithFormat:@"【%@】这个小区怎么样？",model.text];

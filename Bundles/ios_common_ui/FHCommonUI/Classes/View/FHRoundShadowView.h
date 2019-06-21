@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , assign) CGFloat cornerRadius;
 
+@property(nonatomic , copy) void (^tapBlankBlock)();
+
 
 @end
 

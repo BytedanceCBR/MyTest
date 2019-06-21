@@ -17,6 +17,7 @@
 
 @property(nonatomic , strong) UILabel *tipLabel;
 @property(nonatomic , strong) NSMutableArray *buttons;
+@property(nonatomic , assign) NSInteger selectedIndex;
 
 @end
 
@@ -34,6 +35,7 @@
         
         _buttons = [NSMutableArray new];
         self.clipsToBounds = YES;
+        _selectedIndex = -1;
     }
     return self;
 }
@@ -81,6 +83,7 @@
 
 -(void)selectAtIndex:(NSInteger)index
 {
+    self.selectedIndex = index;
     [self.buttons enumerateObjectsUsingBlock:^(UIButton  * _Nonnull btn, NSUInteger idx, BOOL * _Nonnull stop) {
         if (idx == index) {
             btn.backgroundColor = [UIColor themeRed1];
@@ -115,8 +118,12 @@
 -(void)onItemAction:(UIButton *)button
 {
     NSInteger index = [self.buttons indexOfObject:button];
+//    if (index == self.selectedIndex) {
+//        index = -1;
+//    }
+    
     [self selectAtIndex:index];
-    if (index < self.buttons.count && [self.delegate respondsToSelector:@selector(selectView:atIndex:)]) {
+    if ([self.delegate respondsToSelector:@selector(selectView:atIndex:)]) {
         [self.delegate selectView:self atIndex:index];
     }
 }

@@ -139,6 +139,7 @@
     [_bannerImgView addSubview:_bannerInfoLabel];
     
     
+    __weak typeof(self) wself = self;
     _containerView = [[FHRoundShadowView alloc] initWithFrame:self.view.bounds];
     _containerView.cornerRadius = 4;
     _containerView.backgroundColor = [UIColor whiteColor];
@@ -146,6 +147,9 @@
     _containerView.shadowRadius = 6;
     _containerView.shadowColor = [UIColor blackColor];
     _containerView.shadowOpacity = 0.1;
+    _containerView.tapBlankBlock = ^{
+        [wself onTapBgAction:nil];
+    };
     
     [_bgView addSubview:_bannerImgView];
     [_bgView addSubview:_containerView];
