@@ -12,6 +12,7 @@
 #import "FHUGCMyInterestedSimpleCell.h"
 #import "FHHouseUGCAPI.h"
 #import "FHUGCMyInterestModel.h"
+#import "FHLocManager.h"
 
 #define kCellId @"cell_id"
 
@@ -58,7 +59,8 @@
     
     __weak typeof(self) wself = self;
     
-    self.requestTask = [FHHouseUGCAPI requestRecommendSocialGroupsWithLatitude:0 longitude:0 class:[FHUGCMyInterestModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    CLLocation *currentLocaton = [FHLocManager sharedInstance].currentLocaton;
+    self.requestTask = [FHHouseUGCAPI requestRecommendSocialGroupsWithLatitude:currentLocaton.coordinate.latitude longitude:currentLocaton.coordinate.longitude class:[FHUGCMyInterestModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         FHUGCMyInterestModel *interestModel = (FHUGCMyInterestModel *)model;
 
