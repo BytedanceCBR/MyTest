@@ -163,4 +163,13 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
++ (TTHttpTask *)requestRecommendSocialGroupsWithLatitude:(CGFloat)latitude longitude:(CGFloat)longitude class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/f100/ugc/recommend_social_groups";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+//    if (text.length > 0) {
+//        paramDic[@"text"] = text;
+//    }
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end

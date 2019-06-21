@@ -33,7 +33,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if(!_isEmpty){
+    if(_isEmpty){
         [self initFeedListVC];
         [self.feedListVC viewWillAppear];
         [self startLoadData];

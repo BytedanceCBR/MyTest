@@ -33,6 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 小区搜索
 + (TTHttpTask *)requestSocialSearchByText:(NSString *)text class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
+// 我感兴趣小区列表
++ (TTHttpTask *)requestRecommendSocialGroupsWithLatitude:(CGFloat)latitude longitude:(CGFloat)longitude class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

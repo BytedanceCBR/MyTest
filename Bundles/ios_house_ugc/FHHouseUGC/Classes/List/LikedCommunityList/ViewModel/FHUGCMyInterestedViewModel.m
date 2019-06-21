@@ -10,6 +10,8 @@
 #import "FHRefreshCustomFooter.h"
 #import "FHUGCMyInterestedCell.h"
 #import "FHUGCMyInterestedSimpleCell.h"
+#import "FHHouseUGCAPI.h"
+#import "FHUGCMyInterestModel.h"
 
 #define kCellId @"cell_id"
 
@@ -43,10 +45,45 @@
 }
 
 - (void)requestData:(BOOL)isHead {
-    for (NSInteger i = 0; i < 15; i++) {
-        [self.dataList addObject:[NSString stringWithFormat:@"小区%li",(long)i]];
-    }
-    [self.tableView reloadData];
+    [self.requestTask cancel];
+    
+//    for (NSInteger i = 0; i < 15; i++) {
+//        [self.dataList addObject:[NSString stringWithFormat:@"小区%li",(long)i]];
+//    }
+//    [self.tableView reloadData];
+    
+    [self.viewController startLoading];
+    
+    __weak typeof(self) wself = self;
+    
+    self.requestTask = [FHHouseUGCAPI requestRecommendSocialGroupsWithLatitude:0 longitude:0 class:[FHUGCMyInterestModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        
+        FHUGCMyInterestModel *interestModel = (FHUGCMyInterestModel *)model;
+        
+        NSLog(@"in");
+        if (error) {
+            //TODO: show handle error
+            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            return;
+        }
+        
+        [wself.viewController.emptyView hideEmptyView];
+        
+        if(model){
+            if (isHead) {
+                [wself.dataList removeAllObjects];
+            }
+            [wself.dataList addObjectsFromArray:interestModel.data.recommendSocialGroups];
+            wself.viewController.hasValidateData = wself.dataList.count > 0;
+            
+            if(wself.dataList.count > 0){
+                [wself.viewController.emptyView hideEmptyView];
+                [wself.tableView reloadData];
+            }else{
+                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            }
+        }
+    }];
 }
 
 #pragma mark - UITableViewDataSource
@@ -58,8 +95,7 @@
     FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    NSString *model = self.dataList[indexPath.row];
-    
+    FHUGCMyInterestDataRecommendSocialGroupsModel *model = self.dataList[indexPath.row];
     [cell refreshWithData:model];
     
     return cell;

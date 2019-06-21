@@ -9,10 +9,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 关注按钮 已关注 不能点击
-@interface FHUGCFollowButton : UIControl
+typedef NS_ENUM(NSInteger , FHUGCFollowButtonStyle) {
+    FHUGCFollowButtonStyleBorder = 0,
+    FHUGCFollowButtonStyleNoBorder,
+};
 
-@property (nonatomic, assign)   BOOL       followed;// 默认是 NO 可点击
+// 关注按钮 已关注 不能点击
+@interface FHUGCFollowButton : UIButton
+
+@property (nonatomic, assign) BOOL followed;// 默认是 NO
+@property (nonatomic, strong) NSString *groupId;// 需要关注的小区id
+
+@property (nonatomic, copy) void(^followedSuccess)(BOOL isSuccess,BOOL isFollow);
 
 @end
 

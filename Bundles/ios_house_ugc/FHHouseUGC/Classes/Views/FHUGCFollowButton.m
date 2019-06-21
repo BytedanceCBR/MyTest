@@ -11,55 +11,116 @@
 #import <UIImageView+BDWebImage.h>
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
+#import "FHUGCFollowManager.h"
+#import "ToastManager.h"
+#import "TTBaseMacro.h"
 
 @interface FHUGCFollowButton ()
 
-@property (nonatomic, strong)   UILabel       *titleLabel;
+@property (nonatomic, assign) FHUGCFollowButtonStyle style; // 默认是有边框
+@property (nonatomic, strong) NSString *loadingImageName;
+@property (nonatomic, strong) NSString *titleStr;
+@property (nonatomic, strong) UIImageView *loadingAnimateView;
+@property (nonatomic, assign) BOOL isLoading;
 
 @end
 
 @implementation FHUGCFollowButton
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        [self initNotification];
         [self setupUI];
-        self.followed = NO;
     }
     return self;
 }
 
+- (instancetype)initWithFrame:(CGRect)frame style:(FHUGCFollowButtonStyle)style {
+    self = [super initWithFrame:frame];
+    if (self) {
+        _style = style;
+        [self initNotification];
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)initNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)setFollowed:(BOOL)followed {
     _followed = followed;
+    UIColor *borderColor = nil;
+    
     if (followed) {
-        self.layer.borderColor = [[UIColor themeGray4] CGColor];
-        self.titleLabel.textColor = [UIColor themeGray4];
-        self.titleLabel.text = @"已关注";
+        self.titleStr = @"已关注";
+        self.loadingImageName = @"fh_ugc_loading_gray";
+        borderColor = [UIColor themeGray4];
     } else {
-        self.layer.borderColor = [[UIColor themeRed1] CGColor];
-        self.titleLabel.textColor = [UIColor themeRed1];
-        self.titleLabel.text = @"关注";
+        self.titleStr = @"关注";
+        self.loadingImageName = @"fh_ugc_loading_red";
+        borderColor = [UIColor themeRed1];
     }
+    
+    if(self.style == FHUGCFollowButtonStyleBorder){
+        self.layer.borderColor = [borderColor CGColor];
+    }
+    
+    [self setTitleColor:borderColor forState:UIControlStateNormal];
+    [self setTitle:self.titleStr forState:UIControlStateNormal];
+    self.loadingAnimateView.image = [UIImage imageNamed:self.loadingImageName];
 }
+
+//- (void)setStyle:(FHUGCFollowButtonStyle)style {
+//    _style = style;
+//
+//    if(self.style == FHUGCFollowButtonStyleBorder){
+//        self.layer.borderWidth = 0.5f;
+//        if(self.followed){
+//            self.layer.borderColor = [[UIColor themeGray4] CGColor];
+//        }else{
+//            self.layer.borderColor = [[UIColor themeRed1] CGColor];
+//        }
+//    }else{
+//        self.layer.borderWidth = 0.0f;
+//    }
+//}
 
 - (void)setupUI {
     self.layer.masksToBounds = YES;
     self.clipsToBounds = YES;
     self.layer.cornerRadius = 4;
-    self.layer.borderColor = [[UIColor themeRed1] CGColor];
-    self.layer.borderWidth = 0.5;
     self.backgroundColor = [UIColor whiteColor];
-    self.titleLabel = [self labelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeRed1]];
-    [self addSubview:_titleLabel];
-    self.titleLabel.text = @"关注";
+    
     self.titleLabel.font = [UIFont themeFontRegular:12];
-    [self setupConstraints];
+    [self setTitle:@"关注" forState:UIControlStateNormal];
+    [self setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    
+    if(self.style == FHUGCFollowButtonStyleBorder){
+        self.layer.borderWidth = 0.5f;
+        self.layer.borderColor = [[UIColor themeRed1] CGColor];
+    }
+    
+    self.loadingImageName = @"fh_ugc_loading_red";
+    self.loadingAnimateView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:self.loadingImageName]];\
+    _loadingAnimateView.hidden = YES;
+    [self addSubview:_loadingAnimateView];
+    
+    [self addTarget:self action:@selector(clicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self initConstraints];
 }
 
-- (void)setupConstraints {
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self);
+- (void)initConstraints {
+    [self.loadingAnimateView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self);
+        make.width.height.mas_equalTo(16);
     }];
 }
 
@@ -69,6 +130,77 @@
     label.font = font;
     label.textColor = textColor;
     return label;
+}
+
+- (void)startLoading {
+    self.isLoading = YES;
+    self.enabled = NO;
+    [self setTitle:@"" forState:UIControlStateNormal];
+    
+    CABasicAnimation *rotationAnimation = [[CABasicAnimation alloc] init];
+    rotationAnimation.keyPath = @"transform.rotation.z";
+    rotationAnimation.toValue = @(M_PI * 2.0);
+    rotationAnimation.duration = 0.4;
+    rotationAnimation.repeatCount = MAXFLOAT;
+    
+    _loadingAnimateView.hidden = NO;
+    [_loadingAnimateView.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+}
+
+- (void)stopLoading {
+    if(self.isLoading){
+        self.isLoading = NO;
+        self.enabled = YES;
+        [self setTitle:self.titleStr forState:UIControlStateNormal];
+        _loadingAnimateView.hidden = YES;
+        [_loadingAnimateView.layer removeAllAnimations];
+    }
+}
+
+- (void)clicked {
+    [self startLoading];
+    //增加延迟，为了动画效果
+    CGFloat delayTime = 1.0f;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self requestData];
+    });
+}
+
+- (void)requestData {
+    if(isEmptyString(self.groupId)){
+        return;
+    }
+
+    __weak typeof(self) wself = self;
+    [[FHUGCFollowManager sharedInstance] followUGCBy:self.groupId isFollow:!self.followed completion:^(BOOL isSuccess) {
+        [wself stopLoading];
+        if(isSuccess){
+            wself.followed = !self.followed;
+        }else{
+            if (wself.followed) {
+                [[ToastManager manager] showToast:@"取消关注失败"];
+            } else {
+                [[ToastManager manager] showToast:@"关注失败"];
+            }
+        }
+        
+        if(self.followedSuccess){
+            self.followedSuccess(isSuccess,wself.followed);
+        }
+    }];
+}
+
+- (void)followStateChanged:(NSNotification *)notification {
+    if(isEmptyString(self.groupId)){
+        return;
+    }
+    
+    BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
+    NSString *groupId = notification.userInfo[@"social_group_id"];
+    
+    if([groupId isEqualToString:self.groupId]){
+        self.followed = followed;
+    }
 }
 
 
