@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , weak) id<FHFastQAGuessQuestionViewDelegate> delegate;
 
--(void)updateWithItems:(NSArray *)items;
+-(NSInteger)updateWithItems:(NSArray *)items;
 
 -(void)selectAtIndex:(NSInteger)index;
 

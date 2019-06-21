@@ -39,6 +39,9 @@
         _phoneTextField.borderStyle = UITextBorderStyleNone;
         _phoneTextField.keyboardType = UIKeyboardTypeNumberPad;
         _phoneTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        _phoneTextField.font = [UIFont themeFontRegular:14];
+        _phoneTextField.textColor = [UIColor themeGray1];
+        _phoneTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"填写手机号" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor themeGray3]}];
         [_phoneBgView addSubview:_phoneTextField];
         
         _tipLabel = [[UILabel alloc]init];

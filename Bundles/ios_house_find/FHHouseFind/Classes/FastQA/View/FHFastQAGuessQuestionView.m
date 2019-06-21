@@ -33,11 +33,12 @@
         [self addSubview:_tipLabel];
         
         _buttons = [NSMutableArray new];
+        self.clipsToBounds = YES;
     }
     return self;
 }
 
--(void)updateWithItems:(NSArray *)items
+-(NSInteger)updateWithItems:(NSArray *)items
 {
     [_buttons enumerateObjectsUsingBlock:^(UIView *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj removeFromSuperview];
@@ -45,10 +46,12 @@
     BOOL newRow = NO;
     CGRect frame = CGRectMake(-ITEM_HOR_PADDING, 27, 0, 0) ;
     NSInteger index = 0;
+    
     for (NSString *item in items) {
         UIButton *btn = [self buttonForTitle:item];
         btn.tag = (ITEM_TAG_BASE+index++);
         CGRect f = btn.frame;
+        f.size = CGSizeMake(f.size.width+30, 30);
         if (CGRectGetWidth(f) >= self.bounds.size.width) {
             f.size.width = self.bounds.size.width;
         }
@@ -67,12 +70,13 @@
         btn.frame = f;
         frame = f;
         [self.buttons addObject:btn];
+        [self addSubview:btn];
     }
     
     CGRect bounds = self.bounds ;
     bounds.size.height = CGRectGetMaxY(frame);
     self.bounds = bounds;
-    
+    return index-1;
 }
 
 -(void)selectAtIndex:(NSInteger)index
@@ -102,7 +106,8 @@
     button.layer.masksToBounds = YES;
     
     [button addTarget:self action:@selector(onItemAction:) forControlEvents:UIControlEventTouchUpInside];
-    
+    [button sizeToFit];
+        
     return button;
 }
 

@@ -13,6 +13,8 @@
 #import "FHFastQAGuessQuestionView.h"
 #import "FHFastQAMobileNumberView.h"
 #import <KVOController/KVOController.h>
+#import "FHFastQAViewModel.h"
+#import <FHHouseBase/FHTracerModel.h>
 
 #define BANNER_WIDTH 375
 #define BANNER_HEIGHT 202
@@ -29,24 +31,19 @@
 @property(nonatomic , strong) UIScrollView *scrollView;
 @property(nonatomic , strong) UIControl *bgView;
 @property(nonatomic , strong) UIImageView *bannerImgView;
+@property(nonatomic , strong) UIImageView *clockImgView;
+@property(nonatomic , strong) UILabel *bannerTitleLabel;
+@property(nonatomic , strong) UILabel *bannerInfoLabel;
 @property(nonatomic , strong) FHRoundShadowView *containerView;
 @property(nonatomic , strong) UILabel *tipLabel;
 @property(nonatomic , strong) FHFastQATextView *questionView;
 @property(nonatomic , strong) FHFastQAGuessQuestionView *guessView;
 @property(nonatomic , strong) FHFastQAMobileNumberView *mobileView;
 @property(nonatomic , strong) UIButton *submitButton;
-
+@property(nonatomic , strong) FHFastQAViewModel *viewModel;
 @end
 
 @implementation FHFastQAViewController
-
-+(void)load
-{
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSURL *url = [NSURL URLWithString:@"sslocal://fast_qa"];
-        [[TTRoute sharedRoute] openURLByPushViewController:url];
-    });
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -55,18 +52,29 @@
     [self setupDefaultNavBar:YES];
     self.title = @"幸福问答";
     
+    self.tracerModel.categoryName = @"quick_ask_question";
+    self.tracerModel.enterFrom = @"quick_ask_question";
+    self.tracerModel.originFrom = @"everyone_ask_question";
+    
     [self setupUI];
-
+    
+    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsZero];
+    self.emptyView.hidden = YES;
+    self.viewModel = [[FHFastQAViewModel alloc] init];
+    self.viewModel.viewController = self;
+    _viewModel.questionView = _questionView;
+    _viewModel.guessView = _guessView;
+    _viewModel.mobileView = _mobileView;
+    
+    [self.viewModel requestData];
+    
     __weak typeof(self) wself = self;
     [self.KVOController observe:self.containerView keyPath:@"bounds" options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-        NSLog(@"[QA] change is: %@",change);
         [wself tryUpdateContentSize];
-//        NSValue *value = change[NSKeyValueChangeNewKey];
-//        CGRect bounds = [value CGRectValue];
-//        if (<#condition#>) {
-//            <#statements#>
-//        }
     }];
+    
+    [self.viewModel addQuckAction];
+    [self.viewModel addGoDetailLog];
     
 }
 
@@ -77,6 +85,7 @@
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotifiation:) name:UIKeyboardWillChangeFrameNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+    [self.viewModel viewWillAppear];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -84,6 +93,12 @@
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+    [self.viewModel viewWillDisappear];
+}
+
+- (void)retryLoadData
+{
+    [self.viewModel requestData];
 }
 
 -(void)setupUI
@@ -94,7 +109,7 @@
     }
     CGRect frame = self.view.bounds;
     if (insets.top > 1) {
-        frame.origin.y = (20+insets.top);
+        frame.origin.y = (44+insets.top);
     }else{
         frame.origin.y = 64;
     }
@@ -109,7 +124,20 @@
     [_scrollView addSubview:_bgView];
     
     _bannerImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH*BANNER_HEIGHT/BANNER_WIDTH)];
-    _bannerImgView.backgroundColor = [UIColor redColor];
+    _bannerImgView.image = SYS_IMG(@"fast_qa_banner.jpg");    
+    _clockImgView = [[UIImageView alloc]initWithImage:SYS_IMG(@"fast_qa_clock")];
+    _bannerTitleLabel = [[UILabel alloc] init];
+    _bannerTitleLabel.textColor = [UIColor themeGray1];
+    _bannerTitleLabel.font = [UIFont themeFontSemibold:18];
+    _bannerTitleLabel.text = @"买房从提问开始";
+    _bannerInfoLabel = [[UILabel alloc] init];
+    _bannerInfoLabel.textColor = [UIColor themeGray3];
+    _bannerInfoLabel.font = [UIFont themeFontRegular:12];
+    _bannerInfoLabel.text = @"百位幸福专家为你解答";
+    [_bannerImgView addSubview:_clockImgView];
+    [_bannerImgView addSubview:_bannerTitleLabel];
+    [_bannerImgView addSubview:_bannerInfoLabel];
+    
     
     _containerView = [[FHRoundShadowView alloc] initWithFrame:self.view.bounds];
     _containerView.cornerRadius = 4;
@@ -132,8 +160,9 @@
     CGFloat contentWidth = SCREEN_WIDTH - 2*HOR_MARGIN - 2*CONTAINER_HOR_MARGIN;
     
     _questionView = [[FHFastQATextView alloc]initWithFrame:CGRectMake(0, 0, contentWidth, QUESTION_VIEW_HEIGHT)];
+    _questionView.placeholder = @"在这里输入您的问题（非必填）";
     
-    _guessView = [[FHFastQAGuessQuestionView alloc] initWithFrame:CGRectMake(0, 0, contentWidth, 97)];
+    _guessView = [[FHFastQAGuessQuestionView alloc] initWithFrame:CGRectMake(0, 0, contentWidth, 0)];
     
     _mobileView = [[FHFastQAMobileNumberView alloc]initWithFrame:CGRectMake(0, 0, contentWidth, MOBILE_HEIGHT)];
     
@@ -144,6 +173,7 @@
     _submitButton.backgroundColor = [UIColor themeRed1];
     _submitButton.layer.cornerRadius = 4;
     _submitButton.layer.masksToBounds = YES;
+    [_submitButton addTarget:self action:@selector(onSubmitAction:) forControlEvents:UIControlEventTouchUpInside];
     
     NSArray *views = @[_tipLabel , _questionView,_guessView,_mobileView,_submitButton];
     [views enumerateObjectsUsingBlock:^(UIView *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -160,6 +190,23 @@
         make.left.top.right.mas_equalTo(self.bannerImgView.superview);
         make.height.mas_equalTo(CGRectGetHeight(self.bannerImgView.bounds));
     }];
+    
+    [_clockImgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(HOR_MARGIN);
+        make.top.mas_equalTo(18);
+        make.size.mas_equalTo(CGSizeMake(47, 46));
+    }];
+    
+    [_bannerTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(HOR_MARGIN);
+        make.top.mas_equalTo(self.clockImgView.mas_bottom).offset(3);
+        make.height.mas_equalTo(25);
+    }];
+    [_bannerInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(HOR_MARGIN);
+        make.top.mas_equalTo(self.bannerTitleLabel.mas_bottom).offset(3);
+    }];
+    
     
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(HOR_MARGIN);
@@ -186,7 +233,7 @@
     [self.guessView mas_makeConstraints:^(MASConstraintMaker *make) {
         MAKE_HOR();
         make.top.mas_equalTo(self.questionView.mas_bottom).offset(ITEM_VER_MARGIN);
-        make.height.mas_equalTo(97);
+        make.height.mas_equalTo(0);
     }];
     
     [self.mobileView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -215,12 +262,26 @@
 
 -(void)onSubmitAction:(id)sender
 {
-    
+    [self.view endEditing:YES];
+    [_viewModel submitQuestation];
 }
 
 -(void)onTapBgAction:(id)sender
 {
     [self.bgView endEditing:YES];
+}
+
+- (void)trackEndedByAppWillEnterBackground
+{
+    [self.viewModel endTrack];
+    [self.viewModel addStayPageLog];
+    [self.viewModel resetStayTime];
+}
+
+- (void)trackStartedByAppWillEnterForground
+{
+    [self.viewModel resetStayTime];
+    [self.viewModel startTrack];
 }
 
 #pragma mark - keyboard
