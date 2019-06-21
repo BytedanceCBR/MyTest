@@ -14,6 +14,7 @@
 #import "FHUGCFollowManager.h"
 #import "ToastManager.h"
 #import "TTBaseMacro.h"
+#import "TTUIResponderHelper.h"
 
 @interface FHUGCFollowButton ()
 
@@ -158,6 +159,14 @@
 }
 
 - (void)clicked {
+    if(self.followed){
+        [self showDeleteAlert];
+    }else{
+        [self doFollow];
+    }
+}
+
+- (void)doFollow {
     [self startLoading];
     //增加延迟，为了动画效果
     CGFloat delayTime = 1.0f;
@@ -201,6 +210,28 @@
     if([groupId isEqualToString:self.groupId]){
         self.followed = followed;
     }
+}
+
+- (void)showDeleteAlert {
+    __weak typeof(self) wself = self;
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确认要退出吗"
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction * _Nonnull action) {
+                                                             // 点击取消按钮，调用此block
+                                                         }];
+    [alert addAction:cancelAction];
+    
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"确定"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * _Nonnull action) {
+                                                              // 点击按钮，调用此block
+                                                              [wself doFollow];
+                                                          }];
+    [alert addAction:defaultAction];
+    [[TTUIResponderHelper visibleTopViewController] presentViewController:alert animated:YES completion:nil];
 }
 
 

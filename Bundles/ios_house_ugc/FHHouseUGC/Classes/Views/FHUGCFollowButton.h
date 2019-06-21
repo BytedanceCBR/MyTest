@@ -22,6 +22,8 @@ typedef NS_ENUM(NSInteger , FHUGCFollowButtonStyle) {
 
 @property (nonatomic, copy) void(^followedSuccess)(BOOL isSuccess,BOOL isFollow);
 
+- (instancetype)initWithFrame:(CGRect)frame style:(FHUGCFollowButtonStyle)style;
+
 @end
 
 NS_ASSUME_NONNULL_END
