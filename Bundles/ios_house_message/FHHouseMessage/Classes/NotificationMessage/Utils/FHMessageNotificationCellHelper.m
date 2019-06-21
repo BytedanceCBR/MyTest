@@ -11,7 +11,7 @@
 #import "FHMessageNotificationInteractiveCell.h"
 #import "FHMessageNotificationDigCell.h"
 #import "TTDeviceHelper.h"
-#import "TTMessageNotificationManager.h"
+#import "FHMessageNotificationManager.h"
 
 @implementation FHMessageNotificationCellHelper
 
@@ -84,8 +84,8 @@
         [logExtra setObject:data.actionType forKey:@"action_type"];
     }
     
-    if ([TTMessageNotificationManager sharedManager].curListReadCursor ) {
-        if ([data.cursor compare:[TTMessageNotificationManager sharedManager].curListReadCursor] == NSOrderedDescending) {
+    if ([FHMessageNotificationManager sharedManager].curListReadCursor ) {
+        if ([data.cursor compare:[FHMessageNotificationManager sharedManager].curListReadCursor] == NSOrderedDescending) {
             [logExtra setObject:@(1) forKey:@"is_new"];
         } else {
             [logExtra setObject:@(0) forKey:@"is_new"];

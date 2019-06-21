@@ -167,6 +167,7 @@
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         cellModel.categoryId = self.categoryId;
         cellModel.feedVC = self.viewController;
+        cellModel.tableView = self.tableView;
         if(cellModel){
             [resultArray addObject:cellModel];
         }
@@ -175,28 +176,29 @@
 }
 
 - (void)insertGuideCell {
-//    if([FHUGCGuideHelper shouldShowFeedGuide]){
+    if([FHUGCGuideHelper shouldShowFeedGuide]){
         //符合引导页显示条件时
         for (NSInteger i = 0; i < self.dataList.count; i++) {
             FHFeedUGCCellModel *cellModel = self.dataList[i];
             if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle || [cellModel.cellType integerValue] == FHUGCFeedListCellTypeUGC){
-                self.guideCellModel = [FHFeedUGCCellModel guideCellModel];
-                [self.dataList insertObject:self.guideCellModel atIndex:(i + 1)];
+                cellModel.isInsertGuideCell = YES;
+                self.guideCellModel = cellModel;
                 //显示以后次数加1
                 [FHUGCGuideHelper addFeedGuideCount];
                 return;
             }
         }
-//    }
+    }
 }
 
-- (void)deleteGuideCell {
-    if(self.guideCellModel){
+- (void)closeGuideView {
+    if(self.guideCellModel.isInsertGuideCell){
         NSInteger row = [self.dataList indexOfObject:self.guideCellModel];
         if(row < self.dataList.count && row >= 0){
-            [self.dataList removeObject:self.guideCellModel];
+            self.guideCellModel.isInsertGuideCell = NO;
+            
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         }
     }
 }
@@ -305,10 +307,6 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
     }
-    
-    if(cellModel == self.guideCellModel){
-        [FHUGCGuideHelper hideFeedGuide];
-    }
 }
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel {
@@ -317,7 +315,7 @@
 
 - (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
     //关闭引导cell
-    [self deleteGuideCell];
+    [self closeGuideView];
     [FHUGCGuideHelper hideFeedGuide];
 }
 

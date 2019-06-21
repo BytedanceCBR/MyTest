@@ -1,42 +1,41 @@
 //
-//  TTMessageNotificationManager.m
+//  FHMessageNotificationManager.m
 //  Article
 //
 //  Created by lizhuoli on 17/3/23.
 //
 //
 
-#import "TTMessageNotificationManager.h"
-#import "TTMessageNotificationTipsManager.h"
-#import "TTMessageNotificationTipsModel.h"
-#import "TTMessageNotificationModel.h"
+#import "FHMessageNotificationManager.h"
 
 #import <TTAccountBusiness.h>
 #import "TTNetworkManager.h"
 
 #import "SDWebImageCompat.h"
 #import "CommonURLSetting.h"
+#import "FHUnreadMsgModel.h"
+#import "FHMessageNotificationTipsManager.h"
 
-#define kMessageNotificationFetchUnreadMessageDefaultTimeInterval 180
-#define kMessageNotificationFetchUnreadMessageMinTimeInterval 60
+#define kMessageNotificationFetchUnreadMessageDefaultTimeInterval 30
+#define kMessageNotificationFetchUnreadMessageMinTimeInterval 15
 
 static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNotificationCheckIntervalKey";
 
-@interface TTMessageNotificationManager ()
+@interface FHMessageNotificationManager ()
 
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) NSTimeInterval lastInterval;
 
 @end
 
-@implementation TTMessageNotificationManager
+@implementation FHMessageNotificationManager
 
 + (instancetype)sharedManager
 {
-    static TTMessageNotificationManager *manager;
+    static FHMessageNotificationManager *manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        manager = [[TTMessageNotificationManager alloc] init];
+        manager = [[FHMessageNotificationManager alloc] init];
     });
     
     return manager;
@@ -66,7 +65,7 @@ static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageN
 - (void)receiverMessageUpdateWithPush:(NSNotification *)notification {
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-            [self fetchUnreadMessageWithChannel:nil];
+            [self fetchUnreadMessageWithChannel:nil callback:nil];
         }
     });
 }
@@ -96,37 +95,43 @@ static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageN
 
 - (void)periodicalFetchUnreadMessage:(NSTimer *)timer
 {
-    [self fetchUnreadMessageWithChannel:nil];
+    [self fetchUnreadMessageWithChannel:nil callback:nil];
 }
 
 #pragma mark - 手动拉取未读消息提示
-- (void)fetchUnreadMessageWithChannel:(NSString *)channel
+- (void)fetchUnreadMessageWithChannel:(NSString *)channel callback:(void(^)(FHUnreadMsgDataUnreadModel *))callback;
 {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     if (!isEmptyString(channel)) {
         params[@"from"] = channel;
     }
     
-//    [[TTNetworkManager shareInstance] requestForJSONWithURL:[CommonURLSetting messageNotificationUnreadURLString] params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-//        if (error || ![jsonObj isKindOfClass:[NSDictionary class]] || [jsonObj tt_intValueForKey:@"error_code"] != 0) {
-//            return;
-//        }
-//        NSDictionary *response = [(NSDictionary *)jsonObj tt_objectForKey:@"data"];
-//        TTMessageNotificationTipsModel *tipsModel = [[TTMessageNotificationTipsModel alloc] initWithDictionary:response error:nil];
-//        if (tipsModel) {
-//            LOGD(@"%@", tipsModel);
-//            dispatch_main_async_safe(^{
-//                [[TTMessageNotificationTipsManager sharedManager] updateTipsWithModel:tipsModel];
-//                if([tipsModel.interval doubleValue] != self.lastInterval){
-//                    [self setNewMessageNotificationCheckInterval:[tipsModel.interval doubleValue]];
-//
-//                    [self stopPeriodicalFetchUnreadMessageNumber];
-//
-//                    self.timer = [NSTimer scheduledTimerWithTimeInterval:[self fetchUnreadTimeInterval] target:self selector:@selector(periodicalFetchUnreadMessage:) userInfo:nil repeats:YES];
-//                }
-//            });
-//        }
-//    }];
+    [[TTNetworkManager shareInstance] requestForJSONWithURL:[CommonURLSetting messageNotificationUnreadURLString] params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        if (error || ![jsonObj isKindOfClass:[NSDictionary class]] || [jsonObj tt_intValueForKey:@"status"] != 0) {
+            if(callback){
+                callback(nil);
+            }
+            return;
+        }
+        NSDictionary *response = [(NSDictionary *)jsonObj tt_objectForKey:@"data"];
+        FHUnreadMsgDataUnreadModel *tipsModel = [[FHUnreadMsgDataUnreadModel alloc] initWithDictionary:response error:nil];
+        if(callback){
+            callback(tipsModel);
+        }
+        if (tipsModel && tipsModel.hasHistoryMsg) {
+            dispatch_main_async_safe(^{
+                //TODO zlj
+                [[FHMessageNotificationTipsManager sharedManager] updateTipsWithModel:tipsModel];
+                if([tipsModel.interval doubleValue] != self.lastInterval){
+                    [self setNewMessageNotificationCheckInterval:[tipsModel.interval doubleValue]];
+
+                    [self stopPeriodicalFetchUnreadMessageNumber];
+
+                    self.timer = [NSTimer scheduledTimerWithTimeInterval:[self fetchUnreadTimeInterval] target:self selector:@selector(periodicalFetchUnreadMessage:) userInfo:nil repeats:YES];
+                }
+            });
+        }
+    }];
 }
 
 #pragma mark - 拉取消息通知列表

@@ -20,6 +20,7 @@
 @property(nonatomic ,strong) UIView *likeView;
 @property(nonatomic ,strong) UIImageView *likeImageView;
 @property(nonatomic ,strong) UILabel *likeLabel;
+@property(nonatomic ,strong) UIView *bottomSepView;
 
 @end
 
@@ -70,12 +71,25 @@
     self.likeLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
     [_likeLabel sizeToFit];
     [self.likeView addSubview:_likeLabel];
+    
+    self.bottomSepView = [[UIView alloc] init];
+    _bottomSepView.backgroundColor = [UIColor themeGray7];
+    [self addSubview:_bottomSepView];
+}
+
+- (FHUGCFeedGuideView *)guideView {
+    if(!_guideView){
+        _guideView = [[FHUGCFeedGuideView alloc] init];
+        [self addSubview:_guideView];
+    }
+    return _guideView;
 }
 
 - (void)initConstraints {
     [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(20);
-        make.top.bottom.mas_equalTo(self);
+        make.top.mas_equalTo(self);
+        make.height.mas_equalTo(24);
     }];
     
     [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -86,9 +100,10 @@
     }];
     
     [self.likeView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.mas_equalTo(self);
+        make.top.mas_equalTo(self);
         make.left.mas_equalTo(self.commentBtn.mas_left).offset(-80);
         make.width.mas_equalTo(70);
+        make.height.mas_equalTo(24);
     }];
     
     [self.likeImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -104,9 +119,31 @@
     }];
     
     [self.commentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.mas_equalTo(self);
+        make.top.mas_equalTo(self);
         make.right.mas_equalTo(self).offset(-20);
+        make.height.mas_equalTo(24);
     }];
+    
+    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.positionView.mas_bottom).offset(20);
+        make.left.right.mas_equalTo(self);
+        make.height.mas_equalTo(5);
+    }];
+}
+
+- (void)setCellModel:(FHFeedUGCCellModel *)cellModel {
+    _cellModel = cellModel;
+    //设置是否显示引导
+    if(cellModel.isInsertGuideCell){
+        self.guideView.hidden = NO;
+        [self.guideView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.positionView.mas_bottom);
+            make.left.right.mas_equalTo(self);
+            make.height.mas_equalTo(42);
+        }];
+    }else{
+        self.guideView.hidden = YES;
+    }
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {

@@ -8,12 +8,12 @@
 
 #import "FHMessageListController.h"
 #import "FHMessageNotificationBaseCell.h"
-#import "TTMessageNotificationManager.h"
+#import "FHMessageNotificationManager.h"
 
 #import <TTAccountBusiness.h>
 #import "UIScrollView+Refresh.h"
 #import "FHMessageNotificationCellHelper.h"
-#import "TTMessageNotificationTipsManager.h"
+#import "FHMessageNotificationTipsManager.h"
 #import <WDNetWorkPluginManager.h>
 #import "FHMessageListViewModel.h"
 #import "FHRefreshCustomFooter.h"
@@ -45,7 +45,7 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
-    [[TTMessageNotificationTipsManager sharedManager] clearTipsModel];
+    [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
 }
 
 - (void)initView {

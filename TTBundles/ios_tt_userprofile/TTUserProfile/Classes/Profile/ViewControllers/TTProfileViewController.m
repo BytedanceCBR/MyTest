@@ -54,8 +54,8 @@
 #import "NSObject+FBKVOController.h"
 #import "TTBadgeTrackerHelper.h"
 #import "TTRoute.h"
-#import "TTMessageNotificationTipsManager.h"
-#import "TTMessageNotificationMacro.h"
+#import "FHMessageNotificationTipsManager.h"
+#import "FHMessageNotificationMacro.h"
 //#import "TTPLManager.h"
 #import <TTTracker.h>
 //#import "TTCommonwealManager.h"
@@ -187,18 +187,19 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     } else {
         [self refreshUserInfoView];
     }
-    
-    TTMessageNotificationTipsManager *manager = [TTMessageNotificationTipsManager sharedManager];
-    [manager saveLastImportantMessageID];
-    //切换到我的tab时
-    if([[TTSettingMineTabManager sharedInstance_tt] getEntryForType:TTSettingMineTabEntyTypeMessage]){
-        if(manager.isImportantMessage){
-            wrapperTrackEventWithCustomKeys(@"message_list", @"vip_show", manager.msgID, nil, kTTMessageNotificationTrackExtra(manager.actionType));
-        }
-        else if(manager.unreadNumber > 0){
-            wrapperTrackEventWithCustomKeys(@"message_list", @"show", nil, nil, kTTMessageNotificationTrackExtra(manager.actionType));
-        }
-    }
+
+    //TODO zlj check
+//    FHMessageNotificationTipsManager *manager = [FHMessageNotificationTipsManager sharedManager];
+//    [manager saveLastImportantMessageID];
+//    //切换到我的tab时
+//    if([[TTSettingMineTabManager sharedInstance_tt] getEntryForType:TTSettingMineTabEntyTypeMessage]){
+//        if(manager.isImportantMessage){
+//            wrapperTrackEventWithCustomKeys(@"message_list", @"vip_show", manager.msgID, nil, kTTMessageNotificationTrackExtra(manager.actionType));
+//        }
+//        else if(manager.unreadNumber > 0){
+//            wrapperTrackEventWithCustomKeys(@"message_list", @"show", nil, nil, kTTMessageNotificationTrackExtra(manager.actionType));
+//        }
+//    }
     
     [self updateTaskEntryDisplayIfNeed];
 }

@@ -82,7 +82,7 @@
 #import "TTTabBarCustomMiddleModel.h"
 //#import "TTFantasyTimeCountDownManager.h"
 //#import "TTFantasyWindowManager.h"
-#import "TTMessageNotificationTipsManager.h"
+#import "FHMessageNotificationTipsManager.h"
 //爱看
 #import "AKImageAlertManager.h"
 #import "AKProfileBenefitManager.h"
@@ -712,8 +712,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         }];
         //隐藏ugc引导
         [self.guideView hide];
-        //跳转后隐藏消息通知
-        [[TTMessageNotificationTipsManager sharedManager] forceRemoveTipsView];
         [[NSNotificationCenter defaultCenter] postNotificationName:kExploreTopVCChangeNotification object:self];
     }
 }
@@ -991,8 +989,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 - (BOOL)isTipsShowing
 {
-    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow ||
-        [TTMessageNotificationTipsManager sharedManager].isShowingTips) {
+    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow) {
         return YES;
     }
     return NO;
@@ -1000,8 +997,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 - (BOOL)tipsCouldShow
 {
-    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow ||
-        [TTMessageNotificationTipsManager sharedManager].isShowingTips || ![[TTGuideDispatchManager sharedInstance_tt] isQueueEmpty]) {
+    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow || ![[TTGuideDispatchManager sharedInstance_tt] isQueueEmpty]) {
         //tip view动画消失或者已经展示
         return NO;
     }
@@ -1042,37 +1038,37 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 - (void)showMessageNotificationTips:(NSNotification *)notification
 {
-    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow) {
-        //tip view动画消失或者已经展示
-        return;
-    }
-    
-    UIViewController *lastVC = self.viewControllers[self.lastSelectedIndex];
-    if ([lastVC isKindOfClass:[UINavigationController class]] && ((UINavigationController *)lastVC).viewControllers.count > 1) {
-        if([((UINavigationController *)lastVC).topViewController isKindOfClass:[TTProfileViewController class]]){
-            [[TTMessageNotificationTipsManager sharedManager] saveLastImportantMessageID];
-        }
-        return;
-    }
-    
-    if (_categoryManagerView.isShowing){
-        return;
-    }
-    
-    if ([[self currentTabIdentifier] isEqualToString:kTTTabMineTabKey] && [TTTabBarProvider isMineTabOnTabBar]) { // 在我的Tab页不显示浮窗，并且标记这条消息已读
-        [[TTMessageNotificationTipsManager sharedManager] saveLastImportantMessageID];
-        return;
-    }
-    
-    CGFloat tabCenterX = 0;
-    if ([TTTabBarProvider isMineTabOnTabBar]) {
-        NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:kTTTabMineTabKey];
-        if (index < ((TTTabbar *)self.tabBar).tabItems.count) {
-            UIView *tabbarItemView = ((TTTabbar *)self.tabBar).tabItems[index];
-            tabCenterX = tabbarItemView.frame.origin.x + tabbarItemView.frame.size.width / 2;
-        }
-    }
-    [[TTMessageNotificationTipsManager sharedManager] showTipsInView:self.view tabCenterX:tabCenterX callback:nil];
+//    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow) {
+//        //tip view动画消失或者已经展示
+//        return;
+//    }
+//
+//    UIViewController *lastVC = self.viewControllers[self.lastSelectedIndex];
+//    if ([lastVC isKindOfClass:[UINavigationController class]] && ((UINavigationController *)lastVC).viewControllers.count > 1) {
+//        if([((UINavigationController *)lastVC).topViewController isKindOfClass:[TTProfileViewController class]]){
+//            [[FHMessageNotificationTipsManager sharedManager] saveLastImportantMessageID];
+//        }
+//        return;
+//    }
+//
+//    if (_categoryManagerView.isShowing){
+//        return;
+//    }
+//
+//    if ([[self currentTabIdentifier] isEqualToString:kTTTabMineTabKey] && [TTTabBarProvider isMineTabOnTabBar]) { // 在我的Tab页不显示浮窗，并且标记这条消息已读
+//        [[FHMessageNotificationTipsManager sharedManager] saveLastImportantMessageID];
+//        return;
+//    }
+//
+//    CGFloat tabCenterX = 0;
+//    if ([TTTabBarProvider isMineTabOnTabBar]) {
+//        NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:kTTTabMineTabKey];
+//        if (index < ((TTTabbar *)self.tabBar).tabItems.count) {
+//            UIView *tabbarItemView = ((TTTabbar *)self.tabBar).tabItems[index];
+//            tabCenterX = tabbarItemView.frame.origin.x + tabbarItemView.frame.size.width / 2;
+//        }
+//    }
+//    [[FHMessageNotificationTipsManager sharedManager] showTipsInView:self.view tabCenterX:tabCenterX callback:nil];
 }
 
 - (void)topBarMineIconTap:(NSNotification *)notification
@@ -1119,8 +1115,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     }
     else if ([[self currentTabIdentifier] isEqualToString:kTTTabMineTabKey]) {
         [self trackBadgeWithLabel:@"click" tabBarTag:kTTTabMineTabKey];
-        //切换到我的tab后隐藏气泡
-        [[TTMessageNotificationTipsManager sharedManager] forceRemoveTipsView];
         // 标记能够展示绑定手机号逻辑
 //        [TTAccountBindingMobileViewController setShowBindingMobileEnabled:YES];
         //检查一下是否需要弹窗
@@ -1604,8 +1598,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         [_categoryManagerView didShow:^{
             StrongSelf;
             [self sendLogForTabStayWithIndex:0 delayResetStayTime:YES];
-            //点击频道选择列表的时候隐藏气泡
-            [[TTMessageNotificationTipsManager sharedManager] forceRemoveTipsView];
         } didDisAppear:^{
             StrongSelf;
             UIViewController * trackVC = self.viewControllers.firstObject;

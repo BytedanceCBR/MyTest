@@ -73,6 +73,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 //频道Id
 @property (nonatomic, copy , nullable) NSString *categoryId;
+//是否需要插入了引导页
+@property (nonatomic, assign) BOOL isInsertGuideCell;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

@@ -7,7 +7,7 @@
 //
 
 #import "TTMessageNotificationStartupTask.h"
-#import "TTMessageNotificationManager.h"
+#import "FHMessageNotificationManager.h"
 #import "ArticleMessageManager.h"
 
 @implementation TTMessageNotificationStartupTask
@@ -21,7 +21,7 @@
 {
     //新消息通知定时轮询未读消息
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[TTMessageNotificationManager sharedManager] startPeriodicalFetchUnreadMessageNumberWithChannel:nil];
+        [[FHMessageNotificationManager sharedManager] startPeriodicalFetchUnreadMessageNumberWithChannel:nil];
         [ArticleMessageManager startPeriodicalGetFollowNumber];
     });
 }
