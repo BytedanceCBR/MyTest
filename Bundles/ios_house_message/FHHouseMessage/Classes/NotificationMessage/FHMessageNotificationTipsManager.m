@@ -7,8 +7,6 @@
 //
 
 #import "FHMessageNotificationTipsManager.h"
-#import "TTMessageNotificationTipsModel.h"
-#import "FHMessageNotificationTipsView.h"
 
 #import "TTRoute.h"
 #import "FHMessageNotificationMacro.h"
@@ -64,7 +62,7 @@ NSString * const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotification
     }
 
     _tipsModel = model;
-    if(self.tipsModel){
+    if(self.tipsModel && self.tipsModel.hasHistoryMsg){
         [self tryShowNotifyBubble:self.tipsModel];
     }
 

@@ -11,6 +11,9 @@
 #import "FHHouseBridgeManager.h"
 #import "IMChatMessageUnreadCountObserver.h"
 #import "IMManager.h"
+#import "FHMessageNotificationManager.h"
+#import "FHMessageNotificationTipsManager.h"
+
 #define API_ERROR_CODE  1000
 #define GET @"GET"
 
@@ -41,6 +44,7 @@
 - (void)initNotification {
     [IMManager shareInstance].chatMessageUnreadCountObv = self;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startSyncMessage) name:@"kFHLogInAccountStatusChangedNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUgcMessageUnreadCountChanged) name:@"kTTMessageNotificationTipsChangeNotification" object:nil];
 }
 
 - (void)startSyncMessage {
@@ -92,7 +96,7 @@
 }
 
 -(void)refreshBadgeNumber {
-    [self setBadgeNumber:_unreadChatMsgCount + _unreadSystemMsgCount];
+    [self setBadgeNumber:[self getTotalUnreadMessageCount]];
 }
 
 - (void)getNewNumberWithCompletion:(void(^)(NSInteger number ,id obj ,NSError *error))completion {
@@ -125,7 +129,17 @@
 }
 
 - (NSInteger)getTotalUnreadMessageCount {
-    return _unreadSystemMsgCount + _unreadChatMsgCount;
+    return _unreadSystemMsgCount + _unreadChatMsgCount + [[FHMessageNotificationTipsManager sharedManager] unreadNumber];
+}
+
+#pragma ugc
+-(void)onUgcMessageUnreadCountChanged{
+    [self refreshBadgeNumber];
+}
+
+-(void)setUnreadSystemMsgCount:(NSUInteger) count {
+    _unreadSystemMsgCount = count;
+    [self refreshBadgeNumber];
 }
 
 #pragma -- IMChatMessageUnreadCountObserver --
@@ -143,11 +157,6 @@
     if (self.unreadSystemMsgCount < 0) {
         self.unreadSystemMsgCount = 0;
     }
-    [self refreshBadgeNumber];
-}
-
--(void)setUnreadSystemMsgCount:(NSUInteger) count {
-    _unreadSystemMsgCount = count;
     [self refreshBadgeNumber];
 }
 

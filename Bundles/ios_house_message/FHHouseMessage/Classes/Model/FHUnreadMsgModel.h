@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *icon;
 @property (nonatomic, copy , nullable) NSString *lastUserAvatar;
 @property (nonatomic, strong) NSNumber *interval; //本接口轮询间隔
+@property (nonatomic) BOOL hasHistoryMsg; //本接口轮询间隔
 
 @end
 
