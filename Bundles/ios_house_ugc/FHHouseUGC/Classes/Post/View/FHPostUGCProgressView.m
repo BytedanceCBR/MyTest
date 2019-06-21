@@ -12,6 +12,8 @@
 #import "TTForumPostThreadStatusCell.h"
 #import "TTForumPostThreadStatusViewModel.h"
 #import "TTPostThreadCenter.h"
+#import "TTAccountManager.h"
+#import "UIImageView+BDWebImage.h"
 
 @interface FHPostUGCProgressView ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -169,6 +171,11 @@
 
 @interface FHPostUGCProgressCell ()
 
+@property (nonatomic, strong)   UIImageView       *iconView;
+@property (nonatomic, strong)   UILabel       *stateLabel;
+@property (nonatomic, strong)   UIButton       *retryBtn;
+@property (nonatomic, strong)   UIButton       *delBtn;
+
 @end
 
 @implementation FHPostUGCProgressCell
@@ -199,6 +206,63 @@
 }
 
 - (void)setupUI {
+    self.iconView = [[UIImageView alloc] init];
+    _iconView.layer.cornerRadius = 14;
+    _iconView.clipsToBounds = YES;
+    NSString *avatarUrl = [TTAccountManager avatarURLString];
+    [_iconView bd_setImageWithURL:[NSURL URLWithString:avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    [self.contentView addSubview:_iconView];
+    
+    self.stateLabel = [self labelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeGray1]];
+    self.stateLabel.text = @"正在发布...";
+    [self.contentView addSubview:_stateLabel];
+    
+    self.retryBtn = [[UIButton alloc] init];
+    [_retryBtn setImage:[UIImage imageNamed:@"fh_ugc_refresh_normal"] forState:UIControlStateNormal];
+    [_retryBtn addTarget:self action:@selector(retryBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:_retryBtn];
+    
+    self.delBtn = [[UIButton alloc] init];
+    [_delBtn setImage:[UIImage imageNamed:@"fh_ugc_close_normal"] forState:UIControlStateNormal];
+    [_delBtn addTarget:self action:@selector(delBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:_delBtn];
+    
+    [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView).offset(20);
+        make.width.height.mas_equalTo(28);
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+    [self.stateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.contentView);
+        make.left.mas_equalTo(self.iconView.mas_right).offset(8);
+        make.right.mas_equalTo(self.retryBtn.mas_left).offset(5);
+        make.height.mas_equalTo(22);
+    }];
+    [self.delBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.width.height.mas_equalTo(24);
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+    [self.retryBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.delBtn.mas_left).offset(-15);
+        make.width.height.mas_equalTo(24);
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+}
+
+- (UILabel *)labelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
+    UILabel *label = [[UILabel alloc] init];
+    label.font = font;
+    label.textColor = textColor;
+    return label;
+}
+
+// event
+- (void)retryBtnClick {
+    
+}
+
+- (void)delBtnClick {
     
 }
 
