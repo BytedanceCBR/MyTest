@@ -127,14 +127,8 @@
 
     [self.viewController.emptyView hideEmptyView];
 
-    NSMutableArray *unreadMsgList = [NSMutableArray array];
-    [unreadMsgList addObjectsFromArray:unreadMsg.data.unread];
-    if(ugcUnread){
-        [unreadMsgList addObject:ugcUnread];
-    }
-
-    self.dataList = unreadMsgList;
-    [self.combiner resetSystemChannels:self.dataList];
+    self.dataList = [unreadMsg.data.unread mutableCopy];
+    [self.combiner resetSystemChannels:self.dataList ugcUnreadMsg:ugcUnread];
     self.viewController.hasValidateData = self.dataList.count > 0;
     [self checkShouldShowEmptyMaskView];
 }

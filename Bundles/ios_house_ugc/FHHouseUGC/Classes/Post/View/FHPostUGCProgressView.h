@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHUGCBaseCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,6 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 视图高度
 - (CGFloat)viewHeight;
+
+@end
+
+@interface FHPostUGCProgressCell : FHUGCBaseCell
 
 @end
 

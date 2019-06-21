@@ -333,6 +333,10 @@ TTAccountMulticastProtocol
             [[self mutableArrayValueForKey:modelName] setObject:statusModel atIndexedSubscript:index];
         }
     }
+    
+    if (self.statusChangeBlk) {
+        self.statusChangeBlk();
+    }
 }
 
 
@@ -357,6 +361,9 @@ TTAccountMulticastProtocol
         }
     }];
     
+    if (self.statusChangeBlk) {
+        self.statusChangeBlk();
+    }
 }
 
 // 发帖失败
@@ -494,6 +501,9 @@ TTAccountMulticastProtocol
         }
         
     }
+    if (self.statusChangeBlk) {
+        self.statusChangeBlk();
+    }
 }
 
 
@@ -538,6 +548,10 @@ TTAccountMulticastProtocol
     else {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:[TTKitchen getString:kTTKUGCRepostWordingRepostSuccessToast] indicatorImage:nil autoDismiss:YES dismissHandler:nil];
     }
+    
+    if (self.statusChangeBlk) {
+        self.statusChangeBlk();
+    }
 }
 
 
@@ -568,6 +582,10 @@ TTAccountMulticastProtocol
     
     if (index != NSNotFound) {
         [[self mutableArrayValueForKey:modelName] removeObjectAtIndex:index];
+    }
+    
+    if (self.statusChangeBlk) {
+        self.statusChangeBlk();
     }
 }
 
@@ -712,15 +730,24 @@ TTAccountMulticastProtocol
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
 {
     //账号切换时需要重新加载账号下的草稿
+    __weak typeof(self) weakSelf = self;
     if ([TTAccountManager isLogin]) {
         // 若切换为登录状态，则优先以内存task状态为准（此处只考虑未登录-已登陆状态切换）
-        [self loadLoginStatusModelsWithCompletionBlock:nil];
+        [self loadLoginStatusModelsWithCompletionBlock:^{
+            if (weakSelf.statusChangeBlk) {
+                weakSelf.statusChangeBlk();
+            }
+        }];
     } else {
         self.mainTaskStatusModels = [[NSMutableArray alloc] init];
         self.followTaskStatusModels = [[NSMutableArray alloc] init];
         self.weitouTiaoTaskStatusModels = [[NSMutableArray alloc] init];
         // 若切换为未登录状态，则优先以持久化task状态为准
-        [self loadStatusModelsWithCompletionBlock:nil];
+        [self loadStatusModelsWithCompletionBlock:^{
+            if (weakSelf.statusChangeBlk) {
+                weakSelf.statusChangeBlk();
+            }
+        }];
     }
     
 }

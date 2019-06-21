@@ -14,12 +14,10 @@
 #import "SDWebImageCompat.h"
 #import "CommonURLSetting.h"
 #import "FHUnreadMsgModel.h"
-#import "FHBubbleTipManager.h"
-#import "FHMessageTipBubble.h"
 #import "FHMessageNotificationTipsManager.h"
 
 #define kMessageNotificationFetchUnreadMessageDefaultTimeInterval 30
-#define kMessageNotificationFetchUnreadMessageMinTimeInterval 60
+#define kMessageNotificationFetchUnreadMessageMinTimeInterval 15
 
 static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNotificationCheckIntervalKey";
 
@@ -110,6 +108,9 @@ static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageN
     
     [[TTNetworkManager shareInstance] requestForJSONWithURL:[CommonURLSetting messageNotificationUnreadURLString] params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         if (error || ![jsonObj isKindOfClass:[NSDictionary class]] || [jsonObj tt_intValueForKey:@"status"] != 0) {
+            if(callback){
+                callback(nil);
+            }
             return;
         }
         NSDictionary *response = [(NSDictionary *)jsonObj tt_objectForKey:@"data"];
@@ -117,7 +118,7 @@ static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageN
         if(callback){
             callback(tipsModel);
         }
-        if (tipsModel) {
+        if (tipsModel && tipsModel.hasHistoryMsg) {
             dispatch_main_async_safe(^{
                 //TODO zlj
                 [[FHMessageNotificationTipsManager sharedManager] updateTipsWithModel:tipsModel];

@@ -52,6 +52,8 @@ typedef NS_ENUM(NSUInteger, TTForumPostThreadFailureWording) {
 @property (nonatomic, assign) BOOL isEnterFollowPageFromPostNotification;
 @property (nonatomic, assign) BOOL isEnterHomeTabFromPostNotification;
 
+@property (nonatomic, copy)     dispatch_block_t       statusChangeBlk;// 状态发生变化
+
 - (BOOL)isTaskConcernIdValid:(NSString *)concernID;
 - (NSMutableArray *)modelsArrayWithConcernID:(NSString *)concernID;
 - (NSString *)modelNamesArrayWithConcernID:(NSString *)concernID;
