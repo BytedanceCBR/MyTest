@@ -325,7 +325,7 @@
             return;
         }
         
-        self.task.uploadProgress = 0.2;
+        self.task.uploadProgress = 0.1;
         
         StrongSelf;
         self.startTime = [NSObject currentUnixTime];
@@ -365,7 +365,6 @@
             return;
         }
         self.task.uploadProgress = 0.2 + ((CGFloat)([self.task.images count] - expectCount + receivedCount)/ (CGFloat)[self.task.images count]) * (TTForumPostVideoThreadTaskBeforePostThreadProgress - 0.2);
-        
     } finishBlock:^(NSError *error, NSArray<FRUploadImageModel*> *finishUpLoadModels) {
         StrongSelf;
         if (self.state != TTPostThreadOperationStateResumed) {
