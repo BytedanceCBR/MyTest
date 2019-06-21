@@ -389,8 +389,7 @@
     param[UT_ORIGIN_FROM] = @"discover_tab";
     param[@"click_position"] = @"quick_ask_question";
     
-    TRACK_EVENT(@"go_detail", param);
-    //click_quick_question
+    TRACK_EVENT(@"click_quick_question", param);
 }
 
 -(void)addGoDetailLog
