@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TTAssetModel.h"
+#import "TTImagePickerDefineHead.h"
 
 //相册Model
 @interface TTAlbumModel : NSObject

@@ -154,7 +154,8 @@
 #import <TTDialogDirector/TTDialogDirector+ClientAB.h>
 //#import "RecommendRedpacketData.h"
 //#import "FRThreadSmartDetailManager.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import "TTVOwnPlayerPreloaderWrapper.h"
 #import "TTVSettingsConfiguration.h"
 //#import "TTFollowCategoryFetchExtraManager.h"
@@ -1291,16 +1292,18 @@ TTRefreshViewDelegate
             return 0;
         }
         if ([_categoryID isEqualToString:@"f_house_news"]) {
-            BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+//            BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
             
-            if (_fetchListManager.items.count > 0 && !isHasFindHouseCategory) {
-                //修改头部类型
-                [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForNews;
-                return 1;
-            }else
-            {
-                return 0;
-            }
+//            if (_fetchListManager.items.count > 0 && !isHasFindHouseCategory) {
+//                //修改头部类型
+//                [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForNews;
+//                return 1;
+//            }else
+//            {
+//                return 0;
+//            }
+            
+            return 0;
         }
         return 0;
     }else
@@ -1319,7 +1322,7 @@ TTRefreshViewDelegate
 //    }else {
     
     if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-        return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
+        return 0;
     }else
     {
         if (indexPath.row < [self listViewMaxModelIndex]) {
@@ -1583,7 +1586,7 @@ TTRefreshViewDelegate
             
         }else
         {
-            NSLog(@"xx index.row = %ld",indexPath.row);
+//            NSLog(@"xx index.row = %ld",indexPath.row);
         }
         
         obj.witnessed = YES;
@@ -2184,7 +2187,7 @@ TTRefreshViewDelegate
     }
         
     //关注频道
-    if ([self.categoryID isEqualToString:kTTFollowCategoryID] && (!getMore || [TTKitchen getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote) {
+    if ([self.categoryID isEqualToString:kTTFollowCategoryID] && (!getMore || [TTKitchen getBOOL:kTTKUGCFollowNotifyCleanWhenLoadMore]) && fromRemote) {
         [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:self.categoryID withClean:YES];
     }
 
@@ -2694,26 +2697,28 @@ TTRefreshViewDelegate
                                                  [weakSelf exploreMixedListTimeConsumingMonitorWithContext:operationContext];
                                                  
                                              }
-                                                                                          if (!isResponseFromRemote && weakSelf.listView.pullDownView.state == PULL_REFRESH_STATE_INIT && weakSelf.listView.customTopOffset != 0)
-                                                                                          {
-                                                                                              
-                                                                                          }
                                              
+//                                                                                          if (!isResponseFromRemote && weakSelf.listView.pullDownView.state == PULL_REFRESH_STATE_INIT && weakSelf.listView.customTopOffset != 0)
+//                                                                                          {
+//
+//                                                                                          }
+//
+//
+//
+//                                             if (_categoryID) {
+//                                                 NSString *requestRecord = [FHUtils contentForKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
+//
+//                                                 if (!requestRecord && !isLoadMore && (isFindHouseRefresh || [TTSandBoxHelper isAPPFirstLaunch])) {
+//                                                     [weakSelf.listView setContentOffset:CGPointMake(0, weakSelf.listView.customTopOffset - weakSelf.listView.contentInset.top) animated:NO];
+//                                                 }
+//
+//                                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                                                     dispatch_async(dispatch_get_main_queue(), ^{
+//                                                         [FHUtils setContent:@"1" forKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
+//                                                     });
+//                                                 });
+//                                             }
                                              
-                                             
-                                             if (_categoryID) {
-                                                 NSString *requestRecord = [FHUtils contentForKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
-                                                 
-                                                 if (!requestRecord && !isLoadMore && (isFindHouseRefresh || [TTSandBoxHelper isAPPFirstLaunch])) {
-                                                     [weakSelf.listView setContentOffset:CGPointMake(0, weakSelf.listView.customTopOffset - weakSelf.listView.contentInset.top) animated:NO];
-                                                 }
-                                                 
-                                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         [FHUtils setContent:@"1" forKey:[NSString stringWithFormat:@"%@%@",_categoryID,kCategoryRequestedKey]];
-                                                     });
-                                                 });
-                                             }
                                              
                                              if (!isResponseFromRemote && weakSelf.listView.pullDownView.state == PULL_REFRESH_STATE_INIT && weakSelf.listView.customTopOffset != 0) {
                                                  [weakSelf.listView setContentOffset:CGPointMake(0, weakSelf.listView.customTopOffset - weakSelf.listView.contentInset.top) animated:NO];
@@ -2777,7 +2782,7 @@ TTRefreshViewDelegate
                                          [weakSelf tryFetchTipIfNeedWithForce:NO];
                                          
                                          //关注频道刷新后，告知提醒轮询manager
-                                         if ([cid isEqualToString:kTTFollowCategoryID] && (!getMore || [TTKitchen getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote && isResponseFromRemote) {
+                                         if ([cid isEqualToString:kTTFollowCategoryID] && (!getMore || [TTKitchen getBOOL:kTTKUGCFollowNotifyCleanWhenLoadMore]) && fromRemote && isResponseFromRemote) {
                                              __block ExploreOrderedData * firstOrderedData = nil;
                                              [weakSelf.fetchListManager.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                                                  if ([obj isKindOfClass:[ExploreOrderedData class]]) {
@@ -2786,7 +2791,7 @@ TTRefreshViewDelegate
                                                  }
                                              }];
                                              NSTimeInterval minBehotTime =  [firstOrderedData behotTime];
-                                             if (getMore && [TTKitchen getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) {
+                                             if (getMore && [TTKitchen getBOOL:kTTKUGCFollowNotifyCleanWhenLoadMore]) {
                                                  minBehotTime = [[NSDate date] timeIntervalSince1970];
                                              }
                                              [[TTInfiniteLoopFetchNewsListRefreshTipManager sharedManager] newsListLastHadRefreshWithCategoryID:cid
@@ -2976,9 +2981,9 @@ TTRefreshViewDelegate
 
 - (void)setListTopInset:(CGFloat)topInset BottomInset:(CGFloat)bottomInset
 {
-    [self setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
-    [self.listView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
-    [self.listView setScrollIndicatorInsets:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+//    [self setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+//    [self.listView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+//    [self.listView setScrollIndicatorInsets:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
 }
 
 - (void)clearListContent

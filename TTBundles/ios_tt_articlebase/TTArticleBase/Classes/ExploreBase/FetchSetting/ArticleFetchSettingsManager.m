@@ -60,7 +60,7 @@
 #import "TTInAppPushSettings.h"
 #import "TTAccountTestSettings.h"
 #import <AKWebViewBundlePlugin/TTDetailWebviewGIFManager.h>
-#import <TTKitchen/TTKitchenMgr.h>
+#import <TTKitchen/TTKitchen.h>
 #import "TTSettingsManager+SaveSettings.h"
 #import <AKWebViewBundlePlugin/TTDetailWebViewContainerConfig.h>
 #import <TTRexxar/TTRPackageManager.h>

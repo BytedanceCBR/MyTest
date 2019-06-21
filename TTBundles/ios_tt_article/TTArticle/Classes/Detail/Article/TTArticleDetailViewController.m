@@ -94,7 +94,8 @@
 #import "TTMemoryMonitor.h"
 #import "TTArticleDetailMemoryMonitor.h"
 #import <TTNetworkUtil.h>
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 
 #import "TTWebImageManager.h"
 #import "TTImageView.h"
@@ -429,6 +430,7 @@
     [_detailView didDisappear];
     NSDictionary *commentDic = @{@"stay_comment_time":[[NSNumber numberWithDouble:round(self.commentShowTimeTotal)] stringValue]};
     [self.detailModel.sharedDetailManager extraTrackerDic:commentDic];
+    self.detailModel.sharedDetailManager.reportParams = self.detailModel.reportParams;
     [self.detailModel.sharedDetailManager endStayTracker];
     _isAppearing = NO;
     [self.natantContainerView resetAllRelatedItemsWhenNatantDisappear];
@@ -1359,7 +1361,7 @@
             self.toolbarView.hidden = NO;
             
             // toolbar 禁表情，改变 toolbarType 会重置 button 的状态
-            BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
+            BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:kTTKCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
             if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
                 self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
             }
@@ -2280,6 +2282,11 @@
     [dic setValue:self.detailModel.logPb == nil ? @"be_null" : self.detailModel.logPb forKey:@"log_pb"];
 //    [[EnvContext shared].tracer writeEvent:@"go_detail" params:dic];
 
+    if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]])
+    {
+        [dic addEntriesFromDictionary:self.detailModel.reportParams];
+    }
+    
     [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
 //    id value = self.detailModel.article.groupModel.groupID;
 //    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
@@ -2607,7 +2614,7 @@
     }
     
     // toolbar 禁表情
-    BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
+    BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:kTTKCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
     if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
         self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
     }

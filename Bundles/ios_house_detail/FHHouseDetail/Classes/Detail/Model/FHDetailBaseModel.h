@@ -53,6 +53,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
+@interface FHDetailContactImageTagModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *imageUrl;
+
+@end
+
 @protocol FHDetailContactModel<NSObject>
 @end
 
@@ -81,6 +87,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *imprId;
 
 @property (nonatomic, copy , nullable) NSString *noticeDesc;
+@property (nonatomic, strong , nullable) FHDetailContactImageTagModel *imageTag;
 
 - (nonnull id)copyWithZone:(nullable NSZone *)zone;
 

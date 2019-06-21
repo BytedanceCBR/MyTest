@@ -18,6 +18,7 @@
 
 @property(nonatomic , strong) UIControl *leftView;
 @property(nonatomic , strong) UIImageView *avatarView;
+@property(nonatomic , strong) UIImageView *identifyView;
 @property(nonatomic , strong) UILabel *nameLabel;
 @property(nonatomic , strong) UILabel *agencyLabel;
 @property(nonatomic , strong) FHLoadingButton *contactBtn;
@@ -56,6 +57,7 @@
     }];
     self.leftView.hidden = YES;
     [self.leftView addSubview:self.avatarView];
+    [self.leftView addSubview:self.identifyView];
     [self.leftView addSubview:self.nameLabel];
     [self.leftView addSubview:self.agencyLabel];
     [self.leftView addSubview:self.licenceIcon];
@@ -69,6 +71,10 @@
         make.left.mas_equalTo(avatarLeftMargin);
         make.centerY.mas_equalTo(self);
         make.width.height.mas_equalTo(42);
+    }];
+    [self.identifyView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.avatarView).mas_offset(2);
+        make.centerX.mas_equalTo(self.avatarView);
     }];
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
@@ -188,6 +194,13 @@
     self.imChatBtn.hidden = !showIM;
      
     [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+    FHDetailContactImageTagModel *tag = contactPhone.imageTag;
+    if (tag.imageUrl.length > 0) {
+        [self.identifyView bd_setImageWithURL:[NSURL URLWithString:tag.imageUrl]];
+        self.identifyView.hidden = NO;
+    }else {
+        self.identifyView.hidden = YES;
+    }
     NSString *realtorName = contactPhone.realtorName;
     if (contactPhone.realtorName.length > 0) {
         if (contactPhone.realtorName.length > 4) {
@@ -293,6 +306,14 @@
         _avatarView.layer.masksToBounds = YES;
     }
     return _avatarView;
+}
+
+- (UIImageView *)identifyView
+{
+    if (!_identifyView) {
+        _identifyView = [[UIImageView alloc]init];
+    }
+    return _identifyView;
 }
 
 - (UILabel *)nameLabel

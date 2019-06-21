@@ -12,8 +12,8 @@
 #import "TTFollowNotifyServer.h"
 #import "TTIconFontChatroomDefine.h"
 #import "UIButton+TTAdditions.h"
-#import <TTKitchen/TTKitchenMgr.h>
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h>
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTArticleBase/SSCommonLogic.h>
 
@@ -297,7 +297,7 @@ static UIColor *TTGetDayColorUsingArrayOrKey(NSArray *themeArray, NSString *key)
                 width = kRedPacketFollowButtonWidth();
             }
             self.followLabel.font = [UIFont systemFontOfSize:TTFollowButtonFloat(14.0)];
-            _followLabel.text = !isEmptyString([TTKitchen getString:kKCUGCRedpacketNoIconStyleText]) ? [TTKitchen getString:kKCUGCRedpacketNoIconStyleText] : @"关注领钱";
+            _followLabel.text = !isEmptyString([TTKitchen getString:kTTKUGCRedpacketNoIconStyleText]) ? [TTKitchen getString:kTTKUGCRedpacketNoIconStyleText] : @"关注领钱";
             _followLabel.textColorThemeKey = kColorText12;
             
             self.backgroundColorThemeKey = [SSCommonLogic followButtonDefaultColorStyleRed] ? kColorBackground7 : kColorBackground8;
@@ -326,7 +326,7 @@ static UIColor *TTGetDayColorUsingArrayOrKey(NSArray *themeArray, NSString *key)
         case TTUnfollowedType204:
         {
             self.followLabel.font = [UIFont boldSystemFontOfSize:TTFollowButtonFloat(14.0)];
-            _followLabel.text = !isEmptyString([TTKitchen getString:kKCUGCRedpacketNoIconStyleText]) ? [TTKitchen getString:kKCUGCRedpacketNoIconStyleText] : @"关注领钱";
+            _followLabel.text = !isEmptyString([TTKitchen getString:kTTKUGCRedpacketNoIconStyleText]) ? [TTKitchen getString:kTTKUGCRedpacketNoIconStyleText] : @"关注领钱";
             _followLabel.textColorThemeKey = [SSCommonLogic followButtonDefaultColorStyleRed] ? kColorText4 : kColorText6;
             
             self.backgroundColorThemeKey = nil;

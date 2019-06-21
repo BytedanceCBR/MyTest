@@ -23,7 +23,8 @@
 //#import "TTWeitoutiaoRepostIconDownloadManager.h"
 #import "TTMessageCenter.h"
 #import <TTSettingsManager/TTSettingsManager.h>
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import "TTVVideoDetailNatantInfoShareView.h"
 #import <TTThemed/TTThemeManager.h>
 #import <Masonry/Masonry.h>
@@ -420,7 +421,7 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
 //        return @"钉钉";
 //    }
     else {
-        return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
+        return [TTKitchen getString:kTTKUGCRepostWordingShareIconTitle];
     }
 }
 

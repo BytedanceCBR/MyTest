@@ -91,6 +91,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions
 {
+    [NewsBaseDelegate startRegisterRemoteNotification];
     //如果展示开屏广告时候有弹窗延迟弹出
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(splashViewDisappearAnimationDidFinished:) name:@"kTTAdSplashShowFinish" object:nil];
     
@@ -155,7 +156,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // in case no callbacks are invoked through notification register
-    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:1.f];
+    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:5.f];
     [[TTNotificationCenterDelegate sharedNotificationCenterDelegate] applicationDidComeToForeground];
 }
 

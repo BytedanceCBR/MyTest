@@ -16,7 +16,7 @@
 #import <TTPlatformUIModel/TTActionSheetController.h>
 #import <TTVerifyKit/TTVerifyIconHelper.h>
 #import <TTAvatar/TTAsyncCornerImageView+VerifyIcon.h>
-#import <TTUIWidget/TTUGCAttributedLabel.h>
+#import <TTUGCFoundation/TTUGCAttributedLabel.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import <TTUGCFoundation/TTRichSpanText+Emoji.h>
 #import <TTRoute/TTRoute.h>

@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <JSONModel/JSONModel.h>
 #import "TTRequestModel.h"
-#import "TTResponseModel.h"
+#import "TTResponseModelProtocol.h"
 #import "FRCommonURLSetting.h"
 
 typedef NS_ENUM(NSInteger, FRGroupItemType) {
@@ -100,6 +100,11 @@ typedef NS_ENUM(NSInteger, FRTabParamType) {
     FRTabParamTypeNeedCommonParam = 1,
 };
 
+typedef NS_ENUM(NSInteger, FRForumTabCommonParamType) {
+    FRForumTabCommonParamTypeForumTabNotNeedCommonParam = 0,
+    FRForumTabCommonParamTypeForumTabNeedCommonParam = 1,
+};
+
 typedef NS_ENUM(NSInteger, FRImageType) {
     FRImageTypeDefaultImage = 0,
     FRImageTypeJpeg = 1,
@@ -149,6 +154,7 @@ typedef NS_ENUM(NSInteger, FRInnerForumType) {
     FRInnerForumTypeGame = 4,
     FRInnerForumTypeActivity = 5,
     FRInnerForumTypeCar = 6,
+    FRInnerForumTypeMicroGame = 72,
 };
 
 typedef NS_ENUM(NSInteger, FRConcernTabIdType) {
@@ -200,6 +206,10 @@ typedef NS_ENUM(NSInteger, FRRepostTypeCode) {
 typedef NS_ENUM(NSInteger, FRCommentTypeCode) {
     FRCommentTypeCodeARTICLE = 211,
     FRCommentTypeCodeTHREAD = 212,
+    FRCommentTypeCodeUGC_VIDEO = 213,
+    FRCommentTypeCodeANSWER = 214,
+    FRCommentTypeCodeINNER_LINK = 215,
+    FRCommentTypeCodeLVIDEO = 223,
 };
 
 typedef NS_ENUM(NSInteger, FRUGCTypeCode) {
@@ -209,8 +219,21 @@ typedef NS_ENUM(NSInteger, FRUGCTypeCode) {
     FRUGCTypeCodeITEM = 4,
     FRUGCTypeCodeGROUP = 5,
     FRUGCTypeCodeUGC_VIDEO = 6,
+    FRUGCTypeCodeZHENZHEN_POP = 7,
+    FRUGCTypeCodeCONCERN = 8,
+    FRUGCTypeCodeLIVE = 9,
+    FRUGCTypeCodeGOODS = 10,
+    FRUGCTypeCodeUSER = 11,
+    FRUGCTypeCodeMICRO_APP = 12,
+    FRUGCTypeCodeNOVEL = 13,
+    FRUGCTypeCodeSUBSCRIBED_COLUMN = 14,
+    FRUGCTypeCodeLEARNING = 15,
+    FRUGCTypeCodeMICRO_GAME = 16,
+    FRUGCTypeCodeLVIDEO_EPISODE = 28,
     FRUGCTypeCodeANSWER = 1025,
     FRUGCTypeCodeQUESTION = 1026,
+    FRUGCTypeCodeKUAIDA_ANSWER = 1030,
+    FRUGCTypeCodeEYEU_DONGTAI = 1040,
 };
 
 typedef NS_ENUM(NSInteger, FRFooterRepostTypeCode) {
@@ -231,7 +254,38 @@ typedef NS_ENUM(NSInteger, FRUGCStoryCoverPictureIconType) {
     FRUGCStoryCoverPictureIconTypeArtielcePicture_Icon = 3,
 };
 
-@class FRGroupStructModel,
+typedef NS_ENUM(NSInteger, FRForumStatusType) {
+    FRForumStatusTypeDelete = 0,
+    FRForumStatusTypePublish = 1,
+    FRForumStatusTypeReviewing = 2,
+    FRForumStatusTypeDeit = 3,
+};
+
+typedef NS_ENUM(NSInteger, FRForumProductType) {
+    FRForumProductTypeTopic = 0,
+    FRForumProductTypeSubject = 1,
+    FRForumProductTypeActivity = 2,
+};
+
+typedef NS_ENUM(NSInteger, FRForumTableType) {
+    FRForumTableTypeLightStream = 0,
+    FRForumTableTypeWeb = 1,
+    FRForumTableTypeChannelArticle = 2,
+    FRForumTableTypeChannelWenda = 3,
+};
+
+typedef NS_ENUM(NSInteger, FRForumHeaderStyle) {
+    FRForumHeaderStyleTopic = 0,
+    FRForumHeaderStyleTopicBanner = 1,
+    FRForumHeaderStyleTopicNotBanner = 2,
+    FRForumHeaderStyleTopicGame = 3,
+    FRForumHeaderStyleSubject = 100,
+    FRForumHeaderStyleActivityBanner = 200,
+    FRForumHeaderStyleActivityNoBanner = 201,
+};
+
+@class FRMapStructModel,
+FRGroupStructModel,
 FRUserRoleStructModel,
 FRUserApplyRoleInfoStructModel,
 FRForumRoleInfoStructModel,
@@ -262,6 +316,13 @@ FRMessageListUserInfoStructModel,
 FRMessageListDataStructModel,
 FRMessageListDataGroupStructModel,
 FRForumStructModel,
+FRTTForumStructModel,
+FRForumSpotStructModel,
+FRForumSpotItemStructModel,
+FRTTForumTitleImageStructModel,
+FRTTForumLogoImageStructModel,
+FRTTForumRankInfoStructModel,
+FRTTForumExtraStructModel,
 FRTagStructModel,
 FRForumTagStructModel,
 FRButtonListItemStructModel,
@@ -293,6 +354,10 @@ FRConcernWordsStructModel,
 FRHashTagPositionStructModel,
 FRConcernForumStructModel,
 FRConcernTabStructModel,
+FRTTForumTabStructModel,
+FRTTForumTabExtraStructModel,
+FRTTForumPublisherControllStructModel,
+FRTTPublisherTypeStructModel,
 FRConcernItemStructModel,
 FRConcernStructModel,
 FRShareStructModel,
@@ -321,6 +386,7 @@ FRCommonUserInfoStructModel,
 FRCommonUserRelationStructModel,
 FRUserRelationCountStructModel,
 FRRecommendCardStructModel,
+FRRecommendMultiCardStructModel,
 FRRecommendUserLargeCardStructModel,
 FRFollowChannelColdBootUserContainerStructModel,
 FRFollowChannelColdBootRecommendUserCardStructModel,
@@ -350,6 +416,8 @@ FRContactsRedpacketOpenResultStructModel,
 FRMomentsRecommendUserStructModel,
 FRActionDataStructModel,
 FRShareInfoStructModel,
+FRTokenShareInfoStructModel,
+FRTokenShareTypeStructModel,
 FRUserBlockedAndBlockingStructModel,
 FRPublishPostUserInfoStructModel,
 FRPublishPostUserRelationCountStructModel,
@@ -370,44 +438,73 @@ FRPublishPostSearchHashtagSuggestStructModel,
 FRRepostCommonContentStructModel,
 FRRepostParamStructModel,
 FRUserRelationContactCheckDataStructModel,
+FRContactUploadSettingsStructModel,
 FRFooterRepostStructModel,
 FRRecommendUserStoryCardStructModel,
 FRRecommendUserStoryVerifyInfoStructModel,
 FRUGCThreadStoryDataStructModel,
 FRUGCStoryCoverDataStructModel,
+FRUGCStoryCoverShowMoreStructModel,
 FRUserDecorationStructModel,
 FRRecommendUserStoryHasMoreStructModel,
 FRQRCodeLinkInfoStructModel,
+FRProfileAuthCheckDataStructModel,
+FRListInteractUserInfoStructModel,
+FRListInteractStyleCtrlsStructModel,
+FRListRawReplyDataStructModel,
+FRListReplyDataStructModel,
+FRListCommentDataStructModel,
+FRListInteractRecommendReasonStructModel,
+FRListInteractDataStructModel,
+FRUGCPublishGuideInfoStructModel,
+FRRecommendCardRelatedControlStructModel,
+FRRelationShipUserInfoStructModel,
+FRRelationShipFansPlatformInfoStructModel,
+FRRelationShipFansPlatformDataStructModel,
+FRRelationShipFansInteractionStructModel,
+FRRelationShipFollowersDataStructModel,
+FRRelationShipFansDataStructModel,
+FRGifImageDataStructModel,
+FRGifImageDataListStructModel,
+FRConcernShareInfoStructModel,
+FRTTForumShareInfoStructModel,
+FRBusinessAllianceStructModel,
+FRBusinessToolboxItemStructModel,
+FRBusinessToolboxDataStructModel,
 FRUgcUserDecorationV1ResponseModel,
 FRUgcUserDecorationV1RequestModel,
 FRTtdiscussV1ShareResponseModel,
 FRTtdiscussV1ShareRequestModel,
+FRUserRelationFansV2ResponseModel,
+FRUserRelationFansV2RequestModel,
 FRTtdiscussV1ForumSearchResponseModel,
 FRTtdiscussV1ForumSearchRequestModel,
-FRUgcPublishVideoV3CommitResponseModel,
-FRUgcPublishVideoV3CommitRequestModel,
 FRTtdiscussV1CommitCommentdeleteResponseModel,
 FRTtdiscussV1CommitCommentdeleteRequestModel,
 FRTtdiscussV1MovieListResponseModel,
 FRTtdiscussV1MovieListRequestModel,
+FRUserRelationUserRecommendV1DislikeCardResponseModel,
+FRUserRelationUserRecommendV1DislikeCardRequestModel,
 FRTtdiscussV2UgcVideoCheckTitleResponseModel,
 FRTtdiscussV2UgcVideoCheckTitleRequestModel,
 FRConcernV1HomeHeadResponseModel,
 FRConcernV1HomeHeadRequestModel,
 FRTtdiscussV2CommitPublishResponseModel,
 FRTtdiscussV2CommitPublishRequestModel,
-FRUgcPublishPostV4CommitResponseModel,
-FRUgcPublishPostV4CommitRequestModel,
 FRTtdiscussV2LongReviewListResponseModel,
 FRTtdiscussV2LongReviewListRequestModel,
 FRTtdiscussV1CommitThreadforwardResponseModel,
 FRTtdiscussV1CommitThreadforwardRequestModel,
 FRUgcActivityVideoIntroRedpackV1OpenResponseModel,
 FRUgcActivityVideoIntroRedpackV1OpenRequestModel,
+FRUgcBusinessAllianceUserInfoResponseModel,
+FRUgcBusinessAllianceUserInfoRequestModel,
 FRUgcPublishPostV1ContactResponseModel,
 FRUgcPublishPostV1ContactRequestModel,
 FRConcernV1CommitDiscareResponseModel,
 FRConcernV1CommitDiscareRequestModel,
+FRForumHomeV1InfoResponseModel,
+FRForumHomeV1InfoRequestModel,
 FRUserProfileEvaluationResponseModel,
 FRUserProfileEvaluationRequestModel,
 FRTtdiscussV1CommitPublishResponseModel,
@@ -424,8 +521,8 @@ FRConcernV1CommitCareResponseModel,
 FRConcernV1CommitCareRequestModel,
 FRUserRelationUserRecommendV1FollowChannelRecommendsResponseModel,
 FRUserRelationUserRecommendV1FollowChannelRecommendsRequestModel,
-FRUgcPublishRepostV6CommitResponseModel,
-FRUgcPublishRepostV6CommitRequestModel,
+FRUgcPublishPostV1ModifyResponseModel,
+FRUgcPublishPostV1ModifyRequestModel,
 FRDongtaiGroupCommentDeleteResponseModel,
 FRDongtaiGroupCommentDeleteRequestModel,
 FRTtdiscussV1CommitOwnerapplyResponseModel,
@@ -438,10 +535,16 @@ FRTtdiscussV2MovieListResponseModel,
 FRTtdiscussV2MovieListRequestModel,
 FRUserRelationFriendsInviteResponseModel,
 FRUserRelationFriendsInviteRequestModel,
+FRUgcPublishVideoV4CheckAuthResponseModel,
+FRUgcPublishVideoV4CheckAuthRequestModel,
+FRUgcThreadDetailV3InfoResponseModel,
+FRUgcThreadDetailV3InfoRequestModel,
+FRUserRelationUserRecommendV1SupplementCardsResponseModel,
+FRUserRelationUserRecommendV1SupplementCardsRequestModel,
 FRUserRelationSetCanBeFoundByPhoneResponseModel,
 FRUserRelationSetCanBeFoundByPhoneRequestModel,
-FRUgcPublishVideoV3CheckAuthResponseModel,
-FRUgcPublishVideoV3CheckAuthRequestModel,
+FRUserRelationFollowingV2ResponseModel,
+FRUserRelationFollowingV2RequestModel,
 FRTtdiscussV1ThreadListResponseModel,
 FRTtdiscussV1ThreadListRequestModel,
 FRUgcActivityUploadContactRedpackV1OpenResponseModel,
@@ -456,22 +559,34 @@ FRTtdiscussV1CommitCommentResponseModel,
 FRTtdiscussV1CommitCommentRequestModel,
 FRTtdiscussV1DiggUserResponseModel,
 FRTtdiscussV1DiggUserRequestModel,
+FRUgcPublishImageV1SuggestResponseModel,
+FRUgcPublishImageV1SuggestRequestModel,
 FRUserRelationUserRecommendV1DislikeUserResponseModel,
 FRUserRelationUserRecommendV1DislikeUserRequestModel,
 FRTtdiscussV1CommitCancelthreaddiggResponseModel,
 FRTtdiscussV1CommitCancelthreaddiggRequestModel,
 FRTtdiscussV1CommitFollowforumResponseModel,
 FRTtdiscussV1CommitFollowforumRequestModel,
+FRUserProfileAuthCheckResponseModel,
+FRUserProfileAuthCheckRequestModel,
 FRUserExpressionConfigResponseModel,
 FRUserExpressionConfigRequestModel,
 FRUgcPublishPostV1SuggestResponseModel,
 FRUgcPublishPostV1SuggestRequestModel,
 FRTtdiscussV1ForumIntroductionResponseModel,
 FRTtdiscussV1ForumIntroductionRequestModel,
+FRUgcPublishVideoV4CommitResponseModel,
+FRUgcPublishVideoV4CommitRequestModel,
 FRUserRelationContactinfoResponseModel,
 FRUserRelationContactinfoRequestModel,
 FRTtdiscussV1MomentListResponseModel,
 FRTtdiscussV1MomentListRequestModel,
+FRTfeRouteUgcVoteCommitResponseModel,
+FRTfeRouteUgcVoteCommitRequestModel,
+FRUgcBusinessAllianceUpdateProtocolStatusResponseModel,
+FRUgcBusinessAllianceUpdateProtocolStatusRequestModel,
+FRUgcBusinessAllianceUpdateBusinessTagResponseModel,
+FRUgcBusinessAllianceUpdateBusinessTagRequestModel,
 FRUgcPublishShareV1SetConfigResponseModel,
 FRUgcPublishShareV1SetConfigRequestModel,
 FRVerticalMovie1ReviewsResponseModel,
@@ -490,6 +605,8 @@ FRTtdiscussV2ForumListResponseModel,
 FRTtdiscussV2ForumListRequestModel,
 FRUserRelationContactfriendsResponseModel,
 FRUserRelationContactfriendsRequestModel,
+FRUgcBusinessAllianceBusinessBoxInfoResponseModel,
+FRUgcBusinessAllianceBusinessBoxInfoRequestModel,
 FRUgcThreadDetailV2ContentResponseModel,
 FRUgcThreadDetailV2ContentRequestModel,
 FRUgcPublishPostV1HotForumResponseModel,
@@ -506,8 +623,12 @@ FRVerticalMovie1ShortReviewsResponseModel,
 FRVerticalMovie1ShortReviewsRequestModel,
 FRUgcRepostV1ListResponseModel,
 FRUgcRepostV1ListRequestModel,
-FRUserRelationUserRecommendV1SupplementCardResponseModel,
-FRUserRelationUserRecommendV1SupplementCardRequestModel,
+FRUserProfileUnstickV1ResponseModel,
+FRUserProfileUnstickV1RequestModel,
+FRUgcPublishPostV5CommitResponseModel,
+FRUgcPublishPostV5CommitRequestModel,
+FRUserProfileStickV1ResponseModel,
+FRUserProfileStickV1RequestModel,
 FRUgcDiggV1ListResponseModel,
 FRUgcDiggV1ListRequestModel,
 FRConcernV2CommitPublishResponseModel,
@@ -516,6 +637,8 @@ FRConcernV1ThreadListResponseModel,
 FRConcernV1ThreadListRequestModel,
 FRTtdiscussV1ThreadCommentsResponseModel,
 FRTtdiscussV1ThreadCommentsRequestModel,
+FRUserRelationInteractionFansV1ResponseModel,
+FRUserRelationInteractionFansV1RequestModel,
 FRUserRelationCredibleFriendsResponseModel,
 FRUserRelationCredibleFriendsRequestModel,
 FRArticleV1TabCommentsResponseModel,
@@ -524,10 +647,14 @@ FRTtdiscussV1SmartReviewListResponseModel,
 FRTtdiscussV1SmartReviewListRequestModel,
 FRUserRelationContactcheckResponseModel,
 FRUserRelationContactcheckRequestModel,
+FRUserRelationSetUserPrivacyExtendResponseModel,
+FRUserRelationSetUserPrivacyExtendRequestModel,
 FRTtdiscussV1CommitThreaddiggResponseModel,
 FRTtdiscussV1CommitThreaddiggRequestModel,
 FRTtdiscussV1ForumRecommendResponseModel,
 FRTtdiscussV1ForumRecommendRequestModel,
+FRUgcPublishRepostV8CommitResponseModel,
+FRUgcPublishRepostV8CommitRequestModel,
 FRUserRelationMfollowResponseModel,
 FRUserRelationMfollowRequestModel,
 FRTtdiscussV1ForumListResponseModel,
@@ -577,6 +704,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @protocol FRTalkType @end
 @protocol FRLoginStatusType @end
 @protocol FRTabParamType @end
+@protocol FRForumTabCommonParamType @end
 @protocol FRImageType @end
 @protocol FRUserPermType @end
 @protocol FRRoleDisplayType @end
@@ -594,6 +722,11 @@ FRUgcConcernThreadV3ListRequestModel;
 @protocol FRFooterRepostTypeCode @end
 @protocol FRUGCStoryCoverType @end
 @protocol FRUGCStoryCoverPictureIconType @end
+@protocol FRForumStatusType @end
+@protocol FRForumProductType @end
+@protocol FRForumTableType @end
+@protocol FRForumHeaderStyle @end
+@protocol FRMapStructModel @end
 @protocol FRGroupStructModel @end
 @protocol FRUserRoleStructModel @end
 @protocol FRUserApplyRoleInfoStructModel @end
@@ -625,6 +758,13 @@ FRUgcConcernThreadV3ListRequestModel;
 @protocol FRMessageListDataStructModel @end
 @protocol FRMessageListDataGroupStructModel @end
 @protocol FRForumStructModel @end
+@protocol FRTTForumStructModel @end
+@protocol FRForumSpotStructModel @end
+@protocol FRForumSpotItemStructModel @end
+@protocol FRTTForumTitleImageStructModel @end
+@protocol FRTTForumLogoImageStructModel @end
+@protocol FRTTForumRankInfoStructModel @end
+@protocol FRTTForumExtraStructModel @end
 @protocol FRTagStructModel @end
 @protocol FRForumTagStructModel @end
 @protocol FRButtonListItemStructModel @end
@@ -656,6 +796,10 @@ FRUgcConcernThreadV3ListRequestModel;
 @protocol FRHashTagPositionStructModel @end
 @protocol FRConcernForumStructModel @end
 @protocol FRConcernTabStructModel @end
+@protocol FRTTForumTabStructModel @end
+@protocol FRTTForumTabExtraStructModel @end
+@protocol FRTTForumPublisherControllStructModel @end
+@protocol FRTTPublisherTypeStructModel @end
 @protocol FRConcernItemStructModel @end
 @protocol FRConcernStructModel @end
 @protocol FRShareStructModel @end
@@ -684,6 +828,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @protocol FRCommonUserRelationStructModel @end
 @protocol FRUserRelationCountStructModel @end
 @protocol FRRecommendCardStructModel @end
+@protocol FRRecommendMultiCardStructModel @end
 @protocol FRRecommendUserLargeCardStructModel @end
 @protocol FRFollowChannelColdBootUserContainerStructModel @end
 @protocol FRFollowChannelColdBootRecommendUserCardStructModel @end
@@ -713,6 +858,8 @@ FRUgcConcernThreadV3ListRequestModel;
 @protocol FRMomentsRecommendUserStructModel @end
 @protocol FRActionDataStructModel @end
 @protocol FRShareInfoStructModel @end
+@protocol FRTokenShareInfoStructModel @end
+@protocol FRTokenShareTypeStructModel @end
 @protocol FRUserBlockedAndBlockingStructModel @end
 @protocol FRPublishPostUserInfoStructModel @end
 @protocol FRPublishPostUserRelationCountStructModel @end
@@ -733,14 +880,39 @@ FRUgcConcernThreadV3ListRequestModel;
 @protocol FRRepostCommonContentStructModel @end
 @protocol FRRepostParamStructModel @end
 @protocol FRUserRelationContactCheckDataStructModel @end
+@protocol FRContactUploadSettingsStructModel @end
 @protocol FRFooterRepostStructModel @end
 @protocol FRRecommendUserStoryCardStructModel @end
 @protocol FRRecommendUserStoryVerifyInfoStructModel @end
 @protocol FRUGCThreadStoryDataStructModel @end
 @protocol FRUGCStoryCoverDataStructModel @end
+@protocol FRUGCStoryCoverShowMoreStructModel @end
 @protocol FRUserDecorationStructModel @end
 @protocol FRRecommendUserStoryHasMoreStructModel @end
 @protocol FRQRCodeLinkInfoStructModel @end
+@protocol FRProfileAuthCheckDataStructModel @end
+@protocol FRListInteractUserInfoStructModel @end
+@protocol FRListInteractStyleCtrlsStructModel @end
+@protocol FRListRawReplyDataStructModel @end
+@protocol FRListReplyDataStructModel @end
+@protocol FRListCommentDataStructModel @end
+@protocol FRListInteractRecommendReasonStructModel @end
+@protocol FRListInteractDataStructModel @end
+@protocol FRUGCPublishGuideInfoStructModel @end
+@protocol FRRecommendCardRelatedControlStructModel @end
+@protocol FRRelationShipUserInfoStructModel @end
+@protocol FRRelationShipFansPlatformInfoStructModel @end
+@protocol FRRelationShipFansPlatformDataStructModel @end
+@protocol FRRelationShipFansInteractionStructModel @end
+@protocol FRRelationShipFollowersDataStructModel @end
+@protocol FRRelationShipFansDataStructModel @end
+@protocol FRGifImageDataStructModel @end
+@protocol FRGifImageDataListStructModel @end
+@protocol FRConcernShareInfoStructModel @end
+@protocol FRTTForumShareInfoStructModel @end
+@protocol FRBusinessAllianceStructModel @end
+@protocol FRBusinessToolboxItemStructModel @end
+@protocol FRBusinessToolboxDataStructModel @end
 
 @interface FRApiRequestModel : JSONModel
 @property (strong, nonatomic) NSString *_uri;
@@ -750,6 +922,9 @@ FRUgcConcernThreadV3ListRequestModel;
 
 @interface FRApiResponseModel : JSONModel
 @property (assign, nonatomic) NSInteger error;
+@end
+
+@interface  FRMapStructModel : JSONModel
 @end
 
 @interface  FRGroupStructModel : JSONModel
@@ -1068,6 +1243,74 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *label_style;
 @property (strong, nonatomic) NSNumber<Optional> *icon_style;
 @property (strong, nonatomic) NSNumber<Optional> *concern_id;
+@property (strong, nonatomic) NSNumber<Optional> *forum_type;
+@property (strong, nonatomic) FRCommonUserStructModel<Optional> *host_info;
+@property (strong, nonatomic) NSString<Optional> *content_rich_span;
+@property (strong, nonatomic) NSString<Optional> *sub_desc;
+@property (strong, nonatomic) NSNumber<Optional> *layout;
+@end
+
+@interface  FRTTForumStructModel : JSONModel
+@property (assign, nonatomic) FRForumStatusType status;
+@property (strong, nonatomic) NSString<Optional> *banner_url;
+@property (strong, nonatomic) NSString<Optional> *forum_name;
+@property (strong, nonatomic) NSNumber<Optional> *logo_type;
+@property (strong, nonatomic) NSNumber<Optional> *forum_id;
+@property (strong, nonatomic) NSString<Optional> *avatar_url;
+@property (strong, nonatomic) NSString<Optional> *schema;
+@property (strong, nonatomic) NSString<Optional> *desc;
+@property (strong, nonatomic) NSString<Optional> *desc_rich_span;
+@property (strong, nonatomic) NSString<Optional> *rich_content;
+@property (strong, nonatomic) NSString<Optional> *sub_desc;
+@property (assign, nonatomic) FRForumProductType product_type;
+@property (strong, nonatomic) NSNumber<Optional> *concern_id;
+@property (strong, nonatomic) FRCommonUserStructModel<Optional> *host_info;
+@property (strong, nonatomic) FRTTForumExtraStructModel<Optional> *extra;
+@property (strong, nonatomic) FRTTForumTitleImageStructModel<Optional> *title_url;
+@property (strong, nonatomic) FRTTForumLogoImageStructModel<Optional> *forum_logo_url;
+@property (strong, nonatomic) NSNumber<Optional> *category_type;
+@property (strong, nonatomic) FRTTForumRankInfoStructModel<Optional> *rank_info;
+@property (assign, nonatomic) FRForumHeaderStyle header_style;
+@property (strong, nonatomic) FRForumSpotStructModel<Optional> *forum_spot;
+@end
+
+@interface  FRForumSpotStructModel : JSONModel
+@property (strong, nonatomic) NSArray<FRForumSpotItemStructModel, Optional> *forum_spot_items;
+@property (strong, nonatomic) FRImageUrlStructModel<Optional> *icon_image;
+@property (strong, nonatomic) NSString<Optional> *title;
+@end
+
+@interface  FRForumSpotItemStructModel : JSONModel
+@property (strong, nonatomic) FRImageUrlStructModel<Optional> *label_image;
+@property (strong, nonatomic) NSString<Optional> *title;
+@property (strong, nonatomic) NSString<Optional> *schema;
+@property (strong, nonatomic) NSNumber<Optional> *gid;
+@end
+
+@interface  FRTTForumTitleImageStructModel : JSONModel
+@property (strong, nonatomic) NSString<Optional> *day_url;
+@property (strong, nonatomic) NSString<Optional> *night_url;
+@end
+
+@interface  FRTTForumLogoImageStructModel : JSONModel
+@property (strong, nonatomic) NSString<Optional> *day_url;
+@property (strong, nonatomic) NSString<Optional> *night_url;
+@end
+
+@interface  FRTTForumRankInfoStructModel : JSONModel
+@property (strong, nonatomic) NSString<Optional> *rank_icon;
+@property (strong, nonatomic) NSString<Optional> *title;
+@property (strong, nonatomic) NSNumber<Optional> *rank;
+@property (strong, nonatomic) NSNumber<Optional> *rank_id;
+@property (strong, nonatomic) NSString<Optional> *rank_list_schema;
+@property (strong, nonatomic) NSString<Optional> *to_ranking_schema;
+@end
+
+@interface  FRTTForumExtraStructModel : JSONModel
+@property (strong, nonatomic) NSNumber<Optional> *music_id;
+@property (strong, nonatomic) NSString<Optional> *theme_id;
+@property (strong, nonatomic) NSNumber<Optional> *effect_id;
+@property (strong, nonatomic) NSString<Optional> *data;
 @end
 
 @interface  FRTagStructModel : JSONModel
@@ -1425,6 +1668,40 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) FRTabExtraStructModel<Optional> *extra;
 @property (strong, nonatomic) NSString *sole_name;
 @property (strong, nonatomic) NSNumber<Optional> *tab_et_status;
+@property (strong, nonatomic) NSNumber<Optional> *ban_refresh;
+@property (strong, nonatomic) NSString<Optional> *category_name;
+@end
+
+@interface  FRTTForumTabStructModel : JSONModel
+@property (assign, nonatomic) FRForumTabCommonParamType need_common_params;
+@property (strong, nonatomic) NSString<Optional> *name;
+@property (strong, nonatomic) FRTTForumTabExtraStructModel<Optional> *extra;
+@property (strong, nonatomic) NSString<Optional> *url;
+@property (assign, nonatomic) FRForumTableType tab_type;
+@property (strong, nonatomic) NSNumber<Optional> *tab_id;
+@property (strong, nonatomic) NSNumber<Optional> *refresh_interval;
+@property (strong, nonatomic) NSString<Optional> *category_name;
+@property (strong, nonatomic) NSString<Optional> *sole_name;
+@property (strong, nonatomic) NSNumber<Optional> *ban_refresh;
+@property (strong, nonatomic) NSNumber<Optional> *tab_et_status;
+@end
+
+@interface  FRTTForumTabExtraStructModel : JSONModel
+@end
+
+@interface  FRTTForumPublisherControllStructModel : JSONModel
+@property (strong, nonatomic) NSNumber<Optional> *publish_module_id;
+@property (strong, nonatomic) NSNumber<Optional> *show_et_status;
+@property (strong, nonatomic) NSString<Optional> *post_content_hint;
+@property (strong, nonatomic) NSNumber<Optional> *tab_publisher_status;
+@property (strong, nonatomic) NSArray<FRPublishConfigStructModel, Optional> *publisher_types;
+@end
+
+@interface  FRTTPublisherTypeStructModel : JSONModel
+@property (strong, nonatomic) NSNumber<Optional> *type;
+@property (strong, nonatomic) NSString<Optional> *name;
+@property (strong, nonatomic) NSString<Optional> *schema;
+@property (strong, nonatomic) NSString<Optional> *icon;
 @end
 
 @interface  FRConcernItemStructModel : JSONModel
@@ -1456,6 +1733,9 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) FRShareStructModel<Optional> *share_data;
 @property (strong, nonatomic) NSNumber<Optional> *read_count;
 @property (strong, nonatomic) NSString<Optional> *desc_rich_span;
+@property (strong, nonatomic) NSString<Optional> *music_id;
+@property (strong, nonatomic) NSString<Optional> *theme_id;
+@property (strong, nonatomic) NSString<Optional> *effect_id;
 @end
 
 @interface  FRShareStructModel : JSONModel
@@ -1517,6 +1797,9 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *show_author_delete_entrance;
 @property (strong, nonatomic) NSArray<FRPublishConfigStructModel, Optional> *main_publisher_type;
 @property (strong, nonatomic) FRPublisherPermissionIntroStructModel<Optional> *video_intro;
+@property (strong, nonatomic) NSNumber<Optional> *show_article_entrance;
+@property (strong, nonatomic) NSNumber<Optional> *share_repost_style;
+@property (strong, nonatomic) NSNumber<Optional> *flipchat_sync_entrance;
 @end
 
 @interface  FRUgcVideoDetailInfoStructModel : JSONModel
@@ -1665,6 +1948,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *schema;
 @property (strong, nonatomic) NSString<Optional> *icon;
 @property (strong, nonatomic) NSString<Optional> *top_icon;
+@property (strong, nonatomic) NSString<Optional> *label;
 @end
 
 @interface  FRCommonUserStructModel : JSONModel
@@ -1687,6 +1971,8 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *media_id;
 @property (strong, nonatomic) NSString<Optional> *remark_name;
 @property (strong, nonatomic) NSString<Optional> *user_decoration;
+@property (strong, nonatomic) NSNumber<Optional> *live_info_type;
+@property (strong, nonatomic) NSString<Optional> *room_schema;
 @end
 
 @interface  FRCommonUserRelationStructModel : JSONModel
@@ -1701,13 +1987,25 @@ FRUgcConcernThreadV3ListRequestModel;
 @end
 
 @interface  FRRecommendCardStructModel : JSONModel
-@property (strong, nonatomic) FRCommonUserStructModel *user;
+@property (strong, nonatomic) FRCommonUserStructModel<Optional> *user;
 @property (strong, nonatomic) NSString<Optional> *recommend_reason;
 @property (strong, nonatomic) NSNumber<Optional> *recommend_type;
 @property (strong, nonatomic) FRActivityStructModel<Optional> *activity;
 @property (strong, nonatomic) NSString<Optional> *stats_place_holder;
 @property (strong, nonatomic) NSNumber<Optional> *card_type;
 @property (strong, nonatomic) NSString<Optional> *profile_user_id;
+@property (strong, nonatomic) NSNumber<Optional> *is_action_card;
+@property (strong, nonatomic) NSString<Optional> *action_schema;
+@property (strong, nonatomic) NSString<Optional> *action_card_title;
+@property (strong, nonatomic) NSArray<FRRecommendCardStructModel, Optional> *inner_list;
+@property (strong, nonatomic) NSNumber<Optional> *supplement;
+@end
+
+@interface  FRRecommendMultiCardStructModel : JSONModel
+@property (strong, nonatomic) NSArray<FRRecommendCardStructModel, Optional> *user_cards;
+@property (strong, nonatomic) NSNumber<Optional> *card_type;
+@property (strong, nonatomic) NSString<Optional> *profile_user_id;
+@property (strong, nonatomic) NSNumber<Optional> *count;
 @end
 
 @interface  FRRecommendUserLargeCardStructModel : JSONModel
@@ -1802,8 +2100,8 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) FRUGCVideoUserStructModel<Optional> *user;
 @property (strong, nonatomic) FRUGCVideoActionStructModel<Optional> *action;
 @property (strong, nonatomic) FRUGCVideoPublishReasonStructModel<Optional> *publish_reason;
-@property (strong, nonatomic) FRImageUrlStructModel<Optional> *thumb_image_list;
-@property (strong, nonatomic) FRImageUrlStructModel<Optional> *large_image_list;
+@property (strong, nonatomic) NSArray<FRImageUrlStructModel, Optional> *thumb_image_list;
+@property (strong, nonatomic) NSArray<FRImageUrlStructModel, Optional> *large_image_list;
 @end
 
 @interface  FRUGCVideoDataStructModel : JSONModel
@@ -1867,6 +2165,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *show_name;
 @property (strong, nonatomic) NSNumber<Optional> *is_toutiao_user;
 @property (strong, nonatomic) NSString<Optional> *intro;
+@property (strong, nonatomic) NSString<Optional> *verify_text;
 @end
 
 @interface  FRAddFriendsDataStructModel : JSONModel
@@ -1876,6 +2175,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSArray<FRAddFriendsUserWrapperStructModel, Optional> *recommend_users;
 @property (strong, nonatomic) NSNumber<Optional> *has_more;
 @property (strong, nonatomic) NSNumber<Optional> *server_follow;
+@property (strong, nonatomic) NSNumber<Optional> *count;
 @end
 
 @interface  FRInviteFriendsDataStructModel : JSONModel
@@ -1924,6 +2224,18 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *share_desc;
 @property (strong, nonatomic) NSString<Optional> *share_weibo_desc;
 @property (strong, nonatomic) FRShareImageUrlStructModel<Optional> *share_cover;
+@end
+
+@interface  FRTokenShareInfoStructModel : JSONModel
+@property (strong, nonatomic) FRTokenShareTypeStructModel<Optional> *share_type;
+@property (strong, nonatomic) NSNumber<Optional> *token_type;
+@end
+
+@interface  FRTokenShareTypeStructModel : JSONModel
+@property (strong, nonatomic) NSNumber<Optional> *pyq;
+@property (strong, nonatomic) NSNumber<Optional> *qq;
+@property (strong, nonatomic) NSNumber<Optional> *qzone;
+@property (strong, nonatomic) NSNumber<Optional> *wx;
 @end
 
 @interface  FRUserBlockedAndBlockingStructModel : JSONModel
@@ -2011,6 +2323,8 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *desc;
 @property (strong, nonatomic) NSString *schema;
 @property (strong, nonatomic) NSString *concern_id;
+@property (strong, nonatomic) NSString<Optional> *talk_count_str;
+@property (strong, nonatomic) NSNumber<Optional> *status;
 @end
 
 @interface  FRPublishPostHashtagHighlightStructModel : JSONModel
@@ -2027,12 +2341,14 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (assign, nonatomic) FRHasMoreType has_more;
 @property (strong, nonatomic) NSArray<FRPublishPostSearchHashtagStructModel, Optional> *recently;
 @property (strong, nonatomic) NSArray<FRPublishPostSearchHashtagStructModel, Optional> *hot;
+@property (strong, nonatomic) NSString<Optional> *suggest_tips;
 @end
 
 @interface  FRPublishPostSearchHashtagSuggestStructModel : JSONModel
 @property (strong, nonatomic) NSNumber *offset;
 @property (assign, nonatomic) FRHasMoreType has_more;
 @property (strong, nonatomic) NSArray<FRPublishPostSearchHashtagStructModel, Optional> *suggest;
+@property (strong, nonatomic) FRPublishPostSearchHashtagStructModel<Optional> *fresh_forum;
 @end
 
 @interface  FRRepostCommonContentStructModel : JSONModel
@@ -2050,6 +2366,8 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *opt_id;
 @property (assign, nonatomic) FRUGCTypeCode opt_id_type;
 @property (strong, nonatomic) NSString<Optional> *schema;
+@property (strong, nonatomic) NSString<Optional> *fw_native_schema;
+@property (strong, nonatomic) NSString<Optional> *fw_share_url;
 @property (strong, nonatomic) NSString<Optional> *title;
 @property (strong, nonatomic) NSString<Optional> *cover_url;
 @end
@@ -2060,6 +2378,20 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *popup_type;
 @property (strong, nonatomic) NSNumber<Optional> *next_time;
 @property (strong, nonatomic) FRContactsRedpacketCheckResultStructModel<Optional> *redpack;
+@property (strong, nonatomic) FRContactUploadSettingsStructModel<Optional> *contact_upload_settings;
+@end
+
+@interface  FRContactUploadSettingsStructModel : JSONModel
+@property (strong, nonatomic) NSString *major_text;
+@property (strong, nonatomic) NSString *minor_text;
+@property (strong, nonatomic) NSString *privacy_notice;
+@property (strong, nonatomic) NSString *button_text;
+@property (strong, nonatomic) NSString *diagram_url;
+@property (strong, nonatomic) NSString *diagram_url_night;
+@property (strong, nonatomic) NSString *friends_list_title;
+@property (strong, nonatomic) NSString *friends_list_button_text;
+@property (strong, nonatomic) NSNumber<Optional> *confirm_times;
+@property (strong, nonatomic) NSString *privacy_notice_schema_text;
 @end
 
 @interface  FRFooterRepostStructModel : JSONModel
@@ -2081,6 +2413,10 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *has_new;
 @property (strong, nonatomic) NSString<Optional> *stats_place_holder;
 @property (strong, nonatomic) FRRecommendUserStoryVerifyInfoStructModel<Optional> *story_label;
+@property (strong, nonatomic) NSNumber<Optional> *is_live;
+@property (strong, nonatomic) NSNumber<Optional> *live_gid;
+@property (strong, nonatomic) NSNumber<Optional> *orientation;
+@property (strong, nonatomic) NSNumber<Optional> *multi_live;
 @end
 
 @interface  FRRecommendUserStoryVerifyInfoStructModel : JSONModel
@@ -2112,6 +2448,17 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (assign, nonatomic) FRUGCStoryCoverType display_type;
 @property (strong, nonatomic) FRRecommendUserStoryVerifyInfoStructModel<Optional> *story_label;
 @property (strong, nonatomic) NSNumber<Optional> *display_sub_type;
+@property (strong, nonatomic) NSString<Optional> *recommend_reason;
+@property (strong, nonatomic) NSString<Optional> *story_extra;
+@property (strong, nonatomic) NSString<Optional> *log_pb;
+@property (strong, nonatomic) NSString<Optional> *group_source;
+@end
+
+@interface  FRUGCStoryCoverShowMoreStructModel : JSONModel
+@property (strong, nonatomic) NSString<Optional> *text;
+@property (strong, nonatomic) NSString<Optional> *url;
+@property (strong, nonatomic) NSString<Optional> *icon_day;
+@property (strong, nonatomic) NSString<Optional> *icon_night;
 @end
 
 @interface  FRUserDecorationStructModel : JSONModel
@@ -2131,11 +2478,185 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString *url;
 @end
 
+@interface  FRProfileAuthCheckDataStructModel : JSONModel
+@property (strong, nonatomic) NSString *title;
+@property (strong, nonatomic) NSNumber *show_auth_guidance;
+@property (strong, nonatomic) NSString<Optional> *body;
+@property (strong, nonatomic) NSString<Optional> *button_schema;
+@property (strong, nonatomic) NSString<Optional> *button_text;
+@property (strong, nonatomic) NSNumber<Optional> *popup_style;
+@end
+
+@interface  FRListInteractUserInfoStructModel : JSONModel
+@property (strong, nonatomic) NSNumber *user_id;
+@property (strong, nonatomic) NSString *name;
+@property (strong, nonatomic) NSString *schema;
+@property (strong, nonatomic) NSString<Optional> *user_auth_info;
+@end
+
+@interface  FRListInteractStyleCtrlsStructModel : JSONModel
+@property (strong, nonatomic) NSNumber<Optional> *max_comment_line;
+@property (strong, nonatomic) NSNumber<Optional> *max_digg_line;
+@property (strong, nonatomic) NSNumber<Optional> *comment_entrance;
+@property (strong, nonatomic) NSString<Optional> *comment_show_more_text;
+@property (strong, nonatomic) NSString<Optional> *digg_show_more_text;
+@property (strong, nonatomic) NSString<Optional> *comment_show_more_schema;
+@property (strong, nonatomic) NSString<Optional> *digg_show_more_schema;
+@property (strong, nonatomic) NSNumber<Optional> *ban_comment;
+@property (strong, nonatomic) NSNumber<Optional> *ban_face;
+@property (strong, nonatomic) NSNumber<Optional> *ban_pic_comment;
+@property (strong, nonatomic) NSNumber<Optional> *show_repost_entrance;
+@property (strong, nonatomic) NSNumber<Optional> *style_type;
+@end
+
+@interface  FRListRawReplyDataStructModel : JSONModel
+@property (strong, nonatomic) NSNumber *reply_id;
+@property (strong, nonatomic) NSString *content;
+@property (strong, nonatomic) NSString<Optional> *content_rich_span;
+@property (strong, nonatomic) FRListInteractUserInfoStructModel *user_info;
+@end
+
+@interface  FRListReplyDataStructModel : JSONModel
+@property (strong, nonatomic) NSNumber *reply_id;
+@property (strong, nonatomic) NSString *content;
+@property (strong, nonatomic) NSString<Optional> *content_rich_span;
+@property (strong, nonatomic) FRListInteractUserInfoStructModel *user_info;
+@property (strong, nonatomic) FRListRawReplyDataStructModel<Optional> *reply_to_reply;
+@end
+
+@interface  FRListCommentDataStructModel : JSONModel
+@property (strong, nonatomic) NSNumber *comment_id;
+@property (strong, nonatomic) NSString *content;
+@property (strong, nonatomic) NSString<Optional> *content_rich_span;
+@property (strong, nonatomic) FRListInteractUserInfoStructModel *user_info;
+@property (strong, nonatomic) NSArray<FRListReplyDataStructModel, Optional> *reply_list;
+@end
+
+@interface  FRListInteractRecommendReasonStructModel : JSONModel
+@property (strong, nonatomic) NSString *reason;
+@property (strong, nonatomic) NSString<Optional> *schema;
+@end
+
+@interface  FRListInteractDataStructModel : JSONModel
+@property (strong, nonatomic) NSArray<FRListInteractUserInfoStructModel, Optional> *digg_user_list;
+@property (strong, nonatomic) NSArray<FRListCommentDataStructModel, Optional> *comment_list;
+@property (strong, nonatomic) NSArray<FRListReplyDataStructModel, Optional> *reply_list;
+@property (strong, nonatomic) FRListInteractStyleCtrlsStructModel *style_ctrls;
+@property (strong, nonatomic) FRListInteractRecommendReasonStructModel<Optional> *recommend_reason;
+@end
+
+@interface  FRUGCPublishGuideInfoStructModel : JSONModel
+@property (strong, nonatomic) NSNumber<Optional> *guide_type;
+@property (strong, nonatomic) NSString<Optional> *major_text;
+@property (strong, nonatomic) NSString<Optional> *minor_text;
+@property (strong, nonatomic) NSString<Optional> *privacy_notice;
+@property (strong, nonatomic) NSString<Optional> *button_text;
+@property (strong, nonatomic) NSString<Optional> *diagram_url;
+@property (strong, nonatomic) NSString<Optional> *diagram_url_night;
+@property (strong, nonatomic) NSString<Optional> *jump_url;
+@end
+
+@interface  FRRecommendCardRelatedControlStructModel : JSONModel
+@property (strong, nonatomic) NSNumber<Optional> *show_related_card;
+@property (strong, nonatomic) NSNumber<Optional> *minimum_rate;
+@end
+
+@interface  FRRelationShipUserInfoStructModel : JSONModel
+@property (strong, nonatomic) FRCommonUserStructModel<Optional> *user;
+@property (strong, nonatomic) NSString<Optional> *recommend_reason;
+@property (strong, nonatomic) NSString<Optional> *fans;
+@property (strong, nonatomic) NSString<Optional> *stats_place_holder;
+@property (strong, nonatomic) NSNumber<Optional> *interaction;
+@end
+
+@interface  FRRelationShipFansPlatformInfoStructModel : JSONModel
+@property (strong, nonatomic) NSNumber<Optional> *fans_count;
+@property (strong, nonatomic) NSString<Optional> *apple_id;
+@property (strong, nonatomic) NSString<Optional> *open_url;
+@property (strong, nonatomic) NSString<Optional> *name;
+@property (strong, nonatomic) NSString<Optional> *package_name;
+@property (strong, nonatomic) NSString<Optional> *app_name;
+@property (strong, nonatomic) NSString<Optional> *download_url;
+@property (strong, nonatomic) NSString<Optional> *icon;
+@end
+
+@interface  FRRelationShipFansPlatformDataStructModel : JSONModel
+@property (strong, nonatomic) NSNumber<Optional> *mplatform_followers_count;
+@property (strong, nonatomic) NSArray<FRRelationShipFansPlatformInfoStructModel, Optional> *followers_detail;
+@end
+
+@interface  FRRelationShipFansInteractionStructModel : JSONModel
+@property (strong, nonatomic) NSString<Optional> *title;
+@property (strong, nonatomic) NSString<Optional> *more_info;
+@property (strong, nonatomic) NSString<Optional> *open_url;
+@property (strong, nonatomic) NSArray<FRRelationShipUserInfoStructModel, Optional> *users;
+@end
+
+@interface  FRRelationShipFollowersDataStructModel : JSONModel
+@property (strong, nonatomic) NSArray<FRRelationShipUserInfoStructModel, Optional> *users;
+@end
+
+@interface  FRRelationShipFansDataStructModel : JSONModel
+@property (strong, nonatomic) FRRelationShipFansPlatformDataStructModel<Optional> *fans_detail;
+@property (strong, nonatomic) FRRelationShipFansInteractionStructModel<Optional> *interaction;
+@property (strong, nonatomic) NSArray<FRRelationShipUserInfoStructModel, Optional> *users;
+@property (strong, nonatomic) NSNumber<Optional> *anonymous_fans;
+@end
+
+@interface  FRGifImageDataStructModel : JSONModel
+@property (strong, nonatomic) FRImageUrlStructModel<Optional> *large_image;
+@property (strong, nonatomic) FRImageUrlStructModel<Optional> *thumb_image;
+@end
+
+@interface  FRGifImageDataListStructModel : JSONModel
+@property (strong, nonatomic) NSNumber<Optional> *count;
+@property (strong, nonatomic) NSNumber<Optional> *offset;
+@property (strong, nonatomic) NSNumber<Optional> *has_more;
+@property (strong, nonatomic) NSString<Optional> *keyword;
+@property (strong, nonatomic) NSArray<FRGifImageDataStructModel, Optional> *images;
+@end
+
+@interface  FRConcernShareInfoStructModel : JSONModel
+@property (strong, nonatomic) NSString<Optional> *share_cover;
+@property (strong, nonatomic) NSString<Optional> *share_title;
+@property (strong, nonatomic) NSString<Optional> *share_url;
+@property (strong, nonatomic) NSString<Optional> *share_desc;
+@property (strong, nonatomic) NSNumber<Optional> *token_type;
+@property (strong, nonatomic) FRTokenShareTypeStructModel<Optional> *share_type;
+@end
+
+@interface  FRTTForumShareInfoStructModel : JSONModel
+@property (strong, nonatomic) NSString<Optional> *share_cover;
+@property (strong, nonatomic) NSString<Optional> *share_title;
+@property (strong, nonatomic) NSString<Optional> *share_url;
+@property (strong, nonatomic) NSString<Optional> *share_desc;
+@property (strong, nonatomic) NSNumber<Optional> *token_type;
+@property (strong, nonatomic) FRTokenShareTypeStructModel<Optional> *share_type;
+@end
+
+@interface  FRBusinessAllianceStructModel : JSONModel
+@property (strong, nonatomic) NSNumber *protocol_accepted;
+@property (strong, nonatomic) NSNumber *show_shop_icon;
+@end
+
+@interface  FRBusinessToolboxItemStructModel : JSONModel
+@property (strong, nonatomic) NSString *title;
+@property (strong, nonatomic) NSString *desc;
+@property (strong, nonatomic) NSNumber *type;
+@property (strong, nonatomic) NSString<Optional> *schema;
+@property (strong, nonatomic) NSString<Optional> *source;
+@property (strong, nonatomic) NSString<Optional> *extra;
+@end
+
+@interface  FRBusinessToolboxDataStructModel : JSONModel
+@property (strong, nonatomic) NSArray<FRBusinessToolboxItemStructModel, Optional> *item_list;
+@end
+
 @interface  FRUgcUserDecorationV1RequestModel : TTRequestModel
 @property (strong, nonatomic) NSString *user_ids;
 @end
 
-@interface  FRUgcUserDecorationV1ResponseModel : TTResponseModel
+@interface  FRUgcUserDecorationV1ResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSArray<FRUserDecorationStructModel, Optional> *user_decoration_list;
 @end
@@ -2147,10 +2668,26 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString *forward_content;
 @end
 
-@interface  FRTtdiscussV1ShareResponseModel : TTResponseModel
+@interface  FRTtdiscussV1ShareResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) NSString<Optional> *expired_platform;
+@end
+
+@interface  FRUserRelationFansV2RequestModel : TTRequestModel
+@property (strong, nonatomic) NSNumber *user_id;
+@property (strong, nonatomic) NSNumber *offset;
+@property (strong, nonatomic) NSNumber *count;
+@property (strong, nonatomic) NSNumber *cursor;
+@end
+
+@interface  FRUserRelationFansV2ResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber *err_no;
+@property (strong, nonatomic) NSString *err_tips;
+@property (strong, nonatomic) NSNumber *offset;
+@property (strong, nonatomic) NSNumber *cursor;
+@property (strong, nonatomic) NSNumber *has_more;
+@property (strong, nonatomic) FRRelationShipFansDataStructModel<Optional> *data;
 @end
 
 @interface  FRTtdiscussV1ForumSearchRequestModel : TTRequestModel
@@ -2159,35 +2696,10 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *count;
 @end
 
-@interface  FRTtdiscussV1ForumSearchResponseModel : TTResponseModel
+@interface  FRTtdiscussV1ForumSearchResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSArray<FRForumItemStructModel, Optional> *forum_list;
 @property (assign, nonatomic) FRHasMoreType has_more;
-@property (strong, nonatomic) NSString<Optional> *err_tips;
-@end
-
-@interface  FRUgcPublishVideoV3CommitRequestModel : TTRequestModel
-@property (strong, nonatomic) NSString<Optional> *title;
-@property (strong, nonatomic) NSString *video_id;
-@property (strong, nonatomic) NSString *video_name;
-@property (strong, nonatomic) NSString *thumb_uri;
-@property (strong, nonatomic) NSNumber *video_type;
-@property (strong, nonatomic) NSNumber *video_duration;
-@property (strong, nonatomic) NSNumber *width;
-@property (strong, nonatomic) NSNumber *height;
-@property (strong, nonatomic) NSNumber<Optional> *thumb_source;
-@property (strong, nonatomic) NSNumber<Optional> *enter_from;
-@property (strong, nonatomic) NSString<Optional> *title_rich_span;
-@property (strong, nonatomic) NSString<Optional> *mention_user;
-@property (strong, nonatomic) NSString<Optional> *mention_concern;
-@property (strong, nonatomic) NSString<Optional> *category;
-@property (strong, nonatomic) NSString<Optional> *music_id;
-@property (strong, nonatomic) NSString<Optional> *challenge_group_id;
-@end
-
-@interface  FRUgcPublishVideoV3CommitResponseModel : TTResponseModel
-@property (strong, nonatomic) NSNumber *err_no;
-@property (strong, nonatomic) FRUgcVideoStructModel *data;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
 
@@ -2195,7 +2707,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *comment_id;
 @end
 
-@interface  FRTtdiscussV1CommitCommentdeleteResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitCommentdeleteResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -2209,7 +2721,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *sort_type;
 @end
 
-@interface  FRTtdiscussV1MovieListResponseModel : TTResponseModel
+@interface  FRTtdiscussV1MovieListResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *ugc_min_cursor;
 @property (strong, nonatomic) NSNumber *ugc_max_cursor;
 @property (strong, nonatomic) NSNumber *movie_min_cursor;
@@ -2223,6 +2735,16 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
 
+@interface  FRUserRelationUserRecommendV1DislikeCardRequestModel : TTRequestModel
+@property (strong, nonatomic) NSString *gid;
+@property (strong, nonatomic) NSString<Optional> *profile_user_id;
+@end
+
+@interface  FRUserRelationUserRecommendV1DislikeCardResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSString<Optional> *message;
+@property (strong, nonatomic) NSString<Optional> *data;
+@end
+
 @interface  FRTtdiscussV2UgcVideoCheckTitleRequestModel : TTRequestModel
 @property (strong, nonatomic) NSString *title;
 @property (strong, nonatomic) NSString<Optional> *content_rich_span;
@@ -2230,7 +2752,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *mention_concern;
 @end
 
-@interface  FRTtdiscussV2UgcVideoCheckTitleResponseModel : TTResponseModel
+@interface  FRTtdiscussV2UgcVideoCheckTitleResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (assign, nonatomic) FRUgcVideoTitleType status;
 @property (strong, nonatomic) NSString<Optional> *status_tips;
@@ -2243,7 +2765,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *latitude;
 @end
 
-@interface  FRConcernV1HomeHeadResponseModel : TTResponseModel
+@interface  FRConcernV1HomeHeadResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRConcernStructModel<Optional> *concern_obj;
@@ -2257,6 +2779,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *concern_and_discuss_describe;
 @property (strong, nonatomic) NSNumber<Optional> *hash_tag_type;
 @property (strong, nonatomic) NSArray<FRPublishConfigStructModel, Optional> *publisher_controll;
+@property (strong, nonatomic) FRConcernShareInfoStructModel<Optional> *share_info;
 @end
 
 @interface  FRTtdiscussV2CommitPublishRequestModel : TTRequestModel
@@ -2274,35 +2797,9 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *rate;
 @end
 
-@interface  FRTtdiscussV2CommitPublishResponseModel : TTResponseModel
+@interface  FRTtdiscussV2CommitPublishResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) FRUgcDataStructModel *thread;
-@property (strong, nonatomic) NSString<Optional> *err_tips;
-@end
-
-@interface  FRUgcPublishPostV4CommitRequestModel : TTRequestModel
-@property (strong, nonatomic) NSString *content;
-@property (strong, nonatomic) NSString *concern_id;
-@property (strong, nonatomic) NSString<Optional> *image_uris;
-@property (strong, nonatomic) NSNumber<Optional> *longitude;
-@property (strong, nonatomic) NSNumber<Optional> *latitude;
-@property (strong, nonatomic) NSString<Optional> *city;
-@property (strong, nonatomic) NSString<Optional> *detail_pos;
-@property (strong, nonatomic) NSNumber<Optional> *is_forward;
-@property (strong, nonatomic) NSString<Optional> *phone;
-@property (strong, nonatomic) NSString<Optional> *title;
-@property (assign, nonatomic) FRFromWhereType from_where;
-@property (strong, nonatomic) NSNumber<Optional> *score;
-@property (strong, nonatomic) NSString<Optional> *category_id;
-@property (strong, nonatomic) NSNumber<Optional> *enter_from;
-@property (strong, nonatomic) NSString<Optional> *content_rich_span;
-@property (strong, nonatomic) NSString<Optional> *mention_user;
-@property (strong, nonatomic) NSString<Optional> *mention_concern;
-@end
-
-@interface  FRUgcPublishPostV4CommitResponseModel : TTResponseModel
-@property (strong, nonatomic) NSNumber *err_no;
-@property (strong, nonatomic) FRUgcDataStructModel<Optional> *thread;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
 
@@ -2313,7 +2810,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *sort_type;
 @end
 
-@interface  FRTtdiscussV2LongReviewListResponseModel : TTResponseModel
+@interface  FRTtdiscussV2LongReviewListResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSArray<FRGroupLikeStructModel, Optional> *group_list;
 @property (strong, nonatomic) NSNumber *min_cursor;
 @property (strong, nonatomic) NSNumber *max_cursor;
@@ -2328,7 +2825,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *forum_id;
 @end
 
-@interface  FRTtdiscussV1CommitThreadforwardResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitThreadforwardResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) FRThreadDataStructModel *thread;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
@@ -2340,17 +2837,27 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString *token;
 @end
 
-@interface  FRUgcActivityVideoIntroRedpackV1OpenResponseModel : TTResponseModel
+@interface  FRUgcActivityVideoIntroRedpackV1OpenResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRRedpacketOpenResultStructModel *data;
+@end
+
+@interface  FRUgcBusinessAllianceUserInfoRequestModel : TTRequestModel
+@property (strong, nonatomic) NSString *user_id;
+@end
+
+@interface  FRUgcBusinessAllianceUserInfoResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber<Optional> *err_no;
+@property (strong, nonatomic) NSString<Optional> *err_msg;
+@property (strong, nonatomic) FRBusinessAllianceStructModel<Optional> *data;
 @end
 
 @interface  FRUgcPublishPostV1ContactRequestModel : TTRequestModel
 @property (strong, nonatomic) NSNumber *offset;
 @end
 
-@interface  FRUgcPublishPostV1ContactResponseModel : TTResponseModel
+@interface  FRUgcPublishPostV1ContactResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRPublishPostSearchUserContactStructModel *data;
@@ -2360,9 +2867,24 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString *concern_id;
 @end
 
-@interface  FRConcernV1CommitDiscareResponseModel : TTResponseModel
+@interface  FRConcernV1CommitDiscareResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
+@end
+
+@interface  FRForumHomeV1InfoRequestModel : TTRequestModel
+@property (strong, nonatomic) NSNumber<Optional> *forum_id;
+@property (strong, nonatomic) NSNumber<Optional> *is_preview;
+@property (strong, nonatomic) NSNumber<Optional> *request_source;
+@end
+
+@interface  FRForumHomeV1InfoResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber<Optional> *err_no;
+@property (strong, nonatomic) NSString<Optional> *err_tips;
+@property (strong, nonatomic) FRTTForumStructModel<Optional> *forum;
+@property (strong, nonatomic) NSArray<FRTTForumTabStructModel, Optional> *tabs;
+@property (strong, nonatomic) FRTTForumShareInfoStructModel<Optional> *share_info;
+@property (strong, nonatomic) FRTTForumPublisherControllStructModel<Optional> *publisher_control;
 @end
 
 @interface  FRUserProfileEvaluationRequestModel : TTRequestModel
@@ -2370,7 +2892,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *disable;
 @end
 
-@interface  FRUserProfileEvaluationResponseModel : TTResponseModel
+@interface  FRUserProfileEvaluationResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) NSNumber *score;
@@ -2398,7 +2920,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *rate;
 @end
 
-@interface  FRTtdiscussV1CommitPublishResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitPublishResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) FRThreadDataStructModel *thread;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
@@ -2413,7 +2935,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *op_extra_reason;
 @end
 
-@interface  FRTtdiscussV1CommitOpthreadResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitOpthreadResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -2429,7 +2951,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *msg_id;
 @end
 
-@interface  FRArticleV2TabCommentsResponseModel : TTResponseModel
+@interface  FRArticleV2TabCommentsResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber<Optional> *total_number;
 @property (strong, nonatomic) NSNumber<Optional> *ban_comment;
 @property (strong, nonatomic) NSNumber<Optional> *has_more;
@@ -2449,7 +2971,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @interface  FRUgcPublishPostV1CheckRequestModel : TTRequestModel
 @end
 
-@interface  FRUgcPublishPostV1CheckResponseModel : TTResponseModel
+@interface  FRUgcPublishPostV1CheckResponseModel : JSONModel<TTResponseModelProtocol>
 @property (assign, nonatomic) FRPostBindCheckType bind_mobile;
 @end
 
@@ -2461,7 +2983,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *profile_user_id;
 @end
 
-@interface  FRUserRelationFriendsV1ResponseModel : TTResponseModel
+@interface  FRUserRelationFriendsV1ResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSString *message;
 @property (strong, nonatomic) FRAddFriendsDataStructModel *data;
 @property (strong, nonatomic) NSString<Optional> *error_tips;
@@ -2471,7 +2993,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString *concern_id;
 @end
 
-@interface  FRConcernV1CommitCareResponseModel : TTResponseModel
+@interface  FRConcernV1CommitCareResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -2479,7 +3001,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @interface  FRUserRelationUserRecommendV1FollowChannelRecommendsRequestModel : TTRequestModel
 @end
 
-@interface  FRUserRelationUserRecommendV1FollowChannelRecommendsResponseModel : TTResponseModel
+@interface  FRUserRelationUserRecommendV1FollowChannelRecommendsResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSNumber<Optional> *auto_skip;
 @property (strong, nonatomic) NSString<Optional> *unselected_tips;
@@ -2488,27 +3010,33 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSArray<FRFollowChannelColdBootRecommendUserCardStructModel, Optional> *recommends;
 @end
 
-@interface  FRUgcPublishRepostV6CommitRequestModel : TTRequestModel
+@interface  FRUgcPublishPostV1ModifyRequestModel : TTRequestModel
 @property (strong, nonatomic) NSString *content;
-@property (strong, nonatomic) NSNumber *repost_type;
-@property (strong, nonatomic) NSString<Optional> *cover_url;
+@property (strong, nonatomic) NSString *concern_id;
+@property (strong, nonatomic) NSString<Optional> *image_uris;
+@property (strong, nonatomic) NSNumber<Optional> *longitude;
+@property (strong, nonatomic) NSNumber<Optional> *latitude;
+@property (strong, nonatomic) NSString<Optional> *city;
+@property (strong, nonatomic) NSString<Optional> *detail_pos;
+@property (strong, nonatomic) NSNumber<Optional> *is_forward;
+@property (strong, nonatomic) NSString<Optional> *phone;
+@property (strong, nonatomic) NSString<Optional> *title;
+@property (assign, nonatomic) FRFromWhereType from_where;
+@property (strong, nonatomic) NSNumber<Optional> *score;
+@property (strong, nonatomic) NSString<Optional> *category_id;
+@property (strong, nonatomic) NSNumber<Optional> *enter_from;
 @property (strong, nonatomic) NSString<Optional> *content_rich_span;
-@property (strong, nonatomic) NSString<Optional> *fw_user_id;
-@property (strong, nonatomic) NSString<Optional> *fw_id;
-@property (assign, nonatomic) FRUGCTypeCode fw_id_type;
-@property (strong, nonatomic) NSString<Optional> *opt_id;
-@property (assign, nonatomic) FRUGCTypeCode opt_id_type;
 @property (strong, nonatomic) NSString<Optional> *mention_user;
 @property (strong, nonatomic) NSString<Optional> *mention_concern;
-@property (strong, nonatomic) NSString<Optional> *schema;
-@property (strong, nonatomic) NSString<Optional> *title;
-@property (strong, nonatomic) NSNumber<Optional> *repost_to_comment;
+@property (strong, nonatomic) NSString *post_id;
+@property (strong, nonatomic) NSString<Optional> *forum_names;
+@property (strong, nonatomic) NSString<Optional> *sdk_params;
 @end
 
-@interface  FRUgcPublishRepostV6CommitResponseModel : TTResponseModel
-@property (strong, nonatomic) NSString<Optional> *err_tips;
+@interface  FRUgcPublishPostV1ModifyResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) FRUgcDataStructModel<Optional> *thread;
+@property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
 
 @interface  FRDongtaiGroupCommentDeleteRequestModel : TTRequestModel
@@ -2516,7 +3044,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *is_answer;
 @end
 
-@interface  FRDongtaiGroupCommentDeleteResponseModel : TTResponseModel
+@interface  FRDongtaiGroupCommentDeleteResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSString<Optional> *message;
 @property (strong, nonatomic) FRDeleteCommentDataStructModel *data;
 @end
@@ -2527,7 +3055,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString *reason;
 @end
 
-@interface  FRTtdiscussV1CommitOwnerapplyResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitOwnerapplyResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -2546,7 +3074,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (assign, nonatomic) FRCommentsGroupType group_type;
 @end
 
-@interface  FR2DataV4PostMessageResponseModel : TTResponseModel
+@interface  FR2DataV4PostMessageResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSString *message;
 @property (strong, nonatomic) NSString *group_id;
 @property (strong, nonatomic) NSNumber *tag_id;
@@ -2560,7 +3088,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *user_id;
 @end
 
-@interface  FRTtdiscussV1ForumFollowResponseModel : TTResponseModel
+@interface  FRTtdiscussV1ForumFollowResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (assign, nonatomic) FRHasMoreType has_more;
 @property (strong, nonatomic) NSArray<FRForumItemStructModel, Optional> *forum_list;
@@ -2576,7 +3104,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *sort_type;
 @end
 
-@interface  FRTtdiscussV2MovieListResponseModel : TTResponseModel
+@interface  FRTtdiscussV2MovieListResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *ugc_min_cursor;
 @property (strong, nonatomic) NSNumber *ugc_max_cursor;
 @property (strong, nonatomic) NSNumber *movie_min_cursor;
@@ -2593,9 +3121,53 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *count;
 @end
 
-@interface  FRUserRelationFriendsInviteResponseModel : TTResponseModel
+@interface  FRUserRelationFriendsInviteResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSString *message;
 @property (strong, nonatomic) FRInviteFriendsDataStructModel *data;
+@property (strong, nonatomic) NSString<Optional> *error_tips;
+@end
+
+@interface  FRUgcPublishVideoV4CheckAuthRequestModel : TTRequestModel
+@end
+
+@interface  FRUgcPublishVideoV4CheckAuthResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber *err_no;
+@property (strong, nonatomic) FRPublisherPermissionStructModel *publisher_permission_control;
+@property (strong, nonatomic) NSString<Optional> *err_tips;
+@end
+
+@interface  FRUgcThreadDetailV3InfoRequestModel : TTRequestModel
+@property (strong, nonatomic) NSNumber *thread_id;
+@end
+
+@interface  FRUgcThreadDetailV3InfoResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber<Optional> *err_no;
+@property (strong, nonatomic) NSString<Optional> *err_tips;
+@property (strong, nonatomic) NSString<Optional> *ad;
+@property (strong, nonatomic) NSString<Optional> *h5_extra;
+@property (strong, nonatomic) NSString<Optional> *like_desc;
+@property (strong, nonatomic) NSString<Optional> *content_rich_span;
+@property (strong, nonatomic) NSNumber<Optional> *repost_type;
+@property (strong, nonatomic) FRForumStructModel<Optional> *forum_info;
+@property (strong, nonatomic) FRThreadDataStructModel *thread;
+@property (strong, nonatomic) FRUgcDataStructModel<Optional> *origin_thread;
+@property (strong, nonatomic) FRGroupInfoStructModel<Optional> *origin_group;
+@property (strong, nonatomic) FRUGCVideoDataStructModel<Optional> *origin_ugc_video;
+@property (strong, nonatomic) FRRecommendSponsorStructModel<Optional> *recommend_sponsor;
+@property (strong, nonatomic) FRRepostCommonContentStructModel<Optional> *origin_common_content;
+@property (strong, nonatomic) FRTokenShareInfoStructModel<Optional> *share_info;
+@end
+
+@interface  FRUserRelationUserRecommendV1SupplementCardsRequestModel : TTRequestModel
+@property (strong, nonatomic) NSString *source;
+@property (strong, nonatomic) NSString *follow_user_id;
+@property (strong, nonatomic) NSNumber *count;
+@end
+
+@interface  FRUserRelationUserRecommendV1SupplementCardsResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber<Optional> *err_no;
+@property (strong, nonatomic) NSString<Optional> *message;
+@property (strong, nonatomic) FRRecommendMultiCardStructModel<Optional> *data;
 @property (strong, nonatomic) NSString<Optional> *error_tips;
 @end
 
@@ -2603,18 +3175,25 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *can_be_found_by_phone;
 @end
 
-@interface  FRUserRelationSetCanBeFoundByPhoneResponseModel : TTResponseModel
+@interface  FRUserRelationSetCanBeFoundByPhoneResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
 
-@interface  FRUgcPublishVideoV3CheckAuthRequestModel : TTRequestModel
+@interface  FRUserRelationFollowingV2RequestModel : TTRequestModel
+@property (strong, nonatomic) NSNumber<Optional> *user_id;
+@property (strong, nonatomic) NSNumber<Optional> *offset;
+@property (strong, nonatomic) NSNumber<Optional> *count;
+@property (strong, nonatomic) NSNumber<Optional> *cursor;
 @end
 
-@interface  FRUgcPublishVideoV3CheckAuthResponseModel : TTResponseModel
+@interface  FRUserRelationFollowingV2ResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
-@property (strong, nonatomic) FRPublisherPermissionStructModel *publisher_permission_control;
-@property (strong, nonatomic) NSString<Optional> *err_tips;
+@property (strong, nonatomic) NSString *err_tips;
+@property (strong, nonatomic) NSNumber *offset;
+@property (strong, nonatomic) NSNumber *cursor;
+@property (strong, nonatomic) NSNumber *has_more;
+@property (strong, nonatomic) FRRelationShipFollowersDataStructModel<Optional> *data;
 @end
 
 @interface  FRTtdiscussV1ThreadListRequestModel : TTRequestModel
@@ -2624,7 +3203,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *forum_id;
 @end
 
-@interface  FRTtdiscussV1ThreadListResponseModel : TTResponseModel
+@interface  FRTtdiscussV1ThreadListResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (assign, nonatomic) FRHasMoreType has_more;
 @property (strong, nonatomic) NSNumber *min_cursor;
@@ -2640,7 +3219,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString *token;
 @end
 
-@interface  FRUgcActivityUploadContactRedpackV1OpenResponseModel : TTResponseModel
+@interface  FRUgcActivityUploadContactRedpackV1OpenResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRContactsRedpacketOpenResultStructModel *data;
@@ -2656,7 +3235,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *reply_user_id;
 @end
 
-@interface  FRTtdiscussV2CommitCommentResponseModel : TTResponseModel
+@interface  FRTtdiscussV2CommitCommentResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSNumber *thread_id;
 @property (strong, nonatomic) NSNumber *comment_id;
@@ -2668,7 +3247,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *comment_id;
 @end
 
-@interface  FRTtdiscussV1CommitCommentdiggResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitCommentdiggResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -2677,7 +3256,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *thread_id;
 @end
 
-@interface  FRUgcThreadDetailV2InfoResponseModel : TTResponseModel
+@interface  FRUgcThreadDetailV2InfoResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber<Optional> *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) NSString<Optional> *ad;
@@ -2704,7 +3283,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *reply_user_id;
 @end
 
-@interface  FRTtdiscussV1CommitCommentResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitCommentResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSNumber *thread_id;
 @property (strong, nonatomic) NSNumber *comment_id;
@@ -2718,7 +3297,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *offset;
 @end
 
-@interface  FRTtdiscussV1DiggUserResponseModel : TTResponseModel
+@interface  FRTtdiscussV1DiggUserResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSNumber *thread_id;
 @property (strong, nonatomic) NSNumber *anonymous_count;
@@ -2728,11 +3307,22 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
 
+@interface  FRUgcPublishImageV1SuggestRequestModel : TTRequestModel
+@property (strong, nonatomic) NSString *keyword;
+@property (strong, nonatomic) NSNumber *offset;
+@end
+
+@interface  FRUgcPublishImageV1SuggestResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber<Optional> *err_no;
+@property (strong, nonatomic) NSString<Optional> *err_tips;
+@property (strong, nonatomic) FRGifImageDataListStructModel<Optional> *data;
+@end
+
 @interface  FRUserRelationUserRecommendV1DislikeUserRequestModel : TTRequestModel
 @property (strong, nonatomic) NSNumber *dislike_user_id;
 @end
 
-@interface  FRUserRelationUserRecommendV1DislikeUserResponseModel : TTResponseModel
+@interface  FRUserRelationUserRecommendV1DislikeUserResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -2741,7 +3331,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString *thread_id;
 @end
 
-@interface  FRTtdiscussV1CommitCancelthreaddiggResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitCancelthreaddiggResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -2750,15 +3340,23 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *forum_id;
 @end
 
-@interface  FRTtdiscussV1CommitFollowforumResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitFollowforumResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
+@end
+
+@interface  FRUserProfileAuthCheckRequestModel : TTRequestModel
+@end
+
+@interface  FRUserProfileAuthCheckResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSString *message;
+@property (strong, nonatomic) FRProfileAuthCheckDataStructModel *data;
 @end
 
 @interface  FRUserExpressionConfigRequestModel : TTRequestModel
 @end
 
-@interface  FRUserExpressionConfigResponseModel : TTResponseModel
+@interface  FRUserExpressionConfigResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRUserExpressionConfigStructModel<Optional> *data;
@@ -2769,7 +3367,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString *words;
 @end
 
-@interface  FRUgcPublishPostV1SuggestResponseModel : TTResponseModel
+@interface  FRUgcPublishPostV1SuggestResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRPublishPostSearchUserSuggestStructModel *data;
@@ -2779,7 +3377,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *forum_id;
 @end
 
-@interface  FRTtdiscussV1ForumIntroductionResponseModel : TTResponseModel
+@interface  FRTtdiscussV1ForumIntroductionResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSArray<FRRoleMemberStructModel, Optional> *role_members;
 @property (strong, nonatomic) NSString *qr_code_uri;
@@ -2793,10 +3391,57 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSArray<FRForumStatDataStructModel, Optional> *forum_stat_data_list;
 @end
 
+@interface  FRUgcPublishVideoV4CommitRequestModel : TTRequestModel
+@property (strong, nonatomic) NSString<Optional> *title;
+@property (strong, nonatomic) NSString *video_id;
+@property (strong, nonatomic) NSString *video_name;
+@property (strong, nonatomic) NSString *thumb_uri;
+@property (strong, nonatomic) NSNumber *video_type;
+@property (strong, nonatomic) NSNumber *video_duration;
+@property (strong, nonatomic) NSNumber *width;
+@property (strong, nonatomic) NSNumber *height;
+@property (strong, nonatomic) NSNumber<Optional> *thumb_source;
+@property (strong, nonatomic) NSNumber<Optional> *enter_from;
+@property (strong, nonatomic) NSString<Optional> *title_rich_span;
+@property (strong, nonatomic) NSString<Optional> *mention_user;
+@property (strong, nonatomic) NSString<Optional> *mention_concern;
+@property (strong, nonatomic) NSString<Optional> *category;
+@property (strong, nonatomic) NSString<Optional> *music_id;
+@property (strong, nonatomic) NSString<Optional> *challenge_group_id;
+@property (strong, nonatomic) NSString<Optional> *theme_id;
+@property (strong, nonatomic) NSString<Optional> *effect_id;
+@property (strong, nonatomic) NSNumber<Optional> *beautify_face;
+@property (strong, nonatomic) NSNumber<Optional> *beautify_eye;
+@property (strong, nonatomic) NSString<Optional> *role_name;
+@property (strong, nonatomic) NSNumber<Optional> *role_type;
+@property (strong, nonatomic) NSNumber<Optional> *video_latitude;
+@property (strong, nonatomic) NSNumber<Optional> *video_longitude;
+@property (strong, nonatomic) NSNumber<Optional> *is_duet;
+@property (strong, nonatomic) NSString<Optional> *origin_group_id;
+@property (strong, nonatomic) NSNumber<Optional> *forum_type;
+@property (strong, nonatomic) NSString<Optional> *filter_id;
+@property (strong, nonatomic) NSString<Optional> *game_id;
+@property (strong, nonatomic) NSNumber<Optional> *game_type;
+@property (strong, nonatomic) NSString<Optional> *vertical_extra;
+@property (strong, nonatomic) NSString<Optional> *tma_id;
+@property (strong, nonatomic) NSNumber<Optional> *tma_type;
+@property (strong, nonatomic) NSNumber<Optional> *dub_type;
+@property (strong, nonatomic) NSString<Optional> *effect_type;
+@property (strong, nonatomic) NSNumber<Optional> *is_ad;
+@property (strong, nonatomic) NSNumber<Optional> *flipchat_sync;
+@end
+
+@interface  FRUgcPublishVideoV4CommitResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber *err_no;
+@property (strong, nonatomic) FRUgcVideoStructModel *data;
+@property (strong, nonatomic) NSString<Optional> *err_tips;
+@property (strong, nonatomic) FRUGCPublishGuideInfoStructModel<Optional> *guide_info;
+@end
+
 @interface  FRUserRelationContactinfoRequestModel : TTRequestModel
 @end
 
-@interface  FRUserRelationContactinfoResponseModel : TTResponseModel
+@interface  FRUserRelationContactinfoResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSString *message;
 @property (strong, nonatomic) NSNumber *is_collected;
 @end
@@ -2807,7 +3452,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *max_cursor;
 @end
 
-@interface  FRTtdiscussV1MomentListResponseModel : TTResponseModel
+@interface  FRTtdiscussV1MomentListResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (assign, nonatomic) FRLoginStatusType login_status;
 @property (assign, nonatomic) FRHasMoreType has_more;
@@ -2818,11 +3463,41 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
 
+@interface  FRTfeRouteUgcVoteCommitRequestModel : TTRequestModel
+@property (strong, nonatomic) NSNumber<Optional> *option_id;
+@end
+
+@interface  FRTfeRouteUgcVoteCommitResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber<Optional> *record_id;
+@property (strong, nonatomic) NSNumber *err_no;
+@property (strong, nonatomic) NSString<Optional> *err_tips;
+@end
+
+@interface  FRUgcBusinessAllianceUpdateProtocolStatusRequestModel : TTRequestModel
+@property (strong, nonatomic) NSString *user_id;
+@property (strong, nonatomic) NSNumber *status;
+@end
+
+@interface  FRUgcBusinessAllianceUpdateProtocolStatusResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber<Optional> *err_no;
+@property (strong, nonatomic) NSString<Optional> *err_msg;
+@end
+
+@interface  FRUgcBusinessAllianceUpdateBusinessTagRequestModel : TTRequestModel
+@property (strong, nonatomic) NSString *user_id;
+@property (strong, nonatomic) NSNumber *tag;
+@end
+
+@interface  FRUgcBusinessAllianceUpdateBusinessTagResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber<Optional> *err_no;
+@property (strong, nonatomic) NSString<Optional> *err_msg;
+@end
+
 @interface  FRUgcPublishShareV1SetConfigRequestModel : TTRequestModel
 @property (strong, nonatomic) NSNumber *share_repost;
 @end
 
-@interface  FRUgcPublishShareV1SetConfigResponseModel : TTResponseModel
+@interface  FRUgcPublishShareV1SetConfigResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -2835,7 +3510,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *sort_type;
 @end
 
-@interface  FRVerticalMovie1ReviewsResponseModel : TTResponseModel
+@interface  FRVerticalMovie1ReviewsResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *post_min_cursor;
 @property (strong, nonatomic) NSNumber *post_max_cursor;
 @property (strong, nonatomic) NSNumber *review_min_cursor;
@@ -2854,7 +3529,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *group_id;
 @end
 
-@interface  FRTtdiscussV1CommentRecommendforumResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommentRecommendforumResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSArray<FRForumItemStructModel, Optional> *forum_info;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
@@ -2866,7 +3541,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *forum_flag;
 @end
 
-@interface  FRUgcPublishPostV1HashtagResponseModel : TTResponseModel
+@interface  FRUgcPublishPostV1HashtagResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRPublishPostSearchHashtagSuggestStructModel *data;
@@ -2879,7 +3554,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *forum_id;
 @end
 
-@interface  FRTtdiscussV1CommitOpcommentResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitOpcommentResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -2890,7 +3565,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *forum_id;
 @end
 
-@interface  FRTtdiscussV1ThreadDetailResponseModel : TTResponseModel
+@interface  FRTtdiscussV1ThreadDetailResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) FRThreadDataStructModel *thread;
 @property (strong, nonatomic) FRCommentBrowStructModel *comments;
@@ -2906,9 +3581,12 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *offset;
 @property (strong, nonatomic) NSNumber *count;
 @property (strong, nonatomic) NSNumber *is_preload;
+@property (strong, nonatomic) NSNumber<Optional> *is_live;
+@property (strong, nonatomic) NSNumber<Optional> *live_gid;
+@property (strong, nonatomic) NSString<Optional> *extra;
 @end
 
-@interface  FRUgcThreadStoryVResponseModel : TTResponseModel
+@interface  FRUgcThreadStoryVResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSString *message;
 @property (strong, nonatomic) FRUGCThreadStoryDataStructModel *data;
 @end
@@ -2919,7 +3597,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *remote_ip;
 @end
 
-@interface  FRTtdiscussV2ForumListResponseModel : TTResponseModel
+@interface  FRTtdiscussV2ForumListResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (assign, nonatomic) FRInnerForumType type;
 @property (strong, nonatomic) FRForumStructModel *forum_info;
@@ -2929,19 +3607,30 @@ FRUgcConcernThreadV3ListRequestModel;
 @end
 
 @interface  FRUserRelationContactfriendsRequestModel : TTRequestModel
-@property (strong, nonatomic) NSNumber *auto_follow;
+@property (strong, nonatomic) NSString *contact_source;
 @end
 
-@interface  FRUserRelationContactfriendsResponseModel : TTResponseModel
+@interface  FRUserRelationContactfriendsResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSString *message;
 @property (strong, nonatomic) FRUserRelationContactFriendsDataStructModel *data;
+@property (strong, nonatomic) NSNumber<Optional> *auto_follow;
+@end
+
+@interface  FRUgcBusinessAllianceBusinessBoxInfoRequestModel : TTRequestModel
+@property (strong, nonatomic) NSString *user_id;
+@end
+
+@interface  FRUgcBusinessAllianceBusinessBoxInfoResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber<Optional> *err_no;
+@property (strong, nonatomic) NSString<Optional> *err_msg;
+@property (strong, nonatomic) FRBusinessToolboxDataStructModel<Optional> *data;
 @end
 
 @interface  FRUgcThreadDetailV2ContentRequestModel : TTRequestModel
 @property (strong, nonatomic) NSNumber *thread_id;
 @end
 
-@interface  FRUgcThreadDetailV2ContentResponseModel : TTResponseModel
+@interface  FRUgcThreadDetailV2ContentResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString *content;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
@@ -2952,7 +3641,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *forum_flag;
 @end
 
-@interface  FRUgcPublishPostV1HotForumResponseModel : TTResponseModel
+@interface  FRUgcPublishPostV1HotForumResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRPublishPostSearchHashtagHotStructModel *data;
@@ -2964,7 +3653,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *offset;
 @end
 
-@interface  FRTtdiscussV1ThreadDetailCommentResponseModel : TTResponseModel
+@interface  FRTtdiscussV1ThreadDetailCommentResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSNumber *comment_number;
 @property (strong, nonatomic) FRDiscussCommentBrowStructModel *comments;
@@ -2975,7 +3664,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString *url;
 @end
 
-@interface  FRUgcThreadLinkV1ConvertResponseModel : TTResponseModel
+@interface  FRUgcThreadLinkV1ConvertResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRQRCodeLinkInfoStructModel *url_info;
@@ -2998,7 +3687,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *title;
 @end
 
-@interface  FRUgcPublishShareV3NotifyResponseModel : TTResponseModel
+@interface  FRUgcPublishShareV3NotifyResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -3011,7 +3700,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *group_id;
 @end
 
-@interface  FRUgcCommentAuthorActionV2DeleteResponseModel : TTResponseModel
+@interface  FRUgcCommentAuthorActionV2DeleteResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -3023,7 +3712,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *sort_type;
 @end
 
-@interface  FRVerticalMovie1ShortReviewsResponseModel : TTResponseModel
+@interface  FRVerticalMovie1ShortReviewsResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSArray<FRUgcDataStructModel, Optional> *posts;
 @property (strong, nonatomic) NSNumber *min_cursor;
 @property (strong, nonatomic) NSNumber *max_cursor;
@@ -3040,7 +3729,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *offset;
 @end
 
-@interface  FRUgcRepostV1ListResponseModel : TTResponseModel
+@interface  FRUgcRepostV1ListResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber<Optional> *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) NSNumber<Optional> *has_more;
@@ -3050,15 +3739,55 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSArray<FRFooterRepostStructModel, Optional> *stick_reposts;
 @end
 
-@interface  FRUserRelationUserRecommendV1SupplementCardRequestModel : TTRequestModel
-@property (strong, nonatomic) NSString *source;
-@property (strong, nonatomic) NSString *follow_user_id;
+@interface  FRUserProfileUnstickV1RequestModel : TTRequestModel
+@property (strong, nonatomic) NSNumber *id;
 @end
 
-@interface  FRUserRelationUserRecommendV1SupplementCardResponseModel : TTResponseModel
-@property (strong, nonatomic) NSNumber<Optional> *err_no;
-@property (strong, nonatomic) NSString<Optional> *message;
-@property (strong, nonatomic) FRRecommendCardStructModel<Optional> *data;
+@interface  FRUserProfileUnstickV1ResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber *err_no;
+@property (strong, nonatomic) NSString *err_tips;
+@end
+
+@interface  FRUgcPublishPostV5CommitRequestModel : TTRequestModel
+@property (strong, nonatomic) NSString *content;
+@property (strong, nonatomic) NSString *concern_id;
+@property (strong, nonatomic) NSString<Optional> *image_uris;
+@property (strong, nonatomic) NSNumber<Optional> *longitude;
+@property (strong, nonatomic) NSNumber<Optional> *latitude;
+@property (strong, nonatomic) NSString<Optional> *city;
+@property (strong, nonatomic) NSString<Optional> *detail_pos;
+@property (strong, nonatomic) NSNumber<Optional> *is_forward;
+@property (strong, nonatomic) NSString<Optional> *phone;
+@property (strong, nonatomic) NSString<Optional> *title;
+@property (assign, nonatomic) FRFromWhereType from_where;
+@property (strong, nonatomic) NSNumber<Optional> *score;
+@property (strong, nonatomic) NSString<Optional> *category_id;
+@property (strong, nonatomic) NSNumber<Optional> *enter_from;
+@property (strong, nonatomic) NSString<Optional> *content_rich_span;
+@property (strong, nonatomic) NSString<Optional> *mention_user;
+@property (strong, nonatomic) NSString<Optional> *mention_concern;
+@property (strong, nonatomic) NSString<Optional> *community_id;
+@property (strong, nonatomic) NSString<Optional> *business_payload;
+@property (strong, nonatomic) NSString<Optional> *forum_names;
+@property (strong, nonatomic) NSString<Optional> *promotion_id;
+@property (strong, nonatomic) NSNumber<Optional> *flipchat_sync;
+@property (strong, nonatomic) NSString<Optional> *sdk_params;
+@end
+
+@interface  FRUgcPublishPostV5CommitResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber *err_no;
+@property (strong, nonatomic) FRUgcDataStructModel<Optional> *thread;
+@property (strong, nonatomic) NSString<Optional> *err_tips;
+@property (strong, nonatomic) FRUGCPublishGuideInfoStructModel<Optional> *guide_info;
+@end
+
+@interface  FRUserProfileStickV1RequestModel : TTRequestModel
+@property (strong, nonatomic) NSNumber *id;
+@end
+
+@interface  FRUserProfileStickV1ResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber *err_no;
+@property (strong, nonatomic) NSString *err_tips;
 @end
 
 @interface  FRUgcDiggV1ListRequestModel : TTRequestModel
@@ -3069,7 +3798,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *offset;
 @end
 
-@interface  FRUgcDiggV1ListResponseModel : TTResponseModel
+@interface  FRUgcDiggV1ListResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber<Optional> *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) NSNumber<Optional> *has_more;
@@ -3097,7 +3826,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *enter_from;
 @end
 
-@interface  FRConcernV2CommitPublishResponseModel : TTResponseModel
+@interface  FRConcernV2CommitPublishResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) FRUgcDataStructModel<Optional> *thread;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
@@ -3110,7 +3839,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *max_cursor;
 @end
 
-@interface  FRConcernV1ThreadListResponseModel : TTResponseModel
+@interface  FRConcernV1ThreadListResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRTipsStructModel<Optional> *tips;
@@ -3126,10 +3855,24 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *offset;
 @end
 
-@interface  FRTtdiscussV1ThreadCommentsResponseModel : TTResponseModel
+@interface  FRTtdiscussV1ThreadCommentsResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) FRCommentBrowStructModel *comments;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
+@end
+
+@interface  FRUserRelationInteractionFansV1RequestModel : TTRequestModel
+@property (strong, nonatomic) NSNumber<Optional> *offset;
+@property (strong, nonatomic) NSNumber<Optional> *count;
+@property (strong, nonatomic) NSString<Optional> *user_id;
+@end
+
+@interface  FRUserRelationInteractionFansV1ResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber *err_no;
+@property (strong, nonatomic) NSString *err_tips;
+@property (strong, nonatomic) NSNumber *has_more;
+@property (strong, nonatomic) NSNumber *offset;
+@property (strong, nonatomic) NSArray<FRRelationShipUserInfoStructModel, Optional> *data;
 @end
 
 @interface  FRUserRelationCredibleFriendsRequestModel : TTRequestModel
@@ -3139,7 +3882,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *rel_type;
 @end
 
-@interface  FRUserRelationCredibleFriendsResponseModel : TTResponseModel
+@interface  FRUserRelationCredibleFriendsResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSString *message;
 @property (strong, nonatomic) FRRecommendRedpacketResultStructModel<Optional> *data;
 @property (strong, nonatomic) NSString<Optional> *error_tips;
@@ -3155,7 +3898,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *fold;
 @end
 
-@interface  FRArticleV1TabCommentsResponseModel : TTResponseModel
+@interface  FRArticleV1TabCommentsResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber<Optional> *total_number;
 @property (strong, nonatomic) NSNumber<Optional> *ban_comment;
 @property (strong, nonatomic) NSNumber<Optional> *has_more;
@@ -3176,7 +3919,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *sort_type;
 @end
 
-@interface  FRTtdiscussV1SmartReviewListResponseModel : TTResponseModel
+@interface  FRTtdiscussV1SmartReviewListResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSArray<FRUgcDataStructModel, Optional> *thread_list;
 @property (strong, nonatomic) NSNumber *min_cursor;
 @property (strong, nonatomic) NSNumber *max_cursor;
@@ -3188,17 +3931,26 @@ FRUgcConcernThreadV3ListRequestModel;
 @interface  FRUserRelationContactcheckRequestModel : TTRequestModel
 @end
 
-@interface  FRUserRelationContactcheckResponseModel : TTResponseModel
+@interface  FRUserRelationContactcheckResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRUserRelationContactCheckDataStructModel *data;
+@end
+
+@interface  FRUserRelationSetUserPrivacyExtendRequestModel : TTRequestModel
+@property (strong, nonatomic) NSNumber *share_with_avatar;
+@end
+
+@interface  FRUserRelationSetUserPrivacyExtendResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSNumber *err_no;
+@property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
 
 @interface  FRTtdiscussV1CommitThreaddiggRequestModel : TTRequestModel
 @property (strong, nonatomic) NSString *thread_id;
 @end
 
-@interface  FRTtdiscussV1CommitThreaddiggResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitThreaddiggResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -3206,10 +3958,38 @@ FRUgcConcernThreadV3ListRequestModel;
 @interface  FRTtdiscussV1ForumRecommendRequestModel : TTRequestModel
 @end
 
-@interface  FRTtdiscussV1ForumRecommendResponseModel : TTResponseModel
+@interface  FRTtdiscussV1ForumRecommendResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSArray<FRForumItemStructModel, Optional> *forum_list;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
+@end
+
+@interface  FRUgcPublishRepostV8CommitRequestModel : TTRequestModel
+@property (strong, nonatomic) NSString *content;
+@property (strong, nonatomic) NSNumber *repost_type;
+@property (strong, nonatomic) NSString<Optional> *cover_url;
+@property (strong, nonatomic) NSString<Optional> *content_rich_span;
+@property (strong, nonatomic) NSString<Optional> *fw_user_id;
+@property (strong, nonatomic) NSString<Optional> *fw_id;
+@property (assign, nonatomic) FRUGCTypeCode fw_id_type;
+@property (strong, nonatomic) NSString<Optional> *opt_id;
+@property (assign, nonatomic) FRUGCTypeCode opt_id_type;
+@property (strong, nonatomic) NSString<Optional> *mention_user;
+@property (strong, nonatomic) NSString<Optional> *mention_concern;
+@property (strong, nonatomic) NSString<Optional> *schema;
+@property (strong, nonatomic) NSString<Optional> *fw_native_schema;
+@property (strong, nonatomic) NSString<Optional> *fw_share_url;
+@property (strong, nonatomic) NSString<Optional> *title;
+@property (strong, nonatomic) NSNumber<Optional> *repost_to_comment;
+@property (strong, nonatomic) NSString<Optional> *sdk_params;
+@property (strong, nonatomic) NSString<Optional> *forum_names;
+@property (strong, nonatomic) NSString<Optional> *business_payload;
+@end
+
+@interface  FRUgcPublishRepostV8CommitResponseModel : JSONModel<TTResponseModelProtocol>
+@property (strong, nonatomic) NSString<Optional> *err_tips;
+@property (strong, nonatomic) NSNumber *err_no;
+@property (strong, nonatomic) FRUgcDataStructModel<Optional> *thread;
 @end
 
 @interface  FRUserRelationMfollowRequestModel : TTRequestModel
@@ -3218,7 +3998,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *reason;
 @end
 
-@interface  FRUserRelationMfollowResponseModel : TTResponseModel
+@interface  FRUserRelationMfollowResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -3227,7 +4007,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *forum_id;
 @end
 
-@interface  FRTtdiscussV1ForumListResponseModel : TTResponseModel
+@interface  FRTtdiscussV1ForumListResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (assign, nonatomic) FRHasMoreType has_more;
 @property (strong, nonatomic) NSNumber *min_cursor;
@@ -3249,18 +4029,19 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *group_id;
 @end
 
-@interface  FRUserRelationUserRecommendV1SupplementRecommendsResponseModel : TTResponseModel
+@interface  FRUserRelationUserRecommendV1SupplementRecommendsResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) NSArray<FRRecommendCardStructModel, Optional> *user_cards;
 @property (strong, nonatomic) NSNumber<Optional> *has_more;
+@property (strong, nonatomic) FRRecommendCardRelatedControlStructModel<Optional> *related_control;
 @end
 
 @interface  FRTtdiscussV1CommitUnfollowforumRequestModel : TTRequestModel
 @property (strong, nonatomic) NSNumber *forum_id;
 @end
 
-@interface  FRTtdiscussV1CommitUnfollowforumResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitUnfollowforumResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -3269,7 +4050,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *forum_id;
 @end
 
-@interface  FRTtdiscussV1CommitForumforwardResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitForumforwardResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSNumber *forum_id;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
@@ -3279,7 +4060,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *thread_id;
 @end
 
-@interface  FRTtdiscussV1CommitThreaddeleteResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitThreaddeleteResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -3291,7 +4072,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *sort_type;
 @end
 
-@interface  FRTtdiscussV1LongReviewListResponseModel : TTResponseModel
+@interface  FRTtdiscussV1LongReviewListResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSArray<FRGroupInfoStructModel, Optional> *group_list;
 @property (strong, nonatomic) NSNumber *min_cursor;
 @property (strong, nonatomic) NSNumber *max_cursor;
@@ -3303,7 +4084,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @interface  FRUserRelationWeitoutiaoRecommendsRequestModel : TTRequestModel
 @end
 
-@interface  FRUserRelationWeitoutiaoRecommendsResponseModel : TTResponseModel
+@interface  FRUserRelationWeitoutiaoRecommendsResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSArray<FRColdStartRecommendUserStructModel, Optional> *users;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
@@ -3315,7 +4096,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString *token;
 @end
 
-@interface  FRUgcActivityFollowRedpackV1OpenResponseModel : TTResponseModel
+@interface  FRUgcActivityFollowRedpackV1OpenResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRRedpacketOpenResultStructModel *data;
@@ -3324,7 +4105,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @interface  FRTtdiscussV1ForumIntroapplypageRequestModel : TTRequestModel
 @end
 
-@interface  FRTtdiscussV1ForumIntroapplypageResponseModel : TTResponseModel
+@interface  FRTtdiscussV1ForumIntroapplypageResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSNumber *user_id;
 @end
@@ -3333,7 +4114,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *upload_id;
 @end
 
-@interface  FRTtdiscussV2UgcVideoUploadVideoUrlResponseModel : TTResponseModel
+@interface  FRTtdiscussV2UgcVideoUploadVideoUrlResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString *upload_id;
 @property (strong, nonatomic) NSString *upload_url;
@@ -3347,7 +4128,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString *reason;
 @end
 
-@interface  FRTtdiscussV1CommitMultiownerapplyResponseModel : TTResponseModel
+@interface  FRTtdiscussV1CommitMultiownerapplyResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -3356,7 +4137,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString *to_user_list;
 @end
 
-@interface  FRUserRelationMultiFollowResponseModel : TTResponseModel
+@interface  FRUserRelationMultiFollowResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @end
@@ -3368,7 +4149,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *sort_type;
 @end
 
-@interface  FRVerticalMovie1LongReviewsResponseModel : TTResponseModel
+@interface  FRVerticalMovie1LongReviewsResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSArray<FRGroupInfoStructModel, Optional> *reviews;
 @property (strong, nonatomic) NSNumber *min_cursor;
 @property (strong, nonatomic) NSNumber *max_cursor;
@@ -3384,13 +4165,13 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber *max_cursor;
 @end
 
-@interface  FRUgcConcernThreadV3ListResponseModel : TTResponseModel
+@interface  FRUgcConcernThreadV3ListResponseModel : JSONModel<TTResponseModelProtocol>
 @property (strong, nonatomic) NSNumber *err_no;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRTipsStructModel<Optional> *tips;
 @property (assign, nonatomic) FRHasMoreType has_more;
 @property (strong, nonatomic) NSNumber *min_cursor;
 @property (strong, nonatomic) NSNumber *max_cursor;
-@property (strong, nonatomic) NSArray<FRUgcDataStructModel, Optional> *threads;
+@property (strong, nonatomic) NSArray<Optional> *threads;
 @end
 

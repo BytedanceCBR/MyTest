@@ -72,7 +72,26 @@
 
 -(void)initSubways
 {
+    UIImage *img = SYS_IMG(@"mapsearch_round_white_bg");
+    img = [img resizableImageWithCapInsets:UIEdgeInsetsMake(15, 15, 15, 15)];
     
+    _subwayBgView = [[UIControl alloc] init];
+    _subwayBgView.layer.contents = (id)[img CGImage];
+    [_subwayBgView addTarget:self action:@selector(onSubwayInfo) forControlEvents:UIControlEventTouchUpInside];
+    
+    _subwayLabel = [[UILabel alloc]init];
+    _subwayLabel.font = [UIFont themeFontRegular:14];
+    _subwayLabel.textColor = [UIColor themeGray1];
+    
+    img = SYS_IMG(@"mapsearch_subway");
+    _subwayIconView = [[UIImageView alloc] initWithImage:img];
+    
+    [_subwayBgView addSubview:_subwayIconView];
+    [_subwayBgView addSubview:_subwayLabel];
+    
+    [self addSubview:_subwayBgView];
+    
+    _subwayBgView.hidden = YES;
 }
 
 -(void)initConstraints
@@ -106,6 +125,24 @@
     }];
     
     //TODO: add subway
+    [_subwayBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self).offset(88);
+        //        make.width.mas_equalTo(200);
+        make.top.mas_equalTo(self).offset(0);
+        make.bottom.mas_equalTo(self).offset(0);
+        make.right.mas_equalTo(self.subwayLabel.mas_right).offset(34);
+    }];
+    
+    [_subwayIconView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(26);
+        make.centerY.mas_equalTo(self.drawLineBgView).offset(-2);
+        make.size.mas_equalTo(CGSizeMake(24, 24));
+    }];
+    
+    [_subwayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.subwayIconView);
+        make.left.mas_equalTo(self.subwayIconView.mas_right).offset(8);
+    }];
     
 }
 
@@ -157,6 +194,23 @@
 {
     _drawLineBgView.hidden = YES;
     _subwayBgView.hidden = NO;
+    
+    _subwayLabel.text = line;
+    [_subwayLabel sizeToFit];
+    CGFloat padding = 78 ; //左右间距 箭头
+    
+    CGFloat width = MIN(ceil(_subwayLabel.width), (SCREEN_WIDTH - 98 - padding));
+    CGFloat left = (SCREEN_WIDTH - width - padding)/2;
+    if (left < 78) {
+        left = 78;
+    }
+    [_subwayLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(width);
+    }];
+    [_subwayBgView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(left);
+    }];
+    
 }
 
 
@@ -168,6 +222,11 @@
 -(void)onDrawLineInfo
 {
     [self.delegate showNeighborList:self.drawLineLabel.text];
+}
+
+-(void)onSubwayInfo
+{
+    [self.delegate showSubwayInBottombar:self];
 }
 
 

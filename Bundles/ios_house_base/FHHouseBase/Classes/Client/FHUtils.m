@@ -62,6 +62,25 @@
     return dic;
 }
 
++ (NSString *)getUrlFormStrFromDict:(NSDictionary *)dic andFirstChar:(BOOL)withFirst
+{
+    NSMutableString *resultStr = [NSMutableString new];
+    
+    for (NSString * key in dic.allKeys) {
+        if ([dic[key] isKindOfClass:[NSString class]] || [dic[key] isKindOfClass:[NSNumber class]]) {
+            [resultStr appendString:[NSString stringWithFormat:@"&%@=%@",key,dic[key]]];
+        }else if([dic[key] isKindOfClass:[NSDictionary class]])
+        {
+            [resultStr appendString:[NSString stringWithFormat:@"&%@=%@",key,[FHUtils getJsonStrFrom:dic[key]]]];
+        }
+    }
+    
+    if (!withFirst && resultStr.length > 1) {
+        resultStr = [resultStr substringFromIndex:1];
+    }
+    return resultStr;
+}
+
 /**
  * @method
  *
@@ -102,6 +121,18 @@
     }
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *strDate = [dateFormatter stringFromDate:date];
+    return strDate;
+}
+
++ (NSString *)stringFromNSDateDay:(NSDate *)date
+{
+    if(!date)
+    {
+        return nil;
+    }
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
     NSString *strDate = [dateFormatter stringFromDate:date];
     return strDate;
 }

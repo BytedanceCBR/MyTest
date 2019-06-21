@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailAgentItemView : UIControl
 
 @property (nonatomic, strong)   UIImageView       *avator;
+@property(nonatomic , strong) UIImageView *identifyView;
 @property (nonatomic, strong)   UIButton       *licenceIcon;
 @property (nonatomic, strong)   UIButton       *callBtn;
 @property (nonatomic, strong)   UIButton       *imBtn;

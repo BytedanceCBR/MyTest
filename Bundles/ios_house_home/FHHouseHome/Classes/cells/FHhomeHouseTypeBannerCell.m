@@ -15,6 +15,11 @@
 #import "FHHouseBridgeManager.h"
 #import <TTRoute.h>
 #import <FHHomeConfigManager.h>
+#import <FHHomeCellHelper.h>
+
+@interface FHhomeHouseTypeBannerCell()
+@property(nonatomic,weak)FHConfigDataModel *cuurentDataModel;
+@end
 
 @implementation FHhomeHouseTypeBannerCell
 
@@ -29,7 +34,7 @@
     // Configure the view for the selected state
 }
 
-- (void)refreshData:(id)data
+- (void)refreshData:(FHHouseType)houseType
 {
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     
@@ -45,18 +50,37 @@
         [view removeFromSuperview];
     }
     
-    NSArray<FHConfigDataOpData2ItemsModel> *items = ((FHConfigDataOpData2ListModel *)dataModel.opData2list.firstObject).opDataList.items;
-    CGFloat viewWidth = ([UIScreen mainScreen].bounds.size.width - 28) / 4.0f;
+    NSArray<FHConfigDataOpData2ItemsModel> *items = nil;
+    
+    for (NSInteger i = 0; i < dataModel.opData2list.count; i ++) {
+        FHConfigDataOpData2ListModel *dataModelItem = dataModel.opData2list[i];
+        if (dataModelItem.opData2Type && [dataModelItem.opData2Type integerValue] == houseType && dataModelItem.opDataList && dataModelItem.opDataList.items.count > 0) {
+            items = dataModelItem.opDataList.items;
+        }
+    }
+    
+    CGFloat viewWidth = ([UIScreen mainScreen].bounds.size.width - 32) / 4.0f;
+    if ([TTDeviceHelper isScreenWidthLarge320]) {
+        viewWidth = ([UIScreen mainScreen].bounds.size.width - 30) / 4.0f;
+    }
+    CGFloat scaleRatio = 0.9;
+
+    CGFloat imageWidth = viewWidth * scaleRatio;
+    CGFloat imageHeight = viewWidth * 69 / 82 * scaleRatio;
     
     for (NSInteger i = 0; i < items.count; i++) {
+        if (i > 3) {
+            break;
+        }
         FHConfigDataOpData2ItemsModel *itemModel = items[i];
 
         UIView *containView = [UIView new];
-        [containView setFrame:CGRectMake( i * viewWidth + 14, 4.0f, viewWidth, 80)];
-        [containView setBackgroundColor:[UIColor whiteColor]];
-
+        [containView setFrame:CGRectMake( i * viewWidth + 15, 8.0f, viewWidth, 80)];
+        [containView setBackgroundColor:[UIColor clearColor]];
+        containView.layer.cornerRadius = 2;
         
         UIImageView *backImage = [UIImageView new];
+        UIView *shaderBackView = [UIView new];
 
         if ([itemModel.image isKindOfClass:[NSArray class]] && [itemModel.image.firstObject isKindOfClass:[FHConfigDataOpData2ItemsImageModel class]]) {
             FHConfigDataOpData2ItemsImageModel *itemImage = (FHConfigDataOpData2ItemsImageModel *)itemModel.image.firstObject;
@@ -68,29 +92,28 @@
         
         [backImage setBackgroundColor:[UIColor whiteColor]];
         backImage.layer.cornerRadius = 2;
-//        backImage.layer.masksToBounds = YE
-        // 因为shandowOffset默认为(0,3),此处需要修正下
         backImage.userInteractionEnabled = YES;
-        backImage.layer.shadowOffset = CGSizeMake(0, 0);
-        backImage.layer.shadowColor = [UIColor themeGray3].CGColor;
-        backImage.layer.shadowOpacity = 0.2;
+        backImage.layer.masksToBounds = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(houseTypeBannerClick:)];
         [backImage addGestureRecognizer:tapGesture];
-        CGFloat shaderWidht = 1;
+        CGFloat shaderWidht = 3;
         
-        if (viewWidth > 82 * [TTDeviceHelper scaleToScreen375]) {
-            [backImage setFrame:CGRectMake((viewWidth - 82 * [TTDeviceHelper scaleToScreen375])/2.0f, 3, 82 * [TTDeviceHelper scaleToScreen375], 69 * [TTDeviceHelper scaleToScreen375])];
-        }else
-        {
-            [backImage setFrame:CGRectMake(0.0f, 3, viewWidth, viewWidth * 69 / 82)];
-        }
+        [backImage setFrame:CGRectMake((viewWidth - imageWidth)/2, 3, imageWidth, imageHeight)];
+
+        [shaderBackView setFrame:CGRectMake(backImage.frame.origin.x + 3, backImage.frame.origin.y + 3, backImage.frame.size.width - 6, backImage.frame.size.height - 6)];
+        [shaderBackView setBackgroundColor:[UIColor clearColor]];
+        
         
         // 设置阴影的路径 此处效果为在view周边添加宽度为4的阴影效果
-        UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(-shaderWidht, -shaderWidht, backImage.frame.size.width + shaderWidht * 2, backImage.frame.size.height + shaderWidht * 2)];
-        backImage.layer.shadowPath = path.CGPath;
-        backImage.tag = i;
-        [containView addSubview:backImage];
+        UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(- shaderWidht, -shaderWidht, shaderBackView.frame.size.width + shaderWidht * 2, shaderBackView.frame.size.height + shaderWidht * 2)];
+        shaderBackView.layer.shadowPath = path.CGPath;
+        shaderBackView.layer.shadowOffset = CGSizeMake(0, 0);
+        shaderBackView.layer.shadowColor = [UIColor themeGray3].CGColor;
+        shaderBackView.layer.shadowOpacity = 0.2;
         
+        backImage.tag = i;
+        [containView addSubview:shaderBackView];
+        [containView addSubview:backImage];
         
         if ([itemModel.tagImage isKindOfClass:[NSArray class]] && itemModel.tagImage.count > 0) {
             FHConfigDataOpData2ItemsImageModel *tagImageModel = (FHConfigDataOpData2ItemsImageModel *)itemModel.tagImage.firstObject;
@@ -99,30 +122,62 @@
                 [hotImage bd_setImageWithURL:[NSURL URLWithString:tagImageModel.url]];
             }
             [hotImage setBackgroundColor:[UIColor whiteColor]];
-            [hotImage setFrame:CGRectMake(backImage.frame.size.width - 16 - ([TTDeviceHelper isScreenWidthLarge320] ? : 1.5), 4, 18, 8)];
+            [hotImage setFrame:CGRectMake(backImage.frame.size.width - ([TTDeviceHelper isScreenWidthLarge320] ? 17 : 18.5), 3.5, 21, 11)];
             [containView addSubview:hotImage];
         }
         
         UILabel *titleLabel = [UILabel new];
         titleLabel.text = itemModel.title;
         titleLabel.textAlignment = NSTextAlignmentCenter;
-        [titleLabel setFrame:CGRectMake(backImage.frame.origin.x + 10, 13, backImage.frame.size.width - 10, 20)];
-        titleLabel.font = [UIFont themeFontSemibold:16 * [TTDeviceHelper scaleToScreen375]];
+
+        
+        if ([TTDeviceHelper isScreenWidthLarge320]) {
+    
+            titleLabel.font = [UIFont themeFontMedium:(titleLabel.text.length > 5 ? 14 * [TTDeviceHelper scaleToScreen375] : ([TTDeviceHelper is896Screen3X] ? 16 : 15))];
+            [titleLabel setFrame:CGRectMake(backImage.frame.origin.x + 8, 17 * [TTDeviceHelper scaleToScreen375], backImage.frame.size.width - 10, 20)];
+        }else
+        {
+            titleLabel.font = [UIFont themeFontMedium:12];
+            if(titleLabel.text.length > 5)
+            {
+                [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  5, 14, backImage.frame.size.width - 10, 20)];
+            }else
+            {
+                [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  10, 14, backImage.frame.size.width - 10, 20)];
+            }
+        }
+        
         titleLabel.textColor = [UIColor themeGray1];
         titleLabel.textAlignment = 0;
         [containView addSubview:titleLabel];
         
         CGFloat titleAddLbaelWidth = 25;
-        
+        CGFloat letftPading = 0;
         if (itemModel.title.length > 5) {
             titleAddLbaelWidth = 20;
+            letftPading = 5;
+        }
+        
+        if (itemModel.title.length == 4) {
+            if ([TTDeviceHelper isScreenWidthLarge320]) {
+                titleAddLbaelWidth = 20;
+                letftPading = 15;
+            }else
+            {
+                titleAddLbaelWidth = 20;
+                letftPading = 10;
+            }
         }
         
         if (itemModel.addDescription) {
             UILabel *titleAddLabel = [UILabel new];
             titleAddLabel.text = itemModel.addDescription;
-            titleAddLabel.textAlignment = NSTextAlignmentCenter;
-            [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth, titleLabel.frame.origin.y + 8, titleAddLbaelWidth, 10)];
+            if ([TTDeviceHelper isScreenWidthLarge320]) {
+                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth  - letftPading, titleLabel.frame.origin.y + 8, titleAddLbaelWidth, 10)];
+            }else
+            {
+                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth + 3 - letftPading, titleLabel.frame.origin.y + 5, titleAddLbaelWidth, 10)];
+            }
             titleAddLabel.font = [UIFont themeFontRegular:6];
             titleAddLabel.textColor = [UIColor themeGray1];
             titleAddLabel.textAlignment = 0;
@@ -132,13 +187,25 @@
         UILabel *subTitleLabel = [UILabel new];
         subTitleLabel.text = itemModel.descriptionStr;
         subTitleLabel.textAlignment = NSTextAlignmentCenter;
-        [subTitleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y + titleLabel.frame.size.height + 5, titleLabel.frame.size.width, 20)];
-        subTitleLabel.font = [UIFont themeFontRegular:11 * [TTDeviceHelper scaleToScreen375]];
+        if ([TTDeviceHelper isScreenWidthLarge320]) {
+            [subTitleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y + titleLabel.frame.size.height , titleLabel.frame.size.width, 20)];
+            subTitleLabel.font = [UIFont themeFontRegular:11 * [TTDeviceHelper scaleToScreen375]];
+        }else
+        {
+            [subTitleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y + titleLabel.frame.size.height - 5, titleLabel.frame.size.width, 20)];
+            subTitleLabel.font = [UIFont themeFontRegular:8];
+        }
         subTitleLabel.textColor = [UIColor themeGray3];
         subTitleLabel.textAlignment = 0;
         [containView addSubview:subTitleLabel];
         [self.contentView addSubview:containView];
     }
+//    if (self.cuurentDataModel != dataModel) {
+//        [FHHomeCellHelper sendBannerTypeCellShowTrace:houseType];
+//    }
+    
+    self.cuurentDataModel = dataModel;
+    
 }
 
 - (void)houseTypeBannerClick:(id)sender
@@ -146,7 +213,6 @@
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     
     if (!dataModel.opData2list || dataModel.opData2list.count == 0) {
-        NSLog(@"op Data = %@",dataModel.opData2list);
         return;
     }
     

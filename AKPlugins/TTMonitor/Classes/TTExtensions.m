@@ -40,7 +40,7 @@ static CTTelephonyNetworkInfo *sharedNetworkInfo = nil;
     
     //除非误操作info.plist文件，否则版本一直会有
     if (!buildVersion) {
-        buildVersion = @"66801";
+        buildVersion = @"67001";
     }
     
     if (buildVersion) {

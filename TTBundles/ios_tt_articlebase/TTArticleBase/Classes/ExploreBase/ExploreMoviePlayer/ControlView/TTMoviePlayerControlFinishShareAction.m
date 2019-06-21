@@ -13,7 +13,8 @@
 //#import "TTWeitoutiaoRepostIconDownloadManager.h"
 #import "TTActivityShareSequenceManager.h"
 #import "TTMessageCenter.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTDeviceHelper.h>
@@ -283,7 +284,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 //        return @"钉钉";
 //    }
     else {
-        return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
+        return [TTKitchen getString:kTTKUGCRepostWordingShareIconTitle];
     }
 }
 

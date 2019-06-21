@@ -16,7 +16,8 @@
 
 #import "SSImpressionModel.h"
 #import <TTVerifyKit/TTVerifyIconHelper.h>
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 
@@ -550,14 +551,14 @@
     NSString* forwardCount = nil;
     if ([data.originalData isKindOfClass:[Article class]]) { //文章
         int64_t forwardCnt = data.article.actionDataModel.repostCount;
-        forwardCount = (forwardCnt > 0 ? [TTBusinessManager formatCommentCount:forwardCnt] : [TTKitchen getString:kKCUGCRepostWordingFeedCellIconTitle]);
+        forwardCount = (forwardCnt > 0 ? [TTBusinessManager formatCommentCount:forwardCnt] : [TTKitchen getString:kTTKUGCRepostWordingFeedCellIconTitle]);
     }
     else if ([data.originalData isKindOfClass:[Comment class]]) { //热评
         int64_t forwardCnt = 0;
         if ([[data comment].forwardInfo[@"forward_count"] longLongValue]) {
             forwardCnt = [[data comment].forwardInfo[@"forward_count"] longLongValue];
         }
-        forwardCount = (forwardCnt > 0 ? [TTBusinessManager formatCommentCount:forwardCnt] : [TTKitchen getString:kKCUGCRepostWordingFeedCellIconTitle]);
+        forwardCount = (forwardCnt > 0 ? [TTBusinessManager formatCommentCount:forwardCnt] : [TTKitchen getString:kTTKUGCRepostWordingFeedCellIconTitle]);
     }
     return forwardCount;
 }

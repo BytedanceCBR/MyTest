@@ -25,7 +25,8 @@
 #import "TTStringHelper.h"
 #import "TTNetworkManager.h"
 #import "Singleton.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import "TTTabBarProvider.h"
 #import "TTArticleTabBarController.h"
 #import "UITabBarController+TabbarConfig.h"
@@ -180,9 +181,9 @@ SINGLETON_GCD(TTTabBarManager);
 //                           kTTTabFollowTabKey:@"关注",
                            kFHouseMessageTabKey: @"消息",
                            kFHouseMineTabKey:@"我的",
-                           kFHouseFindTabKey:@"找房",
+                           kFHouseFindTabKey:@"发现",
 
-//                           kTTTabWeitoutiaoTabKey:[KitchenMgr getString:kKCUGCFeedNamesTab],
+//                           kTTTabWeitoutiaoTabKey:[KitchenMgr getString:kTTKUGCFeedNamesTab],
                            };
     
     _defaultImageNames = @{kTTTabHomeTabKey:@"tab-home",
@@ -492,7 +493,7 @@ SINGLETON_GCD(TTTabBarManager);
         
         if ([obj isEqualToString:kTTTabWeitoutiaoTabKey]) {
             //微头条的底tab标题由微头条文案下发逻辑控制
-            title = [TTKitchen getString:kKCUGCFeedNamesTab];
+            title = [TTKitchen getString:kTTKUGCFeedNamesTab];
         }
         [mutableTabTitles setValue:title forKey:obj];
     }];

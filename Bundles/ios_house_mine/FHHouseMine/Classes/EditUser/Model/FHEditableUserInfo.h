@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *userDescription;
 @property (nonatomic, copy) NSString *avatarURL;
 @property (nonatomic, assign) BOOL editEnabled;
+@property (nonatomic, assign) BOOL isAuditing;
 
 @end
 

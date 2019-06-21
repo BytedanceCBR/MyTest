@@ -17,7 +17,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTUIWidget/TTUGCAttributedLabel.h>
+#import <TTUGCFoundation/TTUGCAttributedLabel.h>
 #import <TTUIWidget/UIScrollView+Refresh.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 

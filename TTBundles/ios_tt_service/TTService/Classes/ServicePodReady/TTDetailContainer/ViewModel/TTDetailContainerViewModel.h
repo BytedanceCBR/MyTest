@@ -29,6 +29,7 @@ typedef void(^FetchRemoteContentBlock)(ExploreDetailManagerFetchResultType type)
 @property (nonatomic, assign) NewsGoDetailFromSource fromSource;
 @property (nonatomic, strong, nullable) TTDetailModel * detailModel;
 @property(nonatomic, strong, nullable) NSString * categoryID;
+@property(nonatomic, strong, nullable) NSDictionary * reportParams;//h5调用扩展参数
 @property(nonatomic, copy, nullable) FetchRemoteContentBlock fetchContentBlock;
 
 - (nullable id)initWithArticle:(nullable id<TTVArticleProtocol>)tArticle

@@ -91,7 +91,7 @@
 }
 
 - (void)setText:(NSString *)text {
-    TTRichSpanText *richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil];
+    TTRichSpanText *richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil imageInfoModelDictionary:nil];
     self.richSpanText = richSpanText;
 }
 
@@ -145,6 +145,7 @@
             case TTDeviceModePad:
             case TTDeviceMode736:
             case TTDeviceMode812:
+            case TTDeviceMode896:
             case TTDeviceMode667: size = 17.f; break;
             case TTDeviceMode568:
             case TTDeviceMode480: size = 15.f; break;
@@ -226,7 +227,7 @@
     // Reset placeholder and call textViewDidChange delegate method
     [self refreshTextViewUI];
 
-    [self.internalGrowingTextView refreshHeight];
+//    [self.internalGrowingTextView refreshHeight];
 }
 
 #pragma mark - UIKeyboardNotification
@@ -354,7 +355,7 @@
     NSArray *newLinks = _richSpanText.richSpans.links;
 
     // 如果 links 发生了变化, 就重置样式和 cursor
-    if (![oldLinks isEqualToArray:newLinks]) {
+    if (oldLinks != newLinks && ![oldLinks isEqualToArray:newLinks]) {
         NSAttributedString *prevAttributedText = self.attributedText;
         self.attributedText = [self attributedStringFromRichSpanText:_richSpanText];
         self.selectedRange = NSMakeRange(originCursor + self.attributedText.length - prevAttributedText.length, 0);
@@ -394,34 +395,52 @@
     NSArray<TTRichSpanLink *> *richSpanLinks = [_richSpanText richSpanLinksOfAttributedString];
 
     for (TTRichSpanLink *link in richSpanLinks) {
-        if (link.type == TTRichSpanLinkTypeLink) {
-            NSRange linkRange = NSMakeRange(link.start, link.length);
+        switch (link.type) {
+            case TTRichSpanLinkTypeUnknown:
+                break;
+            case TTRichSpanLinkTypeAt:
+            case TTRichSpanLinkTypeHashtag:
+            case TTRichSpanLinkTypeLink:
+            case TTRichSpanLinkTypeImage:
+            case TTRichSpanLinkTypeMicroApp:
+            case TTRichSpanLinkTypeMicroGame:
+                {
+                    NSRange linkRange = NSMakeRange(link.start, link.length);
 
-            NSRange forceSelectedRange = NSMakeRange(NSNotFound, 0);
+                    NSRange forceSelectedRange = NSMakeRange(NSNotFound, 0);
 
-            // 控制可选中区域，对于链接只能整体选中
-            if (selectedRange.length == 0 && selectedRange.location > linkRange.location && selectedRange.location < linkRange.location + linkRange.length) {
-                if (selectedRange.location < linkRange.location + linkRange.length / 2) {
-                    forceSelectedRange = NSMakeRange(linkRange.location, 0);
-                } else {
-                    forceSelectedRange = NSMakeRange(linkRange.location + linkRange.length, 0);
+                    // 控制可选中区域，对于链接只能整体选中
+                    if (selectedRange.length == 0 && selectedRange.location > linkRange.location && selectedRange.location < linkRange.location + linkRange.length) {
+                        if (selectedRange.location < linkRange.location + linkRange.length / 2) {
+                            forceSelectedRange = NSMakeRange(linkRange.location, 0);
+                        } else {
+                            forceSelectedRange = NSMakeRange(linkRange.location + linkRange.length, 0);
+                        }
+                    } else if (selectedRange.length > 0 && NSIntersectionRange(linkRange, selectedRange).length > 0) {
+                        if (!NSEqualRanges(NSUnionRange(linkRange, selectedRange), selectedRange)) {
+                            NSInteger min = MIN(selectedRange.location, linkRange.location);
+                            NSInteger max = MAX(selectedRange.location + selectedRange.length, linkRange.location + linkRange.length);
+
+                            forceSelectedRange = NSMakeRange(MAX(min, 0), MAX(max - min, 0));
+                        }
+                    }
+
+                    // 避免重复处理和按 backspace 按键时强制选择等情况
+                    if (forceSelectedRange.location == NSNotFound || self.didInputTextBackspaceOrAnythingElse) {
+                        continue;
+                    } else {
+                        growingTextView.selectedRange = forceSelectedRange;
+                    }
                 }
-            } else if (selectedRange.length > 0 && NSIntersectionRange(linkRange, selectedRange).length > 0) {
-                if (!NSEqualRanges(NSUnionRange(linkRange, selectedRange), selectedRange)) {
-                    NSInteger min = MIN(selectedRange.location, linkRange.location);
-                    NSInteger max = MAX(selectedRange.location + selectedRange.length, linkRange.location + linkRange.length);
+                break;
 
-                    forceSelectedRange = NSMakeRange(MAX(min, 0), MAX(max - min, 0));
-                }
-            }
-
-            // 避免重复处理和按 backspace 按键时强制选择等情况
-            if (forceSelectedRange.location == NSNotFound || self.didInputTextBackspaceOrAnythingElse) {
-                continue;
-            } else {
-                growingTextView.selectedRange = forceSelectedRange;
-            }
+            default:
+                break;
         }
+    }
+
+    if (self.delegate && [self.delegate respondsToSelector:@selector(textViewDidChangeSelection:)]) {
+        [self.delegate textViewDidChangeSelection:self];
     }
 }
 
@@ -496,9 +515,16 @@
 
     [richSpanLinks enumerateObjectsUsingBlock:^(TTRichSpanLink *obj, NSUInteger idx, BOOL *stop) {
         NSRange range = NSMakeRange(obj.start, obj.length);
+        
+        UIColor *textColor = nil;
+        id colorInfo = [obj.userInfo objectForKey:@"color_info"]; //判断是否有hashTag颜色信息
+        if (colorInfo && [colorInfo isKindOfClass:[NSDictionary class]]) {
+            textColor = [UIColor colorWithDayColorName:[colorInfo objectForKey:@"day"] nightColorName:[colorInfo objectForKey:@"night"]];
+        }
+        
         [mutableAttributedString addAttributes:@{
             NSFontAttributeName: [UIFont systemFontOfSize:self.textViewFontSize],
-            NSForegroundColorAttributeName : SSGetThemedColorWithKey(kColorText5)
+            NSForegroundColorAttributeName : textColor ?: SSGetThemedColorWithKey(kColorText5)
         } range:range];
     }];
 
@@ -506,6 +532,7 @@
 }
 
 - (NSUInteger)transformIndexOfAttributedString:(NSAttributedString *)attributedString withIndex:(NSUInteger)index {
+    index = MIN(index, attributedString.length);
     NSRange range = NSMakeRange(0, index);
     NSAttributedString *attributedSubstring = [attributedString attributedSubstringFromRange:range];
     NSString *substring = [TTUGCEmojiParser stringify:attributedSubstring];
