@@ -19,17 +19,9 @@
 }
 
 + (TTHttpTask *)requestCommunityDetail:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-    NSString *queryPath = @"/f100/api/community/detail";
+    NSString *queryPath = @"/f100/ugc/social_group_basic_info";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
-    paramDic[@"community_id"] = communityId ?: @"";
-    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
-}
-
-+ (TTHttpTask *)joinCommunity:(NSString *)communityId join:(BOOL)join :(id)class :(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-    NSString *queryPath = @"/f100/api/community/join";
-    NSMutableDictionary *paramDic = [NSMutableDictionary new];
-    paramDic[@"community_id"] = communityId ?: @"";
-    paramDic[@"join"] = @(join);
+    paramDic[@"social_group_id"] = communityId ?: @"";
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
@@ -160,6 +152,15 @@
     if (text.length > 0) {
         paramDic[@"text"] = text;
     }
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestRecommendSocialGroupsWithLatitude:(CGFloat)latitude longitude:(CGFloat)longitude class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/f100/ugc/recommend_social_groups";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+//    if (text.length > 0) {
+//        paramDic[@"text"] = text;
+//    }
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 

@@ -9,7 +9,6 @@
 #import "FHCommunityDetailHeaderView.h"
 #import "TTBaseMacro.h"
 #import "FHHouseUGCAPI.h"
-#import "FHCommunityDetailModel.h"
 #import "ToastManager.h"
 #import "TTReachability.h"
 #import "UIImageView+BDWebImage.h"
@@ -19,13 +18,14 @@
 #import "TTThemedAlertController.h"
 #import "FHUGCGuideView.h"
 #import "FHUGCGuideHelper.h"
+#import "FHUGCScialGroupModel.h"
 
 
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
 
 @property(nonatomic, weak) FHCommunityDetailViewController *viewController;
 @property(nonatomic, strong) FHCommunityFeedListController *feedListController;
-@property(nonatomic, strong) FHCommunityDetailDataModel *data;
+@property(nonatomic, strong) FHUGCScialGroupDataModel *data;
 @property(nonatomic, strong) FHCommunityDetailHeaderView *headerView;
 @property(nonatomic, strong) FHUGCFollowButton *rightBtn;
 @property(nonatomic, strong) UILabel *titleLabel;
@@ -115,13 +115,13 @@
 }
 
 - (void)addUgcGuide {
-    if([FHUGCGuideHelper shouldShowUgcDetailGuide]){
+    if ([FHUGCGuideHelper shouldShowUgcDetailGuide]) {
         [self.guideView show:self.viewController.view dismissDelayTime:0.0f];
     }
 }
 
 - (FHUGCGuideView *)guideView {
-    if(!_guideView){
+    if (!_guideView) {
         WeakSelf;
         _guideView = [[FHUGCGuideView alloc] initWithFrame:self.viewController.view.bounds andType:FHUGCGuideViewTypeDetail];
         [self.viewController.view layoutIfNeeded];
@@ -152,14 +152,14 @@
     }
 
     WeakSelf;
-    [FHHouseUGCAPI requestCommunityDetail:@"1234" class:FHCommunityDetailModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+    [FHHouseUGCAPI requestCommunityDetail:@"6703403081570189582" class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
         if (model && (error == nil)) {
-            FHCommunityDetailModel *responseModel = model;
+            FHUGCScialGroupModel *responseModel = model;
             [wself updateUIWithData:responseModel.data];
-            
+
             //仅仅在未关注时显示引导页
-            if(!responseModel.data.followed){
+            if (![responseModel.data.hasFollow boolValue]) {
                 [self addUgcGuide];
             }
         } else {
@@ -169,32 +169,36 @@
             return;
         }
     }];
-    if(refreshFeed){
+    if (refreshFeed) {
         [self.feedListController startLoadData];
     }
 }
 
 - (void)followClicked {
-    if (self.data.followed) {
+    if ([self.data.hasFollow boolValue]) {
         WeakSelf;
         TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"确定退出？" message:nil preferredType:TTThemedAlertControllerTypeAlert];
-        [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
-        [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+        [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:
+            nil)                 actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
+        [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:
+            nil)                 actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
             StrongSelf;
-            [FHUGCFollowHelper followCommunity:wself.data.id userInfo:nil followBlock:nil];
+            [FHUGCFollowHelper followCommunity:wself.data.socialGroupId userInfo:nil followBlock:nil];
         }];
         [alertController showFrom:self.viewController animated:YES];
     }
 }
 
 - (void)goPosDetail {
-    if (!self.data.followed) {
+    if (![self.data.hasFollow boolValue]) {
         WeakSelf;
         TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"先关注该小区才能发布哦" message:nil preferredType:TTThemedAlertControllerTypeAlert];
-        [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
-        [alertController addActionWithTitle:NSLocalizedString(@"关注", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+        [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:
+            nil)                 actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
+        [alertController addActionWithTitle:NSLocalizedString(@"关注", comment:
+            nil)                 actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
             StrongSelf;
-            [FHUGCFollowHelper followCommunity:wself.data.id userInfo:nil followBlock:^(){
+            [FHUGCFollowHelper followCommunity:wself.data.socialGroupId userInfo:nil followBlock:^() {
                 //跳转发布器
                 NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
                 [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:nil];
@@ -246,7 +250,7 @@
     self.headerView.topBack.frame = CGRectMake(0, offsetY, rect.size.width, self.headerView.headerBackHeight - offsetY);
 }
 
-- (void)updateUIWithData:(FHCommunityDetailDataModel *)data {
+- (void)updateUIWithData:(FHUGCScialGroupDataModel *)data {
     if (!data) {
         self.feedListController.view.hidden = YES;
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -256,19 +260,27 @@
     self.feedListController.view.hidden = NO;
     self.viewController.emptyView.hidden = YES;
     [self.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar]];
-    self.headerView.nameLabel.text = isEmptyString(data.name) ? @"" : data.name;
-    self.headerView.subtitleLabel.text = isEmptyString(data.subtitle) ? @"" : data.subtitle;
-    if (isEmptyString(data.publications)) {
+    self.headerView.nameLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
+    NSString *subtitle = [self generateSubTitle:data];
+    self.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
+    if (isEmptyString(data.announcement)) {
         self.headerView.publicationsContainer.hidden = YES;
     } else {
-        self.headerView.publicationsContentLabel.text = data.publications;
+        self.headerView.publicationsContentLabel.text = data.announcement;
     }
-    [self updateJoinUI:data.followed];
-    self.titleLabel.text = isEmptyString(data.name) ? @"" : data.name;
-    self.subTitleLabel.text = isEmptyString(data.subtitle) ? @"" : data.subtitle;
+    [self updateJoinUI:[data.hasFollow boolValue]];
+    self.titleLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
+    self.subTitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
 
     [self.headerView resize];
     self.feedListController.tableHeaderView = self.headerView;
+}
+
+- (NSString *)generateSubTitle:(FHUGCScialGroupDataModel *)data {
+    if (data) {
+        return [NSString stringWithFormat:@"%@个成员·%@帖子", data.followerCount, data.contentCount];
+    }
+    return nil;
 }
 
 - (void)updateJoinUI:(BOOL)followed {

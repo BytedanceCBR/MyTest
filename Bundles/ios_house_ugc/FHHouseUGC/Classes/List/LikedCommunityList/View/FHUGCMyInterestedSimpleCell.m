@@ -11,6 +11,8 @@
 #import <Masonry.h>
 #import <UIImageView+BDWebImage.h>
 #import "TTDeviceHelper.h"
+#import "FHUGCFollowButton.h"
+#import "FHUGCMyInterestModel.h"
 
 #define iconWidth 48
 
@@ -20,7 +22,7 @@
 @property(nonatomic, strong) UILabel *descLabel;
 @property(nonatomic, strong) UILabel *sourceLabel;
 @property(nonatomic, strong) UIImageView *icon;
-@property(nonatomic, strong) UIButton *joinBtn;
+@property(nonatomic, strong) FHUGCFollowButton *joinBtn;
 @property(nonatomic, strong) UIView *bottomLine;
 
 @end
@@ -49,11 +51,13 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if([data isKindOfClass:[NSString class]]){
-        _titleLabel.text = data;
-        _descLabel.text = @"88热帖·9221人";
-        _sourceLabel.text = @"附近推荐";
-        [self.icon bd_setImageWithURL:[NSURL URLWithString:@"http://p1.pstatp.com/thumb/fea7000014edee1159ac"] placeholder:nil];
+    if([data isKindOfClass:[FHUGCMyInterestDataRecommendSocialGroupsModel class]]){
+        FHUGCMyInterestDataRecommendSocialGroupsModel *model = (FHUGCMyInterestDataRecommendSocialGroupsModel *)data;
+        _titleLabel.text = model.socialGroup.socialGroupName;
+        _descLabel.text = model.socialGroup.countText;
+        _sourceLabel.text = model.socialGroup.suggestReason;
+        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.socialGroup.avatar] placeholder:nil];
+        self.joinBtn.groupId = model.socialGroup.socialGroupId;
     }
 }
 
@@ -74,15 +78,7 @@
     self.sourceLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor themeGray3]];
     [self.contentView addSubview:_sourceLabel];
     
-    self.joinBtn = [[UIButton alloc] init];
-    _joinBtn.layer.masksToBounds = YES;
-    _joinBtn.layer.cornerRadius = 4;
-    _joinBtn.layer.borderColor = [[UIColor themeRed1] CGColor];
-    _joinBtn.layer.borderWidth = 0.5;
-    [_joinBtn setTitle:@"关注" forState:UIControlStateNormal];
-    [_joinBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    _joinBtn.titleLabel.font = [UIFont themeFontRegular:12];
-    [_joinBtn addTarget:self action:@selector(joinIn) forControlEvents:UIControlEventTouchUpInside];
+    self.joinBtn = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_joinBtn];
     
     self.bottomLine = [[UIView alloc] init];
@@ -138,10 +134,6 @@
     label.font = font;
     label.textColor = textColor;
     return label;
-}
-
-- (void)joinIn {
-    
 }
 
 @end

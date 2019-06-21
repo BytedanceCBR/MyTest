@@ -10,6 +10,7 @@
 #import "UIFont+House.h"
 #import <Masonry.h>
 #import <UIImageView+BDWebImage.h>
+#import "FHUGCFollowButton.h"
 
 #define iconWidth 48
 
@@ -19,7 +20,7 @@
 @property(nonatomic, strong) UILabel *descLabel;
 @property(nonatomic, strong) UILabel *sourceLabel;
 @property(nonatomic, strong) UIImageView *icon;
-@property(nonatomic, strong) UIButton *joinBtn;
+@property(nonatomic, strong) FHUGCFollowButton *joinBtn;
 
 @property(nonatomic, strong) id model;
 
@@ -54,11 +55,14 @@
         _titleLabel.text = data;
         _descLabel.text = @"88热帖·9221人";
         _sourceLabel.text = @"附近推荐";
+//        _joinBtn.groupId = @"111";
         [self.icon bd_setImageWithURL:[NSURL URLWithString:@"http://p1.pstatp.com/thumb/fea7000014edee1159ac"] placeholder:nil];
     }
 }
 
 - (void)initViews {
+    __weak typeof(self) wself = self;
+    
     self.icon = [[UIImageView alloc] init];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
@@ -75,15 +79,12 @@
     self.sourceLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor themeGray3]];
     [self.contentView addSubview:_sourceLabel];
     
-    self.joinBtn = [[UIButton alloc] init];
-    _joinBtn.layer.masksToBounds = YES;
-    _joinBtn.layer.cornerRadius = 4;
-    _joinBtn.layer.borderColor = [[UIColor themeRed1] CGColor];
-    _joinBtn.layer.borderWidth = 0.5;
-    [_joinBtn setTitle:@"关注" forState:UIControlStateNormal];
-    [_joinBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    _joinBtn.titleLabel.font = [UIFont themeFontRegular:12];
-    [_joinBtn addTarget:self action:@selector(joinIn) forControlEvents:UIControlEventTouchUpInside];
+    self.joinBtn = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero];
+    self.joinBtn.followedSuccess = ^(BOOL isSuccess, BOOL isFollow) {
+        if(isSuccess && isFollow){
+            [wself joinIn];
+        }
+    };
     [self addSubview:_joinBtn];
 }
 

@@ -11,6 +11,7 @@
 #import <Masonry.h>
 #import <UIImageView+BDWebImage.h>
 #import "TTDeviceHelper.h"
+#import "FHUGCMyInterestModel.h"
 
 #define iconWidth 48
 
@@ -55,30 +56,49 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if([data isKindOfClass:[NSString class]]){
-        _titleLabel.text = data;
-        _descLabel.text = @"88热帖·9221人";
-        _sourceLabel.text = @"附近推荐";
-        _postDescLabel.text = @"留在深圳，工作生活都很稳定，城市环境好，朋友圈子融洽，收入也还比较稳定";
-        [self.icon bd_setImageWithURL:[NSURL URLWithString:@"http://p1.pstatp.com/thumb/fea7000014edee1159ac"] placeholder:nil];
-//        [self.postIcon bd_setImageWithURL:[NSURL URLWithString:@"http://p1.pstatp.com/thumb/fea7000014edee1159ac"] placeholder:nil];
+    if([data isKindOfClass:[FHUGCMyInterestDataRecommendSocialGroupsModel class]]){
+        FHUGCMyInterestDataRecommendSocialGroupsModel *model = (FHUGCMyInterestDataRecommendSocialGroupsModel *)data;
+        _titleLabel.text = model.socialGroup.socialGroupName;
+        _descLabel.text = model.socialGroup.countText;
+        _sourceLabel.text = model.socialGroup.suggestReason;
+        _postDescLabel.text = model.threadInfo.content;
+        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.socialGroup.avatar] placeholder:nil];
         
-        
-//        //当没有图片时
-//        self.postIcon.hidden = YES;
-//        [self.postDescLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.top.mas_equalTo(self.bottomSepLine1.mas_bottom).offset(15);
-//            make.left.mas_equalTo(self.containerView).offset(10);
-//            make.right.mas_equalTo(self.containerView).offset(-25);
-//        }];
-//
-//        [self.bottomSepLine2 mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.top.mas_equalTo(self.postDescLabel.mas_bottom).offset(15);
-//            make.left.mas_equalTo(self.containerView).offset(10);
-//            make.right.mas_equalTo(self.containerView).offset(-10);
-//            make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
-//        }];
-        
+        if(model.threadInfo.images.count > 0){
+            FHUGCMyInterestDataRecommendSocialGroupsThreadInfoImagesModel *imageModel = [model.threadInfo.images firstObject];
+            [self.postIcon bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+            
+            self.postIcon.hidden = NO;
+            [self.postDescLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.mas_equalTo(self.postIcon);
+                make.left.mas_equalTo(self.containerView).offset(10);
+                make.right.mas_equalTo(self.postIcon.mas_left).offset(-10);
+                make.height.mas_equalTo(40);
+            }];
+            
+            [self.bottomSepLine2 mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.postIcon.mas_bottom).offset(10);
+                make.left.mas_equalTo(self.containerView).offset(10);
+                make.right.mas_equalTo(self.containerView).offset(-10);
+                make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+            }];
+        }else{
+            //当没有图片时
+            self.postIcon.hidden = YES;
+            [self.postDescLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.bottomSepLine1.mas_bottom).offset(15);
+                make.left.mas_equalTo(self.containerView).offset(10);
+                make.right.mas_equalTo(self.containerView).offset(-25);
+            }];
+            
+            [self.bottomSepLine2 mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.postDescLabel.mas_bottom).offset(15);
+                make.left.mas_equalTo(self.containerView).offset(10);
+                make.right.mas_equalTo(self.containerView).offset(-10);
+                make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+            }];
+
+        }
     }
 }
 
