@@ -116,6 +116,7 @@ const CGFloat TTForumPostVideoThreadTaskBeforePostThreadProgress = 0.95f;
         self.promotionID = [aDecoder decodeObjectForKey:@"promotionID"];
         self.sdkParams = [aDecoder decodeObjectForKey:@"sdkParams"];
         self.social_group_id = [aDecoder decodeObjectForKey:@"social_group_id"];
+        self.uploadProgress = [aDecoder decodeFloatForKey:@"uploadProgress"];
         
         @try {
             NSArray * datas = [aDecoder decodeObjectForKey:@"images"];
@@ -162,6 +163,7 @@ const CGFloat TTForumPostVideoThreadTaskBeforePostThreadProgress = 0.95f;
     [aCoder encodeInt:_locationType forKey:@"locationType"];
     [aCoder encodeObject:_locationAddress forKey:@"locationAddress"];
     [aCoder encodeObject:[NSValue valueWithRange:_selectedRange] forKey:@"selectedRange"];
+    [aCoder encodeFloat:_uploadProgress forKey:@"uploadProgress"];
     
     if (_postID) {
         [aCoder encodeObject:_postID forKey:@"postID"];

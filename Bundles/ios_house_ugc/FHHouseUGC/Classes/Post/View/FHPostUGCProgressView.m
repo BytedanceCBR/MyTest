@@ -89,6 +89,7 @@
         TTPostThreadTaskStatusModel *statusModel = [self.statusViewModel.followTaskStatusModels lastObject];
         NSLog(@"-------:2:%ld",statusModel.status);
     }
+    [self.tableView reloadData];
 }
 
 // 删除发送失败的任务
@@ -285,11 +286,13 @@
 
 // event
 - (void)retryBtnClick {
-    
+    // 无网络判断
 }
 
 - (void)delBtnClick {
-    
+    if (self.statusModel) {
+        [[TTPostThreadCenter sharedInstance_tt] removeTaskForFakeThreadID:self.statusModel.fakeThreadId concernID:self.statusModel.concernID];
+    }
 }
 
 @end
