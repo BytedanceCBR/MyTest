@@ -78,21 +78,6 @@
     self.loadingAnimateView.image = [UIImage imageNamed:self.loadingImageName];
 }
 
-//- (void)setStyle:(FHUGCFollowButtonStyle)style {
-//    _style = style;
-//
-//    if(self.style == FHUGCFollowButtonStyleBorder){
-//        self.layer.borderWidth = 0.5f;
-//        if(self.followed){
-//            self.layer.borderColor = [[UIColor themeGray4] CGColor];
-//        }else{
-//            self.layer.borderColor = [[UIColor themeRed1] CGColor];
-//        }
-//    }else{
-//        self.layer.borderWidth = 0.0f;
-//    }
-//}
-
 - (void)setupUI {
     self.layer.masksToBounds = YES;
     self.clipsToBounds = YES;
@@ -167,6 +152,10 @@
 }
 
 - (void)doFollow {
+    if(isEmptyString(self.groupId)){
+        return;
+    }
+    
     [self startLoading];
     //增加延迟，为了动画效果
     CGFloat delayTime = 1.0f;
@@ -176,10 +165,6 @@
 }
 
 - (void)requestData {
-    if(isEmptyString(self.groupId)){
-        return;
-    }
-
     __weak typeof(self) wself = self;
     [[FHUGCFollowManager sharedInstance] followUGCBy:self.groupId isFollow:!self.followed completion:^(BOOL isSuccess) {
         [wself stopLoading];
