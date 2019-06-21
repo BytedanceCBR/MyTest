@@ -20,7 +20,8 @@
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHUGCMyInterestedController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
-@property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
+@property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
+@property(nonatomic, strong) NSMutableDictionary *cellHeightCaches;
 
 @end
 
@@ -29,7 +30,8 @@
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHUGCMyInterestedController *)viewController {
     self = [super init];
     if (self) {
-        self.dataList = [[NSMutableArray alloc] init];
+        _dataList = [[NSMutableArray alloc] init];
+        _cellHeightCaches = [NSMutableDictionary dictionary];
         tableView.delegate = self;
         tableView.dataSource = self;
         _viewController = viewController;
@@ -59,8 +61,7 @@
     self.requestTask = [FHHouseUGCAPI requestRecommendSocialGroupsWithLatitude:0 longitude:0 class:[FHUGCMyInterestModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         FHUGCMyInterestModel *interestModel = (FHUGCMyInterestModel *)model;
-        
-        NSLog(@"in");
+
         if (error) {
             //TODO: show handle error
             [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
@@ -80,18 +81,28 @@
                 [wself.viewController.emptyView hideEmptyView];
                 [wself.tableView reloadData];
             }else{
-                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                if(wself.viewController.type == FHUGCMyInterestedTypeEmpty){
+                    [wself.viewController.emptyView showEmptyWithTip:@"你还没有关注任何小区圈\n去附近或发现逛逛吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+                }else{
+                    [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                }
             }
         }
     }];
 }
 
 #pragma mark - UITableViewDataSource
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.dataList count];
 }
 
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
+    self.cellHeightCaches[tempKey] = cellHeight;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
@@ -103,11 +114,16 @@
 
 #pragma mark - UITableViewDelegate
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(self.viewController.type == FHUGCMyInterestedTypeMore){
         return 70;
     }else{
-        return 192;
+        NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+        NSNumber *cellHeight = self.cellHeightCaches[tempKey];
+        if (cellHeight) {
+            return [cellHeight floatValue];
+        }
+        return UITableViewAutomaticDimension;
     }
 }
 

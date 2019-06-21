@@ -172,9 +172,9 @@
             wself.followed = !self.followed;
         }else{
             if (wself.followed) {
-                [[ToastManager manager] showToast:@"取消关注失败"];
+                [[ToastManager manager] showToast:@"取消关注失败，请稍后重试"];
             } else {
-                [[ToastManager manager] showToast:@"关注失败"];
+                [[ToastManager manager] showToast:@"关注失败，请稍后重试"];
             }
         }
         
