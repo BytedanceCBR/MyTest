@@ -51,6 +51,7 @@
     for (UIView *v in self.containerView.subviews) {
         [v removeFromSuperview];
     }
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *)data;
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         CGFloat vHeight = 66.0;
