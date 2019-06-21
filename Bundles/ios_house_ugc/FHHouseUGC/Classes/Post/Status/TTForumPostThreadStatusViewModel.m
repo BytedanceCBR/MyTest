@@ -743,11 +743,12 @@ TTAccountMulticastProtocol
         self.followTaskStatusModels = [[NSMutableArray alloc] init];
         self.weitouTiaoTaskStatusModels = [[NSMutableArray alloc] init];
         // 若切换为未登录状态，则优先以持久化task状态为准
-        [self loadStatusModelsWithCompletionBlock:^{
-            if (weakSelf.statusChangeBlk) {
-                weakSelf.statusChangeBlk();
-            }
-        }];
+//        [self loadStatusModelsWithCompletionBlock:^{
+//
+//        }];
+        if (weakSelf.statusChangeBlk) {
+            weakSelf.statusChangeBlk();
+        }
     }
     
 }

@@ -325,12 +325,12 @@
             return;
         }
         
-        self.task.uploadProgress = 0.1;
-        
         StrongSelf;
         self.startTime = [NSObject currentUnixTime];
         
-        self.task.uploadProgress = 0.1;
+        if (self.task.uploadProgress < 0.2) {
+            self.task.uploadProgress = 0.2;
+        }
         
         if ([self.task needUploadImg]) {
             [self uploadImages];

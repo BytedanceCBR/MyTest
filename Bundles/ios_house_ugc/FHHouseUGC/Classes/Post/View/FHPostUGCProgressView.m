@@ -15,6 +15,8 @@
 #import "TTAccountManager.h"
 #import "UIImageView+BDWebImage.h"
 #import "TTThemedUploadingStatusCellProgressBar.h"
+#import "TTReachability.h"
+#import "ToastManager.h"
 
 @interface FHPostUGCProgressView ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -83,11 +85,8 @@
     }
     self.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.ugc_viewHeight);
     self.tableView.frame = self.frame;
-    // 取最新的一个
-    NSLog(@"--------:1:%ld",self.statusViewModel.followTaskStatusModels.count);
-    if (self.statusViewModel.followTaskStatusModels.count > 0) {
-        TTPostThreadTaskStatusModel *statusModel = [self.statusViewModel.followTaskStatusModels lastObject];
-        NSLog(@"-------:2:%ld",statusModel.status);
+    if (self.refreshViewBlk) {
+        self.refreshViewBlk();
     }
     [self.tableView reloadData];
 }
@@ -209,8 +208,14 @@
         
         if (self.statusModel.status == TTPostTaskStatusFailed) {
             self.stateLabel.text = @"发布失败";
+            [self.progressBar setForegroundColorThemeKey:kFHColorCoolGrey2];
+            self.retryBtn.hidden = NO;
+            self.delBtn.hidden = NO;
         } else {
             self.stateLabel.text = @"正在发布...";
+            [self.progressBar setForegroundColorThemeKey:kFHColorCoral];
+            self.retryBtn.hidden = YES;
+            self.delBtn.hidden = YES;
         }
     }
 }
@@ -287,6 +292,11 @@
 // event
 - (void)retryBtnClick {
     // 无网络判断
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+     [[TTPostThreadCenter sharedInstance_tt] resentThreadForFakeThreadID:self.statusModel.fakeThreadId concernID:self.statusModel.concernID];
 }
 
 - (void)delBtnClick {
