@@ -90,7 +90,7 @@
             return ;
         }
         if (error) {
-            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+//            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             return;
         }else{
             [wself.viewController.emptyView hideEmptyView];
@@ -253,10 +253,10 @@
     if(self.userEditPhone){
         self.phoneNum = self.mobileView.phoneTextField.text;
     }
+    [self addSubmibLog];
     NSString *phoneNum = self.phoneNum;
     if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && (!self.userEditPhone || [self isPureInt:phoneNum])) {
         [self sendQuestion];
-        [self addSubmibLog];
     }else if (phoneNum.length == 0){
         SHOW_TOAST(@"请留下联系电话，方便获取问题解答");
     }else {
@@ -514,7 +514,7 @@
     param[UT_ENTER_FROM] = self.viewController.tracerModel.enterFrom;
     param[UT_ORIGIN_FROM] = self.viewController.tracerModel.originFrom;
     param[@"click_position"] = @"refer_question";
-    param[@"phone_number"] = self.phoneNum;
+    param[@"phone_number"] = (self.phoneNum.length > 0)?self.phoneNum:UT_BE_NULL;
     
     TRACK_EVENT(@"click_submit", param);
     //click_submit

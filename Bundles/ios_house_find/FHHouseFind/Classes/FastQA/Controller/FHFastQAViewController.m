@@ -52,7 +52,7 @@
     [self setupDefaultNavBar:YES];
     self.title = @"幸福问答";
     
-    self.tracerModel.categoryName = @"quick_ask_question";
+    self.tracerModel.categoryName = @"want_ask_question";
     self.tracerModel.enterFrom = @"quick_ask_question";
     self.tracerModel.originFrom = @"everyone_ask_question";
     
