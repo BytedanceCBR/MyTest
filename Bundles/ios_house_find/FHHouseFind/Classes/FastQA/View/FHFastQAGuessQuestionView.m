@@ -84,19 +84,19 @@
 -(void)selectAtIndex:(NSInteger)index
 {
     self.selectedIndex = index;
-    [self.buttons enumerateObjectsUsingBlock:^(UIButton  * _Nonnull btn, NSUInteger idx, BOOL * _Nonnull stop) {
-        UIColor *titleColor = nil;
-        if (idx == index) {
-            btn.backgroundColor = [UIColor themeRed1];
-            btn.layer.borderWidth = 0;
-            titleColor = [UIColor whiteColor];
-        }else{
-            btn.backgroundColor = [UIColor whiteColor];
-            btn.layer.borderWidth = 0.5;
-            titleColor = [UIColor themeGray1];
-        }
-        [btn setTitleColor:titleColor forState:UIControlStateNormal];
-    }];
+//    [self.buttons enumerateObjectsUsingBlock:^(UIButton  * _Nonnull btn, NSUInteger idx, BOOL * _Nonnull stop) {
+//        UIColor *titleColor = nil;
+//        if (idx == index) {
+//            btn.backgroundColor = [UIColor themeRed1];
+//            btn.layer.borderWidth = 0;
+//            titleColor = [UIColor whiteColor];
+//        }else{
+//            btn.backgroundColor = [UIColor whiteColor];
+//            btn.layer.borderWidth = 0.5;
+//            titleColor = [UIColor themeGray1];
+//        }
+//        [btn setTitleColor:titleColor forState:UIControlStateNormal];
+//    }];
 }
 
 -(UIButton *)buttonForTitle:(NSString *)title
