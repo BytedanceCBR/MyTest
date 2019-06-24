@@ -95,6 +95,7 @@
     self.followButton = [[FHUGCFollowButton alloc] init];
     [self.followButton addTarget:self action:@selector(followButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     self.followButton.followed = YES;
+    self.followButton.groupId = [NSString stringWithFormat:@"%lld",self.tid];
     [self.customNavBarView addSubview:_followButton];
     [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(58);
@@ -157,6 +158,7 @@
         self.naviHeaderView.descLabel.text = self.weakViewModel.detailHeaderModel.socialGroupModel.countText;
         // 关注按钮
         self.followButton.followed = [self.weakViewModel.detailHeaderModel.socialGroupModel.hasFollow boolValue];
+        self.followButton.groupId = self.weakViewModel.detailHeaderModel.socialGroupModel.socialGroupId;
     }
 }
 

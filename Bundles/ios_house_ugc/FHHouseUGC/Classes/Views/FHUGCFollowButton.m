@@ -169,7 +169,7 @@
     [[FHUGCFollowManager sharedInstance] followUGCBy:self.groupId isFollow:!self.followed completion:^(BOOL isSuccess) {
         [wself stopLoading];
         if(isSuccess){
-            wself.followed = !self.followed;
+            wself.followed = !wself.followed;
         }else{
             if (wself.followed) {
                 [[ToastManager manager] showToast:@"取消关注失败，请稍后重试"];
@@ -178,8 +178,8 @@
             }
         }
         
-        if(self.followedSuccess){
-            self.followedSuccess(isSuccess,wself.followed);
+        if(wself.followedSuccess){
+            wself.followedSuccess(isSuccess,wself.followed);
         }
     }];
 }

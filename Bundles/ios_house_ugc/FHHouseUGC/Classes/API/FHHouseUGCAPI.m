@@ -7,7 +7,7 @@
 #import "TTLocationManager.h"
 #import "TTDeviceHelper.h"
 #import "NSStringAdditions.h"
-
+#import "FHUGCModel.h"
 
 @implementation FHHouseUGCAPI
 
@@ -126,12 +126,15 @@
 
 + (TTHttpTask *)requestFollow:(NSString *)group_id action:(NSInteger)action completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/follow";
+    Class jsonCls = [FHCommonModel class];
     if (action == 0) {
         // 取消关注
         queryPath = @"/f100/ugc/unfollow";
+        jsonCls = [FHCommonModel class];
     } else if (action == 1) {
-        // 取消关注
+        // 关注
         queryPath = @"/f100/ugc/follow";
+        jsonCls = [FHUGCFollowModel class];
     }
         
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -139,7 +142,7 @@
         paramDic[@"social_group_id"] = group_id;
     }
     NSString *query = [NSString stringWithFormat:@"social_group_id=%@",group_id];
-    return [FHMainApi postRequest:queryPath query:query params:paramDic jsonClass:[FHCommonModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+    return [FHMainApi postRequest:queryPath query:query params:paramDic jsonClass:jsonCls completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion(model,error);
         }
