@@ -63,13 +63,6 @@ static AKTaskSettingHelper *shareInstance = nil;
     return enable;
 }
 
-//- (void)updateBenefitValue
-//{
-//      [[AKRedPacketManager sharedManager] applyNewbeeRedPacketIgnoreLocalFlag:NO];
-////    [[AKActivityTabManager sharedManager] updateActivityTabHiddenState:![AKTaskSettingHelper shareInstance].isEnableShowTaskEntrance];
-////    [[NSNotificationCenter defaultCenter] postNotificationName:kAKBenefitSettingValueUpdateNotification object:self];
-//}
-
 - (void)setShowTaskEntrance:(BOOL)enable
 {
     [[NSUserDefaults standardUserDefaults] setBool:enable forKey:kUserDefaultKeySettingShowEntrance];

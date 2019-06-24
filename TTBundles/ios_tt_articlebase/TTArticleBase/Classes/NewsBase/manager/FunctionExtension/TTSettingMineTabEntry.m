@@ -27,7 +27,7 @@
 #import "NSDictionary+TTAdditions.h"
 //#import "TTRNBundleManager.h"
 #import "NSString+URLEncoding.h"
-#import "AKLoginTrafficViewController.h"
+//#import "AKLoginTrafficViewController.h"
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 
@@ -474,7 +474,9 @@
             
             if(![TTAccountManager isLogin]){
                 wrapperTrackEvent(@"message_list", @"click_logoff");
-                [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:nil];
+                [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+                }];
+//                [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:nil];
             }
             else{
                 if (weakEntry.isImportantMessage){
