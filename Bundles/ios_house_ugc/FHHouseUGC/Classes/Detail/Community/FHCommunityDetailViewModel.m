@@ -54,6 +54,7 @@
     self.feedListController = [[FHCommunityFeedListController alloc] init];
     self.feedListController.publishBtnBottomHeight = 10;
     self.feedListController.tableViewNeedPullDown = NO;
+    self.feedListController.showErrorView = NO;
     self.feedListController.scrollViewDelegate = self;
     self.feedListController.listType = FHCommunityFeedListTypePostDetail;
     self.feedListController.forumId = self.viewController.communityId;

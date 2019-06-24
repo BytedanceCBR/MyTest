@@ -69,6 +69,7 @@
     
     FHCommunityFeedListController *vc =[[FHCommunityFeedListController alloc] init];
     vc.listType = FHCommunityFeedListTypeMyJoin;
+    vc.showErrorView = NO;
     vc.tableHeaderView = self.neighbourhoodView;
     
     vc.view.frame = self.view.bounds;

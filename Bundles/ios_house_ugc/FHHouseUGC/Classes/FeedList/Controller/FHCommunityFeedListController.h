@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) CLLocation *currentLocaton;
 //小区详情页进入需要传这个参数，小区圈子id
 @property(nonatomic, strong) NSString *forumId;
+//当接口返回空数据的时候是否显示空态页，默认为YES
+@property(nonatomic, assign) BOOL showErrorView;
 
 @property(nonatomic, weak) id<UIScrollViewDelegate> scrollViewDelegate;
 - (void)showNotify:(NSString *)message;

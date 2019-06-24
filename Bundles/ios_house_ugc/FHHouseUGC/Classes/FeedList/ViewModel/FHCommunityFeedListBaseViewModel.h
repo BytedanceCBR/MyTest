@@ -12,6 +12,7 @@
 #import <FHCommonUI/FHRefreshCustomFooter.h>
 #import "FHUGCBaseCell.h"
 #import "FHFeedUGCCellModel.h"
+#import "FHFeedListModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHUGCBaseCell *currentCell;
 @property(nonatomic, strong) FHFeedUGCCellModel *currentCellModel;
 @property(nonatomic, assign) BOOL needRefreshCell;
+@property(nonatomic, strong) FHFeedListModel *feedListModel;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
 

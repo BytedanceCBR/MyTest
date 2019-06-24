@@ -29,7 +29,8 @@
 -(instancetype)init{
     self = [super init];
     if(self){
-        self.tableViewNeedPullDown = YES;
+        _tableViewNeedPullDown = YES;
+        _showErrorView = YES;
     }
     return self;
 }
@@ -51,7 +52,9 @@
     [self initNotifyBarView];
     [self initPublishBtn];
     
-    [self addDefaultEmptyViewFullScreen];
+    if(self.showErrorView){
+        [self addDefaultEmptyViewFullScreen];
+    }
 }
 
 - (void)initTableView {
