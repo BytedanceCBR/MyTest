@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHConfigModel.h"
+#import "FHUGCConfigModel.h"
 #import <YYCache/YYCache.h>
 
 NS_ASSUME_NONNULL_BEGIN

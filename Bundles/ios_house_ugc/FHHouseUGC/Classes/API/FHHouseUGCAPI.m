@@ -170,4 +170,9 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
++ (TTHttpTask *)requestUGCConfig:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/f100/ugc/config";
+    return [FHMainApi queryData:queryPath params:nil class:cls completion:completion];
+}
+
 @end

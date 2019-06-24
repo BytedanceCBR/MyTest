@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 我感兴趣小区列表
 + (TTHttpTask *)requestRecommendSocialGroupsWithLatitude:(CGFloat)latitude longitude:(CGFloat)longitude class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
+// ugc配置
++ (TTHttpTask *)requestUGCConfig:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
