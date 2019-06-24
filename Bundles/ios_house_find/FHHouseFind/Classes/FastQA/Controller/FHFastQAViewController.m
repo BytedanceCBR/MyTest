@@ -255,12 +255,14 @@
 }
 
 -(void)tryUpdateContentSize
-{
+{    
     CGRect frame = self.containerView.frame;
+    frame.origin.y = CONTAINTER_TOP;
     if (CGRectGetMaxY(frame) > self.scrollView.frame.size.height) {
         CGSize size = self.scrollView.contentSize;
-        size.height = CGRectGetMaxY(frame);
+        size = CGSizeMake(SCREEN_WIDTH, CGRectGetMaxY(frame));
         self.scrollView.contentSize = size;
+        self.bgView.frame = CGRectMake(0, 0, size.width, size.height);
     }
 }
 
@@ -286,6 +288,19 @@
 {
     [self.viewModel resetStayTime];
     [self.viewModel startTrack];
+}
+
+-(void)scrollToFitShowKeyboard
+{
+    
+}
+-(void)scrollToFitHideKeyboard
+{
+    CGRect frame = self.bgView.frame;
+    frame.origin.y = 0;
+    [UIView animateWithDuration:0.3 animations:^{
+        self.bgView.frame = frame;
+    }];
 }
 
 #pragma mark - keyboard
@@ -355,7 +370,7 @@
     CGRect keyboardScreenFrame = [[userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     keyboardScreenFrame = [self.view convertRect:keyboardScreenFrame fromView:self.containerView];
     
-    if (self.bgView.frame.origin.y >= 0 || !self.mobileView.phoneTextField.isFirstResponder) {
+    if (self.bgView.frame.origin.y >= 0 ) {//[self.viewController scrollToFitHideKeyboard];
         return;
     }
     

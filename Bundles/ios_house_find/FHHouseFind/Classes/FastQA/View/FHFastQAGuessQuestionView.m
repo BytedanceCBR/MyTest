@@ -30,6 +30,7 @@
         _tipLabel = [[UILabel alloc] init];
         _tipLabel.text = @"猜你想问";
         _tipLabel.textColor = [UIColor themeGray1];
+        _tipLabel.font = [UIFont themeFontRegular:12];
         [_tipLabel sizeToFit];
         [self addSubview:_tipLabel];
         

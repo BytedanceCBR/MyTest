@@ -46,7 +46,7 @@
         
         _tipLabel = [[UILabel alloc]init];
         _tipLabel.text = @"*我们将通过短信或电话的方式提供解答";
-        _tipLabel.font = [UIFont themeFontRegular:11];
+        _tipLabel.font = [UIFont themeFontRegular:14];
         _tipLabel.textColor = [UIColor themeGray3];
         
         [self addSubview:_titleLabel];

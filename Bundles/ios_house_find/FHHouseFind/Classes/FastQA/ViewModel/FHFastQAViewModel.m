@@ -258,7 +258,7 @@
         [self sendQuestion];
         [self addSubmibLog];
     }else {
-        [[ToastManager manager] showToast:@"请留下联系电话，方便获取问题解答"];
+        SHOW_TOAST(@"手机格式错误");
     }
 }
 
@@ -346,6 +346,12 @@
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
     [self addClickFillLog];
+}
+
+-(BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    [self.viewController scrollToFitHideKeyboard];
+    return YES;
 }
 
 

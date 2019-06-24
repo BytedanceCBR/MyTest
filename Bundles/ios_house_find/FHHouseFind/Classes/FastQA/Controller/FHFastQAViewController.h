@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 快速找房
 @interface FHFastQAViewController : FHBaseViewController
 
+-(void)scrollToFitShowKeyboard;
+-(void)scrollToFitHideKeyboard;
+
 @end
 
 NS_ASSUME_NONNULL_END
