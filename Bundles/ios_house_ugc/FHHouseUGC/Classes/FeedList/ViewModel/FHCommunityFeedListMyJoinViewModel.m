@@ -270,7 +270,7 @@
 }
 
 - (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel {
-    if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle || [cellModel.cellType integerValue] == FHUGCFeedListCellTypeQuestion){
+    if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         BOOL canOpenURL = NO;
         if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
             NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
@@ -288,7 +288,7 @@
             NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
         }
-    }else if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeUGC){
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
         [self jumpToPostDetail:cellModel showComment:NO];
     }
 }

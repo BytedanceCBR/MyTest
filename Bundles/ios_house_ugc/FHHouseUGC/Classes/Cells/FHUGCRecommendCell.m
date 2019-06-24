@@ -130,7 +130,7 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         self.isReplace = NO;
         _model = (FHFeedUGCCellModel *)data;
-        self.sourceList = _model.interestNeighbourhoodList;
+        self.sourceList = [_model.recommendSocialGroupList mutableCopy];
         [self refreshData];
     }
 }

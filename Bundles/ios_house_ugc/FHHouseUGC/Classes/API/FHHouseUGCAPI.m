@@ -200,4 +200,25 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
++ (TTHttpTask *)requestFeedListWithCategory:(NSString *)categoryId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/f100/ugc/recommend_feeds";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"channel_id"] = categoryId;
+    paramDic[@"count"] = @(20);
+    paramDic[@"offset"] = @(offset);
+    
+    TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
+    if (placemarkItem.coordinate.longitude > 0) {
+        paramDic[@"latitude"] = @(placemarkItem.coordinate.latitude);
+        paramDic[@"longitude"] = @(placemarkItem.coordinate.longitude);
+    }
+    
+    paramDic[@"load_more"] = @(loadMore);
+    
+    Class cls = NSClassFromString(@"FHFeedListModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end

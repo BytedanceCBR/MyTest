@@ -58,7 +58,7 @@
         Class cls = nil;
         if(type == FHUGCFeedListCellTypeUGC){
             cls = [FHFeedUGCContentModel class];
-        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion){
+        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -84,24 +84,9 @@
 
 + (FHFeedUGCCellModel *)modelFromFeedContent:(FHFeedContentModel *)model {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
-    cellModel.cellType = model.cellType;
-    cellModel.title = model.title;
-    cellModel.behotTime = model.behotTime;
-    cellModel.openUrl = model.openUrl;
+    cellModel.cellType = [model.cellType integerValue];
     cellModel.groupId = model.groupId;
-    if(!isEmptyString(model.openUrl) && !isEmptyString(model.sourceDesc)){
-        //针对问答的情况
-        cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
-    }else{
-        cellModel.desc = [self generateArticleDesc:model];
-    }
-    cellModel.detailScheme = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
-    
-    FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
-    community.name = model.community.name;
-    community.url = model.community.url;
-    cellModel.community = community;
-    
+    //处理图片
     NSMutableArray *cellImageList = [NSMutableArray array];
     for (FHFeedContentImageListModel *imageModel in model.imageList) {
         FHFeedUGCCellImageListModel *cellImageModel = [[FHFeedUGCCellImageListModel alloc] init];
@@ -120,15 +105,39 @@
         
         [cellImageList addObject:cellImageModel];
     }
-    
     cellModel.imageList = cellImageList;
-    
-    if(cellModel.imageList.count == 1){
-        cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleSingleImage;
-    }else if(cellModel.imageList.count > 1){
-        cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleMultiImage;
-    }else{
-        cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
+    //处理其他数据
+    if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
+        cellModel.title = model.title;
+        cellModel.behotTime = model.behotTime;
+        cellModel.openUrl = model.openUrl;
+        
+        if(!isEmptyString(model.openUrl) && !isEmptyString(model.sourceDesc)){
+            //针对问答的情况
+            cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
+        }else{
+            cellModel.desc = [self generateArticleDesc:model];
+        }
+        cellModel.detailScheme = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
+        
+        FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
+        community.name = model.community.name;
+        community.url = model.community.url;
+        cellModel.community = community;
+        
+        if(cellModel.imageList.count == 1){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleSingleImage;
+        }else if(cellModel.imageList.count > 1){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleMultiImage;
+        }else{
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
+        }
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner){
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBanner;
+        cellModel.openUrl = model.url;
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
+        cellModel.recommendSocialGroupList = model.recommendSocialGroupList;
     }
     
     return cellModel;
@@ -137,7 +146,7 @@
 + (FHFeedUGCCellModel *)modelFromFeedUGCContent:(FHFeedUGCContentModel *)model {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.originData = model;
-    cellModel.cellType = model.cellType;
+    cellModel.cellType = [model.cellType integerValue];
     cellModel.title = model.title;
     cellModel.behotTime = model.behotTime;
     cellModel.content = model.content;
@@ -243,31 +252,14 @@
 //推荐假数据
 + (FHFeedUGCCellModel *)modelFromFakeData {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
-    cellModel.cellType =@"60";
+    cellModel.cellType = 2001;
     cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
     
     NSMutableArray *sourceList = [NSMutableArray array];
     for (NSInteger i = 0; i < 20; i++) {
         [sourceList addObject:[NSString stringWithFormat:@"小区%li",(long)i]];
     }
-    cellModel.interestNeighbourhoodList = sourceList;
-    
-    return cellModel;
-}
-
-//运营位假数据
-+ (FHFeedUGCCellModel *)modelFromFakeData2 {
-    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
-    cellModel.cellType =@"61";
-    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBanner;
-    
-    return cellModel;
-}
-
-//引导页数据
-+ (FHFeedUGCCellModel *)guideCellModel {
-    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
-    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCGuide;
+//    cellModel.interestNeighbourhoodList = sourceList;
     
     return cellModel;
 }

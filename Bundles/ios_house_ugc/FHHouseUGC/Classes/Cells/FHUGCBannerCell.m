@@ -14,6 +14,7 @@
 @property(nonatomic ,strong) UIImageView *bannerImageView;
 @property(nonatomic ,strong) UIView *bottomSepView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
+@property(nonatomic, assign) CGFloat imageWidth;
 
 @end
 
@@ -56,11 +57,16 @@
 }
 
 - (void)initConstraints {
+//    make.top.left.bottom.mas_equalTo(self);
+//    make.width.mas_equalTo(self.imageWidth);
+//    make.height.mas_equalTo(self.imageWidth * 251.0f/355.0f);
+    self.imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
+    
     [self.bannerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentView).offset(20);
         make.left.mas_equalTo(self.contentView).offset(20);
-        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.height.mas_equalTo(100);
+        make.width.mas_equalTo(self.imageWidth);
+        make.height.mas_equalTo(self.imageWidth * 0.5);
     }];
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -82,10 +88,16 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         self.cellModel = cellModel;
         //图片
-//        FHFeedUGCCellImageListModel *imageModel = [cellModel.imageList firstObject];
-//        if(imageModel){
-            [self.bannerImageView bd_setImageWithURL:[NSURL URLWithString:@"http://t11.baidu.com/it/u=1311525232,1138951251&fm=175&app=25&f=JPEG?w=640&h=400&s=F69B15C594B265961C3465270300D043"] placeholder:nil];
-//        }
+        FHFeedUGCCellImageListModel *imageModel = [cellModel.imageList firstObject];
+        if(imageModel){
+            CGFloat width = [imageModel.width floatValue];
+            CGFloat height = [imageModel.height floatValue];
+            [self.bannerImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+            
+            [self.bannerImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(self.imageWidth * height/width);
+            }];
+        }
     }
 }
 
