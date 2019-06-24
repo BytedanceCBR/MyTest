@@ -40,6 +40,7 @@
 #import "FHPostUGCMainView.h"
 #import "FHUGCFollowListController.h"
 #import "TTCategoryDefine.h"
+#import "ToastManager.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -99,6 +100,8 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, copy) NSString *enterConcernID; //entrance为concern时有意义
 
 @property (nonatomic, strong)   FHPostUGCMainView       *selectView;
+@property (nonatomic, copy)     NSString       *selectGroupId;// 选中的小区id 小区位置不能点击
+@property (nonatomic, copy)     NSString       *selectGroupName; // 选中的小区name
 
 @end
 
@@ -125,7 +128,15 @@ static NSInteger const kMaxPostImageCount = 9;
             }
             self.outerInputRichSpanText = self.richSpanText;
             
-             self.postFinishCompletionBlock = [params tt_objectForKey:@"completionBlock"];
+            self.postFinishCompletionBlock = [params tt_objectForKey:@"completionBlock"];
+            // 选中小区圈
+            self.selectGroupId = [params tt_stringValueForKey:@"select_group_id"];
+            self.selectGroupName = [params tt_stringValueForKey:@"select_group_name"];
+            if (!(self.selectGroupId.length > 0 && self.selectGroupName.length > 0)) {
+                // 必须都有值
+                self.selectGroupId = nil;
+                self.selectGroupName = nil;
+            }
             
             // 添加google地图注册
             [[TTLocationManager sharedManager] registerReverseGeocoder:[TTGoogleMapGeocoder sharedGeocoder] forKey:NSStringFromClass([TTGoogleMapGeocoder class])];
@@ -359,6 +370,10 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)selectCommunityViewClick:(UITapGestureRecognizer *)sender {
+    // 外部传入小区圈，不跳转
+    if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
+        return;
+    }
     self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
     [self endEditing];
     NSMutableDictionary *dict = @{}.mutableCopy;
@@ -544,6 +559,11 @@ static NSInteger const kMaxPostImageCount = 9;
     NSString *inputText = richSpanText.text;
     
     if (![self isValidateWithInputText:inputText]) {
+        return;
+    }
+    
+    if (![self.selectView hasValidData]) {
+        [[ToastManager manager] showToast:@"请选择要发布的小区！"];
         return;
     }
     
@@ -766,14 +786,19 @@ static NSInteger const kMaxPostImageCount = 9;
     //发布器
     if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
         self.postButton.enabled = YES;
-        self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
         [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
         [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
     } else {
-        self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateHighlighted];
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
         self.postButton.enabled = NO;
+    }
+    // 选择小区
+    if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
+        self.selectView.groupId = self.selectGroupId;
+        self.selectView.communityName = self.selectGroupName;
     }
 }
 
