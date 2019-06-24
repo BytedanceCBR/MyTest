@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic, copy) void(^deleteCellBlock)(void);
 
+- (void)showPositionView:(BOOL)isShow;
+
 @end
 
 NS_ASSUME_NONNULL_END

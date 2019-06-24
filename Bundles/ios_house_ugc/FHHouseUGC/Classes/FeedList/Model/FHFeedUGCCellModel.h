@@ -14,6 +14,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface FHFeedUGCCellCommunityModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *name;
+@end
+
 @interface FHFeedUGCCellImageListUrlListModel : NSObject
 
 @property (nonatomic, copy , nullable) NSString *url;
@@ -75,6 +81,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *categoryId;
 //是否需要插入了引导页
 @property (nonatomic, assign) BOOL isInsertGuideCell;
+//圈子相关
+@property (nonatomic, strong , nullable) FHFeedUGCCellCommunityModel *community ;
+//是否显示圈子名称，默认为YES
+@property (nonatomic, assign) BOOL showCommunity;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

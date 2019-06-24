@@ -120,6 +120,23 @@
     }
 }
 
+- (void)showPositionView:(BOOL)isShow {
+    self.positionView.hidden = !isShow;
+    if(isShow){
+        [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.positionView.mas_right).offset(6);
+            make.centerY.mas_equalTo(self.positionView);
+            make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
+        }];
+    }else{
+        [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(20);
+            make.centerY.mas_equalTo(self.positionView);
+            make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
+        }];
+    }
+}
+
 - (void)moreOperation {
     FHFeedOperationView *dislikeView = [[FHFeedOperationView alloc] init];
     FHFeedOperationViewModel *viewModel = [[FHFeedOperationViewModel alloc] init];

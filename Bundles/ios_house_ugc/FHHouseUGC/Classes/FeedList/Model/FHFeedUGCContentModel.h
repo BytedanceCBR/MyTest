@@ -1,6 +1,12 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 NS_ASSUME_NONNULL_BEGIN
+@interface FHFeedUGCContentCommunityModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *name;
+@end
+
 @interface FHFeedUGCContentShareShareCoverModel : JSONModel 
 
 @property (nonatomic, strong , nullable) NSArray *urlList;
@@ -305,6 +311,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *threadIdStr;
 @property (nonatomic, assign) BOOL showPortrait;
 @property (nonatomic, copy , nullable) NSString *distance;
+@property (nonatomic, copy , nullable) NSString *distanceInfo;
 @property (nonatomic, strong , nullable) FHFeedUGCContentForumModel *forum ;  
 @property (nonatomic, copy , nullable) NSString *level;
 @property (nonatomic, copy , nullable) NSString *cellFlag;
@@ -322,7 +329,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedUGCContentPositionModel *position ;  
 @property (nonatomic, copy , nullable) NSString *cellUiType;
 @property (nonatomic, strong , nullable) FHFeedUGCContentUgcRecommendModel *ugcRecommend ;  
-@property (nonatomic, strong , nullable) FHFeedUGCContentUserModel *user ;  
+@property (nonatomic, strong , nullable) FHFeedUGCContentUserModel *user ;
+@property (nonatomic, strong , nullable) FHFeedUGCContentCommunityModel *community ;
 @end
 
 

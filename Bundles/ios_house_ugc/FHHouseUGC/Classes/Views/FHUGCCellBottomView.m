@@ -42,6 +42,7 @@
     _positionView.layer.masksToBounds= YES;
     _positionView.layer.cornerRadius = 4;
     _positionView.userInteractionEnabled = YES;
+    _positionView.hidden = YES;
     [self addSubview:_positionView];
     
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeRed3]];
@@ -151,6 +152,10 @@
     label.font = font;
     label.textColor = textColor;
     return label;
+}
+
+- (void)showPositionView:(BOOL)isShow {
+    self.positionView.hidden = !isShow;
 }
 
 - (void)updateLikeState:(NSString *)diggCount userDigg:(NSString *)userDigg {

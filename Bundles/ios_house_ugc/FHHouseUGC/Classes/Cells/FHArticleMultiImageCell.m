@@ -139,7 +139,10 @@
         self.contentLabel.text = cellModel.title;
         self.bottomView.cellModel = cellModel;
         self.bottomView.descLabel.attributedText = cellModel.desc;
-        self.bottomView.position.text = @"左家庄";
+        
+        BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
+        self.bottomView.position.text = cellModel.community.name;
+        [self.bottomView showPositionView:showCommunity];
         //图片
         NSArray *imageList = cellModel.imageList;
         for (NSInteger i = 0; i < self.imageViewList.count; i++) {

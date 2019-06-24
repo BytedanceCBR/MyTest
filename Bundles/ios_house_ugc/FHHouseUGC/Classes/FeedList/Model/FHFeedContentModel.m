@@ -1,5 +1,12 @@
 //GENERATED CODE , DON'T EDIT
 #import "FHFeedContentModel.h"
+@implementation FHFeedContentCommunityModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHFeedContentForwardInfoModel
 + (JSONKeyMapper*)keyMapper
 {

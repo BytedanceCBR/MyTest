@@ -163,7 +163,6 @@
         [resultArray addObject:[FHFeedUGCCellModel modelFromFakeData2]];
     }
     for (FHFeedListDataModel *itemModel in feedList) {
-        NSString *content = itemModel.content;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         cellModel.categoryId = self.categoryId;
         cellModel.feedVC = self.viewController;
@@ -180,7 +179,7 @@
         //符合引导页显示条件时
         for (NSInteger i = 0; i < self.dataList.count; i++) {
             FHFeedUGCCellModel *cellModel = self.dataList[i];
-            if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle || [cellModel.cellType integerValue] == FHUGCFeedListCellTypeUGC){
+            if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle || [cellModel.cellType integerValue] == FHUGCFeedListCellTypeQuestion || [cellModel.cellType integerValue] == FHUGCFeedListCellTypeUGC){
                 cellModel.isInsertGuideCell = YES;
                 self.guideCellModel = cellModel;
                 //显示以后次数加1
@@ -254,7 +253,7 @@
 }
 
 - (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel {
-    if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle){
+    if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle || [cellModel.cellType integerValue] == FHUGCFeedListCellTypeQuestion){
         BOOL canOpenURL = NO;
         if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
             NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
