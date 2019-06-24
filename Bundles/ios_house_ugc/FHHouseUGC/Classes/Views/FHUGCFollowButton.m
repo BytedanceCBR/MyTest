@@ -157,11 +157,7 @@
     }
     
     [self startLoading];
-    //增加延迟，为了动画效果
-    CGFloat delayTime = 1.0f;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self requestData];
-    });
+    [self requestData];
 }
 
 - (void)requestData {
@@ -169,17 +165,11 @@
     [[FHUGCFollowManager sharedInstance] followUGCBy:self.groupId isFollow:!self.followed completion:^(BOOL isSuccess) {
         [wself stopLoading];
         if(isSuccess){
-            wself.followed = !self.followed;
-        }else{
-            if (wself.followed) {
-                [[ToastManager manager] showToast:@"取消关注失败，请稍后重试"];
-            } else {
-                [[ToastManager manager] showToast:@"关注失败，请稍后重试"];
-            }
+            wself.followed = !wself.followed;
         }
         
-        if(self.followedSuccess){
-            self.followedSuccess(isSuccess,wself.followed);
+        if(wself.followedSuccess){
+            wself.followedSuccess(isSuccess,wself.followed);
         }
     }];
 }
@@ -199,17 +189,17 @@
 
 - (void)showDeleteAlert {
     __weak typeof(self) wself = self;
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确认要退出吗"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确认要取消关注吗？"
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"再看看"
                                                            style:UIAlertActionStyleCancel
                                                          handler:^(UIAlertAction * _Nonnull action) {
                                                              // 点击取消按钮，调用此block
                                                          }];
     [alert addAction:cancelAction];
     
-    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"确定"
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"确认"
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * _Nonnull action) {
                                                               // 点击按钮，调用此block

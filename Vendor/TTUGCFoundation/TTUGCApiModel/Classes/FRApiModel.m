@@ -1,4 +1,5 @@
 #import "FRApiModel.h"
+#import "FHURLSettings.h"
 @implementation FRApiRequestModel
 - (instancetype) init {
     self = [super init];
@@ -7915,9 +7916,9 @@
     self = [super init];
     if (self) {
         self._method = @"POST";
-        self._host = [FRCommonURLSetting baseURL];
+        self._host = [FHURLSettings baseURL];
         self._uri = @"/f100/ugc/post_publish";//@"/ugc/publish/post/v5/commit";
-        self._response = @"FRUgcPublishPostV5CommitResponseModel";
+        self._response = @"FRPublishPostResponseModel";
     }
 
     return self;
@@ -7956,6 +7957,12 @@
 
 @end
 
+@implementation FHUgcPublishPostResponseModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 @implementation FRUgcPublishPostV5CommitResponseModel
 - (instancetype) init

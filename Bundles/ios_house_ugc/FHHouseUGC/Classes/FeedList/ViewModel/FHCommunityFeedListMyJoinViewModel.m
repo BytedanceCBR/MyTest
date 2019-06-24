@@ -15,6 +15,7 @@
 #import "Article.h"
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
+#import "TTUGCDefine.h"
 
 @interface FHCommunityFeedListMyJoinViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -27,9 +28,16 @@
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
+        // 发帖成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
     }
     
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)configTableView {
@@ -47,6 +55,43 @@
         [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
             [wself requestData:YES first:NO];
         }];
+    }
+}
+
+// 发帖成功，插入数据
+- (void)postThreadSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        NSDictionary *result_model = userInfo[@"result_model"];
+        if (result_model && [result_model isKindOfClass:[NSDictionary class]]) {
+            NSDictionary * thread_cell_dic = result_model[@"data"];
+            if (thread_cell_dic && [thread_cell_dic isKindOfClass:[NSDictionary class]]) {
+                NSString * thread_cell_data = thread_cell_dic[@"thread_cell"];
+                if (thread_cell_data && [thread_cell_data isKindOfClass:[NSString class]]) {
+                    // 得到cell 数据
+                    NSError *jsonParseError;
+                    NSData *jsonData = [thread_cell_data dataUsingEncoding:NSUTF8StringEncoding];
+                    if (jsonData) {
+                        Class cls = [FHFeedUGCContentModel class];
+                        FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
+                        if (model && jsonParseError == nil) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+                                // 是否有空页面y逻辑 ?? add by zyk
+                                if (cellModel) {
+                                    if (self.dataList.count == 0) {
+                                        [self.dataList addObject:cellModel];
+                                    } else {
+                                        [self.dataList insertObject:cellModel atIndex:0];
+                                    }
+                                    [self.tableView reloadData];
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

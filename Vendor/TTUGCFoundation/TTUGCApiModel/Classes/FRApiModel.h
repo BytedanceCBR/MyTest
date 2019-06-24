@@ -3782,6 +3782,12 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) FRUGCPublishGuideInfoStructModel<Optional> *guide_info;
 @end
 
+@interface FHUgcPublishPostResponseModel : JSONModel<TTResponseModelProtocol>
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) NSDictionary *data ;
+@end
+
 @interface  FRUserProfileStickV1RequestModel : TTRequestModel
 @property (strong, nonatomic) NSNumber *id;
 @end
