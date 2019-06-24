@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/16.
 //
 //
-
+#if 0
 #import "TTStartupGroup.h"
 #import "TTStartupTask.h"
 
@@ -27,3 +27,4 @@ typedef NS_ENUM(NSUInteger, TTSDKsRegisterStartupType) {
 + (TTStartupSDKsGroup *)SDKsRegisterGroup;
 
 @end
+#endif

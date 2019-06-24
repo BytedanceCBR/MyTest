@@ -11,6 +11,9 @@
 #import "SSCookieManager.h"
 //#import "FRLogicManager.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTHandleFirstLauchTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+13);
 
 @implementation TTHandleFirstLauchTask
 

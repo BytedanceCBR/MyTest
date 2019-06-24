@@ -22,6 +22,9 @@
 #import <TTArticleBase/SSCommonLogic.h>
 #import <Heimdallr/HMDTTMonitor.h>
 #import "FHIMAlertViewListenerImpl.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
 @interface FHIMConfigDelegateImpl : NSObject<FHIMConfigDelegate>
 
@@ -166,8 +169,7 @@
     return YES;
 }
 
-- (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
-    NSLog(@"startup IM");
+- (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {    
     if ([SSCommonLogic imCanStart]) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];

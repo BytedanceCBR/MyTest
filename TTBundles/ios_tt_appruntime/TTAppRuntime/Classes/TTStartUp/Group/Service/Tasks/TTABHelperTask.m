@@ -13,6 +13,9 @@
 #import <BDABTestSDK/BDABTestManager.h>
 #import <TTTracker.h>
 #import <TTSettingsManager/TTSettingsManager.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
 
 @implementation TTABHelperTask
 

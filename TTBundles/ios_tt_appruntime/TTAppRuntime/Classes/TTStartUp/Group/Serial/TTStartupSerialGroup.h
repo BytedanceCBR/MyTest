@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/17.
 //
 //
-
+#if 0
 #import "TTStartupGroup.h"
 
 typedef NS_ENUM(NSUInteger, TTSerialStartupType) {
@@ -41,3 +41,4 @@ typedef NS_ENUM(NSUInteger, TTSerialStartupType) {
 + (TTStartupSerialGroup *)serialGroup;
 
 @end
+#endif

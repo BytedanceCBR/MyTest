@@ -19,6 +19,9 @@
 #import "SSCommonLogic.h"
 #import <TTMonitor/TTMonitor.h>
 #import <TTArticleBase/ExploreLogicSetting.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTClearCacheTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+9);
 
 @implementation TTClearCacheTask
 

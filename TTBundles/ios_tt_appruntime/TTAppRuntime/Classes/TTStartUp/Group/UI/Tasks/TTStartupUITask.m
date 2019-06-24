@@ -24,9 +24,12 @@
 #import "TTTabBar.h"
 //#import "TTFantasyTimeCountDownManager.h"
 #import "AKTaskSettingHelper.h"
-//#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 #import "SSCommonLogic.h"
+
+#import "TTLaunchDefine.h"
+
+DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 @implementation TTStartupUITask
 

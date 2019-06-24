@@ -27,7 +27,9 @@
 #import <BDUGMonitorInterface/BDUGMonitorInterface.h>
 
 //#import <BDSDKApi+CompanyProduct.h>
+#import "TTLaunchDefine.h"
 
+DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
 
 
 @implementation TTAccountSDKRegister
