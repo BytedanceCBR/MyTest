@@ -112,9 +112,13 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
+    
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"community_id"] = @"6703388142264647950";
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     //跳转到圈子详情页
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 //埋点

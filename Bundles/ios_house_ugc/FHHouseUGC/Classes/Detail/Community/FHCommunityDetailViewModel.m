@@ -56,6 +56,8 @@
     self.feedListController.tableViewNeedPullDown = NO;
     self.feedListController.scrollViewDelegate = self;
     self.feedListController.listType = FHCommunityFeedListTypePostDetail;
+    self.feedListController.forumId = self.viewController.communityId;
+    
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
     self.feedListController.tableHeaderView = self.headerView;
 

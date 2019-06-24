@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 圈子详情页
 @interface FHCommunityDetailViewController : FHBaseViewController
+
+@property(nonatomic, copy) NSString *communityId;
+
 @end
 
 NS_ASSUME_NONNULL_END
