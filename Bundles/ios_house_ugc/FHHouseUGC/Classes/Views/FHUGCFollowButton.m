@@ -157,11 +157,7 @@
     }
     
     [self startLoading];
-    //增加延迟，为了动画效果
-    CGFloat delayTime = 1.0f;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self requestData];
-    });
+    [self requestData];
 }
 
 - (void)requestData {
