@@ -33,6 +33,7 @@
 #import <TTPostBase/TTPostTaskCenter.h>
 #import "TTStringHelper.h"
 #import "TTArticleCategoryManager.h"
+#import "ToastManager.h"
 
 @interface TTPostThreadTaskStatusModel ()
 
@@ -409,98 +410,6 @@ TTAccountMulticastProtocol
         }
     };
    
-    //对于登录状态过期的处理
-    if ([task.finishError code] == TTPostThreadErrorCodeLoginStateValid) {
-        
-        NSString *source = nil;
-        if (task.taskType == TTPostTaskTypeVideo) {
-            source = @"post_topic";
-        }
-        else {
-            source = @"post_video";
-        }
-        
-        [TTAccountManager showLoginAlertWithType:TTAccountLoginAlertTitleTypePost
-                                          source:source
-                                     inSuperView:[TTUIResponderHelper topmostViewController].view
-                                      completion:^(TTAccountAlertCompletionEventType type, NSString *phoneNum) {
-                                          
-                                          if (type == TTAccountAlertCompletionEventTypeDone) {
-                                              sendLogic(ArticleLoginStatePlatformLogin);
-                                          }
-                                          else if (type == TTAccountAlertCompletionEventTypeTip) {
-                                              
-                                              [TTAccountManager presentQuickLoginFromVC:[TTUIResponderHelper topmostViewController]
-                                                                                   type:TTAccountLoginDialogTitleTypeDefault
-                                                                                 source:source
-                                                                             completion:nil];
-                                          }
-                                          
-                                      }];
-        
-        NSString * text = [task.finishError.userInfo tt_stringValueForKey:@"description"];
-        if (isEmptyString(text)) {
-            text = NSLocalizedString(@"登录失效，请重新登录", nil);
-        }
-        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:text indicatorImage:nil autoDismiss:YES dismissHandler:nil];
-    }
-    else if (task.repostType == TTThreadRepostTypeNone) {
-        NSString * text = [task.finishError.userInfo tt_stringValueForKey:@"description"];
-        if (isEmptyString(text)) {
-            text = NSLocalizedString(@"发布失败", nil);
-        }
-        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:text indicatorImage:nil autoDismiss:YES dismissHandler:nil];
-    }
-    else {
-        NSDictionary *err_alert = [task.finishError.userInfo tt_dictionaryValueForKey:@"err_alert"];
-        NSString *error_title = [err_alert tt_stringValueForKey:@"err_title"];
-        NSString *error_tips = [err_alert tt_stringValueForKey:@"err_content"];
-        NSString *error_schema = [err_alert tt_stringValueForKey:@"err_schema"];
-        if (!isEmptyString(error_schema) && !isEmptyString(error_tips)) {
-            
-            TTAccountAlertView *alert = [[TTAccountAlertView alloc] initWithTitle:error_tips message:nil cancelBtnTitle:@"取消" confirmBtnTitle:error_title?:@"查看详情" animated:YES tapCompletion:^(TTAccountAlertCompletionEventType type) {
-                if (type == TTAccountAlertCompletionEventTypeDone) {
-                    if (!isEmptyString(error_schema)) {
-                        NSURL *openURL = [TTStringHelper URLWithURLString:error_schema];
-                        if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
-                            [[TTRoute sharedRoute] openURLByPushViewController:openURL];
-                        }
-                        else {
-                            NSString *linkStr = openURL.absoluteString;
-                            if (!isEmptyString(linkStr)) {
-                                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://webview"]
-                                                                          userInfo:TTRouteUserInfoWithDict(@{@"url":linkStr})];
-                            }
-                        }
-                    }
-                }
-            }];
-            
-            [alert showInView:[TTUIResponderHelper topmostView]];
-        }
-        else {
-            if (!self.isRetryAlertViewShown) {
-                NSString * title = NSLocalizedString(@"发送失败，是否重新发送", nil);
-                if (TTPostTaskTypeThread == task.taskType && TTThreadRepostTypeNone != task.repostType) {
-                    //发帖任务 并且是 转发帖子任务
-                    if (!isEmptyString([task.finishError.userInfo tt_stringValueForKey:@"description"])) {
-                        title = [task.finishError.userInfo tt_stringValueForKey:@"description"];
-                    }
-                }
-                TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:title message:nil preferredType:TTThemedAlertControllerTypeAlert];
-                [alert addActionWithTitle:NSLocalizedString(@"取消", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-                    self.isRetryAlertViewShown = NO;
-                }];
-                [alert addActionWithTitle:NSLocalizedString(@"重试", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-                    [[TTPostThreadCenter sharedInstance_tt] resentThreadForFakeThreadID:task.fakeThreadId concernID:task.concernID];
-                    self.isRetryAlertViewShown = NO;
-                }];
-                [alert showFrom:[TTUIResponderHelper topmostViewController] animated:YES];
-                self.isRetryAlertViewShown = YES;
-            }
-        }
-        
-    }
     if (self.statusChangeBlk) {
         self.statusChangeBlk();
     }
@@ -546,7 +455,8 @@ TTAccountMulticastProtocol
         }
     }
     else {
-        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:[TTKitchen getString:kTTKUGCRepostWordingRepostSuccessToast] indicatorImage:nil autoDismiss:YES dismissHandler:nil];
+        // [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:[TTKitchen getString:kTTKUGCRepostWordingRepostSuccessToast] indicatorImage:nil autoDismiss:YES dismissHandler:nil];
+        [[ToastManager manager] showToast:@"发帖成功"];
     }
     
     if (self.statusChangeBlk) {
@@ -677,42 +587,8 @@ TTAccountMulticastProtocol
 {
     if ([TTKitchen getBOOL:kTTKUGCPostThreadRevalFollowChannel]) {
 
-//        if (self.bubbleView) {
-//            //关注频道是否在左侧固定频道
-//            BOOL followCategoryExistInLeft = YES;//[[TTArticleCategoryManager sharedManager] isCategoryInFrontOfMainArticleCategoryInSubScribedCategories:kTTFollowCategoryID];
-//
-//            if (followCategoryExistInLeft) {
-//                CGPoint tipsAnchorPoint = [self bubbleViewAnchorPoint];
-//
-//                [self.bubbleView changeAnchorPoint:tipsAnchorPoint];
-//            }
-//            else {
-//                WeakSelf;
-//                [self.bubbleView hideTipWithAnimation:NO forceHide:YES completionHandle:^{
-//                    StrongSelf;
-//                    self.bubbleView = nil;
-//                }];
-//
-//            }
-//
-//        }
     }
 }
-
-//- (CGPoint)bubbleViewAnchorPoint {
-
-//    TTExploreMainViewController *mainListView = [(NewsBaseDelegate *)[[UIApplication sharedApplication] delegate] exploreMainViewController];
-//
-//    TTCategorySelectorManager *selectorManager = mainListView.selectorManager;
-//
-//    UIView * followCategoryButton = [selectorManager categorySelectorButtonByCategoryId:kTTFollowCategoryID];
-//
-//    CGPoint tipsAnchorPoint = CGPointMake(followCategoryButton.superview.origin.x + CGRectGetWidth(followCategoryButton.frame)/2.f, CGRectGetMaxY(followCategoryButton.frame));
-//
-//    CGPoint tipsAnchorPointInMainListView = [mainListView.view convertPoint:tipsAnchorPoint fromView:selectorManager.selectorView];
-//    return tipsAnchorPointInMainListView;
-//}
-
 
 - (NSUInteger)selectIndexInTabbarController {
     UIWindow * mainWindow = [[UIApplication sharedApplication].delegate window];

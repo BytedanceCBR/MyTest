@@ -660,6 +660,8 @@ static NSInteger const kMaxPostImageCount = 9;
 //        }
         
         [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+    } else {
+        
     }
 }
 
@@ -789,7 +791,7 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.longitude = longitude;
     postThreadModel.latitude = latitude;
     
-    self.selectView.groupId = @"1636215424527368";
+    self.selectView.groupId = @"6703403081570189582";
     postThreadModel.social_group_id = self.selectView.groupId;
     NSLog(@"social_group_id:%@",self.selectView.groupId);
 //    postThreadModel.score = rate;
