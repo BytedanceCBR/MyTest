@@ -11,6 +11,9 @@
 #import "ExploreCellBase.h"
 #import "NetworkUtilities.h"
 #import "TTArticleCategoryManager.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTFeedPreloadTask",FHTaskTypeService,TASK_PRIORITY_HIGH+13);
 
 static NSArray *allItems = nil;
 static BOOL preloadInvalid = NO;

@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/18.
 //
 //
-
+#if 0
 #import "NewsBaseDelegate+Notification.h"
 #import "TTStartupNotificationGroup.h"
 #import "TTStartupTask.h"
@@ -37,3 +37,4 @@
 }
 
 @end
+#endif

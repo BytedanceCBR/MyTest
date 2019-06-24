@@ -15,6 +15,9 @@
 #import <mach/task.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <objc/runtime.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTCrashAttemptFixTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+1);
 
 @implementation TTCrashAttemptFixTask
 

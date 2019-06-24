@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/19.
 //
 //
-
+#if 0
 #import "TTStartupGroup.h"
 
 @interface TTStartupADGroup : TTStartupGroup
@@ -21,3 +21,4 @@ typedef NS_ENUM(NSUInteger, TTADStartupType) {
 + (TTStartupADGroup *)ADGroup;
 
 @end
+#endif

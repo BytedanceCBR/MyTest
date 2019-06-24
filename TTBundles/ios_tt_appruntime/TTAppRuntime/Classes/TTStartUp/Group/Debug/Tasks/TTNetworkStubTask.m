@@ -8,6 +8,9 @@
 
 #import "TTNetworkStubTask.h"
 #import "TTNetworkStub.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTNetworkStubTask",FHTaskTypeDebug,TASK_PRIORITY_HIGH);
 
 @implementation TTNetworkStubTask
 
