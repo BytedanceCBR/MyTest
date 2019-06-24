@@ -24,12 +24,14 @@
 #import "FHEnvContext.h"
 #import "FHUGCModel.h"
 #import "ToastManager.h"
+#import "FHUGCFollowManager.h"
 
 @interface FHUGCSearchListController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) FHUGCSuggectionTableView *tableView;
 @property (nonatomic, strong)   NSMutableArray       *items;
 @property(nonatomic , weak) TTHttpTask *sugHttpTask;
+@property (nonatomic, copy)     NSString       *searchText;
 
 @end
 
@@ -143,6 +145,7 @@
         self.naviBar.searchInput.text = text;
     }
     BOOL hasText = text.length > 0;
+    self.searchText = text;
     if (hasText) {
         [self requestSuggestion:text];
     } else {
@@ -160,6 +163,9 @@
     }
     __weak typeof(self) weakSelf = self;
     self.sugHttpTask = [FHHouseUGCAPI requestSocialSearchByText:text class:[FHUGCSearchModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        [weakSelf.items removeAllObjects];
+        [weakSelf.items addObjectsFromArray:[FHUGCFollowManager sharedInstance].followData.data.userFollowSocialGroups];
+        [weakSelf.tableView reloadData];
         if (model != NULL && error == NULL) {
             [weakSelf.items removeAllObjects];
             FHUGCSearchModel *tModel = model;
@@ -207,6 +213,7 @@
     
     NSInteger row = indexPath.row;
     if (row >= 0 && row < self.items.count) {
+        cell.highlightedText = self.searchText;
         id data = self.items[row];
         [cell refreshWithData:data];
     }
