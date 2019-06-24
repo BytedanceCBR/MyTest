@@ -52,6 +52,7 @@
         // self.titleLabel.text = model.socialGroupName;
         self.descLabel.text = model.countText;
         self.followButton.followed = [model.hasFollow boolValue];
+        self.followButton.groupId = model.socialGroupId;
         [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
     }
 }

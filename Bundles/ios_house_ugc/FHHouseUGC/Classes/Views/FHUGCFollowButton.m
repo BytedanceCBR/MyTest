@@ -157,14 +157,17 @@
     }
     
     [self startLoading];
-    [self requestData];
+    __weak typeof(self) wSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [wSelf requestData];
+    });
 }
 
 - (void)requestData {
     __weak typeof(self) wself = self;
     [[FHUGCFollowManager sharedInstance] followUGCBy:self.groupId isFollow:!self.followed completion:^(BOOL isSuccess) {
         [wself stopLoading];
-        if(isSuccess){
+        if(isSuccess) {
             wself.followed = !wself.followed;
         }
         
