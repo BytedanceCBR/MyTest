@@ -112,7 +112,11 @@
     if ([notification.name isEqualToString:UIKeyboardWillShowNotification]) {
         _keyboardVisible = YES;
     } else {
-        _keyboardVisible = NO;
+        // 解决tableView的touch 事件先于 cell点击的问题
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            weakSelf.keyboardVisible = NO;
+        });
     }
 }
 
