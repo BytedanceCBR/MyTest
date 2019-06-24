@@ -149,11 +149,10 @@
                 [wself.dataList addObjectsFromArray:result];
             }
             wself.tableView.hasMore = feedListModel.hasMore;
-            [wself updateTableViewWithMoreData:feedListModel.hasMore];
             wself.viewController.hasValidateData = wself.dataList.count > 0;
             
             if(wself.dataList.count > 0){
-                wself.refreshFooter.hidden = NO;
+                [wself updateTableViewWithMoreData:feedListModel.hasMore];
                 [wself.viewController.emptyView hideEmptyView];
             }else{
                 [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];

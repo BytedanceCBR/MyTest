@@ -178,13 +178,14 @@
     return [FHMainApi queryData:queryPath params:nil class:cls completion:completion];
 }
 
-+ (TTHttpTask *)requestForumFeedListWithForumId:(NSString *)forumId lastId:(NSString *)lastId loadMore:(BOOL)loadMore completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
++ (TTHttpTask *)requestForumFeedListWithForumId:(NSString *)forumId lastId:(NSString *)lastId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/forum_feeds";
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"forum_id"] = forumId;
     paramDic[@"count"] = @(20);
     paramDic[@"last_id"] = lastId;
+    paramDic[@"offset"] = @(offset);
     
     TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
     if (placemarkItem.coordinate.longitude > 0) {

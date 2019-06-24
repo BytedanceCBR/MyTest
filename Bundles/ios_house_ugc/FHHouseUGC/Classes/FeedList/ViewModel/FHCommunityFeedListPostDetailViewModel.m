@@ -61,21 +61,26 @@
     
     NSInteger listCount = self.dataList.count;
     NSString *lastId = nil;
+    NSInteger offset = 0;
     
     if(!isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
         lastId = cellModel.groupId;
+        if(self.feedListModel){
+            offset = [self.feedListModel.lastOffset integerValue];
+        }
     }
     
-    self.requestTask = [FHHouseUGCAPI requestForumFeedListWithForumId:self.categoryId lastId:lastId loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestForumFeedListWithForumId:self.categoryId lastId:lastId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(isFirst){
-            [self.viewController endLoading];
+            [wself.viewController endLoading];
         }
         
-        [self.tableView finishPullDownWithSuccess:YES];
+        [wself.tableView finishPullDownWithSuccess:YES];
         
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
+        wself.feedListModel = feedListModel;
         
         if (!wself) {
             return;
@@ -102,12 +107,12 @@
             }else{
                 [wself.dataList addObjectsFromArray:result];
             }
+            
             wself.tableView.hasMore = feedListModel.hasMore;
-            [wself updateTableViewWithMoreData:feedListModel.hasMore];
             wself.viewController.hasValidateData = wself.dataList.count > 0;
             
             if(wself.dataList.count > 0){
-                wself.refreshFooter.hidden = NO;
+                [wself updateTableViewWithMoreData:feedListModel.hasMore];
                 [wself.viewController.emptyView hideEmptyView];
             }else{
                 [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
@@ -121,9 +126,9 @@
             //            }
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
-                [self.viewController showNotify:refreshTip];
-                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
+                [wself.viewController showNotify:refreshTip];
+                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
             }
             
             //            if(!isHead){
