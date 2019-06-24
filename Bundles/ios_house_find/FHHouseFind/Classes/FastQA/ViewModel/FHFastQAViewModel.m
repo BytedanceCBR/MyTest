@@ -260,7 +260,7 @@
     }else if (phoneNum.length == 0){
         SHOW_TOAST(@"请留下联系电话，方便获取问题解答");
     }else {
-        SHOW_TOAST(@"手机格式错误");
+        SHOW_TOAST(@"手机号格式错误");
     }
 }
 
