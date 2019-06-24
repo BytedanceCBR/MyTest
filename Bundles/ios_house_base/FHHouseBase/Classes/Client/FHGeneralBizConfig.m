@@ -10,6 +10,7 @@
 #import "FHUtils.h"
 #import "FHEnvContext.h"
 #import "FHLazyLoadModel.h"
+#import "FHUGCConfigModel.h"
 
 
 static NSString *const kGeneralCacheName = @"general_config";
