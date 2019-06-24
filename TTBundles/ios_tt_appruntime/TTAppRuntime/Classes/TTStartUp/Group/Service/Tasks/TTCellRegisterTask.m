@@ -11,6 +11,9 @@
 //#import "TTForumCellHelper.h"
 //#import "TTWendaCellHelper.h"
 #import "TTADCellHelper.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTCellRegisterTask",FHTaskTypeService,TASK_PRIORITY_HIGH+1);
 
 @implementation TTCellRegisterTask
 

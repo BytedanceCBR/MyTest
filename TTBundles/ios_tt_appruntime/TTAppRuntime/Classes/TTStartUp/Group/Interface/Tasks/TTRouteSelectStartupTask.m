@@ -9,6 +9,9 @@
 #import "TTRouteSelectStartupTask.h"
 // #import "TTLCSManager.h"
 #import <TTNetBusiness/TTRouteSelectionManager.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTRouteSelectStartupTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+6);
 
 @implementation TTRouteSelectStartupTask
 

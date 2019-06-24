@@ -8,6 +8,9 @@
 
 #import "TTRequestRefreshADTask.h"
 #import "TTAdManager.h"
+//#import "TTLaunchDefine.h"
+//
+//DEC_TASK("TTRequestRefreshADTask",FHTaskTypeAD,TASK_PRIORITY_HIGH);
 
 @implementation TTRequestRefreshADTask
 

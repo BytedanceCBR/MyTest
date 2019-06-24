@@ -14,6 +14,9 @@
 #import "TTUserSettingsManager+NetworkTraffic.h"
 #import "APNsManager.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTPermissionSettingsReportTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+14);
 
 @implementation TTPermissionSettingsReportTask
 

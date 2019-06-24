@@ -8,6 +8,9 @@
 
 #import "TTNetworkNotifyTask.h"
 #import "NetworkUtilities.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTNetworkNotifyTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+11);
 
 @implementation TTNetworkNotifyTask
 

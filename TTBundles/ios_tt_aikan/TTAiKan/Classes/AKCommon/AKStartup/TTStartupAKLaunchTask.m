@@ -14,6 +14,9 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTInstallService/TTInstallIDManager.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeService,TASK_PRIORITY_HIGH+15);
 
 @interface PreFcAction : NSObject<UIAlertViewDelegate>
 {

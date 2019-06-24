@@ -12,6 +12,9 @@
 //#if INHOUSE
 //#import "TTDebugAssistant.h"
 //#endif
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTMemoryMonitorTask",FHTaskTypeDebug,TASK_PRIORITY_HIGH+1);
 
 @implementation TTMemoryMonitorTask
 

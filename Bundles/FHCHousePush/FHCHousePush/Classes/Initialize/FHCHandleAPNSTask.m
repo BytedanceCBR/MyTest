@@ -31,7 +31,9 @@
 //#import <TTAppRuntime/TTIntroduceViewTask.h>
 #import <TTAppRuntime/TTStartupTasksTracker.h>
 #import <TTAppRuntime/TTProjectLogicManager.h>
+#import "TTLaunchDefine.h"
 
+DEC_TASK_N(FHCHandleAPNSTask,FHTaskTypeSerial,TASK_PRIORITY_HIGH+12);
 
 static NSString * const kTTAPNSRemoteNotificationDict = @"kTTAPNSRemoteNotificationDict";
 static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
