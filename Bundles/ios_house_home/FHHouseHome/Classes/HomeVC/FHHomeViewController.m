@@ -76,16 +76,16 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.adColdHadJump = NO;
     
     [self registerNotifications];
-
+    
     [self resetMaintableView];
     
     self.automaticallyAdjustsScrollViewInsets = NO;
-  
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
     //如果是inhouse的，弹升级弹窗
-    if ([TTSandBoxHelper isInHouseApp]) {
+    if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
         //#if INHOUSE
         [self checkLocalTestUpgradeVersionAlert];
         //#endif
@@ -102,6 +102,8 @@ static CGFloat const kSectionHeaderHeight = 38;
     [self.view bringSubviewToFront:self.topBar];
 }
 
+
+//初始化main table
 - (void)resetMaintableView
 {
     if (self.mainTableView) {
@@ -217,16 +219,16 @@ static CGFloat const kSectionHeaderHeight = 38;
         [UIView animateWithDuration:0.3 animations:^{
             UIEdgeInsets inset = self.mainTableView.contentInset;
             inset.top = 0;
-//            self.homeListViewModel
+            //            self.homeListViewModel
             self.mainTableView.contentInset = inset;
             [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
             self.homeListViewModel.isResetingOffsetZero = NO;
-//    [self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            //    [self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }];
-//        [UIView animateWithDuration:0.3 animations:^{
-//
-//        } completion:^(BOOL finished) {
-//        }];
+        //        [UIView animateWithDuration:0.3 animations:^{
+        //
+        //        } completion:^(BOOL finished) {
+        //        }];
         
     });
     
@@ -236,7 +238,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [self.notifyBar hideImmediately];
 }
-         
+
 - (void)retryLoadData
 {
     if (![FHEnvContext isNetworkConnected]) {
@@ -276,13 +278,13 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     
     [FHEnvContext sharedInstance].refreshConfigRequestType = @"refresh_config";
-
+    
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
     
     //首次无网启动点击加载重试，增加拉取频道
     if ([TTSandBoxHelper isAPPFirstLaunch]) {
         [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
-         
+            
         }];
     }
 }
@@ -313,7 +315,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
         [self.homeListViewModel checkCityStatus];
     }
-
+    
     [self scrollToTopEnable:YES];
     
     self.homeListViewModel.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
@@ -322,8 +324,6 @@ static CGFloat const kSectionHeaderHeight = 38;
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
     }
     
-    [self.view bringSubviewToFront:self.topBar];
-
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
@@ -400,19 +400,19 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)scrollToTopEnable:(BOOL)enable
 {
-//    self.mainTableView.scrollsToTop = enable;
+    //    self.mainTableView.scrollsToTop = enable;
 }
 
 - (void)scrollToTopAnimated:(BOOL)animated
 {
-//    self.mainTableView.contentOffset = CGPointMake(0, 0);
+    //    self.mainTableView.contentOffset = CGPointMake(0, 0);
 }
 
 - (void)didAppear
 {
     self.homeListViewModel.stayTime = [[NSDate date] timeIntervalSince1970];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
-
+    
     [[FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell.bannerView resetTimer];
 }
 
@@ -432,8 +432,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom
 {
-//    self.mainTableView.ttContentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
-//    self.mainTableView.scrollIndicatorInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
+    //    self.mainTableView.ttContentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
+    //    self.mainTableView.scrollIndicatorInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
 }
 
 - (BOOL)tt_hasValidateData

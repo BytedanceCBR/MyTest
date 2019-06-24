@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/22.
 //
 //
-
+#if 0
 #import "TTStartupOpenURLGroup.h"
 #import "TTQQShareOpenURLTask.h"
 #import "TTAppLinkOpenURLTask.h"
@@ -86,3 +86,4 @@
 }
 
 @end
+#endif

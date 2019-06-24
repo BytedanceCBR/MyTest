@@ -10,6 +10,9 @@
 #import "NewFeedbackAlertManager.h"
 #import "SSFeedbackManager.h"
 #import "SSCommonLogic.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTFeedbackCheckTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+8);
 
 @implementation TTFeedbackCheckTask
 

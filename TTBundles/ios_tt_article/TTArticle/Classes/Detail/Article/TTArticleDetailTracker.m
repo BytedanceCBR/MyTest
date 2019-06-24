@@ -452,6 +452,13 @@
     [param setValue:@(percent) forKey:@"percent"];
     [param setValue:@(pageCount) forKey:@"page_count"];
     param[@"event_type"] = @"house_app2c_v2";
+    
+    
+    if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]])
+    {
+        [param addEntriesFromDictionary:self.detailModel.reportParams];
+    }
+    
 //    [[EnvContext shared].tracer writeEvent:@"read_pct" params:param];
     [FHEnvContext recordEvent:param andEventKey:@"read_pct"];
 }

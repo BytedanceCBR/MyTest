@@ -10,6 +10,9 @@
 #import "TTArticleCategoryManager.h"
 #import <TTTrackerWrapper.h>
 #import "SSCommonLogic.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTGetCategoryTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+9);
 
 static BOOL kTTHasReceivedGotCategoryNotification = NO;
 

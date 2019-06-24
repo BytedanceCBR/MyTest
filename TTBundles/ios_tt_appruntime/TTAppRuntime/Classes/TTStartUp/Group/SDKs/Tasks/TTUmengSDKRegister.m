@@ -11,6 +11,9 @@
 #import "DebugUmengIndicator.h"
 #import <UMMobClick/MobClick.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTUmengSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH+1);
 
 @implementation TTUmengSDKRegister
 

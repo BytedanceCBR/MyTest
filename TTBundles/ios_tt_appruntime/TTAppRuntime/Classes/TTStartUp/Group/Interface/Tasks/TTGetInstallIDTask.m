@@ -19,6 +19,9 @@
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "CommonURLSetting.h"
 #import <TTBaseLib/TTBaseMacro.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTGetInstallIDTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
 
 @implementation TTGetInstallIDTask
 

@@ -10,7 +10,9 @@
 #import "TTRoute.h"
 #import "TTRouteService.h"
 #import "NewsBaseDelegate.h"
+#import "TTLaunchDefine.h"
 
+DEC_TASK("TTAppPageManagerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+10);
 
 @implementation TTAppPageManagerTask
 

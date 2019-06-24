@@ -8,6 +8,9 @@
 
 #import "TTTimeIntervalTask.h"
 #import "SSCommonLogic.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTTimeIntervalTask",FHTaskTypeService,TASK_PRIORITY_HIGH+4);
 
 @implementation TTTimeIntervalTask
 

@@ -6,6 +6,7 @@
 //
 //
 
+#if 0
 #import "NewsBaseDelegate+AD.h"
 #import "TTStartupADGroup.h"
 #import "TTStartupTask.h"
@@ -37,3 +38,4 @@
 }
 
 @end
+#endif

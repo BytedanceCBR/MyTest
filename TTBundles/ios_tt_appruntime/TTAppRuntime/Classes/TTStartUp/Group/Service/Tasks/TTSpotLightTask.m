@@ -17,6 +17,9 @@
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTMonitor/TTMonitor.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTSpotlightTask",FHTaskTypeService,TASK_PRIORITY_HIGH+6);
 
 @implementation TTSpotlightTask
 

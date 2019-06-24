@@ -8,6 +8,9 @@
 
 #import "TTiOS10NotificationCheckTask.h"
 #import "TTTrackerWrapper.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTiOS10NotificationCheckTask",FHTaskTypeService,TASK_PRIORITY_HIGH+10);
 
 @implementation TTiOS10NotificationCheckTask
 
