@@ -58,6 +58,9 @@
     
 }
 
+- (void)fh_didEndDisplayingCell{
+
+}
 @end
 
 // FHDetailBaseCollectionCell
