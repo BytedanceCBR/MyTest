@@ -9,7 +9,6 @@
 #import "FHCommunityDetailViewModel.h"
 
 @interface FHCommunityDetailViewController ()
-@property(nonatomic, copy) NSString *communityId;
 @property(nonatomic, strong) FHCommunityDetailViewModel *viewModel;
 @end
 

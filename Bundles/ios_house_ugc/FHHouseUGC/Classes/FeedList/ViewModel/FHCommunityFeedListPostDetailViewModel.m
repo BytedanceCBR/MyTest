@@ -5,7 +5,7 @@
 //  Created by 谢思铭 on 2019/6/3.
 //
 
-#import "FHCommunityFeedListMyJoinViewModel.h"
+#import "FHCommunityFeedListPostDetailViewModel.h"
 #import "FHUGCBaseCell.h"
 #import "FHTopicListModel.h"
 #import "FHHouseUGCAPI.h"
@@ -15,29 +15,21 @@
 #import "Article.h"
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
-#import "TTUGCDefine.h"
 
-@interface FHCommunityFeedListMyJoinViewModel () <UITableViewDelegate, UITableViewDataSource>
+@interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
 
 @end
 
-@implementation FHCommunityFeedListMyJoinViewModel
+@implementation FHCommunityFeedListPostDetailViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController {
     self = [super initWithTableView:tableView controller:viewController];
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
-        // 发帖成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
     }
     
     return self;
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)configTableView {
@@ -58,43 +50,6 @@
     }
 }
 
-// 发帖成功，插入数据
-- (void)postThreadSuccess:(NSNotification *)noti {
-    if (noti && noti.userInfo && self.dataList) {
-        NSDictionary *userInfo = noti.userInfo;
-        NSDictionary *result_model = userInfo[@"result_model"];
-        if (result_model && [result_model isKindOfClass:[NSDictionary class]]) {
-            NSDictionary * thread_cell_dic = result_model[@"data"];
-            if (thread_cell_dic && [thread_cell_dic isKindOfClass:[NSDictionary class]]) {
-                NSString * thread_cell_data = thread_cell_dic[@"thread_cell"];
-                if (thread_cell_data && [thread_cell_data isKindOfClass:[NSString class]]) {
-                    // 得到cell 数据
-                    NSError *jsonParseError;
-                    NSData *jsonData = [thread_cell_data dataUsingEncoding:NSUTF8StringEncoding];
-                    if (jsonData) {
-                        Class cls = [FHFeedUGCContentModel class];
-                        FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
-                        if (model && jsonParseError == nil) {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
-                                // 是否有空页面y逻辑 ?? add by zyk
-                                if (cellModel) {
-                                    if (self.dataList.count == 0) {
-                                        [self.dataList addObject:cellModel];
-                                    } else {
-                                        [self.dataList insertObject:cellModel atIndex:0];
-                                    }
-                                    [self.tableView reloadData];
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     [super requestData:isHead first:isFirst];
     
@@ -105,23 +60,27 @@
     __weak typeof(self) wself = self;
     
     NSInteger listCount = self.dataList.count;
-    double behotTime = 0;
+    NSString *lastId = nil;
+    NSInteger offset = 0;
     
     if(!isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
-        behotTime = [cellModel.behotTime doubleValue];
+        lastId = cellModel.groupId;
+        if(self.feedListModel){
+            offset = [self.feedListModel.lastOffset integerValue];
+        }
     }
     
-    //    @"weitoutiao" @"f_wenda"
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestForumFeedListWithForumId:self.categoryId lastId:lastId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(isFirst){
-            [self.viewController endLoading];
+            [wself.viewController endLoading];
         }
         
-        [self.tableView finishPullDownWithSuccess:YES];
+        [wself.tableView finishPullDownWithSuccess:YES];
         
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
+        wself.feedListModel = feedListModel;
         
         if (!wself) {
             return;
@@ -148,6 +107,7 @@
             }else{
                 [wself.dataList addObjectsFromArray:result];
             }
+            
             wself.tableView.hasMore = feedListModel.hasMore;
             wself.viewController.hasValidateData = wself.dataList.count > 0;
             
@@ -166,9 +126,9 @@
             //            }
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
-                [self.viewController showNotify:refreshTip];
-                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
+                [wself.viewController showNotify:refreshTip];
+                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
             }
             
             //            if(!isHead){
@@ -192,6 +152,7 @@
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
+        cellModel.showCommunity = NO;
         cellModel.categoryId = self.categoryId;
         cellModel.feedVC = self.viewController;
         if(cellModel){

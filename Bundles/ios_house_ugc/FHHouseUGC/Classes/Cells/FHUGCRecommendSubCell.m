@@ -11,6 +11,7 @@
 #import <Masonry.h>
 #import <UIImageView+BDWebImage.h>
 #import "FHUGCFollowButton.h"
+#import "FHFeedContentModel.h"
 
 #define iconWidth 48
 
@@ -51,12 +52,13 @@
 
 - (void)refreshWithData:(id)data {
     _model = data;
-    if([data isKindOfClass:[NSString class]]){
-        _titleLabel.text = data;
-        _descLabel.text = @"88热帖·9221人";
-        _sourceLabel.text = @"附近推荐";
-//        _joinBtn.groupId = @"111";
-        [self.icon bd_setImageWithURL:[NSURL URLWithString:@"http://p1.pstatp.com/thumb/fea7000014edee1159ac"] placeholder:nil];
+    if([data isKindOfClass:[FHFeedContentRecommendSocialGroupListModel class]]){
+        FHFeedContentRecommendSocialGroupListModel *model = (FHFeedContentRecommendSocialGroupListModel *)data;
+        _titleLabel.text = model.SocialGroupName;
+        _descLabel.text = model.CountText;
+        _sourceLabel.text = model.SuggestReason;
+        _joinBtn.groupId = model.SocialGroupId;
+        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.Avatar] placeholder:nil];
     }
 }
 

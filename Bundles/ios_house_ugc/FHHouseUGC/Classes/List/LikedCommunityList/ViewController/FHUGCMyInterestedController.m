@@ -62,7 +62,6 @@
     
     _tableView.sectionFooterHeight = 0.0;
     
-    _tableView.estimatedRowHeight = 85;
     _tableView.estimatedSectionHeaderHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
     
@@ -73,6 +72,17 @@
     [self.view addSubview:_tableView];
     
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+    
+    if(self.type == FHUGCMyInterestedTypeEmpty){
+        
+        _tableView.estimatedRowHeight = 192;
+        
+        [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.view);
+        }];
+    }else{
+        _tableView.estimatedRowHeight = 70;
+    }
 }
 
 - (UIView *)emptyHeaderView {

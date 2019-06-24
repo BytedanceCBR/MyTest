@@ -64,16 +64,15 @@
     __weak typeof(self) wself = self;
     
     NSInteger listCount = self.dataList.count;
-    double behotTime = 0;
+    NSInteger offset = 0;
     
     if(!isHead && listCount > 0){
-        FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
-        behotTime = [cellModel.behotTime doubleValue];
+        if(self.feedListModel){
+            offset = [self.feedListModel.lastOffset integerValue];
+        }
     }
     
-//    @"weitoutiao" @"f_wenda"
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if(isFirst){
             [self.viewController endLoading];
         }
@@ -108,11 +107,10 @@
                 [wself.dataList addObjectsFromArray:result];
             }
             wself.tableView.hasMore = feedListModel.hasMore;
-            [wself updateTableViewWithMoreData:feedListModel.hasMore];
             wself.viewController.hasValidateData = wself.dataList.count > 0;
             
             if(wself.dataList.count > 0){
-                wself.refreshFooter.hidden = NO;
+                [wself updateTableViewWithMoreData:feedListModel.hasMore];
                 [wself.viewController.emptyView hideEmptyView];
                 
                 if(isFirst){
@@ -122,13 +120,12 @@
                 [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
                 wself.viewController.showenRetryButton = YES;
             }
-            
             [wself.tableView reloadData];
             
-//            if(isFirst){
-//                self.originSearchId = self.searchId;
-//                [self addEnterCategoryLog];
-//            }
+            //            if(isFirst){
+            //                self.originSearchId = self.searchId;
+            //                [self addEnterCategoryLog];
+            //            }
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
             if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
@@ -136,11 +133,79 @@
                 [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
             }
             
-//            if(!isHead){
-//                [self addRefreshLog];
-//            }
+            //            if(!isHead){
+            //                [self addRefreshLog];
+            //            }
         }
     }];
+//    @"weitoutiao" @"f_wenda"
+//    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+//
+//        if(isFirst){
+//            [self.viewController endLoading];
+//        }
+//
+//        [self.tableView finishPullDownWithSuccess:YES];
+//
+//        FHFeedListModel *feedListModel = (FHFeedListModel *)model;
+//
+//        if (!wself) {
+//            return;
+//        }
+//
+//        if (error) {
+//            //TODO: show handle error
+//            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+//            wself.viewController.showenRetryButton = YES;
+//            return;
+//        }
+//
+//        if(model){
+//            if (isHead && feedListModel.hasMore) {
+//                [wself.dataList removeAllObjects];
+//            }
+//            NSArray *result = [wself convertModel:feedListModel.data];
+//
+//            if(isHead){
+//                if(result.count > 0){
+//                    [wself.cellHeightCaches removeAllObjects];
+//                }
+//                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
+//            }else{
+//                [wself.dataList addObjectsFromArray:result];
+//            }
+//            wself.tableView.hasMore = feedListModel.hasMore;
+//            wself.viewController.hasValidateData = wself.dataList.count > 0;
+//
+//            if(wself.dataList.count > 0){
+//                [wself updateTableViewWithMoreData:feedListModel.hasMore];
+//                [wself.viewController.emptyView hideEmptyView];
+//
+//                if(isFirst){
+//                    [wself insertGuideCell];
+//                }
+//            }else{
+//                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+//                wself.viewController.showenRetryButton = YES;
+//            }
+//            [wself.tableView reloadData];
+//
+////            if(isFirst){
+////                self.originSearchId = self.searchId;
+////                [self addEnterCategoryLog];
+////            }
+//
+//            NSString *refreshTip = feedListModel.tips.displayInfo;
+//            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
+//                [self.viewController showNotify:refreshTip];
+//                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+//            }
+//
+////            if(!isHead){
+////                [self addRefreshLog];
+////            }
+//        }
+//    }];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -155,15 +220,13 @@
 
 - (NSArray *)convertModel:(NSArray *)feedList {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    if(feedList.count > 0){
-        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFakeData];
-        cellModel.tableView = self.tableView;
-        [resultArray addObject:cellModel];
-
-        [resultArray addObject:[FHFeedUGCCellModel modelFromFakeData2]];
-    }
+//    if(feedList.count > 0){
+//        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFakeData];
+//        cellModel.tableView = self.tableView;
+//        [resultArray addObject:cellModel];
+//    }
+    
     for (FHFeedListDataModel *itemModel in feedList) {
-        NSString *content = itemModel.content;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         cellModel.categoryId = self.categoryId;
         cellModel.feedVC = self.viewController;
@@ -180,7 +243,7 @@
         //符合引导页显示条件时
         for (NSInteger i = 0; i < self.dataList.count; i++) {
             FHFeedUGCCellModel *cellModel = self.dataList[i];
-            if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle || [cellModel.cellType integerValue] == FHUGCFeedListCellTypeUGC){
+            if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion || cellModel.cellType == FHUGCFeedListCellTypeUGC){
                 cellModel.isInsertGuideCell = YES;
                 self.guideCellModel = cellModel;
                 //显示以后次数加1
@@ -250,11 +313,19 @@
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
     self.currentCellModel = cellModel;
     self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-    [self jumpToDetail:cellModel];
+    if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeUGC){
+        [self jumpToDetail:cellModel];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner){
+        //根据url跳转
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }else{
+        //什么都不做
+    }
 }
 
 - (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel {
-    if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeArticle){
+    if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         BOOL canOpenURL = NO;
         if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
             NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
@@ -272,7 +343,7 @@
             NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
         }
-    }else if([cellModel.cellType integerValue] == FHUGCFeedListCellTypeUGC){
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
         [self jumpToPostDetail:cellModel showComment:NO];
     }
 }

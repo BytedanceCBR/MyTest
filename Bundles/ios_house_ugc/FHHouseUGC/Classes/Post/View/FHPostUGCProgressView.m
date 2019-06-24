@@ -14,6 +14,9 @@
 #import "TTPostThreadCenter.h"
 #import "TTAccountManager.h"
 #import "UIImageView+BDWebImage.h"
+#import "TTThemedUploadingStatusCellProgressBar.h"
+#import "TTReachability.h"
+#import "ToastManager.h"
 
 @interface FHPostUGCProgressView ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -82,12 +85,10 @@
     }
     self.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.ugc_viewHeight);
     self.tableView.frame = self.frame;
-    // 取最新的一个
-    NSLog(@"--------:1:%ld",self.statusViewModel.followTaskStatusModels.count);
-    if (self.statusViewModel.followTaskStatusModels.count > 0) {
-        TTPostThreadTaskStatusModel *statusModel = [self.statusViewModel.followTaskStatusModels lastObject];
-        NSLog(@"-------:2:%ld",statusModel.status);
+    if (self.refreshViewBlk) {
+        self.refreshViewBlk();
     }
+    [self.tableView reloadData];
 }
 
 // 删除发送失败的任务
@@ -175,22 +176,47 @@
 @property (nonatomic, strong)   UILabel       *stateLabel;
 @property (nonatomic, strong)   UIButton       *retryBtn;
 @property (nonatomic, strong)   UIButton       *delBtn;
+@property (nonatomic, strong)   TTThemedUploadingStatusCellProgressBar       *progressBar;
+@property (nonatomic, copy) TTPostThreadTaskProgressBlock progressBlock;
+@property (nonatomic, weak)     TTPostThreadTaskStatusModel       *statusModel;
 
 @end
 
 @implementation FHPostUGCProgressCell
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[TTPostThreadTaskStatusModel class]]) {
+    if (![data isKindOfClass:[TTPostThreadTaskStatusModel class]]) {
         return;
     }
     self.currentData = data;
+    self.statusModel = data;
     
     TTPostThreadTaskStatusModel *model = self.currentData;
     if ([model isKindOfClass:[TTPostThreadTaskStatusModel class]]) {
-//        self.titleLabel.text = model.socialGroupName;
-//        self.descLabel.text = model.countText;
-//        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
+        if (self.progressBlock) {
+            [_statusModel removeProgressBlock:self.progressBlock];
+        }
+        
+        WeakSelf;
+        self.progressBlock = ^(CGFloat progress){
+            StrongSelf;
+            [self.progressBar setProgress:progress animated:YES];
+        };
+        [_statusModel addProgressBlock:self.progressBlock];
+        
+        [self.progressBar setProgress:_statusModel.uploadingProgress animated:NO];
+        
+        if (self.statusModel.status == TTPostTaskStatusFailed) {
+            self.stateLabel.text = @"发布失败";
+            [self.progressBar setForegroundColorThemeKey:kFHColorCoolGrey2];
+            self.retryBtn.hidden = NO;
+            self.delBtn.hidden = NO;
+        } else {
+            self.stateLabel.text = @"正在发布...";
+            [self.progressBar setForegroundColorThemeKey:kFHColorCoral];
+            self.retryBtn.hidden = YES;
+            self.delBtn.hidden = YES;
+        }
     }
 }
 
@@ -227,10 +253,16 @@
     [_delBtn addTarget:self action:@selector(delBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_delBtn];
     
+    self.progressBar = [[TTThemedUploadingStatusCellProgressBar alloc] initWithFrame:CGRectMake(0, 39, [UIScreen mainScreen].bounds.size.width, 1)];
+    [self.progressBar setForegroundColorThemeKey:kFHColorCoral];
+    [self.contentView addSubview:self.progressBar];
+    
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(20);
         make.width.height.mas_equalTo(28);
         make.centerY.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.contentView).offset(6);
+        make.bottom.mas_equalTo(self.contentView).offset(-6);
     }];
     [self.stateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentView);
@@ -259,11 +291,18 @@
 
 // event
 - (void)retryBtnClick {
-    
+    // 无网络判断
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+     [[TTPostThreadCenter sharedInstance_tt] resentThreadForFakeThreadID:self.statusModel.fakeThreadId concernID:self.statusModel.concernID];
 }
 
 - (void)delBtnClick {
-    
+    if (self.statusModel) {
+        [[TTPostThreadCenter sharedInstance_tt] removeTaskForFakeThreadID:self.statusModel.fakeThreadId concernID:self.statusModel.concernID];
+    }
 }
 
 @end

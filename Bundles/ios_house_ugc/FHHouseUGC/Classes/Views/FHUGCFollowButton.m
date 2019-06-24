@@ -14,6 +14,7 @@
 #import "FHUGCFollowManager.h"
 #import "ToastManager.h"
 #import "TTBaseMacro.h"
+#import "TTUIResponderHelper.h"
 
 @interface FHUGCFollowButton ()
 
@@ -76,21 +77,6 @@
     [self setTitle:self.titleStr forState:UIControlStateNormal];
     self.loadingAnimateView.image = [UIImage imageNamed:self.loadingImageName];
 }
-
-//- (void)setStyle:(FHUGCFollowButtonStyle)style {
-//    _style = style;
-//
-//    if(self.style == FHUGCFollowButtonStyleBorder){
-//        self.layer.borderWidth = 0.5f;
-//        if(self.followed){
-//            self.layer.borderColor = [[UIColor themeGray4] CGColor];
-//        }else{
-//            self.layer.borderColor = [[UIColor themeRed1] CGColor];
-//        }
-//    }else{
-//        self.layer.borderWidth = 0.0f;
-//    }
-//}
 
 - (void)setupUI {
     self.layer.masksToBounds = YES;
@@ -158,34 +144,35 @@
 }
 
 - (void)clicked {
+    if(self.followed){
+        [self showDeleteAlert];
+    }else{
+        [self doFollow];
+    }
+}
+
+- (void)doFollow {
+    if(isEmptyString(self.groupId)){
+        return;
+    }
+    
     [self startLoading];
-    //增加延迟，为了动画效果
-    CGFloat delayTime = 1.0f;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self requestData];
+    __weak typeof(self) wSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [wSelf requestData];
     });
 }
 
 - (void)requestData {
-    if(isEmptyString(self.groupId)){
-        return;
-    }
-
     __weak typeof(self) wself = self;
     [[FHUGCFollowManager sharedInstance] followUGCBy:self.groupId isFollow:!self.followed completion:^(BOOL isSuccess) {
         [wself stopLoading];
-        if(isSuccess){
-            wself.followed = !self.followed;
-        }else{
-            if (wself.followed) {
-                [[ToastManager manager] showToast:@"取消关注失败"];
-            } else {
-                [[ToastManager manager] showToast:@"关注失败"];
-            }
+        if(isSuccess) {
+            wself.followed = !wself.followed;
         }
         
-        if(self.followedSuccess){
-            self.followedSuccess(isSuccess,wself.followed);
+        if(wself.followedSuccess){
+            wself.followedSuccess(isSuccess,wself.followed);
         }
     }];
 }
@@ -201,6 +188,28 @@
     if([groupId isEqualToString:self.groupId]){
         self.followed = followed;
     }
+}
+
+- (void)showDeleteAlert {
+    __weak typeof(self) wself = self;
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确认要取消关注吗？"
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"再看看"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction * _Nonnull action) {
+                                                             // 点击取消按钮，调用此block
+                                                         }];
+    [alert addAction:cancelAction];
+    
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"确认"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * _Nonnull action) {
+                                                              // 点击按钮，调用此block
+                                                              [wself doFollow];
+                                                          }];
+    [alert addAction:defaultAction];
+    [[TTUIResponderHelper visibleTopViewController] presentViewController:alert animated:YES completion:nil];
 }
 
 

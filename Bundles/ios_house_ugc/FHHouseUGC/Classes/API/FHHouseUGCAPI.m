@@ -7,7 +7,7 @@
 #import "TTLocationManager.h"
 #import "TTDeviceHelper.h"
 #import "NSStringAdditions.h"
-
+#import "FHUGCModel.h"
 
 @implementation FHHouseUGCAPI
 
@@ -126,12 +126,15 @@
 
 + (TTHttpTask *)requestFollow:(NSString *)group_id action:(NSInteger)action completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/follow";
+    Class jsonCls = [FHCommonModel class];
     if (action == 0) {
         // 取消关注
         queryPath = @"/f100/ugc/unfollow";
+        jsonCls = [FHCommonModel class];
     } else if (action == 1) {
-        // 取消关注
+        // 关注
         queryPath = @"/f100/ugc/follow";
+        jsonCls = [FHUGCFollowModel class];
     }
         
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -139,7 +142,7 @@
         paramDic[@"social_group_id"] = group_id;
     }
     NSString *query = [NSString stringWithFormat:@"social_group_id=%@",group_id];
-    return [FHMainApi postRequest:queryPath query:query params:paramDic jsonClass:[FHCommonModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+    return [FHMainApi postRequest:queryPath query:query params:paramDic jsonClass:jsonCls completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion(model,error);
         }
@@ -158,9 +161,63 @@
 + (TTHttpTask *)requestRecommendSocialGroupsWithLatitude:(CGFloat)latitude longitude:(CGFloat)longitude class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
     NSString *queryPath = @"/f100/ugc/recommend_social_groups";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
-//    if (text.length > 0) {
-//        paramDic[@"text"] = text;
-//    }
+    
+    if(latitude != 0){
+        paramDic[@"latitude"] = @(latitude);
+    }
+    
+    if(longitude != 0){
+        paramDic[@"longitude"] = @(longitude);
+    }
+
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestUGCConfig:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/f100/ugc/config";
+    return [FHMainApi queryData:queryPath params:nil class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestForumFeedListWithForumId:(NSString *)forumId lastId:(NSString *)lastId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/forum_feeds";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"forum_id"] = forumId;
+    paramDic[@"count"] = @(20);
+    paramDic[@"last_id"] = lastId;
+    paramDic[@"offset"] = @(offset);
+    
+    TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
+    if (placemarkItem.coordinate.longitude > 0) {
+        paramDic[@"latitude"] = @(placemarkItem.coordinate.latitude);
+        paramDic[@"longitude"] = @(placemarkItem.coordinate.longitude);
+    }
+    
+    paramDic[@"load_more"] = @(loadMore);
+    
+    Class cls = NSClassFromString(@"FHFeedListModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestFeedListWithCategory:(NSString *)categoryId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/f100/ugc/recommend_feeds";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"channel_id"] = categoryId;
+    paramDic[@"count"] = @(20);
+    paramDic[@"offset"] = @(offset);
+    
+    TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
+    if (placemarkItem.coordinate.longitude > 0) {
+        paramDic[@"latitude"] = @(placemarkItem.coordinate.latitude);
+        paramDic[@"longitude"] = @(placemarkItem.coordinate.longitude);
+    }
+    
+    paramDic[@"load_more"] = @(loadMore);
+    
+    Class cls = NSClassFromString(@"FHFeedListModel");
+    
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 

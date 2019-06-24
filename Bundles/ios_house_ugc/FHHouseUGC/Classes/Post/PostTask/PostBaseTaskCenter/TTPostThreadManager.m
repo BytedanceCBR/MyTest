@@ -19,13 +19,22 @@
 #import <TTUGCFoundation/TTUGCMonitorDefine.h>
 
 @interface  FRPublishPostResponseModel : JSONModel<TTResponseModelProtocol>
-@property (strong, nonatomic) NSNumber *err_no;
-@property (strong, nonatomic) NSDictionary<Optional> *thread;
-@property (strong, nonatomic) NSString<Optional> *err_tips;
-@property (strong, nonatomic) FRUGCPublishGuideInfoStructModel<Optional> *guide_info;
+//@property (strong, nonatomic) NSNumber *err_no;
+//@property (strong, nonatomic) NSDictionary<Optional> *thread;
+//@property (strong, nonatomic) NSString<Optional> *err_tips;
+//@property (strong, nonatomic) FRUGCPublishGuideInfoStructModel<Optional> *guide_info;
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) NSDictionary *data ;
 @end
 
 @implementation FRPublishPostResponseModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
 @end
 
 @interface FRPublishRePostResponseModel : JSONModel<TTResponseModelProtocol>
@@ -188,9 +197,9 @@
             [[HMDTTMonitor defaultManager] hmdTrackService:kTTUGCPublishBehaviorMonitor metric:nil category:@{@"status" : @(kTTBehaviorFunnelRequestSuccess)} extra:@{kTTUGCMonitorType : kTTPostBehaviorTypePost}];
 
             FRPublishPostResponseModel *publishResponse = (FRPublishPostResponseModel *)responseModel;
-            if (publishResponse.thread.count == 0) {
-                publishResponse.thread = nil;
-            }
+//            if (publishResponse.thread.count == 0) {
+//                publishResponse.thread = nil;
+//            }
             if (finishBlock) {
                 finishBlock(error, [publishResponse toDictionary], monitorModel,total);
             }
@@ -253,9 +262,9 @@
             [[HMDTTMonitor defaultManager] hmdTrackService:kTTUGCPublishBehaviorMonitor metric:nil category:@{@"status" : @(kTTBehaviorFunnelRequestSuccess)} extra:@{kTTUGCMonitorType : kTTPostBehaviorTypePost}];
 
             FRPublishPostResponseModel *publishEidtedResponse = (FRPublishPostResponseModel *)responseModel;
-            if (publishEidtedResponse.thread.count == 0) {
-                publishEidtedResponse.thread = nil;
-            }
+//            if (publishEidtedResponse.thread.count == 0) {
+//                publishEidtedResponse.thread = nil;
+//            }
             if (finishBlock) {
                 finishBlock(error, [publishEidtedResponse toDictionary], monitorModel,total);
             }

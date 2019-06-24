@@ -39,6 +39,8 @@
 #import "TTUGCHashtagModel.h"
 #import "FHPostUGCMainView.h"
 #import "FHUGCFollowListController.h"
+#import "TTCategoryDefine.h"
+#import "ToastManager.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -98,6 +100,8 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, copy) NSString *enterConcernID; //entrance为concern时有意义
 
 @property (nonatomic, strong)   FHPostUGCMainView       *selectView;
+@property (nonatomic, copy)     NSString       *selectGroupId;// 选中的小区id 小区位置不能点击
+@property (nonatomic, copy)     NSString       *selectGroupName; // 选中的小区name
 
 @end
 
@@ -109,30 +113,6 @@ static NSInteger const kMaxPostImageCount = 9;
     if (self) {
         NSDictionary * params = paramObj.allParams;
         if ([params isKindOfClass:[NSDictionary class]]) {
-            /* add by zyk
-             {
-             "category_id" = "__all__";
-             cid = 6454692306795629069;
-             "enter_type" = "feed_publisher";
-             "post_content_hint" = "\U5206\U4eab\U65b0\U9c9c\U4e8b";
-             "post_ugc_enter_from" = 1;
-             refer = 1;
-             "show_et_status" = 8;
-             }
-             
-             TTPostThreadViewController *postThreadVC = [[TTPostThreadViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(params)];
-             postThreadVC.enterConcernID = self.enterConcernID;
-             postThreadVC.entrance = self.entrance;
-             TTCustomAnimationNavigationController *nav = [[TTCustomAnimationNavigationController alloc] initWithRootViewController:postThreadVC animationStyle:TTCustomAnimationStyleUGCPostEntrance];
-             nav.ttDefaultNavBarStyle = @"White";
-             
-             */
-            
-            //Concern id
-//            self.cid = [params tt_stringValueForKey:@"cid"] ?: KTTFollowPageConcernID;
-//
-//            //Category id
-//            self.categoryID = [params tt_stringValueForKey:@"category_id"] ?: kTTMainCategoryID;
             
             self.useDraftFirst = [params tt_boolValueForKey:@"use_draft_first"];
             
@@ -148,7 +128,15 @@ static NSInteger const kMaxPostImageCount = 9;
             }
             self.outerInputRichSpanText = self.richSpanText;
             
-             self.postFinishCompletionBlock = [params tt_objectForKey:@"completionBlock"];
+            self.postFinishCompletionBlock = [params tt_objectForKey:@"completionBlock"];
+            // 选中小区圈
+            self.selectGroupId = [params tt_stringValueForKey:@"select_group_id"];
+            self.selectGroupName = [params tt_stringValueForKey:@"select_group_name"];
+            if (!(self.selectGroupId.length > 0 && self.selectGroupName.length > 0)) {
+                // 必须都有值
+                self.selectGroupId = nil;
+                self.selectGroupName = nil;
+            }
             
             // 添加google地图注册
             [[TTLocationManager sharedManager] registerReverseGeocoder:[TTGoogleMapGeocoder sharedGeocoder] forKey:NSStringFromClass([TTGoogleMapGeocoder class])];
@@ -382,6 +370,10 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)selectCommunityViewClick:(UITapGestureRecognizer *)sender {
+    // 外部传入小区圈，不跳转
+    if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
+        return;
+    }
     self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
     [self endEditing];
     NSMutableDictionary *dict = @{}.mutableCopy;
@@ -562,12 +554,6 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)sendPost:(id)sender {
-    // 未登陆的情况是否不能发布 add by zyk
-//    if ([[TTPostThreadBridge sharedInstance] shouldBindPhone]) {
-//        [[TTPostThreadBridge sharedInstance] jumpToBindPhonePageWithParams:nil];
-//        return;
-//    }
-    
     TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
     [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSString *inputText = richSpanText.text;
@@ -575,126 +561,51 @@ static NSInteger const kMaxPostImageCount = 9;
     if (![self isValidateWithInputText:inputText]) {
         return;
     }
-    // iCloud 同步 不需要？
-//    if ([self hasUncompletedIcloudTask]) {
-//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                  indicatorText:NSLocalizedString(@"iCloud同步中", nil)
-//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
-//                                    autoDismiss:YES
-//                                 dismissHandler:nil];
-//        return;
-//    }
-//    if ([self hasFailedIcloudTask]) {
-//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                  indicatorText:NSLocalizedString(@"iCloud同步失败", nil)
-//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
-//                                    autoDismiss:YES
-//                                 dismissHandler:nil];
-//        return;
-//    }
+    
+    if (![self.selectView hasValidData]) {
+        [[ToastManager manager] showToast:@"请选择要发布的小区！"];
+        return;
+    }
     
     [self endEditing];
-    WeakSelf;
-    // add by zyk 判断是否登录
-//    if (![[BDContextGet() findServiceByName:TTAccountProviderServiceName] isLogin]) {
-//        [[TTPostThreadBridge sharedInstance] showLoginAlertWithSource:self.source
-//                                                            superView:self.navigationController.view
-//                                                           completion:^(BOOL tips) {
-//                                                               StrongSelf;
-//                                                               if (!tips) {
-//                                                                   [self sendThreadWithLoginState:1 withTitleText:titleText inputText:inputText phoneText:phoneText];
-//                                                               } else {
-//                                                                   [[TTPostThreadBridge sharedInstance] presentQuickLoginFromVC:self source:self.source];
-//                                                               }
-//                                                           }];
-//    }else {
-//        [self sendThreadWithLoginState:1 withTitleText:titleText inputText:inputText phoneText:phoneText];
-//    }
     
-    // 注意 参数
-    [self sendThreadWithLoginState:1 withTitleText:@"" inputText:inputText phoneText:@"15101086350"];
+    // 注意 参数 下一步获取手机号
+    [self sendThreadWithLoginState:1 withTitleText:@"" inputText:inputText phoneText:nil];
 }
 
 - (void)sendThreadWithLoginState:(NSInteger)loginState withTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
     if (self && [TTAccountManager isLogin]) {
-        
-        // add by zyk 是否需要绑定手机号
-//        if ([TTKitchen getBOOL:kTTKCommonUgcPostBindingPhoneNumberKey]) {
-//
-//            self.view.userInteractionEnabled = NO;
-//            TTIndicatorView * checkBoundPhoneIndicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView
-//                                                                                               indicatorText:@"发布中..."
-//                                                                                              indicatorImage:nil
-//                                                                                              dismissHandler:nil];
-//            checkBoundPhoneIndicatorView.autoDismiss = NO;
-//            [checkBoundPhoneIndicatorView showFromParentView:self.view];
-//
-//            WeakSelf;
-//            [TTPostThreadManager checkPostNeedBindPhoneOrNotWithCompletion:^(FRPostBindCheckType checkType) {
-//
-//                StrongSelf;
-//                [checkBoundPhoneIndicatorView dismissFromParentView];
-//                self.view.userInteractionEnabled = YES;
-//
-//                if (checkType == FRPostBindCheckTypePostBindCheckTypeNeed) {
-//
-//                    WeakSelf;
-//                    UIViewController *bindViewController = [[TTPostThreadBridge sharedInstance] pushBindPhoneNumberWhenPostThreadWithCompletion:^{
-//                        StrongSelf;
-//                        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-//                    }];
-//
-//                    if (!bindViewController) {
-//                        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-//                    } else {
-//                        if ([self.navigationController isKindOfClass:[UINavigationController class]] && bindViewController && [bindViewController isKindOfClass:[UIViewController class]]) {
-//                            [self.navigationController pushViewController:bindViewController animated:YES];
-//                        }
-//                    }
-//                } else {
-//                    [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-//                }
-//            }];
-//        } else {
-//            [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-//        }
-        
-        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+        TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
+        [self postThreadWithTitleText:titleText inputText:inputText phoneText:userInfo.mobile];
+    } else {
+        // 应该不会走到当前位置，UGC外面限制强制登录
+        [self gotoLogin];
     }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:@"post_ugc" forKey:@"enter_from"];
+    [params setObject:@"post_ugc" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [wSelf sendPost:nil];
+                });
+            }
+        }
+    }];
 }
 
 - (void)postThreadWithTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
     
     if (!SSIsEmptyDictionary(self.sdkParamsDict)) {
         // 鉴权
-//        if (self.oauthStatus == PostCheckOAuthStatusUnknown) {
-//
-//            self.view.userInteractionEnabled = NO;
-//            TTIndicatorView * checkBoundPhoneIndicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView
-//                                                                                               indicatorText:@"发布中..."
-//                                                                                              indicatorImage:nil
-//                                                                                              dismissHandler:nil];
-//            checkBoundPhoneIndicatorView.autoDismiss = NO;
-//            [checkBoundPhoneIndicatorView showFromParentView:self.view];
-//
-//            [self checkOAuthWithCompletionBlock:^(PostCheckOAuthStatus status) {
-//
-//                [checkBoundPhoneIndicatorView dismissFromParentView];
-//                self.view.userInteractionEnabled = YES;
-//
-//                if (self.oauthStatus == PostCheckOAuthStatusSucceed) {
-//                    [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-//                } else {
-//                    [TTWeitoutiaoShareManager backWithSDKParams:self.sdkParamsDict result:TTWeitoutiaoShareResultOAuthFailed];
-//                }
-//            }];
-//            return;
-//        } else if (self.oauthStatus == PostCheckOAuthStatusFailed) {
-//            // 第一次鉴权网络断开，第二次返回失败
-//            [TTWeitoutiaoShareManager backWithSDKParams:self.sdkParamsDict result:TTWeitoutiaoShareResultOAuthFailed];
-//            return;
-//        }
-        //    }
     }
     
     TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
@@ -753,12 +664,8 @@ static NSInteger const kMaxPostImageCount = 9;
                                                          }];
     
     // 话题页发帖默认是带上了话题concern，如果在发布前用户手动删除话题，则将cid改回默认的，避免错误的召回到该话题下
-    self.cid = @"6454692306795629069";
+    self.cid = KTTFollowPageConcernID;
     NSString *concernID = self.cid;
-//    if (!isEmptyString(self.enterConcernID) && [self.enterConcernID isEqualToString:self.cid] && ![mentionConcerns containsObject:self.cid]) {
-//        concernID = KTTFollowPageConcernID;
-//    }
-    
     // 去掉links中fake的自建话题
     TTRichSpans *richSpans = richSpanText.richSpans;
     if (!SSIsEmptyArray(createdConcerns)) {
@@ -788,40 +695,12 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.detailPos = self.addLocationView.selectedLocation.locationName;
     postThreadModel.longitude = longitude;
     postThreadModel.latitude = latitude;
-    
-    self.selectView.groupId = @"1636215424527368";
+    // add by zyk
+    self.selectView.groupId = @"6703403081570189582";
     postThreadModel.social_group_id = self.selectView.groupId;
     NSLog(@"social_group_id:%@",self.selectView.groupId);
-//    postThreadModel.score = rate;
-//    postThreadModel.refer = self.refer;
-//    postThreadModel.communityID = self.communityID;
-//    postThreadModel.postUGCEnterFrom = self.postUGCEnterFrom;
-//    postThreadModel.forumNames = [createdConcerns tt_JSONRepresentation];
-    postThreadModel.extraTrack = [extraTrack copy];
-//    postThreadModel.syncToRocket = self.syncToRocketButton.selected;
-//    postThreadModel.promotionId = self.goodsItem.promotion_id;
-//    postThreadModel.insertMixCardID = self.insertMixCardID;
-//    postThreadModel.relatedForumSubjectID = self.relatedForumSubjectID;
     
-//    if (!SSIsEmptyDictionary(self.sdkParamsDict)) {
-//        @try {
-//            NSString *jsonString = [self.sdkParamsDict JSONRepresentation];
-//            postThreadModel.sdkParams = jsonString;
-//        } @catch (NSException *exception) {
-//        } @finally {
-//        }
-//    }
-//    if (self.goodsItem) {
-//        NSMutableDictionary *businessPayloadDict = [NSMutableDictionary dictionary];
-//        NSDictionary *currentPayload = [NSJSONSerialization tt_dictionaryWithJSONString:self.businessPayload error:nil];
-//        [businessPayloadDict setValue:self.goodsItem.item_type forKey:@"ecom_type"];
-//        [businessPayloadDict setValue:self.goodsItem.promotion_id forKey:@"promotion_id"];
-//        [businessPayloadDict setValuesForKeysWithDictionary:currentPayload];
-//        postThreadModel.payload = [businessPayloadDict tt_JSONRepresentation];
-//    } else {
-//        postThreadModel.payload = self.businessPayload;
-//    }
-//    postThreadModel.payload = self.businessPayload;
+    postThreadModel.extraTrack = [extraTrack copy];
     
     [[TTPostThreadCenter sharedInstance_tt] postThreadWithPostThreadModel:postThreadModel finishBlock:^(TTPostThreadTask *task) {
         [self postFinished:YES task:task];
@@ -897,14 +776,6 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)refreshUI {
     NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
     NSString *inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-//    if (inputText.length > maxTextCount) {
-//        self.tipLabel.hidden = NO;
-//        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
-//        excludeCount = MIN(excludeCount, 9999);
-//        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
-//    } else {
-//        self.tipLabel.hidden = YES;
-//    }
     self.tipLabel.hidden = NO;
     self.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",inputText.length, maxTextCount];
     
@@ -915,14 +786,19 @@ static NSInteger const kMaxPostImageCount = 9;
     //发布器
     if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
         self.postButton.enabled = YES;
-        self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
         [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
         [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
     } else {
-        self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateHighlighted];
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
         self.postButton.enabled = NO;
+    }
+    // 选择小区
+    if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
+        self.selectView.groupId = self.selectGroupId;
+        self.selectView.communityName = self.selectGroupName;
     }
 }
 

@@ -25,6 +25,7 @@
 #import "FHIESGeckoManager.h"
 #import <TTDeviceHelper.h>
 #import <BDALog/BDAgileLog.h>
+#import "FHUGCConfigModel.h"
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -255,6 +256,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 - (void)saveGeneralConfig:(FHConfigModel *)model
+{
+    [self.generalBizConfig saveCurrentConfigCache:model];
+}
+
+- (void)saveUGCConfig:(FHUGCConfigModel *)model
 {
     [self.generalBizConfig saveCurrentConfigCache:model];
 }

@@ -1,5 +1,12 @@
 //GENERATED CODE , DON'T EDIT
 #import "FHFeedUGCContentModel.h"
+@implementation FHFeedUGCContentCommunityModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHFeedUGCContentRepostParamsModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -243,6 +250,7 @@
     @"videoStyle": @"video_style",
     @"diggIconKey": @"digg_icon_key",
     @"ugcRecommend": @"ugc_recommend",
+    @"distanceInfo": @"distance_info",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

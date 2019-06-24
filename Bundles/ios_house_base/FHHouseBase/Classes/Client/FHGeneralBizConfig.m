@@ -10,8 +10,12 @@
 #import "FHUtils.h"
 #import "FHEnvContext.h"
 #import "FHLazyLoadModel.h"
+#import "FHUGCConfigModel.h"
+
+
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
+static NSString *const kUGCConfigKey = @"ugcConfig";
 static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 static NSString *const kUserDefaultCityNamePre05_Key = @"currentcitytext"; // 0.5版本之前保存的当前城市名称
 NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
@@ -110,6 +114,16 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
     }
 }
 
+- (void)saveUGCConfigCache:(FHUGCConfigModel *)configValue
+{
+    if([configValue.data isKindOfClass:[FHUGCConfigModel class]])
+    {
+        NSString *configJsonStr = configValue.data.toJSONString;
+        if ([configJsonStr isKindOfClass:[NSString class]]) {
+            [self.generalConfigCache setObject:configJsonStr forKey:kUGCConfigKey];
+        }
+    }
+}
 
 - (void)updateUserSelectDiskCacheIndex:(NSNumber *)indexNum
 {

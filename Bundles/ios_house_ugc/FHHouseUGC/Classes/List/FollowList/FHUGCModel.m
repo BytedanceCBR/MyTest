@@ -23,6 +23,14 @@
 }
 @end
 
+
+@implementation FHUGCFollowModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHUGCSearchDataModel
 + (JSONKeyMapper*)keyMapper
 {

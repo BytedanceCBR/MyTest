@@ -14,13 +14,15 @@ typedef NS_ENUM(NSInteger , FHUGCFollowButtonStyle) {
     FHUGCFollowButtonStyleNoBorder,
 };
 
-// 关注按钮 已关注 不能点击
+// 关注按钮 已关注
 @interface FHUGCFollowButton : UIButton
 
 @property (nonatomic, assign) BOOL followed;// 默认是 NO
 @property (nonatomic, strong) NSString *groupId;// 需要关注的小区id
 
 @property (nonatomic, copy) void(^followedSuccess)(BOOL isSuccess,BOOL isFollow);
+
+- (instancetype)initWithFrame:(CGRect)frame style:(FHUGCFollowButtonStyle)style;
 
 @end
 

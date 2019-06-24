@@ -1,6 +1,28 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 NS_ASSUME_NONNULL_BEGIN
+@protocol FHFeedContentRecommendSocialGroupListModel<NSObject>
+@end
+
+@interface FHFeedContentRecommendSocialGroupListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *ContentCount;
+@property (nonatomic, copy , nullable) NSString *Announcement;
+@property (nonatomic, copy , nullable) NSString *FollowerCount;
+@property (nonatomic, copy , nullable) NSString *SocialGroupName;
+@property (nonatomic, copy , nullable) NSString *SuggestReason;
+@property (nonatomic, copy , nullable) NSString *SocialGroupId;
+@property (nonatomic, copy , nullable) NSString *CountText;
+@property (nonatomic, copy , nullable) NSString *Avatar;
+@property (nonatomic, copy , nullable) NSString *HasFollow;
+@end
+
+@interface FHFeedContentCommunityModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *name;
+@end
+
 @interface FHFeedContentUgcRecommendModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *reason;
@@ -208,6 +230,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *imageList;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *sourceDesc;
+@property (nonatomic, strong , nullable) FHFeedContentCommunityModel *community ;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
 @end
 
 

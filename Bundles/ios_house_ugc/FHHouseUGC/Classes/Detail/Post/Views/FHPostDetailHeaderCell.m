@@ -50,6 +50,7 @@
     [self.icon bd_setImageWithURL:[NSURL URLWithString:headerModel.socialGroupModel.avatar] placeholder:nil];
     BOOL isFollowed = [headerModel.socialGroupModel.hasFollow boolValue];
     self.joinBtn.followed = isFollowed;
+    self.joinBtn.groupId = headerModel.socialGroupModel.socialGroupId;
 }
 
 

@@ -140,19 +140,19 @@
 }
 
 - (void)setupSetmentedControl {
-    _segmentControl =  [[HMSegmentedControl alloc] initWithSectionTitles:@[@"我关注的",@"附近",@"发现"]];
+    _segmentControl =  [[HMSegmentedControl alloc] initWithSectionTitles:@[@"关注",@"附近",@"发现"]];
     
     NSDictionary* titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
                                           NSForegroundColorAttributeName: [UIColor themeGray3]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
     
-    NSDictionary* selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontMedium:16],
+    NSDictionary* selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontMedium:18],
                                                   NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
     
     
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
-    _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
+    _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     _segmentControl.isNeedNetworkCheck = NO;
     _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(5, 10, 0, 10);
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;

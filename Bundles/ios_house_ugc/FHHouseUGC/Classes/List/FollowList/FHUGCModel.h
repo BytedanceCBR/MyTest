@@ -15,6 +15,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHUGCDataModel *data ;  
 @end
 
+
+// 关注
+@interface FHUGCFollowModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHUGCScialGroupDataModel *data ;
+@end
+
 // 搜索model
 @interface FHUGCSearchDataModel : JSONModel
 

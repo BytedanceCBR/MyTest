@@ -12,6 +12,7 @@
 #import <UIImageView+BDWebImage.h>
 #import "TTDeviceHelper.h"
 #import "FHUGCMyInterestModel.h"
+#import "FHUGCFollowButton.h"
 
 #define iconWidth 48
 
@@ -22,7 +23,7 @@
 @property(nonatomic, strong) UILabel *descLabel;
 @property(nonatomic, strong) UILabel *sourceLabel;
 @property(nonatomic, strong) UIImageView *icon;
-@property(nonatomic, strong) UIButton *joinBtn;
+@property(nonatomic, strong) FHUGCFollowButton *joinBtn;
 @property(nonatomic, strong) UIView *bottomSepLine1;
 @property(nonatomic, strong) UIView *bottomSepLine2;
 
@@ -63,43 +64,48 @@
         _sourceLabel.text = model.socialGroup.suggestReason;
         _postDescLabel.text = model.threadInfo.content;
         [self.icon bd_setImageWithURL:[NSURL URLWithString:model.socialGroup.avatar] placeholder:nil];
-        
-        if(model.threadInfo.images.count > 0){
-            FHUGCMyInterestDataRecommendSocialGroupsThreadInfoImagesModel *imageModel = [model.threadInfo.images firstObject];
-            [self.postIcon bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
-            
-            self.postIcon.hidden = NO;
-            [self.postDescLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.centerY.mas_equalTo(self.postIcon);
-                make.left.mas_equalTo(self.containerView).offset(10);
-                make.right.mas_equalTo(self.postIcon.mas_left).offset(-10);
-                make.height.mas_equalTo(40);
-            }];
-            
-            [self.bottomSepLine2 mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.postIcon.mas_bottom).offset(10);
-                make.left.mas_equalTo(self.containerView).offset(10);
-                make.right.mas_equalTo(self.containerView).offset(-10);
-                make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
-            }];
-        }else{
-            //当没有图片时
-            self.postIcon.hidden = YES;
-            [self.postDescLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.bottomSepLine1.mas_bottom).offset(15);
-                make.left.mas_equalTo(self.containerView).offset(10);
-                make.right.mas_equalTo(self.containerView).offset(-25);
-            }];
-            
-            [self.bottomSepLine2 mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.postDescLabel.mas_bottom).offset(15);
-                make.left.mas_equalTo(self.containerView).offset(10);
-                make.right.mas_equalTo(self.containerView).offset(-10);
-                make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
-            }];
-
-        }
+        self.joinBtn.groupId = model.socialGroup.socialGroupId;
+        [self updateImageConstraints:model];
     }
+}
+
+- (void)updateImageConstraints:(FHUGCMyInterestDataRecommendSocialGroupsModel *)model {
+    if(model.threadInfo.images.count > 0){
+        FHUGCMyInterestDataRecommendSocialGroupsThreadInfoImagesModel *imageModel = [model.threadInfo.images firstObject];
+        [self.postIcon bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+        
+        self.postIcon.hidden = NO;
+        [self.postDescLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(self.postIcon);
+            make.left.mas_equalTo(self.containerView).offset(10);
+            make.right.mas_equalTo(self.postIcon.mas_left).offset(-10);
+            make.height.mas_equalTo(40);
+        }];
+        
+        [self.bottomSepLine2 mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.postIcon.mas_bottom).offset(10);
+            make.left.mas_equalTo(self.containerView).offset(10);
+            make.right.mas_equalTo(self.containerView).offset(-10);
+            make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+        }];
+    }else{
+        //当没有图片时
+        self.postIcon.hidden = YES;
+        [self.postDescLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.bottomSepLine1.mas_bottom).offset(15);
+            make.left.mas_equalTo(self.containerView).offset(10);
+            make.right.mas_equalTo(self.containerView).offset(-25);
+        }];
+        
+        [self.bottomSepLine2 mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.postDescLabel.mas_bottom).offset(15);
+            make.left.mas_equalTo(self.containerView).offset(10);
+            make.right.mas_equalTo(self.containerView).offset(-10);
+            make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+        }];
+        
+    }
+
 }
 
 - (void)initViews {
@@ -127,16 +133,8 @@
     self.sourceLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor themeGray3]];
     [self.containerView addSubview:_sourceLabel];
     
-    self.joinBtn = [[UIButton alloc] init];
-    _joinBtn.layer.masksToBounds = YES;
-    _joinBtn.layer.cornerRadius = 4;
-    _joinBtn.layer.borderColor = [[UIColor themeRed1] CGColor];
-    _joinBtn.layer.borderWidth = 0.5;
-    [_joinBtn setTitle:@"关注" forState:UIControlStateNormal];
-    [_joinBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    _joinBtn.titleLabel.font = [UIFont themeFontRegular:12];
-    [_joinBtn addTarget:self action:@selector(joinIn) forControlEvents:UIControlEventTouchUpInside];
-    [self.containerView addSubview:_joinBtn];
+    self.joinBtn = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero];
+    [self.contentView addSubview:_joinBtn];
     
     self.bottomSepLine1 = [[UIView alloc] init];
     _bottomSepLine1.backgroundColor = [UIColor themeGray6];
@@ -235,6 +233,7 @@
         make.left.mas_equalTo(self.locationIcon.mas_right).offset(4);
         make.right.mas_equalTo(self.containerView).offset(-10);
         make.height.mas_equalTo(17);
+        make.bottom.mas_equalTo(self.containerView).offset(-10);
     }];
 }
 

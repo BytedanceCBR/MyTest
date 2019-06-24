@@ -19,6 +19,7 @@
 #import "FHUGCGuideView.h"
 #import "FHUGCGuideHelper.h"
 #import "FHUGCScialGroupModel.h"
+#import "FHUGCFollowManager.h"
 
 
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
@@ -54,8 +55,11 @@
     self.feedListController = [[FHCommunityFeedListController alloc] init];
     self.feedListController.publishBtnBottomHeight = 10;
     self.feedListController.tableViewNeedPullDown = NO;
+    self.feedListController.showErrorView = NO;
     self.feedListController.scrollViewDelegate = self;
-    self.feedListController.listType = FHCommunityFeedListTypeMyJoin;
+    self.feedListController.listType = FHCommunityFeedListTypePostDetail;
+    self.feedListController.forumId = self.viewController.communityId;
+    
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
     self.feedListController.tableHeaderView = self.headerView;
 
@@ -198,18 +202,34 @@
         [alertController addActionWithTitle:NSLocalizedString(@"关注", comment:
             nil)                 actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
             StrongSelf;
-            [FHUGCFollowHelper followCommunity:wself.data.socialGroupId userInfo:nil followBlock:^() {
-                //跳转发布器
-                NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
-                [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:nil];
-            }];
+            [wself followCommunity:wself.data.socialGroupId];
         }];
         [alertController showFrom:self.viewController animated:YES];
         return;
     }
-    //跳转发布器
+    [self gotoPostVC];
+}
+
+- (void)followCommunity:(NSString *)groupId {
+    if (groupId) {
+        WeakSelf;
+        [[FHUGCFollowManager sharedInstance] followUGCBy:groupId isFollow:YES completion:^(BOOL isSuccess) {
+            StrongSelf;
+            if (isSuccess) {
+                [wself gotoPostVC];
+            }
+        }];
+    }
+}
+
+- (void)gotoPostVC {
+    // 跳转发布器
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+    dic[@"select_group_id"] = self.data.socialGroupId;
+    dic[@"select_group_name"] = self.data.socialGroupName;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
     NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
-    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:nil];
+    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
 }
 
 - (void)refreshContentOffset:(CGPoint)contentOffset {

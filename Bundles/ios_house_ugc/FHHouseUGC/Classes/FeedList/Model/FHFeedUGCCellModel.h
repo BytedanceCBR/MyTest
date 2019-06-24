@@ -14,6 +14,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface FHFeedUGCCellCommunityModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *name;
+@end
+
 @interface FHFeedUGCCellImageListUrlListModel : NSObject
 
 @property (nonatomic, copy , nullable) NSString *url;
@@ -38,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFeedUGCCellModel : NSObject
 
-@property (nonatomic, copy , nullable) NSString *cellType;
+@property (nonatomic, assign) FHUGCFeedListCellType cellType;
 @property (nonatomic, assign) FHUGCFeedListCellSubType cellSubType;
 //文章相关
 @property (nonatomic, copy , nullable) NSString *title;
@@ -68,13 +74,17 @@ NS_ASSUME_NONNULL_BEGIN
 //feedVC
 @property (nonatomic, weak) FHCommunityFeedListController *feedVC;
 //感兴趣的小区
-@property (nonatomic, strong , nullable) NSMutableArray *interestNeighbourhoodList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
 //唯一Id
 @property (nonatomic, copy , nullable) NSString *groupId;
 //频道Id
 @property (nonatomic, copy , nullable) NSString *categoryId;
 //是否需要插入了引导页
 @property (nonatomic, assign) BOOL isInsertGuideCell;
+//圈子相关
+@property (nonatomic, strong , nullable) FHFeedUGCCellCommunityModel *community ;
+//是否显示圈子名称，默认为YES
+@property (nonatomic, assign) BOOL showCommunity;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 
@@ -82,8 +92,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 //临时假数据
 + (FHFeedUGCCellModel *)modelFromFakeData;
-+ (FHFeedUGCCellModel *)modelFromFakeData2;
-+ (FHFeedUGCCellModel *)guideCellModel;
 
 @end
 

@@ -33,7 +33,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if(_isEmpty){
+    if(!_isEmpty){
         [self initFeedListVC];
         [self.feedListVC viewWillAppear];
         [self startLoadData];
@@ -69,6 +69,7 @@
     
     FHCommunityFeedListController *vc =[[FHCommunityFeedListController alloc] init];
     vc.listType = FHCommunityFeedListTypeMyJoin;
+    vc.showErrorView = NO;
     vc.tableHeaderView = self.neighbourhoodView;
     
     vc.view.frame = self.view.bounds;

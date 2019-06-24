@@ -1,5 +1,19 @@
 //GENERATED CODE , DON'T EDIT
 #import "FHFeedContentModel.h"
+@implementation FHFeedContentRecommendSocialGroupListModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentCommunityModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHFeedContentForwardInfoModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -143,6 +157,7 @@
     @"middleImage": @"middle_image",
     @"openUrl": @"open_url",
     @"sourceDesc": @"source_desc",
+    @"recommendSocialGroupList": @"recommend_social_group_list",
     
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

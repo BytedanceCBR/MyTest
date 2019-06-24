@@ -13,6 +13,7 @@
 #import "FHFeedUGCContentModel.h"
 #import "FHFeedUGCCellModel.h"
 #import "FHUGCBaseViewModel.h"
+#import "TTBaseMacro.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -10,6 +10,7 @@
 #import "FHCommunityFeedListBaseViewModel.h"
 #import "FHCommunityFeedListNearbyViewModel.h"
 #import "FHCommunityFeedListMyJoinViewModel.h"
+#import "FHCommunityFeedListPostDetailViewModel.h"
 #import "TTReachability.h"
 #import "ArticleListNotifyBarView.h"
 #import <UIViewAdditions.h>
@@ -28,7 +29,8 @@
 -(instancetype)init{
     self = [super init];
     if(self){
-        self.tableViewNeedPullDown = YES;
+        _tableViewNeedPullDown = YES;
+        _showErrorView = YES;
     }
     return self;
 }
@@ -50,7 +52,9 @@
     [self initNotifyBarView];
     [self initPublishBtn];
     
-    [self addDefaultEmptyViewFullScreen];
+    if(self.showErrorView){
+        [self addDefaultEmptyViewFullScreen];
+    }
 }
 
 - (void)initTableView {
@@ -122,10 +126,13 @@
 
     if(self.listType == FHCommunityFeedListTypeNearby){
         viewModel = [[FHCommunityFeedListNearbyViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = @"weitoutiao";
+        viewModel.categoryId = @"94349537888";
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = @"f_wenda";
+    }else if(self.listType == FHCommunityFeedListTypePostDetail) {
+        viewModel = [[FHCommunityFeedListPostDetailViewModel alloc] initWithTableView:_tableView controller:self];
+        viewModel.categoryId = self.forumId;
     }
     
     self.viewModel = viewModel;
@@ -140,10 +147,6 @@
             [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         }
     }
-}
-
-- (void)reLoadData {
-    
 }
 
 - (void)retryLoadData {

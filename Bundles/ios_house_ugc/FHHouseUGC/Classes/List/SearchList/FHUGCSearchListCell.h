@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCSearchListCell : FHUGCBaseCell
 
+@property (nonatomic, copy)     NSString       *highlightedText;
+
 @end
 
 @interface FHUGCSuggectionTableView : UITableView
