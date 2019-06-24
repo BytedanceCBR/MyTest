@@ -32,6 +32,10 @@
 @property (nonatomic, strong)   NSMutableArray       *items;
 @property(nonatomic , weak) TTHttpTask *sugHttpTask;
 @property (nonatomic, copy)     NSString       *searchText;
+@property (nonatomic, assign)   BOOL       isViewAppearing;
+@property (nonatomic, assign)   BOOL       needReloadData;
+@property (nonatomic, assign)   BOOL       isKeybordShow;
+@property (nonatomic, assign)   BOOL       keyboardVisible;
 
 @end
 
@@ -56,10 +60,67 @@
         [weakSelf.naviBar.searchInput resignFirstResponder];
     };
     [self startLoadData];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardVisibleChanged:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardVisibleChanged:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.isViewAppearing = YES;
+    if (self.needReloadData) {
+        self.needReloadData = NO;
+        [self.tableView reloadData];
+    }
+    if (self.isKeybordShow) {
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf.naviBar.searchInput becomeFirstResponder];
+        });
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.isViewAppearing = NO;
+}
+
+- (void)followStateChanged:(NSNotification *)notification {
+    if (notification) {
+        if (self.isViewAppearing) {
+            return;
+        }
+        NSDictionary *userInfo = notification.userInfo;
+        BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
+        NSString *groupId = notification.userInfo[@"social_group_id"];
+        if(groupId.length > 0){
+            [self.items enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj.socialGroupId isEqualToString:groupId]) {
+                    obj.hasFollow = followed ? @"1" : @"0";
+                    self.needReloadData = YES;
+                    *stop = YES;
+                }
+            }];
+        }
+    }
+}
+
+#pragma mark - UIKeyboardNotification
+
+- (void)keyboardVisibleChanged:(NSNotification *)notification {
+    if ([notification.name isEqualToString:UIKeyboardWillShowNotification]) {
+        _keyboardVisible = YES;
+    } else {
+        _keyboardVisible = NO;
+    }
 }
 
 - (void)setupData {
     self.items = [NSMutableArray new];
+    self.needReloadData = NO;
+    self.isKeybordShow = YES;
+    self.keyboardVisible = NO;
 }
 
 - (void)setupNaviBar {
@@ -117,11 +178,6 @@
 - (void)startLoadData {
     if (![TTReachability isNetworkConnected]) {
          [[ToastManager manager] showToast:@"网络异常"];
-    } else {
-        __weak typeof(self) weakSelf = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [weakSelf.naviBar.searchInput becomeFirstResponder];
-        });
     }
 }
 
@@ -246,6 +302,9 @@
     
     NSInteger row = indexPath.row;
     if (row >= 0 && row < self.items.count) {
+        // 键盘是否显示
+        self.isKeybordShow = self.keyboardVisible;
+        //
         FHUGCScialGroupDataModel *data = self.items[row];
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = data.socialGroupId;
