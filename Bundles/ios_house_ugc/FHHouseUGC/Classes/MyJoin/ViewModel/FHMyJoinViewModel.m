@@ -114,7 +114,6 @@
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
     FHUGCScialGroupDataModel *model = self.dataList[indexPath.row];
     NSMutableDictionary *dict = @{}.mutableCopy;
-//    dict[@"community_id"] = @"6703388142264647950";
     dict[@"community_id"] = model.socialGroupId;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     //跳转到圈子详情页
