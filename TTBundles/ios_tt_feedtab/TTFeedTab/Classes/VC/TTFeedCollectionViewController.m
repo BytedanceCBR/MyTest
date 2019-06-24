@@ -605,7 +605,7 @@ TTFeedCollectionCellDelegate>
     NSArray *allCategorys = [[TTArticleCategoryManager sharedManager] allCategories];
        _collectionView.frame = CGRectMake(0, self.topInset, self.view.width, self.view.height - self.topInset);
     if (allCategorys.count <= 1) {
-        _collectionView.frame = CGRectMake(0, self.topInset - 20, self.view.width, self.view.height - self.topInset);
+          _collectionView.frame = CGRectMake(0, self.topInset - 40, self.view.width, self.view.height - self.topInset + 40);
     }
     [self.collectionView.collectionViewLayout invalidateLayout];
     
@@ -686,7 +686,7 @@ TTFeedCollectionCellDelegate>
         
         NSArray *allCategorys = [[TTArticleCategoryManager sharedManager] allCategories];
         if (allCategorys.count <= 1) {
-            _collectionView.frame = CGRectMake(0, self.topInset - 20, self.view.width, self.view.height - self.topInset);
+            _collectionView.frame = CGRectMake(0, self.topInset - 40, self.view.width, self.view.height - self.topInset + 40);
         }else
         {
             //解决视频列表横屏播放，返回偏移问题
