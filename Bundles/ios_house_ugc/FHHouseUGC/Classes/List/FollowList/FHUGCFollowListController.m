@@ -191,7 +191,13 @@
         FHUGCScialGroupDataModel* data = self.items[row];
         if (self.vcType == FHUGCFollowVCTypeList) {
             // 我关注的小区
-            // 点击进入下个页面
+            FHUGCScialGroupDataModel *data = self.items[row];
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"community_id"] = data.socialGroupId;
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            // 跳转到圈子详情页
+            NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         } else if (self.vcType == FHUGCFollowVCTypeSelectList)  {
             // 选择小区
             if (self.ugc_delegate) {

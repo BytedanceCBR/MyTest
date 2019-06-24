@@ -40,18 +40,47 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHUGCScialGroupDataModel class]]) {
+    if (![data isKindOfClass:[FHUGCScialGroupDataModel class]]) {
         return;
     }
     self.currentData = data;
     
     FHUGCScialGroupDataModel *model = self.currentData;
     if ([model isKindOfClass:[FHUGCScialGroupDataModel class]]) {
-        self.titleLabel.text = model.socialGroupName;
+        NSAttributedString *text1 = [self processHighlightedDefault:model.socialGroupName textColor:[UIColor themeGray1] fontSize:15.0];
+        self.titleLabel.attributedText = [self processHighlighted:text1 originText:model.socialGroupName textColor:[UIColor themeRed1] fontSize:15.0];
+        // self.titleLabel.text = model.socialGroupName;
         self.descLabel.text = model.countText;
         self.followButton.followed = [model.hasFollow boolValue];
+        self.followButton.groupId = model.socialGroupId;
         [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
     }
+}
+
+// 1、默认
+- (NSAttributedString *)processHighlightedDefault:(NSString *)text textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {
+    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:textColor};
+    NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:text attributes:attr];
+    
+    return attrStr;
+}
+
+// 2、高亮
+- (NSAttributedString *)processHighlighted:(NSAttributedString *)text originText:(NSString *)originText textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {
+    if (self.highlightedText.length > 0) {
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:textColor};
+        NSMutableAttributedString * tempAttr = [[NSMutableAttributedString alloc] initWithAttributedString:text];
+        
+        NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:[NSString stringWithFormat:@"%@",self.highlightedText] options:NSRegularExpressionCaseInsensitive error:nil];
+        
+        [regex enumerateMatchesInString:originText options:NSMatchingReportProgress range:NSMakeRange(0, originText.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
+            [tempAttr addAttributes:attr range:result.range];
+        }];
+        return tempAttr;
+    } else {
+        return text;
+    }
+    return text;
 }
 
 
