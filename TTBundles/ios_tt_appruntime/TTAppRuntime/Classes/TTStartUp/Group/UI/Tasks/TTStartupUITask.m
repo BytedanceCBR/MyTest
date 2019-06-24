@@ -19,7 +19,6 @@
 //#import "TTFollowWebViewController.h"
 #import "TTProfileViewController.h"
 #import "TTSettingsManager.h"
-#import "TSVTabViewController.h"
 #import "TTTabBarProvider.h"
 #import "TTTabBar.h"
 //#import "TTFantasyTimeCountDownManager.h"

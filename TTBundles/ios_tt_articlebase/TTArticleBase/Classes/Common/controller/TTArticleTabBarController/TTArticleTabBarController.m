@@ -71,7 +71,6 @@
 #import "TTSettingsManager.h"
 #import "TSVStartupTabManager.h"
 #import "TTShortVideoHelper.h"
-#import "TSVTabViewController.h"
 #import "TSVTabTipManager.h"
 #import "TTTabBarProvider.h"
 #import "TSVTabManager.h"

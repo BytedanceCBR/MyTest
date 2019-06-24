@@ -15,8 +15,6 @@
 //#import "TTFollowWebViewController.h"
 #import "TTProfileViewController.h"
 #import "TTSettingsManager.h"
-#import "TSVTabViewController.h"
-#import "TTHTSTabViewController.h"
 //#import "TTUGCPermissionService.h"
 #import <TTServiceKit/TTServiceCenter.h>
 #import "TTTabbar.h"
@@ -98,15 +96,10 @@ static NSString *lastTabIdentifier;
 //    else if ([identifier isEqualToString:kTTTabWeitoutiaoTabKey]) {
 //        return [[TTWeitoutiaoViewController alloc] init];
 //    }
-    else if ([identifier isEqualToString:kTTTabHTSTabKey]) {
-        UIViewController *shortVideoTabVC = nil;
-        if ([[[TTSettingsManager sharedManager] settingForKey:@"tt_huoshan_tab_sub_category_enable" defaultValue:@0 freeze:YES] boolValue]) {
-            shortVideoTabVC = [[TSVTabViewController alloc] init];
-        } else {
-            shortVideoTabVC = [[TTHTSTabViewController alloc] init];
-        }
-        return shortVideoTabVC;
-    }
+//    else if ([identifier isEqualToString:kTTTabHTSTabKey]) {
+//        UIViewController *shortVideoTabVC = [[TTHTSTabViewController alloc] init];
+//        return shortVideoTabVC;
+//    }
 //    else if ([identifier isEqualToString:kAKTabActivityTabKey]) {
 //        AKActivityViewController *vc = [[AKActivityViewController alloc] init];
 //        [vc preloadPage];
