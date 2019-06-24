@@ -1586,7 +1586,7 @@ TTRefreshViewDelegate
             
         }else
         {
-            NSLog(@"xx index.row = %ld",indexPath.row);
+//            NSLog(@"xx index.row = %ld",indexPath.row);
         }
         
         obj.witnessed = YES;

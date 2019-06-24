@@ -238,9 +238,9 @@
         [self.tableView.mj_footer endRefreshing];
     }
     
-    if (self.houseDataItemsModel.count < 10 && !self.tableView.hasMore) {
-        self.tableView.mj_footer.hidden = YES;
-    }
+//    if (self.houseDataItemsModel.count < 10 && !self.tableView.hasMore) {
+//        self.tableView.mj_footer.hidden = YES;
+//    }
     
 }
 

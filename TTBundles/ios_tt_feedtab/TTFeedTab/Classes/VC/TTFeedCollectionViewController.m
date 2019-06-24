@@ -602,8 +602,11 @@ TTFeedCollectionCellDelegate>
 
 - (void)relayoutPages
 {
-    _collectionView.frame = CGRectMake(0, self.topInset, self.view.width, self.view.height - self.topInset);
-
+    NSArray *allCategorys = [[TTArticleCategoryManager sharedManager] allCategories];
+       _collectionView.frame = CGRectMake(0, self.topInset, self.view.width, self.view.height - self.topInset);
+    if (allCategorys.count <= 1) {
+        _collectionView.frame = CGRectMake(0, self.topInset - 20, self.view.width, self.view.height - self.topInset);
+    }
     [self.collectionView.collectionViewLayout invalidateLayout];
     
     if (self.pageCategories.count > 0) {
@@ -681,13 +684,17 @@ TTFeedCollectionCellDelegate>
         
         [self.view bringSubviewToFront:self.refreshView];
         
-//        _collectionView.frame = CGRectMake(0, self.topInset, self.view.width, self.view.height - self.topInset);
-        //解决视频列表横屏播放，返回偏移问题
-        [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.view).offset(self.topInset - self.view.frame.origin.y);
-            make.left.right.bottom.equalTo(self.view);
-        }];
-
+        NSArray *allCategorys = [[TTArticleCategoryManager sharedManager] allCategories];
+        if (allCategorys.count <= 1) {
+            _collectionView.frame = CGRectMake(0, self.topInset - 20, self.view.width, self.view.height - self.topInset);
+        }else
+        {
+            //解决视频列表横屏播放，返回偏移问题
+            [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.view).offset(self.topInset - self.view.frame.origin.y);
+                make.left.right.bottom.equalTo(self.view);
+            }];
+        }
     }
     return _collectionView;
 }
