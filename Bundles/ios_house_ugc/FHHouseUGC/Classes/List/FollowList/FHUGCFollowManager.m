@@ -185,7 +185,13 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
                 }
                 NSMutableDictionary *dict = [NSMutableDictionary new];
                 dict[@"social_group_id"] = social_group_id;
-                dict[@"followStatus"] = @(action);// 0 取消关注 1 关注
+                NSInteger act = 0;
+                if (isSuccess) {
+                    act = action;
+                } else {
+                    act = (action == 1) ? 0 : 1;
+                }
+                dict[@"followStatus"] = @(act);// 关注结果：0 未关注 1 已关注
                 [dict setValue:model.status forKey:@"status"];
                 [dict setValue:model.message forKey:@"message"];
                 // 发送通知

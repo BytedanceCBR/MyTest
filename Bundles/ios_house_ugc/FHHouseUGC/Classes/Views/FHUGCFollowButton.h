@@ -14,7 +14,7 @@ typedef NS_ENUM(NSInteger , FHUGCFollowButtonStyle) {
     FHUGCFollowButtonStyleNoBorder,
 };
 
-// 关注按钮 已关注 不能点击
+// 关注按钮 已关注
 @interface FHUGCFollowButton : UIButton
 
 @property (nonatomic, assign) BOOL followed;// 默认是 NO

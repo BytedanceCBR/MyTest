@@ -170,12 +170,6 @@
         [wself stopLoading];
         if(isSuccess){
             wself.followed = !wself.followed;
-        }else{
-            if (wself.followed) {
-                [[ToastManager manager] showToast:@"取消关注失败，请稍后重试"];
-            } else {
-                [[ToastManager manager] showToast:@"关注失败，请稍后重试"];
-            }
         }
         
         if(wself.followedSuccess){
@@ -199,17 +193,17 @@
 
 - (void)showDeleteAlert {
     __weak typeof(self) wself = self;
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确认要退出吗"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确认要取消关注吗？"
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"再看看"
                                                            style:UIAlertActionStyleCancel
                                                          handler:^(UIAlertAction * _Nonnull action) {
                                                              // 点击取消按钮，调用此block
                                                          }];
     [alert addAction:cancelAction];
     
-    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"确定"
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"确认"
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * _Nonnull action) {
                                                               // 点击按钮，调用此block
