@@ -144,6 +144,10 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCLoadFollowDataFinishedNotification object:nil];
 }
 
+- (NSArray<FHUGCScialGroupDataModel> *)followList {
+    return self.followData.data.userFollowSocialGroups;
+}
+
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 - (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow completion:(void (^ _Nullable)(BOOL isSuccess))completion {
     if (![TTReachability isNetworkConnected]) {
