@@ -1,6 +1,12 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 NS_ASSUME_NONNULL_BEGIN
+@interface FHFeedContentCommunityModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *name;
+@end
+
 @interface FHFeedContentUgcRecommendModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *reason;
@@ -208,6 +214,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *imageList;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *sourceDesc;
+@property (nonatomic, strong , nullable) FHFeedContentCommunityModel *community ;
 @end
 
 

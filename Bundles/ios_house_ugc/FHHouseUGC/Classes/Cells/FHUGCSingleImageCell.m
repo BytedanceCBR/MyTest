@@ -118,7 +118,11 @@
         [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
         //设置底部
         self.bottomView.cellModel = cellModel;
-        self.bottomView.position.text = @"左家庄";
+        
+        BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
+        self.bottomView.position.text = cellModel.community.name;
+        [self.bottomView showPositionView:showCommunity];
+        
         [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
         [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
         //内容

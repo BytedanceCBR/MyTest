@@ -5,7 +5,7 @@
 //  Created by 谢思铭 on 2019/6/3.
 //
 
-#import "FHCommunityFeedListMyJoinViewModel.h"
+#import "FHCommunityFeedListPostDetailViewModel.h"
 #import "FHUGCBaseCell.h"
 #import "FHTopicListModel.h"
 #import "FHHouseUGCAPI.h"
@@ -16,11 +16,11 @@
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
 
-@interface FHCommunityFeedListMyJoinViewModel () <UITableViewDelegate, UITableViewDataSource>
+@interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
 
 @end
 
-@implementation FHCommunityFeedListMyJoinViewModel
+@implementation FHCommunityFeedListPostDetailViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController {
     self = [super initWithTableView:tableView controller:viewController];
@@ -60,15 +60,14 @@
     __weak typeof(self) wself = self;
     
     NSInteger listCount = self.dataList.count;
-    double behotTime = 0;
+    NSString *lastId = nil;
     
     if(!isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
-        behotTime = [cellModel.behotTime doubleValue];
+        lastId = cellModel.groupId;
     }
     
-    //    @"weitoutiao" @"f_wenda"
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestForumFeedListWithForumId:self.categoryId lastId:lastId loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(isFirst){
             [self.viewController endLoading];
@@ -148,6 +147,7 @@
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
+        cellModel.showCommunity = NO;
         cellModel.categoryId = self.categoryId;
         cellModel.feedVC = self.viewController;
         if(cellModel){

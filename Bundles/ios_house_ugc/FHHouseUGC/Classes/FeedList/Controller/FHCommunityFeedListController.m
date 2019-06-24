@@ -10,6 +10,7 @@
 #import "FHCommunityFeedListBaseViewModel.h"
 #import "FHCommunityFeedListNearbyViewModel.h"
 #import "FHCommunityFeedListMyJoinViewModel.h"
+#import "FHCommunityFeedListPostDetailViewModel.h"
 #import "TTReachability.h"
 #import "ArticleListNotifyBarView.h"
 #import <UIViewAdditions.h>
@@ -126,6 +127,13 @@
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = @"f_wenda";
+    }else if(self.listType == FHCommunityFeedListTypePostDetail) {
+        viewModel = [[FHCommunityFeedListPostDetailViewModel alloc] initWithTableView:_tableView controller:self];
+        
+        //test
+        self.forumId = @"6703388142264647950";
+        
+        viewModel.categoryId = self.forumId;
     }
     
     self.viewModel = viewModel;
@@ -140,10 +148,6 @@
             [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         }
     }
-}
-
-- (void)reLoadData {
-    
 }
 
 - (void)retryLoadData {

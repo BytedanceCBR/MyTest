@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 - (void)updateLikeState:(NSString *)diggCount userDigg:(NSString *)userDigg;
+- (void)showPositionView:(BOOL)isShow;
 
 @end
 

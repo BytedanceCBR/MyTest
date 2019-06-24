@@ -104,7 +104,10 @@
         
         self.bottomView.cellModel = cellModel;
         self.bottomView.descLabel.attributedText = cellModel.desc;
-        self.bottomView.position.text = @"左家庄";
+        
+        BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
+        self.bottomView.position.text = cellModel.community.name;
+        [self.bottomView showPositionView:showCommunity];
         //图片
         FHFeedUGCCellImageListModel *imageModel = [cellModel.imageList firstObject];
         if(imageModel){

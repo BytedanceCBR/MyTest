@@ -10,6 +10,10 @@
 #import "TTBusinessManager+StringUtils.h"
 #import "TTBaseMacro.h"
 
+@implementation FHFeedUGCCellCommunityModel
+
+@end
+
 @implementation FHFeedUGCCellImageListUrlListModel
 
 @end
@@ -23,6 +27,14 @@
 @end
 
 @implementation FHFeedUGCCellModel
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _showCommunity = YES;
+    }
+    return self;
+}
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content {
     FHFeedUGCCellModel *cellModel = nil;
@@ -46,7 +58,7 @@
         Class cls = nil;
         if(type == FHUGCFeedListCellTypeUGC){
             cls = [FHFeedUGCContentModel class];
-        }else if(type == FHUGCFeedListCellTypeArticle){
+        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -84,6 +96,12 @@
         cellModel.desc = [self generateArticleDesc:model];
     }
     cellModel.detailScheme = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
+    
+    FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
+    community.name = model.community.name;
+    community.url = model.community.url;
+    cellModel.community = community;
+    
     NSMutableArray *cellImageList = [NSMutableArray array];
     for (FHFeedContentImageListModel *imageModel in model.imageList) {
         FHFeedUGCCellImageListModel *cellImageModel = [[FHFeedUGCCellImageListModel alloc] init];
@@ -129,6 +147,11 @@
     cellModel.userDigg = model.userDigg;
     cellModel.desc = [self generateUGCDesc:model];
     cellModel.groupId = model.threadId;
+    
+    FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
+    community.name = model.community.name;
+    community.url = model.community.url;
+    cellModel.community = community;
     
     FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
     user.name = model.user.name;
@@ -251,7 +274,7 @@
 
 + (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
-    double time = [model.behotTime doubleValue];
+    double time = [model.createTime doubleValue];
     NSString *publishTime = [TTBusinessManager customtimeAndCustomdateStringSince1970:time];
     
     if(![publishTime isEqualToString:@""]){
@@ -259,8 +282,9 @@
         [desc appendAttributedString:publishTimeAStr];
     }
     
-    NSString *distance = @"   1.5km";
-    if(![distance isEqualToString:@""]){
+    if(!isEmptyString(model.distanceInfo)){
+//        NSString *distance = @"   1.5km";
+        NSString *distance = [NSString stringWithFormat:@"   %@",model.distanceInfo];
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
         attachment.bounds = CGRectMake(8, 0, 8, 8);
         attachment.image = [UIImage imageNamed:@"fh_ugc_location"];
@@ -291,7 +315,7 @@
         [desc appendAttributedString:publishTimeAStr];
     }
     
-    double time = [model.behotTime doubleValue];
+    double time = [model.publishTime doubleValue];
     NSString *publishTime = [TTBusinessManager customtimeAndCustomdateStringSince1970:time];
     
     if(![publishTime isEqualToString:@""]){

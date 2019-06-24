@@ -175,4 +175,25 @@
     return [FHMainApi queryData:queryPath params:nil class:cls completion:completion];
 }
 
++ (TTHttpTask *)requestForumFeedListWithForumId:(NSString *)forumId lastId:(NSString *)lastId loadMore:(BOOL)loadMore completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/forum_feeds";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"forum_id"] = forumId;
+    paramDic[@"count"] = @(20);
+    paramDic[@"last_id"] = lastId;
+    
+    TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
+    if (placemarkItem.coordinate.longitude > 0) {
+        paramDic[@"latitude"] = @(placemarkItem.coordinate.latitude);
+        paramDic[@"longitude"] = @(placemarkItem.coordinate.longitude);
+    }
+    
+    paramDic[@"load_more"] = @(loadMore);
+    
+    Class cls = NSClassFromString(@"FHFeedListModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end
