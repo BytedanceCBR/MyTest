@@ -47,8 +47,38 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         // 加载本地
         [self loadFollowListData];
         [self loadLocalUgcConfigData];
+        [self registerNoti];
     }
     return self;
+}
+
+- (void)registerNoti {
+    // 发帖成功通知 数放在userinfo的：social_group_id
+    //    static NSString *const kFHUGCPostSuccessNotification = @"k_fh_ugc_post_finish";
+    // 删除帖子成功通知 数放在userinfo的：social_group_id
+    //    static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
+}
+
+// 发帖成功通知
+- (void)postThreadSuccess:(NSNotification *)noti {
+    if (noti) {
+        NSString *groupId = noti.userInfo[@"social_group_id"];
+        if (groupId.length > 0) {
+            FHUGCScialGroupDataModel *data = [self socialGroupData:groupId];
+            [self updatePostSuccessScialGroupDataModel:data];
+        }
+    }
+}
+
+// 删帖成功通知
+- (void)delPostThreadSuccess:(NSNotification *)noti {
+    NSString *groupId = noti.userInfo[@"social_group_id"];
+    if (groupId.length > 0) {
+        FHUGCScialGroupDataModel *data = [self socialGroupData:groupId];
+        [self updatePostDelSuccessScialGroupDataModel:data];
+    }
 }
 
 - (void)dealloc
@@ -231,6 +261,34 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
                 model.countText = countText;
             }
         }
+    }
+}
+
+// 发帖成功 更新帖子数 + 1
+- (void)updatePostSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model {
+    if (model) {
+        NSString *contentCountStr = model.contentCount;
+        NSInteger contentCount = [model.contentCount integerValue];
+        contentCount += 1;
+        NSString *replaceContentCountStr = [NSString stringWithFormat:@"%ld",contentCount];
+        NSString *countText = model.countText;
+        // 替换第二个数字（热帖个数）
+        NSRange range = [countText rangeOfString:contentCountStr];
+        // 有数据而且是起始位置的数据
+        if (range.location == 0 && range.length > 0) {
+            [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
+            model.contentCount = replaceContentCountStr;
+        } else {
+            model.contentCount = contentCountStr;
+        }
+        model.countText = countText;
+    }
+}
+
+// 删帖成功 更新帖子数 - 1
+- (void)updatePostDelSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model {
+    if (model) {
+        
     }
 }
 
