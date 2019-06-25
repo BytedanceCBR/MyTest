@@ -45,7 +45,6 @@ NSString * const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotification
 
 - (instancetype)init{
     if(self = [super init]){
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
 }
@@ -80,7 +79,7 @@ NSString * const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotification
 }
 
 -(void)tryShowNotifyBubble:(FHUnreadMsgDataUnreadModel*)tipsModel{
-    if(!tipsModel || [tipsModel.id isEqualToString:self.lastMsgId]){
+    if(!tipsModel || [tipsModel.lastMsgId isEqualToString:self.lastMsgId]){
         return;
     }
     [self saveLastMsgId];
@@ -110,10 +109,10 @@ NSString * const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotification
 }
 
 -(void)saveLastMsgId{
-    if(isEmptyString(self.tipsModel.id)){
+    if(isEmptyString(self.tipsModel.lastMsgId)){
         return;
     }
-    [[NSUserDefaults standardUserDefaults] setObject:self.tipsModel.id forKey:kTTMessageNotificationLastTipSaveKey];
+    [[NSUserDefaults standardUserDefaults] setObject:self.tipsModel.lastMsgId forKey:kTTMessageNotificationLastTipSaveKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 

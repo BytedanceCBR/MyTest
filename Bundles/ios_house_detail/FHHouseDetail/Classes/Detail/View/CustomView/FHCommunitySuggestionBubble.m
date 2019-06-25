@@ -44,6 +44,7 @@
     _label.backgroundColor = [UIColor clearColor];
     _label.font = [UIFont systemFontOfSize:10.0f];
     _label.numberOfLines = 1;
+    _label.preferredMaxLayoutWidth = 140;
 
     [self addSubview:_iconView];
     [self addSubview:_label];
@@ -64,17 +65,16 @@
     }];
 }
 
-- (void)refreshWithAvatar:(NSString *)icon title:(NSString *)title {
+- (CGFloat)refreshWithAvatar:(NSString *)icon title:(NSString *)title color:(UIColor *)color{
     if (isEmptyString(icon) || isEmptyString(title)) {
-        return;
+        return 0.0f;
     }
 
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:icon]];
     self.label.text = title;
+    self.label.textColor = color;
     CGSize preferSize = [self.label sizeThatFits:CGSizeMake(140, 14)];
-    CGFloat size = fminf(140, preferSize.width);
-    [self.label mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(size);
-    }];
+    CGFloat labelSize = fminf(140, preferSize.width);
+    return labelSize;
 }
 @end

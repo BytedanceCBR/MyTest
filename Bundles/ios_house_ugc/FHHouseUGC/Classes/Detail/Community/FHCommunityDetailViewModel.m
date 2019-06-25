@@ -61,6 +61,7 @@
     self.feedListController.forumId = self.viewController.communityId;
     
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
+    self.headerView.followButton.groupId = self.viewController.communityId;
     self.feedListController.tableHeaderView = self.headerView;
 
     [self.viewController addChildViewController:self.feedListController];
@@ -77,6 +78,7 @@
     FHNavBarView *naveBarView = self.viewController.customNavBarView;
     self.rightBtn = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero];
     self.rightBtn.backgroundColor = [UIColor themeWhite];
+    self.rightBtn.groupId = self.viewController.communityId;
     self.rightBtn.hidden = YES;
 
     self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];

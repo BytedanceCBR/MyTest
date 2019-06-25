@@ -14,6 +14,7 @@
 #import "FHMessageNotificationCellHelper.h"
 #import "FHMessageNotificationBaseCell.h"
 #import "TTUIResponderHelper.h"
+#import "FHMessageNotificationTipsManager.h"
 
 @interface FHMessageListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -22,6 +23,7 @@
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter; //加载更多footer
 @property(nonatomic, strong) NSMutableDictionary *cellHeightCaches; //缓存的item高度
+@property (nonatomic, strong) NSNumber *maxCursor;
 
 @property(nonatomic, strong) NSMutableArray<TTMessageNotificationModel *> *messageModels; //所有拉取到的message模型数组
 @property(nonatomic, assign) BOOL hasMore;
@@ -59,14 +61,13 @@
     }
 
     if (!loadMore) {
-//        [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
-        //TODO zlj
+        [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
         [[FHMessageNotificationManager sharedManager] fetchUnreadMessageWithChannel:nil callback:nil];
+        self.maxCursor = nil;
     }
 
-    NSNumber *cursor = loadMore ? @(self.messageModels.count) : @(0);
     WeakSelf;
-    [[FHMessageNotificationManager sharedManager] fetchMessageListWithChannel:nil cursor:cursor completionBlock:^(NSError *error, TTMessageNotificationResponseModel *response) {
+    [[FHMessageNotificationManager sharedManager] fetchMessageListWithChannel:nil cursor:self.maxCursor completionBlock:^(NSError *error, TTMessageNotificationResponseModel *response) {
         StrongSelf;
         if (response && (error == nil)) {
             if (!loadMore) {
@@ -77,6 +78,7 @@
                     return;
                 }
             }
+            wself.maxCursor = response.minCursor;
             [wself updateTableViewWithMoreData:[response.hasMore boolValue]];
             [wself.viewController.emptyView hideEmptyView];
             [wself.messageModels addObjectsFromArray:response.msgList];
