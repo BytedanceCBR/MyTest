@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/2/4.
 //
 //
-
+#if 0
 #import "NewsBaseDelegate+OpenURL.h"
 #import "TTStartupOpenURLGroup.h"
 #import "TTStartupTask.h"
@@ -37,3 +37,4 @@
 }
 
 @end
+#endif

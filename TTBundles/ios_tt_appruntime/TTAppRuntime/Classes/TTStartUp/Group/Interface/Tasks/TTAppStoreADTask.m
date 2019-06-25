@@ -11,6 +11,9 @@
 #import "TTNetworkManager.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTAppStoreADTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+5);
 
 @implementation TTAppStoreADTask
 

@@ -9,6 +9,9 @@
 #import "TTMessageNotificationStartupTask.h"
 #import "TTMessageNotificationManager.h"
 #import "ArticleMessageManager.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTMessageNotificationStartupTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+11);
 
 @implementation TTMessageNotificationStartupTask
 

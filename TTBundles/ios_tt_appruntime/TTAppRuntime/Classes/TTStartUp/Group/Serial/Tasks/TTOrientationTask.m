@@ -15,6 +15,9 @@
 #import "TTVFullscreenViewController.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTArticleBase/Log.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTOrientationTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+13);
 
 @implementation TTOrientationTask
 

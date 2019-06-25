@@ -22,10 +22,13 @@
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "CommonURLSetting.h"
+#import "TTLaunchDefine.h"
 
 static NSString *const kTTFabricLaunchCrashKey = @"kTTFabricLaunchCrashKey";
 
 extern const char *build_rev();
+
+DEC_TASK("TTFabricSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+3);
 
 @implementation TTFabricSDKRegister
 

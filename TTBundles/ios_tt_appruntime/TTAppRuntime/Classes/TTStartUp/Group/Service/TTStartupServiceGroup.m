@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/17.
 //
 //
-
+#if 0
 #import "TTStartupServiceGroup.h"
 #import "TTMonitorStartupTask.h"
 #import "TTABHelperTask.h"
@@ -138,3 +138,4 @@
 }
 
 @end
+#endif
