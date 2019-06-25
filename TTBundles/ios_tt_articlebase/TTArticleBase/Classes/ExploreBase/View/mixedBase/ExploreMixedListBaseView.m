@@ -173,6 +173,8 @@
 #import "SSCommonLogic.h"
 #import "TTSandBoxHelper.h"
 #import <FHUtils.h>
+#import <TTTabBarItem.h>
+
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -1032,6 +1034,13 @@ TTRefreshViewDelegate
     
     //唤醒后刷新
     if ((self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) || ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate && [_fetchListManager items].count > 0)) {
+        self.refreshShouldLastReadUpate = YES;
+        self.refreshFromType = ListDataOperationReloadFromTypeAuto;
+        [self pullAndRefresh];
+        
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = NO;
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
+    }else if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"]) {
         self.refreshShouldLastReadUpate = YES;
         self.refreshFromType = ListDataOperationReloadFromTypeAuto;
         [self pullAndRefresh];
@@ -4556,11 +4565,15 @@ TTRefreshViewDelegate
 - (void)clearTipCount {
     NSString *tag = [TTTabBarProvider currentSelectedTabTag];
     
+    TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kTTTabHomeTabKey];
+    
     if (![[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey] && ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabFollowTabKey] || [TTTabBarProvider isFollowTabOnTabBar])) {
+        tabItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
         return;
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kChangeExploreTabBarBadgeNumberNotification object:nil userInfo:@{kExploreTabBarItemIndentifierKey:tag, kExploreTabBarBadgeNumberKey:@(0)}];
+    tabItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
 }
 
 #pragma mark - DisplayMessage
