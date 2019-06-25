@@ -533,10 +533,10 @@ TTRefreshViewDelegate
             _animationView.loopAnimation = YES;
         }
         
-        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-            StrongSelf;
-            [self reloadFHHomeHeaderCell];
-        }];
+//        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+//            StrongSelf;
+//            [self reloadFHHomeHeaderCell];
+//        }];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(categoryGotFinished) name:kFHSwitchGetLightFinishedNotification object:nil];
     }
@@ -548,14 +548,23 @@ TTRefreshViewDelegate
     if (![[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]]) {
         [self.listView reloadData];
     }
-}
-
-- (void)reloadFHHomeHeaderCell
-{
-    if ([_categoryID isEqualToString:@"f_house_news"]) {
-        [self.listView reloadData];
+    
+    if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"]) {
+        self.refreshShouldLastReadUpate = YES;
+        self.refreshFromType = ListDataOperationReloadFromTypeAuto;
+        [self pullAndRefresh];
+        
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = NO;
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
     }
 }
+
+//- (void)reloadFHHomeHeaderCell
+//{
+//    if ([_categoryID isEqualToString:@"f_house_news"]) {
+//        [self.listView reloadData];
+//    }
+//}
 
 - (void)setupSilentFetchTimer
 {
@@ -1022,7 +1031,7 @@ TTRefreshViewDelegate
     self.shouldReloadBackAfterLeaveCurrentCategory = [self shouldReloadBackAfterLeaveCurrentCategory];
     
     //唤醒后刷新
-    if ((self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) || ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate && [_fetchListManager items].count > 0) || [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"]) {
+    if ((self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) || ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate && [_fetchListManager items].count > 0)) {
         self.refreshShouldLastReadUpate = YES;
         self.refreshFromType = ListDataOperationReloadFromTypeAuto;
         [self pullAndRefresh];
