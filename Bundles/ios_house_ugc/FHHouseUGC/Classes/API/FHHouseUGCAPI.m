@@ -10,7 +10,15 @@
 #import "FHUGCModel.h"
 #import "FHUGCConfig.h"
 
+#define DEFULT_ERROR @"请求错误"
+#define API_ERROR_CODE  10000
+#define QURL(QPATH) [[self host] stringByAppendingString:QPATH]
+
 @implementation FHHouseUGCAPI
+
++ (NSString *)host {
+    return [FHURLSettings baseURL];
+}
 
 + (void)loadUgcConfigEntrance {
     [[FHUGCConfig sharedInstance] loadConfigData];
@@ -223,6 +231,36 @@
     Class cls = NSClassFromString(@"FHFeedListModel");
     
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)postDelete:(NSString *)groupId completion:(void(^)(bool success , NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/delete_post";
+    NSString *url = QURL(queryPath);
+    
+    NSDictionary *param = @{
+                            @"group_id":groupId,
+                            };
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+            }
+        }
+        if (completion) {
+            completion(success,error);
+        }
+    }];
 }
 
 @end

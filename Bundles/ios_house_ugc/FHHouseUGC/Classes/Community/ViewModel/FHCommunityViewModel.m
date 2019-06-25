@@ -43,7 +43,7 @@
         
         [self initDataArray];
         //切换开关
-//        [self showUGC:YES];
+//        [self showUGC:NO];
     }
     return self;
 }

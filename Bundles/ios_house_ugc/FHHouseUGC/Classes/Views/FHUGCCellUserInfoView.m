@@ -12,6 +12,9 @@
 #import "FHFeedOperationView.h"
 #import "UIButton+TTAdditions.h"
 #import "FHCommunityFeedListController.h"
+#import "FHHouseUGCAPI.h"
+#import "ToastManager.h"
+#import "FHHouseUGCHeader.h"
 
 @implementation FHUGCCellUserInfoView
 
@@ -127,13 +130,26 @@
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * _Nonnull action) {
                                                               // 点击按钮，调用此block
-                                                              //调用删除接口
-                                                              if(wself.deleteCellBlock){
-                                                                  wself.deleteCellBlock();
-                                                              }
+                                                              [wself postDelete];
                                                           }];
     [alert addAction:defaultAction];
     [self.cellModel.feedVC presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)postDelete {
+    __weak typeof(self) wself = self;
+    [FHHouseUGCAPI postDelete:self.cellModel.groupId completion:^(bool success, NSError * _Nonnull error) {
+        if(success){
+            //调用删除接口
+            if(wself.deleteCellBlock){
+                wself.deleteCellBlock();
+            }
+            //删除帖子成功发送通知
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostDeleteSuccessNotification object:self.cellModel.community.socialGroupId];
+        }else{
+            [[ToastManager manager] showToast:@"删除失败"];
+        }
+    }];
 }
 
 @end

@@ -160,6 +160,7 @@
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     community.name = model.community.name;
     community.url = model.community.url;
+    community.socialGroupId = model.community.socialGroupId;
     cellModel.community = community;
     
     FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
