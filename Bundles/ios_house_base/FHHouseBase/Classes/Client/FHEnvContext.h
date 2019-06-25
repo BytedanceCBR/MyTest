@@ -83,6 +83,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)isSameLocCityToUserSelect;
 
 /*
+ 显示tab上的红点
+ */
++ (void)showFindTabRedDots;
+
+/*
+ 隐藏tab上的红点
+ */
++ (void)hideFindTabRedDots;
+
+/*
   app启动调用
  */
 - (void)onStartApp;

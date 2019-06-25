@@ -24,6 +24,7 @@
 #import "FHHomeCellHelper.h"
 #import <TTSandBoxHelper.h>
 #import "FHHomeItemViewController.h"
+#import "FHHomeSearchPanelViewModel.h"
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
@@ -56,7 +57,7 @@
 
 @implementation FHHomeListViewModel
 
-- (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC
+- (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC andPanelVM:(FHHomeSearchPanelViewModel *)panelVM
 {
     self = [super init];
     if (self) {
@@ -65,6 +66,7 @@
         self.homeViewController = homeVC;
         self.isSelectIndex = YES;
         self.isResetingOffsetZero = NO;
+        self.panelVM = panelVM;
         _itemsVCArray = [NSMutableArray new];
         
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -113,6 +115,9 @@
                 return ;
             }
             
+            if (self.panelVM) {
+                [self.panelVM fetchSearchPanelRollData];
+            }
           
             if (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                 [self requestOriginData:self.isFirstChange isShowPlaceHolder:[FHEnvContext sharedInstance].isRefreshFromCitySwitch];
@@ -127,15 +132,25 @@
             self.isRequestFromSwitch = NO;
             FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
             
-            self.isSelectIndex = YES;
-            
-            [self configIconRowCountAndHeight];
-            
-            
             if (xConfigDataModel.cityAvailability.enable.boolValue)
             {
                 [self.homeViewController.emptyView hideEmptyView];
             }
+            
+            self.headerHeight = [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
+            if (xConfigDataModel.houseTypeList.count <= 1) {
+                self.headerHeight += KFHHomeSectionHeight;
+            }else
+            {
+                self.headerHeight += 1;
+            }
+            [self.tableViewV reloadData];
+            
+            [self setUpTableScrollOffsetZero];
+            
+            self.isSelectIndex = YES;
+            
+            [self configIconRowCountAndHeight];
             
             //更新冷启动默认选项
             if (xConfigDataModel.houseTypeDefault && (xConfigDataModel.houseTypeDefault.integerValue > 0) && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
@@ -149,6 +164,8 @@
                 [self updateCategoryViewSegmented:NO];
             }else
             {
+                //收起tip
+                [self.homeViewController hideImmediately];
 //                [self.homeViewController resetMaintableView];
                 [self updateCategoryViewSegmented:YES];
             }
@@ -163,7 +180,7 @@
             if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 [FHHomeCellHelper sharedInstance].isFirstLanuch = NO;
                                 
-                [self.tableViewV reloadData];
+//                [self.tableViewV reloadData];
                 
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
                 
@@ -221,21 +238,7 @@
 
 - (void)setUpTableScrollOffsetZero
 {
-    
-    //    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    //    NSInteger currentSelectIndex = self.categoryView.segmentedControl.selectedSegmentIndex;
-    //
-    //    if (configDataModel.houseTypeList.count > currentSelectIndex && self.itemsVCArray.count > currentSelectIndex) {
-    //        FHHomeItemViewController *itemVC = self.itemsVCArray[currentSelectIndex];
-    //
-    //        itemVC.tableView.contentOffset = CGPointMake(0, 0);
-    //        if (itemVC.tableView.numberOfSections > 0 && [itemVC.tableView numberOfRowsInSection:0] > 0) {
-    //            [itemVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-    //        }
-    //    }
-    
     self.isResetingOffsetZero = YES;
-
     self.tableViewV.contentOffset = CGPointMake(0, 0);
     
     if (self.tableViewV.numberOfSections > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
@@ -257,6 +260,7 @@
 //    self.tableViewV.scrollEnabled = NO;
     
     _childVCScrollView.contentOffset = CGPointMake(0, 0);
+    __weak typeof(self) weakSelf = self;
 
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSMutableArray *itemVCArrayTmp = [NSMutableArray new];
@@ -265,7 +269,7 @@
         if ([houseTypeNum isKindOfClass:[NSNumber class]]) {
             FHHomeItemViewController *itemVC = [[FHHomeItemViewController alloc] initItemWith:self];
             itemVC.houseType = [houseTypeNum integerValue];
-            
+            itemVC.panelVM = self.panelVM;
             if (houseTypeNum.integerValue == self.houseType) {
                 itemVC.isOriginShowSelf = YES;
                 self.previousHouseType = self.houseType;
@@ -277,15 +281,15 @@
             // 添加子控制器
             [self.homeViewController addChildViewController:itemVC];
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
-                [self processRequestData:refreshType andHouseType:houseType andIsSucees:isSuccess andDataModel:dataModel];
+                [weakSelf processRequestData:refreshType andHouseType:houseType andIsSucees:isSuccess andDataModel:dataModel];
             };
+            
             itemVC.scrollDidEnd = ^{
-                [self scrollViewWillBeginDragging:self.homeViewController.scrollView];
-                [self scrollViewDidEndDecelerating:self.homeViewController.scrollView];
+
             };
             
             itemVC.requestNetworkUnAvalableRetryCallBack = ^{
-                [self.homeViewController retryLoadData];
+                [weakSelf.homeViewController retryLoadData];
             };
             //将子控制的view添加到scrollView上去
             [self.homeViewController.scrollView addSubview:itemVC.view];
@@ -305,7 +309,7 @@
     if (![FHEnvContext isNetworkConnected]) {
         self.homeViewController.scrollView.scrollEnabled = NO;
     }
-    [self.tableViewV reloadData];
+//    [self.tableViewV reloadData];
 //    self.tableViewV.scrollEnabled = YES;
 }
 
@@ -554,43 +558,7 @@
 
 - (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType
 {
-    //    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-    //    self.homeViewController.tracerModel.enterFrom = @"maintab";
-    //    self.homeViewController.tracerModel.elementFrom = @"maintab_list";
-    //
-    //    tracerDict[@"category_name"] = [self.dataSource pageTypeString] ? : @"be_null";
-    //    tracerDict[@"enter_from"] = @"maintab";
-    //    tracerDict[@"enter_type"] = self.enterType ? : @"be_null";
-    //    tracerDict[@"element_from"] = @"maintab_list";
-    //    tracerDict[@"search_id"] = self.itemsSearchIdCache[[self matchHouseString:self.currentHouseType]] ? : @"be_null";
-    //    tracerDict[@"origin_from"] = [self.dataSource pageTypeString]  ? : @"be_null";
-    //    tracerDict[@"origin_search_id"] = self.originSearchIdCache[[self matchHouseString:self.currentHouseType]] ? : @"be_null";
-    //
-    //
-    //    if (traceType == FHHomeCategoryTraceTypeEnter) {
-    //        [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
-    //    }else if (traceType == FHHomeCategoryTraceTypeStay)
-    //    {
-    //        NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
-    //        if (duration) {
-    //            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
-    //        }
-    //        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
-    //    }else if (traceType == FHHomeCategoryTraceTypeRefresh)
-    //    {
-    //        NSString *stringReloadType = @"pull";
-    //        if (self.reloadType == TTReloadTypeTab) {
-    //            stringReloadType = @"tab";
-    //        }
-    //        if (self.reloadType == TTReloadTypeClickCategory) {
-    //            stringReloadType = @"click";
-    //        }
-    //        tracerDict[@"refresh_type"] = (self.currentPullType == FHHomePullTriggerTypePullUp ? @"pre_load_more" : stringReloadType);
-    //        [FHEnvContext recordEvent:tracerDict andEventKey:@"category_refresh"];
-    //
-    //        self.reloadType = nil;
-    //    }
-    //
+
 }
 
 #pragma mark tableView 代理
@@ -653,7 +621,7 @@
         return KFHHomeSectionHeight;
     }
     
-    return [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight];
+    return [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight] + 45;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -670,7 +638,6 @@
     if (self.tableViewV == scrollView) {
         if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight)) {
             [self.categoryView showOriginStyle:NO];
-            NSLog(@"scrolldid scroll y = %ld,h=%ld",((NSInteger)self.tableViewV.contentOffset.y),self.headerHeight);
             
             if (!self.isResetingOffsetZero) {
                 [self.homeViewController hideImmediately];

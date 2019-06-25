@@ -7,6 +7,9 @@
 
 #import "TTIESPlayerTask.h"
 #import "TTHTSVideoConfiguration.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTIESPlayerTask",FHTaskTypeService,TASK_PRIORITY_HIGH+14);
 
 @implementation TTIESPlayerTask
 

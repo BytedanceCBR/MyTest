@@ -45,7 +45,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
 @property (nonatomic) BOOL adColdHadJump;
 @property (nonatomic, strong) TTTopBar *topBar;
-@property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
+@property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 
 @end
@@ -76,14 +76,16 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.adColdHadJump = NO;
     
     [self registerNotifications];
-
+    
     [self resetMaintableView];
-  
+    
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
     //如果是inhouse的，弹升级弹窗
-    if ([TTSandBoxHelper isInHouseApp]) {
+    if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
         //#if INHOUSE
         [self checkLocalTestUpgradeVersionAlert];
         //#endif
@@ -96,8 +98,12 @@ static CGFloat const kSectionHeaderHeight = 38;
         [self.mainTableView removeFromSuperview];
         [self.emptyView showEmptyWithTip:@"功能暂未开通" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
     }
+    
+    [self.view bringSubviewToFront:self.topBar];
 }
 
+
+//初始化main table
 - (void)resetMaintableView
 {
     if (self.mainTableView) {
@@ -105,11 +111,11 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     
     self.mainTableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    
+    self.mainTableView.decelerationRate = 0.5;
     self.mainTableView.showsVerticalScrollIndicator = NO;
     
     if (_isMainTabVC) {
-        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
+        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
     }
     
     [self.view addSubview:self.mainTableView];
@@ -166,19 +172,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     {
         [self.mainTableView setFrame:CGRectMake(0.0f, 64 + 20, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 20 - 49)];
     }
-//    if ([TTDeviceHelper isIPhoneXDevice]) {
-//        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.equalTo(self.topBar.mas_bottom);
-//            make.bottom.left.right.equalTo(self.view);
-//        }];
-//    }else
-//    {
-//        [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.equalTo(self.topBar.mas_bottom);
-//            make.left.right.equalTo(self.view);
-//            make.bottom.equalTo(self.view).offset(-40);
-//        }];
-//    }
 }
 
 - (void)setupTopBarConstraints
@@ -226,16 +219,16 @@ static CGFloat const kSectionHeaderHeight = 38;
         [UIView animateWithDuration:0.3 animations:^{
             UIEdgeInsets inset = self.mainTableView.contentInset;
             inset.top = 0;
-//            self.homeListViewModel
+            //            self.homeListViewModel
             self.mainTableView.contentInset = inset;
             [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
             self.homeListViewModel.isResetingOffsetZero = NO;
-//    [self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            //    [self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }];
-//        [UIView animateWithDuration:0.3 animations:^{
-//
-//        } completion:^(BOOL finished) {
-//        }];
+        //        [UIView animateWithDuration:0.3 animations:^{
+        //
+        //        } completion:^(BOOL finished) {
+        //        }];
         
     });
     
@@ -245,7 +238,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [self.notifyBar hideImmediately];
 }
-         
+
 - (void)retryLoadData
 {
     if (![FHEnvContext isNetworkConnected]) {
@@ -285,13 +278,13 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     
     [FHEnvContext sharedInstance].refreshConfigRequestType = @"refresh_config";
-
+    
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
     
     //首次无网启动点击加载重试，增加拉取频道
     if ([TTSandBoxHelper isAPPFirstLaunch]) {
         [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
-         
+            
         }];
     }
 }
@@ -322,7 +315,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
         [self.homeListViewModel checkCityStatus];
     }
-
+    
     [self scrollToTopEnable:YES];
     
     self.homeListViewModel.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
@@ -407,19 +400,19 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)scrollToTopEnable:(BOOL)enable
 {
-    self.mainTableView.scrollsToTop = enable;
+    //    self.mainTableView.scrollsToTop = enable;
 }
 
 - (void)scrollToTopAnimated:(BOOL)animated
 {
-    self.mainTableView.contentOffset = CGPointMake(0, 0);
+    //    self.mainTableView.contentOffset = CGPointMake(0, 0);
 }
 
 - (void)didAppear
 {
     self.homeListViewModel.stayTime = [[NSDate date] timeIntervalSince1970];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
-
+    
     [[FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell.bannerView resetTimer];
 }
 
@@ -439,8 +432,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom
 {
-//    self.mainTableView.ttContentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
-//    self.mainTableView.scrollIndicatorInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
+    //    self.mainTableView.ttContentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
+    //    self.mainTableView.scrollIndicatorInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
 }
 
 - (BOOL)tt_hasValidateData

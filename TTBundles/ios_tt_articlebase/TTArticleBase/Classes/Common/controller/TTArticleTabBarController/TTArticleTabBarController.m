@@ -610,8 +610,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [logv3Dic setValue:@"default" forKey:@"enter_type"];
     [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
     
-    //显示ugc新人引导
-//    [self addUgcGuide];
+    [FHEnvContext showFindTabRedDots];
 }
 
 - (BOOL)isShowingConcernOrForumTab
@@ -1233,6 +1232,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         // enter_tab埋点
         NSMutableDictionary *logv3Dic = [NSMutableDictionary dictionaryWithCapacity:1];
         NSString *selectedTabName = [[self class] tabStayStringForIndex:self.selectedIndex];
+        
         [logv3Dic setValue:selectedTabName forKey:@"tab_name"];
         if ([selectedTabName isEqualToString:@"f_hotsoon_video"]) {//小视频tab 该埋点必须发
             [logv3Dic setValue:self.autoEnterShortVideoTab ? @1 : @0 forKey:@"is_auto"];

@@ -7,6 +7,9 @@
 //
 
 #import "TTRegisterSettingsTask.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTRegisterSettingsTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+8);
 
 @implementation TTRegisterSettingsTask
 

@@ -640,6 +640,10 @@
     [params setValue:self.paramDicts[kNewsDetailViewConditionRelateReadFromGID] forKey:@"from_gid"];
     [params setValue:@((long long)(duration * 1000)).stringValue forKey:@"stay_time"];
 
+    if ([self.reportParams isKindOfClass:[NSDictionary class]]) {
+        [params addEntriesFromDictionary:self.reportParams];
+    }
+    
 //    [[EnvContext shared].tracer writeEvent:@"stay_page" params:params];
     [FHEnvContext recordEvent:params andEventKey:@"stay_page"];
 //    [TTTrackerWrapper eventV3:@"stay_page" params:({

@@ -26,6 +26,8 @@
 #import <TTDeviceHelper.h>
 #import <BDALog/BDAgileLog.h>
 #import "FHUGCConfigModel.h"
+#import <TTTabBarManager.h>
+#import <TTTabBarItem.h>
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -248,6 +250,46 @@ static NSInteger kGetLightRequestRetryCount = 3;
 + (BOOL)isNetworkConnected
 {
     return [TTReachability isNetworkConnected];
+}
+
+/*
+ 显示tab上的红点
+ */
++ (void)showFindTabRedDots
+{
+    NSString *stringKey = [FHUtils stringFromNSDateDay:[NSDate date]];
+    
+    if (stringKey) {
+       NSNumber *countNum = [FHUtils contentForKey:stringKey];
+        if (!countNum || [countNum isKindOfClass:[NSNumber class]]) {
+            NSInteger hadCount = [countNum integerValue];
+            if (hadCount < 3) {
+              TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+              tabItem.ttBadgeView.badgeNumber = TTBadgeNumberPoint;
+            }
+        }
+    }
+}
+
+/*
+ 隐藏tab上的红点
+ */
++ (void)hideFindTabRedDots
+{
+    NSString *stringKey = [FHUtils stringFromNSDateDay:[NSDate date]];
+    if (stringKey) {
+        NSNumber *countNum = [FHUtils contentForKey:stringKey];
+        if (!countNum) {
+            countNum = @(1);
+        }else
+        {
+            countNum = @(countNum.integerValue + 1);
+        }
+        [FHUtils setContent:countNum forKey:stringKey];
+    }
+    
+    TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+    tabItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
 }
 
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key
@@ -490,8 +532,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
     NSString * buildVersionNew = [buildVersionRaw stringByReplacingOccurrencesOfString:@"." withString:@""];
     
     NSString * versionFirst = @"6";
-    NSString * versionMiddle = @"6";
-    NSString * versionEnd = @"6";
+    NSString * versionMiddle = @"7";
+    NSString * versionEnd = @"0";
     
     if ([buildVersionNew isKindOfClass:[NSString class]] && buildVersionNew.length > 3) {
         versionFirst = [buildVersionNew substringWithRange:NSMakeRange(0, 1)];

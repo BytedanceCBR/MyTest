@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/16.
 //
 //
-
+#if 0
 #import "NewsBaseDelegate+SDKs.h"
 #import "TTStartupSDKsGroup.h"
 #import "NewsBaseDelegate.h"
@@ -38,3 +38,4 @@
 }
 
 @end
+#endif

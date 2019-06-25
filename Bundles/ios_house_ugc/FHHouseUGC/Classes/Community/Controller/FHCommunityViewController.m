@@ -26,7 +26,7 @@
 @property(nonatomic , strong) UIButton *searchBtn;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property(nonatomic, strong) FHUGCGuideView *guideView;
-
+@property (nonatomic, assign) BOOL hasShowDots;
 @end
 
 @implementation FHCommunityViewController
@@ -35,7 +35,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
+    self.hasShowDots = NO;
+
     [self initView];
     [self initConstraints];
     [self initViewModel];
@@ -69,12 +70,6 @@
     [self.guideView hide];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.viewModel viewWillAppear];
-     self.stayTime = [[NSDate date] timeIntervalSince1970];
-}
-
 - (void)initView {
     self.view.backgroundColor = [UIColor whiteColor];
     
@@ -104,7 +99,20 @@
     [self addStayCategoryLog:self.stayTime];
 }
 
-- (void)addStayCategoryLog:(NSTimeInterval)stayTime {
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.viewModel viewWillAppear];
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
+    
+    if(!self.hasShowDots)
+    {
+        [FHEnvContext hideFindTabRedDots];
+        self.hasShowDots = YES;
+    }
+}
+
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
     //        if (duration) {

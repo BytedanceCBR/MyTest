@@ -11,6 +11,9 @@
 #import "NewsBaseDelegate.h"
 #import "NewsBaseDelegate.h"
 #import "SSCommonLogic.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTAppAlertStartupTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+1);
 
 @implementation TTAppAlertStartupTask
 

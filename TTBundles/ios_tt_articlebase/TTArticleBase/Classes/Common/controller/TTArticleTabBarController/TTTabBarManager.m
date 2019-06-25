@@ -50,7 +50,7 @@ NSString *kTTTabUnloginName = @"ak_mine_unlogin_tab"; //我的tab未登录图片
 NSString *kTTTabFeedPublishName = @"feed_publish"; //feed发布器图片
 //NSString *kTTTabBigActivityTabKey = @"tab_redpackage_big"; //春节运营活动大tab 标题&图片名
 NSString *kAKTabActivityTabKey = @"tab_ak_activity";//爱看活动tab 标题key&图片名
-NSString *kFHouseFindTabKey = @"tab_f_find";//房产找房key
+NSString *kFHouseFindTabKey = @"tab_f_find";//发现key
 NSString *kFHouseMessageTabKey = @"tab_message";
 NSString *kFHouseMineTabKey = @"tab_mine"; //房产首页key
 //Path

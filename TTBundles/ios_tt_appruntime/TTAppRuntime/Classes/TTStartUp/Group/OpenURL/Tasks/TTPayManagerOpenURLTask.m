@@ -12,6 +12,9 @@
 #import "NewsBaseDelegate.h"
 //#import "SSADManager.h"
 #import "TTAdSplashMediator.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTPayManagerOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_HIGH+10);
 
 @implementation TTPayManagerOpenURLTask
 

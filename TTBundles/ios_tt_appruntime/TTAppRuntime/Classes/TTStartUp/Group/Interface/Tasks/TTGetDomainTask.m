@@ -11,6 +11,9 @@
 #import "SSCommonLogic.h"
 #import "CommonURLSetting.h"
 #import <TTNetworkManager/TTNetworkManager.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTGetDomainTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+7);
 
 @implementation TTGetDomainTask
 

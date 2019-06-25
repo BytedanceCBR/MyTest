@@ -21,6 +21,7 @@
 #import <FHPlaceHolderCell.h>
 #import "FHHomeListViewModel.h"
 #import "TTSandBoxHelper.h"
+#import <FHHomeSearchPanelViewModel.h>
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -136,6 +137,9 @@
     if (self.showRequestErrorView) {
         [self showPlaceHolderCells];
         [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+        if (self.panelVM) {
+            [self.panelVM fetchSearchPanelRollData];
+        }
     }
     
     self.stayTime = [self getCurrentTime];
@@ -238,9 +242,9 @@
         [self.tableView.mj_footer endRefreshing];
     }
     
-    if (self.houseDataItemsModel.count < 10 && !self.tableView.hasMore) {
-        self.tableView.mj_footer.hidden = YES;
-    }
+//    if (self.houseDataItemsModel.count < 10 && !self.tableView.hasMore) {
+//        self.tableView.mj_footer.hidden = YES;
+//    }
     
 }
 
@@ -290,7 +294,7 @@
                 return;
             }
             
-            if (error && [error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+            if ((error && [error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) || !model || error) {
                 [self reloadCityEnbaleAndNoHouseData:NO];
                 if (self.requestCallBack) {
                     self.requestCallBack(pullType, self.houseType, NO, nil);
@@ -536,11 +540,14 @@
             [cellError.contentView addSubview:noDataErrorView];
             
             if ([FHEnvContext isNetworkConnected]) {
-                [noDataErrorView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:@"group-9"
+                [noDataErrorView showEmptyWithTip:@"数据走丢了" errorImageName:@"group-9"
                                         showRetry:YES];
                 __weak typeof(self) weakSelf = self;
                 noDataErrorView.retryBlock = ^{
-                    [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+                    if (weakSelf.panelVM) {
+                        [weakSelf.panelVM fetchSearchPanelRollData];
+                    }
+                    [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                 };
             }else
             {
@@ -555,7 +562,10 @@
                             }
                         }else
                         {
-                            [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+                            if (weakSelf.panelVM) {
+                                [weakSelf.panelVM fetchSearchPanelRollData];
+                            }
+                            [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                         }
                     }
                 };
@@ -691,6 +701,7 @@
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
+        //        _tableView.decelerationRate = 0.1;
         _tableView.showsVerticalScrollIndicator = NO;
     }
     return _tableView;

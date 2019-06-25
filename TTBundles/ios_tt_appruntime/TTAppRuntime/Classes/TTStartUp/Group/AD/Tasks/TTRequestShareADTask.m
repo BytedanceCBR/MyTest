@@ -8,6 +8,9 @@
 
 #import "TTRequestShareADTask.h"
 
+//#import "TTLaunchDefine.h"
+//
+//DEC_TASK("TTRequestShareADTask",FHTaskTypeAD,TASK_PRIORITY_HIGH);
 @implementation TTRequestShareADTask
 
 - (NSString *)taskIdentifier {
