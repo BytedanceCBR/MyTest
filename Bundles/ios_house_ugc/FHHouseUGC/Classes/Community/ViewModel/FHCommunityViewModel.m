@@ -42,8 +42,8 @@
         self.viewController = (FHCommunityViewController *)viewController;
         
         [self initDataArray];
-        //临时版本使用，UGC上线后去掉
-        // [self initForTempVersion];
+        //切换开关
+//        [self showUGC:NO];
     }
     return self;
 }
@@ -54,12 +54,21 @@
     }
 }
 
-- (void)initForTempVersion {
-    self.currentTabIndex = 0;
-    self.dataArray = @[
-                       @(FHCommunityCollectionCellTypeDiscovery)
-                       ];
-    [self.viewController hideSegmentControl];
+- (void)showUGC:(BOOL)isShow {
+    if(isShow){
+    self.currentTabIndex = 1;
+        self.dataArray = @[
+                           @(FHCommunityCollectionCellTypeMyJoin),
+                           @(FHCommunityCollectionCellTypeNearby),
+                           @(FHCommunityCollectionCellTypeDiscovery)
+                           ];
+    }else{
+        self.currentTabIndex = 0;
+        self.dataArray = @[
+                           @(FHCommunityCollectionCellTypeDiscovery)
+                           ];
+    }
+    [self.viewController showSegmentControl:isShow];
 }
 
 - (void)initDataArray {

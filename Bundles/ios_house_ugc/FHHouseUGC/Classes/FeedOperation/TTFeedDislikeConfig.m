@@ -8,6 +8,8 @@
 #import "TTFeedDislikeConfig.h"
 #import "TTReportManager.h"
 #import "TTAccountManager.h"
+#import "FHUGCConfig.h"
+#import "TTBaseMacro.h"
 
 static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_options";
 @implementation TTFeedDislikeConfig
@@ -43,17 +45,45 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
 }
 
 + (NSArray *)operationList {
-    NSArray *operationList = @[
-                               @{
-                                   @"id": @"1",
-                                   @"title": @"举报",
-                                   @"subTitle": @"广告、低俗、重复、过时",
-                                   },
-                               @{
-                                   @"id": @"2",
-                                   @"title": @"删除"
-                                   }
-                               ];
+    NSArray *operations = [[FHUGCConfig sharedInstance] operationConfig];
+    NSMutableArray *operationList = [NSMutableArray array];
+    
+    for (FHUGCConfigDataPermissionModel *permissionModel in operations) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        
+        if(!isEmptyString(permissionModel.title)){
+            dic[@"title"] = permissionModel.title;
+        }
+        
+        if(!isEmptyString(permissionModel.subtitle)){
+            dic[@"subTitle"] = permissionModel.subtitle;
+        }
+        
+        if([permissionModel.id isEqualToString:@"report"]){
+            dic[@"id"] = @"1";
+        }else if([permissionModel.id isEqualToString:@"delete"]){
+            dic[@"id"] = @"2";
+        }
+        
+        [operationList addObject:dic];
+    }
+    
+    //为了防止config接口无内容，默认的值
+    if(operationList.count == 0){
+        operationList = @[
+                          @{
+                              @"id": @"1",
+                              @"title": @"举报",
+                              @"subTitle": @"广告、低俗、重复、过时",
+                              },
+                          @{
+                              @"id": @"2",
+                              @"title": @"删除"
+                              }
+                          ].mutableCopy;
+
+    }
+    
     return operationList;
 }
 

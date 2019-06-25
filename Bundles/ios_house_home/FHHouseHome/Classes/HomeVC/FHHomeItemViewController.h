@@ -21,6 +21,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 static const NSUInteger kFHHomeHouseTypeBannerViewSection = 0;
 static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 
+@class FHHomeSearchPanelViewModel;
+
 @interface FHHomeItemViewController : UIViewController
 
 @property (nonatomic,assign) FHHouseType houseType;
@@ -31,6 +33,7 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic , strong) FHTracerModel *tracerModel;
 @property (nonatomic, assign) TTReloadType reloadType; //当前enterType，用于enter_category
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
 
 @property (nonatomic, strong) NSMutableArray *traceNeedUploadCache;
 @property (nonatomic, strong) NSMutableDictionary *traceEnterCategoryCache;

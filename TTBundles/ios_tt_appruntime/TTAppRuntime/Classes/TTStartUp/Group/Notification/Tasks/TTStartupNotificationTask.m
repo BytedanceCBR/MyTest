@@ -41,6 +41,9 @@
 #import "SSCommonLogic.h"
 #import <TTArticleBase/ExploreLogicSetting.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTStartupNotificationTask",FHTaskTypeNotification,TASK_PRIORITY_HIGH);
 
 @interface TTStartupNotificationTask ()
 <

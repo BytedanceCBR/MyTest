@@ -46,8 +46,39 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         _followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];
         // 加载本地
         [self loadFollowListData];
+        [self loadLocalUgcConfigData];
+        [self registerNoti];
     }
     return self;
+}
+
+- (void)registerNoti {
+    // 发帖成功通知 数放在userinfo的：social_group_id
+    //    static NSString *const kFHUGCPostSuccessNotification = @"k_fh_ugc_post_finish";
+    // 删除帖子成功通知 数放在userinfo的：social_group_id
+    //    static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
+}
+
+// 发帖成功通知
+- (void)postThreadSuccess:(NSNotification *)noti {
+    if (noti) {
+        NSString *groupId = noti.userInfo[@"social_group_id"];
+        if (groupId.length > 0) {
+            FHUGCScialGroupDataModel *data = [self socialGroupData:groupId];
+            [self updatePostSuccessScialGroupDataModel:data];
+        }
+    }
+}
+
+// 删帖成功通知
+- (void)delPostThreadSuccess:(NSNotification *)noti {
+    NSString *groupId = noti.userInfo[@"social_group_id"];
+    if (groupId.length > 0) {
+        FHUGCScialGroupDataModel *data = [self socialGroupData:groupId];
+        [self updatePostDelSuccessScialGroupDataModel:data];
+    }
 }
 
 - (void)dealloc
@@ -183,6 +214,101 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     return groupData;
 }
 
+- (void)updateScialGroupDataModel:(FHUGCScialGroupDataModel *)model byFollowed:(BOOL)followed {
+    if (model) {
+        // 替换关注人数 XX关注XX热帖
+        BOOL currentFollowed = [model.hasFollow boolValue];
+        if (followed) {
+            // 看是否 + 1
+            if (!currentFollowed) {
+                model.hasFollow = @"1";
+                NSString *followCountStr = model.followerCount;
+                NSInteger followCount = [model.followerCount integerValue];
+                followCount += 1;
+                NSString *replaceFollowCountStr = [NSString stringWithFormat:@"%ld",followCount];
+                NSString *countText = model.countText;
+                // 替换第一个 关注数字
+                NSRange range = [countText rangeOfString:followCountStr];
+                // 有数据而且是起始位置的数据
+                if (range.location == 0 && range.length > 0) {
+                    countText = [countText stringByReplacingCharactersInRange:range withString:replaceFollowCountStr];
+                    model.followerCount = replaceFollowCountStr;
+                } else {
+                    model.followerCount = followCountStr;
+                }
+                model.countText = countText;
+            }
+        } else {
+            // 看是否 - 1
+            if (currentFollowed) {
+                model.hasFollow = @"0";
+                NSString *followCountStr = model.followerCount;
+                NSInteger followCount = [model.followerCount integerValue];
+                followCount -= 1;
+                if (followCount < 0) {
+                    followCount = 0;
+                }
+                NSString *replaceFollowCountStr = [NSString stringWithFormat:@"%ld",followCount];
+                NSString *countText = model.countText;
+                // 替换第一个 关注数字
+                NSRange range = [countText rangeOfString:followCountStr];
+                if (range.location == 0 && range.length > 0) {
+                    countText = [countText stringByReplacingCharactersInRange:range withString:replaceFollowCountStr];
+                    model.followerCount = replaceFollowCountStr;
+                } else {
+                    model.followerCount = followCountStr;
+                }
+                model.countText = countText;
+            }
+        }
+    }
+}
+
+// 发帖成功 更新帖子数 + 1
+- (void)updatePostSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model {
+    if (model) {
+        NSString *contentCountStr = model.contentCount;
+        NSInteger contentCount = [model.contentCount integerValue];
+        contentCount += 1;
+        NSString *replaceContentCountStr = [NSString stringWithFormat:@"%ld",contentCount];
+        NSString *countText = model.countText;
+        // 替换第二个数字（热帖个数）
+        NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
+        // 有数据而且不是起始位置的数据
+        if (range.location > 0 && range.length > 0) {
+            countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
+            model.contentCount = replaceContentCountStr;
+        } else {
+            model.contentCount = contentCountStr;
+        }
+        model.countText = countText;
+    }
+}
+
+// 删帖成功 更新帖子数 - 1
+- (void)updatePostDelSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model {
+    if (model) {
+        NSString *contentCountStr = model.contentCount;
+        NSInteger contentCount = [model.contentCount integerValue];
+        contentCount -= 1;
+        if (contentCount < 0) {
+            contentCount = 0;
+        }
+        NSString *replaceContentCountStr = [NSString stringWithFormat:@"%ld",contentCount];
+        NSString *countText = model.countText;
+        // 替换第二个数字（热帖个数）
+        NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
+        // 有数据而且不是起始位置的数据
+        if (range.location > 0 && range.length > 0) {
+            countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
+            model.contentCount = replaceContentCountStr;
+        } else {
+            model.contentCount = contentCountStr;
+        }
+        model.countText = countText;
+    }
+}
+
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 - (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow completion:(void (^ _Nullable)(BOOL isSuccess))completion {
     if (![TTReachability isNetworkConnected]) {
@@ -271,7 +397,13 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 #pragma mark - UGC Config Ref
 
 - (void)loadUGCConfigData {
-    
+    __weak typeof(self) wself = self;
+    [FHHouseUGCAPI requestUGCConfig:[FHUGCConfigModel class] completion:^(id<FHBaseModelProtocol> _Nonnull model, NSError * _Nonnull error) {
+        if(!error){
+            wself.configData = (FHUGCConfigModel *)model;
+            [wself saveLocalUgcConfigData];
+        }
+    }];
 }
 
 
@@ -286,11 +418,62 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 - (void)loadLocalUgcConfigData {
     // 参考上面
     // kFHUGCConfigDataKey
+    NSDictionary *configDic = [self.ugcConfigCache objectForKey:kFHUGCConfigDataKey];
+    if (configDic && [configDic isKindOfClass:[NSDictionary class]]) {
+        NSError *err = nil;
+        FHUGCConfigModel * model = [[FHUGCConfigModel alloc] initWithDictionary:configDic error:&err];
+        if (model) {
+            self.configData = model;
+        }
+    }
 }
 
 - (void)saveLocalUgcConfigData {
     // 参考上面
     // kFHUGCConfigDataKey
+    if (self.configData) {
+        NSDictionary *dic = [self.configData toDictionary];
+        if (dic) {
+            [self.ugcConfigCache setObject:dic forKey:kFHUGCConfigDataKey];
+        }
+    }
+}
+
+- (NSArray *)secondTabLeadSuggest {
+    NSString* suggest = nil;
+    for (FHUGCConfigDataLeadSuggestModel *suggestModel in self.configData.data.leadSuggest) {
+        if([suggestModel.kind isEqualToString:@"neighborhood"]){
+            suggest = suggestModel.hint;
+            break;
+        }
+    }
+    return suggest;
+}
+
+- (NSArray *)searchLeadSuggest {
+    NSString* suggest = nil;
+    for (FHUGCConfigDataLeadSuggestModel *suggestModel in self.configData.data.leadSuggest) {
+        if([suggestModel.kind isEqualToString:@"search"]){
+            suggest = suggestModel.hint;
+            break;
+        }
+    }
+    return suggest;
+}
+
+- (NSArray *)ugcDetailLeadSuggest {
+    NSString* suggest = nil;
+    for (FHUGCConfigDataLeadSuggestModel *suggestModel in self.configData.data.leadSuggest) {
+        if([suggestModel.kind isEqualToString:@"subsribe"]){
+            suggest = suggestModel.hint;
+            break;
+        }
+    }
+    return suggest;
+}
+
+- (NSArray *)operationConfig {
+    return self.configData.data.permission;
 }
 
 @end

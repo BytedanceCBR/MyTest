@@ -17,6 +17,9 @@
 #import "FHUtils.h"
 #import "FHEnvContext.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK_N(TTShowADTask,FHTaskTypeAD,TASK_PRIORITY_HIGH);
 
 @implementation TTShowADTask
 

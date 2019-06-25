@@ -1,6 +1,15 @@
 //GENERATED CODE , DON'T EDIT
 #import "FHFeedUGCContentModel.h"
 @implementation FHFeedUGCContentCommunityModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"socialGroupId": @"social_group_id",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

@@ -9,6 +9,9 @@
 #import "TTAVPlayerTask.h"
 #import "TTAVPlayerOpenGLActivity.h"
 #import "TTVideoTip.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTAVPlayerTask",FHTaskTypeService,TASK_PRIORITY_HIGH+3);
 
 @implementation TTAVPlayerTask
 

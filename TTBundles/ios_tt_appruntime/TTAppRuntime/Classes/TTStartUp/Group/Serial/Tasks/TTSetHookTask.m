@@ -12,6 +12,9 @@
 #import "SSCommonLogic.h"
 #import "TTLocationManager.h"
 #import "TTArticleCategoryManager.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTSetHookTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+13);
 
 @implementation TTSetHookTask
 

@@ -269,10 +269,10 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
         }
     }
     
-    if (self.adShowCompletion) {
-        self.adShowCompletion(self.isNotClicked);
-    }
-    
+//    if (self.adShowCompletion) {
+//        self.adShowCompletion(self.isNotClicked);
+//    }
+//
 }
 
 - (void)trackWithTag:(NSString *)tag label:(NSString *)label extra:(NSDictionary *)extra

@@ -125,6 +125,18 @@
     return strDate;
 }
 
++ (NSString *)stringFromNSDateDay:(NSDate *)date
+{
+    if(!date)
+    {
+        return nil;
+    }
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    NSString *strDate = [dateFormatter stringFromDate:date];
+    return strDate;
+}
+
 /*
  周边加阴影，并且同时圆角，注意这个方法必须在view已经布局完成能够获得frame的情况下使用
  */

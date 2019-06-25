@@ -12,6 +12,10 @@
 #import "TTReportManager.h"
 #import "WDCommonURLSetting.h"
 
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTCommonURLSettingTask",FHTaskTypeService,TASK_PRIORITY_HIGH+11);
+
 @implementation TTCommonURLSettingTask
 
 - (NSString *)taskIdentifier {

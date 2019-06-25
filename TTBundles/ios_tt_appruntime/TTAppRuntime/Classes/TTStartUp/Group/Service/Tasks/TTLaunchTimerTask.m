@@ -7,6 +7,9 @@
 //
 
 #import "TTLaunchTimerTask.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTLaunchTimerTask",FHTaskTypeService,TASK_PRIORITY_HIGH+12);
 
 NSString * const TTLaunchTimerTaskLaunchTimeIntervalKey = @"TTLaunchTimerTaskLaunchTimeIntervalKey";
 

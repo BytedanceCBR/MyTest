@@ -34,6 +34,9 @@
 #import <Masonry/Masonry.h>
 #import "CommonURLSetting.h"
 #import <TTAccountSDK/TTAccountSDK.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTMonitorStartupTask",FHTaskTypeService,TASK_PRIORITY_HIGH);
 
 static BOOL TTDebugrealInitialized = NO;
 NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNotification";

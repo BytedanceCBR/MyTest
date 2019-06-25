@@ -17,6 +17,7 @@
 #import "FHUGCGuideHelper.h"
 #import "FHUGCGuideView.h"
 #import "TTForumPostThreadStatusViewModel.h"
+#import "FHEnvContext.h"
 
 @interface FHCommunityViewController ()
 
@@ -26,7 +27,7 @@
 @property(nonatomic , strong) UIButton *searchBtn;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property(nonatomic, strong) FHUGCGuideView *guideView;
-
+@property (nonatomic, assign) BOOL hasShowDots;
 @end
 
 @implementation FHCommunityViewController
@@ -35,7 +36,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
+    self.hasShowDots = NO;
+
     [self initView];
     [self initConstraints];
     [self initViewModel];
@@ -52,7 +54,7 @@
 }
 
 - (void)addUgcGuide {
-    if([FHUGCGuideHelper shouldShowSearchGuide]){
+    if([FHUGCGuideHelper shouldShowSearchGuide] && [FHEnvContext isUGCOpen]){
         [self.guideView show:self.view dismissDelayTime:5.0f];
     }
 }
@@ -67,12 +69,6 @@
 
 - (void)topVCChange:(NSNotification *)notification {
     [self.guideView hide];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.viewModel viewWillAppear];
-     self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)initView {
@@ -104,7 +100,20 @@
     [self addStayCategoryLog:self.stayTime];
 }
 
-- (void)addStayCategoryLog:(NSTimeInterval)stayTime {
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.viewModel viewWillAppear];
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
+    
+    if(!self.hasShowDots)
+    {
+        [FHEnvContext hideFindTabRedDots];
+        self.hasShowDots = YES;
+    }
+}
+
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
     //        if (duration) {
@@ -225,14 +234,21 @@
     _viewModel = [[FHCommunityViewModel alloc] initWithCollectionView:self.collectionView controller:self];
 }
 
-- (void)hideSegmentControl {
-    self.segmentControl.hidden = YES;
-    self.bottomLineView.hidden = YES;
-    self.topView.hidden = YES;
-    _collectionView.backgroundColor = [UIColor whiteColor];
-    [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(0);
-    }];
+- (void)showSegmentControl:(BOOL)isShow {
+    self.segmentControl.hidden = !isShow;
+    self.bottomLineView.hidden = !isShow;
+    self.topView.hidden = !isShow;
+    if(isShow){
+        _collectionView.backgroundColor = [UIColor themeGray7];
+        [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(60);
+        }];
+    }else{
+        _collectionView.backgroundColor = [UIColor whiteColor];
+        [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+    }
 }
 
 //进入搜索页

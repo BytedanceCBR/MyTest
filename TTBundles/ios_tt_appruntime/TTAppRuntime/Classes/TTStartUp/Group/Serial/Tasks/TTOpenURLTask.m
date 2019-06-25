@@ -11,6 +11,9 @@
 #import "SSADManager.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <FHEnvContext.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_MEDIUM);
 
 @implementation TTOpenURLTask
 
@@ -30,6 +33,16 @@
         [SSADManager shareInstance].splashADShowType = SSSplashADShowTypeHide;
         [[self class] sendLaunchTrackIfNeededWithUrl:url];
         [[TTRoute sharedRoute] openURLByPushViewController:url];
+    }else if ([url.host isEqualToString:@"main"]){
+        //snssdk1370://main?select_tab=tab_message
+        TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
+        NSDictionary* params = [obj queryParams];
+        if (params != nil) {
+            NSString* target = params[@"select_tab"];
+            if (target != nil && target.length > 0) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
+            }
+        }
     }
     
     return ret;

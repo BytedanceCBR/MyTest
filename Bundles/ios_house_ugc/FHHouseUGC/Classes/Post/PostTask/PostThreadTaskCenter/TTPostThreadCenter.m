@@ -34,6 +34,8 @@
 #import <TTUGCFoundation/TTUGCMonitorDefine.h>
 #import "TTAccount.h"
 #import "TTAccountManager.h"
+#import "FHUGCConfig.h"
+#import "ToastManager.h"
 
 NSString * const TTPostTaskBeginNotification = kTTForumPostingThreadNotification;
 NSString * const TTPostTaskResumeNotification = kTTForumResumeThreadNotification;
@@ -180,7 +182,16 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         BOOL isRepost = (!isEmptyString(task.opt_id) && task.repostType != TTThreadRepostTypeNone);
         [userInfo setValue:@(isRepost) forKey:kFRPostThreadIsRepost];
 
+        // 发帖成功
+        if (task.social_group_id.length > 0) {
+            NSDictionary *dic = @{@"social_group_id":task.social_group_id};
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostSuccessNotification object:nil userInfo:dic];
+        }
+        
+        [[ToastManager manager] showToast:@"发帖成功"];
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostThreadSuccessNotification object:task userInfo:userInfo];
+        
         //编辑帖子发送成功
         if (task.postID) {
             NSMutableDictionary *repostModelInfo = [NSMutableDictionary dictionary];

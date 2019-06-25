@@ -16,6 +16,7 @@
 @interface ExploreDetailManager : NSObject
 @property(nonatomic, weak, nullable)id<ExploreDetailManagerDelegate> delegate;
 @property(nonatomic, retain, readonly, nullable)NSString *eventLabel;
+@property(nonatomic, strong, nullable)NSDictionary *reportParams;
 @property(nonatomic, copy,nullable)NSString * adLogExtra;
 /** 设置是否是导流页超时从而加载转码页 */
 @property(nonatomic, assign)BOOL forceLoadNativeContent;

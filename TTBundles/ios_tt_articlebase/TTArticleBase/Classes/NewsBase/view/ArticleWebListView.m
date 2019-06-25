@@ -54,7 +54,7 @@
     if (self) {
         self.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
         
-        self.webContainer = [[SSWebViewContainer alloc] initWithFrame:[self frameForListView]];
+        self.webContainer = [[SSWebViewContainer alloc] initWithFrame:[self frameForListView] baseCondition:@{@"use_wk":@(YES)}];
         [_webContainer.ssWebView addDelegate:self];
         [_webContainer hiddenProgressView:YES];
         _webContainer.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -110,8 +110,8 @@
                                                           
                                                       }];
         
-        [_webContainer setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
-        [_webContainer.ssWebView.scrollView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+//        [_webContainer setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+//        [_webContainer.ssWebView.scrollView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
         
         [self registerIsVisibleJSBridgeHandler];
         
