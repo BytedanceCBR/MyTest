@@ -231,7 +231,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
                 NSRange range = [countText rangeOfString:followCountStr];
                 // 有数据而且是起始位置的数据
                 if (range.location == 0 && range.length > 0) {
-                    [countText stringByReplacingCharactersInRange:range withString:replaceFollowCountStr];
+                    countText = [countText stringByReplacingCharactersInRange:range withString:replaceFollowCountStr];
                     model.followerCount = replaceFollowCountStr;
                 } else {
                     model.followerCount = followCountStr;
@@ -253,7 +253,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
                 // 替换第一个 关注数字
                 NSRange range = [countText rangeOfString:followCountStr];
                 if (range.location == 0 && range.length > 0) {
-                    [countText stringByReplacingCharactersInRange:range withString:replaceFollowCountStr];
+                    countText = [countText stringByReplacingCharactersInRange:range withString:replaceFollowCountStr];
                     model.followerCount = replaceFollowCountStr;
                 } else {
                     model.followerCount = followCountStr;
@@ -273,10 +273,10 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         NSString *replaceContentCountStr = [NSString stringWithFormat:@"%ld",contentCount];
         NSString *countText = model.countText;
         // 替换第二个数字（热帖个数）
-        NSRange range = [countText rangeOfString:contentCountStr];
-        // 有数据而且是起始位置的数据
-        if (range.location == 0 && range.length > 0) {
-            [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
+        NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
+        // 有数据而且不是起始位置的数据
+        if (range.location > 0 && range.length > 0) {
+            countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
             model.contentCount = replaceContentCountStr;
         } else {
             model.contentCount = contentCountStr;
@@ -288,7 +288,24 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 // 删帖成功 更新帖子数 - 1
 - (void)updatePostDelSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model {
     if (model) {
-        
+        NSString *contentCountStr = model.contentCount;
+        NSInteger contentCount = [model.contentCount integerValue];
+        contentCount -= 1;
+        if (contentCount < 0) {
+            contentCount = 0;
+        }
+        NSString *replaceContentCountStr = [NSString stringWithFormat:@"%ld",contentCount];
+        NSString *countText = model.countText;
+        // 替换第二个数字（热帖个数）
+        NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
+        // 有数据而且不是起始位置的数据
+        if (range.location > 0 && range.length > 0) {
+            countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
+            model.contentCount = replaceContentCountStr;
+        } else {
+            model.contentCount = contentCountStr;
+        }
+        model.countText = countText;
     }
 }
 

@@ -48,6 +48,11 @@
         self.groupModel = groupModel;
         // 列表页数据
         self.detailData = params[@"data"];
+        if (self.detailData) {
+            self.comment_count = [self.detailData.commentCount longLongValue];
+            self.user_digg = [self.detailData.userDigg integerValue];
+            self.digg_count = [self.detailData.diggCount longLongValue];
+        }
         // add by zyk 注意埋点
     }
     return self;
