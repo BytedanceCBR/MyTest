@@ -46,10 +46,6 @@
         self.fid = fid;// 6564242300        1621706233835550    6564242300          86578926583
         TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:[NSString stringWithFormat:@"%lld", tid] itemID:[NSString stringWithFormat:@"%lld", tid] impressionID:nil aggrType:1];
         self.groupModel = groupModel;
-        // 评论数 点赞数等
-        self.comment_count = [[paramObj.allParams objectForKey:@"comment_count"] integerValue];
-        self.digg_count = [[paramObj.allParams objectForKey:@"digg_count"] integerValue];
-        self.user_digg = [[paramObj.allParams objectForKey:@"user_digg"] integerValue];
         // 列表页数据
         self.detailData = params[@"data"];
         // add by zyk 注意埋点
@@ -104,7 +100,6 @@
     self.customNavBarView.title.text = @"详情";
     // 关注按钮
     self.followButton = [[FHUGCFollowButton alloc] init];
-    [self.followButton addTarget:self action:@selector(followButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     self.followButton.followed = YES;
     self.followButton.groupId = [NSString stringWithFormat:@"%lld",self.tid];
     [self.customNavBarView addSubview:_followButton];
@@ -125,10 +120,6 @@
     }];
     self.naviHeaderView.hidden = YES;
     self.followButton.hidden = YES;
-}
-
-- (void)followButtonClick:(UIControl *)control {
-    
 }
 
 - (void)startLoadData {

@@ -303,7 +303,7 @@
     if (contentModel && [contentModel isKindOfClass:[FHFeedUGCContentModel class]]) {
         NSString *schema = contentModel.schema;
         if (schema.length > 0) {
-            routeUrl = [schema stringByReplacingOccurrencesOfString:@"sslocal://thread_detail" withString:@"sslocal://ugc_post_detail"];
+            routeUrl = [schema stringByReplacingOccurrencesOfString:@"sslocal://thread_detail" withString:@"sslocal://thread_detail"];
         }
         // 记得 如果是push 和 url要添加评论数 点赞数以及自己是否点赞
         routeUrl = [NSString stringWithFormat:@"%@&comment_count=%@&digg_count=%@&user_digg=%@",routeUrl,contentModel.commentCount,contentModel.diggCount,contentModel.userDigg];
