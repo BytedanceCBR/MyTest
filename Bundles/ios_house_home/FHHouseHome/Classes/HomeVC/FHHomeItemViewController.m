@@ -137,6 +137,9 @@
     if (self.showRequestErrorView) {
         [self showPlaceHolderCells];
         [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+        if (self.panelVM) {
+            [self.panelVM fetchSearchPanelRollData];
+        }
     }
     
     self.stayTime = [self getCurrentTime];
@@ -541,10 +544,10 @@
                                         showRetry:YES];
                 __weak typeof(self) weakSelf = self;
                 noDataErrorView.retryBlock = ^{
-                    if (self.panelVM) {
-                        [self.panelVM fetchSearchPanelRollData];
+                    if (weakSelf.panelVM) {
+                        [weakSelf.panelVM fetchSearchPanelRollData];
                     }
-                    [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+                    [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                 };
             }else
             {
@@ -559,10 +562,10 @@
                             }
                         }else
                         {
-                            if (self.panelVM) {
-                                [self.panelVM fetchSearchPanelRollData];
+                            if (weakSelf.panelVM) {
+                                [weakSelf.panelVM fetchSearchPanelRollData];
                             }
-                            [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+                            [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                         }
                     }
                 };

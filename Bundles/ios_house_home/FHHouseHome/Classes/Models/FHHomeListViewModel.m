@@ -260,6 +260,7 @@
 //    self.tableViewV.scrollEnabled = NO;
     
     _childVCScrollView.contentOffset = CGPointMake(0, 0);
+    __weak typeof(self) weakSelf = self;
 
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSMutableArray *itemVCArrayTmp = [NSMutableArray new];
@@ -280,7 +281,7 @@
             // 添加子控制器
             [self.homeViewController addChildViewController:itemVC];
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
-                [self processRequestData:refreshType andHouseType:houseType andIsSucees:isSuccess andDataModel:dataModel];
+                [weakSelf processRequestData:refreshType andHouseType:houseType andIsSucees:isSuccess andDataModel:dataModel];
             };
             
             itemVC.scrollDidEnd = ^{
@@ -288,7 +289,7 @@
             };
             
             itemVC.requestNetworkUnAvalableRetryCallBack = ^{
-                [self.homeViewController retryLoadData];
+                [weakSelf.homeViewController retryLoadData];
             };
             //将子控制的view添加到scrollView上去
             [self.homeViewController.scrollView addSubview:itemVC.view];
