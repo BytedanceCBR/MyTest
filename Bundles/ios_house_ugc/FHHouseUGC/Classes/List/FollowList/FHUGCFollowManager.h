@@ -35,6 +35,8 @@ static NSString *const kFHUGCFollowNotification = @"k_fh_ugc_follow_finish";
  */
 - (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow completion:(void (^ _Nullable)(BOOL isSuccess))completion;
 
+- (NSArray<FHUGCScialGroupDataModel> *)followList;
+
 @end
 
 NS_ASSUME_NONNULL_END

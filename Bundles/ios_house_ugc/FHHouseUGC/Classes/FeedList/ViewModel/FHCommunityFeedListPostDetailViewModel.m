@@ -60,18 +60,15 @@
     __weak typeof(self) wself = self;
     
     NSInteger listCount = self.dataList.count;
-    NSString *lastId = nil;
     NSInteger offset = 0;
     
-    if(!isHead && listCount > 0){
-        FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
-        lastId = cellModel.groupId;
+    if(listCount > 0){
         if(self.feedListModel){
             offset = [self.feedListModel.lastOffset integerValue];
         }
     }
     
-    self.requestTask = [FHHouseUGCAPI requestForumFeedListWithForumId:self.categoryId lastId:lastId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestForumFeedListWithForumId:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(isFirst){
             [wself.viewController endLoading];
