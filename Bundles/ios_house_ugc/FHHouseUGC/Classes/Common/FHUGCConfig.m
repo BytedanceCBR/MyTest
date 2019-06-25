@@ -314,11 +314,40 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     }
 }
 
-- (NSArray *)configLeadSuggest {
-    return self.configData.data.leadSuggest;
+- (NSArray *)secondTabLeadSuggest {
+    NSString* suggest = nil;
+    for (FHUGCConfigDataLeadSuggestModel *suggestModel in self.configData.data.leadSuggest) {
+        if([suggestModel.kind isEqualToString:@"neighborhood"]){
+            suggest = suggestModel.hint;
+            break;
+        }
+    }
+    return suggest;
 }
 
-- (NSArray *)configPermisson {
+- (NSArray *)searchLeadSuggest {
+    NSString* suggest = nil;
+    for (FHUGCConfigDataLeadSuggestModel *suggestModel in self.configData.data.leadSuggest) {
+        if([suggestModel.kind isEqualToString:@"search"]){
+            suggest = suggestModel.hint;
+            break;
+        }
+    }
+    return suggest;
+}
+
+- (NSArray *)ugcDetailLeadSuggest {
+    NSString* suggest = nil;
+    for (FHUGCConfigDataLeadSuggestModel *suggestModel in self.configData.data.leadSuggest) {
+        if([suggestModel.kind isEqualToString:@"subsribe"]){
+            suggest = suggestModel.hint;
+            break;
+        }
+    }
+    return suggest;
+}
+
+- (NSArray *)operationConfig {
     return self.configData.data.permission;
 }
 

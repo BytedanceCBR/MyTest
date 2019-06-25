@@ -43,6 +43,16 @@ static NSString *const kFHUGCFollowNotification = @"k_fh_ugc_follow_finish";
  - 2       其他错误
  */
 - (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow completion:(void (^ _Nullable)(BOOL isSuccess))completion;
+//
+
+
+- (NSArray *)operationConfig;
+
+- (NSArray *)secondTabLeadSuggest;
+
+- (NSArray *)searchLeadSuggest;
+
+- (NSArray *)ugcDetailLeadSuggest;
 
 @end
 

@@ -10,6 +10,7 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "UIViewAdditions.h"
+#import "FHUGCConfig.h"
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
@@ -74,7 +75,7 @@
     [self addSubview:_imageView];
     
     self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 15, self.bounds.size.width - 20, 18)];
-    _contentLabel.text = @"点击搜索与你相关的小区圈";
+    _contentLabel.text = [[FHUGCConfig sharedInstance] searchLeadSuggest] ? [[FHUGCConfig sharedInstance] searchLeadSuggest] : @"点击搜索与你相关的小区圈";
     _contentLabel.textColor = [UIColor whiteColor];
     _contentLabel.font = [UIFont themeFontMedium:13];
     [self addSubview:_contentLabel];
@@ -86,7 +87,7 @@
     [self addSubview:_imageView];
     
     self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 9, self.bounds.size.width - 20, 16)];
-    _contentLabel.text = @"速来围观附近的小区趣事";
+    _contentLabel.text = [[FHUGCConfig sharedInstance] secondTabLeadSuggest] ? [[FHUGCConfig sharedInstance] secondTabLeadSuggest] : @"速来围观附近的小区趣事";
     _contentLabel.textColor = [UIColor whiteColor];
     _contentLabel.font = [UIFont themeFontMedium:13];
     [self addSubview:_contentLabel];
@@ -126,7 +127,7 @@
     [self addSubview:_imageView];
     
     self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 182, 18)];
-    _contentLabel.text = @"关注小区圈，不错过小区新鲜事";
+    _contentLabel.text = [[FHUGCConfig sharedInstance] ugcDetailLeadSuggest] ? [[FHUGCConfig sharedInstance] ugcDetailLeadSuggest] : @"关注小区圈，不错过小区新鲜事";
     _contentLabel.textColor = [UIColor whiteColor];
     _contentLabel.font = [UIFont themeFontMedium:13];
     [self addSubview:_contentLabel];
