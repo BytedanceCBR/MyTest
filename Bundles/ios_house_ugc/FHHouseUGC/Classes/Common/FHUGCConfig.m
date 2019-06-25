@@ -183,6 +183,56 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     return groupData;
 }
 
+- (void)updateScialGroupDataModel:(FHUGCScialGroupDataModel *)model byFollowed:(BOOL)followed {
+    if (model) {
+        // 替换关注人数 XX关注XX热帖
+        BOOL currentFollowed = [model.hasFollow boolValue];
+        if (followed) {
+            // 看是否 + 1
+            if (!currentFollowed) {
+                model.hasFollow = @"1";
+                NSString *followCountStr = model.followerCount;
+                NSInteger followCount = [model.followerCount integerValue];
+                followCount += 1;
+                NSString *replaceFollowCountStr = [NSString stringWithFormat:@"%ld",followCount];
+                NSString *countText = model.countText;
+                // 替换第一个 关注数字
+                NSRange range = [countText rangeOfString:followCountStr];
+                // 有数据而且是起始位置的数据
+                if (range.location == 0 && range.length > 0) {
+                    [countText stringByReplacingCharactersInRange:range withString:replaceFollowCountStr];
+                    model.followerCount = replaceFollowCountStr;
+                } else {
+                    model.followerCount = followCountStr;
+                }
+                model.countText = countText;
+            }
+        } else {
+            // 看是否 - 1
+            if (currentFollowed) {
+                model.hasFollow = @"0";
+                NSString *followCountStr = model.followerCount;
+                NSInteger followCount = [model.followerCount integerValue];
+                followCount -= 1;
+                if (followCount < 0) {
+                    followCount = 0;
+                }
+                NSString *replaceFollowCountStr = [NSString stringWithFormat:@"%ld",followCount];
+                NSString *countText = model.countText;
+                // 替换第一个 关注数字
+                NSRange range = [countText rangeOfString:followCountStr];
+                if (range.location == 0 && range.length > 0) {
+                    [countText stringByReplacingCharactersInRange:range withString:replaceFollowCountStr];
+                    model.followerCount = replaceFollowCountStr;
+                } else {
+                    model.followerCount = followCountStr;
+                }
+                model.countText = countText;
+            }
+        }
+    }
+}
+
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 - (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow completion:(void (^ _Nullable)(BOOL isSuccess))completion {
     if (![TTReachability isNetworkConnected]) {

@@ -38,7 +38,7 @@
 
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHPostDetailHeaderModel class]]) {
+    if (![data isKindOfClass:[FHPostDetailHeaderModel class]]) {
         return;
     }
     self.currentData = data;
@@ -79,17 +79,9 @@
     [self.contentView addSubview:_descLabel];
     
     self.joinBtn = [[FHUGCFollowButton alloc] init];
-    [self.joinBtn addTarget:self action:@selector(followButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_joinBtn];
     
     [self setupConstraints];
-}
-
-- (void)followButtonClick:(UIControl *)control {
-//    NSString *gId = @"6703403081570189582";
-//    [[FHUGCFollowManager sharedInstance] followUGCBy:gId isFollow:NO completion:^(BOOL isSuccess) {
-//
-//    }];
 }
 
 - (void)setupConstraints {

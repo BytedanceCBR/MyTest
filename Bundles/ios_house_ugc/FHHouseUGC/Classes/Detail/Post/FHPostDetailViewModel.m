@@ -95,13 +95,17 @@
         NSDictionary *userInfo = notification.userInfo;
         BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
         NSString *groupId = notification.userInfo[@"social_group_id"];
-        if(groupId.length > 0) {
-//            [self.items enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//                if ([obj.socialGroupId isEqualToString:groupId]) {
-//                    obj.hasFollow = followed ? @"1" : @"0";
-//                    *stop = YES;
-//                }
-//            }];
+        NSString *currentGroupId = [NSString stringWithFormat:@"%lld",self.threadID];
+        if(groupId.length > 0 && currentGroupId.length > 0) {
+            if (self.detailHeaderModel) {
+                // 有头部信息
+                if ([groupId isEqualToString:currentGroupId]) {
+                    // 替换关注人数 AA关注BB热帖 替换：AA
+                    [[FHUGCConfig sharedInstance] updateScialGroupDataModel:self.detailHeaderModel.socialGroupModel byFollowed:followed];
+                    [self.detailController headerInfoChanged];
+                    [self reloadData];
+                }
+            }
         }
     }
 }
