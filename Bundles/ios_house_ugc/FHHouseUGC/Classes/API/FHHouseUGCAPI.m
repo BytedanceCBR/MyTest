@@ -11,6 +11,10 @@
 
 @implementation FHHouseUGCAPI
 
++ (void)loadUgcConfigEntrance {
+    
+}
+
 + (TTHttpTask *)requestTopicList:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/api/community/topics";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -150,10 +154,10 @@
 }
 
 + (TTHttpTask *)requestSocialSearchByText:(NSString *)text class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-    NSString *queryPath = @"/f100/ugc/search";
+    NSString *queryPath = @"/f100/ugc/social_group_suggestion";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (text.length > 0) {
-        paramDic[@"text"] = text;
+        paramDic[@"query"] = text;
     }
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
