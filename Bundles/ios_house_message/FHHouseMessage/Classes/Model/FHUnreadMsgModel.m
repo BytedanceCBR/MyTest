@@ -22,6 +22,7 @@
     @"dateStr": @"date_str",
     @"lastUserAvatar": @"last_user_avatar",
     @"hasHistoryMsg": @"has_history_msg",
+    @"lastMsgId": @"last_msg_id",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

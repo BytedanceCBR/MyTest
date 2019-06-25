@@ -38,7 +38,6 @@
 
 - (void)setupUI {
     [self initViews];
-    [self initConstraints];
 }
 
 - (void)initViews {
@@ -48,15 +47,18 @@
     _backView.frame = CGRectMake(20, 10, SCREEN_WIDTH - 40, 40);
 
     _activeCountInfoLabel = [[UILabel alloc] init];
+    [_activeCountInfoLabel setContentHuggingPriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     _activeCountInfoLabel.font = [UIFont systemFontOfSize:14.0f];
     _activeCountInfoLabel.numberOfLines = 1;
     _activeCountInfoLabel.textAlignment = NSTextAlignmentLeft;
+    _activeCountInfoLabel.frame = CGRectMake(10, 10, SCREEN_WIDTH - 40 - 10 - 22 - 160, 20);
 
-    _bubble0 = [[FHCommunitySuggestionBubble alloc] initWithFrame: CGRectMake(_backView.frame.size.width - 22 - 160, 10, 160, 20)];
-    _bubble1 = [[FHCommunitySuggestionBubble alloc] initWithFrame: CGRectMake(_backView.frame.size.width - 22 - 160, 40, 160, 20)];
+    _bubble0 = [[FHCommunitySuggestionBubble alloc] initWithFrame:CGRectMake(_backView.frame.size.width - 22 - 160, 10, 160, 20)];
+    _bubble1 = [[FHCommunitySuggestionBubble alloc] initWithFrame:CGRectMake(_backView.frame.size.width - 22 - 160, 40, 160, 20)];
 
     _arrowView = [[UIImageView alloc] init];
     _arrowView.image = [UIImage imageNamed:@"detail_red_arrow_right"];
+    _arrowView.frame = CGRectMake(SCREEN_WIDTH - 40 - 6 - 12, 14, 12, 12);
 
     [_backView addSubview:_activeCountInfoLabel];
     [_backView addSubview:_bubble0];
@@ -66,22 +68,6 @@
     [self.contentView addSubview:_backView];
 }
 
-- (void)initConstraints {
-//    [_activeCountInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self.backView).offset(10);
-//        make.right.mas_equalTo(self.bubble0.mas_left).offset(-10).priorityLow();
-//        make.centerY.mas_equalTo(self.backView);
-//        make.height.mas_equalTo(20);
-//    }];
-
-    [_arrowView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.bubble0.mas_right);
-        make.left.mas_equalTo(self.bubble1.mas_right);
-        make.centerY.mas_equalTo(self.backView);
-        make.width.height.mas_equalTo(12);
-        make.right.mas_equalTo(self.backView).offset(-6).priorityHigh();
-    }];
-}
 
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailCommunityEntryModel class]]) {
@@ -94,18 +80,35 @@
     if (!entryModel.activeInfo) {
         return;
     }
-    FHDetailCommunityEntryActiveInfoModel *model = entryModel.activeInfo[self.curWheelIndex];
-    [self.bubble0 refreshWithAvatar:model.activeUserAvatar title:model.suggestInfo];
-    NSUInteger nextIndex = (self.curWheelIndex + 1) % entryModel.activeInfo.count;
-    [self prepareNext:self.bubble1 model:entryModel.activeInfo[nextIndex]];
+
+    NSString *numStr = [NSString stringWithFormat:@"%@", entryModel.activeCountInfo.count];
+    NSString *textStr = [NSString stringWithFormat:@" %@", entryModel.activeCountInfo.text];
+    NSString *combineStr = [NSString stringWithFormat:@"%@%@", numStr, textStr];
+    NSMutableAttributedString *aStr = [[NSMutableAttributedString alloc] initWithString:combineStr];
+    UIColor *numColor = isEmptyString(entryModel.activeCountInfo.numColor) ? [UIColor themeRed1] : [UIColor colorWithHexStr:entryModel.activeCountInfo.numColor];
+    UIColor *textColor = isEmptyString(entryModel.activeCountInfo.textColor) ? [UIColor themeGray1] : [UIColor colorWithHexStr:entryModel.activeCountInfo.textColor];
+    [aStr addAttribute:NSForegroundColorAttributeName value:numColor range:NSMakeRange(0, numStr.length)];
+    [aStr addAttribute:NSForegroundColorAttributeName value:textColor range:NSMakeRange(numStr.length, textStr.length)];
+
+    self.activeCountInfoLabel.attributedText = aStr;
+    [self updateBubble];
 }
 
-- (void)prepareNext:(FHCommunitySuggestionBubble *)bubble model:(FHDetailCommunityEntryActiveInfoModel *)model {
-    if (!model) {
+- (void)updateBubble {
+    FHDetailCommunityEntryModel *entryModel = self.currentData;
+    if (!entryModel.activeInfo) {
         return;
     }
-    NSLog(@"zlj prepareNext:%@",bubble);
-    [bubble refreshWithAvatar:model.activeUserAvatar title:model.suggestInfo];
+    FHDetailCommunityEntryActiveInfoModel *model = entryModel.activeInfo[self.curWheelIndex];
+    FHDetailCommunityEntryActiveInfoModel *nextModel = entryModel.activeInfo[(self.curWheelIndex + 1) % entryModel.activeInfo.count];
+    UIColor *suggestColor = isEmptyString(model.suggestInfoColor) ? [UIColor themeRed1] : [UIColor colorWithHexStr:model.suggestInfoColor];
+    UIColor *nextSuggestColor = isEmptyString(nextModel.suggestInfoColor) ? [UIColor themeRed1] : [UIColor colorWithHexStr:nextModel.suggestInfoColor];
+
+    CGFloat labelWidth = [self.bubble0 refreshWithAvatar:model.activeUserAvatar title:model.suggestInfo color:suggestColor];
+    self.bubble0.frame = CGRectMake(SCREEN_WIDTH - 40 - (6 + 12 + 4 + 4 + labelWidth + 20), 10, labelWidth + 4 + 20, 20);
+
+    labelWidth = [self.bubble1 refreshWithAvatar:model.activeUserAvatar title:nextModel.suggestInfo color:nextSuggestColor];
+    self.bubble1.frame = CGRectMake(SCREEN_WIDTH - 40 - (6 + 12 + 4 + 4 + labelWidth + 20), 40, labelWidth + 4 + 20, 20);
 }
 
 - (void)wheelSuggestionInfo {
@@ -116,25 +119,29 @@
     if (entryModel.activeInfo.count == 0) {
         return;
     }
-    FHCommunitySuggestionBubble *curBubble = self.curWheelIndex % 2 == 0 ? self.bubble0 : self.bubble1;
-    FHCommunitySuggestionBubble *popBuuble = self.curWheelIndex % 2 == 0 ? self.bubble1 : self.bubble0;
-    NSLog(@"zlj cur:%@ pop:%@",curBubble,popBuuble);
-    NSLog(@"zlj curFrame:%@ popFrame:%@",NSStringFromCGRect(curBubble.frame),NSStringFromCGRect(popBuuble.frame));
     WeakSelf;
     [UIView animateWithDuration:0.5 animations:^{
         StrongSelf;
-//        curBubble.alpha = 0;
-//        popBuuble.alpha = 1;
-        curBubble.frame = CGRectOffset(curBubble.frame, 0, -30.0f);
-        popBuuble.frame = CGRectOffset(popBuuble.frame, 0, -30.0f);
-    }completion:^(BOOL finished) {
+        wself.bubble0.alpha = 0;
+        wself.bubble1.alpha = 1;
+        wself.bubble0.frame = CGRectOffset(wself.bubble0.frame, 0, -30.0f);
+        wself.bubble1.frame = CGRectOffset(wself.bubble1.frame, 0, -30.0f);
+    }                completion:^(BOOL finished) {
         StrongSelf;
-        NSLog(@"zlj animatefinish: %@,curFrame:%@ popFrame:%@",finished ? @"YES" : @"NO",NSStringFromCGRect(curBubble.frame),NSStringFromCGRect(popBuuble.frame));
-        curBubble.frame = CGRectOffset(curBubble.frame, 0, 60.0f);
-        NSLog(@"zlj curIndex:%d",wself.curWheelIndex);
-        wself.curWheelIndex = (wself.curWheelIndex + 1) % entryModel.activeInfo.count;
-        NSUInteger nextIndex = (wself.curWheelIndex + 1) % entryModel.activeInfo.count;
-        [wself prepareNext:curBubble model:entryModel.activeInfo[nextIndex]];
+
+        wself.bubble0.alpha = 1;
+        wself.bubble1.alpha = 0;
+
+        CGRect frame0 = wself.bubble0.frame;
+        frame0.origin.y = 10;
+        wself.bubble0.frame = frame0;
+
+        CGRect frame1 = wself.bubble0.frame;
+        frame1.origin.y = 40;
+        wself.bubble1.frame = frame1;
+
+        wself.curWheelIndex = (self.curWheelIndex + 1) % entryModel.activeInfo.count;
+        [wself updateBubble];
     }];
 }
 

@@ -1262,16 +1262,13 @@ static CommonURLSetting *_sharedInstance = nil;
 // 新消息通知列表
 + (NSString *)messageNotificationListURLString
 {
-    //TODO zlj
-    return [NSString stringWithFormat:@"%@/f100/api/msg/ugc/list",@"http://i.haoduofangs.com"];
+    return [NSString stringWithFormat:@"%@/f100/api/msg/ugc/list",[self baseURL]];
 }
 
 // 新消息通知未读提示
 + (NSString*)messageNotificationUnreadURLString
 {
-    ////TODO zlj
-    return [NSString stringWithFormat:@"%@/f100/api/msg/ugc/unread/", @"http://i.haoduofangs.com"];
-//    return @"https://is-hl.snssdk.com/api/msg/v7/unread/";
+    return [NSString stringWithFormat:@"%@/f100/api/msg/ugc/unread/", [self baseURL]];
 }
 
 @end
