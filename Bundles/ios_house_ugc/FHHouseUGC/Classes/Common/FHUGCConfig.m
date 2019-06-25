@@ -46,6 +46,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         _followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];
         // 加载本地
         [self loadFollowListData];
+        [self loadLocalUgcConfigData];
     }
     return self;
 }
@@ -271,7 +272,13 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 #pragma mark - UGC Config Ref
 
 - (void)loadUGCConfigData {
-    
+    __weak typeof(self) wself = self;
+    [FHHouseUGCAPI requestUGCConfig:[FHUGCConfigModel class] completion:^(id<FHBaseModelProtocol> _Nonnull model, NSError * _Nonnull error) {
+        if(!error){
+            wself.configData = (FHUGCConfigModel *)model;
+            [wself saveLocalUgcConfigData];
+        }
+    }];
 }
 
 
@@ -286,11 +293,33 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 - (void)loadLocalUgcConfigData {
     // 参考上面
     // kFHUGCConfigDataKey
+    NSDictionary *configDic = [self.ugcConfigCache objectForKey:kFHUGCConfigDataKey];
+    if (configDic && [configDic isKindOfClass:[NSDictionary class]]) {
+        NSError *err = nil;
+        FHUGCConfigModel * model = [[FHUGCConfigModel alloc] initWithDictionary:configDic error:&err];
+        if (model) {
+            self.configData = model;
+        }
+    }
 }
 
 - (void)saveLocalUgcConfigData {
     // 参考上面
     // kFHUGCConfigDataKey
+    if (self.configData) {
+        NSDictionary *dic = [self.configData toDictionary];
+        if (dic) {
+            [self.ugcConfigCache setObject:dic forKey:kFHUGCConfigDataKey];
+        }
+    }
+}
+
+- (NSArray *)configLeadSuggest {
+    return self.configData.data.leadSuggest;
+}
+
+- (NSArray *)configPermisson {
+    return self.configData.data.permission;
 }
 
 @end

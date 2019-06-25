@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHUGCModel.h"
+#import "FHUGCConfigModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,7 +24,9 @@ static NSString *const kFHUGCFollowNotification = @"k_fh_ugc_follow_finish";
 - (void)loadConfigData;
 
 // 关注模型
-@property (nonatomic, strong)   FHUGCModel       *followData;
+@property (nonatomic, strong) FHUGCModel *followData;
+// 配置模型
+@property (nonatomic, strong) FHUGCConfigModel *configData;
 
 // 关注列表
 - (NSArray<FHUGCScialGroupDataModel> *)followList;

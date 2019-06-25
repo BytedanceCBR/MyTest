@@ -130,22 +130,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-//    FHSystemMsgDataItemsModel *model = self.dataList[indexPath.row];
-//
-//    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-//    tracerDict[@"category_name"] = [self.viewController categoryName];
-//    tracerDict[@"log_pb"] = model.logPb ? : @"be_null";
-//    tracerDict[@"official_message_id"] = model.id;
-//    TRACK_EVENT(@"click_official_message", tracerDict);
-//
-//    NSURL* url = [NSURL URLWithString:model.openUrl];
-//    if ([url.scheme isEqualToString:@"fschema"]) {
-//        NSString *newModelUrl = [model.openUrl stringByReplacingOccurrencesOfString:@"fschema:" withString:@"snssdk1370:"];
-//        url = [NSURL URLWithString:newModelUrl];
-//    }
-//
-//    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    FHUGCMyInterestDataRecommendSocialGroupsModel *model = self.dataList[indexPath.row];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"community_id"] = model.socialGroup.socialGroupId;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    //跳转到圈子详情页
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 @end
