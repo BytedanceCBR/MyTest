@@ -66,7 +66,7 @@
     NSInteger listCount = self.dataList.count;
     NSInteger offset = 0;
     
-    if(!isHead && listCount > 0){
+    if(listCount > 0){
         if(self.feedListModel){
             offset = [self.feedListModel.lastOffset integerValue];
         }

@@ -15,15 +15,21 @@ static NSString *const kFHUGCLoadFollowDataFinishedNotification = @"k_fh_ugc_loa
 // 关注 和 取消关注
 static NSString *const kFHUGCFollowNotification = @"k_fh_ugc_follow_finish";
 
-@interface FHUGCFollowManager : NSObject
+@interface FHUGCConfig : NSObject
 
 + (instancetype)sharedInstance;
 
-// 加载UGC 关注的小区数据 数据存放在followData中 发送kFHUGCLoadFollowDataFinishedNotification通知
-- (void)loadFollowData;
+// 加载config数据等
+- (void)loadConfigData;
 
 // 关注模型
 @property (nonatomic, strong)   FHUGCModel       *followData;
+
+// 关注列表
+- (NSArray<FHUGCScialGroupDataModel> *)followList;
+
+// 根据groupid去关注的列表中获取最新的关注数据信息，取消关注可能获取的数据为nil
+- (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id;
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 /*

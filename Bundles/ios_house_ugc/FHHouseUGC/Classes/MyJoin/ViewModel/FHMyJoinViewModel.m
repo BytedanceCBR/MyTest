@@ -8,6 +8,7 @@
 #import "FHMyJoinViewModel.h"
 #import <TTHttpTask.h>
 #import "FHMyJoinNeighbourhoodCell.h"
+#import "FHUGCConfig.h"
 
 #define cellId @"cellId"
 
@@ -44,9 +45,8 @@
 
 - (void)requestData {
     [self.dataList removeAllObjects];
-    for (NSInteger i = 0; i < 10; i++) {
-        [self.dataList addObject:[NSString stringWithFormat:@"小区%li",(long)i]];
-    }
+    [self.dataList addObjectsFromArray: [[FHUGCConfig sharedInstance] followList]];
+    
     [self updateJoinProgressView];
     [self.collectionView reloadData];
 }
@@ -112,9 +112,9 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
-    
+    FHUGCScialGroupDataModel *model = self.dataList[indexPath.row];
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"community_id"] = @"6703388142264647950";
+    dict[@"community_id"] = model.socialGroupId;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     //跳转到圈子详情页
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];

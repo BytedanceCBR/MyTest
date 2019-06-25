@@ -57,16 +57,13 @@
 }
 
 - (void)initConstraints {
-//    make.top.left.bottom.mas_equalTo(self);
-//    make.width.mas_equalTo(self.imageWidth);
-//    make.height.mas_equalTo(self.imageWidth * 251.0f/355.0f);
     self.imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
     
     [self.bannerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentView).offset(20);
         make.left.mas_equalTo(self.contentView).offset(20);
         make.width.mas_equalTo(self.imageWidth);
-        make.height.mas_equalTo(self.imageWidth * 0.5);
+        make.height.mas_equalTo(self.imageWidth * 58.0/335.0);
     }];
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -90,13 +87,7 @@
         //图片
         FHFeedUGCCellImageListModel *imageModel = [cellModel.imageList firstObject];
         if(imageModel){
-            CGFloat width = [imageModel.width floatValue];
-            CGFloat height = [imageModel.height floatValue];
             [self.bannerImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
-            
-            [self.bannerImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(self.imageWidth * height/width);
-            }];
         }
     }
 }

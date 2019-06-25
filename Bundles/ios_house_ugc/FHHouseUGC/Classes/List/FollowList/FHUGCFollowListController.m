@@ -17,7 +17,7 @@
 #import "UIViewController+NavbarItem.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "TTDeviceHelper.h"
-#import "FHUGCFollowManager.h"
+#import "FHUGCConfig.h"
 #import "FHUGCFollowListCell.h"
 
 @interface FHUGCFollowListController ()<UITableViewDelegate,UITableViewDataSource>
@@ -83,9 +83,9 @@
     }
     [self.items removeAllObjects];
     // 是否有数据
-    if ([FHUGCFollowManager sharedInstance].followData && [FHUGCFollowManager sharedInstance].followData.data.userFollowSocialGroups.count > 0) {
+    if ([FHUGCConfig sharedInstance].followData && [FHUGCConfig sharedInstance].followData.data.userFollowSocialGroups.count > 0) {
         // 有数据
-        [self.items addObjectsFromArray:[FHUGCFollowManager sharedInstance].followData.data.userFollowSocialGroups];
+        [self.items addObjectsFromArray:[FHUGCConfig sharedInstance].followData.data.userFollowSocialGroups];
         [self.emptyView hideEmptyView];
         [self.tableView reloadData];
     } else {
@@ -130,7 +130,7 @@
 }
 
 - (void)startLoadData {
-    [[FHUGCFollowManager sharedInstance] loadFollowData];
+    
 }
 
 - (void)retryLoadData {

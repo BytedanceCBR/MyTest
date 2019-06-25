@@ -23,6 +23,7 @@
 #import <HMDTTMonitor.h>
 #import <TTInstallIDManager.h>
 #import <TTArticleCategoryManager.h>
+#import "FHHouseUGCAPI.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -441,6 +442,9 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     if (model.data) {
         [[FHEnvContext sharedInstance] acceptConfigDataModel:model.data];
     }
+    
+    // config 加载完成，请求参数更新完成，请求UGC Config
+    [FHHouseUGCAPI loadUgcConfigEntrance];
     
     // 告诉城市列表config加载ok
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHAllConfigLoadSuccessNotice object:nil];

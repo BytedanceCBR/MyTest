@@ -8,8 +8,13 @@
 #import "TTDeviceHelper.h"
 #import "NSStringAdditions.h"
 #import "FHUGCModel.h"
+#import "FHUGCConfig.h"
 
 @implementation FHHouseUGCAPI
+
++ (void)loadUgcConfigEntrance {
+    [[FHUGCConfig sharedInstance] loadConfigData];
+}
 
 + (TTHttpTask *)requestTopicList:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/api/community/topics";
@@ -150,10 +155,10 @@
 }
 
 + (TTHttpTask *)requestSocialSearchByText:(NSString *)text class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-    NSString *queryPath = @"/f100/ugc/search";
+    NSString *queryPath = @"/f100/ugc/social_group_suggestion";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (text.length > 0) {
-        paramDic[@"text"] = text;
+        paramDic[@"query"] = text;
     }
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
@@ -178,13 +183,12 @@
     return [FHMainApi queryData:queryPath params:nil class:cls completion:completion];
 }
 
-+ (TTHttpTask *)requestForumFeedListWithForumId:(NSString *)forumId lastId:(NSString *)lastId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
++ (TTHttpTask *)requestForumFeedListWithForumId:(NSString *)forumId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/forum_feeds";
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"forum_id"] = forumId;
     paramDic[@"count"] = @(20);
-    paramDic[@"last_id"] = lastId;
     paramDic[@"offset"] = @(offset);
     
     TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;

@@ -10,6 +10,7 @@
 #import "UIFont+House.h"
 #import <Masonry.h>
 #import <UIImageView+BDWebImage.h>
+#import "FHUGCModel.h"
 
 #define iconWidth 42
 
@@ -34,11 +35,14 @@
 }
 
 - (void)refreshWithData:(id)data {
-    NSString *text = @"望京家园壹号院";
-    _titleLabel.text = [self titleString:text];
-    _descLabel.text = @"88热帖·9221人";
-    
-    [self.icon bd_setImageWithURL:[NSURL URLWithString:@"http://p1.pstatp.com/thumb/fea7000014edee1159ac"] placeholder:nil];
+    if([data isKindOfClass:[FHUGCScialGroupDataModel class]]){
+        FHUGCScialGroupDataModel *model = (FHUGCScialGroupDataModel *)data;
+        NSString *text = model.socialGroupName;
+        _titleLabel.text = [self titleString:text];
+        _descLabel.text = model.countText;
+        
+        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
+    }
 }
 
 - (void)initView {

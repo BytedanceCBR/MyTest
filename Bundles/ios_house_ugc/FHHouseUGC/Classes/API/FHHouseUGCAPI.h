@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseUGCAPI : NSObject
 
+// UGC config 入口
++ (void)loadUgcConfigEntrance;
+
 + (TTHttpTask *)requestTopicList:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 + (TTHttpTask *)requestCommunityDetail:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
@@ -24,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)categoryId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
-+ (TTHttpTask *)requestForumFeedListWithForumId:(NSString *)forumId lastId:(NSString *)lastId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
++ (TTHttpTask *)requestForumFeedListWithForumId:(NSString *)forumId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 // type 用户关注的类型，类型int，0/不传:不限制，1:小区，2:话题，3:用户
 + (TTHttpTask *)requestFollowListByType:(NSInteger)type class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;

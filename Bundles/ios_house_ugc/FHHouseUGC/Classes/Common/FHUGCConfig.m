@@ -5,27 +5,35 @@
 //  Created by 张元科 on 2019/6/16.
 //
 
-#import "FHUGCFollowManager.h"
+#import "FHUGCConfig.h"
 #import "FHHouseUGCAPI.h"
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "YYCache.h"
+#import "TTAccount.h"
+#import "TTAccount+Multicast.h"
+#import "TTAccountManager.h"
 
 static const NSString *kFHFollowListCacheKey = @"cache_follow_list_key";
 static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
+// UGC config
+static const NSString *kFHUGCConfigCacheKey = @"cache_ugc_config_key";
+static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
-@interface FHUGCFollowManager ()
+@interface FHUGCConfig ()
 
 @property (nonatomic, strong)   YYCache       *followListCache;
+@property (nonatomic, strong)   YYCache       *ugcConfigCache;
+@property (nonatomic, copy)     NSString       *followListDataKey;// 关注数据 用户相关 存储key
 
 @end
 
-@implementation FHUGCFollowManager
+@implementation FHUGCConfig
 
 + (instancetype)sharedInstance {
-    static FHUGCFollowManager *_sharedInstance = nil;
+    static FHUGCConfig *_sharedInstance = nil;
     if (!_sharedInstance) {
-        _sharedInstance = [[FHUGCFollowManager alloc] init];
+        _sharedInstance = [[FHUGCConfig alloc] init];
     }
     return _sharedInstance;
 }
@@ -34,12 +42,20 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
 {
     self = [super init];
     if (self) {
+        [TTAccount addMulticastDelegate:self];
+        _followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];
         // 加载本地
-        [self loadData];
+        [self loadFollowListData];
     }
     return self;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [TTAccount removeMulticastDelegate:self];
+}
+// 关注数据存储-start
 - (YYCache *)followListCache
 {
     if (!_followListCache) {
@@ -48,17 +64,17 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
     return _followListCache;
 }
 
-- (void)saveData {
+- (void)saveFollowListData {
     if (self.followData) {
         NSDictionary *dic = [self.followData toDictionary];
         if (dic) {
-            [self.followListCache setObject:dic forKey:kFHFollowListDataKey];
+            [self.followListCache setObject:dic forKey:self.followListDataKey];
         }
     }
 }
 
-- (void)loadData {
-    NSDictionary *followListDic = [self.followListCache objectForKey:kFHFollowListDataKey];
+- (void)loadFollowListData {
+    NSDictionary *followListDic = [self.followListCache objectForKey:self.followListDataKey];
     if (followListDic && [followListDic isKindOfClass:[NSDictionary class]]) {
         NSError *err = nil;
         FHUGCModel * model = [[FHUGCModel alloc] initWithDictionary:followListDic error:&err];
@@ -69,6 +85,12 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
         self.followData = [[FHUGCModel alloc] init];
         self.followData.data = [[FHUGCDataModel alloc] init];
     }
+}
+// 关注数据存储-end
+
+- (void)loadConfigData {
+    [self loadFollowData];
+    [self loadUGCConfigData];
 }
 
 // App启动的时候需要加载
@@ -140,8 +162,25 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
 
 // 更新关注本地数据以及通知
 - (void)updateFollowData {
-    [self saveData];
+    [self saveFollowListData];
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCLoadFollowDataFinishedNotification object:nil];
+}
+
+- (NSArray<FHUGCScialGroupDataModel> *)followList {
+    return self.followData.data.userFollowSocialGroups;
+}
+
+- (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id {
+    __block FHUGCScialGroupDataModel *groupData = nil;
+    if (social_group_id.length > 0 && self.followData.data.userFollowSocialGroups.count > 0) {
+        [self.followData.data.userFollowSocialGroups enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.socialGroupId isEqualToString:social_group_id]) {
+                groupData = obj;
+                *stop = YES;
+            }
+        }];
+    }
+    return groupData;
 }
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
@@ -209,6 +248,49 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
         }
     }];
   
+}
+
+#pragma mark - TTAccountMulticaastProtocol
+
+// 帐号切换
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
+{
+    if ([TTAccountManager isLogin]) {
+        self.followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];
+    } else {
+        self.followListDataKey = [NSString stringWithFormat:@"%@_",kFHFollowListDataKey];
+    }
+    // 切换账号 加载数据
+    [self loadFollowListData];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    // 重新加载
+    [self loadFollowData];
+}
+
+
+#pragma mark - UGC Config Ref
+
+- (void)loadUGCConfigData {
+    
+}
+
+
+- (YYCache *)ugcConfigCache
+{
+    if (!_ugcConfigCache) {
+        _ugcConfigCache = [YYCache cacheWithName:kFHUGCConfigCacheKey];
+    }
+    return _ugcConfigCache;
+}
+
+- (void)loadLocalUgcConfigData {
+    // 参考上面
+    // kFHUGCConfigDataKey
+}
+
+- (void)saveLocalUgcConfigData {
+    // 参考上面
+    // kFHUGCConfigDataKey
 }
 
 @end

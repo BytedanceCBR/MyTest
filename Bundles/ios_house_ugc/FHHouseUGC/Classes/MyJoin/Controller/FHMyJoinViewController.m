@@ -9,13 +9,13 @@
 #import "FHMyJoinViewModel.h"
 #import "FHUGCMyInterestedController.h"
 #import "FHHouseUGCHeader.h"
+#import "FHUGCConfig.h"
 
 @interface FHMyJoinViewController ()
 
 @property(nonatomic, strong) FHMyJoinViewModel *viewModel;
 @property(nonatomic, assign) FHUGCMyJoinType type;
 @property(nonatomic, strong) UIView *currentView;
-@property(nonatomic, assign) BOOL isEmpty;
 
 @end
 
@@ -33,16 +33,15 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if(!_isEmpty){
+    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
+    
+    if(hasSocialGroups){
         [self initFeedListVC];
         [self.feedListVC viewWillAppear];
-        [self startLoadData];
+        [self loadData];
     }else{
         [self initMyInterestListVC];
     }
-    
-    
-//    _isEmpty = !_isEmpty;
 }
 
 //- (void)initView {
@@ -118,7 +117,7 @@
     return _viewModel;
 }
 
-- (void)startLoadData {
+- (void)loadData {
     [self.viewModel requestData];
 }
 

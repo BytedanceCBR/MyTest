@@ -27,6 +27,7 @@
 
 @property (nonatomic, strong)   FHPostDetailNavHeaderView       *naviHeaderView;
 @property (nonatomic, strong)   FHUGCFollowButton       *followButton;// 关注
+@property (nonatomic, assign)   BOOL       isViewAppearing;
 
 @end
 
@@ -87,6 +88,16 @@
         self.detailData.userDigg = [NSString stringWithFormat:@"%ld",self.user_digg];
         self.detailData.diggCount = [NSString stringWithFormat:@"%lld",self.digg_count];
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.isViewAppearing = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.isViewAppearing = NO;
 }
 
 - (void)setupDetailNaviBar {
