@@ -16,6 +16,7 @@
 #import "FHHouseMsgFooterView.h"
 #import "TTRoute.h"
 #import "FHHouseType.h"
+#import <FHHouseBase/FHHouseTypeManager.h>
 
 #define kCellId @"FHHouseMsgCell_id"
 
@@ -199,7 +200,8 @@
     tracerDict[@"card_type"] = @"left_pic";
     tracerDict[@"element_type"] = @"be_null";
     tracerDict[@"group_id"] = model.id;
-    tracerDict[@"house_type"] = model.houseType;
+    NSString *house_type = [[FHHouseTypeManager sharedInstance] traceValueForType:model.houseType.integerValue];
+    tracerDict[@"house_type"] = house_type;
     tracerDict[@"impr_id"] = model.imprId;
     tracerDict[@"log_pb"] = model.logPb ? model.logPb : @"be_null";
     tracerDict[@"rank"] = @(index);

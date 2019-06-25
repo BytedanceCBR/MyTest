@@ -73,6 +73,9 @@
             }else if ([paramObj.host isEqualToString:@"house_list_same_neighborhood"]) {
                 self.neighborListVCType = (self.houseType == FHHouseTypeRentHouse) ? FHNeighborListVCTypeRentSameNeighbor : FHNeighborListVCTypeErshouSameNeighbor;
                 self.tracerModel.categoryName = [self categoryName];
+                if (self.tracerDict) {
+                    self.tracerDict[@"category_name"] = self.tracerModel.categoryName;
+                }
 
             }
         }
