@@ -533,6 +533,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return [[FHEnvContext sharedInstance] getConfigFromCache].entranceSwitch.isPriceValuationShowHouseTrend;
 }
 
++ (BOOL)isUGCOpen
+{
+    return [[FHEnvContext sharedInstance] getConfigFromCache].ugcCitySwitch;
+}
+
 - (TTReachability *)reachability
 {
     if (!_reachability) {

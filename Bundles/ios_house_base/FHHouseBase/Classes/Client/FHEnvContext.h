@@ -131,6 +131,12 @@ NS_ASSUME_NONNULL_BEGIN
  判断在房屋估价结果页中是否显示查看城市行情的按钮
  */
 + (BOOL)isPriceValuationShowHouseTrend;
+
+/*
+ 判断是否开通ugc模块
+ */
++ (BOOL)isUGCOpen;
+
 //返回origin_search id
 
 //接受config数据

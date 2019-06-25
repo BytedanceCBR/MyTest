@@ -46,6 +46,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         _followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];
         // 加载本地
         [self loadFollowListData];
+        [self loadLocalUgcConfigData];
     }
     return self;
 }
@@ -321,7 +322,13 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 #pragma mark - UGC Config Ref
 
 - (void)loadUGCConfigData {
-    
+    __weak typeof(self) wself = self;
+    [FHHouseUGCAPI requestUGCConfig:[FHUGCConfigModel class] completion:^(id<FHBaseModelProtocol> _Nonnull model, NSError * _Nonnull error) {
+        if(!error){
+            wself.configData = (FHUGCConfigModel *)model;
+            [wself saveLocalUgcConfigData];
+        }
+    }];
 }
 
 
@@ -336,11 +343,62 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 - (void)loadLocalUgcConfigData {
     // 参考上面
     // kFHUGCConfigDataKey
+    NSDictionary *configDic = [self.ugcConfigCache objectForKey:kFHUGCConfigDataKey];
+    if (configDic && [configDic isKindOfClass:[NSDictionary class]]) {
+        NSError *err = nil;
+        FHUGCConfigModel * model = [[FHUGCConfigModel alloc] initWithDictionary:configDic error:&err];
+        if (model) {
+            self.configData = model;
+        }
+    }
 }
 
 - (void)saveLocalUgcConfigData {
     // 参考上面
     // kFHUGCConfigDataKey
+    if (self.configData) {
+        NSDictionary *dic = [self.configData toDictionary];
+        if (dic) {
+            [self.ugcConfigCache setObject:dic forKey:kFHUGCConfigDataKey];
+        }
+    }
+}
+
+- (NSArray *)secondTabLeadSuggest {
+    NSString* suggest = nil;
+    for (FHUGCConfigDataLeadSuggestModel *suggestModel in self.configData.data.leadSuggest) {
+        if([suggestModel.kind isEqualToString:@"neighborhood"]){
+            suggest = suggestModel.hint;
+            break;
+        }
+    }
+    return suggest;
+}
+
+- (NSArray *)searchLeadSuggest {
+    NSString* suggest = nil;
+    for (FHUGCConfigDataLeadSuggestModel *suggestModel in self.configData.data.leadSuggest) {
+        if([suggestModel.kind isEqualToString:@"search"]){
+            suggest = suggestModel.hint;
+            break;
+        }
+    }
+    return suggest;
+}
+
+- (NSArray *)ugcDetailLeadSuggest {
+    NSString* suggest = nil;
+    for (FHUGCConfigDataLeadSuggestModel *suggestModel in self.configData.data.leadSuggest) {
+        if([suggestModel.kind isEqualToString:@"subsribe"]){
+            suggest = suggestModel.hint;
+            break;
+        }
+    }
+    return suggest;
+}
+
+- (NSArray *)operationConfig {
+    return self.configData.data.permission;
 }
 
 @end

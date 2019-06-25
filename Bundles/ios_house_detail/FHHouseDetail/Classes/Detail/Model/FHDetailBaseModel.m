@@ -233,6 +233,56 @@
 }
 @end
 
+@implementation FHDetailCommunityEntryActiveCountInfoModel
++(JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+            @"numColor": @"num_color",
+            @"textColor": @"text_color"
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailCommunityEntryActiveInfoModel
++(JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+            @"activeUserAvatar": @"active_user_avatar",
+            @"suggestInfo": @"suggest_info",
+            @"suggestInfoColor": @"suggest_info_color"
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailCommunityEntryModel
++(JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+            @"activeInfo": @"active_info",
+            @"socialGroupSchema": @"social_group_schema",
+            @"activeCountInfo": @"active_count_info"
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 
 
 
