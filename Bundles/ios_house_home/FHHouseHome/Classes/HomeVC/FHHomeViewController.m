@@ -115,8 +115,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.mainTableView.showsVerticalScrollIndicator = NO;
     
     if (_isMainTabVC) {
-        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
-        self.homeListViewModel.panelVM = self.panelVM;
+        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
     }
     
     [self.view addSubview:self.mainTableView];

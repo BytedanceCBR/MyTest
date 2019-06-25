@@ -57,7 +57,7 @@
 
 @implementation FHHomeListViewModel
 
-- (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC
+- (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC andPanelVM:(FHHomeSearchPanelViewModel *)panelVM
 {
     self = [super init];
     if (self) {
@@ -66,6 +66,7 @@
         self.homeViewController = homeVC;
         self.isSelectIndex = YES;
         self.isResetingOffsetZero = NO;
+        self.panelVM = panelVM;
         _itemsVCArray = [NSMutableArray new];
         
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -267,7 +268,7 @@
         if ([houseTypeNum isKindOfClass:[NSNumber class]]) {
             FHHomeItemViewController *itemVC = [[FHHomeItemViewController alloc] initItemWith:self];
             itemVC.houseType = [houseTypeNum integerValue];
-            
+            itemVC.panelVM = self.panelVM;
             if (houseTypeNum.integerValue == self.houseType) {
                 itemVC.isOriginShowSelf = YES;
                 self.previousHouseType = self.houseType;

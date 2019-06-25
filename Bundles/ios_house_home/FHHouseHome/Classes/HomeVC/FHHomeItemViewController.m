@@ -21,6 +21,7 @@
 #import <FHPlaceHolderCell.h>
 #import "FHHomeListViewModel.h"
 #import "TTSandBoxHelper.h"
+#import <FHHomeSearchPanelViewModel.h>
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -540,6 +541,9 @@
                                         showRetry:YES];
                 __weak typeof(self) weakSelf = self;
                 noDataErrorView.retryBlock = ^{
+                    if (self.panelVM) {
+                        [self.panelVM fetchSearchPanelRollData];
+                    }
                     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                 };
             }else
@@ -555,6 +559,9 @@
                             }
                         }else
                         {
+                            if (self.panelVM) {
+                                [self.panelVM fetchSearchPanelRollData];
+                            }
                             [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                         }
                     }
