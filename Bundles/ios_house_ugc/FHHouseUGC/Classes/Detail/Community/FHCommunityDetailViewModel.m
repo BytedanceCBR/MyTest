@@ -19,7 +19,7 @@
 #import "FHUGCGuideView.h"
 #import "FHUGCGuideHelper.h"
 #import "FHUGCScialGroupModel.h"
-#import "FHUGCFollowManager.h"
+#import "FHUGCConfig.h"
 
 
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
@@ -213,7 +213,7 @@
 - (void)followCommunity:(NSString *)groupId {
     if (groupId) {
         WeakSelf;
-        [[FHUGCFollowManager sharedInstance] followUGCBy:groupId isFollow:YES completion:^(BOOL isSuccess) {
+        [[FHUGCConfig sharedInstance] followUGCBy:groupId isFollow:YES completion:^(BOOL isSuccess) {
             StrongSelf;
             if (isSuccess) {
                 [wself gotoPostVC];

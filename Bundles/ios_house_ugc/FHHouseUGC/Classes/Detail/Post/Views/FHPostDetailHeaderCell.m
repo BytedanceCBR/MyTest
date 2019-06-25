@@ -12,7 +12,7 @@
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 #import "FHUGCFollowButton.h"
-#import "FHUGCFollowManager.h"
+#import "FHUGCConfig.h"
 
 @interface FHPostDetailHeaderCell ()
 

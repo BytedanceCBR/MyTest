@@ -8,7 +8,7 @@
 #import "FHMyJoinViewModel.h"
 #import <TTHttpTask.h>
 #import "FHMyJoinNeighbourhoodCell.h"
-#import "FHUGCFollowManager.h"
+#import "FHUGCConfig.h"
 
 #define cellId @"cellId"
 
@@ -45,7 +45,7 @@
 
 - (void)requestData {
     [self.dataList removeAllObjects];
-    [self.dataList addObjectsFromArray: [[FHUGCFollowManager sharedInstance] followList]];
+    [self.dataList addObjectsFromArray: [[FHUGCConfig sharedInstance] followList]];
     
     [self updateJoinProgressView];
     [self.collectionView reloadData];

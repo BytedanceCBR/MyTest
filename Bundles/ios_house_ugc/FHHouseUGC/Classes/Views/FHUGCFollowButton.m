@@ -11,7 +11,7 @@
 #import <UIImageView+BDWebImage.h>
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
-#import "FHUGCFollowManager.h"
+#import "FHUGCConfig.h"
 #import "ToastManager.h"
 #import "TTBaseMacro.h"
 #import "TTUIResponderHelper.h"
@@ -165,7 +165,7 @@
 
 - (void)requestData {
     __weak typeof(self) wself = self;
-    [[FHUGCFollowManager sharedInstance] followUGCBy:self.groupId isFollow:!self.followed completion:^(BOOL isSuccess) {
+    [[FHUGCConfig sharedInstance] followUGCBy:self.groupId isFollow:!self.followed completion:^(BOOL isSuccess) {
         [wself stopLoading];
         if(isSuccess) {
             wself.followed = !wself.followed;

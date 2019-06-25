@@ -17,14 +17,14 @@
 #import "UIViewController+NavbarItem.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "TTDeviceHelper.h"
-#import "FHUGCFollowManager.h"
+#import "FHUGCConfig.h"
 #import "FHUGCSearchListCell.h"
 #import "FHHouseUGCAPI.h"
 #import "TTNavigationController.h"
 #import "FHEnvContext.h"
 #import "FHUGCModel.h"
 #import "ToastManager.h"
-#import "FHUGCFollowManager.h"
+#import "FHUGCConfig.h"
 
 @interface FHUGCSearchListController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -224,7 +224,7 @@
     __weak typeof(self) weakSelf = self;
     self.sugHttpTask = [FHHouseUGCAPI requestSocialSearchByText:text class:[FHUGCSearchModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         [weakSelf.items removeAllObjects];
-        [weakSelf.items addObjectsFromArray:[FHUGCFollowManager sharedInstance].followData.data.userFollowSocialGroups];
+        [weakSelf.items addObjectsFromArray:[FHUGCConfig sharedInstance].followData.data.userFollowSocialGroups];
         [weakSelf.tableView reloadData];
         if (model != NULL && error == NULL) {
             [weakSelf.items removeAllObjects];

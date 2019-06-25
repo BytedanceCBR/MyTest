@@ -5,7 +5,7 @@
 //  Created by 张元科 on 2019/6/16.
 //
 
-#import "FHUGCFollowManager.h"
+#import "FHUGCConfig.h"
 #import "FHHouseUGCAPI.h"
 #import "TTReachability.h"
 #import "ToastManager.h"
@@ -14,18 +14,18 @@
 static const NSString *kFHFollowListCacheKey = @"cache_follow_list_key";
 static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
 
-@interface FHUGCFollowManager ()
+@interface FHUGCConfig ()
 
 @property (nonatomic, strong)   YYCache       *followListCache;
 
 @end
 
-@implementation FHUGCFollowManager
+@implementation FHUGCConfig
 
 + (instancetype)sharedInstance {
-    static FHUGCFollowManager *_sharedInstance = nil;
+    static FHUGCConfig *_sharedInstance = nil;
     if (!_sharedInstance) {
-        _sharedInstance = [[FHUGCFollowManager alloc] init];
+        _sharedInstance = [[FHUGCConfig alloc] init];
     }
     return _sharedInstance;
 }

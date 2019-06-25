@@ -9,7 +9,7 @@
 #import "FHMyJoinViewModel.h"
 #import "FHUGCMyInterestedController.h"
 #import "FHHouseUGCHeader.h"
-#import "FHUGCFollowManager.h"
+#import "FHUGCConfig.h"
 
 @interface FHMyJoinViewController ()
 
@@ -33,7 +33,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    BOOL hasSocialGroups = [FHUGCFollowManager sharedInstance].followList.count > 0;
+    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
     
     if(hasSocialGroups){
         [self initFeedListVC];

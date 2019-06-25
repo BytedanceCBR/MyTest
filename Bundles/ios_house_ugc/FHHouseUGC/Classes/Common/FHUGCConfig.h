@@ -15,7 +15,7 @@ static NSString *const kFHUGCLoadFollowDataFinishedNotification = @"k_fh_ugc_loa
 // 关注 和 取消关注
 static NSString *const kFHUGCFollowNotification = @"k_fh_ugc_follow_finish";
 
-@interface FHUGCFollowManager : NSObject
+@interface FHUGCConfig : NSObject
 
 + (instancetype)sharedInstance;
 
