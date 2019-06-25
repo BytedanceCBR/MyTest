@@ -391,27 +391,15 @@ PODS:
   - TTNewsAccountBusiness/SSCookieManager (0.2.4)
   - TTPersistence (0.2.3.1-binary)
   - TTPhotoScrollVC (0.1.6)
-  - TTPlatformBaseLib (0.2.13):
-    - TTPlatformBaseLib/ArticleJSManager (= 0.2.13)
-    - TTPlatformBaseLib/TTCategoryManager (= 0.2.13)
-    - TTPlatformBaseLib/TTIconFontDefine (= 0.2.13)
-    - TTPlatformBaseLib/TTKeyChainStorage (= 0.2.13)
-    - TTPlatformBaseLib/TTPlatformSwitcher (= 0.2.13)
-    - TTPlatformBaseLib/TTPostDataSerializer (= 0.2.13)
-    - TTPlatformBaseLib/TTProfileFillManager (= 0.2.13)
-    - TTPlatformBaseLib/TTTAssetCountHelper (= 0.2.13)
-    - TTPlatformBaseLib/TTTrackerWrapper (= 0.2.13)
-    - TTPlatformBaseLib/TTURLDomainHelper (= 0.2.13)
-  - TTPlatformBaseLib/ArticleJSManager (0.2.13)
-  - TTPlatformBaseLib/TTCategoryManager (0.2.13)
-  - TTPlatformBaseLib/TTIconFontDefine (0.2.13)
-  - TTPlatformBaseLib/TTKeyChainStorage (0.2.13)
-  - TTPlatformBaseLib/TTPlatformSwitcher (0.2.13)
-  - TTPlatformBaseLib/TTPostDataSerializer (0.2.13)
-  - TTPlatformBaseLib/TTProfileFillManager (0.2.13)
-  - TTPlatformBaseLib/TTTAssetCountHelper (0.2.13)
-  - TTPlatformBaseLib/TTTrackerWrapper (0.2.13)
-  - TTPlatformBaseLib/TTURLDomainHelper (0.2.13)
+  - TTPlatformBaseLib (1.3.1):
+    - TTPlatformBaseLib/TTIconFontDefine (= 1.3.1)
+    - TTPlatformBaseLib/TTProfileFillManager (= 1.3.1)
+    - TTPlatformBaseLib/TTTrackerWrapper (= 1.3.1)
+    - TTPlatformBaseLib/TTURLDomainHelper (= 1.3.1)
+  - TTPlatformBaseLib/TTIconFontDefine (1.3.1)
+  - TTPlatformBaseLib/TTProfileFillManager (1.3.1)
+  - TTPlatformBaseLib/TTTrackerWrapper (1.3.1)
+  - TTPlatformBaseLib/TTURLDomainHelper (1.3.1)
   - TTPlatformUIModel (0.2.39):
     - TTPlatformUIModel/HPGrowingTextView (= 0.2.39)
     - TTPlatformUIModel/TTActionSheet (= 0.2.39)
@@ -773,7 +761,7 @@ DEPENDENCIES:
   - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
   - TTPersistence (= 0.2.3.1-binary)
   - TTPhotoScrollVC (from `../AKPlugins/TTPhotoScrollVC`)
-  - TTPlatformBaseLib (from `../AKPlugins/TTPlatformBaseLib`)
+  - TTPlatformBaseLib (= 1.3.1)
   - TTPlatformUIModel (from `../AKPlugins/AKPlatformUIModel`)
   - TTPlayerSDK (= 2.9.9.10)
   - TTPostBase (from `../AKPlugins/TTPostBase`)
@@ -924,8 +912,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/TTNewsAccountBusiness
   TTPhotoScrollVC:
     :path: ../AKPlugins/TTPhotoScrollVC
-  TTPlatformBaseLib:
-    :path: ../AKPlugins/TTPlatformBaseLib
   TTPlatformUIModel:
     :path: ../AKPlugins/AKPlatformUIModel
   TTPostBase:
@@ -1112,7 +1098,7 @@ SPEC CHECKSUMS:
   TTNewsAccountBusiness: 50125377b67c11155b3677cf0e6d3d02ed718a03
   TTPersistence: e0685fe3f0cfd826ccf6917ab5e8227fd6331947
   TTPhotoScrollVC: f34664f26861dbfbf617e47385a2522ba8bf1755
-  TTPlatformBaseLib: 4d690f459522050397f6ca58188c617ffa453fad
+  TTPlatformBaseLib: 46cc48c57de16b6c48527ca5266f8932d4e60e65
   TTPlatformUIModel: 42e1baaadf68615bd4911b3a0fce24683b955105
   TTPlayerSDK: 64564c57c01b3448059203e9fe48d6d07520d641
   TTPostBase: 91071b89ed5d95c7ac3d96354a31c65d77a6c94e
@@ -1159,6 +1145,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 117b48101326728554d4594f545258bc23d958d8
+PODFILE CHECKSUM: 6ca143a957a8238523c6c1255c4fd9dd23116335
 
 COCOAPODS: 1.4.0

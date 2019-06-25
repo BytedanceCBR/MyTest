@@ -7,9 +7,12 @@
 //
 
 #import "TTProfileFillManager.h"
-#import "TTNetworkManager.h"
-#import "TTIndicatorView.h"
-#import <TTAccountBusiness.h>
+#import <TTNetworkManager/TTNetworkManager.h>
+#import <TTUIWidget/TTIndicatorView.h>
+#import <TTAccountSDK/TTAccount.h>
+#import <TTAccountSDK/TTAccount+NetworkTasks.h>
+#import <TTBaseLib/TTDeviceHelper.h>
+#import <TTBaseLib/TTBaseMacro.h>
 #import <TTServiceKit/TTModuleBridge.h>
 #import "TTURLDomainHelper.h"
 
@@ -106,7 +109,7 @@
         return;
     }
     
-    if (![TTAccountManager isLogin]) {
+    if (![[TTAccount sharedAccount] isLogin]) {
         return;
     }
     
@@ -303,8 +306,8 @@
     [TTAccount updateUserProfileWithDict:info completion:^(TTAccountUserEntity * _Nullable userEntity, NSError * _Nullable error) {
         if (!error) {
             // 同步本地标识
-            [self synchronizeLocalFlag:[TTAccountManager userName] orIcon:[TTAccountManager avatarURLString]];
-            
+            [self synchronizeLocalFlag:[[TTAccount sharedAccount] user].name orIcon:[[TTAccount sharedAccount] user].avatarURL];
+
             if (completion) completion(userEntity, error);
             
         } else {
@@ -380,12 +383,12 @@
     }
     if (![self.profileModel.is_avatar_valid boolValue] ) {
         NSString *avatarPath = [[self.profileModel.avatar_url stringByDeletingPathExtension] lastPathComponent];
-        NSString *accountAvatarPath = [[[TTAccountManager avatarURLString] stringByDeletingPathExtension] lastPathComponent];
+        NSString *accountAvatarPath = [[TTAccount sharedAccount] user].avatarURL stringByDeletingPathExtension] lastPathComponent];
         if (![avatarPath isEqualToString:accountAvatarPath]) {
             return YES;
         }
     }
-    if (![self.profileModel.is_name_valid boolValue] && ![self.profileModel.name isEqualToString:[TTAccountManager userName]]) {
+    if (![self.profileModel.is_name_valid boolValue] && ![self.profileModel.name isEqualToString:[[TTAccount sharedAccount] user].name]) {
         return YES;
     }
     return NO;
