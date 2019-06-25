@@ -31,6 +31,7 @@
 #import "FHBaseModelProtocol.h"
 #import "FHFeedContentModel.h"
 #import "FHUGCScialGroupModel.h"
+#import "FHUGCConfig.h"
 
 @interface FHPostDetailViewModel ()
 
@@ -74,6 +75,7 @@
     if (self) {
         self.threadID = threadID;
         self.forumID = forumID;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     }
     return self;
 }
@@ -84,7 +86,24 @@
 }
 
 - (void)dealloc {
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+// 关注状态改变
+- (void)followStateChanged:(NSNotification *)notification {
+    if (notification) {
+        NSDictionary *userInfo = notification.userInfo;
+        BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
+        NSString *groupId = notification.userInfo[@"social_group_id"];
+        if(groupId.length > 0) {
+//            [self.items enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                if ([obj.socialGroupId isEqualToString:groupId]) {
+//                    obj.hasFollow = followed ? @"1" : @"0";
+//                    *stop = YES;
+//                }
+//            }];
+        }
+    }
 }
 
 // startLoadData
@@ -107,15 +126,18 @@
 - (void)processWithData:(FHFeedUGCContentModel *)model socialGroup:(FHUGCScialGroupDataModel *)socialGroupModel {
     if (model && [model isKindOfClass:[FHFeedUGCContentModel class]]) {
         [self.items removeAllObjects];
-        //
-        FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
-        headerModel.socialGroupModel = socialGroupModel;
-        [self.items addObject:headerModel];
-        self.detailHeaderModel = headerModel;
-        [self.detailController headerInfoChanged];
-        //
-        FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
+        // 网络请求返回
+        if (![socialGroupModel.hasFollow boolValue]) {
+            // 未关注
+            FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
+            headerModel.socialGroupModel = socialGroupModel;
+            [self.items addObject:headerModel];
+            self.detailHeaderModel = headerModel;
+            [self.detailController headerInfoChanged];
+            //
+            FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
+            [self.items addObject:grayLine];
+        }
         //
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
         [self.items addObject:cellModel];

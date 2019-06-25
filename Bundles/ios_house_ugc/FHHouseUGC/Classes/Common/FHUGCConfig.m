@@ -16,10 +16,14 @@
 
 static const NSString *kFHFollowListCacheKey = @"cache_follow_list_key";
 static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
+// UGC config
+static const NSString *kFHUGCConfigCacheKey = @"cache_ugc_config_key";
+static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
 @interface FHUGCConfig ()
 
 @property (nonatomic, strong)   YYCache       *followListCache;
+@property (nonatomic, strong)   YYCache       *ugcConfigCache;
 @property (nonatomic, copy)     NSString       *followListDataKey;// 关注数据 用户相关 存储key
 
 @end
@@ -86,6 +90,7 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
 
 - (void)loadConfigData {
     [self loadFollowData];
+    [self loadUGCConfigData];
 }
 
 // App启动的时候需要加载
@@ -249,5 +254,28 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
     [self loadFollowData];
 }
 
+
+#pragma mark - UGC Config Ref
+
+- (void)loadUGCConfigData {
+    
+}
+
+
+- (YYCache *)ugcConfigCache
+{
+    if (!_ugcConfigCache) {
+        _ugcConfigCache = [YYCache cacheWithName:kFHUGCConfigCacheKey];
+    }
+    return _ugcConfigCache;
+}
+
+- (void)loadLocalUgcConfigData {
+    // 参考上面
+}
+
+- (void)saveLocalUgcConfigData {
+    // 参考上面
+}
 
 @end
