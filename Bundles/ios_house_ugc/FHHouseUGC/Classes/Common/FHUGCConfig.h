@@ -19,8 +19,8 @@ static NSString *const kFHUGCFollowNotification = @"k_fh_ugc_follow_finish";
 
 + (instancetype)sharedInstance;
 
-// 加载UGC 关注的小区数据 数据存放在followData中 发送kFHUGCLoadFollowDataFinishedNotification通知
-- (void)loadFollowData;
+// 加载config数据等
+- (void)loadConfigData;
 
 // 关注模型
 @property (nonatomic, strong)   FHUGCModel       *followData;

@@ -130,7 +130,7 @@
 }
 
 - (void)startLoadData {
-    [[FHUGCConfig sharedInstance] loadFollowData];
+    
 }
 
 - (void)retryLoadData {

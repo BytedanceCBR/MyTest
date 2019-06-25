@@ -10,6 +10,9 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "YYCache.h"
+#import "TTAccount.h"
+#import "TTAccount+Multicast.h"
+#import "TTAccountManager.h"
 
 static const NSString *kFHFollowListCacheKey = @"cache_follow_list_key";
 static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
@@ -17,6 +20,7 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
 @interface FHUGCConfig ()
 
 @property (nonatomic, strong)   YYCache       *followListCache;
+@property (nonatomic, copy)     NSString       *followListDataKey;// 关注数据 用户相关 存储key
 
 @end
 
@@ -34,10 +38,18 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
 {
     self = [super init];
     if (self) {
+        [TTAccount addMulticastDelegate:self];
+        _followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];
         // 加载本地
         [self loadData];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [TTAccount removeMulticastDelegate:self];
 }
 
 - (YYCache *)followListCache
@@ -52,13 +64,13 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
     if (self.followData) {
         NSDictionary *dic = [self.followData toDictionary];
         if (dic) {
-            [self.followListCache setObject:dic forKey:kFHFollowListDataKey];
+            [self.followListCache setObject:dic forKey:self.followListDataKey];
         }
     }
 }
 
 - (void)loadData {
-    NSDictionary *followListDic = [self.followListCache objectForKey:kFHFollowListDataKey];
+    NSDictionary *followListDic = [self.followListCache objectForKey:self.followListDataKey];
     if (followListDic && [followListDic isKindOfClass:[NSDictionary class]]) {
         NSError *err = nil;
         FHUGCModel * model = [[FHUGCModel alloc] initWithDictionary:followListDic error:&err];
@@ -69,6 +81,10 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
         self.followData = [[FHUGCModel alloc] init];
         self.followData.data = [[FHUGCDataModel alloc] init];
     }
+}
+
+- (void)loadConfigData {
+    [self loadFollowData];
 }
 
 // App启动的时候需要加载
@@ -214,5 +230,21 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
     }];
   
 }
+
+#pragma mark - TTAccountMulticaastProtocol
+
+// 帐号切换
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
+{
+    if ([TTAccountManager isLogin]) {
+       self.followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];
+    } else {
+       self.followListDataKey = [NSString stringWithFormat:@"%@_",kFHFollowListDataKey];
+    }
+    // 切换账号 加载数据
+    [self loadData];
+    // add by zyk 要不要刷新数据
+}
+
 
 @end
