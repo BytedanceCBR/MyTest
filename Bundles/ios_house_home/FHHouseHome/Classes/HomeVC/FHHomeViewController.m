@@ -45,7 +45,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
 @property (nonatomic) BOOL adColdHadJump;
 @property (nonatomic, strong) TTTopBar *topBar;
-@property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
+@property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 
 @end
@@ -116,6 +116,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     if (_isMainTabVC) {
         self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
+        self.homeListViewModel.panelVM = self.panelVM;
     }
     
     [self.view addSubview:self.mainTableView];

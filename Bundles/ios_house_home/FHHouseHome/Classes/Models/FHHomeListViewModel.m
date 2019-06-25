@@ -24,6 +24,7 @@
 #import "FHHomeCellHelper.h"
 #import <TTSandBoxHelper.h>
 #import "FHHomeItemViewController.h"
+#import "FHHomeSearchPanelViewModel.h"
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
@@ -113,6 +114,9 @@
                 return ;
             }
             
+            if (self.panelVM) {
+                [self.panelVM fetchSearchPanelRollData];
+            }
           
             if (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                 [self requestOriginData:self.isFirstChange isShowPlaceHolder:[FHEnvContext sharedInstance].isRefreshFromCitySwitch];
