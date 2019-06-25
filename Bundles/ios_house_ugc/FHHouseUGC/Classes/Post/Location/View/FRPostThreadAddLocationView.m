@@ -184,7 +184,6 @@
 - (void)showCurrentGeoLocation {
     
     if (!self.selectedLocation) {
-        //服务器控制是否默认选中地理位置 add by zyk 需要后续看是否服务器控制
         self.selectedLocation = [self getLastLocationEntity];
     }
 }

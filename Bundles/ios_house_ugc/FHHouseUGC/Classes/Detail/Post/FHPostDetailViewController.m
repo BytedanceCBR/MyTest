@@ -65,7 +65,7 @@
     self.weakViewModel = self.viewModel;
     self.weakViewModel.threadID = self.tid;
     self.weakViewModel.forumID = self.fid;
-    self.weakViewModel.category = @"test";// add by zyk
+    self.weakViewModel.category = @"thread_detail";
     // 导航栏
     [self setupDetailNaviBar];
     // 全部评论

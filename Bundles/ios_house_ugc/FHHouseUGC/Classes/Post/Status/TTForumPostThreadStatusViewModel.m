@@ -512,8 +512,6 @@ TTAccountMulticastProtocol
         return;
     }
 
-
-    // add by zyk
     NSInteger followCategoryIndex = -1;//[[TTArticleCategoryManager sharedManager] indexOfCategoryInSubScribedCategories:kTTFollowCategoryID];
     //不在已订阅频道时，进行关注频道的生成并强制插入
     if (followCategoryIndex == NSNotFound && [TTKitchen getBOOL:kTTKUGCPostThreadRevalFollowChannel]) {

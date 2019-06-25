@@ -338,7 +338,6 @@
                                  dismissHandler:nil];
         return;
     }
-    // add by zyk 收藏
 }
 
 // 点赞
