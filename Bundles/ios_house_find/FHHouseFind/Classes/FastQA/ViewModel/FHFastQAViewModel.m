@@ -218,11 +218,19 @@
 -(void)requestCallReport
 {
     __weak typeof(self) wself = self;
-    [FHMainApi requestSendPhoneNumbserByHouseId:nil phone:self.phoneNum from:@"app_askpage" agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    NSString *houseId = nil;
+    NSNumber *type = nil;
+    if (self.selectedModel) {
+        houseId = self.selectedModel.id;
+        type = @(self.selectedModel.type);
+    }
+    
+    [FHMainApi requestQuickQuestionByHouseId:houseId phone:self.phoneNum from:@"app_askpage" type:type completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+        
         if (!wself) {
             return ;
         }
-        if (error) {
+        if (error || model.status.integerValue != 0) {
             SHOW_TOAST(@"网络异常，请稍后重试");
             return ;
         }
