@@ -516,7 +516,7 @@ TTRefreshViewDelegate
                 StrongSelf;
                 [self clearTipCount];
             };
-            if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey]) {
+            if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey]) {
                 self.remindView.enabled = YES;
             }
             
@@ -937,18 +937,18 @@ TTRefreshViewDelegate
         [[TTVideoAutoPlayManager sharedManager] restoreCellMovieIfCould];
     }
     
-    if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey] && !self.hasHitPushed && self.remindView) {
+    if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey] && !self.hasHitPushed && self.remindView) {
         self.remindView.enabled = YES;
         [self.remindView show:YES];
     } else {
-        if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey] && self.remindView) {
+        if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey] && self.remindView) {
             self.remindView.enabled = YES;
         }
     }
     self.hasHitPushed = NO;
     
     if (!self.shouldReloadBackAfterLeaveCurrentCategory) {
-        if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey]) {
+        if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey]) {
             NSDictionary *infoDic = [NewsListLogicManager newsListShowRefreshInfo];
             if (infoDic && [_fetchListManager items].count > 0) {
                 self.refreshShouldLastReadUpate = YES;
@@ -4519,7 +4519,7 @@ TTRefreshViewDelegate
         return;
     }
     
-    if (![[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey] && (![[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabFollowTabKey] || [TTTabBarProvider isFollowTabOnTabBar] || [TTTabBarProvider isHTSTabOnTabBar])) {
+    if (![[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey] && (![[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabFollowTabKey] || [TTTabBarProvider isFollowTabOnTabBar] || [TTTabBarProvider isHTSTabOnTabBar])) {
         return;
     }
     
@@ -4545,7 +4545,7 @@ TTRefreshViewDelegate
 - (void)clearTipCount {
     NSString *tag = [TTTabBarProvider currentSelectedTabTag];
     
-    if (![[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey] && ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabFollowTabKey] || [TTTabBarProvider isFollowTabOnTabBar])) {
+    if (![[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey] && ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabFollowTabKey] || [TTTabBarProvider isFollowTabOnTabBar])) {
         return;
     }
     
