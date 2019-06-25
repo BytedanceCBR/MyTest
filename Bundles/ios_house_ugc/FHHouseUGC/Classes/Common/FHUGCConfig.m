@@ -41,7 +41,7 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
         [TTAccount addMulticastDelegate:self];
         _followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];
         // 加载本地
-        [self loadData];
+        [self loadFollowListData];
     }
     return self;
 }
@@ -51,7 +51,7 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [TTAccount removeMulticastDelegate:self];
 }
-
+// 关注数据存储-start
 - (YYCache *)followListCache
 {
     if (!_followListCache) {
@@ -60,7 +60,7 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
     return _followListCache;
 }
 
-- (void)saveData {
+- (void)saveFollowListData {
     if (self.followData) {
         NSDictionary *dic = [self.followData toDictionary];
         if (dic) {
@@ -69,7 +69,7 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
     }
 }
 
-- (void)loadData {
+- (void)loadFollowListData {
     NSDictionary *followListDic = [self.followListCache objectForKey:self.followListDataKey];
     if (followListDic && [followListDic isKindOfClass:[NSDictionary class]]) {
         NSError *err = nil;
@@ -82,6 +82,7 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
         self.followData.data = [[FHUGCDataModel alloc] init];
     }
 }
+// 关注数据存储-end
 
 - (void)loadConfigData {
     [self loadFollowData];
@@ -156,7 +157,7 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
 
 // 更新关注本地数据以及通知
 - (void)updateFollowData {
-    [self saveData];
+    [self saveFollowListData];
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCLoadFollowDataFinishedNotification object:nil];
 }
 
@@ -237,13 +238,15 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
 {
     if ([TTAccountManager isLogin]) {
-       self.followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];
+        self.followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];
     } else {
-       self.followListDataKey = [NSString stringWithFormat:@"%@_",kFHFollowListDataKey];
+        self.followListDataKey = [NSString stringWithFormat:@"%@_",kFHFollowListDataKey];
     }
     // 切换账号 加载数据
-    [self loadData];
-    // add by zyk 要不要刷新数据
+    [self loadFollowListData];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    // 重新加载
+    [self loadFollowData];
 }
 
 

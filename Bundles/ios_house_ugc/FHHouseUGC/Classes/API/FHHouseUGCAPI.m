@@ -8,11 +8,12 @@
 #import "TTDeviceHelper.h"
 #import "NSStringAdditions.h"
 #import "FHUGCModel.h"
+#import "FHUGCConfig.h"
 
 @implementation FHHouseUGCAPI
 
 + (void)loadUgcConfigEntrance {
-    
+    [[FHUGCConfig sharedInstance] loadConfigData];
 }
 
 + (TTHttpTask *)requestTopicList:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {

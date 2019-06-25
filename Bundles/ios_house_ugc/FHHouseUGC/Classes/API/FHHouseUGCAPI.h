@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseUGCAPI : NSObject
 
-// UGC config
+// UGC config 入口
 + (void)loadUgcConfigEntrance;
 
 + (TTHttpTask *)requestTopicList:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;

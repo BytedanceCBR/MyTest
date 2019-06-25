@@ -25,6 +25,9 @@ static NSString *const kFHUGCFollowNotification = @"k_fh_ugc_follow_finish";
 // 关注模型
 @property (nonatomic, strong)   FHUGCModel       *followData;
 
+// 关注列表
+- (NSArray<FHUGCScialGroupDataModel> *)followList;
+
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 /*
  - status
@@ -34,8 +37,6 @@ static NSString *const kFHUGCFollowNotification = @"k_fh_ugc_follow_finish";
  - 2       其他错误
  */
 - (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow completion:(void (^ _Nullable)(BOOL isSuccess))completion;
-
-- (NSArray<FHUGCScialGroupDataModel> *)followList;
 
 @end
 
