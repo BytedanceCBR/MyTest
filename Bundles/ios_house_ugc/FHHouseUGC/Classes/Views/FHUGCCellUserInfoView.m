@@ -15,6 +15,7 @@
 #import "FHHouseUGCAPI.h"
 #import "ToastManager.h"
 #import "FHHouseUGCHeader.h"
+#import "FHUGCConfig.h"
 
 @implementation FHUGCCellUserInfoView
 
@@ -145,7 +146,10 @@
                 wself.deleteCellBlock();
             }
             //删除帖子成功发送通知
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostDeleteSuccessNotification object:self.cellModel.community.socialGroupId];
+            if (wself.cellModel.community.socialGroupId.length > 0) {
+                NSDictionary *dic = @{@"social_group_id":wself.cellModel.community.socialGroupId};
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
+            }
         }else{
             [[ToastManager manager] showToast:@"删除失败"];
         }
