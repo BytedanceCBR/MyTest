@@ -11,6 +11,7 @@
 #import "UIImageView+BDWebImage.h"
 #import "IMConsDefine.h"
 #import "FHUGCFollowButton.h"
+#import "SSViewBase.h"
 
 @interface FHCommunityDetailHeaderView ()
 @end
@@ -52,7 +53,7 @@
     [self.labelContainer addSubview:self.nameLabel];
     [self.labelContainer addSubview:self.subtitleLabel];
 
-    self.followButton = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero];
+    self.followButton = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero style:FHUGCFollowButtonStyleNoBorder];
     self.followButton.followed = NO;
 
     self.publicationsLabel = [UILabel createLabel:@"公告" textColor:@"" fontSize:13];

@@ -7,18 +7,13 @@
 #import "NSTimer+NoRetain.h"
 #import "TTBaseMacro.h"
 #import "IMConsDefine.h"
+#import "FHCommunitySuggestionBubble.h"
 
 
 @interface FHDetailCommunityEntryCell () <FHDetailVCViewLifeCycleProtocol>
 @property(nonatomic, strong) UILabel *activeCountInfoLabel;
-@property(nonatomic, strong) UIImageView *activeUserAvatarView;
-@property(nonatomic, strong) UILabel *suggestInfoLabel;
-@property(nonatomic, strong) UIView *suggestionBackView;
-@property(nonatomic, strong) UIView *suggestionContainerView;
-@property(nonatomic, strong) UIImageView *activeUserAvatarView1;
-@property(nonatomic, strong) UILabel *suggestInfoLabel1;
-@property(nonatomic, strong) UIView *suggestionBackView1;
-@property(nonatomic, strong) UIView *suggestionContainerView1;
+@property(nonatomic, strong) FHCommunitySuggestionBubble *bubble0;
+@property(nonatomic, strong) FHCommunitySuggestionBubble *bubble1;
 @property(nonatomic, strong) UIImageView *arrowView;
 @property(nonatomic, strong) UIView *backView;
 @property(nonatomic, strong) NSTimer *wheelTimer;
@@ -47,125 +42,44 @@
 }
 
 - (void)initViews {
-    _activeCountInfoLabel = [[UILabel alloc] init];
-    _activeCountInfoLabel.font = [UIFont systemFontOfSize:14.0f];
-    _activeCountInfoLabel.numberOfLines = 1;
-    _activeCountInfoLabel.textAlignment = NSTextAlignmentLeft;
-
-    _activeUserAvatarView = [[UIImageView alloc] init];
-    _activeUserAvatarView.layer.cornerRadius = 7.0f;
-    _activeUserAvatarView.layer.borderWidth = 0.5f;
-    _activeUserAvatarView.layer.borderColor = [UIColor themeRed3].CGColor;
-    _activeUserAvatarView.clipsToBounds = YES;
-
-    _suggestInfoLabel = [[UILabel alloc] init];
-    _suggestInfoLabel.textColor = [UIColor themeRed1];
-    _suggestInfoLabel.backgroundColor = [UIColor clearColor];
-    _suggestInfoLabel.font = [UIFont systemFontOfSize:10.0f];
-    _suggestInfoLabel.numberOfLines = 1;
-
-    _suggestionBackView = [[UIView alloc] init];
-    _suggestionBackView.layer.cornerRadius = 10.0f;
-    _suggestionBackView.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
-
-    _suggestionContainerView = [[UIView alloc] init];
-    _suggestionContainerView.frame = CGRectMake(SCREEN_WIDTH - 20 - 6 - 12- 160, 0, 160, 40);
-
-    _activeUserAvatarView1 = [[UIImageView alloc] init];
-    _activeUserAvatarView1.layer.cornerRadius = 7.0f;
-    _activeUserAvatarView1.layer.borderWidth = 0.5f;
-    _activeUserAvatarView1.layer.borderColor = [UIColor themeRed3].CGColor;
-    _activeUserAvatarView1.clipsToBounds = YES;
-
-    _suggestInfoLabel1 = [[UILabel alloc] init];
-    _suggestInfoLabel1.textColor = [UIColor themeRed1];
-    _suggestInfoLabel1.backgroundColor = [UIColor clearColor];
-    _suggestInfoLabel1.font = [UIFont systemFontOfSize:10.0f
-    _suggestInfoLabel1.numberOfLines = 1;
-
-    _suggestionBackView1 = [[UIView alloc] init];
-    _suggestionBackView1.layer.cornerRadius = 10.0f;
-    _suggestionBackView1.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
-
-    _suggestionContainerView1 = [[UIView alloc] init];
-    _suggestionContainerView1.frame = CGRectMake(SCREEN_WIDTH - 20 - 6 - 12 - 160, 40, 160, 40);
-
-    _arrowView.frame = CGRectMake(SCREEN_WIDTH - 20 - 6 - 12, 14, 12, 12);
-
     _backView = [[UIView alloc] init];
     _backView.layer.cornerRadius = 4.0f;
     _backView.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
     _backView.frame = CGRectMake(20, 10, SCREEN_WIDTH - 40, 40);
 
+    _activeCountInfoLabel = [[UILabel alloc] init];
+    _activeCountInfoLabel.font = [UIFont systemFontOfSize:14.0f];
+    _activeCountInfoLabel.numberOfLines = 1;
+    _activeCountInfoLabel.textAlignment = NSTextAlignmentLeft;
+
+    _bubble0 = [[FHCommunitySuggestionBubble alloc] initWithFrame: CGRectMake(_backView.frame.size.width - 22 - 160, 10, 160, 20)];
+    _bubble1 = [[FHCommunitySuggestionBubble alloc] initWithFrame: CGRectMake(_backView.frame.size.width - 22 - 160, 40, 160, 20)];
+
     _arrowView = [[UIImageView alloc] init];
     _arrowView.image = [UIImage imageNamed:@"detail_red_arrow_right"];
 
-    [_suggestionBackView addSubview:_activeUserAvatarView];
-    [_suggestionBackView addSubview:_suggestInfoLabel];
-
-    [_suggestionBackView1 addSubview:_activeUserAvatarView1];
-    [_suggestionBackView1 addSubview:_suggestInfoLabel1];
-
-    [_suggestionContainerView addSubview:_suggestionBackView];
-    [_suggestionContainerView1 addSubview:_suggestionBackView1];
-
     [_backView addSubview:_activeCountInfoLabel];
-    [_backView addSubview:_suggestionContainerView];
-    [_backView addSubview:_suggestionContainerView1];
+    [_backView addSubview:_bubble0];
+    [_backView addSubview:_bubble1];
     [_backView addSubview:_arrowView];
     _backView.clipsToBounds = YES;
-
     [self.contentView addSubview:_backView];
-
 }
 
 - (void)initConstraints {
+//    [_activeCountInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self.backView).offset(10);
+//        make.right.mas_equalTo(self.bubble0.mas_left).offset(-10).priorityLow();
+//        make.centerY.mas_equalTo(self.backView);
+//        make.height.mas_equalTo(20);
+//    }];
 
-    [_activeCountInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.backView).offset(10);
-        make.right.mas_equalTo(self.suggestionContainerView.mas_left).offset(-10);
+    [_arrowView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.bubble0.mas_right);
+        make.left.mas_equalTo(self.bubble1.mas_right);
         make.centerY.mas_equalTo(self.backView);
-        make.height.mas_equalTo(20);
-    }];
-
-    [_suggestionBackView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.arrowView.mas_left).offset(-4);
-        make.left.mas_equalTo(self.activeUserAvatarView).offset(-4);
-        make.centerY.mas_equalTo(self.backView);
-        make.height.mas_equalTo(20);
-    }];
-
-    [_activeUserAvatarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.suggestionBackView).offset(4);
-        make.centerY.mas_equalTo(self.suggestionBackView);
-        make.width.height.mas_equalTo(14);
-    }];
-
-    [_suggestInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.activeUserAvatarView.mas_right).offset(2.0f);
-        make.centerY.mas_equalTo(self.suggestionBackView);
-        make.height.mas_equalTo(14);
-        make.right.mas_equalTo(self.suggestionBackView);
-    }];
-
-    [_suggestionBackView1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.suggestionContainerView1).offset(-4);
-        make.left.mas_equalTo(self.activeUserAvatarView1).offset(-4);
-        make.centerY.mas_equalTo(self.backView);
-        make.height.mas_equalTo(20);
-    }];
-
-    [_activeUserAvatarView1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.suggestionBackView1).offset(4);
-        make.centerY.mas_equalTo(self.suggestionBackView1);
-        make.width.height.mas_equalTo(14);
-    }];
-
-    [_suggestInfoLabel1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.activeUserAvatarView.mas_right).offset(2.0f);
-        make.centerY.mas_equalTo(self.suggestionBackView1);
-        make.height.mas_equalTo(14);
-        make.right.mas_equalTo(self.suggestionBackView1);
+        make.width.height.mas_equalTo(12);
+        make.right.mas_equalTo(self.backView).offset(-6).priorityHigh();
     }];
 }
 
@@ -177,44 +91,21 @@
     self.curWheelIndex = 0;
 
     FHDetailCommunityEntryModel *entryModel = data;
-    self.activeCountInfoLabel.text = [NSString stringWithFormat:@"%@%@", entryModel.activeCountInfo.count, entryModel.activeCountInfo.text];
-    [self refreshSuggestionInfoWithIndex:self.curWheelIndex];
+    if (!entryModel.activeInfo) {
+        return;
+    }
+    FHDetailCommunityEntryActiveInfoModel *model = entryModel.activeInfo[self.curWheelIndex];
+    [self.bubble0 refreshWithAvatar:model.activeUserAvatar title:model.suggestInfo];
+    NSUInteger nextIndex = (self.curWheelIndex + 1) % entryModel.activeInfo.count;
+    [self prepareNext:self.bubble1 model:entryModel.activeInfo[nextIndex]];
 }
 
-- (void)refreshSuggestionInfoWithIndex:(NSUInteger)index {
-    if (![self.currentData isKindOfClass:[FHDetailCommunityEntryModel class]]) {
+- (void)prepareNext:(FHCommunitySuggestionBubble *)bubble model:(FHDetailCommunityEntryActiveInfoModel *)model {
+    if (!model) {
         return;
     }
-
-    FHDetailCommunityEntryModel *entryModel = self.currentData;
-    if (entryModel.activeInfo.count == 0 || index >= entryModel.activeInfo.count) {
-        return;
-    }
-    NSUInteger index1 = self.curWheelIndex + 1;
-    index1 = index1 % entryModel.activeInfo.count;
-    FHDetailCommunityEntryActiveInfoModel *model;
-    FHDetailCommunityEntryActiveInfoModel *model1;
-//    if (index % 2 == 0) {
-    model = entryModel.activeInfo[index];
-    model1 = entryModel.activeInfo[index1];
-//    } else {
-//        model1 = entryModel.activeInfo[index];
-//        model = entryModel.activeInfo[index1];
-//    }
-
-    [self.activeUserAvatarView bd_setImageWithURL:[NSURL URLWithString:model.activeUserAvatar]];
-    self.suggestInfoLabel.text = model.suggestInfo;
-    CGSize preferSize = [self.suggestInfoLabel sizeThatFits:CGSizeMake(140, 14)];
-    [_suggestInfoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(preferSize.width);
-    }];
-
-    [self.activeUserAvatarView1 bd_setImageWithURL:[NSURL URLWithString:model1.activeUserAvatar]];
-    self.suggestInfoLabel1.text = model1.suggestInfo;
-    CGSize preferSize1 = [self.suggestInfoLabel1 sizeThatFits:CGSizeMake(140, 14)];
-    [_suggestInfoLabel1 mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(preferSize1.width);
-    }];
+    NSLog(@"zlj prepareNext:%@",bubble);
+    [bubble refreshWithAvatar:model.activeUserAvatar title:model.suggestInfo];
 }
 
 - (void)wheelSuggestionInfo {
@@ -225,19 +116,25 @@
     if (entryModel.activeInfo.count == 0) {
         return;
     }
-    CGFloat distance = 40.0f;
+    FHCommunitySuggestionBubble *curBubble = self.curWheelIndex % 2 == 0 ? self.bubble0 : self.bubble1;
+    FHCommunitySuggestionBubble *popBuuble = self.curWheelIndex % 2 == 0 ? self.bubble1 : self.bubble0;
+    NSLog(@"zlj cur:%@ pop:%@",curBubble,popBuuble);
+    NSLog(@"zlj curFrame:%@ popFrame:%@",NSStringFromCGRect(curBubble.frame),NSStringFromCGRect(popBuuble.frame));
     WeakSelf;
     [UIView animateWithDuration:0.5 animations:^{
         StrongSelf;
-        wself.suggestionContainerView.frame = CGRectOffset(wself.suggestionBackView.frame, 0, distance);
-        wself.suggestionContainerView1.frame = CGRectOffset(wself.suggestionBackView1.frame, 0, distance);
-    }                completion:^(BOOL finished) {
+//        curBubble.alpha = 0;
+//        popBuuble.alpha = 1;
+        curBubble.frame = CGRectOffset(curBubble.frame, 0, -30.0f);
+        popBuuble.frame = CGRectOffset(popBuuble.frame, 0, -30.0f);
+    }completion:^(BOOL finished) {
         StrongSelf;
-        wself.suggestionContainerView.frame = CGRectOffset(wself.suggestionBackView.frame, 0, -distance);
-        wself.suggestionContainerView1.frame = CGRectOffset(wself.suggestionBackView1.frame, 0, -distance);
-        NSInteger index = wself.curWheelIndex + 1;
-        wself.curWheelIndex = index % entryModel.activeInfo.count;
-        [wself refreshSuggestionInfoWithIndex:wself.curWheelIndex];
+        NSLog(@"zlj animatefinish: %@,curFrame:%@ popFrame:%@",finished ? @"YES" : @"NO",NSStringFromCGRect(curBubble.frame),NSStringFromCGRect(popBuuble.frame));
+        curBubble.frame = CGRectOffset(curBubble.frame, 0, 60.0f);
+        NSLog(@"zlj curIndex:%d",wself.curWheelIndex);
+        wself.curWheelIndex = (wself.curWheelIndex + 1) % entryModel.activeInfo.count;
+        NSUInteger nextIndex = (wself.curWheelIndex + 1) % entryModel.activeInfo.count;
+        [wself prepareNext:curBubble model:entryModel.activeInfo[nextIndex]];
     }];
 }
 
@@ -273,8 +170,7 @@
     if (![self canWheel]) {
         return;
     }
-    self.wheelTimer = [NSTimer scheduledNoRetainTimerWithTimeInterval:2.0f target:self selector:@selector(wheelSuggestionInfo) userInfo:nil repeats:YES];
-    self.curWheelIndex = self.curWheelIndex + 1;
+    self.wheelTimer = [NSTimer scheduledNoRetainTimerWithTimeInterval:4.0f target:self selector:@selector(wheelSuggestionInfo) userInfo:nil repeats:YES];
     [self.wheelTimer fire];
 }
 

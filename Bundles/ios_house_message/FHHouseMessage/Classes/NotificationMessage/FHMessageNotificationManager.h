@@ -31,7 +31,4 @@
                              cursor:(NSNumber *)cursor // 如果为nil默认为0
                     completionBlock:(void(^)(NSError *error, TTMessageNotificationResponseModel *response))completionBlock;
 
-/** 判断当前的cursor是否达到了已读/未读的分界线cursor */
-- (BOOL)isReachUnreadWithCursor:(NSNumber *)cursor readCursor:(NSNumber *)readCursor;
-
 @end
