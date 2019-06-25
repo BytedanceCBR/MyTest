@@ -17,6 +17,7 @@
 #import "FHUGCGuideHelper.h"
 #import "FHUGCGuideView.h"
 #import "TTForumPostThreadStatusViewModel.h"
+#import "FHEnvContext.h"
 
 @interface FHCommunityViewController ()
 
@@ -53,7 +54,7 @@
 }
 
 - (void)addUgcGuide {
-    if([FHUGCGuideHelper shouldShowSearchGuide]){
+    if([FHUGCGuideHelper shouldShowSearchGuide] && [FHEnvContext isUGCOpen]){
         [self.guideView show:self.view dismissDelayTime:5.0f];
     }
 }
@@ -233,14 +234,21 @@
     _viewModel = [[FHCommunityViewModel alloc] initWithCollectionView:self.collectionView controller:self];
 }
 
-- (void)hideSegmentControl {
-    self.segmentControl.hidden = YES;
-    self.bottomLineView.hidden = YES;
-    self.topView.hidden = YES;
-    _collectionView.backgroundColor = [UIColor whiteColor];
-    [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(0);
-    }];
+- (void)showSegmentControl:(BOOL)isShow {
+    self.segmentControl.hidden = !isShow;
+    self.bottomLineView.hidden = !isShow;
+    self.topView.hidden = !isShow;
+    if(isShow){
+        _collectionView.backgroundColor = [UIColor themeGray7];
+        [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(60);
+        }];
+    }else{
+        _collectionView.backgroundColor = [UIColor whiteColor];
+        [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+    }
 }
 
 //进入搜索页
