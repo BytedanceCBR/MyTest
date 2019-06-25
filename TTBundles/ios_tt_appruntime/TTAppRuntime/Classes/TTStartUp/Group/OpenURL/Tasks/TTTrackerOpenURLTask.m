@@ -9,6 +9,9 @@
 #import "TTTrackerOpenURLTask.h"
 #import <TTSandBoxHelper.h>
 #import <TTTrackerSessionHandler.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTTrackerOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_HIGH+1);
 
 @implementation TTTrackerOpenURLTask
 

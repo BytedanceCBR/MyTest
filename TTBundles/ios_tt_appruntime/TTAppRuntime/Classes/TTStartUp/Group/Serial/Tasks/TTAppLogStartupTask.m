@@ -28,7 +28,9 @@
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "SSCommonLogic.h"
 #import "CommonURLSetting.h"
+#import "TTLaunchDefine.h"
 
+DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
 
 @implementation TTAppLogStartupTask
 

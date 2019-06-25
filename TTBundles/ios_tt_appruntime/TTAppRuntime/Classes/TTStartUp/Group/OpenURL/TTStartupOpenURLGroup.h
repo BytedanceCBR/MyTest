@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/22.
 //
 //
-
+#if 0
 #import "TTStartupGroup.h"
 
 typedef NS_ENUM(NSUInteger, TTOpenURLType) {
@@ -28,3 +28,4 @@ typedef NS_ENUM(NSUInteger, TTOpenURLType) {
 + (TTStartupOpenURLGroup *)openURLGroup;
 
 @end
+#endif

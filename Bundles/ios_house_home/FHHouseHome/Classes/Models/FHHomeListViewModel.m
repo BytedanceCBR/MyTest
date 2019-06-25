@@ -127,15 +127,25 @@
             self.isRequestFromSwitch = NO;
             FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
             
-            self.isSelectIndex = YES;
-            
-            [self configIconRowCountAndHeight];
-            
-            
             if (xConfigDataModel.cityAvailability.enable.boolValue)
             {
                 [self.homeViewController.emptyView hideEmptyView];
             }
+            
+            self.headerHeight = [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
+            if (xConfigDataModel.houseTypeList.count <= 1) {
+                self.headerHeight += KFHHomeSectionHeight;
+            }else
+            {
+                self.headerHeight += 1;
+            }
+            [self.tableViewV reloadData];
+            
+            [self setUpTableScrollOffsetZero];
+            
+            self.isSelectIndex = YES;
+            
+            [self configIconRowCountAndHeight];
             
             //更新冷启动默认选项
             if (xConfigDataModel.houseTypeDefault && (xConfigDataModel.houseTypeDefault.integerValue > 0) && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
@@ -165,7 +175,7 @@
             if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 [FHHomeCellHelper sharedInstance].isFirstLanuch = NO;
                                 
-                [self.tableViewV reloadData];
+//                [self.tableViewV reloadData];
                 
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
                 
