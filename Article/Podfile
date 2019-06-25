@@ -1,12 +1,12 @@
 #—————————————pod私有源--------------------------------------
-source 'git@code.byted.org:iOS_Library/toutiao_binary_repo.git' #TTRNKit 二进制版本在此仓库中
-source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git' #TTRNKit 源码在此仓库中
-source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'#一定要把这个源放在publicthird_source_repo.git之前，才能引用到正确的React组件
-source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
-source 'git@code.byted.org:ugc/UGCSpecs.git'
-#source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
-
-source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
+#source 'git@code.byted.org:iOS_Library/toutiao_binary_repo.git' #TTRNKit 二进制版本在此仓库中
+#source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git' #TTRNKit 源码在此仓库中
+#source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'#一定要把这个源放在publicthird_source_repo.git之前，才能引用到正确的React组件
+#source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
+#source 'git@code.byted.org:ugc/UGCSpecs.git'
+##source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+#
+#source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
 
 require File.dirname(__FILE__)+'/pod_binary.rb'
 install! 'cocoapods', :warn_for_multiple_pod_sources => false
@@ -48,11 +48,12 @@ def appPods
 
     pod 'FHWebView', :path => '../AKPlugins/FHWebView'
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '898fbc9d6beb4e7e9094487eea1b2ffeb16f618b' #:branch => 'feature/develop'
-#    pod 'ios_house_im' , :path => '../../../f_pods/ios_house_im'
+    #pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '898fbc9d6beb4e7e9094487eea1b2ffeb16f618b' #:branch => 'feature/develop'
+    pod 'ios_house_im' , '0.1.1'
 
-    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
-
+    #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
+    pod 'ios_house_filter' , '1.0.1'
+    
     #---------------------------------------------------头条业务源码库--------------------------------------------------#
     pod 'TTAD', :path => '../TTBundles/ios_tt_ad'
     pod 'TTAiKan', :path => '../TTBundles/ios_tt_aikan'
@@ -397,7 +398,7 @@ def appPods
     #pod 'TTAVRecorder', '1.1.1'
 
     #----弹窗互斥---
-    pod 'TTDialogDirector', :git => 'git@code.byted.org:TTIOS/TTDialogDirector.git', :commit => '8ed5beb', :subspecs => [
+    pod 'TTDialogDirector', '0.1.4' , :subspecs => [ #:git => 'git@code.byted.org:TTIOS/TTDialogDirector.git', :commit => '8ed5beb',
     'Core',
     'PhotoLibrary',
     'Microphone',
@@ -508,27 +509,27 @@ def appPods
 
 
     pod 'TTIMSDK', '0.7.7', :subspecs => [
-    'IMKit',
-    'IMKit_WebSocket',
-    'Feature_ApplicationStatus',
-    'IMKit_Core',
-    'Foundation_Plugin_TTNetwork',
-    'Foundation',
-    'Feature_WebSocket',
-    'Feature_Essential_PB',
-    'Feature_Essential',
-    'Feature_Core_Store',
-    'Feature_Core_Sender',
-    'Feature_Core_Puller',
-    'Feature_Core_Notifier',
-    'Feature_Core_Logger',
-    'Feature_Core_ErrorHandler',
-    'Feature_Core_CurrentUser',
-    'Feature_Core_ConversationInfo',
-    'Feature_Core_Config',
-    'Feature_Core',
-    'Feature_ApplicationStatus',
-    'Bridges'
+        'IMKit',
+        'IMKit_WebSocket',
+        'Feature_ApplicationStatus',
+        'IMKit_Core',
+        'Foundation_Plugin_TTNetwork',
+        'Foundation',
+        'Feature_WebSocket',
+        'Feature_Essential_PB',
+        'Feature_Essential',
+        'Feature_Core_Store',
+        'Feature_Core_Sender',
+        'Feature_Core_Puller',
+        'Feature_Core_Notifier',
+        'Feature_Core_Logger',
+        'Feature_Core_ErrorHandler',
+        'Feature_Core_CurrentUser',
+        'Feature_Core_ConversationInfo',
+        'Feature_Core_Config',
+        'Feature_Core',
+        'Feature_ApplicationStatus',
+        'Bridges'
     ]
     
     pod_binary 'IGListKit','3.4.0'
