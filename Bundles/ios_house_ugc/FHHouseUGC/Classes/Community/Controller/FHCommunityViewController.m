@@ -195,9 +195,9 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
     
-    FHWDAnswerPictureTextViewController *vc = [[FHWDAnswerPictureTextViewController alloc] init];
-    TTNavigationController *navVC = [[TTNavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:navVC animated:YES completion:nil];
+//    FHWDAnswerPictureTextViewController *vc = [[FHWDAnswerPictureTextViewController alloc] init];
+//    TTNavigationController *navVC = [[TTNavigationController alloc] initWithRootViewController:vc];
+//    [self presentViewController:navVC animated:YES completion:nil];
 }
 
 - (void)hideSegmentControl {

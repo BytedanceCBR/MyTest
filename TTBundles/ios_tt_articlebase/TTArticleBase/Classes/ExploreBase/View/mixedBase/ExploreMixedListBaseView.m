@@ -4424,19 +4424,21 @@ TTRefreshViewDelegate
                         if (self.remindView.type == NewsListTipsReminderViewTypeShowOnce) {
                             self.remindView.disappearActionBlock = ^(BOOL finished){
                                 StrongSelf;
-                                if (count > 0) {
-                                    [self notifyTipCount:count useDotStyle:useDotStyle withTabTag:[TTTabBarProvider currentSelectedTabTag]];
-                                } else {
-                                    [self clearTipCount];
-                                }
+//                                if (count > 0) {
+//                                    [self notifyTipCount:count useDotStyle:useDotStyle withTabTag:[TTTabBarProvider currentSelectedTabTag]];
+//                                } else {
+//                                    [self clearTipCount];
+//                                }
+                                [self clearTipCount];
                             };
                         }
                     } else {
-                        if (count > 0) {
-                            [self notifyTipCount:count useDotStyle:useDotStyle forTag:[TTTabBarProvider currentSelectedTabTag]];
-                        }else {
-                            [self clearTipCount];
-                        }
+                        [self clearTipCount];
+//                        if (count > 0) {
+//                            [self notifyTipCount:count useDotStyle:useDotStyle forTag:[TTTabBarProvider currentSelectedTabTag]];
+//                        }else {
+//                            [self clearTipCount];
+//                        }
                     }
                 }
                 
@@ -4548,7 +4550,7 @@ TTRefreshViewDelegate
         return;
     }
     
-          [self notifyTipCount:count useDotStyle:dotStyle forTag:curTag];
+//    [self notifyTipCount:count useDotStyle:dotStyle forTag:curTag];
 }
 
 - (void)clearTipCount {

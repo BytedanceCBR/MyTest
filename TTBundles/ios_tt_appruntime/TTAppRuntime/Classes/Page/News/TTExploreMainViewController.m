@@ -670,9 +670,9 @@
     if ([tabBarController isKindOfClass:[TTArticleTabBarController class]]) {
         [tabBarController didChangeCategory];
         
-        if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey]) {
+        if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey]) {
             // 清除tab红点
-            [[NSNotificationCenter defaultCenter] postNotificationName:kChangeExploreTabBarBadgeNumberNotification object:nil userInfo:@{kExploreTabBarItemIndentifierKey:kTTTabHomeTabKey, kExploreTabBarBadgeNumberKey:@(0)}];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kChangeExploreTabBarBadgeNumberNotification object:nil userInfo:@{kExploreTabBarItemIndentifierKey:kFHouseFindTabKey, kExploreTabBarBadgeNumberKey:@(0)}];
         }
     }
     
