@@ -169,13 +169,6 @@ static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageN
     }];
 }
 
-- (BOOL)isReachUnreadWithCursor:(NSNumber *)cursor readCursor:(NSNumber *)readCursor
-{
-    //服务端的cursor拉链是由小到大排列，比分界线cursor小则为旧的已读数据，大则为新的未读数据
-    return cursor.longLongValue <= readCursor.longLongValue;
-}
-
-
 #pragma mark - 设置轮询间隔
 // 轮询间隔由本接口下发
 - (void)setNewMessageNotificationCheckInterval:(NSTimeInterval)interval

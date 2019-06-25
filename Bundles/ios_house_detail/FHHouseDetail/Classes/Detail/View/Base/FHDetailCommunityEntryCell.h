@@ -1,0 +1,11 @@
+//
+// Created by zhulijun on 2019-06-24.
+//
+
+#import <Foundation/Foundation.h>
+#import "FHDetailBaseCell.h"
+
+
+@interface FHDetailCommunityEntryCell : FHDetailBaseCell
+@property(nonatomic, weak)UITableView *tableView;
+@end

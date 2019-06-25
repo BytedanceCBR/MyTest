@@ -45,6 +45,7 @@
 #import "FHDetailOldNearbyMapCell.h"
 #import "FHDetailOldEvaluateCell.h"
 #import "FHDetailOldComfortCell.h"
+#import "FHDetailCommunityEntryCell.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -88,6 +89,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailAveragePriceComparisonCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAveragePriceComparisonCell class])];
     [self.tableView registerClass:[FHDetailOldNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldNearbyMapCell class])];
     [self.tableView registerClass:[FHDetailOldComfortCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldComfortCell class])];
+    [self.tableView registerClass:[FHDetailCommunityEntryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryCell class])];
 
 }
 // cell class
@@ -186,6 +188,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     // 舒适指数
     if ([model isKindOfClass:[FHDetailOldComfortModel class]]) {
         return [FHDetailOldComfortCell class];
+    }
+    // ugc 圈子入口
+    if ([model isKindOfClass:[FHDetailCommunityEntryModel class]]) {
+        return [FHDetailCommunityEntryCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -443,11 +449,21 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         infoModel.baseViewModel = self;
         [self.items addObject:infoModel];
     }
+    //ugc 圈子入口
+    BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
+    if(showUgcEntry){
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        [self.items addObject:model.data.ugcSocialGroup];
+    }
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
+        if(!showUgcEntry){
+            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+            [self.items addObject:grayLine];
+        }
+
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
         infoModel.tableView = self.tableView;

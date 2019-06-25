@@ -192,4 +192,26 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *reportUrl;
 @end
 
+@interface FHDetailCommunityEntryActiveCountInfoModel : JSONModel
+@property (nonatomic, copy , nullable) NSNumber *count;
+@property (nonatomic, copy , nullable) NSString *numColor;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@end
+
+
+@interface FHDetailCommunityEntryActiveInfoModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *activeUserAvatar;
+@property (nonatomic, copy , nullable) NSString *suggestInfo;
+@property (nonatomic, copy , nullable) NSString *suggestInfoColor;
+@end
+
+@protocol FHDetailCommunityEntryActiveInfoModel;
+
+@interface FHDetailCommunityEntryModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *socialGroupId;
+@property (nonatomic, strong , nullable) FHDetailCommunityEntryActiveCountInfoModel *activeCountInfo;
+@property (nonatomic, strong , nullable) NSArray<FHDetailCommunityEntryActiveInfoModel> *activeInfo;
+@property (nonatomic, copy , nullable) NSString *socialGroupSchema;
+@end
 NS_ASSUME_NONNULL_END
