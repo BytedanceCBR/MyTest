@@ -240,7 +240,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 }
 
 - (void)addUgcGuide {
-    if([FHUGCGuideHelper shouldShowSecondTabGuide] && !self.isAlreadyShowedGuideView){
+    if([FHUGCGuideHelper shouldShowSecondTabGuide] && !self.isAlreadyShowedGuideView && [FHEnvContext isUGCOpen]){
         self.isAlreadyShowedGuideView = YES;
         [self.guideView show:self.view dismissDelayTime:5.0f];
     }

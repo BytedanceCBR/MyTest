@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)viewWillAppear;
 
+- (void)showUGC:(BOOL)isShow;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -44,6 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 // ugc配置
 + (TTHttpTask *)requestUGCConfig:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion;
 
+// 删除帖子
++ (TTHttpTask *)postDelete:(NSString *)groupId completion:(void(^)(bool success , NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

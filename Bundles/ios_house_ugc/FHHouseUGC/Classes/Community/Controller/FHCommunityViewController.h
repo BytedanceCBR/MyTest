@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) UIView *containerView;
 @property(nonatomic , strong) HMSegmentedControl *segmentControl;
 
-- (void)hideSegmentControl;
+- (void)showSegmentControl:(BOOL)isShow;
 
 @end
 

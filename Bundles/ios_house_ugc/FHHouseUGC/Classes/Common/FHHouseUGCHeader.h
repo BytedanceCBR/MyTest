@@ -8,6 +8,9 @@
 #ifndef FHHouseUGCHeader_h
 #define FHHouseUGCHeader_h
 
+//通知
+static NSString *const kFHUGCPostDeleteSuccessNotification = @"kFHUGCPostDeleteSuccessNotification";
+
 typedef NS_ENUM(NSInteger, FHCommunityFeedListType)
 {
     FHCommunityFeedListTypeNearby = 0,
