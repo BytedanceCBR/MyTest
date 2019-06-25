@@ -28,6 +28,9 @@ static NSString *const kFHUGCFollowNotification = @"k_fh_ugc_follow_finish";
 // 关注列表
 - (NSArray<FHUGCScialGroupDataModel> *)followList;
 
+// 根据groupid去关注的列表中获取最新的关注数据信息，取消关注可能获取的数据为nil
+- (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id;
+
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 /*
  - status

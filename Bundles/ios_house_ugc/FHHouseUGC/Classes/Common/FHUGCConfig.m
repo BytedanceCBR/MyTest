@@ -170,6 +170,19 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     return self.followData.data.userFollowSocialGroups;
 }
 
+- (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id {
+    __block FHUGCScialGroupDataModel *groupData = nil;
+    if (social_group_id.length > 0 && self.followData.data.userFollowSocialGroups.count > 0) {
+        [self.followData.data.userFollowSocialGroups enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.socialGroupId isEqualToString:social_group_id]) {
+                groupData = obj;
+                *stop = YES;
+            }
+        }];
+    }
+    return groupData;
+}
+
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 - (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow completion:(void (^ _Nullable)(BOOL isSuccess))completion {
     if (![TTReachability isNetworkConnected]) {
@@ -272,10 +285,12 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
 - (void)loadLocalUgcConfigData {
     // 参考上面
+    // kFHUGCConfigDataKey
 }
 
 - (void)saveLocalUgcConfigData {
     // 参考上面
+    // kFHUGCConfigDataKey
 }
 
 @end
