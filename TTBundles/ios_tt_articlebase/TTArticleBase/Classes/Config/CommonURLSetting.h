@@ -231,13 +231,6 @@ NSString * logBaseURL(void);
 
 @end
 
-@interface CommonURLSetting (TTMessageNotification)
-
-+ (NSString*)messageNotificationListURLString; // 新消息通知列表
-+ (NSString*)messageNotificationUnreadURLString; // 新消息通知未读提示
-
-@end
-
 @interface CommonURLSetting (TTFlowStatistics)
 
 + (NSString *)queryResidualFlowURLString;

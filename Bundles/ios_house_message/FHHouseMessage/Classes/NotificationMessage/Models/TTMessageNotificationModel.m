@@ -13,17 +13,19 @@
 
 @implementation TTMessageNotificationModel
 
-+ (JSONKeyMapper *)keyMapper
-{
-    return [[JSONKeyMapper alloc] initWithDictionary:@{
-                                                      @"create_time": @"createTime",
-                                                      @"id": @"ID",
-                                                      @"type": @"actionType",
-                                                       }];
++ (JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+            @"createTime": @"create_time",
+            @"ID": @"id",
+            @"actionType": @"type",
+    };
+    return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName] ?: keyName;
+    }];
 }
 
-- (instancetype)init{
-    if(self = [super init]){
+- (instancetype)init {
+    if (self = [super init]) {
         self.cachedHeight = @(0);
         self.hasFollowed = @(0);
         self.hasBeFollowed = @(0);
@@ -31,28 +33,26 @@
     return self;
 }
 
-- (BOOL)isEqual:(id)object
-{
+- (BOOL)isEqual:(id)object {
     if (self == object) {
         return YES;
     }
-    
+
     if (![object isKindOfClass:[TTMessageNotificationModel class]]) {
         return NO;
     }
-    
-    TTMessageNotificationModel *other = (TTMessageNotificationModel *)object;
+
+    TTMessageNotificationModel *other = (TTMessageNotificationModel *) object;
     BOOL equal = IsEqualNumber(self.cursor, other.cursor);
-    
+
     return equal;
 }
 
-- (NSUInteger)hash
-{
+- (NSUInteger)hash {
     NSUInteger prime = 31;
     NSUInteger result = 1;
     result = prime * result + [self.cursor hash];
-    
+
     return result;
 }
 
@@ -64,93 +64,80 @@
 
 @implementation TTMessageNotificationUserModel
 
-+ (JSONKeyMapper *)keyMapper
-{
-    return [[JSONKeyMapper alloc] initWithDictionary:@{
-                                                       @"user_id": @"userID",
-                                                       @"screen_name": @"screenName",
-                                                       @"avatar_url": @"avatarUrl",
-                                                       @"user_auth_info": @"userAuthInfo",
-                                                       @"contact_info": @"contactInfo",
-                                                       @"relation_info": @"relationInfo",
-                                                       @"user_decoration": @"userDecoration"
-                                                       }];
++ (JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+            @"userID": @"user_id",
+            @"screenName": @"screen_name",
+            @"avatarUrl": @"avatar_url",
+            @"userAuthInfo": @"user_auth_info",
+            @"contactInfo": @"contact_info",
+            @"relationInfo": @"relation_info",
+            @"userDecoration": @"user_decoration"
+    };
+    return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName] ?: keyName;
+    }];
 }
 
 @end
 
 @implementation TTMessageNotificationWDProfitModel
 
-+ (JSONKeyMapper *)keyMapper
-{
-    return [[JSONKeyMapper alloc] initWithDictionary:@{
-                                                       @"icon_day_url": @"iconDayUrl",
-                                                       @"icon_night_url": @"iconNightUrl",
-                                                       @"text": @"text",
-                                                       @"amount" : @"amount"
-                                                       }];
++ (JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+            @"iconDayUrl": @"icon_day_url",
+            @"iconNightUrl": @"icon_night_url",
+            @"text": @"text",
+            @"amount": @"amount"
+    };
+    return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName] ?: keyName;
+    }];
 }
 
 @end
 
 @implementation TTMessageNotificationContentModel
 
-+ (JSONKeyMapper *)keyMapper
-{
-    return [[JSONKeyMapper alloc] initWithDictionary:@{
-                                                      @"body_text": @"bodyText",
-                                                      @"body_url": @"bodyUrl",
-                                                      @"ref_text": @"refText",
-                                                      @"ref_thumb_url": @"refThumbUrl",
-                                                      @"multi_text": @"multiText",
-                                                      @"multi_url": @"multiUrl",
-                                                      @"action_text": @"actionText",
-                                                      @"goto_text": @"gotoText",
-                                                      @"goto_thumb_url" : @"gotoThumbUrl",
-                                                      @"goto_url" :@"gotoUrl",
-                                                      @"ref_image_type" : @"refImageType",
-                                                      @"filter_words" : @"filterWords"
-                                                      }];
++ (JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+            @"bodyText": @"body_text",
+            @"bodyUrl": @"body_url",
+            @"refText": @"ref_text",
+            @"refThumbUrl": @"ref_thumb_url",
+            @"multiText": @"multi_text",
+            @"multiUrl": @"multi_url",
+            @"actionText": @"action_text",
+            @"gotoText": @"goto_text",
+            @"gotoThumbUrl": @"goto_thumb_url",
+            @"gotoUrl": @"goto_url",
+            @"refImageType": @"ref_image_type",
+            @"filterWords": @"filter_words"
+    };
+    return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName] ?: keyName;
+    }];
 }
 
 @end
 
 @implementation TTMessageNotificationResponseModel
 
-+ (JSONKeyMapper *)keyMapper
-{
-    return [[JSONKeyMapper alloc] initWithDictionary:@{
-                                                      @"msg_list": @"msgList",
-                                                      @"has_more": @"hasMore",
-                                                      @"read_cursor": @"readCursor",
-                                                      @"min_cursor": @"minCursor"
-                                                       }];
++ (JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+            @"msgList": @"msg_list",
+            @"hasMore": @"has_more",
+            @"readCursor": @"read_cursor",
+            @"minCursor": @"min_cursor"
+    };
+    return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName] ?: keyName;
+    }];
 }
+@end
 
-- (void)setMsgListWithNSArray:(NSArray *)msgList
-{
-    NSMutableArray *mutArr = [NSMutableArray array];
-    
-    for (NSDictionary *msgDict in msgList) {
-        if ([msgDict isKindOfClass:[NSDictionary class]]) {
-            NSError *error;
-            TTMessageNotificationModel *msgModel = [[TTMessageNotificationModel alloc] initWithDictionary:msgDict error:&error];
-            
-            if (msgModel) {
-                [mutArr addObject:msgModel];
-            } else {
-                NSMutableDictionary *extraParams = [NSMutableDictionary dictionary];
-                
-                [extraParams setValue:[msgDict objectForKey:@"style"] forKey:@"style"];
-                [extraParams setValue:@(error.code) forKey:@"err_code"];
-                [extraParams setValue:error.localizedDescription forKey:@"err_des"];
-                
-                [[TTMonitor shareManager] trackService:@"tt_message_monitor_model_error" status:1 extra:[extraParams copy]];
-            }
-        }
-    }
-    
-    self.msgList = [mutArr copy];
+@implementation TTMessageNotificationRespModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
 }
-
 @end

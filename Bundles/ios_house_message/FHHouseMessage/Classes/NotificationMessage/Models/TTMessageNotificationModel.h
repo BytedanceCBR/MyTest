@@ -96,3 +96,9 @@ typedef NS_ENUM(NSUInteger, TTMessageNotificationStyle) {
 
 @end
 
+@interface TTMessageNotificationRespModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) TTMessageNotificationResponseModel *data ;
+@end
+

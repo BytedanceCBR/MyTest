@@ -15,29 +15,29 @@
 #import "CommonURLSetting.h"
 #import "FHUnreadMsgModel.h"
 #import "FHMessageNotificationTipsManager.h"
+#import "FHMessageAPI.h"
 
 #define kMessageNotificationFetchUnreadMessageDefaultTimeInterval 30
 #define kMessageNotificationFetchUnreadMessageMinTimeInterval 15
 
-static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNotificationCheckIntervalKey";
+static NSString *const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNotificationCheckIntervalKey";
 
 @interface FHMessageNotificationManager ()
 
-@property (nonatomic, strong) NSTimer *timer;
-@property (nonatomic, assign) NSTimeInterval lastInterval;
+@property(nonatomic, strong) NSTimer *timer;
+@property(nonatomic, assign) NSTimeInterval lastInterval;
 
 @end
 
 @implementation FHMessageNotificationManager
 
-+ (instancetype)sharedManager
-{
++ (instancetype)sharedManager {
     static FHMessageNotificationManager *manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[FHMessageNotificationManager alloc] init];
     });
-    
+
     return manager;
 }
 
@@ -53,11 +53,11 @@ static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageN
 }
 
 #pragma mark - 定时轮询拉取未读消息提示
-- (void)startPeriodicalFetchUnreadMessageNumberWithChannel:(NSString *)channel
-{
+
+- (void)startPeriodicalFetchUnreadMessageNumberWithChannel:(NSString *)channel {
     [self stopPeriodicalFetchUnreadMessageNumber];
     //未登录启动时调用一次后，再登录，不会调用此方法，因此第一次需要构造timer
-    
+
     self.timer = [NSTimer scheduledTimerWithTimeInterval:[self fetchUnreadTimeInterval] target:self selector:@selector(periodicalFetchUnreadMessage:) userInfo:nil repeats:YES];
     [self.timer fire];
 }
@@ -70,8 +70,7 @@ static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageN
     });
 }
 
-- (NSTimeInterval)fetchUnreadTimeInterval
-{
+- (NSTimeInterval)fetchUnreadTimeInterval {
     NSTimeInterval timeInterval = [self newMessageNotificationCheckInterval];
     if (!timeInterval) {
         timeInterval = kMessageNotificationFetchUnreadMessageDefaultTimeInterval;
@@ -79,105 +78,83 @@ static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageN
     if (timeInterval < kMessageNotificationFetchUnreadMessageMinTimeInterval) {
         timeInterval = kMessageNotificationFetchUnreadMessageDefaultTimeInterval;
     }
-    
+
     self.lastInterval = timeInterval;
-    
+
     return timeInterval;
 }
 
-- (void)stopPeriodicalFetchUnreadMessageNumber
-{
+- (void)stopPeriodicalFetchUnreadMessageNumber {
     if (self.timer) {
         [self.timer invalidate];
         self.timer = nil;
     }
 }
 
-- (void)periodicalFetchUnreadMessage:(NSTimer *)timer
-{
+- (void)periodicalFetchUnreadMessage:(NSTimer *)timer {
     [self fetchUnreadMessageWithChannel:nil callback:nil];
 }
 
 #pragma mark - 手动拉取未读消息提示
-- (void)fetchUnreadMessageWithChannel:(NSString *)channel callback:(void(^)(FHUnreadMsgDataUnreadModel *))callback;
-{
+
+- (void)fetchUnreadMessageWithChannel:(NSString *)channel callback:(void (^)(FHUnreadMsgDataUnreadModel *))callback; {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     if (!isEmptyString(channel)) {
         params[@"from"] = channel;
     }
-    
-    [[TTNetworkManager shareInstance] requestForJSONWithURL:[CommonURLSetting messageNotificationUnreadURLString] params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        if (error || ![jsonObj isKindOfClass:[NSDictionary class]] || [jsonObj tt_intValueForKey:@"status"] != 0) {
-            if(callback){
+
+    [FHMessageAPI requestUgcUnreadMessageWithChannel:channel completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+        if (error || ![model isKindOfClass:[FHUGCUnreadMsgModel class]] || [model.status integerValue] != 0) {
+            if (callback) {
                 callback(nil);
             }
             return;
         }
-        NSDictionary *response = [(NSDictionary *)jsonObj tt_objectForKey:@"data"];
-        FHUnreadMsgDataUnreadModel *tipsModel = [[FHUnreadMsgDataUnreadModel alloc] initWithDictionary:response error:nil];
-        if(callback){
+        FHUGCUnreadMsgModel *unreadMsgModel = (FHUGCUnreadMsgModel *) model;
+        FHUnreadMsgDataUnreadModel *tipsModel = unreadMsgModel.data;
+
+        if (callback) {
             callback(tipsModel);
         }
         if (tipsModel && tipsModel.hasHistoryMsg) {
-            dispatch_main_async_safe(^{
-                [[FHMessageNotificationTipsManager sharedManager] updateTipsWithModel:tipsModel];
-                if([tipsModel.interval doubleValue] != self.lastInterval){
-                    [self setNewMessageNotificationCheckInterval:[tipsModel.interval doubleValue]];
+            [[FHMessageNotificationTipsManager sharedManager] updateTipsWithModel:tipsModel];
+            if ([tipsModel.interval doubleValue] != self.lastInterval) {
+                [self setNewMessageNotificationCheckInterval:[tipsModel.interval doubleValue]];
 
-                    [self stopPeriodicalFetchUnreadMessageNumber];
+                [self stopPeriodicalFetchUnreadMessageNumber];
 
-                    self.timer = [NSTimer scheduledTimerWithTimeInterval:[self fetchUnreadTimeInterval] target:self selector:@selector(periodicalFetchUnreadMessage:) userInfo:nil repeats:YES];
-                }
-            });
+                self.timer = [NSTimer scheduledTimerWithTimeInterval:[self fetchUnreadTimeInterval] target:self selector:@selector(periodicalFetchUnreadMessage:) userInfo:nil repeats:YES];
+            }
         }
     }];
+
 }
 
 #pragma mark - 拉取消息通知列表
-- (void)fetchMessageListWithChannel:(NSString *)channel cursor:(NSNumber *)cursor completionBlock:(void (^)(NSError *, TTMessageNotificationResponseModel *))completionBlock
-{
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    if (!isEmptyString(channel)) {
-        params[@"from"] = channel;
-    }
-    
-    if (cursor) {
-        params[@"cursor"] = cursor;
-    }
-    
-    [[TTNetworkManager shareInstance] requestForJSONWithURL:[CommonURLSetting messageNotificationListURLString] params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        if (error || ![jsonObj isKindOfClass:[NSDictionary class]] || [jsonObj tt_intValueForKey:@"error_code"] != 0) {
-            if (!error) {
-                error = [NSError errorWithDomain:kTTMessageNotificationErrorDomain code:-1 userInfo:nil];
-            }
+
+- (void)fetchMessageListWithChannel:(NSString *)channel cursor:(NSNumber *)cursor completionBlock:(void (^)(NSError *, TTMessageNotificationResponseModel *))completionBlock {
+    [FHMessageAPI requestUgcMessageList:cursor channel:channel completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+        if (!model || error || ![model isKindOfClass:TTMessageNotificationRespModel.class]) {
             if (completionBlock) {
-                dispatch_main_async_safe(^{
-                    completionBlock(error, nil);
-                });
+                completionBlock(error, nil);
             }
-            return;
         }
-        NSDictionary *response = [(NSDictionary *)jsonObj tt_objectForKey:@"data"];
-        TTMessageNotificationResponseModel *responseModel = [[TTMessageNotificationResponseModel alloc] initWithDictionary:response error:&error];
-        LOGD(@"%@", responseModel.msgList);
+        TTMessageNotificationRespModel *respModel = (TTMessageNotificationRespModel *) model;
         if (completionBlock) {
-            dispatch_main_async_safe(^{
-                completionBlock(nil, responseModel);
-            });
+            completionBlock(nil, respModel.data);
         }
     }];
 }
 
 #pragma mark - 设置轮询间隔
+
 // 轮询间隔由本接口下发
-- (void)setNewMessageNotificationCheckInterval:(NSTimeInterval)interval
-{
+- (void)setNewMessageNotificationCheckInterval:(NSTimeInterval)interval {
     [[NSUserDefaults standardUserDefaults] setDouble:interval forKey:kNewMessageNotificationCheckIntervalKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (NSTimeInterval)newMessageNotificationCheckInterval
-{
+- (NSTimeInterval)newMessageNotificationCheckInterval {
     NSTimeInterval interval = [[NSUserDefaults standardUserDefaults] doubleForKey:kNewMessageNotificationCheckIntervalKey];
     return interval;
 }

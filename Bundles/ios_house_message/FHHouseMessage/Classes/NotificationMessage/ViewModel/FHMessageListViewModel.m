@@ -15,6 +15,7 @@
 #import "FHMessageNotificationBaseCell.h"
 #import "TTUIResponderHelper.h"
 #import "FHMessageNotificationTipsManager.h"
+#import "TTStringHelper.h"
 
 @interface FHMessageListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -23,7 +24,7 @@
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter; //加载更多footer
 @property(nonatomic, strong) NSMutableDictionary *cellHeightCaches; //缓存的item高度
-@property (nonatomic, strong) NSNumber *maxCursor;
+@property(nonatomic, strong) NSNumber *maxCursor;
 
 @property(nonatomic, strong) NSMutableArray<TTMessageNotificationModel *> *messageModels; //所有拉取到的message模型数组
 @property(nonatomic, assign) BOOL hasMore;
@@ -133,4 +134,15 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    TTMessageNotificationModel *model = self.messageModels[indexPath.row];
+    NSString *bodyUrl = model.content.bodyUrl;
+    if (!isEmptyString(bodyUrl)) {
+        NSURL *openURL = [TTStringHelper URLWithURLString:bodyUrl];
+        if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
+            [[TTRoute sharedRoute] openURLByPushViewController:openURL];
+        }
+    }
+}
 @end

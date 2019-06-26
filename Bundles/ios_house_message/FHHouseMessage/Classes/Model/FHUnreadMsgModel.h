@@ -1,5 +1,6 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
+
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHUnreadMsgDataUnreadModel<NSObject>
 @end
@@ -33,6 +34,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHUnreadMsgDataModel *data ;  
 @end
 
+@interface FHUGCUnreadMsgModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHUnreadMsgDataUnreadModel *data ;
+@end
 
 NS_ASSUME_NONNULL_END
 //END OF HEADER
