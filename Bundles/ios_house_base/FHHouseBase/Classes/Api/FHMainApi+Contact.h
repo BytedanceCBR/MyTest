@@ -16,6 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHFillFormAgencyListItemModel;
 @interface FHMainApi (Contact)
 
+//快速问答 表单
++ (TTHttpTask*)requestQuickQuestionByHouseId:(NSString*)houseId
+                                       phone:(NSString*)phone
+                                        from:(NSString*)from
+                                        type:(NSNumber*)type
+                                  completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 详情页线索提交表单
 + (TTHttpTask*)requestSendPhoneNumbserByHouseId:(NSString*)houseId
