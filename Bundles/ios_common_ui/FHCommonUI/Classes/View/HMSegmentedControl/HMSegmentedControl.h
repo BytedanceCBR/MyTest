@@ -64,6 +64,21 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
 @property (nonatomic, strong) NSArray<UIImage *> *sectionSelectedImages;
 
 /**
+ 目前只在HMSegmentedControlTypeText模式下支持
+ 
+ 格式 @[@1,@0]  1为显示 0为不显示
+ */
+@property (nonatomic, strong) NSArray *sectionRedPoints;
+
+/**
+ 目前只在HMSegmentedControlTypeText模式下支持
+ 
+ 格式 @[@"2",@"",@""]
+ */
+@property (nonatomic, strong) NSArray *sectionMessageTips;
+
+
+/**
   增加是否需要判断网络
  */
 @property (nonatomic, assign) BOOL isNeedNetworkCheck;

@@ -244,7 +244,7 @@
                             @"group_id":groupId,
                             };
     
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:param method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
         
         BOOL success = NO;
         if (!error) {

@@ -77,7 +77,7 @@
                         if (model && jsonParseError == nil) {
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
-                                // 是否有空页面y逻辑 ?? add by zyk
+
                                 if (cellModel) {
                                     if (self.dataList.count == 0) {
                                         [self.dataList addObject:cellModel];
