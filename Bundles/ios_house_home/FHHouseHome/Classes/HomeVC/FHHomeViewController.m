@@ -330,7 +330,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    if(_isMainTabVC)
+    if(_isMainTabVC && self.mainTableView.contentOffset.y <= [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType])
     {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
     }
