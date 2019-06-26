@@ -72,6 +72,13 @@
         StrongSelf;
         [self goPosDetail];
     };
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)initNavBar {
@@ -267,6 +274,25 @@
     self.headerView.topBack.frame = CGRectMake(0, offsetY, rect.size.width, self.headerView.headerBackHeight - offsetY);
 }
 
+// 关注状态改变
+- (void)followStateChanged:(NSNotification *)notification {
+    if (notification) {
+        NSDictionary *userInfo = notification.userInfo;
+        BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
+        NSString *groupId = notification.userInfo[@"social_group_id"];
+        NSString *currentGroupId = self.viewController.communityId;
+        if(groupId.length > 0 && currentGroupId.length > 0) {
+            if ([groupId isEqualToString:currentGroupId]) {
+                if (self.data) {
+                    // 替换关注人数 AA关注BB热帖 替换：AA
+                    [[FHUGCConfig sharedInstance] updateScialGroupDataModel:self.data byFollowed:followed];
+                    [self updateUIWithData:self.data];
+                }
+            }
+        }
+    }
+}
+
 - (void)updateUIWithData:(FHUGCScialGroupDataModel *)data {
     if (!data) {
         self.feedListController.view.hidden = YES;
@@ -278,7 +304,7 @@
     self.viewController.emptyView.hidden = YES;
     [self.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar]];
     self.headerView.nameLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
-    NSString *subtitle = [self generateSubTitle:data];
+    NSString *subtitle = data.countText;// [self generateSubTitle:data];
     self.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
     if (isEmptyString(data.announcement)) {
         self.headerView.publicationsContainer.hidden = YES;

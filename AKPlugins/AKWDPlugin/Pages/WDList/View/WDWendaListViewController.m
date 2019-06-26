@@ -1069,7 +1069,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     if (!_answerListView) {
         CGRect frame = [self p_frameForListView];
         _answerListView = [[SSThemedTableView alloc] initWithFrame:frame style:UITableViewStylePlain];
-        _answerListView.backgroundColor = [UIColor clearColor];
+        _answerListView.backgroundColor = [UIColor whiteColor];
         _answerListView.delegate = self;
         _answerListView.dataSource = self;
         _answerListView.separatorStyle = UITableViewCellSeparatorStyleNone;
