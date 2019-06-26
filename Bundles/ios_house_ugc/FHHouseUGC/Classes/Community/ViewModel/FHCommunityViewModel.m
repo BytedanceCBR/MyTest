@@ -9,6 +9,7 @@
 #import "FHCommunityViewController.h"
 #import "FHCommunityCollectionCell.h"
 #import "FHHouseUGCHeader.h"
+#import <FHEnvContext.h>
 
 #define kCellId @"cellId"
 #define maxCellCount 3
@@ -42,8 +43,14 @@
         self.viewController = (FHCommunityViewController *)viewController;
         
         [self initDataArray];
+        
         //切换开关
-//        [self showUGC:NO];
+        WeakSelf;
+        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+            StrongSelf;
+            FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
+            [self showUGC:xConfigDataModel.ugcCitySwitch];
+        }];
     }
     return self;
 }

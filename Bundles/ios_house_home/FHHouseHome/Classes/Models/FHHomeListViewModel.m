@@ -152,6 +152,8 @@
             
             [self configIconRowCountAndHeight];
             
+            [FHEnvContext changeFindTabTitle];
+            
             //更新冷启动默认选项
             if (xConfigDataModel.houseTypeDefault && (xConfigDataModel.houseTypeDefault.integerValue > 0) && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
                 [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:xConfigDataModel.houseTypeDefault];
