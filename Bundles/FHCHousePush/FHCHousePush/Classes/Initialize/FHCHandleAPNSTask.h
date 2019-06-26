@@ -6,12 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <TTAppRuntime/TTStartupTask.h>
 
 @protocol ArticleAPNsManagerDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHCHandleAPNSTask : NSObject<ArticleAPNsManagerDelegate,UIApplicationDelegate>
+@interface FHCHandleAPNSTask : TTStartupTask<ArticleAPNsManagerDelegate,UIApplicationDelegate>
 
 + (NSString *)deviceTokenString;
 

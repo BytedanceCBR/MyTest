@@ -10,6 +10,10 @@
 #import "SSCommonLogic.h"
 #import <TTMonitor/TTDebugRealMonitorManager.h>
 #import <TTNetworkManager/TTNetworkDefine.h>
+#import "TTLaunchDefine.h"
+
+
+DEC_TASK("TTCrashRepotTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+2);
 
 @implementation TTCrashRepotTask
 

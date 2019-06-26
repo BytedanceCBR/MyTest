@@ -10,8 +10,9 @@
 #import <TTAccountBusiness.h>
 #import "TTProjectLogicManager.h"
 #import "TTAccountTestSettings.h"
+#import "TTLaunchDefine.h"
 
-
+DEC_TASK("TTUserInfoStartupTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH);
 
 @implementation TTUserInfoStartupTask
 

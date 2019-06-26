@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/18.
 //
 //
-
+#if 0
 #import "TTStartupGroup.h"
 
 @interface TTStartupNotificationGroup : TTStartupGroup
@@ -17,3 +17,4 @@ typedef NS_ENUM(NSUInteger, TTNotificationStartupType) {
 + (TTStartupNotificationGroup *)notificationGroup;
 
 @end
+#endif

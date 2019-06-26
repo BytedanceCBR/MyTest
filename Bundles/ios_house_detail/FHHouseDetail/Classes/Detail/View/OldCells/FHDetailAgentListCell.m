@@ -78,6 +78,14 @@
             if (obj.avatarUrl.length > 0) {
                 [itemView.avator bd_setImageWithURL:[NSURL URLWithString:obj.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
             }
+            FHDetailContactImageTagModel *tag = obj.imageTag;
+            [self refreshIdentifyView:itemView.identifyView withUrl:tag.imageUrl];
+            if (tag.imageUrl.length > 0) {
+                [itemView.identifyView bd_setImageWithURL:[NSURL URLWithString:tag.imageUrl]];
+                itemView.identifyView.hidden = NO;
+            }else {
+                itemView.identifyView.hidden = YES;
+            }
             itemView.licenceIcon.hidden = ![self shouldShowContact:obj];
             itemsCount += 1;
         }];
@@ -106,6 +114,30 @@
         }];
     }
     [self updateItems:NO];
+}
+
+- (void)refreshIdentifyView:(UIImageView *)identifyView withUrl:(NSString *)imageUrl
+{
+    if (!identifyView) {
+        return;
+    }
+    if (imageUrl.length > 0) {
+        [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:imageUrl] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+            if (!error && image) {
+                identifyView.image = image;
+                CGFloat ratio = 0;
+                if (image.size.height > 0) {
+                    ratio = image.size.width / image.size.height;
+                }
+                [identifyView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(14 * ratio);
+                }];
+            }
+        }];
+        identifyView.hidden = NO;
+    }else {
+        identifyView.hidden = YES;
+    }
 }
 
 // cell点击
@@ -324,11 +356,13 @@
 
 - (void)setupUI {
     _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_default_avatar"]];
-    _avator.layer.cornerRadius = 23;
+    _avator.layer.cornerRadius = 21;
     _avator.contentMode = UIViewContentModeScaleAspectFill;
     _avator.clipsToBounds = YES;
     [self addSubview:_avator];
     
+    [self addSubview:self.identifyView];
+
     _licenceIcon = [[FHExtendHotAreaButton alloc] init];
     [_licenceIcon setImage:[UIImage imageNamed:@"contact"] forState:UIControlStateNormal];
     [self addSubview:_licenceIcon];
@@ -357,10 +391,17 @@
     [self addSubview:_agency];
     
     [self.avator mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.width.mas_equalTo(46);
+        make.height.width.mas_equalTo(42);
         make.left.mas_equalTo(20);
-        make.top.mas_equalTo(20);
-        make.bottom.mas_equalTo(self);
+        make.top.mas_equalTo(22);
+        make.bottom.mas_equalTo(self).mas_offset(-2);
+    }];
+    CGFloat ratio = 0;
+    [self.identifyView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.avator).mas_offset(2);
+        make.centerX.mas_equalTo(self.avator);
+        make.height.mas_equalTo(14);
+        make.width.mas_equalTo(14 * ratio);
     }];
     [self.name mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avator.mas_right).offset(14);
@@ -389,6 +430,15 @@
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
         make.centerY.mas_equalTo(self.avator);
     }];
+}
+
+
+- (UIImageView *)identifyView
+{
+    if (!_identifyView) {
+        _identifyView = [[UIImageView alloc]init];
+    }
+    return _identifyView;
 }
 
 @end

@@ -50,6 +50,23 @@
 }
 @end
 
+@implementation FHDetailContactImageTagModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"imageUrl":@"image_url"
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHDetailContactModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -67,6 +84,7 @@
                            @"imLabel" : @"chat_button_text",
                            @"callButtonText" : @"call_button_text",
                            @"realtorDetailUrl" : @"main_page_info",
+                           @"imageTag": @"image_tag",
                            @"reportButtonText":@"report_button_text"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

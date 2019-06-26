@@ -6,11 +6,13 @@ PODS:
     - AFNetworking/Reachability (= 2.5.1.1-binary)
     - AFNetworking/Security (= 2.5.1.1-binary)
     - AFNetworking/Serialization (= 2.5.1.1-binary)
+    - AFNetworking/UIKit (= 2.5.1.1-binary)
   - AFNetworking/NSURLConnection (2.5.1.1-binary)
   - AFNetworking/NSURLSession (2.5.1.1-binary)
   - AFNetworking/Reachability (2.5.1.1-binary)
   - AFNetworking/Security (2.5.1.1-binary)
   - AFNetworking/Serialization (2.5.1.1-binary)
+  - AFNetworking/UIKit (2.5.1.1-binary)
   - AKCommentPlugin (0.1.0)
   - AKShareServicePlugin (0.1.0)
   - AKWDPlugin (0.1.0)
@@ -34,6 +36,7 @@ PODS:
   - BDAccountSessionSDK (0.1.11.1-binary)
   - BDALog (0.1.12.1-binary)
   - BDAlogProtocol (0.1.6)
+  - BDAssert/Core (2.0.0)
   - BDTArticle (0.2.3)
   - BDTBasePlayer (0.3.47)
   - BDTExploreOrderedData (0.1.7)
@@ -83,6 +86,7 @@ PODS:
   - FHHouseMessage (0.1.0)
   - FHHouseMine (0.1.0)
   - FHHouseTrend (0.1.0)
+  - FHHouseUGC (0.1.0)
   - FHMapSearch (0.1.0)
   - FHRNKit (0.1.0)
   - FHWebView (0.1.0)
@@ -91,6 +95,7 @@ PODS:
   - FMDB (2.6.2.1-binary):
     - FMDB/standard (= 2.6.2.1-binary)
   - FMDB/standard (2.6.2.1-binary)
+  - Gaia (1.0.7-rc.1)
   - Godzippa (1.1.0.1-binary)
   - Heimdallr/ALog (0.6.27-rc.0.1.binary)
   - Heimdallr/CloudCommand (0.6.27-rc.0.1.binary)
@@ -215,7 +220,7 @@ PODS:
   - OHHTTPStubs/OHPathHelpers (4.2.1.1-binary)
   - OpenSSL-Universal (1.0.1.20.1-binary)
   - OpenUDID (0.1.0.1-binary)
-  - Protobuf (3.0.1-ttv)
+  - Protobuf (3.0.1-ttv.1-binary)
   - React/base (0.55.9-alpha.22.1.binary)
   - React/Core (0.55.9-alpha.22.1.binary)
   - React/CxxBridge (0.55.9-alpha.22.1.binary)
@@ -336,6 +341,7 @@ PODS:
   - TTFileUploadClient (1.7.6.8.1-binary)
   - TTFlowStatisticsManager (0.0.10.1-binary)
   - TTFriendRelation (0.2.10)
+  - TTGaiaExtension (0.2.13)
   - TTGallery (0.1.0)
   - TTHTSVideo (0.1.0)
   - TTImage (0.8.4.1-binary):
@@ -371,8 +377,10 @@ PODS:
   - TTIMSDK/IMKit_Core (0.7.7)
   - TTIMSDK/IMKit_WebSocket (0.7.7)
   - TTInstallService (1.0.0.6.1-binary)
-  - TTKitchen (1.0.2.1-binary)
+  - TTKitchen/Core (1.6.0)
+  - TTKitchen/TTCommonConfig (1.6.0)
   - TTLCSService (0.1.1.1-binary)
+  - TTLocationManager (1.0.22)
   - TTMonitor (0.7.9.44)
   - TTNetBusiness (0.0.10.1-binary)
   - TTNetworkManager (2.2.8.55-rc.1.1.binary)
@@ -432,6 +440,7 @@ PODS:
   - TTPlatformUIModel/TTModel (0.2.39)
   - TTPlatformUIModel/TTSeachBarView (0.2.39)
   - TTPlayerSDK (2.9.9.10)
+  - TTPostBase (0.1.4)
   - TTPreloaderSDK (1.4.20-rc.0)
   - TTPushAuthorizationManager (0.1.3)
   - TTPushManager (0.0.13.4)
@@ -447,10 +456,9 @@ PODS:
   - TTService (0.1.0)
   - TTServiceKit (0.4.1.1-binary)
   - TTServiceProtocols (0.0.5)
-  - TTSettingsManager (0.4.1.1-binary):
-    - TTSettingsManager/Core (= 0.4.1.1-binary)
-  - TTSettingsManager/Core (0.4.1.1-binary)
-  - TTSettingsManager/Debug (0.4.1.1-binary)
+  - TTSettingsManager/Core (0.4.16)
+  - TTSettingsManager/Debug (0.4.16)
+  - TTSettingsManager/Performance (0.4.16)
   - TTShare (0.3.3):
     - TTShare/TTShareBasic (= 0.3.3)
     - TTShare/TTShareBusiness (= 0.3.3)
@@ -502,10 +510,12 @@ PODS:
     - TTUGCFoundation/RequestMonitor (= 0.1.3)
     - TTUGCFoundation/TTUGCActionDataService (= 0.1.3)
     - TTUGCFoundation/TTUGCApiModel (= 0.1.3)
+    - TTUGCFoundation/TTUGCImage (= 0.1.3)
     - TTUGCFoundation/TTUGCRichText (= 0.1.3)
   - TTUGCFoundation/RequestMonitor (0.1.3)
   - TTUGCFoundation/TTUGCActionDataService (0.1.3)
   - TTUGCFoundation/TTUGCApiModel (0.1.3)
+  - TTUGCFoundation/TTUGCImage (0.1.3)
   - TTUGCFoundation/TTUGCRichText (0.1.3)
   - TTUIWidget (0.1.0):
     - TTUIWidget/TTIndicatorView (= 0.1.0)
@@ -567,6 +577,7 @@ DEPENDENCIES:
   - BDAccountSessionSDK (= 0.1.11.1-binary)
   - BDALog (= 0.1.12.1-binary)
   - BDAlogProtocol (= 0.1.6)
+  - BDAssert/Core (= 2.0.0)
   - BDTArticle (from `../AKPlugins/BDTArticle`)
   - BDTBasePlayer (from `../AKPlugins/BDTBasePlayer`)
   - BDTExploreOrderedData (from `../AKPlugins/BDTExploreOrderedData`)
@@ -601,12 +612,14 @@ DEPENDENCIES:
   - FHHouseMessage (from `../Bundles/ios_house_message`)
   - FHHouseMine (from `../Bundles/ios_house_mine`)
   - FHHouseTrend (from `../Bundles/ios_house_trend`)
+  - FHHouseUGC (from `../Bundles/ios_house_ugc`)
   - FHMapSearch (from `../Bundles/ios_map_search`)
   - FHRNKit (from `../Bundles/ios_common_rn`)
   - FHWebView (from `../AKPlugins/FHWebView`)
   - FLAnimatedImage (= 1.0.12.1-binary)
   - FLEX (= 2.1.1.1-binary)
   - FMDB (= 2.6.2.1-binary)
+  - Gaia (= 1.0.7-rc.1)
   - Godzippa (= 1.1.0.1-binary)
   - Heimdallr/ALog (= 0.6.27-rc.0.1.binary)
   - Heimdallr/CloudCommand (= 0.6.27-rc.0.1.binary)
@@ -649,7 +662,7 @@ DEPENDENCIES:
   - OHHTTPStubs (= 4.2.1.1-binary)
   - OpenSSL-Universal (= 1.0.1.20.1-binary)
   - OpenUDID (= 0.1.0.1-binary)
-  - Protobuf (= 3.0.1-ttv)
+  - Protobuf (= 3.0.1-ttv.1-binary)
   - React/base (= 0.55.9-alpha.22.1.binary)
   - React/Core (= 0.55.9-alpha.22.1.binary)
   - React/CxxBridge (= 0.55.9-alpha.22.1.binary)
@@ -722,6 +735,7 @@ DEPENDENCIES:
   - TTFileUploadClient (= 1.7.6.8.1-binary)
   - TTFlowStatisticsManager (= 0.0.10.1-binary)
   - TTFriendRelation (from `../AKPlugins/TTFriendRelation`)
+  - TTGaiaExtension (= 0.2.13)
   - TTGallery (from `../TTBundles/ios_tt_gallery`)
   - TTHTSVideo (from `../TTBundles/ios_tt_htsvideo`)
   - TTImage (= 0.8.4.1-binary)
@@ -749,8 +763,10 @@ DEPENDENCIES:
   - TTIMSDK/IMKit_Core (= 0.7.7)
   - TTIMSDK/IMKit_WebSocket (= 0.7.7)
   - TTInstallService (= 1.0.0.6.1-binary)
-  - TTKitchen (= 1.0.2.1-binary)
+  - TTKitchen/Core (= 1.6.0)
+  - TTKitchen/TTCommonConfig (= 1.6.0)
   - TTLCSService (= 0.1.1.1-binary)
+  - TTLocationManager (= 1.0.22)
   - TTMonitor (from `../AKPlugins/TTMonitor`)
   - TTNetBusiness (= 0.0.10.1-binary)
   - TTNetworkManager (= 2.2.8.55-rc.1.1.binary)
@@ -760,6 +776,7 @@ DEPENDENCIES:
   - TTPlatformBaseLib (from `../AKPlugins/TTPlatformBaseLib`)
   - TTPlatformUIModel (from `../AKPlugins/AKPlatformUIModel`)
   - TTPlayerSDK (= 2.9.9.10)
+  - TTPostBase (from `../AKPlugins/TTPostBase`)
   - TTPreloaderSDK (= 1.4.20-rc.0)
   - TTPushAuthorizationManager (from `../AKPlugins/AKPushAuthorizationManager`)
   - TTPushManager (= 0.0.13.4)
@@ -775,8 +792,9 @@ DEPENDENCIES:
   - TTService (from `../TTBundles/ios_tt_service`)
   - TTServiceKit (= 0.4.1.1-binary)
   - TTServiceProtocols (from `../AKPlugins/AKServiceProtocols`)
-  - TTSettingsManager (= 0.4.1.1-binary)
+  - TTSettingsManager/Core (= 0.4.16)
   - TTSettingsManager/Debug
+  - TTSettingsManager/Performance (= 0.4.16)
   - TTShare (from `../AKPlugins/TTShare`)
   - TTTAttributedLabel (= 1.13.3.1-binary)
   - TTThemed (from `../AKPlugins/AKThemed`)
@@ -847,6 +865,8 @@ EXTERNAL SOURCES:
     :path: ../Bundles/ios_house_mine
   FHHouseTrend:
     :path: ../Bundles/ios_house_trend
+  FHHouseUGC:
+    :path: ../Bundles/ios_house_ugc
   FHMapSearch:
     :path: ../Bundles/ios_map_search
   FHRNKit:
@@ -908,6 +928,8 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/TTPlatformBaseLib
   TTPlatformUIModel:
     :path: ../AKPlugins/AKPlatformUIModel
+  TTPostBase:
+    :path: ../AKPlugins/TTPostBase
   TTPushAuthorizationManager:
     :path: ../AKPlugins/AKPushAuthorizationManager
   TTRoute:
@@ -957,7 +979,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
-  AFNetworking: fac3e1b64a9a165c0c7ac9de2d62660b3e875c7e
+  AFNetworking: ae73845b1571323685452375dc66d8e98feefa67
   AKCommentPlugin: 5ad084d3f5a4e3b0da26477aedd952dc0d4f1634
   AKShareServicePlugin: 7f4273d1d25b641a6d3c97537d6c57e8ceb999fc
   AKWDPlugin: 578ff2a20b6d16a523e2b1e96512e77e5c6b6fd3
@@ -973,6 +995,7 @@ SPEC CHECKSUMS:
   BDAccountSessionSDK: 1b21928204da418d25fb12d6a51e81587264fd6d
   BDALog: 2c34fe6b9e0f7107abb36d41ca3baf1ee33113bb
   BDAlogProtocol: 3079beb0afd725ea0e209a617dc4381158aa151f
+  BDAssert: 7b1b4dd1138bd7ab31cabd3d75b340a49f6902d7
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: eed47dd8f845dde6c955f2d527b255a823d40665
   BDTExploreOrderedData: 96bb150a05e560a5e927a7ee53bda56690571a61
@@ -994,18 +1017,20 @@ SPEC CHECKSUMS:
   FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
   FHHouseBase: c3b414517c0e6c2e012691129e9bacfc0af79fba
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
-  FHHouseFind: b0e40221ad76cc8455c4da2d7dae61adf480a2a1
+  FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
   FHHouseHome: e6f78062259c79d7354a352b5ccf97dd0d4f6e1e
   FHHouseList: 02ebfe64a848d2ac54a0f4fa72603813b70190f3
   FHHouseMessage: 1879205d8b77b49fefba376311c38ae3b5e8381c
   FHHouseMine: c0c197cb55d97e3357427d2a1731a7ab4225d94b
   FHHouseTrend: feb4c9736617882d2bd7181262e6a3e2d4ebad4f
+  FHHouseUGC: e29aa4a9f3170024b600f1cb8e5b8c6ed2e40400
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
   FHRNKit: b8966b198eb601696630a3fd4bc72aac277258be
   FHWebView: 1c354474ccc25e8a56b77e34b7b3a52bb4c6e414
   FLAnimatedImage: c103d911f434514c39961a5eed4c0e29c6cdae48
   FLEX: 41f5c73df50a2c8100e3c38f2eba75fdacf788e2
   FMDB: 20748cf597d147c452903c32d101953e46dcb4b5
+  Gaia: 8d07f88e57c49364734d1fb5ea331f37c225c619
   Godzippa: d9e858886267fa9026eb4eb1e2e4ce5e0df2d680
   Heimdallr: 6f61359ac15e725ddc5a421bd679c98bf855c7f5
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
@@ -1028,12 +1053,12 @@ SPEC CHECKSUMS:
   OHHTTPStubs: 8fe4a9bac9386d3450c6cdaeca77e5d07d0f6cf4
   OpenSSL-Universal: 7bd04be21cd79882c6b2e4afd9433b3e94f88ac0
   OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
-  Protobuf: e97b6e7b829ac5b4be715db957917a1ba10c4a9a
+  Protobuf: 52a446ec094fe19d92c51ef98bd5c975b56d8732
   React: d5707a221547497a307b5fc2347665017824b20f
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
   RSSwizzle: 9b7cf78908bc6b249f1403926c168f730f840e91
-  RXCollections: ef46a1c3b1f25711117ece94c48d9beae9f143a6
+  RXCollections: fc5eb6c41b5a3646601e6a01c1ee444c354a9bfc
   SDWebImage: abd373dadf531cf5d1738f6a8e9487f7f4a12f14
   SecGuard: 0c9ebebd0992c9efd94a3a026832eb721ae0cc15
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
@@ -1069,6 +1094,7 @@ SPEC CHECKSUMS:
   TTFileUploadClient: 974455ed11ab6fe13cf29b5ad3032d1816ac5751
   TTFlowStatisticsManager: 6589b320762fe753556fa2058d0e3e0c42f16ae0
   TTFriendRelation: 376685f5cb6e25bd3960b0a245eb59761c3b576d
+  TTGaiaExtension: 5c3eeb1faa1a6d570adc7505a94787b9dd3ed088
   TTGallery: 694e0873aa6423012bd0a4f8ffd85747e0a60193
   TTHTSVideo: 84859e259f16d792cd01ab4cecc052dec9af21bc
   TTImage: 8c4ddc40fd78a992571042abdbd7a80642e0bfdc
@@ -1077,8 +1103,9 @@ SPEC CHECKSUMS:
   TTImpression: d2d80c26abef863c5be6dc8b6fe10ebef3331b84
   TTIMSDK: bc920322f0cb1a542bc0f6c7cfdef1f8576dbc3c
   TTInstallService: e4d70620bc4b61384861f9a1f74de5225b27adfc
-  TTKitchen: e82fe1cb9fae8b5ea96284a6971f52f4d11bad0c
+  TTKitchen: b7fcce48014799914152c0b90e6c513ee0e9b1a4
   TTLCSService: d9fc936bba13993ecc454b486a15a403a9fdbdc4
+  TTLocationManager: 4e294fc0d5a8e0d263af7a96d48fb37fe4489665
   TTMonitor: 2677003dc3428a13b1fbbc93a0c49344c1adc1b1
   TTNetBusiness: e436bc6d648bf01946cc01756c86adfd0d718e5c
   TTNetworkManager: 6afdda81f4f04c85b9d38c22d1d542d24b5d9141
@@ -1088,6 +1115,7 @@ SPEC CHECKSUMS:
   TTPlatformBaseLib: 4d690f459522050397f6ca58188c617ffa453fad
   TTPlatformUIModel: 42e1baaadf68615bd4911b3a0fce24683b955105
   TTPlayerSDK: 64564c57c01b3448059203e9fe48d6d07520d641
+  TTPostBase: 91071b89ed5d95c7ac3d96354a31c65d77a6c94e
   TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
   TTPushAuthorizationManager: 97925f80e95c63085f31471d5faa744261a0b5f2
   TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
@@ -1100,13 +1128,13 @@ SPEC CHECKSUMS:
   TTService: 61600ce842ad99be7776dbbf3e614301ef706f7b
   TTServiceKit: 94210c3f54f65e5ba8ddde3e498837fa04649d57
   TTServiceProtocols: 155d69fde3ee30af409edd22f53735c75f5b77ad
-  TTSettingsManager: c44994859a5c05bf29fc2d9b852007e8ffcc36c5
+  TTSettingsManager: 6c9f2451b51d836979ea8e7e51ac8397a9b74b06
   TTShare: e5faa4ed799189e7dec34372f61794c6a011c2a6
   TTTAttributedLabel: dc7f8eada1e3d7fa25244fb05f50615d692d8d3e
   TTThemed: c441f202fc9c8833863bf6f8473fd833cd5e3ac6
   TTThirdPartySDKs: 0c0f991cd09a2839cbc372659f68c21bc0d05d07
   TTTracker: 8fdfc910c2a593f625d8dce8b045b3b6aedc6ddd
-  TTUGCFoundation: 38878721f4ea5eecaa985eda71e933a8dded1fe5
+  TTUGCFoundation: f67fd0f474fef086cd3e986a4ad2c8bb79220d94
   TTUIWidget: d6b9ff5d35146e048c206d45a8362c2e490b7025
   TTUserProfile: e9f6d23e86b3c1232b15a79a239e5d3a27e5b2f3
   TTUserSettings: ae3d4a3efeb987e7a2fe528545cfdb87a7798c72
@@ -1131,6 +1159,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 621aaf2af523d0d44fc031945d6b2efd9b357c3a
+PODFILE CHECKSUM: 6e4945a2d9b74accb5e69990c8e455044aec88ce
 
 COCOAPODS: 1.4.0

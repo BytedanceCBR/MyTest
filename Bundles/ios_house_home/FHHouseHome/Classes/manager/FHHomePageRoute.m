@@ -33,7 +33,7 @@
             [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarFirst];
         }
         
-        [[FHHomeConfigManager sharedInstance] openCategoryFeedStart];
+//        [[FHHomeConfigManager sharedInstance] openCategoryFeedStart];
         
         [TTArticleCategoryManager sharedManager].completionRequest = nil;
     }

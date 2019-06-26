@@ -6,11 +6,58 @@
 //
 //
 
-#import <TTAvatar/SSAvatarView.h>
 #import "TTUGCSearchHashtagTableViewCell.h"
 #import "NSString+UGCUtils.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
+
+@implementation TTUGCSearchHashtagTableHeaderViewCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(nullable NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+
+        [self.contentView addSubview:self.separatorView];
+        [self.contentView addSubview:self.titleLabel];
+    }
+
+    return self;
+}
+
+- (void)configWithHashtagHeaderModel:(TTUGCHashtagHeaderModel *)hashtagHeaderModel {
+    self.titleLabel.text = hashtagHeaderModel.text;
+    [self.titleLabel sizeToFit];
+    self.titleLabel.width = MIN(self.titleLabel.width, self.contentView.width - 30.f);
+    self.titleLabel.left = 15.f;
+    self.titleLabel.bottom = self.contentView.bottom;
+
+    self.separatorView.hidden = !hashtagHeaderModel.showTopSeparator;
+    self.separatorView.width = self.contentView.width;
+    self.separatorView.left = 0;
+    self.separatorView.height = 6.f;
+}
+
+- (SSThemedLabel *)titleLabel {
+    if (!_titleLabel) {
+        _titleLabel = [[SSThemedLabel alloc] init];
+        _titleLabel.textColorThemeKey = kColorText1;
+        _titleLabel.font = [UIFont systemFontOfSize:16.f];
+    }
+
+    return _titleLabel;
+}
+
+- (SSThemedView *)separatorView {
+    if (!_separatorView) {
+        _separatorView = [[SSThemedView alloc] init];
+        _separatorView.backgroundColorThemeKey = kColorBackground3;
+    }
+
+    return _separatorView;
+}
+
+@end
 
 @implementation TTUGCSearchHashtagTableViewCell
 
@@ -19,11 +66,12 @@
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
 
-        [self addSubview:self.avatarView];
-        [self addSubview:self.nameLabel];
-        [self addSubview:self.descLabel];
-        [self addSubview:self.cornerImageView];
-        [self addSubview:self.bottomLineView];
+        [self.contentView addSubview:self.avatarView];
+        [self.contentView addSubview:self.nameLabel];
+        [self.contentView addSubview:self.descLabel];
+        [self.contentView addSubview:self.discussLabel];
+        [self.contentView addSubview:self.cornerImageView];
+        [self.contentView addSubview:self.bottomLineView];
 
         self.avatarView.left = 15.f;
         self.avatarView.top = 15.f;
@@ -41,7 +89,7 @@
         self.cornerImageView.bottom = self.avatarView.bottom;
 
         self.bottomLineView.left = 15.f;
-        self.bottomLineView.width = self.width - 15.f;
+        self.bottomLineView.width = self.width;
         self.bottomLineView.height = [TTDeviceHelper ssOnePixel];
         self.bottomLineView.bottom = self.height - 1;
 
@@ -56,21 +104,29 @@
 
     [self.nameLabel sizeToFit];
     [self.descLabel sizeToFit];
+    [self.discussLabel sizeToFit];
 
-    CGFloat maxWidth = self.width - 15 - 44 - 10 - 15;
-
+    CGFloat nameMaxWidth = self.width - 15 - 44 - 10 - 15 - self.discussLabel.width - 30;
     self.nameLabel.top = 13.f;
-    self.nameLabel.width = MIN(self.nameLabel.width, maxWidth);
+    self.nameLabel.width = MIN(self.nameLabel.width, nameMaxWidth);
     self.nameLabel.height = 24.f;
 
-    self.descLabel.width = MIN(self.descLabel.width, maxWidth);
-    self.descLabel.bottom = self.avatarView.bottom + 1;
+    if (isEmptyString(self.descLabel.text)) {
+        self.nameLabel.centerY = self.avatarView.centerY;
+    }
+
+    CGFloat descMaxWidth = self.width - 15 - 44 - 10 - 15;
+    self.descLabel.width = MIN(self.descLabel.width, descMaxWidth);
+    self.descLabel.bottom = self.avatarView.bottom;
+
+    self.discussLabel.centerY = self.nameLabel.centerY;
+    self.discussLabel.right = self.width - 15.f;
 
     self.bottomLineView.width = self.width;
-    self.bottomLineView.bottom = self.height - 1;
+    self.bottomLineView.bottom = self.contentView.bottom;
 }
 
-- (void)configWithHashtagModel:(FRPublishPostSearchHashtagStructModel *)hashtagModel row:(NSInteger)row {
+- (void)configWithHashtagModel:(TTUGCHashtagModel *)hashtagModel row:(NSInteger)row longSeparatorLine:(BOOL)longSeparatorLine {
     if (!hashtagModel) return;
 
     CGFloat maxWidth = self.width;
@@ -89,7 +145,7 @@
     NSMutableAttributedString *mutableAttributedString = [[NSMutableAttributedString alloc] initWithString:ellipsisForumName];
     if (hashtagModel.highlight.forum_name.count > 0) {
         for (NSNumber *location in hashtagModel.highlight.forum_name) {
-            if (location.unsignedIntegerValue + 1 < commonPrefixString.length) {
+            if ([location isKindOfClass:[NSNumber class]] && location.unsignedIntegerValue + 1 < commonPrefixString.length) {
                 // 处理 emoji 表情字符数问题
                 NSRange range = [commonPrefixString rangeOfComposedCharacterSequenceAtCodePoint:location.unsignedIntegerValue + 1];
                 [mutableAttributedString addAttribute:NSForegroundColorAttributeName
@@ -102,6 +158,19 @@
     self.nameLabel.attributedText = mutableAttributedString;
 
     self.descLabel.text = hashtagModel.forum.desc;
+    self.discussLabel.text = hashtagModel.forum.talk_count_str;
+
+    if (hashtagModel.canBeCreated) {
+        self.descLabel.font = [UIFont boldSystemFontOfSize:14.f];
+    } else {
+        self.descLabel.font = [UIFont systemFontOfSize:14.f];
+    }
+
+    if (longSeparatorLine) {
+        self.bottomLineView.left = 0.f;
+    } else {
+        self.bottomLineView.left = 15.f;
+    }
 
     if (row >= 1 && row <= 3) {
         switch (row) {
@@ -134,6 +203,15 @@
         _avatarView.avatarButton.userInteractionEnabled = NO;
         _avatarView.avatarStyle = SSAvatarViewStyleRectangle;
         _avatarView.rectangleAvatarImgRadius = 0.f;
+
+        CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+        UIGraphicsBeginImageContext(rect.size);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextSetFillColorWithColor(context, SSGetThemedColorWithKey(kColorBackground2).CGColor);
+        CGContextFillRect(context, rect);
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        _avatarView.defaultHeadImg = image;
     }
 
     return _avatarView;
@@ -143,7 +221,7 @@
     if (!_nameLabel) {
         _nameLabel = [SSThemedLabel new];
         _nameLabel.numberOfLines = 1;
-        _nameLabel.font = [UIFont boldSystemFontOfSize:15.f];
+        _nameLabel.font = [UIFont boldSystemFontOfSize:16.f];
         _nameLabel.textColorThemeKey = kColorText1;
         _nameLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
     }
@@ -155,12 +233,23 @@
     if (!_descLabel) {
         _descLabel = [SSThemedLabel new];
         _descLabel.numberOfLines = 1;
-        _descLabel.font = [UIFont systemFontOfSize:15.f];
+        _descLabel.font = [UIFont systemFontOfSize:14.f];
         _descLabel.textColorThemeKey = kColorText1;
         _descLabel.contentInset = UIEdgeInsetsMake(1.f, 0, 1.f, 0);
     }
 
     return _descLabel;
+}
+
+- (SSThemedLabel *)discussLabel {
+    if (!_discussLabel) {
+        _discussLabel = [SSThemedLabel new];
+        _discussLabel.numberOfLines = 1;
+        _discussLabel.font = [UIFont systemFontOfSize:13.f];
+        _discussLabel.textColorThemeKey = kColorText3;
+    }
+
+    return _discussLabel;
 }
 
 - (SSThemedImageView *)cornerImageView {

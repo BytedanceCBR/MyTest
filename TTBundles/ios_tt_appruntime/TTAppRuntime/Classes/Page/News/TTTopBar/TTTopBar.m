@@ -93,6 +93,10 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
 
 - (void)showUnValibleCity
 {
+    if (!self.isShowTopSearchPanel) {
+        return;
+    }
+    
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (dataModel.cityAvailability && [dataModel.cityAvailability.enable respondsToSelector:@selector(boolValue)] &&[dataModel.cityAvailability.enable boolValue] == false) {
         self.pageSearchPanel.hidden = YES;
@@ -255,10 +259,12 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
      _searchBarImageView.hidden = YES;
      [self.backgroundImageView addSubview:_searchBarImageView];
      */
-    
-    _pageSearchPanel = [[FHHomeSearchPanelView alloc] init];
-//    _pageSearchPanel = [[HomePageSearchPanel alloc] init];
-    [self.backgroundImageView addSubview:_pageSearchPanel];
+    if (self.isShowTopSearchPanel) {
+        _pageSearchPanel = [[FHHomeSearchPanelView alloc] init];
+        //    _pageSearchPanel = [[HomePageSearchPanel alloc] init];
+        [self.backgroundImageView addSubview:_pageSearchPanel];
+    }
+
     
     /*
      _currentCityLabel = [[SSThemedLabel alloc] init];
@@ -349,15 +355,17 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     //        make.height.mas_equalTo(44.0f);
     //    }];
     
-    
-    [_pageSearchPanel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self);
-        make.bottom.mas_equalTo(_backgroundImageView.mas_bottom);
-        make.right.equalTo(self);
-        make.height.mas_equalTo(64.0f);
-    }];
-   
-    [_pageSearchPanel setBackgroundColor:[UIColor whiteColor]];
+    if (self.isShowTopSearchPanel) {
+        [_pageSearchPanel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self);
+            make.bottom.mas_equalTo(_backgroundImageView.mas_bottom);
+            make.right.equalTo(self);
+            make.height.mas_equalTo(64.0f);
+        }];
+        
+        [_pageSearchPanel setBackgroundColor:[UIColor whiteColor]];
+    }
+
     [self remakeConstraintsForSearchLabel];
 }
 

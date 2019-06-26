@@ -95,6 +95,15 @@ Pod::Spec.new do |s|
         ss.dependency 'TTPlatformBaseLib/TTURLDomainHelper'
         ss.dependency 'TTPlatformUIModel/TTSeachBarView'
     end
+    
+    s.subspec 'TTUGCImage' do |ss|
+        ss.requires_arc =   true
+        ss.dependency 'TTNetworkManager'
+        ss.dependency 'JSONModel'
+        ss.source_files =   'TTUGCImage/Classes/**/*.{h,m}'
+        ss.public_header_files = 'TTUGCImage/Classes/**/*.h'
+    end
+
 
     # s.subspec 'TTUGCComment' do |ss|
     #     ss.requires_arc =   true

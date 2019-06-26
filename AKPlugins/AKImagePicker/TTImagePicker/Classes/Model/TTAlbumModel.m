@@ -7,6 +7,7 @@
 //
 
 #import "TTAlbumModel.h"
+#import "TTImagePickerManager.h"
 
 
 @implementation TTAlbumModel

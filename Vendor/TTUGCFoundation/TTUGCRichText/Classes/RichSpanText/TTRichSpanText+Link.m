@@ -10,6 +10,7 @@
 #import "TTUGCEmojiParser.h"
 #import <objc/runtime.h>
 #import "TTBaseMacro.h"
+#import "NSDictionary+TTAdditions.h"
 
 static char kReplaceLinksAsInactiveLinksKey;
 
@@ -33,7 +34,7 @@ static char kReplaceLinksAsInactiveLinksKey;
     }
 
     for (TTRichSpanLink *link in richSpans.links) {
-        if (link.type == TTRichSpanLinkTypeLink && !isEmptyString(link.text)
+        if ([self ifMatchCorrectLinkType:link.type] && !isEmptyString(link.text)
             && link.start + link.length <= maxLength) {
             number++;
         }
@@ -47,7 +48,7 @@ static char kReplaceLinksAsInactiveLinksKey;
 - (TTRichSpanText *)replaceWhitelistLinks {
     self.replaceLinksAsInactiveLinks = NO;
 
-    TTRichSpanText *richSpanTextWithReplacedWhitelistLink = [[TTRichSpanText alloc] initWithText:self.replacedText richSpanLinks:self.replacedRichSpanLinks];
+    TTRichSpanText *richSpanTextWithReplacedWhitelistLink = [[TTRichSpanText alloc] initWithText:self.replacedText richSpanLinks:self.replacedRichSpanLinks imageInfoModelDictionary:self.richSpans.imageInfoModesDict];
 
     return richSpanTextWithReplacedWhitelistLink;
 }
@@ -55,7 +56,7 @@ static char kReplaceLinksAsInactiveLinksKey;
 - (TTRichSpanText *)replaceWhitelistLinksAsInactiveLinks {
     self.replaceLinksAsInactiveLinks = YES;
 
-    TTRichSpanText *richSpanTextWithReplacedWhitelistLink = [[TTRichSpanText alloc] initWithText:self.replacedText richSpanLinks:self.replacedRichSpanLinks];
+    TTRichSpanText *richSpanTextWithReplacedWhitelistLink = [[TTRichSpanText alloc] initWithText:self.replacedText richSpanLinks:self.replacedRichSpanLinks imageInfoModelDictionary:self.richSpans.imageInfoModesDict];
 
     return richSpanTextWithReplacedWhitelistLink;
 }
@@ -71,13 +72,17 @@ static char kReplaceLinksAsInactiveLinksKey;
 
     NSArray <TTRichSpanLink *> *richSpanLinks = [self sortedRichSpanLinks:richSpans.links];
 
-    NSUInteger offset = 0;
+    NSInteger offset = 0;
     for (TTRichSpanLink *link in richSpanLinks) {
-        if (link.type == TTRichSpanLinkTypeLink && !isEmptyString(link.text)
+        if ([self ifMatchCorrectLinkType:link.type] && !isEmptyString(link.text)
             && link.start + link.length <= maxLength) {
-            NSUInteger start = link.start - offset;
+            NSInteger linkStart = link.start - offset;
+            if (linkStart < 0) {
+                linkStart = 0;
+            }
+            NSUInteger start = linkStart;
             NSUInteger length = link.length;
-            NSString *replaceText = [self replacementText:link.text];
+            NSString *replaceText = [self replacementText:link.text linkType:link.type linkFlagType:link.flagType];
             offset += link.length - replaceText.length;
             text = [text stringByReplacingCharactersInRange:NSMakeRange(start, length) withString:replaceText];
         }
@@ -85,6 +90,7 @@ static char kReplaceLinksAsInactiveLinksKey;
 
     return text;
 }
+
 
 - (NSArray <TTRichSpanLink *> *)replacedRichSpanLinks {
     NSUInteger maxLength = self.text.length;
@@ -98,23 +104,28 @@ static char kReplaceLinksAsInactiveLinksKey;
     NSArray <TTRichSpanLink *> *richSpanLinks = [self sortedRichSpanLinks:richSpans.links];
 
     NSMutableArray <TTRichSpanLink *> *replacedLinkRichSpanLinks = [[NSMutableArray alloc] initWithCapacity:richSpanLinks.count];
-    NSUInteger offset = 0;
+    NSInteger offset = 0;
     for (TTRichSpanLink *link in richSpanLinks) {
         if (link.start + link.length <= maxLength) {
             NSString *content = [text substringWithRange:NSMakeRange(link.start, link.length)];
-            NSUInteger start = link.start - offset;
+            NSInteger linkStart = link.start - offset;
+            if (linkStart < 0) {
+                linkStart = 0;
+            }
+            NSUInteger start = linkStart;
             NSUInteger length = link.length;
 
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:link.userInfo];
             // 如果是网页链接，替换为 link.text 字符
-            if (link.type == TTRichSpanLinkTypeLink && !isEmptyString(link.text)) {
-                NSString *replaceText = [self replacementText:link.text];
+            if ([self ifMatchCorrectLinkType:link.type] && !isEmptyString(link.text)) {
+                NSString *replaceText = [self replacementText:link.text linkType:link.type linkFlagType:link.flagType];
                 offset += link.length - replaceText.length;
                 length = replaceText.length;
+                [userInfo setValue:content forKey:@"content"];
             }
 
-            TTRichSpanLink *replacedLink = [[TTRichSpanLink alloc] initWithStart:start length:length link:link.link text:link.text type:link.type];
-            NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:link.userInfo];
-            [userInfo setValue:content forKey:@"content"];
+            TTRichSpanLink *replacedLink = [[TTRichSpanLink alloc] initWithStart:start length:length link:link.link text:link.text imageInfoModels:link.imageInfoModels type:link.type flagType:link.flagType];
+
             replacedLink.userInfo = userInfo;
             [replacedLinkRichSpanLinks addObject:replacedLink];
         }
@@ -126,7 +137,7 @@ static char kReplaceLinksAsInactiveLinksKey;
 #pragma mark - restore methods
 
 - (TTRichSpanText *)restoreWhitelistLinks {
-    TTRichSpanText *richSpanTextWithRestoredWhitelistLink = [[TTRichSpanText alloc] initWithText:self.restoredText richSpanLinks:self.restoredRichSpanLinks];
+    TTRichSpanText *richSpanTextWithRestoredWhitelistLink = [[TTRichSpanText alloc] initWithText:self.restoredText richSpanLinks:self.restoredRichSpanLinks imageInfoModelDictionary:self.richSpans.imageInfoModesDict];
 
     return richSpanTextWithRestoredWhitelistLink;
 }
@@ -142,18 +153,22 @@ static char kReplaceLinksAsInactiveLinksKey;
 
     NSArray <TTRichSpanLink *> *richSpanLinks = [self sortedRichSpanLinks:richSpans.links];
 
-    NSUInteger offset = 0;
+    NSInteger offset = 0;
     for (TTRichSpanLink *link in richSpanLinks) {
-        if (link.type == TTRichSpanLinkTypeLink && !isEmptyString(link.link)
+        if ([self ifMatchCorrectLinkType:link.type] && !isEmptyString(link.link)
             && link.start + link.length <= maxLength) {
-            NSString *replaceText = [self replacementText:link.text];
+            NSString *replaceText = [self replacementText:link.text linkType:link.type linkFlagType:link.flagType];
             NSString *content = link.userInfo[@"content"];
 
             if (isEmptyString(content)) {
                 continue;
             }
 
-            NSUInteger start = link.start + offset;
+            NSInteger linkStart = link.start + offset;
+            if (linkStart < 0) {
+                linkStart = 0;
+            }
+            NSUInteger start = linkStart;
             NSUInteger length = replaceText.length;
             offset += content.length - replaceText.length;
             text = [text stringByReplacingCharactersInRange:NSMakeRange(start, length) withString:content];
@@ -165,7 +180,6 @@ static char kReplaceLinksAsInactiveLinksKey;
 
 - (NSArray <TTRichSpanLink *> *)restoredRichSpanLinks {
     NSUInteger maxLength = self.text.length;
-    NSString *text = self.text;
     TTRichSpans *richSpans = self.richSpans;
 
     if (richSpans.links.count == 0) {
@@ -174,22 +188,26 @@ static char kReplaceLinksAsInactiveLinksKey;
 
     NSArray <TTRichSpanLink *> *richSpanLinks = [self sortedRichSpanLinks:richSpans.links];
 
-    NSUInteger offset = 0;
+    NSInteger offset = 0;
     NSMutableArray <TTRichSpanLink *> *replacedLinkRichSpanLinks = [[NSMutableArray alloc] initWithCapacity:richSpanLinks.count];
     for (TTRichSpanLink *link in richSpanLinks) {
         if (link.start + link.length <= maxLength) {
-            NSUInteger start = link.start + offset;
+            NSInteger linkStart = link.start + offset;
+            if (linkStart < 0) {
+                linkStart = 0;
+            }
+            NSUInteger start = linkStart;
             NSUInteger length = link.length;
             NSString *content = link.userInfo[@"content"];
 
             // 如果是网页链接，替换为 link.text 字符
-            if (link.type == TTRichSpanLinkTypeLink && !isEmptyString(content)) {
+            if ([self ifMatchCorrectLinkType:link.type] && !isEmptyString(content)) {
                 length = content.length;
-                NSString *replaceText = [self replacementText:link.text];
+                NSString *replaceText = [self replacementText:link.text linkType:link.type linkFlagType:link.flagType];
                 offset += content.length - replaceText.length;
             }
 
-            TTRichSpanLink *replacedLink = [[TTRichSpanLink alloc] initWithStart:start length:length link:link.link text:link.text type:link.type];
+            TTRichSpanLink *replacedLink = [[TTRichSpanLink alloc] initWithStart:start length:length link:link.link text:link.text imageInfoModels:link.imageInfoModels type:link.type flagType:link.flagType];
             replacedLink.userInfo = link.userInfo;
             [replacedLinkRichSpanLinks addObject:replacedLink];
         }
@@ -200,23 +218,27 @@ static char kReplaceLinksAsInactiveLinksKey;
 
 #pragma mark - utils
 
-- (NSString *)replacementText:(NSString *)text {
+- (NSString *)replacementText:(NSString *)text linkType:(TTRichSpanLinkType)linkType linkFlagType:(TTRichSpanLinkFlagType)linkFlagType {
     if (isEmptyString(text)) return nil;
 
-    NSString *link = self.replaceLinksAsInactiveLinks ? kTTUGCEmojiInactiveLinkReplacementText : kTTUGCEmojiLinkReplacementText;
-    return [NSString stringWithFormat:@"%@%@", link, text];
+    if (linkType == TTRichSpanLinkTypeLink || linkType == TTRichSpanLinkTypeMicroApp || linkType == TTRichSpanLinkTypeMicroGame) {
+        if (linkFlagType & TTRichSpanLinkFlagTypeHideIcon) { // 不需要拼接前面的icon
+            return text;
+        }
+
+        if (linkType == TTRichSpanLinkTypeLink) {
+            NSString *link = self.replaceLinksAsInactiveLinks ? kTTUGCEmojiInactiveLinkReplacementText : kTTUGCEmojiLinkReplacementText;
+            return [NSString stringWithFormat:@"%@%@", link, text];
+        } else if (linkType == TTRichSpanLinkTypeMicroApp || linkType == TTRichSpanLinkTypeMicroGame) {
+            NSString *link = self.replaceLinksAsInactiveLinks ? kTTUGCEmojiInactiveMicroAppReplacementText : kTTUGCEmojiMicroAppReplacementText;
+            return [NSString stringWithFormat:@"%@%@", link, text];
+        }
+    }
+    return nil;
 }
 
-- (NSArray <TTRichSpanLink *> *)sortedRichSpanLinks:(NSArray <TTRichSpanLink *> *)richSpanLinks {
-    return [richSpanLinks sortedArrayUsingComparator:^NSComparisonResult(TTRichSpanLink *link1, TTRichSpanLink *link2) {
-        if (link1.start < link2.start) {
-            return NSOrderedAscending;
-        } else if (link1.start > link2.start) {
-            return NSOrderedDescending;
-        } else {
-            return NSOrderedSame;
-        }
-    }];
+- (BOOL)ifMatchCorrectLinkType:(TTRichSpanLinkType)linkType {
+    return (linkType == TTRichSpanLinkTypeLink || linkType == TTRichSpanLinkTypeMicroApp || linkType == TTRichSpanLinkTypeMicroGame);
 }
 
 @end

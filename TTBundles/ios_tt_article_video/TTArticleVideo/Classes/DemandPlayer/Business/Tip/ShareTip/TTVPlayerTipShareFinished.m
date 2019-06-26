@@ -20,7 +20,8 @@
 //#import "TTAliShare.h"
 //#import "TTDingTalkShare.h"
 #import "TTMessageCenter.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import "TTVVideoPlayerStateStore.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTBaseLib/TTDeviceUIUtils.h>
@@ -400,7 +401,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 //        return @"钉钉";
 //    }
     else {
-        return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
+        return [TTKitchen getString:kTTKUGCRepostWordingShareIconTitle];
     }
 }
 

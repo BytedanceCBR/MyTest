@@ -109,36 +109,18 @@ static NSMutableArray  * _Nullable identifierArr;
             }
         }
         //不同频道cell顺序不同
-        if (type == FHHomeHeaderCellPositionTypeForNews) {
-            
-            if (dataModel.opData2.items.count != 0) {
-                [modelsArray addObject:dataModel.opData2];
-            }
-            
-            if (dataModel.cityStats.count > 0) {
-                for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
-                    
-                    if (model.houseType.integerValue == FHHouseTypeSecondHandHouse) {
-                        [modelsArray addObject:model];
-                        break;
-                    }
+        if (dataModel.cityStats.count > 0) {
+            for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
+                
+                if (model.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+                    [modelsArray addObject:model];
+                    break;
                 }
             }
-        }else
-        {
-            if (dataModel.cityStats.count > 0) {
-                for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
-                    
-                    if (model.houseType.integerValue == FHHouseTypeSecondHandHouse) {
-                        [modelsArray addObject:model];
-                        break;
-                    }
-                }
-            }
-            
-            if (dataModel.opData2.items.count != 0) {
-                [modelsArray addObject:dataModel.opData2];
-            }
+        }
+        
+        if (dataModel.opData2.items.count != 0) {
+            [modelsArray addObject:dataModel.opData2];
         }
     }
     
@@ -251,6 +233,21 @@ static NSMutableArray  * _Nullable identifierArr;
     //    }
 }
 
+- (CGFloat)heightForFHHomeListHouseSectionHeight
+{
+    CGFloat padding = 0;
+    if ([[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList.count <= 1) {
+        padding = 90;
+    }
+    // 108: topbar   49:tahbar  45:sectionHeader
+    if ([TTDeviceHelper isIPhoneXSeries]) {
+        return MAIN_SCREENH_HEIGHT - 108 - 49 - 45 + padding;
+    }else
+    {
+        return MAIN_SCREENH_HEIGHT - 84 - 49 - 45 + padding;
+    }
+}
+
 - (CGFloat)heightForFHHomeHeaderCellViewType
 {
     //未开通城市返回
@@ -268,7 +265,7 @@ static NSMutableArray  * _Nullable identifierArr;
         dataModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
     }
     
-    BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+    BOOL isHasFindHouseCategory = YES;
 
     //如果数据无变化直接返回
     if (self.previousDataModel == dataModel && isHasFindHouseCategory) {
@@ -668,7 +665,7 @@ static NSMutableArray  * _Nullable identifierArr;
 + (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
 //    model.openUrl = @"sslocal://mapfind_house?center_latitude=34.7579750000&center_longitude=113.6654120000&house_type=2&resize_level=10&rm=a";
     WeakSelf;
-    BOOL isFindHouse = [FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForFindHouse;
+    BOOL isFindHouse = YES;
 
     [cell updateTrendFont:isFindHouse];
     

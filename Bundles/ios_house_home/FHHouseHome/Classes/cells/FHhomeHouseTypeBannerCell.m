@@ -200,9 +200,9 @@
         [containView addSubview:subTitleLabel];
         [self.contentView addSubview:containView];
     }
-    if (self.cuurentDataModel != dataModel) {
-        [FHHomeCellHelper sendBannerTypeCellShowTrace:houseType];
-    }
+//    if (self.cuurentDataModel != dataModel) {
+//        [FHHomeCellHelper sendBannerTypeCellShowTrace:houseType];
+//    }
     
     self.cuurentDataModel = dataModel;
     

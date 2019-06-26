@@ -25,7 +25,7 @@
 #import "TTCommentDetailHeaderGroupItem.h"
 #import "TTCommentDetailHeaderDigItem.h"
 #import <TTUGCFoundation/TTUGCEmojiParser.h>
-#import <TTUIWidget/TTUGCAttributedLabel.h>
+#import <TTUGCFoundation/TTUGCAttributedLabel.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
 #import <TTUGCFoundation/TTRichSpanText+Emoji.h>

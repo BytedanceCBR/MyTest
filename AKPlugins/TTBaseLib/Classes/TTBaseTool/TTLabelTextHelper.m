@@ -230,7 +230,9 @@
     [param setValue:text forKey:@"text"];
     [param setValue:@(fontSize) forKey:@"fontSize"];
     [[TTModuleBridge sharedInstance_tt] triggerAction:@"TTUGCEmojiParser.parseInTextKitContext" object:nil withParams:param complete:^(id  _Nullable result) {
-        string = result;
+        if ([result isKindOfClass:[NSString class]]) {
+            string = result;
+        }
     }];
     if (string == nil) {
         string = [[NSAttributedString alloc] initWithString:text];

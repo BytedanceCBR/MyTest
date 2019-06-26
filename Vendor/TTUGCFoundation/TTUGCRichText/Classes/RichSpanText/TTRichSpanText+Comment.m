@@ -21,7 +21,7 @@
     NSString *schema = [NSString stringWithFormat:@"sslocal://profile?uid=%@", userId];
 
     TTRichSpanLink *richSpanLink = [[TTRichSpanLink alloc] initWithStart:2 length:(userName.length + 1) link:schema text:nil type:TTRichSpanLinkTypeQuotedCommentUser];
-    TTRichSpanText *richSpanText = [[TTRichSpanText alloc] initWithText:appendText richSpanLinks:@[richSpanLink]];
+    TTRichSpanText *richSpanText = [[TTRichSpanText alloc] initWithText:appendText richSpanLinks:@[richSpanLink] imageInfoModelDictionary:nil];
     [self appendRichSpanText:richSpanText];
 }
 

@@ -15,7 +15,8 @@
 #import "TTBaseMacro.h"
 #import <TTAccountManager.h>
 #import <FRApiModel.h>
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import <TTNetworkManager.h>
 
 @interface TTAvatarDecoratorManager()
@@ -70,7 +71,7 @@
 }
 
 - (void)setupDecoratorWithUserID:(NSString *)uid nightMode:(BOOL)enableNightMode completion:(TTAvatarDecoratorCompletionBlock)block {
-    if (!block || isEmptyString(uid) || ![TTKitchen getBOOL:kKCUserDecorationUserIDSwitch]) {
+    if (!block || isEmptyString(uid) || ![TTKitchen getBOOL:kTTKUserDecorationUserIDSwitch]) {
         return;
     }
 

@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/19.
 //
 //
-
+#if 0
 #import "TTStartupADGroup.h"
 #import "TTShowADTask.h"
 //#import "TTRequestRefreshADTask.h"
@@ -44,3 +44,4 @@
 }
 
 @end
+#endif

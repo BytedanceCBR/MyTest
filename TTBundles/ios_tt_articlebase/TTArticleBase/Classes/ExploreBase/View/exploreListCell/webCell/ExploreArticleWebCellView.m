@@ -83,6 +83,9 @@
         _webView.backgroundColor = [UIColor clearColor];
         _webView.opaque = NO;
         _webView.userInteractionEnabled = YES;
+        if (@available(iOS 11.0 , *)) {
+            _webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         [_webView addDelegate:self];
         [self registerPanelClose];
         [self registerPanelHeight];

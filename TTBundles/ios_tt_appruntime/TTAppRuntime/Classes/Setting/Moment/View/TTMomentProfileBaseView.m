@@ -39,7 +39,9 @@
 #import "TSVShortVideoOriginalData.h"
 #import "ExploreMomentDefine.h"
 #import "TTCommentDataManager.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 
 
@@ -117,7 +119,7 @@ TTActivityShareManagerDelegate
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveBlockUserNotification:) name:kTTJSOrRNBlockOrUnBlockUserNotificationName object:nil];
         
         // 举报
-        if(![TTKitchen getBOOL:kKCUGCPersonHomeNativeEnable]) {
+        if(![TTKitchen getBOOL:kTTKUGCPersonHomeNativeEnable]) {
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveReportUserNotification:) name:kTTJSOrRNReportUserNotificationName object:nil];
         }
         //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveReportUserNotification:) name:kTTJSOrRNReportUserNotificationName object:nil];
@@ -505,7 +507,7 @@ TTActivityShareManagerDelegate
     NSString *update_id = nil;
     NSString *reply_id = nil;
     NSString *user_id = nil;
-    if(![TTKitchen getBOOL:kKCUGCPersonHomeNativeEnable]) {
+    if(![TTKitchen getBOOL:kTTKUGCPersonHomeNativeEnable]) {
         source = [parameters objectForKey:@"source"] ? [parameters tt_intValueForKey:@"source"] : TTReportSourceUser;
         update_id = [parameters tt_stringValueForKey:@"update_id"];
         reply_id = [parameters tt_stringValueForKey:@"reply_id"];

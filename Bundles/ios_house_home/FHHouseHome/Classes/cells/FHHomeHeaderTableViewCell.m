@@ -54,7 +54,6 @@
 
 - (void)refreshUI
 {
-    [[FHHomeCellHelper sharedInstance] refreshFHHomeTableUI:_contentTableView andType:FHHomeHeaderCellPositionTypeForNews];
     self.contentTableView.backgroundColor = [UIColor whiteColor];
     self.backgroundColor = [UIColor whiteColor];
     self.contentView.backgroundColor = [UIColor whiteColor];

@@ -17,7 +17,8 @@
 @property(nonatomic, copy) NSString *subtitle;
 
 @end
-
+// TTDebugLocationPickerController.m 中定义
+/*
 @implementation STAnnotation
 @synthesize coordinate = _coordinate;
 
@@ -34,6 +35,7 @@
 }
 
 @end
+ */
 
 @interface SSLocationPickerController () <MKMapViewDelegate>
 

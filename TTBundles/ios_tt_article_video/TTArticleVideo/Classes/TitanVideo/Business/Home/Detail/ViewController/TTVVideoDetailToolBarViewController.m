@@ -67,7 +67,8 @@
 #import "TTShareMethodUtil.h"
 //#import "TTThreadDeleteContentItem.h"
 #import "ExploreOrderedData.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import "BDPlayerObjManager.h"
 #import "TTDirectForwardWeitoutiaoContentItem.h"
 #import <TTDirectForwardWeitoutiaoActivity.h>
@@ -185,7 +186,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     _banEmojiInput = banEmojiInput;
     if ([self isViewLoaded]) {
 
-        BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0)  || ak_banEmojiInput();
+        BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:kTTKCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0)  || ak_banEmojiInput();
         self.toolbarView.banEmojiInput = banEmojiInput || isBanRepostOrEmoji;
         if(self.commentWriteView) {
             self.commentWriteView.banEmojiInput = banEmojiInput;
