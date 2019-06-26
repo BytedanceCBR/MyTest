@@ -49,18 +49,17 @@
 
 - (void)requestData:(BOOL)isHead {
     [self.requestTask cancel];
-    
-//    for (NSInteger i = 0; i < 15; i++) {
-//        [self.dataList addObject:[NSString stringWithFormat:@"小区%li",(long)i]];
-//    }
-//    [self.tableView reloadData];
-    
     [self.viewController startLoading];
     
     __weak typeof(self) wself = self;
     
+    NSString *source = @"other";
+    if(self.viewController.type == FHUGCMyInterestedTypeEmpty){
+        source = @"empty_page";
+    }
+    
     CLLocation *currentLocaton = [FHLocManager sharedInstance].currentLocaton;
-    self.requestTask = [FHHouseUGCAPI requestRecommendSocialGroupsWithLatitude:currentLocaton.coordinate.latitude longitude:currentLocaton.coordinate.longitude class:[FHUGCMyInterestModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestRecommendSocialGroupsWithSource:source latitude:currentLocaton.coordinate.latitude longitude:currentLocaton.coordinate.longitude class:[FHUGCMyInterestModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         FHUGCMyInterestModel *interestModel = (FHUGCMyInterestModel *)model;
 
