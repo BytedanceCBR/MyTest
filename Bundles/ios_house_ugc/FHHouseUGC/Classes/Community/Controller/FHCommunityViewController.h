@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , strong) UIView *containerView;
 @property(nonatomic , strong) HMSegmentedControl *segmentControl;
+@property (nonatomic, assign) BOOL isUgcOpen;
 
 - (void)showSegmentControl:(BOOL)isShow;
 
