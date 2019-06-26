@@ -34,6 +34,7 @@
 @property(nonatomic, strong) UIView *titleContainer;
 
 @property(nonatomic, strong) FHUGCGuideView *guideView;
+@property(nonatomic) BOOL shouldShowUGcGuide;
 
 @end
 
@@ -44,6 +45,7 @@
     if (self) {
         self.viewController = viewController;
         [self initView];
+        self.shouldShowUGcGuide = YES;
     }
     return self;
 }
@@ -168,7 +170,7 @@
     [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
         if (model && (error == nil)) {
-            FHUGCScialGroupModel *responseModel = model;
+            FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
             [wself updateUIWithData:responseModel.data];
         } else {
             wself.feedListController.view.hidden = YES;
@@ -319,9 +321,10 @@
     self.feedListController.tableHeaderView = self.headerView;
 
     //仅仅在未关注时显示引导页
-    if (![data.hasFollow boolValue]) {
+    if (![data.hasFollow boolValue] && self.shouldShowUGcGuide) {
         [self addUgcGuide];
     }
+    self.shouldShowUGcGuide = NO;
 }
 
 - (NSString *)generateSubTitle:(FHUGCScialGroupDataModel *)data {

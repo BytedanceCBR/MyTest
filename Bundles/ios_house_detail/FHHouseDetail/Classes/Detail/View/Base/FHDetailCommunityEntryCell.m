@@ -44,7 +44,6 @@
     _backView = [[UIView alloc] init];
     _backView.layer.cornerRadius = 4.0f;
     _backView.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
-//    _backView.frame = CGRectMake(20, 10, SCREEN_WIDTH - 40, 40);
 
     _activeCountInfoLabel = [[UILabel alloc] init];
     [_activeCountInfoLabel setContentHuggingPriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
@@ -66,16 +65,29 @@
     [_backView addSubview:_arrowView];
     _backView.clipsToBounds = YES;
     [self.contentView addSubview:_backView];
-    
+
     [_backView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
+        make.edges.mas_equalTo(self.contentView).insets(UIEdgeInsetsMake(10, 20, 10, 20));
         make.height.mas_equalTo(40);
-        make.top.mas_equalTo(10);
-        make.bottom.mas_equalTo(-10);
     }];
+
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cellClick)];
+    [_backView addGestureRecognizer:singleTap];
 }
 
+- (void)cellClick {
+    if (![self.currentData isKindOfClass:[FHDetailCommunityEntryModel class]]) {
+        return;
+    }
+    FHDetailCommunityEntryModel *entryModel = self.currentData;
+    if (isEmptyString(entryModel.socialGroupSchema)) {
+        return;
+    }
+    NSURL *openURL = [NSURL URLWithString:[entryModel.socialGroupSchema stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
+        [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:nil];
+    }
+}
 
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailCommunityEntryModel class]]) {
@@ -134,7 +146,7 @@
         wself.flowBubble.frame = CGRectOffset(wself.flowBubble.frame, 0, -30.0f);
     }                completion:^(BOOL finished) {
         StrongSelf;
-        FHCommunitySuggestionBubble* tempBubble = wself.curBubble;
+        FHCommunitySuggestionBubble *tempBubble = wself.curBubble;
         wself.curBubble = wself.flowBubble;
         wself.flowBubble = tempBubble;
         wself.curWheelIndex = (self.curWheelIndex + 1) % entryModel.activeInfo.count;
