@@ -105,16 +105,15 @@
     __weak typeof(self) wself = self;
     
     NSInteger listCount = self.dataList.count;
-    double behotTime = 0;
+    NSInteger offset = 0;
     
-    if(!isHead && listCount > 0){
-        FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
-        behotTime = [cellModel.behotTime doubleValue];
+    if(listCount > 0){
+        if(self.feedListModel){
+            offset = [self.feedListModel.lastOffset integerValue];
+        }
     }
     
-    //    @"weitoutiao" @"f_wenda"
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if(isFirst){
             [self.viewController endLoading];
         }
@@ -122,6 +121,7 @@
         [self.tableView finishPullDownWithSuccess:YES];
         
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
+        wself.feedListModel = feedListModel;
         
         if (!wself) {
             return;
@@ -135,9 +135,6 @@
         }
         
         if(model){
-            if (isHead && feedListModel.hasMore) {
-                [wself.dataList removeAllObjects];
-            }
             NSArray *result = [wself convertModel:feedListModel.data];
             
             if(isHead){

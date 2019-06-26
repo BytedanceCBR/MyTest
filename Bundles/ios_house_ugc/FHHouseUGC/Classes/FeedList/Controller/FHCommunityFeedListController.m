@@ -129,7 +129,7 @@
         viewModel.categoryId = @"94349537888";
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = @"f_wenda";
+        viewModel.categoryId = @"94349537893";
     }else if(self.listType == FHCommunityFeedListTypePostDetail) {
         viewModel = [[FHCommunityFeedListPostDetailViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = self.forumId;

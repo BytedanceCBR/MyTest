@@ -54,11 +54,11 @@
     _model = data;
     if([data isKindOfClass:[FHFeedContentRecommendSocialGroupListModel class]]){
         FHFeedContentRecommendSocialGroupListModel *model = (FHFeedContentRecommendSocialGroupListModel *)data;
-        _titleLabel.text = model.SocialGroupName;
-        _descLabel.text = model.CountText;
-        _sourceLabel.text = model.SuggestReason;
-        _joinBtn.groupId = model.SocialGroupId;
-        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.Avatar] placeholder:nil];
+        _titleLabel.text = model.socialGroupName;
+        _descLabel.text = model.countText;
+        _sourceLabel.text = model.suggestReason;
+        _joinBtn.groupId = model.socialGroupId;
+        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
     }
 }
 

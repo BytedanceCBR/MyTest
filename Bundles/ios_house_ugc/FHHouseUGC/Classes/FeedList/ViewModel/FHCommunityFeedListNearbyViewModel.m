@@ -80,6 +80,7 @@
         [self.tableView finishPullDownWithSuccess:YES];
         
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
+        wself.feedListModel = feedListModel;
         
         if (!wself) {
             return;
@@ -93,9 +94,6 @@
         }
         
         if(model){
-            if (isHead && feedListModel.hasMore) {
-                [wself.dataList removeAllObjects];
-            }
             NSArray *result = [wself convertModel:feedListModel.data];
             
             if(isHead){
@@ -220,12 +218,6 @@
 
 - (NSArray *)convertModel:(NSArray *)feedList {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-//    if(feedList.count > 0){
-//        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFakeData];
-//        cellModel.tableView = self.tableView;
-//        [resultArray addObject:cellModel];
-//    }
-    
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         cellModel.categoryId = self.categoryId;
@@ -233,9 +225,22 @@
         cellModel.tableView = self.tableView;
         if(cellModel){
             [resultArray addObject:cellModel];
+            //去重逻辑
+            if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner){
+                [self removeDuplicaionModel:cellModel.groupId];
+            }
         }
     }
     return resultArray;
+}
+
+- (void)removeDuplicaionModel:(NSString *)groupId {
+    for (FHFeedUGCCellModel *itemModel in self.dataList) {
+        if([groupId isEqualToString:itemModel.groupId]){
+            [self.dataList removeObject:itemModel];
+            break;
+        }
+    }
 }
 
 - (void)insertGuideCell {
@@ -313,15 +318,7 @@
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
     self.currentCellModel = cellModel;
     self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-    if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeUGC){
-        [self jumpToDetail:cellModel];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner){
-        //根据url跳转
-        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-    }else{
-        //什么都不做
-    }
+    [self jumpToDetail:cellModel];
 }
 
 - (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel {
@@ -345,6 +342,12 @@
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
         [self jumpToPostDetail:cellModel showComment:NO];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner){
+        //根据url跳转
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }else{
+        //什么都不做
     }
 }
 

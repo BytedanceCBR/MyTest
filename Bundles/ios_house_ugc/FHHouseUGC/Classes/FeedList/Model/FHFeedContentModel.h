@@ -6,15 +6,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFeedContentRecommendSocialGroupListModel : JSONModel
 
-@property (nonatomic, copy , nullable) NSString *ContentCount;
-@property (nonatomic, copy , nullable) NSString *Announcement;
-@property (nonatomic, copy , nullable) NSString *FollowerCount;
-@property (nonatomic, copy , nullable) NSString *SocialGroupName;
-@property (nonatomic, copy , nullable) NSString *SuggestReason;
-@property (nonatomic, copy , nullable) NSString *SocialGroupId;
-@property (nonatomic, copy , nullable) NSString *CountText;
-@property (nonatomic, copy , nullable) NSString *Avatar;
-@property (nonatomic, copy , nullable) NSString *HasFollow;
+@property (nonatomic, copy , nullable) NSString *announcement;
+@property (nonatomic, copy , nullable) NSString *contentCount;
+@property (nonatomic, copy , nullable) NSString *countText;
+@property (nonatomic, copy , nullable) NSString *socialGroupId;
+@property (nonatomic, copy , nullable) NSString *avatar;
+@property (nonatomic, copy , nullable) NSString *suggestReason;
+@property (nonatomic, copy , nullable) NSString *socialGroupName;
+@property (nonatomic, copy , nullable) NSString *hasFollow;
+@property (nonatomic, copy , nullable) NSString *followerCount;
 @end
 
 @interface FHFeedContentCommunityModel : JSONModel

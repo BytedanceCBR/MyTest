@@ -1,6 +1,21 @@
 //GENERATED CODE , DON'T EDIT
 #import "FHFeedContentModel.h"
 @implementation FHFeedContentRecommendSocialGroupListModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"contentCount": @"content_count",
+                           @"countText": @"count_text",
+                           @"socialGroupName": @"social_group_name",
+                           @"suggestReason": @"suggest_reason",
+                           @"socialGroupId": @"social_group_id",
+                           @"hasFollow": @"has_follow",
+                           @"followerCount": @"follower_count",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
