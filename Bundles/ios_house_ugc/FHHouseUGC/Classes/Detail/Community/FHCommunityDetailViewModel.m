@@ -59,7 +59,7 @@
     self.feedListController.scrollViewDelegate = self;
     self.feedListController.listType = FHCommunityFeedListTypePostDetail;
     self.feedListController.forumId = self.viewController.communityId;
-    
+
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
     self.headerView.followButton.groupId = self.viewController.communityId;
     self.feedListController.tableHeaderView = self.headerView;
@@ -163,11 +163,6 @@
         if (model && (error == nil)) {
             FHUGCScialGroupModel *responseModel = model;
             [wself updateUIWithData:responseModel.data];
-
-            //仅仅在未关注时显示引导页
-            if (![responseModel.data.hasFollow boolValue]) {
-                [self addUgcGuide];
-            }
         } else {
             wself.feedListController.view.hidden = YES;
             [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
@@ -196,7 +191,7 @@
 }
 
 - (void)goPosDetail {
-    if (![self.data.hasFollow boolValue]) {
+    if (!self.headerView.followButton.followed) {
         WeakSelf;
         TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"先关注该小区才能发布哦" message:nil preferredType:TTThemedAlertControllerTypeAlert];
         [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:
@@ -296,6 +291,11 @@
 
     [self.headerView resize];
     self.feedListController.tableHeaderView = self.headerView;
+
+    //仅仅在未关注时显示引导页
+    if (![data.hasFollow boolValue]) {
+        [self addUgcGuide];
+    }
 }
 
 - (NSString *)generateSubTitle:(FHUGCScialGroupDataModel *)data {
@@ -329,7 +329,7 @@
     if (offsetY >= 0.0f) {
         return;
     }
-    if (offsetY > -60.0f) {
+    if (offsetY > -80.0f) {
         return;
     }
     [self requestData:YES];

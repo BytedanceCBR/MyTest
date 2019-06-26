@@ -10,6 +10,7 @@
 #import "IMConsDefine.h"
 #import "FHUGCFollowButton.h"
 #import "SSViewBase.h"
+#import "TTDeviceHelper.h"
 
 @interface FHCommunityDetailHeaderView ()
 @end
@@ -30,7 +31,10 @@
     self.backgroundColor = [UIColor themeGray7];
 
     self.topBack = [[UIImageView alloc] init];
-    self.topBack = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fh_ugc_community_detail_header_back"]];
+    //随机一张背景图
+    int randomImageIndex = arc4random() % 4;
+    NSString *imageNmae = [NSString stringWithFormat:@"fh_ugc_community_detail_header_back%d",randomImageIndex];
+    self.topBack = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageNmae]];
     self.topBack.contentMode = UIViewContentModeScaleAspectFill;
 
     self.avatar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"default_avatar"]];
