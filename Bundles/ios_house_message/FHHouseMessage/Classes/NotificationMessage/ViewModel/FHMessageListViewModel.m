@@ -62,8 +62,6 @@
     }
 
     if (!loadMore) {
-        [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
-        [[FHMessageNotificationManager sharedManager] fetchUnreadMessageWithChannel:nil callback:nil];
         self.maxCursor = nil;
     }
 
@@ -72,6 +70,7 @@
         StrongSelf;
         if (response && (error == nil)) {
             if (!loadMore) {
+                [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
                 [wself.messageModels removeAllObjects];
                 if (response.msgList.count <= 0) {
                     self.tableView.hidden = YES;
@@ -139,7 +138,7 @@
     TTMessageNotificationModel *model = self.messageModels[indexPath.row];
     NSString *bodyUrl = model.content.bodyUrl;
     if (!isEmptyString(bodyUrl)) {
-        NSURL *openURL = [TTStringHelper URLWithURLString:bodyUrl];
+        NSURL *openURL = [NSURL URLWithString:[bodyUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
             [[TTRoute sharedRoute] openURLByPushViewController:openURL];
         }

@@ -38,13 +38,16 @@
         _collectionView = collectionView;
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMessageView) name:kTTMessageNotificationTipsChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
 
         [_collectionView registerClass:[FHMyJoinNeighbourhoodCell class] forCellWithReuseIdentifier:cellId];
         __weak typeof(self) weakSelf = self;
         self.viewController.neighbourhoodView.progressView.refreshViewBlk = ^{
             [weakSelf updateJoinProgressView];
         };
+
+        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onUnreadMessageClick)];
+        [self.viewController.neighbourhoodView.messageView addGestureRecognizer:singleTap];
     }
 
     return self;
@@ -56,6 +59,15 @@
 
     [self updateJoinProgressView];
     [self.collectionView reloadData];
+}
+
+- (void)onUnreadMessageChange {
+    FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
+    if (!model) {
+        [self hideMessageView];
+        return;
+    }
+    [self showMessageView];
 }
 
 - (void)showMessageView {
@@ -83,6 +95,14 @@
     self.viewController.neighbourhoodView.frame = frame;
 
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
+}
+
+- (void)onUnreadMessageClick {
+    FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
+    NSURL *openURL = [NSURL URLWithString:[model.openUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
+        [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:nil];
+    }
 }
 
 // 更新发帖进度视图
