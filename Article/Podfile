@@ -355,7 +355,7 @@ def appPods
     pod_binary 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
     pod 'TTPushManager', '0.0.13.4'
     pod_binary 'TTReachability', '0.1.8'
-    pod 'Protobuf', '3.0.1-ttv'
+    pod_binary 'Protobuf', '3.0.1-ttv'
     #----- 存储库 -----
     pod_binary 'TTPersistence', '0.2.3'
     pod_binary 'TTEntityBase', '0.2.4'
@@ -651,6 +651,28 @@ post_install do |installer|
             target.build_configurations.each do |config|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
             end
+        end
+    end
+    
+    # Xcode 11目前和CocoaPods有兼容问题，会导致Assets.car这个文件，由于出现在两处Output File而报错
+    # 一处是Xcode自带的Copy Bundle Resources，一处是CocoaPods的[CP] Copy Pods Resources
+    # 这个问题在Xcode 10上也有小概率发生，现在统一临时Fix下，参考CocoaPods/CocoaPods#8122
+    installer.aggregate_targets.each do |target|
+        if ['Pods-f100', 'Pods-NewsLiteInHouse','Pods-NewsLite','Pods-NewsLiteChannel'].include?(target.name)
+            patched = false
+            target.user_targets.first.build_phases.each do |phase|
+                if phase.display_name == '[CP] Copy Pods Resources'
+                    assets_car_path = '${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car'
+                    if !phase.input_paths
+                        phase.input_paths = []
+                    end
+                    if !phase.input_paths.include?(assets_car_path)
+                        phase.input_paths << assets_car_path
+                        patched = true
+                    end
+                end
+            end
+            target.user_project.save if patched
         end
     end
 end

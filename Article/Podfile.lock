@@ -162,8 +162,8 @@ PODS:
     - libextobjc/EXTScope (= 0.4.1.1-binary)
     - libextobjc/EXTSelectorChecking (= 0.4.1.1-binary)
     - libextobjc/EXTSynthesize (= 0.4.1.1-binary)
-    - libextobjc/NSInvocation+EXT (= 0.4.1.1-binary)
-    - libextobjc/NSMethodSignature+EXT (= 0.4.1.1-binary)
+    - "libextobjc/NSInvocation+EXT (= 0.4.1.1-binary)"
+    - "libextobjc/NSMethodSignature+EXT (= 0.4.1.1-binary)"
     - libextobjc/RuntimeExtensions (= 0.4.1.1-binary)
     - libextobjc/UmbrellaHeader (= 0.4.1.1-binary)
   - libextobjc/EXTADT (0.4.1.1-binary)
@@ -174,8 +174,8 @@ PODS:
   - libextobjc/EXTScope (0.4.1.1-binary)
   - libextobjc/EXTSelectorChecking (0.4.1.1-binary)
   - libextobjc/EXTSynthesize (0.4.1.1-binary)
-  - libextobjc/NSInvocation+EXT (0.4.1.1-binary)
-  - libextobjc/NSMethodSignature+EXT (0.4.1.1-binary)
+  - "libextobjc/NSInvocation+EXT (0.4.1.1-binary)"
+  - "libextobjc/NSMethodSignature+EXT (0.4.1.1-binary)"
   - libextobjc/RuntimeExtensions (0.4.1.1-binary)
   - libextobjc/UmbrellaHeader (0.4.1.1-binary)
   - libwebp (0.6.1.1-binary):
@@ -220,7 +220,7 @@ PODS:
   - OHHTTPStubs/OHPathHelpers (4.2.1.1-binary)
   - OpenSSL-Universal (1.0.1.20.1-binary)
   - OpenUDID (0.1.0.1-binary)
-  - Protobuf (3.0.1-ttv)
+  - Protobuf (3.0.1-ttv.1-binary)
   - React/base (0.55.9-alpha.22.1.binary)
   - React/Core (0.55.9-alpha.22.1.binary)
   - React/CxxBridge (0.55.9-alpha.22.1.binary)
@@ -546,7 +546,7 @@ PODS:
   - TTVTableViewProtocolInterceptor/UIViewControllerCategory (0.1.2.1-binary)
   - TTVTLIndexPathTools (0.4.4.1-binary)
   - TYRZApiSDK (1.2.0.1-binary)
-  - UITableView+FDTemplateLayoutCell (1.6.1-binary)
+  - "UITableView+FDTemplateLayoutCell (1.6.1-binary)"
   - UMengAnalytics (4.1.4.1-binary)
   - WCDB (1.0.7.5.1-binary)
   - WCDBOptimizedSQLCipher (1.2.1.1-binary)
@@ -662,7 +662,7 @@ DEPENDENCIES:
   - OHHTTPStubs (= 4.2.1.1-binary)
   - OpenSSL-Universal (= 1.0.1.20.1-binary)
   - OpenUDID (= 0.1.0.1-binary)
-  - Protobuf (= 3.0.1-ttv)
+  - Protobuf (= 3.0.1-ttv.1-binary)
   - React/base (= 0.55.9-alpha.22.1.binary)
   - React/Core (= 0.55.9-alpha.22.1.binary)
   - React/CxxBridge (= 0.55.9-alpha.22.1.binary)
@@ -787,7 +787,7 @@ DEPENDENCIES:
   - TTRexxar/PackageApp (= 0.8.10.1-binary)
   - TTRexxar/Plugins (= 0.8.10.1-binary)
   - TTRexxar/WebView (= 0.8.10.1-binary)
-  - TTRoute (from `git@code.byted.org:TTIOS/tt_pods_route.git`, branch `array_type_query`)
+  - "TTRoute (from `git@code.byted.org:TTIOS/tt_pods_route.git`, branch `array_type_query`)"
   - TTSearch (from `../TTBundles/ios_tt_search`)
   - TTService (from `../TTBundles/ios_tt_service`)
   - TTServiceKit (= 0.4.1.1-binary)
@@ -817,7 +817,7 @@ DEPENDENCIES:
   - TTVTableViewProtocolInterceptor (= 0.1.2.1-binary)
   - TTVTLIndexPathTools (= 0.4.4.1-binary)
   - TYRZApiSDK (= 1.2.0.1-binary)
-  - UITableView+FDTemplateLayoutCell (= 1.6.1-binary)
+  - "UITableView+FDTemplateLayoutCell (= 1.6.1-binary)"
   - UMengAnalytics (= 4.1.4.1-binary)
   - WCDB (= 1.0.7.5.1-binary)
   - WCDBOptimizedSQLCipher (= 1.2.1.1-binary)
@@ -828,112 +828,243 @@ DEPENDENCIES:
   - YYText (= 1.0.7.1-binary)
   - YYWebImage (= 1.0.4.1-binary)
 
+SPEC REPOS:
+  "git@code.byted.org:iOS_Library/privatethird_binary_repo.git":
+    - AWECloudCommand
+    - BDAccountSessionSDK
+    - BDALog
+    - BDUGUnionSDK
+    - EAccountApiSDK
+    - IESGeckoKit
+    - IESWebKit
+    - React
+    - ToutiaoFrontierWebSocket
+    - TTReachability
+    - TYRZApiSDK
+  "git@code.byted.org:iOS_Library/privatethird_source_repo.git":
+    - BDAlogProtocol
+    - BDUGContainer
+    - BDUGMonitorInterface
+    - BDUGTrackerInterface
+    - Gaia
+    - ios_house_filter
+    - ios_house_im
+    - TTFFmpeg
+    - TTIMSDK
+    - TTPlayerSDK
+  "git@code.byted.org:iOS_Library/publicthird_binary_repo.git":
+    - AFgzipRequestSerializer
+    - AFNetworking
+    - AMap3DMap
+    - AMapFoundation
+    - AMapLocation
+    - AMapSearch
+    - Aspects
+    - Bolts
+    - CHTCollectionViewWaterfallLayout
+    - CocoaLumberjack
+    - Crashlytics
+    - Fabric
+    - FLAnimatedImage
+    - FLEX
+    - FMDB
+    - Godzippa
+    - IGListKit
+    - JSONModel
+    - KVOController
+    - libextobjc
+    - libwebp
+    - lottie-ios
+    - Masonry
+    - MBProgressHUD
+    - MJExtension
+    - MJRefresh
+    - OHHTTPStubs
+    - OpenSSL-Universal
+    - Protobuf
+    - ReactiveObjC
+    - RNCryptor-objc
+    - SDWebImage
+    - SocketRocket
+    - SQLiteRepairKit
+    - SSZipArchive
+    - TTTAttributedLabel
+    - "UITableView+FDTemplateLayoutCell"
+    - UMengAnalytics
+    - WCDB
+    - WCDBOptimizedSQLCipher
+    - YYCache
+    - YYImage
+    - YYModel
+    - YYText
+    - YYWebImage
+  "git@code.byted.org:iOS_Library/publicthird_source_repo.git":
+    - RXCollections
+  "git@code.byted.org:iOS_Library/toutiao_binary_repo.git":
+    - AWEVideoPlayer
+    - BDABTestSDK
+    - BDTFactoryConfigurator
+    - BDWebImage
+    - Heimdallr
+    - Mantle
+    - OpenUDID
+    - RSSwizzle
+    - SecGuard
+    - TSVToolkit
+    - TTABManager
+    - TTAddressBookService
+    - TTAdSplashSDK
+    - TTAppUpdateHelper
+    - TTAudio
+    - TTBatchItemAction
+    - TTDebugAssistant
+    - TTEntityBase
+    - TTEntry
+    - TTFileUploadClient
+    - TTFlowStatisticsManager
+    - TTImage
+    - TTImagePreviewAnimateManager
+    - TTImpression
+    - TTInstallService
+    - TTLCSService
+    - TTNetBusiness
+    - TTNetworkManager
+    - TTPersistence
+    - TTPushSDK
+    - TTReporter
+    - TTRexxar
+    - TTServiceKit
+    - TTTracker
+    - TTUserSettings
+    - TTVContainerScrollView
+    - TTVerifyKit
+    - TTVideo
+    - TTVideoEngine
+    - TTVideoService
+    - TTVTableViewItem
+    - TTVTableViewProtocolInterceptor
+    - TTVTLIndexPathTools
+  "git@code.byted.org:iOS_Library/toutiao_source_repo.git":
+    - BDAssert
+    - boringssl
+    - TTAccountSDK
+    - TTDialogDirector
+    - TTGaiaExtension
+    - TTKitchen
+    - TTLocationManager
+    - TTPreloaderSDK
+    - TTPushManager
+    - TTSettingsManager
+    - TTThirdPartySDKs
+  "git@code.byted.org:ugc/UGCSpecs.git":
+    - IESVideoPlayer
+
 EXTERNAL SOURCES:
   AKCommentPlugin:
-    :path: ../AKPlugins/AKCommentPlugin
+    :path: "../AKPlugins/AKCommentPlugin"
   AKShareServicePlugin:
-    :path: ../AKPlugins/AKShareServicePlugin
+    :path: "../AKPlugins/AKShareServicePlugin"
   AKWDPlugin:
-    :path: ../AKPlugins/AKWDPlugin
+    :path: "../AKPlugins/AKWDPlugin"
   AKWebViewBundlePlugin:
-    :path: ../AKPlugins/AKWebViewBundlePlugin
+    :path: "../AKPlugins/AKWebViewBundlePlugin"
   BDTArticle:
-    :path: ../AKPlugins/BDTArticle
+    :path: "../AKPlugins/BDTArticle"
   BDTBasePlayer:
-    :path: ../AKPlugins/BDTBasePlayer
+    :path: "../AKPlugins/BDTBasePlayer"
   BDTExploreOrderedData:
-    :path: ../AKPlugins/BDTExploreOrderedData
+    :path: "../AKPlugins/BDTExploreOrderedData"
   BDTSharedHeaders:
-    :path: ../Vendor/BDTSharedHeaders
+    :path: "../Vendor/BDTSharedHeaders"
   FHCHousePush:
-    :path: ../Bundles/FHCHousePush
+    :path: "../Bundles/FHCHousePush"
   FHCommonUI:
-    :path: ../Bundles/ios_common_ui
+    :path: "../Bundles/ios_common_ui"
   FHHouseBase:
-    :path: ../Bundles/ios_house_base
+    :path: "../Bundles/ios_house_base"
   FHHouseDetail:
-    :path: ../Bundles/ios_house_detail
+    :path: "../Bundles/ios_house_detail"
   FHHouseFind:
-    :path: ../Bundles/ios_house_find
+    :path: "../Bundles/ios_house_find"
   FHHouseHome:
-    :path: ../Bundles/ios_house_home
+    :path: "../Bundles/ios_house_home"
   FHHouseList:
-    :path: ../Bundles/ios_house_list
+    :path: "../Bundles/ios_house_list"
   FHHouseMessage:
-    :path: ../Bundles/ios_house_message
+    :path: "../Bundles/ios_house_message"
   FHHouseMine:
-    :path: ../Bundles/ios_house_mine
+    :path: "../Bundles/ios_house_mine"
   FHHouseTrend:
-    :path: ../Bundles/ios_house_trend
+    :path: "../Bundles/ios_house_trend"
   FHHouseUGC:
-    :path: ../Bundles/ios_house_ugc
+    :path: "../Bundles/ios_house_ugc"
   FHMapSearch:
-    :path: ../Bundles/ios_map_search
+    :path: "../Bundles/ios_map_search"
   FHRNKit:
-    :path: ../Bundles/ios_common_rn
+    :path: "../Bundles/ios_common_rn"
   FHWebView:
-    :path: ../AKPlugins/FHWebView
+    :path: "../AKPlugins/FHWebView"
   HTSVideoPlay:
-    :path: ../Vendor/ShortVideo
+    :path: "../Vendor/ShortVideo"
   TTAccountLogin:
-    :path: ../AKPlugins/AKAccountLogin
+    :path: "../AKPlugins/AKAccountLogin"
   TTAD:
-    :path: ../TTBundles/ios_tt_ad
+    :path: "../TTBundles/ios_tt_ad"
   TTAdModule:
-    :path: ../AKPlugins/TTAdModule
+    :path: "../AKPlugins/TTAdModule"
   TTAiKan:
-    :path: ../TTBundles/ios_tt_aikan
+    :path: "../TTBundles/ios_tt_aikan"
   TTAppRuntime:
-    :path: ../TTBundles/ios_tt_appruntime
+    :path: "../TTBundles/ios_tt_appruntime"
   TTArticle:
-    :path: ../TTBundles/ios_tt_article
+    :path: "../TTBundles/ios_tt_article"
   TTArticleBase:
-    :path: ../TTBundles/ios_tt_articlebase
+    :path: "../TTBundles/ios_tt_articlebase"
   TTArticleVideo:
-    :path: ../TTBundles/ios_tt_article_video
+    :path: "../TTBundles/ios_tt_article_video"
   TTAvatar:
-    :path: ../AKPlugins/TTAvatar
+    :path: "../AKPlugins/TTAvatar"
   TTBaseLib:
-    :path: ../AKPlugins/TTBaseLib
+    :path: "../AKPlugins/TTBaseLib"
   TTDebug:
-    :path: ../TTBundles/ios_tt_debug
+    :path: "../TTBundles/ios_tt_debug"
   TTDiggButton:
-    :path: ../AKPlugins/AKDiggButton
+    :path: "../AKPlugins/AKDiggButton"
   TTFeedTab:
-    :path: ../TTBundles/ios_tt_feedtab
+    :path: "../TTBundles/ios_tt_feedtab"
   TTFriendRelation:
-    :path: ../AKPlugins/TTFriendRelation
+    :path: "../AKPlugins/TTFriendRelation"
   TTGallery:
-    :path: ../TTBundles/ios_tt_gallery
+    :path: "../TTBundles/ios_tt_gallery"
   TTHTSVideo:
-    :path: ../TTBundles/ios_tt_htsvideo
+    :path: "../TTBundles/ios_tt_htsvideo"
   TTImagePicker:
-    :path: ../AKPlugins/AKImagePicker
+    :path: "../AKPlugins/AKImagePicker"
   TTMonitor:
-    :path: ../AKPlugins/TTMonitor
+    :path: "../AKPlugins/TTMonitor"
   TTNewsAccountBusiness:
-    :path: ../AKPlugins/TTNewsAccountBusiness
+    :path: "../AKPlugins/TTNewsAccountBusiness"
   TTPhotoScrollVC:
-    :path: ../AKPlugins/TTPhotoScrollVC
+    :path: "../AKPlugins/TTPhotoScrollVC"
   TTPlatformBaseLib:
-    :path: ../AKPlugins/TTPlatformBaseLib
+    :path: "../AKPlugins/TTPlatformBaseLib"
   TTPlatformUIModel:
-    :path: ../AKPlugins/AKPlatformUIModel
+    :path: "../AKPlugins/AKPlatformUIModel"
   TTPostBase:
-    :path: ../AKPlugins/TTPostBase
+    :path: "../AKPlugins/TTPostBase"
   TTPushAuthorizationManager:
-    :path: ../AKPlugins/AKPushAuthorizationManager
+    :path: "../AKPlugins/AKPushAuthorizationManager"
   TTRoute:
     :branch: array_type_query
-    :git: git@code.byted.org:TTIOS/tt_pods_route.git
+    :git: "git@code.byted.org:TTIOS/tt_pods_route.git"
   TTSearch:
-    :path: ../TTBundles/ios_tt_search
+    :path: "../TTBundles/ios_tt_search"
   TTService:
-    :path: ../TTBundles/ios_tt_service
+    :path: "../TTBundles/ios_tt_service"
   TTServiceProtocols:
-    :path: ../AKPlugins/AKServiceProtocols
+    :path: "../AKPlugins/AKServiceProtocols"
   TTShare:
-    :path: ../AKPlugins/TTShare
+    :path: "../AKPlugins/TTShare"
     :subspects:
       - TTShareBasic/TTQQShare
       - TTShareBasic/TTWeChatShare
@@ -942,22 +1073,22 @@ EXTERNAL SOURCES:
       - TTShareBusiness/TTShareQQBusiness
       - TTShareBusiness/TTShareWeChatBusiness
   TTThemed:
-    :path: ../AKPlugins/AKThemed
+    :path: "../AKPlugins/AKThemed"
   TTUGCFoundation:
-    :path: ../Vendor/TTUGCFoundation
+    :path: "../Vendor/TTUGCFoundation"
   TTUIWidget:
-    :path: ../AKPlugins/TTUIWidget
+    :path: "../AKPlugins/TTUIWidget"
   TTUserProfile:
-    :path: ../TTBundles/ios_tt_userprofile
+    :path: "../TTBundles/ios_tt_userprofile"
   TTVPlayerPod:
-    :path: ../AKPlugins/TTVPlayer
+    :path: "../AKPlugins/TTVPlayer"
   yoga:
-    :path: ../ReactCommon/yoga
+    :path: "../ReactCommon/yoga"
 
 CHECKOUT OPTIONS:
   TTRoute:
     :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa
-    :git: git@code.byted.org:TTIOS/tt_pods_route.git
+    :git: "git@code.byted.org:TTIOS/tt_pods_route.git"
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
@@ -1035,7 +1166,7 @@ SPEC CHECKSUMS:
   OHHTTPStubs: 8fe4a9bac9386d3450c6cdaeca77e5d07d0f6cf4
   OpenSSL-Universal: 7bd04be21cd79882c6b2e4afd9433b3e94f88ac0
   OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
-  Protobuf: e97b6e7b829ac5b4be715db957917a1ba10c4a9a
+  Protobuf: 52a446ec094fe19d92c51ef98bd5c975b56d8732
   React: d5707a221547497a307b5fc2347665017824b20f
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
@@ -1130,7 +1261,7 @@ SPEC CHECKSUMS:
   TTVTableViewProtocolInterceptor: b40445eb84a3de5ded2f9869c4f6c946df4898e7
   TTVTLIndexPathTools: 2f6c23b4990f3aee6e7ceb867f632d4d02ea5384
   TYRZApiSDK: 67e06aee48215f1d0058cf11ea99fa99b1745fc9
-  UITableView+FDTemplateLayoutCell: a2662e078962600e17f9e090cc09b5f49f3e4762
+  "UITableView+FDTemplateLayoutCell": a2662e078962600e17f9e090cc09b5f49f3e4762
   UMengAnalytics: 03d571efddd70d2a64a58f35c23dcf9732344b5b
   WCDB: f443005ee9bc01706ff0f67bb1ad890e875d6f8c
   WCDBOptimizedSQLCipher: cea840096ebeefae3116ffd2262ebc489e089b1c
@@ -1141,6 +1272,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: ba744b3827b50e6aa6a8705bc8ee998fb3c0453f
+PODFILE CHECKSUM: 5c7ef861730866d9ff0f6062b6f4184b2224a8fc
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.3
