@@ -11,6 +11,7 @@
 #import <math.h>
 #import "FHEnvContext.h"
 #import "ToastManager.h"
+#import "TTBadgeNumberView.h"
 
 @interface HMScrollView : UIScrollView
 @end
@@ -23,6 +24,7 @@
 @property (nonatomic, readwrite) CGFloat segmentWidth;
 @property (nonatomic, readwrite) NSArray<NSNumber *> *segmentWidthsArray;
 @property (nonatomic, strong) HMScrollView *scrollView;
+@property (nonatomic, strong) TTBadgeNumberView *tipView;
 
 @end
 
@@ -181,6 +183,20 @@
 
 - (void)setSectionTitles:(NSArray<NSString *> *)sectionTitles {
         _sectionTitles = sectionTitles;
+    
+    [self setNeedsLayout];
+    [self setNeedsDisplay];
+}
+
+- (void)setSectionRedPoints:(NSArray *)sectionRedPoints {
+    _sectionRedPoints = sectionRedPoints;
+    
+    [self setNeedsLayout];
+    [self setNeedsDisplay];
+}
+
+- (void)setSectionMessageTips:(NSArray *)sectionMessageTips {
+    _sectionMessageTips = sectionMessageTips;
     
     [self setNeedsLayout];
     [self setNeedsDisplay];
@@ -346,6 +362,45 @@
             titleLayer.contentsScale = [[UIScreen mainScreen] scale];
             
             [self.scrollView.layer addSublayer:titleLayer];
+            
+            //显示红点
+            if(idx < _sectionRedPoints.count){
+                BOOL isShowRed = [_sectionRedPoints[idx] boolValue];
+                if(isShowRed){
+                    UIImage *icon = [UIImage imageNamed:@"seg_red_point"];
+                    CGFloat imageWidth = icon.size.width;
+                    CGFloat imageHeight = icon.size.height;
+                    CGFloat red_y = roundf(CGRectGetMinY(rect)  - imageHeight/2.0f + 3.0f);
+                    CGFloat red_x = roundf(CGRectGetMaxX(rect)  - imageWidth/2.0f);
+                    CGRect redPointRect = CGRectMake(red_x, red_y, imageWidth, imageHeight);
+                    
+                    CALayer *imageLayer = [CALayer layer];
+                    imageLayer.frame = redPointRect;
+                    imageLayer.contents = (id)icon.CGImage;
+                    [self.scrollView.layer addSublayer:imageLayer];
+                }
+            }
+            
+            //显示数字
+            if(idx < _sectionMessageTips.count){
+                NSInteger tipsCount = [_sectionMessageTips[idx] integerValue];
+                if(tipsCount > 0){
+                    self.tipView = [[TTBadgeNumberView alloc] init];
+                    _tipView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
+                    _tipView.badgeNumber = tipsCount;
+                    
+                    CGFloat width = self.tipView.frame.size.width;
+                    CGFloat height = self.tipView.frame.size.height;
+                    CGFloat red_y = roundf(CGRectGetMinY(rect) - height/2 + 1.0f);
+                    CGFloat red_x = roundf(CGRectGetMaxX(rect) - 5.0f);
+                    CGRect redPointRect = CGRectMake(red_x, red_y, width, height);
+                    
+                    _tipView.frame = redPointRect;
+                    [self.scrollView.layer addSublayer:_tipView.layer];
+                }else{
+                    self.tipView.badgeNumber = TTBadgeNumberHidden;
+                }
+            }
             
             // Vertical Divider
             if (self.isVerticalDividerEnabled && idx > 0) {
