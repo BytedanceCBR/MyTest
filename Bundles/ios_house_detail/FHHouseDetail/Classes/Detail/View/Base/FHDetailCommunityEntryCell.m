@@ -12,8 +12,8 @@
 
 @interface FHDetailCommunityEntryCell () <FHDetailVCViewLifeCycleProtocol>
 @property(nonatomic, strong) UILabel *activeCountInfoLabel;
-@property(nonatomic, strong) FHCommunitySuggestionBubble *bubble0;
-@property(nonatomic, strong) FHCommunitySuggestionBubble *bubble1;
+@property(nonatomic, strong) FHCommunitySuggestionBubble *curBubble;
+@property(nonatomic, strong) FHCommunitySuggestionBubble *flowBubble;
 @property(nonatomic, strong) UIImageView *arrowView;
 @property(nonatomic, strong) UIView *backView;
 @property(nonatomic, strong) NSTimer *wheelTimer;
@@ -53,16 +53,16 @@
     _activeCountInfoLabel.textAlignment = NSTextAlignmentLeft;
     _activeCountInfoLabel.frame = CGRectMake(10, 10, SCREEN_WIDTH - 40 - 10 - 22 - 160, 20);
 
-    _bubble0 = [[FHCommunitySuggestionBubble alloc] initWithFrame:CGRectMake(_backView.frame.size.width - 22 - 160, 10, 160, 20)];
-    _bubble1 = [[FHCommunitySuggestionBubble alloc] initWithFrame:CGRectMake(_backView.frame.size.width - 22 - 160, 40, 160, 20)];
+    _curBubble = [[FHCommunitySuggestionBubble alloc] initWithFrame:CGRectMake(_backView.frame.size.width - 22 - 160, 10, 160, 20)];
+    _flowBubble = [[FHCommunitySuggestionBubble alloc] initWithFrame:CGRectMake(_backView.frame.size.width - 22 - 160, 40, 160, 20)];
 
     _arrowView = [[UIImageView alloc] init];
     _arrowView.image = [UIImage imageNamed:@"detail_red_arrow_right"];
     _arrowView.frame = CGRectMake(SCREEN_WIDTH - 40 - 6 - 12, 14, 12, 12);
 
     [_backView addSubview:_activeCountInfoLabel];
-    [_backView addSubview:_bubble0];
-    [_backView addSubview:_bubble1];
+    [_backView addSubview:_curBubble];
+    [_backView addSubview:_flowBubble];
     [_backView addSubview:_arrowView];
     _backView.clipsToBounds = YES;
     [self.contentView addSubview:_backView];
@@ -104,11 +104,11 @@
     UIColor *suggestColor = isEmptyString(model.suggestInfoColor) ? [UIColor themeRed1] : [UIColor colorWithHexStr:model.suggestInfoColor];
     UIColor *nextSuggestColor = isEmptyString(nextModel.suggestInfoColor) ? [UIColor themeRed1] : [UIColor colorWithHexStr:nextModel.suggestInfoColor];
 
-    CGFloat labelWidth = [self.bubble0 refreshWithAvatar:model.activeUserAvatar title:model.suggestInfo color:suggestColor];
-    self.bubble0.frame = CGRectMake(SCREEN_WIDTH - 40 - (6 + 12 + 4 + 4 + labelWidth + 20), 10, labelWidth + 4 + 20, 20);
+    CGFloat labelWidth = [self.curBubble refreshWithAvatar:model.activeUserAvatar title:model.suggestInfo color:suggestColor];
+    self.curBubble.frame = CGRectMake(SCREEN_WIDTH - 40 - (6 + 12 + 4 + 4 + labelWidth + 20), 10, labelWidth + 4 + 20, 20);
 
-    labelWidth = [self.bubble1 refreshWithAvatar:model.activeUserAvatar title:nextModel.suggestInfo color:nextSuggestColor];
-    self.bubble1.frame = CGRectMake(SCREEN_WIDTH - 40 - (6 + 12 + 4 + 4 + labelWidth + 20), 40, labelWidth + 4 + 20, 20);
+    labelWidth = [self.flowBubble refreshWithAvatar:model.activeUserAvatar title:nextModel.suggestInfo color:nextSuggestColor];
+    self.flowBubble.frame = CGRectMake(SCREEN_WIDTH - 40 - (6 + 12 + 4 + 4 + labelWidth + 20), 40, labelWidth + 4 + 20, 20);
 }
 
 - (void)wheelSuggestionInfo {
@@ -122,24 +122,13 @@
     WeakSelf;
     [UIView animateWithDuration:0.5 animations:^{
         StrongSelf;
-        wself.bubble0.alpha = 0;
-        wself.bubble1.alpha = 1;
-        wself.bubble0.frame = CGRectOffset(wself.bubble0.frame, 0, -30.0f);
-        wself.bubble1.frame = CGRectOffset(wself.bubble1.frame, 0, -30.0f);
+        wself.curBubble.frame = CGRectOffset(wself.curBubble.frame, 0, -30.0f);
+        wself.flowBubble.frame = CGRectOffset(wself.flowBubble.frame, 0, -30.0f);
     }                completion:^(BOOL finished) {
         StrongSelf;
-
-        wself.bubble0.alpha = 1;
-        wself.bubble1.alpha = 0;
-
-        CGRect frame0 = wself.bubble0.frame;
-        frame0.origin.y = 10;
-        wself.bubble0.frame = frame0;
-
-        CGRect frame1 = wself.bubble0.frame;
-        frame1.origin.y = 40;
-        wself.bubble1.frame = frame1;
-
+        FHCommunitySuggestionBubble* tempBubble = wself.curBubble;
+        wself.curBubble = wself.flowBubble;
+        wself.flowBubble = tempBubble;
         wself.curWheelIndex = (self.curWheelIndex + 1) % entryModel.activeInfo.count;
         [wself updateBubble];
     }];

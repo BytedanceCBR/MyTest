@@ -1257,22 +1257,6 @@ static CommonURLSetting *_sharedInstance = nil;
 
 @end
 
-@implementation CommonURLSetting (TTMessageNotification)
-
-// 新消息通知列表
-+ (NSString *)messageNotificationListURLString
-{
-    return [NSString stringWithFormat:@"%@/f100/api/msg/ugc/list",[self baseURL]];
-}
-
-// 新消息通知未读提示
-+ (NSString*)messageNotificationUnreadURLString
-{
-    return [NSString stringWithFormat:@"%@/f100/api/msg/ugc/unread/", [self baseURL]];
-}
-
-@end
-
 @implementation CommonURLSetting (TTFlowStatistics)
 
 + (NSString *)queryResidualFlowURLString

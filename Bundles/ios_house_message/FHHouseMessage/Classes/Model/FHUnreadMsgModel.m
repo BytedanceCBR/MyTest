@@ -34,3 +34,10 @@
 }
 @end
 
+@implementation FHUGCUnreadMsgModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+

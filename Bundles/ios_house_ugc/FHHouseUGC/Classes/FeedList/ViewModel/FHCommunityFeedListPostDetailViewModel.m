@@ -15,6 +15,7 @@
 #import "Article.h"
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
+#import "TTRoute.h"
 
 @interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
 
