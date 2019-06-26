@@ -24,6 +24,7 @@
 #import "FHHomeCellHelper.h"
 #import <TTSandBoxHelper.h>
 #import "FHHomeItemViewController.h"
+#import "FHHomeSearchPanelViewModel.h"
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
@@ -56,7 +57,7 @@
 
 @implementation FHHomeListViewModel
 
-- (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC
+- (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC andPanelVM:(FHHomeSearchPanelViewModel *)panelVM
 {
     self = [super init];
     if (self) {
@@ -65,6 +66,7 @@
         self.homeViewController = homeVC;
         self.isSelectIndex = YES;
         self.isResetingOffsetZero = NO;
+        self.panelVM = panelVM;
         _itemsVCArray = [NSMutableArray new];
         
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -113,6 +115,9 @@
                 return ;
             }
             
+            if (self.panelVM) {
+                [self.panelVM fetchSearchPanelRollData];
+            }
           
             if (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                 [self requestOriginData:self.isFirstChange isShowPlaceHolder:[FHEnvContext sharedInstance].isRefreshFromCitySwitch];
@@ -255,6 +260,7 @@
 //    self.tableViewV.scrollEnabled = NO;
     
     _childVCScrollView.contentOffset = CGPointMake(0, 0);
+    __weak typeof(self) weakSelf = self;
 
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSMutableArray *itemVCArrayTmp = [NSMutableArray new];
@@ -263,7 +269,7 @@
         if ([houseTypeNum isKindOfClass:[NSNumber class]]) {
             FHHomeItemViewController *itemVC = [[FHHomeItemViewController alloc] initItemWith:self];
             itemVC.houseType = [houseTypeNum integerValue];
-            
+            itemVC.panelVM = self.panelVM;
             if (houseTypeNum.integerValue == self.houseType) {
                 itemVC.isOriginShowSelf = YES;
                 self.previousHouseType = self.houseType;
@@ -275,7 +281,7 @@
             // 添加子控制器
             [self.homeViewController addChildViewController:itemVC];
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
-                [self processRequestData:refreshType andHouseType:houseType andIsSucees:isSuccess andDataModel:dataModel];
+                [weakSelf processRequestData:refreshType andHouseType:houseType andIsSucees:isSuccess andDataModel:dataModel];
             };
             
             itemVC.scrollDidEnd = ^{
@@ -283,7 +289,7 @@
             };
             
             itemVC.requestNetworkUnAvalableRetryCallBack = ^{
-                [self.homeViewController retryLoadData];
+                [weakSelf.homeViewController retryLoadData];
             };
             //将子控制的view添加到scrollView上去
             [self.homeViewController.scrollView addSubview:itemVC.view];

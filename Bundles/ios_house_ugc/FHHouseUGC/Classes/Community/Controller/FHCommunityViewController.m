@@ -83,7 +83,7 @@
     //        if (duration) {
     //            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
     //        }
-    [tracerDict setValue:@"main" forKey:@"tab_name"];
+    [tracerDict setValue:@"discover_tab" forKey:@"tab_name"];
     [tracerDict setValue:@(0) forKey:@"with_tips"];
     [tracerDict setValue:@"click_tab" forKey:@"enter_type"];
     tracerDict[@"stay_time"] = @((int)duration);
@@ -195,9 +195,9 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
     
-    FHWDAnswerPictureTextViewController *vc = [[FHWDAnswerPictureTextViewController alloc] init];
-    TTNavigationController *navVC = [[TTNavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:navVC animated:YES completion:nil];
+//    FHWDAnswerPictureTextViewController *vc = [[FHWDAnswerPictureTextViewController alloc] init];
+//    TTNavigationController *navVC = [[TTNavigationController alloc] initWithRootViewController:vc];
+//    [self presentViewController:navVC animated:YES completion:nil];
 }
 
 - (void)hideSegmentControl {
