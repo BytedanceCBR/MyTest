@@ -8,6 +8,7 @@
 #import "WDAnswerService.h"
 #import <TTBaseLib/JSONAdditions.h>
 #import "WDNetWorkPluginManager.h"
+#import "FHCommonApi.h"
 
 @interface WDAnswerService ()
 
@@ -77,13 +78,25 @@
     requestModel.digg_type = @(diggType);
     requestModel.enter_from = enterFrom;
     requestModel.api_param = [apiParam tt_JSONRepresentation];
-    
-    [[WDNetWorkPluginManager sharedInstance_tt] requestModel:requestModel callback:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel) {
+    NSInteger action = 0;
+    if (diggType == WDDiggTypeDigg) {
+        action = 1;
+    } else if (diggType == WDDiggTypeUnDigg) {
+        action = 0;
+    }
+    // 新接口
+    [FHCommonApi requestCommonDigg:ansID groupType:FHDetailDiggTypeANSWER action:action completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (finishBlock) {
             finishBlock(error);
         }
         [[WDAnswerService sharedInstance] broadcastAnswerWithAnsId:ansID actionType:WDAnswerActionTypeDigg error:error];
     }];
+//    [[WDNetWorkPluginManager sharedInstance_tt] requestModel:requestModel callback:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel) {
+//        if (finishBlock) {
+//            finishBlock(error);
+//        }
+//        [[WDAnswerService sharedInstance] broadcastAnswerWithAnsId:ansID actionType:WDAnswerActionTypeDigg error:error];
+//    }];
 }
 
 + (void)buryWithAnswerID:(NSString *)ansID

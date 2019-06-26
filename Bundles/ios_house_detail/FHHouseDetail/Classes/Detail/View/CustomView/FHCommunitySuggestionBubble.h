@@ -6,5 +6,5 @@
 
 
 @interface FHCommunitySuggestionBubble : UIView
-- (void)refreshWithAvatar:(NSString *)icon title:(NSString *)title;
+- (CGFloat)refreshWithAvatar:(NSString *)icon title:(NSString *)title color:(UIColor *)color;
 @end

@@ -120,7 +120,6 @@ static NSString * const kNewMessageNotificationCheckIntervalKey = @"kNewMessageN
         }
         if (tipsModel && tipsModel.hasHistoryMsg) {
             dispatch_main_async_safe(^{
-                //TODO zlj
                 [[FHMessageNotificationTipsManager sharedManager] updateTipsWithModel:tipsModel];
                 if([tipsModel.interval doubleValue] != self.lastInterval){
                     [self setNewMessageNotificationCheckInterval:[tipsModel.interval doubleValue]];

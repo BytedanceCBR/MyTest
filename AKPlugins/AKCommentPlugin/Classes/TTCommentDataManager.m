@@ -19,7 +19,7 @@
 #import <Crashlytics/Crashlytics/Answers.h>
 #import <TTUGCFoundation/FRActionDataService.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
-
+#import "FHCommonApi.h"
 
 extern NSString * const TTCommentSuccessForPushGuideNotification;
 
@@ -567,7 +567,16 @@ static TTCommentDataManager *sharedManager;
     [param setValue:commentID forKey:@"id"];
     [param setValue:commentReplyID forKey:@"reply_id"];
     [param setValue:isDigg ? @"cancel_digg": @"digg" forKey:@"action"];
-    [[TTNetworkManager shareInstance] requestForJSONWithURL:[TTCommentDataManager diggCommentReplyURLString] params:param method:@"GET" needCommonParams:YES callback:nil];
+    
+    NSInteger action = 0;
+    if (isDigg) {
+        action = 0;
+    } else {
+        action = 1;
+    }
+    // 新接口
+    [FHCommonApi requestCommonDigg: commentReplyID groupType:FHDetailDiggTypeREPLY action:action completion:nil];
+//    [[TTNetworkManager shareInstance] requestForJSONWithURL:[TTCommentDataManager diggCommentReplyURLString] params:param method:@"GET" needCommonParams:YES callback:nil];
 }
 
 #pragma mark - URLString

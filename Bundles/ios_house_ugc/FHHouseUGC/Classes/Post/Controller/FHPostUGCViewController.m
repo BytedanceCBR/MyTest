@@ -73,14 +73,14 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, strong) FRAddMultiImagesView * addImagesView;
 @property (nonatomic, copy) NSDictionary *position; //编辑带入的位置信息
 @property (nonatomic, strong) FRPostThreadAddLocationView * addLocationView;
-@property (nonatomic, copy) NSDictionary *trackDict; //  add by zyk
+@property (nonatomic, copy) NSDictionary *trackDict;
 @property (nonatomic, assign) CGRect keyboardEndFrame;
 @property (nonatomic, assign) BOOL keyboardVisibleBeforePresent; // 保存 present 页面之前的键盘状态，用于 Dismiss 之后恢复键盘
 @property (nonatomic, copy) NSArray <TTAssetModel *> * outerInputAssets; //传入的assets
 @property (nonatomic, copy) NSArray <UIImage *> * outerInputImages; //传入的images
-@property (nonatomic, assign) FRShowEtStatus showEtStatus; //控制发帖页面展示项 add by zyk
-@property (nonatomic, copy) NSString * cid; //关心ID  add by zyk
-@property (nonatomic, copy) NSString * categoryID; //频道ID  add by zyk
+@property (nonatomic, assign) FRShowEtStatus showEtStatus; //控制发帖页面展示项
+@property (nonatomic, copy) NSString * cid; //关心ID
+@property (nonatomic, copy) NSString * categoryID; //频道ID  
 @property (nonatomic, copy) NSDictionary *sdkParamsDict;// 分享调起
 @property (nonatomic, strong) SSThemedLabel * tipLabel;
 @property (nonatomic, assign) UIStatusBarStyle originStatusBarStyle;
@@ -695,10 +695,7 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.detailPos = self.addLocationView.selectedLocation.locationName;
     postThreadModel.longitude = longitude;
     postThreadModel.latitude = latitude;
-    // add by zyk
-    self.selectView.groupId = @"6703403081570189582";
     postThreadModel.social_group_id = self.selectView.groupId;
-    NSLog(@"social_group_id:%@",self.selectView.groupId);
     
     postThreadModel.extraTrack = [extraTrack copy];
     

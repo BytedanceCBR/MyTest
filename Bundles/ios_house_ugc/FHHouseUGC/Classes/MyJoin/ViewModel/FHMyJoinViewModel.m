@@ -9,10 +9,12 @@
 #import <TTHttpTask.h>
 #import "FHMyJoinNeighbourhoodCell.h"
 #import "FHUGCConfig.h"
+#import "FHMessageNotificationTipsManager.h"
+#import "FHUnreadMsgModel.h"
 
 #define cellId @"cellId"
 
-@interface FHMyJoinViewModel ()<UICollectionViewDelegate,UICollectionViewDataSource,FHMyJoinNeighbourhoodViewDelegate>
+@interface FHMyJoinViewModel () <UICollectionViewDelegate, UICollectionViewDataSource, FHMyJoinNeighbourhoodViewDelegate>
 
 @property(nonatomic, strong) UICollectionView *collectionView;
 @property(nonatomic, weak) FHMyJoinViewController *viewController;
@@ -24,6 +26,10 @@
 
 @implementation FHMyJoinViewModel
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(FHMyJoinViewController *)viewController {
     self = [super init];
     if (self) {
@@ -32,50 +38,50 @@
         _collectionView = collectionView;
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMessageView) name:kTTMessageNotificationTipsChangeNotification object:nil];
+
         [_collectionView registerClass:[FHMyJoinNeighbourhoodCell class] forCellWithReuseIdentifier:cellId];
         __weak typeof(self) weakSelf = self;
         self.viewController.neighbourhoodView.progressView.refreshViewBlk = ^{
             [weakSelf updateJoinProgressView];
         };
     }
-    
+
     return self;
 }
 
 - (void)requestData {
     [self.dataList removeAllObjects];
-    [self.dataList addObjectsFromArray: [[FHUGCConfig sharedInstance] followList]];
-    
+    [self.dataList addObjectsFromArray:[[FHUGCConfig sharedInstance] followList]];
+
     [self updateJoinProgressView];
     [self.collectionView reloadData];
 }
 
-- (void)refreshMessage {
-    [self.viewController.neighbourhoodView.messageView refreshWithUrl:@"http://p1.pstatp.com/thumb/fea7000014edee1159ac" messageCount:2];
-}
-
 - (void)showMessageView {
+    FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
+    if (isEmptyString(model.openUrl) || isEmptyString(model.lastUserAvatar) || [model.unread intValue] <= 0) {
+        return;
+    }
     self.isShowMessage = YES;
     self.viewController.neighbourhoodView.messageView.hidden = NO;
-    
+
     CGRect frame = self.viewController.neighbourhoodView.frame;
     frame.size.height = 252;
     self.viewController.neighbourhoodView.frame = frame;
-    
+
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
-    
-    [self refreshMessage];
+    [self.viewController.neighbourhoodView.messageView refreshWithUrl:model.lastUserAvatar messageCount:[model.unread intValue]];
 }
 
 - (void)hideMessageView {
     self.isShowMessage = NO;
     self.viewController.neighbourhoodView.messageView.hidden = YES;
-    
+
     CGRect frame = self.viewController.neighbourhoodView.frame;
     frame.size.height = 194;
     self.viewController.neighbourhoodView.frame = frame;
-    
+
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
 }
 
@@ -88,7 +94,7 @@
     CGRect frame = self.viewController.neighbourhoodView.frame;
     frame.size.height = self.viewController.neighbourhoodView.progressView.viewHeight + neighbourhoodViewHeight;
     self.viewController.neighbourhoodView.frame = frame;
-    
+
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
 }
 

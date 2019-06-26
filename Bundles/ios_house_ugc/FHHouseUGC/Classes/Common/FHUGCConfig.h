@@ -15,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 static NSString *const kFHUGCLoadFollowDataFinishedNotification = @"k_fh_ugc_load_follow_data_finish";
 // 关注 和 取消关注
 static NSString *const kFHUGCFollowNotification = @"k_fh_ugc_follow_finish";
+// 发帖成功通知 数放在userinfo的：social_group_id
+static NSString *const kFHUGCPostSuccessNotification = @"k_fh_ugc_post_finish";
+// 删除帖子成功通知 数放在userinfo的：social_group_id
+static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
 
 @interface FHUGCConfig : NSObject
 
@@ -36,6 +40,12 @@ static NSString *const kFHUGCFollowNotification = @"k_fh_ugc_follow_finish";
 
 // 关注变化导致的数据更新，followed为最新的关注状态 groupid要一样
 - (void)updateScialGroupDataModel:(FHUGCScialGroupDataModel *)model byFollowed:(BOOL)followed;
+
+// 发帖成功 更新帖子数 + 1
+- (void)updatePostSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model;
+
+// 删帖成功 更新帖子数 - 1
+- (void)updatePostDelSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model;
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 /*

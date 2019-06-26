@@ -580,6 +580,18 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return [[FHEnvContext sharedInstance] getConfigFromCache].ugcCitySwitch;
 }
 
++ (void)changeFindTabTitle
+{
+    if ([self isUGCOpen]) {
+        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+        [tabItem setTitle:@"邻里"];
+    }else
+    {
+        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+        [tabItem setTitle:@"发现"];
+    }
+}
+
 - (TTReachability *)reachability
 {
     if (!_reachability) {
