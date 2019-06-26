@@ -44,13 +44,7 @@
         
         [self initDataArray];
         
-        //切换开关
-        WeakSelf;
-        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-            StrongSelf;
-            FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
-            [self showUGC:xConfigDataModel.ugcCitySwitch];
-        }];
+        [self showUGC:self.viewController.isUgcOpen];
     }
     return self;
 }

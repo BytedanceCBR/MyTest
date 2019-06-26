@@ -585,6 +585,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if ([self isUGCOpen]) {
         TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
         [tabItem setTitle:@"邻里"];
+        tabItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
     }else
     {
         TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];

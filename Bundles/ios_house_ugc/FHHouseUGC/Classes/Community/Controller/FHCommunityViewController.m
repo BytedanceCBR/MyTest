@@ -28,6 +28,8 @@
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property (nonatomic, assign) BOOL hasShowDots;
+@property (nonatomic, assign) BOOL alreadyShowGuide;
+
 @end
 
 @implementation FHCommunityViewController
@@ -37,12 +39,23 @@
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.hasShowDots = NO;
-
+    self.isUgcOpen = [FHEnvContext isUGCOpen];
+    self.alreadyShowGuide = NO;
+    
     [self initView];
     [self initConstraints];
     [self initViewModel];
     
-    [self addUgcGuide];
+    //切换开关
+    WeakSelf;
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        StrongSelf;
+        FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
+        if(self.isUgcOpen != xConfigDataModel.ugcCitySwitch){
+            self.isUgcOpen = xConfigDataModel.ugcCitySwitch;
+            [self initViewModel];
+        }
+    }];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     
@@ -54,8 +67,9 @@
 }
 
 - (void)addUgcGuide {
-    if([FHUGCGuideHelper shouldShowSearchGuide] && [FHEnvContext isUGCOpen]){
+    if([FHUGCGuideHelper shouldShowSearchGuide] && self.isUgcOpen && !self.alreadyShowGuide){
         [self.guideView show:self.view dismissDelayTime:5.0f];
+        self.alreadyShowGuide = YES;
     }
 }
 
@@ -68,7 +82,9 @@
 }
 
 - (void)topVCChange:(NSNotification *)notification {
-    [self.guideView hide];
+    if(self.isUgcOpen){
+        [self.guideView hide];
+    }
 }
 
 - (void)initView {
@@ -91,7 +107,7 @@
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
     
-    [self setupCollectionView];
+//    [self setupCollectionView];
     [self setupSetmentedControl];
 }
 
@@ -105,6 +121,7 @@
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
+    [self addUgcGuide];
     
     if(!self.hasShowDots)
     {
@@ -119,7 +136,7 @@
     //        if (duration) {
     //            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
     //        }
-    [tracerDict setValue:@"main" forKey:@"tab_name"];
+    [tracerDict setValue:@"discover_tab" forKey:@"tab_name"];
     [tracerDict setValue:@(0) forKey:@"with_tips"];
     [tracerDict setValue:@"click_tab" forKey:@"enter_type"];
     tracerDict[@"stay_time"] = @((int)duration);
@@ -131,6 +148,11 @@
 
 
 - (void)setupCollectionView {
+    if(self.collectionView){
+        [self.collectionView removeFromSuperview];
+        self.collectionView = nil;
+    }
+    
     self.automaticallyAdjustsScrollViewInsets = NO;
     //1.初始化layout
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -146,6 +168,10 @@
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor themeGray7];
     [self.containerView addSubview:_collectionView];
+    
+    [self.collectionView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.containerView);
+    }];
 }
 
 - (void)setupSetmentedControl {
@@ -224,13 +250,10 @@
         make.left.right.equalTo(self.view);
         make.bottom.mas_equalTo(self.view).offset(-bottom);
     }];
-    
-    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.containerView);
-    }];
 }
 
 - (void)initViewModel {
+    [self setupCollectionView];
     _viewModel = [[FHCommunityViewModel alloc] initWithCollectionView:self.collectionView controller:self];
 }
 
@@ -248,7 +271,7 @@
         [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
-    }
+  }
 }
 
 //进入搜索页

@@ -142,7 +142,7 @@
             CGFloat height = [imageModel.height floatValue];
             [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
             //只对单图做重新布局，多图都是1：1
-            if(self.count == 1){
+            if(self.count == 1 && !self.fixedSingleImage){
                 [imageView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.height.mas_equalTo(self.imageWidth * height/width);
                 }];

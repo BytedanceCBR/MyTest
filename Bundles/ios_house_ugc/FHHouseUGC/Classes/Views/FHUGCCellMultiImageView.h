@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateImageView:(NSArray *)imageList largeImageList:(NSArray *)largeImageList;
 
+//单图时固定尺寸
+@property(nonatomic, assign) BOOL fixedSingleImage;
+
 @end
 
 NS_ASSUME_NONNULL_END

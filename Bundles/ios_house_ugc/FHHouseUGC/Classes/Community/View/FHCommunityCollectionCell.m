@@ -30,7 +30,7 @@
 }
 
 - (void)setType:(FHCommunityCollectionCellType)type {
-    if(_type == FHCommunityCollectionCellTypeNone){
+    if(_type != type){
         _type = type;
         [self initViews];
     }else{
@@ -39,6 +39,11 @@
 }
 
 - (void)initViews {
+    if(self.vc){
+        [self.vc.view removeFromSuperview];
+        self.vc = nil;
+    }
+    
     if(self.type == FHCommunityCollectionCellTypeNearby){
         FHNearbyViewController *vc = [[FHNearbyViewController alloc] init];
         self.vc = vc;
