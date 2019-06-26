@@ -72,9 +72,12 @@
         make.centerY.mas_equalTo(self);
         make.width.height.mas_equalTo(42);
     }];
+    CGFloat ratio = 0;
     [self.identifyView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.avatarView).mas_offset(2);
         make.centerX.mas_equalTo(self.avatarView);
+        make.height.mas_equalTo(14);
+        make.width.mas_equalTo(14 * ratio);
     }];
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
@@ -194,13 +197,10 @@
     self.imChatBtn.hidden = !showIM;
      
     [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+
     FHDetailContactImageTagModel *tag = contactPhone.imageTag;
-    if (tag.imageUrl.length > 0) {
-        [self.identifyView bd_setImageWithURL:[NSURL URLWithString:tag.imageUrl]];
-        self.identifyView.hidden = NO;
-    }else {
-        self.identifyView.hidden = YES;
-    }
+    [self refreshIdentifyView:self.identifyView withUrl:tag.imageUrl];
+    
     NSString *realtorName = contactPhone.realtorName;
     if (contactPhone.realtorName.length > 0) {
         if (contactPhone.realtorName.length > 4) {
@@ -276,6 +276,30 @@
                 make.left.mas_equalTo(self.leftView.mas_right).offset(20);
             }];
         }
+    }
+}
+
+- (void)refreshIdentifyView:(UIImageView *)identifyView withUrl:(NSString *)imageUrl
+{
+    if (!identifyView) {
+        return;
+    }
+    if (imageUrl.length > 0) {
+        [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:imageUrl] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+            if (!error && image) {
+                identifyView.image = image;
+                CGFloat ratio = 0;
+                if (image.size.height > 0) {
+                    ratio = image.size.width / image.size.height;
+                }
+                [identifyView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(14 * ratio);
+                }];
+            }
+        }];
+        identifyView.hidden = NO;
+    }else {
+        identifyView.hidden = YES;
     }
 }
 

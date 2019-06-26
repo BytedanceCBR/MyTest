@@ -173,6 +173,8 @@
 #import "SSCommonLogic.h"
 #import "TTSandBoxHelper.h"
 #import <FHUtils.h>
+#import <TTTabBarItem.h>
+
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -516,7 +518,7 @@ TTRefreshViewDelegate
                 StrongSelf;
                 [self clearTipCount];
             };
-            if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey]) {
+            if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey]) {
                 self.remindView.enabled = YES;
             }
             
@@ -533,10 +535,10 @@ TTRefreshViewDelegate
             _animationView.loopAnimation = YES;
         }
         
-        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-            StrongSelf;
-            [self reloadFHHomeHeaderCell];
-        }];
+//        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+//            StrongSelf;
+//            [self reloadFHHomeHeaderCell];
+//        }];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(categoryGotFinished) name:kFHSwitchGetLightFinishedNotification object:nil];
     }
@@ -548,14 +550,23 @@ TTRefreshViewDelegate
     if (![[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]]) {
         [self.listView reloadData];
     }
-}
-
-- (void)reloadFHHomeHeaderCell
-{
-    if ([_categoryID isEqualToString:@"f_house_news"]) {
-        [self.listView reloadData];
+    
+    if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"]) {
+        self.refreshShouldLastReadUpate = YES;
+        self.refreshFromType = ListDataOperationReloadFromTypeAuto;
+        [self pullAndRefresh];
+        
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = NO;
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
     }
 }
+
+//- (void)reloadFHHomeHeaderCell
+//{
+//    if ([_categoryID isEqualToString:@"f_house_news"]) {
+//        [self.listView reloadData];
+//    }
+//}
 
 - (void)setupSilentFetchTimer
 {
@@ -937,18 +948,18 @@ TTRefreshViewDelegate
         [[TTVideoAutoPlayManager sharedManager] restoreCellMovieIfCould];
     }
     
-    if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey] && !self.hasHitPushed && self.remindView) {
+    if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey] && !self.hasHitPushed && self.remindView) {
         self.remindView.enabled = YES;
         [self.remindView show:YES];
     } else {
-        if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey] && self.remindView) {
+        if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey] && self.remindView) {
             self.remindView.enabled = YES;
         }
     }
     self.hasHitPushed = NO;
     
     if (!self.shouldReloadBackAfterLeaveCurrentCategory) {
-        if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey]) {
+        if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey]) {
             NSDictionary *infoDic = [NewsListLogicManager newsListShowRefreshInfo];
             if (infoDic && [_fetchListManager items].count > 0) {
                 self.refreshShouldLastReadUpate = YES;
@@ -1022,7 +1033,14 @@ TTRefreshViewDelegate
     self.shouldReloadBackAfterLeaveCurrentCategory = [self shouldReloadBackAfterLeaveCurrentCategory];
     
     //唤醒后刷新
-    if ((self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) || ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate && [_fetchListManager items].count > 0) || [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"]) {
+    if ((self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) || ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate && [_fetchListManager items].count > 0)) {
+        self.refreshShouldLastReadUpate = YES;
+        self.refreshFromType = ListDataOperationReloadFromTypeAuto;
+        [self pullAndRefresh];
+        
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = NO;
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
+    }else if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"]) {
         self.refreshShouldLastReadUpate = YES;
         self.refreshFromType = ListDataOperationReloadFromTypeAuto;
         [self pullAndRefresh];
@@ -4415,19 +4433,21 @@ TTRefreshViewDelegate
                         if (self.remindView.type == NewsListTipsReminderViewTypeShowOnce) {
                             self.remindView.disappearActionBlock = ^(BOOL finished){
                                 StrongSelf;
-                                if (count > 0) {
-                                    [self notifyTipCount:count useDotStyle:useDotStyle withTabTag:[TTTabBarProvider currentSelectedTabTag]];
-                                } else {
-                                    [self clearTipCount];
-                                }
+//                                if (count > 0) {
+//                                    [self notifyTipCount:count useDotStyle:useDotStyle withTabTag:[TTTabBarProvider currentSelectedTabTag]];
+//                                } else {
+//                                    [self clearTipCount];
+//                                }
+                                [self clearTipCount];
                             };
                         }
                     } else {
-                        if (count > 0) {
-                            [self notifyTipCount:count useDotStyle:useDotStyle forTag:[TTTabBarProvider currentSelectedTabTag]];
-                        }else {
-                            [self clearTipCount];
-                        }
+                        [self clearTipCount];
+//                        if (count > 0) {
+//                            [self notifyTipCount:count useDotStyle:useDotStyle forTag:[TTTabBarProvider currentSelectedTabTag]];
+//                        }else {
+//                            [self clearTipCount];
+//                        }
                     }
                 }
                 
@@ -4519,7 +4539,7 @@ TTRefreshViewDelegate
         return;
     }
     
-    if (![[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey] && (![[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabFollowTabKey] || [TTTabBarProvider isFollowTabOnTabBar] || [TTTabBarProvider isHTSTabOnTabBar])) {
+    if (![[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey] && (![[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabFollowTabKey] || [TTTabBarProvider isFollowTabOnTabBar] || [TTTabBarProvider isHTSTabOnTabBar])) {
         return;
     }
     
@@ -4539,17 +4559,21 @@ TTRefreshViewDelegate
         return;
     }
     
-          [self notifyTipCount:count useDotStyle:dotStyle forTag:curTag];
+//    [self notifyTipCount:count useDotStyle:dotStyle forTag:curTag];
 }
 
 - (void)clearTipCount {
     NSString *tag = [TTTabBarProvider currentSelectedTabTag];
     
-    if (![[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey] && ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabFollowTabKey] || [TTTabBarProvider isFollowTabOnTabBar])) {
+    TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kTTTabHomeTabKey];
+    
+    if (![[TTTabBarProvider currentSelectedTabTag] isEqualToString:kFHouseFindTabKey] && ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabFollowTabKey] || [TTTabBarProvider isFollowTabOnTabBar])) {
+        tabItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
         return;
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kChangeExploreTabBarBadgeNumberNotification object:nil userInfo:@{kExploreTabBarItemIndentifierKey:tag, kExploreTabBarBadgeNumberKey:@(0)}];
+    tabItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
 }
 
 #pragma mark - DisplayMessage
