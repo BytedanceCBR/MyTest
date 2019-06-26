@@ -93,6 +93,7 @@
             self.contentView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
             self.bottomLabel.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
             self.rewardLabel.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+            self.cellBottomView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
             self.answerImagesBgView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
             [self.headerView setHighlighted:highlighted];
             [self.characterView setHighlighted:highlighted];
@@ -103,6 +104,7 @@
             self.contentView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
             self.bottomLabel.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
             self.rewardLabel.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+            self.cellBottomView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
             self.answerImagesBgView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
             [self.headerView setHighlighted:highlighted];
             [self.characterView setHighlighted:highlighted];
