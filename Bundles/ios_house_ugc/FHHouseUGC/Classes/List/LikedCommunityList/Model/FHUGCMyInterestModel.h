@@ -1,5 +1,6 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
+#import "FHUGCScialGroupModel.h"
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHUGCMyInterestDataRecommendSocialGroupsModel<NSObject>
 @end
@@ -39,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCMyInterestDataRecommendSocialGroupsModel : JSONModel 
 
-@property (nonatomic, strong , nullable) FHUGCMyInterestDataRecommendSocialGroupsSocialGroupModel *socialGroup ;  
+@property (nonatomic, strong , nullable) FHUGCScialGroupDataModel *socialGroup ;
 @property (nonatomic, strong , nullable) FHUGCMyInterestDataRecommendSocialGroupsThreadInfoModel *threadInfo ;  
 @end
 
