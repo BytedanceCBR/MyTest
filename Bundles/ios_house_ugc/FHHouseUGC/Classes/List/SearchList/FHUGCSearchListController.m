@@ -223,9 +223,6 @@
     }
     __weak typeof(self) weakSelf = self;
     self.sugHttpTask = [FHHouseUGCAPI requestSocialSearchByText:text class:[FHUGCSearchModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        [weakSelf.items removeAllObjects];
-        [weakSelf.items addObjectsFromArray:[FHUGCConfig sharedInstance].followData.data.userFollowSocialGroups];
-        [weakSelf.tableView reloadData];
         if (model != NULL && error == NULL) {
             [weakSelf.items removeAllObjects];
             FHUGCSearchModel *tModel = model;
