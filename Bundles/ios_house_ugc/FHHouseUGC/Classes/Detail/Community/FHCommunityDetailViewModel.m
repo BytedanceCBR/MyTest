@@ -165,7 +165,7 @@
     }
 
     WeakSelf;
-    [FHHouseUGCAPI requestCommunityDetail:@"6703403081570189582" class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+    [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
         if (model && (error == nil)) {
             FHUGCScialGroupModel *responseModel = model;
