@@ -11,8 +11,6 @@
 #import <TTAccountBusiness.h>
 #import "TTNetworkManager.h"
 
-#import "SDWebImageCompat.h"
-#import "CommonURLSetting.h"
 #import "FHUnreadMsgModel.h"
 #import "FHMessageNotificationTipsManager.h"
 #import "FHMessageAPI.h"
@@ -22,7 +20,7 @@
 
 static NSString *const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNotificationCheckIntervalKey";
 
-@interface FHMessageNotificationManager ()
+@interface FHMessageNotificationManager () <TTAccountMulticastProtocol>
 
 @property(nonatomic, strong) NSTimer *timer;
 @property(nonatomic, assign) NSTimeInterval lastInterval;
@@ -43,6 +41,7 @@ static NSString *const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNo
 
 - (instancetype)init {
     if (self = [super init]) {
+        [TTAccount addMulticastDelegate:self];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiverMessageUpdateWithPush:) name:@"kTTUGCMessageUpdateMessage" object:nil];
     }
     return self;
@@ -50,6 +49,7 @@ static NSString *const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNo
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [TTAccount removeMulticastDelegate:self];
 }
 
 #pragma mark - 定时轮询拉取未读消息提示
@@ -57,7 +57,9 @@ static NSString *const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNo
 - (void)startPeriodicalFetchUnreadMessageNumberWithChannel:(NSString *)channel {
     [self stopPeriodicalFetchUnreadMessageNumber];
     //未登录启动时调用一次后，再登录，不会调用此方法，因此第一次需要构造timer
-
+    if(![TTAccountManager isLogin]){
+        return;
+    }
     self.timer = [NSTimer scheduledTimerWithTimeInterval:[self fetchUnreadTimeInterval] target:self selector:@selector(periodicalFetchUnreadMessage:) userInfo:nil repeats:YES];
     [self.timer fire];
 }
@@ -157,6 +159,14 @@ static NSString *const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNo
 - (NSTimeInterval)newMessageNotificationCheckInterval {
     NSTimeInterval interval = [[NSUserDefaults standardUserDefaults] doubleForKey:kNewMessageNotificationCheckIntervalKey];
     return interval;
+}
+
+- (void)onAccountLogin {
+    [self startPeriodicalFetchUnreadMessageNumberWithChannel:nil];
+}
+
+- (void)onAccountLogout {
+    [self stopPeriodicalFetchUnreadMessageNumber];
 }
 
 @end

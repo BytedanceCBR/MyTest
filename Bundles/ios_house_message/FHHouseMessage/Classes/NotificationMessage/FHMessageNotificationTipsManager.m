@@ -24,62 +24,58 @@
 
 #import <TTDialogDirector/TTDialogDirector.h>
 
-NSString * const kTTMessageNotificationTipsChangeNotification = @"kTTMessageNotificationTipsChangeNotification";
-NSString * const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotificationLastTipSaveKey";
+NSString *const kTTMessageNotificationTipsChangeNotification = @"kTTMessageNotificationTipsChangeNotification";
+NSString *const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotificationLastTipSaveKey";
 
 @interface FHMessageNotificationTipsManager ()
 @end
 
 @implementation FHMessageNotificationTipsManager
 
-+ (instancetype)sharedManager
-{
++ (instancetype)sharedManager {
     static FHMessageNotificationTipsManager *manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[FHMessageNotificationTipsManager alloc] init];
     });
-    
+
     return manager;
 }
 
-- (instancetype)init{
-    if(self = [super init]){
+- (instancetype)init {
+    if (self = [super init]) {
     }
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)updateTipsWithModel:(FHUnreadMsgDataUnreadModel *)model
-{
+- (void)updateTipsWithModel:(FHUnreadMsgDataUnreadModel *)model {
     if (![model isKindOfClass:[FHUnreadMsgDataUnreadModel class]]) {
         return;
     }
 
     _tipsModel = model;
-    if(self.tipsModel && self.tipsModel.hasHistoryMsg){
+    if (self.tipsModel && [self.tipsModel.unread intValue] > 0) {
         [self tryShowNotifyBubble:self.tipsModel];
     }
 
     [[NSNotificationCenter defaultCenter] postNotificationName:kTTMessageNotificationTipsChangeNotification object:nil];
 }
 
-- (void)clearTipsModel
-{
+- (void)clearTipsModel {
     BOOL needNotify = (self.tipsModel != nil);
     _tipsModel = nil;
-    
-    if(needNotify){
+
+    if (needNotify) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTMessageNotificationTipsChangeNotification object:nil];
     }
 }
 
--(void)tryShowNotifyBubble:(FHUnreadMsgDataUnreadModel*)tipsModel{
-    if(!tipsModel || [tipsModel.lastMsgId isEqualToString:self.lastMsgId]){
+- (void)tryShowNotifyBubble:(FHUnreadMsgDataUnreadModel *)tipsModel {
+    if (!tipsModel || [tipsModel.lastMsgId isEqualToString:self.lastMsgId]) {
         return;
     }
     [self saveLastMsgId];
@@ -94,7 +90,7 @@ NSString * const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotification
     bubbleData.time = timeTip;
     NSURL *openURL = [NSURL URLWithString:tipsModel.openUrl];
 
-    BubbleClickCallback  clickCallback = ^(FHBubbleData *data, FHMessageTipBubble *bubble) {
+    BubbleClickCallback clickCallback = ^(FHBubbleData *data, FHMessageTipBubble *bubble) {
         if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
             [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:nil];
             [bubble removeFromSuperview];
@@ -104,12 +100,12 @@ NSString * const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotification
     [[FHBubbleTipManager shareInstance] tryShowBubbleTip:bubbleData clickCallback:clickCallback appearCallback:nil];
 }
 
-- (NSString *)lastMsgId{
+- (NSString *)lastMsgId {
     return [[NSUserDefaults standardUserDefaults] objectForKey:kTTMessageNotificationLastTipSaveKey];
 }
 
--(void)saveLastMsgId{
-    if(isEmptyString(self.tipsModel.lastMsgId)){
+- (void)saveLastMsgId {
+    if (isEmptyString(self.tipsModel.lastMsgId)) {
         return;
     }
     [[NSUserDefaults standardUserDefaults] setObject:self.tipsModel.lastMsgId forKey:kTTMessageNotificationLastTipSaveKey];
