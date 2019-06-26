@@ -83,7 +83,7 @@
     //        if (duration) {
     //            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
     //        }
-    [tracerDict setValue:@"main" forKey:@"tab_name"];
+    [tracerDict setValue:@"discover_tab" forKey:@"tab_name"];
     [tracerDict setValue:@(0) forKey:@"with_tips"];
     [tracerDict setValue:@"click_tab" forKey:@"enter_type"];
     tracerDict[@"stay_time"] = @((int)duration);
