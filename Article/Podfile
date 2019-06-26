@@ -354,7 +354,7 @@ def appPods
     pod_binary 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
     pod 'TTPushManager', '0.0.13.4'
     pod_binary 'TTReachability', '0.1.8'
-    pod 'Protobuf', '3.0.1-ttv'
+    pod_binary 'Protobuf', '3.0.1-ttv'
     #----- 存储库 -----
     pod_binary 'TTPersistence', '0.2.3'
     pod_binary 'TTEntityBase', '0.2.4'
