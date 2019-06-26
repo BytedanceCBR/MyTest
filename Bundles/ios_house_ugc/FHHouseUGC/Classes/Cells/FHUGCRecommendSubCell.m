@@ -58,6 +58,7 @@
         _descLabel.text = model.countText;
         _sourceLabel.text = model.suggestReason;
         _joinBtn.groupId = model.socialGroupId;
+        _joinBtn.followed = [model.hasFollow boolValue];
         [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
     }
 }
