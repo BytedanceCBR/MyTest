@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, copy , nullable) NSString *name;
+@property (nonatomic, copy , nullable) NSString *socialGroupId;
 @end
 
 @interface FHFeedContentUgcRecommendModel : JSONModel 

@@ -389,6 +389,15 @@
     //关闭引导cell
     [self closeGuideView];
     [FHUGCGuideHelper hideFeedGuide];
+    
+    if(cellModel.community.socialGroupId){
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"community_id"] = cellModel.community.socialGroupId;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        //跳转到圈子详情页
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
 }
 
 @end
