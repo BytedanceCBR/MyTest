@@ -181,7 +181,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
 
         BOOL isRepost = (!isEmptyString(task.opt_id) && task.repostType != TTThreadRepostTypeNone);
         [userInfo setValue:@(isRepost) forKey:kFRPostThreadIsRepost];
-
+        [userInfo setValue:task.social_group_id forKey:@"social_group_id"];
         // 发帖成功
         if (task.social_group_id.length > 0) {
             NSDictionary *dic = @{@"social_group_id":task.social_group_id};
