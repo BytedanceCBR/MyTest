@@ -218,7 +218,7 @@ PODS:
   - OHHTTPStubs/OHPathHelpers (4.2.1.1-binary)
   - OpenSSL-Universal (1.0.1.20.1-binary)
   - OpenUDID (0.1.0.1-binary)
-  - Protobuf (3.0.1-ttv)
+  - Protobuf (3.0.1-ttv.1-binary)
   - React/base (0.55.9-alpha.22.1.binary)
   - React/Core (0.55.9-alpha.22.1.binary)
   - React/CxxBridge (0.55.9-alpha.22.1.binary)
@@ -660,7 +660,7 @@ DEPENDENCIES:
   - OHHTTPStubs (= 4.2.1.1-binary)
   - OpenSSL-Universal (= 1.0.1.20.1-binary)
   - OpenUDID (= 0.1.0.1-binary)
-  - Protobuf (= 3.0.1-ttv)
+  - Protobuf (= 3.0.1-ttv.1-binary)
   - React/base (= 0.55.9-alpha.22.1.binary)
   - React/Core (= 0.55.9-alpha.22.1.binary)
   - React/CxxBridge (= 0.55.9-alpha.22.1.binary)
@@ -1051,7 +1051,7 @@ SPEC CHECKSUMS:
   OHHTTPStubs: 8fe4a9bac9386d3450c6cdaeca77e5d07d0f6cf4
   OpenSSL-Universal: 7bd04be21cd79882c6b2e4afd9433b3e94f88ac0
   OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
-  Protobuf: e97b6e7b829ac5b4be715db957917a1ba10c4a9a
+  Protobuf: 52a446ec094fe19d92c51ef98bd5c975b56d8732
   React: d5707a221547497a307b5fc2347665017824b20f
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
@@ -1157,6 +1157,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: e31cc7d6b055822cc3b79e7a0bf7255aca9a372b
+PODFILE CHECKSUM: 371a9db6c52a54d24971c872e408cff48f37c4bd
 
 COCOAPODS: 1.4.0
