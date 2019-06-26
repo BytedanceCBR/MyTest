@@ -16,6 +16,7 @@
 #import "ToastManager.h"
 #import "FHHouseUGCHeader.h"
 #import "FHUGCConfig.h"
+#import "TTUIResponderHelper.h"
 
 @implementation FHUGCCellUserInfoView
 
@@ -134,7 +135,7 @@
                                                               [wself postDelete];
                                                           }];
     [alert addAction:defaultAction];
-    [self.cellModel.feedVC presentViewController:alert animated:YES completion:nil];
+    [[TTUIResponderHelper visibleTopViewController] presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)postDelete {

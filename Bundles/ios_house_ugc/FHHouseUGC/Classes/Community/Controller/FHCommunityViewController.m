@@ -18,6 +18,8 @@
 #import "FHUGCGuideView.h"
 #import "TTForumPostThreadStatusViewModel.h"
 #import "FHEnvContext.h"
+#import "FHMessageNotificationTipsManager.h"
+#import "FHUnreadMsgModel.h"
 
 @interface FHCommunityViewController ()
 
@@ -46,6 +48,8 @@
     [self initConstraints];
     [self initViewModel];
     
+    [self onUnreadMessageChange];
+    
     //切换开关
     WeakSelf;
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
@@ -58,7 +62,7 @@
     }];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
 }
 
@@ -84,6 +88,16 @@
 - (void)topVCChange:(NSNotification *)notification {
     if(self.isUgcOpen){
         [self.guideView hide];
+    }
+}
+
+- (void)onUnreadMessageChange {
+    FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
+    if (model && [model.unread integerValue] > 0) {
+        NSInteger count = [model.unread integerValue];
+        _segmentControl.sectionMessageTips = @[@(count)];
+    }else{
+        _segmentControl.sectionMessageTips = @[@(0)];
     }
 }
 
@@ -184,12 +198,10 @@
     NSDictionary* selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontMedium:18],
                                                   NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
-    
-    
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     _segmentControl.isNeedNetworkCheck = NO;
-    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(5, 10, 0, 10);
+    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(10, 10, 0, 10);
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _segmentControl.selectionIndicatorWidth = 24.0f;
     _segmentControl.selectionIndicatorHeight = 12.0f;
@@ -241,7 +253,7 @@
     [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.topView);
         make.width.mas_equalTo([self.segmentControl totalSegmentedControlWidth]);
-        make.top.mas_equalTo(self.topView).offset(11);
+        make.top.mas_equalTo(self.topView).offset(6);
         make.bottom.mas_equalTo(self.topView).offset(-4);
     }];
     

@@ -48,6 +48,8 @@
 
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onUnreadMessageClick)];
         [self.viewController.neighbourhoodView.messageView addGestureRecognizer:singleTap];
+        
+        [self onUnreadMessageChange];
     }
 
     return self;
@@ -63,11 +65,11 @@
 
 - (void)onUnreadMessageChange {
     FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
-    if (!model) {
+    if (model && [model.unread integerValue] > 0) {
+        [self showMessageView];
+    }else{
         [self hideMessageView];
-        return;
     }
-    [self showMessageView];
 }
 
 - (void)showMessageView {
