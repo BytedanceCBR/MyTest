@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (TTHttpTask *)requestSocialSearchByText:(NSString *)text class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 // 我感兴趣小区列表
-+ (TTHttpTask *)requestRecommendSocialGroupsWithLatitude:(CGFloat)latitude longitude:(CGFloat)longitude class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
++ (TTHttpTask *)requestRecommendSocialGroupsWithSource:(NSString *)source latitude:(CGFloat)latitude longitude:(CGFloat)longitude class:(Class)cls completion:(void (^)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 // ugc配置
 + (TTHttpTask *)requestUGCConfig:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion;

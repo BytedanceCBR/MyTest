@@ -59,7 +59,7 @@
             
             //内容
             label.numberOfLines = numberOfLines;
-            label.attributedText = mutableAttributedString;
+            [label setText:mutableAttributedString];
             if(model.showLookMore){
                 label.attributedTruncationToken = [FHUGCCellHelper truncationFont:[attributes objectForKey:NSFontAttributeName]
                                                                  contentColor:attributes[NSForegroundColorAttributeName]
