@@ -13,6 +13,7 @@
 #import "TTDeviceHelper.h"
 #import "FHUGCFollowButton.h"
 #import "FHUGCMyInterestModel.h"
+#import "FHUGCConfig.h"
 
 #define iconWidth 48
 
@@ -48,10 +49,38 @@
 - (void)initUIs {
     [self initViews];
     [self initConstraints];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+// 关注状态改变
+- (void)followStateChanged:(NSNotification *)notification {
+    if (notification) {
+        FHUGCMyInterestDataRecommendSocialGroupsModel *model = (FHUGCMyInterestDataRecommendSocialGroupsModel *)self.currentData;
+        NSDictionary *userInfo = notification.userInfo;
+        BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
+        NSString *groupId = notification.userInfo[@"social_group_id"];
+        NSString *currentGroupId = model.socialGroup.socialGroupId;
+        if(groupId.length > 0 && currentGroupId.length > 0) {
+            if ([groupId isEqualToString:currentGroupId]) {
+                if (self.currentData) {
+                    // 替换关注人数 AA关注BB热帖 替换：AA
+                    [[FHUGCConfig sharedInstance] updateScialGroupDataModel:model.socialGroup byFollowed:followed];
+                    [self refreshWithData:self.currentData];
+                }
+            }
+        }
+    }
 }
 
 - (void)refreshWithData:(id)data {
     if([data isKindOfClass:[FHUGCMyInterestDataRecommendSocialGroupsModel class]]){
+        self.currentData = data;
         FHUGCMyInterestDataRecommendSocialGroupsModel *model = (FHUGCMyInterestDataRecommendSocialGroupsModel *)data;
         _titleLabel.text = model.socialGroup.socialGroupName;
         _descLabel.text = model.socialGroup.countText;

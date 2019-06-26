@@ -16,6 +16,7 @@
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
 #import "TTUGCDefine.h"
+#import "FHUGCConfig.h"
 
 @interface FHCommunityFeedListMyJoinViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -62,6 +63,7 @@
 - (void)postThreadSuccess:(NSNotification *)noti {
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
+        NSString *social_group_id = userInfo[@"social_group_id"];
         NSDictionary *result_model = userInfo[@"result_model"];
         if (result_model && [result_model isKindOfClass:[NSDictionary class]]) {
             NSDictionary * thread_cell_dic = result_model[@"data"];
@@ -77,7 +79,15 @@
                         if (model && jsonParseError == nil) {
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
-
+                                // 插入圈子数据
+                                if (social_group_id.length > 0) {
+                                    FHUGCScialGroupDataModel *socialGroupData = [[FHUGCConfig sharedInstance] socialGroupData:social_group_id];
+                                    if (socialGroupData) {
+                                        cellModel.community.url = [NSString stringWithFormat:@"sslocal://ugc_community_detail?community_id=%@",social_group_id];
+                                        cellModel.community.socialGroupId = social_group_id;
+                                        cellModel.community.name = socialGroupData.socialGroupName;
+                                    }
+                                }
                                 if (cellModel) {
                                     if (self.dataList.count == 0) {
                                         [self.dataList addObject:cellModel];
