@@ -44,7 +44,6 @@
     _backView = [[UIView alloc] init];
     _backView.layer.cornerRadius = 4.0f;
     _backView.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
-    _backView.frame = CGRectMake(20, 10, SCREEN_WIDTH - 40, 40);
 
     _activeCountInfoLabel = [[UILabel alloc] init];
     [_activeCountInfoLabel setContentHuggingPriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
@@ -66,8 +65,29 @@
     [_backView addSubview:_arrowView];
     _backView.clipsToBounds = YES;
     [self.contentView addSubview:_backView];
+
+    [_backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.contentView).insets(UIEdgeInsetsMake(10, 20, 10, 20));
+        make.height.mas_equalTo(40);
+    }];
+
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cellClick)];
+    [_backView addGestureRecognizer:singleTap];
 }
 
+- (void)cellClick {
+    if (![self.currentData isKindOfClass:[FHDetailCommunityEntryModel class]]) {
+        return;
+    }
+    FHDetailCommunityEntryModel *entryModel = self.currentData;
+    if (isEmptyString(entryModel.socialGroupSchema)) {
+        return;
+    }
+    NSURL *openURL = [NSURL URLWithString:[entryModel.socialGroupSchema stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
+        [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:nil];
+    }
+}
 
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailCommunityEntryModel class]]) {
@@ -107,7 +127,7 @@
     CGFloat labelWidth = [self.curBubble refreshWithAvatar:model.activeUserAvatar title:model.suggestInfo color:suggestColor];
     self.curBubble.frame = CGRectMake(SCREEN_WIDTH - 40 - (6 + 12 + 4 + 4 + labelWidth + 20), 10, labelWidth + 4 + 20, 20);
 
-    labelWidth = [self.flowBubble refreshWithAvatar:model.activeUserAvatar title:nextModel.suggestInfo color:nextSuggestColor];
+    labelWidth = [self.flowBubble refreshWithAvatar:nextModel.activeUserAvatar title:nextModel.suggestInfo color:nextSuggestColor];
     self.flowBubble.frame = CGRectMake(SCREEN_WIDTH - 40 - (6 + 12 + 4 + 4 + labelWidth + 20), 40, labelWidth + 4 + 20, 20);
 }
 
@@ -126,7 +146,7 @@
         wself.flowBubble.frame = CGRectOffset(wself.flowBubble.frame, 0, -30.0f);
     }                completion:^(BOOL finished) {
         StrongSelf;
-        FHCommunitySuggestionBubble* tempBubble = wself.curBubble;
+        FHCommunitySuggestionBubble *tempBubble = wself.curBubble;
         wself.curBubble = wself.flowBubble;
         wself.flowBubble = tempBubble;
         wself.curWheelIndex = (self.curWheelIndex + 1) % entryModel.activeInfo.count;
@@ -167,6 +187,7 @@
         return;
     }
     self.wheelTimer = [NSTimer scheduledNoRetainTimerWithTimeInterval:4.0f target:self selector:@selector(wheelSuggestionInfo) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.wheelTimer forMode:NSRunLoopCommonModes];
     [self.wheelTimer fire];
 }
 
