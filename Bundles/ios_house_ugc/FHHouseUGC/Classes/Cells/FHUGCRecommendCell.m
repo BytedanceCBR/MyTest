@@ -199,32 +199,31 @@
 
 - (void)generateDataList:(NSMutableArray *)sourceList {
     [self.dataList removeAllObjects];
-    if(sourceList.count <= 3){
-        [self.dataList addObjectsFromArray:self.sourceList];
-    }else{
-        NSInteger index = self.currentIndex;
-        for (NSInteger i = index; i < index + 3; i++) {
-            NSInteger k = 0;
-            if(i < self.sourceList.count){
-                k = i;
-            }else{
-                k = i - self.sourceList.count;
-            }
-            [self.dataList addObject:self.sourceList[k]];
+    NSInteger count = sourceList.count < 3 ? sourceList.count : 3;
+    NSInteger index = self.currentIndex;
+    for (NSInteger i = index; i < index + count; i++) {
+        NSInteger k = 0;
+        if(i < self.sourceList.count){
+            k = i;
+        }else{
+            k = i - self.sourceList.count;
         }
+        [self.dataList addObject:self.sourceList[k]];
     }
 }
 
 - (void)changeData {
-    self.currentIndex = self.currentIndex + 3;
-    
-    if(self.currentIndex >= self.sourceList.count){
-        self.currentIndex = self.currentIndex - self.sourceList.count;
+    if(self.sourceList.count > 3){
+        self.currentIndex = self.currentIndex + 3;
+
+        if(self.currentIndex >= self.sourceList.count){
+            self.currentIndex = self.currentIndex - self.sourceList.count;
+        }
+        
+        self.isReplace = NO;
+        
+        [self refreshData];
     }
-    
-    self.isReplace = NO;
-    
-    [self refreshData];
 }
 
 - (void)moreData {
