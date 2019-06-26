@@ -207,7 +207,7 @@ NSString * const kWDWendaListViewControllerUMEventName = @"question";
     _isLoading = YES;
     self.startTime = CACurrentMediaTime();
     
-    [self _clear];
+//    [self _clear];
     
     [WDListViewModel requestForQuestionID:self.qID apiParam:self.apiParameter gdExtJson:self.gdExtJson offset:0 finishBlock:^(WDWendaV2QuestionBrowResponseModel *responseModel, NSError *error) {
         if (!error) {

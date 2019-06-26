@@ -273,7 +273,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     self.lastStatusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
     if (self.needReloadData) {
         [self.answerListView setContentOffset:CGPointZero animated:NO];
-        [self firstLoadContent];
+        [self secondLoadContent];
     }
 }
 
@@ -456,17 +456,23 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     }
 }
 
-- (void)firstLoadContent
-{
-    [self tt_startUpdate];
-    [self.viewModel refresh];
-
+- (void)secondLoadContent {
     WeakSelf;
     [self.viewModel requestFinishBlock:^(NSError *error) {
         StrongSelf;
-
         self.error = error;
+        [self tt_endUpdataData:NO error:error];
+        self.ttErrorView.hidden = YES;
+        [self.answerListView reloadData];
+    }];
+}
 
+static void extracted(WDWendaListViewController *object, WDWendaListViewController *const __weak wself) {
+    [object.viewModel requestFinishBlock:^(NSError *error) {
+        StrongSelf;
+        
+        self.error = error;
+        
         [self tt_endUpdataData:NO error:error];
         
         if (error.code == TTNetworkErrorCodeSuccess) {
@@ -494,7 +500,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
                 }
             }
             //刷新底部tab按钮数据
-//            [self.bottomTabView refresh];
+            //            [self.bottomTabView refresh];
         } else {
             if (error.code == 67686) {
                 self.ttErrorView.viewType = TTFullScreenErrorViewTypeDeleted;
@@ -503,8 +509,16 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
             [self sendTrackWithLabel:@"enter_api_fail"];
         }
         
-//        [self buildTitleView];
+        //        [self buildTitleView];
     }];
+}
+
+- (void)firstLoadContent
+{
+    [self tt_startUpdate];
+    [self.viewModel refresh];
+    WeakSelf;
+    extracted(self, wself);
 }
 
 - (void)_loadMore
