@@ -20,6 +20,7 @@
 #import "FHEnvContext.h"
 #import "FHMessageNotificationTipsManager.h"
 #import "FHUnreadMsgModel.h"
+#import "FHUGCConfig.h"
 
 @interface FHCommunityViewController ()
 
@@ -63,6 +64,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
 }
 
@@ -92,8 +94,9 @@
 }
 
 - (void)onUnreadMessageChange {
+    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
     FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
-    if (model && [model.unread integerValue] > 0) {
+    if (model && [model.unread integerValue] > 0 && hasSocialGroups) {
         NSInteger count = [model.unread integerValue];
         _segmentControl.sectionMessageTips = @[@(count)];
     }else{
@@ -201,7 +204,7 @@
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     _segmentControl.isNeedNetworkCheck = NO;
-    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(10, 10, 0, 10);
+    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(9, 10, 0, 10);
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _segmentControl.selectionIndicatorWidth = 24.0f;
     _segmentControl.selectionIndicatorHeight = 12.0f;

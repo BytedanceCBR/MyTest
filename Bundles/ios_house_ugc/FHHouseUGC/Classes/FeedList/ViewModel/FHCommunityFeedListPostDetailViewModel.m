@@ -28,6 +28,9 @@
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
+        
+        // 删帖成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
     }
     
     return self;
@@ -158,6 +161,14 @@
         }
     }
     return resultArray;
+}
+
+- (void)postDeleteSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        [self deleteCell:cellModel];
+    }
 }
 
 #pragma mark - UITableViewDataSource

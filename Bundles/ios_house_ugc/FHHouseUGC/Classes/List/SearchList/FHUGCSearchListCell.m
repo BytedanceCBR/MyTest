@@ -15,6 +15,7 @@
 #import "FHUGCModel.h"
 #import "FHUGCFollowButton.h"
 #import "FHUGCScialGroupModel.h"
+#import "FHUGCConfig.h"
 
 @interface FHUGCSearchListCell ()
 
@@ -37,6 +38,31 @@
     [super setSelected:selected animated:animated];
     
     // Configure the view for the selected state
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+// 关注状态改变
+- (void)followStateChanged:(NSNotification *)notification {
+    if (notification) {
+        FHUGCScialGroupDataModel *model = self.currentData;
+        NSDictionary *userInfo = notification.userInfo;
+        BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
+        NSString *groupId = notification.userInfo[@"social_group_id"];
+        NSString *currentGroupId = model.socialGroupId;
+        if(groupId.length > 0 && currentGroupId.length > 0) {
+            if (model) {
+                // 有头部信息
+                if ([groupId isEqualToString:currentGroupId]) {
+                    // 替换关注人数 AA关注BB热帖 替换：AA
+                    [[FHUGCConfig sharedInstance] updateScialGroupDataModel:model byFollowed:followed];
+                    [self refreshWithData:model];
+                }
+            }
+        }
+    }
 }
 
 - (void)refreshWithData:(id)data {
@@ -90,6 +116,7 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         [self setupUI];
+         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     }
     return self;
 }

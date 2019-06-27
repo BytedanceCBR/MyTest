@@ -85,6 +85,8 @@
         return;
     }
     
+    _feedListVC = nil;
+    
     if(_currentView){
         [_currentView removeFromSuperview];
         _currentView = nil;
@@ -97,7 +99,6 @@
     [self addChildViewController:vc];
     [self.view addSubview:vc.view];
     _currentView = vc.view;
-    _feedListVC = vc;
     
     _type = FHUGCMyJoinTypeEmpty;
 }

@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic, copy) void(^deleteCellBlock)(void);
+@property(nonatomic, copy) void(^reportSuccessBlock)(void);
 
 @end
 

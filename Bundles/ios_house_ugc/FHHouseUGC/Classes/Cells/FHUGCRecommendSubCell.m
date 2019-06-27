@@ -12,6 +12,8 @@
 #import <UIImageView+BDWebImage.h>
 #import "FHUGCFollowButton.h"
 #import "FHFeedContentModel.h"
+#import "FHUGCConfig.h"
+#import "TTBaseMacro.h"
 
 #define iconWidth 48
 
@@ -23,7 +25,7 @@
 @property(nonatomic, strong) UIImageView *icon;
 @property(nonatomic, strong) FHUGCFollowButton *joinBtn;
 
-@property(nonatomic, strong) id model;
+@property(nonatomic, strong) FHFeedContentRecommendSocialGroupListModel *model;
 
 @end
 
@@ -48,12 +50,21 @@
 - (void)initUIs {
     [self initViews];
     [self initConstraints];
+    [self initNotification];
+}
+
+- (void)initNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)refreshWithData:(id)data {
-    _model = data;
     if([data isKindOfClass:[FHFeedContentRecommendSocialGroupListModel class]]){
         FHFeedContentRecommendSocialGroupListModel *model = (FHFeedContentRecommendSocialGroupListModel *)data;
+        _model = model;
         _titleLabel.text = model.socialGroupName;
         _descLabel.text = model.countText;
         _sourceLabel.text = model.suggestReason;
@@ -83,11 +94,6 @@
     [self.contentView addSubview:_sourceLabel];
     
     self.joinBtn = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero];
-    self.joinBtn.followedSuccess = ^(BOOL isSuccess, BOOL isFollow) {
-        if(isSuccess && isFollow){
-            [wself joinIn];
-        }
-    };
     [self addSubview:_joinBtn];
 }
 
@@ -134,9 +140,24 @@
     return label;
 }
 
-- (void)joinIn {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
-        [self.delegate joinIn:self.model cell:self];
+//- (void)joinIn {
+//    if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
+//        [self.delegate joinIn:self.model cell:self];
+//    }
+//}
+
+- (void)followStateChanged:(NSNotification *)notification {
+    if(isEmptyString(self.model.socialGroupId)){
+        return;
+    }
+    
+    BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
+    NSString *groupId = notification.userInfo[@"social_group_id"];
+    
+    if([groupId isEqualToString:self.model.socialGroupId] && followed){
+        if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
+            [self.delegate joinIn:self.model cell:self];
+        }
     }
 }
 

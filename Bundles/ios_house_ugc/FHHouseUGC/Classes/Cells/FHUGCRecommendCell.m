@@ -270,6 +270,20 @@
         }];
     }
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(indexPath.row < self.dataList.count){
+        FHFeedContentRecommendSocialGroupListModel *model = self.dataList[indexPath.row];
+        
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"community_id"] = model.socialGroupId;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        //跳转到圈子详情页
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+
+    }
+}
     
 
 #pragma mark - FHUGCRecommendSubCellDelegate

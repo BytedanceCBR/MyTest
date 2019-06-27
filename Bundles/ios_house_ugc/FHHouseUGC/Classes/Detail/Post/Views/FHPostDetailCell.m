@@ -12,6 +12,7 @@
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
+#import "FHCommentDetailViewModel.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -51,6 +52,11 @@
 - (void)setupViews {
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_userInfoView];
+    __weak typeof(self) weakSelf = self;
+    self.userInfoView.deleteCellBlock = ^{
+        FHCommentDetailViewModel *viewModel = weakSelf.baseViewModel;
+        [viewModel.detailController goBack];
+    };
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_contentLabel];
@@ -111,6 +117,7 @@
     self.imageCount = cellModel.largeImageList.count;
     [self setupUIs];
     // 设置userInfo
+    self.userInfoView.cellModel = cellModel;
     self.userInfoView.userName.text = cellModel.user.name;
     self.userInfoView.descLabel.attributedText = cellModel.desc;
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
