@@ -50,10 +50,21 @@
     if (!isEmptyString(threadContent.text)) {
         NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16];
         if (attrStr) {
+            UIFont *font = [UIFont themeFontRegular:16];
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
             NSMutableDictionary *attributes = @{}.mutableCopy;
             [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
-            [attributes setValue:[UIFont themeFontRegular:16] forKey:NSFontAttributeName];
+            [attributes setValue:font forKey:NSFontAttributeName];
+            
+            NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            
+            CGFloat lineHeightMultiple = 24 / font.lineHeight;
+            paragraphStyle.minimumLineHeight = 24;
+            paragraphStyle.maximumLineHeight = 24;
+            paragraphStyle.lineHeightMultiple = lineHeightMultiple;
+            
+            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
+            [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
             
             [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
             
