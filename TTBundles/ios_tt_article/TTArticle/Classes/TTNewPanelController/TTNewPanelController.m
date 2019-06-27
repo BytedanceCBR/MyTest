@@ -296,7 +296,7 @@
         _backWindow = [[TTNewPanelControllerWindow alloc] init];
         CGRect windowFrame = [UIApplication sharedApplication].keyWindow.bounds;
         self.originalKeyWindow = [UIApplication sharedApplication].keyWindow;
-        if (windowFrame.size.width != [UIScreen mainScreen].bounds.size.width && windowFrame.size.height != [UIScreen mainScreen].bounds.size.width) {
+        if (windowFrame.size.width != [UIScreen mainScreen].bounds.size.width || windowFrame.size.height != [UIScreen mainScreen].bounds.size.height) {
             windowFrame = [UIApplication sharedApplication].delegate.window.bounds;
             self.originalKeyWindow = [UIApplication sharedApplication].delegate.window;
         }
