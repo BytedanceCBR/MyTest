@@ -226,8 +226,8 @@
         if (model != NULL && error == NULL) {
             [weakSelf.items removeAllObjects];
             FHUGCSearchModel *tModel = model;
-            if (tModel.data.searchSocialGroups.count > 0) {
-                [weakSelf.items addObjectsFromArray:tModel.data.searchSocialGroups];
+            if (tModel.data.count > 0) {
+                [weakSelf.items addObjectsFromArray:tModel.data];
             }
             [weakSelf.tableView reloadData];
         }
