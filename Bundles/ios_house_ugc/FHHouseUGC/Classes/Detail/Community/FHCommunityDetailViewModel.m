@@ -20,6 +20,7 @@
 #import "FHUGCGuideHelper.h"
 #import "FHUGCScialGroupModel.h"
 #import "FHUGCConfig.h"
+#import "TTAccountManager.h"
 
 
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
@@ -72,7 +73,7 @@
     WeakSelf;
     self.feedListController.publishBlock = ^() {
         StrongSelf;
-        [self goPosDetail];
+        [self gotoPostThreadVC];
     };
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
@@ -197,6 +198,35 @@
         }];
         [alertController showFrom:self.viewController animated:YES];
     }
+}
+
+// 发布按钮点击
+- (void)gotoPostThreadVC {
+    if ([TTAccountManager isLogin]) {
+        [self goPosDetail];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    // add by zyk 记得修改埋点
+    [params setObject:@"communitydetail" forKey:@"enter_from"];
+    [params setObject:@"communitydetail" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [wSelf goPosDetail];
+                });
+            }
+        }
+    }];
 }
 
 - (void)goPosDetail {
