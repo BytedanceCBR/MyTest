@@ -28,6 +28,7 @@ NSString *const kTTMessageNotificationTipsChangeNotification = @"kTTMessageNotif
 NSString *const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotificationLastTipSaveKey";
 
 @interface FHMessageNotificationTipsManager ()
+@property(nonatomic, copy)NSString *lastMsgId;
 @end
 
 @implementation FHMessageNotificationTipsManager
@@ -57,6 +58,10 @@ NSString *const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotificationL
         return;
     }
 
+    if([model.lastMsgId isEqualToString:self.tipsModel.lastMsgId]){
+        return;
+    }
+    
     _tipsModel = model;
     if (self.tipsModel && [self.tipsModel.unread intValue] > 0) {
         [self tryShowNotifyBubble:self.tipsModel];

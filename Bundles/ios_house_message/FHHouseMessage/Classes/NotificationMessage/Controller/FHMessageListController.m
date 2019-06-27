@@ -34,7 +34,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-
+        self.title = paramObj.allParams[@"title"];
     }
     return self;
 }
@@ -50,7 +50,7 @@
 
 - (void)initView {
     [self setupDefaultNavBar:YES];
-    [self setTitle:@"消息"];
+    [self setTitle:self.title];
     self.automaticallyAdjustsScrollViewInsets = NO;
 
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];

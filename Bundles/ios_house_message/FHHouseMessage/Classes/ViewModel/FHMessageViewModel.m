@@ -22,6 +22,7 @@
 #import "FHUserTracker.h"
 #import "TTAccount.h"
 #import "FHMessageNotificationManager.h"
+#import "FHEnvContext.h"
 
 #import <ReactiveObjC/ReactiveObjC.h>
 
@@ -102,6 +103,10 @@
 }
 
 - (void)requestUgcUnread:(FHUnreadMsgModel *)unreadMsg error:(NSError *)error {
+    if(![FHEnvContext isUGCOpen]){
+        [self dataLoaded:nil error:error ugcUnread:nil];
+        return;
+    }
     WeakSelf;
     [[FHMessageNotificationManager sharedManager] fetchUnreadMessageWithChannel:nil callback:^(FHUnreadMsgDataUnreadModel *model) {
         StrongSelf;
