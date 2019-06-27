@@ -31,6 +31,8 @@
         [self configTableView];
         // 发帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
+        // 删帖成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
     }
     
     return self;
@@ -102,6 +104,14 @@
                 }
             }
         }
+    }
+}
+
+- (void)postDeleteSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        [self deleteCell:cellModel];
     }
 }
 

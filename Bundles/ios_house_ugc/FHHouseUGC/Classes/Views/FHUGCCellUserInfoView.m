@@ -107,8 +107,8 @@
 - (void)handleItemselected:(FHFeedOperationView *) view {
     if(view.selectdWord.type == FHFeedOperationWordTypeReport){
         //举报
-        if(self.deleteCellBlock){
-            self.deleteCellBlock();
+        if(self.reportSuccessBlock){
+            self.reportSuccessBlock();
         }
     }else if(view.selectdWord.type == FHFeedOperationWordTypeDelete){
         //二次弹窗提醒
@@ -148,7 +148,10 @@
             }
             //删除帖子成功发送通知
             if (wself.cellModel.community.socialGroupId.length > 0) {
-                NSDictionary *dic = @{@"social_group_id":wself.cellModel.community.socialGroupId};
+                NSDictionary *dic = @{
+                                      @"social_group_id":wself.cellModel.community.socialGroupId,
+                                      @"cellModel":wself.cellModel,
+                                      };
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
             }
         }else{

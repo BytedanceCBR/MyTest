@@ -52,7 +52,7 @@
     __weak typeof(self) wself = self;
     
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
-    _userInfoView.deleteCellBlock = ^{
+    _userInfoView.reportSuccessBlock = ^{
         [wself deleteCell];
     };
     [self.contentView addSubview:_userInfoView];

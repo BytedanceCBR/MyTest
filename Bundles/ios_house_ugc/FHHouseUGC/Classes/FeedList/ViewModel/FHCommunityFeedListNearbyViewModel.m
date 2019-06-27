@@ -30,6 +30,9 @@
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
+        
+        // 删帖成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
     }
     
     return self;
@@ -268,6 +271,14 @@
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
             [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         }
+    }
+}
+
+- (void)postDeleteSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        [self deleteCell:cellModel];
     }
 }
 

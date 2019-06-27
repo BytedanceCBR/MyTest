@@ -13,6 +13,7 @@
 #import "FHUGCBaseCell.h"
 #import "FHFeedUGCCellModel.h"
 #import "FHFeedListModel.h"
+#import "FHUGCConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
