@@ -57,13 +57,12 @@
             [attributes setValue:font forKey:NSFontAttributeName];
             
             NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-            
-            CGFloat lineHeightMultiple = 24 / font.lineHeight;
+        
             paragraphStyle.minimumLineHeight = 24;
             paragraphStyle.maximumLineHeight = 24;
-            paragraphStyle.lineHeightMultiple = lineHeightMultiple;
+            paragraphStyle.lineSpacing = 0;
             
-            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
             [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
             
             [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
