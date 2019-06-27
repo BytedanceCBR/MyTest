@@ -64,6 +64,7 @@
 
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
     self.headerView.followButton.groupId = self.viewController.communityId;
+    self.headerView.communityId = self.viewController.communityId;
     self.feedListController.tableHeaderView = self.headerView;
 
     [self.viewController addChildViewController:self.feedListController];
@@ -248,17 +249,20 @@
 - (void)updateNavBarWithAlpha:(CGFloat)alpha {
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     if (alpha <= 0.1f) {
+        [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = YES;
         self.rightBtn.hidden = YES;
     } else if (alpha > 0.1f && alpha < 0.9f) {
+        [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
         self.viewController.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = YES;
         self.rightBtn.hidden = YES;
     } else {
+        [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = NO;
@@ -304,7 +308,7 @@
     self.data = data;
     self.feedListController.view.hidden = NO;
     self.viewController.emptyView.hidden = YES;
-    [self.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar]];
+    [self.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar] placeholder:[UIImage imageNamed:@"default_avatar"]];
     self.headerView.nameLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
     NSString *subtitle = data.countText;// [self generateSubTitle:data];
     self.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
