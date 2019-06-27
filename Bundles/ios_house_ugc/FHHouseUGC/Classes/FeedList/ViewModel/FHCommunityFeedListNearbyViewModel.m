@@ -384,11 +384,20 @@
 #pragma mark - FHUGCBaseCellDelegate
 
 - (void)deleteCell:(FHFeedUGCCellModel *)cellModel {
-    NSInteger row = [self.dataList indexOfObject:cellModel];
+    NSInteger row = [self getCellIndex:cellModel];
     if(row < self.dataList.count && row >= 0){
-        [self.dataList removeObject:cellModel];
+        [self.dataList removeObjectAtIndex:row];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+    }
+}
+
+- (NSInteger)getCellIndex:(FHFeedUGCCellModel *)cellModel {
+    for (NSInteger i = 0; i < self.dataList.count; i++) {
+        FHFeedUGCCellModel *model = self.dataList[i];
+        if([model.groupId isEqualToString:cellModel.groupId]){
+            return i;
+        }
     }
 }
 
