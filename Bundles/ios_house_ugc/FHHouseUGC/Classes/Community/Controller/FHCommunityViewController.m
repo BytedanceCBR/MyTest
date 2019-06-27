@@ -201,7 +201,7 @@
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     _segmentControl.isNeedNetworkCheck = NO;
-    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(10, 10, 0, 10);
+    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(9, 10, 0, 10);
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _segmentControl.selectionIndicatorWidth = 24.0f;
     _segmentControl.selectionIndicatorHeight = 12.0f;
