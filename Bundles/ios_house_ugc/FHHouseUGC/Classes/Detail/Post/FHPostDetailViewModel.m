@@ -144,6 +144,9 @@
         }
         //
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+        if (cellModel.community.socialGroupId.length <= 0) {
+            cellModel.community = self.detailData.community;
+        }
         [self.items addObject:cellModel];
         
         // 更新点赞以及评论数
