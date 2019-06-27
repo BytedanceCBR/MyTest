@@ -16,6 +16,7 @@
 #import <UIViewAdditions.h>
 #import "TTDeviceHelper.h"
 #import <TTRoute.h>
+#import "TTAccountManager.h"
 
 @interface FHCommunityFeedListController ()
 
@@ -158,7 +159,40 @@
         self.publishBlock();
         return;
     }
-    //跳转到发布器
+    [self gotoPostThreadVC];
+}
+
+// 发布按钮点击
+- (void)gotoPostThreadVC {
+    if ([TTAccountManager isLogin]) {
+        [self gotoPostVC];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    // add by zyk 记得修改埋点
+    [params setObject:@"communityfeedlist" forKey:@"enter_from"];
+    [params setObject:@"communityfeedlist" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [wSelf gotoPostVC];
+                });
+            }
+        }
+    }];
+}
+
+- (void)gotoPostVC {
+    // 跳转到发布器
     NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];
     [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:nil];
 }

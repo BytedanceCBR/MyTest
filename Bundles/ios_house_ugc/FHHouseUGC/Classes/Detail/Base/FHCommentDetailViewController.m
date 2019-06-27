@@ -41,6 +41,7 @@
 #import "ExploreItemActionManager.h"
 #import "FHPostDetailCommentWriteView.h"
 #import "FHCommonApi.h"
+#import "TTAccountManager.h"
 
 @interface FHCommentDetailViewController ()<UIScrollViewDelegate>
 
@@ -325,7 +326,7 @@
     }
     else if (sender == _toolbarView.digButton) {
         // 点赞
-        [self p_digg];
+        [self gotoDigg];
     }
 }
 
@@ -340,7 +341,33 @@
     }
 }
 
-// 点赞
+// 去点赞
+- (void)gotoDigg {
+    if ([TTAccountManager isLogin]) {
+        [self p_digg];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    // add by zyk 记得修改埋点
+    [params setObject:@"communityDetail" forKey:@"enter_from"];
+    [params setObject:@"communityDetail" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                [wSelf p_digg];
+            }
+        }
+    }];
+}
+
 - (void)p_digg {
     self.user_digg = (self.user_digg == 1) ? 0 : 1;
     self.digg_count = self.user_digg == 1 ? (self.digg_count + 1) : MAX(0, (self.digg_count - 1));

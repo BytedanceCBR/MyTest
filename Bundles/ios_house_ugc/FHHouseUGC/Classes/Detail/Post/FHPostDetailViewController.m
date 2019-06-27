@@ -75,6 +75,7 @@
         [self.viewModel.items addObject:self.detailData];
         // 刷新数据
         [self.viewModel reloadData];
+        self.weakViewModel.detailData = self.detailData;
     }
     [self addDefaultEmptyViewFullScreen];
     // 请求 详情页数据
