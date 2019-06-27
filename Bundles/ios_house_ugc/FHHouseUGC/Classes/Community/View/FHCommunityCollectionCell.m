@@ -37,6 +37,9 @@
 }
 
 - (void)initViews {
+    
+    [self.vc removeFromParentViewController];
+    
     if(self.type == FHCommunityCollectionCellTypeNearby){
         FHNearbyViewController *vc = [[FHNearbyViewController alloc] init];
         self.vc = vc;
@@ -55,6 +58,11 @@
         self.vc.view.frame = self.bounds;
         [self.contentView addSubview:self.vc.view];
     }
+}
+
+-(UIViewController *)contentViewController
+{
+    return _vc;
 }
 
 @end

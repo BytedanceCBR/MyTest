@@ -172,3 +172,5 @@
 //"ugc_post_detail" = "FHPostDetailViewController";
 //"ugc_my_interest" = "FHUGCMyInterestedController";
 
+//幸福问答
+"quick_ask" = "FHFastQAViewController";
