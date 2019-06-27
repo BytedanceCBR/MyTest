@@ -9,7 +9,6 @@
 #import "TTMessageNotificationModel.h"
 #import "FHMessageNotificationMacro.h"
 
-@class TTMessageNotificationTipsModel;
 @class FHUnreadMsgDataUnreadModel;
 
 @interface FHMessageNotificationManager : NSObject
