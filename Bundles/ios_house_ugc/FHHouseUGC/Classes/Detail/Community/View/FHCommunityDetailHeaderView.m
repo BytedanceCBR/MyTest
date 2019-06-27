@@ -43,11 +43,11 @@
     self.avatar.layer.cornerRadius = 25;
     self.avatar.clipsToBounds = YES;
 
-    self.nameLabel = [UILabel createLabel:@"世纪城" textColor:@"" fontSize:16];
+    self.nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
     self.nameLabel.textColor = [UIColor themeWhite];
     self.nameLabel.numberOfLines = 1;
 
-    self.subtitleLabel = [UILabel createLabel:@"82930个成员" textColor:@"" fontSize:12];
+    self.subtitleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     self.subtitleLabel.textColor = [UIColor themeWhite];
     self.subtitleLabel.numberOfLines = 1;
 
@@ -61,7 +61,7 @@
     self.publicationsLabel = [UILabel createLabel:@"公告" textColor:@"" fontSize:13];
     self.publicationsLabel.textColor = [UIColor themeRed1];
 
-    self.publicationsContentLabel = [UILabel createLabel:@"此讨论组为世纪城委员会成员自发组织加入，大家自行加入共同建立家园" textColor:@"" fontSize:13];
+    self.publicationsContentLabel = [UILabel createLabel:@"" textColor:@"" fontSize:13];
     self.publicationsContentLabel.textColor = [UIColor themeGray1];
     self.publicationsContentLabel.numberOfLines = 0;
     [self.publicationsContentLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
