@@ -58,8 +58,8 @@
             
             NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         
-            paragraphStyle.minimumLineHeight = 24;
-            paragraphStyle.maximumLineHeight = 24;
+            paragraphStyle.minimumLineHeight = 21;
+            paragraphStyle.maximumLineHeight = 21;
             paragraphStyle.lineSpacing = 0;
             
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;

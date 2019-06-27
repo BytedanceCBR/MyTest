@@ -61,6 +61,8 @@
     CLLocation *currentLocaton = [FHLocManager sharedInstance].currentLocaton;
     self.requestTask = [FHHouseUGCAPI requestRecommendSocialGroupsWithSource:source latitude:currentLocaton.coordinate.latitude longitude:currentLocaton.coordinate.longitude class:[FHUGCMyInterestModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
+        [wself.viewController endLoading];
+        
         FHUGCMyInterestModel *interestModel = (FHUGCMyInterestModel *)model;
 
         if (error) {
