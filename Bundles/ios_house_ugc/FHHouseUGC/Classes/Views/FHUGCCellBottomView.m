@@ -21,6 +21,7 @@
 @property(nonatomic ,strong) UIImageView *likeImageView;
 @property(nonatomic ,strong) UILabel *likeLabel;
 @property(nonatomic ,strong) UIView *bottomSepView;
+@property (nonatomic, copy)  NSString *saveDiggGroupId;
 
 @end
 
@@ -179,6 +180,7 @@
 
 // 去点赞
 - (void)gotoDigg {
+    self.saveDiggGroupId = self.cellModel.groupId;
     if ([TTAccountManager isLogin]) {
         [self p_digg];
     } else {
@@ -205,6 +207,10 @@
 }
 
 - (void)p_digg {
+    // 防止重用时数据改变
+    if (![self.saveDiggGroupId isEqualToString:self.cellModel.groupId]) {
+        return;
+    }
     // 刷新UI
     NSInteger user_digg = [self.cellModel.userDigg integerValue];
     NSInteger diggCount = [self.cellModel.diggCount integerValue];
