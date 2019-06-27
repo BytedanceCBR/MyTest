@@ -278,7 +278,8 @@ static NSInteger const kMaxPostImageCount = 9;
     self.inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(kLeftPadding - 5, y + kInputViewTopPadding, self.view.width - kLeftPadding - kRightPadding + 10.f, kTextViewHeight)];
 
     self.inputTextView.keyboardAppearance = UIKeyboardAppearanceLight;
-    
+    self.inputTextView.isBanAt = YES;
+    self.inputTextView.isBanHashtag = YES;
     self.inputTextView.source = @"post";
     y = self.inputTextView.bottom;
     

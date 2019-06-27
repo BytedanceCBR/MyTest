@@ -261,6 +261,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     self.inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(kLeftPadding - 5, y + kInputViewTopPadding, self.view.width - kLeftPadding - kRightPadding + 10.f, kTextViewHeight)];
     self.inputTextView.richSpanText = [[TTRichSpanText alloc] initWithText:@"" richSpansJSONString:nil];
     self.inputTextView.contentInset = UIEdgeInsetsZero;
+    self.inputTextView.isBanAt = YES;
+    self.inputTextView.isBanHashtag = YES;
     y = self.inputTextView.bottom;
     
     HPGrowingTextView *internalTextView = self.inputTextView.internalGrowingTextView;
