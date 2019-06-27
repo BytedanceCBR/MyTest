@@ -51,6 +51,10 @@
 - (void)setupViews {
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_userInfoView];
+    __weak typeof(self) weakSelf = self;
+    self.userInfoView.deleteCellBlock = ^{
+//        weakSelf.baseViewModel
+    };
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_contentLabel];
@@ -111,6 +115,7 @@
     self.imageCount = cellModel.largeImageList.count;
     [self setupUIs];
     // 设置userInfo
+    self.userInfoView.cellModel = cellModel;
     self.userInfoView.userName.text = cellModel.user.name;
     self.userInfoView.descLabel.attributedText = cellModel.desc;
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];

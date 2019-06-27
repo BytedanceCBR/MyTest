@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
-@property (nonatomic, strong , nullable) FHUGCSearchDataModel *data ;
+@property (nonatomic, strong , nullable) NSArray<FHUGCScialGroupDataModel> *data ;
 @end
 
 NS_ASSUME_NONNULL_END
