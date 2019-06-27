@@ -17,7 +17,7 @@
 #import <TTThemed/SSThemed.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTBaseLib/NSStringAdditions.h>
-#import <TTBaseLib/SSWeakObject.h>
+#import <TTNewsAccountBusiness/SSWeakObject.h>
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTBaseLib/NSString+URLEncoding.h>

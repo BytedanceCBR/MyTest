@@ -22,6 +22,7 @@
 #import "FHHomeListViewModel.h"
 #import "TTSandBoxHelper.h"
 #import <FHHomeSearchPanelViewModel.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
 

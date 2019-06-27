@@ -39,7 +39,7 @@
 #import "TTShareConstants.h"
 //#import "SSPayManager.h"
 
-#import "TTVersionHelper.h"
+#import <TTVersionHelper/TTVersionHelper.h>
 #import "TTDeviceHelper.h"
 #import "TTURLUtils.h"
 #import "NSObject+TTAdditions.h"
@@ -468,6 +468,10 @@ static NSTimeInterval lastTime;
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
+#if DEBUG
+    NSLog(@"=== DEVICE TOKEN IS: %@ ===",deviceToken);
+#endif
+    
     [self.residentTasks enumerateObjectsUsingBlock:^(TTStartupTask * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj conformsToProtocol:@protocol(UIApplicationDelegate)] && [obj respondsToSelector:_cmd]) {
 #pragma clang diagnostic push

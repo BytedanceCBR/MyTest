@@ -12,6 +12,7 @@
 #import "UIImageView+BDWebImage.h"
 #import <FHHouseBaseItemCell.h>
 #import <TTDeviceHelper.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 @implementation FHFloorPanPicCollectionCell
 - (instancetype)initWithFrame:(CGRect)frame

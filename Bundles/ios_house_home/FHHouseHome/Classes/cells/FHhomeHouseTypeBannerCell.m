@@ -16,6 +16,7 @@
 #import <TTRoute.h>
 #import <FHHomeConfigManager.h>
 #import <FHHomeCellHelper.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 @interface FHhomeHouseTypeBannerCell()
 @property(nonatomic,weak)FHConfigDataModel *cuurentDataModel;

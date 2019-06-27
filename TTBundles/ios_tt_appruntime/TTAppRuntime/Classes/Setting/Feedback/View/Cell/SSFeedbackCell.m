@@ -12,7 +12,6 @@
 #import "SSFeedbackViewController.h"
  
 #import "UIImage+TTThemeExtension.h"
-#import "TTBusinessManager+StringUtils.h"
 #import "TTProjectLogicManager.h"
 #import "TTLabelTextHelper.h"
 #import "UILabel+Tapping.h"
@@ -21,6 +20,8 @@
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import <TTBaseLib/TTBusinessManager.h>
+#import <TTBaseLib/TTBusinessManager+StringUtils.h>
 
 #define AvatarViewWidth 36.f
 #define SSContentViewSeverTypeLeftPadding   66.f
@@ -204,7 +205,7 @@
     }
     
 //    NSString * timeStr = [TTBusinessManager noTimeStringSince1970:[model.pubDate doubleValue]];
-    NSString * timeStr = [TTBusinessManager customtimeStringSince1970:[model.pubDate doubleValue] formateType:TTTimeFormatterNormalNoTime];
+    NSString * timeStr = [TTBusinessManager customtimeStringSince1970:[model.pubDate doubleValue] midnightInterval:0 formateType:TTTimeFormatterNormalNoTime];
     [_timeLabel setText:timeStr];
     
     if ([SSFeedbackCell hasFeedbackImageForModel:model]) {

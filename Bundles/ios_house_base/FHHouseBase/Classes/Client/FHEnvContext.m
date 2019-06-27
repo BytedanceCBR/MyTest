@@ -27,6 +27,7 @@
 #import <BDALog/BDAgileLog.h>
 #import <TTTabBarManager.h>
 #import <TTTabBarItem.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
