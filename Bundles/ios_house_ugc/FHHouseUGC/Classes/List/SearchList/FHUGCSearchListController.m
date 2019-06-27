@@ -88,21 +88,21 @@
 
 - (void)followStateChanged:(NSNotification *)notification {
     if (notification) {
-        if (self.isViewAppearing) {
-            return;
-        }
-        NSDictionary *userInfo = notification.userInfo;
-        BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
-        NSString *groupId = notification.userInfo[@"social_group_id"];
-        if(groupId.length > 0){
-            [self.items enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([obj.socialGroupId isEqualToString:groupId]) {
-                    obj.hasFollow = followed ? @"1" : @"0";
-                    self.needReloadData = YES;
-                    *stop = YES;
-                }
-            }];
-        }
+//        if (self.isViewAppearing) {
+//            return;
+//        }
+//        NSDictionary *userInfo = notification.userInfo;
+//        BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
+//        NSString *groupId = notification.userInfo[@"social_group_id"];
+//        if(groupId.length > 0){
+//            [self.items enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                if ([obj.socialGroupId isEqualToString:groupId]) {
+//                    obj.hasFollow = followed ? @"1" : @"0";
+//                    self.needReloadData = YES;
+//                    *stop = YES;
+//                }
+//            }];
+//        }
     }
 }
 
