@@ -146,6 +146,7 @@
     }
     
     self.viewModel = viewModel;
+    self.needReloadData = YES;
     //切换开关
     WeakSelf;
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
