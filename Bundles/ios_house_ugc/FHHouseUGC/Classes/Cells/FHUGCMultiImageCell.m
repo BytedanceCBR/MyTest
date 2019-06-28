@@ -12,7 +12,6 @@
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
-#import "TTBaseMacro.h"
 
 #define leftMargin 20
 #define rightMargin 20
