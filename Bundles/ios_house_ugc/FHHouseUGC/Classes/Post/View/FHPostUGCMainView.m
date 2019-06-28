@@ -12,7 +12,6 @@
 
 @interface FHPostUGCMainView ()
 
-@property (nonatomic, strong)   UIImageView       *rightImageView;
 @property (nonatomic, strong)   UILabel       *nameLabel;
 @property (nonatomic, strong)   UILabel       *valueLabel;
 @property (nonatomic, strong)   UIView       *sepLine;
