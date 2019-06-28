@@ -67,7 +67,11 @@
 
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
     self.headerView.followButton.groupId = self.viewController.communityId;
-    self.headerView.communityId = self.viewController.communityId;
+    //随机一张背景图
+    NSUInteger randomImageIndex = [self.viewController.communityId integerValue] % 4;
+    NSString *imageNmae = [NSString stringWithFormat:@"fh_ugc_community_detail_header_back%d",randomImageIndex];
+    self.headerView.topBack.image = [UIImage imageNamed:imageNmae];
+    
     self.feedListController.tableHeaderView = self.headerView;
 
     [self.viewController addChildViewController:self.feedListController];
@@ -353,8 +357,7 @@
     self.titleLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
     self.subTitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
 
-    [self.headerView resize];
-    self.feedListController.tableHeaderView = self.headerView;
+    self.feedListController.tableView.tableHeaderView = self.headerView;
 
     //仅仅在未关注时显示引导页
     if (![data.hasFollow boolValue] && self.shouldShowUGcGuide) {
