@@ -160,12 +160,9 @@
 
     CGFloat scrollDistance = scrollView.contentOffset.x - _oldX;
     CGFloat diff = scrollView.contentOffset.x - self.beginOffSet.x;
-    if(diff == 0){
-        return;
-    }
 
     CGFloat tabIndex = scrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width;
-    if(diff > 0){
+    if(diff >= 0){
         tabIndex = floorf(tabIndex);
     }else if (diff < 0){
         tabIndex = ceilf(tabIndex);
@@ -176,12 +173,12 @@
         self.viewController.segmentControl.selectedSegmentIndex = self.currentTabIndex;
     }
     else{
-        if((tabIndex == 0 && diff < 0) || (tabIndex == maxCellCount - 1 && diff > 0)){
-
-        }else{
-            CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;
-            [self.viewController.segmentControl setScrollValue:value isDirectionLeft:diff < 0];
+        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (self.viewController.segmentControl.sectionTitles.count - 1)){
+            return;
         }
+        
+        CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;
+        [self.viewController.segmentControl setScrollValue:value isDirectionLeft:diff < 0];
     }
 
     _oldX = scrollView.contentOffset.x;
