@@ -93,8 +93,7 @@ NSString *const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotificationL
     bubbleData.content = tipsModel.content;
     bubbleData.avatar = tipsModel.lastUserAvatar;
     bubbleData.time = timeTip;
-    NSURL *openURL = [NSURL URLWithString:tipsModel.openUrl];
-
+    NSURL *openURL = [NSURL URLWithString:[tipsModel.openUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     BubbleClickCallback clickCallback = ^(FHBubbleData *data, FHMessageTipBubble *bubble) {
         if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
             [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:nil];

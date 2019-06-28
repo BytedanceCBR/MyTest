@@ -9,10 +9,13 @@
 
 
 @interface FHCommunityDetailViewModel : NSObject <UIScrollViewDelegate>
+@property(nonatomic , strong) NSMutableDictionary *tracerDict;
+
 - (instancetype)initWithController:(FHCommunityDetailViewController *)viewController;
 
 - (void)requestData:(BOOL) refreshFeed;
 
 - (void)viewWillAppear;
 
+-(void)addGoDetailLog;
 @end
