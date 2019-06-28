@@ -50,7 +50,7 @@
 }
 
 - (void)viewWillAppear {
-    [self.viewModel refreshCurrentCell];
+    [self.viewModel viewWillAppear];
     if (self.needReloadData) {
         self.needReloadData = NO;
         [self startLoadData];
@@ -167,10 +167,7 @@
 
 - (void)scrollToTopAndRefresh {
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-    __weak typeof(self) wself = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [wself startLoadData];
-    });
+    [self startLoadData];
 }
 
 - (void)retryLoadData {

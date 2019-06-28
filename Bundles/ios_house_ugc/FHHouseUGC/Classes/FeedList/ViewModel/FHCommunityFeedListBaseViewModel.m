@@ -32,6 +32,10 @@
     return self;
 }
 
+- (void)viewWillAppear {
+    [self refreshCurrentCell];
+}
+
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     [self.requestTask cancel];
 }

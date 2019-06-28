@@ -20,6 +20,8 @@
 
 @interface FHCommunityFeedListMyJoinViewModel () <UITableViewDelegate, UITableViewDataSource>
 
+@property(nonatomic, assign) BOOL needDealFollowData;
+
 @end
 
 @implementation FHCommunityFeedListMyJoinViewModel
@@ -35,9 +37,17 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 举报成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
+        // 关注状态变化
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     }
     
     return self;
+}
+
+- (void)viewWillAppear {
+    [super viewWillAppear];
+    
+    
 }
 
 - (void)dealloc
@@ -121,7 +131,6 @@
     [super requestData:isHead first:isFirst];
     
     if(isFirst){
-        [self.dataList removeAllObjects];
         [self.viewController startLoading];
     }
     
@@ -130,7 +139,7 @@
     NSInteger listCount = self.dataList.count;
     NSInteger offset = 0;
     
-    if(listCount > 0){
+    if(listCount > 0 && !isFirst){
         if(self.feedListModel){
             offset = [self.feedListModel.lastOffset integerValue];
         }
@@ -138,6 +147,7 @@
     
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if(isFirst){
+            [self.dataList removeAllObjects];
             [self.viewController endLoading];
         }
         
@@ -219,6 +229,25 @@
         }
     }
     return resultArray;
+}
+
+- (void)followStateChanged:(NSNotification *)notification {
+    BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
+    NSString *socialGroupId = notification.userInfo[@"social_group_id"];
+    
+    NSMutableArray *dataList = [self.dataList mutableCopy];
+    //当取消关注时候，需要删掉所有相关的数据
+    if(!followed){
+        for (NSInteger i = 0; i < self.dataList.count; i++) {
+            FHFeedUGCCellModel *cellModel = self.dataList[i];
+            if([socialGroupId isEqualToString:cellModel.community.socialGroupId]){
+                [dataList removeObject:cellModel];
+            }
+        }
+    }
+    
+    self.dataList = [dataList mutableCopy];
+    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource

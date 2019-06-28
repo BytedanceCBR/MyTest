@@ -38,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshCurrentCell;
 
+- (void)viewWillAppear;
+
 @end
 
 NS_ASSUME_NONNULL_END

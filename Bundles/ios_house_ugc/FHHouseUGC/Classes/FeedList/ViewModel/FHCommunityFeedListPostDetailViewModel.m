@@ -60,7 +60,6 @@
     [super requestData:isHead first:isFirst];
     
     if(isFirst){
-        [self.dataList removeAllObjects];
         [self.viewController startLoading];
     }
     
@@ -69,7 +68,7 @@
     NSInteger listCount = self.dataList.count;
     NSInteger offset = 0;
     
-    if(listCount > 0){
+    if(listCount > 0 && !isFirst){
         if(self.feedListModel){
             offset = [self.feedListModel.lastOffset integerValue];
         }
@@ -78,6 +77,7 @@
     self.requestTask = [FHHouseUGCAPI requestForumFeedListWithForumId:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(isFirst){
+            [self.dataList removeAllObjects];
             [wself.viewController endLoading];
         }
         
