@@ -23,6 +23,7 @@
 #import "TTAccount.h"
 #import "FHMessageNotificationManager.h"
 #import "FHEnvContext.h"
+#import "TTAccountManager.h"
 
 #import <ReactiveObjC/ReactiveObjC.h>
 
@@ -103,7 +104,7 @@
 }
 
 - (void)requestUgcUnread:(FHUnreadMsgModel *)unreadMsg error:(NSError *)error {
-    if(![FHEnvContext isUGCOpen]){
+    if(![FHEnvContext isUGCOpen] || ![TTAccountManager isLogin] ){
         [self dataLoaded:nil error:error ugcUnread:nil];
         return;
     }

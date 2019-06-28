@@ -21,6 +21,7 @@
 #import "FHUGCScialGroupModel.h"
 #import "FHUGCConfig.h"
 #import "TTAccountManager.h"
+#import "FHUserTracker.h"
 
 
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
@@ -36,7 +37,6 @@
 
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic) BOOL shouldShowUGcGuide;
-
 @end
 
 @implementation FHCommunityDetailViewModel
@@ -47,6 +47,8 @@
         self.viewController = viewController;
         [self initView];
         self.shouldShowUGcGuide = YES;
+        [self addGoDetailLog];
+        [self addPublicationsShowLog];
     }
     return self;
 }
@@ -396,6 +398,43 @@
         return;
     }
     [self requestData:YES];
+}
+
+-(void)addGoDetailLog{
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"enter_type"] = self.tracerDict[@"enter_type"] ? : @"be_null";
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    params[@"page_type"] = [self pageTypeString];
+    [FHUserTracker writeEvent:@"go_detail_community" params:params];
+}
+
+-(void)addPublicationsShowLog{
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"element_type"] = @"community_group_notice";
+    params[@"page_type"] = [self pageTypeString];
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    [FHUserTracker writeEvent:@"element_show" params:params];
+}
+
+-(void)addPublisherPopupShowLog{
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"page_type"] = [self pageTypeString];
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    [FHUserTracker writeEvent:@"community_publisher_popup_show" params:params];
+}
+
+-(void)addPublisherPopupClickLog:(BOOL) positive{
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"page_type"] = [self pageTypeString];
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"click_position"] = positive ? @"confirm" : @"cancel";
+    [FHUserTracker writeEvent:@"community_publisher_popup_click" params:params];
+}
+
+- (NSString *)pageTypeString
+{
+    return @"community_group_detail";
 }
 
 @end
