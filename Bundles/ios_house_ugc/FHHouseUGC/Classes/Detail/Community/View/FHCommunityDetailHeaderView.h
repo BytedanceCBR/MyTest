@@ -18,6 +18,7 @@
 @property(nonatomic, strong) UILabel *publicationsLabel;
 @property(nonatomic, strong) UILabel *publicationsContentLabel;
 @property(nonatomic) CGFloat headerBackHeight;
+@property (nonatomic, copy) NSString *communityId;
 
 - (void)resize;
 

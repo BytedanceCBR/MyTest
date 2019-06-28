@@ -21,6 +21,7 @@
 @property(nonatomic ,strong) UIImageView *likeImageView;
 @property(nonatomic ,strong) UILabel *likeLabel;
 @property(nonatomic ,strong) UIView *bottomSepView;
+@property (nonatomic, copy)  NSString *saveDiggGroupId;
 
 @end
 
@@ -175,15 +176,40 @@
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-    // 如果未登录，先登录
-    if(![TTAccountManager isLogin]){
-//        NSMutableDictionary *dict = @{}.mutableCopy;
-//        dict[@"enter_from"] = @"minetab";
-//        dict[@"enter_type"] = @"login";
-//        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        
-        NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    [self gotoDigg];
+}
+
+// 去点赞
+- (void)gotoDigg {
+    self.saveDiggGroupId = self.cellModel.groupId;
+    if ([TTAccountManager isLogin]) {
+        [self p_digg];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    // add by zyk 记得修改埋点
+    [params setObject:@"cellbottom" forKey:@"enter_from"];
+    [params setObject:@"cellbottom" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                [wSelf p_digg];
+            }
+        }
+    }];
+}
+
+- (void)p_digg {
+    // 防止重用时数据改变
+    if (![self.saveDiggGroupId isEqualToString:self.cellModel.groupId]) {
         return;
     }
     // 刷新UI

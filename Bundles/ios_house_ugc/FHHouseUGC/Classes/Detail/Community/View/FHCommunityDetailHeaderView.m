@@ -32,7 +32,7 @@
 
     self.topBack = [[UIImageView alloc] init];
     //随机一张背景图
-    int randomImageIndex = arc4random() % 4;
+    int randomImageIndex = [self.communityId integerValue] % 4;
     NSString *imageNmae = [NSString stringWithFormat:@"fh_ugc_community_detail_header_back%d",randomImageIndex];
     self.topBack = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageNmae]];
     self.topBack.contentMode = UIViewContentModeScaleAspectFill;
@@ -122,8 +122,8 @@
     [self.publicationsContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(20);
         make.right.mas_equalTo(self).offset(-20);
+        make.height.mas_greaterThanOrEqualTo(50);
         make.top.mas_equalTo(self.topBack.mas_bottom).offset(-30);
-        make.bottom.mas_equalTo(self.publicationsContentLabel).offset(15).priorityHigh();
     }];
 
     [self.publicationsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -136,16 +136,23 @@
         make.top.mas_equalTo(self.publicationsContainer).offset(15);
         make.left.mas_equalTo(self.publicationsLabel.mas_right).offset(10);
         make.right.mas_equalTo(self.publicationsContainer).offset(-15);
+        make.bottom.mas_equalTo(self.publicationsContainer.mas_bottom).offset(-15);
+        make.height.mas_greaterThanOrEqualTo(20);
     }];
 
-    [self resize];
+    [self mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.right.mas_equalTo(self.topBack);
+        make.bottom.mas_equalTo(self.publicationsContainer).offset(10);
+    }];
+
+//    [self resize];
 }
 
 - (void)resize {
-    [self layoutIfNeeded];
-    CGFloat height = CGRectGetMaxY(self.publicationsContainer.frame);
-    CGRect frame = self.frame;
-    frame.size.height = height + 10;
-    self.frame = frame;
+//    [self layoutIfNeeded];
+//    CGFloat height = CGRectGetMaxY(self.publicationsContainer.frame);
+//    CGRect frame = self.frame;
+//    frame.size.height = height + 10;
+//    self.frame = frame;
 }
 @end

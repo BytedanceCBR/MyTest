@@ -14,6 +14,7 @@
 #import "FHUnreadMsgModel.h"
 #import "FHMessageNotificationTipsManager.h"
 #import "FHMessageAPI.h"
+#import "FHEnvContext.h"
 
 #define kMessageNotificationFetchUnreadMessageDefaultTimeInterval 30
 #define kMessageNotificationFetchUnreadMessageMinTimeInterval 15
@@ -57,7 +58,7 @@ static NSString *const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNo
 - (void)startPeriodicalFetchUnreadMessageNumberWithChannel:(NSString *)channel {
     [self stopPeriodicalFetchUnreadMessageNumber];
     //未登录启动时调用一次后，再登录，不会调用此方法，因此第一次需要构造timer
-    if(![TTAccountManager isLogin]){
+    if(![TTAccountManager isLogin] || ![FHEnvContext isUGCOpen]){
         return;
     }
     self.timer = [NSTimer scheduledTimerWithTimeInterval:[self fetchUnreadTimeInterval] target:self selector:@selector(periodicalFetchUnreadMessage:) userInfo:nil repeats:YES];
