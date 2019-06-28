@@ -13,7 +13,7 @@
 
 //...全文处理
 + (NSAttributedString *)truncationFont:(UIFont *)font contentColor:(UIColor *)contentColor color:(UIColor *)color linkUrl:(NSString *)linkUrl {
-    NSString * moreStr = NSLocalizedString(@"...查看全文", nil);
+    NSString * moreStr = NSLocalizedString(@"...全文", nil);
     NSMutableDictionary * attrDic = @{}.mutableCopy;
     if (font) {
         [attrDic setValue:font forKey:NSFontAttributeName];
@@ -60,7 +60,7 @@
         
             paragraphStyle.minimumLineHeight = 21;
             paragraphStyle.maximumLineHeight = 21;
-            paragraphStyle.lineSpacing = 0;
+            paragraphStyle.lineSpacing = 2;
             
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
             [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];

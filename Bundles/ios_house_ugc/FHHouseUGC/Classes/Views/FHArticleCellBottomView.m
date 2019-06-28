@@ -86,7 +86,7 @@
     }];
     
     [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(16);
+        make.width.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self.positionView);
         make.right.mas_equalTo(self).offset(-18);
     }];

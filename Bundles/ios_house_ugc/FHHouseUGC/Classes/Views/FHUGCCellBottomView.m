@@ -50,6 +50,7 @@
     [_positionView addSubview:_position];
     
     self.commentBtn = [[UIButton alloc] init];
+    _commentBtn.imageView.contentMode = UIViewContentModeCenter;
     [_commentBtn setImage:[UIImage imageNamed:@"fh_ugc_comment"] forState:UIControlStateNormal];
     [_commentBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     _commentBtn.titleLabel.font = [UIFont themeFontRegular:14];
@@ -120,9 +121,9 @@
     }];
     
     [self.commentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self);
+        make.top.mas_equalTo(self).offset(2);
         make.right.mas_equalTo(self).offset(-20);
-        make.height.mas_equalTo(24);
+        make.height.mas_equalTo(20);
     }];
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
