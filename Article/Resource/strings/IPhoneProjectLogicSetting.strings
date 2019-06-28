@@ -177,3 +177,5 @@
 "ugc_follow_communitys" = "FHUGCFollowListController";
 "ugc_search_list" = "FHUGCSearchListController";
 
+//幸福问答
+"quick_ask" = "FHFastQAViewController";

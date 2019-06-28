@@ -13,6 +13,7 @@
 #import <TTNetworkManager.h>
 #import "FHPostDataHTTPRequestSerializer.h"
 #import "FHFillFormAgencyListItemModel.h"
+#import "FHEnvContext.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -22,6 +23,50 @@
 @implementation FHMainApi (Contact)
 
 
+//快速问答 表单
++ (TTHttpTask*)requestQuickQuestionByHouseId:(NSString*)houseId
+                                          phone:(NSString*)phone
+                                           from:(NSString*)from
+                                           type:(NSNumber*)type
+                                     completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
+{
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/call_report/v2"];
+    NSString *userName = [TTAccount sharedAccount].user.name ? : [TTInstallIDManager sharedInstance].deviceID; //如果没有名字，则取did
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (houseId.length > 0) {
+        paramDic[@"house_id"] = houseId;
+    }
+    if (userName.length > 0) {
+        paramDic[@"user_name"] = userName;
+    }
+    if (phone.length > 0) {
+        paramDic[@"user_phone"] = phone;
+    }
+    if (from.length > 0) {
+        paramDic[@"from"] = from;
+    }
+    
+    if (type > 0) {
+        paramDic[@"target_type"] = type;
+    }
+    paramDic[@"city_id"] = [FHEnvContext getCurrentSelectCityIdFromLocal];
+
+    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj) {
+        FHDetailResponseModel *model = nil;
+        NSError *jerror = nil;
+        if (!error) {
+            model = [[FHDetailResponseModel alloc]initWithData:jsonObj error:&jerror];
+        }
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+}
 // 详情页线索提交表单
 + (TTHttpTask*)requestSendPhoneNumbserByHouseId:(NSString*)houseId
                                           phone:(NSString*)phone

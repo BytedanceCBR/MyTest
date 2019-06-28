@@ -145,6 +145,36 @@ TTFeedCollectionCellDelegate>
     
     if (!_firstLoad) {
         [self.currentCollectionPageCell willAppear];
+        //切换tab、进入文章页回来时需要b上报enter_category
+        
+        TTCategory *category = self.currentCategory;
+        //log3.0
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
+        [dict setValue:category.categoryID forKey:@"category_name"];
+        [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [dict setValue:@"click" forKey:@"enter_type"];
+        
+        [FHHomeConfigManager sharedInstance].enterType = @"click";
+        
+        if ([category.categoryID isEqualToString:@"f_find_house"])
+        {
+            [dict setValue:@"maintab_list" forKey:@"element_from"];
+            [dict setValue:@"maintab" forKey:@"enter_from"];
+            
+            NSString * searchId = [FHEnvContext sharedInstance].getCommonParams.originSearchId;
+            NSString * categoryName = [FHEnvContext sharedInstance].getCommonParams.originFrom;
+            
+            [dict setValue:categoryName forKey:@"origin_from"];
+            [dict setValue:searchId forKey:@"search_id"];
+            [dict setValue:searchId forKey:@"origin_search_id"];
+            [dict setValue:categoryName forKey:@"category_name"];
+            
+            [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+        }else
+        {
+            [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+        }
+        
     }
     
     self.isDisplay = YES;
