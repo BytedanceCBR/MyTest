@@ -33,6 +33,10 @@
 #import "TTCommentEmptyView.h"
 #import "TTCommentDetailToolbarView.h"
 #import "FHTraceEventUtils.h"
+#import "FHCommonApi.h"
+#import "TTCommentModel.h"
+#import "TTAccountManager.h"
+#import "SSMyUserModel.h"
 
 
 #define kDeleteCommentNotificationKey   @"kDeleteCommentNotificationKey"
@@ -758,8 +762,48 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
          [TTTracker eventV3:@"rt_unlike" params:params];
     }
     
-    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
-    [self.store dispatch:action];
+    SSUserModel *userModel;
+    if ([[TTAccountManager sharedManager] myUser]) {
+        SSMyUserModel *myUserModel = [[TTAccountManager sharedManager] myUser];
+        userModel = [[SSUserModel alloc] init];
+        userModel.ID = myUserModel.ID;
+        userModel.name = myUserModel.name;
+        userModel.avatarURLString = myUserModel.avatarURLString;
+        userModel.userDescription = myUserModel.userDescription;
+        userModel.userAuthInfo = myUserModel.userAuthInfo;
+        userModel.verifiedReason = myUserModel.verifiedReason;
+        userModel.isOwner = [self.pageState.detailModel.user.ID isEqualToString:myUserModel.ID];
+        [self.pageState.detailModel.digUsers removeObject:userModel];
+    }
+    
+    NSInteger action = 0;
+    if (self.pageState.detailModel.userDigg) {
+        action = 0;
+        self.pageState.detailModel.diggCount = self.pageState.detailModel.diggCount - 1;
+        self.pageState.detailModel.userDigg = NO;
+        if (userModel) {
+            [self.pageState.detailModel.digUsers removeObject:userModel];
+        }
+    } else {
+        action = 1;
+        self.pageState.detailModel.diggCount = self.pageState.detailModel.diggCount + 1;
+        self.pageState.detailModel.userDigg = YES;
+        if (userModel) {
+            [self.pageState.detailModel.digUsers insertObject:userModel atIndex:0];
+        }
+    }
+    [header refreshWithModel:self.pageState.detailModel];
+    // 新接口
+    if (self.commentModel && [self.commentModel isKindOfClass:[TTCommentModel class]]) {
+        TTCommentModel *model = (TTCommentModel *)self.commentModel;
+        model.userDigged = self.pageState.detailModel.userDigg;
+        model.digCount = @(self.pageState.detailModel.diggCount);
+        self.commentModel = model;
+    }
+    [FHCommonApi requestCommonDigg: [NSString stringWithFormat:@"%@", self.commentModel.commentID] groupType:FHDetailDiggTypeCOMMENT action:action completion:nil];
+    
+//    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
+//    [self.store dispatch:action];
 }
 
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header replyButtonOnClick:(id)sender {
