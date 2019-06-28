@@ -33,6 +33,8 @@
 #import "TTCommentEmptyView.h"
 #import "TTCommentDetailToolbarView.h"
 #import "FHTraceEventUtils.h"
+#import "FHCommonApi.h"
+#import "TTCommentModel.h"
 
 
 #define kDeleteCommentNotificationKey   @"kDeleteCommentNotificationKey"
@@ -758,8 +760,28 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
          [TTTracker eventV3:@"rt_unlike" params:params];
     }
     
-    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
-    [self.store dispatch:action];
+    NSInteger action = 0;
+    if (self.pageState.detailModel.userDigg) {
+        action = 0;
+        self.pageState.detailModel.diggCount = self.pageState.detailModel.diggCount - 1;
+        self.pageState.detailModel.userDigg = NO;
+    } else {
+        action = 1;
+        self.pageState.detailModel.diggCount = self.pageState.detailModel.diggCount + 1;
+        self.pageState.detailModel.userDigg = YES;
+    }
+    [header refreshWithModel:self.pageState.detailModel];
+    // 新接口
+    if (self.commentModel && [self.commentModel isKindOfClass:[TTCommentModel class]]) {
+        TTCommentModel *model = (TTCommentModel *)self.commentModel;
+        model.userDigged = self.pageState.detailModel.userDigg;
+        model.digCount = @(self.pageState.detailModel.diggCount);
+        self.commentModel = model;
+    }
+    [FHCommonApi requestCommonDigg: [NSString stringWithFormat:@"%@", self.commentModel.commentID] groupType:FHDetailDiggTypeCOMMENT action:action completion:nil];
+    
+//    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
+//    [self.store dispatch:action];
 }
 
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header replyButtonOnClick:(id)sender {
