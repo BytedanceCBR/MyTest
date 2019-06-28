@@ -180,6 +180,10 @@
     [self p_refreshToolbarView];
 }
 
+- (void)becomeFirstResponder_comment {
+    [self toolBarButtonClicked:self.self.toolbarView.writeButton];
+}
+
 #pragma mark - KVO
 
 - (void)p_addObserver {
