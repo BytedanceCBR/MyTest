@@ -314,6 +314,7 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
         _refImageView.layer.borderColor = [UIColor themeGray6].CGColor;
         _refImageView.layer.borderWidth = kRefImageViewBorderWidth();
         _refImageView.layer.cornerRadius = FHMNRefImageViewCornerRadius();
+        _refImageView.clipsToBounds = YES;
         [self addSubview:_refImageView];
     }
     return _refImageView;

@@ -18,7 +18,7 @@
     if (!isEmptyString(channel)) {
         paramDic[@"from"] = channel;
     }
-    return [FHMainApi queryData:queryPath params:nil class:cls completion:completion];
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
 
@@ -32,7 +32,7 @@
     }
     paramDic[@"max_cursor"] = maxCursor;
 
-    return [FHMainApi queryData:queryPath params:nil class:cls completion:completion];
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
 
