@@ -49,6 +49,7 @@
     _bottomView.deleteCellBlock = ^{
         [wself deleteCell];
     };
+    [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
     UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
@@ -65,7 +66,8 @@
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
         make.height.mas_equalTo(39);
-        make.left.right.bottom.mas_equalTo(self.contentView);
+        make.left.right.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.contentView).priorityLow();
     }];
 }
 
@@ -103,6 +105,18 @@
             make.height.mas_equalTo(39);
         }];
     }
+}
+
+- (void)closeGuideView {
+    self.cellModel.isInsertGuideCell = NO;
+    [self.cellModel.tableView beginUpdates];
+    
+    [self showGuideView];
+    self.bottomView.cellModel = self.cellModel;
+    
+    [self setNeedsUpdateConstraints];
+    
+    [self.cellModel.tableView endUpdates];
 }
 
 - (void)deleteCell {

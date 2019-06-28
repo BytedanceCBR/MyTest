@@ -58,6 +58,11 @@
         [viewModel.detailController goBack];
     };
     
+    self.userInfoView.reportSuccessBlock = ^{
+        FHCommentDetailViewModel *viewModel = weakSelf.baseViewModel;
+        [viewModel.detailController goBack];
+    };
+    
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_contentLabel];
     

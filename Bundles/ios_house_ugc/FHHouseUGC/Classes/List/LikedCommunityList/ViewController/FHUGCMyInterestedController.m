@@ -9,6 +9,8 @@
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "FHUGCMyInterestedViewModel.h"
 #import "TTReachability.h"
+#import "TTAccount+Multicast.h"
+#import "FHEnvContext.h"
 
 @interface FHUGCMyInterestedController ()<TTRouteInitializeProtocol,UIViewControllerErrorHandler>
 
@@ -22,7 +24,6 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-//        self.type = [paramObj.allParams[@"type"] integerValue];
         self.title = @"你可能感兴趣的小区";
     }
     return self;
@@ -39,6 +40,8 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    
+    [TTAccount addMulticastDelegate:self];
 }
 
 - (void)initNavbar {
@@ -114,7 +117,12 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHUGCMyInterestedViewModel alloc] initWithTableView:self.tableView controller:self];
-    [self startLoadData];
+    //切换开关
+    WeakSelf;
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        StrongSelf;
+        [self startLoadData];
+    }];
 }
 
 - (void)startLoadData {
@@ -136,5 +144,13 @@
 - (BOOL)tt_hasValidateData {
     return _viewModel.dataList.count == 0 ? NO : YES; //默认会显示空
 }
+
+#pragma mark - TTAccountMulticaastProtocol
+// 帐号切换
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
+{
+    [self startLoadData];
+}
+
 
 @end

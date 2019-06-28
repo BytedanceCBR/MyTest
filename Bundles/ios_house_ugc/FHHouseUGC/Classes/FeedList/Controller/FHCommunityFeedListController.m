@@ -17,11 +17,14 @@
 #import "TTDeviceHelper.h"
 #import <TTRoute.h>
 #import "TTAccountManager.h"
+#import "TTAccount+Multicast.h"
+#import "FHEnvContext.h"
 
 @interface FHCommunityFeedListController ()
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
+@property(nonatomic, assign) BOOL needReloadData;
 
 @end
 
@@ -42,10 +45,16 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    
+    [TTAccount addMulticastDelegate:self];
 }
 
 - (void)viewWillAppear {
     [self.viewModel refreshCurrentCell];
+    if (self.needReloadData) {
+        self.needReloadData = NO;
+        [self startLoadData];
+    }
 }
 
 - (void)initView {
@@ -137,7 +146,13 @@
     }
     
     self.viewModel = viewModel;
-    [self startLoadData];
+    self.needReloadData = YES;
+    //切换开关
+    WeakSelf;
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        StrongSelf;
+        self.needReloadData = YES;
+    }];
 }
 
 - (void)startLoadData {
@@ -214,6 +229,14 @@
             }
         }];
     });
+}
+
+#pragma mark - TTAccountMulticaastProtocol
+
+// 帐号切换
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
+{
+    self.needReloadData = YES;
 }
 
 
