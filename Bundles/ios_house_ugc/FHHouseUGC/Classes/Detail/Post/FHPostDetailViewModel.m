@@ -35,6 +35,8 @@
 
 @interface FHPostDetailViewModel ()
 
+@property (nonatomic, copy , nullable) NSString *social_group_id;
+
 @end
 
 @implementation FHPostDetailViewModel
@@ -69,7 +71,15 @@
     return NSStringFromClass(cls);
 }
 
-// init
+-(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType {
+    self = [super initWithController:viewController tableView:tableView postType:postType];
+    self.threadID = 0;
+    self.forumID = 0;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+    return self;
+}
+
+// init(会走上面的方法)
 - (nonnull instancetype)initWithThreadID:(int64_t)threadID forumID:(int64_t)forumID{
     self = [super init];
     if (self) {
@@ -80,6 +90,7 @@
     return self;
 }
 
+// init(会走上面的方法)
 - (instancetype)init {
     self = [self initWithThreadID:0 forumID:0];
     return self;
@@ -95,7 +106,7 @@
         NSDictionary *userInfo = notification.userInfo;
         BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
         NSString *groupId = notification.userInfo[@"social_group_id"];
-        NSString *currentGroupId = [NSString stringWithFormat:@"%lld",self.threadID];
+        NSString *currentGroupId = self.social_group_id;
         if(groupId.length > 0 && currentGroupId.length > 0) {
             if (self.detailHeaderModel) {
                 // 有头部信息
@@ -135,6 +146,7 @@
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
             headerModel.socialGroupModel = socialGroupModel;
+            self.social_group_id = socialGroupModel.socialGroupId;
             [self.items addObject:headerModel];
             self.detailHeaderModel = headerModel;
             [self.detailController headerInfoChanged];
