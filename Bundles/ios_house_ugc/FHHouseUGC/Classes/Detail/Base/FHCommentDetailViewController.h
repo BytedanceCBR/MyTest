@@ -34,6 +34,8 @@ typedef NS_ENUM (NSInteger , FHUGCPostType){
 - (void)headerInfoChanged;
 - (void)refreshToolbarView;
 
+- (void)becomeFirstResponder_comment;
+
 @end
 
 NS_ASSUME_NONNULL_END

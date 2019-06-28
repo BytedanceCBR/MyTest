@@ -31,10 +31,6 @@
     self.backgroundColor = [UIColor themeGray7];
 
     self.topBack = [[UIImageView alloc] init];
-    //随机一张背景图
-    int randomImageIndex = [self.communityId integerValue] % 4;
-    NSString *imageNmae = [NSString stringWithFormat:@"fh_ugc_community_detail_header_back%d",randomImageIndex];
-    self.topBack = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageNmae]];
     self.topBack.contentMode = UIViewContentModeScaleAspectFill;
 
     self.avatar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"default_avatar"]];
@@ -145,14 +141,5 @@
         make.bottom.mas_equalTo(self.publicationsContainer).offset(10);
     }];
 
-//    [self resize];
-}
-
-- (void)resize {
-//    [self layoutIfNeeded];
-//    CGFloat height = CGRectGetMaxY(self.publicationsContainer.frame);
-//    CGRect frame = self.frame;
-//    frame.size.height = height + 10;
-//    self.frame = frame;
 }
 @end

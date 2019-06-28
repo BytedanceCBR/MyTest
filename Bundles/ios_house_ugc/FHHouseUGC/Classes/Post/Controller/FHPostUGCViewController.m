@@ -797,6 +797,7 @@ static NSInteger const kMaxPostImageCount = 9;
     if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
         self.selectView.groupId = self.selectGroupId;
         self.selectView.communityName = self.selectGroupName;
+        self.selectView.rightImageView.hidden = YES;
     }
 }
 

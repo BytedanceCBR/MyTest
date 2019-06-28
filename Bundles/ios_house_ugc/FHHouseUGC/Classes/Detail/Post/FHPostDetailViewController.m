@@ -72,9 +72,9 @@
     [self commentCountChanged];
     // 列表页数据
     if (self.detailData) {
-        [self.viewModel.items addObject:self.detailData];
-        // 刷新数据
-        [self.viewModel reloadData];
+//        [self.viewModel.items addObject:self.detailData];
+//        // 刷新数据
+//        [self.viewModel reloadData];
         self.weakViewModel.detailData = self.detailData;
     }
     [self addDefaultEmptyViewFullScreen];
