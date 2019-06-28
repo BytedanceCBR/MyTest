@@ -41,6 +41,7 @@
 - (void)initViews {
     if(self.vc){
         [self.vc.view removeFromSuperview];
+        [self.vc removeFromParentViewController];
         self.vc = nil;
     }
     
@@ -62,6 +63,11 @@
         self.vc.view.frame = self.bounds;
         [self.contentView addSubview:self.vc.view];
     }
+}
+
+-(UIViewController *)contentViewController
+{
+    return _vc;
 }
 
 @end
