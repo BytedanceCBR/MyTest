@@ -29,7 +29,8 @@
 #import "TTPersonalHomeViewController.h"
 #import "FriendDataManager.h"
 #import "NSString+URLEncoding.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 
 @interface ArticleMomentProfileViewController ()
 

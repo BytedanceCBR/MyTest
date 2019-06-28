@@ -37,6 +37,8 @@ typedef enum : NSUInteger {
 
 - (void)hideEmptyView;
 
+- (void)setUpHomeRedBtn;
+
 @end
 
 NS_ASSUME_NONNULL_END

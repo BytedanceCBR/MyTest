@@ -10,6 +10,12 @@
 #import "TTNavigationController.h"
 #import "TTRichSpanText+Emoji.h"
 #import "TTTrackerWrapper.h"
+#import "TTIndicatorView.h"
+#import <TTStringHelper.h>
+//#import <TTServiceProtocols/TTAccountProvider.h>
+//#import <BDMobileRuntime/BDMobileRuntime.h>
+//#import <TTRegistry/TTRegistryDefines.h>
+#import "TTUGCHashtagModel.h"
 
 @implementation TTUGCTextViewMediator
 
@@ -63,6 +69,12 @@
     [self.textView.navigationController presentViewController:navigationController animated:YES completion:nil];
 }
 
+- (void)toolbarDidClickPictureButtonWithBanPicInput:(BOOL)banPicInput {
+    if (!banPicInput) {
+        [self.multiImageView presentMultiImagePickerView];
+    }
+}
+
 - (void)toolbarDidClickHashtagButton {
     self.textView.didInputTextHashtag = NO;
 
@@ -75,6 +87,7 @@
 
     TTUGCSearchHashtagViewController *viewController = [[TTUGCSearchHashtagViewController alloc] init];
     viewController.hashtagSuggestOption = self.hashtagSuggestOption;
+    viewController.showCanBeCreatedHashtag = self.showCanBeCreatedHashtag;
     viewController.delegate = self;
     TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:viewController];
     navigationController.ttNavBarStyle = @"White";
@@ -110,7 +123,7 @@
         NSString *text = @"@";
         NSRange range = self.textView.selectedRange;
 
-        TTRichSpanText *richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil];
+        TTRichSpanText *richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil imageInfoModelDictionary:nil];
 
         [self.textView replaceRichSpanText:richSpanText inRange:range];
     }
@@ -136,12 +149,27 @@
     TTRichSpanText *richSpanText;
     if (!isEmptyString(schema)) {
         TTRichSpanLink *atUserLink = [[TTRichSpanLink alloc] initWithStart:0 length:userName.length + 1 link:schema text:nil type:TTRichSpanLinkTypeAt];
-        atUserLink.userInfo = @{
-            @"user_id": userModel.user.info.user_id ?: @""
-        };
-        richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:@[atUserLink]];
+        NSDictionary *colorInfo = nil;
+        if (self.richSpanColorHexStringForDay && self.richSpanColorHexStringForNight) {
+            colorInfo = @{
+                         @"day": self.richSpanColorHexStringForDay,
+                         @"night":self.richSpanColorHexStringForNight
+                         };
+        }
+        if (colorInfo) {
+            atUserLink.userInfo = @{
+                                    @"user_id": userModel.user.info.user_id ?: @"",
+                                    @"color_info": colorInfo
+                                    };
+        } else {
+            atUserLink.userInfo = @{
+                                    @"user_id": userModel.user.info.user_id ?: @"",
+                                    };
+        }
+        
+        richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:@[atUserLink] imageInfoModelDictionary:nil];
     } else {
-        richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil];
+        richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil imageInfoModelDictionary:nil];
     }
 
     [self.textView replaceRichSpanText:richSpanText inRange:range];
@@ -157,7 +185,7 @@
         NSString *text = @"#";
         NSRange range = self.textView.selectedRange;
 
-        TTRichSpanText *richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil];
+        TTRichSpanText *richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil imageInfoModelDictionary:nil];
 
         [self.textView replaceRichSpanText:richSpanText inRange:range];
     }
@@ -175,7 +203,7 @@
     });
 }
 
-- (void)searchHashtagTableViewDidSelectedHashtag:(FRPublishPostSearchHashtagStructModel *)hashtagModel {
+- (void)searchHashtagTableViewDidSelectedHashtag:(TTUGCHashtagModel *)hashtagModel {
     NSString *schema = hashtagModel.forum.schema;
     NSString *forumName = hashtagModel.forum.forum_name;
     NSString *concernId = hashtagModel.forum.concern_id;
@@ -185,13 +213,32 @@
     TTRichSpanText *richSpanText;
     if (!isEmptyString(schema)) {
         TTRichSpanLink *hashtagLink = [[TTRichSpanLink alloc] initWithStart:0 length:forumName.length + 2 link:schema text:nil type:TTRichSpanLinkTypeHashtag];
-        hashtagLink.userInfo = @{
-            @"forum_name": forumName ?: @"",
-            @"concern_id": concernId ?: @""
-        };
-        richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:@[hashtagLink]];
+        
+        NSDictionary *colorInfo = nil;
+        if (self.richSpanColorHexStringForDay && self.richSpanColorHexStringForNight) {
+            colorInfo = @{
+                         @"day": self.richSpanColorHexStringForDay,
+                         @"night":self.richSpanColorHexStringForNight
+                         };
+        }
+        if (colorInfo) {
+            hashtagLink.userInfo = @{
+                                     @"forum_name": forumName ?: @"",
+                                     @"concern_id": concernId ?: @"",
+                                     @"color_info": colorInfo,
+                                     @"forum_id": hashtagModel.forum.forum_id ?: @""
+                                     };
+        } else {
+            hashtagLink.userInfo = @{
+                                     @"forum_name": forumName ?: @"",
+                                     @"concern_id": concernId ?: @"",
+                                     @"forum_id": hashtagModel.forum.forum_id ?: @""
+                                     };
+        }
+        
+        richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:@[hashtagLink] imageInfoModelDictionary:nil];
     } else {
-        richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil];
+        richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil imageInfoModelDictionary:nil];
     }
 
     [self.textView replaceRichSpanText:richSpanText inRange:range];

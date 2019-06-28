@@ -168,9 +168,11 @@
     if(textField.markedTextRange){
         return;
     }
-    
-    if ([textField.text tt_lengthOfBytes] > self.maxLength && textField.markedTextRange == nil) {
-        if(self.tempRange.length > 0 && self.tempRange.length > 0){
+    NSInteger length = [textField.text tt_lengthOfBytes];
+
+    if (length > self.maxLength && textField.markedTextRange == nil) {
+        if(self.tempRange.length > 0 && self.tempStr.length > 0 && self.tempRange.location >= 0 && (self.tempRange.location + self.tempRange.length <= textField.text.length)){
+            
             NSString *str = [textField.text stringByReplacingCharactersInRange:self.tempRange withString:self.tempStr];
             textField.text = str;
             [self cursorLocation:self.textField index:(self.tempRange.location + self.tempStr.length)];

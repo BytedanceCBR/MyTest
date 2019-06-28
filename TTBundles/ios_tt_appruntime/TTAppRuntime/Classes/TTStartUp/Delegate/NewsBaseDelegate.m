@@ -78,6 +78,9 @@
 #import <TTDialogDirector/TTDialogDirector.h>
 #import <TTMonitor/TTExtensions.h>
 #import <Crashlytics/Crashlytics.h>
+#import "TTLaunchManager.h"
+#import "GAIAEngine+TTBase.h"
+
 ///...
 //#import "TVLManager.h"
 
@@ -144,6 +147,7 @@ static NSTimeInterval lastTime;
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [GAIAEngine appWillFinishLaunching];
     [TTAccountVersionAdapter oldAccountUserCompatibility];
 
     [TTDialogDirector setQueueEnabled:NO];
@@ -153,6 +157,7 @@ static NSTimeInterval lastTime;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    [GAIAEngine appDidFinishLaunching];
     // add by zjing 这行代码要保留，为了解决启动时addObserver引起的死锁crash问题，我只是代码的搬运工，有问题找谷妈妈
     [TTExtensions networkStatus];
     
@@ -234,17 +239,20 @@ static NSTimeInterval lastTime;
 //refactorLaunchProcess
 - (BOOL)application:(UIApplication *)application refactorLaunchProcessWithOptions:(NSDictionary *)launchOptions {
     [self trackCurrentIntervalInMainThreadWithTag:@"refactor start"];
-    [self didFinishSerialLaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishUILaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishNotificationLaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishSDKsLaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishServiceLaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishInterfaceLaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishOpenURLLaunchingForApplication:application WithOptions:launchOptions];
-    [self didFinishADLaunchingForApplication:application WithOptions:launchOptions];
-#ifdef DEBUG
-    [self didFinishDebugLaunchingForApplication:application WithOptions:launchOptions];
-#endif
+    
+    [[TTLaunchManager sharedInstance] launchWithApplication:application andOptions:launchOptions];
+    
+//    [self didFinishSerialLaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishUILaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishNotificationLaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishSDKsLaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishServiceLaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishInterfaceLaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishOpenURLLaunchingForApplication:application WithOptions:launchOptions];
+//    [self didFinishADLaunchingForApplication:application WithOptions:launchOptions];
+//#ifdef DEBUG
+//    [self didFinishDebugLaunchingForApplication:application WithOptions:launchOptions];
+//#endif
     
     uint64_t mainEndTime = [NSObject currentUnixTime];
     dispatch_barrier_sync(self.barrierQueue, ^{
@@ -670,8 +678,21 @@ static NSTimeInterval lastTime;
     TTNavigationController * navigationController = (TTNavigationController*)(rootTabController.viewControllers.firstObject);
     
     ArticleTabBarStyleNewsListViewController * tabbarNewsVC = navigationController.viewControllers.firstObject;
-    
-    return tabbarNewsVC.mainVC;
+    if ([tabbarNewsVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
+        return tabbarNewsVC.mainVC;
+    } else {
+        if (navigationController.viewControllers.count > 1) {
+            ArticleTabBarStyleNewsListViewController * tabbarNewsVC = navigationController.viewControllers[1];
+            if ([tabbarNewsVC respondsToSelector:@selector(mainVC)]) {
+                return tabbarNewsVC.mainVC;
+            }
+            NSLog(@"exxxx plaore   !!!!!!");
+            return nil;
+        }else
+        {
+            return nil;
+        }
+    }
 }
 
 - (void)trackCurrentIntervalInMainThreadWithTag:(NSString *)tag {

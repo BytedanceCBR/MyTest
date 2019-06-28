@@ -27,10 +27,19 @@
     NSMutableArray <TTRichSpanLink *> *transformedRichSpanLinks = [[NSMutableArray alloc] initWithCapacity:richSpanLinks.count];
     for (TTRichSpanLink *link in richSpanLinks) {
         if (link.start + link.length <= maxLength) {
-            NSUInteger start = link.start - [self offsetAheadLinkLocation:link.start emojiRangeValues:emojiRangeValues];
-            NSUInteger length = link.length - [self offsetInLinkLocation:link.start length:link.length emojiRangeValues:emojiRangeValues];
-
-            TTRichSpanLink *replacedLink = [[TTRichSpanLink alloc] initWithStart:start length:length link:link.link text:link.text type:link.type];
+            NSInteger start = link.start - [self offsetAheadLinkLocation:link.start emojiRangeValues:emojiRangeValues];
+            NSInteger length = link.length - [self offsetInLinkLocation:link.start length:link.length emojiRangeValues:emojiRangeValues];
+            //对于某些richspan数据错误的情况，eg。[我要静静](120，6)，link:(122，4)会导致上面那个offsetInLink方法返回5，然后导致length = -1
+            //错误数据：http://web_admin.byted.org/pirate/stream/get_history_detail/?device_id=47850862307&start_time=1527161603720&end_time=1527161603720
+            //先按下面做了保护
+            length = MAX(length, 0);
+            start = MAX(start, 0);
+            
+            if (link.length == 0) {
+                length = 0;
+            }
+            TTRichSpanLink *replacedLink = [[TTRichSpanLink alloc] initWithStart:start length:length link:link.link text:link.text imageInfoModels:link.imageInfoModels type:link.type flagType:link.flagType];
+            replacedLink.userInfo = link.userInfo;
             [transformedRichSpanLinks addObject:replacedLink];
         }
     }
@@ -61,25 +70,13 @@
         if ([emojiRangeValues[i] isKindOfClass:[NSValue class]]) {
             NSRange emojiRange = [emojiRangeValues[i] rangeValue];
 
-            if (emojiRange.location + emojiRange.length > location && emojiRange.location + emojiRange.length < location + length) {
+            if (emojiRange.location + emojiRange.length > location && emojiRange.location + emojiRange.length <= location + length) {
                 offset += emojiRange.length - 1;
             }
         }
     }
 
     return offset;
-}
-
-- (NSArray <TTRichSpanLink *> *)sortedRichSpanLinks:(NSArray <TTRichSpanLink *> *)richSpanLinks {
-    return [richSpanLinks sortedArrayUsingComparator:^NSComparisonResult(TTRichSpanLink *link1, TTRichSpanLink *link2) {
-        if (link1.start < link2.start) {
-            return NSOrderedAscending;
-        } else if (link1.start > link2.start) {
-            return NSOrderedDescending;
-        } else {
-            return NSOrderedSame;
-        }
-    }];
 }
 
 @end

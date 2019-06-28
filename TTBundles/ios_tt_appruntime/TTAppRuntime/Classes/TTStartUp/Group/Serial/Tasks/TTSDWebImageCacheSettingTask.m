@@ -13,6 +13,9 @@
 #import "TTWebImageManager.h"
 #import "SSCommonLogic.h"
 #import <TTMonitor/TTMonitor.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTSDWebImageCacheSettingTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+10);
 
 @implementation TTSDWebImageCacheSettingTask
 

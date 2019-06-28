@@ -11,7 +11,7 @@
 #import "SSThemed.h"
 #import "SSNavigationBar.h"
 #import "TTUGCSearchHashtagTableViewCell.h"
-#import "TTNetworkManager.h"
+#import "TTUGCRequestManager.h"
 #import "TTSeachBarView.h"
 #import "UIScrollView+Refresh.h"
 #import "FRApiModel.h"
@@ -19,6 +19,7 @@
 #import "TTTrackerWrapper.h"
 #import "UIViewAdditions.h"
 #import "UIViewController+NavigationBarStyle.h"
+#import <TTUIWidget/TTIndicatorView.h>
 
 typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
     TTUGCSearchState,
@@ -36,14 +37,14 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
 
 @property (nonatomic, assign) BOOL hasMore; // 请求是否hasMore
 @property (nonatomic, strong) NSNumber *offset;
-@property (nonatomic, strong) NSArray <FRPublishPostSearchHashtagStructModel *> *recentHashtags;
-@property (nonatomic, strong) NSArray <FRPublishPostSearchHashtagStructModel *> *hotHashtags;
+@property (nonatomic, strong) NSArray <TTUGCHashtagModel *> *recentHashtags;
+@property (nonatomic, strong) NSArray <TTUGCHashtagModel *> *hotHashtags;
 
 @property (nonatomic, assign) TTUGCSearchHashtagViewControllerState state; // 是否处于搜索请求结果
 
 @property (nonatomic, assign) BOOL hasMoreSearchResult; // 请求是否hasMore
 @property (nonatomic, strong) NSNumber *searchResultOffset;
-@property (nonatomic, strong) NSArray <FRPublishPostSearchHashtagStructModel *> *searchResultSuggestHashtags;
+@property (nonatomic, strong) NSArray <TTUGCHashtagModel *> *searchResultSuggestHashtags;
 @property (nonatomic, copy) NSString *searchingWord;
 
 @property (nonatomic, strong) NSError *searchError;
@@ -56,6 +57,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.ttNeedHideBottomLine = YES;
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     self.view.backgroundColor = SSGetThemedColorWithKey(kColorBackground4);
 
@@ -119,8 +121,9 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
     }
 
     WeakSelf;
-    [[TTNetworkManager shareInstance] requestModel:requestModel callback:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel) {
+    [TTUGCRequestManager requestModel:requestModel callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, TTUGCRequestMonitorModel *monitorModel) {
         StrongSelf;
+        self.searchBar.searchField.placeholder = @"输入关键字搜索话题";
 
         FRUgcPublishPostV1HotForumResponseModel *model = (FRUgcPublishPostV1HotForumResponseModel *) responseModel;
 
@@ -148,27 +151,57 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
             return;
         }
 
+        if (!isEmptyString(model.data.suggest_tips) && self.showCanBeCreatedHashtag) {
+            self.searchBar.searchField.placeholder = model.data.suggest_tips;
+        }
+
         self.searchError = nil;
         self.offset = model.data.offset;
         self.hasMore = model.data.has_more;
 
+        // recent
         if (!self.recentHashtags) {
-            self.recentHashtags = model.data.recently;
+            self.recentHashtags = [TTUGCHashtagModel hashtagModelsWithSearchHashtagModels:model.data.recently];
         }
 
+        // insert recent header
+        if (self.recentHashtags && self.recentHashtags.count > 0) {
+            TTUGCHashtagHeaderModel *recentHeaderModel = [[TTUGCHashtagHeaderModel alloc] init];
+            recentHeaderModel.cellHeight = 34.f;
+            recentHeaderModel.text = @"最近使用";
+            NSMutableArray *recentHashtags = [NSMutableArray arrayWithArray:self.recentHashtags];
+            [recentHashtags insertObject:recentHeaderModel atIndex:0];
+            self.recentHashtags = [recentHashtags copy];
+        }
+
+        // hot
         if (!self.hotHashtags) {
             self.hotHashtags = [NSArray array];
         }
-
         NSMutableArray *hotHashtags = [self.hotHashtags mutableCopy];
         if (model.data.hot) {
-            [hotHashtags addObjectsFromArray:model.data.hot];
+            [hotHashtags addObjectsFromArray:[TTUGCHashtagModel hashtagModelsWithSearchHashtagModels:model.data.hot]];
+        }
+
+        // insert hot header
+        if (hotHashtags.count > 0) {
+            TTUGCHashtagHeaderModel *hotHeaderModel = [[TTUGCHashtagHeaderModel alloc] init];
+            hotHeaderModel.text = @"热门话题";
+            if (self.recentHashtags && self.recentHashtags.count > 0) {
+                hotHeaderModel.showTopSeparator = YES;
+                hotHeaderModel.cellHeight = 40.f;
+            } else {
+                hotHeaderModel.showTopSeparator = NO;
+                hotHeaderModel.cellHeight = 34.f;
+            }
+
+            [hotHashtags insertObject:hotHeaderModel atIndex:0];
         }
         self.hotHashtags = [hotHashtags copy];
 
         self.tableView.hasMore = model.data.has_more;
         self.tableView.pullUpView.enabled = YES;
-        [self.tableView reloadData];
+        [self reloadDataAndConfigScrollable:self.tableView];
 
         [self tt_endUpdataData:NO error:error];
 
@@ -204,13 +237,12 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
 
     self.ttTargetView = self.searchResultTableView;
 
-    // 去掉搜索结果页的 loading 效果，避免无结果情况下闪烁问题
-//    if (!loadMore && (!self.searchResultSuggestHashtags)) {
-//        [self tt_startUpdate];
-//    }
+    if (!loadMore && SSIsEmptyArray(self.searchResultSuggestHashtags)) {
+        [self tt_startUpdate];
+    }
 
     WeakSelf;
-    [[TTNetworkManager shareInstance] requestModel:requestModel callback:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel) {
+    [TTUGCRequestManager requestModel:requestModel callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, TTUGCRequestMonitorModel *monitorModel) {
         StrongSelf;
 
         if (!loadMore) {
@@ -233,7 +265,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
 
                 self.searchResultError = error;
 
-                [self.searchResultTableView reloadData];
+                [self reloadDataAndConfigScrollable:self.searchResultTableView];
 
                 [self tt_endUpdataData:NO error:error];
             } else { // loadMore
@@ -245,9 +277,9 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
         }
 
         // 检索数据为空时，展现用户数据
-        if (!loadMore && model.data.suggest.count == 0) {
+        if (!loadMore && model.data.suggest.count == 0 && !model.data.fresh_forum) {
             self.ttViewType = TTFullScreenErrorViewTypeEmpty;
-            [self.searchResultTableView reloadData];
+            [self reloadDataAndConfigScrollable:self.searchResultTableView];
             [self tt_endUpdataData:NO error:error];
             return;
         }
@@ -261,14 +293,17 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
         }
 
         NSMutableArray *searchResultSuggestHashtags = [self.searchResultSuggestHashtags mutableCopy];
+        if (self.showCanBeCreatedHashtag && !loadMore && model.data.fresh_forum) { // 追加可自建的话题到最前面
+            [searchResultSuggestHashtags addObject:[TTUGCHashtagModel hashtagModelSelfCreateWithSearchHashtagStructModel:model.data.fresh_forum]];
+        }
         if (model.data.suggest) {
-            [searchResultSuggestHashtags addObjectsFromArray:model.data.suggest];
+            [searchResultSuggestHashtags addObjectsFromArray:[TTUGCHashtagModel hashtagModelsWithSearchHashtagModels:model.data.suggest]];
         }
         self.searchResultSuggestHashtags = [searchResultSuggestHashtags copy];
 
         self.searchResultTableView.hasMore = model.data.has_more;
         self.searchResultTableView.pullUpView.enabled = YES;
-        [self.searchResultTableView reloadData];
+        [self reloadDataAndConfigScrollable:self.searchResultTableView];
 
         [self tt_endUpdataData:NO error:error];
     }];
@@ -311,7 +346,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
 
     self.searchResultSuggestHashtags = nil;
 
-    [self.searchResultTableView reloadData];
+    [self reloadDataAndConfigScrollable:self.searchResultTableView];
 
     [self.view addSubview:self.searchResultTableView];
 }
@@ -322,7 +357,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
     self.searchingWord = nil;
     self.searchResultSuggestHashtags = nil;
 
-    [self.searchResultTableView reloadData];
+    [self reloadDataAndConfigScrollable:self.searchResultTableView];
 
     [self.searchResultTableView removeFromSuperview];
 
@@ -330,6 +365,13 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
         self.ttTargetView = self.tableView;
         [self tt_endUpdataData:NO error:self.searchError];
     }
+}
+
+- (void)reloadDataAndConfigScrollable:(UITableView *)tableView {
+    [tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        tableView.pullUpView.hidden = tableView.contentSize.height + 74.f * 2 < tableView.height;
+    });
 }
 
 #pragma mark - UIView+ErrorHandler
@@ -428,7 +470,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
         [self.searchBar resignFirstResponder];
     }
 
-    CGFloat topInset = TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height;
+    CGFloat topInset = TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height - 4.f;
 
     [UIView animateWithDuration:UINavigationControllerHideShowBarDuration animations:^{
         self.searchBar.top = topInset;
@@ -437,8 +479,8 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
         self.searchBar.showsCancelButton = NO;
         self.searchBar.contentView.width += self.searchBar.cancelButton.width;
         self.searchBar.cancelButton.left += self.searchBar.cancelButton.width;
-        self.searchBar.backgroundColorThemeKey = kColorBackground3;
-        self.searchBar.inputBackgroundView.backgroundColorThemeKey = kColorBackground4;
+        self.searchBar.backgroundColorThemeKey = kColorBackground4;
+        self.searchBar.inputBackgroundView.backgroundColorThemeKey = kColorBackground3;
         self.maskView.top = topInset + 44.f;
         self.maskView.alpha = 0.f;
     } completion:^(BOOL finished) {
@@ -462,22 +504,6 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
             return self.recentHashtags;
         } else if (section == 1) {
             return self.hotHashtags;
-        }
-    }
-
-    return nil;
-}
-
-- (NSString *)titleForHeaderInSection:(NSInteger)section forState:(TTUGCSearchHashtagViewControllerState)state {
-    if (state == TTUGCSearchResultState) {
-        if (section == 0) {
-            return nil;
-        }
-    } else if (state == TTUGCSearchState || state == TTUGCSearchingState) {
-        if (section == 0) {
-            return @"最近使用";
-        } else if (section == 1) {
-            return @"热门话题";
         }
     }
 
@@ -511,6 +537,20 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
 
 }
 
+- (BOOL)showLastLongSeparatorLineInIndexPath:(NSIndexPath *)indexPath dataSource:(NSArray *)dataSource forState:(TTUGCSearchHashtagViewControllerState)state {
+    if (state == TTUGCSearchResultState) {
+        if (indexPath.section == 0 && indexPath.row == dataSource.count - 1) {
+            return YES;
+        }
+    } else if (state == TTUGCSearchState || state == TTUGCSearchingState) {
+        if ((indexPath.section == 0 || indexPath.section == 1) && indexPath.row == dataSource.count - 1) {
+            return YES;
+        }
+    }
+
+    return NO;
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -523,31 +563,6 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
     return 2;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (self.state == TTUGCSearchResultState) {
-        return 0;
-    }
-
-    NSArray *dataSource = [self dataSourceInSection:section forState:self.state];
-
-    return dataSource.count > 0 ? 28.f : 0.f;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    SSThemedView *headerView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.width, 28)];
-    headerView.backgroundColor = SSGetThemedColorWithKey(kColorBackground3);
-
-    SSThemedLabel *titleLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 0, self.tableView.width - 15, 28)];
-    titleLabel.font = [UIFont systemFontOfSize:15];
-    titleLabel.textColor = SSGetThemedColorWithKey(kColorText1);
-    titleLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
-    titleLabel.text = [self titleForHeaderInSection:section forState:self.state];
-
-    [headerView addSubview:titleLabel];
-
-    return headerView;
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSArray *dataSource = [self dataSourceInSection:section forState:self.state];
 
@@ -555,25 +570,45 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSArray *dataSource = [self dataSourceInSection:indexPath.section forState:self.state];
+    if (dataSource && dataSource.count > indexPath.row) {
+        id model = [dataSource objectAtIndex:indexPath.row];
+        if ([model isKindOfClass:[TTUGCHashtagHeaderModel class]]) {
+            return ((TTUGCHashtagHeaderModel *) model).cellHeight;
+        }
+    }
+
     return 74.f;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    FRPublishPostSearchHashtagStructModel *hashtagModel;
+    id hashtagModel;
     NSArray *dataSource = [self dataSourceInSection:indexPath.section forState:self.state];
     if (indexPath.row < dataSource.count) {
         hashtagModel = dataSource[indexPath.row];
     }
 
-    TTUGCSearchHashtagTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([TTUGCSearchHashtagTableViewCell class]) forIndexPath:indexPath];
+    UITableViewCell *cell = nil;
 
-    NSInteger row = self.state == TTUGCSearchState && indexPath.section == 1 ? indexPath.row + 1 : 0;
-    [cell configWithHashtagModel:hashtagModel row:row];
+    if ([hashtagModel isKindOfClass:[TTUGCHashtagHeaderModel class]]) {
+        cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([TTUGCSearchHashtagTableHeaderViewCell class]) forIndexPath:indexPath];
+        [(TTUGCSearchHashtagTableHeaderViewCell *)cell configWithHashtagHeaderModel:hashtagModel];
+    } else if ([hashtagModel isKindOfClass:[TTUGCHashtagModel class]]) {
+        cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([TTUGCSearchHashtagTableViewCell class]) forIndexPath:indexPath];
 
-    if (indexPath.section == 0 && indexPath.row == dataSource.count - 1) {
-        cell.bottomLineView.hidden = YES;
-    } else {
-        cell.bottomLineView.hidden = NO;
+        NSInteger row = self.state == TTUGCSearchState && indexPath.section == 1 ? indexPath.row : 0;
+        [(TTUGCSearchHashtagTableViewCell *)cell configWithHashtagModel:hashtagModel row:row longSeparatorLine:[self showLastLongSeparatorLineInIndexPath:indexPath dataSource:dataSource forState:self.state]];
+
+        // ui 第一个section最后一个cell分割线不显示
+        if ((self.state == TTUGCSearchState || self.state == TTUGCSearchingState) && indexPath.section == 0 && self.hotHashtags.count > 0 && self.recentHashtags.count > 0 && indexPath.row == dataSource.count - 1) {
+            ((TTUGCSearchHashtagTableViewCell *)cell).bottomLineView.hidden = YES;
+        } else {
+            ((TTUGCSearchHashtagTableViewCell *)cell).bottomLineView.hidden = NO;
+        }
+    }
+
+    if (!cell) {
+        cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class]) forIndexPath:indexPath];
     }
 
     return cell;
@@ -582,27 +617,55 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    FRPublishPostSearchHashtagStructModel *hashtagModel;
+    id selectedModel = nil;
     NSArray *dataSource = [self dataSourceInSection:indexPath.section forState:self.state];
     if (indexPath.row < dataSource.count) {
-        hashtagModel = dataSource[indexPath.row];
+        selectedModel = dataSource[indexPath.row];
     }
 
-    if (hashtagModel) {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(searchHashtagTableViewDidSelectedHashtag:)]) {
-            [self.delegate searchHashtagTableViewDidSelectedHashtag:hashtagModel];
+    if (selectedModel && [selectedModel isKindOfClass:[TTUGCHashtagModel class]]) {
+        TTUGCHashtagModel *hashtagModel = (TTUGCHashtagModel *)selectedModel;
+        if (hashtagModel.canBeCreated && hashtagModel.forum.status.intValue == 0) {
+            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                      indicatorText:@"您的话题被话题君带走了~"
+                                     indicatorImage:nil
+                                        autoDismiss:YES
+                                     dismissHandler:nil];
+        } else {
+            if (hashtagModel.canBeCreated) {
+                NSString *forumName = hashtagModel.forum.forum_name;
+                if ([forumName containsString:@"#"] || [forumName containsString:@"@"]) {
+                    [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+                                              indicatorText:@"不支持特殊符号的话题创建"
+                                             indicatorImage:nil
+                                                autoDismiss:YES
+                                             dismissHandler:nil];
+                    forumName = [forumName stringByReplacingOccurrencesOfString:@"#" withString:@""];
+                    forumName = [forumName stringByReplacingOccurrencesOfString:@"@" withString:@""];
+                }
+
+                NSError *error = nil;
+                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"  +" options:NSRegularExpressionCaseInsensitive error:&error];
+                NSString *trimmedString = [regex stringByReplacingMatchesInString:forumName options:0 range:NSMakeRange(0, [forumName length]) withTemplate:@" "];
+                forumName = [trimmedString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                hashtagModel.forum.forum_name = forumName;
+            }
+
+            if (self.delegate && [self.delegate respondsToSelector:@selector(searchHashtagTableViewDidSelectedHashtag:)]) {
+                [self.delegate searchHashtagTableViewDidSelectedHashtag:hashtagModel];
+            }
+
+            [self dismissAction:nil];
         }
 
-        [self dismissAction:nil];
+        NSString *trackEventProfileType = [self trackEventProfileTypeInSection:indexPath.section forState:self.state];
+        NSString *trackEventPageType = [self trackEventPageTypeInSection:indexPath.section forState:self.state];
+
+        [TTTrackerWrapper eventV3:@"hashtag_choose_click" params:@{
+            @"page_type" : trackEventPageType ?: @"",
+            @"profile_type" : trackEventProfileType ?: @"",
+        }];
     }
-
-    NSString *trackEventProfileType = [self trackEventProfileTypeInSection:indexPath.section forState:self.state];
-    NSString *trackEventPageType = [self trackEventPageTypeInSection:indexPath.section forState:self.state];
-
-    [TTTrackerWrapper eventV3:@"hashtag_choose_click" params:@{
-        @"page_type" : trackEventPageType ?: @"",
-        @"profile_type" : trackEventProfileType ?: @"",
-    }];
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
@@ -610,17 +673,14 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
 #pragma mark - getter and setter
 
 - (TTSeachBarView *)searchBar {
-    CGFloat topInset = TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height;
+    CGFloat topInset = TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height - 4.f;
 
     if (!_searchBar) {
         _searchBar = [[TTSeachBarView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, 44.f)];
-        _searchBar.backgroundColorThemeKey = kColorBackground3;
-        _searchBar.inputBackgroundView.backgroundColorThemeKey = kColorBackground4;
+        _searchBar.backgroundColorThemeKey = kColorBackground4;
+        _searchBar.inputBackgroundView.backgroundColorThemeKey = kColorBackground3;
         _searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        _searchBar.searchField.placeholder = @"搜索话题";
         _searchBar.searchField.placeholderColorThemeKey = kColorText3;
-        _searchBar.cancelButton.titleColorThemeKey = kColorText1;
-        _searchBar.cancelButton.highlightedTitleColorThemeKey = kColorText1Highlighted;
         _searchBar.delegate = self;
     }
 
@@ -628,18 +688,17 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
 }
 
 - (SSThemedTableView *)tableView {
-    CGFloat topInset = TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height;
-
     if (!_tableView) {
-        _tableView = [[SSThemedTableView alloc] initWithFrame:CGRectMake(0, topInset + 44, self.view.width, self.view.height - topInset - 44)];
+        _tableView = [[SSThemedTableView alloc] initWithFrame:CGRectMake(0, self.searchBar.bottom, self.view.width, self.view.height - self.searchBar.bottom)];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.backgroundColorThemeKey = kColorBackground4;
         _tableView.backgroundView = nil;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [_tableView registerClass:[UITableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([UITableViewHeaderFooterView class])];
+        [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
         [_tableView registerClass:[TTUGCSearchHashtagTableViewCell class] forCellReuseIdentifier:NSStringFromClass([TTUGCSearchHashtagTableViewCell class])];
+        [_tableView registerClass:[TTUGCSearchHashtagTableHeaderViewCell class] forCellReuseIdentifier:NSStringFromClass([TTUGCSearchHashtagTableHeaderViewCell class])];
     }
 
     return _tableView;
@@ -657,7 +716,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
         _searchResultTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _searchResultTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _searchResultTableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
-        [_searchResultTableView registerClass:[UITableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([UITableViewHeaderFooterView class])];
+        [_searchResultTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
         [_searchResultTableView registerClass:[TTUGCSearchHashtagTableViewCell class] forCellReuseIdentifier:NSStringFromClass([TTUGCSearchHashtagTableViewCell class])];
     }
 

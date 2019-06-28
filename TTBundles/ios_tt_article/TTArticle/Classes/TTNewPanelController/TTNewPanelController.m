@@ -24,7 +24,8 @@
 #import "TTVPlayVideo.h"
 #import <Aspects/Aspects.h>
 #import "TTVSettingsConfiguration.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 //#ifndef TTModule
@@ -295,7 +296,7 @@
         _backWindow = [[TTNewPanelControllerWindow alloc] init];
         CGRect windowFrame = [UIApplication sharedApplication].keyWindow.bounds;
         self.originalKeyWindow = [UIApplication sharedApplication].keyWindow;
-        if (windowFrame.size.width != [UIScreen mainScreen].bounds.size.width && windowFrame.size.height != [UIScreen mainScreen].bounds.size.width) {
+        if (windowFrame.size.width != [UIScreen mainScreen].bounds.size.width || windowFrame.size.height != [UIScreen mainScreen].bounds.size.height) {
             windowFrame = [UIApplication sharedApplication].delegate.window.bounds;
             self.originalKeyWindow = [UIApplication sharedApplication].delegate.window;
         }
@@ -642,7 +643,7 @@
     TTPanelControllerItem *item = self.data[sender.row][sender.index];
 
     if ([ExploreMovieView isFullScreen] || [TTVPlayVideo currentPlayingPlayVideo].player.context.isFullScreen) {
-        if ([sender.nameLabel.text rangeOfString:@"举报"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:[TTKitchen getString:kKCUGCRepostWordingShareIconTitle]].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"系统"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"邮件"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"短信"].location !=NSNotFound )
+        if ([sender.nameLabel.text rangeOfString:@"举报"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:[TTKitchen getString:kTTKUGCRepostWordingShareIconTitle]].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"系统"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"邮件"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"短信"].location !=NSNotFound )
         {
             ExploreMovieView *movieView = [ExploreMovieView currentFullScreenMovieView];
             [movieView exitFullScreen:NO completion:^(BOOL finished) {

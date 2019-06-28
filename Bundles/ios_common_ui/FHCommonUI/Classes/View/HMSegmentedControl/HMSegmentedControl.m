@@ -647,7 +647,11 @@
                 
                 if (self.selectedSegmentIndex < self.segmentWidthsArray.count) {
                     
-                    return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
+                    if (self.selectionIndicatorWidth != CGFLOAT_MIN) {
+                        return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left + ([[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorWidth) / 2, indicatorYOffset, self.selectionIndicatorWidth - (self.selectionIndicatorEdgeInsets.left + self.selectionIndicatorEdgeInsets.right), self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
+                    } else {
+                        return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
+                    }
                 }
             }
             
@@ -889,13 +893,6 @@
 
 - (void)setSelectedSegmentIndex:(NSUInteger)index animated:(BOOL)animated notify:(BOOL)notify {
     
-    if (self.isNeedNetworkCheck) {
-        if (![FHEnvContext isNetworkConnected]) {
-            [[ToastManager manager] showToast:@"网络异常"];
-            return;
-        }
-    }
-    
     _selectedSegmentIndex = index;
     [self setNeedsDisplay];
     
@@ -997,6 +994,23 @@
     }
     
     return [resultingAttrs copy];
+}
+
+- (void)setScrollValue:(CGFloat)value isDirectionLeft:(BOOL)isDirectionLeft {
+    CGFloat width = self.segmentWidth;
+    if (self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic) {
+        if(isDirectionLeft && (self.selectedSegmentIndex - 1) >= 0){
+            width = ([[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex - 1)] floatValue] + [[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex)] floatValue])/2;
+        }else if(!isDirectionLeft && (self.selectedSegmentIndex + 1) < self.segmentWidthsArray.count){
+            width = ([[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex + 1)] floatValue] + [[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex)] floatValue])/2;
+        }else{
+            width = [[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex)] floatValue];
+        }
+    }
+    CGRect frame = self.selectionIndicatorStripLayer.frame;
+    CGFloat diff = value * width;
+    frame.origin.x += diff;
+    self.selectionIndicatorStripLayer.frame = frame;
 }
 
 @end

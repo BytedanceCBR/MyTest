@@ -119,6 +119,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 +(TTHttpTask *)requestHomeCategoryMessage:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion;
 
++(JSONModel *)generateModel:(NSData *)jsonData class:(Class)class error:(NSError *__autoreleasing *)error;
+
 @end
 
 NS_ASSUME_NONNULL_END

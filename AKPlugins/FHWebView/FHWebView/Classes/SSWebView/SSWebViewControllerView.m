@@ -37,7 +37,8 @@
 //#import "TTActivityShareSequenceManager.h"
 //#import "TTVSettingsConfiguration.h"
 #import "SSCommonLogic.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
@@ -298,7 +299,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         enableShare = YES;
     }
     if (!isEmptyString(host)) { // 如果host在白名单，也可以分享
-        NSArray *array = [TTKitchen getArray:kKCUGCWhiteListOfShareHost];
+        NSArray *array = [TTKitchen getArray:kTTKUGCWhiteListOfShareHost];
         for (NSString *whiteListHost in array) {
             if ([host containsString:whiteListHost]) {
                 enableShare = YES;
@@ -455,7 +456,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     NSInteger repostType = self.repostType;
     
     if (self.isRepostWeitoutiaoFromWeb == NO
-        && [TTKitchen getBOOL:kKCUGCRepostLinkEnable]) {
+        && [TTKitchen getBOOL:kTTKUGCRepostLinkEnable]) {
         
         NSURL *curURL = _ssWebContainer.ssWebView.currentURL;
         if ([curURL.host containsString:@"mp.weixin.qq.com"]) {
@@ -502,9 +503,15 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     
     //    if (![self.backButtonView isCloseButtonShowing]) {
     [self performSelector:@selector(showCloseButton) withObject:nil afterDelay:0.1];
-    //    }
+    //    }    
     if ([self.ssWebContainer.ssWebView canGoBack] && !self.shouldDisableHistory) {
-        [self.ssWebContainer.ssWebView goBack];
+        if (self.isWebControl) {
+            [self.ssWebContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"ToutiaoJSBridge.trigger('close');"
+                                                                completionHandler:nil];
+            
+        }else{
+            [self.ssWebContainer.ssWebView goBack];
+        }
     } else {
         
         if (self.isWebControl) {

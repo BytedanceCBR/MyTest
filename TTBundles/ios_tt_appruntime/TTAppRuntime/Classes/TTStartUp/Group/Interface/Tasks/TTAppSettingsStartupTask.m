@@ -15,6 +15,9 @@
 #import "BDImageCache.h"
 #endif
 #import <BDABTestSDK/BDABTestManager.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTAppSettingsStartupTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+2);
 
 static const NSInteger kSDOptimizeCacheMaxCacheAge = 60 * 60 * 24 * 2; // 2day
 static const NSInteger kSDOptimizeCacheMaxSize = 100 * 1024 * 1024; // 100M

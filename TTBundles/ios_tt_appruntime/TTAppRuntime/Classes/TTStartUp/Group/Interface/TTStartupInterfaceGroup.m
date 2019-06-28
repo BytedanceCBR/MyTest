@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/18.
 //
 //
-
+#if 0
 #import "TTStartupInterfaceGroup.h"
 #import "TTUserInfoStartupTask.h"
 #import "TTAppAlertStartupTask.h"
@@ -113,3 +113,4 @@
 }
 
 @end
+#endif

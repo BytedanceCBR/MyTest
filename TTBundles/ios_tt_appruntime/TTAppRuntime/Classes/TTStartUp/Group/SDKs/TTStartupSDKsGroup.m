@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/16.
 //
 //
-
+#if 0
 #import "TTStartupSDKsGroup.h"
 #import "SSCommonLogic.h"
 #import "TTWeixinSDKRegister.h"
@@ -78,3 +78,4 @@
 }
 
 @end
+#endif

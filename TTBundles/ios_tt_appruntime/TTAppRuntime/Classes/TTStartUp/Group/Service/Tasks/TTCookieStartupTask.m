@@ -11,7 +11,9 @@
 #import "ExploreExtenstionDataHelper.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/TTBaseMacro.h>
+#import "TTLaunchDefine.h"
 
+DEC_TASK("TTCookieStartupTask",FHTaskTypeService,TASK_PRIORITY_HIGH+8);
 @implementation TTCookieStartupTask
 
 - (NSString *)taskIdentifier {

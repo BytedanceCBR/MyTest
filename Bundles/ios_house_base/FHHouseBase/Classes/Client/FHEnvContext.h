@@ -46,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isSendConfigFromFirstRemote;
 @property (nonatomic, assign) BOOL isRefreshFromAlertCitySwitch;
 @property (nonatomic, assign) BOOL isRefreshFromCitySwitch;
+@property (nonatomic, assign) BOOL isClickTab;
 @property (nonatomic, copy) NSString * refreshConfigRequestType;
 
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
@@ -80,6 +81,16 @@ NS_ASSUME_NONNULL_BEGIN
  判断用户选择城市和当前城市是否是同一个
  */
 + (BOOL)isSameLocCityToUserSelect;
+
+/*
+ 显示tab上的红点
+ */
++ (void)showFindTabRedDots;
+
+/*
+ 隐藏tab上的红点
+ */
++ (void)hideFindTabRedDots;
 
 /*
   app启动调用

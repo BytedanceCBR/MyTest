@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/16.
 //
 //
-
+#if 0
 #import <Foundation/Foundation.h>
 #import "NewsBaseDelegate.h"
 
@@ -14,3 +14,4 @@
 - (void)didFinishSDKsLaunchingForApplication:(UIApplication *)application WithOptions:(NSDictionary *)options;
 
 @end
+#endif

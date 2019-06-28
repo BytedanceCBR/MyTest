@@ -18,6 +18,7 @@
 
 @property(nonatomic , strong) UIControl *leftView;
 @property(nonatomic , strong) UIImageView *avatarView;
+@property(nonatomic , strong) UIImageView *identifyView;
 @property(nonatomic , strong) UILabel *nameLabel;
 @property(nonatomic , strong) UILabel *agencyLabel;
 @property(nonatomic , strong) FHLoadingButton *contactBtn;
@@ -56,6 +57,7 @@
     }];
     self.leftView.hidden = YES;
     [self.leftView addSubview:self.avatarView];
+    [self.leftView addSubview:self.identifyView];
     [self.leftView addSubview:self.nameLabel];
     [self.leftView addSubview:self.agencyLabel];
     [self.leftView addSubview:self.licenceIcon];
@@ -69,6 +71,13 @@
         make.left.mas_equalTo(avatarLeftMargin);
         make.centerY.mas_equalTo(self);
         make.width.height.mas_equalTo(42);
+    }];
+    CGFloat ratio = 0;
+    [self.identifyView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.avatarView).mas_offset(2);
+        make.centerX.mas_equalTo(self.avatarView);
+        make.height.mas_equalTo(14);
+        make.width.mas_equalTo(14 * ratio);
     }];
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
@@ -188,6 +197,10 @@
     self.imChatBtn.hidden = !showIM;
      
     [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+
+    FHDetailContactImageTagModel *tag = contactPhone.imageTag;
+    [self refreshIdentifyView:self.identifyView withUrl:tag.imageUrl];
+    
     NSString *realtorName = contactPhone.realtorName;
     if (contactPhone.realtorName.length > 0) {
         if (contactPhone.realtorName.length > 4) {
@@ -266,6 +279,30 @@
     }
 }
 
+- (void)refreshIdentifyView:(UIImageView *)identifyView withUrl:(NSString *)imageUrl
+{
+    if (!identifyView) {
+        return;
+    }
+    if (imageUrl.length > 0) {
+        [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:imageUrl] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+            if (!error && image) {
+                identifyView.image = image;
+                CGFloat ratio = 0;
+                if (image.size.height > 0) {
+                    ratio = image.size.width / image.size.height;
+                }
+                [identifyView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(14 * ratio);
+                }];
+            }
+        }];
+        identifyView.hidden = NO;
+    }else {
+        identifyView.hidden = YES;
+    }
+}
+
 - (void)startLoading
 {
     [self.contactBtn startLoading];
@@ -293,6 +330,14 @@
         _avatarView.layer.masksToBounds = YES;
     }
     return _avatarView;
+}
+
+- (UIImageView *)identifyView
+{
+    if (!_identifyView) {
+        _identifyView = [[UIImageView alloc]init];
+    }
+    return _identifyView;
 }
 
 - (UILabel *)nameLabel

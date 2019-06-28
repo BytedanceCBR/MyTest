@@ -133,6 +133,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *guessSearchType;
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, copy , nullable) NSString *extinfo;
+@property (nonatomic, assign ) NSInteger type;
+@property (nonatomic, copy , nullable) NSString *id;
 
 @end
 

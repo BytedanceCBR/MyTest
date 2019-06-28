@@ -11,7 +11,7 @@
 
 #import "SSViewControllerBase.h"
 
-@class FRPublishPostSearchHashtagStructModel;
+@class TTUGCHashtagModel;
 
 /**
  * Hashtag 推荐排序策略
@@ -27,7 +27,7 @@ typedef NS_ENUM(NSUInteger, TTHashtagSuggestOption) {
 
 - (void)searchHashtagTableViewWillDismiss;
 - (void)searchHashtagTableViewDidDismiss;
-- (void)searchHashtagTableViewDidSelectedHashtag:(FRPublishPostSearchHashtagStructModel *)hashtagModel;
+- (void)searchHashtagTableViewDidSelectedHashtag:(TTUGCHashtagModel *)hashtagModel;
 
 @end
 
@@ -36,5 +36,6 @@ typedef NS_ENUM(NSUInteger, TTHashtagSuggestOption) {
 
 @property (nonatomic, weak) id <TTUGCSearchHashtagTableViewDelegate> delegate;
 @property (nonatomic, assign) TTHashtagSuggestOption hashtagSuggestOption;
+@property (nonatomic, assign) BOOL showCanBeCreatedHashtag; // 是否展示可被创建的话题
 
 @end

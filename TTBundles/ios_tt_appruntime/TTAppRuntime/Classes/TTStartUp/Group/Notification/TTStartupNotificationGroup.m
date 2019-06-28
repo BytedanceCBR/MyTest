@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/18.
 //
 //
-
+#if 0
 #import "TTStartupNotificationGroup.h"
 #import "TTStartupNotificationTask.h"
 
@@ -38,3 +38,4 @@
 }
 
 @end
+#endif

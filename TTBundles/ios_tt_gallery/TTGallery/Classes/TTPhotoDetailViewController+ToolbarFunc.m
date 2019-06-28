@@ -36,7 +36,8 @@
 //#import "TTRepostOriginModels.h"
 //#import <TTRepostServiceProtocol.h>
 //#import "TTRepostService.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import "TTShareConstants.h"
 #import <TTActivityContentItemProtocol.h>
 #import <TTWechatTimelineContentItem.h>
