@@ -21,6 +21,7 @@
 #import "FHMessageNotificationTipsManager.h"
 #import "FHUnreadMsgModel.h"
 #import "FHUGCConfig.h"
+#import "ExploreLogicSetting.h"
 
 @interface FHCommunityViewController ()
 
@@ -65,6 +66,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
+    //tabbar双击的通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
 }
 
@@ -287,6 +290,10 @@
             make.height.mas_equalTo(0);
         }];
   }
+}
+
+- (void)refreshData {
+    [self.viewModel refreshCell];
 }
 
 //进入搜索页

@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showUGC:(BOOL)isShow;
 
+- (void)refreshCell;
+
 @end
 
 NS_ASSUME_NONNULL_END

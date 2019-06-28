@@ -19,6 +19,8 @@ static NSString *const kFHUGCFollowNotification = @"k_fh_ugc_follow_finish";
 static NSString *const kFHUGCPostSuccessNotification = @"k_fh_ugc_post_finish";
 // 删除帖子成功通知 数放在userinfo的：social_group_id
 static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
+// 举报帖子成功通知 数放在userinfo的：cellModel
+static NSString *const kFHUGCReportPostNotification = @"k_fh_ugc_report_post_finish";
 
 @interface FHUGCConfig : NSObject
 

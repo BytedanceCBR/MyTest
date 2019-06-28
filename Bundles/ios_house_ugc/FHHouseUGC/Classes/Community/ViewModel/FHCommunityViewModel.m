@@ -110,6 +110,13 @@
     }
 }
 
+- (void)refreshCell {
+    if([self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
+        FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
+        [cell refreshData];
+    }
+}
+
 
 #pragma mark - UICollectionViewDelegate
 

@@ -52,10 +52,6 @@
 
 - (void)initViews {
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
-    __weak typeof(self) wself = self;
-    _userInfoView.reportSuccessBlock = ^{
-        [wself deleteCell];
-    };
     [self.contentView addSubview:_userInfoView];
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];

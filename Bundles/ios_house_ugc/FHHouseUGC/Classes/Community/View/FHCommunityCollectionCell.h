@@ -14,7 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , assign) FHCommunityCollectionCellType type;
 
--(UIViewController *)contentViewController;
+- (UIViewController *)contentViewController;
+
+- (void)refreshData;
 
 @end
 

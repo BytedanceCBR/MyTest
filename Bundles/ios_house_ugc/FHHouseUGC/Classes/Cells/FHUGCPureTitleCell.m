@@ -52,9 +52,6 @@
     __weak typeof(self) wself = self;
     
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
-    _userInfoView.reportSuccessBlock = ^{
-        [wself deleteCell];
-    };
     [self.contentView addSubview:_userInfoView];
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];

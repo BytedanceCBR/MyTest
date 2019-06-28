@@ -9,7 +9,6 @@
 #import "FHHotTopicView.h"
 #import "FHInterestCommunityView.h"
 #import "UIColor+Theme.h"
-#import "FHCommunityFeedListController.h"
 #import "FHLocManager.h"
 #import "TTThemedAlertController.h"
 #import "TTUIResponderHelper.h"
@@ -17,7 +16,6 @@
 
 @interface FHNearbyViewController ()
 
-@property(nonatomic ,strong) FHCommunityFeedListController *feedVC;
 @property(nonatomic, strong) CLLocation *currentLocaton;
 @property(nonatomic, assign) NSTimeInterval lastRequestTime;
 
@@ -84,12 +82,12 @@
 
 - (void)showLocationGuideAlert {
     __weak typeof(self) wself = self;
-    TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"无定位权限，请前往系统设置开启" message:nil preferredType:TTThemedAlertControllerTypeAlert];
-    [alertVC addActionWithGrayTitle:@"手动选择" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+    TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"你还没有开启定位服务哦" message:@"请在手机设置中开启定位服务，获取更多周边小区趣事" preferredType:TTThemedAlertControllerTypeAlert];
+    [alertVC addActionWithGrayTitle:@"我知道了" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
         [wself initView];
     }];
     
-    [alertVC addActionWithTitle:@"前往设置" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+    [alertVC addActionWithTitle:@"开启定位" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         NSURL *jumpUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
         
         if ([[UIApplication sharedApplication] canOpenURL:jumpUrl]) {

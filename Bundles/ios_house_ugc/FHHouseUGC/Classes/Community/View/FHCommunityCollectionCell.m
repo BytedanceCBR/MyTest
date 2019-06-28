@@ -65,9 +65,18 @@
     }
 }
 
--(UIViewController *)contentViewController
-{
+- (UIViewController *)contentViewController {
     return _vc;
+}
+
+- (void)refreshData {
+    if([self.vc isKindOfClass:[FHNearbyViewController class]]){
+        FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
+        [vc.feedVC scrollToTopAndRefresh];
+    }else if([self.vc isKindOfClass:[FHMyJoinViewController class]]){
+        FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
+        [vc.feedListVC scrollToTopAndRefresh];
+    }
 }
 
 @end

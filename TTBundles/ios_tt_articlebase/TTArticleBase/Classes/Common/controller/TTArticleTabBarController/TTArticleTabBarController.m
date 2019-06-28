@@ -1211,6 +1211,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         else if([[self currentTabIdentifier] isEqualToString:kTTTabHTSTabKey]) {
             [self keepTapShortVideoTab];
         }
+        else if ([[self currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFindTabbarKeepClickedNotification object:self userInfo:nil];
+        }
 //        else if ([[self currentTabIdentifier] isEqualToString:kAKTabActivityTabKey]) {
 //            [[AKActivityTabManager sharedManager] reloadActivityTabViewController];
 //        }

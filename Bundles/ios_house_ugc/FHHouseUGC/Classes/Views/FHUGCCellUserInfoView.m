@@ -110,6 +110,12 @@
         if(self.reportSuccessBlock){
             self.reportSuccessBlock();
         }
+    
+        NSDictionary *dic = @{
+                              @"cellModel":self.cellModel,
+                              };
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCReportPostNotification object:nil userInfo:dic];
+        
     }else if(view.selectdWord.type == FHFeedOperationWordTypeDelete){
         //二次弹窗提醒
         [self showDeleteAlert];
