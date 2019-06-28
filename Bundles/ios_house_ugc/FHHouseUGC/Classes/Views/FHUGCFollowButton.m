@@ -120,7 +120,6 @@
 
 - (void)startLoading {
     self.isLoading = YES;
-    self.enabled = NO;
     [self setTitle:@"" forState:UIControlStateNormal];
     
     CABasicAnimation *rotationAnimation = [[CABasicAnimation alloc] init];
@@ -136,7 +135,6 @@
 - (void)stopLoading {
     if(self.isLoading){
         self.isLoading = NO;
-        self.enabled = YES;
         [self setTitle:self.titleStr forState:UIControlStateNormal];
         _loadingAnimateView.hidden = YES;
         [_loadingAnimateView.layer removeAllAnimations];
@@ -155,7 +153,9 @@
     if(isEmptyString(self.groupId)){
         return;
     }
-    
+    if (self.isLoading) {
+        return;
+    }
     [self startLoading];
     __weak typeof(self) wSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
