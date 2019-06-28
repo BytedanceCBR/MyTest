@@ -58,6 +58,7 @@
     [super requestData:isHead first:isFirst];
     
     if(isFirst){
+        [self.dataList removeAllObjects];
         [self.viewController startLoading];
     }
     

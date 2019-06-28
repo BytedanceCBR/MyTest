@@ -18,6 +18,7 @@
 #import <TTRoute.h>
 #import "TTAccountManager.h"
 #import "TTAccount+Multicast.h"
+#import "FHEnvContext.h"
 
 @interface FHCommunityFeedListController ()
 
@@ -145,7 +146,12 @@
     }
     
     self.viewModel = viewModel;
-    [self startLoadData];
+    //切换开关
+    WeakSelf;
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        StrongSelf;
+        self.needReloadData = YES;
+    }];
 }
 
 - (void)startLoadData {
