@@ -166,7 +166,7 @@
 }
 
 - (void)scrollToTopAndRefresh {
-    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO]; 
     [self startLoadData];
 }
 

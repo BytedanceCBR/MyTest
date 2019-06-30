@@ -93,8 +93,10 @@
         
         if (error) {
             //TODO: show handle error
-            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-            wself.viewController.showenRetryButton = YES;
+            if(error.code != -999){
+                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+                wself.viewController.showenRetryButton = YES;
+            }
             return;
         }
         

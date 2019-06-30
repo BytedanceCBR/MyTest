@@ -51,7 +51,7 @@
 
 - (void)viewWillAppear {
     if(!self.isFirstLoad){
-        [self initCell];
+        [self initCell:@"default"];
     }
 }
 
@@ -97,15 +97,16 @@
 - (void)segmentViewIndexChanged:(NSInteger)index {
     self.currentTabIndex = index;
     
-    [self initCell];
+    [self initCell:@"click"];
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
     [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
 }
 
-- (void)initCell {
+- (void)initCell:(NSString *)enterType {
     if([self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
         FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
+        cell.enterType = enterType;
         cell.type = [self.dataArray[self.currentTabIndex] integerValue];
     }
 }
@@ -144,7 +145,7 @@
     }
     
     if(row == self.currentTabIndex){
-        [self initCell];
+        [self initCell:@"default"];
         [self.viewController addChildViewController:cell.contentViewController];
     }
     
@@ -200,7 +201,7 @@
         return;
     }
     
-    [self initCell];
+    [self initCell:@"flip"];
 }
 
 @end

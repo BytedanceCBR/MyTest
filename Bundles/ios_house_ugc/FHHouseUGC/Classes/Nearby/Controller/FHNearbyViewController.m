@@ -13,6 +13,8 @@
 #import "TTThemedAlertController.h"
 #import "TTUIResponderHelper.h"
 #import "TTReachability.h"
+#import "UIViewController+Track.h"
+#import "FHUserTracker.h"
 
 @interface FHNearbyViewController ()
 
@@ -26,6 +28,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.ttTrackStayEnable = YES;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -48,6 +51,13 @@
     
     [self loadFeedListView];
     [self.feedVC viewWillAppear];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [self addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
 }
 
 - (void)initView {
@@ -101,5 +111,24 @@
     }
 }
 
+- (void)addEnterCategoryLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    
+    TRACK_EVENT(@"enter_category", tracerDict);
+}
+
+- (void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    NSTimeInterval duration = stayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    TRACK_EVENT(@"stay_category", tracerDict);
+}
+
+- (void)categoryName {
+    
+}
 
 @end
