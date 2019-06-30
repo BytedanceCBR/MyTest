@@ -272,6 +272,13 @@ static NSInteger const kMaxPostImageCount = 9;
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];
     [self.selectView addGestureRecognizer:tapGestureRecognizer];
     y += 44;
+    NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+    tracerDict[@"element_type"] = @"select_like_publisher_neighborhood";
+    if (self.selectGroupId.length > 0) {
+        tracerDict[@"group_id"] = self.selectGroupId;
+    }
+    [FHUserTracker writeEvent:@"element_show" params:tracerDict];
+    
     
     //Input view
     self.inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(kLeftPadding - 5, y + kInputViewTopPadding, self.view.width - kLeftPadding - kRightPadding + 10.f, kTextViewHeight)];
@@ -374,6 +381,11 @@ static NSInteger const kMaxPostImageCount = 9;
     if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
         return;
     }
+    
+    NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+    tracerDict[@"click_position"] = @"select_like_publisher_neighborhood";
+    [FHUserTracker writeEvent:@"click_like_publisher_neighborhood" params:tracerDict];
+    
     self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
     [self endEditing];
     NSMutableDictionary *dict = @{}.mutableCopy;
@@ -384,8 +396,8 @@ static NSInteger const kMaxPostImageCount = 9;
     dict[@"ugc_delegate"] = ugcDelegateTable;
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_type"] = @"click";
-    traceParam[@"enter_from"] = @"my_join_list";
-    traceParam[@"element_from"] = @"my_joined_neighborhood";
+    traceParam[@"enter_from"] = @"feed_publisher";
+    traceParam[@"element_from"] = @"select_like_publisher_neighborhood";
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
