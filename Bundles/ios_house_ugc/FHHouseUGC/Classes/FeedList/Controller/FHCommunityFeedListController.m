@@ -19,6 +19,7 @@
 #import "TTAccountManager.h"
 #import "TTAccount+Multicast.h"
 #import "FHEnvContext.h"
+#import "FHUserTracker.h"
 
 @interface FHCommunityFeedListController ()
 
@@ -213,8 +214,26 @@
 
 - (void)gotoPostVC {
     // 跳转到发布器
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"element_type"] = @"feed_publisher";
+    NSString *page_type = @"nearby_list";
+    if (self.listType == FHCommunityFeedListTypeMyJoin) {
+        page_type = @"my_join_list";
+    } else  if (self.listType == FHCommunityFeedListTypeNearby) {
+        page_type = @"nearby_list";
+    }
+    tracerDict[@"page_type"] = page_type;// “附近”：’nearby_list‘；“我加入的”：’my_join_list‘；'小区圈子详情页‘：community_group_detail‘
+    [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
+    
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    traceParam[@"page_type"] = @"feed_publisher";
+    traceParam[@"enter_from"] = page_type;
+    dict[TRACER_KEY] = traceParam;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
     NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];
-    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:nil];
+    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
 }
 
 #pragma mark - show notify
