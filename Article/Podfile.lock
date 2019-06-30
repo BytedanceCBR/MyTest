@@ -6,13 +6,11 @@ PODS:
     - AFNetworking/Reachability (= 2.5.1.1-binary)
     - AFNetworking/Security (= 2.5.1.1-binary)
     - AFNetworking/Serialization (= 2.5.1.1-binary)
-    - AFNetworking/UIKit (= 2.5.1.1-binary)
   - AFNetworking/NSURLConnection (2.5.1.1-binary)
   - AFNetworking/NSURLSession (2.5.1.1-binary)
   - AFNetworking/Reachability (2.5.1.1-binary)
   - AFNetworking/Security (2.5.1.1-binary)
   - AFNetworking/Serialization (2.5.1.1-binary)
-  - AFNetworking/UIKit (2.5.1.1-binary)
   - AKCommentPlugin (0.1.0)
   - AKShareServicePlugin (0.1.0)
   - AKWDPlugin (0.1.0)
@@ -979,7 +977,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
-  AFNetworking: ae73845b1571323685452375dc66d8e98feefa67
+  AFNetworking: fac3e1b64a9a165c0c7ac9de2d62660b3e875c7e
   AKCommentPlugin: 5ad084d3f5a4e3b0da26477aedd952dc0d4f1634
   AKShareServicePlugin: 7f4273d1d25b641a6d3c97537d6c57e8ceb999fc
   AKWDPlugin: 578ff2a20b6d16a523e2b1e96512e77e5c6b6fd3
@@ -1058,7 +1056,7 @@ SPEC CHECKSUMS:
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
   RSSwizzle: 9b7cf78908bc6b249f1403926c168f730f840e91
-  RXCollections: fc5eb6c41b5a3646601e6a01c1ee444c354a9bfc
+  RXCollections: ef46a1c3b1f25711117ece94c48d9beae9f143a6
   SDWebImage: abd373dadf531cf5d1738f6a8e9487f7f4a12f14
   SecGuard: 0c9ebebd0992c9efd94a3a026832eb721ae0cc15
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
@@ -1159,6 +1157,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 6e4945a2d9b74accb5e69990c8e455044aec88ce
+PODFILE CHECKSUM: 87c3cbb82c4ebba9e7418c45a5246710f792b9f7
 
 COCOAPODS: 1.4.0
