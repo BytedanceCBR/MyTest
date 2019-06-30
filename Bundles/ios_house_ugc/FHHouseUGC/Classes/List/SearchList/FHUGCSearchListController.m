@@ -271,7 +271,16 @@
     NSInteger row = indexPath.row;
     if (row >= 0 && row < self.items.count) {
         cell.highlightedText = self.searchText;
-        id data = self.items[row];
+        FHUGCScialGroupDataModel* data = self.items[row];
+        // 埋点
+        NSMutableDictionary *tracerDic = @{}.mutableCopy;
+        tracerDic[@"card_type"] = @"left_pic";
+        tracerDic[@"page_type"] = @"community_search";
+        tracerDic[@"enter_from"] = @"neighborhood_tab";
+        tracerDic[@"rank"] = @(row);
+        tracerDic[@"log_pb"] = data.logPb ?: @"be_null";
+        cell.tracerDic = tracerDic;
+        // 刷新数据
         [cell refreshWithData:data];
     }
     

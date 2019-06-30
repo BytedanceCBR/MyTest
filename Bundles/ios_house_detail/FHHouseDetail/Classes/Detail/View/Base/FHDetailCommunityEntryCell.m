@@ -198,4 +198,8 @@
     }
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType
+{
+    return @"community_group";
+}
 @end

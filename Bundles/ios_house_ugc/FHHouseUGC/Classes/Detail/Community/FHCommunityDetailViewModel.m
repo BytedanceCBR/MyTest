@@ -66,7 +66,7 @@
 
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
     self.headerView.followButton.groupId = self.viewController.communityId;
-    self.headerView.followButton.traceDict = [self followButtonTraceDict];
+    self.headerView.followButton.tracerDic = [self followButtonTraceDict];
 
     //随机一张背景图
     NSInteger randomImageIndex =[self.viewController.communityId integerValue] % 4;
@@ -99,7 +99,7 @@
     self.rightBtn.backgroundColor = [UIColor themeWhite];
     self.rightBtn.groupId = self.viewController.communityId;
     self.rightBtn.hidden = YES;
-    self.rightBtn.traceDict = [self followButtonTraceDict];
+    self.rightBtn.tracerDic = [self followButtonTraceDict];
 
     self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -258,9 +258,20 @@
 
 - (void)gotoPostVC {
     // 跳转发布器
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"element_type"] = @"feed_publisher";
+    tracerDict[@"page_type"] = @"community_group_detail";
+    [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
+    
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    traceParam[@"page_type"] = @"feed_publisher";
+    traceParam[@"enter_from"] = @"community_group_detail";
+    
     NSMutableDictionary *dic = [NSMutableDictionary new];
     dic[@"select_group_id"] = self.data.socialGroupId;
     dic[@"select_group_name"] = self.data.socialGroupName;
+    dic[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
     NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
     [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];

@@ -15,6 +15,7 @@
 #import "ToastManager.h"
 #import "TTBaseMacro.h"
 #import "TTUIResponderHelper.h"
+#import "FHUserTracker.h"
 
 @interface FHUGCFollowButton ()
 
@@ -157,10 +158,13 @@
         return;
     }
     [self startLoading];
-//    __weak typeof(self) wSelf = self;
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [wSelf requestData];
-//    });
+    if (self.followed) {
+        // 取消关注埋点
+        [self unFollowTracer];
+    } else {
+        // 关注埋点
+        [self followTracer];
+    }
     [self requestData];
 }
 
@@ -192,6 +196,7 @@
 }
 
 - (void)showDeleteAlert {
+    [self cancelJoinPopupShow];
     __weak typeof(self) wself = self;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确认要取消关注吗？"
                                                                    message:nil
@@ -200,6 +205,7 @@
                                                            style:UIAlertActionStyleCancel
                                                          handler:^(UIAlertAction * _Nonnull action) {
                                                              // 点击取消按钮，调用此block
+                                                             [wself cancelJoinPopupClickByConfirm:NO];
                                                          }];
     [alert addAction:cancelAction];
     
@@ -208,10 +214,55 @@
                                                           handler:^(UIAlertAction * _Nonnull action) {
                                                               // 点击按钮，调用此block
                                                               [wself doFollow];
+                                                              [wself cancelJoinPopupClickByConfirm:YES];
                                                           }];
     [alert addAction:defaultAction];
     [[TTUIResponderHelper visibleTopViewController] presentViewController:alert animated:YES completion:nil];
 }
 
+- (void)cancelJoinPopupClickByConfirm:(BOOL)isConfirm {
+    NSMutableDictionary *tracerDict = self.tracerDic.mutableCopy;
+    NSString *page_type = self.tracerDic[@"page_type"];
+    NSString *enter_from = self.tracerDic[@"enter_from"];
+    tracerDict[@"page_type"] = @"join_community_grouppopup";
+    tracerDict[@"enter_from"] = page_type ?: @"be_null";
+    tracerDict[@"origin_from"] = enter_from ?: @"be_null";
+    [tracerDict removeObjectForKey:@"enter_type"];
+    [tracerDict removeObjectForKey:@"rank"];
+    if (isConfirm) {
+        tracerDict[@"click_position"] = @"confirm";
+    } else {
+        tracerDict[@"click_position"] = @"cancel";
+    }
+    
+    [FHUserTracker writeEvent:@"cancel_join_popup_click" params:tracerDict];
+}
+
+- (void)cancelJoinPopupShow {
+    NSMutableDictionary *tracerDict = self.tracerDic.mutableCopy;
+    NSString *page_type = self.tracerDic[@"page_type"];
+    NSString *enter_from = self.tracerDic[@"enter_from"];
+    tracerDict[@"page_type"] = @"join_community_grouppopup";
+    tracerDict[@"enter_from"] = page_type ?: @"be_null";
+    tracerDict[@"origin_from"] = enter_from ?: @"be_null";
+    [tracerDict removeObjectForKey:@"enter_type"];
+    [tracerDict removeObjectForKey:@"rank"];
+    
+    [FHUserTracker writeEvent:@"cancel_join_popup_show" params:tracerDict];
+}
+
+// 关注埋点
+- (void)followTracer {
+    NSMutableDictionary *tracerDict = self.tracerDic.mutableCopy;
+    tracerDict[@"click_position"] = @"join_like";
+    [FHUserTracker writeEvent:@"click_join" params:tracerDict];
+}
+
+// 取消关注埋点
+- (void)unFollowTracer {
+    NSMutableDictionary *tracerDict = self.tracerDic.mutableCopy;
+    tracerDict[@"click_position"] = @"cancel_like";
+    [FHUserTracker writeEvent:@"click_unjoin" params:tracerDict];
+}
 
 @end
