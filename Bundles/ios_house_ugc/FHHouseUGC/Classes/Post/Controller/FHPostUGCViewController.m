@@ -57,8 +57,6 @@ static NSString * const kPostTopicEventName = @"topic_post";
 static NSString * const kUserInputTelephoneKey = @"userInputTelephoneKey";
 static NSInteger const kTitleCharactersLimit = 20;
 
-NSString * const kFHUGCForumPostThreadFinish = @"kFHUGCForumPostThreadFinish";
-
 static NSInteger const kMaxPostImageCount = 9;
 
 @interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate,FRPostThreadAddLocationViewDelegate,FHUGCFollowListDelegate>

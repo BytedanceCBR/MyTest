@@ -40,6 +40,10 @@
     return self;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)configTableView {
     self.tableView.delegate = self;
     self.tableView.dataSource = self;

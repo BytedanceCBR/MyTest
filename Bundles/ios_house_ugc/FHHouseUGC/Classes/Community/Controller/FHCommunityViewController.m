@@ -22,6 +22,7 @@
 #import "FHUnreadMsgModel.h"
 #import "FHUGCConfig.h"
 #import "ExploreLogicSetting.h"
+#import "FHPostUGCViewController.h"
 
 @interface FHCommunityViewController ()
 
@@ -68,6 +69,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
     //tabbar双击的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeMyJoinTab) name:kFHUGCForumPostThreadFinish object:nil];
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
 }
 
@@ -295,6 +297,12 @@
 
 - (void)refreshData {
     [self.viewModel refreshCell];
+}
+
+- (void)changeMyJoinTab {
+    if(self.navigationController.viewControllers.count <= 1){
+        [self.viewModel changeMyJoinTab];
+    }
 }
 
 //进入搜索页

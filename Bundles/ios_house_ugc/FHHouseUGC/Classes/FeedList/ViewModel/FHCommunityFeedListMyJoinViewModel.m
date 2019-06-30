@@ -46,12 +46,9 @@
 
 - (void)viewWillAppear {
     [super viewWillAppear];
-    
-    
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -75,6 +72,7 @@
 
 // 发帖成功，插入数据
 - (void)postThreadSuccess:(NSNotification *)noti {
+    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO]; 
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         NSString *social_group_id = userInfo[@"social_group_id"];
@@ -94,6 +92,8 @@
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
                                 if (cellModel) {
+                                    //去重逻辑
+                                    [self removeDuplicaionModel:cellModel.groupId];
                                     if (self.dataList.count == 0) {
                                         [self.dataList addObject:cellModel];
                                     } else {
