@@ -6,8 +6,6 @@
 //
 
 #import "FHNearbyViewController.h"
-#import "FHHotTopicView.h"
-#import "FHInterestCommunityView.h"
 #import "UIColor+Theme.h"
 #import "FHLocManager.h"
 #import "TTThemedAlertController.h"
