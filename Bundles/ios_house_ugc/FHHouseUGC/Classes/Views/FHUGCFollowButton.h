@@ -19,6 +19,8 @@ typedef NS_ENUM(NSInteger , FHUGCFollowButtonStyle) {
 
 @property (nonatomic, assign) BOOL followed;// 默认是 NO
 @property (nonatomic, strong) NSString *groupId;// 需要关注的小区id
+/* page_type/ enter_from /enter_type /rank/log_pb */
+@property (nonatomic, copy)     NSDictionary       *tracerDic;
 
 @property (nonatomic, copy) void(^followedSuccess)(BOOL isSuccess,BOOL isFollow);
 

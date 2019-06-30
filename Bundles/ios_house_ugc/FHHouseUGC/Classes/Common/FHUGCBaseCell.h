@@ -47,6 +47,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , weak) id<FHUGCBaseCellDelegate> delegate;
 
+// 当前cell所需基础埋点数据，更新refreshWithData的时候赋值
+@property (nonatomic, copy)     NSDictionary       *tracerDic;
+
 @end
 
 // FHUGCBaseCollectionCell
