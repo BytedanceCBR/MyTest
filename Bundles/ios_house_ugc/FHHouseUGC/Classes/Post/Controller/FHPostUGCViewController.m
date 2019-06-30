@@ -41,6 +41,7 @@
 #import "FHUGCFollowListController.h"
 #import "TTCategoryDefine.h"
 #import "ToastManager.h"
+#import "FHUserTracker.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -137,7 +138,7 @@ static NSInteger const kMaxPostImageCount = 9;
                 self.selectGroupId = nil;
                 self.selectGroupName = nil;
             }
-            
+            self.trackDict = [self.tracerDict copy];
             // 添加google地图注册
             [[TTLocationManager sharedManager] registerReverseGeocoder:[TTGoogleMapGeocoder sharedGeocoder] forKey:NSStringFromClass([TTGoogleMapGeocoder class])];
         }
@@ -547,13 +548,24 @@ static NSInteger const kMaxPostImageCount = 9;
             }];
             [alertController showFrom:self animated:YES];
         } else {
+            // 弹窗埋点
+            NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+            tracerDict[@"enter_type"] = @"click";
+            [FHUserTracker writeEvent:@"publisher_cancel_popup_show" params:tracerDict];
+            
             TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"编辑未完成" message:@"退出后编辑的内容将不被保存" preferredType:TTThemedAlertControllerTypeAlert];
             WeakSelf;
             [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
                 StrongSelf;
+                tracerDict[@"click_position"] = @"confirm";
+                [FHUserTracker writeEvent:@"publisher_cancel_popup_click" params:tracerDict];
                 [self postFinished:NO];
             }];
-            [alertController addActionWithTitle:NSLocalizedString(@"继续编辑", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:nil];
+            [alertController addActionWithTitle:NSLocalizedString(@"继续编辑", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+                StrongSelf;
+                tracerDict[@"click_position"] = @"cancel";
+                [FHUserTracker writeEvent:@"publisher_cancel_popup_click" params:tracerDict];
+            }];
             [alertController showFrom:self animated:YES];
         }
     }
@@ -721,6 +733,10 @@ static NSInteger const kMaxPostImageCount = 9;
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionCancelledNotification
                                                             object:nil
                                                           userInfo:nil];
+        // 取消埋点
+        NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+        tracerDict[@"click_position"] = @"publisher_cancel";
+        [FHUserTracker writeEvent:@"click_options" params:tracerDict];
     }
 
     // 发帖跳关注频道
