@@ -57,7 +57,7 @@ static NSString * const kPostTopicEventName = @"topic_post";
 static NSString * const kUserInputTelephoneKey = @"userInputTelephoneKey";
 static NSInteger const kTitleCharactersLimit = 20;
 
-NSString * const kForumPostThreadFinish = @"ForumPostThreadFinish";
+NSString * const kFHUGCForumPostThreadFinish = @"kFHUGCForumPostThreadFinish";
 
 static NSInteger const kMaxPostImageCount = 9;
 
@@ -716,7 +716,7 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)postFinished:(BOOL)hasSent task:(TTPostThreadTask *)task {
     [self clearDraft];
     if (hasSent && !isEmptyString(self.cid)) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kForumPostThreadFinish object:nil userInfo:@{@"cid" : self.cid}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCForumPostThreadFinish object:nil userInfo:@{@"cid" : self.cid}];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionCancelledNotification
                                                             object:nil
