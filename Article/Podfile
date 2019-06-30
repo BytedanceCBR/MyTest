@@ -270,8 +270,8 @@ def appPods
     #-----头条网络业务库------
     pod_binary 'TTNetBusiness', '0.0.10'
 
-    #-----授权----
-    pod 'TTPushAuthorizationManager', :path => '../AKPlugins/AKPushAuthorizationManager', :inhibit_warnings => false
+    #-----授权管理----
+    pod 'FHPushAuthorizationManager','0.1.2'
     
     #----头条Settihngs----
 #    pod_binary 'TTSettingsManager', '0.4.1'

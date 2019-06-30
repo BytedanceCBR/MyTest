@@ -88,6 +88,7 @@ PODS:
   - FHHouseTrend (0.1.0)
   - FHHouseUGC (0.1.0)
   - FHMapSearch (0.1.0)
+  - FHPushAuthorizationManager (0.1.2)
   - FHRNKit (0.1.0)
   - FHWebView (0.1.0)
   - FLAnimatedImage (1.0.12.1-binary)
@@ -421,7 +422,6 @@ PODS:
   - TTPlayerSDK (2.9.9.10)
   - TTPostBase (0.1.4)
   - TTPreloaderSDK (1.4.20-rc.0)
-  - TTPushAuthorizationManager (0.1.3)
   - TTPushManager (0.0.13.4)
   - TTPushSDK (0.1.1.1-binary)
   - TTReachability (0.5.1.1-binary)
@@ -594,6 +594,7 @@ DEPENDENCIES:
   - FHHouseTrend (from `../Bundles/ios_house_trend`)
   - FHHouseUGC (from `../Bundles/ios_house_ugc`)
   - FHMapSearch (from `../Bundles/ios_map_search`)
+  - FHPushAuthorizationManager (= 0.1.2)
   - FHRNKit (from `../Bundles/ios_common_rn`)
   - FHWebView (from `../AKPlugins/FHWebView`)
   - FLAnimatedImage (= 1.0.12.1-binary)
@@ -765,7 +766,6 @@ DEPENDENCIES:
   - TTPlayerSDK (= 2.9.9.10)
   - TTPostBase (from `../AKPlugins/TTPostBase`)
   - TTPreloaderSDK (= 1.4.20-rc.0)
-  - TTPushAuthorizationManager (from `../AKPlugins/AKPushAuthorizationManager`)
   - TTPushManager (= 0.0.13.4)
   - TTPushSDK (= 0.1.1.1-binary)
   - TTReachability (= 0.5.1.1-binary)
@@ -905,8 +905,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/AKPlatformUIModel
   TTPostBase:
     :path: ../AKPlugins/TTPostBase
-  TTPushAuthorizationManager:
-    :path: ../AKPlugins/AKPushAuthorizationManager
   TTRoute:
     :branch: array_type_query
     :git: git@code.byted.org:TTIOS/tt_pods_route.git
@@ -991,6 +989,7 @@ SPEC CHECKSUMS:
   FHHouseTrend: feb4c9736617882d2bd7181262e6a3e2d4ebad4f
   FHHouseUGC: e29aa4a9f3170024b600f1cb8e5b8c6ed2e40400
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
+  FHPushAuthorizationManager: e92e4fa7b03b0acbb4d369c1133349b0c27d557f
   FHRNKit: b8966b198eb601696630a3fd4bc72aac277258be
   FHWebView: 1c354474ccc25e8a56b77e34b7b3a52bb4c6e414
   FLAnimatedImage: c103d911f434514c39961a5eed4c0e29c6cdae48
@@ -1083,7 +1082,6 @@ SPEC CHECKSUMS:
   TTPlayerSDK: 64564c57c01b3448059203e9fe48d6d07520d641
   TTPostBase: 91071b89ed5d95c7ac3d96354a31c65d77a6c94e
   TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
-  TTPushAuthorizationManager: 97925f80e95c63085f31471d5faa744261a0b5f2
   TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
   TTPushSDK: 3302f3e57c39cf8e14233769b28cb07d5f403966
   TTReachability: 2ccada0bc62de6ad2c8d9cb86b843ecb6b24ccfc
@@ -1126,6 +1124,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 9206a0b4a66794cb210f62a266937550f3692870
+PODFILE CHECKSUM: 9ea746625a48c3582031f790be3795bcd03d85c5
 
 COCOAPODS: 1.4.0
