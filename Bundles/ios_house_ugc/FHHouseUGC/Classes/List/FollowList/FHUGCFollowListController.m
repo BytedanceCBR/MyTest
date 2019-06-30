@@ -19,6 +19,7 @@
 #import "TTDeviceHelper.h"
 #import "FHUGCConfig.h"
 #import "FHUGCFollowListCell.h"
+#import "UIViewController+Track.h"
 
 @interface FHUGCFollowListController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -43,8 +44,23 @@
         }
         NSHashTable<FHUGCFollowListDelegate> *ugc_delegate = paramObj.allParams[@"ugc_delegate"];
         self.ugc_delegate = ugc_delegate.anyObject;
+        // 埋点
+        self.tracerDict[@"category_name"] = [self categoryName];
+        
+        self.ttTrackStayEnable = YES;
     }
     return self;
+}
+
+- (NSString *)categoryName
+{
+    if (self.vcType == FHUGCFollowVCTypeList) {
+        return @"my_joined_neighborhood_list";
+    }else if (self.vcType == FHUGCFollowVCTypeSelectList) {
+        // 选择小区列表
+        return @"my_joined_neighborhood_list";
+    }
+    return @"my_joined_neighborhood_list";
 }
 
 - (void)dealloc
@@ -61,6 +77,8 @@
     [self setupData];
     [self startLoadData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFollowDataFinished:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    // 埋点
+    [self addEnterCategoryLog];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -219,6 +237,54 @@
     } else {
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayCategoryLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+#pragma mark - Tracer
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self addStayCategoryLog];
+}
+
+-(void)addEnterCategoryLog {
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
+}
+
+-(void)addStayCategoryLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_category" params:tracerDict];
+    [self tt_resetStayTime];
+}
+
+-(NSDictionary *)categoryLogDict {
+    
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    NSString *enter_type = self.tracerDict[@"enter_type"];
+    tracerDict[@"enter_type"] = enter_type.length > 0 ? enter_type : @"be_null";
+    NSString *category_name = self.tracerDict[@"category_name"];
+    tracerDict[@"category_name"] = category_name.length > 0 ? category_name : @"be_null";
+    NSString *enter_from = self.tracerDict[@"enter_from"];
+    tracerDict[@"enter_from"] = enter_from.length > 0 ? enter_from : @"be_null";
+    NSString *element_from = self.tracerDict[@"element_from"];
+    tracerDict[@"element_from"] = element_from.length > 0 ? element_from : @"be_null";
+    return tracerDict;
 }
 
 @end
