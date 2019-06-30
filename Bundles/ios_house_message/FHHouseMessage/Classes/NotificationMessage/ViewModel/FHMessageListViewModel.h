@@ -10,9 +10,10 @@
 
 
 @interface FHMessageListViewModel : NSObject
+@property (nonatomic, strong)NSDictionary *tracerDict;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageListController *)viewController;
 
-- (void)requestData:(BOOL)isLoadMore;
+- (void)requestData:(BOOL)isLoadMore isFirst:(BOOL)isFirst;
 
 @end

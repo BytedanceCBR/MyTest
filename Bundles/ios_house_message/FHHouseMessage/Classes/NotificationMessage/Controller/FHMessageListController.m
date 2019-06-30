@@ -66,7 +66,7 @@
     WeakSelf;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         StrongSelf;
-        [wself.viewModel requestData:YES];
+        [wself.viewModel requestData:YES isFirst:NO];
     }];
     self.tableView.mj_footer = self.refreshFooter;
     [self.refreshFooter setUpNoMoreDataText:@"暂无更多数据" offsetY:-3];
@@ -91,15 +91,11 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHMessageListViewModel alloc] initWithTableView:self.tableView controller:self];
-    [self.viewModel requestData:NO];
+    [self.viewModel requestData:NO isFirst:YES];
 }
 
 - (void)retryLoadData {
-    [self loadData:NO];
-}
-
-- (void)loadData:(BOOL)isLoadMore {
-    [self.viewModel requestData:isLoadMore];
+    [self.viewModel requestData:NO isFirst:NO];
 }
 
 @end
