@@ -140,12 +140,6 @@
     return label;
 }
 
-//- (void)joinIn {
-//    if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
-//        [self.delegate joinIn:self.model cell:self];
-//    }
-//}
-
 - (void)followStateChanged:(NSNotification *)notification {
     if(isEmptyString(self.model.socialGroupId)){
         return;
