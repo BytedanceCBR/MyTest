@@ -715,7 +715,7 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.latitude = latitude;
     postThreadModel.social_group_id = self.selectView.groupId;
     
-    postThreadModel.extraTrack = [extraTrack copy];
+    postThreadModel.extraTrack = self.trackDict.copy;
     
     [[TTPostThreadCenter sharedInstance_tt] postThreadWithPostThreadModel:postThreadModel finishBlock:^(TTPostThreadTask *task) {
         [self postFinished:YES task:task];
@@ -729,6 +729,10 @@ static NSInteger const kMaxPostImageCount = 9;
     [self clearDraft];
     if (hasSent && !isEmptyString(self.cid)) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCForumPostThreadFinish object:nil userInfo:@{@"cid" : self.cid}];
+        NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+        tracerDict[@"click_position"] = @"passport_publisher";
+        // 此时没有groupID
+        [FHUserTracker writeEvent:@"feed_publish_click" params:tracerDict];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionCancelledNotification
                                                             object:nil

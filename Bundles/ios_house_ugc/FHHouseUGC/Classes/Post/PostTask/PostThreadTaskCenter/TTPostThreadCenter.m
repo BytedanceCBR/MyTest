@@ -36,6 +36,10 @@
 #import "TTAccountManager.h"
 #import "FHUGCConfig.h"
 #import "ToastManager.h"
+#import "FHUserTracker.h"
+#import "FHFeedUGCContentModel.h"
+#import "FHMainApi.h"
+#import "FHFeedUGCCellModel.h"
 
 NSString * const TTPostTaskBeginNotification = kTTForumPostingThreadNotification;
 NSString * const TTPostTaskResumeNotification = kTTForumResumeThreadNotification;
@@ -198,8 +202,30 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
             [repostModelInfo setValue:resultModelDict forKey:@"repostModel"];
             [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadSuccessNotification object:nil userInfo:repostModelInfo];
         }
-
-        [[HMDTTMonitor defaultManager] hmdTrackService:kTTUGCPublishBehaviorMonitor metric:nil category:@{@"status" : @(kTTBehaviorFunnelBackToUserInterface)} extra:@{kTTUGCMonitorType : isRepost ? kTTPostBehaviorTypeRepost : kTTPostBehaviorTypePost}];
+        
+        // 发帖成功埋点
+        NSString *group_id_str = @"be_null";
+        NSDictionary *thread_data_dic = task.responseDict[@"data"];
+        NSString * thread_cell_data = nil;
+        if ([thread_data_dic isKindOfClass:[NSDictionary class]]) {
+            thread_cell_data = thread_data_dic[@"thread_cell"];
+        }
+        if (thread_cell_data && [thread_cell_data isKindOfClass:[NSString class]]) {
+            // 得到cell 数据
+            NSError *jsonParseError;
+            NSData *jsonData = [thread_cell_data dataUsingEncoding:NSUTF8StringEncoding];
+            if (jsonData) {
+                Class cls = [FHFeedUGCContentModel class];
+                FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
+                if (model && jsonParseError == nil && model.threadId.length > 0) {
+                    group_id_str = model.threadId;
+                }
+            }
+        }
+        NSMutableDictionary *tracerDict = task.extraTrack.mutableCopy;
+        tracerDict[@"publish_type"] = @"publish_success";
+        tracerDict[@"group_id"] = group_id_str;
+        [FHUserTracker writeEvent:@"feed_publish_success" params:tracerDict];
 
         //对于转发帖单独发一堆通知,并且对应的opt_id/fw_id的帖子转发数加1
         if (!isEmptyString(task.opt_id) && task.repostType != TTThreadRepostTypeNone) {
@@ -230,6 +256,12 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
             }
         }
     } cancelledBlock:^(TTPostThreadTask *task, TTPostThreadOperationCancelHint cancelHint) {
+        
+        // 发帖成功埋点
+        NSMutableDictionary *tracerDict = task.extraTrack.mutableCopy;
+        tracerDict[@"publish_type"] = @"publish_failed";
+        [FHUserTracker writeEvent:@"feed_publish_failed" params:tracerDict];
+        
         task.isPosting = YES;
         task.retryCount += 1;
         taskFailureTrackerBlock(task);
