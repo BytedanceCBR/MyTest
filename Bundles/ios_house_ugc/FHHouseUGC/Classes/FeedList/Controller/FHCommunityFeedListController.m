@@ -59,7 +59,7 @@
     [self.viewModel viewWillAppear];
     if (self.needReloadData) {
         self.needReloadData = NO;
-        [self startLoadData];
+        [self scrollToTopAndRefresh];
     }
 }
 

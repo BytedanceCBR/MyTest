@@ -14,8 +14,11 @@
 #import "FHUGCMyInterestModel.h"
 #import "FHUGCFollowButton.h"
 #import "FHUGCConfig.h"
+#import "TTUGCAttributedLabel.h"
+#import "FHUGCCellHelper.h"
 
 #define iconWidth 48
+#define maxLines 2
 
 @interface FHUGCMyInterestedCell ()
 
@@ -28,7 +31,7 @@
 @property(nonatomic, strong) UIView *bottomSepLine1;
 @property(nonatomic, strong) UIView *bottomSepLine2;
 
-@property(nonatomic, strong) UILabel *postDescLabel;
+@property(nonatomic, strong) TTUGCAttributedLabel *postDescLabel;
 @property(nonatomic, strong) UIImageView *postIcon;
 @property(nonatomic, strong) UIImageView *locationIcon;
 
@@ -92,6 +95,8 @@
         _descLabel.text = model.socialGroup.countText;
         _sourceLabel.text = model.socialGroup.suggestReason;
         _postDescLabel.text = model.threadInfo.content;
+        //内容
+        [FHUGCCellHelper setRichContent:_postDescLabel content:model.threadInfo.content font:[UIFont themeFontRegular:14] numberOfLines:maxLines];
         [self.icon bd_setImageWithURL:[NSURL URLWithString:model.socialGroup.avatar] placeholder:nil];
         self.joinBtn.groupId = model.socialGroup.socialGroupId;
         [self updateImageConstraints:model];
@@ -173,8 +178,8 @@
     _bottomSepLine2.backgroundColor = [UIColor themeGray6];
     [self.containerView addSubview:_bottomSepLine2];
     
-    self.postDescLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
-    _postDescLabel.numberOfLines = 2;
+//    self.postDescLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
+    self.postDescLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     [self.containerView addSubview:_postDescLabel];
     
     self.postIcon = [[UIImageView alloc] init];

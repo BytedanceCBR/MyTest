@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshCell;
 
+- (void)changeMyJoinTab;
+
 @end
 
 NS_ASSUME_NONNULL_END
