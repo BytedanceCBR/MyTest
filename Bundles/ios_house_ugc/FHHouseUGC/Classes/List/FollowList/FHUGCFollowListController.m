@@ -19,6 +19,7 @@
 #import "TTDeviceHelper.h"
 #import "FHUGCConfig.h"
 #import "FHUGCFollowListCell.h"
+#import "UIViewController+Track.h"
 
 @interface FHUGCFollowListController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -26,6 +27,7 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong)   NSMutableArray       *items;
 @property (nonatomic, weak)     id<FHUGCFollowListDelegate>   ugc_delegate;
+@property (nonatomic, strong)     NSMutableDictionary       *houseShowTracerDic;
 
 @end
 
@@ -43,8 +45,23 @@
         }
         NSHashTable<FHUGCFollowListDelegate> *ugc_delegate = paramObj.allParams[@"ugc_delegate"];
         self.ugc_delegate = ugc_delegate.anyObject;
+        // 埋点
+        self.tracerDict[@"category_name"] = [self categoryName];
+        
+        self.ttTrackStayEnable = YES;
     }
     return self;
+}
+
+- (NSString *)categoryName
+{
+    if (self.vcType == FHUGCFollowVCTypeList) {
+        return @"my_joined_neighborhood_list";
+    }else if (self.vcType == FHUGCFollowVCTypeSelectList) {
+        // 选择小区列表
+        return @"my_joined_neighborhood_list";
+    }
+    return @"my_joined_neighborhood_list";
 }
 
 - (void)dealloc
@@ -61,6 +78,9 @@
     [self setupData];
     [self startLoadData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFollowDataFinished:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    // 埋点
+     self.houseShowTracerDic = [NSMutableDictionary new];
+    [self addEnterCategoryLog];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -166,7 +186,17 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    if (indexPath.row < self.items.count) {
+        FHUGCScialGroupDataModel* data = self.items[indexPath.row];
+        NSString *recordKey = data.socialGroupId;
+        if (recordKey.length > 0) {
+            if (!self.houseShowTracerDic[recordKey]) {
+                // 埋点
+                self.houseShowTracerDic[recordKey] = @(YES);
+                [self addHouseShowLog:indexPath];
+            }
+        }
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -219,6 +249,81 @@
     } else {
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayCategoryLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+#pragma mark - Tracer
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self addStayCategoryLog];
+}
+
+-(void)addEnterCategoryLog {
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
+}
+
+-(void)addStayCategoryLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_category" params:tracerDict];
+    [self tt_resetStayTime];
+}
+
+-(NSDictionary *)categoryLogDict {
+    
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    NSString *enter_type = self.tracerDict[@"enter_type"];
+    tracerDict[@"enter_type"] = enter_type.length > 0 ? enter_type : @"be_null";
+    NSString *category_name = self.tracerDict[@"category_name"];
+    tracerDict[@"category_name"] = category_name.length > 0 ? category_name : @"be_null";
+    NSString *enter_from = self.tracerDict[@"enter_from"];
+    tracerDict[@"enter_from"] = enter_from.length > 0 ? enter_from : @"be_null";
+    NSString *element_from = self.tracerDict[@"element_from"];
+    tracerDict[@"element_from"] = element_from.length > 0 ? element_from : @"be_null";
+    return tracerDict;
+}
+
+
+-(void)addHouseShowLog:(NSIndexPath *)indexPath {
+    
+    if (indexPath.row >= self.items.count) {
+        return;
+    }
+    FHUGCScialGroupDataModel* cellModel = self.items[indexPath.row];
+    
+    if (!cellModel) {
+        return;
+    }
+    
+    NSString *house_type = @"community";
+    NSString *page_type = self.tracerDict[@"category_name"];
+    
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    tracerDict[@"house_type"] = house_type ? : @"be_null";
+    tracerDict[@"page_type"] = page_type ? : @"be_null";
+    tracerDict[@"rank"] = @(indexPath.row);
+    tracerDict[@"log_pb"] = cellModel.logPb ? : @"be_null";
+    
+    [tracerDict removeObjectForKey:@"category_name"];
+    
+    
+    [FHUserTracker writeEvent:@"community_group_show" params:tracerDict];
 }
 
 @end

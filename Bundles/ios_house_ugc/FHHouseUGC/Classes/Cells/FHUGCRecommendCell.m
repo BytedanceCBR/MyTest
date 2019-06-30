@@ -60,7 +60,7 @@
     self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
     _headerView.titleLabel.text = @"你可能感兴趣的小区";
     _headerView.bottomLine.hidden = NO;
-    _headerView.refreshBtn.hidden = NO;
+    _headerView.refreshBtn.hidden = YES;
     [_headerView.refreshBtn addTarget:self action:@selector(changeData) forControlEvents:UIControlEventTouchUpInside];
     [_headerView.moreBtn addTarget:self action:@selector(moreData) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_headerView];
@@ -137,6 +137,8 @@
 
 - (void)refreshData {
     [self generateDataList:self.sourceList];
+    //刷新换一换按钮的状态
+    self.headerView.refreshBtn.hidden = !(self.dataList.count > 3);
     //刷新列表
     [self reloadNewData];
     //更新高度

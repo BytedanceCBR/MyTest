@@ -18,6 +18,7 @@
     @"countText": @"count_text",
     @"socialGroupName": @"social_group_name",
     @"hasFollow": @"has_follow",
+    @"logPb":@"log_pb",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
