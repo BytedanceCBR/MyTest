@@ -16,6 +16,7 @@
 #import "TTUIResponderHelper.h"
 #import "FHMessageNotificationTipsManager.h"
 #import "TTStringHelper.h"
+#import "FHUserTracker.h"
 
 @interface FHMessageListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -23,8 +24,8 @@
 @property(nonatomic, weak) FHMessageListController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter; //加载更多footer
-@property(nonatomic, strong) NSMutableDictionary *cellHeightCaches; //缓存的item高度
 @property(nonatomic, strong) NSNumber *maxCursor;
+@property(nonatomic, strong) NSMutableDictionary *messageShowRecords;
 
 @property(nonatomic, strong) NSMutableArray<TTMessageNotificationModel *> *messageModels; //所有拉取到的message模型数组
 @property(nonatomic, assign) BOOL hasMore;
@@ -42,6 +43,7 @@
         self.tableView.dataSource = self;
         [FHMessageNotificationCellHelper registerAllCellClassWithTableView:self.tableView];
         self.messageModels = [NSMutableArray array];
+        self.messageShowRecords = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -55,7 +57,7 @@
     }
 }
 
-- (void)requestData:(BOOL)loadMore {
+- (void)requestData:(BOOL)loadMore isFirst:(BOOL)isFirst {
     if (![TTReachability isNetworkConnected]) {
         [self networkError:loadMore];
         return;
@@ -73,8 +75,11 @@
                 [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
                 [wself.messageModels removeAllObjects];
                 if (response.msgList.count <= 0) {
-                    self.tableView.hidden = YES;
-                    [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeEmptyMessage];
+                    wself.tableView.hidden = YES;
+                    if (isFirst) {
+                        [wself addEnterCategoryLog:YES];
+                    }
+                    [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeEmptyMessage];
                     return;
                 }
             }
@@ -84,6 +89,9 @@
             [wself.messageModels addObjectsFromArray:response.msgList];
             wself.tableView.hidden = NO;
             [wself.tableView reloadData];
+            if (isFirst) {
+                [wself addEnterCategoryLog:NO];
+            }
         } else {
             [wself.tableView.mj_footer endRefreshing];
             [self networkError:loadMore];
@@ -136,6 +144,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     TTMessageNotificationModel *model = self.messageModels[indexPath.row];
+    [self addFeedMessageClickLog:!isEmptyString(model.content.refThumbUrl) rank:indexPath.row];
     NSString *bodyUrl = model.content.bodyUrl;
     if (!isEmptyString(bodyUrl)) {
         NSURL *openURL = [NSURL URLWithString:[bodyUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -144,4 +153,69 @@
         }
     }
 }
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row < self.messageModels.count) {
+        TTMessageNotificationModel *model = self.messageModels[indexPath.row];
+        if (model && self.messageShowRecords[model.ID]) {
+            [self addFeedMessageShowLog:!isEmptyString(model.content.refThumbUrl) rank:indexPath.row];
+        }
+    }
+}
+
+- (NSString *)categoryName {
+    return @"feed_message_list";
+}
+
+- (NSString *)pageType {
+    return @"feed_message_list";
+}
+
+- (void)addEnterCategoryLog:(BOOL)blank {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"category_name"] = [self categoryName];
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
+    params[@"show_type"] = blank ? @"message_blank" : @"message_full";
+    [FHUserTracker writeEvent:@"enter_category" params:params];
+}
+
+- (void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    NSTimeInterval duration = stayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"category_name"] = [self categoryName];
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
+    params[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_category" params:params];
+}
+
+- (void)addFeedMessageShowLog:(BOOL)hasRightPic rank:(NSInteger)rank {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"page_type"] = [self pageType];
+    params[@"card_type"] = hasRightPic ? @"right_pic" : @"no_pic";
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"origin_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
+    params[@"rank"] = @(rank);
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    [FHUserTracker writeEvent:@"feed_message_show" params:params];
+}
+
+- (void)addFeedMessageClickLog:(BOOL)hasRightPic rank:(NSInteger)rank {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"page_type"] = [self pageType];
+    params[@"card_type"] = hasRightPic ? @"right_pic" : @"no_pic";
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"origin_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
+    params[@"rank"] = @(rank);
+    params[@"click_position"] = @"feed_message";
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_feed_message" params:params];
+}
+
 @end
