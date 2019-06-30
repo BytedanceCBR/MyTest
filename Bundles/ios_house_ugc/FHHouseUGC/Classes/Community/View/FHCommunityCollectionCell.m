@@ -37,7 +37,9 @@
         [self.vc viewWillAppear:NO];
     }
     
-    self.vc.tracerDict = [self traceDic].mutableCopy;
+    if(self.type == FHCommunityCollectionCellTypeNearby || self.type == FHCommunityCollectionCellTypeMyJoin){
+        self.vc.tracerDict = [self traceDic].mutableCopy;
+    }
 }
 
 - (void)initViews {

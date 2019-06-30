@@ -51,6 +51,7 @@
     
     [self loadFeedListView];
     [self.feedVC viewWillAppear];
+    [self addEnterCategoryLog];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -113,7 +114,7 @@
 
 - (void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    
+    tracerDict[@"category_name"] = [self categoryName];
     TRACK_EVENT(@"enter_category", tracerDict);
 }
 
@@ -123,12 +124,13 @@
         return;
     }
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"category_name"] = [self categoryName];
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
     TRACK_EVENT(@"stay_category", tracerDict);
 }
 
-- (void)categoryName {
-    
+- (NSString *)categoryName {
+    return @"nearby_list";
 }
 
 @end
