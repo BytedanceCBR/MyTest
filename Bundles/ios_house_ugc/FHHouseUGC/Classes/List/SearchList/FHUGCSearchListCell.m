@@ -79,6 +79,7 @@
         self.descLabel.text = model.countText;
         self.followButton.followed = [model.hasFollow boolValue];
         self.followButton.groupId = model.socialGroupId;
+        self.followButton.tracerDic = self.tracerDic;
         [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
     }
 }
