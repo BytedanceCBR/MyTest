@@ -7,6 +7,7 @@
 
 #import "FHCommunityDetailViewController.h"
 #import "FHCommunityDetailViewModel.h"
+#import "UIViewController+Track.h"
 
 @interface FHCommunityDetailViewController ()
 @property(nonatomic, strong) FHCommunityDetailViewModel *viewModel;
@@ -32,6 +33,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.viewModel addStayPageLog:self.ttTrackStartTime];
 }
 
 - (void)initView {

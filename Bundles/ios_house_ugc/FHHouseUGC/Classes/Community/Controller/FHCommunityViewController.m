@@ -153,10 +153,11 @@
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
-    //        if (duration) {
-    //            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
-    //        }
-    [tracerDict setValue:@"discover_tab" forKey:@"tab_name"];
+    if(self.isUgcOpen){
+        [tracerDict setValue:@"neighborhood_tab" forKey:@"tab_name"];
+    }else{
+        [tracerDict setValue:@"discover_tab" forKey:@"tab_name"];
+    }
     [tracerDict setValue:@(0) forKey:@"with_tips"];
     [tracerDict setValue:@"click_tab" forKey:@"enter_type"];
     tracerDict[@"stay_time"] = @((int)duration);

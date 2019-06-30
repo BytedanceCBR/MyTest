@@ -1254,6 +1254,11 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             self.autoEnterTab = NO;
             if ([selectedTabName isEqualToString:@"find"]) {
                 [logv3Dic setValue:@"discover_tab" forKey:@"tab_name"];
+                if([FHEnvContext isUGCOpen]){
+                    [logv3Dic setValue:@"neighborhood_tab" forKey:@"tab_name"];
+                }else{
+                    [logv3Dic setValue:@"discover_tab" forKey:@"tab_name"];
+                }
             }
             [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
         }

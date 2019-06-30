@@ -13,7 +13,7 @@
 
 @interface FHCommunityCollectionCell ()
 
-@property(nonatomic, strong) UIViewController *vc;
+@property(nonatomic, strong) FHBaseViewController *vc;
 
 @end
 
@@ -35,6 +35,10 @@
         [self initViews];
     }else{
         [self.vc viewWillAppear:NO];
+    }
+    
+    if(self.type == FHCommunityCollectionCellTypeNearby || self.type == FHCommunityCollectionCellTypeMyJoin){
+        self.vc.tracerDict = [self traceDic].mutableCopy;
     }
 }
 
@@ -77,6 +81,14 @@
         FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
         [vc.feedListVC scrollToTopAndRefresh];
     }
+}
+
+- (NSDictionary *)traceDic {
+    NSString *enterType = self.enterType ? self.enterType : @"default";
+    return @{
+             @"enter_from":@"neighborhood_tab",
+             @"enter_type":self.enterType
+             };
 }
 
 @end
