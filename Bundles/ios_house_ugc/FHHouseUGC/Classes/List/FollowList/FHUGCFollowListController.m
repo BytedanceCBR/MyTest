@@ -27,6 +27,7 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong)   NSMutableArray       *items;
 @property (nonatomic, weak)     id<FHUGCFollowListDelegate>   ugc_delegate;
+@property (nonatomic, strong)     NSMutableDictionary       *houseShowTracerDic;
 
 @end
 
@@ -78,6 +79,7 @@
     [self startLoadData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFollowDataFinished:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     // 埋点
+     self.houseShowTracerDic = [NSMutableDictionary new];
     [self addEnterCategoryLog];
 }
 
@@ -184,7 +186,17 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    if (indexPath.row < self.items.count) {
+        FHUGCScialGroupDataModel* data = self.items[indexPath.row];
+        NSString *recordKey = data.socialGroupId;
+        if (recordKey.length > 0) {
+            if (!self.houseShowTracerDic[recordKey]) {
+                // 埋点
+                self.houseShowTracerDic[recordKey] = @(YES);
+                [self addHouseShowLog:indexPath];
+            }
+        }
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -285,6 +297,33 @@
     NSString *element_from = self.tracerDict[@"element_from"];
     tracerDict[@"element_from"] = element_from.length > 0 ? element_from : @"be_null";
     return tracerDict;
+}
+
+
+-(void)addHouseShowLog:(NSIndexPath *)indexPath {
+    
+    if (indexPath.row >= self.items.count) {
+        return;
+    }
+    FHUGCScialGroupDataModel* cellModel = self.items[indexPath.row];
+    
+    if (!cellModel) {
+        return;
+    }
+    
+    NSString *house_type = @"community";
+    NSString *page_type = self.tracerDict[@"category_name"];
+    
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    tracerDict[@"house_type"] = house_type ? : @"be_null";
+    tracerDict[@"page_type"] = page_type ? : @"be_null";
+    tracerDict[@"rank"] = @(indexPath.row);
+    tracerDict[@"log_pb"] = cellModel.logPb ? : @"be_null";
+    
+    [tracerDict removeObjectForKey:@"category_name"];
+    
+    
+    [FHUserTracker writeEvent:@"community_group_show" params:tracerDict];
 }
 
 @end
