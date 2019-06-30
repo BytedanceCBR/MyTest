@@ -92,8 +92,10 @@
         
         if (error) {
             //TODO: show handle error
-            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-            wself.viewController.showenRetryButton = YES;
+            if(error.code != -999){
+                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+                wself.viewController.showenRetryButton = YES;
+            }
             return;
         }
         
@@ -161,9 +163,20 @@
         cellModel.feedVC = self.viewController;
         if(cellModel){
             [resultArray addObject:cellModel];
+            //去重逻辑
+            [self removeDuplicaionModel:cellModel.groupId];
         }
     }
     return resultArray;
+}
+
+- (void)removeDuplicaionModel:(NSString *)groupId {
+    for (FHFeedUGCCellModel *itemModel in self.dataList) {
+        if([groupId isEqualToString:itemModel.groupId]){
+            [self.dataList removeObject:itemModel];
+            break;
+        }
+    }
 }
 
 - (void)postDeleteSuccess:(NSNotification *)noti {

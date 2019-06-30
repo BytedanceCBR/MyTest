@@ -26,6 +26,8 @@
 @property(nonatomic , assign) CGPoint beginOffSet;
 @property(nonatomic , assign) CGFloat oldX;
 
+@property(nonatomic , strong) FHCommunityCollectionCell *lastCell;
+
 @end
 
 @implementation FHCommunityViewModel
@@ -108,6 +110,16 @@
         FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
         cell.enterType = enterType;
         cell.type = [self.dataArray[self.currentTabIndex] integerValue];
+        
+        //在进入之前报一下上一次tab的埋点
+        if(_lastCell && _lastCell != cell){
+            [_lastCell cellDisappear];
+            _lastCell = nil;
+        }
+        
+        [self.viewController addChildViewController:cell.contentViewController];
+        
+        _lastCell = cell;
     }
 }
 
@@ -146,7 +158,6 @@
     
     if(row == self.currentTabIndex){
         [self initCell:@"default"];
-        [self.viewController addChildViewController:cell.contentViewController];
     }
     
     return cell;

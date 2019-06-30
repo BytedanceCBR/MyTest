@@ -40,26 +40,37 @@
     }else{
         [self showLocationGuideAlert];
     }
+    
+    [self addEnterCategoryLog];
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
+- (void)viewWillAppear {
     [self loadFeedListView];
     [self.feedVC viewWillAppear];
-    [self addEnterCategoryLog];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
+- (void)viewWillDisappear {
     [self addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
 }
+
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
+//
+//    [self loadFeedListView];
+//    [self.feedVC viewWillAppear];
+//}
+//
+//- (void)viewWillDisappear:(BOOL)animated {
+//    [super viewWillDisappear:animated];
+//
+//    [self addStayCategoryLog:self.ttTrackStayTime];
+//    [self tt_resetStayTime];
+//}
 
 - (void)initView {
     if(!self.feedVC){
@@ -71,6 +82,7 @@
         _feedVC.view.frame = self.view.bounds;
         [self addChildViewController:_feedVC];
         [self.view addSubview:_feedVC.view];
+        [self.feedVC viewWillAppear];
     }else{
         _feedVC.currentLocaton = self.currentLocaton;
         [self.feedVC startLoadData];

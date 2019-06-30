@@ -143,74 +143,6 @@
             //            }
         }
     }];
-//    @"weitoutiao" @"f_wenda"
-//    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-//
-//        if(isFirst){
-//            [self.viewController endLoading];
-//        }
-//
-//        [self.tableView finishPullDownWithSuccess:YES];
-//
-//        FHFeedListModel *feedListModel = (FHFeedListModel *)model;
-//
-//        if (!wself) {
-//            return;
-//        }
-//
-//        if (error) {
-//            //TODO: show handle error
-//            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-//            wself.viewController.showenRetryButton = YES;
-//            return;
-//        }
-//
-//        if(model){
-//            if (isHead && feedListModel.hasMore) {
-//                [wself.dataList removeAllObjects];
-//            }
-//            NSArray *result = [wself convertModel:feedListModel.data];
-//
-//            if(isHead){
-//                if(result.count > 0){
-//                    [wself.cellHeightCaches removeAllObjects];
-//                }
-//                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
-//            }else{
-//                [wself.dataList addObjectsFromArray:result];
-//            }
-//            wself.tableView.hasMore = feedListModel.hasMore;
-//            wself.viewController.hasValidateData = wself.dataList.count > 0;
-//
-//            if(wself.dataList.count > 0){
-//                [wself updateTableViewWithMoreData:feedListModel.hasMore];
-//                [wself.viewController.emptyView hideEmptyView];
-//
-//                if(isFirst){
-//                    [wself insertGuideCell];
-//                }
-//            }else{
-//                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-//                wself.viewController.showenRetryButton = YES;
-//            }
-//            [wself.tableView reloadData];
-//
-////            if(isFirst){
-////                self.originSearchId = self.searchId;
-////                [self addEnterCategoryLog];
-////            }
-//
-//            NSString *refreshTip = feedListModel.tips.displayInfo;
-//            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
-//                [self.viewController showNotify:refreshTip];
-//                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-//            }
-//
-////            if(!isHead){
-////                [self addRefreshLog];
-////            }
-//        }
-//    }];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -233,9 +165,7 @@
         if(cellModel){
             [resultArray addObject:cellModel];
             //去重逻辑
-            if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner){
-                [self removeDuplicaionModel:cellModel.groupId];
-            }
+            [self removeDuplicaionModel:cellModel.groupId];
         }
     }
     return resultArray;
