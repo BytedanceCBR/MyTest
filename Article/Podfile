@@ -438,7 +438,7 @@ def appPods
     pod 'BDUGContainer', '1.1.2'
     pod 'BDUGTrackerInterface', '1.1.1'
     pod 'BDUGMonitorInterface', '1.0.0'
-    pod_binary 'TYRZApiSDK', '1.2.0'
+    pod 'TYRZApiSDK' , '1.2.1'
     pod_binary 'EAccountApiSDK', '1.1.1'
     pod_binary 'BDUGUnionSDK', '0.1.2'
 

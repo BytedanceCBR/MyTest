@@ -55,7 +55,6 @@
 
 - (void)initView {
     [self initNavBar];
-    [self.rightBtn addTarget:self action:@selector(followClicked) forControlEvents:UIControlEventTouchUpInside];
 
     self.feedListController = [[FHCommunityFeedListController alloc] init];
     self.feedListController.publishBtnBottomHeight = 10;
@@ -67,10 +66,13 @@
 
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
     self.headerView.followButton.groupId = self.viewController.communityId;
+    self.headerView.followButton.traceDict = [self followButtonTraceDict];
+
     //随机一张背景图
-    NSUInteger randomImageIndex = [self.viewController.communityId integerValue] % 4;
-    NSString *imageNmae = [NSString stringWithFormat:@"fh_ugc_community_detail_header_back%d",randomImageIndex];
-    self.headerView.topBack.image = [UIImage imageNamed:imageNmae];
+    NSInteger randomImageIndex =[self.viewController.communityId integerValue] % 4;
+    randomImageIndex = randomImageIndex < 0 ? 0 : randomImageIndex;
+    NSString *imageName = [NSString stringWithFormat:@"fh_ugc_community_detail_header_back%d",randomImageIndex];
+    self.headerView.topBack.image = [UIImage imageNamed:imageName];
     
     self.feedListController.tableHeaderView = self.headerView;
 
@@ -97,6 +99,7 @@
     self.rightBtn.backgroundColor = [UIColor themeWhite];
     self.rightBtn.groupId = self.viewController.communityId;
     self.rightBtn.hidden = YES;
+    self.rightBtn.traceDict = [self followButtonTraceDict];
 
     self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -192,25 +195,10 @@
     }
 }
 
-- (void)followClicked {
-    if ([self.data.hasFollow boolValue]) {
-        WeakSelf;
-        TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"确定退出？" message:nil preferredType:TTThemedAlertControllerTypeAlert];
-        [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:
-            nil)                 actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
-        [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:
-            nil)                 actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
-            StrongSelf;
-            [FHUGCFollowHelper followCommunity:wself.data.socialGroupId userInfo:nil followBlock:nil];
-        }];
-        [alertController showFrom:self.viewController animated:YES];
-    }
-}
-
 // 发布按钮点击
 - (void)gotoPostThreadVC {
     if ([TTAccountManager isLogin]) {
-        [self goPosDetail];
+        [self goPostDetail];
     } else {
         [self gotoLogin];
     }
@@ -229,25 +217,28 @@
             // 登录成功
             if ([TTAccountManager isLogin]) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [wSelf goPosDetail];
+                    [wSelf goPostDetail];
                 });
             }
         }
     }];
 }
 
-- (void)goPosDetail {
+- (void)goPostDetail {
     if (!self.headerView.followButton.followed) {
         WeakSelf;
         TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"先关注该小区才能发布哦" message:nil preferredType:TTThemedAlertControllerTypeAlert];
-        [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:
-            nil)                 actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
-        [alertController addActionWithTitle:NSLocalizedString(@"关注", comment:
-            nil)                 actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+        [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
             StrongSelf;
+            [wself addPublisherPopupClickLog:NO];
+        }];
+        [alertController addActionWithTitle:NSLocalizedString(@"关注", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+            StrongSelf;
+            [wself addPublisherPopupClickLog:YES];
             [wself followCommunity:wself.data.socialGroupId];
         }];
         [alertController showFrom:self.viewController animated:YES];
+        [self addPublisherPopupShowLog];
         return;
     }
     [self gotoPostVC];
@@ -319,7 +310,6 @@
 // 关注状态改变
 - (void)followStateChanged:(NSNotification *)notification {
     if (notification) {
-        NSDictionary *userInfo = notification.userInfo;
         BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
         NSString *groupId = notification.userInfo[@"social_group_id"];
         NSString *currentGroupId = self.viewController.communityId;
@@ -412,6 +402,20 @@
     [FHUserTracker writeEvent:@"go_detail_community" params:params];
 }
 
+-(void)addStayPageLog:(NSTimeInterval)stayTime{
+    NSTimeInterval duration = stayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"enter_type"] = self.tracerDict[@"enter_type"] ? : @"be_null";
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    params[@"page_type"] = [self pageTypeString];
+    params[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_page_community" params:params];
+}
+
 -(void)addPublicationsShowLog{
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"element_type"] = @"community_group_notice";
@@ -438,6 +442,18 @@
 - (NSString *)pageTypeString
 {
     return @"community_group_detail";
+}
+
+-(NSDictionary *)followButtonTraceDict{
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"community_id"] = self.viewController.communityId;
+    params[@"page_type"] = [self pageTypeString];
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"enter_type"] = self.tracerDict[@"enter_type"] ? : @"be_null";
+    params[@"click_position"] = @"join_like";
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    return [params copy];
 }
 
 @end
