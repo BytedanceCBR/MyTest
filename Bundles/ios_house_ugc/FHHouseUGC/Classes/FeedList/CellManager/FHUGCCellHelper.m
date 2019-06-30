@@ -81,7 +81,6 @@
 }
 
 + (void)setRichContent:(TTUGCAttributedLabel *)label content:(NSString *)content font:(UIFont *)font numberOfLines:(NSInteger)numberOfLines {
-//    TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
     TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:content richSpans:nil];
     
     TTRichSpanText *threadContent = [[TTRichSpanText alloc] initWithText:@"" richSpanLinks:nil imageInfoModelDictionary:nil];

@@ -105,7 +105,7 @@
         }
         
         if(model){
-            NSArray *result = [wself convertModel:feedListModel.data];
+            NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
             
             if(isHead){
                 if(result.count > 0){
@@ -159,7 +159,7 @@
     }
 }
 
-- (NSArray *)convertModel:(NSArray *)feedList {
+- (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
@@ -167,9 +167,16 @@
         cellModel.feedVC = self.viewController;
         cellModel.tableView = self.tableView;
         if(cellModel){
-            [resultArray addObject:cellModel];
-            //去重逻辑
-            [self removeDuplicaionModel:cellModel.groupId];
+            if(isHead){
+                [resultArray addObject:cellModel];
+                //去重逻辑
+                [self removeDuplicaionModel:cellModel.groupId];
+            }else{
+                NSInteger index = [self getCellIndex:cellModel];
+                if(index < 0){
+                    [resultArray addObject:cellModel];
+                }
+            }
         }
     }
     return resultArray;
@@ -337,6 +344,7 @@
             return i;
         }
     }
+    return -1;
 }
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel {
