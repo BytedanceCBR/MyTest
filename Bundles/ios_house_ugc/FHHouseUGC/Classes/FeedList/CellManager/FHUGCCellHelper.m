@@ -80,4 +80,40 @@
     }
 }
 
++ (void)setRichContent:(TTUGCAttributedLabel *)label content:(NSString *)content font:(UIFont *)font numberOfLines:(NSInteger)numberOfLines {
+//    TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
+    TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:content richSpans:nil];
+    
+    TTRichSpanText *threadContent = [[TTRichSpanText alloc] initWithText:@"" richSpanLinks:nil imageInfoModelDictionary:nil];
+    
+    if (!isEmptyString(content)) {
+        [threadContent appendRichSpanText:richContent];
+    }
+    
+    if (!isEmptyString(threadContent.text)) {
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:font.pointSize];
+        if (attrStr) {
+            NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
+            NSMutableDictionary *attributes = @{}.mutableCopy;
+            [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
+            [attributes setValue:font forKey:NSFontAttributeName];
+            
+            NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            
+            paragraphStyle.minimumLineHeight = 21;
+            paragraphStyle.maximumLineHeight = 21;
+            paragraphStyle.lineSpacing = 2;
+            
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+            
+            [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
+            
+            //内容
+            label.numberOfLines = numberOfLines;
+            [label setText:mutableAttributedString];
+        }
+    }
+}
+
 @end
