@@ -93,15 +93,6 @@
                         if (model && jsonParseError == nil) {
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
-                                // 插入圈子数据
-                                if (social_group_id.length > 0) {
-                                    FHUGCScialGroupDataModel *socialGroupData = [[FHUGCConfig sharedInstance] socialGroupData:social_group_id];
-                                    if (socialGroupData) {
-                                        cellModel.community.url = [NSString stringWithFormat:@"sslocal://ugc_community_detail?community_id=%@",social_group_id];
-                                        cellModel.community.socialGroupId = social_group_id;
-                                        cellModel.community.name = socialGroupData.socialGroupName;
-                                    }
-                                }
                                 if (cellModel) {
                                     if (self.dataList.count == 0) {
                                         [self.dataList addObject:cellModel];

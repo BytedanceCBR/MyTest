@@ -50,6 +50,11 @@
     [TTAccount addMulticastDelegate:self];
 }
 
+- (void)dealloc
+{
+    [TTAccount removeMulticastDelegate:self];
+}
+
 - (void)viewWillAppear {
     [self.viewModel viewWillAppear];
     if (self.needReloadData) {
