@@ -154,9 +154,21 @@
 }
 
 - (void)retryLoadData {
+    
+    // add by zyk
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"join_like_neighborhood";
+    [FHUserTracker writeEvent:@"click_join_like_neighborhood" params:tracerDict];
+    
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[@"enter_from"] = @"my_join_list";
+    dict[TRACER_KEY] = traceParam;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
     // 关注小区 按钮点击
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_my_interest"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
