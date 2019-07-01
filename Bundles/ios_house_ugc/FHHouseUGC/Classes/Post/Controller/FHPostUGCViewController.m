@@ -943,6 +943,11 @@ static NSInteger const kMaxPostImageCount = 9;
 #pragma mark - FRAddMultiImagesViewDelegate
 
 - (void)addImagesButtonDidClickedOfAddMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"page_type"] = @"feed_publisher";
+    tracerDict[@"click_position"] = @"picture";
+    [FHUserTracker writeEvent:@"click_options" params:tracerDict];
+    
     self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
     [self endEditing];
 }
