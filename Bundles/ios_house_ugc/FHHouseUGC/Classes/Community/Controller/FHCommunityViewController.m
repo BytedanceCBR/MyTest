@@ -135,6 +135,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [self.viewModel viewWillDisappear];
     [self addStayCategoryLog:self.stayTime];
 }
 

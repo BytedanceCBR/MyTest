@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *socialGroupName;
 @property (nonatomic, copy , nullable) NSString *hasFollow;
 @property (nonatomic, copy , nullable) NSString *followerCount;
+@property (nonatomic, copy , nullable) NSDictionary *logPb;
 @end
 
 @interface FHFeedContentCommunityModel : JSONModel

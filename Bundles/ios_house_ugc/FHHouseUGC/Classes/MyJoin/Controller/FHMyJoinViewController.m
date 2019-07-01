@@ -87,6 +87,7 @@
     vc.listType = FHCommunityFeedListTypeMyJoin;
     vc.showErrorView = NO;
     vc.tableHeaderView = self.neighbourhoodView;
+    vc.tracerDict = [self.tracerDict mutableCopy];
     
     vc.view.frame = self.view.bounds;
     [self addChildViewController:vc];

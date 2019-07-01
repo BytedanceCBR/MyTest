@@ -5,6 +5,7 @@
 #import <Foundation/Foundation.h>
 
 @class FHUGCFollowButton;
+@class FHCommunityDetailRefreshView;
 
 
 @interface FHCommunityDetailHeaderView : UIView
@@ -18,5 +19,11 @@
 @property(nonatomic, strong) UILabel *publicationsLabel;
 @property(nonatomic, strong) UILabel *publicationsContentLabel;
 @property(nonatomic) CGFloat headerBackHeight;
+@property(nonatomic, strong) FHCommunityDetailRefreshView *refreshView;
 
+- (void)startRefresh;
+
+- (void)stopRefresh;
+
+- (void)updateWhenScrolledWithContentOffset:(CGPoint)contentOffset isScrollTop:(BOOL)isScrollTop;
 @end

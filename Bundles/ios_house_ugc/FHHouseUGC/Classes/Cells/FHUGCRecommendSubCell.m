@@ -61,7 +61,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)refreshWithData:(id)data {
+- (void)refreshWithData:(id)data rank:(NSInteger)rank {
     if([data isKindOfClass:[FHFeedContentRecommendSocialGroupListModel class]]){
         FHFeedContentRecommendSocialGroupListModel *model = (FHFeedContentRecommendSocialGroupListModel *)data;
         _model = model;
@@ -70,8 +70,22 @@
         _sourceLabel.text = model.suggestReason;
         _joinBtn.groupId = model.socialGroupId;
         _joinBtn.followed = [model.hasFollow boolValue];
+        _joinBtn.tracerDic = [self joinBtnTrackDicJoinBtn:rank];
         [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
     }
+}
+
+- (NSMutableDictionary *)joinBtnTrackDicJoinBtn:(NSInteger)rank {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"card_type"] = @"left_pic";
+    dict[@"house_type"] = @"community";
+    dict[@"element_from"] = @"like_neighborhood";
+    dict[@"log_pb"] = _model.logPb;
+    dict[@"page_type"] = @"nearby_list";
+    dict[@"enter_from"] = @"neighborhood_tab";
+    dict[@"rank"] = @(rank);
+    
+    return dict;
 }
 
 - (void)initViews {
