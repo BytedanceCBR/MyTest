@@ -17,6 +17,7 @@
 #import "TTThemedUploadingStatusCellProgressBar.h"
 #import "TTReachability.h"
 #import "ToastManager.h"
+#import "FHUserTracker.h"
 
 @interface FHPostUGCProgressView ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -24,6 +25,8 @@
 // 存放当前发帖数据模型
 @property (nonatomic, weak)     TTForumPostThreadStatusViewModel       *statusViewModel;
 @property (nonatomic, strong)   UITableView       *tableView;
+
+@property (nonatomic, strong)     NSMutableDictionary       *houseShowTracerDic;
 
 @end
 
@@ -42,6 +45,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor redColor];
+        self.houseShowTracerDic = [NSMutableDictionary new];
         [self setupData];
         [self setupUI];
         __weak typeof(self) weakSelf = self;
@@ -141,7 +145,17 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    if (indexPath.row < self.statusViewModel.followTaskStatusModels.count) {
+        TTPostThreadTaskStatusModel* cellModel = self.statusViewModel.followTaskStatusModels[indexPath.row];
+        NSString *recordKey = [NSString stringWithFormat:@"%lld",cellModel.fakeThreadId];
+        if (recordKey.length > 0) {
+            if (!self.houseShowTracerDic[recordKey]) {
+                // 埋点
+                self.houseShowTracerDic[recordKey] = @(YES);
+                [self addHouseShowLog:indexPath];
+            }
+        }
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -162,7 +176,28 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSInteger row = indexPath.row;
+}
+
+#pragma mark - Tracer
+
+-(void)addHouseShowLog:(NSIndexPath *)indexPath {
     
+    if (indexPath.row >= self.statusViewModel.followTaskStatusModels.count) {
+        return;
+    }
+    TTPostThreadTaskStatusModel* cellModel = self.statusViewModel.followTaskStatusModels[indexPath.row];
+    
+    if (!cellModel) {
+        return;
+    }
+    
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"element_type"] = @"publish_failed_toast";
+    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"enter_from"] = @"neighborhood_tab";
+    tracerDict[@"card_type"] = @"left";
+    
+    [FHUserTracker writeEvent:@"element_show" params:tracerDict];
 }
 
 @end
@@ -291,6 +326,14 @@
 
 // event
 - (void)retryBtnClick {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"element_from"] = @"publish_failed_toast";
+    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"enter_from"] = @"neighborhood_tab";
+    tracerDict[@"card_type"] = @"left";
+    tracerDict[@"click_position"] = @"try_again_publish";
+    
+    [FHUserTracker writeEvent:@"feed_publish_try_again" params:tracerDict];
     // 无网络判断
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
@@ -301,6 +344,15 @@
 
 - (void)delBtnClick {
     if (self.statusModel) {
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[@"element_from"] = @"publish_failed_toast";
+        tracerDict[@"page_type"] = @"my_join_list";
+        tracerDict[@"enter_from"] = @"neighborhood_tab";
+        tracerDict[@"card_type"] = @"left";
+        tracerDict[@"click_position"] = @"delete_publish";
+        
+        [FHUserTracker writeEvent:@"feed_publish_delete" params:tracerDict];
+        
         [[TTPostThreadCenter sharedInstance_tt] removeTaskForFakeThreadID:self.statusModel.fakeThreadId concernID:self.statusModel.concernID];
     }
 }
