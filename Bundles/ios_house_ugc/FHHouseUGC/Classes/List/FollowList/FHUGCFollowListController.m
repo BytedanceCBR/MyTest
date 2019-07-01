@@ -155,14 +155,14 @@
 
 - (void)retryLoadData {
     
-    // add by zyk
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"join_like_neighborhood";
     [FHUserTracker writeEvent:@"click_join_like_neighborhood" params:tracerDict];
     
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = @"my_join_list";
+    NSString *enter_from = @"join_like_neighborhood";
+    traceParam[@"enter_from"] = enter_from;
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
