@@ -17,9 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)viewWillAppear;
 
+- (void)viewWillDisappear;
+
 - (void)showUGC:(BOOL)isShow;
 
 - (void)refreshCell;
+
+- (void)changeMyJoinTab;
 
 @end
 

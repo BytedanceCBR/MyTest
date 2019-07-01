@@ -16,6 +16,7 @@
 
 @property(nonatomic, strong) FHUGCMyInterestedViewModel *viewModel;
 @property(nonatomic ,strong) UITableView *tableView;
+@property (nonatomic, assign) NSTimeInterval lastRequestTime;
 
 @end
 
@@ -126,8 +127,11 @@
 }
 
 - (void)startLoadData {
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970] - self.lastRequestTime;
     if ([TTReachability isNetworkConnected]) {
-        [_viewModel requestData:YES];
+        if(currentTime > 2){
+            [_viewModel requestData:YES];
+        }
     } else {
         if(!self.hasValidateData){
             [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];

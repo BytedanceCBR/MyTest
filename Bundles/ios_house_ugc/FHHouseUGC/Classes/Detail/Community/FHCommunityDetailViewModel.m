@@ -262,9 +262,20 @@
 
 - (void)gotoPostVC {
     // 跳转发布器
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"element_type"] = @"feed_publisher";
+    tracerDict[@"page_type"] = @"community_group_detail";
+    [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
+    
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    traceParam[@"page_type"] = @"feed_publisher";
+    traceParam[@"enter_from"] = @"community_group_detail";
+    
     NSMutableDictionary *dic = [NSMutableDictionary new];
     dic[@"select_group_id"] = self.data.socialGroupId;
     dic[@"select_group_name"] = self.data.socialGroupName;
+    dic[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
     NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
     [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];

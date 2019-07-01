@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshData;
 
+- (void)cellDisappear;
+
 @end
 
 NS_ASSUME_NONNULL_END

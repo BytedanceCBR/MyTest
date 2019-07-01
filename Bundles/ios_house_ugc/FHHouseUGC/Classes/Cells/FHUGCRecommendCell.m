@@ -9,6 +9,7 @@
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCRecommendSubCell.h"
 #import <TTRoute.h>
+#import "FHUserTracker.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -27,6 +28,8 @@
 @property(nonatomic ,assign) BOOL isReplace;
 @property(nonatomic ,strong) FHUGCRecommendSubCell *joinedCell;
 @property(nonatomic ,assign) NSInteger joinedCellRow;
+
+@property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 
 @end
 
@@ -60,7 +63,6 @@
     self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
     _headerView.titleLabel.text = @"你可能感兴趣的小区";
     _headerView.bottomLine.hidden = NO;
-    _headerView.refreshBtn.hidden = YES;
     [_headerView.refreshBtn addTarget:self action:@selector(changeData) forControlEvents:UIControlEventTouchUpInside];
     [_headerView.moreBtn addTarget:self action:@selector(moreData) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_headerView];
@@ -215,6 +217,8 @@
 }
 
 - (void)changeData {
+    [self traceChangeData];
+    
     if(self.sourceList.count > 3){
         self.currentIndex = self.currentIndex + 3;
 
@@ -228,9 +232,55 @@
     }
 }
 
+- (void)traceChangeData {
+    NSMutableDictionary *dict = [self tracerDic];
+    dict[@"click_position"] = @"change_list";
+    TRACK_EVENT(@"click_change", dict);
+}
+
+- (NSMutableDictionary *)tracerDic {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"card_type"] = @"left_pic";
+    dict[@"house_type"] = @"community";
+    dict[@"element_from"] = @"like_neighborhood";
+    dict[@"page_type"] = @"nearby_list";
+    dict[@"enter_from"] = @"neighborhood_tab";
+    return dict;
+}
+
 - (void)moreData {
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_my_interest"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+}
+
+-(void)traceGroupAtIndexPath:(NSIndexPath*)indexPath {
+    if (indexPath.row >= self.dataList.count) {
+        return;
+    }
+    
+    FHFeedContentRecommendSocialGroupListModel *model = self.dataList[indexPath.row];
+    
+    if (!_clientShowDict) {
+        _clientShowDict = [NSMutableDictionary new];
+    }
+    
+    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+    NSString *socialGroupId = model.socialGroupId;
+    if(socialGroupId){
+        if (_clientShowDict[socialGroupId]) {
+            return;
+        }
+        
+        _clientShowDict[socialGroupId] = @(indexPath.row);
+        [self trackGroupShow:model rank:indexPath.row];
+    }
+}
+
+- (void)trackGroupShow:(FHFeedContentRecommendSocialGroupListModel *)model rank:(NSInteger)rank {
+    NSMutableDictionary *dict = [self tracerDic];
+    dict[@"log_pb"] = model.logPb;
+    dict[@"rank"] = @(rank);
+    TRACK_EVENT(@"community_group_show", dict);
 }
 
 #pragma mark - UITableViewDataSource
@@ -240,7 +290,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *str = self.dataList[indexPath.row];
+    FHFeedContentRecommendSocialGroupListModel *model = self.dataList[indexPath.row];
     FHUGCRecommendSubCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
     
     if (cell == nil) {
@@ -251,7 +301,7 @@
     cell.delegate = self;
     
     if(indexPath.row < self.dataList.count){
-        [cell refreshWithData:str];
+        [cell refreshWithData:model rank:indexPath.row];
     }
     
     return cell;
@@ -270,6 +320,10 @@
         [UIView animateWithDuration:0.5 animations:^{
             cell.layer.transform = CATransform3DMakeScale(1, 1, 1);
         }];
+    }
+    
+    if(indexPath.row < self.dataList.count){
+        [self traceGroupAtIndexPath:indexPath];
     }
 }
 

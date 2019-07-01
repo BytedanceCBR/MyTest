@@ -16,6 +16,10 @@
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
 #import "TTRoute.h"
+#import "TTUGCDefine.h"
+#import "FHUGCModel.h"
+#import "FHFeedUGCContentModel.h"
+#import "FHFeedListModel.h"
 
 @interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -33,10 +37,58 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 举报成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
+        
+        // 发帖成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
     }
     
     return self;
 }
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+// 发帖成功，插入数据
+- (void)postThreadSuccess:(NSNotification *)noti {
+    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        NSString *social_group_id = userInfo[@"social_group_id"];
+        NSDictionary *result_model = userInfo[@"result_model"];
+        if (result_model && [result_model isKindOfClass:[NSDictionary class]]) {
+            NSDictionary * thread_cell_dic = result_model[@"data"];
+            if (thread_cell_dic && [thread_cell_dic isKindOfClass:[NSDictionary class]]) {
+                NSString * thread_cell_data = thread_cell_dic[@"thread_cell"];
+                if (thread_cell_data && [thread_cell_data isKindOfClass:[NSString class]]) {
+                    // 得到cell 数据
+                    NSError *jsonParseError;
+                    NSData *jsonData = [thread_cell_data dataUsingEncoding:NSUTF8StringEncoding];
+                    if (jsonData) {
+                        Class cls = [FHFeedUGCContentModel class];
+                        FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
+                        if (model && jsonParseError == nil) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+                                if (cellModel) {
+                                    //去重逻辑
+                                    [self removeDuplicaionModel:cellModel.groupId];
+                                    if (self.dataList.count == 0) {
+                                        [self.dataList addObject:cellModel];
+                                    } else {
+                                        [self.dataList insertObject:cellModel atIndex:0];
+                                    }
+                                    [self.tableView reloadData];
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 - (void)configTableView {
     self.tableView.delegate = self;
@@ -92,8 +144,10 @@
         
         if (error) {
             //TODO: show handle error
-            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-            wself.viewController.showenRetryButton = YES;
+            if(error.code != -999){
+                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+                wself.viewController.showenRetryButton = YES;
+            }
             return;
         }
         
@@ -101,7 +155,7 @@
             if (isHead && feedListModel.hasMore) {
                 [wself.dataList removeAllObjects];
             }
-            NSArray *result = [wself convertModel:feedListModel.data];
+            NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
             
             if(isHead){
                 if(result.count > 0){
@@ -152,18 +206,36 @@
     }
 }
 
-- (NSArray *)convertModel:(NSArray *)feedList {
+- (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
-        cellModel.showCommunity = NO;
         cellModel.categoryId = self.categoryId;
         cellModel.feedVC = self.viewController;
+        cellModel.tableView = self.tableView;
         if(cellModel){
-            [resultArray addObject:cellModel];
+            if(isHead){
+                [resultArray addObject:cellModel];
+                //去重逻辑
+                [self removeDuplicaionModel:cellModel.groupId];
+            }else{
+                NSInteger index = [self getCellIndex:cellModel];
+                if(index < 0){
+                    [resultArray addObject:cellModel];
+                }
+            }
         }
     }
     return resultArray;
+}
+
+- (void)removeDuplicaionModel:(NSString *)groupId {
+    for (FHFeedUGCCellModel *itemModel in self.dataList) {
+        if([groupId isEqualToString:itemModel.groupId]){
+            [self.dataList removeObject:itemModel];
+            break;
+        }
+    }
 }
 
 - (void)postDeleteSuccess:(NSNotification *)noti {
@@ -303,6 +375,7 @@
             return i;
         }
     }
+    return -1;
 }
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel {

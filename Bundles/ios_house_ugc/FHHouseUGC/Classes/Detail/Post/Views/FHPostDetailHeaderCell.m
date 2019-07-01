@@ -13,6 +13,7 @@
 #import "UIColor+Theme.h"
 #import "FHUGCFollowButton.h"
 #import "FHUGCConfig.h"
+#import "TTRoute.h"
 
 @interface FHPostDetailHeaderCell ()
 
@@ -82,6 +83,24 @@
     [self addSubview:_joinBtn];
     
     [self setupConstraints];
+    
+    __weak typeof(self) wSelf = self;
+    self.didClickCellBlk = ^{
+        [wSelf gotoCommunityDetail];
+    };
+}
+
+- (void)gotoCommunityDetail {
+     FHPostDetailHeaderModel *headerModel = (FHPostDetailHeaderModel *)self.currentData;
+    if (headerModel) {
+        FHUGCScialGroupDataModel *data = headerModel.socialGroupModel;
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"community_id"] = data.socialGroupId;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        // 跳转到圈子详情页
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
 }
 
 - (void)setupConstraints {

@@ -10,6 +10,8 @@
 #import "FHUGCMyInterestedController.h"
 #import "FHHouseUGCHeader.h"
 #import "FHUGCConfig.h"
+#import "UIViewController+Track.h"
+#import "FHUserTracker.h"
 
 @interface FHMyJoinViewController ()
 
@@ -25,16 +27,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
-    
-//    [self initView];
-//    [self initViewModel];
+    [self addEnterCategoryLog];
+    [self loadVC];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
+- (void)loadVC {
     BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
-    
     if(hasSocialGroups){
         [self initFeedListVC];
         [self.feedListVC viewWillAppear];
@@ -44,15 +42,34 @@
     }
 }
 
-//- (void)initView {
+- (void)viewWillAppear {
+    [self loadVC];
+}
+
+- (void)viewWillDisappear {
+    [self addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
+
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
 //
-//    //根据用户是否已加入小区显示不同的页面
-//    if(1){
+//    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
+//
+//    if(hasSocialGroups){
 //        [self initFeedListVC];
+//        [self.feedListVC viewWillAppear];
+//        [self loadData];
 //    }else{
 //        [self initMyInterestListVC];
 //    }
+//}
 //
+//- (void)viewWillDisappear:(BOOL)animated {
+//    [super viewWillDisappear:animated];
+//
+//    [self addStayCategoryLog:self.ttTrackStayTime];
+//    [self tt_resetStayTime];
 //}
 
 - (void)initFeedListVC {
@@ -70,6 +87,7 @@
     vc.listType = FHCommunityFeedListTypeMyJoin;
     vc.showErrorView = NO;
     vc.tableHeaderView = self.neighbourhoodView;
+    vc.tracerDict = [self.tracerDict mutableCopy];
     
     vc.view.frame = self.view.bounds;
     [self addChildViewController:vc];
@@ -120,6 +138,27 @@
 
 - (void)loadData {
     [self.viewModel requestData];
+}
+
+- (void)addEnterCategoryLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"category_name"] = [self categoryName];
+    TRACK_EVENT(@"enter_category", tracerDict);
+}
+
+- (void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    NSTimeInterval duration = stayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"category_name"] = [self categoryName];
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    TRACK_EVENT(@"stay_category", tracerDict);
+}
+
+- (NSString *)categoryName {
+    return @"my_join_list";
 }
 
 @end

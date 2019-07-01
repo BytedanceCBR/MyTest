@@ -41,6 +41,7 @@
 #import "FHUGCFollowListController.h"
 #import "TTCategoryDefine.h"
 #import "ToastManager.h"
+#import "FHUserTracker.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -56,8 +57,6 @@ static CGFloat kUGCToolbarHeight = 80.f;
 static NSString * const kPostTopicEventName = @"topic_post";
 static NSString * const kUserInputTelephoneKey = @"userInputTelephoneKey";
 static NSInteger const kTitleCharactersLimit = 20;
-
-NSString * const kForumPostThreadFinish = @"ForumPostThreadFinish";
 
 static NSInteger const kMaxPostImageCount = 9;
 
@@ -137,7 +136,7 @@ static NSInteger const kMaxPostImageCount = 9;
                 self.selectGroupId = nil;
                 self.selectGroupName = nil;
             }
-            
+            self.trackDict = [self.tracerDict copy];
             // 添加google地图注册
             [[TTLocationManager sharedManager] registerReverseGeocoder:[TTGoogleMapGeocoder sharedGeocoder] forKey:NSStringFromClass([TTGoogleMapGeocoder class])];
         }
@@ -273,6 +272,13 @@ static NSInteger const kMaxPostImageCount = 9;
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];
     [self.selectView addGestureRecognizer:tapGestureRecognizer];
     y += 44;
+    NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+    tracerDict[@"element_type"] = @"select_like_publisher_neighborhood";
+    if (self.selectGroupId.length > 0) {
+        tracerDict[@"group_id"] = self.selectGroupId;
+    }
+    [FHUserTracker writeEvent:@"element_show" params:tracerDict];
+    
     
     //Input view
     self.inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(kLeftPadding - 5, y + kInputViewTopPadding, self.view.width - kLeftPadding - kRightPadding + 10.f, kTextViewHeight)];
@@ -375,6 +381,11 @@ static NSInteger const kMaxPostImageCount = 9;
     if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
         return;
     }
+    
+    NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+    tracerDict[@"click_position"] = @"select_like_publisher_neighborhood";
+    [FHUserTracker writeEvent:@"click_like_publisher_neighborhood" params:tracerDict];
+    
     self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
     [self endEditing];
     NSMutableDictionary *dict = @{}.mutableCopy;
@@ -385,8 +396,8 @@ static NSInteger const kMaxPostImageCount = 9;
     dict[@"ugc_delegate"] = ugcDelegateTable;
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_type"] = @"click";
-    traceParam[@"enter_from"] = @"my_join_list";
-    traceParam[@"element_from"] = @"my_joined_neighborhood";
+    traceParam[@"enter_from"] = @"feed_publisher";
+    traceParam[@"element_from"] = @"select_like_publisher_neighborhood";
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
@@ -547,13 +558,24 @@ static NSInteger const kMaxPostImageCount = 9;
             }];
             [alertController showFrom:self animated:YES];
         } else {
+            // 弹窗埋点
+            NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+            tracerDict[@"enter_type"] = @"click";
+            [FHUserTracker writeEvent:@"publisher_cancel_popup_show" params:tracerDict];
+            
             TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"编辑未完成" message:@"退出后编辑的内容将不被保存" preferredType:TTThemedAlertControllerTypeAlert];
             WeakSelf;
             [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
                 StrongSelf;
+                tracerDict[@"click_position"] = @"confirm";
+                [FHUserTracker writeEvent:@"publisher_cancel_popup_click" params:tracerDict];
                 [self postFinished:NO];
             }];
-            [alertController addActionWithTitle:NSLocalizedString(@"继续编辑", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:nil];
+            [alertController addActionWithTitle:NSLocalizedString(@"继续编辑", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+                StrongSelf;
+                tracerDict[@"click_position"] = @"cancel";
+                [FHUserTracker writeEvent:@"publisher_cancel_popup_click" params:tracerDict];
+            }];
             [alertController showFrom:self animated:YES];
         }
     }
@@ -703,7 +725,7 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.latitude = latitude;
     postThreadModel.social_group_id = self.selectView.groupId;
     
-    postThreadModel.extraTrack = [extraTrack copy];
+    postThreadModel.extraTrack = self.trackDict.copy;
     
     [[TTPostThreadCenter sharedInstance_tt] postThreadWithPostThreadModel:postThreadModel finishBlock:^(TTPostThreadTask *task) {
         [self postFinished:YES task:task];
@@ -716,11 +738,19 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)postFinished:(BOOL)hasSent task:(TTPostThreadTask *)task {
     [self clearDraft];
     if (hasSent && !isEmptyString(self.cid)) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kForumPostThreadFinish object:nil userInfo:@{@"cid" : self.cid}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCForumPostThreadFinish object:nil userInfo:@{@"cid" : self.cid}];
+        NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+        tracerDict[@"click_position"] = @"passport_publisher";
+        // 此时没有groupID
+        [FHUserTracker writeEvent:@"feed_publish_click" params:tracerDict];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionCancelledNotification
                                                             object:nil
                                                           userInfo:nil];
+        // 取消埋点
+        NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+        tracerDict[@"click_position"] = @"publisher_cancel";
+        [FHUserTracker writeEvent:@"click_options" params:tracerDict];
     }
 
     // 发帖跳关注频道

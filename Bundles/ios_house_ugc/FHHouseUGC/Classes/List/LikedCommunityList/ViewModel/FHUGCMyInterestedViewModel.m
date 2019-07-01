@@ -67,7 +67,9 @@
 
         if (error) {
             //TODO: show handle error
-            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            if(error.code != -999){
+                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            }
             return;
         }
         

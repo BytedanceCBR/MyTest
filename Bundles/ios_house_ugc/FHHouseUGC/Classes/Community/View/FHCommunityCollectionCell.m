@@ -34,11 +34,28 @@
         _type = type;
         [self initViews];
     }else{
-        [self.vc viewWillAppear:NO];
+        if(self.type == FHCommunityCollectionCellTypeNearby || self.type == FHCommunityCollectionCellTypeMyJoin){
+            self.vc.tracerDict = [self traceDic].mutableCopy;
+        }
+//        [self.vc viewWillAppear:NO];
+        
+        if(self.type == FHCommunityCollectionCellTypeNearby){
+            FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
+            [vc viewWillAppear];
+        }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
+            FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
+            [vc viewWillAppear];
+        }
     }
-    
-    if(self.type == FHCommunityCollectionCellTypeNearby || self.type == FHCommunityCollectionCellTypeMyJoin){
-        self.vc.tracerDict = [self traceDic].mutableCopy;
+}
+
+- (void)cellDisappear {
+    if(self.type == FHCommunityCollectionCellTypeNearby){
+        FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
+        [vc viewWillDisappear];
+    }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
+        FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
+        [vc viewWillDisappear];
     }
 }
 
@@ -61,6 +78,10 @@
         self.vc = ariticleListVC;
     }else{
         
+    }
+    
+    if(self.type == FHCommunityCollectionCellTypeNearby || self.type == FHCommunityCollectionCellTypeMyJoin){
+        self.vc.tracerDict = [self traceDic].mutableCopy;
     }
     
     if(self.vc){
@@ -87,7 +108,7 @@
     NSString *enterType = self.enterType ? self.enterType : @"default";
     return @{
              @"enter_from":@"neighborhood_tab",
-             @"enter_type":self.enterType
+             @"enter_type":self.enterType,
              };
 }
 
