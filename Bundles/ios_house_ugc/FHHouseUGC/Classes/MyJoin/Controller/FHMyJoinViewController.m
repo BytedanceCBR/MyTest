@@ -10,7 +10,6 @@
 #import "FHUGCMyInterestedController.h"
 #import "FHHouseUGCHeader.h"
 #import "FHUGCConfig.h"
-#import "UIViewController+Track.h"
 #import "FHUserTracker.h"
 
 @interface FHMyJoinViewController ()
@@ -18,6 +17,9 @@
 @property(nonatomic, strong) FHMyJoinViewModel *viewModel;
 @property(nonatomic, assign) FHUGCMyJoinType type;
 @property(nonatomic, strong) UIView *currentView;
+@property(nonatomic, strong) FHUGCMyInterestedController *interestedVC;
+@property(nonatomic, assign) BOOL showFeed;
+@property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
 
 @end
 
@@ -27,13 +29,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
-    [self addEnterCategoryLog];
     [self loadVC];
 }
 
 - (void)loadVC {
-    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
-    if(hasSocialGroups){
+    self.showFeed = [FHUGCConfig sharedInstance].followList.count > 0;
+    if(self.showFeed){
         [self initFeedListVC];
         [self.feedListVC viewWillAppear];
         [self loadData];
@@ -44,39 +45,28 @@
 
 - (void)viewWillAppear {
     [self loadVC];
+    
+    if ([[NSDate date]timeIntervalSince1970] - _enterTabTimestamp > 24*60*60) {
+        //超过一天
+        _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+    }
 }
 
 - (void)viewWillDisappear {
-    [self addStayCategoryLog:self.ttTrackStayTime];
-    [self tt_resetStayTime];
+    if(self.showFeed){
+        [self addStayCategoryLog];
+    }else{
+        [self.interestedVC viewWillDisappear];
+    }
 }
-
-//- (void)viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
-//
-//    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
-//
-//    if(hasSocialGroups){
-//        [self initFeedListVC];
-//        [self.feedListVC viewWillAppear];
-//        [self loadData];
-//    }else{
-//        [self initMyInterestListVC];
-//    }
-//}
-//
-//- (void)viewWillDisappear:(BOOL)animated {
-//    [super viewWillDisappear:animated];
-//
-//    [self addStayCategoryLog:self.ttTrackStayTime];
-//    [self tt_resetStayTime];
-//}
 
 - (void)initFeedListVC {
     if(self.type == FHUGCMyJoinTypeFeed){
         //考虑是否需要刷新数据
         return;
     }
+    
+    _interestedVC = nil;
     
     if(_currentView){
         [_currentView removeFromSuperview];
@@ -96,6 +86,8 @@
     _feedListVC = vc;
     
     _type = FHUGCMyJoinTypeFeed;
+    
+    [self addEnterCategoryLog];
 }
 
 - (void)initMyInterestListVC {
@@ -117,6 +109,7 @@
     [self addChildViewController:vc];
     [self.view addSubview:vc.view];
     _currentView = vc.view;
+    _interestedVC = vc;
     
     _type = FHUGCMyJoinTypeEmpty;
 }
@@ -143,18 +136,24 @@
 - (void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"category_name"] = [self categoryName];
+    tracerDict[@"show_type"] = @"feed_full";
     TRACK_EVENT(@"enter_category", tracerDict);
+    
+    self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
 }
 
-- (void)addStayCategoryLog:(NSTimeInterval)stayTime {
-    NSTimeInterval duration = stayTime * 1000.0;
-    if (duration == 0) {//当前页面没有在展示过
+- (void)addStayCategoryLog {
+    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTabTimestamp;
+    if (duration <= 0 || duration >= 24*60*60) {
         return;
     }
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"category_name"] = [self categoryName];
-    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    tracerDict[@"show_type"] = @"feed_full";
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:(duration * 1000)];
     TRACK_EVENT(@"stay_category", tracerDict);
+    
+    self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
 }
 
 - (NSString *)categoryName {

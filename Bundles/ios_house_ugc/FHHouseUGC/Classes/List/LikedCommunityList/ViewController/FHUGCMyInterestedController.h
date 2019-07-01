@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) FHUGCMyInterestedType type;
 
+- (void)viewWillAppear;
+- (void)viewWillDisappear;
+
 @end
 
 NS_ASSUME_NONNULL_END

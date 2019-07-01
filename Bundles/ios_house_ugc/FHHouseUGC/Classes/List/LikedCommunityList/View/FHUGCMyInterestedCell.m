@@ -99,6 +99,7 @@
         [FHUGCCellHelper setRichContent:_postDescLabel content:model.threadInfo.content font:[UIFont themeFontRegular:14] numberOfLines:maxLines];
         [self.icon bd_setImageWithURL:[NSURL URLWithString:model.socialGroup.avatar] placeholder:nil];
         self.joinBtn.groupId = model.socialGroup.socialGroupId;
+        self.joinBtn.tracerDic = self.tracerDic;
         [self updateImageConstraints:model];
     }
 }

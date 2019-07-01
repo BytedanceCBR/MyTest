@@ -213,6 +213,7 @@
         cellModel.categoryId = self.categoryId;
         cellModel.feedVC = self.viewController;
         cellModel.tableView = self.tableView;
+        cellModel.showCommunity = NO;
         if(cellModel){
             if(isHead){
                 [resultArray addObject:cellModel];
