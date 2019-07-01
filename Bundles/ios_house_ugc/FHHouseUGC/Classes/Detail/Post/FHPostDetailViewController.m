@@ -14,6 +14,7 @@
 #import "FHPostDetailNavHeaderView.h"
 #import "FHCommonDefines.h"
 #import "FHUGCFollowButton.h"
+#import "FHUserTracker.h"
 
 @interface FHPostDetailViewController ()
 
@@ -80,6 +81,12 @@
     [self addDefaultEmptyViewFullScreen];
     // 请求 详情页数据
     [self startLoadData];
+}
+
+- (void)addGoDetail {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"page_type"] = @"feed_detail";
+    [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
