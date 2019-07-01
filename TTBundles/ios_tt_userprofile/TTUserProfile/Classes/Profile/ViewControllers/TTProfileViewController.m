@@ -188,7 +188,6 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
         [self refreshUserInfoView];
     }
 
-    //TODO zlj check
 //    FHMessageNotificationTipsManager *manager = [FHMessageNotificationTipsManager sharedManager];
 //    [manager saveLastImportantMessageID];
 //    //切换到我的tab时

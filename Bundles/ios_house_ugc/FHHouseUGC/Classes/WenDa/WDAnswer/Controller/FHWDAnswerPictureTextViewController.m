@@ -47,6 +47,7 @@
 #import "JSONAdditions.h"
 #import "WDMonitorManager.h"
 #import "FHWenDaToolbar.h"
+#import "FHUserTracker.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -692,6 +693,13 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 #pragma mark - FRAddMultiImagesViewDelegate
 
 - (void)addImagesButtonDidClickedOfAddMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"page_type"] = @"answer_publisher";
+    tracerDict[@"click_position"] = @"picture";
+    tracerDict[@"enter_from"] = @"feed_list";
+    tracerDict[@"log_pb"] = @"be_null";
+    [FHUserTracker writeEvent:@"click_options" params:tracerDict];
+    
     self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
     [self endEditing];
 }

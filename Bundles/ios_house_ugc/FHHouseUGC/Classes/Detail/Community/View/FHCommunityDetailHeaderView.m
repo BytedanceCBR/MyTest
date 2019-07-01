@@ -11,6 +11,7 @@
 #import "FHUGCFollowButton.h"
 #import "SSViewBase.h"
 #import "TTDeviceHelper.h"
+#import "FHCommunityDetailRefreshView.h"
 
 @interface FHCommunityDetailHeaderView ()
 @end
@@ -75,11 +76,15 @@
     self.publicationsContainer.layer.shadowOpacity = 0.1;//0.8;//阴影透明度，默认0
     self.publicationsContainer.layer.shadowRadius = 4;//8;//阴影半径，默认3
 
+    self.refreshView = [[FHCommunityDetailRefreshView alloc] initWithFrame:CGRectMake(0, 20.f + ([TTDeviceHelper isIPhoneXSeries] ? 44 : 20), 0, 0)];
+    self.refreshView.alpha = 0.0f;
+
     [self addSubview:self.topBack];
     [self addSubview:self.avatar];
     [self addSubview:self.labelContainer];
     [self addSubview:self.followButton];
     [self addSubview:self.publicationsContainer];
+    [self addSubview:self.refreshView];
 }
 
 - (void)initConstraints {
@@ -142,4 +147,29 @@
     }];
 
 }
+
+- (void)updateWhenScrolledWithContentOffset:(CGPoint)contentOffset isScrollTop:(BOOL)isScrollTop {
+    if (-contentOffset.y <= 0) {
+        self.refreshView.alpha = 0.0f;
+    }
+    if (-contentOffset.y <= self.refreshView.toRefreshMinDistance) {
+        self.refreshView.alpha = fmaxf(0.0f, fminf((-contentOffset.y / self.refreshView.toRefreshMinDistance), 1.0f));
+    }
+    if (-contentOffset.y > self.refreshView.toRefreshMinDistance) {
+        self.refreshView.alpha = 1.0f;
+    }
+    if (isScrollTop) {
+        return;
+    }
+    [self.refreshView updateWithContentOffsetY:-contentOffset.y];
+}
+
+- (void)startRefresh {
+    [self.refreshView beginRefresh];
+}
+
+- (void)stopRefresh {
+    [self.refreshView endRefresh];
+}
+
 @end
