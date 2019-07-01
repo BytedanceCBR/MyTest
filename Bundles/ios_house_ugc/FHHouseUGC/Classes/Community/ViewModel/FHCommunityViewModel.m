@@ -57,6 +57,13 @@
     }
 }
 
+- (void)viewWillDisappear {
+    if([self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
+        FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
+        [cell cellDisappear];
+    }
+}
+
 - (void)showUGC:(BOOL)isShow {
     if(isShow){
     self.currentTabIndex = 1;

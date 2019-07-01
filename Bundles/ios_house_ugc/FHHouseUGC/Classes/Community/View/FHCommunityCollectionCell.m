@@ -50,10 +50,6 @@
 }
 
 - (void)cellDisappear {
-//    if(self.type == FHCommunityCollectionCellTypeNearby || self.type == FHCommunityCollectionCellTypeMyJoin){
-//        [self.vc viewWillDisappear:NO];
-//    }
-    
     if(self.type == FHCommunityCollectionCellTypeNearby){
         FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
         [vc viewWillDisappear];

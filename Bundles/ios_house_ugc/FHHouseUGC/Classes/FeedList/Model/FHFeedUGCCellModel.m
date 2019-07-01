@@ -139,6 +139,7 @@
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
         cellModel.recommendSocialGroupList = model.recommendSocialGroupList;
+        cellModel.elementFrom = @"like_neighborhood";
     }
     
     return cellModel;

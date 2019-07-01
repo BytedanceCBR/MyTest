@@ -166,6 +166,7 @@
         cellModel.categoryId = self.categoryId;
         cellModel.feedVC = self.viewController;
         cellModel.tableView = self.tableView;
+        cellModel.enterFrom = [self.viewController categoryName];
         if(cellModel){
             if(isHead){
                 [resultArray addObject:cellModel];

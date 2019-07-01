@@ -78,6 +78,7 @@
         _feedVC.listType = FHCommunityFeedListTypeNearby;
         _feedVC.currentLocaton = self.currentLocaton;
         _feedVC.view.frame = self.view.bounds;
+        _feedVC.tracerDict = [self.tracerDict mutableCopy];
         [self addChildViewController:_feedVC];
         [self.view addSubview:_feedVC.view];
         [self.feedVC viewWillAppear];

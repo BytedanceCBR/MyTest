@@ -87,12 +87,13 @@ NS_ASSUME_NONNULL_BEGIN
 //是否显示圈子名称，默认为YES
 @property (nonatomic, assign) BOOL showCommunity;
 
+//埋点相关
+@property (nonatomic, copy) NSString *elementFrom;
+@property (nonatomic, copy) NSString *enterFrom;
+
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 
 + (FHFeedUGCCellModel *)modelFromFeedUGCContent:(FHFeedUGCContentModel *)model;
-
-//临时假数据
-+ (FHFeedUGCCellModel *)modelFromFakeData;
 
 @end
 
