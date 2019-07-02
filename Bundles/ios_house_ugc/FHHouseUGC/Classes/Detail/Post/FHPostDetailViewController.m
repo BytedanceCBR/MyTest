@@ -106,6 +106,10 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     self.isViewAppearing = NO;
+}
+
+- (void)dealloc
+{
     [self addReadPct];
 }
 
@@ -224,6 +228,8 @@
 
 - (void)addReadPct {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"page_count"] = @"1";
+    tracerDict[@"percent"] = @"100";
     [FHUserTracker writeEvent:@"read_pct" params:tracerDict];
 }
 
