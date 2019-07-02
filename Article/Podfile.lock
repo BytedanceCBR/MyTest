@@ -6,19 +6,21 @@ PODS:
     - AFNetworking/Reachability (= 2.5.1.1-binary)
     - AFNetworking/Security (= 2.5.1.1-binary)
     - AFNetworking/Serialization (= 2.5.1.1-binary)
+    - AFNetworking/UIKit (= 2.5.1.1-binary)
   - AFNetworking/NSURLConnection (2.5.1.1-binary)
   - AFNetworking/NSURLSession (2.5.1.1-binary)
   - AFNetworking/Reachability (2.5.1.1-binary)
   - AFNetworking/Security (2.5.1.1-binary)
   - AFNetworking/Serialization (2.5.1.1-binary)
+  - AFNetworking/UIKit (2.5.1.1-binary)
   - AKCommentPlugin (0.1.0)
   - AKShareServicePlugin (0.1.0)
   - AKWDPlugin (0.1.0)
   - AKWebViewBundlePlugin (0.1.0)
-  - AMap3DMap (6.2.0.1-binary)
-  - AMapFoundation (1.5.2.1-binary)
+  - AMap3DMap (6.9.0.1-binary)
+  - AMapFoundation (1.5.7.1-binary)
   - AMapLocation (2.6.0.1-binary)
-  - AMapSearch (6.1.1.1-binary)
+  - AMapSearch (6.9.0.1-binary)
   - Aspects (1.4.1.1-binary)
   - AWECloudCommand (1.0.7.1-binary):
     - AWECloudCommand/Core (= 1.0.7.1-binary)
@@ -564,10 +566,10 @@ DEPENDENCIES:
   - AKShareServicePlugin (from `../AKPlugins/AKShareServicePlugin`)
   - AKWDPlugin (from `../AKPlugins/AKWDPlugin`)
   - AKWebViewBundlePlugin (from `../AKPlugins/AKWebViewBundlePlugin`)
-  - AMap3DMap (= 6.2.0.1-binary)
-  - AMapFoundation (= 1.5.2.1-binary)
+  - AMap3DMap (= 6.9.0.1-binary)
+  - AMapFoundation (= 1.5.7.1-binary)
   - AMapLocation (= 2.6.0.1-binary)
-  - AMapSearch (= 6.1.1.1-binary)
+  - AMapSearch (= 6.9.0.1-binary)
   - Aspects (= 1.4.1.1-binary)
   - AWECloudCommand (= 1.0.7.1-binary)
   - AWEVideoPlayer (= 0.3.20.1-binary)
@@ -977,15 +979,15 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
-  AFNetworking: fac3e1b64a9a165c0c7ac9de2d62660b3e875c7e
+  AFNetworking: ae73845b1571323685452375dc66d8e98feefa67
   AKCommentPlugin: 5ad084d3f5a4e3b0da26477aedd952dc0d4f1634
   AKShareServicePlugin: 7f4273d1d25b641a6d3c97537d6c57e8ceb999fc
   AKWDPlugin: 578ff2a20b6d16a523e2b1e96512e77e5c6b6fd3
   AKWebViewBundlePlugin: 684255bc41391dae352b786c0ef7b7e8cc4b794a
-  AMap3DMap: ade5ca8605a03833fb799fdd6e7b489e83963941
-  AMapFoundation: bc8d29843a0d4e0f83a175a77729d2b623c26026
+  AMap3DMap: 53ed5087b5d5459d1b21030ed0ab8c02515747aa
+  AMapFoundation: 897a0981ddd65afe7e289957ca5589276d5523d8
   AMapLocation: 4ada3e0cb6933c1ac0b64038abb816b768d6311b
-  AMapSearch: 010f2224fd4b3d902e3df088856382370da84607
+  AMapSearch: 64c969de27b970351537d0c60550033c70beede7
   Aspects: 49ab2ffbcea7b491efa20fda09e60a3f629b7616
   AWECloudCommand: 60f409e41dc60fe48dca27e05028da89fe3e5f18
   AWEVideoPlayer: 79aef06155256984da6189dba3ac966c63b55098
@@ -1056,7 +1058,7 @@ SPEC CHECKSUMS:
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
   RSSwizzle: 9b7cf78908bc6b249f1403926c168f730f840e91
-  RXCollections: ef46a1c3b1f25711117ece94c48d9beae9f143a6
+  RXCollections: fc5eb6c41b5a3646601e6a01c1ee444c354a9bfc
   SDWebImage: abd373dadf531cf5d1738f6a8e9487f7f4a12f14
   SecGuard: 0c9ebebd0992c9efd94a3a026832eb721ae0cc15
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
@@ -1157,6 +1159,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 87c3cbb82c4ebba9e7418c45a5246710f792b9f7
+PODFILE CHECKSUM: 308d04e0d7e6f722e54fa91c59dc11602b4cef0c
 
 COCOAPODS: 1.4.0

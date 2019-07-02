@@ -31,12 +31,14 @@
 #import "FHMapSearchWayChooseView.h"
 #import <TTUIWidget/TTNavigationController.h>
 #import "FHMapSearchBottomBar.h"
+#import "FHMapSimpleNavbar.h"
 
 #define kTapDistrictZoomLevel  16
 #define kFilterBarHeight 44
 
 @interface FHMapSearchViewController ()<TTRouteInitializeProtocol>
 
+@property(nonatomic , strong) FHMapSimpleNavbar *simpleNavBar;
 @property(nonatomic , strong) FHMapNavigationBar *navBar;
 @property(nonatomic , strong) FHMapSearchConfigModel *configModel;
 @property(nonatomic , strong) FHMapSearchViewModel *viewModel;

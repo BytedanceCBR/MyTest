@@ -10,8 +10,8 @@
 #import "UIColor+Theme.h"
 #import <UIViewAdditions.h>
 
-#define kHorPadding 10
-#define kViewHeight 40
+#define kHorPadding 13
+#define kViewHeight 25
 
 @interface FHMapSearchTipView ()
 
@@ -37,7 +37,11 @@
         [self addSubview:_tipLabel];
         
         self.backgroundColor = [UIColor themeRed2];
-        self.clipsToBounds = YES;
+        
+        self.layer.cornerRadius = 20;
+        self.layer.borderColor = [[UIColor themeRed3]CGColor];
+        self.layer.borderWidth = 0.5;
+        self.layer.masksToBounds = YES;
     }
     return self;
 }

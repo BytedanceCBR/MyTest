@@ -72,6 +72,9 @@
 		3D97BE7F226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
 		3D97BE81226D86230063C39A /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
 		3D97BE82226D862B0063C39A /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
+		3D9FD21F22CB40A4009CFB78 /* gaode_style_extra.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D9FD21E22CB40A4009CFB78 /* gaode_style_extra.data */; };
+		3D9FD22022CB40A4009CFB78 /* gaode_style_extra.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D9FD21E22CB40A4009CFB78 /* gaode_style_extra.data */; };
+		3D9FD22122CB40A4009CFB78 /* gaode_style_extra.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D9FD21E22CB40A4009CFB78 /* gaode_style_extra.data */; };
 		3DB49F852265E34900A0780E /* IPhoneProjectLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE12265E34900A0780E /* IPhoneProjectLogicSetting.strings */; };
 		3DB49F862265E34900A0780E /* IPhoneProjectLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE12265E34900A0780E /* IPhoneProjectLogicSetting.strings */; };
 		3DB49F872265E34900A0780E /* IPhoneProjectLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE12265E34900A0780E /* IPhoneProjectLogicSetting.strings */; };
@@ -411,6 +414,7 @@
 		3D7D2F3B22704CAA00A95FAF /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		3D97BE7B226D753E0063C39A /* TTNotificationServiceExtensionBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTNotificationServiceExtensionBase.h; sourceTree = "<group>"; };
 		3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTNotificationServiceExtensionBase.m; sourceTree = "<group>"; };
+		3D9FD21E22CB40A4009CFB78 /* gaode_style_extra.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_style_extra.data; sourceTree = "<group>"; };
 		3DB49EE12265E34900A0780E /* IPhoneProjectLogicSetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = IPhoneProjectLogicSetting.strings; sourceTree = "<group>"; };
 		3DB49EE22265E34900A0780E /* ProjectDayModeThemeUISetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = ProjectDayModeThemeUISetting.strings; sourceTree = "<group>"; };
 		3DB49EE32265E34900A0780E /* ProjectNightModeThemeUISetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = ProjectNightModeThemeUISetting.strings; sourceTree = "<group>"; };
@@ -879,6 +883,7 @@
 				D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */,
 				D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */,
 				3D721A9D218FE7FA006C1156 /* gaode_map_style.data */,
+				3D9FD21E22CB40A4009CFB78 /* gaode_style_extra.data */,
 				6114B09C21B3E78C00331D12 /* house_refresh.json */,
 				3DB49EE42265E34900A0780E /* iconfont_new.ttf */,
 				D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */,
@@ -1204,6 +1209,7 @@
 				C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				3DB49F912265E34900A0780E /* iconfont_new.ttf in Resources */,
+				3D9FD21F22CB40A4009CFB78 /* gaode_style_extra.data in Resources */,
 				6B50C7B51F5D44EF00BF89A1 /* Weather.xcassets in Resources */,
 				3D2F39972270545700AE567D /* TargetLogicSetting.strings in Resources */,
 				2E14CCED1FE007C30093E05D /* sound3.caf in Resources */,
@@ -1276,6 +1282,7 @@
 				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				3DB49F932265E34900A0780E /* iconfont_new.ttf in Resources */,
+				3D9FD22122CB40A4009CFB78 /* gaode_style_extra.data in Resources */,
 				B373CEA62174587A008F9905 /* Weather.xcassets in Resources */,
 				3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */,
 				B373CEAA2174587A008F9905 /* sound3.caf in Resources */,
@@ -1336,6 +1343,7 @@
 				3DB49F922265E34900A0780E /* iconfont_new.ttf in Resources */,
 				FEFA59F0205FB1A8001F50D8 /* Weather.xcassets in Resources */,
 				FEFA59F6205FB1A8001F50D8 /* sound3.caf in Resources */,
+				3D9FD22022CB40A4009CFB78 /* gaode_style_extra.data in Resources */,
 				3DB7A72F21A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				FEFA59FB205FB1A8001F50D8 /* CommonResource.xcassets in Resources */,
 				FEFA59FC205FB1A8001F50D8 /* sound2.caf in Resources */,
@@ -1575,6 +1583,8 @@
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/RootTab.storyboard",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/transparent_1px@2x.png",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
+				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/feed.xcassets",
+				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/FantasyAnimation.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/Settings.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button.png",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button@2x.png",
@@ -1685,6 +1695,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RootTab.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/transparent_1px@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/feed.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FantasyAnimation.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Settings.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button@2x.png",
@@ -1848,6 +1860,8 @@
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/RootTab.storyboard",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/transparent_1px@2x.png",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
+				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/feed.xcassets",
+				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/FantasyAnimation.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/Settings.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button.png",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button@2x.png",
@@ -1957,6 +1971,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RootTab.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/transparent_1px@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/feed.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FantasyAnimation.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Settings.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button@2x.png",
@@ -2239,6 +2255,8 @@
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/RootTab.storyboard",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/transparent_1px@2x.png",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
+				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/feed.xcassets",
+				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/FantasyAnimation.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/Settings.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button.png",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button@2x.png",
@@ -2348,6 +2366,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RootTab.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/transparent_1px@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/feed.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FantasyAnimation.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Settings.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button@2x.png",

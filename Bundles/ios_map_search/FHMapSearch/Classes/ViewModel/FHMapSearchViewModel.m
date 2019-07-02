@@ -224,6 +224,19 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             BDALOG_ERROR(@"map_search_location : (longitude:%fmlatitude:%f) ",center.longitude,center.latitude);
         }
         
+        //设置地图style
+        NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_map_style.data" ofType:nil];
+        NSData *data = [NSData dataWithContentsOfFile:stylePath];
+        NSString *extraPath = [[NSBundle mainBundle] pathForResource:@"gaode_style_extra.data" ofType:nil];
+        NSData *extraData = [NSData dataWithContentsOfFile:extraPath];
+//        [_mapView setCustomMapStyleWithWebData:data];
+        MAMapCustomStyleOptions *options = [MAMapCustomStyleOptions new];
+//        options.styleId = @"ff4f227ed4a5b4431c987097c46b63c8";
+        options.styleData = data;
+        options.styleExtraData = extraData;
+        [_mapView setCustomMapStyleOptions:options];
+        [_mapView setCustomMapStyleEnabled:YES];
+        
 //        MAUserLocationRepresentation *r = [[MAUserLocationRepresentation alloc] init];
 //        r.showsHeadingIndicator = NO;///是否显示方向指示(MAUserTrackingModeFollowWithHeading模式开启)。默认为YES
 //        r.fillColor = RGBA(0x29, 0x9c, 0xff, 0.3);///精度圈 填充颜色, 默认 kAccuracyCircleDefaultColor
