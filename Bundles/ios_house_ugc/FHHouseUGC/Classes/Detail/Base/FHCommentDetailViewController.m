@@ -602,6 +602,7 @@
         [wSelf clickSubmitComment];
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
     commentManager.enterFrom = @"feed_detail";
+    commentManager.enter_type = @"submit_comment";
     
     self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
     
