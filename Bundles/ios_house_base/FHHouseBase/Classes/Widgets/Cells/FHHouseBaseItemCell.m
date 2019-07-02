@@ -435,6 +435,17 @@
         layout.height = YGPointValue(54.0f);
     }];
     
+    [self.leftInfoView addSubview:self.houseVideoImageView];
+    
+    [_houseVideoImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.position = YGPositionTypeAbsolute;
+        layout.top = YGPointValue(27.0f);
+        layout.left = YGPointValue(25.0f);
+        layout.width = YGPointValue(20.0f);
+        layout.height = YGPointValue(20.0f);
+    }];
+    
     [_imageTagLabelBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;

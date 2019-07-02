@@ -31,11 +31,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 同小区房源 item
 @interface FHDetailSameNeighborhoodHouseCollectionCell : FHDetailBaseCollectionCell
 
-@property (nonatomic, strong)   UIImageView       *icon;
-@property (nonatomic, strong)   YYLabel       *descLabel;
-@property (nonatomic, strong)   UILabel       *priceLabel;
-@property (nonatomic, strong)   UILabel       *spaceLabel;
-
+@property (nonatomic, strong) UIImageView *icon;
+@property (nonatomic, strong) UIImageView *houseVideoImageView;
+@property (nonatomic, strong) YYLabel *descLabel;
+@property (nonatomic, strong) UILabel *priceLabel;
+@property (nonatomic, strong) UILabel *spaceLabel;
 
 @end
 
