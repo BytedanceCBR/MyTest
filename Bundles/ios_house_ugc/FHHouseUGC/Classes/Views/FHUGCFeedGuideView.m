@@ -8,6 +8,7 @@
 #import "FHUGCFeedGuideView.h"
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
+#import "FHUserTracker.h"
 #import <Masonry.h>
 
 @interface FHUGCFeedGuideView ()
@@ -46,6 +47,7 @@
     [self.contentView addSubview:_contentLabel];
     
     self.closeBtn = [[UIButton alloc] init];
+    [self.closeBtn addTarget:self action:@selector(onCloseGuideClick) forControlEvents:UIControlEventTouchUpInside];
     [_closeBtn setImage:[UIImage imageNamed:@"fh_ugc_feed_guide_close"] forState:UIControlStateNormal];
     [self.contentView addSubview:_closeBtn];
 }
@@ -101,4 +103,12 @@
     return desc;
 }
 
+-(void)onCloseGuideClick{
+    NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+    tracerDic[@"element_type"] = @"feed_community_guide_notice";
+    tracerDic[@"page_type"] = @"nearby_list";
+    tracerDic[@"enter_from"] = @"neighborhood_tab";
+    tracerDic[@"click_position"] = @"cancel";
+    [FHUserTracker writeEvent:@"click_options" params:tracerDic];
+}
 @end

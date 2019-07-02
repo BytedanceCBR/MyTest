@@ -26,16 +26,18 @@
 #import "ToastManager.h"
 #import "FHUGCConfig.h"
 
-@interface FHUGCSearchListController ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHUGCSearchListController () <UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic, strong) FHUGCSuggectionTableView *tableView;
-@property (nonatomic, strong)   NSMutableArray       *items;
-@property(nonatomic , weak) TTHttpTask *sugHttpTask;
-@property (nonatomic, copy)     NSString       *searchText;
-@property (nonatomic, assign)   BOOL       isViewAppearing;
-@property (nonatomic, assign)   BOOL       needReloadData;
-@property (nonatomic, assign)   BOOL       isKeybordShow;
-@property (nonatomic, assign)   BOOL       keyboardVisible;
+@property(nonatomic, strong) FHUGCSuggectionTableView *tableView;
+@property(nonatomic, strong) NSMutableArray *items;
+@property(nonatomic, weak) TTHttpTask *sugHttpTask;
+@property(nonatomic, copy) NSString *searchText;
+@property(nonatomic, assign) BOOL isViewAppearing;
+@property(nonatomic, assign) BOOL needReloadData;
+@property(nonatomic, assign) BOOL isKeybordShow;
+@property(nonatomic, assign) BOOL keyboardVisible;
+@property(nonatomic, strong) NSMutableDictionary *showCache;
+@property(nonatomic, assign) NSInteger associatedCount;
 
 @end
 
@@ -44,7 +46,8 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-
+        self.showCache = [NSMutableDictionary dictionary];
+        self.associatedCount = 0;
     }
     return self;
 }
@@ -60,7 +63,7 @@
         [weakSelf.naviBar.searchInput resignFirstResponder];
     };
     [self startLoadData];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardVisibleChanged:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardVisibleChanged:) name:UIKeyboardWillHideNotification object:nil];
@@ -75,7 +78,7 @@
     }
     if (self.isKeybordShow) {
         __weak typeof(self) weakSelf = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [weakSelf.naviBar.searchInput becomeFirstResponder];
         });
     }
@@ -114,7 +117,7 @@
     } else {
         // 解决tableView的touch 事件先于 cell点击的问题
         __weak typeof(self) weakSelf = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             weakSelf.keyboardVisible = NO;
         });
     }
@@ -139,15 +142,15 @@
     }];
     [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     _naviBar.searchInput.delegate = self;
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
 - (void)setupUI {
     [self setupNaviBar];
-    
+
     CGFloat height = [FHFakeInputNavbar perferredHeight];
-    
+
     [self configTableView];
     [self.view addSubview:_tableView];
     _tableView.dataSource = self;
@@ -168,7 +171,7 @@
         [weakSelf.view endEditing:YES];
     };
     _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 11.0, *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     _tableView.estimatedRowHeight = 70;
@@ -181,12 +184,12 @@
 
 - (void)startLoadData {
     if (![TTReachability isNetworkConnected]) {
-         [[ToastManager manager] showToast:@"网络异常"];
+        [[ToastManager manager] showToast:@"网络异常"];
     }
 }
 
 - (void)retryLoadData {
-    
+
 }
 
 // 文本框文字变化，进行sug请求
@@ -222,13 +225,15 @@
         [self.sugHttpTask cancel];
     }
     __weak typeof(self) weakSelf = self;
-    self.sugHttpTask = [FHHouseUGCAPI requestSocialSearchByText:text class:[FHUGCSearchModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.sugHttpTask = [FHHouseUGCAPI requestSocialSearchByText:text class:[FHUGCSearchModel class] completion:^(id <FHBaseModelProtocol> _Nonnull model, NSError *_Nonnull error) {
         if (model != NULL && error == NULL) {
+            weakSelf.associatedCount +=1;
             [weakSelf.items removeAllObjects];
             FHUGCSearchModel *tModel = model;
             if (tModel.data.count > 0) {
                 [weakSelf.items addObjectsFromArray:tModel.data];
             }
+            [weakSelf addAssociateCommunityShowLog];
             [weakSelf.tableView reloadData];
         }
     }];
@@ -242,13 +247,12 @@
 
 // 输入框执行搜索
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-   //  NSString *userInputText = self.naviBar.searchInput.text;
+    //  NSString *userInputText = self.naviBar.searchInput.text;
 }
 
 #pragma mark - dealloc
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -258,20 +262,18 @@
     return 1;
 }
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.items.count;
 }
 
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    FHUGCSearchListCell *cell = (FHUGCSearchListCell *)[tableView dequeueReusableCellWithIdentifier:@"FHUGCSearchListCell" forIndexPath:indexPath];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    FHUGCSearchListCell *cell = (FHUGCSearchListCell *) [tableView dequeueReusableCellWithIdentifier:@"FHUGCSearchListCell" forIndexPath:indexPath];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
+
     NSInteger row = indexPath.row;
     if (row >= 0 && row < self.items.count) {
         cell.highlightedText = self.searchText;
-        FHUGCScialGroupDataModel* data = self.items[row];
+        FHUGCScialGroupDataModel *data = self.items[row];
         // 埋点
         NSMutableDictionary *tracerDic = @{}.mutableCopy;
         tracerDic[@"card_type"] = @"left_pic";
@@ -283,39 +285,36 @@
         // 刷新数据
         [cell refreshWithData:data];
     }
-    
+
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 70;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return CGFLOAT_MIN;
-}
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return CGFLOAT_MIN;
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return CGFLOAT_MIN;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
+
     NSInteger row = indexPath.row;
     if (row >= 0 && row < self.items.count) {
         // 键盘是否显示
         self.isKeybordShow = self.keyboardVisible;
         //
         FHUGCScialGroupDataModel *data = self.items[row];
+        [self addCommunityClickLog:data rank:row];
+
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = data.socialGroupId;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -323,6 +322,73 @@
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
+}
+
+// 联想词埋点
+- (void)addAssociateCommunityShowLog {
+    NSMutableArray *wordList = [NSMutableArray new];
+    for (NSInteger index = 0; index < self.items.count; index++) {
+        FHUGCScialGroupDataModel *item = self.items[index];
+        NSDictionary *dic = @{
+                @"text": item.socialGroupName ?: @"be_null",
+                @"word_id": item.socialGroupId ?: @"be_null",
+                @"rank": @(index)
+        };
+        [wordList addObject:dic];
+    }
+    NSError *error = NULL;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:wordList options:NSJSONReadingAllowFragments error:&error];
+    NSString *wordListStr = @"";
+    if (data && error == NULL) {
+        wordListStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+    NSDictionary *logPb;
+    if (self.items.count > 0) {
+        FHUGCScialGroupDataModel *item = self.items[0];
+        logPb = item.logPb;
+    }
+    NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+    tracerDic[@"community_list"] = wordListStr ?: @"be_null";
+    tracerDic[@"associate_cnt"] = @(self.associatedCount);
+    tracerDic[@"associate_type"] = @"community_group";
+    tracerDic[@"community_cnt"] = @(wordList.count);
+    tracerDic[@"element_type"] = @"community_search";
+    tracerDic[@"log_pb"] = logPb;
+    [FHUserTracker writeEvent:@"associate_community_show" params:tracerDic];
+}
+
+- (void)addCommunityClickLog:(FHUGCScialGroupDataModel *)model rank:(NSInteger)rank  {
+    if(!model){
+        return;
+    }
+
+    NSMutableArray *wordList = [NSMutableArray new];
+    for (NSInteger index = 0; index < self.items.count; index++) {
+        FHUGCScialGroupDataModel *item = self.items[index];
+        NSDictionary *dic = @{
+                @"text": item.socialGroupName ?: @"be_null",
+                @"word_id": item.socialGroupId ?: @"be_null",
+                @"rank": @(index)
+        };
+        [wordList addObject:dic];
+    }
+    NSError *error = NULL;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:wordList options:NSJSONReadingAllowFragments error:&error];
+    NSString *wordListStr = @"";
+    if (data && error == NULL) {
+        wordListStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+
+    NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+    tracerDic[@"community_list"] = wordListStr ?: @"be_null";
+    tracerDic[@"associate_cnt"] = @(self.associatedCount);
+    tracerDic[@"associate_type"] = @"community_group";
+    tracerDic[@"community_cnt"] = @(wordList.count);
+    tracerDic[@"element_type"] = @"community_search";
+    tracerDic[@"word_id"] = model.socialGroupId;
+    tracerDic[@"rank"] = @(rank);
+    tracerDic[@"log_pb"] = model.logPb;
+    [FHUserTracker writeEvent:@"associate_community_click" params:tracerDic];
 }
 
 @end
