@@ -159,6 +159,7 @@
         if (cellModel.community.socialGroupId.length <= 0) {
             cellModel.community = self.detailData.community;
         }
+        cellModel.tracerDic = [self.detailController.tracerDict copy];
         [self.items addObject:cellModel];
         
         // 更新点赞以及评论数
