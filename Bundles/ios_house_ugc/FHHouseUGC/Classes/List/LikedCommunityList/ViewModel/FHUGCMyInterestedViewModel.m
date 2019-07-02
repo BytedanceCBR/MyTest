@@ -260,6 +260,8 @@
     FHUGCMyInterestDataRecommendSocialGroupsModel *model = self.dataList[indexPath.row];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"community_id"] = model.socialGroup.socialGroupId;
+    dict[@"tracer"] = @{@"enter_from":@"like_neighborhood_list",
+                        @"enter_type":@"click"};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     //跳转到圈子详情页
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];

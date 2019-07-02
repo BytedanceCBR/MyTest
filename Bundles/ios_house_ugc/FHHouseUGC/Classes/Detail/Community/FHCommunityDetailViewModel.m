@@ -50,8 +50,6 @@
         self.viewController = viewController;
         [self initView];
         self.shouldShowUGcGuide = YES;
-        [self addGoDetailLog];
-        [self addPublicationsShowLog];
     }
     return self;
 }
