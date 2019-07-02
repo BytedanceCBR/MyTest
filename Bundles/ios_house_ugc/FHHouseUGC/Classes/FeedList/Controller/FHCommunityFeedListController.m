@@ -199,9 +199,14 @@
 
 - (void)gotoLogin {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    // add by zyk 记得修改埋点
-    [params setObject:@"communityfeedlist" forKey:@"enter_from"];
-    [params setObject:@"communityfeedlist" forKey:@"enter_type"];
+    NSString *page_type = @"nearby_list";
+    if (self.listType == FHCommunityFeedListTypeMyJoin) {
+        page_type = @"my_join_list";
+    } else  if (self.listType == FHCommunityFeedListTypeNearby) {
+        page_type = @"nearby_list";
+    }
+    [params setObject:page_type forKey:@"enter_from"];
+    [params setObject:@"click_publisher" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     __weak typeof(self) wSelf = self;

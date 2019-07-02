@@ -14,6 +14,7 @@
 #import "TTReachability.h"
 #import "TTAccountManager.h"
 #import "UIButton+TTAdditions.h"
+#import "FHUserTracker.h"
 
 @interface FHUGCCellBottomView ()
 
@@ -191,9 +192,12 @@
 
 - (void)gotoLogin {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    // add by zyk 记得修改埋点
-    [params setObject:@"cellbottom" forKey:@"enter_from"];
-    [params setObject:@"cellbottom" forKey:@"enter_type"];
+    NSString *enter_from = self.cellModel.tracerDic[@"enter_from"];
+    if (enter_from.length <= 0) {
+        enter_from = @"be_null";
+    }
+    [params setObject:enter_from forKey:@"enter_from"];
+    [params setObject:@"feed_like" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     __weak typeof(self) wSelf = self;
@@ -212,6 +216,8 @@
     if (![self.saveDiggGroupId isEqualToString:self.cellModel.groupId]) {
         return;
     }
+    
+    [self trackClickLike];
     // 刷新UI
     NSInteger user_digg = [self.cellModel.userDigg integerValue];
     NSInteger diggCount = [self.cellModel.diggCount integerValue];
@@ -231,6 +237,18 @@
     [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
     
     [FHCommonApi requestCommonDigg:self.cellModel.groupId groupType:FHDetailDiggTypeTHREAD action:[self.cellModel.userDigg integerValue] completion:nil];
+}
+
+- (void)trackClickLike {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    NSInteger user_digg = [self.cellModel.userDigg integerValue];
+    if(user_digg == 1){
+        dict[@"click_position"] = @"feed_dislike";
+        TRACK_EVENT(@"click_dislike", dict);
+    }else{
+        dict[@"click_position"] = @"feed_like";
+        TRACK_EVENT(@"click_like", dict);
+    }
 }
 
 @end

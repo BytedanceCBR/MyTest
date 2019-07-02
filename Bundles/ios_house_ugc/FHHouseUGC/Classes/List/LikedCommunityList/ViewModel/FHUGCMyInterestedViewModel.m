@@ -201,7 +201,6 @@
     
     dict[@"house_type"] = @"community";
     dict[@"card_type"] = @"left_pic";
-    dict[@"element_from"] = @"like_neighborhood";
     dict[@"log_pb"] = model.socialGroup.logPb;
     dict[@"rank"] = @(rank);
     
@@ -210,6 +209,7 @@
         dict[@"show_type"] = self.showType ? self.showType : @"be_null";
     }else{
         dict[@"page_type"] = @"like_neighborhood_list";
+        dict[@"element_from"] = @"like_neighborhood";
     }
     
     return dict;

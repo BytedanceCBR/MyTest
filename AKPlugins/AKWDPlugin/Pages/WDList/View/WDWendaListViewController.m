@@ -416,15 +416,21 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     if (self.ansid.length > 0) {
         dict[@"ansid"] = self.ansid;
     }
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"origin_from"] = self.goDetailDict[@"enter_from"];
+    tracerDict[@"enter_from"] = @"question";
+    tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"log_pb"] = self.goDetailDict[@"log_pb"];
+    dict[@"tracer"] = tracerDict;
+    
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
 }
 
 - (void)gotoLogin {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    // add by zyk 记得修改埋点
-    [params setObject:@"rent_feedback" forKey:@"enter_from"];
-    [params setObject:@"feedback" forKey:@"enter_type"];
+    [params setObject:@"question" forKey:@"enter_from"];
+    [params setObject:@"want_answer" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(NO) forKey:@"need_pop_vc"];
     __weak typeof(self) wSelf = self;
