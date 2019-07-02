@@ -93,12 +93,15 @@
 
 - (void)showLocationGuideAlert {
     __weak typeof(self) wself = self;
+    [self trackLocationAuthShow];
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"你还没有开启定位服务哦" message:@"请在手机设置中开启定位服务，获取更多周边小区趣事" preferredType:TTThemedAlertControllerTypeAlert];
     [alertVC addActionWithGrayTitle:@"我知道了" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+        [wself trackLocationAuthClick:YES];
         [wself initView];
     }];
     
     [alertVC addActionWithTitle:@"开启定位" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+        [wself trackLocationAuthClick:NO];
         NSURL *jumpUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
         
         if ([[UIApplication sharedApplication] canOpenURL:jumpUrl]) {
@@ -111,6 +114,8 @@
         [alertVC showFrom:topVC animated:YES];
     }
 }
+
+#pragma mark - 埋点
 
 - (void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
@@ -135,6 +140,23 @@
 
 - (NSString *)categoryName {
     return @"nearby_list";
+}
+
+- (void)trackLocationAuthShow {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"category_name"] = [self categoryName];
+    TRACK_EVENT(@"ugc_location_authpopoup_show", tracerDict);
+}
+
+- (void)trackLocationAuthClick:(BOOL)isCancel {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"category_name"] = [self categoryName];
+    if(isCancel){
+        tracerDict[@"click_type"] = @"confirm";
+    }else{
+        tracerDict[@"click_type"] = @"open_location";
+    }
+    TRACK_EVENT(@"ugc_location_authpopoup_click", tracerDict);
 }
 
 @end

@@ -300,7 +300,7 @@
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
-        [self jumpToPostDetail:cellModel showComment:NO];
+        [self jumpToPostDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner){
         //根据url跳转
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
@@ -310,15 +310,14 @@
     }
 }
 
-- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment {
+- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
     NSMutableDictionary *dict = @{}.mutableCopy;
-    
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_from"] = @"hot_discuss_feed";
-    traceParam[@"enter_type"] = @"feed_comment";
-    traceParam[@"rank"] = @"be_null";
-    traceParam[@"log_pb"] = @"be_null";
+    traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+    traceParam[@"log_pb"] = cellModel.logPb;
     dict[TRACER_KEY] = traceParam;
     
     dict[@"data"] = cellModel;
@@ -361,7 +360,7 @@
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel {
     [self trackClickComment:cellModel];
-    [self jumpToPostDetail:cellModel showComment:YES];
+    [self jumpToPostDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
 - (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
@@ -410,11 +409,24 @@
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [self trackDict:cellModel rank:rank];
     TRACK_EVENT(@"feed_client_show", dict);
+    
+    if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
+        [self trackElementShow:rank];
+    }
+}
+
+- (void)trackElementShow:(NSInteger)rank {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"element_type"] = @"like_neighborhood";
+    dict[@"page_type"] = @"nearby_list";
+    dict[@"enter_from"] = @"neighborhood_tab";
+    dict[@"rank"] = @(rank);
+    
+    TRACK_EVENT(@"element_show", dict);
 }
 
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    
     dict[@"enter_from"] = @"nearby_list";
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;

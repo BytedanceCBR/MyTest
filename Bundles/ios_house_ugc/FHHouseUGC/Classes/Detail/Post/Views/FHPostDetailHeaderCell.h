@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHPostDetailHeaderModel : FHDetailBaseModel
 
 @property (nonatomic, strong)   FHUGCScialGroupDataModel       *socialGroupModel;
+@property (nonatomic, copy)     NSDictionary       *tracerDict;
 
 @end
 

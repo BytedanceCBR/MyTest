@@ -412,6 +412,9 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
     [dic setValue:model.userID forKey:@"to_user_id"];
     [dic setValue:model.commentID forKey:@"comment_id"];
     [dic setValue:@"detail" forKey:@"position"];
+    if (self.enter_from.length > 0) {
+        [dic setValue:self.enter_from forKey:@"enter_from"];
+    }
     
     [TTTracker eventV3:@"comment_enter" params:dic];
 }
