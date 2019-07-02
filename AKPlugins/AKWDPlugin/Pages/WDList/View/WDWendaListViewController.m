@@ -416,6 +416,13 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     if (self.ansid.length > 0) {
         dict[@"ansid"] = self.ansid;
     }
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"origin_from"] = self.goDetailDict[@"enter_from"];
+    tracerDict[@"enter_from"] = @"question";
+    tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"log_pb"] = self.goDetailDict[@"log_pb"];
+    dict[@"tracer"] = tracerDict;
+    
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
 }
