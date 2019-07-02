@@ -106,6 +106,7 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     self.isViewAppearing = NO;
+    [self addReadPct];
 }
 
 - (void)setupDetailNaviBar {

@@ -349,6 +349,14 @@
 
 // 去点赞
 - (void)gotoDigg {
+    // 点赞埋点
+    if (self.user_digg == 1) {
+        // 取消点赞
+        [self click_feed_dislike];
+    } else {
+        // 点赞
+        [self click_feed_like];
+    }
     if ([TTAccountManager isLogin]) {
         [self p_digg];
     } else {
@@ -490,6 +498,10 @@
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(id<TTCommentModelProtocol>)model
 {
     
+}
+
+- (void)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController deleteCommentWithCommentModel:(nonnull id<TTCommentModelProtocol>)model {
+    [self click_delete_comment];
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController tappedWithUserID:(NSString *)userID {
@@ -722,6 +734,27 @@
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"reply_dislike";
     [FHUserTracker writeEvent:@"click_reply_dislike" params:tracerDict];
+}
+
+// 点击删除自己的评论
+- (void)click_delete_comment {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"delete_comment";
+    [FHUserTracker writeEvent:@"click_delete_comment" params:tracerDict];
+}
+
+// 详情 点赞
+- (void)click_feed_like {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"feed_like";
+    [FHUserTracker writeEvent:@"click_like" params:tracerDict];
+}
+
+// 详情页 取消点赞
+- (void)click_feed_dislike {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"feed_dislike";
+    [FHUserTracker writeEvent:@"click_dislike" params:tracerDict];
 }
 
 @end
