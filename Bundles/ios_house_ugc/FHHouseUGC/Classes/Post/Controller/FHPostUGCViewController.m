@@ -230,6 +230,7 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)createComponent {
     //Container View
     CGFloat top = 44.f + [UIApplication sharedApplication].statusBarFrame.size.height;
+    top += 44;
     self.containerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, top, self.view.width, self.view.height - top)];
     self.containerView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
     self.containerView.alwaysBounceVertical = YES;
@@ -258,20 +259,13 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)createInputComponent {
-    CGFloat y = 0;
-    
-    //Input container view
-    self.inputContainerView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 0)];
-    self.inputContainerView.backgroundColorThemeKey = kColorBackground4;
-    [self.containerView addSubview:self.inputContainerView];
-    
     // select view
-    self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 44)];
-    [self.inputContainerView addSubview:self.selectView];
+    CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
+    self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, top, self.view.width, 44)];
+    [self.view addSubview:self.selectView];
     self.selectView.userInteractionEnabled = YES;
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];
     [self.selectView addGestureRecognizer:tapGestureRecognizer];
-    y += 44;
     NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
     tracerDict[@"element_type"] = @"select_like_publisher_neighborhood";
     if (self.selectGroupId.length > 0) {
@@ -279,6 +273,11 @@ static NSInteger const kMaxPostImageCount = 9;
     }
     [FHUserTracker writeEvent:@"element_show" params:tracerDict];
     
+    CGFloat y = 0;
+    //Input container view
+    self.inputContainerView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 0)];
+    self.inputContainerView.backgroundColorThemeKey = kColorBackground4;
+    [self.containerView addSubview:self.inputContainerView];
     
     //Input view
     self.inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(kLeftPadding - 5, y + kInputViewTopPadding, self.view.width - kLeftPadding - kRightPadding + 10.f, kTextViewHeight)];
@@ -1137,6 +1136,8 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 避免视频详情页转发时，出现 statusBar 高度获取为 0 的情况
     CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
+    self.selectView.frame = CGRectMake(0, top, self.view.width, 44);
+    top += 44;// 选择小区
     self.containerView.frame = CGRectMake(0, top, self.view.width, self.view.height - top);
 }
 

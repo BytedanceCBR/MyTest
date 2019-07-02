@@ -58,6 +58,7 @@
         //超过一天
         _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
     }
+    [self addEnterCategoryLog];
 }
 
 - (void)viewWillDisappear {

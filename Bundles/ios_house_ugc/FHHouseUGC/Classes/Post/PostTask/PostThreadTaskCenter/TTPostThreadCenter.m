@@ -257,11 +257,6 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         }
     } cancelledBlock:^(TTPostThreadTask *task, TTPostThreadOperationCancelHint cancelHint) {
         
-        // 发帖成功埋点
-        NSMutableDictionary *tracerDict = task.extraTrack.mutableCopy;
-        tracerDict[@"publish_type"] = @"publish_failed";
-        [FHUserTracker writeEvent:@"feed_publish_failed" params:tracerDict];
-        
         task.isPosting = YES;
         task.retryCount += 1;
         taskFailureTrackerBlock(task);
@@ -294,6 +289,11 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
             [fakeInfo setValue:task.postID forKey:@"threadId"];
             [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:fakeInfo];
         }
+        // 发帖失败埋点
+        NSMutableDictionary *tracerDict = task.extraTrack.mutableCopy;
+        tracerDict[@"publish_type"] = @"publish_failed";
+        [FHUserTracker writeEvent:@"feed_publish_failed" params:tracerDict];
+        
         task.isPosting = YES;
         task.retryCount += 1;
         taskFailureTrackerBlock(task);

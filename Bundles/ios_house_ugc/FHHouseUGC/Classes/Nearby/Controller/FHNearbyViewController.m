@@ -12,12 +12,15 @@
 #import "TTUIResponderHelper.h"
 #import "TTReachability.h"
 #import "FHUserTracker.h"
+#import "TTArticleTabBarController.h"
+#import "TTTabBarManager.h"
 
 @interface FHNearbyViewController ()
 
 @property(nonatomic, strong) CLLocation *currentLocaton;
 @property(nonatomic, assign) NSTimeInterval lastRequestTime;
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
+@property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
 
 @end
 
@@ -29,6 +32,7 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     
     if([[FHLocManager sharedInstance] isHaveLocationAuthorization]){
         self.currentLocaton = [FHLocManager sharedInstance].currentLocaton;
@@ -53,10 +57,25 @@
         //超过一天
         _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
     }
+    
+    if(!self.noNeedAddEnterCategorylog){
+        [self addEnterCategoryLog];
+    }else{
+        self.noNeedAddEnterCategorylog = NO;
+    }
 }
 
 - (void)viewWillDisappear {
     [self addStayCategoryLog];
+}
+
+- (void)topVCChange:(NSNotification *)notification {
+    TTArticleTabBarController *vc = (TTArticleTabBarController *)notification.object;
+    if ([[vc currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
+        self.noNeedAddEnterCategorylog = YES;
+    }else{
+        self.noNeedAddEnterCategorylog = NO;
+    }
 }
 
 - (void)initView {

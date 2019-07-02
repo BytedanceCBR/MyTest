@@ -86,7 +86,7 @@
         [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.left.bottom.mas_equalTo(self);
             make.width.mas_equalTo(self.imageWidth);
-            make.height.mas_equalTo(self.imageWidth * 251.0f/355.0f);
+            make.height.mas_equalTo(self.imageWidth * 9.0f/16.0f);
         }];
     }else if(self.count == 2){
         _imageWidth = (self.bounds.size.width - itemPadding)/2;
