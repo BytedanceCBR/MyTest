@@ -20,4 +20,6 @@
 -(void)addGoDetailLog;
 
 -(void)addStayPageLog:(NSTimeInterval)stayTime;
+
+- (void)addPublicationsShowLog;
 @end
