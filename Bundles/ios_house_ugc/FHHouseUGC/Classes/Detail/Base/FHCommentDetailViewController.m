@@ -592,24 +592,9 @@
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
     commentManager.enterFrom = @"article";
     
-//    commentManager.enterFromStr = self.detailModel.clickLabel;
-//    commentManager.categoryID = self.detailModel.categoryID;
-//    commentManager.logPb = self.detailModel.logPb;
-    
     self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
     
     self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
-    
-    
-    
-    // writeCommentView 禁表情
-//    if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
-//        self.commentWriteView.banEmojiInput = self.commentViewController.tt_banEmojiInput;
-//    }
-    
-//    if ([self.commentViewController respondsToSelector:@selector(tt_writeCommentViewPlaceholder)]) {
-//        [self.commentWriteView setTextViewPlaceholder:self.commentViewController.tt_writeCommentViewPlaceholder];
-//    }
     
     [self.commentWriteView showInView:self.view animated:YES];
 }

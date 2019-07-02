@@ -221,4 +221,9 @@
     [self tt_resetStayTime];
 }
 
+- (void)addReadPct {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [FHUserTracker writeEvent:@"read_pct" params:tracerDict];
+}
+
 @end
