@@ -106,6 +106,7 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     self.isViewAppearing = NO;
+    [self addReadPct];
 }
 
 - (void)setupDetailNaviBar {
@@ -219,6 +220,11 @@
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
     [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
     [self tt_resetStayTime];
+}
+
+- (void)addReadPct {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [FHUserTracker writeEvent:@"read_pct" params:tracerDict];
 }
 
 @end

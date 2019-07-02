@@ -120,6 +120,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         self.isForbidComment = NO;
         self.isPosting = NO;
         self.gdExtJson = nil;
+        
+        self.tracerDict[@"page_type"] = @"answer_publisher";
     }
     return self;
 }
@@ -133,6 +135,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     [self addImagesViewSizeChanged];
     [self refreshUI];
     self.startDate = [NSDate date];
+    [self goDetail];
 }
 
 - (void)setupData {
@@ -390,16 +393,29 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
     
     if (!shouldAlert) {
+        NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+        tracerDict[@"click_position"] = @"answer_publisher_cancel";
+        [FHUserTracker writeEvent:@"click_options" params:tracerDict];
+        
         [self dismissSelf];
     } else {
+        NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+        [FHUserTracker writeEvent:@"answer_publisher_cancelpopoup_show" params:tracerDict];
+        
         TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"编辑未完成" message:@"退出后编辑的内容将不被保存" preferredType:TTThemedAlertControllerTypeAlert];
         WeakSelf;
         [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
             StrongSelf;
+            NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+            tracerDict[@"click_position"] = @"quit";
+            [FHUserTracker writeEvent:@"answer_publisher_cancelpopoup_click" params:tracerDict];
             [self dismissSelf];
         }];
         [alertController addActionWithTitle:NSLocalizedString(@"继续编辑", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
             StrongSelf;
+            NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+            tracerDict[@"click_position"] = @"continue_edit";
+            [FHUserTracker writeEvent:@"answer_publisher_cancelpopoup_click" params:tracerDict];
             if (self.keyboardVisibleBeforePresent) {
                 [self.inputTextView becomeFirstResponder];
             }
@@ -503,6 +519,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
             NSString *ansid = wself.ansid;
             if (qid.length > 0 && ansid.length > 0) {
                 //回答发送成功
+                [wself sendAnswerSuccessTracer:ansid];
                 [wself.sendingIndicatorView updateIndicatorWithText:[wself postAnswerSuccessText] shouldRemoveWaitingView:YES];
                 [wself.sendingIndicatorView updateIndicatorWithImage:[UIImage themedImageNamed:@"doneicon_popup_textpage"]];
                 wself.sendingIndicatorView.showDismissButton = NO;
@@ -693,11 +710,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 #pragma mark - FRAddMultiImagesViewDelegate
 
 - (void)addImagesButtonDidClickedOfAddMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView {
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"page_type"] = @"answer_publisher";
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"picture";
-    tracerDict[@"enter_from"] = @"feed_list";
-    tracerDict[@"log_pb"] = @"be_null";
     [FHUserTracker writeEvent:@"click_options" params:tracerDict];
     
     self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
@@ -922,6 +936,29 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     if (self.sendAnswerBlock) {
         self.sendAnswerBlock();
     }
+}
+
+#pragma mark - tracer
+
+- (void)goDetail {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [FHUserTracker writeEvent:@"answer_feed_go_detail" params:tracerDict];
+}
+
+// 回答发送成功埋点
+- (void)sendAnswerSuccessTracer:(NSString *)answer_id {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"answer_passport_publisher";
+    NSDictionary *log_pb = self.tracerDict[@"log_pb"];
+    if (answer_id.length > 0) {
+        NSMutableDictionary *temp_log_pb = [NSMutableDictionary new];
+        if ([log_pb isKindOfClass:[NSDictionary class]]) {
+            [temp_log_pb addEntriesFromDictionary:log_pb];
+        }
+        temp_log_pb[@"group_id"] = answer_id;
+        tracerDict[@"log_pb"] = temp_log_pb;
+    }
+    [FHUserTracker writeEvent:@"answer_publish" params:tracerDict];
 }
 
 @end

@@ -42,6 +42,7 @@
 #import "FHPostDetailCommentWriteView.h"
 #import "FHCommonApi.h"
 #import "TTAccountManager.h"
+#import "FHUserTracker.h"
 
 @interface FHCommentDetailViewController ()<UIScrollViewDelegate>
 
@@ -326,6 +327,7 @@
             [self.toolbarView.writeButton setTitle:@"说点什么..." forState:UIControlStateNormal];
             return;
         }
+        [self clickCommentFieldTracer];
         [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
     }
     else if (sender == _toolbarView.digButton) {
@@ -347,6 +349,14 @@
 
 // 去点赞
 - (void)gotoDigg {
+    // 点赞埋点
+    if (self.user_digg == 1) {
+        // 取消点赞
+        [self click_feed_dislike];
+    } else {
+        // 点赞
+        [self click_feed_like];
+    }
     if ([TTAccountManager isLogin]) {
         [self p_digg];
     } else {
@@ -469,9 +479,9 @@
 {
     // 对评论 点赞
     if (!model.userDigged) {
-
+        [self click_reply_dislike];
     } else {
-
+        [self click_reply_like];
     }
 }
 
@@ -481,11 +491,17 @@
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController didClickReplyButtonWithCommentModel:(nonnull id<TTCommentModelProtocol>)model
 {
+    // 埋点 点击回复他人评论
+    [self clickReplyComment];
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(id<TTCommentModelProtocol>)model
 {
     
+}
+
+- (void)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController deleteCommentWithCommentModel:(nonnull id<TTCommentModelProtocol>)model {
+    [self click_delete_comment];
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController tappedWithUserID:(NSString *)userID {
@@ -517,24 +533,6 @@
 //    [mdict setValue:self.detailModel.article forKey:@"group"];
     
     [mdict setValue:@"favorite" forKey:@"categoryID"];
-//    [mdict setValue:self.detailModel.clickLabel forKey:@"enterFrom"];
-//    [mdict setValue:self.detailModel.logPb forKey:@"logPb"];
-    
-    /*{
-     categoryID = favorite;
-     categoryName = favorite;
-     commentModel = "_groupID: 6682645929197044227, _commentID 6688965152903004174, forumID:(null), _userAvatarURL http://p0.pstatp.com/origin/3791/5070639578, badgeList:(\n)";
-     enterFrom = "click_favorite";
-     from = 1;
-     fromPage = "detail_article_comment_dig";
-     "from_message" = 0;
-     group = "<Article: 0x119061610>";
-     groupId = 6682645929197044227;
-     groupModel = "<TTGroupModel: 0x28260f400>";
-     "source_type" = 5;
-     writeComment = 0;
-     }
-     */
     
     TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(mdict.copy)];
     
@@ -598,29 +596,17 @@
     qualityModel.readPct = @(percent);
 //    qualityModel.stayTimeMs = @([self.detailModel.sharedDetailManager currentStayDuration]);
     
+    __weak typeof(self) wSelf = self;
+    
     TTCommentWriteManager *commentManager = [[TTCommentWriteManager alloc] initWithCommentCondition:condition commentViewDelegate:self commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
         *willRepostFwID = fwID;
+        [wSelf clickSubmitComment];
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
     commentManager.enterFrom = @"article";
-    
-//    commentManager.enterFromStr = self.detailModel.clickLabel;
-//    commentManager.categoryID = self.detailModel.categoryID;
-//    commentManager.logPb = self.detailModel.logPb;
     
     self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
     
     self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
-    
-    
-    
-    // writeCommentView 禁表情
-//    if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
-//        self.commentWriteView.banEmojiInput = self.commentViewController.tt_banEmojiInput;
-//    }
-    
-//    if ([self.commentViewController respondsToSelector:@selector(tt_writeCommentViewPlaceholder)]) {
-//        [self.commentWriteView setTextViewPlaceholder:self.commentViewController.tt_writeCommentViewPlaceholder];
-//    }
     
     [self.commentWriteView showInView:self.view animated:YES];
 }
@@ -711,6 +697,64 @@
 #pragma mark - UIKeyboardWillHideNotification
 - (void)keyboardDidHide {
     [self.commentWriteView dismissAnimated:NO];
+}
+
+#pragma mark - tracer
+
+// 点击评论
+- (void)clickCommentFieldTracer {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"comment_field";
+    [FHUserTracker writeEvent:@"click_comment_field" params:tracerDict];
+}
+
+// 点击回复
+- (void)clickSubmitComment {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"submit_comment";
+    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
+}
+
+// 点击回复他人的评论中的“回复”按钮
+- (void)clickReplyComment {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_comment";
+    [FHUserTracker writeEvent:@"click_reply_comment" params:tracerDict];
+}
+
+// 详情页他人评论点赞
+- (void)click_reply_like {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_like";
+    [FHUserTracker writeEvent:@"click_reply_like" params:tracerDict];
+}
+
+// 详情页他人评论取消点赞
+- (void)click_reply_dislike {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_dislike";
+    [FHUserTracker writeEvent:@"click_reply_dislike" params:tracerDict];
+}
+
+// 点击删除自己的评论
+- (void)click_delete_comment {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"delete_comment";
+    [FHUserTracker writeEvent:@"click_delete_comment" params:tracerDict];
+}
+
+// 详情 点赞
+- (void)click_feed_like {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"feed_like";
+    [FHUserTracker writeEvent:@"click_like" params:tracerDict];
+}
+
+// 详情页 取消点赞
+- (void)click_feed_dislike {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"feed_dislike";
+    [FHUserTracker writeEvent:@"click_dislike" params:tracerDict];
 }
 
 @end
