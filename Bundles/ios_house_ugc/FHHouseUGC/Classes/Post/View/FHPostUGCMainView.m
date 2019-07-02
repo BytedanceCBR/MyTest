@@ -78,8 +78,10 @@
     _communityName = communityName;
     if (communityName.length > 0) {
         self.valueLabel.text = communityName;
+        self.valueLabel.textColor = [UIColor themeGray1];
     } else {
         self.valueLabel.text = @"选择想要发布帖子的小区圈";
+        self.valueLabel.textColor = [UIColor themeGray3];
     }
 }
 
