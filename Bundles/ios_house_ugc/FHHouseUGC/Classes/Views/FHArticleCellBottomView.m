@@ -12,6 +12,7 @@
 #import "FHFeedOperationView.h"
 #import "UIButton+TTAdditions.h"
 #import "FHCommunityFeedListController.h"
+#import "FHUserTracker.h"
 
 @interface FHArticleCellBottomView ()
 
@@ -138,6 +139,7 @@
 }
 
 - (void)moreOperation {
+    [self trackClickOptions];
     FHFeedOperationView *dislikeView = [[FHFeedOperationView alloc] init];
     FHFeedOperationViewModel *viewModel = [[FHFeedOperationViewModel alloc] init];
     
@@ -158,11 +160,26 @@
 //文章只处理举报，没有删除
 - (void)handleItemselected:(FHFeedOperationView *) view {
     if(view.selectdWord.type == FHFeedOperationWordTypeReport){
+        [self trackClickReport];
         //举报
         if(self.deleteCellBlock){
             self.deleteCellBlock();
         }
     }
+}
+
+#pragma mark - 埋点
+
+- (void)trackClickOptions {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    dict[@"click_position"] = @"feed_more";
+    TRACK_EVENT(@"click_options", dict);
+}
+
+- (void)trackClickReport {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    dict[@"click_position"] = @"feed_report";
+    TRACK_EVENT(@"click_report", dict);
 }
 
 @end
