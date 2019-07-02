@@ -249,11 +249,18 @@
 }
 
 - (void)moreData {
+    [self trackClickMore];
+    
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"tracer"] = @{
+                        @"enter_from":@"nearby_list"
+                        };
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_my_interest"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
--(void)traceGroupAtIndexPath:(NSIndexPath*)indexPath {
+- (void)traceGroupAtIndexPath:(NSIndexPath*)indexPath {
     if (indexPath.row >= self.dataList.count) {
         return;
     }
@@ -281,6 +288,13 @@
     dict[@"log_pb"] = model.logPb;
     dict[@"rank"] = @(rank);
     TRACK_EVENT(@"community_group_show", dict);
+}
+
+- (void)trackClickMore {
+    NSMutableDictionary *dict = [self tracerDic];
+    
+    [dict removeObjectsForKeys:@[@"card_type"]];
+    TRACK_EVENT(@"click_more", dict);
 }
 
 #pragma mark - UITableViewDataSource

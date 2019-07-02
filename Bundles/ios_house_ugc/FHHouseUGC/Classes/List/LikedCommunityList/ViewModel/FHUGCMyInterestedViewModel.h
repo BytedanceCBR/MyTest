@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)requestData:(BOOL)isHead;
 
+- (void)viewWillAppear;
+- (void)viewWillDisappear;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -141,7 +141,7 @@
                 [self.viewController showNotify:refreshTip];
                 [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
             }
-            
+    
             //            if(!isHead){
             //                [self addRefreshLog];
             //            }

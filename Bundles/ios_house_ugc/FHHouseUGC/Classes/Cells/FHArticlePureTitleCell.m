@@ -67,7 +67,7 @@
         make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
         make.height.mas_equalTo(39);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView).priorityLow();
+        make.bottom.mas_equalTo(self.contentView);
     }];
 }
 
