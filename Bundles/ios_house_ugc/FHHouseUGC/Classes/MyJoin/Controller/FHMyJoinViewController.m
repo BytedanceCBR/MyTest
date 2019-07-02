@@ -11,6 +11,8 @@
 #import "FHHouseUGCHeader.h"
 #import "FHUGCConfig.h"
 #import "FHUserTracker.h"
+#import "TTArticleTabBarController.h"
+#import "TTTabBarManager.h"
 
 @interface FHMyJoinViewController ()
 
@@ -20,6 +22,7 @@
 @property(nonatomic, strong) FHUGCMyInterestedController *interestedVC;
 @property(nonatomic, assign) BOOL showFeed;
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
+@property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
 
 @end
 
@@ -28,13 +31,23 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     self.view.backgroundColor = [UIColor whiteColor];
     [self loadVC];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)loadVC {
     self.showFeed = [FHUGCConfig sharedInstance].followList.count > 0;
     if(self.showFeed){
+        if(!self.noNeedAddEnterCategorylog){
+            [self addEnterCategoryLog];
+        }else{
+            self.noNeedAddEnterCategorylog = NO;
+        }
         [self initFeedListVC];
         [self.feedListVC viewWillAppear];
         [self loadData];
@@ -59,6 +72,16 @@
         [self.interestedVC viewWillDisappear];
     }
 }
+
+- (void)topVCChange:(NSNotification *)notification {
+    TTArticleTabBarController *vc = (TTArticleTabBarController *)notification.object;
+    if ([[vc currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
+        self.noNeedAddEnterCategorylog = YES;
+    }else{
+        self.noNeedAddEnterCategorylog = NO;
+    }
+}
+
 
 - (void)initFeedListVC {
     if(self.type == FHUGCMyJoinTypeFeed){
@@ -86,12 +109,15 @@
     _feedListVC = vc;
     
     _type = FHUGCMyJoinTypeFeed;
-    
-    [self addEnterCategoryLog];
 }
 
 - (void)initMyInterestListVC {
     if(self.type == FHUGCMyJoinTypeEmpty){
+        if(!self.noNeedAddEnterCategorylog){
+            [self.interestedVC viewWillAppear];
+        }else{
+            self.noNeedAddEnterCategorylog = NO;
+        }
         return;
     }
     

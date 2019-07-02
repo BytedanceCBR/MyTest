@@ -32,6 +32,8 @@ extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification
 
 - (void)updateTabBarControllerWithAutoJump:(BOOL)autoJump;
 
+- (NSString *)currentTabIdentifier;
+
 @end
 
 @interface QuickLoginDelegate : NSObject
