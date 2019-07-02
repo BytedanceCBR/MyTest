@@ -1045,7 +1045,7 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
         self.maskView.alpha = 1.0;
     }];
     
-    [self trackEvent:@"dislike_menu_show" extraParameters:nil];
+//    [self trackEvent:@"dislike_menu_show" extraParameters:nil];
 }
 
 - (NSArray<NSString *> *)modern_selectedWords {

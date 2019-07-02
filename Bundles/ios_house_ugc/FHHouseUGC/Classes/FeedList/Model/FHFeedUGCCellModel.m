@@ -86,6 +86,7 @@
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.cellType = [model.cellType integerValue];
     cellModel.groupId = model.groupId;
+    cellModel.logPb = model.logPb;
     //处理图片
     NSMutableArray *cellImageList = [NSMutableArray array];
     for (FHFeedContentImageListModel *imageModel in model.imageList) {
@@ -158,6 +159,7 @@
     cellModel.userDigg = model.userDigg;
     cellModel.desc = [self generateUGCDesc:model];
     cellModel.groupId = model.threadId;
+    cellModel.logPb = model.logPb;
     
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     community.name = model.community.name;

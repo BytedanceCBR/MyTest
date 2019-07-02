@@ -238,6 +238,7 @@
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
+    [self traceClientShowAtIndexPath:indexPath];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -252,6 +253,7 @@
     }
     
     cell.delegate = self;
+    cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
 
     if(indexPath.row < self.dataList.count){
         [cell refreshWithData:cellModel];
@@ -358,6 +360,7 @@
 }
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel {
+    [self trackClickComment:cellModel];
     [self jumpToPostDetail:cellModel showComment:YES];
 }
 
@@ -374,6 +377,57 @@
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
+}
+
+#pragma mark - 埋点
+
+- (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
+    if (indexPath.row >= self.dataList.count) {
+        return;
+    }
+    
+    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+    
+    if (!self.clientShowDict) {
+        self.clientShowDict = [NSMutableDictionary new];
+    }
+    
+    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+    NSString *groupId = cellModel.groupId;
+    if(groupId){
+        if (self.clientShowDict[groupId]) {
+            return;
+        }
+        
+        self.clientShowDict[groupId] = @(indexPath.row);
+        [self trackClientShow:cellModel rank:indexPath.row];
+    }
+}
+
+- (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+    NSMutableDictionary *dict = [self trackDict:cellModel rank:rank];
+    TRACK_EVENT(@"feed_client_show", dict);
+}
+
+- (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    
+    dict[@"enter_from"] = @"nearby_list";
+    dict[@"page_type"] = [self pageType];
+    dict[@"log_pb"] = cellModel.logPb;
+    dict[@"rank"] = @(rank);
+    
+    return dict;
+}
+
+- (NSString *)pageType {
+    return @"hot_discuss_feed";
+}
+
+- (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
+    NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
+    dict[@"click_position"] = @"feed_comment";
+    TRACK_EVENT(@"click_comment", dict);
 }
 
 @end

@@ -14,6 +14,7 @@
 #import "FHFeedUGCCellModel.h"
 #import "FHFeedListModel.h"
 #import "FHUGCConfig.h"
+#import "FHUserTracker.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHFeedUGCCellModel *currentCellModel;
 @property(nonatomic, assign) BOOL needRefreshCell;
 @property(nonatomic, strong) FHFeedListModel *feedListModel;
+@property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
 
