@@ -601,7 +601,7 @@
         *willRepostFwID = fwID;
         [wSelf clickSubmitComment];
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
-    commentManager.enterFrom = @"article";
+    commentManager.enterFrom = @"feed_detail";
     
     self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
     
