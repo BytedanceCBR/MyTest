@@ -24,6 +24,7 @@
 @property (nonatomic, strong) NSString *titleStr;
 @property (nonatomic, strong) UIImageView *loadingAnimateView;
 @property (nonatomic, assign) BOOL isLoading;
+@property (nonatomic, strong)     NSMutableDictionary       *tracerParams;
 
 @end
 
@@ -220,13 +221,24 @@
     [[TTUIResponderHelper visibleTopViewController] presentViewController:alert animated:YES completion:nil];
 }
 
+- (void)setTracerDic:(NSDictionary *)tracerDic {
+    _tracerDic = [tracerDic copy];
+    if (tracerDic) {
+        self.tracerParams = [NSMutableDictionary new];
+        //
+        self.tracerParams[@"page_type"] = self.tracerDic[@"page_type"] ?: @"be_null";
+        self.tracerParams[@"enter_from"] = self.tracerDic[@"enter_from"] ?: @"be_null";
+        self.tracerParams[@"enter_type"] = self.tracerDic[@"enter_type"] ?: @"be_null";
+        self.tracerParams[@"rank"] = self.tracerDic[@"rank"] ?: @"be_null";
+        self.tracerParams[@"log_pb"] = self.tracerDic[@"log_pb"] ?: @"be_null";
+    }
+}
+
 - (void)cancelJoinPopupClickByConfirm:(BOOL)isConfirm {
-    NSMutableDictionary *tracerDict = self.tracerDic.mutableCopy;
+    NSMutableDictionary *tracerDict = self.tracerParams.mutableCopy;
     NSString *page_type = self.tracerDic[@"page_type"];
-    NSString *enter_from = self.tracerDic[@"enter_from"];
     tracerDict[@"page_type"] = @"join_community_grouppopup";
     tracerDict[@"enter_from"] = page_type ?: @"be_null";
-    tracerDict[@"origin_from"] = enter_from ?: @"be_null";
     [tracerDict removeObjectForKey:@"enter_type"];
     [tracerDict removeObjectForKey:@"rank"];
     if (isConfirm) {
@@ -239,12 +251,10 @@
 }
 
 - (void)cancelJoinPopupShow {
-    NSMutableDictionary *tracerDict = self.tracerDic.mutableCopy;
+    NSMutableDictionary *tracerDict = self.tracerParams.mutableCopy;
     NSString *page_type = self.tracerDic[@"page_type"];
-    NSString *enter_from = self.tracerDic[@"enter_from"];
     tracerDict[@"page_type"] = @"join_community_grouppopup";
     tracerDict[@"enter_from"] = page_type ?: @"be_null";
-    tracerDict[@"origin_from"] = enter_from ?: @"be_null";
     [tracerDict removeObjectForKey:@"enter_type"];
     [tracerDict removeObjectForKey:@"rank"];
     
@@ -253,14 +263,14 @@
 
 // 关注埋点
 - (void)followTracer {
-    NSMutableDictionary *tracerDict = self.tracerDic.mutableCopy;
+    NSMutableDictionary *tracerDict = self.tracerParams.mutableCopy;
     tracerDict[@"click_position"] = @"join_like";
     [FHUserTracker writeEvent:@"click_join" params:tracerDict];
 }
 
 // 取消关注埋点
 - (void)unFollowTracer {
-    NSMutableDictionary *tracerDict = self.tracerDic.mutableCopy;
+    NSMutableDictionary *tracerDict = self.tracerParams.mutableCopy;
     tracerDict[@"click_position"] = @"cancel_like";
     [FHUserTracker writeEvent:@"click_unjoin" params:tracerDict];
 }

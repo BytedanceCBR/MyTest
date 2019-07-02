@@ -106,6 +106,10 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     self.isViewAppearing = NO;
+}
+
+- (void)dealloc
+{
     [self addReadPct];
 }
 
@@ -114,6 +118,7 @@
     // 关注按钮
     self.followButton = [[FHUGCFollowButton alloc] init];
     self.followButton.followed = YES;
+    self.followButton.tracerDic = self.tracerDict.mutableCopy;
     self.followButton.groupId = [NSString stringWithFormat:@"%lld",self.tid];
     [self.customNavBarView addSubview:_followButton];
     [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -224,6 +229,8 @@
 
 - (void)addReadPct {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"page_count"] = @"1";
+    tracerDict[@"percent"] = @"100";
     [FHUserTracker writeEvent:@"read_pct" params:tracerDict];
 }
 

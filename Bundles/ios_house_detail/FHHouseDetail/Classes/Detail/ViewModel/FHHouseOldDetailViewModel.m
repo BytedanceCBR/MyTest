@@ -454,6 +454,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     if(showUgcEntry){
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
+        model.data.ugcSocialGroup.houseType = FHHouseTypeSecondHandHouse;
         [self.items addObject:model.data.ugcSocialGroup];
     }
     // 小区信息

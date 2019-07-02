@@ -51,6 +51,7 @@
     [self.icon bd_setImageWithURL:[NSURL URLWithString:headerModel.socialGroupModel.avatar] placeholder:nil];
     BOOL isFollowed = [headerModel.socialGroupModel.hasFollow boolValue];
     self.joinBtn.followed = isFollowed;
+    self.joinBtn.tracerDic = headerModel.tracerDict;
     self.joinBtn.groupId = headerModel.socialGroupModel.socialGroupId;
 }
 
@@ -97,7 +98,8 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = data.socialGroupId;
         dict[@"tracer"] = @{@"enter_from":@"feed_detail",
-                            @"enter_type":@"click"};
+                            @"enter_type":@"click",
+                            @"log_pb":data.logPb};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         // 跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];

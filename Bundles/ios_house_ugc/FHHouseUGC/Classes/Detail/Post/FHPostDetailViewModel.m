@@ -146,6 +146,7 @@
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
             headerModel.socialGroupModel = socialGroupModel;
+            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
             self.social_group_id = socialGroupModel.socialGroupId;
             [self.items addObject:headerModel];
             self.detailHeaderModel = headerModel;
