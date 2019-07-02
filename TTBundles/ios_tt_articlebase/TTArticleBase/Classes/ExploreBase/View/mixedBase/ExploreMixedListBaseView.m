@@ -1585,6 +1585,10 @@ TTRefreshViewDelegate
                     [dictTraceParams setValue:@"be_null" forKey:@"ansid"];
                     [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"qid"];
                     [dictTraceParams setValue:@(obj.cellType) ? : @"be_null" forKey:@"cell_type"];
+                    if (obj.cellType == ExploreOrderedDataCellTypeWeb) {
+                        //问答下运营卡片增加 gid
+                        [dictTraceParams setValue:obj.uniqueID ? : @"be_null" forKey:@"element_card_id"];
+                    }
                     [TTTracker eventV3:@"client_show" params:dictTraceParams];
                     
                 }else {
