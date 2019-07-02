@@ -409,6 +409,14 @@
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [self trackDict:cellModel rank:rank];
     TRACK_EVENT(@"feed_client_show", dict);
+
+    if(cellModel.isInsertGuideCell){
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"element_type"] = @"feed_community_guide_notice";
+        guideDict[@"page_type"] = @"nearby_list";
+        guideDict[@"enter_from"] = @"neighborhood_tab";
+        TRACK_EVENT(@"element_show", guideDict);
+    }
     
     if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
         [self trackElementShow:rank];

@@ -17,10 +17,11 @@
 #import <WDNetWorkPluginManager.h>
 #import "FHMessageListViewModel.h"
 #import "FHRefreshCustomFooter.h"
+#import "UIViewController+Track.h"
 #import <WDApiModel.h>
 
 
-@interface FHMessageListController ()
+@interface FHMessageListController ()<TTUIViewControllerTrackProtocol>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, assign) BOOL hasMore;
@@ -34,6 +35,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.ttTrackStayEnable = YES;
         self.title = paramObj.allParams[@"title"];
     }
     return self;
@@ -91,11 +93,28 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHMessageListViewModel alloc] initWithTableView:self.tableView controller:self];
+    self.viewModel.tracerDict = self.tracerDict;
     [self.viewModel requestData:NO isFirst:YES];
 }
 
 - (void)retryLoadData {
     [self.viewModel requestData:NO isFirst:NO];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.viewModel addStayCategoryLog:self.ttTrackStartTime];
+    [self tt_resetStayTime];
+}
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
 @end

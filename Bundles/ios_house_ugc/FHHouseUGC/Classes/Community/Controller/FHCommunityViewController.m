@@ -320,7 +320,7 @@
 - (void)addGoToSearchLog {
     NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
     reportParams[@"page_type"] = @"neighborhood_tab";
-    reportParams[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+    reportParams[@"origin_from"] = @"community_search";
     reportParams[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ?: @"be_null";
     [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
 }

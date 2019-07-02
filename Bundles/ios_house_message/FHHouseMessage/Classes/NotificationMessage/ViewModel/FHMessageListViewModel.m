@@ -144,7 +144,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     TTMessageNotificationModel *model = self.messageModels[indexPath.row];
-    [self addFeedMessageClickLog:!isEmptyString(model.content.refThumbUrl) rank:indexPath.row];
+    [self addFeedMessageClickLog:model rank:indexPath.row];
     NSString *bodyUrl = model.content.bodyUrl;
     if (!isEmptyString(bodyUrl)) {
         NSURL *openURL = [NSURL URLWithString:[bodyUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -157,8 +157,9 @@
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.messageModels.count) {
         TTMessageNotificationModel *model = self.messageModels[indexPath.row];
-        if (model && self.messageShowRecords[model.ID]) {
-            [self addFeedMessageShowLog:!isEmptyString(model.content.refThumbUrl) rank:indexPath.row];
+        if (model && !self.messageShowRecords[model.ID]) {
+            self.messageShowRecords[model.ID] = @(YES);
+            [self addFeedMessageShowLog:model rank:indexPath.row];
         }
     }
 }
@@ -195,26 +196,26 @@
     [FHUserTracker writeEvent:@"stay_category" params:params];
 }
 
-- (void)addFeedMessageShowLog:(BOOL)hasRightPic rank:(NSInteger)rank {
+- (void)addFeedMessageShowLog:(TTMessageNotificationModel*)model rank:(NSInteger)rank {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"page_type"] = [self pageType];
-    params[@"card_type"] = hasRightPic ? @"right_pic" : @"no_pic";
+    params[@"card_type"] = !isEmptyString(model.content.refThumbUrl) ? @"right_pic" : @"no_pic";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     params[@"origin_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"rank"] = @(rank);
-    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    params[@"log_pb"] = model.logPb ?: @"be_null";
     [FHUserTracker writeEvent:@"feed_message_show" params:params];
 }
 
-- (void)addFeedMessageClickLog:(BOOL)hasRightPic rank:(NSInteger)rank {
+- (void)addFeedMessageClickLog:(TTMessageNotificationModel*)model rank:(NSInteger)rank {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"page_type"] = [self pageType];
-    params[@"card_type"] = hasRightPic ? @"right_pic" : @"no_pic";
+    params[@"card_type"] = !isEmptyString(model.content.refThumbUrl) ? @"right_pic" : @"no_pic";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     params[@"origin_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"rank"] = @(rank);
     params[@"click_position"] = @"feed_message";
-    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    params[@"log_pb"] = model.logPb ?: @"be_null";
     [FHUserTracker writeEvent:@"click_feed_message" params:params];
 }
 
