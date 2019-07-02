@@ -286,6 +286,8 @@
 - (void)p_buildCommentViewController
 {
     self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:CGRectMake(0, _mainScrollView.frame.size.height, self.view.width, _mainScrollView.frame.size.height) dataSource:self delegate:self];
+    NSString *enter_from = self.tracerDict[@"enter_from"];
+    self.commentViewController.enter_from = enter_from;
     self.commentViewController.enableImpressionRecording = YES;
     [self.commentViewController willMoveToParentViewController:self];
     [self addChildViewController:self.commentViewController];
@@ -719,7 +721,7 @@
 - (void)clickReplyComment:(NSString *)comment_id {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"reply_comment";
-    tracerDict[@"comment_id"] = @"comment_id";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
     [FHUserTracker writeEvent:@"click_reply_comment" params:tracerDict];
 }
 
@@ -727,7 +729,7 @@
 - (void)click_reply_like:(NSString *)comment_id {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"reply_like";
-    tracerDict[@"comment_id"] = @"comment_id";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
     [FHUserTracker writeEvent:@"click_reply_like" params:tracerDict];
 }
 
@@ -735,7 +737,7 @@
 - (void)click_reply_dislike:(NSString *)comment_id {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"reply_dislike";
-    tracerDict[@"comment_id"] = @"comment_id";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
     [FHUserTracker writeEvent:@"click_reply_dislike" params:tracerDict];
 }
 
@@ -743,7 +745,7 @@
 - (void)click_delete_comment:(NSString *)comment_id {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"delete_comment";
-    tracerDict[@"comment_id"] = @"comment_id";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
     [FHUserTracker writeEvent:@"click_delete_comment" params:tracerDict];
 }
 
