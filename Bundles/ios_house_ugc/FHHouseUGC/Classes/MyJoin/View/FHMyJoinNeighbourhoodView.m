@@ -10,6 +10,7 @@
 #import "UIFont+House.h"
 #import <Masonry.h>
 #import "FHUGCCellHeaderView.h"
+#import "FHUserTracker.h"
 
 @interface FHMyJoinNeighbourhoodView ()
 
@@ -24,6 +25,7 @@
     if (self) {
         [self initViews];
         [self initConstraints];
+        [self trackElementShow];
     }
     return self;
 }
@@ -101,6 +103,15 @@
     if(self.delegate && [self.delegate respondsToSelector:@selector(gotoMore)]){
         [self.delegate gotoMore];
     }
+}
+
+- (void)trackElementShow {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"element_type"] = @"my_joined_neighborhood";
+    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"enter_from"] = @"neighborhood_tab";
+    tracerDict[@"card_type"] = @"large";
+    TRACK_EVENT(@"element_show", tracerDict);
 }
 
 @end
