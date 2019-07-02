@@ -146,8 +146,9 @@
     FHUGCScialGroupDataModel *model = self.dataList[indexPath.row];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"community_id"] = model.socialGroupId;
-    dict[@"tracer"] = @{@"enter_from":@"my_join_feed",
-                        @"enter_type":@"click"};
+    dict[@"tracer"] = @{@"enter_from":@"my_joined_neighborhood",
+                        @"enter_type":@"click",
+                        @"log_pb":model.logPb};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     //跳转到圈子详情页
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];

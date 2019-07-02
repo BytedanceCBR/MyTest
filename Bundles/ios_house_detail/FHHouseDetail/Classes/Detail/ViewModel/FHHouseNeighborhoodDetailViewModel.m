@@ -191,6 +191,7 @@
     if(showUgcEntry){
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
+        model.data.ugcSocialGroup.houseType = FHHouseTypeNeighborhood;
         [self.items addObject:model.data.ugcSocialGroup];
     }
 
