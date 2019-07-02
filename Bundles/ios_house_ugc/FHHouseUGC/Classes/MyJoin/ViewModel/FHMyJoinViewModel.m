@@ -87,6 +87,7 @@
 
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
     [self.viewController.neighbourhoodView.messageView refreshWithUrl:model.lastUserAvatar messageCount:[model.unread intValue]];
+    [self trackElementShow];
 }
 
 - (void)hideMessageView {
@@ -106,6 +107,7 @@
     if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
         [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:nil];
     }
+    [self trackClickOptions];
 }
 
 // 更新发帖进度视图
@@ -189,5 +191,24 @@
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
+
+#pragma mark - 埋点
+
+- (void)trackElementShow {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"element_type"] = @"feed_message_tips_card";
+    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"enter_from"] = @"neighborhood_tab";
+    TRACK_EVENT(@"element_show", tracerDict);
+}
+
+- (void)trackClickOptions {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"click_position"] = @"feed_message_tips_card";
+    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"enter_from"] = @"neighborhood_tab";
+    TRACK_EVENT(@"click_options", tracerDict);
+}
+
 
 @end

@@ -300,7 +300,7 @@
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
-        [self jumpToPostDetail:cellModel showComment:NO];
+        [self jumpToPostDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner){
         //根据url跳转
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
@@ -310,15 +310,14 @@
     }
 }
 
-- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment {
+- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
     NSMutableDictionary *dict = @{}.mutableCopy;
-    
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_from"] = @"hot_discuss_feed";
-    traceParam[@"enter_type"] = @"feed_comment";
-    traceParam[@"rank"] = @"be_null";
-    traceParam[@"log_pb"] = @"be_null";
+    traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+    traceParam[@"log_pb"] = cellModel.logPb;
     dict[TRACER_KEY] = traceParam;
     
     dict[@"data"] = cellModel;
@@ -361,7 +360,7 @@
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel {
     [self trackClickComment:cellModel];
-    [self jumpToPostDetail:cellModel showComment:YES];
+    [self jumpToPostDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
 - (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
