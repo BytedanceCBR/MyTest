@@ -613,8 +613,8 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)gotoLogin {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setObject:@"post_ugc" forKey:@"enter_from"];
-    [params setObject:@"post_ugc" forKey:@"enter_type"];
+    [params setObject:@"feed_publisher" forKey:@"enter_from"];
+    [params setObject:@"click" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     __weak typeof(self) wSelf = self;

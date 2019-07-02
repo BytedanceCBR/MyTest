@@ -193,7 +193,7 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     // add by zyk 记得修改埋点
     [params setObject:@"cellbottom" forKey:@"enter_from"];
-    [params setObject:@"cellbottom" forKey:@"enter_type"];
+    [params setObject:@"feed_like" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     __weak typeof(self) wSelf = self;
