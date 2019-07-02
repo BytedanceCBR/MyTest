@@ -63,6 +63,8 @@
 - (void)initViewModel {
     self.viewModel = [[FHCommunityDetailViewModel alloc] initWithController:self];
     self.viewModel.tracerDict = self.tracerDict;
+    [self.viewModel addGoDetailLog];
+    [self.viewModel addPublicationsShowLog];
     [self loadData];
 }
 

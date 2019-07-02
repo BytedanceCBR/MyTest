@@ -372,6 +372,8 @@
     if(cellModel.community.socialGroupId){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = cellModel.community.socialGroupId;
+        dict[@"tracer"] = @{@"enter_from":@"hot_discuss_feed_from",
+                @"enter_type":@"click"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
@@ -407,11 +409,24 @@
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [self trackDict:cellModel rank:rank];
     TRACK_EVENT(@"feed_client_show", dict);
+    
+    if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
+        [self trackElementShow:rank];
+    }
+}
+
+- (void)trackElementShow:(NSInteger)rank {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"element_type"] = @"like_neighborhood";
+    dict[@"page_type"] = @"nearby_list";
+    dict[@"enter_from"] = @"neighborhood_tab";
+    dict[@"rank"] = @(rank);
+    
+    TRACK_EVENT(@"element_show", dict);
 }
 
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    
     dict[@"enter_from"] = @"nearby_list";
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
