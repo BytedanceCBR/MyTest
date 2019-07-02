@@ -14,6 +14,8 @@
 #import "FHPostDetailNavHeaderView.h"
 #import "FHCommonDefines.h"
 #import "FHUGCFollowButton.h"
+#import "FHUserTracker.h"
+#import "UIViewController+Track.h"
 
 @interface FHPostDetailViewController ()
 
@@ -53,7 +55,9 @@
             self.user_digg = [self.detailData.userDigg integerValue];
             self.digg_count = [self.detailData.diggCount longLongValue];
         }
-        // add by zyk 注意埋点
+        // 埋点
+        self.tracerDict[@"page_type"] = @"feed_detail";
+        self.ttTrackStayEnable = YES;
     }
     return self;
 }
@@ -80,10 +84,12 @@
     [self addDefaultEmptyViewFullScreen];
     // 请求 详情页数据
     [self startLoadData];
+    [self addGoDetailLog];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [self addStayPageLog];
     if (self.detailData) {
         // 修改列表页数据
         self.detailData.commentCount = [NSString stringWithFormat:@"%lld",self.comment_count];
@@ -183,6 +189,36 @@
             self.followButton.hidden = YES;
         }
     }
+}
+
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayPageLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+#pragma mark - Tracer
+
+-(void)addGoDetailLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
+}
+
+-(void)addStayPageLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
+    [self tt_resetStayTime];
 }
 
 @end
