@@ -943,6 +943,11 @@ static NSInteger const kMaxPostImageCount = 9;
 #pragma mark - FRAddMultiImagesViewDelegate
 
 - (void)addImagesButtonDidClickedOfAddMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"page_type"] = @"feed_publisher";
+    tracerDict[@"click_position"] = @"picture";
+    [FHUserTracker writeEvent:@"click_options" params:tracerDict];
+    
     self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
     [self endEditing];
 }
@@ -1222,6 +1227,13 @@ static NSInteger const kMaxPostImageCount = 9;
         self.selectView.groupId = item.socialGroupId;
         self.selectView.communityName = item.socialGroupName;
         [self refreshPostButtonUI];
+        
+        NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+        tracerDict[@"element_type"] = @"select_like_publisher_neighborhood";
+        if (item.socialGroupId.length > 0) {
+            tracerDict[@"group_id"] = item.socialGroupId;
+        }
+        [FHUserTracker writeEvent:@"element_show" params:tracerDict];
     }
 }
 

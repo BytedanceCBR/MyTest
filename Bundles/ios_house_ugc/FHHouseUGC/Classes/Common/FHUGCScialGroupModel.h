@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *countText;
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
 @property (nonatomic, copy , nullable) NSString *hasFollow;
-@property (nonatomic, copy , nullable) NSDictionary       *logPb;
+@property (nonatomic, copy , nullable) NSDictionary *logPb;
 
 @end
 

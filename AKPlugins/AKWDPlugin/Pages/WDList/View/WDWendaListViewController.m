@@ -53,6 +53,7 @@
 #import <TTVideoService/TTFFantasyTracker.h>
 #import "WDListBottomButton.h"
 #import "TTAccountManager.h"
+#import "FHUserTracker.h"
 
 #define kListBottomBarHeight (self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44)
 
@@ -92,6 +93,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 @property (nonatomic, copy)   NSString *       qid;
 @property (nonatomic, copy)   NSString *       ansid;
 @property (nonatomic, assign)   BOOL       needReloadData;
+@property (nonatomic, strong)   NSDictionary       *goDetailDict;
 
 @end
 
@@ -201,15 +203,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         [self sendTrackWithDict:dict];
         
         //go detail
-        NSMutableDictionary * goDetailDict = [NSMutableDictionary dictionaryWithDictionary:self.viewModel.gdExtJson];
-//        [goDetailDict setValue:@"go_detail" forKey:@"tag"];
-//        [goDetailDict setValue:[self enterFrom] forKey:@"label"];
-//        [goDetailDict setValue:self.viewModel.qID forKey:@"value"];
-//        [goDetailDict setValue:@"umeng" forKey:@"category"];
-
-//        if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-//            [TTTrackerWrapper eventData:goDetailDict];
-//        }
+        self.goDetailDict = [NSMutableDictionary dictionaryWithDictionary:self.viewModel.gdExtJson];
         
 
         //Wenda_V3_DoubleSending
@@ -234,6 +228,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         [v3Dic removeObjectForKey:@"pct"];
         [v3Dic setValue:self.viewModel.qID forKey:@"group_id"];
         [TTTracker eventV3:@"go_detail" params:v3Dic isDoubleSending:NO];
+        self.goDetailDict = v3Dic;
 
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fontChanged) name:kSettingFontSizeChangedNotification object:nil];
@@ -383,6 +378,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     [self.bottomButton addTarget:self action:@selector(writeAnswer) forControlEvents:UIControlEventTouchUpInside];
 //    //底部tab
 //    [self.view addSubview:self.bottomTabView];
+    [self feed_answer_element_show];
     
     //监听变化
     WeakSelf;
@@ -401,6 +397,8 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 
 // 写答案
 - (void)writeAnswer {
+    // 埋点
+    [self feed_click_want_answer];
     if ([TTAccountManager isLogin]) {
         [self gotoPostWDAnswer];
     } else {
@@ -1148,6 +1146,20 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
 - (UIView *)suitableFinishBackView
 {
     return _answerListView;
+}
+
+#pragma mark - tracer key
+
+- (void)feed_answer_element_show {
+    NSMutableDictionary *tracerDict = self.goDetailDict.mutableCopy;
+    tracerDict[@"element_type"] = @"want_answer";
+    [FHUserTracker writeEvent:@"feed_answer_element_show" params:tracerDict];
+}
+
+- (void)feed_click_want_answer {
+    NSMutableDictionary *tracerDict = self.goDetailDict.mutableCopy;
+    tracerDict[@"click_position"] = @"want_answer";
+    [FHUserTracker writeEvent:@"feed_click_want_answer" params:tracerDict];
 }
 
 @end

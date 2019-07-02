@@ -11,13 +11,13 @@
 #import "TTThemedAlertController.h"
 #import "TTUIResponderHelper.h"
 #import "TTReachability.h"
-#import "UIViewController+Track.h"
 #import "FHUserTracker.h"
 
 @interface FHNearbyViewController ()
 
 @property(nonatomic, strong) CLLocation *currentLocaton;
 @property(nonatomic, assign) NSTimeInterval lastRequestTime;
+@property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
 
 @end
 
@@ -26,7 +26,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.ttTrackStayEnable = YES;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -49,26 +48,16 @@
 - (void)viewWillAppear {
     [self loadFeedListView];
     [self.feedVC viewWillAppear];
+    
+    if ([[NSDate date]timeIntervalSince1970] - _enterTabTimestamp > 24*60*60) {
+        //超过一天
+        _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+    }
 }
 
 - (void)viewWillDisappear {
-    [self addStayCategoryLog:self.ttTrackStayTime];
-    [self tt_resetStayTime];
+    [self addStayCategoryLog];
 }
-
-//- (void)viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
-//
-//    [self loadFeedListView];
-//    [self.feedVC viewWillAppear];
-//}
-//
-//- (void)viewWillDisappear:(BOOL)animated {
-//    [super viewWillDisappear:animated];
-//
-//    [self addStayCategoryLog:self.ttTrackStayTime];
-//    [self tt_resetStayTime];
-//}
 
 - (void)initView {
     if(!self.feedVC){
@@ -127,17 +116,21 @@
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"category_name"] = [self categoryName];
     TRACK_EVENT(@"enter_category", tracerDict);
+    
+    self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
 }
 
-- (void)addStayCategoryLog:(NSTimeInterval)stayTime {
-    NSTimeInterval duration = stayTime * 1000.0;
-    if (duration == 0) {//当前页面没有在展示过
+- (void)addStayCategoryLog {
+    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTabTimestamp;
+    if (duration <= 0 || duration >= 24*60*60) {
         return;
     }
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"category_name"] = [self categoryName];
-    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:(duration * 1000)];
     TRACK_EVENT(@"stay_category", tracerDict);
+    
+    self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
 }
 
 - (NSString *)categoryName {

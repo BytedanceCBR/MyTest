@@ -841,6 +841,9 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
             actionSheet.tag = kDeleteCommentActionSheetTag;
             [actionSheet showInView:self.view];
         }
+        if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentViewController:deleteCommentWithCommentModel:)]) {
+            [self.delegate tt_commentViewController:self deleteCommentWithCommentModel:model];
+        }
     } else {
         self.needDeleteCommentModel = nil;
     }

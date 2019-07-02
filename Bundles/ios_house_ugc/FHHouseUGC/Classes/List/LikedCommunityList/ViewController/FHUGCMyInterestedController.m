@@ -11,6 +11,8 @@
 #import "TTReachability.h"
 #import "TTAccount+Multicast.h"
 #import "FHEnvContext.h"
+#import "UIViewController+Track.h"
+#import "FHUserTracker.h"
 
 @interface FHUGCMyInterestedController ()<TTRouteInitializeProtocol,UIViewControllerErrorHandler>
 
@@ -34,15 +36,32 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
+    self.ttTrackStayEnable = YES;
     if(self.type == FHUGCMyInterestedTypeMore){
         [self initNavbar];
+        [self addEnterCategoryLog];
     }
     [self initView];
     [self initConstraints];
     [self initViewModel];
     
     [TTAccount addMulticastDelegate:self];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    if(self.type == FHUGCMyInterestedTypeMore){
+        [self addStayCategoryLog:self.ttTrackStayTime];
+    }
+}
+
+- (void)viewWillAppear {
+    [self.viewModel viewWillAppear];
+}
+
+- (void)viewWillDisappear {
+    [self.viewModel viewWillDisappear];
 }
 
 - (void)initNavbar {
@@ -141,6 +160,32 @@
 
 - (void)retryLoadData {
     [self startLoadData];
+}
+
+- (void)addEnterCategoryLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    
+    tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"element_from"] = @"like_neighborhood";
+    tracerDict[@"category_name"] = [self categoryName];
+    TRACK_EVENT(@"enter_category", tracerDict);
+}
+
+- (void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    NSTimeInterval duration = stayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"element_from"] = @"like_neighborhood";
+    tracerDict[@"category_name"] = [self categoryName];
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    TRACK_EVENT(@"stay_category", tracerDict);
+}
+
+- (NSString *)categoryName {
+    return @"like_neighborhood_list";
 }
 
 #pragma mark - UIViewControllerErrorHandler

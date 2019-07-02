@@ -141,7 +141,7 @@
                 [self.viewController showNotify:refreshTip];
                 [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
             }
-            
+    
             //            if(!isHead){
             //                [self addRefreshLog];
             //            }
@@ -310,6 +310,15 @@
 
 - (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment {
     NSMutableDictionary *dict = @{}.mutableCopy;
+    
+    // 埋点
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[@"enter_from"] = @"hot_discuss_feed";
+    traceParam[@"enter_type"] = @"feed_comment";
+    traceParam[@"rank"] = @"be_null";
+    traceParam[@"log_pb"] = @"be_null";
+    dict[TRACER_KEY] = traceParam;
+    
     dict[@"data"] = cellModel;
     dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
