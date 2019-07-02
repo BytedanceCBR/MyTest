@@ -478,9 +478,9 @@
 {
     // 对评论 点赞
     if (!model.userDigged) {
-        [self click_reply_dislike];
+        [self click_reply_dislike:model.commentID];
     } else {
-        [self click_reply_like];
+        [self click_reply_like:model.commentID];
     }
 }
 
@@ -491,7 +491,7 @@
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController didClickReplyButtonWithCommentModel:(nonnull id<TTCommentModelProtocol>)model
 {
     // 埋点 点击回复他人评论
-    [self clickReplyComment];
+    [self clickReplyComment:model.commentID];
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(id<TTCommentModelProtocol>)model
@@ -500,7 +500,7 @@
 }
 
 - (void)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController deleteCommentWithCommentModel:(nonnull id<TTCommentModelProtocol>)model {
-    [self click_delete_comment];
+    [self click_delete_comment:model.commentID];
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController tappedWithUserID:(NSString *)userID {
@@ -716,30 +716,34 @@
 }
 
 // 点击回复他人的评论中的“回复”按钮
-- (void)clickReplyComment {
+- (void)clickReplyComment:(NSString *)comment_id {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"reply_comment";
+    tracerDict[@"comment_id"] = @"comment_id";
     [FHUserTracker writeEvent:@"click_reply_comment" params:tracerDict];
 }
 
 // 详情页他人评论点赞
-- (void)click_reply_like {
+- (void)click_reply_like:(NSString *)comment_id {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"reply_like";
+    tracerDict[@"comment_id"] = @"comment_id";
     [FHUserTracker writeEvent:@"click_reply_like" params:tracerDict];
 }
 
 // 详情页他人评论取消点赞
-- (void)click_reply_dislike {
+- (void)click_reply_dislike:(NSString *)comment_id {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"reply_dislike";
+    tracerDict[@"comment_id"] = @"comment_id";
     [FHUserTracker writeEvent:@"click_reply_dislike" params:tracerDict];
 }
 
 // 点击删除自己的评论
-- (void)click_delete_comment {
+- (void)click_delete_comment:(NSString *)comment_id {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"delete_comment";
+    tracerDict[@"comment_id"] = @"comment_id";
     [FHUserTracker writeEvent:@"click_delete_comment" params:tracerDict];
 }
 
