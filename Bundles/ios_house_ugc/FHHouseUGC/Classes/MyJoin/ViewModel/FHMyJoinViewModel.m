@@ -11,6 +11,7 @@
 #import "FHUGCConfig.h"
 #import "FHMessageNotificationTipsManager.h"
 #import "FHUnreadMsgModel.h"
+#import "FHUserTracker.h"
 
 #define cellId @"cellId"
 
@@ -162,9 +163,18 @@
 //    }
 }
 
+- (void)trackMore {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"element_type"] = @"my_joined_neighborhood";
+    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"enter_from"] = @"neighborhood_tab";
+    TRACK_EVENT(@"click_more", tracerDict);
+}
+
 #pragma mark - FHMyJoinNeighbourhoodViewDelegate
 
 - (void)gotoMore {
+    [self trackMore];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"title"] = @"我关注的小区";
     dict[@"action_type"] = @(0);

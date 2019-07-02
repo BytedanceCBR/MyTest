@@ -118,6 +118,11 @@
             if(wself.viewController.type == FHUGCMyInterestedTypeEmpty){
                 [self addEnterCategoryLog];
             }
+            
+            //报的是我关注的feed页的埋点组件展现
+            if(wself.viewController.type == FHUGCMyInterestedTypeEmpty && self.dataList.count > 0){
+                [self trackElementShow];
+            }
         }
     }];
 }
@@ -150,6 +155,17 @@
     TRACK_EVENT(@"stay_category", tracerDict);
     
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+}
+
+- (void)trackElementShow {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    
+    tracerDict[@"element_type"] = @"like_neighborhood";
+    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"enter_from"] = @"neighborhood_tab";
+    tracerDict[@"card_type"] = @"left_pic";
+    tracerDict[@"show_type"] = self.showType ? self.showType : @"be_null";
+    TRACK_EVENT(@"element_show", tracerDict);
 }
 
 - (void)traceGroupShowAtIndexPath:(NSIndexPath*)indexPath {
@@ -185,10 +201,16 @@
     
     dict[@"house_type"] = @"community";
     dict[@"card_type"] = @"left_pic";
-    dict[@"page_type"] = @"like_neighborhood_list";
     dict[@"element_from"] = @"like_neighborhood";
     dict[@"log_pb"] = model.socialGroup.logPb;
     dict[@"rank"] = @(rank);
+    
+    if(self.viewController.type == FHUGCMyInterestedTypeEmpty){
+        dict[@"page_type"] = @"my_join_list";
+        dict[@"show_type"] = self.showType ? self.showType : @"be_null";
+    }else{
+        dict[@"page_type"] = @"like_neighborhood_list";
+    }
     
     return dict;
 }
