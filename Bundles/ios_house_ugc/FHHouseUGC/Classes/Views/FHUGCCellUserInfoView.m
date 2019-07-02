@@ -17,6 +17,7 @@
 #import "FHHouseUGCHeader.h"
 #import "FHUGCConfig.h"
 #import "TTUIResponderHelper.h"
+#import "FHUserTracker.h"
 
 @implementation FHUGCCellUserInfoView
 
@@ -86,6 +87,8 @@
 }
 
 - (void)moreOperation {
+    [self trackClickOptions];
+    __weak typeof(self) wself = self;
     FHFeedOperationView *dislikeView = [[FHFeedOperationView alloc] init];
     FHFeedOperationViewModel *viewModel = [[FHFeedOperationViewModel alloc] init];
 
@@ -100,12 +103,13 @@
     [dislikeView showAtPoint:point
                     fromView:_moreBtn
              didDislikeBlock:^(FHFeedOperationView * _Nonnull view) {
-                 [self handleItemselected:view];
+                 [wself handleItemselected:view];
              }];
 }
 
 - (void)handleItemselected:(FHFeedOperationView *) view {
     if(view.selectdWord.type == FHFeedOperationWordTypeReport){
+        [self trackClickReport];
         //举报
         if(self.reportSuccessBlock){
             self.reportSuccessBlock();
@@ -117,6 +121,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCReportPostNotification object:nil userInfo:dic];
         
     }else if(view.selectdWord.type == FHFeedOperationWordTypeDelete){
+        [self trackClickDelete];
         //二次弹窗提醒
         [self showDeleteAlert];
     }
@@ -131,6 +136,7 @@
                                                            style:UIAlertActionStyleCancel
                                                          handler:^(UIAlertAction * _Nonnull action) {
                                                              // 点击取消按钮，调用此block
+                                                             [wself trackConfirmDeletePopupClick:YES];
                                                          }];
     [alert addAction:cancelAction];
 
@@ -138,10 +144,12 @@
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * _Nonnull action) {
                                                               // 点击按钮，调用此block
+                                                              [wself trackConfirmDeletePopupClick:NO];
                                                               [wself postDelete];
                                                           }];
     [alert addAction:defaultAction];
     [[TTUIResponderHelper visibleTopViewController] presentViewController:alert animated:YES completion:nil];
+    [self trackConfirmDeletePopupShow];
 }
 
 - (void)postDelete {
@@ -164,6 +172,41 @@
             [[ToastManager manager] showToast:@"删除失败"];
         }
     }];
+}
+
+#pragma mark - 埋点
+
+- (void)trackClickOptions {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    dict[@"click_position"] = @"feed_more";
+    TRACK_EVENT(@"click_options", dict);
+}
+
+- (void)trackClickReport {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    dict[@"click_position"] = @"feed_report";
+    TRACK_EVENT(@"click_report", dict);
+}
+
+- (void)trackClickDelete {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    dict[@"click_position"] = @"feed_delete";
+    TRACK_EVENT(@"click_delete", dict);
+}
+
+- (void)trackConfirmDeletePopupShow {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    TRACK_EVENT(@"confirm_delete_popup_show", dict);
+}
+
+- (void)trackConfirmDeletePopupClick:(BOOL)isCancel {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    if(isCancel){
+        dict[@"click_position"] = @"cancel";
+    }else{
+        dict[@"click_position"] = @"confrim_delete";
+    }
+    TRACK_EVENT(@"confirm_delete_popup_click", dict);
 }
 
 @end

@@ -14,6 +14,7 @@
 #import "TTReachability.h"
 #import "TTAccountManager.h"
 #import "UIButton+TTAdditions.h"
+#import "FHUserTracker.h"
 
 @interface FHUGCCellBottomView ()
 
@@ -212,6 +213,8 @@
     if (![self.saveDiggGroupId isEqualToString:self.cellModel.groupId]) {
         return;
     }
+    
+    [self trackClickLike];
     // 刷新UI
     NSInteger user_digg = [self.cellModel.userDigg integerValue];
     NSInteger diggCount = [self.cellModel.diggCount integerValue];
@@ -231,6 +234,18 @@
     [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
     
     [FHCommonApi requestCommonDigg:self.cellModel.groupId groupType:FHDetailDiggTypeTHREAD action:[self.cellModel.userDigg integerValue] completion:nil];
+}
+
+- (void)trackClickLike {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    NSInteger user_digg = [self.cellModel.userDigg integerValue];
+    if(user_digg == 1){
+        dict[@"click_position"] = @"feed_dislike";
+        TRACK_EVENT(@"click_dislike", dict);
+    }else{
+        dict[@"click_position"] = @"feed_like";
+        TRACK_EVENT(@"click_like", dict);
+    }
 }
 
 @end

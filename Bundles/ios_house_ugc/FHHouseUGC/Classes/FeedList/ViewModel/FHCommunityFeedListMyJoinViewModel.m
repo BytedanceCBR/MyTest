@@ -273,6 +273,7 @@
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
+    [self traceClientShowAtIndexPath:indexPath];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -408,6 +409,51 @@
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
+}
+
+#pragma mark - 埋点
+
+- (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
+    if (indexPath.row >= self.dataList.count) {
+        return;
+    }
+    
+    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+    
+    if (!self.clientShowDict) {
+        self.clientShowDict = [NSMutableDictionary new];
+    }
+    
+    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+    NSString *groupId = cellModel.groupId;
+    if(groupId){
+        if (self.clientShowDict[groupId]) {
+            return;
+        }
+        
+        self.clientShowDict[groupId] = @(indexPath.row);
+        [self trackClientShow:cellModel rank:indexPath.row];
+    }
+}
+
+- (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+    NSMutableDictionary *dict =  [self trackDict:cellModel rank:rank];
+    TRACK_EVENT(@"feed_client_show", dict);
+}
+
+- (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    
+    dict[@"enter_from"] = @"my_join_list";
+    dict[@"page_type"] = [self pageType];
+    dict[@"log_pb"] = cellModel.logPb;
+    dict[@"rank"] = @(rank);
+    
+    return dict;
+}
+
+- (NSString *)pageType {
+    return @"my_join_feed";
 }
 
 @end

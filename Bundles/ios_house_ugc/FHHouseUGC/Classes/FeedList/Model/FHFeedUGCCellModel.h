@@ -88,8 +88,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL showCommunity;
 
 //埋点相关
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy) NSString *elementFrom;
 @property (nonatomic, copy) NSString *enterFrom;
+@property (nonatomic, strong) NSDictionary *tracerDic;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 
