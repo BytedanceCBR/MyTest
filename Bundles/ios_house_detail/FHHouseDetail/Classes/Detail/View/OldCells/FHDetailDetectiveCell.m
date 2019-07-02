@@ -1,0 +1,218 @@
+//
+//  FHDetailDetectiveCell.m
+//  FHHouseDetail
+//
+//  Created by 张静 on 2019/7/2.
+//
+
+#import "FHDetailDetectiveCell.h"
+#import "FHDetectiveTopView.h"
+#import "FHDetectiveContainerView.h"
+#import <FHCommonUI/FHRoundShadowView.h>
+#import <Masonry.h>
+#import "FHDetailOldModel.h"
+#import <TTRoute/TTRoute.h>
+#import "FHDetectiveItemView.h"
+#import "FHDetailHalfPopFooter.h"
+
+@interface FHDetailDetectiveCell ()
+
+@property (nonatomic, strong) FHDetectiveTopView *topView;
+@property (nonatomic, strong) FHDetectiveContainerView *containerView;
+@property (nonatomic, strong) UIView *detectiveView;
+@property(nonatomic , strong) FHDetailHalfPopFooter *footer;
+@property (nonatomic, strong) FHRoundShadowView *shadowView;
+
+@end
+
+@implementation FHDetailDetectiveCell
+
+- (void)refreshWithData:(id)data
+{
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailDetectiveModel class]]) {
+        return;
+    }
+    self.currentData = data;
+    FHDetailDetectiveModel *model = (FHDetailDetectiveModel *)data;
+    [self.topView updateWithTitle:model.detective.dialogs.title tip:model.detective.dialogs.subTitle];
+
+    if (model.detective.detectiveInfo.detectiveList.count > 0) {
+        
+        for (UIView *subview in self.detectiveView.subviews) {
+            [subview removeFromSuperview];
+        }
+        UIView *lastView = nil;
+        NSArray *detectiveList = model.detective.detectiveInfo.detectiveList;
+        for (NSInteger index = 0; index < detectiveList.count; index++) {
+            FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel *item = detectiveList[index];
+            FHDetectiveItemView *itemView = [[FHDetectiveItemView alloc]initWithFrame:CGRectZero];
+            [itemView updateWithModel:item];
+            [self.detectiveView addSubview:itemView];
+            CGFloat height = [FHDetectiveItemView heightForTile:item.title tip:item.explainContent];
+            height = MAX(height, 30 + 40 + 17);
+            [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (lastView) {
+                    make.top.mas_equalTo(lastView.mas_bottom);
+                }else {
+                    make.top.mas_equalTo(5);
+                }
+                if (index == detectiveList.count - 1) {
+                    make.bottom.mas_equalTo(-5);
+                }
+                make.left.right.mas_equalTo(0);
+                make.height.mas_equalTo(height);
+            }];
+            lastView = itemView;
+            [itemView showBottomLine:(index != detectiveList.count - 1)];
+        }
+    }
+    [_footer showTip:model.detective.dialogs.feedbackContent type:FHDetailHalfPopFooterTypeChoose positiveTitle:@"是" negativeTitle:@"否"];
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style
+                reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    // add by zjing for test
+    return @"trade_tips";
+}
+
+- (void)setupUI {
+
+    [self.contentView addSubview:self.topView];
+    [self.contentView addSubview:self.shadowView];
+    [self.contentView addSubview:self.containerView];
+    [self.containerView addSubview:self.detectiveView];
+    [self.containerView addSubview:self.footer];
+
+    [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+    }];
+    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(20);
+        make.right.mas_equalTo(-20);
+        make.top.mas_equalTo(65 + 22);
+        make.bottom.mas_equalTo(0);
+    }];
+    [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.containerView);
+    }];
+    [self.detectiveView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(0);
+    }];
+    [self.footer mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.detectiveView.mas_bottom);
+        make.left.right.bottom.mas_equalTo(0);
+        make.height.mas_equalTo(60);
+    }];
+    
+    __weak typeof(self)wself = self;
+    self.topView.tapBlock = ^{
+        [wself jump2Report];
+    };
+    
+    self.footer.actionBlock = ^(NSInteger positive) {
+        [wself feedBack:positive];
+    };
+}
+
+- (void)feedBack:(NSInteger)type
+{
+    FHDetailDetectiveModel *model = (FHDetailDetectiveModel *)self.currentData;
+    if (model.feedBack) {
+        __weak typeof(self) wself = self;
+        model.feedBack(type, model.detective, ^(BOOL success) {
+            [wself updateFooterFeedback:success];
+        });
+//        [wself addClickAgreeLogType:type];
+    }
+    self.footer.actionButton.enabled = NO;
+    self.footer.negativeButton.enabled = NO;
+}
+
+- (void)updateFooterFeedback:(BOOL)success
+{
+    if (success) {
+        [self.footer changeToFeedbacked];
+    }else{
+        self.footer.actionButton.enabled = YES;
+        self.footer.negativeButton.enabled = YES;
+    }
+}
+
+- (void)jump2Report
+{
+    FHDetailDetectiveModel *model = (FHDetailDetectiveModel *)self.currentData;
+    [self.baseViewModel gotoReportVC:model.detective];
+}
+
+- (FHDetectiveTopView *)topView
+{
+    if (!_topView) {
+        _topView = [[FHDetectiveTopView alloc]init];
+    }
+    return _topView;
+}
+
+- (FHDetectiveContainerView *)containerView
+{
+    if (!_containerView) {
+        _containerView = [[FHDetectiveContainerView alloc]init];
+        _containerView.layer.cornerRadius = 4;
+        _containerView.layer.masksToBounds = YES;
+    }
+    return _containerView;
+}
+
+- (UIView *)detectiveView
+{
+    if (!_detectiveView) {
+        _detectiveView = [[UIView alloc]init];
+    }
+    return _detectiveView;
+}
+
+- (FHDetailHalfPopFooter *)footer
+{
+    if (!_footer) {
+        _footer = [[FHDetailHalfPopFooter alloc]init];
+    }
+    return _footer;
+}
+
+- (FHRoundShadowView *)shadowView
+{
+    if (!_shadowView) {
+        _shadowView = [[FHRoundShadowView alloc] initWithFrame:CGRectZero];
+        _shadowView.cornerRadius = 4;
+        _shadowView.shadowOffset = CGSizeMake(2, 4);
+        _shadowView.shadowRadius = 6;
+        _shadowView.shadowColor = [UIColor blackColor];
+        _shadowView.shadowOpacity = 0.1;
+    }
+    return _shadowView;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end
+
+@implementation FHDetailDetectiveModel
+
+@end

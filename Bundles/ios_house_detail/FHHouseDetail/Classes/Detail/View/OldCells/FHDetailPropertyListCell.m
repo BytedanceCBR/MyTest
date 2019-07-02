@@ -162,23 +162,23 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             lastView = rowView;
         }
         
-        if (model.extraInfo.detective) {
-            rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
-            [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
-            [self.contentView addSubview:rowView];
-            [rowView updateWithDetectiveData:model.extraInfo.detective];
-            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
-                if (lastView) {
-                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
-                }else{
-                    make.top.mas_equalTo(10);
-                }
-                make.left.mas_equalTo(20);
-                make.right.mas_equalTo(-20);
-                make.height.mas_equalTo(20);
-            }];
-            lastView = rowView;
-        }
+//        if (model.extraInfo.detective) {
+//            rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
+//            [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
+//            [self.contentView addSubview:rowView];
+//            [rowView updateWithDetectiveData:model.extraInfo.detective];
+//            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
+//                if (lastView) {
+//                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+//                }else{
+//                    make.top.mas_equalTo(10);
+//                }
+//                make.left.mas_equalTo(20);
+//                make.right.mas_equalTo(-20);
+//                make.height.mas_equalTo(20);
+//            }];
+//            lastView = rowView;
+//        }
     }
     
     if (model.rentExtraInfo.securityInformation) {
