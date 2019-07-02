@@ -195,8 +195,14 @@ static bool isTTCommentPublishing = NO;
         self.commentViewStrong = self.commentWriteView;
         [self.commentWriteView dismissAnimated:YES];
 
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        if (self.enterFrom.length > 0) {
+            
+            [params setObject:self.enterFrom forKey:@"enter_from"];
+            [params setObject:@"comment" forKey:@"enter_type"];
+        }
         
-        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
             if (type == TTAccountAlertCompletionEventTypeDone) {
                 //登录成功 走发送逻辑
                 if ([TTAccountManager isLogin]) {
