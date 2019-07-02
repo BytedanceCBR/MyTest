@@ -44,9 +44,10 @@
 
 @implementation FHCommunityDetailViewModel
 
-- (instancetype)initWithController:(FHCommunityDetailViewController *)viewController {
+- (instancetype)initWithController:(FHCommunityDetailViewController *)viewController tracerDict:(NSDictionary*)tracerDict{
     self = [super init];
     if (self) {
+        self.tracerDict = tracerDict;
         self.viewController = viewController;
         [self initView];
         self.shouldShowUGcGuide = YES;
@@ -486,7 +487,6 @@
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
     params[@"click_position"] = @"join_like";
-    params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     return [params copy];
 }

@@ -83,9 +83,24 @@
     if (isEmptyString(entryModel.socialGroupSchema)) {
         return;
     }
+
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    if(entryModel.houseType == FHHouseTypeNeighborhood){
+        tracerDict[@"enter_from"] = @"neighborhood_detail";
+    }
+
+    if(entryModel.houseType == FHHouseTypeSecondHandHouse){
+        tracerDict[@"enter_from"] = @"old_detail";
+    }
+
+    tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"log_pb"] = entryModel.logPb;
+    NSDictionary *dict = @{@"tracer":tracerDict};
+
+    TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openURL = [NSURL URLWithString:[entryModel.socialGroupSchema stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
-        [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
     }
 }
 

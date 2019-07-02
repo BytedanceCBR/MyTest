@@ -405,7 +405,8 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = cellModel.community.socialGroupId;
         dict[@"tracer"] = @{@"enter_from":@"my_join_feed_from",
-                @"enter_type":@"click"};
+                            @"enter_type":@"click",
+                            @"log_pb":cellModel.logPb};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];

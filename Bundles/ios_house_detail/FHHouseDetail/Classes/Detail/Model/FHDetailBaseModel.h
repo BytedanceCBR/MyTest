@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHHouseListModel.h"
 #import "FHBaseModelProtocol.h"
+#import "FHHouseType.h"
 #import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 
 @class FHDetailNewDataSmallImageGroupModel;
@@ -213,5 +214,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailCommunityEntryActiveCountInfoModel *activeCountInfo;
 @property (nonatomic, strong , nullable) NSArray<FHDetailCommunityEntryActiveInfoModel> *activeInfo;
 @property (nonatomic, copy , nullable) NSString *socialGroupSchema;
+@property (nonatomic, assign) FHHouseType houseType;
+@property (nonatomic, copy) NSDictionary *logPb;
 @end
 NS_ASSUME_NONNULL_END

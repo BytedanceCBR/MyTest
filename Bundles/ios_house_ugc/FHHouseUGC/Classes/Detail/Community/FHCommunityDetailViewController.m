@@ -9,7 +9,7 @@
 #import "FHCommunityDetailViewModel.h"
 #import "UIViewController+Track.h"
 
-@interface FHCommunityDetailViewController ()
+@interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol>
 @property(nonatomic, strong) FHCommunityDetailViewModel *viewModel;
 @end
 
@@ -18,6 +18,7 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.ttTrackStayEnable = YES;
         self.communityId = paramObj.allParams[@"community_id"];
     }
     return self;
@@ -38,6 +39,7 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.viewModel addStayPageLog:self.ttTrackStartTime];
+    [self tt_resetStayTime];
 }
 
 - (void)initView {
@@ -61,8 +63,7 @@
 }
 
 - (void)initViewModel {
-    self.viewModel = [[FHCommunityDetailViewModel alloc] initWithController:self];
-    self.viewModel.tracerDict = self.tracerDict;
+    self.viewModel = [[FHCommunityDetailViewModel alloc] initWithController:self tracerDict:self.tracerDict];
     [self.viewModel addGoDetailLog];
     [self.viewModel addPublicationsShowLog];
     [self loadData];
@@ -74,6 +75,16 @@
 
 - (void)loadData {
     [self.viewModel requestData:NO];
+}
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self.viewModel addStayPageLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
 @end
