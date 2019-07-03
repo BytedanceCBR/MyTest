@@ -27,7 +27,7 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        self.title = @"你可能感兴趣的小区";
+        self.title = @"你可能感兴趣的小区圈";
     }
     return self;
 }
@@ -115,7 +115,7 @@
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, [UIScreen mainScreen].bounds.size.width, 21)];
     label.font = [UIFont themeFontRegular:15];
     label.textColor = [UIColor themeGray1];
-    label.text = @"你可能刚兴趣的小区";
+    label.text = @"你可能感兴趣的小区圈";
     [headerView addSubview:label];
     
     return headerView;
