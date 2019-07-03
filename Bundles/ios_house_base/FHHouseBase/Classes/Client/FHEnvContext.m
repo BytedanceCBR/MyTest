@@ -28,6 +28,7 @@
 #import "FHUGCConfigModel.h"
 #import <TTTabBarManager.h>
 #import <TTTabBarItem.h>
+#import <TTArticleTabBarController.h>
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -586,6 +587,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
         TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
         [tabItem setTitle:@"邻里"];
         tabItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
+        
+        UIWindow * mainWindow = [[UIApplication sharedApplication].delegate window];
+     
+        TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)mainWindow.rootViewController;
+        if ([mainWindow.rootViewController isKindOfClass:[TTArticleTabBarController class]]) {
+            [rootTabController addUgcGuide];
+        }
     }else
     {
         TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
