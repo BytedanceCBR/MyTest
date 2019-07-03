@@ -14,6 +14,7 @@
 #import "FHUserTracker.h"
 
 #define cellId @"cellId"
+#define neighbourhoodViewHeight 194
 
 @interface FHMyJoinViewModel () <UICollectionViewDelegate, UICollectionViewDataSource, FHMyJoinNeighbourhoodViewDelegate>
 
@@ -22,6 +23,7 @@
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, assign) BOOL isShowMessage;
+@property(nonatomic, assign) CGFloat messageViewHeight;
 
 @end
 
@@ -39,6 +41,7 @@
         _collectionView = collectionView;
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
+        _messageViewHeight = 0;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
 
         [_collectionView registerClass:[FHMyJoinNeighbourhoodCell class] forCellWithReuseIdentifier:cellId];
@@ -78,11 +81,12 @@
     if (isEmptyString(model.openUrl) || isEmptyString(model.lastUserAvatar) || [model.unread intValue] <= 0) {
         return;
     }
+    self.messageViewHeight = 58;
     self.isShowMessage = YES;
     self.viewController.neighbourhoodView.messageView.hidden = NO;
 
     CGRect frame = self.viewController.neighbourhoodView.frame;
-    frame.size.height = 252;
+    frame.size.height = neighbourhoodViewHeight + self.messageViewHeight + self.viewController.neighbourhoodView.progressView.viewHeight;
     self.viewController.neighbourhoodView.frame = frame;
 
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
@@ -93,9 +97,10 @@
 - (void)hideMessageView {
     self.isShowMessage = NO;
     self.viewController.neighbourhoodView.messageView.hidden = YES;
+    self.messageViewHeight = 0;
 
     CGRect frame = self.viewController.neighbourhoodView.frame;
-    frame.size.height = 194;
+    frame.size.height = neighbourhoodViewHeight + self.messageViewHeight + self.viewController.neighbourhoodView.progressView.viewHeight;
     self.viewController.neighbourhoodView.frame = frame;
 
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
@@ -112,12 +117,8 @@
 
 // 更新发帖进度视图
 - (void)updateJoinProgressView {
-    CGFloat neighbourhoodViewHeight = 194;
-    if (self.isShowMessage) {
-        neighbourhoodViewHeight = 252;
-    }
     CGRect frame = self.viewController.neighbourhoodView.frame;
-    frame.size.height = self.viewController.neighbourhoodView.progressView.viewHeight + neighbourhoodViewHeight;
+    frame.size.height = neighbourhoodViewHeight + self.messageViewHeight + self.viewController.neighbourhoodView.progressView.viewHeight;
     self.viewController.neighbourhoodView.frame = frame;
 
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;

@@ -407,7 +407,7 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
 
 - (void)updateAvatarImageView {
     self.avatarImageView.image = [UIImage themedImageNamed:@"defaulthead_message"];
-    [self.avatarImageView bd_setImageWithURL:[NSURL URLWithString:self.messageModel.user.avatarUrl]];
+    [self.avatarImageView bd_setImageWithURL:[NSURL URLWithString:self.messageModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"big_defaulthead_head"]];
 }
 
 - (void)updateRefTextLabel {
