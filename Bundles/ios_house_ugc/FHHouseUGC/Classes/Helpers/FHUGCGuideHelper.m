@@ -32,7 +32,7 @@
     BOOL showFeedGuide = [guideDic[kFHUGCShowFeedGuide] boolValue];
     NSInteger showFeedGuideCount = [guideDic[kFHUGCShowFeedGuideCount] integerValue];
     
-    if(!showFeedGuide || showFeedGuideCount > 3){
+    if(!showFeedGuide || showFeedGuideCount >= 3){
         return NO;
     }
     return YES;

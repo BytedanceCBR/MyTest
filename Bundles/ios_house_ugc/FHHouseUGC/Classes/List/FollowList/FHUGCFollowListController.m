@@ -164,6 +164,9 @@
     NSString *enter_from = @"join_like_neighborhood";
     traceParam[@"enter_from"] = enter_from;
     dict[TRACER_KEY] = traceParam;
+    if(self.vcType == FHUGCFollowVCTypeSelectList){
+        dict[@"forbidGoToDetail"] = @(1);
+    }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
     // 关注小区 按钮点击

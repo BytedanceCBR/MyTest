@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHUGCMyInterestedController : FHBaseViewController
 
 @property(nonatomic, assign) FHUGCMyInterestedType type;
+@property(nonatomic, assign) BOOL forbidGoToDetail;
 
 - (void)viewWillAppear;
 - (void)viewWillDisappear;
