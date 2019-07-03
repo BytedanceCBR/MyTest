@@ -300,7 +300,7 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 图文发布器展示
     internalTextView.minHeight = kTextViewHeight;
-    internalTextView.maxNumberOfLines = 8;
+    internalTextView.maxNumberOfLines = 11;
     
     if (!isEmptyString(self.postContentHint)) {
         internalTextView.placeholder = self.postContentHint;
