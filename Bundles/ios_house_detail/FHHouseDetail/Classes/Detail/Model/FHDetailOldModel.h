@@ -249,6 +249,8 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *explainContent;
 @property (nonatomic, copy , nullable) NSString *subTitle;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *icon;
+
 @end
 
 @interface FHDetailDataBaseExtraDetectiveDetectiveInfoModel : JSONModel
