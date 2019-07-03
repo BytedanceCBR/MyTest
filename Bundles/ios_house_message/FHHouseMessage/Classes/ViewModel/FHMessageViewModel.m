@@ -105,7 +105,7 @@
 
 - (void)requestUgcUnread:(FHUnreadMsgModel *)unreadMsg error:(NSError *)error {
     if(![FHEnvContext isUGCOpen] || ![TTAccountManager isLogin] ){
-        [self dataLoaded:nil error:error ugcUnread:nil];
+        [self dataLoaded:unreadMsg error:error ugcUnread:nil];
         return;
     }
     WeakSelf;
