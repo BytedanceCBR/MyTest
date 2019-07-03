@@ -44,6 +44,8 @@
 
 @property (nonatomic, weak) id <TTUGCTextViewDelegate> delegate;
 
+@property (nonatomic, weak) id <TTUGCTextViewDelegate> textLenDelegate;// 字数限制的代理
+
 @property (nonatomic, strong, readonly) HPGrowingTextView *internalGrowingTextView;
 
 /**
