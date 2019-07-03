@@ -81,7 +81,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 - (FHDetailHalfPopLayer *)popLayer;
 
 - (void)enableController:(BOOL)enabled;
-- (void)gotoReportVC:(id)model;
+- (void)popLayerReport:(id)model;
 - (void)poplayerFeedBack:(id)model type:(NSInteger)type completion:(void (^)(BOOL success))completion;
 @end
 

@@ -80,8 +80,7 @@
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    // add by zjing for test
-    return @"trade_tips";
+    return @"happiness_eye_detail";
 }
 
 - (void)setupUI {
@@ -126,12 +125,13 @@
 - (void)feedBack:(NSInteger)type
 {
     FHDetailDetectiveModel *model = (FHDetailDetectiveModel *)self.currentData;
+    model.detective.fromDetail = YES;
     if (model.feedBack) {
         __weak typeof(self) wself = self;
         model.feedBack(type, model.detective, ^(BOOL success) {
             [wself updateFooterFeedback:success];
         });
-//        [wself addClickAgreeLogType:type];
+        [wself addClickAgreeLogType:type];
     }
     self.footer.actionButton.enabled = NO;
     self.footer.negativeButton.enabled = NO;
@@ -150,7 +150,24 @@
 - (void)jump2Report
 {
     FHDetailDetectiveModel *model = (FHDetailDetectiveModel *)self.currentData;
-    [self.baseViewModel gotoReportVC:model.detective];
+    model.detective.fromDetail = YES;
+    [self.baseViewModel popLayerReport:model.detective];
+}
+
+#pragma mark - log
+-(void)addClickAgreeLogType:(NSInteger)type
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[@"page_type"] = self.baseViewModel.detailTracerDic[@"page_type"] ? : @"be_null";
+    param[@"enter_from"] = @"happiness_eye_detail";
+    param[@"element_from"] = self.baseViewModel.detailTracerDic[@"element_from"] ? : @"be_null";
+    param[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"] ? : @"be_null";
+    param[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"] ? : @"be_null";
+    param[@"log_pb"] = self.baseViewModel.detailTracerDic[@"log_pb"] ? : @"be_null";
+    param[@"rank"] = self.baseViewModel.detailTracerDic[@"rank"] ? : @"be_null";
+    param[@"click_position"] = (type == 1)?@"yes":@"no";
+    
+    TRACK_EVENT(@"click_agree", param);
 }
 
 - (FHDetectiveTopView *)topView

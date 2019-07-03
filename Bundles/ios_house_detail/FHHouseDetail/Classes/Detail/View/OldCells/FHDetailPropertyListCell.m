@@ -234,9 +234,9 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         if (model.extraInfo.official) {
             [types addObject:@"official_inspection"];
         }
-        if (model.extraInfo.detective) {
-            [types addObject:@"happiness_eye"];
-        }
+//        if (model.extraInfo.detective) {
+//            [types addObject:@"happiness_eye"];
+//        }
         
         return types;
     }

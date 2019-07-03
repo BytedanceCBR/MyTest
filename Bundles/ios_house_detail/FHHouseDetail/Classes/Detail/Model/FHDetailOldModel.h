@@ -268,6 +268,7 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *icon;
 @property (nonatomic, copy , nullable) NSString *tips;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraDialogsModel *dialogs ;
+@property (nonatomic, assign) BOOL fromDetail;
 
 @end
 

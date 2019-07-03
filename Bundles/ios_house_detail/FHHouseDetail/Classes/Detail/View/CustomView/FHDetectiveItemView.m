@@ -71,7 +71,11 @@
 
 - (void)updateWithModel:(FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel *)model
 {
-    [self.icon bd_setImageWithURL:[NSURL URLWithString:model.icon] placeholder:[FHUtils createImageWithColor:[UIColor themeGray7]]];
+    if (model.icon.length > 0) {
+        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.icon] placeholder:[FHUtils createImageWithColor:[UIColor themeGray7]]];
+    }else {
+        self.icon.image = [FHUtils createImageWithColor:[UIColor themeGray7]];
+    }
     BOOL ok = model.status.integerValue == 0;
     self.tipImageView.image = [UIImage imageNamed: ok?@"detail_check_ok":@"detail_check_failed"];
     
