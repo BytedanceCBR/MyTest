@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
+#import "UIViewAdditions.h"
 
 @class FHCommunityFeedListController;
 

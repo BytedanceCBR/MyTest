@@ -88,8 +88,12 @@
 }
 
 - (void)initConstraints {
-    self.topBack.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight);
-
+    [self.topBack mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(0);
+        make.width.mas_equalTo(SCREEN_WIDTH);
+        make.height.mas_greaterThanOrEqualTo(self.headerBackHeight);
+    }];
+    
     [self.avatar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.topBack).offset(20);
         make.bottom.mas_equalTo(self.topBack).offset(-46);

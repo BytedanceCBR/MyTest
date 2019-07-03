@@ -141,9 +141,11 @@
 
     CGFloat labelWidth = [self.curBubble refreshWithAvatar:model.activeUserAvatar title:model.suggestInfo color:suggestColor];
     self.curBubble.frame = CGRectMake(SCREEN_WIDTH - 40 - (6 + 12 + 4 + 4 + labelWidth + 20), 10, labelWidth + 4 + 20, 20);
-
+    self.curBubble.alpha = 1.0f;
+    
     labelWidth = [self.flowBubble refreshWithAvatar:nextModel.activeUserAvatar title:nextModel.suggestInfo color:nextSuggestColor];
     self.flowBubble.frame = CGRectMake(SCREEN_WIDTH - 40 - (6 + 12 + 4 + 4 + labelWidth + 20), 40, labelWidth + 4 + 20, 20);
+    self.flowBubble.alpha = 0.0f;
 }
 
 - (void)wheelSuggestionInfo {
@@ -158,8 +160,11 @@
     [UIView animateWithDuration:0.5 animations:^{
         StrongSelf;
         wself.curBubble.frame = CGRectOffset(wself.curBubble.frame, 0, -30.0f);
+        wself.curBubble.alpha = 0.0f;
+        
         wself.flowBubble.frame = CGRectOffset(wself.flowBubble.frame, 0, -30.0f);
-    }                completion:^(BOOL finished) {
+        wself.flowBubble.alpha = 1.0f;
+    }completion:^(BOOL finished) {
         StrongSelf;
         FHCommunitySuggestionBubble *tempBubble = wself.curBubble;
         wself.curBubble = wself.flowBubble;
@@ -188,6 +193,7 @@
 }
 
 - (void)vc_viewDidAppear:(BOOL)animated {
+    [self startWheel];
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {
@@ -203,7 +209,6 @@
     }
     self.wheelTimer = [NSTimer scheduledNoRetainTimerWithTimeInterval:4.0f target:self selector:@selector(wheelSuggestionInfo) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.wheelTimer forMode:NSRunLoopCommonModes];
-    [self.wheelTimer fire];
 }
 
 - (void)stopWheel {

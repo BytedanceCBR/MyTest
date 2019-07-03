@@ -16,4 +16,5 @@
 
 - (void)requestData:(BOOL)isLoadMore isFirst:(BOOL)isFirst;
 
+- (void)addStayCategoryLog:(NSTimeInterval)stayTime;
 @end

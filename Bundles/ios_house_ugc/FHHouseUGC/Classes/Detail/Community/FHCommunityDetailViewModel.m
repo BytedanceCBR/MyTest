@@ -59,7 +59,13 @@
     [self initNavBar];
 
     self.feedListController = [[FHCommunityFeedListController alloc] init];
-    self.feedListController.publishBtnBottomHeight = 10;
+    CGFloat publishBtnBottomHeight;
+    if ([TTDeviceHelper isIPhoneXSeries]) {
+        publishBtnBottomHeight = 44;
+    }else{
+        publishBtnBottomHeight = 10;
+    }
+    self.feedListController.publishBtnBottomHeight = publishBtnBottomHeight;
     self.feedListController.tableViewNeedPullDown = NO;
     self.feedListController.showErrorView = NO;
     self.feedListController.scrollViewDelegate = self;
@@ -316,8 +322,10 @@
     if (offsetY >= 0.0f) {
         return;
     }
-    CGRect rect = self.headerView.topBack.frame;
-    self.headerView.topBack.frame = CGRectMake(0, offsetY, rect.size.width, self.headerView.headerBackHeight - offsetY);
+    [self.headerView.topBack mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(offsetY);
+        make.height.mas_greaterThanOrEqualTo(self.headerView.headerBackHeight - offsetY);
+    }];
     self.feedListController.tableView.tableHeaderView = self.headerView;
 }
 
@@ -408,8 +416,8 @@
     [UIView animateWithDuration:0.5 animations:^{
         StrongSelf;
         wself.feedListController.tableView.contentOffset = CGPointMake(0, 0);
-    }completion:^(BOOL finished) {
         wself.feedListController.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    }completion:^(BOOL finished) {
         [wself.headerView stopRefresh];
     }];
 }
@@ -417,10 +425,11 @@
 - (void)requestDataAfter {
     WeakSelf;
     [self cancelRequestAfter];
-    self.requestDataTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer *timer) {
-        StrongSelf;
-        [wself requestData:YES];
-    }];
+    self.requestDataTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(requestDataWithRefresh) userInfo:nil repeats:NO];
+}
+
+-(void)requestDataWithRefresh{
+    [self requestData:YES];
 }
 
 - (void)cancelRequestAfter {
@@ -435,6 +444,7 @@
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = [self pageTypeString];
     [FHUserTracker writeEvent:@"go_detail_community" params:params];
 }
@@ -448,6 +458,7 @@
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = [self pageTypeString];
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
     [FHUserTracker writeEvent:@"stay_page_community" params:params];

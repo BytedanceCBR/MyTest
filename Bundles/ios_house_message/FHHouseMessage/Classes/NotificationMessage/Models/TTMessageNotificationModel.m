@@ -18,6 +18,7 @@
             @"createTime": @"create_time",
             @"ID": @"id",
             @"actionType": @"type",
+            @"logPb": @"log_pb",
     };
     return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName] ?: keyName;

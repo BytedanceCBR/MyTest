@@ -122,20 +122,12 @@
             if(wself.dataList.count > 0){
                 [wself updateTableViewWithMoreData:feedListModel.hasMore];
                 [wself.viewController.emptyView hideEmptyView];
-                
-                if(isFirst){
-                    [wself insertGuideCell];
-                }
+                [wself insertGuideCell];
             }else{
                 [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
                 wself.viewController.showenRetryButton = YES;
             }
             [wself.tableView reloadData];
-            
-            //            if(isFirst){
-            //                self.originSearchId = self.searchId;
-            //                [self addEnterCategoryLog];
-            //            }
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
             if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
@@ -199,6 +191,9 @@
         for (NSInteger i = 0; i < self.dataList.count; i++) {
             FHFeedUGCCellModel *cellModel = self.dataList[i];
             if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion || cellModel.cellType == FHUGCFeedListCellTypeUGC){
+                if(self.guideCellModel){
+                    self.guideCellModel.isInsertGuideCell = NO;
+                }
                 cellModel.isInsertGuideCell = YES;
                 self.guideCellModel = cellModel;
                 //显示以后次数加1
@@ -377,6 +372,7 @@
         dict[@"community_id"] = cellModel.community.socialGroupId;
         dict[@"tracer"] = @{@"enter_from":@"hot_discuss_feed_from",
                             @"enter_type":@"click",
+                            @"rank":cellModel.tracerDic[@"rank"],
                             @"log_pb":cellModel.logPb};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到圈子详情页
@@ -413,6 +409,14 @@
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [self trackDict:cellModel rank:rank];
     TRACK_EVENT(@"feed_client_show", dict);
+
+    if(cellModel.isInsertGuideCell){
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"element_type"] = @"feed_community_guide_notice";
+        guideDict[@"page_type"] = @"nearby_list";
+        guideDict[@"enter_from"] = @"neighborhood_tab";
+        TRACK_EVENT(@"element_show", guideDict);
+    }
     
     if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
         [self trackElementShow:rank];
