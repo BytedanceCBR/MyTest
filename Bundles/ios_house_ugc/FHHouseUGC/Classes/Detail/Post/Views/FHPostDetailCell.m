@@ -25,6 +25,9 @@
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) UIView *bottomSepView;
 @property(nonatomic ,assign) NSInteger       imageCount;
+@property(nonatomic ,strong) UILabel *position;
+@property(nonatomic ,strong) UIView *positionView;
+@property(nonatomic, assign)   BOOL       showCommunity;
 
 @end
 
@@ -39,6 +42,7 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        self.showCommunity = NO;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
@@ -72,6 +76,18 @@
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray6];
     [self.contentView addSubview:_bottomSepView];
+    
+    self.positionView = [[UIView alloc] init];
+    _positionView.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
+    _positionView.layer.masksToBounds= YES;
+    _positionView.layer.cornerRadius = 4;
+    _positionView.userInteractionEnabled = YES;
+    _positionView.hidden = YES;
+    [self.contentView addSubview:_positionView];
+    
+    self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeRed3]];
+    [_position sizeToFit];
+    [_positionView addSubview:_position];
 }
 
 - (void)setupConstraints {
@@ -92,14 +108,47 @@
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
     }];
-
-    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(20);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-        make.bottom.mas_equalTo(self.contentView).offset(0);
-        make.height.mas_equalTo(0.5);
-    }];
+    
+    if (self.showCommunity) {
+        self.positionView.hidden = NO;
+        UIView *lastView = self.multiImageView;
+        if (self.imageCount <= 0) {
+            lastView = self.contentLabel;
+        }
+        [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(20);
+            make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+            make.height.mas_equalTo(24);
+        }];
+        
+        [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.positionView).offset(6);
+            make.right.mas_equalTo(self.positionView).offset(-6);
+            make.centerY.mas_equalTo(self.positionView);
+            make.height.mas_equalTo(18);
+        }];
+        
+        [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.positionView.mas_bottom).offset(20);
+            make.left.mas_equalTo(self.contentView).offset(leftMargin);
+            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+            make.bottom.mas_equalTo(self.contentView).offset(0);
+            make.height.mas_equalTo(0.5);
+        }];
+    } else {
+        self.positionView.hidden = YES;
+        UIView *lastView = self.multiImageView;
+        if (self.imageCount <= 0) {
+            lastView = self.contentLabel;
+        }
+        [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(lastView.mas_bottom).offset(20);
+            make.left.mas_equalTo(self.contentView).offset(leftMargin);
+            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+            make.bottom.mas_equalTo(self.contentView).offset(0);
+            make.height.mas_equalTo(0.5);
+        }];
+    }
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -120,6 +169,7 @@
     }
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
     self.imageCount = cellModel.largeImageList.count;
+    self.showCommunity = cellModel.showCommunity;
     [self setupUIs];
     // 设置userInfo
     self.userInfoView.cellModel = cellModel;
@@ -130,6 +180,9 @@
     [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:kFHMaxLines];
     // 图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
+    // 小区
+    self.position.text = cellModel.community.name;
+    [self.position sizeToFit];
 }
 
 @end

@@ -142,6 +142,11 @@
     if (model && [model isKindOfClass:[FHFeedUGCContentModel class]]) {
         [self.items removeAllObjects];
         // 网络请求返回
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+        if (cellModel.community.socialGroupId.length <= 0) {
+            cellModel.community = self.detailData.community;
+        }
+        cellModel.tracerDic = [self.detailController.tracerDict copy];
         if (![socialGroupModel.hasFollow boolValue]) {
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
@@ -154,13 +159,11 @@
             //
             FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
             [self.items addObject:grayLine];
+            cellModel.showCommunity = NO;
+        } else {
+            cellModel.showCommunity = YES;
         }
         //
-        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
-        if (cellModel.community.socialGroupId.length <= 0) {
-            cellModel.community = self.detailData.community;
-        }
-        cellModel.tracerDic = [self.detailController.tracerDict copy];
         [self.items addObject:cellModel];
         
         // 更新点赞以及评论数
