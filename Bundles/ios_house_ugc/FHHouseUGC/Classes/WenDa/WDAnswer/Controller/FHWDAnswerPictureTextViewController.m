@@ -473,6 +473,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 }
 
 - (void)postQuestionAction:(id)sender {
+    [self publish_click_tracer];
     TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
     [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSString *inputText = richSpanText.text;
@@ -955,10 +956,17 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         if ([log_pb isKindOfClass:[NSDictionary class]]) {
             [temp_log_pb addEntriesFromDictionary:log_pb];
         }
-        temp_log_pb[@"group_id"] = answer_id;
+        temp_log_pb[@"group_id"] = self.qid ?: @"be_null";
+        temp_log_pb[@"answer_id"] = answer_id;
         tracerDict[@"log_pb"] = temp_log_pb;
     }
-    [FHUserTracker writeEvent:@"answer_publish" params:tracerDict];
+    [FHUserTracker writeEvent:@"answer_publish_success" params:tracerDict];
+}
+
+- (void)publish_click_tracer {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"group_id"] = self.qid ?: @"be_null";
+    [FHUserTracker writeEvent:@"answer_publish_click" params:tracerDict];
 }
 
 @end
