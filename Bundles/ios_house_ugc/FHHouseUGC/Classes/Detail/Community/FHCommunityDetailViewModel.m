@@ -143,7 +143,8 @@
 
 - (void)addUgcGuide {
     if ([FHUGCGuideHelper shouldShowUgcDetailGuide]) {
-        [self.guideView show:self.viewController.view dismissDelayTime:0.0f];
+        [self.guideView show:self.viewController.view dismissDelayTime:0.0f completion:nil];
+        [FHUGCGuideHelper hideUgcDetailGuide];
     }
 }
 
@@ -163,7 +164,6 @@
 
 - (void)hideGuideView {
     [self.guideView hide];
-    [FHUGCGuideHelper hideUgcDetailGuide];
 }
 
 - (void)viewWillAppear {

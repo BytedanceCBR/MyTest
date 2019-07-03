@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithFrame:(CGRect)frame andType:(FHUGCGuideViewType)type;
 
-- (void)show:(UIView *)parentView dismissDelayTime:(NSTimeInterval)delayTime;
+- (void)show:(UIView *)parentView dismissDelayTime:(NSTimeInterval)delayTime completion:(void (^)(void))completion;
 
 - (void)hide;
 
