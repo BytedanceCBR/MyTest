@@ -101,6 +101,7 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, strong)   FHPostUGCMainView       *selectView;
 @property (nonatomic, copy)     NSString       *selectGroupId;// 选中的小区id 小区位置不能点击
 @property (nonatomic, copy)     NSString       *selectGroupName; // 选中的小区name
+@property (nonatomic, assign)   BOOL       hasSocialGroup;// 外部传入小区
 
 @end
 
@@ -133,8 +134,11 @@ static NSInteger const kMaxPostImageCount = 9;
             self.selectGroupName = [params tt_stringValueForKey:@"select_group_name"];
             if (!(self.selectGroupId.length > 0 && self.selectGroupName.length > 0)) {
                 // 必须都有值
+                self.hasSocialGroup = NO;
                 self.selectGroupId = nil;
                 self.selectGroupName = nil;
+            } else {
+                self.hasSocialGroup = YES;
             }
             self.trackDict = [self.tracerDict copy];
             // 添加google地图注册
@@ -230,7 +234,9 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)createComponent {
     //Container View
     CGFloat top = 44.f + [UIApplication sharedApplication].statusBarFrame.size.height;
-    top += 44;
+    if (!self.hasSocialGroup) {
+        top += 44;
+    }
     self.containerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, top, self.view.width, self.view.height - top)];
     self.containerView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
     self.containerView.alwaysBounceVertical = YES;
@@ -260,18 +266,20 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)createInputComponent {
     // select view
-    CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
-    self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, top, self.view.width, 44)];
-    [self.view addSubview:self.selectView];
-    self.selectView.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];
-    [self.selectView addGestureRecognizer:tapGestureRecognizer];
-    NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
-    tracerDict[@"element_type"] = @"select_like_publisher_neighborhood";
-    if (self.selectGroupId.length > 0) {
-        tracerDict[@"group_id"] = self.selectGroupId;
+    if (!self.hasSocialGroup) {
+        CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
+        self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, top, self.view.width, 44)];
+        [self.view addSubview:self.selectView];
+        self.selectView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];
+        [self.selectView addGestureRecognizer:tapGestureRecognizer];
+        NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+        tracerDict[@"element_type"] = @"select_like_publisher_neighborhood";
+        if (self.selectGroupId.length > 0) {
+            tracerDict[@"group_id"] = self.selectGroupId;
+        }
+        [FHUserTracker writeEvent:@"element_show" params:tracerDict];
     }
-    [FHUserTracker writeEvent:@"element_show" params:tracerDict];
     
     CGFloat y = 0;
     //Input container view
@@ -589,7 +597,7 @@ static NSInteger const kMaxPostImageCount = 9;
         return;
     }
     
-    if (![self.selectView hasValidData]) {
+    if (![self.selectView hasValidData] && !self.hasSocialGroup) {
         [[ToastManager manager] showToast:@"请选择要发布的小区！"];
         return;
     }
@@ -722,7 +730,12 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.detailPos = self.addLocationView.selectedLocation.locationName;
     postThreadModel.longitude = longitude;
     postThreadModel.latitude = latitude;
-    postThreadModel.social_group_id = self.selectView.groupId;
+    if (self.hasSocialGroup) {
+        postThreadModel.social_group_id = self.selectGroupId;
+    } else {
+        postThreadModel.social_group_id = self.selectView.groupId;
+    }
+    
     
     postThreadModel.extraTrack = self.trackDict.copy;
     
@@ -1136,8 +1149,10 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 避免视频详情页转发时，出现 statusBar 高度获取为 0 的情况
     CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
-    self.selectView.frame = CGRectMake(0, top, self.view.width, 44);
-    top += 44;// 选择小区
+    if (!self.hasSocialGroup) {
+        self.selectView.frame = CGRectMake(0, top, self.view.width, 44);
+        top += 44;
+    }
     self.containerView.frame = CGRectMake(0, top, self.view.width, self.view.height - top);
 }
 
