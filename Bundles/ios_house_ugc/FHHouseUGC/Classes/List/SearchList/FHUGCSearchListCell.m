@@ -131,9 +131,11 @@
     [self.contentView addSubview:_icon];
     
     self.titleLabel = [self labelWithFont:[UIFont themeFontRegular:15] textColor:[UIColor themeGray1]];
+    self.titleLabel.numberOfLines = 1;
     [self.contentView addSubview:_titleLabel];
     
     self.descLabel = [self labelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    self.descLabel.numberOfLines = 1;
     [self.contentView addSubview:_descLabel];
     
     self.bottomSepView = [[UIView alloc] init];
@@ -163,7 +165,7 @@
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentView).offset(15);
         make.left.mas_equalTo(self.icon.mas_right).offset(10);
-        make.right.mas_equalTo(self.contentView).offset(-10);
+        make.right.mas_equalTo(self.followButton.mas_left).offset(-10);
         make.height.mas_equalTo(21);
     }];
     

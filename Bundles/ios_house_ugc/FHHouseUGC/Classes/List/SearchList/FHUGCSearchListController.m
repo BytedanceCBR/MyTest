@@ -194,6 +194,12 @@
 
 // 文本框文字变化，进行sug请求
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {
+    
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    
     NSInteger maxCount = 80;
     NSString *text = self.naviBar.searchInput.text;
     UITextRange *selectedRange = [self.naviBar.searchInput markedTextRange];
