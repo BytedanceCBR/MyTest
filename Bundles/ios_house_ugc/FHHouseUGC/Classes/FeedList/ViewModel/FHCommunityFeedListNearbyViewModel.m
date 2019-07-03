@@ -372,6 +372,7 @@
         dict[@"community_id"] = cellModel.community.socialGroupId;
         dict[@"tracer"] = @{@"enter_from":@"hot_discuss_feed_from",
                             @"enter_type":@"click",
+                            @"rank":cellModel.tracerDic[@"rank"],
                             @"log_pb":cellModel.logPb};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到圈子详情页
@@ -408,6 +409,14 @@
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [self trackDict:cellModel rank:rank];
     TRACK_EVENT(@"feed_client_show", dict);
+
+    if(cellModel.isInsertGuideCell){
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"element_type"] = @"feed_community_guide_notice";
+        guideDict[@"page_type"] = @"nearby_list";
+        guideDict[@"enter_from"] = @"neighborhood_tab";
+        TRACK_EVENT(@"element_show", guideDict);
+    }
     
     if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
         [self trackElementShow:rank];

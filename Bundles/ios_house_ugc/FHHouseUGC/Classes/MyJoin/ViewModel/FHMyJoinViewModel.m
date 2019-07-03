@@ -148,6 +148,7 @@
     dict[@"community_id"] = model.socialGroupId;
     dict[@"tracer"] = @{@"enter_from":@"my_joined_neighborhood",
                         @"enter_type":@"click",
+                        @"rank":@(indexPath.row),
                         @"log_pb":model.logPb};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     //跳转到圈子详情页

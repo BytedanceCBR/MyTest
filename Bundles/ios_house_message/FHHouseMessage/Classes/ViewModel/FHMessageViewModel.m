@@ -209,6 +209,16 @@
                 cell.unreadView.badgeNumber = TTBadgeNumberHidden;
             }
             NSURL *url = [NSURL URLWithString:[theModel.openUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            //ugc 消息列表
+            if([theModel.id isEqualToString:@"309"]){
+                NSMutableDictionary *tracerDictForUgc = [NSMutableDictionary dictionary];
+                tracerDictForUgc[@"enter_from"] = @"messagetab";
+                tracerDictForUgc[@"enter_type"] = @"click";
+                tracerDictForUgc[@"element_from"] = @"feed_messagetab_cell";
+                TTRouteUserInfo *ugcUserInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDictForUgc}];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:ugcUserInfo];
+                return;
+            }
 
             NSDictionary *dict = @{
                     @"typeId": theModel.id
@@ -216,6 +226,8 @@
 
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+            
+            
         } else {
             IMConversation *conv = item;
             [self openConversation:conv];
