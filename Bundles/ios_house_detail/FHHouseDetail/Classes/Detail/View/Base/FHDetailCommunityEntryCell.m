@@ -188,6 +188,7 @@
 }
 
 - (void)vc_viewDidAppear:(BOOL)animated {
+    [self startWheel];
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {

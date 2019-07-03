@@ -414,6 +414,7 @@
         dict[@"community_id"] = cellModel.community.socialGroupId;
         dict[@"tracer"] = @{@"enter_from":@"my_join_feed_from",
                             @"enter_type":@"click",
+                            @"rank":cellModel.tracerDic[@"rank"],
                             @"log_pb":cellModel.logPb};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到圈子详情页
