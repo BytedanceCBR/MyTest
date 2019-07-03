@@ -96,7 +96,13 @@
         _sourceLabel.text = model.socialGroup.suggestReason;
         _postDescLabel.text = model.threadInfo.content;
         //内容
-        [FHUGCCellHelper setRichContent:_postDescLabel content:model.threadInfo.content font:[UIFont themeFontRegular:14] numberOfLines:maxLines];
+        if(isEmptyString(model.threadInfo.content)){
+            self.postDescLabel.hidden = YES;
+        }else{
+            self.postDescLabel.hidden = NO;
+            //内容
+            [FHUGCCellHelper setRichContent:_postDescLabel content:model.threadInfo.content font:[UIFont themeFontRegular:14] numberOfLines:maxLines];
+        }
         [self.icon bd_setImageWithURL:[NSURL URLWithString:model.socialGroup.avatar] placeholder:nil];
         self.joinBtn.groupId = model.socialGroup.socialGroupId;
         self.joinBtn.tracerDic = self.tracerDic;
