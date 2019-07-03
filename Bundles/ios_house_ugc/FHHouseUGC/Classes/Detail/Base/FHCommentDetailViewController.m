@@ -52,7 +52,6 @@
 
 @property (nonatomic,assign) double commentShowTimeTotal;
 @property (nonatomic,strong) NSDate *commentShowDate;
-@property (nonatomic, assign) BOOL beginShowComment;
 @property (nonatomic, assign)   CGFloat       topTableViewContentHeight;
 @property (nonatomic, assign)   BOOL       isAppearing;
 @property(nonatomic, strong) FHPostDetailCommentWriteView *commentWriteView;
