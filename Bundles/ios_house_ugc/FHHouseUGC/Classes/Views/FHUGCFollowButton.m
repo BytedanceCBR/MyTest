@@ -16,6 +16,7 @@
 #import "TTBaseMacro.h"
 #import "TTUIResponderHelper.h"
 #import "FHUserTracker.h"
+#import "TTReachability.h"
 
 @interface FHUGCFollowButton ()
 
@@ -152,6 +153,11 @@
 }
 
 - (void)doFollow {
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    
     if(isEmptyString(self.groupId)){
         return;
     }
