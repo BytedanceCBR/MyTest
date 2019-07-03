@@ -49,8 +49,15 @@
         }else{
             [tableView registerClass:[FHUGCMyInterestedCell class] forCellReuseIdentifier:kCellId];
         }
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewWillAppear {
@@ -59,13 +66,14 @@
         _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
     }
     [self addEnterCategoryLog];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)viewWillDisappear {
     if(self.viewController.type == FHUGCMyInterestedTypeEmpty){
-        [self addStayCategoryLog:self.viewController.ttTrackStayTime];
-        [self.viewController tt_resetStayTime];
+        [self addStayCategoryLog];
     }
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)requestData:(BOOL)isHead {
@@ -141,7 +149,7 @@
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
 }
 
-- (void)addStayCategoryLog:(NSTimeInterval)stayTime {
+- (void)addStayCategoryLog {
     NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTabTimestamp;
     if (duration <= 0 || duration >= 24*60*60) {
         return;
@@ -268,6 +276,18 @@
     //跳转到圈子详情页
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+}
+
+- (void)applicationDidEnterBackground {
+    if(self.viewController.type == FHUGCMyInterestedTypeEmpty){
+        [self addStayCategoryLog];
+    }
+}
+
+- (void)applicationDidBecomeActive {
+    if(self.viewController.type == FHUGCMyInterestedTypeEmpty){
+        _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+    }
 }
 
 @end
