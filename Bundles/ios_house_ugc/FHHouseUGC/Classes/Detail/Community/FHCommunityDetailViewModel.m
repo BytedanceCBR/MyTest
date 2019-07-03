@@ -59,7 +59,13 @@
     [self initNavBar];
 
     self.feedListController = [[FHCommunityFeedListController alloc] init];
-    self.feedListController.publishBtnBottomHeight = 10;
+    CGFloat publishBtnBottomHeight;
+    if ([TTDeviceHelper isIPhoneXSeries]) {
+        publishBtnBottomHeight = 44;
+    }else{
+        publishBtnBottomHeight = 10;
+    }
+    self.feedListController.publishBtnBottomHeight = publishBtnBottomHeight;
     self.feedListController.tableViewNeedPullDown = NO;
     self.feedListController.showErrorView = NO;
     self.feedListController.scrollViewDelegate = self;
