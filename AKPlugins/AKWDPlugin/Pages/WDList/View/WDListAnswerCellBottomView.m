@@ -12,6 +12,7 @@
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 #import "WDAnswerService.h"
+#import "FHUserTracker.h"
 
 @interface WDListAnswerCellBottomView ()
 
@@ -83,6 +84,8 @@
         return;
     }
     
+    [self click_comment];
+    
     NSDictionary *dict = @{@"is_jump_comment":@(YES)};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:self.ansEntity.answerSchema] userInfo:userInfo];
@@ -91,16 +94,60 @@
 - (void)followBtnClick {
     if (self.followBtn.followed) {
         // 取消点赞
+        [self click_answer_dislike];
         self.ansEntity.isDigg = NO;
         self.ansEntity.diggCount = (self.ansEntity.diggCount.longLongValue >= 1) ? @(self.ansEntity.diggCount.longLongValue - 1) : @0;
         [WDAnswerService digWithAnswerID:self.ansEntity.ansid diggType:WDDiggTypeUnDigg enterFrom:@"wenda_list" apiParam:self.apiParams finishBlock:nil];
     } else {
         // 点赞
+        [self click_answer_like];
         self.ansEntity.isDigg = YES;
         self.ansEntity.diggCount = @(self.ansEntity.diggCount.longLongValue + 1);
         [WDAnswerService digWithAnswerID:self.ansEntity.ansid diggType:WDDiggTypeDigg enterFrom:@"wenda_list" apiParam:self.apiParams finishBlock:nil];
     }
     self.ansEntity = self.ansEntity;
+}
+
+// 详情 评论
+- (void)click_comment {
+    if (self.gdExtJson && [self.gdExtJson isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *tracerDict = self.gdExtJson.mutableCopy;
+        tracerDict[@"click_position"] = @"question_comment";
+        NSString *ansid = self.ansEntity.ansid;
+        if (ansid.length > 0) {
+            tracerDict[@"ansid"] = ansid;
+        }
+        tracerDict[@"page_type"] = @"question";
+        [FHUserTracker writeEvent:@"click_comment" params:tracerDict];
+    }
+}
+
+// 详情 点赞
+- (void)click_answer_like {
+    if (self.gdExtJson && [self.gdExtJson isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *tracerDict = self.gdExtJson.mutableCopy;
+        tracerDict[@"click_position"] = @"-------";
+        NSString *ansid = self.ansEntity.ansid;
+        if (ansid.length > 0) {
+            tracerDict[@"ansid"] = ansid;
+        }
+        tracerDict[@"page_type"] = @"question";
+        [FHUserTracker writeEvent:@"rt_like" params:tracerDict];
+    }
+}
+
+// 详情页 取消点赞
+- (void)click_answer_dislike {
+    if (self.gdExtJson && [self.gdExtJson isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *tracerDict = self.gdExtJson.mutableCopy;
+        tracerDict[@"click_position"] = @"-------";
+        NSString *ansid = self.ansEntity.ansid;
+        if (ansid.length > 0) {
+            tracerDict[@"ansid"] = ansid;
+        }
+        tracerDict[@"page_type"] = @"question";
+        [FHUserTracker writeEvent:@"rt_dislike" params:tracerDict];
+    }
 }
 
 @end
