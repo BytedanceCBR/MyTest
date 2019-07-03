@@ -262,12 +262,10 @@
     [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:0.3 animations:^{
-//            if ([TTDeviceHelper isIPhoneXDevice]) {
-//                self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-//            }else{
-                self.tableView.contentInset = UIEdgeInsetsZero;
-//            }
+        [UIView animateWithDuration:0.3 animations:^{  
+            UIEdgeInsets inset = self.tableView.contentInset;
+            inset.top = 0;
+            self.tableView.contentInset = inset;
         }];
     });
 }
