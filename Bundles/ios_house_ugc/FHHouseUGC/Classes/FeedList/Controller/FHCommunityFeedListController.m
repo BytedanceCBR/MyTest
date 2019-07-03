@@ -20,6 +20,7 @@
 #import "TTAccount+Multicast.h"
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
+#import <UIScrollView+Refresh.h>
 
 @interface FHCommunityFeedListController ()
 
@@ -59,7 +60,7 @@
     [self.viewModel viewWillAppear];
     if (self.needReloadData) {
         self.needReloadData = NO;
-        [self scrollToTopAndRefresh];
+        [self scrollToTopAndRefreshAllData];
     }
 }
 
@@ -171,9 +172,14 @@
     }
 }
 
-- (void)scrollToTopAndRefresh {
+- (void)scrollToTopAndRefreshAllData {
     [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO]; 
     [self startLoadData];
+}
+
+- (void)scrollToTopAndRefresh {
+    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+    [self.tableView triggerPullDown];
 }
 
 - (void)retryLoadData {

@@ -122,20 +122,12 @@
             if(wself.dataList.count > 0){
                 [wself updateTableViewWithMoreData:feedListModel.hasMore];
                 [wself.viewController.emptyView hideEmptyView];
-                
-                if(isFirst){
-                    [wself insertGuideCell];
-                }
+                [wself insertGuideCell];
             }else{
                 [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
                 wself.viewController.showenRetryButton = YES;
             }
             [wself.tableView reloadData];
-            
-            //            if(isFirst){
-            //                self.originSearchId = self.searchId;
-            //                [self addEnterCategoryLog];
-            //            }
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
             if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
@@ -199,6 +191,9 @@
         for (NSInteger i = 0; i < self.dataList.count; i++) {
             FHFeedUGCCellModel *cellModel = self.dataList[i];
             if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion || cellModel.cellType == FHUGCFeedListCellTypeUGC){
+                if(self.guideCellModel){
+                    self.guideCellModel.isInsertGuideCell = NO;
+                }
                 cellModel.isInsertGuideCell = YES;
                 self.guideCellModel = cellModel;
                 //显示以后次数加1
