@@ -122,6 +122,7 @@
     NSMutableAttributedString *aStr = [[NSMutableAttributedString alloc] initWithString:combineStr];
     UIColor *numColor = isEmptyString(entryModel.activeCountInfo.numColor) ? [UIColor themeRed1] : [UIColor colorWithHexStr:entryModel.activeCountInfo.numColor];
     UIColor *textColor = isEmptyString(entryModel.activeCountInfo.textColor) ? [UIColor themeGray1] : [UIColor colorWithHexStr:entryModel.activeCountInfo.textColor];
+    [aStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"DINAlternate-Bold" size:14.0f] range:NSMakeRange(0, numStr.length)];
     [aStr addAttribute:NSForegroundColorAttributeName value:numColor range:NSMakeRange(0, numStr.length)];
     [aStr addAttribute:NSForegroundColorAttributeName value:textColor range:NSMakeRange(numStr.length, textStr.length)];
 

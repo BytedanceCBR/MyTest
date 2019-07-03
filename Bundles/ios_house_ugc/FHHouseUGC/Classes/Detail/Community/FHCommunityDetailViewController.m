@@ -66,15 +66,11 @@
     self.viewModel = [[FHCommunityDetailViewModel alloc] initWithController:self tracerDict:self.tracerDict];
     [self.viewModel addGoDetailLog];
     [self.viewModel addPublicationsShowLog];
-    [self loadData];
+    [self.viewModel requestData:NO];
 }
 
 - (void)retryLoadData {
-    [self loadData];
-}
-
-- (void)loadData {
-    [self.viewModel requestData:NO];
+    [self.viewModel requestData:YES];
 }
 
 - (void)trackEndedByAppWillEnterBackground {
