@@ -201,7 +201,7 @@ static bool isTTCommentPublishing = NO;
             [params setObject:self.enterFrom forKey:@"enter_from"];
             [params setObject:@"comment" forKey:@"enter_type"];
         }
-        
+        params[@"from_ugc"] = @(YES);
         [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
             if (type == TTAccountAlertCompletionEventTypeDone) {
                 //登录成功 走发送逻辑
