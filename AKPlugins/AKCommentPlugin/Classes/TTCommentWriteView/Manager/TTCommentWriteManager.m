@@ -612,6 +612,8 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                 [params setObject:self.enter_type forKey:@"enter_type"];
             }
 
+            params[@"from_ugc"] = @(YES);
+            
             [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
                 if (type == TTAccountAlertCompletionEventTypeDone) {
                     //登录成功 走发送逻辑

@@ -433,6 +433,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     [params setObject:@"want_answer" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(NO) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
     __weak typeof(self) wSelf = self;
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {

@@ -360,9 +360,9 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.toolbar addSubview:self.addLocationView];
     
     //Tip label
-    CGFloat tipLabelWidth = 100.0;
-    self.tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(self.view.width - tipLabelWidth - kRightPadding, 11, tipLabelWidth, 25.f)];
-    
+    CGFloat tipLabelWidth = self.view.width - kRightPadding * 2;
+    self.tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(kRightPadding, 11, tipLabelWidth, 25.f)];
+    self.tipLabel.backgroundColor = [UIColor whiteColor];
     self.tipLabel.font = [UIFont systemFontOfSize:11];
     self.tipLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
     self.tipLabel.textAlignment = NSTextAlignmentRight;
@@ -625,6 +625,7 @@ static NSInteger const kMaxPostImageCount = 9;
     [params setObject:@"click" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
     __weak typeof(self) wSelf = self;
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
