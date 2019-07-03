@@ -32,6 +32,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     self.view.backgroundColor = [UIColor whiteColor];
     [self loadVC];
 }
@@ -63,6 +65,8 @@
         //超过一天
         _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)viewWillDisappear {
@@ -71,6 +75,7 @@
     }else{
         [self.interestedVC viewWillDisappear];
     }
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)topVCChange:(NSNotification *)notification {
@@ -159,6 +164,18 @@
 
 - (void)loadData {
     [self.viewModel requestData];
+}
+
+- (void)applicationDidEnterBackground {
+    if(self.type == FHUGCMyJoinTypeFeed){
+        [self addStayCategoryLog];
+    }
+}
+
+- (void)applicationDidBecomeActive {
+    if(self.type == FHUGCMyJoinTypeFeed){
+        self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+    }
 }
 
 - (void)addEnterCategoryLog {

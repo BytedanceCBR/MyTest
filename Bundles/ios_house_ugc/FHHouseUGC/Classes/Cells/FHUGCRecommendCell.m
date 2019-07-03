@@ -78,7 +78,7 @@
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
+    self.tableView.scrollEnabled = NO;
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
     _tableView.tableHeaderView = headerView;
     
@@ -87,7 +87,7 @@
     
     _tableView.sectionFooterHeight = 0.0;
     
-    _tableView.estimatedRowHeight = 85;
+    _tableView.estimatedRowHeight = 60;
     _tableView.estimatedSectionHeaderHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
     
@@ -133,18 +133,18 @@
         self.isReplace = NO;
         _model = (FHFeedUGCCellModel *)data;
         self.sourceList = [_model.recommendSocialGroupList mutableCopy];
-        [self refreshData];
+        [self refreshData:YES];
     }
 }
 
-- (void)refreshData {
+- (void)refreshData:(BOOL)isFirst {
     [self generateDataList:self.sourceList];
     //刷新换一换按钮的状态
     self.headerView.refreshBtn.hidden = !(self.dataList.count > 3);
     //刷新列表
     [self reloadNewData];
     //更新高度
-    [self updateCellConstraints];
+    [self updateCellConstraints:isFirst];
 }
 
 - (void)reloadNewData {
@@ -170,7 +170,7 @@
     }
 }
 
-- (void)updateCellConstraints {
+- (void)updateCellConstraints:(BOOL)isFirst {
     CGFloat height = 0;
     if(self.dataList.count < 3){
         height = 60 * self.dataList.count;
@@ -190,14 +190,18 @@
             [self.delegate deleteCell:self.model];
         }
     }else{
-        [_model.tableView beginUpdates];
-        [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.headerView.mas_bottom).offset(5);
-            make.left.right.mas_equalTo(self.contentView);
-            make.height.mas_equalTo(self.tableViewHeight);
-        }];
-        [self setNeedsUpdateConstraints];
-        [_model.tableView endUpdates];
+        if(isFirst){
+            [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(self.tableViewHeight);
+            }];
+        }else{
+            [_model.tableView beginUpdates];
+            [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(self.tableViewHeight);
+            }];
+            [self setNeedsUpdateConstraints];
+            [_model.tableView endUpdates];
+        }
     }
 }
 
@@ -228,7 +232,7 @@
         
         self.isReplace = NO;
         
-        [self refreshData];
+        [self refreshData:NO];
     }
 }
 
@@ -385,7 +389,10 @@
         self.isReplace = NO;
     }
     
-    [self refreshData];
+    //重新赋值
+    self.model.recommendSocialGroupList = [self.sourceList copy];
+    
+    [self refreshData:NO];
 }
 
 @end

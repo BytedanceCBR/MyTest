@@ -33,6 +33,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
     if([[FHLocManager sharedInstance] isHaveLocationAuthorization]){
         self.currentLocaton = [FHLocManager sharedInstance].currentLocaton;
@@ -63,10 +64,13 @@
     }else{
         self.noNeedAddEnterCategorylog = NO;
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)viewWillDisappear {
     [self addStayCategoryLog];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)topVCChange:(NSNotification *)notification {
@@ -106,8 +110,13 @@
     }
 }
 
+- (void)applicationDidEnterBackground {
+    [self addStayCategoryLog];
+}
+
 - (void)applicationDidBecomeActive {
     [self loadFeedListView];
+    self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
 }
 
 - (void)showLocationGuideAlert {

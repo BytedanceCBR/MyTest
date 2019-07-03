@@ -53,6 +53,7 @@
     
     if(self.type == FHUGCMyInterestedTypeMore){
         [self addStayCategoryLog:self.ttTrackStayTime];
+        [self tt_resetStayTime];
     }
 }
 
@@ -199,6 +200,21 @@
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
 {
     [self startLoadData];
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    if(self.type == FHUGCMyInterestedTypeMore){
+        [self addStayCategoryLog:self.ttTrackStayTime];
+        [self tt_resetStayTime];
+    }
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    if(self.type == FHUGCMyInterestedTypeMore){
+        self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    }
 }
 
 
