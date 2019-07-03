@@ -164,6 +164,8 @@
             if ([configDataModel.houseTypeList containsObject:@(self.houseType)] && [configDataModel.houseTypeList isEqualToArray:xConfigDataModel.houseTypeList] && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch && [FHHomeCellHelper sharedInstance].isFirstLanuch) {
                 //更新切换
                 [self updateCategoryViewSegmented:NO];
+                
+                [FHEnvContext addTabUGCGuid];
             }else
             {
                 //收起tip
