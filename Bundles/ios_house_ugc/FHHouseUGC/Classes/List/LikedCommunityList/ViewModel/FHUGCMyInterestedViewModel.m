@@ -266,16 +266,18 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHUGCMyInterestDataRecommendSocialGroupsModel *model = self.dataList[indexPath.row];
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"community_id"] = model.socialGroup.socialGroupId;
-    dict[@"tracer"] = @{@"enter_from":@"like_neighborhood_list",
-                        @"enter_type":@"click",
-                        @"log_pb":model.socialGroup.logPb};
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    //跳转到圈子详情页
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    if(!self.viewController.forbidGoToDetail){
+        FHUGCMyInterestDataRecommendSocialGroupsModel *model = self.dataList[indexPath.row];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"community_id"] = model.socialGroup.socialGroupId;
+        dict[@"tracer"] = @{@"enter_from":@"like_neighborhood_list",
+                            @"enter_type":@"click",
+                            @"log_pb":model.socialGroup.logPb};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        //跳转到圈子详情页
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
 }
 
 - (void)applicationDidEnterBackground {

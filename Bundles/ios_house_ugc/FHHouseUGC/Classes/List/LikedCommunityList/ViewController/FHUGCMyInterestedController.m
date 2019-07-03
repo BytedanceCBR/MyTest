@@ -28,6 +28,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.title = @"你可能感兴趣的小区圈";
+        self.forbidGoToDetail = [paramObj.allParams[@"forbidGoToDetail"] boolValue];
     }
     return self;
 }
