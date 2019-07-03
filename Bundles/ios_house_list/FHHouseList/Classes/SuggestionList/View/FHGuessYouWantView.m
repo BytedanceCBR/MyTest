@@ -66,11 +66,17 @@
         if (item.text.length > 0) {
             FHGuessYouWantButton *button = [[FHGuessYouWantButton alloc] init];
             button.label.text = item.text;
-            CGSize size = [button.label sizeThatFits:CGSizeMake(121, 17)];
-            if (size.width > 120) {
-                size.width = 120;
+            CGSize size = [button.label sizeThatFits:CGSizeMake(161, 17)];
+            if (size.width > 160) {
+                size.width = 160;
             }
-            size.width += 12;
+            if (isFirtItem && line == 1) {
+                size.width += 35;
+            }else
+            {
+                size.width += 12;
+            }
+            
             button.tag = currentIndex;
             [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
             if (size.width > remainWidth) {
@@ -98,9 +104,45 @@
                 make.width.mas_equalTo(size.width);
                 make.height.mas_equalTo(29);
             }];
+            
+            if (isFirtItem && line == 1) {
+                button.label.text = @"";
+
+                UILabel *titleLabel = [UILabel new];
+                titleLabel.text = item.text;
+                titleLabel.textAlignment = NSTextAlignmentLeft;
+                [button addSubview:titleLabel];
+                titleLabel.font = button.label.font;
+                [titleLabel setBackgroundColor:[UIColor clearColor]];
+                [button setBackgroundColor:[UIColor colorWithRed:255.0/255.0 green:88/255.0  blue:105/255.0  alpha:0.1]];
+                titleLabel.textColor = [UIColor themeRed1];
+
+                [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.top.bottom.equalTo(button);
+                    make.left.equalTo(button).offset(23);
+                    make.right.equalTo(button).offset(-6);
+                }];
+
+                UIImageView *imageViewIcon = [UIImageView new];
+                [button addSubview:imageViewIcon];
+
+                [imageViewIcon setImage:[UIImage imageNamed:@"fh_real_houseinvalid-name"]];
+                // 布局
+                [imageViewIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(5);
+                    make.centerY.equalTo(button);
+                    make.width.mas_equalTo(14);
+                    make.height.mas_equalTo(14);
+                }];
+                [imageViewIcon setBackgroundColor:[UIColor clearColor]];
+
+                [button layoutIfNeeded];
+            }
+            
             isFirtItem = NO;
             leftView = button;
             [_tempViews addObject:button];
+           
             [self trackShowEventData:item rank:button.tag];
         }
         currentIndex += 1;

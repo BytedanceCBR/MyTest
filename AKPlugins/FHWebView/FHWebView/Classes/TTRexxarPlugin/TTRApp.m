@@ -21,6 +21,7 @@
 #import <TTBaseLib/TTBaseMacro.h>
 #import "TTAccount.h"
 #import "TTDeviceHelper.h"
+#import "FHEnvContext.h"
 
 @implementation TTRApp
 
@@ -111,6 +112,11 @@
             [data setValue:uid forKey:@"user_id"];
         }
     }
+    
+    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+    id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
+    NSString *phoneNum = (NSString *)phoneCache;
+    [data setValue:phoneNum forKey:@"form_phone"];
     
     NSString *idfaString = [TTDeviceHelper idfaString];
     [data setValue:idfaString forKey:@"idfa"];
