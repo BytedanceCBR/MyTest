@@ -131,6 +131,7 @@
 - (void)refreshWithData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         self.isReplace = NO;
+        self.currentIndex = 0;
         _model = (FHFeedUGCCellModel *)data;
         self.sourceList = [_model.recommendSocialGroupList mutableCopy];
         [self refreshData:YES];
