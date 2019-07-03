@@ -381,6 +381,7 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.toolbar tt_addDelegate:self asMainDelegate:NO];
     self.inputTextView.delegate = self.textViewMediator;
     [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
+    self.inputTextView.textLenDelegate = self;
 }
 
 - (void)selectCommunityViewClick:(UITapGestureRecognizer *)sender {
@@ -937,6 +938,19 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    return YES;
+}
+
+// 输入文本长度限制代理
+- (BOOL)textView:(TTUGCTextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
+    NSUInteger currentLen = textView.text.length;
+    if (currentLen + text.length > maxTextCount) {
+        return NO;
+    }
+    if (currentLen < range.location + range.length) {
+        return NO;
+    }
     return YES;
 }
 
