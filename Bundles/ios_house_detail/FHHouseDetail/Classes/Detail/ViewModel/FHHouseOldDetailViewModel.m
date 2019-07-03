@@ -46,6 +46,7 @@
 #import "FHDetailOldEvaluateCell.h"
 #import "FHDetailOldComfortCell.h"
 #import "FHDetailCommunityEntryCell.h"
+#import "FHDetailBlankLineCell.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -90,6 +91,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailOldNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldNearbyMapCell class])];
     [self.tableView registerClass:[FHDetailOldComfortCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldComfortCell class])];
     [self.tableView registerClass:[FHDetailCommunityEntryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryCell class])];
+    [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineCell class])];
 
 }
 // cell class
@@ -109,6 +111,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     // 灰色分割线
     if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
         return [FHDetailGrayLineCell class];
+    }
+    // 自定义分割线
+    if ([model isKindOfClass:[FHDetailBlankLineModel class]]) {
+        return [FHDetailBlankLineCell class];
     }
     // Core Info
     if ([model isKindOfClass:[FHDetailErshouHouseCoreInfoModel class]]) {
@@ -449,20 +455,20 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         infoModel.baseViewModel = self;
         [self.items addObject:infoModel];
     }
-    //ugc 圈子入口
-    BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
-    if(showUgcEntry){
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-        model.data.ugcSocialGroup.houseType = FHHouseTypeSecondHandHouse;
-        [self.items addObject:model.data.ugcSocialGroup];
-    }
+
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        if(!showUgcEntry){
-            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-            [self.items addObject:grayLine];
+        //ugc 圈子入口,写在这儿是因为如果小区模块移除，那么圈子入口也不展示
+        BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        if(showUgcEntry){
+            model.data.ugcSocialGroup.houseType = FHHouseTypeSecondHandHouse;
+            [self.items addObject:model.data.ugcSocialGroup];
+        } else{
+            FHDetailBlankLineModel *whiteLine = [[FHDetailBlankLineModel alloc] init];
+            [self.items addObject:whiteLine];
         }
 
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];

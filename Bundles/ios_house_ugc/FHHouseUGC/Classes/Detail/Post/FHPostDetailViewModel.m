@@ -175,7 +175,7 @@
             [self.detailController commentCountChanged];
         }
         // 评论个数为0 直接调起键盘
-        if (self.detailController.comment_count <= 0) {
+        if (self.detailController.comment_count <= 0 && self.detailController.beginShowComment) {
             __weak typeof(self) weakSelf = self;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [weakSelf.detailController becomeFirstResponder_comment];

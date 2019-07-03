@@ -52,7 +52,6 @@
 
 @property (nonatomic,assign) double commentShowTimeTotal;
 @property (nonatomic,strong) NSDate *commentShowDate;
-@property (nonatomic, assign) BOOL beginShowComment;
 @property (nonatomic, assign)   CGFloat       topTableViewContentHeight;
 @property (nonatomic, assign)   BOOL       isAppearing;
 @property(nonatomic, strong) FHPostDetailCommentWriteView *commentWriteView;
@@ -466,7 +465,7 @@
 {
     //点击评论进入文章时跳转到评论区
     __weak typeof(self) weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf p_scrollToCommentIfNeeded];
         weakSelf.hasLoadedComment = YES;
     });
@@ -619,18 +618,20 @@
     if (self.beginShowComment && [self p_needShowToolBarView]) {
         // 跳转到评论 区域
         CGFloat totalHeight = self.tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height;
-        
-        CGFloat offset = self.topTableViewContentHeight - SCREEN_HEIGHT / 3;
-        if (offset <= 0) {
-            offset = 0;
-        } else {
-            CGFloat frameHeight = self.mainScrollView.bounds.size.height;
-            if (totalHeight - offset < frameHeight) {
-                offset = totalHeight - frameHeight - 1;
+        CGFloat frameHeight = self.mainScrollView.bounds.size.height;
+
+        if (totalHeight > frameHeight) {
+            CGFloat topOffset = self.topTableViewContentHeight;
+            CGFloat commentHeight = self.commentViewController.commentTableView.contentSize.height; // 评论高度
+            if (commentHeight < frameHeight) {
+                topOffset = topOffset - (frameHeight - commentHeight) - 1;
             }
+            if (topOffset <= 0) {
+                topOffset = 0;
+            }
+            
+            [self.mainScrollView setContentOffset:CGPointMake(0, topOffset) animated:YES];
         }
-        
-        [self.mainScrollView setContentOffset:CGPointMake(0, offset) animated:YES];
     }
 }
 
