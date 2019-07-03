@@ -16,6 +16,7 @@
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
 #import "FHUGCGuideHelper.h"
+#import "FHUGCConfig.h"
 
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
@@ -201,7 +202,10 @@
                 cellModel.isInsertGuideCell = YES;
                 self.guideCellModel = cellModel;
                 //显示以后次数加1
-                [FHUGCGuideHelper addFeedGuideCount];
+                if(![FHUGCConfig sharedInstance].isAlreadyShowFeedGuide){
+                    [FHUGCConfig sharedInstance].isAlreadyShowFeedGuide = YES;
+                    [FHUGCGuideHelper addFeedGuideCount];
+                }
                 return;
             }
         }

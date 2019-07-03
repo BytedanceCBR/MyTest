@@ -88,6 +88,9 @@
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeRed3]];
     [_position sizeToFit];
     [_positionView addSubview:_position];
+    
+    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCommunityDetail)];
+    [self.positionView addGestureRecognizer:singleTap];
 }
 
 - (void)setupConstraints {
@@ -156,6 +159,22 @@
     label.font = font;
     label.textColor = textColor;
     return label;
+}
+
+- (void)gotoCommunityDetail {
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
+    if (cellModel) {
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        NSDictionary *log_pb = cellModel.tracerDic[@"log_pb"];
+        dict[@"community_id"] = cellModel.community.socialGroupId;
+        dict[@"tracer"] = @{@"enter_from":@"feed_detail",
+                            @"enter_type":@"click",
+                            @"log_pb":log_pb ?: @"be_null"};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        // 跳转到圈子详情页
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
 }
 
 - (void)refreshWithData:(id)data {

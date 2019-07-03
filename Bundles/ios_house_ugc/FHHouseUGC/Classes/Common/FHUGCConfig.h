@@ -33,6 +33,8 @@ static NSString *const kFHUGCReportPostNotification = @"k_fh_ugc_report_post_fin
 @property (nonatomic, strong) FHUGCModel *followData;
 // 配置模型
 @property (nonatomic, strong) FHUGCConfigModel *configData;
+// 是否已经显示出feed引导
+@property (nonatomic, assign) BOOL isAlreadyShowFeedGuide;
 
 // 关注列表
 - (NSArray<FHUGCScialGroupDataModel> *)followList;

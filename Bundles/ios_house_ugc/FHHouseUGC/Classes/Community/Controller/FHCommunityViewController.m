@@ -80,7 +80,9 @@
 
 - (void)addUgcGuide {
     if ([FHUGCGuideHelper shouldShowSearchGuide] && self.isUgcOpen && !self.alreadyShowGuide) {
-        [self.guideView show:self.view dismissDelayTime:5.0f];
+        [self.guideView show:self.view dismissDelayTime:5.0f completion:^{
+            [FHUGCGuideHelper hideSearchGuide];
+        }];
         self.alreadyShowGuide = YES;
     }
 }
@@ -96,6 +98,7 @@
 - (void)topVCChange:(NSNotification *)notification {
     if (self.isUgcOpen) {
         [self.guideView hide];
+        [FHUGCGuideHelper hideSearchGuide];
     }
 }
 

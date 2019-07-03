@@ -27,7 +27,8 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        self.title = @"你可能感兴趣的小区";
+        self.title = @"你可能感兴趣的小区圈";
+        self.forbidGoToDetail = [paramObj.allParams[@"forbidGoToDetail"] boolValue];
     }
     return self;
 }
@@ -53,6 +54,7 @@
     
     if(self.type == FHUGCMyInterestedTypeMore){
         [self addStayCategoryLog:self.ttTrackStayTime];
+        [self tt_resetStayTime];
     }
 }
 
@@ -114,7 +116,7 @@
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, [UIScreen mainScreen].bounds.size.width, 21)];
     label.font = [UIFont themeFontRegular:15];
     label.textColor = [UIColor themeGray1];
-    label.text = @"你可能刚兴趣的小区";
+    label.text = @"你可能感兴趣的小区圈";
     [headerView addSubview:label];
     
     return headerView;
@@ -199,6 +201,21 @@
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
 {
     [self startLoadData];
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    if(self.type == FHUGCMyInterestedTypeMore){
+        [self addStayCategoryLog:self.ttTrackStayTime];
+        [self tt_resetStayTime];
+    }
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    if(self.type == FHUGCMyInterestedTypeMore){
+        self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    }
 }
 
 

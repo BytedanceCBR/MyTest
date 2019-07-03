@@ -29,12 +29,15 @@
 
 @implementation FHUGCGuideView
 
-- (void)show:(UIView *)parentView dismissDelayTime:(NSTimeInterval)delayTime {
+- (void)show:(UIView *)parentView dismissDelayTime:(NSTimeInterval)delayTime completion:(void (^)(void))completion {
     [parentView addSubview:self];
     
     if(delayTime > 0){
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self removeFromSuperview];
+            if(completion){
+                completion();
+            }
         });
     }
 }
