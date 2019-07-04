@@ -461,6 +461,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         FHDetailHouseOutlineInfoModel *infoModel = [[FHDetailHouseOutlineInfoModel alloc] init];
         infoModel.houseOverreview = model.data.houseOverreview;
         infoModel.baseViewModel = self;
+        infoModel.hideReport = model.data.baseExtra.detective ? YES : NO;
         [self.items addObject:infoModel];
     }
     // 小区信息

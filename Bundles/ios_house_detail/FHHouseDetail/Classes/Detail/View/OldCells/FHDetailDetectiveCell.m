@@ -48,8 +48,8 @@
             FHDetectiveItemView *itemView = [[FHDetectiveItemView alloc]initWithFrame:CGRectZero];
             [itemView updateWithModel:item];
             [self.detectiveView addSubview:itemView];
-            CGFloat height = [FHDetectiveItemView heightForTile:item.title tip:item.explainContent] + 40 + 15;
-            height = MAX(height, 30 + 40 + 17);
+            CGFloat height = [FHDetectiveItemView heightForTile:item.title tip:item.explainContent];
+            height = MAX(height, 40 + 17 + 4) + 30;
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (lastView) {
                     make.top.mas_equalTo(lastView.mas_bottom);

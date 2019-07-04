@@ -51,6 +51,8 @@
         [v removeFromSuperview];
     }
     FHDetailHouseOutlineInfoModel *model = (FHDetailHouseOutlineInfoModel *)data;
+    _infoButton.hidden = model.hideReport;
+
     __block UIView *lastView = self.containerView;
     if (model.houseOverreview.list.count > 0) {
         NSInteger count = model.houseOverreview.list.count;
