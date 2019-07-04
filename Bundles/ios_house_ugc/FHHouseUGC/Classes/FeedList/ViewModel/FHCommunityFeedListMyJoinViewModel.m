@@ -65,6 +65,8 @@
     if(self.viewController.tableViewNeedPullDown){
         // 下拉刷新
         [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
+            wself.isRefreshingTip = NO;
+            [wself.viewController hideImmediately];
             [wself requestData:YES first:NO];
         }];
     }
@@ -196,6 +198,7 @@
                         wself.isRefreshingTip = NO;
                     });
                 }];
+                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
             }
         }
     }];
