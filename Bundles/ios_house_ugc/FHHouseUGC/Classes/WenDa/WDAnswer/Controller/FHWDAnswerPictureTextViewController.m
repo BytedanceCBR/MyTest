@@ -272,7 +272,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     HPGrowingTextView *internalTextView = self.inputTextView.internalGrowingTextView;
     internalTextView.minHeight = kTextViewHeight;
 //    internalTextView.maxHeight = INT_MAX;
-    internalTextView.maxNumberOfLines = 8;
+    internalTextView.maxNumberOfLines = 11;
     internalTextView.tintColor = [UIColor themeRed1];
     internalTextView.placeholder = @"分享你的观点";
     
@@ -294,7 +294,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     self.addImagesView.hidden = NO;
     self.addImagesView.dragEnable = NO;
     self.addImagesView.hideAddImagesButtonWhenEmpty = YES; // 只有第一次添加图片后才显示
-    self.addImagesView.selectionLimit = 11;
+    self.addImagesView.selectionLimit = 9;
     self.addImagesView.delegate = self;
     WeakSelf;
     self.addImagesView.shouldAddPictureHandle = ^{
