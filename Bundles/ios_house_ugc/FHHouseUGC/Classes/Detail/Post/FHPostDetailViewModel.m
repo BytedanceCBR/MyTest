@@ -148,6 +148,10 @@
         if (cellModel.community.socialGroupId.length <= 0) {
             cellModel.community = self.detailData.community;
         }
+        // 兼容 服务端返回的数据不一致的问题
+        if ([cellModel.commentCount longLongValue] < self.detailController.comment_count) {
+            cellModel.commentCount = [NSString stringWithFormat:@"%lld",self.detailController.comment_count];
+        }
         cellModel.tracerDic = [self.detailController.tracerDict copy];
         if (![socialGroupModel.hasFollow boolValue]) {
             // 未关注
