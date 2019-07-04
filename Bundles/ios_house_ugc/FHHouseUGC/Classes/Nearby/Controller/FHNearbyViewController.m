@@ -102,9 +102,12 @@
 
 - (void)loadFeedListView {
     NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970] - self.lastRequestTime;
-    //间隔6小时再次进入页面会主动刷新
-    if([[FHLocManager sharedInstance] isHaveLocationAuthorization] && currentTime > 21600 && [TTReachability isNetworkConnected]){
+    //开启定位时候需要获取定位信息
+    if([[FHLocManager sharedInstance] isHaveLocationAuthorization]){
         self.currentLocaton = [FHLocManager sharedInstance].currentLocaton;
+    }
+    //间隔6小时再次进入页面会主动刷新
+    if(currentTime > 21600){
         [self initView];
         self.lastRequestTime = [[NSDate date] timeIntervalSince1970];
     }
