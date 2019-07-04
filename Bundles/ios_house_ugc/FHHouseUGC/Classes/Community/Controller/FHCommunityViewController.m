@@ -225,6 +225,10 @@
     _segmentControl.indexChangeBlock = ^(NSInteger index) {
         [weakSelf.viewModel segmentViewIndexChanged:index];
     };
+    
+    _segmentControl.indexRepeatBlock = ^(NSInteger index) {
+        [weakSelf.viewModel refreshCell];
+    };
 }
 
 - (void)initConstraints {

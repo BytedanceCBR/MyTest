@@ -91,6 +91,11 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
  */
 @property (nonatomic, copy) IndexChangeBlock indexChangeBlock;
 
+/*
+ 相同按钮重复点击事件
+ */
+@property (nonatomic, copy) IndexChangeBlock indexRepeatBlock;
+
 /**
  Used to apply custom text styling to titles when set.
  

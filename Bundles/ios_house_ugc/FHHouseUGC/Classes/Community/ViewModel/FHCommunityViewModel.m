@@ -104,12 +104,16 @@
 
 //顶部tabView点击事件
 - (void)segmentViewIndexChanged:(NSInteger)index {
-    self.currentTabIndex = index;
-    
-    [self initCell:@"click"];
-    
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-    [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+    if(self.currentTabIndex == index){
+        [self refreshCell];
+    }else{
+        self.currentTabIndex = index;
+        
+        [self initCell:@"click"];
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+    }
 }
 
 - (void)initCell:(NSString *)enterType {

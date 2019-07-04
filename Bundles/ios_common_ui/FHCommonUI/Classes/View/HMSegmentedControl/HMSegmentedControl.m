@@ -882,10 +882,15 @@
             sectionsCount = [self.sectionTitles count];
         }
         
-        if (segment != self.selectedSegmentIndex && segment < sectionsCount) {
-            // Check if we have to do anything with the touch event
-            if (self.isTouchEnabled)
+        // Check if we have to do anything with the touch event
+        if (segment < sectionsCount && self.isTouchEnabled) {
+            if(segment != self.selectedSegmentIndex){
                 [self setSelectedSegmentIndex:segment animated:self.shouldAnimateUserSelection notify:YES];
+            }else{
+                if(self.indexRepeatBlock){
+                    self.indexRepeatBlock(segment);
+                }
+            }
         }
     }
 }
