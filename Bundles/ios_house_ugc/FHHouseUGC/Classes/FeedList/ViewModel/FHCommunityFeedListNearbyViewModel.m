@@ -17,6 +17,7 @@
 #import "TTStringHelper.h"
 #import "FHUGCGuideHelper.h"
 #import "FHUGCConfig.h"
+#import "ToastManager.h"
 
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
@@ -105,9 +106,14 @@
         
         if (error) {
             //TODO: show handle error
-            if(error.code != -999){
-                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-                wself.viewController.showenRetryButton = YES;
+            if(isFirst){
+                if(error.code != -999){
+                    [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+                    wself.viewController.showenRetryButton = YES;
+                }
+            }else{
+                [[ToastManager manager] showToast:@"网络异常"];
+                [wself updateTableViewWithMoreData:YES];
             }
             return;
         }
