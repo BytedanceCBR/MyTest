@@ -163,7 +163,11 @@
             [self.items addObject:grayLine];
             cellModel.showCommunity = NO;
         } else {
-            cellModel.showCommunity = YES;
+            if (cellModel.community && cellModel.community.name.length > 0) {
+                cellModel.showCommunity = YES;
+            } else {
+                cellModel.showCommunity = NO;
+            }
         }
         //
         [self.items addObject:cellModel];
