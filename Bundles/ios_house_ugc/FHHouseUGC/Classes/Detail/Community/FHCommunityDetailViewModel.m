@@ -205,7 +205,9 @@
         self.feedListController.view.hidden = YES;
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
-    [[ToastManager manager] showToast:@"网络异常"];
+    if(showToast){
+        [[ToastManager manager] showToast:@"网络异常"];
+    }
 }
 // 发布按钮点击
 - (void)gotoPostThreadVC {

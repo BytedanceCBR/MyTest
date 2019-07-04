@@ -255,25 +255,10 @@
     return cellModel;
 }
 
-//推荐假数据
-+ (FHFeedUGCCellModel *)modelFromFakeData {
-    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
-    cellModel.cellType = 2001;
-    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
-    
-    NSMutableArray *sourceList = [NSMutableArray array];
-    for (NSInteger i = 0; i < 20; i++) {
-        [sourceList addObject:[NSString stringWithFormat:@"小区%li",(long)i]];
-    }
-//    cellModel.interestNeighbourhoodList = sourceList;
-    
-    return cellModel;
-}
-
 + (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [model.createTime doubleValue];
-    NSString *publishTime = [TTBusinessManager customtimeAndCustomdateStringSince1970:time];
+    NSString *publishTime = [TTBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
     
     if(![publishTime isEqualToString:@""]){
         NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
@@ -281,7 +266,6 @@
     }
     
     if(!isEmptyString(model.distanceInfo)){
-//        NSString *distance = @"   1.5km";
         NSString *distance = [NSString stringWithFormat:@"   %@",model.distanceInfo];
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
         attachment.bounds = CGRectMake(8, 0, 8, 8);
@@ -314,7 +298,7 @@
     }
     
     double time = [model.publishTime doubleValue];
-    NSString *publishTime = [TTBusinessManager customtimeAndCustomdateStringSince1970:time];
+    NSString *publishTime = [TTBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
     
     if(![publishTime isEqualToString:@""]){
         if(desc.length > 0){

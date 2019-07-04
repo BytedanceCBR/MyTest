@@ -70,7 +70,7 @@
 }
 
 - (void)retryLoadData {
-    [self.viewModel requestData:YES showEmptyIfFailed:YES showToast:YES];
+    [self.viewModel requestData:YES showEmptyIfFailed:YES showToast:NO];
 }
 
 - (void)trackEndedByAppWillEnterBackground {
