@@ -160,6 +160,7 @@
     cellModel.desc = [self generateUGCDesc:model];
     cellModel.groupId = model.threadId;
     cellModel.logPb = model.logPb;
+    cellModel.showLookMore = YES;
     
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     community.name = model.community.name;
@@ -214,7 +215,7 @@
             }
         }else{
             //纯文本
-            cellModel.showLookMore = YES;
+//            cellModel.showLookMore = YES;
         }
     }
     
