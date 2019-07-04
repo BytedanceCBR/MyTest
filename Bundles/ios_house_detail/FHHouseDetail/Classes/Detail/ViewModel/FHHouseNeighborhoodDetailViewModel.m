@@ -27,6 +27,7 @@
 #import "FHDetailNewModel.h"
 #import "FHDetailPureTitleCell.h"
 #import "FHDetailCommunityEntryCell.h"
+#import "FHDetailBlankLineCell.h"
 #import <HMDTTMonitor.h>
 
 @interface FHHouseNeighborhoodDetailViewModel ()
@@ -56,6 +57,7 @@
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateCell class])];
     [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleCell class])];
     [self.tableView registerClass:[FHDetailCommunityEntryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryCell class])];
+    [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -69,6 +71,10 @@
     // 灰色分割线
     if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
         return [FHDetailGrayLineCell class];
+    }
+    // 自定义分割线
+    if ([model isKindOfClass:[FHDetailBlankLineModel class]]) {
+        return [FHDetailBlankLineCell class];
     }
     // 周边配套
     if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
@@ -201,6 +207,8 @@
         if(!showUgcEntry){
             FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
             [self.items addObject:grayLine];
+            FHDetailBlankLineModel *whiteLine = [[FHDetailBlankLineModel alloc] init];
+            [self.items addObject:whiteLine];
         }
 
         FHDetailNeighborhoodPropertyInfoModel *infoModel = [[FHDetailNeighborhoodPropertyInfoModel alloc] init];

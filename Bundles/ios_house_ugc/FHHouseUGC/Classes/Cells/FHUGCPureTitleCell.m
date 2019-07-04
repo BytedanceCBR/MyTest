@@ -113,7 +113,12 @@
         [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
         [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
         //内容
-        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
+        if(isEmptyString(cellModel.content)){
+            self.contentLabel.hidden = YES;
+        }else{
+            self.contentLabel.hidden = NO;
+            [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
+        }
         
         [self showGuideView];
     }

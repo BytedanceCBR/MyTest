@@ -123,7 +123,22 @@
         [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
         [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
         //内容
-        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
+        if(isEmptyString(cellModel.content)){
+            self.contentLabel.hidden = YES;
+            [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
+                make.left.mas_equalTo(self.contentView).offset(leftMargin);
+                make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+            }];
+        }else{
+            self.contentLabel.hidden = NO;
+            [self.multiImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
+                make.left.mas_equalTo(self.contentView).offset(leftMargin);
+                make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+            }];
+            [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
+        }
         //图片
         [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
         
