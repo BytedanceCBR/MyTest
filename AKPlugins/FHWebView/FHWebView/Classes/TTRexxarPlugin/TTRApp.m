@@ -23,6 +23,8 @@
 #import "TTDeviceHelper.h"
 #import "FHEnvContext.h"
 
+extern NSString *const kFHPLoginhoneNumberCacheKey;
+
 @implementation TTRApp
 
 + (void)load {
@@ -114,9 +116,14 @@
     }
     
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-    id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-    NSString *phoneNum = (NSString *)phoneCache;
+    id form_phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
+    id logIn_phoneCache = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
+    
+    NSString *phoneNum = (NSString *)form_phoneCache;
+    NSString *phoneNumLogin = (NSString *)logIn_phoneCache;
     [data setValue:phoneNum forKey:@"form_phone"];
+    [data setValue:phoneNumLogin forKey:@"login_phone"];
+
     
     NSString *idfaString = [TTDeviceHelper idfaString];
     [data setValue:idfaString forKey:@"idfa"];
