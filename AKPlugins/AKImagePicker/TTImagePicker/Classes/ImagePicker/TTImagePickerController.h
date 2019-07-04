@@ -38,6 +38,8 @@
 /// 默认为4，每一行的图片数
 @property (nonatomic, assign) NSInteger columnNumber;
 
+/// 默认为YES，如果设置为NO，选择照片不包含gif
+@property (nonatomic, assign) BOOL isAllowGifPhoto;
 
 /// 影响- (void)imagePickerController:didFinishPickingPhotos:sourceAssets:代理方法
 /// 是否需要回调带上Photos（UIImage数组），默认为YES，则会有从asset -> image的请求的延迟。 (图片越大，延迟越久,现在有做缓存，但是有可能选择完成的太快，缓存还没完成，则会造成延迟，)
