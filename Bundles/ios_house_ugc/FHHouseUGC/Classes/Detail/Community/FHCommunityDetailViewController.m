@@ -66,11 +66,11 @@
     self.viewModel = [[FHCommunityDetailViewModel alloc] initWithController:self tracerDict:self.tracerDict];
     [self.viewModel addGoDetailLog];
     [self.viewModel addPublicationsShowLog];
-    [self.viewModel requestData:NO showEmptyIfFailed:YES showToast:NO];
+    [self.viewModel requestData:NO refreshFeed:YES showEmptyIfFailed:YES showToast:NO];
 }
 
 - (void)retryLoadData {
-    [self.viewModel requestData:YES showEmptyIfFailed:YES showToast:NO];
+    [self.viewModel requestData:NO refreshFeed:YES showEmptyIfFailed:YES showToast:NO];
 }
 
 - (void)trackEndedByAppWillEnterBackground {

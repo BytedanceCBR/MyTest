@@ -177,17 +177,21 @@
     [self.feedListController viewWillAppear];
 }
 
-- (void)requestData:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed showToast:(BOOL) showToast{
+- (void)requestData:(BOOL) userPull refreshFeed:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed showToast:(BOOL) showToast{
     if (![TTReachability isNetworkConnected]) {
         [self onNetworError:showEmptyIfFailed showToast:showToast];
-        [self endRefresh];
+        if(userPull){
+            [self endRefresh];
+        }
         return;
     }
 
     WeakSelf;
     [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
-        [wself endRefresh];
+        if(userPull){
+            [self endRefresh];
+        }
         if (model && (error == nil)) {
             FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
             [wself updateUIWithData:responseModel.data];
@@ -435,7 +439,7 @@
 }
 
 -(void)requestDataWithRefresh{
-    [self requestData:YES showEmptyIfFailed:NO showToast:YES];
+    [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
 }
 
 - (void)cancelRequestAfter {
