@@ -163,7 +163,13 @@
             [self.items addObject:grayLine];
             cellModel.showCommunity = NO;
         } else {
-            if (cellModel.community && cellModel.community.name.length > 0) {
+            if (cellModel.community && cellModel.community.name.length > 0 && cellModel.community.socialGroupId.length > 0) {
+                cellModel.showCommunity = YES;
+            } else if (socialGroupModel && socialGroupModel.socialGroupId.length > 0 && socialGroupModel.socialGroupName.length > 0) {
+                // 挽救一下 balabala
+                cellModel.community = [[FHFeedUGCCellCommunityModel alloc] init];
+                cellModel.community.name = socialGroupModel.socialGroupName;
+                cellModel.community.socialGroupId = socialGroupModel.socialGroupId;
                 cellModel.showCommunity = YES;
             } else {
                 cellModel.showCommunity = NO;
@@ -201,7 +207,6 @@
         uint64_t startTime = [NSObject currentUnixTime];
         WeakSelf;
         NSString *host = [FHURLSettings baseURL];
-//        host = @"http://10.224.14.218:6789";
         NSString *urlStr = [NSString stringWithFormat:@"%@/f100/ugc/thread",host];
         [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
             StrongSelf;
