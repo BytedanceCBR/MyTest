@@ -132,7 +132,9 @@
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             }
         } else {
+            [wSelf.detailController.emptyView hideEmptyView];
             [wSelf reloadData];
+            [wSelf.detailController re_add_comment_vc];
         }
     }];
 }

@@ -153,6 +153,7 @@
 // 重新加载
 - (void)retryLoadData {
     if (!self.isLoadingData) {
+        [self remove_comment_vc];
         [self startLoadData];
     }
 }
