@@ -149,7 +149,8 @@
             cellModel.community = self.detailData.community;
         }
         // 兼容 服务端返回的数据不一致的问题
-        if ([cellModel.commentCount longLongValue] < self.detailController.comment_count) {
+        if (self.detailController.comment_count > 0) {
+            // 直接用评论接口返回的个数
             cellModel.commentCount = [NSString stringWithFormat:@"%lld",self.detailController.comment_count];
         }
         cellModel.tracerDic = [self.detailController.tracerDict copy];
