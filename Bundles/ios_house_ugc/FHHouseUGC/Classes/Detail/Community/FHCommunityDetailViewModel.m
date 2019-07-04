@@ -177,9 +177,9 @@
     [self.feedListController viewWillAppear];
 }
 
-- (void)requestData:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed{
-    if (![TTReachability isNetworkConnected] && showEmptyIfFailed) {
-        [self onNetworError:showEmptyIfFailed];
+- (void)requestData:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed showToast:(BOOL) showToast{
+    if (![TTReachability isNetworkConnected]) {
+        [self onNetworError:showEmptyIfFailed showToast:showToast];
         [self endRefresh];
         return;
     }
@@ -193,19 +193,19 @@
             [wself updateUIWithData:responseModel.data];
             return;
         }
-        [self onNetworError:showEmptyIfFailed];
-        return;
+        [self onNetworError:showEmptyIfFailed showToast:showToast];
     }];
     if (refreshFeed) {
         [self.feedListController startLoadData];
     }
 }
 
--(void)onNetworError:(BOOL)showEmpty{
+-(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
     if(showEmpty){
         self.feedListController.view.hidden = YES;
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
+    [[ToastManager manager] showToast:@"网络异常"];
 }
 // 发布按钮点击
 - (void)gotoPostThreadVC {
