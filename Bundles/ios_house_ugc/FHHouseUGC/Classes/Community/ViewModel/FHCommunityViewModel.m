@@ -102,6 +102,15 @@
     [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
 }
 
+- (void)setCurrentTabIndex:(NSInteger)currentTabIndex {
+    _currentTabIndex = currentTabIndex;
+    if (currentTabIndex >= 2) {
+        self.searchBtn.hidden = YES;
+    } else {
+        self.searchBtn.hidden = NO;
+    }
+}
+
 //顶部tabView点击事件
 - (void)segmentViewIndexChanged:(NSInteger)index {
     self.currentTabIndex = index;

@@ -279,6 +279,7 @@
 - (void)initViewModel {
     [self setupCollectionView];
     _viewModel = [[FHCommunityViewModel alloc] initWithCollectionView:self.collectionView controller:self];
+    _viewModel.searchBtn = self.searchBtn;
 }
 
 - (void)showSegmentControl:(BOOL)isShow {
