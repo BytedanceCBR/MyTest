@@ -88,9 +88,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)showFindTabRedDots;
 
 /*
- 显示tab上的红点
+ 修改第二个tab名称
  */
 + (void)changeFindTabTitle;
+
+/*
+ 增加引导
+ */
++ (void)addTabUGCGuid;
 
 /*
  隐藏tab上的红点

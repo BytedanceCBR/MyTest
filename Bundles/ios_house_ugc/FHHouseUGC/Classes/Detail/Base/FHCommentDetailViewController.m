@@ -57,6 +57,7 @@
 @property(nonatomic, strong) FHPostDetailCommentWriteView *commentWriteView;
 @property (nonatomic, strong) ExploreItemActionManager *itemActionManager;
 @property (nonatomic, assign)   BOOL       hasLoadedComment;
+@property (nonatomic, assign)   BOOL       isRebuildCommentViewController;
 
 @end
 
@@ -66,6 +67,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.beginShowComment = NO;
+        self.isRebuildCommentViewController = NO;
         if(paramObj.allParams[@"begin_show_comment"]) {
             self.beginShowComment = [paramObj.allParams[@"begin_show_comment"] boolValue];
         }
@@ -249,7 +251,9 @@
 - (void)p_removeDetailViewKVO
 {
     [self.tableView removeObserver:self forKeyPath:@"contentSize"];
-    [self.commentViewController.commentTableView removeObserver:self forKeyPath:@"contentSize"];
+    if (self.commentViewController) {
+        [self.commentViewController.commentTableView removeObserver:self forKeyPath:@"contentSize"];
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
@@ -292,6 +296,24 @@
     [self addChildViewController:self.commentViewController];
     [self.commentViewController didMoveToParentViewController:self];
     [self.mainScrollView addSubview:self.commentViewController.view];
+}
+
+- (void)remove_comment_vc {
+    if (self.commentViewController) {
+        [self.commentViewController.commentTableView removeObserver:self forKeyPath:@"contentSize"];
+        [self.commentViewController.view removeFromSuperview];
+        [self.commentViewController removeFromParentViewController];
+        self.commentViewController = nil;
+    }
+    self.isRebuildCommentViewController = NO;
+}
+
+- (void)re_add_comment_vc {
+    if (self.commentViewController == nil) {
+        [self p_buildCommentViewController];
+         [self.commentViewController.commentTableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
+        self.isRebuildCommentViewController = YES;
+    }
 }
 
 // 当前详情页可视范围标准rect(去掉顶部导航,且根据articleType判断是否去掉底部toolbar)
@@ -463,8 +485,16 @@
 
 - (void)tt_commentViewControllerDidFetchCommentsWithError:(NSError *)error
 {
-    //点击评论进入文章时跳转到评论区
     __weak typeof(self) weakSelf = self;
+    if (error == nil) {
+        if (self.isRebuildCommentViewController) {
+            self.isRebuildCommentViewController = NO;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [weakSelf scrollViewDidScroll:weakSelf.mainScrollView];
+            });
+        }
+    }
+    // 点击评论进入文章时跳转到评论区
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf p_scrollToCommentIfNeeded];
         weakSelf.hasLoadedComment = YES;

@@ -272,7 +272,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     HPGrowingTextView *internalTextView = self.inputTextView.internalGrowingTextView;
     internalTextView.minHeight = kTextViewHeight;
 //    internalTextView.maxHeight = INT_MAX;
-    internalTextView.maxNumberOfLines = 8;
+    internalTextView.maxNumberOfLines = 11;
     internalTextView.tintColor = [UIColor themeRed1];
     internalTextView.placeholder = @"分享你的观点";
     

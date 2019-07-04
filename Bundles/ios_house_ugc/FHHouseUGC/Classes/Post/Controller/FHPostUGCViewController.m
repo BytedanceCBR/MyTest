@@ -300,7 +300,7 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 图文发布器展示
     internalTextView.minHeight = kTextViewHeight;
-    internalTextView.maxNumberOfLines = 8;
+    internalTextView.maxNumberOfLines = 11;
     
     if (!isEmptyString(self.postContentHint)) {
         internalTextView.placeholder = self.postContentHint;
@@ -326,6 +326,7 @@ static NSInteger const kMaxPostImageCount = 9;
     self.addImagesView.delegate = self;
     self.addImagesView.ssTrackDict = self.trackDict;
     self.addImagesView.hideAddImagesButtonWhenEmpty = YES;
+    self.addImagesView.selectionLimit = 9;
     [self.addImagesView startTrackImagepicker];
     
     [self.inputContainerView addSubview:self.addImagesView];
