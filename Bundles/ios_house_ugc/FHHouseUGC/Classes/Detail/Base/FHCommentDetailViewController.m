@@ -432,6 +432,13 @@
 {
     self.toolbarView.digButton.selected = self.user_digg == 1;
     self.toolbarView.digCountValue = [NSString stringWithFormat:@"%ld",self.digg_count];
+    if (self.user_digg == 1) {
+        // 点赞
+        self.toolbarView.digCountLabel.textColor = [UIColor themeRed1];
+    } else {
+        // 取消点赞
+        self.toolbarView.digCountLabel.textColor = [UIColor themeGray1];
+    }
 }
 
 - (CGRect)p_frameForToolBarView

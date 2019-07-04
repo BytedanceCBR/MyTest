@@ -158,7 +158,7 @@
         return;
     }
     WeakSelf;
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.4 animations:^{
         StrongSelf;
         wself.curBubble.frame = CGRectOffset(wself.curBubble.frame, 0, -30.0f);
         wself.curBubble.alpha = 0.0f;
