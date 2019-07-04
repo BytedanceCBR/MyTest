@@ -318,6 +318,28 @@
     
 }
 
+- (void)removeGifByTTAlbumModel:(TTAlbumModel *)model {
+    if (model && model.models.count > 0) {
+        NSMutableArray<TTAssetModel *> *models = [NSMutableArray new];
+        [models addObjectsFromArray:model.models];
+        NSMutableArray *removeArr = [NSMutableArray new];
+        [models enumerateObjectsUsingBlock:^(TTAssetModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.type == TTAssetModelMediaTypePhotoGif) {
+                // 是Gif
+                [removeArr addObject:obj];
+            }
+        }];
+        if (removeArr.count > 0) {
+            NSInteger removeCount = removeArr.count;
+            model.count -= removeCount;
+            if (model.count <= 0) {
+                model.count = 0;
+            }
+            [models removeObjectsInArray:removeArr];
+            model.models = models;
+        }
+    }
+}
 
 #pragma mark - Get & Set
 - (void)_getCurrentImages
@@ -325,6 +347,7 @@
     __weak typeof(self) weakSelf = self;
     
     [[TTImagePickerManager manager] getCameraRollAlbum:self.isAllowVideo allowPickingImage:self.isAllowPhoto completion:^(TTAlbumModel *model) {
+        [weakSelf removeGifByTTAlbumModel:model];
         weakSelf.currentAlbumModel = model;
         if (self.imagePickerMode == TTImagePickerModePhoto) {
             if (model.count > 0) {
