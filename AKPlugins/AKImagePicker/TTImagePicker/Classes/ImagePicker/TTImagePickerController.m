@@ -78,7 +78,7 @@
         
         self.isAllowPhoto = YES;
         self.isAllowVideo = NO;
-       
+        self.isAllowGifPhoto = YES;
     }
     return self;
 }
@@ -319,6 +319,9 @@
 }
 
 - (void)removeGifByTTAlbumModel:(TTAlbumModel *)model {
+    if (self.isAllowGifPhoto) {
+        return;
+    }
     if (model && model.models.count > 0) {
         NSMutableArray<TTAssetModel *> *models = [NSMutableArray new];
         [models addObjectsFromArray:model.models];
@@ -386,10 +389,12 @@
 }
 - (void)_getAllAlbums
 {
+     __weak typeof(self) weakSelf = self;
     //相册选择视图
     [[TTImagePickerManager manager] getAllAlbums:self.isAllowVideo allowPickingImage:self.isAllowPhoto completion:^(NSArray<TTAlbumModel *> *models) {
-    
-        
+        [models enumerateObjectsUsingBlock:^(TTAlbumModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [weakSelf removeGifByTTAlbumModel:obj];
+        }];
         if (_customAlmumNav && [_customAlmumNav respondsToSelector:@selector(didCompletedTheRequestWithAlbums:)]) {
             [_customAlmumNav didCompletedTheRequestWithAlbums:models];
         }
