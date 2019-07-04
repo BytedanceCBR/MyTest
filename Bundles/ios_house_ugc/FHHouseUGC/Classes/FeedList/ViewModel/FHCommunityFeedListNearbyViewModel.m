@@ -65,6 +65,11 @@
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     [super requestData:isHead first:isFirst];
+    
+    if(self.isRefreshingTip){
+        [self.tableView finishPullDownWithSuccess:YES];
+        return;
+    }
 
     if(isFirst){
         [self.viewController startLoading];
@@ -130,14 +135,14 @@
             [wself.tableView reloadData];
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
-                [self.viewController showNotify:refreshTip];
-                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
+                wself.isRefreshingTip = YES;
+                [wself.viewController showNotify:refreshTip completion:^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        wself.isRefreshingTip = NO;
+                    });
+                }];
             }
-    
-            //            if(!isHead){
-            //                [self addRefreshLog];
-            //            }
         }
     }];
 }

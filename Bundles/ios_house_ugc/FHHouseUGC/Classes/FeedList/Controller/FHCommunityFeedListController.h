@@ -32,7 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL showErrorView;
 
 @property(nonatomic, weak) id<UIScrollViewDelegate> scrollViewDelegate;
-- (void)showNotify:(NSString *)message;
+- (void)showNotify:(NSString *)message ;
+- (void)showNotify:(NSString *)message completion:(void(^)())completion;
 //下拉刷新数据
 - (void)startLoadData;
 

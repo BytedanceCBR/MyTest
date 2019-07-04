@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHFeedListModel *feedListModel;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 
+@property(nonatomic, assign) BOOL isRefreshingTip;
+
+
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst;
