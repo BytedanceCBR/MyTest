@@ -208,7 +208,7 @@
     if (![self canWheel]) {
         return;
     }
-    self.wheelTimer = [NSTimer scheduledNoRetainTimerWithTimeInterval:4.0f target:self selector:@selector(wheelSuggestionInfo) userInfo:nil repeats:YES];
+    self.wheelTimer = [NSTimer scheduledNoRetainTimerWithTimeInterval:2.0f target:self selector:@selector(wheelSuggestionInfo) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.wheelTimer forMode:NSRunLoopCommonModes];
 }
 

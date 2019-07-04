@@ -24,6 +24,7 @@
 #import "FHMessageNotificationManager.h"
 #import "FHEnvContext.h"
 #import "TTAccountManager.h"
+#import "FHMessageNotificationTipsManager.h"
 
 #import <ReactiveObjC/ReactiveObjC.h>
 
@@ -53,7 +54,6 @@
 @property(nonatomic, strong) id <FHMessageBridgeProtocol> messageBridge;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSString *pageType;
-@property(nonatomic, strong) FHUnreadMsgModel *fUnreadMsg;
 
 @property(nonatomic, strong) DeleteAlertDelegate *deleteAlertDelegate;
 
@@ -81,6 +81,11 @@
             @strongify(self)
             NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
             [_combiner resetConversations:allConversations];
+            [self.tableView reloadData];
+        }];
+        [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:kTTMessageNotificationTipsChangeNotification object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
+            @strongify(self)
+            [_combiner resetSystemChannels:self.dataList ugcUnreadMsg:[FHMessageNotificationTipsManager sharedManager].tipsModel];
             [self.tableView reloadData];
         }];
     }

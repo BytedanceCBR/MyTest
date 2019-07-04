@@ -358,7 +358,7 @@
         dict[@"tracer"] = @{@"enter_from":@"like_neighborhood",
                             @"enter_type":@"click",
                             @"rank":@(indexPath.row),
-                            @"log_pb":model.logPb};
+                            @"log_pb":model.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];

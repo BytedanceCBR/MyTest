@@ -70,6 +70,7 @@
                         if (model && jsonParseError == nil) {
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+                                cellModel.showCommunity = NO;
                                 if (cellModel) {
                                     //去重逻辑
                                     [self removeDuplicaionModel:cellModel.groupId];
