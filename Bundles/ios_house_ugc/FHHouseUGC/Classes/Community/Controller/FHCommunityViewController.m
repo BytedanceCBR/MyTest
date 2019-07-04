@@ -225,6 +225,10 @@
     _segmentControl.indexChangeBlock = ^(NSInteger index) {
         [weakSelf.viewModel segmentViewIndexChanged:index];
     };
+    
+    _segmentControl.indexRepeatBlock = ^(NSInteger index) {
+        [weakSelf.viewModel refreshCell];
+    };
 }
 
 - (void)initConstraints {
@@ -279,6 +283,7 @@
 - (void)initViewModel {
     [self setupCollectionView];
     _viewModel = [[FHCommunityViewModel alloc] initWithCollectionView:self.collectionView controller:self];
+    _viewModel.searchBtn = self.searchBtn;
 }
 
 - (void)showSegmentControl:(BOOL)isShow {

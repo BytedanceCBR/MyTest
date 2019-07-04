@@ -102,14 +102,27 @@
     [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
 }
 
+- (void)setCurrentTabIndex:(NSInteger)currentTabIndex {
+    _currentTabIndex = currentTabIndex;
+    if (currentTabIndex >= 2) {
+        self.searchBtn.hidden = YES;
+    } else {
+        self.searchBtn.hidden = NO;
+    }
+}
+
 //顶部tabView点击事件
 - (void)segmentViewIndexChanged:(NSInteger)index {
-    self.currentTabIndex = index;
-    
-    [self initCell:@"click"];
-    
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-    [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+    if(self.currentTabIndex == index){
+        [self refreshCell];
+    }else{
+        self.currentTabIndex = index;
+        
+        [self initCell:@"click"];
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+    }
 }
 
 - (void)initCell:(NSString *)enterType {
