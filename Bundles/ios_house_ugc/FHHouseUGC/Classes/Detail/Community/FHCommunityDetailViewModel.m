@@ -23,6 +23,7 @@
 #import "TTAccountManager.h"
 #import "FHUserTracker.h"
 #import "FHCommunityDetailRefreshView.h"
+#import "NSTimer+NoRetain.h"
 
 
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
@@ -426,7 +427,7 @@
 - (void)requestDataAfter {
     WeakSelf;
     [self cancelRequestAfter];
-    self.requestDataTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(requestDataWithRefresh) userInfo:nil repeats:NO];
+    self.requestDataTimer = [NSTimer scheduledNoRetainTimerWithTimeInterval:1.0f target:self selector:@selector(requestDataWithRefresh) userInfo:nil repeats:NO];
 }
 
 -(void)requestDataWithRefresh{

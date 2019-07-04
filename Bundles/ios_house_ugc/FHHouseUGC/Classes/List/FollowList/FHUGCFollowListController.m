@@ -242,7 +242,7 @@
             dict[@"tracer"] = @{@"enter_from":@"my_joined_neighborhood_list",
                                 @"enter_type":@"click",
                                 @"rank":@(indexPath.row),
-                                @"log_pb":data.logPb};
+                                @"log_pb":data.logPb ?: @"be_null"};
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             // 跳转到圈子详情页
             NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
