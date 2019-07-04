@@ -178,20 +178,14 @@
             }
             [wself.tableView reloadData];
             
-            //            if(isFirst){
-            //                self.originSearchId = self.searchId;
-            //                [self addEnterCategoryLog];
-            //            }
-            
             NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
-                [wself.viewController showNotify:refreshTip];
-                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
+                [self.viewController showNotify:refreshTip completion:^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.tableView setContentOffset:CGPointMake(0,0) animated:NO];
+                    });
+                }];
             }
-            
-            //            if(!isHead){
-            //                [self addRefreshLog];
-            //            }
         }
     }];
 }

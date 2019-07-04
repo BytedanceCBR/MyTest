@@ -178,6 +178,9 @@
 }
 
 - (void)scrollToTopAndRefresh {
+    if(self.viewModel.isRefreshingTip){
+        return;
+    }
     [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
     [self.tableView triggerPullDown];
 }
@@ -255,7 +258,12 @@
 
 #pragma mark - show notify
 
-- (void)showNotify:(NSString *)message {
+- (void)showNotify:(NSString *)message
+{
+    [self showNotify:message completion:nil];
+}
+
+- (void)showNotify:(NSString *)message completion:(void(^)())completion{
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
     self.tableView.contentInset = inset;
@@ -266,6 +274,10 @@
             UIEdgeInsets inset = self.tableView.contentInset;
             inset.top = 0;
             self.tableView.contentInset = inset;
+        }completion:^(BOOL finished) {
+            if (completion) {
+                completion();
+            }
         }];
     });
 }
