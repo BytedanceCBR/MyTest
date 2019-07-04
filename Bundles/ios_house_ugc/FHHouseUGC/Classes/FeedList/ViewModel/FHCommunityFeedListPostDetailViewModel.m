@@ -104,6 +104,8 @@
     if(self.viewController.tableViewNeedPullDown){
         // 下拉刷新
         [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
+            wself.isRefreshingTip = NO;
+            [wself.viewController hideImmediately];
             [wself requestData:YES first:NO];
         }];
     }
@@ -180,12 +182,14 @@
             [wself.tableView reloadData];
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && self.dataList.count > 0 && ![refreshTip isEqualToString:@""] && self.viewController.tableViewNeedPullDown){
-                [self.viewController showNotify:refreshTip completion:^{
+            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
+                wself.isRefreshingTip = YES;
+                [wself.viewController showNotify:refreshTip completion:^{
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.tableView setContentOffset:CGPointMake(0,0) animated:NO];
+                        wself.isRefreshingTip = NO;
                     });
                 }];
+                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
             }
         }
     }];
