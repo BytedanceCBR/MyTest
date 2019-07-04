@@ -13,7 +13,7 @@
 
 - (instancetype)initWithController:(FHCommunityDetailViewController *)viewController tracerDict:(NSDictionary*)tracerDict;
 
-- (void)requestData:(BOOL) refreshFeed;
+- (void)requestData:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed;
 
 - (void)viewWillAppear;
 

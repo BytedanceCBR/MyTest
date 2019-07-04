@@ -177,11 +177,9 @@
     [self.feedListController viewWillAppear];
 }
 
-- (void)requestData:(BOOL)refreshFeed {
-    if (![TTReachability isNetworkConnected]) {
-        self.feedListController.view.hidden = YES;
-        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-        [[ToastManager manager] showToast:@"网络不给力,请稍后重试"];
+- (void)requestData:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed{
+    if (![TTReachability isNetworkConnected] && showEmptyIfFailed) {
+        [self onNetworError:showEmptyIfFailed];
         [self endRefresh];
         return;
     }
@@ -193,18 +191,22 @@
         if (model && (error == nil)) {
             FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
             [wself updateUIWithData:responseModel.data];
-        } else {
-            wself.feedListController.view.hidden = YES;
-            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-            [[ToastManager manager] showToast:@"网络不给力,请稍后重试"];
             return;
         }
+        [self onNetworError:showEmptyIfFailed];
+        return;
     }];
     if (refreshFeed) {
         [self.feedListController startLoadData];
     }
 }
 
+-(void)onNetworError:(BOOL)showEmpty{
+    if(showEmpty){
+        self.feedListController.view.hidden = YES;
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+    }
+}
 // 发布按钮点击
 - (void)gotoPostThreadVC {
     if ([TTAccountManager isLogin]) {
@@ -431,7 +433,7 @@
 }
 
 -(void)requestDataWithRefresh{
-    [self requestData:YES];
+    [self requestData:YES showEmptyIfFailed:NO showToast:YES];
 }
 
 - (void)cancelRequestAfter {
