@@ -13,6 +13,7 @@
 #import "FHDetailOldModel.h"
 #import <TTBaseLib/UIImageAdditions.h>
 #import <FHHouseBase/FHUtils.h>
+#import <TTBaseLib/UIViewAdditions.h>
 
 @interface FHDetectiveItemView ()
 
@@ -44,7 +45,7 @@
         _stateLabel = [self labelWithFont:[UIFont themeFontRegular:12] color:[UIColor themeGray2]];
         _tipLabel = [self labelWithFont:[UIFont themeFontRegular:12] color:[UIColor themeGray3]];
         _tipLabel.numberOfLines = 0;
-        _tipLabel.preferredMaxLayoutWidth = [[UIScreen mainScreen]bounds].size.width - 2 * 20 - 20 - 40 - 24 - 15;
+//        _tipLabel.preferredMaxLayoutWidth = [[UIScreen mainScreen]bounds].size.width - 2 * 20 - 20 - 24 - 15;
         _bottomLine = [[UIView alloc]init];
         _bottomLine.backgroundColor = [UIColor themeGray6];
         
@@ -115,9 +116,8 @@
     }];
     [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.titleLabel);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(8);
-        make.right.mas_equalTo(-20);
-//        make.bottom.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(40);
+        make.right.mas_equalTo(-15);
     }];
     [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
@@ -129,12 +129,12 @@
 
 + (CGFloat)heightForTile:(NSString *)title tip:(NSString *)tip
 {
-    CGFloat height = 40;
-    CGFloat width = [[UIScreen mainScreen]bounds].size.width - 2 * 20 - 20 - 40 - 24 - 15;
+    CGFloat height = 0;
+    CGFloat width = [[UIScreen mainScreen]bounds].size.width - 2 * 20 - 84 - 15;
     UIFont *font = [UIFont themeFontRegular:12];
-    height += [title boundingRectWithSize:CGSizeMake(width, INT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.height;
+    height += [tip boundingRectWithSize:CGSizeMake(width, INT_MAX) options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:font} context:nil].size.height;
     
-    height = ceil(height) + 15;
+    height = ceil(height);
     
     return height;
 }
