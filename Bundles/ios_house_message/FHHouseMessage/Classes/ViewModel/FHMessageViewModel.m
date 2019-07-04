@@ -85,8 +85,11 @@
         }];
         [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:kTTMessageNotificationTipsChangeNotification object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
             @strongify(self)
-            [_combiner resetSystemChannels:self.dataList ugcUnreadMsg:[FHMessageNotificationTipsManager sharedManager].tipsModel];
-            [self.tableView reloadData];
+            if([FHMessageNotificationTipsManager sharedManager].tipsModel){
+                [_combiner resetSystemChannels:self.dataList ugcUnreadMsg:[FHMessageNotificationTipsManager sharedManager].tipsModel];
+                [self.tableView reloadData];
+                return;
+            }
         }];
     }
     return self;
