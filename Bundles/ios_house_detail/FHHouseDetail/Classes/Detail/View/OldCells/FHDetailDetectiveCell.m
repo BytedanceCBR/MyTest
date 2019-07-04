@@ -108,7 +108,9 @@
     }];
     [self.footer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.detectiveView.mas_bottom);
-        make.left.right.bottom.mas_equalTo(0);
+        make.bottom.mas_equalTo(0);
+        make.left.mas_equalTo(-5);
+        make.right.mas_equalTo(0);
         make.height.mas_equalTo(60);
     }];
     
