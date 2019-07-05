@@ -332,6 +332,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedUGCContentUgcRecommendModel *ugcRecommend ;  
 @property (nonatomic, strong , nullable) FHFeedUGCContentUserModel *user ;
 @property (nonatomic, strong , nullable) FHFeedUGCContentCommunityModel *community ;
+@property (nonatomic, assign)   NSInteger       ugcStatus;
 @end
 
 

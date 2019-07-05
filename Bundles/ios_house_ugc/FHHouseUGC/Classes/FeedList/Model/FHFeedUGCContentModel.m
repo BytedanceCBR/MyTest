@@ -260,6 +260,7 @@
     @"diggIconKey": @"digg_icon_key",
     @"ugcRecommend": @"ugc_recommend",
     @"distanceInfo": @"distance_info",
+    @"ugcStatus": @"status",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
