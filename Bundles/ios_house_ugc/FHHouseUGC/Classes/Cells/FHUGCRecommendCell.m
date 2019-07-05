@@ -150,25 +150,26 @@
 
 - (void)reloadNewData {
     if(self.isReplace){
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_joinedCellRow inSection:0];
-        _joinedCell.hidden = YES;
-        
-        
-        [_model.tableView beginUpdates];
-        
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-        _joinedCell.hidden = NO;
-        //如果不重置，在某些特殊情况下新出的cell并没有被系统还原正确大小
-        dispatch_async(dispatch_get_main_queue(), ^{
-            _joinedCell.transform = CGAffineTransformIdentity;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.4f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof UITableViewCell * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    obj.transform = CGAffineTransformIdentity;
-                }];
+        if(_joinedCellRow >= 0){
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_joinedCellRow inSection:0];
+            _joinedCell.hidden = YES;
+            
+            [_model.tableView beginUpdates];
+            
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            _joinedCell.hidden = NO;
+            //如果不重置，在某些特殊情况下新出的cell并没有被系统还原正确大小
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _joinedCell.transform = CGAffineTransformIdentity;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.4f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof UITableViewCell * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        obj.transform = CGAffineTransformIdentity;
+                    }];
+                });
             });
-        });
-        
-        [_model.tableView endUpdates];
+            
+            [_model.tableView endUpdates];
+        }
     }else{
         [self.tableView reloadData];
     }
@@ -373,22 +374,25 @@
 - (void)joinIn:(id)model cell:(nonnull FHUGCRecommendSubCell *)cell {
     //调用加入的接口
     _joinedCell = cell;
-    _joinedCellRow = [self.dataList indexOfObject:model];
+    _joinedCellRow = [self getCellIndex:model sourceList:self.dataList];
     //加入成功后
     if(_sourceList.count > 3){
-        NSInteger current = [_sourceList indexOfObject:model];
-        NSInteger next = self.currentIndex + 3;
-        if(next >= _sourceList.count){
-            next = next - self.sourceList.count;
+        NSInteger current1 = [_sourceList indexOfObject:model];
+        NSInteger current = [self getCellIndex:model sourceList:self.sourceList];
+        if(current >= 0){
+            NSInteger next = self.currentIndex + 3;
+            if(next >= _sourceList.count){
+                next = next - self.sourceList.count;
+            }
+            
+            if(next < self.currentIndex) {
+                self.currentIndex = self.currentIndex - 1;
+            }
+            
+            [_sourceList replaceObjectAtIndex:current withObject:_sourceList[next]];
+            [_sourceList removeObjectAtIndex:next];
+            self.isReplace = YES;
         }
-        
-        if(next < self.currentIndex) {
-            self.currentIndex = self.currentIndex - 1;
-        }
-        
-        [_sourceList replaceObjectAtIndex:current withObject:_sourceList[next]];
-        [_sourceList removeObjectAtIndex:next];
-        self.isReplace = YES;
     }else{
         [_sourceList removeObject:model];
         self.isReplace = NO;
@@ -398,6 +402,16 @@
     self.model.recommendSocialGroupList = [self.sourceList copy];
     
     [self refreshData:NO];
+}
+
+- (NSInteger)getCellIndex:(FHFeedContentRecommendSocialGroupListModel *)model sourceList:(NSArray *)souceList {
+    for (NSInteger i = 0; i < souceList.count; i++) {
+        FHFeedContentRecommendSocialGroupListModel *sourceModel = souceList[i];
+        if([model.socialGroupId isEqualToString:sourceModel.socialGroupId]){
+            return i;
+        }
+    }
+    return -1;
 }
 
 @end
