@@ -15,6 +15,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define defaultTruncationLinkURLString @"www.bytedance.contentTruncationLinkURLString"
+
 @interface FHUGCCellHelper : NSObject
 
 + (NSAttributedString *)truncationFont:(UIFont *)font contentColor:(UIColor *)contentColor color:(UIColor *)color linkUrl:(NSString *)linkUrl;

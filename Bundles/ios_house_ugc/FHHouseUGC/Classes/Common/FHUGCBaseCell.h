@@ -17,6 +17,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHUGCBaseCell;
+
 @protocol FHUGCBaseCellDelegate <NSObject>
 
 @optional
@@ -25,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel;
 
 - (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel;
+
+- (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
 
 @end
 

@@ -16,7 +16,7 @@
 #define rightMargin 20
 #define maxLines 5
 
-@interface FHUGCPureTitleCell ()
+@interface FHUGCPureTitleCell ()<TTUGCAttributedLabelDelegate>
 
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
@@ -55,6 +55,7 @@
     [self.contentView addSubview:_userInfoView];
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
@@ -165,6 +166,16 @@
 - (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
     if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
         [self.delegate goToCommunityDetail:self.cellModel];
+    }
+}
+
+#pragma mark - TTUGCAttributedLabelDelegate
+
+- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+    if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
+        if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
+            [self.delegate lookAllLinkClicked:self.cellModel cell:self];
+        }
     }
 }
 

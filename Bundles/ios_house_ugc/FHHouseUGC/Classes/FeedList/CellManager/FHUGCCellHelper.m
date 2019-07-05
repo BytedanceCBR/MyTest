@@ -12,7 +12,7 @@
 @implementation FHUGCCellHelper
 
 //...全文处理
-+ (NSAttributedString *)truncationFont:(UIFont *)font contentColor:(UIColor *)contentColor color:(UIColor *)color linkUrl:(NSString *)linkUrl {
++ (NSAttributedString *)truncationFont:(UIFont *)font contentColor:(UIColor *)contentColor color:(UIColor *)color {
     NSString * moreStr = NSLocalizedString(@"...全文", nil);
     NSMutableDictionary * attrDic = @{}.mutableCopy;
     if (font) {
@@ -23,11 +23,9 @@
     }
     NSMutableAttributedString * truncationString = [[NSMutableAttributedString alloc] initWithString:moreStr attributes:attrDic];
     // TODO 其实这里使用了错误的方式来修复点击无效的 bug，暂且如此
-    if(linkUrl){
-        [truncationString addAttribute:NSLinkAttributeName  // 修复点击问题的bug 强制加一个无用action
-                                 value:[NSURL URLWithString:linkUrl ?: @"www.bytedance.contentTruncationLinkURLString"]
-                                 range:NSMakeRange(0, moreStr.length)];
-    }
+    [truncationString addAttribute:NSLinkAttributeName  // 修复点击问题的bug 强制加一个无用action
+                             value:[NSURL URLWithString:defaultTruncationLinkURLString]
+                             range:NSMakeRange(0, moreStr.length)];
     if (contentColor) {
         [truncationString addAttribute:NSForegroundColorAttributeName value:contentColor range:NSMakeRange(0, @"...".length)];
     }
@@ -73,8 +71,7 @@
             if(model.showLookMore){
                 label.attributedTruncationToken = [FHUGCCellHelper truncationFont:[attributes objectForKey:NSFontAttributeName]
                                                                  contentColor:attributes[NSForegroundColorAttributeName]
-                                                                        color:[UIColor themeRed3]
-                                                                      linkUrl:nil];
+                                                                        color:[UIColor themeRed3]];
             }
         }
     }
