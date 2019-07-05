@@ -127,7 +127,9 @@
     [self requestV3InfoWithCompletion:^(NSError *error, uint64_t networkConsume) {
         [wSelf.detailController endLoading];
         if (error) {
-            if (wSelf.items.count <= 0) {
+            if (error.code == -10001) {
+                // 被删除，空页面已经展示了
+            } else if (wSelf.items.count <= 0) {
                 // 显示空页面
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             }
@@ -229,12 +231,21 @@
                         if (jsonData) {
                             Class cls = [FHFeedUGCContentModel class];
                             FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
-                            if (model && jsonParseError == nil) {
-                                // 继续解析小区头部
-                                NSDictionary *social_group = [dataDict tt_dictionaryValueForKey:@"social_group"];
-                                NSError *groupError = nil;
-                                FHUGCScialGroupDataModel * groupData = [[FHUGCScialGroupDataModel alloc] initWithDictionary:social_group error:&groupError];
-                                [self processWithData:model socialGroup:groupData];
+                            if (model.ugcStatus == 0) {
+                                // 说明被删除
+                                error = [NSError errorWithDomain:NSURLErrorDomain code:-10001 userInfo:nil];
+                                [self.detailController remove_comment_vc];
+                                self.tableView.hidden = YES;
+                                // 显示空页面
+                                [self.detailController.emptyView showEmptyWithTip:@"该内容已被删除" errorImageName:kFHErrorMaskNoListDataImageName showRetry:NO];
+                            } else {
+                                if (model && jsonParseError == nil) {
+                                    // 继续解析小区头部
+                                    NSDictionary *social_group = [dataDict tt_dictionaryValueForKey:@"social_group"];
+                                    NSError *groupError = nil;
+                                    FHUGCScialGroupDataModel * groupData = [[FHUGCScialGroupDataModel alloc] initWithDictionary:social_group error:&groupError];
+                                    [self processWithData:model socialGroup:groupData];
+                                }
                             }
                         }
                     }

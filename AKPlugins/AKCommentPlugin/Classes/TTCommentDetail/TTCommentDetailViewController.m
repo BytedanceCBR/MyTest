@@ -651,18 +651,29 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark - actions
 
 - (void)toolbarDiggButtonOnClicked:(id)sender {
-//    if (!self.pageState.detailModel.userDigg) {
-//        NSMutableDictionary *params = [NSMutableDictionary dictionary];
-//        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
-//        [params setValue:_groupId forKey:@"group_Id"];
-//        [params setValue:_groupId forKey:@"item_Id"];
-//        [params setValue:_logPb  forKey:@"log_pd"];
-//        [params setValue:_categoryName  forKey:@"category_name"];
-//        [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
-//        [params setValue:@"comment_detail" forKey:@"position"];
-//        [params setValue:@"comment_id" forKey:[self.commentModel.commentID stringValue]];
-//        [TTTracker eventV3:@"rt_like" params:params];
-//    }
+    if (self.groupId == nil) {
+        self.groupId = self.pageState.detailModel.groupModel.groupID;
+    }
+    NSString *commentId = (NSString *)self.commentModel.commentID;
+    if (commentId == nil) {
+        commentId = self.pageState.detailModel.commentID;
+    }
+    if (commentId == nil) {
+        return;
+    }
+    
+    if (!self.pageState.detailModel.userDigg) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:_groupId forKey:@"group_Id"];
+        [params setValue:_groupId forKey:@"item_Id"];
+        [params setValue:_logPb  forKey:@"log_pd"];
+        [params setValue:_categoryName  forKey:@"category_name"];
+        [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+        [params setValue:@"comment_detail" forKey:@"position"];
+        [params setValue:commentId forKey:@"comment_id"];
+        [TTTracker eventV3:@"rt_like" params:params];
+    }
 //    wrapperTrackEvent(@"update_detail", @"bottom_digg_click");
 //    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
 //    [self.store dispatch:action];
@@ -705,7 +716,8 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         model.digCount = @(self.pageState.detailModel.diggCount);
         self.commentModel = model;
     }
-    [FHCommonApi requestCommonDigg: [NSString stringWithFormat:@"%@", self.commentModel.commentID] groupType:FHDetailDiggTypeCOMMENT action:action completion:nil];
+
+    [FHCommonApi requestCommonDigg: [NSString stringWithFormat:@"%@", commentId] groupType:FHDetailDiggTypeCOMMENT action:action completion:nil];
     [self onStateChange:self.pageState];
 }
 
