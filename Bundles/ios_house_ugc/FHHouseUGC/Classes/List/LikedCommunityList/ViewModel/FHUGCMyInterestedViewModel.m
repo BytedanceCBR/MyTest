@@ -51,6 +51,10 @@
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        
+        if(viewController.type == FHUGCMyInterestedTypeEmpty){
+            [self addEnterCategoryLog];
+        }
     }
     return self;
 }
@@ -119,10 +123,6 @@
                 }else{
                     [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
                 }
-            }
-            
-            if(wself.viewController.type == FHUGCMyInterestedTypeEmpty){
-                [self addEnterCategoryLog];
             }
             
             //报的是我关注的feed页的埋点组件展现
