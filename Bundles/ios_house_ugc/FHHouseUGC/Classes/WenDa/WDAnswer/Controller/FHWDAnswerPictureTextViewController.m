@@ -272,7 +272,18 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     HPGrowingTextView *internalTextView = self.inputTextView.internalGrowingTextView;
     internalTextView.minHeight = kTextViewHeight;
 //    internalTextView.maxHeight = INT_MAX;
-    internalTextView.maxNumberOfLines = 11;
+    // 行数适配
+    int maxNumberOfLines = 8;
+    if ([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen]) {
+        maxNumberOfLines = 8;
+    } else if ([TTDeviceHelper is667Screen]) {
+        maxNumberOfLines = 10;
+    } else if ([TTDeviceHelper is736Screen]) {
+        maxNumberOfLines = 11;
+    } if ([TTDeviceHelper isIPhoneXDevice]) {
+        maxNumberOfLines = 12;
+    }
+    internalTextView.maxNumberOfLines = maxNumberOfLines;
     internalTextView.tintColor = [UIColor themeRed1];
     internalTextView.placeholder = @"分享你的观点";
     
