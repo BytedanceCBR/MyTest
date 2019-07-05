@@ -27,7 +27,6 @@
 @property(nonatomic, strong) NSMutableDictionary *cellHeightCaches;
 
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
-@property(nonatomic, strong) NSString *showType;
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
 
 @end
@@ -114,11 +113,9 @@
             if(wself.dataList.count > 0){
                 [wself.viewController.emptyView hideEmptyView];
                 [wself.tableView reloadData];
-                wself.showType = @"feed_blank_select";
             }else{
                 if(wself.viewController.type == FHUGCMyInterestedTypeEmpty){
                     [wself.viewController.emptyView showEmptyWithTip:@"你还没有关注任何小区圈\n去附近或发现逛逛吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
-                    wself.showType = @"feed_blank_null";
                 }else{
                     [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
                 }
@@ -143,7 +140,7 @@
     tracerDict[@"category_name"] = @"my_join_list";
     tracerDict[@"enter_type"] = @"click";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
-    tracerDict[@"show_type"] = self.showType ? self.showType : @"be_null";
+    tracerDict[@"show_type"] = @"feed_blank_select";
     TRACK_EVENT(@"enter_category", tracerDict);
     
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
@@ -159,7 +156,7 @@
     tracerDict[@"category_name"] = @"my_join_list";
     tracerDict[@"enter_type"] = @"click";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
-    tracerDict[@"show_type"] = self.showType ? self.showType : @"be_null";
+    tracerDict[@"show_type"] = @"feed_blank_select";
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:(duration * 1000)];
     TRACK_EVENT(@"stay_category", tracerDict);
     
@@ -173,7 +170,7 @@
     tracerDict[@"page_type"] = @"my_join_list";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"card_type"] = @"left_pic";
-    tracerDict[@"show_type"] = self.showType ? self.showType : @"be_null";
+    tracerDict[@"show_type"] = @"feed_blank_select";
     TRACK_EVENT(@"element_show", tracerDict);
 }
 
@@ -215,7 +212,7 @@
     
     if(self.viewController.type == FHUGCMyInterestedTypeEmpty){
         dict[@"page_type"] = @"my_join_list";
-        dict[@"show_type"] = self.showType ? self.showType : @"be_null";
+        dict[@"show_type"] = @"feed_blank_select";
     }else{
         dict[@"page_type"] = @"like_neighborhood_list";
         dict[@"element_from"] = @"like_neighborhood";
