@@ -68,6 +68,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 @property (nonatomic, strong) NSString *qid;
 
 @property (nonatomic, strong) NSDate *enterDate;
+@property (nonatomic,assign) BOOL hidePost;
 @end
 
 @implementation TTCommentDetailViewController
@@ -129,7 +130,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     self.store.categoryID = self.categoryID;
     self.store.logPb = self.logPb;
 
-    
+    self.hidePost = [baseCondition[@"hidePost"] boolValue];
     
 }
 
@@ -650,18 +651,18 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark - actions
 
 - (void)toolbarDiggButtonOnClicked:(id)sender {
-    if (!self.pageState.detailModel.userDigg) {
-        NSMutableDictionary *params = [NSMutableDictionary dictionary];
-        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
-        [params setValue:_groupId forKey:@"group_Id"];
-        [params setValue:_groupId forKey:@"item_Id"];
-        [params setValue:_logPb  forKey:@"log_pd"];
-        [params setValue:_categoryName  forKey:@"category_name"];
-        [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
-        [params setValue:@"comment_detail" forKey:@"position"];
-        [params setValue:@"comment_id" forKey:[self.commentModel.commentID stringValue]];
-        [TTTracker eventV3:@"rt_like" params:params];
-    }
+//    if (!self.pageState.detailModel.userDigg) {
+//        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+//        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+//        [params setValue:_groupId forKey:@"group_Id"];
+//        [params setValue:_groupId forKey:@"item_Id"];
+//        [params setValue:_logPb  forKey:@"log_pd"];
+//        [params setValue:_categoryName  forKey:@"category_name"];
+//        [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+//        [params setValue:@"comment_detail" forKey:@"position"];
+//        [params setValue:@"comment_id" forKey:[self.commentModel.commentID stringValue]];
+//        [TTTracker eventV3:@"rt_like" params:params];
+//    }
 //    wrapperTrackEvent(@"update_detail", @"bottom_digg_click");
 //    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
 //    [self.store dispatch:action];
@@ -1057,6 +1058,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         _headerView = [[TTCommentDetailHeader alloc] initWithModel:self.pageState.detailModel frame:CGRectMake(0, 0, frame.size.width, height) needShowGroupItem:!(self.pageState.from == TTCommentDetailSourceTypeDetail || self.pageState.from == TTCommentDetailSourceTypeThread)];
         _headerView.delegate = self;
         _headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        _headerView.hidePost = self.hidePost;
         //headView主评论出现的时间
         NSMutableDictionary *extra = [NSMutableDictionary dictionary];
         [extra setValue:@"comment_detail" forKey:@"comment_position"];

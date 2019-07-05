@@ -300,7 +300,7 @@
 
 - (void)trackClickMore {
     NSMutableDictionary *dict = [self tracerDic];
-    
+    dict[@"element_type"] = @"like_neighborhood";
     [dict removeObjectsForKeys:@[@"card_type"]];
     TRACK_EVENT(@"click_more", dict);
 }

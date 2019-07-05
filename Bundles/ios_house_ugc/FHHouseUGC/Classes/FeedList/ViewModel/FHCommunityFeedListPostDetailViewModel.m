@@ -277,6 +277,7 @@
     }
     
     cell.delegate = self;
+    cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
     
     if(indexPath.row < self.dataList.count){
         [cell refreshWithData:cellModel];
@@ -394,6 +395,7 @@
 }
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel {
+    [self trackClickComment:cellModel];
     [self jumpToPostDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
@@ -440,6 +442,12 @@
 
 - (NSString *)pageType {
     return @"community_group_detail";
+}
+
+- (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
+    NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
+    dict[@"click_position"] = @"feed_comment";
+    TRACK_EVENT(@"click_comment", dict);
 }
 
 @end

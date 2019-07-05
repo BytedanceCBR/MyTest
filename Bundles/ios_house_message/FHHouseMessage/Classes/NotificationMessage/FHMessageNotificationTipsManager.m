@@ -58,7 +58,7 @@ NSString *const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotificationL
         return;
     }
 
-    if([model.lastMsgId isEqualToString:self.tipsModel.lastMsgId]){
+    if([model.lastMsgId isEqualToString:self.tipsModel.lastMsgId] && [model.unread integerValue] == [self.tipsModel.unread integerValue]){
         return;
     }
     

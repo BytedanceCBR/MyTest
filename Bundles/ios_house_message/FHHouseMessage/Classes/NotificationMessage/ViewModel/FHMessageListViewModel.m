@@ -147,9 +147,17 @@
     [self addFeedMessageClickLog:model rank:indexPath.row];
     NSString *bodyUrl = model.content.bodyUrl;
     if (!isEmptyString(bodyUrl)) {
+        TTRouteUserInfo *userInfo = nil;
+        
+        if([bodyUrl containsString:@"comment_detail"]){
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"hidePost"] = @(1);
+            userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        }
+        
         NSURL *openURL = [NSURL URLWithString:[bodyUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
-            [[TTRoute sharedRoute] openURLByPushViewController:openURL];
+            [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
         }
     }
 }
