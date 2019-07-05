@@ -399,6 +399,12 @@
     [self jumpToPostDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
+- (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
+    self.currentCellModel = cellModel;
+    self.currentCell = cell;
+    [self jumpToDetail:cellModel];
+}
+
 #pragma mark - 埋点
 
 - (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {

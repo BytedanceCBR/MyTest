@@ -17,7 +17,7 @@
 #define rightMargin 20
 #define maxLines 3
 
-@interface FHUGCSingleImageCell ()
+@interface FHUGCSingleImageCell ()<TTUGCAttributedLabelDelegate>
 
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
@@ -55,6 +55,7 @@
     [self.contentView addSubview:_userInfoView];
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
     self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:1];
@@ -187,6 +188,16 @@
 - (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
     if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
         [self.delegate goToCommunityDetail:self.cellModel];
+    }
+}
+
+#pragma mark - TTUGCAttributedLabelDelegate
+
+- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+    if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
+        if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
+            [self.delegate lookAllLinkClicked:self.cellModel cell:self];
+        }
     }
 }
 
