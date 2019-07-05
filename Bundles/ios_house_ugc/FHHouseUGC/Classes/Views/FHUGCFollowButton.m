@@ -237,6 +237,18 @@
         self.tracerParams[@"enter_type"] = self.tracerDic[@"enter_type"] ?: @"be_null";
         self.tracerParams[@"rank"] = self.tracerDic[@"rank"] ?: @"be_null";
         self.tracerParams[@"log_pb"] = self.tracerDic[@"log_pb"] ?: @"be_null";
+        
+        if(tracerDic[@"card_type"]){
+            self.tracerParams[@"card_type"] = tracerDic[@"card_type"];
+        }
+        
+        if(tracerDic[@"element_from"]){
+            self.tracerParams[@"element_from"] = tracerDic[@"element_from"];
+        }
+        
+        if(tracerDic[@"house_type"]){
+            self.tracerParams[@"house_type"] = tracerDic[@"house_type"];
+        }
     }
 }
 
