@@ -92,7 +92,7 @@
             }
             
             if (item.type == 1) {
-                size.width += 32;
+                size.width += 25;
             }else
             {
                 size.width += 12;
@@ -141,16 +141,16 @@
                 [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.top.bottom.equalTo(button);
                     make.left.equalTo(button).offset(23);
-                    make.right.equalTo(button).offset(-6);
+                    make.right.equalTo(button).offset(-1);
                 }];
 
                 UIImageView *imageViewIcon = [UIImageView new];
                 [button addSubview:imageViewIcon];
 
-                [imageViewIcon setImage:[UIImage imageNamed:@"fh_real_houseinvalid-name"]];
                 if (item.imageUrl) {
                     [imageViewIcon bd_setImageWithURL:[NSURL URLWithString:item.imageUrl] placeholder:[UIImage imageNamed:@"fh_real_houseinvalid-name"]];
                 }
+                
                 // 布局
                 [imageViewIcon mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(5);
@@ -272,11 +272,6 @@
                         // 找满足长度的数据
                         FHGuessYouWantResponseDataDataModel *remainItem = vArray[index];
                         CGFloat remainLen = [self guessYouWantTextLength:remainItem.text];
-                        
-//                        if(remainItem.type == 1)
-//                        {
-//
-//                        }
                         if (remainLen <= remainWidth || remainItem.type == 1) {
                             // 找到
                             findIndex = index;
