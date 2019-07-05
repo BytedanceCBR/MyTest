@@ -146,7 +146,6 @@
     
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if(isFirst){
-            [self.dataList removeAllObjects];
             [self.viewController endLoading];
         }
         
@@ -175,6 +174,10 @@
         
         if(model){
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
+            
+            if(isFirst){
+                [self.dataList removeAllObjects];
+            }
             
             if(isHead){
                 if(result.count > 0){
