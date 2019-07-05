@@ -267,7 +267,8 @@
         FHUGCMyInterestDataRecommendSocialGroupsModel *model = self.dataList[indexPath.row];
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = model.socialGroup.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"like_neighborhood_list",
+        NSString* enterFrom = self.viewController.type == FHUGCMyInterestedTypeEmpty ? @"feed_blank_select" : @"like_neighborhood_list";
+        dict[@"tracer"] = @{@"enter_from":enterFrom,
                             @"enter_type":@"click",
                             @"rank":@(indexPath.row),
                             @"log_pb":model.socialGroup.logPb ?: @"be_null"};
