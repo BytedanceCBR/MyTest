@@ -300,7 +300,21 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 图文发布器展示
     internalTextView.minHeight = kTextViewHeight;
-    internalTextView.maxNumberOfLines = 11;
+    // 行数适配
+    int maxNumberOfLines = 8;
+    if ([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen]) {
+        maxNumberOfLines = 8;
+    } else if ([TTDeviceHelper is667Screen]) {
+        maxNumberOfLines = 10;
+    } else if ([TTDeviceHelper is736Screen]) {
+        maxNumberOfLines = 11;
+    } if ([TTDeviceHelper isIPhoneXDevice]) {
+        maxNumberOfLines = 12;
+    }
+    if (!self.hasSocialGroup) {
+        maxNumberOfLines -= 2;
+    }
+    internalTextView.maxNumberOfLines = maxNumberOfLines;
     
     if (!isEmptyString(self.postContentHint)) {
         internalTextView.placeholder = self.postContentHint;
