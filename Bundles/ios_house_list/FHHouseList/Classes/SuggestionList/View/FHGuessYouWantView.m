@@ -90,8 +90,9 @@
             if (size.width > 200) {
                 size.width = 200;
             }
-            if (isFirtItem && line == 1) {
-                size.width += 35;
+            
+            if (item.type == 1) {
+                size.width += 32;
             }else
             {
                 size.width += 12;
