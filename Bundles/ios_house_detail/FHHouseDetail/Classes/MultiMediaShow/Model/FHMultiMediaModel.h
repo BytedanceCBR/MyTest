@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign)   CGFloat       vHeight;
 @property (nonatomic, copy , nullable) NSString *infoSubTitle;
 @property (nonatomic, copy , nullable) NSString *infoTitle;
+@property(nonatomic, copy) NSString *instantImageUrl;
 
 @end
 

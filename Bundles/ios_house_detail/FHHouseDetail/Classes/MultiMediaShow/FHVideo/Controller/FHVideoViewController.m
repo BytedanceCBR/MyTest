@@ -14,6 +14,7 @@
 #import "FHVideoNetFlowTipView.h"
 #import "FHUserTracker.h"
 #import <TTVFullScreenPart.h>
+#import <BDWebImage/BDWebImageManager.h>
 
 @interface FHVideoViewController ()<FHVideoViewDelegate,TTVPlayerDelegate,TTVPlayerCustomViewDelegate>
 
@@ -109,7 +110,13 @@
             _playState = TTVPlaybackState_Stopped;
         }
         _model = model;
-        self.videoView.coverView.imageUrl = _model.coverImageUrl;
+                
+        NSString *placeHolderImageUrl = [_model.coverImageUrl stringByReplacingOccurrencesOfString:@"/origin/" withString:@"/large/"];
+        NSString *key = [[BDWebImageManager sharedManager]  requestKeyWithURL:[NSURL URLWithString:placeHolderImageUrl]];
+        UIImage *placeHolder = [[BDWebImageManager sharedManager].imageCache imageForKey:key];
+        
+//        self.videoView.coverView.imageUrl = _model.coverImageUrl;
+        [self.videoView.coverView showWithImageUrl:_model.coverImageUrl placeHoder:placeHolder];
         
         if(!self.isFirstDisplay){
             [self updateVideo];

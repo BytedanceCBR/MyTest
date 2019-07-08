@@ -37,13 +37,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *followId;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *desc;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
+@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, copy , nullable) NSString *price;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *salesInfo;
 @property (nonatomic, copy , nullable) NSString *pricePerSqm;
 @property (nonatomic, copy , nullable) NSString *imprId;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *searchId;

@@ -63,6 +63,10 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 // 二级页所需数据
 - (NSDictionary *)subPageParams;
 
+//秒开相关
+-(void)handleInstantData:(id)data;
+-(BOOL)currentIsInstantData;
+
 // 埋点相关
 - (void)addGoDetailLog;
 - (void)addStayPageLog:(NSTimeInterval)stayTime;
