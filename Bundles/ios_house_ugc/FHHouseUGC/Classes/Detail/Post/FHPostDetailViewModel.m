@@ -137,6 +137,8 @@
             [wSelf.detailController.emptyView hideEmptyView];
             [wSelf reloadData];
             [wSelf.detailController re_add_comment_vc];
+            wSelf.tableView.hidden = NO;
+            [wSelf.detailController show_comment_view];
         }
     }];
 }
@@ -197,7 +199,15 @@
         if (self.detailController.comment_count <= 0 && self.detailController.beginShowComment) {
             __weak typeof(self) weakSelf = self;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [weakSelf reloadData];
+                [weakSelf.detailController refresh_page_view];
                 [weakSelf.detailController becomeFirstResponder_comment];
+            });
+        } else {
+            __weak typeof(self) weakSelf = self;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [weakSelf reloadData];
+                [weakSelf.detailController refresh_page_view];
             });
         }
     }

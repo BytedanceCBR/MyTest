@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 刷新数据
 - (void)reloadData;
 - (void)refreshToolbarView;
+- (void)clearCacheHeight;
 
 @end
 

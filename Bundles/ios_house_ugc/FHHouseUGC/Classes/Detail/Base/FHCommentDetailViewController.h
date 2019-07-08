@@ -39,6 +39,8 @@ typedef NS_ENUM (NSInteger , FHUGCPostType){
 
 - (void)remove_comment_vc;
 - (void)re_add_comment_vc;
+- (void)show_comment_view;
+- (void)refresh_page_view;
 
 @end
 
