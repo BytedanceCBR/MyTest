@@ -15,6 +15,7 @@
 #import <KVOController/KVOController.h>
 #import "FHFastQAViewModel.h"
 #import <FHHouseBase/FHTracerModel.h>
+#import <FHHouseBase/FHURLSettings.h>
 
 #define BANNER_WIDTH 375
 #define BANNER_HEIGHT 202
@@ -40,6 +41,7 @@
 @property(nonatomic , strong) FHFastQAGuessQuestionView *guessView;
 @property(nonatomic , strong) FHFastQAMobileNumberView *mobileView;
 @property(nonatomic , strong) UIButton *submitButton;
+@property(nonatomic , strong) UILabel *aboutLabel;
 @property(nonatomic , strong) FHFastQAViewModel *viewModel;
 @end
 
@@ -179,7 +181,17 @@
     _submitButton.layer.masksToBounds = YES;
     [_submitButton addTarget:self action:@selector(onSubmitAction:) forControlEvents:UIControlEventTouchUpInside];
     
-    NSArray *views = @[_tipLabel , _questionView,_guessView,_mobileView,_submitButton];
+    _aboutLabel = [[UILabel alloc]init];
+    _aboutLabel.font = [UIFont themeFontRegular:10];
+    _aboutLabel.textColor = [UIColor themeGray4];
+    _aboutLabel.text = @"提交即视为同意《个人信息保护声明》";
+    [_aboutLabel sizeToFit];
+    _aboutLabel.textAlignment = NSTextAlignmentCenter;
+    UITapGestureRecognizer *tipTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tipBtnDidClick)];
+    self.aboutLabel.userInteractionEnabled = YES;
+    [self.aboutLabel addGestureRecognizer:tipTap];
+    
+    NSArray *views = @[_tipLabel , _questionView,_guessView,_mobileView,_submitButton,_aboutLabel];
     [views enumerateObjectsUsingBlock:^(UIView *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [self.containerView addSubview:obj];
     }];
@@ -216,7 +228,7 @@
         make.left.mas_equalTo(HOR_MARGIN);
         make.right.mas_equalTo(-HOR_MARGIN);
         make.top.mas_equalTo(CONTAINTER_TOP);
-        make.bottom.mas_equalTo(self.submitButton.mas_bottom).offset(20);
+        make.bottom.mas_equalTo(self.aboutLabel.mas_bottom).offset(11);
     }];
 
 #define MAKE_HOR()  make.left.mas_equalTo(CONTAINER_HOR_MARGIN); \
@@ -252,6 +264,13 @@
         make.height.mas_equalTo(SUBMIT_HEIGHT);
     }];
     
+    [self.aboutLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.aboutLabel.superview);
+        make.width.mas_equalTo(self.aboutLabel.bounds.size.width);
+        make.top.mas_equalTo(self.submitButton.mas_bottom).offset(3);
+        make.height.mas_equalTo(16);
+    }];
+    
 }
 
 -(void)tryUpdateContentSize
@@ -275,6 +294,14 @@
 -(void)onTapBgAction:(id)sender
 {
     [self.bgView endEditing:YES];
+}
+
+- (void)tipBtnDidClick
+{
+    NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
+    NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
+    [[TTRoute sharedRoute]openURLByPushViewController:url];
 }
 
 - (void)trackEndedByAppWillEnterBackground
