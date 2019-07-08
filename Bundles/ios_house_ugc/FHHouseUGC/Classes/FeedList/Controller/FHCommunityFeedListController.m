@@ -60,7 +60,13 @@
 
 - (void)viewWillAppear {
     [self.viewModel viewWillAppear];
-    if (self.needReloadData) {
+    
+    if(self.viewModel.dataList.count > 0){
+        if (self.needReloadData) {
+            self.needReloadData = NO;
+            [self scrollToTopAndRefreshAllData];
+        }
+    }else{
         self.needReloadData = NO;
         [self scrollToTopAndRefreshAllData];
     }
