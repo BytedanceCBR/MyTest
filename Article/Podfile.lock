@@ -6,11 +6,13 @@ PODS:
     - AFNetworking/Reachability (= 2.5.1.1-binary)
     - AFNetworking/Security (= 2.5.1.1-binary)
     - AFNetworking/Serialization (= 2.5.1.1-binary)
+    - AFNetworking/UIKit (= 2.5.1.1-binary)
   - AFNetworking/NSURLConnection (2.5.1.1-binary)
   - AFNetworking/NSURLSession (2.5.1.1-binary)
   - AFNetworking/Reachability (2.5.1.1-binary)
   - AFNetworking/Security (2.5.1.1-binary)
   - AFNetworking/Serialization (2.5.1.1-binary)
+  - AFNetworking/UIKit (2.5.1.1-binary)
   - AKCommentPlugin (0.1.0)
   - AKShareServicePlugin (0.1.0)
   - AKWDPlugin (0.1.0)
@@ -147,8 +149,8 @@ PODS:
     - IGListKit/Diffing (= 3.4.0.1-binary)
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
-  - ios_house_filter (0.1.0)
-  - ios_house_im (0.1.0)
+  - ios_house_filter (1.0.1)
+  - ios_house_im (0.1.1)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -307,12 +309,12 @@ PODS:
   - TTBatchItemAction (0.1.8.1-binary)
   - TTDebug (0.1.0)
   - TTDebugAssistant (0.2.33.1-binary)
-  - TTDialogDirector/Camera (0.1.2)
-  - TTDialogDirector/Contacts (0.1.2)
-  - TTDialogDirector/Core (0.1.2)
-  - TTDialogDirector/Microphone (0.1.2)
-  - TTDialogDirector/PhotoLibrary (0.1.2)
-  - TTDialogDirector/UserNotification (0.1.2)
+  - TTDialogDirector/Camera (0.1.4)
+  - TTDialogDirector/Contacts (0.1.4)
+  - TTDialogDirector/Core (0.1.4)
+  - TTDialogDirector/Microphone (0.1.4)
+  - TTDialogDirector/PhotoLibrary (0.1.4)
+  - TTDialogDirector/UserNotification (0.1.4)
   - TTDiggButton (0.1.1)
   - TTEntityBase (0.2.4.1-binary)
   - TTEntry (0.1.7.1-binary)
@@ -645,8 +647,8 @@ DEPENDENCIES:
   - IESVideoPlayer (= 0.1.16)
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
-  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, commit `9423cbfa9bb1c30d2b87c1542b862b457b7c141a`)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `898fbc9d6beb4e7e9094487eea1b2ffeb16f618b`)
+  - ios_house_filter (= 1.0.1)
+  - ios_house_im (= 0.1.1)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -719,12 +721,12 @@ DEPENDENCIES:
   - TTBatchItemAction (= 0.1.8.1-binary)
   - TTDebug (from `../TTBundles/ios_tt_debug`)
   - TTDebugAssistant (= 0.2.33.1-binary)
-  - TTDialogDirector/Camera (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
-  - TTDialogDirector/Contacts (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
-  - TTDialogDirector/Core (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
-  - TTDialogDirector/Microphone (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
-  - TTDialogDirector/PhotoLibrary (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
-  - TTDialogDirector/UserNotification (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
+  - TTDialogDirector/Camera (= 0.1.4)
+  - TTDialogDirector/Contacts (= 0.1.4)
+  - TTDialogDirector/Core (= 0.1.4)
+  - TTDialogDirector/Microphone (= 0.1.4)
+  - TTDialogDirector/PhotoLibrary (= 0.1.4)
+  - TTDialogDirector/UserNotification (= 0.1.4)
   - TTDiggButton (from `../AKPlugins/AKDiggButton`)
   - TTEntityBase (= 0.2.4.1-binary)
   - TTEntry (= 0.1.7.1-binary)
@@ -873,12 +875,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/FHWebView
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
-  ios_house_filter:
-    :commit: 9423cbfa9bb1c30d2b87c1542b862b457b7c141a
-    :git: git@code.byted.org:fproject/ios_house_filter.git
-  ios_house_im:
-    :commit: 898fbc9d6beb4e7e9094487eea1b2ffeb16f618b
-    :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAD:
@@ -901,9 +897,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/TTBaseLib
   TTDebug:
     :path: ../TTBundles/ios_tt_debug
-  TTDialogDirector:
-    :commit: 8ed5beb
-    :git: git@code.byted.org:TTIOS/TTDialogDirector.git
   TTDiggButton:
     :path: ../AKPlugins/AKDiggButton
   TTFeedTab:
@@ -962,22 +955,13 @@ EXTERNAL SOURCES:
     :path: ../ReactCommon/yoga
 
 CHECKOUT OPTIONS:
-  ios_house_filter:
-    :commit: 9423cbfa9bb1c30d2b87c1542b862b457b7c141a
-    :git: git@code.byted.org:fproject/ios_house_filter.git
-  ios_house_im:
-    :commit: 898fbc9d6beb4e7e9094487eea1b2ffeb16f618b
-    :git: git@code.byted.org:fproject/ios_house_im.git
-  TTDialogDirector:
-    :commit: 8ed5beb
-    :git: git@code.byted.org:TTIOS/TTDialogDirector.git
   TTRoute:
     :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa
     :git: git@code.byted.org:TTIOS/tt_pods_route.git
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
-  AFNetworking: fac3e1b64a9a165c0c7ac9de2d62660b3e875c7e
+  AFNetworking: ae73845b1571323685452375dc66d8e98feefa67
   AKCommentPlugin: 5ad084d3f5a4e3b0da26477aedd952dc0d4f1634
   AKShareServicePlugin: 7f4273d1d25b641a6d3c97537d6c57e8ceb999fc
   AKWDPlugin: 578ff2a20b6d16a523e2b1e96512e77e5c6b6fd3
@@ -1036,8 +1020,8 @@ SPEC CHECKSUMS:
   IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
-  ios_house_filter: 872f04fb17142ff0a472fd3c414484c1075524ab
-  ios_house_im: 93431910eb6de50b0b84130f90d5eabb85849261
+  ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
+  ios_house_im: d3f360533526babf872bd335e2443e37b5fd455b
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1056,7 +1040,7 @@ SPEC CHECKSUMS:
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
   RSSwizzle: 9b7cf78908bc6b249f1403926c168f730f840e91
-  RXCollections: ef46a1c3b1f25711117ece94c48d9beae9f143a6
+  RXCollections: fc5eb6c41b5a3646601e6a01c1ee444c354a9bfc
   SDWebImage: abd373dadf531cf5d1738f6a8e9487f7f4a12f14
   SecGuard: 0c9ebebd0992c9efd94a3a026832eb721ae0cc15
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
@@ -1083,7 +1067,7 @@ SPEC CHECKSUMS:
   TTBatchItemAction: 6e6ed79565823fe6f3ee77d66d6e3ec5fec4d52f
   TTDebug: b8ba18669b70deaf52dbd0775578e2163cf07c45
   TTDebugAssistant: c1c106b1cef486fb07833e7a9a6316cf2711df5d
-  TTDialogDirector: 2b7e322ec7ea0632b91b1fe025320203e14e9ddb
+  TTDialogDirector: f7af351061299ae70ab95259b546de42be940209
   TTDiggButton: cf6762b9f675e4aa59eeea083150ac781d59eb2e
   TTEntityBase: 9036725e63faa0661eaf01bfe3b9626825f6560b
   TTEntry: 0da2ac49bb4705a3d228f721b9f307798ecb2d6e
@@ -1157,6 +1141,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 87c3cbb82c4ebba9e7418c45a5246710f792b9f7
+PODFILE CHECKSUM: 3f43ba699ff6d254bae1deaa33059a321b3c75ad
 
 COCOAPODS: 1.4.0
