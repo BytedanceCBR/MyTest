@@ -165,8 +165,10 @@
     self.likeLabel.text = diggCount;
     if([userDigg boolValue]){
         self.likeImageView.image = [UIImage imageNamed:@"fh_ugc_like_selected"];
+        self.likeLabel.textColor = [UIColor themeRed1];
     }else{
         self.likeImageView.image = [UIImage imageNamed:@"fh_ugc_like"];
+        self.likeLabel.textColor = [UIColor themeGray1];
     }
 }
 

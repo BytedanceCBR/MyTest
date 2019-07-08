@@ -98,22 +98,22 @@
 
 - (void)initDetailView {
     
-    UIImageView *knowBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 110, 36)];
-    knowBgView.image = [UIImage imageNamed:@"fh_ugc_guide_kown_bg"];
-    [self addSubview:knowBgView];
-    
-    knowBgView.bottom = self.bottom - 100;
-    knowBgView.centerX = self.centerX;
-    
-    self.knowLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 56, 20)];
-    _knowLabel.text = @"我知道了";
-    _knowLabel.textAlignment = NSTextAlignmentCenter;
-    _knowLabel.textColor = [UIColor whiteColor];
-    _knowLabel.font = [UIFont themeFontRegular:14];
-    [self addSubview:_knowLabel];
-    
-    _knowLabel.centerY = knowBgView.centerY;
-    _knowLabel.centerX = knowBgView.centerX;
+//    UIImageView *knowBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 110, 36)];
+//    knowBgView.image = [UIImage imageNamed:@"fh_ugc_guide_kown_bg"];
+//    [self addSubview:knowBgView];
+//
+//    knowBgView.bottom = self.bottom - 100;
+//    knowBgView.centerX = self.centerX;
+//
+//    self.knowLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 56, 20)];
+//    _knowLabel.text = @"我知道了";
+//    _knowLabel.textAlignment = NSTextAlignmentCenter;
+//    _knowLabel.textColor = [UIColor whiteColor];
+//    _knowLabel.font = [UIFont themeFontRegular:14];
+//    [self addSubview:_knowLabel];
+//
+//    _knowLabel.centerY = knowBgView.centerY;
+//    _knowLabel.centerX = knowBgView.centerX;
     
     self.focusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 58, 26)];
     _focusLabel.backgroundColor = [UIColor whiteColor];
