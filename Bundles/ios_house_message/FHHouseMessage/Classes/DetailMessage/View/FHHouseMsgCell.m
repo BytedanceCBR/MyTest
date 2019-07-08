@@ -191,7 +191,6 @@
         self.priceLabel.text = model.price;
         self.roomSpaceLabel.text = model.pricePerSqm;
     }
-    
     //超过1行时候，只显示一行，不能显示的tag就不显示了
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
     NSMutableAttributedString *temptext = [[NSMutableAttributedString alloc] init];
@@ -232,9 +231,11 @@
         self.imageTopLeftLabelBgView.hidden = YES;
     }
     
-    if([model.status integerValue] == 1){ // 已下架
-        self.priceLabel.textColor = [UIColor themeGray1];
-    }else{
+    if (model.status == 1) {
+        self.titleLabel.textColor = [UIColor themeGray3];
+        self.priceLabel.textColor = [UIColor themeGray3];
+    }else {
+        self.titleLabel.textColor = [UIColor themeGray1];
         self.priceLabel.textColor = [UIColor themeRed1];
     }
 }

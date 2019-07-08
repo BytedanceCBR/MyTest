@@ -122,6 +122,7 @@
     
     if(row == self.currentTabIndex){
         [self initCell];
+        [self.viewController addChildViewController:cell.contentViewController];
     }
     
     return cell;

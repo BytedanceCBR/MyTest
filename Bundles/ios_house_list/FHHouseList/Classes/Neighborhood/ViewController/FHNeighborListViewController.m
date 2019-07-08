@@ -27,6 +27,7 @@
 @property (nonatomic, copy) NSString *houseId;
 
 @property (nonatomic, strong) FHNeighborViewModel *viewModel;
+@property (nonatomic, strong) TTRouteParamObj *paramObj;
 
 @property (nonatomic, assign) FHNeighborListVCType neighborListVCType;
 
@@ -56,13 +57,51 @@
          element_from:same_neighborhood（同小区房源），related（周边房源），house_renting（在租房源）,）'在售房源': 'house_onsale',
          $$ search_id:外部的searchId无用，每次使用网络返回的searchId
          */
+        _paramObj = paramObj;
         self.neighborhoodId = paramObj.allParams[@"neighborhood_id"];
         self.houseId = paramObj.allParams[@"house_id"];
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
-        self.neighborListVCType = [paramObj.allParams[@"list_vc_type"] integerValue];
+        if (paramObj.allParams[@"list_vc_type"]) {
+            self.neighborListVCType = [paramObj.allParams[@"list_vc_type"] integerValue];
+        }else {
+            if ([paramObj.host isEqualToString:@"house_list_related_house"]) {
+                self.neighborListVCType = (self.houseType == FHHouseTypeRentHouse) ? FHNeighborListVCTypeRentNearBy : FHNeighborListVCTypeErshouNearBy;
+                self.tracerModel.categoryName = [self categoryName];
+                if (self.tracerDict) {
+                    self.tracerDict[@"category_name"] = self.tracerModel.categoryName;
+                }
+            }else if ([paramObj.host isEqualToString:@"house_list_same_neighborhood"]) {
+                self.neighborListVCType = (self.houseType == FHHouseTypeRentHouse) ? FHNeighborListVCTypeRentSameNeighbor : FHNeighborListVCTypeErshouSameNeighbor;
+                self.tracerModel.categoryName = [self categoryName];
+                if (self.tracerDict) {
+                    self.tracerDict[@"category_name"] = self.tracerModel.categoryName;
+                }
+
+            }
+        }
         self.ttTrackStayEnable = YES;
     }
     return self;
+}
+
+- (NSString *)categoryName
+{
+    if ([_paramObj.host isEqualToString:@"house_list_related_house"]) {
+        return @"related_list";
+    }else if ([_paramObj.host isEqualToString:@"house_list_same_neighborhood"]) {
+        return @"same_neighborhood_list";
+    }
+    return @"";
+}
+
+- (NSString *)titleName
+{
+    if ([_paramObj.host isEqualToString:@"house_list_related_house"]) {
+        return @"周边房源";
+    }else if ([_paramObj.host isEqualToString:@"house_list_same_neighborhood"]) {
+        return @"同小区房源";
+    }
+    return @"";
 }
 
 - (void)viewDidLoad {
@@ -85,7 +124,7 @@
 }
 
 - (void)setupUI {
-    [self setupDefaultNavBar:YES];
+    [self setupDefaultNavBar:NO];
     self.ttNeedHideBottomLine = YES;
     
     CGFloat height = [FHFakeInputNavbar perferredHeight];
@@ -111,6 +150,12 @@
     }];    
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(44, 0, 0, 0)];
     [self.view bringSubviewToFront:self.filterBgControl];
+    
+    if ([_paramObj.allParams[@"title"] isKindOfClass:[NSString class]]) {
+        self.customNavBarView.title.text = _paramObj.allParams[@"title"];
+    }else {
+        self.customNavBarView.title.text = [self titleName];
+    }
 }
 
 -(void)setupFilter
@@ -164,12 +209,14 @@
     _viewModel.conditionNoneFilterBlock = ^NSString * _Nullable(NSDictionary * _Nonnull params) {
         return [wself.houseFilterBridge getNoneFilterQueryParams:params];
     };
+    [self.houseFilterViewModel setFilterConditions:_paramObj.queryParams];
     [self.houseFilterBridge setViewModel:self.houseFilterViewModel withDelegate:self];
 }
 
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
-        [self firstRequestDataWithLoading:YES];
+        [self.houseFilterBridge trigerConditionChanged];
+//        [self firstRequestDataWithLoading:YES];
     } else {
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }

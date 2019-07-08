@@ -115,8 +115,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.mainTableView.showsVerticalScrollIndicator = NO;
     
     if (_isMainTabVC) {
-        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
-        self.homeListViewModel.panelVM = self.panelVM;
+        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
     }
     
     [self.view addSubview:self.mainTableView];
@@ -331,7 +330,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    if(_isMainTabVC)
+    if(_isMainTabVC && self.mainTableView.contentOffset.y <= [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType])
     {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
     }
@@ -469,7 +468,7 @@ static CGFloat const kSectionHeaderHeight = 38;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.contentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width*4, 0);
-        _scrollView.backgroundColor = [UIColor orangeColor];
+        _scrollView.backgroundColor = [UIColor whiteColor];
     }
     return _scrollView;
 }

@@ -22,6 +22,8 @@
 "message_detail_list"   = "FHMessageListViewController";
 "message_system_list"   = "FHMessageListViewController";
 "house_list_in_neighborhood" = "FHNeighborListViewController";
+"house_list_related_house" = "FHNeighborListViewController";
+"house_list_same_neighborhood" = "FHNeighborListViewController";
 "myFocus"            = "FHMyFavoriteViewController";
 //"editUserProfile"       = "TTEditUserProfileViewController";
 "editUserProfile"       = "FHEditUserController";
@@ -166,7 +168,9 @@
 "house_fake_list" = "FHFalseHouseListViewController";
 
 //UGC相关
-"ugc_post" = "FHPostUGCViewController";
-"ugc_post_detail" = "FHPostDetailViewController";
-"ugc_my_interest" = "FHUGCMyInterestedController";
+//"ugc_post" = "FHPostUGCViewController";
+//"ugc_post_detail" = "FHPostDetailViewController";
+//"ugc_my_interest" = "FHUGCMyInterestedController";
 
+//幸福问答
+"quick_ask" = "FHFastQAViewController";

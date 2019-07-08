@@ -26,9 +26,9 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) FHHouseType houseType;
 @property (nonatomic, assign) BOOL isResetingOffsetZero;
-@property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
+@property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
 
-- (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC;
+- (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC andPanelVM:(FHHomeSearchPanelViewModel *)panelVM;
 
 - (void)reloadHomeTableHeaderSection;
 

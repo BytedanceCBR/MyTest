@@ -4392,6 +4392,20 @@ static NSString *const kTTFeedStartCategoryConfig = @"f_category_settings";
 }
 @end
 
+@implementation SSCommonLogic (ArticleTitleLogoSettings)
+
++ (void)setArticleTitleLogoEnbale:(BOOL)enable
+{
+    
+}
+
++ (BOOL)articleTitleLogoEnable
+{
+    return NO;
+}
+
+@end
+
 static NSString *const kTTFeedStartTabConfig = @"tt_start_tab_config";
 @implementation SSCommonLogic (FeedStartTabConfig)
 + (void)setFeedStartTabConfig:(NSDictionary *)dict

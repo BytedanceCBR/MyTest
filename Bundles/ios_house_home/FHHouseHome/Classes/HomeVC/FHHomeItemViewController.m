@@ -21,6 +21,7 @@
 #import <FHPlaceHolderCell.h>
 #import "FHHomeListViewModel.h"
 #import "TTSandBoxHelper.h"
+#import <FHHomeSearchPanelViewModel.h>
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -136,6 +137,9 @@
     if (self.showRequestErrorView) {
         [self showPlaceHolderCells];
         [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+        if (self.panelVM) {
+            [self.panelVM fetchSearchPanelRollData];
+        }
     }
     
     self.stayTime = [self getCurrentTime];
@@ -266,11 +270,18 @@
         [requestDictonary setValue:@(0) forKey:@"offset"];
     }else
     {
+        if(self.currentSearchId)
+        {
+            [requestDictonary setValue:self.currentSearchId forKey:@"search_id"];
+        }
+        
         [requestDictonary setValue:@(offsetValue) forKey:@"offset"];
     }
     [requestDictonary setValue:@(self.houseType) forKey:@"house_type"];
     [requestDictonary setValue:@(20) forKey:@"count"];
     
+
+
     self.requestTask = nil;
     
     WeakSelf;
@@ -540,7 +551,10 @@
                                         showRetry:YES];
                 __weak typeof(self) weakSelf = self;
                 noDataErrorView.retryBlock = ^{
-                    [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+                    if (weakSelf.panelVM) {
+                        [weakSelf.panelVM fetchSearchPanelRollData];
+                    }
+                    [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                 };
             }else
             {
@@ -555,7 +569,10 @@
                             }
                         }else
                         {
-                            [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+                            if (weakSelf.panelVM) {
+                                [weakSelf.panelVM fetchSearchPanelRollData];
+                            }
+                            [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                         }
                     }
                 };
