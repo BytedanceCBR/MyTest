@@ -69,6 +69,7 @@
 }
 
 - (void)viewWillDisappear {
+    [self.feedVC viewWillDisappear];
     [self addStayCategoryLog];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
 }

@@ -16,6 +16,7 @@
 #import "FHUGCFollowButton.h"
 #import "FHUserTracker.h"
 #import "UIViewController+Track.h"
+#import "FHFeedOperationView.h"
 
 @interface FHPostDetailViewController ()
 
@@ -96,6 +97,8 @@
         self.detailData.userDigg = [NSString stringWithFormat:@"%ld",self.user_digg];
         self.detailData.diggCount = [NSString stringWithFormat:@"%lld",self.digg_count];
     }
+    //跳页时关闭举报的弹窗
+    [FHFeedOperationView dismissIfVisible];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

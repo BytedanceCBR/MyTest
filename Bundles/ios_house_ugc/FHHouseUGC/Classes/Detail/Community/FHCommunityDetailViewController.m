@@ -38,6 +38,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [self.viewModel viewWillDisappear];
     [self.viewModel addStayPageLog:self.ttTrackStartTime];
     [self tt_resetStayTime];
 }

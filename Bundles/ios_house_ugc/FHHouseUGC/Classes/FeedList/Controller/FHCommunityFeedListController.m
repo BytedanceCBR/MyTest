@@ -21,6 +21,7 @@
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
 #import <UIScrollView+Refresh.h>
+#import "FHFeedOperationView.h"
 
 @interface FHCommunityFeedListController ()
 
@@ -63,6 +64,10 @@
         self.needReloadData = NO;
         [self scrollToTopAndRefreshAllData];
     }
+}
+
+- (void)viewWillDisappear {
+    [FHFeedOperationView dismissIfVisible];
 }
 
 - (void)initView {
