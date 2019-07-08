@@ -447,12 +447,15 @@
 
 -(void)popLayerReport:(id)model
 {
-    
     NSString *enterFrom = @"be_null";
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
         enterFrom = @"official_inspection";
     }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
         enterFrom = @"happiness_eye";
+        FHDetailDataBaseExtraDetectiveModel *detective = (FHDetailDataBaseExtraDetectiveModel *)model;
+        if (detective.fromDetail) {
+            enterFrom = @"happiness_eye_detail";
+        }
     }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         enterFrom = @"transaction_remind";
     }
