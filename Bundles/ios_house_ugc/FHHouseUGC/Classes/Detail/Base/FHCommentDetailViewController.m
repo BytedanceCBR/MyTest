@@ -718,7 +718,7 @@
 #pragma mark - TTWriteCommentViewDelegate
 
 - (void)commentView:(TTCommentWriteView *) commentView cancelledWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager {
-    commentWriteManager.delegate = nil;
+    // commentWriteManager.delegate = nil;
 }
 
 - (void)commentView:(TTCommentWriteView *) commentView sucessWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager responsedData:(NSDictionary *)responseData
