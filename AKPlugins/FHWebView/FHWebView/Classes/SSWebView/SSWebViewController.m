@@ -246,7 +246,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             }
             
             if ([[params allKeys] containsObject:@"hide_back_button"]) {
-                _shouldHideBackButtonView = [params tt_boolValueForKey:@"hide_back_button"];
+                _shouldHideBackButtonView = [[NSString stringWithFormat:@"%@", params[@"hide_back_button"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_back_button"]] isEqualToString:@"true"];
             }
         }
         

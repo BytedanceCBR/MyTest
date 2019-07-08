@@ -11,6 +11,9 @@
 #import <UIColor+Theme.h>
 #import "TTDeviceHelper.h"
 #import "FHUserTracker.h"
+#import <BDImageView.h>
+#import <UIImageView+BDWebImage.h>
+#import <BDImageView.h>
 
 @interface FHGuessYouWantView ()
 
@@ -47,7 +50,24 @@
 }
 
 - (void)setGuessYouWantItems:(NSArray *)guessYouWantItems {
-    _guessYouWantItems = guessYouWantItems;
+    
+    FHGuessYouWantResponseDataDataModel *dataItem = nil;
+    NSMutableArray *processFirstArray = [NSMutableArray new];
+    
+    FHGuessYouWantResponseDataDataModel *dataItemTest = guessYouWantItems.firstObject;
+ 
+    NSMutableArray *guessItems = [NSMutableArray arrayWithArray:guessYouWantItems];
+
+    for (NSInteger index =0; index < guessYouWantItems.count; index++) {
+        FHGuessYouWantResponseDataDataModel *dataItem = guessYouWantItems[index];
+        if ([dataItem isKindOfClass:[FHGuessYouWantResponseDataDataModel class]]) {
+            if (dataItem.type == 1 && dataItem.rank >= 0) {
+                [guessItems exchangeObjectAtIndex:dataItem.rank withObjectAtIndex:index];
+            }
+        }
+    }
+    
+    _guessYouWantItems = guessItems;
     [self reAddViews];
 }
 
@@ -66,12 +86,13 @@
         if (item.text.length > 0) {
             FHGuessYouWantButton *button = [[FHGuessYouWantButton alloc] init];
             button.label.text = item.text;
-            CGSize size = [button.label sizeThatFits:CGSizeMake(161, 17)];
-            if (size.width > 160) {
-                size.width = 160;
+            CGSize size = [button.label sizeThatFits:CGSizeMake(201, 17)];
+            if (size.width > 200) {
+                size.width = 200;
             }
-            if (isFirtItem && line == 1) {
-                size.width += 35;
+            
+            if (item.type == 1) {
+                size.width += 25;
             }else
             {
                 size.width += 12;
@@ -105,7 +126,7 @@
                 make.height.mas_equalTo(29);
             }];
             
-            if (isFirtItem && line == 1) {
+            if (item.type == 1) {
                 button.label.text = @"";
 
                 UILabel *titleLabel = [UILabel new];
@@ -120,13 +141,16 @@
                 [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.top.bottom.equalTo(button);
                     make.left.equalTo(button).offset(23);
-                    make.right.equalTo(button).offset(-6);
+                    make.right.equalTo(button).offset(-1);
                 }];
 
                 UIImageView *imageViewIcon = [UIImageView new];
                 [button addSubview:imageViewIcon];
 
-                [imageViewIcon setImage:[UIImage imageNamed:@"fh_real_houseinvalid-name"]];
+                if (item.imageUrl) {
+                    [imageViewIcon bd_setImageWithURL:[NSURL URLWithString:item.imageUrl] placeholder:[UIImage imageNamed:@"fh_real_houseinvalid-name"]];
+                }
+                
                 // 布局
                 [imageViewIcon mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(5);
@@ -248,7 +272,7 @@
                         // 找满足长度的数据
                         FHGuessYouWantResponseDataDataModel *remainItem = vArray[index];
                         CGFloat remainLen = [self guessYouWantTextLength:remainItem.text];
-                        if (remainLen <= remainWidth) {
+                        if (remainLen <= remainWidth || remainItem.type == 1) {
                             // 找到
                             findIndex = index;
                             remainWidth -= (remainLen + 10);
