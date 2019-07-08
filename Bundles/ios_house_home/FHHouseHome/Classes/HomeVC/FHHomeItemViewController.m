@@ -271,11 +271,18 @@
         [requestDictonary setValue:@(0) forKey:@"offset"];
     }else
     {
+        if(self.currentSearchId)
+        {
+            [requestDictonary setValue:self.currentSearchId forKey:@"search_id"];
+        }
+        
         [requestDictonary setValue:@(offsetValue) forKey:@"offset"];
     }
     [requestDictonary setValue:@(self.houseType) forKey:@"house_type"];
     [requestDictonary setValue:@(20) forKey:@"count"];
     
+
+
     self.requestTask = nil;
     
     WeakSelf;
