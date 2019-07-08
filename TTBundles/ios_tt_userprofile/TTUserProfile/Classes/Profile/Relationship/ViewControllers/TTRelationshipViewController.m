@@ -365,8 +365,8 @@ TTHorizontalCategoryBarDelegate
         [_navCategoryBar showVerticalLine:NO];
         [_navCategoryBar setTabBarTextFont:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:17.f]]];
         
-        [_navCategoryBar setTabBarTextColor:[UIColor tt_themedColorForKey:kColorText1] maskColor:[UIColor tt_themedColorForKey:kAKMainColorHex] lineColor:[UIColor tt_themedColorForKey:kColorLine1]];
-        _navCategoryBar.bottomIndicatorColor = [UIColor tt_themedColorForKey:kAKMainColorHex];
+        [_navCategoryBar setTabBarTextColor:[UIColor tt_themedColorForKey:kColorText1] maskColor:[UIColor colorWithHexString:@"FF0031"] lineColor:[UIColor tt_themedColorForKey:kColorLine1]];
+        _navCategoryBar.bottomIndicatorColor = [UIColor tt_themedColorForKey:[UIColor colorWithHexString:@"FF0031"]];
         
         __weak typeof (self) wself = self;
         _navCategoryBar.didTapCategoryItem = ^(NSUInteger indexOfTappedItem, NSUInteger currentIndex) {

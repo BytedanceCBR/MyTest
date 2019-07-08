@@ -719,7 +719,7 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
 {
     [super themeChanged:notification];
     [self.viewModel updateAttributeTitle];
-    _watchCountLabel.textColor = SSGetThemedColorWithKey(kFHColorCoolGrey2);
+    _watchCountLabel.textColor = SSGetThemedColorWithKey(@"grey4");
     _directShareLabel.textColor = SSGetThemedColorWithKey(kColorText1);
     [self updateVideoInfo];
     _detailButton.imageName = [TTDeviceHelper isPadDevice] ? @"Triangle" : @"Triangle";
@@ -727,34 +727,34 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
     [_digButton setImage:[UIImage themedImageNamed:@"white-like"] forState:UIControlStateNormal];
     [_digButton setImage:[UIImage themedImageNamed:@"detail_like_press"] forState:UIControlStateHighlighted];
     [_digButton setImage:[UIImage themedImageNamed:@"detail_like_press"] forState:UIControlStateSelected];
-    [_digButton setTintColor:SSGetThemedColorWithKey(kFHColorCoolGrey2)];
+    [_digButton setTintColor:SSGetThemedColorWithKey(@"grey4")];
     [_digButton updateThemes];
     
-    [_digButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoolGrey2) forState:UIControlStateNormal];
-    [_digButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoral) forState:UIControlStateHighlighted];
-    [_digButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoral) forState:UIControlStateSelected];
+    [_digButton setTitleColor:SSGetThemedColorWithKey(@"grey4") forState:UIControlStateNormal];
+    [_digButton setTitleColor:SSGetThemedColorWithKey(@"red1") forState:UIControlStateHighlighted];
+    [_digButton setTitleColor:SSGetThemedColorWithKey(@"red1") forState:UIControlStateSelected];
     
     [_buryButton setImage:[UIImage themedImageNamed:@"step"] forState:UIControlStateNormal];
     [_buryButton setImage:[UIImage themedImageNamed:@"step_press"] forState:UIControlStateHighlighted];
     [_buryButton setImage:[UIImage themedImageNamed:@"step_press"] forState:UIControlStateSelected];
     [_buryButton updateThemes];
-    [_buryButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoolGrey2) forState:UIControlStateNormal];
-    [_buryButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoral) forState:UIControlStateHighlighted];
-    [_buryButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoral) forState:UIControlStateSelected];
+    [_buryButton setTitleColor:SSGetThemedColorWithKey(@"grey4") forState:UIControlStateNormal];
+    [_buryButton setTitleColor:SSGetThemedColorWithKey(@"red1") forState:UIControlStateHighlighted];
+    [_buryButton setTitleColor:SSGetThemedColorWithKey(@"red1") forState:UIControlStateSelected];
     
     [_videoExtendLinkButton setImage:[UIImage themedImageNamed:@"link"] forState:UIControlStateNormal];
     [_videoExtendLinkButton setImage:[UIImage themedImageNamed:@"link_press"] forState:UIControlStateHighlighted];
     [_videoExtendLinkButton updateThemes];
-    [_videoExtendLinkButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoolGrey2) forState:UIControlStateNormal];
-    [_videoExtendLinkButton setTitleColor:[SSGetThemedColorWithKey(kFHColorCoolGrey2) colorWithAlphaComponent:0.5] forState:UIControlStateHighlighted];
+    [_videoExtendLinkButton setTitleColor:SSGetThemedColorWithKey(@"grey4") forState:UIControlStateNormal];
+    [_videoExtendLinkButton setTitleColor:[SSGetThemedColorWithKey(@"grey4") colorWithAlphaComponent:0.5] forState:UIControlStateHighlighted];
     
     [self.shareButton setImage:[UIImage themedImageNamed:[self ttv_shareImageIcon]] forState:UIControlStateNormal];
     [self.shareButton setImage:[UIImage themedImageNamed:[self ttv_shareImageIcon]] forState:UIControlStateHighlighted];
     self.shareButton.imageSize = CGSizeMake(20.f, 20.f);
     
     [self.shareButton updateThemes];
-    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey2] forState:UIControlStateNormal];
-    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey2] forState:UIControlStateHighlighted];
+    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:@"grey4"] forState:UIControlStateNormal];
+    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:@"grey4"] forState:UIControlStateHighlighted];
     if (_weixinMoment && _weixin) {
         [self addDirectShareButtons];
     }

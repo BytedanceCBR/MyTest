@@ -115,8 +115,8 @@
                                                       NSUnderlineStyleAttributeName: [NSNumber numberWithInteger:NSUnderlineStyleSingle]
                                                       };
         _contentLabel.labelActiveLinkAttributes = @{
-                                                    NSForegroundColorAttributeName:[UIColor tt_themedColorForKey:kFHColorCoolGrey3],
-                                                    NSUnderlineColorAttributeName:[UIColor tt_themedColorForKey:kFHColorCoolGrey3],
+                                                    NSForegroundColorAttributeName:[UIColor tt_themedColorForKey:@"grey3"],
+                                                    NSUnderlineColorAttributeName:[UIColor tt_themedColorForKey:@"grey3"],
                                                     NSUnderlineStyleAttributeName: [NSNumber numberWithInteger:NSUnderlineStyleSingle]
                                                     };
         _contentLabel.labelTappingDelegate = self;
@@ -170,8 +170,8 @@
 
 - (void)themeChanged:(NSNotification *)notification
 {
-    [_contentLabel setTextColor:[UIColor tt_themedColorForKey:kFHColorCharcoalGrey]];
-    [_timeLabel setTextColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3]];
+    [_contentLabel setTextColor:[UIColor tt_themedColorForKey:@"grey1"]];
+    [_timeLabel setTextColor:[UIColor tt_themedColorForKey:@"grey3"]];
     [self refreshContentBgImgView];
     _avatarView.backgroundNormalImage = [UIImage themedImageNamed:@"headbg_comment.png"];
     _avatarView.backgroundHightlightImage = [UIImage themedImageNamed:@"headbg_comment.png"];
@@ -181,10 +181,10 @@
 {
     NSString *colorKey = nil;
     if ([_model.feedbackType intValue] == feedbackTypeUser) {
-        colorKey = kFHColorCoral;
+        colorKey = @"red1";
     }
     else if ([_model.feedbackType intValue] == feedbackTypeServer) {
-        colorKey = kFHColorPaleGrey;
+        colorKey = @"grey7";
     }
     
     _contentBgImgView.backgroundColor = [UIColor tt_themedColorForKey:colorKey];
@@ -218,8 +218,8 @@
     if ([_model.feedbackType intValue]== feedbackTypeServer) {
         _timeLabel.textAlignment = NSTextAlignmentLeft;
         _contentLabel.textAlignment = NSTextAlignmentLeft;
-        [_contentLabel setTextColor:[UIColor tt_themedColorForKey:kFHColorCharcoalGrey]];
-        [_timeLabel setTextColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3]];
+        [_contentLabel setTextColor:[UIColor tt_themedColorForKey:@"grey1"]];
+        [_timeLabel setTextColor:[UIColor tt_themedColorForKey:@"grey3"]];
     }
     else {
         _timeLabel.textAlignment = NSTextAlignmentRight;

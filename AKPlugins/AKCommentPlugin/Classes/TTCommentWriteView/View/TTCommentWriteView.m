@@ -615,7 +615,7 @@ static struct timeval commentTimeval;
             _inputTextView.isBanAt = YES;
         }
         _inputTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        _inputTextView.backgroundColorThemeKey = kFHColorPaleGrey;
+        _inputTextView.backgroundColorThemeKey = @"grey7";
 //        _inputTextView.borderColorThemeKey = kColorLine1;
 
 //        _inputTextView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
@@ -634,7 +634,7 @@ static struct timeval commentTimeval;
         internalTextView.placeholder = kCommentInputPlaceHolder;
         internalTextView.backgroundColor = [UIColor clearColor];
         internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
-        internalTextView.placeholderColor = SSGetThemedColorWithKey(kFHColorCoolGrey3);
+        internalTextView.placeholderColor = SSGetThemedColorWithKey(@"grey3");
         internalTextView.internalTextView.placeHolderFont = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:14.f]];
         _inputTextView.layer.cornerRadius = _inputTextView.height / 2;
         _inputTextView.richSpanText = [[TTRichSpanText alloc] initWithText:@"" richSpans:nil];
@@ -665,8 +665,8 @@ static struct timeval commentTimeval;
         _publishButton.titleLabel.font = [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]];
         [_publishButton sizeToFit];
         _publishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
-        _publishButton.titleColorThemeKey = kFHColorCoral;
-        _publishButton.disabledTitleColorThemeKey = kFHColorCoolGrey2;
+        _publishButton.titleColorThemeKey = @"red1";
+        _publishButton.disabledTitleColorThemeKey = @"grey4";
         [_publishButton addTarget:self action:@selector(publish:) forControlEvents:UIControlEventTouchUpInside];
         _publishButton.enabled = NO;
     }

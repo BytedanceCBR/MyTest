@@ -150,7 +150,7 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     self.tableView.tableFooterView = [SSThemedView new];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, [TTDeviceUIUtils tt_padding:30.f/2], 0, 0);
     self.tableView.separatorColor = [UIColor tt_themedColorForKey:kColorLine1];
-    self.tableView.disableTTStyledSeparatorEdge = YES;
+    self.tableView.enableTTStyledSeparator = NO;
     [self.tableView registerClass:[AKProfilePhotoCarouselViewCell class] forCellReuseIdentifier:kAKIdenfitierPhotoCarouselKey];
     [self updateHeaderControls];
     [[TTSettingMineTabManager sharedInstance_tt] reloadSectionsIfNeeded];

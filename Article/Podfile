@@ -307,7 +307,10 @@ def appPods
     pod_binary 'TTVersionHelper', '1.0.0'
 
     #-----头条主题库-----
-    pod 'TTThemed', :path => '../AKPlugins/AKThemed', :inhibit_warnings => false
+#    pod 'TTThemed', :path => '../AKPlugins/AKThemed', :inhibit_warnings => false
+
+    pod 'TTThemed','0.1.36'
+
     #-----头条UI组件库-----
     pod 'TTUIWidget', :path => '../AKPlugins/TTUIWidget', :inhibit_warnings => false
 

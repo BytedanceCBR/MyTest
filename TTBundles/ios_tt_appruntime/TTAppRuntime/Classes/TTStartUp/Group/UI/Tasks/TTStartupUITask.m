@@ -39,6 +39,9 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
     [[self class] makeKeyWindowVisible];
+    if ([[TTThemeManager sharedInstance_tt] respondsToSelector:@selector(applyBundleName:)]) {
+        [[TTThemeManager sharedInstance_tt] performSelector:@selector(applyBundleName:) withObject:@"FHHouseBase"];
+    }
     [self registerHomePageViewControllers];
     [[self class] setLaunchController];
 }

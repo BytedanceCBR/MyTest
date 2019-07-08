@@ -40,7 +40,7 @@
         CGRect tipFrame = CGRectMake(kWDCellLeftPadding, 20, self.width - kWDCellLeftPadding - kWDCellRightPadding, 20);
         self.tipLabel = [[SSThemedLabel alloc] initWithFrame:tipFrame];
         _tipLabel.frame = tipFrame;
-        _tipLabel.textColorThemeKey = kFHColorCoolGrey3;
+        _tipLabel.textColorThemeKey = @"grey3";
         _tipLabel.font = [UIFont systemFontOfSize:14];
         _tipLabel.textAlignment = NSTextAlignmentLeft;
         _tipLabel.verticalAlignment = ArticleVerticalAlignmentTop;
@@ -67,11 +67,11 @@
         NSMutableAttributedString *attrTitle = [[NSMutableAttributedString alloc] initWithString:title
                                                                                       attributes:@{
                                                                                                    NSFontAttributeName : [UIFont systemFontOfSize:14],
-                                                                                                   NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kFHColorCoolGrey3]}];
+                                                                                                   NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:@"grey3"]}];
 //        NSMutableAttributedString *token = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",ask_arrow_right]
 //                                                                                  attributes:@{NSBaselineOffsetAttributeName:@(1.5),
 //                                                                                               NSFontAttributeName : [UIFont fontWithName:wd_iconfont size:10],
-//                                                                                               NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kFHColorCoolGrey3]}
+//                                                                                               NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:@"grey3"]}
 //                                            ];
 //
 //
@@ -87,10 +87,10 @@
     CGFloat padding = 0;
     if (isNoAnswers) {
         padding = WDPadding(8) ;
-        _tipLabel.textColorThemeKey = kFHColorCoolGrey3;
+        _tipLabel.textColorThemeKey = @"grey3";
     } else {
         padding = [_viewModel hasNiceAnswers] ? WDPadding(6) : WDPadding(12) ;
-        _tipLabel.textColorThemeKey = kFHColorCoolGrey3;
+        _tipLabel.textColorThemeKey = @"grey3";
     }
     _tipLabel.origin = CGPointMake(kWDCellLeftPadding, 17.5);
     self.clickedBlock = block;
@@ -120,7 +120,7 @@
     // 有回答 6 无回答 12 暂无回答 120
     CGFloat padding = 0 ;
     if (isNoAnswers) {
-        _tipLabel.textColorThemeKey = kFHColorCoolGrey3;
+        _tipLabel.textColorThemeKey = @"grey3";
         if (isNew) {
             padding = WDPadding(120);
             _tipLabel.top = padding;
@@ -131,7 +131,7 @@
         }
     } else {
         padding = [_viewModel hasNiceAnswers] ? WDPadding(6) : WDPadding(12) ;
-        _tipLabel.textColorThemeKey = kFHColorCoolGrey3;
+        _tipLabel.textColorThemeKey = @"grey3";
         _tipLabel.origin = CGPointMake(kWDCellLeftPadding, padding);
     }
     self.clickedBlock = block;

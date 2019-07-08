@@ -67,13 +67,13 @@
     self.inputTextView.textAlignment = NSTextAlignmentLeft;
     self.inputTextView.placeHolderEdgeInsets = UIEdgeInsetsMake(0, 8.f, 0, 0);
     self.inputTextView.placeHolder = @"请具体说明问题，我们将尽快处理";
-    self.inputTextView.placeHolderColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
+    self.inputTextView.placeHolderColor = [UIColor tt_themedColorForKey:@"grey3"];
     self.inputTextView.placeHolderFont = [UIFont systemFontOfSize:16];
     self.inputTextView.textColor = [UIColor tt_themedColorForKey:kColorText1];
     self.inputTextView.layer.borderColor = [UIColor tt_themedColorForKey:kColorLine1].CGColor;
     self.inputTextView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
     self.inputTextView.layer.cornerRadius = 4.f;
-    [self.inputTextView setBackgroundColor:[UIColor tt_themedColorForKey:kFHColorPaleGrey]];
+    [self.inputTextView setBackgroundColor:[UIColor tt_themedColorForKey:@"grey7"]];
     [self.inputTextView setFont:[UIFont systemFontOfSize:16]];
     
     self.finishedButton.frame = CGRectMake(0, self.inputTextView.bottom + 8, 57, 28);
