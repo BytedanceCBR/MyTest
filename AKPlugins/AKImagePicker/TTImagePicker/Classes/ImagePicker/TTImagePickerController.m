@@ -21,6 +21,7 @@
 #import "TTImagePickerTrackManager.h"
 #import "TTImagePickerAlert.h"
 #import "UIViewAdditions.h"
+#import "FHBubbleTipManager.h"
 
 @interface TTImagePickerController ()<UICollectionViewDelegate,UICollectionViewDataSource,TTImagePickerNavDelegate,TTImageAlbumSelectViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,TTImagePreviewViewControllerDelegate,UIGestureRecognizerDelegate,TTImagePickerBackGestureViewDelegate>
 {
@@ -52,6 +53,7 @@
 
 @property (nonatomic,assign) UIStatusBarStyle lastStyle;
 @property (nonatomic,assign) BOOL lastHidden;
+@property (nonatomic, assign)   BOOL       lastCanShowMessageTip;
 
 @end
 
@@ -108,6 +110,8 @@
 
 - (void)presentOn:(UIViewController *)parentViewController;
 {
+    self.lastCanShowMessageTip = [FHBubbleTipManager shareInstance].canShowTip;
+    [FHBubbleTipManager shareInstance].canShowTip = NO;
     WeakSelf;
     [[TTImagePickerManager manager] startAuthAlbumWithSuccess:^{
         StrongSelf;
@@ -176,7 +180,7 @@
 //        [[UIApplication sharedApplication] setStatusBarStyle:self.lastStyle animated:NO];
 //        [[UIApplication sharedApplication] setStatusBarHidden:self.lastHidden];
 //    });
-
+     [FHBubbleTipManager shareInstance].canShowTip = self.lastCanShowMessageTip;
 }
 
 - (void)showPromptViewAtBottomViewTop:(UIView *)promptView {
