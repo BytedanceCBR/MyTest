@@ -436,6 +436,7 @@
     }];
     
     [self.leftInfoView addSubview:self.houseVideoImageView];
+    _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video_small"];
     
     [_houseVideoImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
