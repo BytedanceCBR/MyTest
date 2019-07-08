@@ -48,6 +48,8 @@
 {
     NSDictionary *dict = @{
                            @"followStatus": @"follow_status",
+                           @"socialGroupFollowStatus": @"social_group_follow_status",
+                           @"socialGroupId": @"social_group_id",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
