@@ -79,6 +79,8 @@
     [super viewDidLoad];
     [self setupData];
     [self setupUI];
+    self.tableView.hidden = YES;
+    self.commentViewController.view.hidden = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -314,6 +316,15 @@
          [self.commentViewController.commentTableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
         self.isRebuildCommentViewController = YES;
     }
+}
+
+- (void)show_comment_view {
+    self.commentViewController.view.hidden = NO;
+}
+
+// 刷新页面以及布局
+- (void)refresh_page_view {
+    [self scrollViewDidScroll:self.mainScrollView];
 }
 
 // 当前详情页可视范围标准rect(去掉顶部导航,且根据articleType判断是否去掉底部toolbar)
@@ -718,7 +729,7 @@
 #pragma mark - TTWriteCommentViewDelegate
 
 - (void)commentView:(TTCommentWriteView *) commentView cancelledWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager {
-    commentWriteManager.delegate = nil;
+    // commentWriteManager.delegate = nil;
 }
 
 - (void)commentView:(TTCommentWriteView *) commentView sucessWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager responsedData:(NSDictionary *)responseData

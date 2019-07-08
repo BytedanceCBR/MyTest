@@ -137,6 +137,8 @@
             [wSelf.detailController.emptyView hideEmptyView];
             [wSelf reloadData];
             [wSelf.detailController re_add_comment_vc];
+            wSelf.tableView.hidden = NO;
+            [wSelf.detailController show_comment_view];
         }
     }];
 }
@@ -200,6 +202,13 @@
                 [weakSelf.detailController becomeFirstResponder_comment];
             });
         }
+        
+        // 页面布局问题修复
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf reloadData];
+            [weakSelf.detailController refresh_page_view];
+        });
     }
 }
 

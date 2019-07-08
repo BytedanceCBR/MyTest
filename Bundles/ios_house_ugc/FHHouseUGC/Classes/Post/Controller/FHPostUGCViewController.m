@@ -42,6 +42,7 @@
 #import "TTCategoryDefine.h"
 #import "ToastManager.h"
 #import "FHUserTracker.h"
+#import "FHBubbleTipManager.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -103,6 +104,9 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, copy)     NSString       *selectGroupName; // 选中的小区name
 @property (nonatomic, assign)   BOOL       hasSocialGroup;// 外部传入小区
 
+@property (nonatomic, assign)   BOOL       lastCanShowMessageTip;
+@property (nonatomic, assign)   BOOL       lastInAppPushTipsHidden;
+
 @end
 
 @implementation FHPostUGCViewController
@@ -162,6 +166,12 @@ static NSInteger const kMaxPostImageCount = 9;
 //    self.panBeginAction = ^{
 //        [weakSelf.naviBar.searchInput resignFirstResponder];
 //    };
+    // 顶部 消息 弹窗tips
+    self.lastCanShowMessageTip = [FHBubbleTipManager shareInstance].canShowTip;
+    [FHBubbleTipManager shareInstance].canShowTip = NO;
+    // App 内push
+    self.lastInAppPushTipsHidden = kFHInAppPushTipsHidden;
+    kFHInAppPushTipsHidden = YES;// 不展示
 }
 
 - (void)restoreData {
@@ -1264,6 +1274,10 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 移除google地图注册
     [[TTLocationManager sharedManager] unregisterReverseGeocoderForKey:NSStringFromClass([TTGoogleMapGeocoder class])];
+    
+    [FHBubbleTipManager shareInstance].canShowTip = self.lastCanShowMessageTip;
+    // App 内push
+    kFHInAppPushTipsHidden = self.lastInAppPushTipsHidden;// 展示
 }
 
 #pragma mark - FHUGCFollowListDelegate
