@@ -38,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface  FHDetailUserFollowStatusModel  : JSONModel
 
 @property (nonatomic, assign) NSInteger followStatus;
+@property (nonatomic, assign) NSInteger socialGroupFollowStatus;
+@property (nonatomic, copy) NSString* socialGroupId;
 
 @end
 
