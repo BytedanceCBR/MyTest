@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
 
+- (void)closeFeedGuide:(FHFeedUGCCellModel *)cellModel;
+
 @end
 
 @interface FHUGCBaseCell : UITableViewCell

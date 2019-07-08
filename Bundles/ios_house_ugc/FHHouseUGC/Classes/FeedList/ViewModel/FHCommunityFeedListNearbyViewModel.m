@@ -22,6 +22,7 @@
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
 @property(nonatomic, strong) FHFeedUGCCellModel *guideCellModel;
+@property(nonatomic, assign) BOOL alreadShowFeedGuide;
 
 @end
 
@@ -203,7 +204,7 @@
 }
 
 - (void)insertGuideCell {
-    if([FHUGCGuideHelper shouldShowFeedGuide]){
+    if([FHUGCGuideHelper shouldShowFeedGuide] && !self.alreadShowFeedGuide){
         //符合引导页显示条件时
         for (NSInteger i = 0; i < self.dataList.count; i++) {
             FHFeedUGCCellModel *cellModel = self.dataList[i];
@@ -402,6 +403,10 @@
     self.currentCellModel = cellModel;
     self.currentCell = cell;
     [self jumpToDetail:cellModel];
+}
+
+- (void)closeFeedGuide:(FHFeedUGCCellModel *)cellModel {
+    self.alreadShowFeedGuide = YES;
 }
 
 #pragma mark - 埋点

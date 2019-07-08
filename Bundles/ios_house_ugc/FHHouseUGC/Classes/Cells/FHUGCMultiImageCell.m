@@ -170,6 +170,10 @@
     [self setNeedsUpdateConstraints];
     
     [self.cellModel.tableView endUpdates];
+    
+    if(self.delegate && [self.delegate respondsToSelector:@selector(closeFeedGuide:)]){
+        [self.delegate closeFeedGuide:self.cellModel];
+    }
 }
 
 - (void)deleteCell {
