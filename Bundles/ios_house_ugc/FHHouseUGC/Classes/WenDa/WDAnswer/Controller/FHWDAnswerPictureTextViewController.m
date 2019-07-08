@@ -48,6 +48,7 @@
 #import "WDMonitorManager.h"
 #import "FHWenDaToolbar.h"
 #import "FHUserTracker.h"
+#import "FHBubbleTipManager.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -103,6 +104,9 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 
 @property (nonatomic, strong) NSDate *startDate;
 
+@property (nonatomic, assign)   BOOL       lastCanShowMessageTip;
+@property (nonatomic, assign)   BOOL       lastInAppPushTipsHidden;
+
 @end
 
 @implementation FHWDAnswerPictureTextViewController
@@ -136,6 +140,13 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     [self refreshUI];
     self.startDate = [NSDate date];
     [self goDetail];
+    
+    // 顶部 消息 弹窗tips
+    self.lastCanShowMessageTip = [FHBubbleTipManager shareInstance].canShowTip;
+    [FHBubbleTipManager shareInstance].canShowTip = NO;
+    // App 内push
+    self.lastInAppPushTipsHidden = kFHInAppPushTipsHidden;
+    kFHInAppPushTipsHidden = YES;// 不展示
 }
 
 - (void)setupData {
@@ -169,6 +180,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [FHBubbleTipManager shareInstance].canShowTip = self.lastCanShowMessageTip;
+    kFHInAppPushTipsHidden = self.lastInAppPushTipsHidden;// 展示
 }
 
 - (void)setupNaviBar {
