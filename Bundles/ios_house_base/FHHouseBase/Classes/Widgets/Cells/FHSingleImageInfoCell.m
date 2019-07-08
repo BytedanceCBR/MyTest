@@ -310,7 +310,7 @@
     self.areaLabel.attributedText =  attributeString;
     
     self.priceLabel.text = commonModel.displayPricePerSqm;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = commonModel.images.firstObject;
+    FHImageModel *imageModel = commonModel.images.firstObject;
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
     
     if (houseType == FHHouseTypeSecondHandHouse) {
@@ -337,7 +337,7 @@
         self.extendTitle.text = commonModel.subtitle;
         self.priceLabel.text = commonModel.pricing;
         self.roomSpaceLabel.text = nil;
-        FHSearchHouseDataItemsHouseImageModel *imageModel = [commonModel.houseImage firstObject];
+        FHImageModel *imageModel = [commonModel.houseImage firstObject];
         [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
         
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
@@ -372,7 +372,7 @@
 
     self.priceLabel.text = model.displayPrice;
     self.roomSpaceLabel.text = model.displayPricePerSqm;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
+    FHImageModel *imageModel = model.houseImage.firstObject;
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
     
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
@@ -399,7 +399,7 @@
     self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
 
     self.priceLabel.text = model.displayPricePerSqm;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
+    FHImageModel *imageModel = model.images.firstObject;
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
     
     [self updateOriginPriceLabelConstraints:nil];
@@ -421,7 +421,7 @@
         self.areaLabel.attributedText =  attributeString;
         
         self.priceLabel.text = model.displayPricePerSqm;
-        FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
+        FHImageModel *imageModel = model.images.firstObject;
         [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
         
         [self updateOriginPriceLabelConstraints:nil];
@@ -438,7 +438,7 @@
 
     self.priceLabel.text = model.displayPrice;
     self.roomSpaceLabel.text = model.displayPricePerSqm;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
+    FHImageModel *imageModel = model.houseImage.firstObject;
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
     
     if (model.recommendReasons.count > 0) {
@@ -472,7 +472,7 @@
     self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
     self.priceLabel.text = model.pricing;
     self.roomSpaceLabel.text = nil;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = [model.houseImage firstObject];
+    FHImageModel *imageModel = [model.houseImage firstObject];
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
     
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
@@ -502,7 +502,7 @@
     [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.infoPanel);
     }];
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
+    FHImageModel *imageModel = model.images.firstObject;
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
 
     self.imageTopLeftLabelBgView.hidden = YES;

@@ -330,13 +330,15 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     self.phoneCallName = contactTitle;
     [self.bottomBar refreshBottomBar:contactPhone contactTitle:contactTitle chatTitle:chatTitle];
     self.showenOnline = self.bottomBar.showIM;// 显示在线联系（详情图册页面）
-    [self tryTraceImElementShow];
-    if (contactPhone.showRealtorinfo) {
-        [self addRealtorShowLog:contactPhone];
-        [self addElementShowLog:contactPhone];
+    if (!contactPhone.isInstantData) {
+        //非列表页带入数据才报埋点
+        [self tryTraceImElementShow];
+        if (contactPhone.showRealtorinfo) {
+            [self addRealtorShowLog:contactPhone];
+            [self addElementShowLog:contactPhone];
+        }
+        [self addLeadShowLog:contactPhone];
     }
-    [self addLeadShowLog:contactPhone];
-    
     @try {
         // 可能会出现崩溃的代码
         if ([FHHouseDetailPhoneCallViewModel fhRNEnableChannels].count > 0 && [FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels].count > 0 && [[FHHouseDetailPhoneCallViewModel fhRNEnableChannels] containsObject:@"f_realtor_detail"] && [[FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels] containsObject:@"f_realtor_detail"] && contactPhone.showRealtorinfo && [FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"]) {

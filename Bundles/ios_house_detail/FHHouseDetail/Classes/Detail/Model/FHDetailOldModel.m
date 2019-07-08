@@ -452,22 +452,22 @@
 }
 @end
 
-@implementation FHDetailDataBaseInfoModel
-
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"isSingle": @"is_single",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
+//@implementation FHDetailDataBaseInfoModel
+//
+//+ (JSONKeyMapper*)keyMapper
+//{
+//    NSDictionary *dict = @{
+//                           @"isSingle": @"is_single",
+//                           };
+//    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+//        return dict[keyName]?:keyName;
+//    }];
+//}
+//+ (BOOL)propertyIsOptional:(NSString *)propertyName
+//{
+//    return YES;
+//}
+//@end
 
 @implementation FHDetailImShareInfoModel
 

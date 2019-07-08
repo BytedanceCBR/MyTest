@@ -6,38 +6,40 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "JSONModel.h"
+#import <JSONModel/JSONModel.h>
+#import <FHHouseBase/FHImageModel.h>
+#import "FHHouseTagsModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FHSearchHouseDataItemsTagsModel<NSObject>
+//@protocol FHSearchHouseDataItemsTagsModel<NSObject>
+//
+//@end
+//
+//
+//@interface  FHSearchHouseDataItemsTagsModel  : JSONModel
+//
+//@property (nonatomic, copy , nullable) NSString *content;
+//@property (nonatomic, copy , nullable) NSString *backgroundColor;
+//@property (nonatomic, copy , nullable) NSString *id;
+//@property (nonatomic, copy , nullable) NSString *textColor;
+//
+//@end
 
-@end
-
-
-@interface  FHSearchHouseDataItemsTagsModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *backgroundColor;
-@property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy , nullable) NSString *textColor;
-
-@end
-
-@protocol FHSearchHouseDataItemsHouseImageModel<NSObject>
-
-@end
-
-
-@interface  FHSearchHouseDataItemsHouseImageModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
-
-@end
+//@protocol FHSearchHouseDataItemsHouseImageModel<NSObject>
+//
+//@end
+//
+//
+//@interface  FHSearchHouseDataItemsHouseImageModel  : JSONModel
+//
+//@property (nonatomic, copy , nullable) NSString *url;
+//@property (nonatomic, copy , nullable) NSString *width;
+//@property (nonatomic, strong , nullable) NSArray *urlList;
+//@property (nonatomic, copy , nullable) NSString *uri;
+//@property (nonatomic, copy , nullable) NSString *height;
+//
+//@end
 
 @protocol FHSearchHouseDataRedirectTipsModel<NSObject>
 

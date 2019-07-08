@@ -7,6 +7,7 @@
 
 #import "FHMultiMediaImageCell.h"
 #import <UIImageView+BDWebImage.h>
+#import <BDWebImage/BDWebImageManager.h>
 
 @interface FHMultiMediaImageCell ()
 
@@ -32,7 +33,16 @@
 - (void)updateViewModel:(FHMultiMediaItemModel *)model {
     NSString *imgStr = model.imageUrl;
     NSURL *url = [NSURL URLWithString:imgStr];
-    [self.imageView bd_setImageWithURL:url placeholder:self.placeHolder];
+    UIImage *placeholder = nil;
+    if (model.instantImageUrl) {        
+        NSString *key = [[BDWebImageManager sharedManager]requestKeyWithURL:[NSURL URLWithString:model.instantImageUrl]];
+        placeholder = [[[BDWebImageManager sharedManager] imageCache] imageForKey:key];
+    }
+    if (!placeholder) {
+        placeholder = self.placeHolder;
+    }
+    
+    [self.imageView bd_setImageWithURL:url placeholder:placeholder];
 }
 
 @end

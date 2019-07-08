@@ -23,6 +23,7 @@ Pod::Spec.new do |s|
 
   s.vendored_libraries = ["TTArticleBase/Classes/**/*.a"]
 
+  #s.xcconfig = {'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited)  SD_WEBP =1'}
   # s.resource_bundles = {
   #   'TTArticleBase' => ['TTArticleBase/Assets/*.png']
   # }
