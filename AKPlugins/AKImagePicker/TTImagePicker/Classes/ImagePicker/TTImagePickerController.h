@@ -13,6 +13,8 @@
 
 @protocol TTImagePickerControllerDelegate,CustomAlmumNavProtocol;
 
+extern BOOL kFHInAppPushTipsHidden;
+
 /// 图片选择器列表类
 @interface TTImagePickerController : UIViewController
 

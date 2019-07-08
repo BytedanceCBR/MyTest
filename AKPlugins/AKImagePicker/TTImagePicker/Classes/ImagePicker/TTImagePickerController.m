@@ -54,6 +54,7 @@
 @property (nonatomic,assign) UIStatusBarStyle lastStyle;
 @property (nonatomic,assign) BOOL lastHidden;
 @property (nonatomic, assign)   BOOL       lastCanShowMessageTip;
+@property (nonatomic, assign)   BOOL       lastInAppPushTipsHidden;
 
 @end
 
@@ -110,8 +111,12 @@
 
 - (void)presentOn:(UIViewController *)parentViewController;
 {
+    // 顶部 消息 弹窗tips
     self.lastCanShowMessageTip = [FHBubbleTipManager shareInstance].canShowTip;
     [FHBubbleTipManager shareInstance].canShowTip = NO;
+    // App 内push
+    self.lastInAppPushTipsHidden = kFHInAppPushTipsHidden;
+    kFHInAppPushTipsHidden = YES;// 不展示
     WeakSelf;
     [[TTImagePickerManager manager] startAuthAlbumWithSuccess:^{
         StrongSelf;
@@ -181,6 +186,8 @@
 //        [[UIApplication sharedApplication] setStatusBarHidden:self.lastHidden];
 //    });
      [FHBubbleTipManager shareInstance].canShowTip = self.lastCanShowMessageTip;
+    // App 内push
+    kFHInAppPushTipsHidden = self.lastInAppPushTipsHidden;// 展示
 }
 
 - (void)showPromptViewAtBottomViewTop:(UIView *)promptView {
