@@ -71,6 +71,7 @@
 
 - (void)viewWillDisappear {
     if(self.showFeed){
+        [self.feedListVC viewWillDisappear];
         [self addStayCategoryLog];
     }else{
         [self.interestedVC viewWillDisappear];

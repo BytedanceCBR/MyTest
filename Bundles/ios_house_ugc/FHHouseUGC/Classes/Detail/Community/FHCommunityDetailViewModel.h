@@ -17,6 +17,8 @@
 
 - (void)viewWillAppear;
 
+- (void)viewWillDisappear;
+
 -(void)addGoDetailLog;
 
 -(void)addStayPageLog:(NSTimeInterval)stayTime;

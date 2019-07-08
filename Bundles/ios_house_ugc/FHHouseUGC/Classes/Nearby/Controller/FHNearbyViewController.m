@@ -21,6 +21,8 @@
 @property(nonatomic, assign) NSTimeInterval lastRequestTime;
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
 @property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
+@property(nonatomic, assign) BOOL needRefresh;
+@property(nonatomic, strong) TTThemedAlertController *alertVC;
 
 @end
 
@@ -30,7 +32,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
+    self.needRefresh = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -69,7 +71,10 @@
 }
 
 - (void)viewWillDisappear {
+    [self.feedVC viewWillDisappear];
     [self addStayCategoryLog];
+    [self.alertVC dismissSelfFromParentViewControllerDidCancel];
+    self.needRefresh = YES;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
@@ -118,21 +123,26 @@
 }
 
 - (void)applicationDidBecomeActive {
-    [self loadFeedListView];
+    if(self.needRefresh){
+        [self loadFeedListView];
+    }
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
 }
 
 - (void)showLocationGuideAlert {
     __weak typeof(self) wself = self;
+    self.needRefresh = NO;
     [self trackLocationAuthShow];
-    TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"你还没有开启定位服务哦" message:@"请在手机设置中开启定位服务，获取更多周边小区趣事" preferredType:TTThemedAlertControllerTypeAlert];
-    [alertVC addActionWithGrayTitle:@"我知道了" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+    self.alertVC = [[TTThemedAlertController alloc] initWithTitle:@"你还没有开启定位服务哦" message:@"请在手机设置中开启定位服务，获取更多周边小区趣事" preferredType:TTThemedAlertControllerTypeAlert];
+    [_alertVC addActionWithGrayTitle:@"我知道了" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
         [wself trackLocationAuthClick:YES];
+        wself.needRefresh = YES;
         [wself initView];
     }];
     
-    [alertVC addActionWithTitle:@"开启定位" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+    [_alertVC addActionWithTitle:@"开启定位" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         [wself trackLocationAuthClick:NO];
+        wself.needRefresh = YES;
         NSURL *jumpUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
         
         if ([[UIApplication sharedApplication] canOpenURL:jumpUrl]) {
@@ -142,7 +152,7 @@
     
     UIViewController *topVC = [TTUIResponderHelper topmostViewController];
     if (topVC) {
-        [alertVC showFrom:topVC animated:YES];
+        [_alertVC showFrom:topVC animated:YES];
     }
 }
 

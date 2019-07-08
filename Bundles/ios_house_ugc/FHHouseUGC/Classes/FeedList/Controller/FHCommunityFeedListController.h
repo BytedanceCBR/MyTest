@@ -39,6 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)viewWillAppear;
 
+- (void)viewWillDisappear;
+
 - (void)scrollToTopAndRefresh;
 
 - (void)hideImmediately;

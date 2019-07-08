@@ -177,6 +177,10 @@
     [self.feedListController viewWillAppear];
 }
 
+- (void)viewWillDisappear {
+    [self.feedListController viewWillDisappear];
+}
+
 - (void)requestData:(BOOL) userPull refreshFeed:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed showToast:(BOOL) showToast{
     if (![TTReachability isNetworkConnected]) {
         [self onNetworError:showEmptyIfFailed showToast:showToast];
