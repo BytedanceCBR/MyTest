@@ -1005,6 +1005,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 - (void)publish_click_tracer {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"group_id"] = self.qid ?: @"be_null";
+    tracerDict[@"click_position"] = @"answer_passport_publisher";
     [FHUserTracker writeEvent:@"answer_publish_click" params:tracerDict];
 }
 
