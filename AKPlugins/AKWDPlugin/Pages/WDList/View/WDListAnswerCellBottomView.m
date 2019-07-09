@@ -118,6 +118,8 @@
             tracerDict[@"ansid"] = ansid;
         }
         tracerDict[@"page_type"] = @"question";
+        NSString *qid = tracerDict[@"qid"];
+        tracerDict[@"group_id"] = qid ?: @"be_null";
         [FHUserTracker writeEvent:@"click_comment" params:tracerDict];
     }
 }
@@ -132,6 +134,8 @@
             tracerDict[@"ansid"] = ansid;
         }
         tracerDict[@"page_type"] = @"question";
+        NSString *qid = tracerDict[@"qid"];
+        tracerDict[@"group_id"] = qid ?: @"be_null";
         [FHUserTracker writeEvent:@"rt_like" params:tracerDict];
     }
 }
@@ -146,6 +150,8 @@
             tracerDict[@"ansid"] = ansid;
         }
         tracerDict[@"page_type"] = @"question";
+        NSString *qid = tracerDict[@"qid"];
+        tracerDict[@"group_id"] = qid ?: @"be_null";
         [FHUserTracker writeEvent:@"rt_dislike" params:tracerDict];
     }
 }
