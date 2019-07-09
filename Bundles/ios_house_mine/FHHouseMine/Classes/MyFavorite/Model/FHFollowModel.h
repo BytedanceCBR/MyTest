@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *height;
 @end
 
+
 @interface FHFollowDataFollowItemsModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *followId;
@@ -47,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, strong, nullable) FHHouseItemHouseVideo* houseVideo;
 
 - (FHHouseNeighborDataItemsModel *)toHouseNeighborModel;
 
