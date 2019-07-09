@@ -27,7 +27,7 @@
 #import <TTPlatformUIModel/TTGroupModel.h>
 #import <TTServiceKit/TTModuleBridge.h>
 #import <TTNetworkManager/TTNetworkUtil.h>
-
+#import "FHUserTracker.h"
 
 
 static NSString *kTTUniversalCommentCellLiteIdentifier = @"TTUniversalCommentCellLiteIdentifier";
@@ -415,8 +415,12 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
     if (self.enter_from.length > 0) {
         [dic setValue:self.enter_from forKey:@"enter_from"];
     }
-    
-    [TTTracker eventV3:@"comment_enter" params:dic];
+    if ([self.tracerDict isKindOfClass:[NSDictionary class]]) {
+        dic[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
+        dic[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+        dic[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
+    }
+    [FHUserTracker writeEvent:@"comment_enter" params:dic];
 }
 
 - (void)p_profileFillAction {

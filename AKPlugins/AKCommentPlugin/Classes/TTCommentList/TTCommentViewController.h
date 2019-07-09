@@ -18,6 +18,7 @@
 @property (nonatomic, strong, readonly) SSThemedTableView *commentTableView;
 @property (nonatomic, strong) NSString *serviceID;            // 评论服务所属 serviceID, 评论接口使用
 @property (nonatomic, copy)     NSString       *enter_from; // 外部 传入
+@property(nonatomic , copy) NSDictionary *tracerDict; // 外部 传入
 
 - (nonnull instancetype)initWithViewFrame:(CGRect)frame
                                dataSource:(nullable id<TTCommentDataSource>)dataSource
