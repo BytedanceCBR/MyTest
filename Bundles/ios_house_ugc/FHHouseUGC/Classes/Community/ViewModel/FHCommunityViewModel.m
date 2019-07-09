@@ -106,6 +106,7 @@
     _currentTabIndex = currentTabIndex;
     if (currentTabIndex >= 2) {
         self.searchBtn.hidden = YES;
+        [self.viewController hideGuideView];
     } else {
         self.searchBtn.hidden = NO;
     }
