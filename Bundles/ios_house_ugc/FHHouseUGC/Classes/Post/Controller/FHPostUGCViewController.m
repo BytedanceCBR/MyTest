@@ -287,6 +287,8 @@ static NSInteger const kMaxPostImageCount = 9;
         tracerDict[@"element_type"] = @"select_like_publisher_neighborhood";
         if (self.selectGroupId.length > 0) {
             tracerDict[@"group_id"] = self.selectGroupId;
+        } else {
+            tracerDict[@"group_id"] = @"be_null";
         }
         [FHUserTracker writeEvent:@"element_show" params:tracerDict];
     }
