@@ -157,6 +157,9 @@
     
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"join_like_neighborhood";
+    NSString *category_name = self.tracerDict[@"category_name"];
+    tracerDict[@"page_type"] = category_name ?: @"be_null";
+    [tracerDict removeObjectForKey:@"category_name"];
     [FHUserTracker writeEvent:@"click_join_like_neighborhood" params:tracerDict];
     
     NSMutableDictionary *dict = @{}.mutableCopy;

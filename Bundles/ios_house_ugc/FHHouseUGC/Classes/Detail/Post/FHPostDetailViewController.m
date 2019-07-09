@@ -235,6 +235,7 @@
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"page_count"] = @"1";
     tracerDict[@"percent"] = @"100";
+    tracerDict[@"item_id"] = self.groupModel.itemID ?: @"be_null";
     [FHUserTracker writeEvent:@"read_pct" params:tracerDict];
 }
 

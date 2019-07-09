@@ -298,6 +298,7 @@
     [self addChildViewController:self.commentViewController];
     [self.commentViewController didMoveToParentViewController:self];
     [self.mainScrollView addSubview:self.commentViewController.view];
+    self.commentViewController.tracerDict = [self.tracerDict copy];
 }
 
 - (void)remove_comment_vc {
