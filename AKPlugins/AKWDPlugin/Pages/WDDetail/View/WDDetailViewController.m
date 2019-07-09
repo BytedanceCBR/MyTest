@@ -2267,6 +2267,9 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"qid"]  forKey:@"qid"];
     [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"log_pb"]  forKey:@"log_pb"];
     [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
+    if (!params[@"group_id"]) {
+        params[@"group_id"] = params[@"qid"] ?: @"be_null";
+    }
     [TTTracker eventV3:@"rt_post_comment" params:params];
     
     commentWriteManager.delegate = nil;
