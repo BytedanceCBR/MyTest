@@ -263,6 +263,7 @@
     
     while (vArray.count > 0) {
         FHGuessYouWantResponseDataDataModel *item = [vArray firstObject];
+        
         if (item.text.length > 0) {
             CGFloat len = [self guessYouWantTextLength:item.text];
             if (len > remainWidth) {
@@ -320,7 +321,21 @@
             [retArray removeLastObject];
             return retArray;
         }
-        NSArray *tempArray = [array fh_randomArray];
+        NSArray <FHGuessYouWantResponseDataDataModel *>*tempArray = [array fh_randomArray];
+        
+        NSMutableArray *arrayTmp = [NSMutableArray new];
+        if (arrayTmp) {
+            [arrayTmp addObjectsFromArray:tempArray];
+        }
+        
+        for (NSInteger index = 0; index < arrayTmp.count; index ++) {
+            FHGuessYouWantResponseDataDataModel *itemTmp = arrayTmp[index];
+            if ([itemTmp isKindOfClass:[FHGuessYouWantResponseDataDataModel class]] && itemTmp.type == 1) {
+                [arrayTmp exchangeObjectAtIndex:0 withObjectAtIndex:index];
+            }
+        }
+        tempArray = arrayTmp;
+        
         return [self firstLineGreaterThanSecond:firstWords array:tempArray count:count + 1];
     }
 }
