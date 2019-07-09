@@ -79,7 +79,7 @@
 }
 
 - (void)addUgcGuide {
-    if (![FHUGCGuideHelper shouldShowSearchGuide] && self.isUgcOpen && !self.alreadyShowGuide) {
+    if ([FHUGCGuideHelper shouldShowSearchGuide] && self.isUgcOpen && !self.alreadyShowGuide) {
         [self.guideView show:self.view dismissDelayTime:5.0f completion:^{
             [FHUGCGuideHelper hideSearchGuide];
         }];
