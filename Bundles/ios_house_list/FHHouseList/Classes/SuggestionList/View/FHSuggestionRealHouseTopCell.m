@@ -17,6 +17,7 @@
 #import "FHExtendHotAreaButton.h"
 #import <TTDeviceHelper.h>
 #import <FHUtils.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHSuggestionRealHouseTopCell()
 @property (nonatomic, strong)FHSugSubscribeDataDataSubscribeInfoModel *currentModel;
@@ -161,7 +162,8 @@
     
     _allWebHouseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _allWebHouseBtn.titleLabel.font = [UIFont themeFontRegular:12];
-    [_allWebHouseBtn setImage:[UIImage imageNamed:@"house_list_real_info"] forState:UIControlStateNormal];
+    UIImage *img = ICON_FONT_IMG(16, @"\U0000e6ad", RGB(0x66, 0x66, 0x66));
+    [_allWebHouseBtn setImage:img forState:UIControlStateNormal];
     [_allWebHouseBtn addTarget:self action:@selector(allWebHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_allWebHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     [self.contentView addSubview:_allWebHouseBtn];
@@ -177,7 +179,8 @@
     
     _allFalseHouseBtn = [FHExtendHotAreaButton buttonWithType:UIButtonTypeCustom];
     _allFalseHouseBtn.isExtend = YES;
-    [_allFalseHouseBtn setImage:[UIImage imageNamed:@"house_list_real_arrow"] forState:UIControlStateNormal];
+    img = ICON_FONT_IMG(16, @"\U0000e670", RGB(0x66, 0x66, 0x66));
+    [_allFalseHouseBtn setImage:img forState:UIControlStateNormal];
     [_allFalseHouseBtn addTarget:self action:@selector(allFalseHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_allFalseHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     [_segementContentView addSubview:_allFalseHouseBtn];
