@@ -158,7 +158,7 @@
             cellModel.commentCount = [NSString stringWithFormat:@"%lld",self.detailController.comment_count];
         }
         cellModel.tracerDic = [self.detailController.tracerDict copy];
-        if (![socialGroupModel.hasFollow boolValue]) {
+        if (socialGroupModel && ![socialGroupModel.hasFollow boolValue]) {
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
             headerModel.socialGroupModel = socialGroupModel;
