@@ -707,6 +707,7 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
     
     [dict setValue:@(percent) forKey:@"pct"];
     [dict setValue:@(pageCount) forKey:@"page_count"];
+    [dict setValue:@"question" forKey:@"page_type"];
     if ([dict objectForKey:@"ansid"]) {
         [dict setValue:[dict objectForKey:@"ansid"] forKey:@"group_id"];
     } else {
