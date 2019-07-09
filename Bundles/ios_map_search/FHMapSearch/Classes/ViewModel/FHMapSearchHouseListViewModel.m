@@ -27,6 +27,7 @@
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import "FHSingleImageInfoCellModel.h"
 #import <Heimdallr/HMDTTMonitor.h>
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 
 #define kCellId @"singleCellId"

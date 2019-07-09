@@ -22,6 +22,7 @@
 #import "FHHomeListViewModel.h"
 #import "TTSandBoxHelper.h"
 #import <FHHomeSearchPanelViewModel.h>
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -280,7 +281,13 @@
     [requestDictonary setValue:@(self.houseType) forKey:@"house_type"];
     [requestDictonary setValue:@(20) forKey:@"count"];
     
-
+    if (self.houseType == FHHouseTypeNewHouse) {
+        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_COURT;
+    } else if (self.houseType == FHHouseTypeSecondHandHouse) {
+        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND;
+    } else if (self.houseType == FHHouseTypeRentHouse) {
+        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_RENT;
+    }
 
     self.requestTask = nil;
     

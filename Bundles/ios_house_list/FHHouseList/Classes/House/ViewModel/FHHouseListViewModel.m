@@ -45,6 +45,7 @@
 #import <BDALog/BDAgileLog.h>
 #import "FHSuggestionRealHouseTopCell.h"
 #import <TTBaseLib/NSString+URLEncoding.h>
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
@@ -340,10 +341,10 @@
                 [self requestRecommendErshouHouseListData:isRefresh query:query offset:offset searchId:self.recommendSearchId];
             } else {
                 if ([query isKindOfClass:[NSString class]] && query.length > 0) {
-                    query = [query stringByAppendingString:@"&channel_id=94349530167"];
+                    query = [query stringByAppendingString:[NSString stringWithFormat:@"&%@=%@",CHANNEL_ID,CHANNEL_ID_SEARCH_HOUSE]];
                 }else
                 {
-                    query = @"channel_id=94349530167";
+                    query = [NSString stringWithFormat:@"&%@=%@",CHANNEL_ID,CHANNEL_ID_SEARCH_HOUSE];
                 }
                 self.query = query;
                 [self requestErshouHouseListData:isRefresh query:query offset:offset searchId:searchId];

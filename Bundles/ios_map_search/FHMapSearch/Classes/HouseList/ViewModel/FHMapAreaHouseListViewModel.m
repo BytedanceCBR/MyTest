@@ -26,6 +26,8 @@
 #import <FHHouseBase/FHCommonDefines.h>
 
 #import "FHMapAreaHouseListViewController.h"
+#import <FHHouseBase/FHSearchChannelTypes.h>
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
