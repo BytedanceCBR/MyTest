@@ -242,8 +242,8 @@
             self.tracerParams[@"card_type"] = tracerDic[@"card_type"];
         }
         
-        if(tracerDic[@"element_from"]){
-            self.tracerParams[@"element_from"] = tracerDic[@"element_from"];
+        if(tracerDic[@"element_type"]){
+            self.tracerParams[@"element_type"] = tracerDic[@"element_type"];
         }
         
         if(tracerDic[@"house_type"]){

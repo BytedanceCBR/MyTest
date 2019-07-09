@@ -199,6 +199,7 @@
 
 - (void)trackGroupShow:(FHUGCMyInterestDataRecommendSocialGroupsModel *)model rank:(NSInteger)rank {
     NSMutableDictionary *dict =  [self trackDict:model rank:rank];
+    [dict removeObjectsForKeys:@[@"element_type"]];
     TRACK_EVENT(@"community_group_show", dict);
 }
 
@@ -216,6 +217,7 @@
     }else{
         dict[@"page_type"] = @"like_neighborhood_list";
         dict[@"element_from"] = @"like_neighborhood";
+        dict[@"element_type"] = @"like_neighborhood";
     }
     
     return dict;
@@ -241,7 +243,9 @@
 
     FHUGCMyInterestDataRecommendSocialGroupsModel *model = self.dataList[indexPath.row];
     
-    cell.tracerDic = [self trackDict:model rank:indexPath.row];
+    NSMutableDictionary *dict =  [self trackDict:model rank:indexPath.row];
+    [dict removeObjectsForKeys:@[@"element_from"]];
+    cell.tracerDic = dict;
     [cell refreshWithData:model];
     
     return cell;
