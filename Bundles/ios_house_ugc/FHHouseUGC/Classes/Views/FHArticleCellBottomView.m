@@ -139,9 +139,15 @@
 }
 
 - (void)moreOperation {
+    __weak typeof(self) wself = self;
+    
     [self trackClickOptions];
     FHFeedOperationView *dislikeView = [[FHFeedOperationView alloc] init];
     FHFeedOperationViewModel *viewModel = [[FHFeedOperationViewModel alloc] init];
+    
+    dislikeView.dislikeTracerBlock = ^{
+        [wself trackClickReport];
+    };
     
     if(self.cellModel){
         viewModel.groupID = self.cellModel.groupId;
@@ -153,14 +159,13 @@
     [dislikeView showAtPoint:point
                     fromView:_moreBtn
              didDislikeBlock:^(FHFeedOperationView * _Nonnull view) {
-                 [self handleItemselected:view];
+                 [wself handleItemselected:view];
              }];
 }
 
 //文章只处理举报，没有删除
 - (void)handleItemselected:(FHFeedOperationView *) view {
     if(view.selectdWord.type == FHFeedOperationWordTypeReport){
-        [self trackClickReport];
         //举报
         if(self.deleteCellBlock){
             self.deleteCellBlock();

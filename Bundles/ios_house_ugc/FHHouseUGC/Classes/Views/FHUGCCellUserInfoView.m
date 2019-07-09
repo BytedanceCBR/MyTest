@@ -92,6 +92,10 @@
     FHFeedOperationView *dislikeView = [[FHFeedOperationView alloc] init];
     FHFeedOperationViewModel *viewModel = [[FHFeedOperationViewModel alloc] init];
 
+    dislikeView.dislikeTracerBlock = ^{
+        [wself trackClickReport];
+    };
+    
     if(self.cellModel){
         viewModel.groupID = self.cellModel.groupId;
         viewModel.userID = self.cellModel.user.userId;
@@ -109,7 +113,6 @@
 
 - (void)handleItemselected:(FHFeedOperationView *) view {
     if(view.selectdWord.type == FHFeedOperationWordTypeReport){
-        [self trackClickReport];
         //举报
         if(self.reportSuccessBlock){
             self.reportSuccessBlock();

@@ -111,6 +111,9 @@ UITableViewDataSource
         case FHFeedOperationOptionTypeReport: {
             [tableView deselectRowAtIndexPath:indexPath animated:NO];
             
+            if(self.dislikeTracerBlock){
+                self.dislikeTracerBlock();
+            }
             TTFeedDislikeKeywordSelectorView *keywordSelectorView = [[TTFeedDislikeKeywordSelectorView alloc] initWithFrame:self.bounds];
             @weakify(self);
             [keywordSelectorView setSelectionFinished:^(FHFeedOperationWord *keyword) {
