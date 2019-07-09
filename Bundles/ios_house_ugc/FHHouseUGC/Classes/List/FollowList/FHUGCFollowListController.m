@@ -338,6 +338,8 @@
     tracerDict[@"page_type"] = page_type ? : @"be_null";
     tracerDict[@"rank"] = @(indexPath.row);
     tracerDict[@"log_pb"] = cellModel.logPb ? : @"be_null";
+    tracerDict[@"card_type"] = @"left_pic";
+    
     
     [tracerDict removeObjectForKey:@"category_name"];
     
