@@ -733,6 +733,7 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
         commentCell.delegate = self;
         TTUniversalCommentLayout *layout = layoutArray[indexPath.row];
         [commentCell tt_refreshConditionWithLayout:layout model:commentModel];
+        commentModel.trackerDic = [self.tracerDict copy];
         return commentCell;
     } else {
         return [[UITableViewCell alloc] init];

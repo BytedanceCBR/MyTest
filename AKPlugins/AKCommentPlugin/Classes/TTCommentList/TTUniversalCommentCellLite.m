@@ -306,6 +306,10 @@
     } else if (actionType == DetailActionCommentUnDigg) {
         action = 0;
     }
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    dict[@"enter_from"] = self.tracerDict[@"enter_from"];
+    dict[@"element_from"] = self.tracerDict[@"element_from"];
+    dict[@"page_type"] = self.tracerDict[@"page_type"];
     // 新接口
     [FHCommonApi requestCommonDigg: [NSString stringWithFormat:@"%@", _commentModel.commentID] groupType:FHDetailDiggTypeCOMMENT action:action completion:nil];
     

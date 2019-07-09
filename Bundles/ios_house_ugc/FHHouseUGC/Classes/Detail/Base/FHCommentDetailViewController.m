@@ -425,6 +425,11 @@
         self.itemActionManager = [[ExploreItemActionManager alloc] init];
     }
     
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    dict[@"enter_from"] = self.tracerDict[@"enter_from"];
+    dict[@"element_from"] = self.tracerDict[@"element_from"];
+    dict[@"page_type"] = self.tracerDict[@"page_type"];
+    
     [FHCommonApi requestCommonDigg:self.groupModel.groupID groupType:FHDetailDiggTypeTHREAD action:self.user_digg completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
     }];

@@ -238,7 +238,10 @@
     
     self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
     [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
-    
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"];
+    dict[@"element_from"] = self.cellModel.tracerDic[@"element_from"];
+    dict[@"page_type"] = self.cellModel.tracerDic[@"page_type"];
     [FHCommonApi requestCommonDigg:self.cellModel.groupId groupType:FHDetailDiggTypeTHREAD action:[self.cellModel.userDigg integerValue] completion:nil];
 }
 

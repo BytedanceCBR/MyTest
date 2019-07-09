@@ -39,6 +39,7 @@
 @property (nonatomic, strong) id<TTCommentModelProtocol> commentModel;
 @property (nonatomic, weak) id<TTCommentCellDelegate> delegate;
 @property (nonatomic, assign) BOOL impressionShown;
+@property (nonatomic, copy)     NSDictionary       *tracerDict;
 
 - (void)tt_refreshConditionWithLayout:(TTUniversalCommentLayout *)layout model:(id<TTCommentModelProtocol>)model;
 

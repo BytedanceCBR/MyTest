@@ -47,6 +47,9 @@ typedef enum FHDetailDiggType{
 // action:0 表示 取消赞 1，表示 赞
 + (TTHttpTask *)requestCommonDigg:(NSString *)group_id groupType:(FHDetailDiggType)group_type action:(NSInteger)action completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
 
+// action:0 表示 取消赞 1，表示 赞 （支持给接口传参）:element_from enter_from page_type
++ (TTHttpTask *)requestCommonDigg:(NSString *)group_id groupType:(FHDetailDiggType)group_type action:(NSInteger)action tracerParam:(NSDictionary *)params completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
