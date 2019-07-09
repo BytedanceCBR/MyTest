@@ -64,12 +64,14 @@
     }
 
     if (!loadMore) {
+        [self.viewController startLoading];
         self.maxCursor = nil;
     }
 
     WeakSelf;
     [[FHMessageNotificationManager sharedManager] fetchMessageListWithChannel:nil cursor:self.maxCursor completionBlock:^(NSError *error, TTMessageNotificationResponseModel *response) {
         StrongSelf;
+        [wself.viewController endLoading];
         if (response && (error == nil)) {
             if (!loadMore) {
                 [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];

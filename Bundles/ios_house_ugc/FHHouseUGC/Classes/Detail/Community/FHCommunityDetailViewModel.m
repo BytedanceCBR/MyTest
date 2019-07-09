@@ -498,15 +498,15 @@
 
 - (void)addPublisherPopupShowLog {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"page_type"] = [self pageTypeString];
-    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"page_type"] = @"community_publisher_popup";
+    params[@"enter_from"] = @"community_group_detail";
     [FHUserTracker writeEvent:@"community_publisher_popup_show" params:params];
 }
 
 - (void)addPublisherPopupClickLog:(BOOL)positive {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"page_type"] = [self pageTypeString];
-    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"page_type"] = @"community_publisher_popup";
+    params[@"enter_from"] = @"community_group_detail";
     params[@"click_position"] = positive ? @"confirm" : @"cancel";
     [FHUserTracker writeEvent:@"community_publisher_popup_click" params:params];
 }
