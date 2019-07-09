@@ -433,6 +433,11 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             if (self.viewControllers.count > self.lastSelectedIndex && self.lastSelectedIndex >= 0) {
                 TTNavigationController *lastNav = self.viewControllers[self.lastSelectedIndex];
                 lastNav.shouldIgnorePushingViewControllers = YES;
+                if (lastNav.presentedViewController) {
+                    [lastNav.presentedViewController dismissViewControllerAnimated:NO completion:nil];
+                }else if ([[lastNav.viewControllers lastObject] presentedViewController]) {
+                    [[lastNav.viewControllers lastObject] dismissViewControllerAnimated:NO completion:nil];
+                }
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     lastNav.shouldIgnorePushingViewControllers = NO;
                 });

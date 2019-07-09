@@ -597,7 +597,7 @@
         self.commentViewController.view.window.rootViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     }
     else {
-        [self.commentViewController presentViewController:navVC animated:NO completion:nil];
+        [self presentViewController:navVC animated:NO completion:nil];
     }
     
     
