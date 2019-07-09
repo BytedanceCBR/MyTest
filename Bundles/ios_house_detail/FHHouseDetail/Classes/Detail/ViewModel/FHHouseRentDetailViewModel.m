@@ -30,6 +30,7 @@
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
+#import <FHHouseBase/FHHouseRentModel.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -47,76 +48,76 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
 // 注册cell类型
 - (void)registerCellClasses {
-    [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
-    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
-    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
-    [self.tableView registerClass:[FHDetailRentHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentHouseCoreInfoCell class])];
-    [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCell class])];
-    [self.tableView registerClass:[FHDetailRentFacilityCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentFacilityCell class])];
-    [self.tableView registerClass:[FHDetailRentHouseOutlineInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentHouseOutlineInfoCell class])];
-    [self.tableView registerClass:[FHDetailRentSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentSameNeighborhoodHouseCell class])];
-    [self.tableView registerClass:[FHDetailRentRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentRelatedHouseCell class])];
-    [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
-    [self.tableView registerClass:[FHDetailNeighborhoodInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoCell class])];
-    [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoCell class])];
-    [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCell class])];
+    [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
+    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
+    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameModel class])];
+    [self.tableView registerClass:[FHDetailRentHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentHouseCoreInfoModel class])];
+    [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListModel class])];
+    [self.tableView registerClass:[FHDetailRentFacilityCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentFacilityModel class])];
+    [self.tableView registerClass:[FHDetailRentHouseOutlineInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentHouseOutlineInfoModel class])];
+    [self.tableView registerClass:[FHDetailRentSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentSameNeighborhoodHouseModel class])];
+    [self.tableView registerClass:[FHDetailRentRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentRelatedHouseModel class])];
+    [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerModel class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoModel class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoModel class])];
+    [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeModel class])];
 }
-// cell class
-- (Class)cellClassForEntity:(id)model {
-    // 头部滑动图片
-    if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
-        return [FHDetailPhotoHeaderCell class];
-    }
-    // 标题
-    if ([model isKindOfClass:[FHDetailHouseNameModel class]]) {
-        return [FHDetailHouseNameCell class];
-    }
-    // 灰色分割线
-    if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
-        return [FHDetailGrayLineCell class];
-    }
-    // coreInfo
-    if ([model isKindOfClass:[FHDetailRentHouseCoreInfoModel class]]) {
-        return [FHDetailRentHouseCoreInfoCell class];
-    }
-    // 属性列表
-    if ([model isKindOfClass:[FHDetailPropertyListModel class]]) {
-        return [FHDetailPropertyListCell class];
-    }
-    // 房屋设施
-    if ([model isKindOfClass:[FHDetailRentFacilityModel class]]) {
-        return [FHDetailRentFacilityCell class];
-    }
-    // 房源概况
-    if ([model isKindOfClass:[FHDetailRentHouseOutlineInfoModel class]]) {
-        return [FHDetailRentHouseOutlineInfoCell class];
-    }
-    // 小区信息
-    if ([model isKindOfClass:[FHDetailNeighborhoodInfoModel class]]) {
-        return [FHDetailNeighborhoodInfoCell class];
-    }
-    // 小区地图
-    if ([model isKindOfClass:[FHDetailNeighborhoodMapInfoModel class]]) {
-        return [FHDetailNeighborhoodMapInfoCell class];
-    }
-    // 同小区房源
-    if ([model isKindOfClass:[FHDetailRentSameNeighborhoodHouseModel class]]) {
-        return [FHDetailRentSameNeighborhoodHouseCell class];
-    }
-    // 周边房源
-    if ([model isKindOfClass:[FHDetailRentRelatedHouseModel class]]) {
-        return [FHDetailRentRelatedHouseCell class];
-    }
-    // 免责声明
-    if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
-        return [FHDetailDisclaimerCell class];
-    }
-    // 订阅房源动态
-    if ([model isKindOfClass:[FHDetailHouseSubscribeModel class]]) {
-        return [FHDetailHouseSubscribeCell class];
-    }
-    return [FHDetailBaseCell class];
-}
+//// cell class
+//- (Class)cellClassForEntity:(id)model {
+//    // 头部滑动图片
+//    if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
+//        return [FHDetailPhotoHeaderCell class];
+//    }
+//    // 标题
+//    if ([model isKindOfClass:[FHDetailHouseNameModel class]]) {
+//        return [FHDetailHouseNameCell class];
+//    }
+//    // 灰色分割线
+//    if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
+//        return [FHDetailGrayLineCell class];
+//    }
+//    // coreInfo
+//    if ([model isKindOfClass:[FHDetailRentHouseCoreInfoModel class]]) {
+//        return [FHDetailRentHouseCoreInfoCell class];
+//    }
+//    // 属性列表
+//    if ([model isKindOfClass:[FHDetailPropertyListModel class]]) {
+//        return [FHDetailPropertyListCell class];
+//    }
+//    // 房屋设施
+//    if ([model isKindOfClass:[FHDetailRentFacilityModel class]]) {
+//        return [FHDetailRentFacilityCell class];
+//    }
+//    // 房源概况
+//    if ([model isKindOfClass:[FHDetailRentHouseOutlineInfoModel class]]) {
+//        return [FHDetailRentHouseOutlineInfoCell class];
+//    }
+//    // 小区信息
+//    if ([model isKindOfClass:[FHDetailNeighborhoodInfoModel class]]) {
+//        return [FHDetailNeighborhoodInfoCell class];
+//    }
+//    // 小区地图
+//    if ([model isKindOfClass:[FHDetailNeighborhoodMapInfoModel class]]) {
+//        return [FHDetailNeighborhoodMapInfoCell class];
+//    }
+//    // 同小区房源
+//    if ([model isKindOfClass:[FHDetailRentSameNeighborhoodHouseModel class]]) {
+//        return [FHDetailRentSameNeighborhoodHouseCell class];
+//    }
+//    // 周边房源
+//    if ([model isKindOfClass:[FHDetailRentRelatedHouseModel class]]) {
+//        return [FHDetailRentRelatedHouseCell class];
+//    }
+//    // 免责声明
+//    if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
+//        return [FHDetailDisclaimerCell class];
+//    }
+//    // 订阅房源动态
+//    if ([model isKindOfClass:[FHDetailHouseSubscribeModel class]]) {
+//        return [FHDetailHouseSubscribeCell class];
+//    }
+//    return [FHDetailBaseCell class];
+//}
 // cell identifier
 - (NSString *)cellIdentifierForEntity:(id)model {
     Class cls = [self cellClassForEntity:model];
@@ -150,11 +151,15 @@ extern NSString *const kFHSubscribeHouseCacheKey;
                 [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         } else {
+//            if (wSelf.detailController.instantData) {
+//                SHOW_TOAST(@"请求失败");
+//            }else{
             wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
+//            }
         }
     }];
 }
@@ -193,6 +198,92 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
 }
 
+-(void)handleInstantData:(id)data
+{
+    FHRentDetailResponseModel *model = [[FHRentDetailResponseModel alloc] init];
+    model.isInstantData = YES;
+    FHRentDetailResponseDataModel *dataModel = [FHRentDetailResponseDataModel new];
+    model.data = dataModel;
+    if ([data isKindOfClass:[FHHouseRentDataItemsModel class]]) {
+        
+        FHHouseRentDataItemsModel *item = (FHHouseRentDataItemsModel *)data;
+        dataModel.title = item.title;
+        dataModel.subtitle = item.subtitle;
+        dataModel.tags = item.tags;
+        dataModel.houseImage = item.houseImage;
+        dataModel.id = item.id;
+        dataModel.logPb = item.logPb;
+        dataModel.baseInfo = item.baseInfo;
+        dataModel.coreInfo = item.coreInfo;
+        dataModel.facilities = item.facilities;
+        
+        if (item.houseImageTag) {
+            NSMutableArray *tags = [NSMutableArray new];
+            FHHouseTagsModel *tag = [[FHHouseTagsModel alloc] initWithDictionary:item.houseImageTag.toDictionary error:nil];
+            tag.content = item.houseImageTag.text;
+            [tags addObject:tag];
+            if (item.tags) {
+                [tags addObjectsFromArray:item.tags];
+            }
+            dataModel.tags = tags;
+        }
+        
+                        
+    }else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]){
+        FHHomeHouseDataItemsModel *item = (FHHomeHouseDataItemsModel *)data;
+        dataModel.title = item.title;
+        dataModel.subtitle = item.subtitle;
+        dataModel.tags = item.tags;
+        dataModel.houseImage = item.houseImage;
+        dataModel.id = item.idx;
+        dataModel.baseInfo = item.baseInfo;
+        dataModel.coreInfo = item.coreInfoList;
+        dataModel.logPb = item.logPb;
+        dataModel.facilities = item.facilities;
+        if (item.houseImageTag) {
+            NSMutableArray *tags = [NSMutableArray new];
+            FHHouseTagsModel *tag = [[FHHouseTagsModel alloc] initWithDictionary:item.houseImageTag.toDictionary error:nil];
+            tag.content = item.houseImageTag.text;
+            [tags addObject:tag];
+            if (item.tags) {
+                [tags addObjectsFromArray:item.tags];
+            }
+            dataModel.tags = tags;
+        }
+        
+    }else{
+        self.detailController.instantData = nil;
+        return;
+    }
+    
+    
+    
+    dataModel.contact = [FHDetailContactModel new];
+    dataModel.contact.isInstantData = YES;
+    model.data = dataModel;
+    self.bottomBar.hidden = NO;
+    [self processDetailData:model];
+}
+
+-(NSArray *)instantHouseImages
+{
+    id data = self.detailController.instantData;
+    if ([data isKindOfClass:[FHHouseRentDataItemsModel class]]) {
+        FHHouseRentDataItemsModel *item = (FHHouseRentDataItemsModel *)data;
+        return  item.houseImage;
+        
+    }else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]){
+        FHHomeHouseDataItemsModel *item = (FHHomeHouseDataItemsModel *)data;
+        return item.houseImage;
+    }
+    return nil;
+}
+
+-(BOOL)currentIsInstantData
+{
+    return [(FHRentDetailResponseModel *)self.detailData isInstantData];
+}
+
 // 处理详情页数据
 - (void)processDetailData:(FHRentDetailResponseModel *)model {
 
@@ -223,9 +314,13 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
     if (model.data.houseImage) {
         headerCellModel.houseImage = model.data.houseImage;
+        if (!model.isInstantData) {
+            headerCellModel.instantHouseImages = [self instantHouseImages];
+        }
+        headerCellModel.isInstantData = model.isInstantData;
     }else{
         //无图片时增加默认图
-        FHDetailHouseDataItemsHouseImageModel *imgModel = [FHDetailHouseDataItemsHouseImageModel new];
+        FHImageModel *imgModel = [FHImageModel new];
         headerCellModel.houseImage = @[imgModel];
     }
     [self.items addObject:headerCellModel];
@@ -308,7 +403,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     //生成IM卡片的schema用 个人认为server应该加接口
     NSString *imgUrl = @"";
     if (model.data.houseImage.count > 0) {
-        FHDetailHouseDataItemsHouseImageModel *imageInfo = model.data.houseImage[0];
+        FHImageModel *imageInfo = model.data.houseImage[0];
         imgUrl = imageInfo.url ?: @"";
     }
     NSString *area = @"";
@@ -402,6 +497,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
          [wSelf processDetailRelatedData];
      }];
  }
+
 
 - (BOOL)isMissTitle
 {

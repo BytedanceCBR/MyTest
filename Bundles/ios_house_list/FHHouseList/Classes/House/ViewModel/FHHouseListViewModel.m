@@ -46,6 +46,8 @@
 #import "FHSuggestionRealHouseTopCell.h"
 #import <TTBaseLib/NSString+URLEncoding.h>
 
+extern NSString *const INSTANT_DATA_KEY;
+
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
 @property(nonatomic , weak) FHErrorView *maskView;
@@ -1562,10 +1564,10 @@
     traceParam[@"origin_from"] = self.originFrom;
     traceParam[@"origin_search_id"] = self.originSearchId;
     traceParam[@"rank"] = @(rank);
-    NSDictionary *dict = @{@"house_type":@(self.houseType) ,
+    NSMutableDictionary *dict = @{@"house_type":@(self.houseType) ,
                            @"tracer": traceParam
-                           };
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                           }.mutableCopy;
+    
     NSString *urlStr;
 
     id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
@@ -1577,6 +1579,7 @@
             if (cellModel.houseModel) {
                 
                 FHNewHouseItemModel *theModel = cellModel.houseModel;
+                dict[INSTANT_DATA_KEY] = theModel;
                 urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId];
             }
             break;
@@ -1604,6 +1607,7 @@
                     return;
                 }
                 FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
+                dict[INSTANT_DATA_KEY] = theModel;
                 urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
             }
             break;
@@ -1611,6 +1615,7 @@
             if (cellModel.rentModel) {
                 
                 FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
+                dict[INSTANT_DATA_KEY] = theModel;
                 urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id];
             }
             break;
@@ -1621,6 +1626,7 @@
                 if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
                     urlStr = theModel.dealOpenUrl;
                 }else {
+                    dict[INSTANT_DATA_KEY] = theModel;
                     urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id];
                 }
             }
@@ -1631,6 +1637,7 @@
     
     if (urlStr.length > 0) {
         NSURL *url = [NSURL URLWithString:urlStr];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
     

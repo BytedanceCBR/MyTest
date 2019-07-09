@@ -25,6 +25,7 @@
 #import "FHDetailDisclaimerCell.h"
 #import "FHDetailNewListSingleImageCell.h"
 #import <HMDTTMonitor.h>
+#import <FHHouseBase/FHCommonDefines.h>
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -39,80 +40,81 @@
 
 // 注册cell类型
 - (void)registerCellClasses {
-    [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
 
-    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
+    [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
     
-    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
-
-    [self.tableView registerClass:[FHDetailNewHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseCoreInfoCell class])];
+    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameModel class])];
     
-    [self.tableView registerClass:[FHDetailNewMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewMutiFloorPanCell class])];
+    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
     
-    [self.tableView registerClass:[FHDetailNewHouseNewsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseNewsCell class])];
+    [self.tableView registerClass:[FHDetailNewHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseCoreInfoModel class])];
     
-    [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
+    [self.tableView registerClass:[FHDetailNewMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewDataFloorpanListModel class])];
     
-    [self.tableView registerClass:[FHDetailNewTimeLineItemCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewTimeLineItemCell class])];
-
-    [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapCell class])];
+    [self.tableView registerClass:[FHDetailNewHouseNewsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseNewsCellModel class])];
     
-    [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewListSingleImageCell class])];
-
+    [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerModel class])];
+    
+    [self.tableView registerClass:[FHDetailNewTimeLineItemCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewTimeLineItemModel class])];
+    
+    [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
+    
+    [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHNewHouseItemModel class])];
+    
 }
-// cell class
-- (Class)cellClassForEntity:(id)model {
-    if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
-        return [FHDetailPhotoHeaderCell class];
-    }
-    
-    // 标题
-    if ([model isKindOfClass:[FHDetailHouseNameModel class]]) {
-        return [FHDetailHouseNameCell class];
-    }
-    
-    // 核心信息
-    if ([model isKindOfClass:[FHDetailNewHouseCoreInfoModel class]]) {
-        return [FHDetailNewHouseCoreInfoCell class];
-    }
-    
-    // 灰色分割线
-    if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
-        return [FHDetailGrayLineCell class];
-    }
-    
-    //楼盘户型
-    if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
-        return [FHDetailNewMutiFloorPanCell class];
-    }
-    
-    //楼盘动态标题
-    if ([model isKindOfClass:[FHDetailNewHouseNewsCellModel class]]) {
-        return [FHDetailNewHouseNewsCell class];
-    }
-    
-    //楼盘动态标题
-    if ([model isKindOfClass:[FHDetailNewTimeLineItemModel class]]) {
-        return [FHDetailNewTimeLineItemCell class];
-    }
-    
-    //周边配套
-    if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
-        return [FHDetailNearbyMapCell class];
-    }
-    
-    //周边新盘
-    if ([model isKindOfClass:[FHNewHouseItemModel class]]) {
-        return [FHDetailNewListSingleImageCell class];
-    }
-    
-    //版权信息
-    if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
-        return [FHDetailDisclaimerCell class];
-    }
-    
-    return [FHDetailBaseCell class];
-}
+//// cell class
+//- (Class)cellClassForEntity:(id)model {
+//    if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
+//        return [FHDetailPhotoHeaderCell class];
+//    }
+//
+//    // 标题
+//    if ([model isKindOfClass:[FHDetailHouseNameModel class]]) {
+//        return [FHDetailHouseNameCell class];
+//    }
+//
+//    // 核心信息
+//    if ([model isKindOfClass:[FHDetailNewHouseCoreInfoModel class]]) {
+//        return [FHDetailNewHouseCoreInfoCell class];
+//    }
+//
+//    // 灰色分割线
+//    if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
+//        return [FHDetailGrayLineCell class];
+//    }
+//
+//    //楼盘户型
+//    if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
+//        return [FHDetailNewMutiFloorPanCell class];
+//    }
+//
+//    //楼盘动态标题
+//    if ([model isKindOfClass:[FHDetailNewHouseNewsCellModel class]]) {
+//        return [FHDetailNewHouseNewsCell class];
+//    }
+//
+//    //楼盘动态标题
+//    if ([model isKindOfClass:[FHDetailNewTimeLineItemModel class]]) {
+//        return [FHDetailNewTimeLineItemCell class];
+//    }
+//
+//    //周边配套
+//    if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
+//        return [FHDetailNearbyMapCell class];
+//    }
+//
+//    //周边新盘
+//    if ([model isKindOfClass:[FHNewHouseItemModel class]]) {
+//        return [FHDetailNewListSingleImageCell class];
+//    }
+//
+//    //版权信息
+//    if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
+//        return [FHDetailDisclaimerCell class];
+//    }
+//
+//    return [FHDetailBaseCell class];
+//}
 // cell identifier
 - (NSString *)cellIdentifierForEntity:(id)model {
     Class cls = [self cellClassForEntity:model];
@@ -139,16 +141,131 @@
             }
         }else {
             wSelf.detailController.isLoadingData = NO;
+//            if (wSelf.detailController.instantData) {
+//                SHOW_TOAST(@"请求失败");
+//            }else{
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
+//            }
         }
     }];
 }
 
+-(void)handleInstantData:(id)data
+{
+    FHDetailNewModel *model = [[FHDetailNewModel alloc]init];
+    model.isInstantData = YES;
+    FHDetailNewDataModel *dataModel = [[FHDetailNewDataModel alloc]init];
+    model.data = dataModel;
+    if ([data isKindOfClass:[FHNewHouseItemModel class ]]) {
+        
+        FHNewHouseItemModel *item = (FHNewHouseItemModel *)data;
+        if (item.images) {
+            FHDetailNewDataImageGroupModel *imgGroup = [FHDetailNewDataImageGroupModel new];
+            imgGroup.images = item.images;
+            imgGroup.type = @"7";
+            
+            dataModel.imageGroup = @[imgGroup];
+        }
+        
+        dataModel.tags = item.tags;
+        if (item.coreInfo) {
+            dataModel.coreInfo = [[FHDetailNewDataCoreInfoModel alloc] initWithDictionary:item.coreInfo.toDictionary error:nil];
+        }
+        dataModel.imprId = item.imprId;
+        if (item.floorpanList && item.floorpanList.count > 0){
+            dataModel.floorpanList = [[FHDetailNewDataFloorpanListModel alloc] initWithDictionary:item.floorpanList error:nil];
+        }
+        if (item.contact) {
+            dataModel.contact = [[FHDetailContactModel alloc] initWithDictionary:item.contact error:nil];
+            dataModel.contact.isInstantData = YES;
+        }
+        if (item.timeline) {
+            dataModel.timeline = [[FHDetailNewDataTimelineModel alloc]initWithDictionary:item.timeline error:nil];
+        }
+        
+        if (item.globalPricing) {
+            dataModel.globalPricing = [[FHDetailNewDataGlobalPricingModel alloc] initWithDictionary:item.globalPricing error:nil];
+        }
+        
+        if (item.userStatus) {
+            dataModel.userStatus = [[FHDetailNewDataUserStatusModel alloc] initWithDictionary:item.userStatus error:nil];
+        }
+        
+        dataModel.logPb = item.logPb;
+        
+    }else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]){
+        FHHomeHouseDataItemsModel *item = (FHHomeHouseDataItemsModel *)data;
+        
+        if (item.images) {
+            FHDetailNewDataImageGroupModel *imgGroup = [FHDetailNewDataImageGroupModel new];
+            imgGroup.images = item.images;
+            imgGroup.type = @"7";
+            
+            dataModel.imageGroup = @[imgGroup];
+        }
+        if (item.coreInfo) {
+            dataModel.coreInfo = [[FHDetailNewDataCoreInfoModel alloc] initWithDictionary:item.coreInfo.toDictionary error:nil];
+        }
+        dataModel.tags = item.tags;
+        if (item.floorpanList && item.floorpanList.list.count > 0){
+            dataModel.floorpanList = [[FHDetailNewDataFloorpanListModel alloc] initWithDictionary:item.floorpanList.toDictionary error:nil];
+        }
+        
+        if (item.contact) {
+            dataModel.contact = [[FHDetailContactModel alloc] initWithDictionary:item.contact.toDictionary error:nil];
+        }
+        
+        if (item.timeline) {
+            dataModel.timeline = [[FHDetailNewDataTimelineModel alloc]initWithDictionary:item.timeline.toDictionary error:nil];
+        }
+        
+        dataModel.imprId = item.imprId;
+        
+        dataModel.logPb = item.logPb;
+    }
+    else{
+        self.detailController.instantData = nil;
+        return;
+    }
+    if (!dataModel.contact) {
+        dataModel.contact = [FHDetailContactModel new];
+    }
+    
+    if (IS_EMPTY_STRING(dataModel.coreInfo.constructionOpendate)) {
+        dataModel.coreInfo.constructionOpendate = @"暂无";
+    }
+    if ([dataModel.coreInfo.aliasName isEqualToString:@"[]"]) {
+        dataModel.coreInfo.aliasName = nil;
+    }
+    
+    self.bottomBar.hidden = NO;
+    [self processDetailData:model];
+}
 
-- (void)processDetailData:(FHDetailNewModel *)model {
+-(BOOL)currentIsInstantData
+{
+    return [(FHDetailNewModel *)self.detailData isInstantData];
+}
+
+-(NSArray *)instantHouseImages
+{
+    id data = self.detailController.instantData;
+    if ([data isKindOfClass:[FHNewHouseItemModel class ]]) {
+        
+        FHNewHouseItemModel *item = (FHNewHouseItemModel *)data;
+        return item.images;
+        
+    }else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]){
+        FHHomeHouseDataItemsModel *item = (FHHomeHouseDataItemsModel *)data;
+        return item.images;
+    }
+    return nil;
+}
+
+- (void)processDetailData:(FHDetailNewModel *)model{
     self.detailData = model;
     [self addDetailCoreInfoExcetionLog];
 
@@ -171,7 +288,7 @@
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     __weak typeof(self) wSelf = self;
-    if (model.data) {
+    if (!model.isInstantData && model.data) {
         [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHDetailRelatedCourtModel * _Nullable model, NSError * _Nullable error) {
             wSelf.relatedHouseData = model;
             [wSelf processDetailRelatedData];
@@ -191,10 +308,14 @@
         headerCellModel.isNewHouse = YES;
         headerCellModel.smallImageGroup = model.data.smallImageGroup;
         headerCellModel.houseImage = arrayHouseImage;
+        if (!model.isInstantData) {
+            headerCellModel.instantHouseImages = [self instantHouseImages];
+        }
+        headerCellModel.isInstantData = model.isInstantData;
         
     }else{
         //无图片时增加默认图
-        FHDetailHouseDataItemsHouseImageModel *imgModel = [FHDetailHouseDataItemsHouseImageModel new];
+        FHImageModel *imgModel = [FHImageModel new];
         headerCellModel.houseImage = @[imgModel];
     }
     [self.items addObject:headerCellModel];

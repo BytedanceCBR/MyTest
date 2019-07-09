@@ -439,11 +439,15 @@
     
     [self.chooseView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.view).offset(bottomMargin);
-        make.left.mas_equalTo(9);
-        make.right.mas_equalTo(-9);
+        if (![self.viewModel suportSubway]) {
+            make.centerX.mas_equalTo(self.view);
+            make.width.mas_equalTo(168);
+        }else{
+            make.left.mas_equalTo(9);
+            make.right.mas_equalTo(-9);
+        }
         make.height.mas_equalTo(58);
-//        make.centerX.mas_equalTo(self.view);
-//        make.size.mas_equalTo(CGSizeMake(160, 58));
+
     }];
     
     [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {

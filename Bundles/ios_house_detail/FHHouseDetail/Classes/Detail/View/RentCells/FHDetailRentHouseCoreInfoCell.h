@@ -8,6 +8,7 @@
 #import "FHDetailBaseCell.h"
 #import "FHDetailBaseModel.h"
 #import "FHDetailRentModel.h"
+#import <FHHouseBase/FHHouseCoreInfoModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface  FHDetailRentHouseCoreInfoModel: FHDetailBaseModel
 
-@property (nonatomic, strong , nullable) NSArray<FHRentDetailResponseDataCoreInfoModel> *coreInfo;
+@property (nonatomic, strong , nullable) NSArray<FHHouseCoreInfoModel> *coreInfo;
 
 @end
 
