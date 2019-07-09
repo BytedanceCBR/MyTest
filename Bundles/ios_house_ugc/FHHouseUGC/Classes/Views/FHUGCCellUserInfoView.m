@@ -154,7 +154,7 @@
 
 - (void)postDelete {
     __weak typeof(self) wself = self;
-    [FHHouseUGCAPI postDelete:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId completion:^(bool success, NSError * _Nonnull error) {
+    [FHHouseUGCAPI postDelete:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(bool success, NSError * _Nonnull error) {
         if(success){
             //调用删除接口
             if(wself.deleteCellBlock){

@@ -246,6 +246,10 @@
             self.tracerParams[@"element_type"] = tracerDic[@"element_type"];
         }
         
+        if(tracerDic[@"element_from"]){
+            self.tracerParams[@"element_from"] = tracerDic[@"element_from"];
+        }
+        
         if(tracerDic[@"house_type"]){
             self.tracerParams[@"house_type"] = tracerDic[@"house_type"];
         }

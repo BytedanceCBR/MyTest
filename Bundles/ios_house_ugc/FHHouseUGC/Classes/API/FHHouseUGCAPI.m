@@ -236,7 +236,7 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
-+ (TTHttpTask *)postDelete:(NSString *)groupId socialGroupId:(NSString *)socialGroupId completion:(void(^)(bool success , NSError *error))completion {
++ (TTHttpTask *)postDelete:(NSString *)groupId socialGroupId:(NSString *)socialGroupId enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void(^)(bool success , NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/delete_post";
     NSString *url = QURL(queryPath);
     
@@ -246,6 +246,12 @@
     }
     if(socialGroupId){
         paramDic[@"social_group_id"] = socialGroupId;
+    }
+    if(enterFrom){
+        paramDic[@"enter_from"] = enterFrom;
+    }
+    if(pageType){
+        paramDic[@"page_type"] = pageType;
     }
     
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
