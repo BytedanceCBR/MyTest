@@ -79,11 +79,18 @@
 }
 
 - (void)addUgcGuide {
-    if ([FHUGCGuideHelper shouldShowSearchGuide] && self.isUgcOpen && !self.alreadyShowGuide) {
+    if (![FHUGCGuideHelper shouldShowSearchGuide] && self.isUgcOpen && !self.alreadyShowGuide) {
         [self.guideView show:self.view dismissDelayTime:5.0f completion:^{
             [FHUGCGuideHelper hideSearchGuide];
         }];
         self.alreadyShowGuide = YES;
+    }
+}
+
+- (void)hideGuideView {
+    if(_guideView){
+        [_guideView hide];
+        [FHUGCGuideHelper hideSearchGuide];
     }
 }
 
@@ -97,8 +104,7 @@
 
 - (void)topVCChange:(NSNotification *)notification {
     if (self.isUgcOpen) {
-        [self.guideView hide];
-        [FHUGCGuideHelper hideSearchGuide];
+        [self hideGuideView];
     }
 }
 
@@ -316,9 +322,7 @@
 
 //进入搜索页
 - (void)goToSearch {
-    [self.guideView hide];
-    [FHUGCGuideHelper hideSearchGuide];
-
+    [self hideGuideView];
     [self addGoToSearchLog];
 
     NSString *routeUrl = @"sslocal://ugc_search_list";
