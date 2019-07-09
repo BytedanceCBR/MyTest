@@ -148,12 +148,20 @@
     NSString *bodyUrl = model.content.bodyUrl;
     if (!isEmptyString(bodyUrl)) {
         TTRouteUserInfo *userInfo = nil;
-        
+        NSMutableDictionary *dict = @{}.mutableCopy;
         if([bodyUrl containsString:@"comment_detail"]){
-            NSMutableDictionary *dict = @{}.mutableCopy;
             dict[@"hidePost"] = @(1);
-            userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         }
+        
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = @"feed_message_list";
+        traceParam[@"enter_type"] = @"feed_message_card";
+        traceParam[@"rank"] = @(indexPath.row);
+        traceParam[@"log_pb"] = model.logPb;
+        dict[TRACER_KEY] = traceParam;
+        
+        dict[@"begin_show_comment"] = @"1";
+        userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
         NSURL *openURL = [NSURL URLWithString:[bodyUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
