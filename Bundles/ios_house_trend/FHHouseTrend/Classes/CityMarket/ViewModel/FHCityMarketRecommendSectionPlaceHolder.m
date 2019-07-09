@@ -75,7 +75,7 @@
     FHSearchHouseDataModel* model = [_recommendViewModel currentData];
     if (model != nil && [model.items count] > indexPath.row) {
         FHSearchHouseDataItemsModel* item = model.items[indexPath.row];
-        FHSearchHouseDataItemsHouseImageModel* imageModel = item.houseImage.firstObject;
+        FHImageModel* imageModel = item.houseImage.firstObject;
         if ([@"zhidemai" isEqualToString:_recommendViewModel.type]) {
             [self fillWorthCell:cell useModel:item atIndexPath:indexPath];
         } else {
@@ -94,7 +94,7 @@
 }
 
 -(void)fillWorthCell:(FHCityMarketRecomandHouseCell*)cell useModel:(FHSearchHouseDataItemsModel*)model atIndexPath:(NSIndexPath*)indexPath {
-    FHSearchHouseDataItemsHouseImageModel* imageModel = model.houseImage.firstObject;
+    FHImageModel* imageModel = model.houseImage.firstObject;
     if (imageModel != nil && !isEmptyString(imageModel.url)) {
         [cell.houseIconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
     }
@@ -103,7 +103,7 @@
     cell.oldPriceLabel.attributedText = nil;
     NSString* roomSpace = nil;
     if ([model.coreInfo count] >= 3) {
-        FHSearchHouseDataItemsCoreInfoModel* value = model.coreInfo[2];
+        FHHouseCoreInfoModel* value = model.coreInfo[2];
         roomSpace = value.value;
     }
     cell.subTitleLabel.attributedText = [self getWorthPriceAttribute:model.displayPrice oldPrice:roomSpace];

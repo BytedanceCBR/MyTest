@@ -158,7 +158,7 @@
 
 
 
--(CGSize)titleSizeWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList titleStr:(NSString *)titleStr {
+-(CGSize)titleSizeWithTagList:(NSArray<FHHouseTagsModel *> *)tagList titleStr:(NSString *)titleStr {
     
     if (tagList.count < 1) {
         
@@ -173,7 +173,7 @@
 }
 
 
-+(NSAttributedString *)tagsStringWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList {
++(NSAttributedString *)tagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList {
     
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc]init];
     if (tagList.count > 0) {
@@ -182,7 +182,7 @@
         
         [tagList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            FHSearchHouseDataItemsTagsModel *element = obj;
+            FHHouseTagsModel *element = obj;
             if (element.content && element.textColor && element.backgroundColor) {
                 
                 UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor colorWithHexString:@"#f85959"];
@@ -235,7 +235,7 @@
     }
 }
 
-+(NSAttributedString *)tagsStringSmallImageWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList
++(NSAttributedString *)tagsStringSmallImageWithTagList:(NSArray<FHHouseTagsModel *> *)tagList
 {
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc]init];
     if (tagList.count > 0) {
@@ -244,7 +244,7 @@
         
         [tagList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            FHSearchHouseDataItemsTagsModel *element = obj;
+            FHHouseTagsModel *element = obj;
             if (element.content && element.textColor && element.backgroundColor) {
                 
                 NSMutableString *reulstString = element.content;

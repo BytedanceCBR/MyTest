@@ -9,6 +9,7 @@
 #import "FHDetailBaseModel.h"
 #import "FHDetailNeighborhoodModel.h"
 #import "FHHouseDetailBaseViewModel.h"
+#import <FHHouseBase/FHHouseBaseInfoModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak)     UITableView       *tableView;
 @property (nonatomic, assign)   BOOL       isFold; // 折叠
-@property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataBaseInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
 
 @end
 

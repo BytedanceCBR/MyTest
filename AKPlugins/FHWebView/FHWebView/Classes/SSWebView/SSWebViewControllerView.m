@@ -490,7 +490,6 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
 
 - (void)showCloseButton
 {
-    NSLog(@"canGoBack = %d",self.ssWebContainer.ssWebView.canGoBack);
     if (self.isShowCloseWebBtn) {
         [self.backButtonView showCloseButton:self.ssWebContainer.ssWebView.canGoBack];
     }else

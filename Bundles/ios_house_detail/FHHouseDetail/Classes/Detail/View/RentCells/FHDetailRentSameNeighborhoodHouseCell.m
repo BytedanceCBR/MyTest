@@ -237,7 +237,7 @@
     FHHouseRentDataItemsModel *model = (FHHouseRentDataItemsModel *)data;
     if (model) {
         if (model.houseImage.count > 0) {
-            FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage[0];
+            FHImageModel *imageModel = model.houseImage[0];
             NSString *urlStr = imageModel.url;
             if ([urlStr length] > 0) {
                 [self.icon bd_setImageWithURL:[NSURL URLWithString:urlStr] placeholder:[UIImage imageNamed:@"default_image"]];
