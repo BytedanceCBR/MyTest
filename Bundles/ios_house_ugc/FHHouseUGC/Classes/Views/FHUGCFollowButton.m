@@ -255,8 +255,10 @@
 - (void)cancelJoinPopupClickByConfirm:(BOOL)isConfirm {
     NSMutableDictionary *tracerDict = self.tracerParams.mutableCopy;
     NSString *page_type = self.tracerDic[@"page_type"];
+    NSString *enter_from = self.tracerDic[@"enter_from"];
     tracerDict[@"page_type"] = @"join_community_grouppopup";
     tracerDict[@"enter_from"] = page_type ?: @"be_null";
+    tracerDict[@"origin_from"] = enter_from ?: @"be_null";
     [tracerDict removeObjectForKey:@"enter_type"];
     [tracerDict removeObjectForKey:@"rank"];
     if (isConfirm) {

@@ -610,17 +610,24 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
             [self.listFooterView setTitle:@"暂无回答" isShowArrow:NO isNoAnswers:YES isNew:YES clickedBlock:nil];
         }
         else if (_needShowFoldView && [self isFoldTipViewDataAvailable]) {
-            if (!_listFooterView) {
-                self.listFooterView = [[WDWendaListFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kWDWendaListFooterViewHeight + bottom)];
-                self.listFooterView.viewModel = self.viewModel;
+            if (self.viewModel.questionEntity.normalAnsCount.longLongValue > 0) {
+                if (!_listFooterView) {
+                    self.listFooterView = [[WDWendaListFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kWDWendaListFooterViewHeight + bottom)];
+                    self.listFooterView.viewModel = self.viewModel;
+                }
+                self.listFooterView.height = kWDWendaListFooterViewHeight + bottom;
+                _answerListView.tableFooterView = self.listFooterView;
+                WeakSelf;
+                [self.listFooterView setTitle:[NSString stringWithFormat:@"%@",self.viewModel.moreListAnswersTitle] isShowArrow:YES isNoAnswers:NO clickedBlock:^{
+                    StrongSelf;
+                    [self _enterMoreListController];
+                }];
+            } else {
+                // 查看0个折叠回答
+                UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 35)];
+                v.backgroundColor = [UIColor whiteColor];
+                _answerListView.tableFooterView = v;
             }
-            self.listFooterView.height = kWDWendaListFooterViewHeight + bottom;
-            _answerListView.tableFooterView = self.listFooterView;
-            WeakSelf;
-            [self.listFooterView setTitle:[NSString stringWithFormat:@"%@",self.viewModel.moreListAnswersTitle] isShowArrow:YES isNoAnswers:NO clickedBlock:^{
-                StrongSelf;
-                [self _enterMoreListController];
-            }];
         }
         else {
             _answerListView.tableFooterView = nil;
