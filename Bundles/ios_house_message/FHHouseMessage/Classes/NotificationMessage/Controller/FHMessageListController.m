@@ -36,13 +36,11 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.ttTrackStayEnable = YES;
-        self.title = paramObj.allParams[@"title"];
     }
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     [self initView];
     [self initConstraints];
@@ -52,7 +50,6 @@
 
 - (void)initView {
     [self setupDefaultNavBar:YES];
-    [self setTitle:self.title];
     self.automaticallyAdjustsScrollViewInsets = NO;
 
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];

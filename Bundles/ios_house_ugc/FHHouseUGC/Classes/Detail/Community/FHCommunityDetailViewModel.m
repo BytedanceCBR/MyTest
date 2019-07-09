@@ -249,17 +249,27 @@
 - (void)goPostDetail {
     if (!self.headerView.followButton.followed) {
         WeakSelf;
-        TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"先关注该小区才能发布哦" message:nil preferredType:TTThemedAlertControllerTypeAlert];
-        [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-            StrongSelf;
-            [wself addPublisherPopupClickLog:NO];
-        }];
-        [alertController addActionWithTitle:NSLocalizedString(@"关注", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
-            StrongSelf;
-            [wself addPublisherPopupClickLog:YES];
-            [wself followCommunity:wself.data.socialGroupId];
-        }];
-        [alertController showFrom:self.viewController animated:YES];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"先关注该小区才能发布哦"
+                                                                       message:nil
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:^(UIAlertAction * _Nonnull action) {
+                                                                 // 点击取消按钮，调用此block
+                                                                 [wself addPublisherPopupClickLog:NO];
+                                                             }];
+        [alert addAction:cancelAction];
+        
+        UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"关注"
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * _Nonnull action) {
+                                                                  // 点击按钮，调用此block
+                                                                  [wself addPublisherPopupClickLog:YES];
+                                                                  [wself followCommunity:wself.data.socialGroupId];
+                                                              }];
+        [alert addAction:defaultAction];
+        [self.viewController presentViewController:alert animated:YES completion:nil];
+        
         [self addPublisherPopupShowLog];
         return;
     }
