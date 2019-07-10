@@ -84,7 +84,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+    [super viewDidAppear:animated];
     if (self.items.count > 0) {
         [self.tableView reloadData];
     }
