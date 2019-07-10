@@ -34,7 +34,7 @@
         [subview removeFromSuperview];
     }
     
-    UIView *lastView = nil;
+    UIView *firstView = nil;
     for (NSInteger index = 0; index < 4; index++) {
         FHDetailComfortItemView *itemView = [[FHDetailComfortItemView alloc]initWithFrame:CGRectZero];
         [self.bgView addSubview:itemView];
@@ -67,21 +67,23 @@
             if (index / 2 == 0) {
                 make.top.mas_equalTo(20);
             }else {
-                make.top.mas_equalTo(lastView.mas_bottom).mas_offset(20);
+                make.top.mas_equalTo(firstView.mas_bottom).mas_offset(20);
                 make.bottom.mas_equalTo(-20);
             }
             // first line
             if (index % 2 == 0) {
                 make.left.mas_equalTo(0);
             } else {
-                make.left.mas_equalTo(lastView.mas_right);
+                make.left.mas_equalTo(firstView.mas_right);
                 make.right.mas_equalTo(0);
             }
-            if (lastView) {
-                make.width.height.mas_equalTo(lastView);
+            if (firstView) {
+                make.width.height.mas_equalTo(firstView);
             }
         }];
-        lastView = itemView;
+        if (!firstView) {
+            firstView = itemView;
+        }        
     }
 }
 

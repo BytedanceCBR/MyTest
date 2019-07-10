@@ -17,6 +17,7 @@
 @interface FHHouseMsgCell()
 
 @property(nonatomic, strong) UIImageView *imgView;
+@property(nonatomic, strong) UIImageView *houseVideoImageView;
 @property(nonatomic, strong) UIView *infoPanel;
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *subTitleLabel;
@@ -70,6 +71,12 @@
     _imgView.layer.masksToBounds = YES;
     [self.contentView addSubview:_imgView];
     
+    self.houseVideoImageView = [[UIImageView alloc] init];
+    _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video"];
+    _houseVideoImageView.backgroundColor = [UIColor clearColor];
+    [self.contentView addSubview:_houseVideoImageView];
+
+    
     self.imageTopLeftLabelBgView = [[UIView alloc] init];
     _imageTopLeftLabelBgView.backgroundColor = [UIColor themeRed1];
     _imageTopLeftLabelBgView.hidden = YES;
@@ -112,6 +119,12 @@
         make.top.mas_equalTo(self.contentView).offset(20);
         make.width.mas_equalTo(114);
         make.height.mas_equalTo(85);
+    }];
+    
+    [self.houseVideoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.imgView);
+        make.width.mas_equalTo(30);
+        make.height.mas_equalTo(30);
     }];
     
     [self.imageTopLeftLabelBgView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -181,6 +194,9 @@
 }
 
 - (void)updateWithModel:(FHHouseMsgDataItemsItemsModel *)model {
+    
+    self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
+    
     self.titleLabel.text = model.title;
     self.subTitleLabel.text = model.desc;
     

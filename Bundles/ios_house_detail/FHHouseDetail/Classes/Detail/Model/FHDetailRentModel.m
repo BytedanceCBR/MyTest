@@ -41,24 +41,24 @@
 @end
 
 
-@implementation  FHRentDetailResponseDataFacilitiesModel
-
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"iconUrl": @"icon_url",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
+//@implementation  FHRentDetailResponseDataFacilitiesModel
+//
+//+ (JSONKeyMapper*)keyMapper
+//{
+//    NSDictionary *dict = @{
+//                           @"iconUrl": @"icon_url",
+//                           };
+//    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+//        return dict[keyName]?:keyName;
+//    }];
+//}
+//
+//+ (BOOL)propertyIsOptional:(NSString *)propertyName
+//{
+//    return YES;
+//}
+//
+//@end
 
 
 @implementation  FHRentDetailResponseDataHouseImageModel
@@ -373,14 +373,14 @@
 @end
 
 
-@implementation  FHRentDetailResponseDataCoreInfoModel
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
+//@implementation  FHRentDetailResponseDataCoreInfoModel
+//
+//+ (BOOL)propertyIsOptional:(NSString *)propertyName
+//{
+//    return YES;
+//}
+//
+//@end
 
 @implementation FHRentDetailImShareInfoModel
 

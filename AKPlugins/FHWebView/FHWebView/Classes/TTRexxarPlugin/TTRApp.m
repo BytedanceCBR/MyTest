@@ -133,6 +133,15 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
+- (void)saveWebPhoneWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    NSString *phoneNum = [param objectForKey:@"phone"];
+    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+    if (phoneNum) {
+        [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
+    }
+}
+
 - (void)configWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
     NSString *clientID = [param objectForKey:@"client_id"];
     if (isEmptyString(clientID)) {

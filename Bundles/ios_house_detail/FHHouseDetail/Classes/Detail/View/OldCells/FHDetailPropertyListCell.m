@@ -58,7 +58,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         __block CGFloat lastViewLeftOffset = 20;
         __block CGFloat lastTopOffset = 20;
         CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 40) / 2;
-        [model.baseInfo enumerateObjectsUsingBlock:^(FHDetailDataBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [model.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (obj.isSingle) {
                 [singles addObject:obj];
             } else {
@@ -103,7 +103,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         if (singles.count > 0) {
             // 重新计算topOffset
             topOffset = 6 + (doubleCount / 2 + doubleCount % 2) * listRowHeight;
-            [singles enumerateObjectsUsingBlock:^(FHDetailDataBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHPropertyListRowView *v = [[FHPropertyListRowView alloc] init];
                 [self.contentView addSubview:v];
                 [v mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -15,6 +15,7 @@
 #import "FHUserTracker.h"
 #import "FHFloorPanPicShowViewController.h"
 #import "FHDetailPictureViewController.h"
+#import <BDWebImage/BDWebImageManager.h>
 
 #define K_CELLID @"cell_id"
 
@@ -34,7 +35,8 @@
 @property(nonatomic, assign) BOOL isLarge;
 @property(nonatomic, assign) NSInteger currentIndex;
 @property(nonatomic, assign) NSTimeInterval enterTimestamp;
-@property (nonatomic, assign)   CGFloat       photoCellHeight;
+@property(nonatomic, assign)   CGFloat       photoCellHeight;
+@property(nonatomic, assign) BOOL instantShift;//秒开数据首次设置偏移
 
 @end
 
@@ -306,6 +308,12 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if ([(FHDetailPhotoHeaderModel *)self.currentData isInstantData]) {
+        //列表页s带入的数据不报埋点
+        return;
+    }
+    
     NSInteger index = [self indexForIndexPath:indexPath];
     [self trackPictureShowWithIndex:index];
 }
@@ -320,7 +328,22 @@
 
     NSURL *url = [NSURL URLWithString:img.url];
     if (url) {
-        [cell.imageView bd_setImageWithURL:url placeholder:self.placeHolder];
+        NSArray *instantImages = [(FHDetailPhotoHeaderModel *)self.currentData instantHouseImages];
+        UIImage *placeHolder = nil;
+        if (([instantImages count] > index) || (instantImages.count > 0 && !self.instantShift && indexPath.item == 0)) {
+            NSInteger imgIndex = MIN(index, indexPath.item);
+            FHImageModel *imgModel = instantImages[imgIndex];
+            NSString *key = [[BDWebImageManager sharedManager] requestKeyWithURL:[NSURL URLWithString:imgModel.url]];
+            placeHolder = [[[BDWebImageManager sharedManager] imageCache] imageForKey:key];
+        }
+        if (instantImages) {
+            self.instantShift = YES;
+        }
+        
+        if (!placeHolder) {
+            placeHolder = self.placeHolder;
+        }
+        [cell.imageView bd_setImageWithURL:url placeholder:placeHolder];
     }else{
         cell.imageView.image = self.placeHolder;
     }
@@ -331,6 +354,10 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ([(FHDetailPhotoHeaderModel *)self.currentData isInstantData]) {
+        //列表页s带入的数据不响应
+        return;
+    }
     NSInteger index = [self indexForIndexPath:indexPath];
     [self showImages:self.images currentIndex:index];
 }

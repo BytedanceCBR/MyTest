@@ -91,13 +91,13 @@
             NSMutableArray *headerImages = [NSMutableArray new];
             NSMutableArray *imageTitles = [NSMutableArray new];
             if (model.contact.businessLicense.length > 0) {
-                FHDetailHouseDataItemsHouseImageModel *imageModel = [[FHDetailHouseDataItemsHouseImageModel alloc] init];
+                FHImageModel *imageModel = [[FHImageModel alloc] init];
                 imageModel.url = model.contact.businessLicense;
                 [imageTitles addObject:@"营业执照"];
                 [headerImages addObject:imageModel];
             }
             if (model.contact.certificate.length > 0) {
-                FHDetailHouseDataItemsHouseImageModel *imageModel = [[FHDetailHouseDataItemsHouseImageModel alloc] init];
+                FHImageModel *imageModel = [[FHImageModel alloc] init];
                 imageModel.url = model.contact.certificate;
                 [imageTitles addObject:@"从业人员信息卡"];
                 [headerImages addObject:imageModel];

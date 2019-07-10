@@ -23,6 +23,25 @@
 }
 @end
 
+@implementation FHHouseMsgItemHouseVideo
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"hasVideo": @"has_video"
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHHouseMsgDataItemsItemsModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -36,6 +55,7 @@
     @"houseImageTag": @"house_image_tag",
     @"salesInfo": @"sales_info",
     @"desc": @"description",
+    @"houseVideo": @"house_video"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

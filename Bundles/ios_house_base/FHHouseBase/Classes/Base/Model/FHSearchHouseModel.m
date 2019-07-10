@@ -162,24 +162,24 @@
 //@end
 
 
-@implementation  FHSearchHouseDataItemsNeighborhoodInfoImagesModel
-
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"urlList": @"url_list",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
+//@implementation  FHSearchHouseDataItemsNeighborhoodInfoImagesModel
+//
+//+ (JSONKeyMapper*)keyMapper
+//{
+//    NSDictionary *dict = @{
+//                           @"urlList": @"url_list",
+//                           };
+//    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+//        return dict[keyName]?:keyName;
+//    }];
+//}
+//
+//+ (BOOL)propertyIsOptional:(NSString *)propertyName
+//{
+//    return YES;
+//}
+//
+//@end
 
 
 
@@ -206,24 +206,24 @@
 @end
 
 
-@implementation  FHSearchHouseDataItemsBaseInfoModel
+//@implementation  FHSearchHouseDataItemsBaseInfoModel
+//
+//+ (BOOL)propertyIsOptional:(NSString *)propertyName
+//{
+//    return YES;
+//}
+//
+//@end
 
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
 
-@end
-
-
-@implementation  FHSearchHouseDataItemsCoreInfoModel
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
+//@implementation  FHSearchHouseDataItemsCoreInfoModel
+//
+//+ (BOOL)propertyIsOptional:(NSString *)propertyName
+//{
+//    return YES;
+//}
+//
+//@end
 
 
 @implementation  FHSearchHouseDataItemsHouseImageTagModel

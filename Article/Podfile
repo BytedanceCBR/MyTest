@@ -676,6 +676,11 @@ post_install do |installer|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
             end
         end
+        if target.name == "TTArticleBase"
+            target.build_configurations.each do |config|
+                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','SD_WEBP=1']
+            end
+        end
     end
     
     # Xcode 11目前和CocoaPods有兼容问题，会导致Assets.car这个文件，由于出现在两处Output File而报错
