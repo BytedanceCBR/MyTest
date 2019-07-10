@@ -322,7 +322,7 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
 
 - (UILabel *)bodyTextLabel {
     if (!_bodyTextLabel) {
-        _bodyTextLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _bodyTextLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
         _bodyTextLabel.font = [UIFont systemFontOfSize:FHMNBodyTextLabelFontSize()];
         _bodyTextLabel.textColor = [UIColor themeGray1];
         _bodyTextLabel.numberOfLines = FHMNBodyTextLabelNumberOfLines();
@@ -443,14 +443,17 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
 
 - (void)updateBodyTextLabel {
     if (!isEmptyString(self.messageModel.content.bodyText)) {
-        NSMutableAttributedString *bodyAttrString = [[TTUGCEmojiParser parseInTextKitContext:self.messageModel.content.bodyText fontSize:FHMNBodyTextLabelFontSize()] mutableCopy];
+        UInt64 recordTime = [[NSDate date] timeIntervalSince1970]*1000;
+        NSMutableAttributedString *bodyAttrString = [[TTUGCEmojiParser parseInCoreTextContext:self.messageModel.content.bodyText fontSize:FHMNBodyTextLabelFontSize()] mutableCopy];
         NSDictionary *attributes = [NSString tt_attributesWithFont:[UIFont systemFontOfSize:FHMNBodyTextLabelFontSize()]
                                                         lineHeight:FHMNBodyTextLabelLineHeight()
                                                      lineBreakMode:NSLineBreakByWordWrapping
                                                    firstLineIndent:0
                                                          alignment:NSTextAlignmentLeft];
         [bodyAttrString addAttributes:attributes range:NSMakeRange(0, bodyAttrString.length)];
-        self.bodyTextLabel.attributedText = [bodyAttrString copy];
+        [self.bodyTextLabel setText: [bodyAttrString copy]];
+        UInt64 recordTimeNow = [[NSDate date] timeIntervalSince1970]*1000;
+        NSLog(@"update text cost time:%qX",recordTime);
     } else {
         self.bodyTextLabel.attributedText = nil;
     }
