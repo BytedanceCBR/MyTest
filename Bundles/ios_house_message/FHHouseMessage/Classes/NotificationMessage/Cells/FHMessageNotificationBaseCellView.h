@@ -90,7 +90,7 @@ extern CGFloat FHMNUserNameLabelMinWidth();
 @property(nonatomic, strong, nullable) UIImageView *refImageView;    //右侧展示的引用图
 @property(nonatomic, strong, nullable) TTUGCAttributedLabel *bodyTextLabel;   //消息主体
 @property(nonatomic, strong, nullable) UILabel *timeLabel;       //显示时间
-@property(nonatomic, strong, nullable) UIButton *multiTextView;   //展示聚合消息的view
+@property(nonatomic, strong, nullable) UIView *multiTextView;   //展示聚合消息的view
 @property(nonatomic, strong, nullable) UIImageView *multiTextArrow;  //展示聚合消息的箭头
 @property(nonatomic, strong, nullable) UILabel *multiTextLabel;  //展示聚合消息的内容
 @property(nonatomic, strong, nullable) UIView *bottomLineView;  //底部分割线

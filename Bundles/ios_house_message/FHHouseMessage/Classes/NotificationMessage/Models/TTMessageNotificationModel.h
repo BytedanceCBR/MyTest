@@ -35,6 +35,7 @@ typedef NS_ENUM(NSUInteger, TTMessageNotificationStyle) {
 @property (nonatomic, strong) NSNumber<Ignore> *cachedHeight;
 @property (nonatomic, strong) NSNumber<Ignore> *hasFollowed;   //代表我是否关注此用户
 @property (nonatomic, strong) NSNumber<Ignore> *hasBeFollowed; //代表此用户是否关注我
+@property (nonatomic, strong) NSNumber<Ignore> *index; //代表此用户是否关注我
 @property (nonatomic, strong) NSDictionary<Optional> *logPb; //代表此用户是否关注我
 @end
 

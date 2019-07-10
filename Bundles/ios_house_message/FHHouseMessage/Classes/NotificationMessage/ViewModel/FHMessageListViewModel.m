@@ -133,6 +133,7 @@
     UITableViewCell *cell = nil;
     if (indexPath.row < self.messageModels.count) {
         TTMessageNotificationModel *model = [self.messageModels objectAtIndex:indexPath.row];
+        model.index = @(indexPath.row);
         // refresh UI
         cell = [FHMessageNotificationCellHelper dequeueTableCellForData:model tableView:tableView atIndexPath:indexPath];
         if ([cell isKindOfClass:[FHMessageNotificationBaseCell class]]) {

@@ -348,10 +348,10 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
 
 - (UIButton *)multiTextView {
     if (!_multiTextView) {
-        _multiTextView = [UIButton buttonWithType:UIButtonTypeCustom];
+        _multiTextView = [[UIView alloc] initWithFrame:CGRectZero];
         //夜间模式的颜色
         _multiTextView.backgroundColor = [UIColor themeRed2];
-        [_multiTextView addTarget:self action:@selector(multiTextViewOnClick:) forControlEvents:UIControlEventTouchUpInside];
+//        [_multiTextView addTarget:self action:@selector(multiTextViewOnClick:) forControlEvents:UIControlEventTouchUpInside];
         [_multiTextView addSubview:self.multiTextLabel];
         [_multiTextView addSubview:self.multiTextArrow];
         [self addSubview:_multiTextView];
@@ -365,13 +365,17 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
         NSURL *url = [TTStringHelper URLWithURLString:self.messageModel.content.multiUrl];
         NSString *URLString = url.absoluteString;
         
-        TTRouteUserInfo *userInfo = nil;
         NSMutableDictionary *dict = @{}.mutableCopy;
         if([URLString containsString:@"comment_detail"]){
             dict[@"hidePost"] = @(1);
-            userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         }
-        
+        NSMutableDictionary *traceParam = [NSMutableDictionary dictionary];
+        traceParam[@"enter_from"] = @"feed_message_list";
+        traceParam[@"enter_type"] = @"feed_message_card";
+        traceParam[@"rank"] = self.messageModel.index;
+        traceParam[@"log_pb"] = self.messageModel.logPb;
+        dict[@"tracer"] = traceParam;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         if ([[TTRoute sharedRoute] canOpenURL:url]) {
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         } else if ([URLString hasPrefix:@"http://"] || [URLString hasPrefix:@"https://"]) {
