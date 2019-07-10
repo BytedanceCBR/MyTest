@@ -616,7 +616,7 @@
         for (FHDetailOldDataHouseImageDictListModel *listModel in mediaHeaderModel.houseImageDictList) {
             if (listModel.houseImageTypeName.length > 0) {
                 NSInteger tempCount = 0;
-                for (FHDetailHouseDataItemsHouseImageModel *imageModel in listModel.houseImageList) {
+                for (FHImageModel *imageModel in listModel.houseImageList) {
                     if (imageModel.url.length > 0) {
                         tempCount += 1;
                     }

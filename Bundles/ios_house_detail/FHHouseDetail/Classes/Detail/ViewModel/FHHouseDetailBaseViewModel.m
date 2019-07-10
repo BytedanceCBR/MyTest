@@ -118,6 +118,16 @@
     [self removePopLayerNotification];
 }
 
+-(void)handleInstantData:(id)data
+{
+    
+}
+
+-(BOOL)currentIsInstantData
+{
+    return NO;
+}
+
 #pragma mark - 需要子类实现的方法
 
 // 注册cell类型
@@ -159,12 +169,17 @@
     NSInteger row = indexPath.row;
     if (row >= 0 && row < self.items.count) {
         id data = self.items[row];
-        NSString *identifier = [self cellIdentifierForEntity:data];
+        NSString *identifier = NSStringFromClass([data class]);//[self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-            cell.baseViewModel = self;
-            [cell refreshWithData:data];
-            return cell;
+            if (cell) {
+                cell.baseViewModel = self;
+                [cell refreshWithData:data];
+                return cell;
+            }else{
+                NSLog(@"nil cell for data: %@",data);
+            }
+
         }
     }
     return [[UITableViewCell alloc] init];
@@ -201,6 +216,11 @@
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
+    
+    if ([self currentIsInstantData]) {
+        //当前是列表页带入的数据，不上报埋点
+        return;
+    }
     
     CGFloat originY = tableView.contentOffset.y;
     CGFloat cellOriginY = cell.frame.origin.y;

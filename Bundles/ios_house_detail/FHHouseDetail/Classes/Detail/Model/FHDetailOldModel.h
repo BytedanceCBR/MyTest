@@ -10,16 +10,17 @@
 #import "FHDetailBaseModel.h"
 #import "FHDetailNeighborhoodModel.h"
 #import <FHHouseBase/FHImageModel.h>
-
+#import <FHHouseBase/FHHouseCoreInfoModel.h>
+#import <FHHouseBase/FHHouseBaseInfoModel.h>
 NS_ASSUME_NONNULL_BEGIN
 
 // 和租房共用
-@interface FHDetailDataBaseInfoModel : JSONModel
-
-@property (nonatomic, assign) BOOL isSingle;
-@property (nonatomic, copy , nullable) NSString *attr;
-@property (nonatomic, copy , nullable) NSString *value;
-@end
+//@interface FHDetailDataBaseInfoModel : JSONModel
+//
+//@property (nonatomic, assign) BOOL isSingle;
+//@property (nonatomic, copy , nullable) NSString *attr;
+//@property (nonatomic, copy , nullable) NSString *value;
+//@end
 
 @protocol FHDetailOldDataNeighborhoodInfoEvaluationInfoSubScoresModel<NSObject>
 @end
@@ -195,7 +196,8 @@ typedef enum : NSInteger {
 
 @property (nonatomic, copy , nullable) NSString *houseImageTypeName;
 @property (nonatomic, assign) FHDetailHouseImageType houseImageType;
-@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImageList;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImageList;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *instantHouseImageList;
 @end
 
 
@@ -301,7 +303,7 @@ typedef enum : NSInteger {
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, assign) NSInteger status;
-@property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoModel *neighborhoodInfo ;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) FHDetailOldDataHousePriceRangeModel *housePriceRange ;
@@ -317,8 +319,8 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailOldDataHouseOverreviewModel *houseOverreview ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataCoreInfoModel> *coreInfo;
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel> *priceTrend;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
-@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImage;
+@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImage;
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataHouseImageDictListModel> *houseImageDictList;
 @property (nonatomic, strong , nullable) FHVideoHouseVideoModel *houseVideo ;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
@@ -346,6 +348,7 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHDetailOldDataModel *data ;
+@property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 @end
 
 // MARK 自定义类型

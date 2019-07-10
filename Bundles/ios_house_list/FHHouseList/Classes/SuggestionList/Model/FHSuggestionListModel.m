@@ -162,6 +162,7 @@
                            @"houseType": @"house_type",
                            @"openUrl": @"open_url",
                            @"guessSearchId": @"guess_search_id",
+                           @"imageUrl":@"image_url"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

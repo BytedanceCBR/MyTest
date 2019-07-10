@@ -23,6 +23,7 @@
 #import <TTDeviceHelper.h>
 #import <FHEnvContext.h>
 #import <FHLocManager.h>
+#import <FHEnvContext.h>
 
 @implementation TTRAd
 + (TTRJSBInstanceType)instanceType {
@@ -152,6 +153,10 @@
     }
     
     [locationDict setValue:provice forKey:@"province"];
+    
+    NSString *cityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+    [locationDict setValue:cityName forKey:@"city"];
+
     callback(TTRJSBMsgSuccess, @{@"address_info": locationDict,@"code": @(locationDict[@"latitude"] != nil && [locationDict[@"latitude"] integerValue] != 0)});
 }
 

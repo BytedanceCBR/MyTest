@@ -17,6 +17,7 @@
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import <FHRNHelper.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -38,6 +39,7 @@
 @property (nonatomic, copy)   NSString* imprId;
 @property (nonatomic, assign)   BOOL isDisableGoDetail;
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
+//@property (nonatomic, strong) id instantData;
 
 @end
 
@@ -109,6 +111,8 @@
         }else {
             [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_schema_error" metric:nil category:@{@"status":@(0)} extra:nil];
         }
+        
+        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
     }
     return self;
 }
@@ -120,6 +124,16 @@
     [self startLoadData];
     self.isViewDidDisapper = NO;
     
+    if(![SSCommonLogic disableDetailInstantShow]){
+        if (self.instantData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.viewModel handleInstantData:self.instantData];
+            });
+        }
+    }else{
+        self.instantData = nil;
+    }
+        
     if (!self.isDisableGoDetail) {
         [self.viewModel addGoDetailLog];
     }
@@ -182,11 +196,15 @@
 
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
-        [self startLoading];
+        if (!self.instantData) {
+            [self startLoading];
+        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
-        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        if (!self.instantData) {
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        }
     }
 }
 
@@ -233,7 +251,7 @@
     [self.view addSubview:_bottomBar];
     self.viewModel.bottomBar = _bottomBar;
     _bottomBar.hidden = YES;
-
+    
     _bottomStatusBar = [[UILabel alloc]init];
     _bottomStatusBar.textAlignment = NSTextAlignmentCenter;
     _bottomStatusBar.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
@@ -499,3 +517,5 @@
 }
 
 @end
+
+NSString *const INSTANT_DATA_KEY = @"_INSTANT_DATA_KEY_";

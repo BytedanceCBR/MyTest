@@ -435,6 +435,18 @@
         layout.height = YGPointValue(54.0f);
     }];
     
+    [self.leftInfoView addSubview:self.houseVideoImageView];
+    _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video_small"];
+    
+    [_houseVideoImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.position = YGPositionTypeAbsolute;
+        layout.top = YGPointValue(27.0f);
+        layout.left = YGPointValue(25.0f);
+        layout.width = YGPointValue(20.0f);
+        layout.height = YGPointValue(20.0f);
+    }];
+    
     [_imageTagLabelBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
@@ -587,11 +599,11 @@
     
     self.priceLabel.text = commonModel.displayPricePerSqm;
 //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
-    FHSearchHouseDataItemsHouseImageModel *imageModel = commonModel.images.firstObject;
+    FHImageModel *imageModel = commonModel.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
     if (houseType == FHHouseTypeSecondHandHouse) {
-        FHHomeHouseDataItemsImagesModel *imageModel = commonModel.houseImage.firstObject;
+        FHImageModel *imageModel = commonModel.houseImage.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
         self.subTitleLabel.text = commonModel.displaySubtitle;
         self.priceLabel.text = commonModel.displayPrice;
@@ -612,7 +624,7 @@
         self.subTitleLabel.text = commonModel.subtitle;
         self.priceLabel.text = commonModel.pricing;
         self.pricePerSqmLabel.text = nil;
-        FHSearchHouseDataItemsHouseImageModel *imageModel = [commonModel.houseImage firstObject];
+        FHImageModel *imageModel = [commonModel.houseImage firstObject];
         [self updateMainImageWithUrl:imageModel.url];
         
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
@@ -644,11 +656,11 @@
     self.tagLabel.attributedText =  attributeString;
     self.priceLabel.text = commonModel.displayPricePerSqm;
     //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
-    FHSearchHouseDataItemsHouseImageModel *imageModel = commonModel.images.firstObject;
+    FHImageModel *imageModel = commonModel.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
     if (houseType == FHHouseTypeSecondHandHouse) {
-        FHHomeHouseDataItemsImagesModel *imageModel = commonModel.houseImage.firstObject;
+        FHImageModel *imageModel = commonModel.houseImage.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
         self.subTitleLabel.text = commonModel.displaySubtitle;
         
@@ -696,7 +708,7 @@
         }
         
         
-        FHSearchHouseDataItemsHouseImageModel *imageModel = [commonModel.houseImage firstObject];
+        FHImageModel *imageModel = [commonModel.houseImage firstObject];
         [self updateMainImageWithUrl:imageModel.url];
         
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
@@ -769,7 +781,7 @@
 {
     self.houseVideoImageView.hidden = YES;
     _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
+    FHImageModel *imageModel = model.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
     self.imageTagLabelBgView.hidden = YES;
@@ -802,7 +814,7 @@
 -(void)updateWithNewHouseModel:(FHNewHouseItemModel *)model {
     self.houseVideoImageView.hidden = YES;
     _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
+    FHImageModel *imageModel = model.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
     self.imageTagLabelBgView.hidden = YES;
@@ -853,7 +865,7 @@
         self.tagLabel.attributedText =  attributeString;
         
         self.priceLabel.text = model.displayPricePerSqm;
-        FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
+        FHImageModel *imageModel = model.images.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
     }
 }
@@ -863,7 +875,7 @@
 {
     self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
     _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
+    FHImageModel *imageModel = model.houseImage.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
@@ -989,7 +1001,7 @@
         _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     }
     
-    FHSearchHouseDataItemsHouseImageModel *imageModel = [model.houseImage firstObject];
+    FHImageModel *imageModel = [model.houseImage firstObject];
     [self updateMainImageWithUrl:imageModel.url];
     
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
