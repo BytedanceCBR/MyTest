@@ -92,6 +92,9 @@
 }
 
 - (void)followBtnClick {
+    NSMutableDictionary *tempDic = [self.apiParams mutableCopy];
+    tempDic[@"page_type"] = @"question";
+    self.apiParams = [tempDic copy];
     if (self.followBtn.followed) {
         // 取消点赞
         [self click_answer_dislike];

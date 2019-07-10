@@ -717,6 +717,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         self.commentModel = model;
     }
 
+    // 评论详情先不给接口传参
     [FHCommonApi requestCommonDigg: [NSString stringWithFormat:@"%@", commentId] groupType:FHDetailDiggTypeCOMMENT action:action completion:nil];
     [self onStateChange:self.pageState];
 }

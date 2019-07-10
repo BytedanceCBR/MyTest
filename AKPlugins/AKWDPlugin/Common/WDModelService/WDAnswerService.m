@@ -84,8 +84,14 @@
     } else if (diggType == WDDiggTypeUnDigg) {
         action = 0;
     }
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    dict[@"enter_from"] = enterFrom;
+    dict[@"page_type"] = apiParam[@"page_type"];
+    if (!apiParam[@"page_type"]) {
+        dict[@"page_type"] = @"answer";
+    }
     // 新接口
-    [FHCommonApi requestCommonDigg:ansID groupType:FHDetailDiggTypeANSWER action:action completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHCommonApi requestCommonDigg:ansID groupType:FHDetailDiggTypeANSWER action:action tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (finishBlock) {
             finishBlock(error);
         }

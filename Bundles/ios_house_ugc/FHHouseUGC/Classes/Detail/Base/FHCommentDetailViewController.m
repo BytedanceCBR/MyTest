@@ -430,7 +430,7 @@
     dict[@"element_from"] = self.tracerDict[@"element_from"];
     dict[@"page_type"] = self.tracerDict[@"page_type"];
     
-    [FHCommonApi requestCommonDigg:self.groupModel.groupID groupType:FHDetailDiggTypeTHREAD action:self.user_digg completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHCommonApi requestCommonDigg:self.groupModel.groupID groupType:FHDetailDiggTypeTHREAD action:self.user_digg tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
     }];
     

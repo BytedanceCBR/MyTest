@@ -311,7 +311,7 @@
     dict[@"element_from"] = self.tracerDict[@"element_from"];
     dict[@"page_type"] = self.tracerDict[@"page_type"];
     // 新接口
-    [FHCommonApi requestCommonDigg: [NSString stringWithFormat:@"%@", _commentModel.commentID] groupType:FHDetailDiggTypeCOMMENT action:action completion:nil];
+    [FHCommonApi requestCommonDigg: [NSString stringWithFormat:@"%@", _commentModel.commentID] groupType:FHDetailDiggTypeCOMMENT action:action tracerParam:dict completion:nil];
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     [dic setValue:_commentModel.commentID.stringValue forKey:@"ext_value"];
