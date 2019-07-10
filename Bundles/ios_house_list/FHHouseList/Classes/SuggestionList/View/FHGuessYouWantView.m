@@ -357,7 +357,10 @@
 - (void)trackShowEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
     NSString *wordType = [self wordTypeFor:model.guessSearchType];
     if (model.type == 1) {
-        wordType = @"hot";
+        wordType = @"web";
+        if (model.rank >= 0) {
+            rank = model.rank;
+        }
     }
     NSDictionary *tracerDic = @{
                                 @"word":model.text.length > 0 ? model.text : @"be_null",
@@ -371,7 +374,10 @@
 - (void)trackClickEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
     NSString *wordType = [self wordTypeFor:model.guessSearchType];
     if (model.type == 1) {
-        wordType = @"hot";
+        wordType = @"web";
+        if (model.rank >= 0) {
+            rank = model.rank;
+        }
     }
     NSDictionary *tracerDic = @{
                                 @"word":model.text.length > 0 ? model.text : @"be_null",
