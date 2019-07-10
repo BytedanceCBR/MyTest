@@ -16,7 +16,7 @@
 
 #define leftMargin 20
 #define rightMargin 20
-#define maxLines 3
+#define maxLines 5
 
 @interface FHUGCMultiImageCell ()<TTUGCAttributedLabelDelegate>
 
