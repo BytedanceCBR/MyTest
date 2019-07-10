@@ -366,8 +366,7 @@
     } else {
         if ([query isKindOfClass:[NSString class]] && query.length > 0) {
             query = [query stringByAppendingString:[NSString stringWithFormat:@"&%@=%@",CHANNEL_ID,CHANNEL_ID_SEARCH_HOUSE_WITH_BANNER]];
-        }else
-        {
+        }else{
             query = [NSString stringWithFormat:@"%@=%@",CHANNEL_ID,CHANNEL_ID_SEARCH_HOUSE_WITH_BANNER];
         }
         [self requestErshouHouseListData:isRefresh query:query offset:offset searchId:searchId];
