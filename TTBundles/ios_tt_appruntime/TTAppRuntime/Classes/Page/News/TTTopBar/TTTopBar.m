@@ -99,7 +99,10 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (dataModel.cityAvailability && [dataModel.cityAvailability.enable respondsToSelector:@selector(boolValue)] &&[dataModel.cityAvailability.enable boolValue] == false) {
-        self.pageSearchPanel.hidden = YES;
+        
+        if (self.isShowTopSearchPanel) {
+            self.pageSearchPanel.hidden = YES;
+        }
 
         if (self.topUnAvalibleCityContainer) {
             [self.topUnAvalibleCityContainer removeFromSuperview];
@@ -209,7 +212,9 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
             [self.topUnAvalibleCityContainer removeFromSuperview];
             self.topUnAvalibleCityContainer = nil;
         }
-        self.pageSearchPanel.hidden = NO;
+        if (self.isShowTopSearchPanel) {
+            self.pageSearchPanel.hidden = NO;
+        }
     }
 }
 
@@ -217,10 +222,15 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
 {
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (dataModel.cityAvailability && [dataModel.cityAvailability.enable respondsToSelector:@selector(boolValue)] &&[dataModel.cityAvailability.enable boolValue] == false) {
-        self.pageSearchPanel.hidden = YES;
+        
+        if (self.isShowTopSearchPanel) {
+            self.pageSearchPanel.hidden = YES;
+        }
     }else
     {
-        self.pageSearchPanel.hidden = NO;
+        if (self.isShowTopSearchPanel) {
+            self.pageSearchPanel.hidden = NO;
+        }
     }
 }
 
@@ -263,6 +273,9 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         _pageSearchPanel = [[FHHomeSearchPanelView alloc] init];
         //    _pageSearchPanel = [[HomePageSearchPanel alloc] init];
         [self.backgroundImageView addSubview:_pageSearchPanel];
+    }else
+    {
+        self.pageSearchPanel = nil;
     }
 
     
@@ -355,7 +368,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     //        make.height.mas_equalTo(44.0f);
     //    }];
     
-    if (self.isShowTopSearchPanel) {
+    if (self.isShowTopSearchPanel && _pageSearchPanel) {
         [_pageSearchPanel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self);
             make.bottom.mas_equalTo(_backgroundImageView.mas_bottom);
