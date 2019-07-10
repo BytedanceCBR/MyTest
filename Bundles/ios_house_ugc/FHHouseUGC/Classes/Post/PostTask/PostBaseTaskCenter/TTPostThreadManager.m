@@ -179,6 +179,7 @@
     publishModel.promotion_id = task.promotionID;
     publishModel._response = NSStringFromClass([FRPublishPostResponseModel class]);
     publishModel.sdk_params = task.sdkParams;
+    publishModel.extraTrack = task.extraTrack;
     
     uint64_t startTime = [NSObject currentUnixTime];
 
