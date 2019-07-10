@@ -8,6 +8,7 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 #import "FHDetailBaseModel.h"
+#import <FHHouseBase/FHHouseBaseInfoModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,15 +22,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *value;
 @end
 
-@protocol FHDetailNeighborhoodDataBaseInfoModel<NSObject>
-@end
-
-@interface FHDetailNeighborhoodDataBaseInfoModel : JSONModel
-
-@property (nonatomic, assign) BOOL isSingle;
-@property (nonatomic, copy , nullable) NSString *attr;
-@property (nonatomic, copy , nullable) NSString *value;
-@end
+//@protocol FHDetailNeighborhoodDataBaseInfoModel<NSObject>
+//@end
+//
+//@interface FHDetailNeighborhoodDataBaseInfoModel : JSONModel
+//
+//@property (nonatomic, assign) BOOL isSingle;
+//@property (nonatomic, copy , nullable) NSString *attr;
+//@property (nonatomic, copy , nullable) NSString *value;
+//@end
 
 @protocol FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoSubScoresModel<NSObject>
 @end
@@ -124,7 +125,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel> *priceTrend;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataStatsInfoModel> *statsInfo;
-@property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataBaseInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighborhoodInfoModel *neighborhoodInfo ;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
@@ -134,7 +135,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighbordhoodStatusModel *neighbordhoodStatus ;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
-@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *neighborhoodImage;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *neighborhoodImage;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataCoreInfoModel> *coreInfo;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel *evaluationInfo ;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
@@ -147,6 +148,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataModel *data ;
+@property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 @end
 
 

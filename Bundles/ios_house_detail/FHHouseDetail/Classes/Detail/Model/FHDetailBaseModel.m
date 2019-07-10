@@ -15,21 +15,21 @@
 
 @end
 
-@implementation FHDetailHouseDataItemsHouseImageModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"urlList": @"url_list",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
+//@implementation FHDetailHouseDataItemsHouseImageModel
+//+ (JSONKeyMapper*)keyMapper
+//{
+//    NSDictionary *dict = @{
+//                           @"urlList": @"url_list",
+//                           };
+//    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+//        return dict[keyName]?:keyName;
+//    }];
+//}
+//+ (BOOL)propertyIsOptional:(NSString *)propertyName
+//{
+//    return YES;
+//}
+//@end
 
 @implementation FHDetailShareInfoModel
 + (JSONKeyMapper*)keyMapper

@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *squaremeter;
 @property (nonatomic, copy , nullable) NSString *imprId;
-@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel *> *images;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel *> *images;
 @property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, assign) NSInteger index;
@@ -60,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailFloorPanDetailInfoDataContactModel *contact ;  
 @property (nonatomic, copy , nullable) NSString *pricing;
 @property (nonatomic, strong , nullable) NSArray<FHDetailFloorPanDetailInfoDataRecommendModel> *recommend;
-@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *districtName;
 @property (nonatomic, copy , nullable) NSString *courtId;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;

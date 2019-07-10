@@ -9,7 +9,7 @@
 #import <JSONModel.h>
 #import "FHBaseModelProtocol.h"
 #import "FHHouseListModel.h"
-
+#import "FHNewHouseItemModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 
@@ -60,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
+@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, copy , nullable) NSString *displayTitle;
 @property (nonatomic, copy , nullable) NSString *displayDescription;
 @property (nonatomic, copy , nullable) NSString *houseId;
@@ -68,11 +68,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *searchId;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, strong , nullable) FHNewHouseItemCoreInfoModel *coreInfo ;
-
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
+@property (nonatomic, strong , nullable) NSDictionary *timeline;
+@property (nonatomic, strong , nullable) NSDictionary *comment;
+@property (nonatomic, strong , nullable) NSDictionary *globalPricing;
+@property (nonatomic, strong , nullable) NSDictionary *floorpanList;
+@property (nonatomic, strong , nullable) NSDictionary *contact;
+@property (nonatomic, strong , nullable) NSDictionary *userStatus;
+
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, assign) BOOL isLast;
 

@@ -10,6 +10,8 @@
 #import "FHBaseModelProtocol.h"
 #import "FHHouseType.h"
 #import <FHHouseBase/FHFillFormAgencyListItemModel.h>
+#import <FHHouseBase/FHImageModel.h>
+#import <FHHouseBase/FHHouseCoreInfoModel.h>
 
 @class FHDetailNewDataSmallImageGroupModel;
 
@@ -22,18 +24,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@protocol FHDetailHouseDataItemsHouseImageModel<NSObject>
-@end
-
-@interface  FHDetailHouseDataItemsHouseImageModel  : JSONModel<FHDetailPhotoHeaderModelProtocol>
-
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
-
-@end
+//@protocol FHDetailHouseDataItemsHouseImageModel<NSObject>
+//@end
+//
+//@interface  FHDetailHouseDataItemsHouseImageModel  : JSONModel<FHDetailPhotoHeaderModelProtocol>
+//
+//@property (nonatomic, copy , nullable) NSString *url;
+//@property (nonatomic, copy , nullable) NSString *width;
+//@property (nonatomic, strong , nullable) NSArray *urlList;
+//@property (nonatomic, copy , nullable) NSString *uri;
+//@property (nonatomic, copy , nullable) NSString *height;
+//
+//@end
 
 @interface FHDetailBaseModel : NSObject
 
@@ -42,7 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailPhotoHeaderModel : FHDetailBaseModel
 @property (nonatomic,assign)BOOL isNewHouse;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel *> *smallImageGroup;
-@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel *> *houseImage;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel *> *houseImage;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel *> *instantHouseImages;//列表页小图
+@property (nonatomic, assign) BOOL isInstantData;
 @end
 
 @interface FHDetailShareInfoModel : JSONModel
@@ -89,6 +93,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *noticeDesc;
 @property (nonatomic, strong , nullable) FHDetailContactImageTagModel *imageTag;
+
+@property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 
 - (nonnull id)copyWithZone:(nullable NSZone *)zone;
 
@@ -142,8 +148,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 // 二手房、租房共用 协议
-@protocol FHDetailDataBaseInfoModel<NSObject>
-@end
+//@protocol FHDetailDataBaseInfoModel<NSObject>
+//@end
 
 @protocol FHDetailPriceTrendModel<NSObject>
 @end

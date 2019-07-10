@@ -39,10 +39,10 @@
     }];
 }
 
-- (void)setDataModel:(FHDetailHouseDataItemsHouseImageModel *)dataModel
+- (void)setDataModel:(FHImageModel *)dataModel
 {
-    if ([dataModel isKindOfClass:[FHDetailHouseDataItemsHouseImageModel class]]) {
-        FHDetailHouseDataItemsHouseImageModel *model = (FHDetailHouseDataItemsHouseImageModel *)dataModel;
+    if ([dataModel isKindOfClass:[FHImageModel class]]) {
+        FHImageModel *model = (FHImageModel *)dataModel;
         if (model.url) {
             [_imageV bd_setImageWithURL:[NSURL URLWithString:model.url] placeholder:[UIImage imageNamed: @"default_image"]];
         }
