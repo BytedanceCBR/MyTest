@@ -419,7 +419,7 @@
     if (openUrl.length <= 0) {
         openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,queryText,placeholder];
     }
-    if (self.suggestDelegate != NULL) {
+    if (self.suggestDelegate != NULL && ![openUrl containsString:@"webview"]) {
         // 1、suggestDelegate说明需要回传sug数据
         // 2、如果是从租房大类页和二手房大类页向下个页面跳转，则需要移除搜索列表相关的页面
         // 3、如果是从列表页和找房Tab列表页进入搜索，则还需pop到对应的列表页

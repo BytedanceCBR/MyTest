@@ -56,7 +56,7 @@
             make.bottom.mas_equalTo(-10);
         }];
         NSMutableArray *tempArray = [NSMutableArray new];
-        [model.facilities enumerateObjectsUsingBlock:^(FHRentDetailResponseDataFacilitiesModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [model.facilities enumerateObjectsUsingBlock:^(FHRentFacilitiesModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             UILabel *strickoutLable = [[UILabel alloc] init];
             strickoutLable.textColor = [UIColor colorWithHexString:@"#a0aab3"];
             strickoutLable.font = [UIFont themeFontRegular:14];

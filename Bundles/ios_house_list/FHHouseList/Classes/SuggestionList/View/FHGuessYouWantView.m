@@ -11,6 +11,9 @@
 #import <UIColor+Theme.h>
 #import "TTDeviceHelper.h"
 #import "FHUserTracker.h"
+#import <BDImageView.h>
+#import <UIImageView+BDWebImage.h>
+#import <BDImageView.h>
 
 @interface FHGuessYouWantView ()
 
@@ -47,7 +50,24 @@
 }
 
 - (void)setGuessYouWantItems:(NSArray *)guessYouWantItems {
-    _guessYouWantItems = guessYouWantItems;
+    
+    FHGuessYouWantResponseDataDataModel *dataItem = nil;
+    NSMutableArray *processFirstArray = [NSMutableArray new];
+    
+    FHGuessYouWantResponseDataDataModel *dataItemTest = guessYouWantItems.firstObject;
+ 
+    NSMutableArray *guessItems = [NSMutableArray arrayWithArray:guessYouWantItems];
+
+    for (NSInteger index =0; index < guessYouWantItems.count; index++) {
+        FHGuessYouWantResponseDataDataModel *dataItem = guessYouWantItems[index];
+        if ([dataItem isKindOfClass:[FHGuessYouWantResponseDataDataModel class]]) {
+            if (dataItem.type == 1 && dataItem.rank >= 0 && guessItems.count > dataItem.rank) {
+                [guessItems exchangeObjectAtIndex:dataItem.rank withObjectAtIndex:index];
+            }
+        }
+    }
+    
+    _guessYouWantItems = guessItems;
     [self reAddViews];
 }
 
@@ -66,11 +86,18 @@
         if (item.text.length > 0) {
             FHGuessYouWantButton *button = [[FHGuessYouWantButton alloc] init];
             button.label.text = item.text;
-            CGSize size = [button.label sizeThatFits:CGSizeMake(121, 17)];
-            if (size.width > 120) {
-                size.width = 120;
+            CGSize size = [button.label sizeThatFits:CGSizeMake(201, 17)];
+            if (size.width > 200) {
+                size.width = 200;
             }
-            size.width += 12;
+            
+            if (item.type == 1) {
+                size.width += 25;
+            }else
+            {
+                size.width += 12;
+            }
+            
             button.tag = currentIndex;
             [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
             if (size.width > remainWidth) {
@@ -98,9 +125,48 @@
                 make.width.mas_equalTo(size.width);
                 make.height.mas_equalTo(29);
             }];
+            
+            if (item.type == 1) {
+                button.label.text = @"";
+
+                UILabel *titleLabel = [UILabel new];
+                titleLabel.text = item.text;
+                titleLabel.textAlignment = NSTextAlignmentLeft;
+                [button addSubview:titleLabel];
+                titleLabel.font = button.label.font;
+                [titleLabel setBackgroundColor:[UIColor clearColor]];
+                [button setBackgroundColor:[UIColor colorWithRed:255.0/255.0 green:88/255.0  blue:105/255.0  alpha:0.1]];
+                titleLabel.textColor = [UIColor themeRed1];
+
+                [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.top.bottom.equalTo(button);
+                    make.left.equalTo(button).offset(23);
+                    make.right.equalTo(button).offset(-1);
+                }];
+
+                UIImageView *imageViewIcon = [UIImageView new];
+                [button addSubview:imageViewIcon];
+
+                if (item.imageUrl) {
+                    [imageViewIcon bd_setImageWithURL:[NSURL URLWithString:item.imageUrl] placeholder:[UIImage imageNamed:@"fh_real_houseinvalid-name"]];
+                }
+                
+                // 布局
+                [imageViewIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(5);
+                    make.centerY.equalTo(button);
+                    make.width.mas_equalTo(14);
+                    make.height.mas_equalTo(14);
+                }];
+                [imageViewIcon setBackgroundColor:[UIColor clearColor]];
+
+                [button layoutIfNeeded];
+            }
+            
             isFirtItem = NO;
             leftView = button;
             [_tempViews addObject:button];
+           
             [self trackShowEventData:item rank:button.tag];
         }
         currentIndex += 1;
@@ -197,6 +263,7 @@
     
     while (vArray.count > 0) {
         FHGuessYouWantResponseDataDataModel *item = [vArray firstObject];
+        
         if (item.text.length > 0) {
             CGFloat len = [self guessYouWantTextLength:item.text];
             if (len > remainWidth) {
@@ -206,7 +273,7 @@
                         // 找满足长度的数据
                         FHGuessYouWantResponseDataDataModel *remainItem = vArray[index];
                         CGFloat remainLen = [self guessYouWantTextLength:remainItem.text];
-                        if (remainLen <= remainWidth) {
+                        if (remainLen <= remainWidth || remainItem.type == 1) {
                             // 找到
                             findIndex = index;
                             remainWidth -= (remainLen + 10);
@@ -254,7 +321,24 @@
             [retArray removeLastObject];
             return retArray;
         }
-        NSArray *tempArray = [array fh_randomArray];
+        NSArray <FHGuessYouWantResponseDataDataModel *>*tempArray = [array fh_randomArray];
+        
+        NSMutableArray *arrayTmp = [NSMutableArray new];
+        if (arrayTmp) {
+            [arrayTmp addObjectsFromArray:tempArray];
+        }
+        
+        for (NSInteger index = 0; index < arrayTmp.count; index ++) {
+            FHGuessYouWantResponseDataDataModel *itemTmp = arrayTmp[index];
+            if ([itemTmp isKindOfClass:[FHGuessYouWantResponseDataDataModel class]] && itemTmp.type == 1) {
+                if(itemTmp.rank >= 0 && arrayTmp.count > itemTmp.rank)
+                {
+                    [arrayTmp exchangeObjectAtIndex:itemTmp.rank withObjectAtIndex:index];
+                }
+            }
+        }
+        tempArray = arrayTmp;
+        
         return [self firstLineGreaterThanSecond:firstWords array:tempArray count:count + 1];
     }
 }
@@ -272,6 +356,12 @@
 
 - (void)trackShowEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
     NSString *wordType = [self wordTypeFor:model.guessSearchType];
+    if (model.type == 1) {
+        wordType = @"web";
+        if (model.rank >= 0) {
+            rank = model.rank;
+        }
+    }
     NSDictionary *tracerDic = @{
                                 @"word":model.text.length > 0 ? model.text : @"be_null",
                                 @"word_id":model.guessSearchId.length > 0 ? model.guessSearchId : @"be_null",
@@ -283,6 +373,12 @@
 
 - (void)trackClickEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
     NSString *wordType = [self wordTypeFor:model.guessSearchType];
+    if (model.type == 1) {
+        wordType = @"web";
+        if (model.rank >= 0) {
+            rank = model.rank;
+        }
+    }
     NSDictionary *tracerDic = @{
                                 @"word":model.text.length > 0 ? model.text : @"be_null",
                                 @"word_id":model.guessSearchId.length > 0 ? model.guessSearchId : @"be_null",

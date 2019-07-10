@@ -8,6 +8,9 @@
 #import "JSONModel.h"
 #import "FHBaseModelProtocol.h"
 #import "FHHouseListModel.h"
+#import "FHHouseBaseInfoModel.h"
+#import "FHHouseCoreInfoModel.h"
+#import "FHRentFacilitiesModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,8 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *subtitle;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *houseImage;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImage;
+@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *searchId;
@@ -43,6 +46,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHouseRentDataItemsHouseImageTagModel *houseImageTag ;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) NSArray * bottomText;//bottom text 是二维数组
+
+@property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) NSArray<FHHouseCoreInfoModel> *coreInfo;
+@property (nonatomic, strong , nullable) NSArray<FHRentFacilitiesModel> *facilities;
 
 @end
 

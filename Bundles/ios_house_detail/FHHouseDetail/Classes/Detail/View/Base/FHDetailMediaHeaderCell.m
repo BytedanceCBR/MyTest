@@ -131,15 +131,22 @@
                 groupType = @"图片";
             }
             
-            for (FHDetailHouseDataItemsHouseImageModel *imageModel in listModel.houseImageList) {
+            NSInteger index = 0;
+            NSArray<FHImageModel> *instantHouseImageList = listModel.instantHouseImageList;
+            for (FHImageModel *imageModel in listModel.houseImageList) {
                 if (imageModel.url.length > 0) {
                     FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
                     itemModel.mediaType = FHMultiMediaTypePicture;
                     itemModel.imageUrl = imageModel.url;
                     itemModel.groupType = groupType;
+                    if (instantHouseImageList.count > index) {
+                        FHImageModel *instantImgModel = instantHouseImageList[index];
+                        itemModel.instantImageUrl = instantImgModel.url;
+                    }
                     [itemArray addObject:itemModel];
                     [self.imageList addObject:imageModel];
                 }
+                index++;
             }
         }
     }
@@ -419,6 +426,10 @@
 #pragma mark - FHMultiMediaScrollViewDelegate
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
+    if ([(FHDetailMediaHeaderModel *)self.currentData isInstantData]) {
+        //列表页带入的数据不响应
+        return;
+    }
     // 图片逻辑
     if (index >= 0 && index < (self.imageList.count + self.vedioCount)) {
         [self showImagesWithCurrentIndex:index];
@@ -426,6 +437,12 @@
 }
 
 - (void)willDisplayCellForItemAtIndex:(NSInteger)index {
+    
+    if ([(FHDetailMediaHeaderModel *)self.currentData isInstantData]) {
+        //列表页带入的数据不报埋点
+        return;
+    }
+    
     [self trackPictureShowWithIndex:index];
 }
 

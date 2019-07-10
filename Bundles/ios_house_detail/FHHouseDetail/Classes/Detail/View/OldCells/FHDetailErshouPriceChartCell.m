@@ -292,9 +292,10 @@
         make.centerY.mas_equalTo(self.priceLabel);
         make.height.mas_equalTo(20);
     }];
-    [self.priceLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.top.mas_equalTo(90);
+        make.height.mas_equalTo(20);
     }];
     [self.chartView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(0);
