@@ -899,6 +899,14 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
                 [self finishSelectionAnimated:YES];
                 if (self.didDislikeWithOptionBlock) self.didDislikeWithOptionBlock(self, optionType);
             }];
+            
+            v.dislikeTracerBlock = ^{
+                @strongify(self);
+                if(self.dislikeTracerBlock){
+                    self.dislikeTracerBlock();
+                }
+            };
+            
             v;
         });
         

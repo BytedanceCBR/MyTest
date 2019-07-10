@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSDictionary *commonTrackingParameters;
 @property (nullable, nonatomic, copy) void (^selectionFinished)(FHFeedOperationWord *keyword, FHFeedOperationOptionType optionType);
 @property (nonatomic, readonly) UITableView *tableView;
+@property (nonatomic, copy) void(^dislikeTracerBlock)(void);
+
 - (void)refreshWithkeywords:(NSArray<FHFeedOperationWord *> *)keywords;
 @end
 

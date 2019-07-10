@@ -57,6 +57,7 @@ typedef NS_ENUM(NSInteger, TTFeedDislikeViewPushFrom) {
 @interface FHFeedOperationView : TTFeedPopupView
 
 @property (nonatomic, strong) FHFeedOperationWord *selectdWord;
+@property (nonatomic, copy) void(^dislikeTracerBlock)(void);
 
 - (void)refreshWithModel:(nullable FHFeedOperationViewModel *)model;
 
