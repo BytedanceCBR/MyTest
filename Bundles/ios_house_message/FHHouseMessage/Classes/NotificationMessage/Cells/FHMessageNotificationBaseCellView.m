@@ -94,7 +94,7 @@ inline CGFloat FHMNBodyTextLabelLineHeight() {
 }
 
 inline NSInteger FHMNBodyTextLabelNumberOfLines() {
-    return 0;
+    return 3;
 }
 
 inline CGFloat FHMNTimeLabelFontSize() {
@@ -226,9 +226,9 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
                                                      alignment:NSTextAlignmentLeft];
     [attributedString addAttributes:attributes range:NSMakeRange(0, attributedString.length)];
 
-    return [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
+    return [TTUGCAsyncAttributedLabel sizeThatFitsAttributedString:attributedString
                                             withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
-                                     limitedToNumberOfLines:0].height;
+                                     limitedToNumberOfLines:FHMNBodyTextLabelNumberOfLines()].height;
 }
 
 + (CGFloat)heightForRefTextLabelWithData:(nullable TTMessageNotificationModel *)data maxWidth:(CGFloat)maxWidth {
@@ -241,7 +241,7 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
                                                      alignment:NSTextAlignmentLeft];
     [refAttrString addAttributes:attributes range:NSMakeRange(0, refAttrString.length)];
 
-    return [TTTAttributedLabel sizeThatFitsAttributedString:[refAttrString copy]
+    return [TTUGCAsyncAttributedLabel sizeThatFitsAttributedString:[refAttrString copy]
                                             withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
                                      limitedToNumberOfLines:FHMNRefTextLabelNumberOfLines()].height;
 }
@@ -296,12 +296,10 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
 
 - (UILabel *)refTextLabel {
     if (!_refTextLabel) {
-        _refTextLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _refTextLabel = [[TTUGCAsyncAttributedLabel alloc] initWithFrame:CGRectZero];
         _refTextLabel.font = [UIFont systemFontOfSize:FHMNRefTextLabelFontSize()];
         _refTextLabel.textColor = [UIColor themeGray2];
         _refTextLabel.numberOfLines = FHMNRefTextLabelNumberOfLines();
-        _refTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        _refTextLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:_refTextLabel];
     }
     return _refTextLabel;
@@ -322,12 +320,10 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
 
 - (UILabel *)bodyTextLabel {
     if (!_bodyTextLabel) {
-        _bodyTextLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+        _bodyTextLabel = [[TTUGCAsyncAttributedLabel alloc] initWithFrame:CGRectZero];
         _bodyTextLabel.font = [UIFont systemFontOfSize:FHMNBodyTextLabelFontSize()];
         _bodyTextLabel.textColor = [UIColor themeGray1];
         _bodyTextLabel.numberOfLines = FHMNBodyTextLabelNumberOfLines();
-        _bodyTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        _bodyTextLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:_bodyTextLabel];
     }
     return _bodyTextLabel;
@@ -424,16 +420,18 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
 
 - (void)updateRefTextLabel {
     if (!isEmptyString(self.messageModel.content.refText)) {
-        NSMutableAttributedString *refAttrString = [[TTUGCEmojiParser parseInTextKitContext:self.messageModel.content.refText fontSize:FHMNRefTextLabelFontSize()] mutableCopy];
+        NSMutableAttributedString *refAttrString = [[TTUGCEmojiParser parseInCoreTextContext:self.messageModel.content.refText fontSize:FHMNRefTextLabelFontSize()] mutableCopy];
         NSDictionary *attributes = [NSString tt_attributesWithFont:[UIFont systemFontOfSize:FHMNRefTextLabelFontSize()]
                                                         lineHeight:FHMNRefTextLabelLineHeight()
-                                                     lineBreakMode:NSLineBreakByTruncatingTail
+                                                     lineBreakMode:NSLineBreakByWordWrapping
                                                    firstLineIndent:0
                                                          alignment:NSTextAlignmentLeft];
         [refAttrString addAttributes:attributes range:NSMakeRange(0, refAttrString.length)];
-        self.refTextLabel.attributedText = [refAttrString copy];
+        [refAttrString addAttribute:NSForegroundColorAttributeName value:[UIColor themeGray2] range:NSMakeRange(0, refAttrString.length)];
+        
+        [self.refTextLabel setText: [refAttrString copy]];
     } else {
-        self.refTextLabel.attributedText = nil;
+        [self.refTextLabel setText: nil];
     }
 }
 
@@ -447,7 +445,6 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
 
 - (void)updateBodyTextLabel {
     if (!isEmptyString(self.messageModel.content.bodyText)) {
-        UInt64 recordTime = [[NSDate date] timeIntervalSince1970]*1000;
         NSMutableAttributedString *bodyAttrString = [[TTUGCEmojiParser parseInCoreTextContext:self.messageModel.content.bodyText fontSize:FHMNBodyTextLabelFontSize()] mutableCopy];
         NSDictionary *attributes = [NSString tt_attributesWithFont:[UIFont systemFontOfSize:FHMNBodyTextLabelFontSize()]
                                                         lineHeight:FHMNBodyTextLabelLineHeight()
@@ -455,11 +452,10 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
                                                    firstLineIndent:0
                                                          alignment:NSTextAlignmentLeft];
         [bodyAttrString addAttributes:attributes range:NSMakeRange(0, bodyAttrString.length)];
-        [self.bodyTextLabel setText: [bodyAttrString copy]];
-        UInt64 recordTimeNow = [[NSDate date] timeIntervalSince1970]*1000;
-        NSLog(@"update text cost time:%qX",recordTime);
+        [bodyAttrString addAttribute:NSForegroundColorAttributeName value:[UIColor themeGray1] range:NSMakeRange(0, bodyAttrString.length)];
+        [self.bodyTextLabel setText:[bodyAttrString copy]];
     } else {
-        self.bodyTextLabel.attributedText = nil;
+        [self.bodyTextLabel setText:nil];
     }
 }
 

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SSViewBase.h"
 #import "TTIconLabel.h"
-#import "TTUGCAttributedLabel.h"
+#import "TTUGCAsyncAttributedLabel.h"
 
 @class TTMessageNotificationModel;
 
@@ -86,9 +86,9 @@ extern CGFloat FHMNUserNameLabelMinWidth();
 @property(nonatomic, strong, nullable) UIImageView *avatarImageView; //头像
 @property(nonatomic, strong, nullable) UILabel *roleInfoView;    //展示用户的名字以及认证信息，如v，版主，好友，已关注
 //@property (nonatomic, strong, nullable) SSThemedLabel          *contactInfoLabel;//展示联系人关系
-@property(nonatomic, strong, nullable) UILabel *refTextLabel;    //右侧展示的引用文本
+@property(nonatomic, strong, nullable) TTUGCAsyncAttributedLabel *refTextLabel;    //右侧展示的引用文本
 @property(nonatomic, strong, nullable) UIImageView *refImageView;    //右侧展示的引用图
-@property(nonatomic, strong, nullable) TTUGCAttributedLabel *bodyTextLabel;   //消息主体
+@property(nonatomic, strong, nullable) TTUGCAsyncAttributedLabel *bodyTextLabel;   //消息主体
 @property(nonatomic, strong, nullable) UILabel *timeLabel;       //显示时间
 @property(nonatomic, strong, nullable) UIView *multiTextView;   //展示聚合消息的view
 @property(nonatomic, strong, nullable) UIImageView *multiTextArrow;  //展示聚合消息的箭头
