@@ -81,16 +81,58 @@
     }
 }
 
+-(void)setType:(FHMapSearchWayChooseViewType)type
+{
+//    if (_type == type) {
+//        return;
+//    }
+    _type = type;
+    switch (type) {
+        case FHMapSearchWayChooseViewTypeBoth:
+        {
+            _subwayButton.hidden = NO;
+            _drawLineButton.hidden = NO;
+            _splitLine.hidden = NO;
+        }
+            break;
+        case FHMapSearchWayChooseViewTypeDraw:
+        {
+            _subwayButton.hidden = YES;
+            _splitLine.hidden = YES;
+            
+        }
+            break;
+        case FHMapSearchWayChooseViewTypeSubway:
+        {
+            _drawLineButton.hidden = YES;
+            _splitLine.hidden = YES;
+        }
+            break;
+        default:
+            
+            break;
+    }
+    [self setNeedsLayout];
+}
+
+
 -(void)layoutSubviews
 {
     [super layoutSubviews];
     _contentView.frame = self.bounds;
     CGRect frame = self.bounds;
-    frame.size.width /= 2;
-    _subwayButton.frame = frame;
-    frame.origin.x = frame.size.width;
-    _drawLineButton.frame = frame;
     
+    if (_subwayButton.hidden || _drawLineButton.hidden) {
+        
+        _subwayButton.frame = frame;
+        _drawLineButton.frame = frame;
+        
+    }else{
+        frame.size.width /= 2;
+        _subwayButton.frame = frame;
+        frame.origin.x = frame.size.width;
+        _drawLineButton.frame = frame;
+    }
     _splitLine.frame = CGRectMake(CGRectGetMidX(self.bounds), 18, 1, 18);
     
 }

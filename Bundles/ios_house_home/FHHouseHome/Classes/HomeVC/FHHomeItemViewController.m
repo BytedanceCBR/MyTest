@@ -24,6 +24,8 @@
 #import <FHHomeSearchPanelViewModel.h>
 #import <FHHouseBase/FHSearchChannelTypes.h>
 
+extern NSString *const INSTANT_DATA_KEY;
+
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
@@ -684,12 +686,11 @@
         {
             houseType = self.houseType;
         }
-        
-        
-        NSDictionary *dict = @{@"house_type":@(houseType),
+                
+        NSMutableDictionary *dict = @{@"house_type":@(houseType),
                                @"tracer": traceParam
-                               };
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                               }.mutableCopy;
+        dict[INSTANT_DATA_KEY] = theModel;
         
         NSURL *jumpUrl = nil;
         
@@ -704,6 +705,7 @@
         }
         
         if (jumpUrl != nil) {
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
         }
     }

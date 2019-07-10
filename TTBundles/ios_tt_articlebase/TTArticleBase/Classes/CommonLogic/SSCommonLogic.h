@@ -1399,6 +1399,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 //首页推荐红点请求时间间隔
 + (NSInteger)categoryBadgeTimeInterval;
 + (BOOL)imCanStart;
+//是否禁用详情页秒开
++(BOOL)disableDetailInstantShow;
 
 @end
 

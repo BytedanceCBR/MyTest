@@ -6,8 +6,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <JSONModel.h>
+#import <JSONModel/JSONModel.h>
 #import "FHDetailBaseModel.h"
+#import <FHHouseBase/FHHouseBaseInfoModel.h>
+#import <FHHouseBase/FHRentFacilitiesModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -92,32 +94,32 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@protocol FHRentDetailResponseDataCoreInfoModel<NSObject>
-
-@end
-
-
-@interface  FHRentDetailResponseDataCoreInfoModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *attr;
-@property (nonatomic, copy , nullable) NSString *value;
-
-@end
-
-
-@protocol FHRentDetailResponseDataFacilitiesModel<NSObject>
-
-@end
+//@protocol FHRentDetailResponseDataCoreInfoModel<NSObject>
+//
+//@end
+//
+//
+//@interface  FHRentDetailResponseDataCoreInfoModel  : JSONModel
+//
+//@property (nonatomic, copy , nullable) NSString *attr;
+//@property (nonatomic, copy , nullable) NSString *value;
+//
+//@end
 
 
-@interface  FHRentDetailResponseDataFacilitiesModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *iconUrl;
-@property (nonatomic, assign) BOOL enabled;
-@property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy , nullable) NSString *name;
-
-@end
+//@protocol FHRentDetailResponseDataFacilitiesModel<NSObject>
+//
+//@end
+//
+//
+//@interface  FHRentDetailResponseDataFacilitiesModel  : JSONModel
+//
+//@property (nonatomic, copy , nullable) NSString *iconUrl;
+//@property (nonatomic, assign) BOOL enabled;
+//@property (nonatomic, copy , nullable) NSString *id;
+//@property (nonatomic, copy , nullable) NSString *name;
+//
+//@end
 
 
 @protocol FHRentDetailResponseDataHouseOverviewListDataModel<NSObject>
@@ -221,14 +223,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface  FHRentDetailResponseDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
-@property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
 @property (nonatomic, strong , nullable) FHRentDetailDataBaseExtraModel *baseExtra ;
 @property (nonatomic, copy , nullable) NSString *subtitle;
 @property (nonatomic, strong , nullable) FHRentDetailResponseDataNeighborhoodInfoModel *neighborhoodInfo ;
 @property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImage;
-@property (nonatomic, strong , nullable) NSArray<FHRentDetailResponseDataCoreInfoModel> *coreInfo;
-@property (nonatomic, strong , nullable) NSArray<FHRentDetailResponseDataFacilitiesModel> *facilities;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImage;
+@property (nonatomic, strong , nullable) NSArray<FHHouseCoreInfoModel> *coreInfo;
+@property (nonatomic, strong , nullable) NSArray<FHRentFacilitiesModel> *facilities;
 @property (nonatomic, copy , nullable) NSString *pricing;
 @property (nonatomic, strong , nullable) FHRentDetailResponseDataHouseOverviewModel *houseOverview;
 @property (nonatomic, copy , nullable) NSString *id;
@@ -239,7 +241,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) FHRentDetailResponseDataUserStatusModel* userStatus;
 @property (nonatomic, assign) NSInteger status;
 @property (nonatomic, copy, nullable) NSString *camplaintUrl;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
+@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, strong , nullable) FHRentDetailImShareInfoModel *imShareInfo;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 
@@ -251,6 +253,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSString* status;
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHRentDetailResponseDataModel *data ;
+@property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 
 @end
 

@@ -38,6 +38,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *textColor;
 @end
 
+@interface FHHouseMsgItemHouseVideo : JSONModel
+
+@property (nonatomic, assign)   BOOL   hasVideo;
+@end
+
+
 @interface FHHouseMsgDataItemsItemsModel : JSONModel 
 
 @property (nonatomic, assign) NSInteger status;
@@ -55,6 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, strong , nullable) FHHouseMsgDataItemsItemsHouseImageTagModel *houseImageTag ;  
 @property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, strong, nullable) FHHouseMsgItemHouseVideo* houseVideo;
 @end
 
 @interface FHHouseMsgDataItemsModel : JSONModel 

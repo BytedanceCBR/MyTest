@@ -53,7 +53,7 @@
     if (model.baseInfo.count > 0) {
         __block NSInteger itemsCount = 0;
         CGFloat vHeight = 30.0;
-        [model.baseInfo enumerateObjectsUsingBlock:^(FHDetailNeighborhoodDataBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [model.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
             [self.containerView addSubview:itemView];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {

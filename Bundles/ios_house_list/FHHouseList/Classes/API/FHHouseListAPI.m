@@ -205,7 +205,7 @@
  */
 +(TTHttpTask *)searchNeighborhoodList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion
 {
-    NSString *queryPath = @"/f100/api/search_neighborhood?";
+    NSString *queryPath = @"/f100/api/search_neighborhood";
 
     NSMutableDictionary *qparam = [NSMutableDictionary new];
     if (query.length > 0) {

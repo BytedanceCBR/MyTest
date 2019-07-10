@@ -184,7 +184,7 @@
     FHDetailFloorPanDetailInfoDataRecommendModel *model = (FHDetailFloorPanDetailInfoDataRecommendModel *)data;
     if (model) {
         if (model.images.count > 0) {
-            FHDetailHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
+            FHImageModel *imageModel = model.images.firstObject;
             NSString *urlStr = imageModel.url;
             if ([urlStr length] > 0) {
                 [self.icon bd_setImageWithURL:[NSURL URLWithString:urlStr] placeholder:[UIImage imageNamed:@"default_image"]];

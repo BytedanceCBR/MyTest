@@ -61,6 +61,8 @@
 #define RENT_BANNER_HEIGHT 102
 #define OLD_ICON_HEADER_HEIGHT 80
 
+extern NSString *const INSTANT_DATA_KEY;
+
 @implementation FHBaseMainListViewModel
 
 -(instancetype)initWithTableView:(UITableView *)tableView houseType:(FHHouseType)houseType  routeParam:(TTRouteParamObj *)paramObj
@@ -1350,7 +1352,7 @@
     NSMutableDictionary *tracerParam = [NSMutableDictionary dictionary];
     NSString *urlStr = nil;
     tracerParam[@"card_type"] = @"left_pic";
-    
+    id instantData = nil;
     if (_mainListPage && self.houseType == FHHouseTypeRentHouse) {
         
         SETTRACERKV(UT_ORIGIN_FROM, @"renting_list");
@@ -1367,6 +1369,7 @@
         tracerParam[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
         
         urlStr = [NSString stringWithFormat:@"fschema://rent_detail?house_id=%@", cellModel.rentModel.id];
+        instantData = cellModel.rentModel;        
         
     }else if (self.houseType == FHHouseTypeSecondHandHouse){
         
@@ -1389,64 +1392,71 @@
         [contextBridge setTraceValue:self.originFrom forKey:UT_ORIGIN_FROM];
         [contextBridge setTraceValue:self.originSearchId forKey:UT_ORIGIN_SEARCH_ID];
         
-        switch (self.houseType) {
-                case FHHouseTypeNewHouse: {
-                    if (cellModel.houseModel) {
-                        FHNewHouseItemModel *theModel = cellModel.houseModel;
-                        urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId];
-                    }
+//        switch (self.houseType) {
+//                case FHHouseTypeNewHouse: {
+//                    if (cellModel.houseModel) {
+//                        FHNewHouseItemModel *theModel = cellModel.houseModel;
+//                        urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId];
+//                    }
+//                }
+//                break;
+//                case FHHouseTypeSecondHandHouse: {
+        if (cellModel.secondModel) {
+            if (cellModel.secondModel.externalInfo.externalUrl &&  cellModel.secondModel.externalInfo.isExternalSite.boolValue) {
+                NSMutableDictionary * dictRealWeb = [NSMutableDictionary new];
+                [dictRealWeb setValue:@(self.houseType) forKey:@"house_type"];
+                
+                if ([cellModel.secondModel.groupId isKindOfClass:[NSString class]] && cellModel.secondModel.groupId.length > 0) {
+                    [tracerParam setValue:cellModel.secondModel.groupId forKey:@"group_id"];
+                }else
+                {
+                    [tracerParam setValue:cellModel.secondModel.hid forKey:@"group_id"];
                 }
-                break;
-                case FHHouseTypeSecondHandHouse: {
-                    if (cellModel.secondModel) {
-                        if (cellModel.secondModel.externalInfo.externalUrl &&  cellModel.secondModel.externalInfo.isExternalSite.boolValue) {
-                            NSMutableDictionary * dictRealWeb = [NSMutableDictionary new];
-                            [dictRealWeb setValue:@(self.houseType) forKey:@"house_type"];
-                            
-                            if ([cellModel.secondModel.groupId isKindOfClass:[NSString class]] && cellModel.secondModel.groupId.length > 0) {
-                                [tracerParam setValue:cellModel.secondModel.groupId forKey:@"group_id"];
-                            }else
-                            {
-                                [tracerParam setValue:cellModel.secondModel.hid forKey:@"group_id"];
-                            }
-                            [tracerParam setValue:cellModel.secondModel.imprId forKey:@"impr_id"];
-                            
-                            [dictRealWeb setValue:tracerParam forKey:@"tracer"];
-                            [dictRealWeb setValue:cellModel.secondModel.externalInfo.externalUrl forKey:@"url"];
-                            [dictRealWeb setValue:cellModel.secondModel.externalInfo.backUrl forKey:@"backUrl"];
-
-                            TTRouteUserInfo *userInfoReal = [[TTRouteUserInfo alloc] initWithInfo:dictRealWeb];
-                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web"] userInfo:userInfoReal];
-                            return;
-                        }
-                        FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
-                        urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
-                    }
-                }
-                break;
-                case FHHouseTypeRentHouse: {
-                    if (cellModel.rentModel) {
-                        FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
-                        urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id];
-                    }
-                }
-                break;
-                case FHHouseTypeNeighborhood: {
-                    if (cellModel.neighborModel) {
-                        FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
-                        urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id];
-                    }
-                }
-                break;
-            default:
-                break;
+                [tracerParam setValue:cellModel.secondModel.imprId forKey:@"impr_id"];
+                
+                [dictRealWeb setValue:tracerParam forKey:@"tracer"];
+                [dictRealWeb setValue:cellModel.secondModel.externalInfo.externalUrl forKey:@"url"];
+                [dictRealWeb setValue:cellModel.secondModel.externalInfo.backUrl forKey:@"backUrl"];
+                
+                TTRouteUserInfo *userInfoReal = [[TTRouteUserInfo alloc] initWithInfo:dictRealWeb];
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web"] userInfo:userInfoReal];
+                return;
+            }
+            FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
+            urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
+            instantData = theModel;
         }
+//    }
+//                break;
+//                case FHHouseTypeRentHouse: {
+//                    if (cellModel.rentModel) {
+//                        FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
+//                        urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id];
+//                    }
+//                }
+//                break;
+//                case FHHouseTypeNeighborhood: {
+//                    if (cellModel.neighborModel) {
+//                        FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
+//                        urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id];
+//                    }
+//                }
+//                break;
+//            default:
+//                break;
+//        }
     }
     
     if (urlStr) {
         NSURL *url = [NSURL URLWithString:urlStr];
         if (url) {
-            TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracerParam,@"house_type":@(self.houseType)}];
+            NSMutableDictionary *dict = [NSMutableDictionary new];
+            dict[@"tracer"] = tracerParam;
+            dict[@"house_type"] = @(self.houseType);
+            if (instantData) {
+                dict[INSTANT_DATA_KEY] = instantData;
+            }
+            TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByViewController:url userInfo: userInfo];
         }
     }

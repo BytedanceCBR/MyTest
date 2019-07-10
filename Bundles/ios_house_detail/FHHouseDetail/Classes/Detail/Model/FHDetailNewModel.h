@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewDataImageGroupModel : JSONModel
 
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *type;
 @property (nonatomic, copy , nullable) NSString *name;
 @end
@@ -79,7 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewDataSmallImageGroupModel : JSONModel
 
-@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *type;
 @property (nonatomic, copy , nullable) NSString *name;
 @end
@@ -185,7 +185,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, strong , nullable) FHDetailNewDataUserStatusModel *userStatus ;
 @property (nonatomic, strong , nullable) FHDetailNewDataGlobalPricingModel *globalPricing ;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
+@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataImageGroupModel> *imageGroup;
 @property (nonatomic, strong , nullable) FHDetailNewDataTimelineModel *timeline ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel> *smallImageGroup;
@@ -227,6 +227,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHDetailNewDataModel *data ;
+@property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 @end
 
 

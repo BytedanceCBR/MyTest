@@ -9,6 +9,7 @@
 #import <JSONModel.h>
 #import "FHBaseModelProtocol.h"
 #import "FHHouseListModel.h"
+#import "FHHouseBaseInfoModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -40,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *gaodeLat;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, copy , nullable) NSString *displayBuiltYear;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, copy , nullable) NSString *displayStatsInfo;
 @property (nonatomic, strong , nullable) FHHouseNeighborDataItemsBaseInfoMapModel *baseInfoMap ;
@@ -48,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displaySubtitle;
 @property (nonatomic, assign) BOOL dealStatus;
 @property (nonatomic, copy , nullable) NSString *dealOpenUrl;
+@property (nonatomic, strong , nullable) NSDictionary *neighborhoodInfo; //带入详情页，当前不解析
+@property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
 
 @end
 
