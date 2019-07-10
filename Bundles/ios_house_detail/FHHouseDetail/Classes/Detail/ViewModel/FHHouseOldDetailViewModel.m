@@ -45,6 +45,7 @@
 #import "FHDetailOldNearbyMapCell.h"
 #import "FHDetailOldEvaluateCell.h"
 #import "FHDetailOldComfortCell.h"
+#import "FHDetailDetectiveCell.h"
 #import <FHHouseBase/FHSearchHouseModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
 
@@ -90,7 +91,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailOldNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldNearbyMapModel class])];
     [self.tableView registerClass:[FHDetailOldComfortCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldComfortModel class])];    
     [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoModel class])];
-    
+    [self.tableView registerClass:[FHDetailDetectiveCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDetectiveModel class])];
+
 }
 //// cell class
 //- (Class)cellClassForEntity:(id)model {
@@ -414,7 +416,29 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     NSString *houseType = [NSString stringWithFormat:@"%d", self.houseType];
     NSString *houseDes = [NSString stringWithFormat:@"%@/%@/%@", area, face, tag];
-    
+    // 幸福天眼
+    __weak typeof(self)wself = self;
+    if (model.data.baseExtra.detective) {
+        FHDetailDetectiveModel *detectiveModel = [[FHDetailDetectiveModel alloc] init];
+        detectiveModel.detective = model.data.baseExtra.detective;
+        detectiveModel.feedBack = ^(NSInteger type, id  _Nonnull data, void (^ _Nonnull compltion)(BOOL)) {
+            [wself poplayerFeedBack:data type:type completion:compltion];
+        };
+        [self.items addObject:detectiveModel];
+    }
+    // 房源概况
+    if (model.data.houseOverreview.list.count > 0) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        if (!model.data.baseExtra.detective) {
+            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+            [self.items addObject:grayLine];
+        }
+        FHDetailHouseOutlineInfoModel *infoModel = [[FHDetailHouseOutlineInfoModel alloc] init];
+        infoModel.houseOverreview = model.data.houseOverreview;
+        infoModel.baseViewModel = self;
+        infoModel.hideReport = model.data.baseExtra.detective ? YES : NO;
+        [self.items addObject:infoModel];
+    }
     // 房源榜单
     if (model.data.listEntrance.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -446,16 +470,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         agentListModel.houseId = self.houseId;
         agentListModel.houseType = self.houseType;
         [self.items addObject:agentListModel];
-    }
-    // 房源概况
-    if (model.data.houseOverreview.list.count > 0) {
-        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-        FHDetailHouseOutlineInfoModel *infoModel = [[FHDetailHouseOutlineInfoModel alloc] init];
-        infoModel.houseOverreview = model.data.houseOverreview;
-        infoModel.baseViewModel = self;
-        [self.items addObject:infoModel];
     }
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
@@ -831,12 +845,13 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         trackInfo[UT_ENTER_FROM] = position;
         [popLayer showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)model trackInfo:trackInfo];
         
-    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-        position = @"happiness_eye";
-        trackInfo[UT_ENTER_FROM] = position;
-        [popLayer showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)model trackInfo:trackInfo];
-        
     }
+//    else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
+//        position = @"happiness_eye";
+//        trackInfo[UT_ENTER_FROM] = position;
+//        [popLayer showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)model trackInfo:trackInfo];
+//
+//    }
     [self addClickOptionLog:position];
     self.tableView.scrollsToTop = NO;
     [self enableController:NO];
