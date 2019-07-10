@@ -17,6 +17,7 @@
 #import "FHMessageNotificationTipsManager.h"
 #import "TTStringHelper.h"
 #import "FHUserTracker.h"
+#import "FHMessageNotificationCellHelper.h"
 
 @interface FHMessageListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -88,7 +89,13 @@
             wself.maxCursor = response.minCursor;
             [wself updateTableViewWithMoreData:[response.hasMore boolValue]];
             [wself.viewController.emptyView hideEmptyView];
-            [wself.messageModels addObjectsFromArray:response.msgList];
+            if(response.msgList){
+                for(TTMessageNotificationModel* itemModel in response.msgList){
+                    CGFloat cellWidth = [TTUIResponderHelper splitViewFrameForView:wself.tableView].size.width;
+                    [FHMessageNotificationCellHelper heightForData:itemModel cellWidth:cellWidth];
+                }
+                [wself.messageModels addObjectsFromArray:response.msgList];
+            }
             wself.tableView.hidden = NO;
             [wself.tableView reloadData];
             if (isFirst) {
