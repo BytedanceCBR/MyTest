@@ -346,7 +346,7 @@ TTAccountMulticastProtocol
     
     TTPostThreadTaskStatusModel *statusModel = [[TTPostThreadTaskStatusModel alloc] initWithPostThreadTask:task];
     
-    if (!isEmptyString(modelName)) {
+    if (!isEmptyString(modelName) && statusModel) {
         if (index == NSNotFound) {
             [[self mutableArrayValueForKey:modelName] addObject:statusModel];
         }

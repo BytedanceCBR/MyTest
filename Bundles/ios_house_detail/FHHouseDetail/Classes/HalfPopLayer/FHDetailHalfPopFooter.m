@@ -10,24 +10,33 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <Masonry/Masonry.h>
+#import <TTBaseLib/TTDeviceHelper.h>
 
 #define HOR_MARGIN 20
 
 @implementation FHDetailHalfPopFooter
+
++ (CGFloat)btnWidth
+{
+    return [TTDeviceHelper isScreenWidthLarge320] ? 50 : 40;
+}
 
 -(instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         _tipLabel = [[UILabel alloc]init];
-        _tipLabel.font = [UIFont themeFontRegular:16];
+        UIFont *font = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:16] : [UIFont themeFontRegular:15];
+        _tipLabel.font = font;
         _tipLabel.textColor = [UIColor themeGray1];
         
         _actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _actionButton.titleLabel.font = font;
         [_actionButton setTitleColor:[UIColor themeRed3] forState:UIControlStateNormal];
         [_actionButton addTarget:self action:@selector(onAction:) forControlEvents:UIControlEventTouchUpInside];
         
         _negativeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _negativeButton.titleLabel.font = font;
         [_negativeButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         [_negativeButton addTarget:self action:@selector(onAction:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -69,7 +78,7 @@
         self.negativeButton.hidden = YES;
 //        CGSize size = [self.actionButton sizeThatFits:CGSizeMake(200, CGRectGetHeight(self.bounds))];
         [self.actionButton mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(60);
+            make.width.mas_equalTo([FHDetailHalfPopFooter btnWidth]);
             make.right.mas_equalTo(-0);
         }];
         
@@ -78,8 +87,8 @@
         [self.negativeButton setTitle:ntitle forState:UIControlStateNormal];
         self.negativeButton.hidden = NO;
         [self.actionButton mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(60);
-            make.right.mas_equalTo(-68);
+            make.width.mas_equalTo([FHDetailHalfPopFooter btnWidth]);
+            make.right.mas_equalTo(-([FHDetailHalfPopFooter btnWidth] + 8));
         }];                
     }
 }
@@ -103,17 +112,17 @@
     [_tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(HOR_MARGIN);
         make.centerY.mas_equalTo(self);
-        make.right.mas_lessThanOrEqualTo(self.actionButton.mas_left).offset(-20);
+        make.right.mas_lessThanOrEqualTo(self.actionButton.mas_left).offset(-5);
     }];
     
     [_negativeButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.right.mas_equalTo(self);
-        make.width.mas_equalTo(60);
+        make.width.mas_equalTo([FHDetailHalfPopFooter btnWidth]);
     }];
     
     [_actionButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.right.mas_equalTo(self);        
-        make.width.mas_equalTo(60);
+        make.width.mas_equalTo([FHDetailHalfPopFooter btnWidth]);
     }];
     
     

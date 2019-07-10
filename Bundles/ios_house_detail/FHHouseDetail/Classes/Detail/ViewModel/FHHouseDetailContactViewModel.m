@@ -485,15 +485,18 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSString *title = nil;
     NSString *subtitle = nil;
     NSString *btnTitle = @"提交";
+    NSString *fromStr = nil;
 
     if (actionType == FHFollowActionTypeFloorPan) {
         title = @"开盘通知";
         subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机";
         btnTitle = @"提交";
+        fromStr = @"app_sellnotice";
     }else if (actionType == FHFollowActionTypePriceChanged) {
         title = @"变价通知";
         subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机";
         btnTitle = @"提交";
+        fromStr = @"app_pricenotice";
     }
     FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
     fillFormConfig.houseType = self.houseType;
@@ -519,6 +522,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [fillFormConfig setTraceParams:params];
     fillFormConfig.searchId = self.searchId;
     fillFormConfig.imprId = self.imprId;
+    fillFormConfig.fromStr = fromStr;
     fillFormConfig.chooseAgencyList = self.chooseAgencyList;
     [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
 }
