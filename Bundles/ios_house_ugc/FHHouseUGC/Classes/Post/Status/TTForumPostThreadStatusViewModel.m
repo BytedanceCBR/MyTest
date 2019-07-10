@@ -34,6 +34,8 @@
 #import "TTStringHelper.h"
 #import "TTArticleCategoryManager.h"
 #import "ToastManager.h"
+#import "FHEnvContext.h"
+#import "FHPostUGCProgressView.h"
 
 @interface TTPostThreadTaskStatusModel ()
 
@@ -129,6 +131,7 @@ TTAccountMulticastProtocol
 //@property (nonatomic, strong) TTBubbleView *bubbleView;
 
 @property (nonatomic, assign) BOOL isRetryAlertViewShown;
+@property (nonatomic, copy)     NSString       *cityName;
 
 @end
 
@@ -141,9 +144,26 @@ TTAccountMulticastProtocol
         self.isEnterHomeTabFromPostNotification = NO;
         [self registerNotifications];
         [self loadStatusModelsWithCompletionBlock:nil];
-        
+        self.cityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
     }
     return self;
+}
+
+// 切换城市 清空失败的帖子数据
+- (void)checkCityPostData {
+    NSString *currentCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+    if (currentCityName.length > 0 && ![currentCityName isEqualToString:self.cityName] && self.followTaskStatusModels.count > 0) {
+        // 删除本地数据
+        [self.followTaskStatusModels enumerateObjectsUsingBlock:^(TTPostThreadTaskStatusModel * _Nonnull statusModel, NSUInteger idx, BOOL * _Nonnull stop) {
+            [[TTPostThreadCenter sharedInstance_tt] removeTaskForFakeThreadID:statusModel.fakeThreadId concernID:statusModel.concernID];
+        }];
+        self.followTaskStatusModels = nil;
+        // 刷新UI 数据
+        [[FHPostUGCProgressView sharedInstance] updatePostData];
+    }
+    if (currentCityName.length > 0) {
+        self.cityName = currentCityName;
+    }
 }
 
 - (void)dealloc {

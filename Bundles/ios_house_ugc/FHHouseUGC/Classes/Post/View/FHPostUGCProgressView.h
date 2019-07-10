@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 视图高度
 - (CGFloat)viewHeight;
 
+// 刷新高度
+- (void)updatePostData;
+
 @end
 
 @interface FHPostUGCProgressCell : FHUGCBaseCell

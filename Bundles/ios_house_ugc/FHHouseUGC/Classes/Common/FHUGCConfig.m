@@ -13,6 +13,7 @@
 #import "TTAccount.h"
 #import "TTAccount+Multicast.h"
 #import "TTAccountManager.h"
+#import "TTForumPostThreadStatusViewModel.h"
 
 static const NSString *kFHFollowListCacheKey = @"cache_follow_list_key";
 static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
@@ -122,6 +123,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 - (void)loadConfigData {
     [self loadFollowData];
     [self loadUGCConfigData];
+    [[TTForumPostThreadStatusViewModel sharedInstance_tt] checkCityPostData];
 }
 
 // App启动的时候需要加载

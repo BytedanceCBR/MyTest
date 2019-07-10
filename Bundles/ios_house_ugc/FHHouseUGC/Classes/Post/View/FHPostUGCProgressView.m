@@ -71,6 +71,14 @@
     self.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.ugc_viewHeight);
 }
 
+- (void)updatePostData {
+    [self setupData];
+    self.hidden = _ugc_viewHeight <= 0;
+    if (_ugc_viewHeight > 0) {
+        [self.tableView reloadData];
+    }
+}
+
 - (void)setupUI {
     [self configTableView];
     [self addSubview:_tableView];

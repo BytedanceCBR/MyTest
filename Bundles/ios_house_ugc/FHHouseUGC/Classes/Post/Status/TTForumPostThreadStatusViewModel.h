@@ -58,6 +58,7 @@ typedef NS_ENUM(NSUInteger, TTForumPostThreadFailureWording) {
 - (NSMutableArray *)modelsArrayWithConcernID:(NSString *)concernID;
 - (NSString *)modelNamesArrayWithConcernID:(NSString *)concernID;
 
+- (void)checkCityPostData;
 
 @end
 
