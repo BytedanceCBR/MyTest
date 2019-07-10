@@ -29,5 +29,15 @@
  */
 + (UIImage *)themedImageNamed:(NSString *)imageName;
 
+/**
+ *  根据imageName和bundle返回相应主题的UIImage
+ *
+ *  @param imageName imageName
+ *  @param bundle 当前图片资源所处的Bundle，用于加载Pod的resource_bundles内的资源图片，默认为nil表示Main Bundle
+ *
+ *  @return 实例
+ */
++ (UIImage *)themedImageNamed:(NSString *)imageName inBundle:(NSBundle *)bundle;
+
 
 @end

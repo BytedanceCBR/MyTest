@@ -45,6 +45,8 @@
 #import "FHDetailOldNearbyMapCell.h"
 #import "FHDetailOldEvaluateCell.h"
 #import "FHDetailOldComfortCell.h"
+#import "FHDetailCommunityEntryCell.h"
+#import "FHDetailBlankLineCell.h"
 #import "FHDetailDetectiveCell.h"
 #import <FHHouseBase/FHSearchHouseModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
@@ -91,108 +93,11 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailOldNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldNearbyMapModel class])];
     [self.tableView registerClass:[FHDetailOldComfortCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldComfortModel class])];    
     [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoModel class])];
+    [self.tableView registerClass:[FHDetailCommunityEntryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
+    [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
     [self.tableView registerClass:[FHDetailDetectiveCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDetectiveModel class])];
-
 }
-//// cell class
-//- (Class)cellClassForEntity:(id)model {
-//    // 兼容旧版本 头部滑动图片
-//    if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
-//        return [FHDetailPhotoHeaderCell class];
-//    }
-//    // 新版本 头部滑动图片
-//    if ([model isKindOfClass:[FHDetailMediaHeaderModel class]]) {
-//        return [FHDetailMediaHeaderCell class];
-//    }
-//    // 标题
-//    if ([model isKindOfClass:[FHDetailHouseNameModel class]]) {
-//        return [FHDetailHouseNameCell class];
-//    }
-//    // 灰色分割线
-//    if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
-//        return [FHDetailGrayLineCell class];
-//    }
-//    // Core Info
-//    if ([model isKindOfClass:[FHDetailErshouHouseCoreInfoModel class]]) {
-//        return [FHDetailErshouHouseCoreInfoCell class];
-//    }
-//    // 价格变动
-//    if ([model isKindOfClass:[FHDetailPriceChangeHistoryModel class]]) {
-//        return [FHDetailPriceChangeHistoryCell class];
-//    }
-//    // 属性列表
-//    if ([model isKindOfClass:[FHDetailPropertyListModel class]]) {
-//        return [FHDetailPropertyListCell class];
-//    }
-//    // 推荐经纪人
-//    if ([model isKindOfClass:[FHDetailAgentListModel class]]) {
-//        return [FHDetailAgentListCell class];
-//    }
-//    // 房源概况
-//    if ([model isKindOfClass:[FHDetailHouseOutlineInfoModel class]]) {
-//        return [FHDetailHouseOutlineInfoCell class];
-//    }
-//    // 小区信息
-//    if ([model isKindOfClass:[FHDetailNeighborhoodInfoModel class]]) {
-//        return [FHDetailNeighborhoodInfoCell class];
-//    }
-//    // 小区评测
-//    if ([model isKindOfClass:[FHDetailOldEvaluateModel class]]) {
-//        return [FHDetailOldEvaluateCell class];
-//    }
-//    // 周边地图
-//    if ([model isKindOfClass:[FHDetailOldNearbyMapModel class]]) {
-//        return [FHDetailOldNearbyMapCell class];
-//    }
-//    // 购房小建议
-//    if ([model isKindOfClass:[FHDetailSuggestTipModel class]]) {
-//        return [FHDetailSuggestTipCell class];
-//    }
-//    // 同小区房源
-//    if ([model isKindOfClass:[FHDetailSameNeighborhoodHouseModel class]]) {
-//        return [FHDetailSameNeighborhoodHouseCell class];
-//    }
-//    // 周边小区
-//    if ([model isKindOfClass:[FHDetailRelatedNeighborhoodModel class]]) {
-//        return [FHDetailRelatedNeighborhoodCell class];
-//    }
-//    // 周边房源
-//    if ([model isKindOfClass:[FHDetailRelatedHouseModel class]]) {
-//        return [FHDetailRelatedHouseCell class];
-//    }
-//    // 免责声明
-//    if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
-//        return [FHDetailDisclaimerCell class];
-//    }
-//    // 价格分析
-//    if ([model isKindOfClass:[FHDetailPureTitleModel class]]) {
-//        return [FHDetailPureTitleCell class];
-//    }
-//    if ([model isKindOfClass:[FHDetailPriceTrendCellModel class]]) {
-//        return [FHDetailErshouPriceChartCell class];
-//    }
-//    // 均价走势
-//    if ([model isKindOfClass:[FHDetailPriceRankModel class]]) {
-//        return [FHDetailPriceRankCell class];
-//    }
-//    // 房源榜单
-//    if ([model isKindOfClass:[FHDetailListEntranceModel class]]) {
-//        return [FHDetailListEntranceCell class];
-//    }
-//    // 订阅房源动态
-//    if ([model isKindOfClass:[FHDetailHouseSubscribeModel class]]) {
-//        return [FHDetailHouseSubscribeCell class];
-//    }
-//    // 均价对比
-//    if ([model isKindOfClass:[FHDetailAveragePriceComparisonModel class]]) {
-//        return [FHDetailAveragePriceComparisonCell class];
-//    }
-//    // 舒适指数
-//    if ([model isKindOfClass:[FHDetailOldComfortModel class]]) {
-//        return [FHDetailOldComfortCell class];
-//    }
-//    return [FHDetailBaseCell class];
-//}
+
 // cell identifier
 - (NSString *)cellIdentifierForEntity:(id)model {
     Class cls = [self cellClassForEntity:model];
@@ -471,11 +376,31 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         agentListModel.houseType = self.houseType;
         [self.items addObject:agentListModel];
     }
-    // 小区信息
-    if (model.data.neighborhoodInfo.id.length > 0) {
+    // 房源概况
+    if (model.data.houseOverreview.list.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
+        FHDetailHouseOutlineInfoModel *infoModel = [[FHDetailHouseOutlineInfoModel alloc] init];
+        infoModel.houseOverreview = model.data.houseOverreview;
+        infoModel.baseViewModel = self;
+        [self.items addObject:infoModel];
+    }
+    // 小区信息
+    if (model.data.neighborhoodInfo.id.length > 0) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        //ugc 圈子入口,写在这儿是因为如果小区模块移除，那么圈子入口也不展示
+        BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        if(showUgcEntry){
+            model.data.ugcSocialGroup.houseType = FHHouseTypeSecondHandHouse;
+            [self.items addObject:model.data.ugcSocialGroup];
+        } else{
+            FHDetailBlankLineModel *whiteLine = [[FHDetailBlankLineModel alloc] init];
+            [self.items addObject:whiteLine];
+        }
+
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
         infoModel.tableView = self.tableView;

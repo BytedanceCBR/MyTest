@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , weak) id<FHUGCRecommendSubCellDelegate> delegate;
 
-- (void)refreshWithData:(id)data;
+- (void)refreshWithData:(id)data rank:(NSInteger)rank;
 
 @end
 

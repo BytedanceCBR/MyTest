@@ -26,6 +26,8 @@
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailNewModel.h"
 #import "FHDetailPureTitleCell.h"
+#import "FHDetailCommunityEntryCell.h"
+#import "FHDetailBlankLineCell.h"
 #import <HMDTTMonitor.h>
 #import <FHHouseBase/FHHouseNeighborModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
@@ -56,56 +58,10 @@
     [self.tableView registerClass:[FHDetailNeighborhoodTransationHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodTransationHistoryModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateModel class])];
     [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleModel class])];
+    [self.tableView registerClass:[FHDetailCommunityEntryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
+    [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
 }
-//// cell class
-//- (Class)cellClassForEntity:(id)model {
-//    if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
-//        return [FHDetailPhotoHeaderCell class];
-//    }
-//    // 标题
-//    if ([model isKindOfClass:[FHDetailNeighborhoodNameModel class]]) {
-//        return [FHDetailNeighborhoodNameCell class];
-//    }
-//    // 灰色分割线
-//    if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
-//        return [FHDetailGrayLineCell class];
-//    }
-//    // 周边配套
-//    if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
-//        return [FHDetailNearbyMapCell class];
-//    }
-//    // 在售（在租）信息
-//    if ([model isKindOfClass:[FHDetailNeighborhoodStatsInfoModel class]]) {
-//        return [FHDetailNeighborhoodStatsInfoCell class];
-//    }
-//    // 属性列表
-//    if ([model isKindOfClass:[FHDetailNeighborhoodPropertyInfoModel class]]) {
-//        return [FHDetailNeighborhoodPropertyInfoCell class];
-//    }
-//    // 周边小区
-//    if ([model isKindOfClass:[FHDetailRelatedNeighborhoodModel class]]) {
-//        return [FHDetailRelatedNeighborhoodCell class];
-//    }
-//    // 小区成交历史
-//    if ([model isKindOfClass:[FHDetailNeighborhoodTransationHistoryModel class]]) {
-//        return [FHDetailNeighborhoodTransationHistoryCell class];
-//    }
-//    // 小区房源
-//    if ([model isKindOfClass:[FHDetailNeighborhoodHouseModel class]]) {
-//        return [FHDetailNeighborhoodHouseCell class];
-//    }
-//    // 小区评测
-//    if ([model isKindOfClass:[FHDetailNeighborhoodEvaluateModel class]]) {
-//        return [FHDetailNeighborhoodEvaluateCell class];
-//    }
-//    if ([model isKindOfClass:[FHDetailPriceTrendCellModel class]]) {
-//        return [FHDetailNeighborPriceChartCell class];
-//    }
-//    if ([model isKindOfClass:[FHDetailPureTitleModel class]]) {
-//        return [FHDetailPureTitleCell class];
-//    }
-//    return [FHDetailBaseCell class];
-//}
+
 // cell identifier
 - (NSString *)cellIdentifierForEntity:(id)model {
     Class cls = [self cellClassForEntity:model];
@@ -252,11 +208,26 @@
         infoModel.statsInfo = model.data.statsInfo;
         [self.items addObject:infoModel];
     }
+
+    //ugc 圈子入口
+    BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
+    if(showUgcEntry){
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        model.data.ugcSocialGroup.houseType = FHHouseTypeNeighborhood;
+        [self.items addObject:model.data.ugcSocialGroup];
+    }
+
     // 属性列表
     if (model.data.baseInfo.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
+        if(!showUgcEntry){
+            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+            [self.items addObject:grayLine];
+            FHDetailBlankLineModel *whiteLine = [[FHDetailBlankLineModel alloc] init];
+            [self.items addObject:whiteLine];
+        }
+
         FHDetailNeighborhoodPropertyInfoModel *infoModel = [[FHDetailNeighborhoodPropertyInfoModel alloc] init];
         infoModel.tableView = self.tableView;
         infoModel.baseInfo = model.data.baseInfo;

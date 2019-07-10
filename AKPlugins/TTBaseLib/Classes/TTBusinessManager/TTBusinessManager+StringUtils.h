@@ -17,6 +17,7 @@ typedef enum TTTimeFormatterType {
     TTTimeFormatterWordNoTime,//xxxx年MM月dd日
     TTTimeFormatterOnlyTime,
     TTTimeFormatterNormalNoTime,
+    TTTimeFormatterNormalNoSecond,//yyyy-MM-dd HH:mm
 }TTTimeFormatterType;
 
 @interface TTBusinessManager (StringUtils)
@@ -124,6 +125,14 @@ typedef enum TTTimeFormatterType {
  *  @return 转换后的字符串
  */
 + (nullable NSString*)customtimeAndCustomdateStringSince1970:(NSTimeInterval)timeInterval;
+/**
+ *  ugc模块使用，将NSTimerInterval转换为NSString，包含中间时间
+ *
+ *  @param timeInterval timeInterval
+ *
+ *  @return 转换后的字符串
+ */
++ (nullable NSString*)ugcCustomtimeAndCustomdateStringSince1970:(NSTimeInterval)timeInterval;
 /**
  *  将NSTimerInterval转换为NSString，格式为根据传入的type决定
  *

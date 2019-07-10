@@ -40,13 +40,19 @@
     [self resetAllItems];
 }
 
--(void)resetSystemChannels:(NSArray<FHUnreadMsgDataUnreadModel*>*)channels {
-    self.channels = channels;
+-(void)resetSystemChannels:(NSArray<FHUnreadMsgDataUnreadModel*>*)channels ugcUnreadMsg:(FHUnreadMsgDataUnreadModel*)ugcUnreadMsg{
     NSNumber* count = [channels rx_foldInitialValue:@(0) block:^id(id memo, FHUnreadMsgDataUnreadModel* each) {
         NSInteger count = [memo unsignedIntegerValue];
         return @(count += [each.unread integerValue]);
     }];
     [[FHEnvContext sharedInstance].messageManager setUnreadSystemMsgCount:[count integerValue]];
+
+    NSMutableArray *combineChannels = [NSMutableArray array];
+    [combineChannels addObjectsFromArray:channels];
+    if(ugcUnreadMsg && ugcUnreadMsg.hasHistoryMsg){
+        [combineChannels addObject:ugcUnreadMsg];
+    }
+    self.channels = [combineChannels copy];
     [self resetAllItems];
 }
 

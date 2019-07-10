@@ -9,6 +9,15 @@
 #import <Masonry.h>
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import "FHFeedOperationView.h"
+#import "UIButton+TTAdditions.h"
+#import "FHCommunityFeedListController.h"
+#import "FHHouseUGCAPI.h"
+#import "ToastManager.h"
+#import "FHHouseUGCHeader.h"
+#import "FHUGCConfig.h"
+#import "TTUIResponderHelper.h"
+#import "FHUserTracker.h"
 
 @implementation FHUGCCellUserInfoView
 
@@ -37,7 +46,8 @@
     
     self.moreBtn = [[UIButton alloc] init];
     [_moreBtn setImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateNormal];
-    //    [_evaluateBtn addTarget:self action:@selector(evaluate) forControlEvents:UIControlEventTouchUpInside];
+    [_moreBtn addTarget:self action:@selector(moreOperation) forControlEvents:UIControlEventTouchUpInside];
+    _moreBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -5, -5, -5);
     [self addSubview:_moreBtn];
 }
 
@@ -74,6 +84,132 @@
     label.font = font;
     label.textColor = textColor;
     return label;
+}
+
+- (void)moreOperation {
+    [self trackClickOptions];
+    __weak typeof(self) wself = self;
+    FHFeedOperationView *dislikeView = [[FHFeedOperationView alloc] init];
+    FHFeedOperationViewModel *viewModel = [[FHFeedOperationViewModel alloc] init];
+
+    dislikeView.dislikeTracerBlock = ^{
+        [wself trackClickReport];
+    };
+    
+    if(self.cellModel){
+        viewModel.groupID = self.cellModel.groupId;
+        viewModel.userID = self.cellModel.user.userId;
+        viewModel.categoryID = self.cellModel.categoryId;
+    }
+
+    [dislikeView refreshWithModel:viewModel];
+    CGPoint point = _moreBtn.center;
+    [dislikeView showAtPoint:point
+                    fromView:_moreBtn
+             didDislikeBlock:^(FHFeedOperationView * _Nonnull view) {
+                 [wself handleItemselected:view];
+             }];
+}
+
+- (void)handleItemselected:(FHFeedOperationView *) view {
+    if(view.selectdWord.type == FHFeedOperationWordTypeReport){
+        //举报
+        if(self.reportSuccessBlock){
+            self.reportSuccessBlock();
+        }
+    
+        NSDictionary *dic = @{
+                              @"cellModel":self.cellModel,
+                              };
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCReportPostNotification object:nil userInfo:dic];
+        
+    }else if(view.selectdWord.type == FHFeedOperationWordTypeDelete){
+        [self trackClickDelete];
+        //二次弹窗提醒
+        [self showDeleteAlert];
+    }
+}
+
+- (void)showDeleteAlert {
+    __weak typeof(self) wself = self;
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"是否确认要删除"
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction * _Nonnull action) {
+                                                             // 点击取消按钮，调用此block
+                                                             [wself trackConfirmDeletePopupClick:YES];
+                                                         }];
+    [alert addAction:cancelAction];
+
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"确定删除"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * _Nonnull action) {
+                                                              // 点击按钮，调用此block
+                                                              [wself trackConfirmDeletePopupClick:NO];
+                                                              [wself postDelete];
+                                                          }];
+    [alert addAction:defaultAction];
+    [[TTUIResponderHelper visibleTopViewController] presentViewController:alert animated:YES completion:nil];
+    [self trackConfirmDeletePopupShow];
+}
+
+- (void)postDelete {
+    __weak typeof(self) wself = self;
+    [FHHouseUGCAPI postDelete:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(bool success, NSError * _Nonnull error) {
+        if(success){
+            //调用删除接口
+            if(wself.deleteCellBlock){
+                wself.deleteCellBlock();
+            }
+            //删除帖子成功发送通知
+            if (wself.cellModel.community.socialGroupId.length > 0) {
+                NSDictionary *dic = @{
+                                      @"social_group_id":wself.cellModel.community.socialGroupId,
+                                      @"cellModel":wself.cellModel,
+                                      };
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
+            }
+        }else{
+            [[ToastManager manager] showToast:@"删除失败"];
+        }
+    }];
+}
+
+#pragma mark - 埋点
+
+- (void)trackClickOptions {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    dict[@"click_position"] = @"feed_more";
+    TRACK_EVENT(@"click_options", dict);
+}
+
+- (void)trackClickReport {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    dict[@"click_position"] = @"feed_report";
+    TRACK_EVENT(@"click_report", dict);
+}
+
+- (void)trackClickDelete {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    dict[@"click_position"] = @"feed_delete";
+    TRACK_EVENT(@"click_delete", dict);
+}
+
+- (void)trackConfirmDeletePopupShow {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    TRACK_EVENT(@"confirm_delete_popup_show", dict);
+}
+
+- (void)trackConfirmDeletePopupClick:(BOOL)isCancel {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    if(isCancel){
+        dict[@"click_position"] = @"cancel";
+    }else{
+        dict[@"click_position"] = @"confrim_delete";
+    }
+    TRACK_EVENT(@"confirm_delete_popup_click", dict);
 }
 
 @end

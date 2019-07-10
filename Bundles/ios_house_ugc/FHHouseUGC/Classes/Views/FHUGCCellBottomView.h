@@ -6,14 +6,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHFeedUGCCellModel.h"
+#import "FHUGCFeedGuideView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCCellBottomView : UIView
 
 @property(nonatomic ,strong) UILabel *position;
-@property(nonatomic ,strong) UIButton *likeBtn;
 @property(nonatomic ,strong) UIButton *commentBtn;
+@property(nonatomic ,strong) UIView *positionView;
+@property(nonatomic ,strong) FHUGCFeedGuideView *guideView;
+@property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
+
+- (void)updateLikeState:(NSString *)diggCount userDigg:(NSString *)userDigg;
+- (void)showPositionView:(BOOL)isShow;
 
 @end
 
