@@ -61,7 +61,7 @@
     for (NSInteger index =0; index < guessYouWantItems.count; index++) {
         FHGuessYouWantResponseDataDataModel *dataItem = guessYouWantItems[index];
         if ([dataItem isKindOfClass:[FHGuessYouWantResponseDataDataModel class]]) {
-            if (dataItem.type == 1 && dataItem.rank >= 0) {
+            if (dataItem.type == 1 && dataItem.rank >= 0 && guessItems.count > dataItem.rank) {
                 [guessItems exchangeObjectAtIndex:dataItem.rank withObjectAtIndex:index];
             }
         }
@@ -331,7 +331,10 @@
         for (NSInteger index = 0; index < arrayTmp.count; index ++) {
             FHGuessYouWantResponseDataDataModel *itemTmp = arrayTmp[index];
             if ([itemTmp isKindOfClass:[FHGuessYouWantResponseDataDataModel class]] && itemTmp.type == 1) {
-                [arrayTmp exchangeObjectAtIndex:0 withObjectAtIndex:index];
+                if(itemTmp.rank >= 0 && arrayTmp.count > itemTmp.rank)
+                {
+                    [arrayTmp exchangeObjectAtIndex:itemTmp.rank withObjectAtIndex:index];
+                }
             }
         }
         tempArray = arrayTmp;
@@ -353,6 +356,9 @@
 
 - (void)trackShowEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
     NSString *wordType = [self wordTypeFor:model.guessSearchType];
+    if (model.type == 1) {
+        wordType = @"hot";
+    }
     NSDictionary *tracerDic = @{
                                 @"word":model.text.length > 0 ? model.text : @"be_null",
                                 @"word_id":model.guessSearchId.length > 0 ? model.guessSearchId : @"be_null",
@@ -364,6 +370,9 @@
 
 - (void)trackClickEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
     NSString *wordType = [self wordTypeFor:model.guessSearchType];
+    if (model.type == 1) {
+        wordType = @"hot";
+    }
     NSDictionary *tracerDic = @{
                                 @"word":model.text.length > 0 ? model.text : @"be_null",
                                 @"word_id":model.guessSearchId.length > 0 ? model.guessSearchId : @"be_null",
