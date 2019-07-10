@@ -110,7 +110,12 @@
     FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
     NSURL *openURL = [NSURL URLWithString:[model.openUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
-        [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:nil];
+        NSMutableDictionary *tracerDictForUgc = [NSMutableDictionary dictionary];
+        tracerDictForUgc[@"enter_from"] = @"neighborhood_tab";
+        tracerDictForUgc[@"enter_type"] = @"click";
+        tracerDictForUgc[@"element_from"] = @"feed_message_tips_card";
+        TTRouteUserInfo *ugcUserInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDictForUgc}];
+        [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:ugcUserInfo];
     }
     [self trackClickOptions];
 }

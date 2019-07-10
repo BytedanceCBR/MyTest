@@ -93,7 +93,12 @@ NSString *const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotificationL
     NSURL *openURL = [NSURL URLWithString:[tipsModel.openUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     BubbleClickCallback clickCallback = ^(FHBubbleData *data, FHMessageTipBubble *bubble) {
         if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
-            [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:nil];
+            NSMutableDictionary *tracerDictForUgc = [NSMutableDictionary dictionary];
+            tracerDictForUgc[@"enter_from"] = @"message_push";
+            tracerDictForUgc[@"enter_type"] = @"click";
+            tracerDictForUgc[@"element_from"] = @"feed_message_top_point";
+            TTRouteUserInfo *ugcUserInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDictForUgc}];
+            [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:ugcUserInfo];
             [bubble removeFromSuperview];
             [[FHBubbleTipManager shareInstance] removeWindow];
         }
