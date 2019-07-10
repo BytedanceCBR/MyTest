@@ -72,7 +72,7 @@
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
                                 cellModel.showCommunity = NO;
-                                if (cellModel) {
+                                if (cellModel && [cellModel.community.socialGroupId isEqualToString:self.viewController.forumId]) {
                                     //去重逻辑
                                     [self removeDuplicaionModel:cellModel.groupId];
                                     if (self.dataList.count == 0) {
