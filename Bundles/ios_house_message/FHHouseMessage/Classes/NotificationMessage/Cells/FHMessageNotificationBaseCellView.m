@@ -364,8 +364,16 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
         wrapperTrackEventWithCustomKeys(@"message_cell", @"more", self.messageModel.ID, nil, [FHMessageNotificationCellHelper listCellLogExtraForData:self.messageModel]);
         NSURL *url = [TTStringHelper URLWithURLString:self.messageModel.content.multiUrl];
         NSString *URLString = url.absoluteString;
+        
+        TTRouteUserInfo *userInfo = nil;
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        if([URLString containsString:@"comment_detail"]){
+            dict[@"hidePost"] = @(1);
+            userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        }
+        
         if ([[TTRoute sharedRoute] canOpenURL:url]) {
-            [[TTRoute sharedRoute] openURLByPushViewController:url];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         } else if ([URLString hasPrefix:@"http://"] || [URLString hasPrefix:@"https://"]) {
             UIViewController *topController = [TTUIResponderHelper topViewControllerFor:self];
             ssOpenWebView(url, @"", topController.navigationController, NO, nil);

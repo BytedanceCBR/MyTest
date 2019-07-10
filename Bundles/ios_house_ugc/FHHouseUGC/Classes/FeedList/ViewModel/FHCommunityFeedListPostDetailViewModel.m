@@ -269,24 +269,26 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
-    FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    if (cell == nil) {
-        Class cellClass = NSClassFromString(cellIdentifier);
-        cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    
-    cell.delegate = self;
-    cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
-    
     if(indexPath.row < self.dataList.count){
-        [cell refreshWithData:cellModel];
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
+        FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        
+        if (cell == nil) {
+            Class cellClass = NSClassFromString(cellIdentifier);
+            cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+        
+        cell.delegate = self;
+        cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
+        
+        if(indexPath.row < self.dataList.count){
+            [cell refreshWithData:cellModel];
+        }
+        return cell;
     }
-    
-    return cell;
+    return nil;
 }
 
 #pragma mark - UITableViewDelegate
