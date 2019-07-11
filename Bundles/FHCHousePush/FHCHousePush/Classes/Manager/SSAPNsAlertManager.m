@@ -31,6 +31,9 @@
 
 #define kCouldShowActivePushAlertKey @"kCouldShowActivityPushAlertKey"
 
+// App 内收到push消息，不显示tips
+BOOL kFHInAppPushTipsHidden = NO;
+
 static SSAPNsAlertManager *s_manager;
 
 @interface SSAPNsAlertManager()
@@ -240,7 +243,10 @@ static NSString * const kTTAPNsImportanceKey = @"important";
     if ([TTAPNsRouting handlePushMsg:dict]) {
         return;
     }
-    
+    // 处理特殊情况下不展示 alert tips
+    if (kFHInAppPushTipsHidden) {
+        return;
+    }
     NSString *schemaString = [dict tt_stringValueForKey:kSSAPNsAlertManagerSchemaKey];
     
     // 暂时兼容的逻辑，如果是detail，走原有弹窗逻辑；否则透传给路由处理

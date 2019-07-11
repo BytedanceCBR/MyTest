@@ -20,6 +20,7 @@
     @"feedFlag": @"feed_flag",
     @"actionToLastStick": @"action_to_last_stick",
     @"hasMoreToRefresh": @"has_more_to_refresh",
+    @"lastOffset": @"last_offset",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

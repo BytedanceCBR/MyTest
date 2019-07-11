@@ -15,11 +15,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define defaultTruncationLinkURLString @"www.bytedance.contentTruncationLinkURLString"
+
 @interface FHUGCCellHelper : NSObject
 
 + (NSAttributedString *)truncationFont:(UIFont *)font contentColor:(UIColor *)contentColor color:(UIColor *)color linkUrl:(NSString *)linkUrl;
 
 + (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model numberOfLines:(NSInteger)numberOfLines;
+
++ (void)setRichContent:(TTUGCAttributedLabel *)label content:(NSString *)content font:(UIFont *)font numberOfLines:(NSInteger)numberOfLines;
 
 @end
 

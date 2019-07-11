@@ -436,6 +436,9 @@ static BOOL s_loginAlertShowing = NO;
         if ([params tta_stringForKey:@"need_pop_vc"] != nil) {
             [dict setObject:[params tta_stringForKey:@"need_pop_vc"] forKey:@"need_pop_vc"];
         }
+        if (params[@"from_ugc"]) {
+            [dict setObject:params[@"from_ugc"] forKey:@"from_ugc"];
+        }
     }
 
     TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];

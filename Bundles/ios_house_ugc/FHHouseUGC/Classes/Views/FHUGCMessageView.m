@@ -83,7 +83,11 @@
 
 - (void)refreshWithUrl:(NSString *)url messageCount:(NSInteger)messageCount {
     if(messageCount > 0){
-        self.messageLabel.text = [NSString stringWithFormat:@"%li条新消息",(long)messageCount];
+        NSString *countStr = [NSString stringWithFormat:@"%ld",messageCount];
+        if (messageCount > 99) {
+            countStr = @"99+";
+        }
+        self.messageLabel.text = [NSString stringWithFormat:@"%@条新消息",countStr];
         if(!isEmptyString(url)){
             [self.icon bd_setImageWithURL:[NSURL URLWithString:url] placeholder:nil];
         }

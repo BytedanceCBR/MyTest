@@ -342,6 +342,9 @@
     [self buildRelationLabelIfNeed];
     [self buildOwnerViewIfNeed];
     CGSize size = [TTLabelTextHelper sizeOfText:title fontSize:_fontSize forWidth:_maxWidth forLineHeight:_titleLabel.font.lineHeight constraintToMaxNumberOfLines:1 firstLineIndent:0 textAlignment:NSTextAlignmentLeft lineBreakMode:_titleLabel.lineBreakMode];
+    if (size.width < _maxWidth - 3) {
+        size.width += 3;
+    }
     _titleLabel.left = 0;
     _titleLabel.centerY = self.height / 2;
     _titleLabel.width = ceilf(size.width);

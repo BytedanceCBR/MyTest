@@ -316,10 +316,10 @@ TTFeedCollectionCellDelegate>
                 cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
             } 
             
-            self.collectionView.bounces = NO;
+//            self.collectionView.bounces = NO;
         }else
         {
-            self.collectionView.bounces = YES;
+//            self.collectionView.bounces = YES;
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
         }
         
@@ -669,7 +669,8 @@ TTFeedCollectionCellDelegate>
         _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _collectionView.pagingEnabled = YES;
         _collectionView.scrollsToTop = NO;
-        _collectionView.alwaysBounceHorizontal = YES;
+        _collectionView.bounces = NO;
+//        _collectionView.alwaysBounceHorizontal = NO;
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         if (@available(iOS 11.0, *)) {

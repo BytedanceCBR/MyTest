@@ -81,7 +81,7 @@
 #import "TTTabBarCustomMiddleModel.h"
 //#import "TTFantasyTimeCountDownManager.h"
 //#import "TTFantasyWindowManager.h"
-#import "TTMessageNotificationTipsManager.h"
+#import "FHMessageNotificationTipsManager.h"
 //爱看
 #import "AKImageAlertManager.h"
 #import "AKProfileBenefitManager.h"
@@ -92,6 +92,9 @@
 #import "SSCommonLogic.h"
 #import "ExploreLogicSetting.h"
 #import "Log.h"
+
+#import "FHUGCGuideHelper.h"
+#import "FHUGCGuideView.h"
 
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
@@ -143,6 +146,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //@property (nonatomic, strong) LOTAnimationView *animationView1;
 
 @property (nonatomic, assign) BOOL isClickTab;
+
+@property(nonatomic, strong) FHUGCGuideView *guideView;
+@property(nonatomic, assign) BOOL isAlreadyShowedGuideView;
 
 @end
 
@@ -229,6 +235,23 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [[TSVTabTipManager sharedManager] setupShortVideoTabRedDotWhenStartupIfNeeded];
     
     [self addClientABTestLog];
+}
+
+- (void)addUgcGuide {
+    if([FHUGCGuideHelper shouldShowSecondTabGuide] && !self.isAlreadyShowedGuideView && [FHEnvContext isUGCOpen]){
+        self.isAlreadyShowedGuideView = YES;
+        [self.guideView show:self.view dismissDelayTime:5.0f completion:nil];
+    }
+}
+
+- (FHUGCGuideView *)guideView {
+    CGFloat width = 163.0f;
+    CGFloat height = 40.0f;
+    CGFloat x = self.view.frame.size.width * 9/24 - width/2;
+    if(!_guideView){
+        _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(x, self.view.frame.size.height - self.tabbarHeight - height + 3, width, height) andType:FHUGCGuideViewTypeSecondTab];
+    }
+    return _guideView;
 }
 
 // add by zjing 测试客户端AB分流清空
@@ -408,6 +431,11 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             if (self.viewControllers.count > self.lastSelectedIndex && self.lastSelectedIndex >= 0) {
                 TTNavigationController *lastNav = self.viewControllers[self.lastSelectedIndex];
                 lastNav.shouldIgnorePushingViewControllers = YES;
+                if (lastNav.presentedViewController) {
+                    [lastNav.presentedViewController dismissViewControllerAnimated:NO completion:nil];
+                }else if ([[lastNav.viewControllers lastObject] presentedViewController]) {
+                    [[lastNav.viewControllers lastObject] dismissViewControllerAnimated:NO completion:nil];
+                }
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     lastNav.shouldIgnorePushingViewControllers = NO;
                 });
@@ -585,7 +613,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [logv3Dic setValue:@"default" forKey:@"enter_type"];
     [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
     
-    [FHEnvContext showFindTabRedDots];
+    if(![FHEnvContext isUGCOpen]){
+        [FHEnvContext showFindTabRedDots];
+    }
 }
 
 - (BOOL)isShowingConcernOrForumTab
@@ -684,8 +714,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
                 wrapperTrackEvent(@"video", @"video_tip_leave");
             }
         }];
-        //跳转后隐藏消息通知
-        [[TTMessageNotificationTipsManager sharedManager] forceRemoveTipsView];
+        //隐藏ugc引导
+        [self.guideView hide];
         [[NSNotificationCenter defaultCenter] postNotificationName:kExploreTopVCChangeNotification object:self];
     }
 }
@@ -695,6 +725,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     if (navigationController.viewControllers.count == 1 && NO == [TTAdSplashMediator shareInstance].isAdShowing) {
         //回到tabbar controller某个导航控制器的栈底，并且没有开屏广告
         [self showTipViewIfNeeded];
+        [self addUgcGuide];
         [self showMessageNotificationTips:nil];
     }
 }
@@ -962,8 +993,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 - (BOOL)isTipsShowing
 {
-    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow ||
-        [TTMessageNotificationTipsManager sharedManager].isShowingTips) {
+    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow) {
         return YES;
     }
     return NO;
@@ -971,8 +1001,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 - (BOOL)tipsCouldShow
 {
-    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow ||
-        [TTMessageNotificationTipsManager sharedManager].isShowingTips || ![[TTGuideDispatchManager sharedInstance_tt] isQueueEmpty]) {
+    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow || ![[TTGuideDispatchManager sharedInstance_tt] isQueueEmpty]) {
         //tip view动画消失或者已经展示
         return NO;
     }
@@ -1013,37 +1042,37 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 - (void)showMessageNotificationTips:(NSNotification *)notification
 {
-    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow) {
-        //tip view动画消失或者已经展示
-        return;
-    }
-    
-    UIViewController *lastVC = self.viewControllers[self.lastSelectedIndex];
-    if ([lastVC isKindOfClass:[UINavigationController class]] && ((UINavigationController *)lastVC).viewControllers.count > 1) {
-        if([((UINavigationController *)lastVC).topViewController isKindOfClass:[TTProfileViewController class]]){
-            [[TTMessageNotificationTipsManager sharedManager] saveLastImportantMessageID];
-        }
-        return;
-    }
-    
-    if (_categoryManagerView.isShowing){
-        return;
-    }
-    
-    if ([[self currentTabIdentifier] isEqualToString:kTTTabMineTabKey] && [TTTabBarProvider isMineTabOnTabBar]) { // 在我的Tab页不显示浮窗，并且标记这条消息已读
-        [[TTMessageNotificationTipsManager sharedManager] saveLastImportantMessageID];
-        return;
-    }
-    
-    CGFloat tabCenterX = 0;
-    if ([TTTabBarProvider isMineTabOnTabBar]) {
-        NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:kTTTabMineTabKey];
-        if (index < ((TTTabbar *)self.tabBar).tabItems.count) {
-            UIView *tabbarItemView = ((TTTabbar *)self.tabBar).tabItems[index];
-            tabCenterX = tabbarItemView.frame.origin.x + tabbarItemView.frame.size.width / 2;
-        }
-    }
-    [[TTMessageNotificationTipsManager sharedManager] showTipsInView:self.view tabCenterX:tabCenterX callback:nil];
+//    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow) {
+//        //tip view动画消失或者已经展示
+//        return;
+//    }
+//
+//    UIViewController *lastVC = self.viewControllers[self.lastSelectedIndex];
+//    if ([lastVC isKindOfClass:[UINavigationController class]] && ((UINavigationController *)lastVC).viewControllers.count > 1) {
+//        if([((UINavigationController *)lastVC).topViewController isKindOfClass:[TTProfileViewController class]]){
+//            [[FHMessageNotificationTipsManager sharedManager] saveLastImportantMessageID];
+//        }
+//        return;
+//    }
+//
+//    if (_categoryManagerView.isShowing){
+//        return;
+//    }
+//
+//    if ([[self currentTabIdentifier] isEqualToString:kTTTabMineTabKey] && [TTTabBarProvider isMineTabOnTabBar]) { // 在我的Tab页不显示浮窗，并且标记这条消息已读
+//        [[FHMessageNotificationTipsManager sharedManager] saveLastImportantMessageID];
+//        return;
+//    }
+//
+//    CGFloat tabCenterX = 0;
+//    if ([TTTabBarProvider isMineTabOnTabBar]) {
+//        NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:kTTTabMineTabKey];
+//        if (index < ((TTTabbar *)self.tabBar).tabItems.count) {
+//            UIView *tabbarItemView = ((TTTabbar *)self.tabBar).tabItems[index];
+//            tabCenterX = tabbarItemView.frame.origin.x + tabbarItemView.frame.size.width / 2;
+//        }
+//    }
+//    [[FHMessageNotificationTipsManager sharedManager] showTipsInView:self.view tabCenterX:tabCenterX callback:nil];
 }
 
 - (void)topBarMineIconTap:(NSNotification *)notification
@@ -1090,8 +1119,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     }
     else if ([[self currentTabIdentifier] isEqualToString:kTTTabMineTabKey]) {
         [self trackBadgeWithLabel:@"click" tabBarTag:kTTTabMineTabKey];
-        //切换到我的tab后隐藏气泡
-        [[TTMessageNotificationTipsManager sharedManager] forceRemoveTipsView];
         // 标记能够展示绑定手机号逻辑
 //        [TTAccountBindingMobileViewController setShowBindingMobileEnabled:YES];
         //检查一下是否需要弹窗
@@ -1111,6 +1138,11 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //
 //    }
     else if ([[self currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
+        //隐藏引导提示
+        if([FHEnvContext isUGCOpen]){
+            [self.guideView hide];
+            [FHUGCGuideHelper hideSecondTabGuide];
+        }
         
         [self trackBadgeWithTabBarTag:kFHouseFindTabKey enter_type:@"click_tab"];
         
@@ -1182,6 +1214,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         else if([[self currentTabIdentifier] isEqualToString:kTTTabHTSTabKey]) {
             [self keepTapShortVideoTab];
         }
+        else if ([[self currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFindTabbarKeepClickedNotification object:self userInfo:nil];
+        }
 //        else if ([[self currentTabIdentifier] isEqualToString:kAKTabActivityTabKey]) {
 //            [[AKActivityTabManager sharedManager] reloadActivityTabViewController];
 //        }
@@ -1222,6 +1257,11 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             self.autoEnterTab = NO;
             if ([selectedTabName isEqualToString:@"find"]) {
                 [logv3Dic setValue:@"discover_tab" forKey:@"tab_name"];
+                if([FHEnvContext isUGCOpen]){
+                    [logv3Dic setValue:@"neighborhood_tab" forKey:@"tab_name"];
+                }else{
+                    [logv3Dic setValue:@"discover_tab" forKey:@"tab_name"];
+                }
             }
             [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
         }
@@ -1376,6 +1416,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     if ([nav isKindOfClass:[UINavigationController class]]
         && nav.viewControllers.count == 1) {
         [self showTipViewIfNeeded];
+        
+        [self addUgcGuide];
     }
 }
 
@@ -1573,8 +1615,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         [_categoryManagerView didShow:^{
             StrongSelf;
             [self sendLogForTabStayWithIndex:0 delayResetStayTime:YES];
-            //点击频道选择列表的时候隐藏气泡
-            [[TTMessageNotificationTipsManager sharedManager] forceRemoveTipsView];
         } didDisAppear:^{
             StrongSelf;
             UIViewController * trackVC = self.viewControllers.firstObject;

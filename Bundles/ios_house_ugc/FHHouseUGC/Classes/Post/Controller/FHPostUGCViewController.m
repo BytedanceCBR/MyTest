@@ -37,11 +37,17 @@
 #import "TTPostThreadCenter.h"
 #import "TTUGCEmojiParser.h"
 #import "TTUGCHashtagModel.h"
+#import "FHPostUGCMainView.h"
+#import "FHUGCFollowListController.h"
+#import "TTCategoryDefine.h"
+#import "ToastManager.h"
+#import "FHUserTracker.h"
+#import "FHBubbleTipManager.h"
 
-static CGFloat const kLeftPadding = 15.f;
-static CGFloat const kRightPadding = 15.f;
+static CGFloat const kLeftPadding = 20.f;
+static CGFloat const kRightPadding = 20.f;
 static CGFloat const kMidPadding = 10.f;
-static CGFloat const kInputViewTopPadding = 8.f;
+static CGFloat const kInputViewTopPadding = 10.f;
 static CGFloat const kRateMovieViewHeight = 100.f;
 static CGFloat const kTextViewHeight = 100.f;
 static CGFloat const kUserInfoViewHeight = 44.f;
@@ -53,11 +59,9 @@ static NSString * const kPostTopicEventName = @"topic_post";
 static NSString * const kUserInputTelephoneKey = @"userInputTelephoneKey";
 static NSInteger const kTitleCharactersLimit = 20;
 
-NSString * const kForumPostThreadFinish = @"ForumPostThreadFinish";
-
 static NSInteger const kMaxPostImageCount = 9;
 
-@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate,FRPostThreadAddLocationViewDelegate>
+@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate,FRPostThreadAddLocationViewDelegate,FHUGCFollowListDelegate>
 
 @property (nonatomic, strong) SSThemedButton * cancelButton;
 @property (nonatomic, strong) SSThemedButton * postButton;
@@ -69,14 +73,14 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, strong) FRAddMultiImagesView * addImagesView;
 @property (nonatomic, copy) NSDictionary *position; //编辑带入的位置信息
 @property (nonatomic, strong) FRPostThreadAddLocationView * addLocationView;
-@property (nonatomic, copy) NSDictionary *trackDict; //  add by zyk
+@property (nonatomic, copy) NSDictionary *trackDict;
 @property (nonatomic, assign) CGRect keyboardEndFrame;
 @property (nonatomic, assign) BOOL keyboardVisibleBeforePresent; // 保存 present 页面之前的键盘状态，用于 Dismiss 之后恢复键盘
 @property (nonatomic, copy) NSArray <TTAssetModel *> * outerInputAssets; //传入的assets
 @property (nonatomic, copy) NSArray <UIImage *> * outerInputImages; //传入的images
-@property (nonatomic, assign) FRShowEtStatus showEtStatus; //控制发帖页面展示项 add by zyk
-@property (nonatomic, copy) NSString * cid; //关心ID  add by zyk
-@property (nonatomic, copy) NSString * categoryID; //频道ID  add by zyk
+@property (nonatomic, assign) FRShowEtStatus showEtStatus; //控制发帖页面展示项
+@property (nonatomic, copy) NSString * cid; //关心ID
+@property (nonatomic, copy) NSString * categoryID; //频道ID  
 @property (nonatomic, copy) NSDictionary *sdkParamsDict;// 分享调起
 @property (nonatomic, strong) SSThemedLabel * tipLabel;
 @property (nonatomic, assign) UIStatusBarStyle originStatusBarStyle;
@@ -95,6 +99,13 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, copy) NSString *entrance; //入口
 @property (nonatomic, copy) NSString *enterConcernID; //entrance为concern时有意义
 
+@property (nonatomic, strong)   FHPostUGCMainView       *selectView;
+@property (nonatomic, copy)     NSString       *selectGroupId;// 选中的小区id 小区位置不能点击
+@property (nonatomic, copy)     NSString       *selectGroupName; // 选中的小区name
+@property (nonatomic, assign)   BOOL       hasSocialGroup;// 外部传入小区
+
+@property (nonatomic, assign)   BOOL       lastCanShowMessageTip;
+@property (nonatomic, assign)   BOOL       lastInAppPushTipsHidden;
 
 @end
 
@@ -106,30 +117,6 @@ static NSInteger const kMaxPostImageCount = 9;
     if (self) {
         NSDictionary * params = paramObj.allParams;
         if ([params isKindOfClass:[NSDictionary class]]) {
-            /* add by zyk
-             {
-             "category_id" = "__all__";
-             cid = 6454692306795629069;
-             "enter_type" = "feed_publisher";
-             "post_content_hint" = "\U5206\U4eab\U65b0\U9c9c\U4e8b";
-             "post_ugc_enter_from" = 1;
-             refer = 1;
-             "show_et_status" = 8;
-             }
-             
-             TTPostThreadViewController *postThreadVC = [[TTPostThreadViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(params)];
-             postThreadVC.enterConcernID = self.enterConcernID;
-             postThreadVC.entrance = self.entrance;
-             TTCustomAnimationNavigationController *nav = [[TTCustomAnimationNavigationController alloc] initWithRootViewController:postThreadVC animationStyle:TTCustomAnimationStyleUGCPostEntrance];
-             nav.ttDefaultNavBarStyle = @"White";
-             
-             */
-            
-            //Concern id
-//            self.cid = [params tt_stringValueForKey:@"cid"] ?: KTTFollowPageConcernID;
-//
-//            //Category id
-//            self.categoryID = [params tt_stringValueForKey:@"category_id"] ?: kTTMainCategoryID;
             
             self.useDraftFirst = [params tt_boolValueForKey:@"use_draft_first"];
             
@@ -145,8 +132,19 @@ static NSInteger const kMaxPostImageCount = 9;
             }
             self.outerInputRichSpanText = self.richSpanText;
             
-             self.postFinishCompletionBlock = [params tt_objectForKey:@"completionBlock"];
-            
+            self.postFinishCompletionBlock = [params tt_objectForKey:@"completionBlock"];
+            // 选中小区圈
+            self.selectGroupId = [params tt_stringValueForKey:@"select_group_id"];
+            self.selectGroupName = [params tt_stringValueForKey:@"select_group_name"];
+            if (!(self.selectGroupId.length > 0 && self.selectGroupName.length > 0)) {
+                // 必须都有值
+                self.hasSocialGroup = NO;
+                self.selectGroupId = nil;
+                self.selectGroupName = nil;
+            } else {
+                self.hasSocialGroup = YES;
+            }
+            self.trackDict = [self.tracerDict copy];
             // 添加google地图注册
             [[TTLocationManager sharedManager] registerReverseGeocoder:[TTGoogleMapGeocoder sharedGeocoder] forKey:NSStringFromClass([TTGoogleMapGeocoder class])];
         }
@@ -164,6 +162,16 @@ static NSInteger const kMaxPostImageCount = 9;
     [self addImagesViewSizeChanged];
     [self addObserverAndNoti];
     [self restoreData];
+//    __weak typeof(self) weakSelf = self;
+//    self.panBeginAction = ^{
+//        [weakSelf.naviBar.searchInput resignFirstResponder];
+//    };
+    // 顶部 消息 弹窗tips
+    self.lastCanShowMessageTip = [FHBubbleTipManager shareInstance].canShowTip;
+    [FHBubbleTipManager shareInstance].canShowTip = NO;
+    // App 内push
+    self.lastInAppPushTipsHidden = kFHInAppPushTipsHidden;
+    kFHInAppPushTipsHidden = YES;// 不展示
 }
 
 - (void)restoreData {
@@ -189,15 +197,16 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)setupNaviBar {
     [self setupDefaultNavBar:YES];
+    [self setTitle:@"发帖"];
     TTNavigationBarItemContainerView * leftBarItem = nil;
     leftBarItem = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfLeft
                                                                                            withTitle:NSLocalizedString(@"取消", nil)
                                                                                               target:self
                                                                                               action:@selector(cancel:)];
     if ([leftBarItem isKindOfClass:[TTNavigationBarItemContainerView class]]) {
-        leftBarItem.button.titleColorThemeKey = kColorText1;
+        [leftBarItem.button setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+        [leftBarItem.button setTitleColor:[UIColor themeGray1] forState:UIControlStateDisabled];
         leftBarItem.button.highlightedTitleColorThemeKey = kColorText1Highlighted;
-        leftBarItem.button.disabledTitleColorThemeKey = kColorText1;
         if ([TTDeviceHelper is736Screen]) {
             // Plus上bar button item的左边距会多4.3个点（13px），调整到间距为30px
             [leftBarItem.button setTitleEdgeInsets:UIEdgeInsetsMake(0, -4.3, 0, 4.3)];
@@ -215,7 +224,7 @@ static NSInteger const kMaxPostImageCount = 9;
                                                                                                action:@selector(sendPost:)];
     
     if ([rightBarItem isKindOfClass:[TTNavigationBarItemContainerView class]]) {
-        rightBarItem.button.titleColorThemeKey = kColorText6;
+        [rightBarItem.button setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         rightBarItem.button.highlightedTitleColorThemeKey = kColorText6Highlighted;
         rightBarItem.button.titleLabel.font = [UIFont boldSystemFontOfSize:16.f];
         if ([TTDeviceHelper is736Screen]) {
@@ -235,6 +244,9 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)createComponent {
     //Container View
     CGFloat top = 44.f + [UIApplication sharedApplication].statusBarFrame.size.height;
+    if (!self.hasSocialGroup) {
+        top += 44;
+    }
     self.containerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, top, self.view.width, self.view.height - top)];
     self.containerView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
     self.containerView.alwaysBounceVertical = YES;
@@ -263,8 +275,25 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)createInputComponent {
-    CGFloat y = 0;
+    // select view
+    if (!self.hasSocialGroup) {
+        CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
+        self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, top, self.view.width, 44)];
+        [self.view addSubview:self.selectView];
+        self.selectView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];
+        [self.selectView addGestureRecognizer:tapGestureRecognizer];
+        NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+        tracerDict[@"element_type"] = @"select_like_publisher_neighborhood";
+        if (self.selectGroupId.length > 0) {
+            tracerDict[@"group_id"] = self.selectGroupId;
+        } else {
+            tracerDict[@"group_id"] = @"be_null";
+        }
+        [FHUserTracker writeEvent:@"element_show" params:tracerDict];
+    }
     
+    CGFloat y = 0;
     //Input container view
     self.inputContainerView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 0)];
     self.inputContainerView.backgroundColorThemeKey = kColorBackground4;
@@ -274,7 +303,8 @@ static NSInteger const kMaxPostImageCount = 9;
     self.inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(kLeftPadding - 5, y + kInputViewTopPadding, self.view.width - kLeftPadding - kRightPadding + 10.f, kTextViewHeight)];
 
     self.inputTextView.keyboardAppearance = UIKeyboardAppearanceLight;
-    
+    self.inputTextView.isBanAt = YES;
+    self.inputTextView.isBanHashtag = YES;
     self.inputTextView.source = @"post";
     y = self.inputTextView.bottom;
     
@@ -282,17 +312,31 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 图文发布器展示
     internalTextView.minHeight = kTextViewHeight;
-    internalTextView.maxNumberOfLines = 8;
+    // 行数适配
+    int maxNumberOfLines = 8;
+    if ([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen]) {
+        maxNumberOfLines = 8;
+    } else if ([TTDeviceHelper is667Screen]) {
+        maxNumberOfLines = 10;
+    } else if ([TTDeviceHelper is736Screen]) {
+        maxNumberOfLines = 11;
+    } if ([TTDeviceHelper isIPhoneXDevice]) {
+        maxNumberOfLines = 12;
+    }
+    if (!self.hasSocialGroup) {
+        maxNumberOfLines -= 2;
+    }
+    internalTextView.maxNumberOfLines = maxNumberOfLines;
     
     if (!isEmptyString(self.postContentHint)) {
         internalTextView.placeholder = self.postContentHint;
     } else {
-        internalTextView.placeholder = [NSString stringWithFormat:@"分享新鲜事"];
+        internalTextView.placeholder = [NSString stringWithFormat:@"新鲜事"];
     }
-    
     
     internalTextView.backgroundColor = [UIColor clearColor];
     internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
+    internalTextView.tintColor = [UIColor themeRed1];
     internalTextView.placeholderColor =  SSGetThemedColorWithKey(kColorText3);
     internalTextView.internalTextView.placeHolderFont = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
     internalTextView.font = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
@@ -307,11 +351,13 @@ static NSInteger const kMaxPostImageCount = 9;
     self.addImagesView.eventName = kPostTopicEventName;
     self.addImagesView.delegate = self;
     self.addImagesView.ssTrackDict = self.trackDict;
+    self.addImagesView.hideAddImagesButtonWhenEmpty = YES;
+    self.addImagesView.selectionLimit = 9;
     [self.addImagesView startTrackImagepicker];
     
     [self.inputContainerView addSubview:self.addImagesView];
   
-    self.inputContainerView.height =  self.addImagesView.bottom + kAddImagesViewBottomPadding;
+    self.inputContainerView.height = self.addImagesView.bottom + kAddImagesViewBottomPadding;
     
     // toolbar
     kUGCToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
@@ -319,10 +365,16 @@ static NSInteger const kMaxPostImageCount = 9;
     self.toolbar.emojiInputView.source = @"post";
     
     self.toolbar.banLongText = YES;
+    __weak typeof(self) weakSelf = self;
+    self.toolbar.picButtonClkBlk = ^{
+        // 添加图片
+        [weakSelf.addImagesView showImagePicker];
+    };
     
     [self.view addSubview:self.toolbar];
     
     //Location view
+    
     self.addLocationView = [[FRPostThreadAddLocationView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 36.f) andShowEtStatus:self.showEtStatus];
     if (!isEmptyString([self.position tt_stringValueForKey:@"position"])) {
         self.addLocationView.selectedLocation = [self generateLocationEntity];
@@ -331,18 +383,19 @@ static NSInteger const kMaxPostImageCount = 9;
     self.addLocationView.categotyID = self.categoryID;
     self.addLocationView.trackDic = self.trackDict;
     self.addLocationView.delegate = self;
+    self.addLocationView.hidden = YES;
     [self.toolbar addSubview:self.addLocationView];
     
     //Tip label
-    CGFloat tipLabelWidth = 70.0;
-    self.tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(self.view.width - tipLabelWidth - kRightPadding, 0, tipLabelWidth, 36.f)];
-    
-    self.tipLabel.font = [UIFont systemFontOfSize:12];
+    CGFloat tipLabelWidth = self.view.width - kRightPadding * 2;
+    self.tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(kRightPadding, 11, tipLabelWidth, 25.f)];
+    self.tipLabel.backgroundColor = [UIColor whiteColor];
+    self.tipLabel.font = [UIFont systemFontOfSize:11];
     self.tipLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
     self.tipLabel.textAlignment = NSTextAlignmentRight;
     self.tipLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
-    self.tipLabel.textColorThemeKey = kColorText4;
-    self.tipLabel.hidden = YES;
+    [self.tipLabel setTextColor:[UIColor themeGray4]];
+    self.tipLabel.hidden = NO;
     [self.toolbar addSubview:self.tipLabel];
     
     // TextView and Toolbar Mediator
@@ -355,6 +408,35 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.toolbar tt_addDelegate:self asMainDelegate:NO];
     self.inputTextView.delegate = self.textViewMediator;
     [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
+    self.inputTextView.textLenDelegate = self;
+}
+
+- (void)selectCommunityViewClick:(UITapGestureRecognizer *)sender {
+    // 外部传入小区圈，不跳转
+    if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
+        return;
+    }
+    
+    NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+    tracerDict[@"click_position"] = @"select_like_publisher_neighborhood";
+    [FHUserTracker writeEvent:@"click_like_publisher_neighborhood" params:tracerDict];
+    
+    self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
+    [self endEditing];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"title"] = @"选择小区";
+    dict[@"action_type"] = @(1);
+    NSHashTable *ugcDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [ugcDelegateTable addObject:self];
+    dict[@"ugc_delegate"] = ugcDelegateTable;
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[@"enter_type"] = @"click";
+    traceParam[@"enter_from"] = @"feed_publisher";
+    traceParam[@"element_from"] = @"select_like_publisher_neighborhood";
+    dict[TRACER_KEY] = traceParam;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 - (void)parseOutInputImagesWithParamDic:(NSDictionary *)params {
@@ -511,12 +593,23 @@ static NSInteger const kMaxPostImageCount = 9;
             }];
             [alertController showFrom:self animated:YES];
         } else {
-            TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"确定退出？" message:nil preferredType:TTThemedAlertControllerTypeAlert];
-            [alertController addActionWithTitle:NSLocalizedString(@"取消", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
+            // 弹窗埋点
+            NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+            tracerDict[@"enter_type"] = @"click";
+            [FHUserTracker writeEvent:@"publisher_cancel_popup_show" params:tracerDict];
+            
+            TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"编辑未完成" message:@"退出后编辑的内容将不被保存" preferredType:TTThemedAlertControllerTypeAlert];
             WeakSelf;
-            [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+            [alertController addActionWithTitle:NSLocalizedString(@"退出", comment:nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
                 StrongSelf;
+                tracerDict[@"click_position"] = @"confirm";
+                [FHUserTracker writeEvent:@"publisher_cancel_popup_click" params:tracerDict];
                 [self postFinished:NO];
+            }];
+            [alertController addActionWithTitle:NSLocalizedString(@"继续编辑", comment:nil) actionType:TTThemedAlertActionTypeDestructive actionBlock:^{
+                StrongSelf;
+                tracerDict[@"click_position"] = @"cancel";
+                [FHUserTracker writeEvent:@"publisher_cancel_popup_click" params:tracerDict];
             }];
             [alertController showFrom:self animated:YES];
         }
@@ -524,12 +617,6 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)sendPost:(id)sender {
-    // 未登陆的情况是否不能发布 add by zyk
-//    if ([[TTPostThreadBridge sharedInstance] shouldBindPhone]) {
-//        [[TTPostThreadBridge sharedInstance] jumpToBindPhonePageWithParams:nil];
-//        return;
-//    }
-    
     TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
     [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSString *inputText = richSpanText.text;
@@ -537,126 +624,52 @@ static NSInteger const kMaxPostImageCount = 9;
     if (![self isValidateWithInputText:inputText]) {
         return;
     }
-    // iCloud 同步 不需要？
-//    if ([self hasUncompletedIcloudTask]) {
-//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                  indicatorText:NSLocalizedString(@"iCloud同步中", nil)
-//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
-//                                    autoDismiss:YES
-//                                 dismissHandler:nil];
-//        return;
-//    }
-//    if ([self hasFailedIcloudTask]) {
-//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                  indicatorText:NSLocalizedString(@"iCloud同步失败", nil)
-//                                 indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
-//                                    autoDismiss:YES
-//                                 dismissHandler:nil];
-//        return;
-//    }
+    
+    if (![self.selectView hasValidData] && !self.hasSocialGroup) {
+        [[ToastManager manager] showToast:@"请选择要发布的小区！"];
+        return;
+    }
     
     [self endEditing];
-    WeakSelf;
-    // add by zyk 判断是否登录
-//    if (![[BDContextGet() findServiceByName:TTAccountProviderServiceName] isLogin]) {
-//        [[TTPostThreadBridge sharedInstance] showLoginAlertWithSource:self.source
-//                                                            superView:self.navigationController.view
-//                                                           completion:^(BOOL tips) {
-//                                                               StrongSelf;
-//                                                               if (!tips) {
-//                                                                   [self sendThreadWithLoginState:1 withTitleText:titleText inputText:inputText phoneText:phoneText];
-//                                                               } else {
-//                                                                   [[TTPostThreadBridge sharedInstance] presentQuickLoginFromVC:self source:self.source];
-//                                                               }
-//                                                           }];
-//    }else {
-//        [self sendThreadWithLoginState:1 withTitleText:titleText inputText:inputText phoneText:phoneText];
-//    }
     
-    // 注意 参数
-    [self sendThreadWithLoginState:1 withTitleText:@"" inputText:inputText phoneText:@"15101086350"];
+    // 注意 参数 下一步获取手机号
+    [self sendThreadWithLoginState:1 withTitleText:@"" inputText:inputText phoneText:nil];
 }
 
 - (void)sendThreadWithLoginState:(NSInteger)loginState withTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
     if (self && [TTAccountManager isLogin]) {
-        
-        // add by zyk 是否需要绑定手机号
-//        if ([TTKitchen getBOOL:kTTKCommonUgcPostBindingPhoneNumberKey]) {
-//
-//            self.view.userInteractionEnabled = NO;
-//            TTIndicatorView * checkBoundPhoneIndicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView
-//                                                                                               indicatorText:@"发布中..."
-//                                                                                              indicatorImage:nil
-//                                                                                              dismissHandler:nil];
-//            checkBoundPhoneIndicatorView.autoDismiss = NO;
-//            [checkBoundPhoneIndicatorView showFromParentView:self.view];
-//
-//            WeakSelf;
-//            [TTPostThreadManager checkPostNeedBindPhoneOrNotWithCompletion:^(FRPostBindCheckType checkType) {
-//
-//                StrongSelf;
-//                [checkBoundPhoneIndicatorView dismissFromParentView];
-//                self.view.userInteractionEnabled = YES;
-//
-//                if (checkType == FRPostBindCheckTypePostBindCheckTypeNeed) {
-//
-//                    WeakSelf;
-//                    UIViewController *bindViewController = [[TTPostThreadBridge sharedInstance] pushBindPhoneNumberWhenPostThreadWithCompletion:^{
-//                        StrongSelf;
-//                        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-//                    }];
-//
-//                    if (!bindViewController) {
-//                        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-//                    } else {
-//                        if ([self.navigationController isKindOfClass:[UINavigationController class]] && bindViewController && [bindViewController isKindOfClass:[UIViewController class]]) {
-//                            [self.navigationController pushViewController:bindViewController animated:YES];
-//                        }
-//                    }
-//                } else {
-//                    [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-//                }
-//            }];
-//        } else {
-//            [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-//        }
-        
-        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+        TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
+        [self postThreadWithTitleText:titleText inputText:inputText phoneText:userInfo.mobile];
+    } else {
+        // 应该不会走到当前位置，UGC外面限制强制登录
+        [self gotoLogin];
     }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:@"feed_publisher" forKey:@"enter_from"];
+    [params setObject:@"click" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [wSelf sendPost:nil];
+                });
+            }
+        }
+    }];
 }
 
 - (void)postThreadWithTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
     
     if (!SSIsEmptyDictionary(self.sdkParamsDict)) {
         // 鉴权
-//        if (self.oauthStatus == PostCheckOAuthStatusUnknown) {
-//
-//            self.view.userInteractionEnabled = NO;
-//            TTIndicatorView * checkBoundPhoneIndicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView
-//                                                                                               indicatorText:@"发布中..."
-//                                                                                              indicatorImage:nil
-//                                                                                              dismissHandler:nil];
-//            checkBoundPhoneIndicatorView.autoDismiss = NO;
-//            [checkBoundPhoneIndicatorView showFromParentView:self.view];
-//
-//            [self checkOAuthWithCompletionBlock:^(PostCheckOAuthStatus status) {
-//
-//                [checkBoundPhoneIndicatorView dismissFromParentView];
-//                self.view.userInteractionEnabled = YES;
-//
-//                if (self.oauthStatus == PostCheckOAuthStatusSucceed) {
-//                    [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-//                } else {
-//                    [TTWeitoutiaoShareManager backWithSDKParams:self.sdkParamsDict result:TTWeitoutiaoShareResultOAuthFailed];
-//                }
-//            }];
-//            return;
-//        } else if (self.oauthStatus == PostCheckOAuthStatusFailed) {
-//            // 第一次鉴权网络断开，第二次返回失败
-//            [TTWeitoutiaoShareManager backWithSDKParams:self.sdkParamsDict result:TTWeitoutiaoShareResultOAuthFailed];
-//            return;
-//        }
-        //    }
     }
     
     TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
@@ -715,12 +728,8 @@ static NSInteger const kMaxPostImageCount = 9;
                                                          }];
     
     // 话题页发帖默认是带上了话题concern，如果在发布前用户手动删除话题，则将cid改回默认的，避免错误的召回到该话题下
-    self.cid = @"6454692306795629069";
+    self.cid = KTTFollowPageConcernID;
     NSString *concernID = self.cid;
-//    if (!isEmptyString(self.enterConcernID) && [self.enterConcernID isEqualToString:self.cid] && ![mentionConcerns containsObject:self.cid]) {
-//        concernID = KTTFollowPageConcernID;
-//    }
-    
     // 去掉links中fake的自建话题
     TTRichSpans *richSpans = richSpanText.richSpans;
     if (!SSIsEmptyArray(createdConcerns)) {
@@ -750,36 +759,14 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.detailPos = self.addLocationView.selectedLocation.locationName;
     postThreadModel.longitude = longitude;
     postThreadModel.latitude = latitude;
-//    postThreadModel.score = rate;
-//    postThreadModel.refer = self.refer;
-//    postThreadModel.communityID = self.communityID;
-//    postThreadModel.postUGCEnterFrom = self.postUGCEnterFrom;
-//    postThreadModel.forumNames = [createdConcerns tt_JSONRepresentation];
-    postThreadModel.extraTrack = [extraTrack copy];
-//    postThreadModel.syncToRocket = self.syncToRocketButton.selected;
-//    postThreadModel.promotionId = self.goodsItem.promotion_id;
-//    postThreadModel.insertMixCardID = self.insertMixCardID;
-//    postThreadModel.relatedForumSubjectID = self.relatedForumSubjectID;
+    if (self.hasSocialGroup) {
+        postThreadModel.social_group_id = self.selectGroupId;
+    } else {
+        postThreadModel.social_group_id = self.selectView.groupId;
+    }
     
-//    if (!SSIsEmptyDictionary(self.sdkParamsDict)) {
-//        @try {
-//            NSString *jsonString = [self.sdkParamsDict JSONRepresentation];
-//            postThreadModel.sdkParams = jsonString;
-//        } @catch (NSException *exception) {
-//        } @finally {
-//        }
-//    }
-//    if (self.goodsItem) {
-//        NSMutableDictionary *businessPayloadDict = [NSMutableDictionary dictionary];
-//        NSDictionary *currentPayload = [NSJSONSerialization tt_dictionaryWithJSONString:self.businessPayload error:nil];
-//        [businessPayloadDict setValue:self.goodsItem.item_type forKey:@"ecom_type"];
-//        [businessPayloadDict setValue:self.goodsItem.promotion_id forKey:@"promotion_id"];
-//        [businessPayloadDict setValuesForKeysWithDictionary:currentPayload];
-//        postThreadModel.payload = [businessPayloadDict tt_JSONRepresentation];
-//    } else {
-//        postThreadModel.payload = self.businessPayload;
-//    }
-//    postThreadModel.payload = self.businessPayload;
+    
+    postThreadModel.extraTrack = self.trackDict.copy;
     
     [[TTPostThreadCenter sharedInstance_tt] postThreadWithPostThreadModel:postThreadModel finishBlock:^(TTPostThreadTask *task) {
         [self postFinished:YES task:task];
@@ -792,11 +779,19 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)postFinished:(BOOL)hasSent task:(TTPostThreadTask *)task {
     [self clearDraft];
     if (hasSent && !isEmptyString(self.cid)) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kForumPostThreadFinish object:nil userInfo:@{@"cid" : self.cid}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCForumPostThreadFinish object:nil userInfo:@{@"cid" : self.cid}];
+        NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+        tracerDict[@"click_position"] = @"passport_publisher";
+        // 此时没有groupID
+        [FHUserTracker writeEvent:@"feed_publish_click" params:tracerDict];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionCancelledNotification
                                                             object:nil
                                                           userInfo:nil];
+        // 取消埋点
+        NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+        tracerDict[@"click_position"] = @"publisher_cancel";
+        [FHUserTracker writeEvent:@"click_options" params:tracerDict];
     }
 
     // 发帖跳关注频道
@@ -855,14 +850,8 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)refreshUI {
     NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
     NSString *inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if (inputText.length > maxTextCount) {
-        self.tipLabel.hidden = NO;
-        NSUInteger excludeCount = (unsigned long)(inputText.length - maxTextCount);
-        excludeCount = MIN(excludeCount, 9999);
-        self.tipLabel.text = [NSString stringWithFormat:@"-%lu", excludeCount];
-    } else {
-        self.tipLabel.hidden = YES;
-    }
+    self.tipLabel.hidden = NO;
+    self.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",inputText.length, maxTextCount];
     
     [self refreshPostButtonUI];
 }
@@ -870,13 +859,21 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)refreshPostButtonUI {
     //发布器
     if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
-        self.postButton.titleColorThemeKey = kColorText6;
-        self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
-        self.postButton.disabledTitleColorThemeKey = kColorText6;
+        self.postButton.enabled = YES;
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
     } else {
-        self.postButton.titleColorThemeKey = kColorText9;
-        self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
-        self.postButton.disabledTitleColorThemeKey = kColorText9;
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateHighlighted];
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
+        self.postButton.enabled = NO;
+    }
+    // 选择小区
+    if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
+        self.selectView.groupId = self.selectGroupId;
+        self.selectView.communityName = self.selectGroupName;
+        self.selectView.rightImageView.hidden = YES;
     }
 }
 
@@ -972,6 +969,19 @@ static NSInteger const kMaxPostImageCount = 9;
     return YES;
 }
 
+// 输入文本长度限制代理
+- (BOOL)textView:(TTUGCTextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
+    NSUInteger currentLen = textView.text.length;
+    if (currentLen + text.length > maxTextCount) {
+        return NO;
+    }
+    if (currentLen < range.location + range.length) {
+        return NO;
+    }
+    return YES;
+}
+
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
     return YES;
 }
@@ -987,6 +997,11 @@ static NSInteger const kMaxPostImageCount = 9;
 #pragma mark - FRAddMultiImagesViewDelegate
 
 - (void)addImagesButtonDidClickedOfAddMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"page_type"] = @"feed_publisher";
+    tracerDict[@"click_position"] = @"picture";
+    [FHUserTracker writeEvent:@"click_options" params:tracerDict];
+    
     self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
     [self endEditing];
 }
@@ -1176,22 +1191,34 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 避免视频详情页转发时，出现 statusBar 高度获取为 0 的情况
     CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
+    if (!self.hasSocialGroup) {
+        self.selectView.frame = CGRectMake(0, top, self.view.width, 44);
+        top += 44;
+    }
     self.containerView.frame = CGRectMake(0, top, self.view.width, self.view.height - top);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [UIApplication sharedApplication].statusBarHidden = NO;
-    if (self.firstAppear) {
-        self.firstAppear = NO;
-        [self.inputTextView becomeFirstResponder];
-    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     self.originStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    if (self.firstAppear) {
+        self.firstAppear = NO;
+        [self.inputTextView becomeFirstResponder];
+    } else {
+        // 选择小区圈子
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (weakSelf.keyboardVisibleBeforePresent) {
+                [weakSelf.inputTextView becomeFirstResponder];
+            }
+        });
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -1249,6 +1276,27 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 移除google地图注册
     [[TTLocationManager sharedManager] unregisterReverseGeocoderForKey:NSStringFromClass([TTGoogleMapGeocoder class])];
+    
+    [FHBubbleTipManager shareInstance].canShowTip = self.lastCanShowMessageTip;
+    // App 内push
+    kFHInAppPushTipsHidden = self.lastInAppPushTipsHidden;// 展示
+}
+
+#pragma mark - FHUGCFollowListDelegate
+- (void)selectedItem:(FHUGCScialGroupDataModel *)item {
+    // 选择 小区圈子
+    if (item) {
+        self.selectView.groupId = item.socialGroupId;
+        self.selectView.communityName = item.socialGroupName;
+        [self refreshPostButtonUI];
+        
+        NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
+        tracerDict[@"element_type"] = @"select_like_publisher_neighborhood";
+        if (item.socialGroupId.length > 0) {
+            tracerDict[@"group_id"] = item.socialGroupId;
+        }
+        [FHUserTracker writeEvent:@"element_show" params:tracerDict];
+    }
 }
 
 @end

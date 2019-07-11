@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController shouldPresentCommentDetailViewControllerWithCommentModel:(nullable id<TTCommentModelProtocol>)model indexPath:(NSIndexPath *)indexPath showKeyBoard:(BOOL)showKeyBoard;
 - (void)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController tappedWithUserID:(nonnull NSString*)userID;
 - (void)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController didSelectWithInfo:(nullable NSDictionary *)info;
+- (void)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController deleteCommentWithCommentModel:(nonnull id<TTCommentModelProtocol>)model;
 
 // 评论列表UI行为
 - (void)tt_commentViewControllerScrollViewDidScrollToTop;

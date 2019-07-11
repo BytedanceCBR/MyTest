@@ -115,6 +115,8 @@ const CGFloat TTForumPostVideoThreadTaskBeforePostThreadProgress = 0.95f;
         self.postID = [aDecoder decodeObjectForKey:@"postID"];
         self.promotionID = [aDecoder decodeObjectForKey:@"promotionID"];
         self.sdkParams = [aDecoder decodeObjectForKey:@"sdkParams"];
+        self.social_group_id = [aDecoder decodeObjectForKey:@"social_group_id"];
+        self.uploadProgress = [aDecoder decodeFloatForKey:@"uploadProgress"];
         
         @try {
             NSArray * datas = [aDecoder decodeObjectForKey:@"images"];
@@ -161,6 +163,7 @@ const CGFloat TTForumPostVideoThreadTaskBeforePostThreadProgress = 0.95f;
     [aCoder encodeInt:_locationType forKey:@"locationType"];
     [aCoder encodeObject:_locationAddress forKey:@"locationAddress"];
     [aCoder encodeObject:[NSValue valueWithRange:_selectedRange] forKey:@"selectedRange"];
+    [aCoder encodeFloat:_uploadProgress forKey:@"uploadProgress"];
     
     if (_postID) {
         [aCoder encodeObject:_postID forKey:@"postID"];
@@ -174,6 +177,9 @@ const CGFloat TTForumPostVideoThreadTaskBeforePostThreadProgress = 0.95f;
     }
     if (_sdkParams) {
         [aCoder encodeObject:_sdkParams forKey:@"sdkParams"];
+    }
+    if (self.social_group_id.length > 0) {
+        [aCoder encodeObject:_social_group_id forKey:@"social_group_id"];
     }
     [aCoder encodeInteger:_fromWhere forKey:@"fromWhere"];
     [aCoder encodeFloat:_score forKey:@"score"];

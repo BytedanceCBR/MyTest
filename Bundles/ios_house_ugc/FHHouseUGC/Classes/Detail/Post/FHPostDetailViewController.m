@@ -13,10 +13,14 @@
 #import "Article.h"
 #import "FHPostDetailNavHeaderView.h"
 #import "FHCommonDefines.h"
+#import "FHUGCFollowButton.h"
+#import "FHUserTracker.h"
+#import "UIViewController+Track.h"
+#import "FHFeedOperationView.h"
 
 @interface FHPostDetailViewController ()
 
-@property (nonatomic, assign) int64_t tid; //帖子ID
+@property (nonatomic, assign) int64_t tid; //帖子ID--必须
 @property (nonatomic, assign) int64_t fid; //话题ID
 @property (nonatomic, copy) NSString *cid; //关心ID
 // 列表页数据
@@ -25,7 +29,8 @@
 @property (nonatomic, weak)     FHPostDetailViewModel       *weakViewModel;
 
 @property (nonatomic, strong)   FHPostDetailNavHeaderView       *naviHeaderView;
-@property (nonatomic, strong)   UIButton       *followButton;// 关注
+@property (nonatomic, strong)   FHUGCFollowButton       *followButton;// 关注
+@property (nonatomic, assign)   BOOL       isViewAppearing;
 
 @end
 
@@ -44,13 +49,16 @@
         self.fid = fid;// 6564242300        1621706233835550    6564242300          86578926583
         TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:[NSString stringWithFormat:@"%lld", tid] itemID:[NSString stringWithFormat:@"%lld", tid] impressionID:nil aggrType:1];
         self.groupModel = groupModel;
-        // 评论数 点赞数等
-        self.comment_count = [[paramObj.allParams objectForKey:@"comment_count"] integerValue];
-        self.digg_count = [[paramObj.allParams objectForKey:@"digg_count"] integerValue];
-        self.user_digg = [[paramObj.allParams objectForKey:@"user_digg"] integerValue];
         // 列表页数据
         self.detailData = params[@"data"];
-        // add by zyk 注意埋点
+        if (self.detailData) {
+            self.comment_count = [self.detailData.commentCount longLongValue];
+            self.user_digg = [self.detailData.userDigg integerValue];
+            self.digg_count = [self.detailData.diggCount longLongValue];
+        }
+        // 埋点
+        self.tracerDict[@"page_type"] = @"feed_detail";
+        self.ttTrackStayEnable = YES;
     }
     return self;
 }
@@ -62,33 +70,59 @@
     self.weakViewModel = self.viewModel;
     self.weakViewModel.threadID = self.tid;
     self.weakViewModel.forumID = self.fid;
-    self.weakViewModel.category = @"test";// add by zyk
+    self.weakViewModel.category = @"thread_detail";
     // 导航栏
     [self setupDetailNaviBar];
     // 全部评论
     [self commentCountChanged];
     // 列表页数据
     if (self.detailData) {
-        [self.viewModel.items addObject:self.detailData];
-        // 刷新数据
-        [self.viewModel reloadData];
+//        [self.viewModel.items addObject:self.detailData];
+//        // 刷新数据
+//        [self.viewModel reloadData];
+        self.weakViewModel.detailData = self.detailData;
     }
     [self addDefaultEmptyViewFullScreen];
     // 请求 详情页数据
     [self startLoadData];
+    [self addGoDetailLog];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self addStayPageLog];
+    if (self.detailData) {
+        // 修改列表页数据
+        self.detailData.commentCount = [NSString stringWithFormat:@"%lld",self.comment_count];
+        self.detailData.userDigg = [NSString stringWithFormat:@"%ld",self.user_digg];
+        self.detailData.diggCount = [NSString stringWithFormat:@"%lld",self.digg_count];
+    }
+    //跳页时关闭举报的弹窗
+    [FHFeedOperationView dismissIfVisible];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.isViewAppearing = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.isViewAppearing = NO;
+}
+
+- (void)dealloc
+{
+    [self addReadPct];
 }
 
 - (void)setupDetailNaviBar {
     self.customNavBarView.title.text = @"详情";
     // 关注按钮
-    self.followButton = [[UIButton alloc] init];
-    _followButton.layer.masksToBounds = YES;
-    _followButton.layer.cornerRadius = 4;
-    _followButton.layer.borderColor = [[UIColor themeRed1] CGColor];
-    _followButton.layer.borderWidth = 0.5;
-    [_followButton setTitle:@"关注" forState:UIControlStateNormal];
-    [_followButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    _followButton.titleLabel.font = [UIFont themeFontRegular:12];
+    self.followButton = [[FHUGCFollowButton alloc] init];
+    self.followButton.followed = YES;
+    self.followButton.tracerDic = self.tracerDict.mutableCopy;
+    self.followButton.groupId = [NSString stringWithFormat:@"%lld",self.tid];
     [self.customNavBarView addSubview:_followButton];
     [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(58);
@@ -107,9 +141,6 @@
     }];
     self.naviHeaderView.hidden = YES;
     self.followButton.hidden = YES;
-    // test
-    self.naviHeaderView.titleLabel.text = @"世纪城";
-    self.naviHeaderView.descLabel.text = @"10000成员。488z帖子";
 }
 
 - (void)startLoadData {
@@ -125,6 +156,7 @@
 // 重新加载
 - (void)retryLoadData {
     if (!self.isLoadingData) {
+        [self remove_comment_vc];
         [self startLoadData];
     }
 }
@@ -144,6 +176,16 @@
     self.commentAllFooter.allCommentLabel.text = commentStr;
 }
 
+- (void)headerInfoChanged {
+    if (self.weakViewModel.detailHeaderModel) {
+        self.naviHeaderView.titleLabel.text = self.weakViewModel.detailHeaderModel.socialGroupModel.socialGroupName;
+        self.naviHeaderView.descLabel.text = self.weakViewModel.detailHeaderModel.socialGroupModel.countText;
+        // 关注按钮
+        self.followButton.followed = [self.weakViewModel.detailHeaderModel.socialGroupModel.hasFollow boolValue];
+        self.followButton.groupId = self.weakViewModel.detailHeaderModel.socialGroupModel.socialGroupId;
+    }
+}
+
 // 子类滚动方法
 - (void)sub_scrollViewDidScroll:(UIScrollView *)scrollView {
     if (self.weakViewModel.detailHeaderModel) {
@@ -157,6 +199,44 @@
             self.followButton.hidden = YES;
         }
     }
+}
+
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayPageLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+#pragma mark - Tracer
+
+-(void)addGoDetailLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
+}
+
+-(void)addStayPageLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
+    [self tt_resetStayTime];
+}
+
+- (void)addReadPct {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"page_count"] = @"1";
+    tracerDict[@"percent"] = @"100";
+    tracerDict[@"item_id"] = self.groupModel.itemID ?: @"be_null";
+    [FHUserTracker writeEvent:@"read_pct" params:tracerDict];
 }
 
 @end

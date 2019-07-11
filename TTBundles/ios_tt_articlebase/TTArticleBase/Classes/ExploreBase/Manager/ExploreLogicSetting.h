@@ -35,6 +35,7 @@
 extern NSString *const kMainTabbarClickedNotificationUserInfoHasTipKey;
 extern NSString *const kMainTabbarClickedNotificationUserInfoShowFriendLabelKey;
 extern NSString *const kMainTabbarKeepClickedNotification;
+extern NSString *const kFindTabbarKeepClickedNotification;
 extern NSString *const kMomentTabbarKeepClickedNotification;
 extern NSString *const kMineTabbarKeepClickedNotification;
 extern NSString *const kVideoTabbarKeepClickedNotification;

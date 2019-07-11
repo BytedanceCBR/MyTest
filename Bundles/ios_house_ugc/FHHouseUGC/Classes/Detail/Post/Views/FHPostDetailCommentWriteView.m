@@ -25,7 +25,7 @@
 #import "TTCommentDefines.h"
 #import "UIColor+Theme.h"
 
-#define PUBLISHBUTTON_WIDTH [TTDeviceUIUtils tt_newPadding:33.f]
+#define PUBLISHBUTTON_WIDTH [TTDeviceUIUtils tt_newPadding:35.f]
 #define PUBLISHBUTTON_HEIGHT [TTDeviceUIUtils tt_newPadding:22.5f]
 #define EMOJI_INPUT_VIEW_HEIGHT ([TTDeviceHelper isScreenWidthLarge320] ? 216.f : 193.f)
 
@@ -414,7 +414,8 @@ static struct timeval kFHCommentTimeval;
     CGFloat targetY = CGRectGetMinY(keyboardScreenFrame) - CGRectGetHeight(frame); // 键盘弹出状态位置
 
     // 为了保证从上往下收起动画效果的完整性
-    if (CGRectGetMinY(keyboardScreenFrame) >= self.height) { // 收起，这里采用 self.height 而不是 window.height，因为 present 方式弹出时高度不一致
+    // self.height - 1 是为了解决XSMax 九宫格表情问题
+    if (CGRectGetMinY(keyboardScreenFrame) >= self.height - 1) { // 收起，这里采用 self.height 而不是 window.height，因为 present 方式弹出时高度不一致
         if (self.emojiInputViewVisible) { // 切换到表情输入，收起键盘
             targetY = CGRectGetHeight(self.frame) - CGRectGetHeight(self.containerView.frame);
 

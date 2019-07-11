@@ -268,6 +268,22 @@
     [self.groupItemView refreshWithDetailModel:model];
 
     [self setupLayout];
+    
+    if(self.hidePost){
+        [self hiddenPostForUgc];
+    }
+}
+
+- (void)hiddenPostForUgc {
+    self.likeView.hidden = YES;
+    self.groupItemView.hidden = YES;
+    self.digButton.hidden = YES;
+    self.timeLabel.hidden = YES;
+    self.reportButton.hidden = YES;
+    self.deleteButton.hidden = YES;
+    self.followButton.hidden = YES;
+    
+    self.height = self.contentLabel.bottom + [TTDeviceUIUtils tt_newPadding:16.f];
 }
 
 - (void)layoutSubviews {

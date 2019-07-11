@@ -279,6 +279,14 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath NS_AVAILABLE_IOS(6_0);{
+    // end display
+    if ([cell isKindOfClass:[FHDetailBaseCell class]]) {
+        FHDetailBaseCell *tCell = (FHDetailBaseCell *)cell;
+        [tCell fh_didEndDisplayingCell];
+    }
+}
+
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (scrollView != self.tableView) {

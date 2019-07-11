@@ -79,6 +79,11 @@
     [self.tableView reloadData];
 }
 
+// 清空高度缓存
+- (void)clearCacheHeight {
+    [self.cellHeightCaches removeAllObjects];
+}
+
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

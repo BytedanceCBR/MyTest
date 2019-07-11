@@ -151,7 +151,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.1)
+  - ios_house_im (0.1.0)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -525,7 +525,7 @@ PODS:
   - TTVTableViewProtocolInterceptor/Core (0.1.2.1-binary)
   - TTVTableViewProtocolInterceptor/UIViewControllerCategory (0.1.2.1-binary)
   - TTVTLIndexPathTools (0.4.4.1-binary)
-  - TYRZApiSDK (1.2.0.1-binary)
+  - TYRZApiSDK (1.2.1)
   - UITableView+FDTemplateLayoutCell (1.6.1-binary)
   - UMengAnalytics (4.1.4.1-binary)
   - WCDB (1.0.7.5.1-binary)
@@ -629,7 +629,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.1)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `6f17a1a165de083d5140c79225175a07f8849cb8`)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -804,7 +804,7 @@ DEPENDENCIES:
   - TTVTableViewItem (= 0.1.0.1-binary)
   - TTVTableViewProtocolInterceptor (= 0.1.2.1-binary)
   - TTVTLIndexPathTools (= 0.4.4.1-binary)
-  - TYRZApiSDK (= 1.2.0.1-binary)
+  - TYRZApiSDK (= 1.2.1)
   - UITableView+FDTemplateLayoutCell (= 1.6.1-binary)
   - UMengAnalytics (= 4.1.4.1-binary)
   - WCDB (= 1.0.7.5.1-binary)
@@ -863,6 +863,9 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/FHWebView
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
+  ios_house_im:
+    :commit: 6f17a1a165de083d5140c79225175a07f8849cb8
+    :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAD:
@@ -935,6 +938,9 @@ EXTERNAL SOURCES:
     :path: ../ReactCommon/yoga
 
 CHECKOUT OPTIONS:
+  ios_house_im:
+    :commit: 6f17a1a165de083d5140c79225175a07f8849cb8
+    :git: git@code.byted.org:fproject/ios_house_im.git
   TTRoute:
     :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa
     :git: git@code.byted.org:TTIOS/tt_pods_route.git
@@ -1002,7 +1008,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: d3f360533526babf872bd335e2443e37b5fd455b
+  ios_house_im: 93431910eb6de50b0b84130f90d5eabb85849261
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1110,7 +1116,7 @@ SPEC CHECKSUMS:
   TTVTableViewItem: edf61da588fddd2f8dcc6e1ed0796b764241fcfd
   TTVTableViewProtocolInterceptor: b40445eb84a3de5ded2f9869c4f6c946df4898e7
   TTVTLIndexPathTools: 2f6c23b4990f3aee6e7ceb867f632d4d02ea5384
-  TYRZApiSDK: 67e06aee48215f1d0058cf11ea99fa99b1745fc9
+  TYRZApiSDK: 98ce3036c6dc594aa94c8b786323a34519b2fdc9
   UITableView+FDTemplateLayoutCell: a2662e078962600e17f9e090cc09b5f49f3e4762
   UMengAnalytics: 03d571efddd70d2a64a58f35c23dcf9732344b5b
   WCDB: f443005ee9bc01706ff0f67bb1ad890e875d6f8c
@@ -1122,6 +1128,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: d7a4f95cf45510c472c52ad903926bd23aa29164
+PODFILE CHECKSUM: 065f8c9de5c0621f366c9584968f22bbf4d33f88
 
 COCOAPODS: 1.4.0

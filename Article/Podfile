@@ -48,9 +48,7 @@ def fhPods
     
     pod 'FHWebView', :path => '../AKPlugins/FHWebView'
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
-    #pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '898fbc9d6beb4e7e9094487eea1b2ffeb16f618b' #:branch => 'feature/develop'
-    pod 'ios_house_im' , '0.1.1'
-    
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '6f17a1a165de083d5140c79225175a07f8849cb8' #:branch => 'feature/develop'
     #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
     pod 'ios_house_filter' , '1.0.1'
 
@@ -458,7 +456,7 @@ def appPods
     pod 'BDUGContainer', '1.1.2'
     pod 'BDUGTrackerInterface', '1.1.1'
     pod 'BDUGMonitorInterface', '1.0.0'
-    pod_binary 'TYRZApiSDK', '1.2.0'
+    pod 'TYRZApiSDK' , '1.2.1'
     pod_binary 'EAccountApiSDK', '1.1.1'
     pod_binary 'BDUGUnionSDK', '0.1.2'
 

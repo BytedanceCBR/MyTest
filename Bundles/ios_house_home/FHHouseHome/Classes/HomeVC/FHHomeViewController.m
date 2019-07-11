@@ -32,6 +32,7 @@
 #import <FHHomeSearchPanelViewModel.h>
 #import <ExploreLogicSetting.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
+#import <TTArticleTabBarController.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -365,6 +366,8 @@ static CGFloat const kSectionHeaderHeight = 38;
             });
         }
     }
+    
+    [FHEnvContext addTabUGCGuid];
     
     [TTSandBoxHelper setAppFirstLaunchForAd];
 }

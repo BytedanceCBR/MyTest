@@ -40,6 +40,7 @@
                            @"coreInfo": @"core_info",
                            @"evaluationInfo": @"evaluation_info",
                            @"chooseAgencyList": @"choose_agency_list",
+                           @"ugcSocialGroup":@"ugc_social_group",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

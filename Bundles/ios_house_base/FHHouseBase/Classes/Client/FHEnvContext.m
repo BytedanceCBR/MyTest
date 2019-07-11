@@ -25,9 +25,11 @@
 #import "FHIESGeckoManager.h"
 #import <TTDeviceHelper.h>
 #import <BDALog/BDAgileLog.h>
+#import "FHUGCConfigModel.h"
 #import <TTTabBarManager.h>
 #import <TTTabBarItem.h>
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import <TTArticleTabBarController.h>
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -302,6 +304,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
     [self.generalBizConfig saveCurrentConfigCache:model];
 }
 
+- (void)saveUGCConfig:(FHUGCConfigModel *)model
+{
+    [self.generalBizConfig saveCurrentConfigCache:model];
+}
+
 - (void)updateRequestCommonParams
 {
     NSDictionary *param = [TTNetworkUtilities commonURLParameters];
@@ -568,6 +575,37 @@ static NSInteger kGetLightRequestRetryCount = 3;
 + (BOOL)isPriceValuationShowHouseTrend
 {
     return [[FHEnvContext sharedInstance] getConfigFromCache].entranceSwitch.isPriceValuationShowHouseTrend;
+}
+
++ (BOOL)isUGCOpen
+{
+    return [[FHEnvContext sharedInstance] getConfigFromCache].ugcCitySwitch;
+}
+
++ (void)changeFindTabTitle
+{
+    if ([self isUGCOpen]) {
+        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+        [tabItem setTitle:@"邻里"];
+        tabItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
+    }else
+    {
+        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+        [tabItem setTitle:@"发现"];
+    }
+}
+
+/*
+ 增加引导
+ */
++ (void)addTabUGCGuid
+{
+    UIWindow * mainWindow = [[UIApplication sharedApplication].delegate window];
+    
+    TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)mainWindow.rootViewController;
+    if ([mainWindow.rootViewController isKindOfClass:[TTArticleTabBarController class]]) {
+        [rootTabController addUgcGuide];
+    }
 }
 
 - (TTReachability *)reachability
