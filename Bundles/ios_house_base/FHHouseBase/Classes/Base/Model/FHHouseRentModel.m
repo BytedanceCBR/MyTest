@@ -20,6 +20,8 @@
                            @"houseImageTag": @"house_image_tag",
                            @"houseImage": @"house_image",
                            @"bottomText": @"bottom_text",
+                           @"baseInfo": @"base_info",
+                           @"coreInfo": @"core_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

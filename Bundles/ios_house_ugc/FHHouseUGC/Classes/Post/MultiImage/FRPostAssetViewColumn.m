@@ -61,9 +61,10 @@
         [_mask setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
         [self addSubview:_mask];
         
-        UIImageView * deleteImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ImgPic_delete_image"]];
-        deleteImageView.width = self.width;
-        deleteImageView.height = 80/222.0 * self.width;
+        UIImageView * deleteImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fh_ugc_del_normal"]];
+        deleteImageView.width = 22;
+        deleteImageView.height = 22;
+        deleteImageView.origin = CGPointMake(self.width - 22, 0);
         [self addSubview:deleteImageView];
         _deleteImageView = deleteImageView;
         

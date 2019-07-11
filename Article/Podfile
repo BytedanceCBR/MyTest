@@ -1,12 +1,12 @@
 #—————————————pod私有源--------------------------------------
-source 'git@code.byted.org:iOS_Library/toutiao_binary_repo.git' #TTRNKit 二进制版本在此仓库中
-source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git' #TTRNKit 源码在此仓库中
-source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'#一定要把这个源放在publicthird_source_repo.git之前，才能引用到正确的React组件
-source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
-source 'git@code.byted.org:ugc/UGCSpecs.git'
-#source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
-
-source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
+#source 'git@code.byted.org:iOS_Library/toutiao_binary_repo.git' #TTRNKit 二进制版本在此仓库中
+#source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git' #TTRNKit 源码在此仓库中
+#source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'#一定要把这个源放在publicthird_source_repo.git之前，才能引用到正确的React组件
+#source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
+#source 'git@code.byted.org:ugc/UGCSpecs.git'
+##source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+#
+#source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
 
 require File.dirname(__FILE__)+'/pod_binary.rb'
 install! 'cocoapods', :warn_for_multiple_pod_sources => false
@@ -48,11 +48,11 @@ def appPods
 
     pod 'FHWebView', :path => '../AKPlugins/FHWebView'
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '898fbc9d6beb4e7e9094487eea1b2ffeb16f618b' #:branch => 'feature/develop'
-#    pod 'ios_house_im' , :path => '../../../f_pods/ios_house_im'
-
-    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
-
+    
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '6f17a1a165de083d5140c79225175a07f8849cb8' #:branch => 'feature/develop'
+    #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
+    pod 'ios_house_filter' , '1.0.1'
+    
     #---------------------------------------------------头条业务源码库--------------------------------------------------#
     pod 'TTAD', :path => '../TTBundles/ios_tt_ad'
     pod 'TTAiKan', :path => '../TTBundles/ios_tt_aikan'
@@ -397,7 +397,7 @@ def appPods
     #pod 'TTAVRecorder', '1.1.1'
 
     #----弹窗互斥---
-    pod 'TTDialogDirector', :git => 'git@code.byted.org:TTIOS/TTDialogDirector.git', :commit => '8ed5beb', :subspecs => [
+    pod 'TTDialogDirector', '0.1.4' , :subspecs => [ #:git => 'git@code.byted.org:TTIOS/TTDialogDirector.git', :commit => '8ed5beb',
     'Core',
     'PhotoLibrary',
     'Microphone',
@@ -437,7 +437,7 @@ def appPods
     pod 'BDUGContainer', '1.1.2'
     pod 'BDUGTrackerInterface', '1.1.1'
     pod 'BDUGMonitorInterface', '1.0.0'
-    pod_binary 'TYRZApiSDK', '1.2.0'
+    pod 'TYRZApiSDK' , '1.2.1'
     pod_binary 'EAccountApiSDK', '1.1.1'
     pod_binary 'BDUGUnionSDK', '0.1.2'
 
@@ -508,27 +508,27 @@ def appPods
 
 
     pod 'TTIMSDK', '0.7.7', :subspecs => [
-    'IMKit',
-    'IMKit_WebSocket',
-    'Feature_ApplicationStatus',
-    'IMKit_Core',
-    'Foundation_Plugin_TTNetwork',
-    'Foundation',
-    'Feature_WebSocket',
-    'Feature_Essential_PB',
-    'Feature_Essential',
-    'Feature_Core_Store',
-    'Feature_Core_Sender',
-    'Feature_Core_Puller',
-    'Feature_Core_Notifier',
-    'Feature_Core_Logger',
-    'Feature_Core_ErrorHandler',
-    'Feature_Core_CurrentUser',
-    'Feature_Core_ConversationInfo',
-    'Feature_Core_Config',
-    'Feature_Core',
-    'Feature_ApplicationStatus',
-    'Bridges'
+        'IMKit',
+        'IMKit_WebSocket',
+        'Feature_ApplicationStatus',
+        'IMKit_Core',
+        'Foundation_Plugin_TTNetwork',
+        'Foundation',
+        'Feature_WebSocket',
+        'Feature_Essential_PB',
+        'Feature_Essential',
+        'Feature_Core_Store',
+        'Feature_Core_Sender',
+        'Feature_Core_Puller',
+        'Feature_Core_Notifier',
+        'Feature_Core_Logger',
+        'Feature_Core_ErrorHandler',
+        'Feature_Core_CurrentUser',
+        'Feature_Core_ConversationInfo',
+        'Feature_Core_Config',
+        'Feature_Core',
+        'Feature_ApplicationStatus',
+        'Bridges'
     ]
     
     pod_binary 'IGListKit','3.4.0'
@@ -638,6 +638,33 @@ post_install do |installer|
             target.build_configurations.each do |config|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
             end
+        end
+        if target.name == "TTArticleBase"
+            target.build_configurations.each do |config|
+                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','SD_WEBP=1']
+            end
+        end
+    end
+    
+    # Xcode 11目前和CocoaPods有兼容问题，会导致Assets.car这个文件，由于出现在两处Output File而报错
+    # 一处是Xcode自带的Copy Bundle Resources，一处是CocoaPods的[CP] Copy Pods Resources
+    # 这个问题在Xcode 10上也有小概率发生，现在统一临时Fix下，参考CocoaPods/CocoaPods#8122
+    installer.aggregate_targets.each do |target|
+        if ['Pods-f100', 'Pods-NewsLiteInHouse','Pods-NewsLite','Pods-NewsLiteChannel'].include?(target.name)
+            patched = false
+            target.user_targets.first.build_phases.each do |phase|
+                if phase.display_name == '[CP] Copy Pods Resources'
+                    assets_car_path = '${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car'
+                    if !phase.input_paths
+                        phase.input_paths = []
+                    end
+                    if !phase.input_paths.include?(assets_car_path)
+                        phase.input_paths << assets_car_path
+                        patched = true
+                    end
+                end
+            end
+            target.user_project.save if patched
         end
     end
 end

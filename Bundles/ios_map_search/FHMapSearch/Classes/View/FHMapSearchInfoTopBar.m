@@ -8,9 +8,9 @@
 
 #import "FHMapSearchInfoTopBar.h"
 #import <Masonry/Masonry.h>
-#import "UIFont+House.h"
+#import <FHCommonUI/UIFont+House.h>
+#import <FHCommonUI/UIColor+Theme.h>
 #import "UIImage+IconFont.h"
-#import "UIColor+Theme.h"
 #import "UIViewAdditions.h"
 
 #define BTN_WIDTH  24

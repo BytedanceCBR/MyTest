@@ -26,6 +26,7 @@
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTThemed/TTThemeManager.h>
+#import "FHCommonApi.h"
 
 
 
@@ -288,17 +289,29 @@
     self.digButton.right = self.right - [TTUniversalCommentCellLiteHelper cellRightPadding];
 
     // TODO delegate 处理
-    TTDetailActionReuestContext *context = [TTDetailActionReuestContext new];
-    if (_commentModel.commentID) {
-        context.itemCommentID = [NSString stringWithFormat:@"%@", _commentModel.commentID];
+//    TTDetailActionReuestContext *context = [TTDetailActionReuestContext new];
+//    if (_commentModel.commentID) {
+//        context.itemCommentID = [NSString stringWithFormat:@"%@", _commentModel.commentID];
+//    }
+//    context.groupModel = _commentModel.groupModel;
+//
+//    if (!_actionManager) {
+//        _actionManager = [[DetailActionRequestManager alloc] init];
+//    }
+//    [_actionManager setContext:context];
+//    [_actionManager startItemActionByType:actionType];
+    NSInteger action = 0;
+    if (actionType == DetailActionCommentDigg) {
+        action = 1;
+    } else if (actionType == DetailActionCommentUnDigg) {
+        action = 0;
     }
-    context.groupModel = _commentModel.groupModel;
-    
-    if (!_actionManager) {
-        _actionManager = [[DetailActionRequestManager alloc] init];
-    }
-    [_actionManager setContext:context];
-    [_actionManager startItemActionByType:actionType];
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    dict[@"enter_from"] = self.tracerDict[@"enter_from"];
+    dict[@"element_from"] = self.tracerDict[@"element_from"];
+    dict[@"page_type"] = self.tracerDict[@"page_type"];
+    // 新接口
+    [FHCommonApi requestCommonDigg: [NSString stringWithFormat:@"%@", _commentModel.commentID] groupType:FHDetailDiggTypeCOMMENT action:action tracerParam:dict completion:nil];
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     [dic setValue:_commentModel.commentID.stringValue forKey:@"ext_value"];

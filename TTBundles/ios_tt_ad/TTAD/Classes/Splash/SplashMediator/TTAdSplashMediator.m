@@ -337,7 +337,21 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     
     self.isNotClicked = YES;
     
-    if (!isEmptyString(open_url) && [[TTRoute sharedRoute] canOpenURL:[TTStringHelper URLWithURLString:open_url]]) {
+    if (!isEmptyString(open_url) && [[[TTStringHelper URLWithURLString:open_url] host] isEqualToString:@"main"]) {
+        //处理开屏点击后进入其他tab的逻辑
+        NSURL *handledOpenURL = [TTStringHelper URLWithURLString:open_url];
+        TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:handledOpenURL];
+        NSDictionary* params = [obj queryParams];
+        if (params != nil) {
+            NSString* target = params[@"select_tab"];
+            if (target != nil && target.length > 0) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
+            } else {
+                NSAssert(false, @"开屏广告的tag为空");
+            }
+        }
+    }
+    else if (!isEmptyString(open_url) && [[TTRoute sharedRoute] canOpenURL:[TTStringHelper URLWithURLString:open_url]]) {
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:5];
         [params setValue:@"splash" forKey:@"gd_label"];
         [params setValue:@(NewsGoDetailFromSourceSplashAD) forKey:kNewsGoDetailFromSourceKey];

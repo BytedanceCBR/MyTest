@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(instancetype)createDetailViewModelWithPostType:(FHUGCPostType)postType withController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView;
 -(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView;
+-(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType;
 @property (nonatomic, assign)   FHUGCPostType postType; // 帖子类型
 
 @property(nonatomic , weak) UITableView *tableView;
@@ -32,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 刷新数据
 - (void)reloadData;
+- (void)refreshToolbarView;
+- (void)clearCacheHeight;
 
 @end
 

@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHFeedUGCCellModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,6 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic ,strong) UILabel *userName;
 @property(nonatomic ,strong) UILabel *descLabel;
 @property(nonatomic ,strong) UIButton *moreBtn;
+
+@property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
+@property(nonatomic, copy) void(^deleteCellBlock)(void);
+@property(nonatomic, copy) void(^reportSuccessBlock)(void);
 
 @end
 

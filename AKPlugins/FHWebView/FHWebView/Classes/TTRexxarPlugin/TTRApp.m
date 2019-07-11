@@ -21,6 +21,9 @@
 #import <TTBaseLib/TTBaseMacro.h>
 #import "TTAccount.h"
 #import "TTDeviceHelper.h"
+#import "FHEnvContext.h"
+
+extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @implementation TTRApp
 
@@ -112,11 +115,30 @@
         }
     }
     
+    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+    id form_phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
+    id logIn_phoneCache = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
+    
+    NSString *phoneNum = (NSString *)form_phoneCache;
+    NSString *phoneNumLogin = (NSString *)logIn_phoneCache;
+    [data setValue:phoneNum forKey:@"form_phone"];
+    [data setValue:phoneNumLogin forKey:@"login_phone"];
+
+    
     NSString *idfaString = [TTDeviceHelper idfaString];
     [data setValue:idfaString forKey:@"idfa"];
     
     if (callback) {
         callback(TTRJSBMsgSuccess, data);
+    }
+}
+
+- (void)saveWebPhoneWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    NSString *phoneNum = [param objectForKey:@"phone"];
+    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+    if (phoneNum) {
+        [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
     }
 }
 

@@ -32,8 +32,19 @@
     return self;
 }
 
+- (void)viewWillAppear {
+    [self refreshCurrentCell];
+}
+
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     [self.requestTask cancel];
+}
+
+- (void)refreshCurrentCell {
+    if(self.needRefreshCell){
+        self.needRefreshCell = NO;
+        [self.currentCell refreshWithData:self.currentCellModel];
+    }
 }
 
 @end

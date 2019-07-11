@@ -40,6 +40,9 @@
 #import "TTCommentWriteView.h"
 #import "ExploreItemActionManager.h"
 #import "FHPostDetailCommentWriteView.h"
+#import "FHCommonApi.h"
+#import "TTAccountManager.h"
+#import "FHUserTracker.h"
 
 @interface FHCommentDetailViewController ()<UIScrollViewDelegate>
 
@@ -49,12 +52,12 @@
 
 @property (nonatomic,assign) double commentShowTimeTotal;
 @property (nonatomic,strong) NSDate *commentShowDate;
-@property (nonatomic, assign) BOOL beginShowComment;
 @property (nonatomic, assign)   CGFloat       topTableViewContentHeight;
 @property (nonatomic, assign)   BOOL       isAppearing;
 @property(nonatomic, strong) FHPostDetailCommentWriteView *commentWriteView;
 @property (nonatomic, strong) ExploreItemActionManager *itemActionManager;
 @property (nonatomic, assign)   BOOL       hasLoadedComment;
+@property (nonatomic, assign)   BOOL       isRebuildCommentViewController;
 
 @end
 
@@ -63,7 +66,11 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-
+        self.beginShowComment = NO;
+        self.isRebuildCommentViewController = NO;
+        if(paramObj.allParams[@"begin_show_comment"]) {
+            self.beginShowComment = [paramObj.allParams[@"begin_show_comment"] boolValue];
+        }
     }
     return self;
 }
@@ -72,6 +79,8 @@
     [super viewDidLoad];
     [self setupData];
     [self setupUI];
+    self.tableView.hidden = YES;
+    self.commentViewController.view.hidden = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -113,7 +122,6 @@
     }
     self.hasLoadedComment = NO;
     self.topTableViewContentHeight = 0;
-    self.beginShowComment = NO;
 }
 
 - (void)setupUI {
@@ -176,6 +184,10 @@
     [self p_refreshToolbarView];
 }
 
+- (void)becomeFirstResponder_comment {
+    [self toolBarButtonClicked:self.self.toolbarView.writeButton];
+}
+
 #pragma mark - KVO
 
 - (void)p_addObserver {
@@ -195,6 +207,10 @@
 }
 
 - (void)commentCountChanged {
+    
+}
+
+- (void)headerInfoChanged {
     
 }
 
@@ -237,7 +253,9 @@
 - (void)p_removeDetailViewKVO
 {
     [self.tableView removeObserver:self forKeyPath:@"contentSize"];
-    [self.commentViewController.commentTableView removeObserver:self forKeyPath:@"contentSize"];
+    if (self.commentViewController) {
+        [self.commentViewController.commentTableView removeObserver:self forKeyPath:@"contentSize"];
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
@@ -273,11 +291,41 @@
 - (void)p_buildCommentViewController
 {
     self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:CGRectMake(0, _mainScrollView.frame.size.height, self.view.width, _mainScrollView.frame.size.height) dataSource:self delegate:self];
+    NSString *enter_from = self.tracerDict[@"enter_from"];
+    self.commentViewController.enter_from = enter_from;
     self.commentViewController.enableImpressionRecording = YES;
     [self.commentViewController willMoveToParentViewController:self];
     [self addChildViewController:self.commentViewController];
     [self.commentViewController didMoveToParentViewController:self];
     [self.mainScrollView addSubview:self.commentViewController.view];
+    self.commentViewController.tracerDict = [self.tracerDict copy];
+}
+
+- (void)remove_comment_vc {
+    if (self.commentViewController) {
+        [self.commentViewController.commentTableView removeObserver:self forKeyPath:@"contentSize"];
+        [self.commentViewController.view removeFromSuperview];
+        [self.commentViewController removeFromParentViewController];
+        self.commentViewController = nil;
+    }
+    self.isRebuildCommentViewController = NO;
+}
+
+- (void)re_add_comment_vc {
+    if (self.commentViewController == nil) {
+        [self p_buildCommentViewController];
+         [self.commentViewController.commentTableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
+        self.isRebuildCommentViewController = YES;
+    }
+}
+
+- (void)show_comment_view {
+    self.commentViewController.view.hidden = NO;
+}
+
+// 刷新页面以及布局
+- (void)refresh_page_view {
+    [self scrollViewDidScroll:self.mainScrollView];
 }
 
 // 当前详情页可视范围标准rect(去掉顶部导航,且根据articleType判断是否去掉底部toolbar)
@@ -314,11 +362,12 @@
             [self.toolbarView.writeButton setTitle:@"说点什么..." forState:UIControlStateNormal];
             return;
         }
+        [self clickCommentFieldTracer];
         [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
     }
     else if (sender == _toolbarView.digButton) {
         // 点赞
-        [self p_digg];
+        [self gotoDigg];
     }
 }
 
@@ -331,10 +380,43 @@
                                  dismissHandler:nil];
         return;
     }
-    // add by zyk 收藏
 }
 
-// 点赞
+// 去点赞
+- (void)gotoDigg {
+    // 点赞埋点
+    if (self.user_digg == 1) {
+        // 取消点赞
+        [self click_feed_dislike];
+    } else {
+        // 点赞
+        [self click_feed_like];
+    }
+    if ([TTAccountManager isLogin]) {
+        [self p_digg];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:@"feed_detail" forKey:@"enter_from"];
+    [params setObject:@"feed_like" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                [wSelf p_digg];
+            }
+        }
+    }];
+}
+
 - (void)p_digg {
     self.user_digg = (self.user_digg == 1) ? 0 : 1;
     self.digg_count = self.user_digg == 1 ? (self.digg_count + 1) : MAX(0, (self.digg_count - 1));
@@ -342,13 +424,16 @@
     if (!self.itemActionManager) {
         self.itemActionManager = [[ExploreItemActionManager alloc] init];
     }
-    Article *article = [[Article alloc] init];
-    article.groupType = TTCommentsGroupTypeArticle;
-    article.uniqueID = [self.groupModel.groupID longLongValue];
-    article.itemID = self.groupModel.itemID;
-    article.aggrType = @(self.groupModel.aggrType);
     
-    [self.itemActionManager sendActionForOriginalData:article adID:nil actionType:(self.user_digg == 1) ? DetailActionTypeLike: DetailActionTypeUnlike finishBlock:nil];
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    dict[@"enter_from"] = self.tracerDict[@"enter_from"];
+    dict[@"element_from"] = self.tracerDict[@"element_from"];
+    dict[@"page_type"] = self.tracerDict[@"page_type"];
+    
+    [FHCommonApi requestCommonDigg:self.groupModel.groupID groupType:FHDetailDiggTypeTHREAD action:self.user_digg tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        
+    }];
+    
     [self p_refreshToolbarView];
 }
 
@@ -356,10 +441,21 @@
     
 }
 
+- (void)refreshToolbarView {
+    [self p_refreshToolbarView];
+}
+
 - (void)p_refreshToolbarView
 {
     self.toolbarView.digButton.selected = self.user_digg == 1;
     self.toolbarView.digCountValue = [NSString stringWithFormat:@"%ld",self.digg_count];
+    if (self.user_digg == 1) {
+        // 点赞
+        self.toolbarView.digCountLabel.textColor = [UIColor themeRed1];
+    } else {
+        // 取消点赞
+        self.toolbarView.digCountLabel.textColor = [UIColor themeGray1];
+    }
 }
 
 - (CGRect)p_frameForToolBarView
@@ -413,9 +509,17 @@
 
 - (void)tt_commentViewControllerDidFetchCommentsWithError:(NSError *)error
 {
-    //点击评论进入文章时跳转到评论区
     __weak typeof(self) weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    if (error == nil) {
+        if (self.isRebuildCommentViewController) {
+            self.isRebuildCommentViewController = NO;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [weakSelf scrollViewDidScroll:weakSelf.mainScrollView];
+            });
+        }
+    }
+    // 点击评论进入文章时跳转到评论区
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf p_scrollToCommentIfNeeded];
         weakSelf.hasLoadedComment = YES;
     });
@@ -430,9 +534,9 @@
 {
     // 对评论 点赞
     if (!model.userDigged) {
-
+        [self click_reply_dislike:model.commentID];
     } else {
-
+        [self click_reply_like:model.commentID];
     }
 }
 
@@ -442,11 +546,17 @@
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController didClickReplyButtonWithCommentModel:(nonnull id<TTCommentModelProtocol>)model
 {
+    // 埋点 点击回复他人评论
+    [self clickReplyComment:model.commentID];
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(id<TTCommentModelProtocol>)model
 {
     
+}
+
+- (void)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController deleteCommentWithCommentModel:(nonnull id<TTCommentModelProtocol>)model {
+    [self click_delete_comment:model.commentID];
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController tappedWithUserID:(NSString *)userID {
@@ -478,24 +588,6 @@
 //    [mdict setValue:self.detailModel.article forKey:@"group"];
     
     [mdict setValue:@"favorite" forKey:@"categoryID"];
-//    [mdict setValue:self.detailModel.clickLabel forKey:@"enterFrom"];
-//    [mdict setValue:self.detailModel.logPb forKey:@"logPb"];
-    
-    /*{
-     categoryID = favorite;
-     categoryName = favorite;
-     commentModel = "_groupID: 6682645929197044227, _commentID 6688965152903004174, forumID:(null), _userAvatarURL http://p0.pstatp.com/origin/3791/5070639578, badgeList:(\n)";
-     enterFrom = "click_favorite";
-     from = 1;
-     fromPage = "detail_article_comment_dig";
-     "from_message" = 0;
-     group = "<Article: 0x119061610>";
-     groupId = 6682645929197044227;
-     groupModel = "<TTGroupModel: 0x28260f400>";
-     "source_type" = 5;
-     writeComment = 0;
-     }
-     */
     
     TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(mdict.copy)];
     
@@ -511,7 +603,7 @@
         self.commentViewController.view.window.rootViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     }
     else {
-        [self.commentViewController presentViewController:navVC animated:NO completion:nil];
+        [self presentViewController:navVC animated:NO completion:nil];
     }
     
     
@@ -559,29 +651,18 @@
     qualityModel.readPct = @(percent);
 //    qualityModel.stayTimeMs = @([self.detailModel.sharedDetailManager currentStayDuration]);
     
+    __weak typeof(self) wSelf = self;
+    
     TTCommentWriteManager *commentManager = [[TTCommentWriteManager alloc] initWithCommentCondition:condition commentViewDelegate:self commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
         *willRepostFwID = fwID;
+        [wSelf clickSubmitComment];
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
-    commentManager.enterFrom = @"article";
-    
-//    commentManager.enterFromStr = self.detailModel.clickLabel;
-//    commentManager.categoryID = self.detailModel.categoryID;
-//    commentManager.logPb = self.detailModel.logPb;
+    commentManager.enterFrom = @"feed_detail";
+    commentManager.enter_type = @"submit_comment";
     
     self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
     
     self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
-    
-    
-    
-    // writeCommentView 禁表情
-//    if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
-//        self.commentWriteView.banEmojiInput = self.commentViewController.tt_banEmojiInput;
-//    }
-    
-//    if ([self.commentViewController respondsToSelector:@selector(tt_writeCommentViewPlaceholder)]) {
-//        [self.commentWriteView setTextViewPlaceholder:self.commentViewController.tt_writeCommentViewPlaceholder];
-//    }
     
     [self.commentWriteView showInView:self.view animated:YES];
 }
@@ -591,18 +672,20 @@
     if (self.beginShowComment && [self p_needShowToolBarView]) {
         // 跳转到评论 区域
         CGFloat totalHeight = self.tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height;
-        
-        CGFloat offset = self.topTableViewContentHeight - SCREEN_HEIGHT / 3;
-        if (offset <= 0) {
-            offset = 0;
-        } else {
-            CGFloat frameHeight = self.mainScrollView.bounds.size.height;
-            if (totalHeight - offset < frameHeight) {
-                offset = totalHeight - frameHeight - 1;
+        CGFloat frameHeight = self.mainScrollView.bounds.size.height;
+
+        if (totalHeight > frameHeight) {
+            CGFloat topOffset = self.topTableViewContentHeight;
+            CGFloat commentHeight = self.commentViewController.commentTableView.contentSize.height; // 评论高度
+            if (commentHeight < frameHeight) {
+                topOffset = topOffset - (frameHeight - commentHeight) - 1;
             }
+            if (topOffset <= 0) {
+                topOffset = 0;
+            }
+            
+            [self.mainScrollView setContentOffset:CGPointMake(0, topOffset) animated:YES];
         }
-        
-        [self.mainScrollView setContentOffset:CGPointMake(0, offset) animated:YES];
     }
 }
 
@@ -652,7 +735,7 @@
 #pragma mark - TTWriteCommentViewDelegate
 
 - (void)commentView:(TTCommentWriteView *) commentView cancelledWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager {
-    commentWriteManager.delegate = nil;
+    // commentWriteManager.delegate = nil;
 }
 
 - (void)commentView:(TTCommentWriteView *) commentView sucessWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager responsedData:(NSDictionary *)responseData
@@ -672,6 +755,68 @@
 #pragma mark - UIKeyboardWillHideNotification
 - (void)keyboardDidHide {
     [self.commentWriteView dismissAnimated:NO];
+}
+
+#pragma mark - tracer
+
+// 点击评论
+- (void)clickCommentFieldTracer {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"comment_field";
+    [FHUserTracker writeEvent:@"click_comment_field" params:tracerDict];
+}
+
+// 点击回复
+- (void)clickSubmitComment {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"submit_comment";
+    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
+}
+
+// 点击回复他人的评论中的“回复”按钮
+- (void)clickReplyComment:(NSString *)comment_id {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_comment";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_comment" params:tracerDict];
+}
+
+// 详情页他人评论点赞
+- (void)click_reply_like:(NSString *)comment_id {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_like";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_like" params:tracerDict];
+}
+
+// 详情页他人评论取消点赞
+- (void)click_reply_dislike:(NSString *)comment_id {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_dislike";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_dislike" params:tracerDict];
+}
+
+// 点击删除自己的评论
+- (void)click_delete_comment:(NSString *)comment_id {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"delete_comment";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_delete_comment" params:tracerDict];
+}
+
+// 详情 点赞
+- (void)click_feed_like {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"feed_like";
+    [FHUserTracker writeEvent:@"click_like" params:tracerDict];
+}
+
+// 详情页 取消点赞
+- (void)click_feed_dislike {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"feed_dislike";
+    [FHUserTracker writeEvent:@"click_dislike" params:tracerDict];
 }
 
 @end

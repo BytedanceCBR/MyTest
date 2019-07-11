@@ -11,6 +11,8 @@
 #import "FHTracerModel.h"
 #import "FHUserTracker.h"
 #import "TTAccountLoginManager.h"
+#import "TTAccountManager.h"
+#import "ToastManager.h"
 
 @interface FHLoginViewController ()<TTRouteInitializeProtocol>
 
@@ -18,6 +20,7 @@
 @property(nonatomic ,strong) FHLoginView *loginView;
 @property (nonatomic, strong)     TTAcountFLoginDelegate       *loginDelegate;
 @property (nonatomic, assign)   BOOL       needPopVC;
+@property (nonatomic, assign)   BOOL       isFromUGC;
 
 @end
 
@@ -39,6 +42,10 @@
         // 有部分需求是登录成功之后要跳转其他页面，so，不需要pop当前登录页面，可以延时0.7s之后移除当前页面
         if (params[@"need_pop_vc"]) {
             self.needPopVC = [params[@"need_pop_vc"] boolValue];
+        }
+        self.isFromUGC = NO;
+        if (params[@"from_ugc"]) {
+            self.isFromUGC = [params[@"from_ugc"] boolValue];
         }
     }
     return self;
@@ -88,6 +95,17 @@
         }
         make.left.right.bottom.equalTo(self.view);
     }];
+}
+
+- (void)dealloc
+{
+    if (self.isFromUGC) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (![TTAccountManager isLogin]) {
+                 [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+            }
+        });
+    }
 }
 
 - (void)initViewModel {

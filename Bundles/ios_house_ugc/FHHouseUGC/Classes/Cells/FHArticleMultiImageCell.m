@@ -19,9 +19,9 @@
 @property(nonatomic ,strong) NSMutableArray *imageViewList;
 @property(nonatomic ,strong) UIView *imageViewContainer;
 @property(nonatomic ,strong) FHArticleCellBottomView *bottomView;
-@property(nonatomic ,strong) UIView *bottomSepView;
 @property(nonatomic ,assign) CGFloat imageWidth;
 @property(nonatomic ,assign) CGFloat imageHeight;
+@property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 @end
 
@@ -61,11 +61,15 @@
     [self.contentView addSubview:_imageViewContainer];
     
     self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectZero];
+    __weak typeof(self) wself = self;
+    _bottomView.deleteCellBlock = ^{
+        [wself deleteCell];
+    };
+    [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
-    self.bottomSepView = [[UIView alloc] init];
-    _bottomSepView.backgroundColor = [UIColor themeGray7];
-    [self.contentView addSubview:_bottomSepView];
+    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
+    [self.bottomView.positionView addGestureRecognizer:tap];
     
     for (NSInteger i = 0; i < 3; i++) {
         UIImageView *imageView = [[UIImageView alloc] init];
@@ -99,13 +103,9 @@
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.imageViewContainer.mas_bottom).offset(10);
+        make.height.mas_equalTo(39);
         make.left.right.mas_equalTo(self.contentView);
-    }];
-    
-    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.bottomView.mas_bottom).offset(10);
-        make.bottom.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(5);
+        make.bottom.mas_equalTo(self.contentView);
     }];
     
     UIView *firstView = self.imageViewContainer;
@@ -132,30 +132,17 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if([data isKindOfClass:[FHFeedContentModel class]]){
-        FHFeedContentModel *model = (FHFeedContentModel *)data;
-        //内容
-        self.contentLabel.text = model.title;
-        self.bottomView.descLabel.text = @"信息来源";
-        
-        NSArray *imageList = model.imageList;
-        for (NSInteger i = 0; i < self.imageViewList.count; i++) {
-            UIImageView *imageView = self.imageViewList[i];
-            if(i < imageList.count){
-                FHFeedContentImageListModel *imageModel = imageList[i];
-                imageView.hidden = NO;
-                [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
-            }else{
-                imageView.hidden = YES;
-            }
-        }
-    }
-    
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        self.cellModel= cellModel;
         //内容
         self.contentLabel.text = cellModel.title;
+        self.bottomView.cellModel = cellModel;
         self.bottomView.descLabel.attributedText = cellModel.desc;
+        
+        BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
+        self.bottomView.position.text = cellModel.community.name;
+        [self.bottomView showPositionView:showCommunity];
         //图片
         NSArray *imageList = cellModel.imageList;
         for (NSInteger i = 0; i < self.imageViewList.count; i++) {
@@ -168,6 +155,49 @@
                 imageView.hidden = YES;
             }
         }
+        
+        [self showGuideView];
+    }
+}
+
+- (void)showGuideView {
+    if(_cellModel.isInsertGuideCell){
+        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(66);
+        }];
+    }else{
+        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(39);
+        }];
+    }
+}
+
+- (void)closeGuideView {
+    self.cellModel.isInsertGuideCell = NO;
+    [self.cellModel.tableView beginUpdates];
+    
+    [self showGuideView];
+    self.bottomView.cellModel = self.cellModel;
+    
+    [self setNeedsUpdateConstraints];
+    
+    [self.cellModel.tableView endUpdates];
+    
+    if(self.delegate && [self.delegate respondsToSelector:@selector(closeFeedGuide:)]){
+        [self.delegate closeFeedGuide:self.cellModel];
+    }
+}
+
+- (void)deleteCell {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
+        [self.delegate deleteCell:self.cellModel];
+    }
+}
+
+//进入圈子详情
+- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
+        [self.delegate goToCommunityDetail:self.cellModel];
     }
 }
 

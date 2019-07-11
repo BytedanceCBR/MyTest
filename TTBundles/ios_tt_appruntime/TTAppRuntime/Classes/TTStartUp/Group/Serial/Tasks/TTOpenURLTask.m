@@ -15,6 +15,8 @@
 
 DEC_TASK("TTOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_MEDIUM);
 
+extern BOOL kFHInAppPushTipsHidden;
+
 @implementation TTOpenURLTask
 
 - (NSString *)taskIdentifier {
@@ -28,6 +30,10 @@ DEC_TASK("TTOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_MEDIUM);
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
     
     [FHEnvContext sharedInstance].refreshConfigRequestType = @"link_launch";
+    // 部分页面不支持Push跳转
+    if (kFHInAppPushTipsHidden) {
+        return NO;
+    }
     BOOL ret = [[TTRoute sharedRoute] canOpenURL:url];
     if (ret && [SharedAppDelegate appTopNavigationController]) {
         [SSADManager shareInstance].splashADShowType = SSSplashADShowTypeHide;

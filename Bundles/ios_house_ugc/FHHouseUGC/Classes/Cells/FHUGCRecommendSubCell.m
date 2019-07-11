@@ -10,6 +10,10 @@
 #import "UIFont+House.h"
 #import <Masonry.h>
 #import <UIImageView+BDWebImage.h>
+#import "FHUGCFollowButton.h"
+#import "FHFeedContentModel.h"
+#import "FHUGCConfig.h"
+#import "TTBaseMacro.h"
 
 #define iconWidth 48
 
@@ -19,9 +23,9 @@
 @property(nonatomic, strong) UILabel *descLabel;
 @property(nonatomic, strong) UILabel *sourceLabel;
 @property(nonatomic, strong) UIImageView *icon;
-@property(nonatomic, strong) UIButton *joinBtn;
+@property(nonatomic, strong) FHUGCFollowButton *joinBtn;
 
-@property(nonatomic, strong) id model;
+@property(nonatomic, strong) FHFeedContentRecommendSocialGroupListModel *model;
 
 @end
 
@@ -46,19 +50,47 @@
 - (void)initUIs {
     [self initViews];
     [self initConstraints];
+    [self initNotification];
 }
 
-- (void)refreshWithData:(id)data {
-    _model = data;
-    if([data isKindOfClass:[NSString class]]){
-        _titleLabel.text = data;
-        _descLabel.text = @"88热帖·9221人";
-        _sourceLabel.text = @"附近推荐";
-        [self.icon bd_setImageWithURL:[NSURL URLWithString:@"http://p1.pstatp.com/thumb/fea7000014edee1159ac"] placeholder:nil];
+- (void)initNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)refreshWithData:(id)data rank:(NSInteger)rank {
+    if([data isKindOfClass:[FHFeedContentRecommendSocialGroupListModel class]]){
+        FHFeedContentRecommendSocialGroupListModel *model = (FHFeedContentRecommendSocialGroupListModel *)data;
+        _model = model;
+        _titleLabel.text = model.socialGroupName;
+        _descLabel.text = model.countText;
+        _sourceLabel.text = model.suggestReason;
+        _joinBtn.groupId = model.socialGroupId;
+        _joinBtn.followed = [model.hasFollow boolValue];
+        _joinBtn.tracerDic = [self joinBtnTrackDicJoinBtn:rank];
+        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
     }
 }
 
+- (NSMutableDictionary *)joinBtnTrackDicJoinBtn:(NSInteger)rank {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"card_type"] = @"left_pic";
+    dict[@"house_type"] = @"community";
+    dict[@"element_from"] = @"like_neighborhood";
+    dict[@"log_pb"] = _model.logPb;
+    dict[@"page_type"] = @"nearby_list";
+    dict[@"enter_from"] = @"neighborhood_tab";
+    dict[@"rank"] = @(rank);
+    
+    return dict;
+}
+
 - (void)initViews {
+    __weak typeof(self) wself = self;
+    
     self.icon = [[UIImageView alloc] init];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
@@ -75,15 +107,7 @@
     self.sourceLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor themeGray3]];
     [self.contentView addSubview:_sourceLabel];
     
-    self.joinBtn = [[UIButton alloc] init];
-    _joinBtn.layer.masksToBounds = YES;
-    _joinBtn.layer.cornerRadius = 4;
-    _joinBtn.layer.borderColor = [[UIColor themeRed1] CGColor];
-    _joinBtn.layer.borderWidth = 0.5;
-    [_joinBtn setTitle:@"关注" forState:UIControlStateNormal];
-    [_joinBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    _joinBtn.titleLabel.font = [UIFont themeFontRegular:12];
-    [_joinBtn addTarget:self action:@selector(joinIn) forControlEvents:UIControlEventTouchUpInside];
+    self.joinBtn = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero];
     [self addSubview:_joinBtn];
 }
 
@@ -130,9 +154,18 @@
     return label;
 }
 
-- (void)joinIn {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
-        [self.delegate joinIn:self.model cell:self];
+- (void)followStateChanged:(NSNotification *)notification {
+    if(isEmptyString(self.model.socialGroupId)){
+        return;
+    }
+    
+    BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
+    NSString *groupId = notification.userInfo[@"social_group_id"];
+    
+    if([groupId isEqualToString:self.model.socialGroupId] && followed){
+        if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
+            [self.delegate joinIn:self.model cell:self];
+        }
     }
 }
 

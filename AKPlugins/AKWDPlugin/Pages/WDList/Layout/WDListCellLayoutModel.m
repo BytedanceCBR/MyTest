@@ -156,7 +156,7 @@
             self.bottomLabelBottomPadding = 6;
         }
     }
-    
+    self.bottomLabelBottomPadding = 10;
     totalHeight += self.bottomLabelTopPadding + [self heightForBottomLabel] + self.bottomLabelBottomPadding;
     
 //    totalHeight += [WDWendaListCellActionFooterView actionFooterHeight];
@@ -371,7 +371,7 @@
 }
 
 + (CGFloat)answerReadCountsLineHeight {
-    return WDConstraintPadding(16.0);
+    return WDConstraintPadding(30.0);// 本来是20 为了扩大按钮的点击范围
 }
 
 + (CGFloat)moreImageCountsFontSize {

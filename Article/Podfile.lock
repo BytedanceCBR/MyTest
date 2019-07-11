@@ -149,7 +149,7 @@ PODS:
     - IGListKit/Diffing (= 3.4.0.1-binary)
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
-  - ios_house_filter (0.1.0)
+  - ios_house_filter (1.0.1)
   - ios_house_im (0.1.0)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
@@ -309,12 +309,12 @@ PODS:
   - TTBatchItemAction (0.1.8.1-binary)
   - TTDebug (0.1.0)
   - TTDebugAssistant (0.2.33.1-binary)
-  - TTDialogDirector/Camera (0.1.2)
-  - TTDialogDirector/Contacts (0.1.2)
-  - TTDialogDirector/Core (0.1.2)
-  - TTDialogDirector/Microphone (0.1.2)
-  - TTDialogDirector/PhotoLibrary (0.1.2)
-  - TTDialogDirector/UserNotification (0.1.2)
+  - TTDialogDirector/Camera (0.1.4)
+  - TTDialogDirector/Contacts (0.1.4)
+  - TTDialogDirector/Core (0.1.4)
+  - TTDialogDirector/Microphone (0.1.4)
+  - TTDialogDirector/PhotoLibrary (0.1.4)
+  - TTDialogDirector/UserNotification (0.1.4)
   - TTDiggButton (0.1.1)
   - TTEntityBase (0.2.4.1-binary)
   - TTEntry (0.1.7.1-binary)
@@ -545,7 +545,7 @@ PODS:
   - TTVTableViewProtocolInterceptor/Core (0.1.2.1-binary)
   - TTVTableViewProtocolInterceptor/UIViewControllerCategory (0.1.2.1-binary)
   - TTVTLIndexPathTools (0.4.4.1-binary)
-  - TYRZApiSDK (1.2.0.1-binary)
+  - TYRZApiSDK (1.2.1)
   - UITableView+FDTemplateLayoutCell (1.6.1-binary)
   - UMengAnalytics (4.1.4.1-binary)
   - WCDB (1.0.7.5.1-binary)
@@ -647,8 +647,8 @@ DEPENDENCIES:
   - IESVideoPlayer (= 0.1.16)
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
-  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, commit `9423cbfa9bb1c30d2b87c1542b862b457b7c141a`)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `898fbc9d6beb4e7e9094487eea1b2ffeb16f618b`)
+  - ios_house_filter (= 1.0.1)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `6f17a1a165de083d5140c79225175a07f8849cb8`)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -721,12 +721,12 @@ DEPENDENCIES:
   - TTBatchItemAction (= 0.1.8.1-binary)
   - TTDebug (from `../TTBundles/ios_tt_debug`)
   - TTDebugAssistant (= 0.2.33.1-binary)
-  - TTDialogDirector/Camera (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
-  - TTDialogDirector/Contacts (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
-  - TTDialogDirector/Core (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
-  - TTDialogDirector/Microphone (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
-  - TTDialogDirector/PhotoLibrary (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
-  - TTDialogDirector/UserNotification (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
+  - TTDialogDirector/Camera (= 0.1.4)
+  - TTDialogDirector/Contacts (= 0.1.4)
+  - TTDialogDirector/Core (= 0.1.4)
+  - TTDialogDirector/Microphone (= 0.1.4)
+  - TTDialogDirector/PhotoLibrary (= 0.1.4)
+  - TTDialogDirector/UserNotification (= 0.1.4)
   - TTDiggButton (from `../AKPlugins/AKDiggButton`)
   - TTEntityBase (= 0.2.4.1-binary)
   - TTEntry (= 0.1.7.1-binary)
@@ -816,7 +816,7 @@ DEPENDENCIES:
   - TTVTableViewItem (= 0.1.0.1-binary)
   - TTVTableViewProtocolInterceptor (= 0.1.2.1-binary)
   - TTVTLIndexPathTools (= 0.4.4.1-binary)
-  - TYRZApiSDK (= 1.2.0.1-binary)
+  - TYRZApiSDK (= 1.2.1)
   - UITableView+FDTemplateLayoutCell (= 1.6.1-binary)
   - UMengAnalytics (= 4.1.4.1-binary)
   - WCDB (= 1.0.7.5.1-binary)
@@ -875,11 +875,8 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/FHWebView
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
-  ios_house_filter:
-    :commit: 9423cbfa9bb1c30d2b87c1542b862b457b7c141a
-    :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: 898fbc9d6beb4e7e9094487eea1b2ffeb16f618b
+    :commit: 6f17a1a165de083d5140c79225175a07f8849cb8
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
@@ -903,9 +900,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/TTBaseLib
   TTDebug:
     :path: ../TTBundles/ios_tt_debug
-  TTDialogDirector:
-    :commit: 8ed5beb
-    :git: git@code.byted.org:TTIOS/TTDialogDirector.git
   TTDiggButton:
     :path: ../AKPlugins/AKDiggButton
   TTFeedTab:
@@ -964,15 +958,9 @@ EXTERNAL SOURCES:
     :path: ../ReactCommon/yoga
 
 CHECKOUT OPTIONS:
-  ios_house_filter:
-    :commit: 9423cbfa9bb1c30d2b87c1542b862b457b7c141a
-    :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: 898fbc9d6beb4e7e9094487eea1b2ffeb16f618b
+    :commit: 6f17a1a165de083d5140c79225175a07f8849cb8
     :git: git@code.byted.org:fproject/ios_house_im.git
-  TTDialogDirector:
-    :commit: 8ed5beb
-    :git: git@code.byted.org:TTIOS/TTDialogDirector.git
   TTRoute:
     :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa
     :git: git@code.byted.org:TTIOS/tt_pods_route.git
@@ -1038,7 +1026,7 @@ SPEC CHECKSUMS:
   IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
-  ios_house_filter: 872f04fb17142ff0a472fd3c414484c1075524ab
+  ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
   ios_house_im: 93431910eb6de50b0b84130f90d5eabb85849261
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
@@ -1077,7 +1065,7 @@ SPEC CHECKSUMS:
   TTAppRuntime: 950cd779a9ea11d64aa82e5c0899bd849c38799b
   TTAppUpdateHelper: d0e770676b263dfc1f8a0a6b07c280a760574b44
   TTArticle: 40401054fc58b1744b37a8ecb054b90dda774702
-  TTArticleBase: 1d21da86955e608a1f8b91dcd078d8f634e9863c
+  TTArticleBase: b77815513c03f2a0339a9acf18ff1516789a0bc6
   TTArticleVideo: 6f1853b56a61152991807c7c07d5474b4667aa80
   TTAudio: e9a692e3b6387c2c5efa5a74b44d7f73712fdc1e
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
@@ -1085,7 +1073,7 @@ SPEC CHECKSUMS:
   TTBatchItemAction: 6e6ed79565823fe6f3ee77d66d6e3ec5fec4d52f
   TTDebug: b8ba18669b70deaf52dbd0775578e2163cf07c45
   TTDebugAssistant: c1c106b1cef486fb07833e7a9a6316cf2711df5d
-  TTDialogDirector: 2b7e322ec7ea0632b91b1fe025320203e14e9ddb
+  TTDialogDirector: f7af351061299ae70ab95259b546de42be940209
   TTDiggButton: cf6762b9f675e4aa59eeea083150ac781d59eb2e
   TTEntityBase: 9036725e63faa0661eaf01bfe3b9626825f6560b
   TTEntry: 0da2ac49bb4705a3d228f721b9f307798ecb2d6e
@@ -1147,7 +1135,7 @@ SPEC CHECKSUMS:
   TTVTableViewItem: edf61da588fddd2f8dcc6e1ed0796b764241fcfd
   TTVTableViewProtocolInterceptor: b40445eb84a3de5ded2f9869c4f6c946df4898e7
   TTVTLIndexPathTools: 2f6c23b4990f3aee6e7ceb867f632d4d02ea5384
-  TYRZApiSDK: 67e06aee48215f1d0058cf11ea99fa99b1745fc9
+  TYRZApiSDK: 98ce3036c6dc594aa94c8b786323a34519b2fdc9
   UITableView+FDTemplateLayoutCell: a2662e078962600e17f9e090cc09b5f49f3e4762
   UMengAnalytics: 03d571efddd70d2a64a58f35c23dcf9732344b5b
   WCDB: f443005ee9bc01706ff0f67bb1ad890e875d6f8c
@@ -1159,6 +1147,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 308d04e0d7e6f722e54fa91c59dc11602b4cef0c
+PODFILE CHECKSUM: 5f8e822a77d65b7985bc17fa5bb33a6573912c99
 
 COCOAPODS: 1.4.0

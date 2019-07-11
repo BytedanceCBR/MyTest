@@ -51,6 +51,12 @@
         [v removeFromSuperview];
     }
     FHDetailHouseOutlineInfoModel *model = (FHDetailHouseOutlineInfoModel *)data;
+    _infoButton.hidden = model.hideReport;
+    CGFloat topMargin = model.hideReport ? -20 : 0;
+    [self.headerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(topMargin);
+    }];
+
     __block UIView *lastView = self.containerView;
     if (model.houseOverreview.list.count > 0) {
         NSInteger count = model.houseOverreview.list.count;
@@ -93,7 +99,8 @@
     _headerView.label.text = @"房源概况";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.contentView);
+        make.left.right.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(0);
         make.height.mas_equalTo(52);// 46 + 6
     }];
     // infoButton
