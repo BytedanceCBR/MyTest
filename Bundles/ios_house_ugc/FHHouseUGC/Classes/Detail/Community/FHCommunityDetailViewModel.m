@@ -304,6 +304,7 @@
     dic[@"select_group_id"] = self.data.socialGroupId;
     dic[@"select_group_name"] = self.data.socialGroupName;
     dic[TRACER_KEY] = traceParam;
+    dic[VCTITLE_KEY] = @"发帖";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
     NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
     [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
