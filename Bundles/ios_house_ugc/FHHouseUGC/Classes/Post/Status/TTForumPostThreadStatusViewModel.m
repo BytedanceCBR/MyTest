@@ -412,7 +412,12 @@ TTAccountMulticastProtocol
     
     TTPostThreadTaskStatusModel *statusModel = [[TTPostThreadTaskStatusModel alloc] initWithPostThreadTask:task];
     
-    if (isEmptyString(modelName)) {
+    if (isEmptyString(modelName) || statusModel == nil) {
+        return;
+    }
+    
+    NSMutableArray *arr = [self mutableArrayValueForKey:modelName];
+    if (arr == nil) {
         return;
     }
     
