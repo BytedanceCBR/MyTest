@@ -38,6 +38,7 @@
 @property(nonatomic, strong) UIView *titleContainer;
 @property(nonatomic) BOOL scrollToTop;
 @property(nonatomic, strong) NSTimer *requestDataTimer;
+@property (nonatomic, assign)   BOOL       isViewAppear;
 
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic) BOOL shouldShowUGcGuide;
@@ -52,6 +53,7 @@
         self.viewController = viewController;
         [self initView];
         self.shouldShowUGcGuide = YES;
+        self.isViewAppear = YES;
     }
     return self;
 }
@@ -98,6 +100,7 @@
 }
 
 - (void)dealloc {
+    [self cancelRequestAfter];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -177,8 +180,16 @@
     [self.feedListController viewWillAppear];
 }
 
+- (void)viewDidAppear {
+    self.isViewAppear = YES;
+    if (self.feedListController.tableView) {
+        [self scrollViewDidScroll:self.feedListController.tableView];
+    }
+}
+
 - (void)viewWillDisappear {
     [self.feedListController viewWillDisappear];
+    self.isViewAppear = NO;
 }
 
 - (void)requestData:(BOOL) userPull refreshFeed:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed showToast:(BOOL) showToast{
@@ -318,6 +329,9 @@
 }
 
 - (void)updateNavBarWithAlpha:(CGFloat)alpha {
+    if (!self.isViewAppear) {
+        return;
+    }
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     if (alpha <= 0.1f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
