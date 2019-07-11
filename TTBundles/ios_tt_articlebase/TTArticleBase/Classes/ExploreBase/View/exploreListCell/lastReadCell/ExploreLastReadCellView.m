@@ -158,8 +158,8 @@
     
     if ([self.showRefresh boolValue] || self.showRefreshHistoryGuide) {
         if (self.showRefreshHistoryGuide) {
-            [self.durationButton setTitleColor:SSGetThemedColorWithKey(kFHColorRed3) forState:UIControlStateNormal];
-            [self.refreshButton setTitleColor:SSGetThemedColorWithKey(kFHColorRed3) forState:UIControlStateNormal];
+            [self.durationButton setTitleColor:SSGetThemedColorWithKey(@"red3") forState:UIControlStateNormal];
+            [self.refreshButton setTitleColor:SSGetThemedColorWithKey(@"red3") forState:UIControlStateNormal];
             _refreshButton.hidden = NO;
             CGFloat imageGap = 2;
             CGFloat textWholeWidth = self.refreshButton.width + imageGap + self.refreshIcon.width;
@@ -170,10 +170,10 @@
             self.refreshIcon.hidden = NO;
             
             _refreshIcon.imageName = @"refresh_lasttime_textpage";
-            self.backgroundView.backgroundColor = SSGetThemedColorWithKey(kFHColorPaleGrey);
+            self.backgroundView.backgroundColor = SSGetThemedColorWithKey(@"grey7");
         } else {
-            [self.durationButton setTitleColor:SSGetThemedColorWithKey(kFHColorRed3) forState:UIControlStateNormal];
-            [self.refreshButton setTitleColor:SSGetThemedColorWithKey(kFHColorRed3) forState:UIControlStateNormal];
+            [self.durationButton setTitleColor:SSGetThemedColorWithKey(@"red3") forState:UIControlStateNormal];
+            [self.refreshButton setTitleColor:SSGetThemedColorWithKey(@"red3") forState:UIControlStateNormal];
             _refreshButton.hidden = NO;
             CGFloat labelGap = 10;
             CGFloat imageGap = 4;
@@ -185,25 +185,25 @@
             self.refreshIcon.hidden = NO;
             
             _refreshIcon.imageName = @"refresh_lasttime_textpage";
-            self.backgroundView.backgroundColor = SSGetThemedColorWithKey(kFHColorPaleGrey);
+            self.backgroundView.backgroundColor = SSGetThemedColorWithKey(@"grey7");
         }
     }
     else {
-        [self.durationButton setTitleColor:SSGetThemedColorWithKey(kFHColorRed3) forState:UIControlStateNormal];
+        [self.durationButton setTitleColor:SSGetThemedColorWithKey(@"red3") forState:UIControlStateNormal];
         _refreshButton.hidden = YES;
         self.durationButton.center = CGPointMake(self.width/2, self.height/2);
         self.refreshButton.hidden = YES;
         self.refreshIcon.hidden = YES;
-        self.backgroundView.backgroundColor = SSGetThemedColorWithKey(kFHColorPaleGrey);
+        self.backgroundView.backgroundColor = SSGetThemedColorWithKey(@"grey7");
     }
     
     self.topBorderLayer.frame = CGRectMake(0, 0, self.bounds.size.width, [TTDeviceHelper ssOnePixel]);
-    self.topBorderLayer.backgroundColor = [SSGetThemedColorWithKey(kFHColorSilver2) CGColor];
+    self.topBorderLayer.backgroundColor = [SSGetThemedColorWithKey(@"grey6") CGColor];
     
     self.bottomBorderLayer.frame = CGRectMake(0, self.bounds.size.height - [TTDeviceHelper ssOnePixel], self.bounds.size.width, [TTDeviceHelper ssOnePixel]);
     
     if ([TTDeviceHelper isPadDevice]) {
-        self.topBorderLayer.backgroundColor = [SSGetThemedColorWithKey(kFHColorSilver2) CGColor];
+        self.topBorderLayer.backgroundColor = [SSGetThemedColorWithKey(@"grey6") CGColor];
         self.topBorderLayer.frame = CGRectMake(0, 0, self.bounds.size.width, [TTDeviceHelper ssOnePixel]);
         
         self.bottomBorderLayer.frame = CGRectMake(0, self.bounds.size.height - [TTDeviceHelper ssOnePixel], self.bounds.size.width, [TTDeviceHelper ssOnePixel]);
@@ -215,7 +215,7 @@
     }
     self.bottomBorderLayer.backgroundColor = [self.topBorderLayer backgroundColor];
     
-    self.backgroundColor = SSGetThemedColorWithKey(kFHColorPaleGrey);
+    self.backgroundColor = SSGetThemedColorWithKey(@"grey7");
 }
 
 - (void)refreshWithData:(id)data {

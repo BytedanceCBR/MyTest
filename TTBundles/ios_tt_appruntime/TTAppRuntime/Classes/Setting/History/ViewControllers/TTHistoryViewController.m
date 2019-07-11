@@ -422,7 +422,7 @@
 
 - (void)sessionExpiredAction {
     if(self.historyType == TTHistoryTypeReadPush) {
-        [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://ak_login_traffic?"] userInfo:nil];
+        [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://flogin"] userInfo:nil];
     } else {
         [self showLoginGuideViewWithSource:@"history_fixed"];
     }
@@ -672,7 +672,7 @@
 
 - (void)showLoginGuideViewWithSource:(NSString *)source {
     
-    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://ak_login_traffic?"] userInfo:nil];
+    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://flogin"] userInfo:nil];
     [self setHasReadHistoryGuideShown:YES];
 }
 
@@ -690,7 +690,7 @@
         NSInteger pushHistoryTotalTime = [[TTLoginDialogStrategyManager sharedInstance] pushHistoryTotalTime];
         [[TTLoginDialogStrategyManager sharedInstance] setPushHistoryTotalTime:++pushHistoryTotalTime];
        
-        [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://ak_login_traffic?"] userInfo:nil];
+        [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://flogin"] userInfo:nil];
     }
 }
 

@@ -8,6 +8,7 @@
 #import "FHHomeBannerView.h"
 #import <Masonry/Masonry.h>
 #import "TTDeviceHelper.h"
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 @implementation FHHomeBannerView
 

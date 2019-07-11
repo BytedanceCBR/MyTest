@@ -22,6 +22,7 @@
 #import "FHHomeListViewModel.h"
 #import "TTSandBoxHelper.h"
 #import <FHHomeSearchPanelViewModel.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 

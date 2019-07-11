@@ -12,6 +12,7 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import <TTTracker/TTTracker.h>
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 
 @implementation TTCollectDiskSpaceTask
 

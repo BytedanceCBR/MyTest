@@ -60,7 +60,7 @@
         [self pickedImage:_editedImg withReferenceURL:_editedImgReferenceURL];
         self.editedImgWebURI = [SSFeedbackManager needPostImgURI];
         self.inputTextView.placeHolder = @"如需传图，请点右边--->";
-        self.inputTextView.placeHolderColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
+        self.inputTextView.placeHolderColor = [UIColor tt_themedColorForKey:@"grey3"];
         self.inputTextView.text = [SSFeedbackManager needPostMsg];
         [self.inputTextView showOrHidePlaceHolderTextView];
         self.inputTextView.delegate = self;

@@ -289,9 +289,6 @@
             [self setHasTipFavlistLoginUserDefaultKey:YES];
             
             wrapperTrackEvent(@"auth", @"fav_pop");
-            
-            // add by zjing 去掉登录页
-//            [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://ak_login_traffic?"] userInfo:nil];
         }
     }
 }
