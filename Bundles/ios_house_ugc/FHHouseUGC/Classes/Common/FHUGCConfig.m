@@ -320,6 +320,10 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         }
         return;
     }
+    // 服务端可能返回 “0”
+    if (social_group_id.length <= 1) {
+        return;
+    }
     NSInteger action = 1;
     if (follow) {
         action = 1;
