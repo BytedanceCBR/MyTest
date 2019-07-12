@@ -33,7 +33,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL needRefreshCell;
 @property(nonatomic, strong) FHFeedListModel *feedListModel;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
-
 @property(nonatomic, assign) BOOL isRefreshingTip;
 
 

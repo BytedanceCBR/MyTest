@@ -37,7 +37,7 @@
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
-    [self.requestTask cancel];
+    
 }
 
 - (void)refreshCurrentCell {
