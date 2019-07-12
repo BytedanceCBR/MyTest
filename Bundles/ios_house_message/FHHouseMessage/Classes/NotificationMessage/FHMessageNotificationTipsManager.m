@@ -57,8 +57,8 @@ NSString *const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotificationL
     if (![model isKindOfClass:[FHUnreadMsgDataUnreadModel class]]) {
         return;
     }
-
-    if([model.lastMsgId isEqualToString:self.tipsModel.lastMsgId] && [model.unread integerValue] == [self.tipsModel.unread integerValue]){
+    
+    if([model.lastMsgId isEqualToString:[self lastMsgId]] && [model.unread integerValue] == [self.tipsModel.unread integerValue]){
         return;
     }
     
@@ -81,6 +81,9 @@ NSString *const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotificationL
 }
 
 - (void)tryShowNotifyBubble:(FHUnreadMsgDataUnreadModel *)tipsModel {
+    if([tipsModel.lastMsgId isEqualToString:[self lastMsgId]]){
+        return;
+    }
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"HH:mm"];
     NSString *timeTip = [dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[tipsModel.timestamp longValue]]];
