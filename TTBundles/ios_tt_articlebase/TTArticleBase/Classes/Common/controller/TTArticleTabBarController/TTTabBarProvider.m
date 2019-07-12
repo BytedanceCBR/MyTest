@@ -121,7 +121,6 @@ static NSString *lastTabIdentifier;
 //        }else {
 //            houseFindVC = [[FHHouseFindViewController alloc] init];
 //        }
-        // add by zyk 记得修改此处
         FHCommunityViewController *communityVC = [[FHCommunityViewController alloc] init];
         
         return communityVC;

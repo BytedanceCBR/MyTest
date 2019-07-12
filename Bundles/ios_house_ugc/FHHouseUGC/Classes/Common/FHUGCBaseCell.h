@@ -13,13 +13,24 @@
 #import "FHFeedUGCContentModel.h"
 #import "FHFeedUGCCellModel.h"
 #import "FHUGCBaseViewModel.h"
+#import "TTBaseMacro.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+@class FHUGCBaseCell;
 
 @protocol FHUGCBaseCellDelegate <NSObject>
 
 @optional
 - (void)deleteCell:(FHFeedUGCCellModel *)cellModel;
+
+- (void)commentClicked:(FHFeedUGCCellModel *)cellModel;
+
+- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel;
+
+- (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
+
+- (void)closeFeedGuide:(FHFeedUGCCellModel *)cellModel;
 
 @end
 
@@ -41,6 +52,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak)     FHUGCBaseViewModel       *baseViewModel;
 
 @property(nonatomic , weak) id<FHUGCBaseCellDelegate> delegate;
+
+// 当前cell所需基础埋点数据，更新refreshWithData的时候赋值
+@property (nonatomic, copy)     NSDictionary       *tracerDic;
 
 @end
 

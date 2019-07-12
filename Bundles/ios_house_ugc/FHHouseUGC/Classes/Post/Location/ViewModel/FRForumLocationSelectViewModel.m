@@ -52,7 +52,6 @@
         self.hasMore = YES;
         self.isLastLoadError = NO;
         
-        // 外部已经设置过了 apiKey add by zyk
 //        [AMapServices sharedServices].apiKey = [[TTPostThreadBridge sharedInstance] amapKey];
         
         [AMapServices sharedServices].crashReportEnabled = NO;

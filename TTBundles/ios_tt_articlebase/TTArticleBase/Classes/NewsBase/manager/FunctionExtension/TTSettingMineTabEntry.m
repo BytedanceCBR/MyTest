@@ -15,12 +15,12 @@
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTThemeManager.h"
 #import "PGCAccountManager.h"
-#import "TTMessageNotificationTipsManager.h"
+#import "FHMessageNotificationTipsManager.h"
 //#import "TTPLManager.h"
 #import "TTBadgeTrackerHelper.h"
 #import "TTRoute.h"
 
-#import "TTMessageNotificationMacro.h"
+#import "FHMessageNotificationMacro.h"
 #import <Crashlytics/Crashlytics.h>
 //#import "TTCommonwealManager.h"
 #import "TTURLUtils.h"
@@ -87,8 +87,8 @@
         case TTSettingMineTabEntyTypeWorkLibrary:
             return [TTSettingMineTabEntry workLibraryEntry];
             break;
-        case TTSettingMineTabEntyTypeMessage:
-            return [TTSettingMineTabEntry messageEntry];
+//        case TTSettingMineTabEntyTypeMessage:
+//            return [TTSettingMineTabEntry messageEntry];
             break;
 //        case TTSettingMineTabEntyTypePrivateLetter:
 //            return [TTSettingMineTabEntry privateLetterEntry];
@@ -245,50 +245,6 @@
     entry.urlString = [self getWorkLibraryEntryUrlString:entry.urlString];
     return entry;
 }
-
-+ (instancetype)messageEntry {
-    TTSettingMineTabEntry *entry = [[TTSettingMineTabEntry alloc] init];
-    
-    TTMessageNotificationTipsManager *manager = [TTMessageNotificationTipsManager sharedManager];
-    NSUInteger number = manager.unreadNumber;
-    
-    entry.key = @"mine_notification";
-    entry.shouldBeDisplayed = YES;
-    entry.hintStyle = number > 0 ? TTSettingHintStyleNumber : TTSettingHintStyleNone;
-    entry.hintCount = number;
-    entry.urlString = @"sslocal://message";
-    entry.text = NSLocalizedString(@"消息", nil);
-    entry.accessoryText = nil;
-    entry.avatarUrlString = manager.thumbUrl;
-    entry.userAuthInfo = manager.userAuthInfo;
-    entry.msgID = manager.msgID;
-    entry.actionType = manager.actionType;
-    entry.userName = manager.userName;
-    entry.action = manager.action;
-    entry.tips = manager.tips;
-    entry.isImportantMessage = manager.isImportantMessage;
-    entry.iconName = @"messageicon_profile";
-    entry.lastImageUrl = manager.lastImageUrl;
-    
-    return entry;
-}
-
-//+ (instancetype)privateLetterEntry {
-//    TTSettingMineTabEntry *entry = [[TTSettingMineTabEntry alloc] init];
-//
-//    NSUInteger number = [TTPLManager sharedManager].unreadNumber;
-//
-//    entry.key = @"private_letter";
-//    entry.shouldBeDisplayed = [SSCommonLogic isIMServerEnable];
-//    entry.hintStyle = number > 0 ? TTSettingHintStyleNumber : TTSettingHintStyleNone;
-//    entry.hintCount = number;
-//    entry.urlString = @"sslocal://private_letter_list";
-//    entry.text = NSLocalizedString(@"私信", nil);
-//    entry.accessoryText = nil;
-//    entry.iconName = @"private_lettericon_profile";
-//
-//    return entry;
-//}
 
 + (instancetype)ttMallEntry {
     TTSettingMineTabEntry *entry = [[TTSettingMineTabEntry alloc] init];
@@ -485,7 +441,7 @@
                 }else {
                     wrapperTrackEventWithCustomKeys(@"message_list", @"click_without_badge", nil, nil, kTTMessageNotificationTrackExtra(weakEntry.actionType));
                 }
-                [[TTMessageNotificationTipsManager sharedManager] clearTipsModel];
+                [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
             
                 [self openURLForEntry:weakEntry clearHint:NO];
                 [self extraStatisticsForEntry:weakEntry];
@@ -512,27 +468,7 @@
 
 + (void)setUpdateBlockForEntry:(TTSettingMineTabEntry *)entry {
     __weak typeof(entry) weakEntry = entry;
-    if ([entry.key isEqualToString:@"mine_notification"]) {
-        entry.update = ^BOOL{
-            [weakEntry setModified:NO];
-            TTMessageNotificationTipsManager *manager = [TTMessageNotificationTipsManager sharedManager];
-            NSUInteger unreadNumber = manager.unreadNumber;
-            weakEntry.hintStyle = unreadNumber > 0 ? TTSettingHintStyleNumber : TTSettingHintStyleNone;
-            weakEntry.hintCount = unreadNumber;
-            weakEntry.accessoryText = nil;
-            weakEntry.userName = manager.userName;
-            weakEntry.action = manager.action;
-            weakEntry.tips = manager.tips;
-            weakEntry.avatarUrlString = manager.thumbUrl;
-            weakEntry.userAuthInfo = manager.userAuthInfo;
-            weakEntry.msgID = manager.msgID;
-            weakEntry.actionType = manager.actionType;
-            weakEntry.isImportantMessage = manager.isImportantMessage;
-            weakEntry.lastImageUrl = manager.lastImageUrl;
-            
-            return weakEntry.isModified;
-        };
-    } else if ([entry.key isEqualToString:@"pgc"]) {
+    if ([entry.key isEqualToString:@"pgc"]) {
         entry.update = ^BOOL{
             [weakEntry setModified:NO];
             weakEntry.shouldBeDisplayed = [[PGCAccountManager shareManager] hasPGCAccount];

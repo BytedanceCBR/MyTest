@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHMyJoinNeighbourhoodView *neighbourhoodView;
 @property(nonatomic, strong) FHCommunityFeedListController *feedListVC;
 
+- (void)viewWillAppear;
+- (void)viewWillDisappear;
+
 @end
 
 NS_ASSUME_NONNULL_END

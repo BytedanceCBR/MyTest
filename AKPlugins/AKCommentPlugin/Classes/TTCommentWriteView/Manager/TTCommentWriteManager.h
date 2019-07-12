@@ -24,6 +24,7 @@
 @property (nonatomic, strong) NSString *serviceID;            // 评论服务所属 serviceID, 评论接口使用
 
 @property (nonatomic, copy) NSString *enterFrom;            // add by zjing 区分评论View来源，便于login_page埋点
+@property (nonatomic, copy)     NSString       *enter_type; // 默认文章 中是comment
 
 @property (nonatomic, copy) NSString *enterFromStr;
 @property (nonatomic, copy) NSString *categoryID;

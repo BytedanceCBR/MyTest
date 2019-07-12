@@ -152,6 +152,8 @@
             
             [self configIconRowCountAndHeight];
             
+            [FHEnvContext changeFindTabTitle];
+            
             //更新冷启动默认选项
             if (xConfigDataModel.houseTypeDefault && (xConfigDataModel.houseTypeDefault.integerValue > 0) && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
                 [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:xConfigDataModel.houseTypeDefault];
@@ -162,6 +164,8 @@
             if ([configDataModel.houseTypeList containsObject:@(self.houseType)] && [configDataModel.houseTypeList isEqualToArray:xConfigDataModel.houseTypeList] && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch && [FHHomeCellHelper sharedInstance].isFirstLanuch) {
                 //更新切换
                 [self updateCategoryViewSegmented:NO];
+                
+                [FHEnvContext addTabUGCGuid];
             }else
             {
                 //收起tip

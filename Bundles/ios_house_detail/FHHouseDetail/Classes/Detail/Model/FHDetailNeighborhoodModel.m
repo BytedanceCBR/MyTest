@@ -40,6 +40,7 @@
                            @"coreInfo": @"core_info",
                            @"evaluationInfo": @"evaluation_info",
                            @"chooseAgencyList": @"choose_agency_list",
+                           @"ugcSocialGroup":@"ugc_social_group",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -51,21 +52,21 @@
 }
 @end
 
-@implementation FHDetailNeighborhoodDataBaseInfoModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"isSingle": @"is_single",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
+//@implementation FHDetailNeighborhoodDataBaseInfoModel
+//+ (JSONKeyMapper*)keyMapper
+//{
+//    NSDictionary *dict = @{
+//                           @"isSingle": @"is_single",
+//                           };
+//    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+//        return dict[keyName]?:keyName;
+//    }];
+//}
+//+ (BOOL)propertyIsOptional:(NSString *)propertyName
+//{
+//    return YES;
+//}
+//@end
 
 @implementation FHDetailNeighborhoodDataStatsInfoModel
 + (JSONKeyMapper*)keyMapper

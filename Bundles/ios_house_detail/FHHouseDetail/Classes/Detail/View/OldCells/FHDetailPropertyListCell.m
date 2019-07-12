@@ -58,7 +58,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         __block CGFloat lastViewLeftOffset = 20;
         __block CGFloat lastTopOffset = 20;
         CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 40) / 2;
-        [model.baseInfo enumerateObjectsUsingBlock:^(FHDetailDataBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [model.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (obj.isSingle) {
                 [singles addObject:obj];
             } else {
@@ -103,7 +103,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         if (singles.count > 0) {
             // 重新计算topOffset
             topOffset = 6 + (doubleCount / 2 + doubleCount % 2) * listRowHeight;
-            [singles enumerateObjectsUsingBlock:^(FHDetailDataBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHPropertyListRowView *v = [[FHPropertyListRowView alloc] init];
                 [self.contentView addSubview:v];
                 [v mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -162,23 +162,23 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             lastView = rowView;
         }
         
-        if (model.extraInfo.detective) {
-            rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
-            [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
-            [self.contentView addSubview:rowView];
-            [rowView updateWithDetectiveData:model.extraInfo.detective];
-            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
-                if (lastView) {
-                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
-                }else{
-                    make.top.mas_equalTo(10);
-                }
-                make.left.mas_equalTo(20);
-                make.right.mas_equalTo(-20);
-                make.height.mas_equalTo(20);
-            }];
-            lastView = rowView;
-        }
+//        if (model.extraInfo.detective) {
+//            rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
+//            [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
+//            [self.contentView addSubview:rowView];
+//            [rowView updateWithDetectiveData:model.extraInfo.detective];
+//            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
+//                if (lastView) {
+//                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+//                }else{
+//                    make.top.mas_equalTo(10);
+//                }
+//                make.left.mas_equalTo(20);
+//                make.right.mas_equalTo(-20);
+//                make.height.mas_equalTo(20);
+//            }];
+//            lastView = rowView;
+//        }
     }
     
     if (model.rentExtraInfo.securityInformation) {
@@ -234,9 +234,9 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         if (model.extraInfo.official) {
             [types addObject:@"official_inspection"];
         }
-        if (model.extraInfo.detective) {
-            [types addObject:@"happiness_eye"];
-        }
+//        if (model.extraInfo.detective) {
+//            [types addObject:@"happiness_eye"];
+//        }
         
         return types;
     }

@@ -278,6 +278,13 @@
         [params setValue:[self.detailModel.gdExtJsonDict tta_stringForKey:@"qid"]  forKey:@"qid"];
         [params setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"log_pb"]  forKey:@"log_pb"];
         [params setValue:@"detail" forKey:@"position"];
+        if (self.detailModel.apiParam[@"enter_from"]
+            && [self.detailModel.apiParam[@"enter_from"] isKindOfClass:[NSString class]]
+            && [self.detailModel.apiParam[@"enter_from"] isEqualToString:@"question"]) {
+            // 来源于问答相关
+            [params setValue:self.detailModel.apiParam[@"enter_from"] forKey:@"enter_from"];
+            [params setValue:@"answer" forKey:@"page_type"];
+        }
         [TTTracker eventV3:@"rt_favourite" params:params];
        
     }

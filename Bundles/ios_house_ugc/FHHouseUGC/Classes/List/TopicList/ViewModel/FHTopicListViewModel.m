@@ -10,10 +10,14 @@
 #import "FHHouseUGCAPI.h"
 #import "FHTopicListModel.h"
 #import "MJRefreshConst.h"
+#import "TTReachability.h"
+#import "FHRefreshCustomFooter.h"
+#import "ToastManager.h"
+#import "UIScrollView+Refresh.h"
 
 @interface FHTopicListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
-@property(nonatomic, strong) UITableView *tableView;
+@property(nonatomic, weak) UITableView *tableView;
 @property(nonatomic, weak) FHTopicListController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *dataList;
@@ -29,19 +33,50 @@
         self.tableView = tableView;
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
+        self.dataList = [NSMutableArray array];
     }
     return self;
 }
 
-- (void)requestData:(BOOL)isLoadMore {
+- (void)requestData:(BOOL)isRefresh {
+    if (![TTReachability isNetworkConnected]) {
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        [[ToastManager manager] showToast:@"网络不给力,请稍后重试"];
+        return;
+    }
+
     WeakSelf;
     [FHHouseUGCAPI requestTopicList:@"1234" class:FHTopicListResponseModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
-        if(model && error != nil){
-            FHTopicListResponseModel * responseModel = model;
+        StrongSelf;
+        if (model && (error == nil)) {
+            if (isRefresh) {
+                [wself.dataList removeAllObjects];
+                [wself.tableView finishPullDownWithSuccess:YES];
+            } else {
+                [wself.tableView.mj_footer endRefreshing];
+            }
+
+            FHTopicListResponseModel *responseModel = model;
             [wself.dataList addObjectsFromArray:responseModel.data.items];
+            wself.tableView.hidden = NO;
             [wself.tableView reloadData];
+        } else {
+            if (isRefresh) {
+                [wself.tableView finishPullDownWithSuccess:NO];
+            } else {
+                [wself.tableView.mj_footer endRefreshing];
+            }
+            if (isRefresh) {
+                wself.tableView.hidden = YES;
+                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            }
+            [[ToastManager manager] showToast:@"网络不给力,请稍后重试"];
         }
     }];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewAutomaticDimension;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

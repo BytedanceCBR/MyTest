@@ -230,7 +230,7 @@
     FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)data;
     if (model) {
         if (model.houseImage.count > 0) {
-            FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage[0];
+            FHImageModel *imageModel = model.houseImage[0];
             NSString *urlStr = imageModel.url;
             if ([urlStr length] > 0) {
                 [self.icon bd_setImageWithURL:[NSURL URLWithString:urlStr] placeholder:[UIImage imageNamed:@"default_image"]];
@@ -240,6 +240,9 @@
         } else {
             self.icon.image = [UIImage imageNamed:@"default_image"];
         }
+        
+        self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
+        
         NSString *str = model.displaySameNeighborhoodTitle;
         if (str == nil) {
             str = @"";
@@ -263,6 +266,11 @@
     _icon.image = [UIImage imageNamed:@"default_image"];
     [self addSubview:_icon];
     
+    _houseVideoImageView = [[UIImageView alloc] init];
+    _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video"];
+    _houseVideoImageView.backgroundColor = [UIColor clearColor];
+    [self addSubview:_houseVideoImageView];
+    
     _descLabel = [[YYLabel alloc] init];
     [self addSubview:_descLabel];
     
@@ -280,6 +288,12 @@
         make.width.mas_equalTo(156);
         make.height.mas_equalTo(116);
         make.top.mas_equalTo(self);
+    }];
+    
+    [self.houseVideoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.icon);
+        make.width.mas_equalTo(30);
+        make.height.mas_equalTo(30);
     }];
     
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {

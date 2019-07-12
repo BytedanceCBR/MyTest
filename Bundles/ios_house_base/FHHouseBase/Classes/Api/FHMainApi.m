@@ -232,7 +232,6 @@
     }];
 }
 
-
 #pragma mark 找房频道首页相关
 +(TTHttpTask *)requestHomeSearchRoll:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion
 {

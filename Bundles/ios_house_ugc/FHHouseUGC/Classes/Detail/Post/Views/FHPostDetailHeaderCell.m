@@ -11,13 +11,16 @@
 #import <UIImageView+BDWebImage.h>
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
+#import "FHUGCFollowButton.h"
+#import "FHUGCConfig.h"
+#import "TTRoute.h"
 
 @interface FHPostDetailHeaderCell ()
 
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *descLabel;
 @property(nonatomic, strong) UIImageView *icon;
-@property(nonatomic, strong) UIButton *joinBtn;
+@property(nonatomic, strong) FHUGCFollowButton *joinBtn;
 
 @end
 
@@ -36,15 +39,20 @@
 
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHPostDetailHeaderModel class]]) {
+    if (![data isKindOfClass:[FHPostDetailHeaderModel class]]) {
         return;
     }
     self.currentData = data;
-//    CGFloat height = ((FHPostDetailHeaderModel *)data).lineHeight;
+
+    FHPostDetailHeaderModel *headerModel = (FHPostDetailHeaderModel *)self.currentData;
     
-    _titleLabel.text = @"世纪城";
-    _descLabel.text = @"88热帖·9221人";
-    [self.icon bd_setImageWithURL:[NSURL URLWithString:@"http://p1.pstatp.com/thumb/fea7000014edee1159ac"] placeholder:nil];
+    _titleLabel.text = headerModel.socialGroupModel.socialGroupName;
+    _descLabel.text = headerModel.socialGroupModel.countText;
+    [self.icon bd_setImageWithURL:[NSURL URLWithString:headerModel.socialGroupModel.avatar] placeholder:nil];
+    BOOL isFollowed = [headerModel.socialGroupModel.hasFollow boolValue];
+    self.joinBtn.followed = isFollowed;
+    self.joinBtn.tracerDic = headerModel.tracerDict;
+    self.joinBtn.groupId = headerModel.socialGroupModel.socialGroupId;
 }
 
 
@@ -72,17 +80,32 @@
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor themeGray3]];
     [self.contentView addSubview:_descLabel];
     
-    self.joinBtn = [[UIButton alloc] init];
-    _joinBtn.layer.masksToBounds = YES;
-    _joinBtn.layer.cornerRadius = 4;
-    _joinBtn.layer.borderColor = [[UIColor themeRed1] CGColor];
-    _joinBtn.layer.borderWidth = 0.5;
-    [_joinBtn setTitle:@"关注" forState:UIControlStateNormal];
-    [_joinBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    _joinBtn.titleLabel.font = [UIFont themeFontRegular:12];
+    self.joinBtn = [[FHUGCFollowButton alloc] init];
     [self addSubview:_joinBtn];
     
     [self setupConstraints];
+    
+    __weak typeof(self) wSelf = self;
+    self.didClickCellBlk = ^{
+        [wSelf gotoCommunityDetail];
+    };
+}
+
+- (void)gotoCommunityDetail {
+     FHPostDetailHeaderModel *headerModel = (FHPostDetailHeaderModel *)self.currentData;
+    if (headerModel) {
+        FHUGCScialGroupDataModel *data = headerModel.socialGroupModel;
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        NSDictionary *log_pb = data.logPb;
+        dict[@"community_id"] = data.socialGroupId;
+        dict[@"tracer"] = @{@"enter_from":@"feed_detail",
+                            @"enter_type":@"click",
+                            @"log_pb":log_pb ?: @"be_null"};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        // 跳转到圈子详情页
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
 }
 
 - (void)setupConstraints {

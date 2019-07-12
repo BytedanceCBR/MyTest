@@ -165,8 +165,8 @@
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
     __block CGFloat height = 0;
     NSMutableAttributedString *dotAttributedString = [self createTagAttributeTextNormal:@" · " fontSize:12.0];
-    [tags enumerateObjectsUsingBlock:^(FHSearchHouseDataItemsTagsModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (![obj isKindOfClass:[FHSearchHouseDataItemsTagsModel class]]) {
+    [tags enumerateObjectsUsingBlock:^(FHHouseTagsModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (![obj isKindOfClass:[FHHouseTagsModel class]]) {
             *stop = YES;
         }
         if (idx > 0) {

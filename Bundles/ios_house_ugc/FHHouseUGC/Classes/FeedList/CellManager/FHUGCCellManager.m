@@ -10,11 +10,11 @@
 #import "FHUGCPureTitleCell.h"
 #import "FHUGCSingleImageCell.h"
 #import "FHUGCMultiImageCell.h"
-#import "FHUGCTwoImageCell.h"
 #import "FHArticlePureTitleCell.h"
 #import "FHArticleSingleImageCell.h"
 #import "FHArticleMultiImageCell.h"
 #import "FHUGCRecommendCell.h"
+#import "FHUGCBannerCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -37,13 +37,12 @@
                                 @"FHUGCPureTitleCell",
                                 @"FHUGCSingleImageCell",
                                 @"FHUGCMultiImageCell",
-                                @"FHUGCTwoImageCell",
                                 @"FHArticlePureTitleCell",
                                 @"FHArticleSingleImageCell",
                                 @"FHArticleMultiImageCell",
                                 @"FHUGCRecommendCell",
-                                
-                                
+                                @"FHUGCBannerCell",
+ 
                                 //可扩展
                                  ];
 }
@@ -64,9 +63,6 @@
         case FHUGCFeedListCellSubTypeSingleImage:
             return [FHUGCSingleImageCell class];
             
-        case FHUGCFeedListCellSubTypeTwoImage:
-            return [FHUGCTwoImageCell class];
-            
         case FHUGCFeedListCellSubTypeMultiImage:
             return [FHUGCMultiImageCell class];
             
@@ -81,6 +77,9 @@
             
         case FHUGCFeedListCellSubTypeUGCRecommend:
             return [FHUGCRecommendCell class];
+
+        case FHUGCFeedListCellSubTypeUGCBanner:
+            return [FHUGCBannerCell class];
 
         default:
             break;

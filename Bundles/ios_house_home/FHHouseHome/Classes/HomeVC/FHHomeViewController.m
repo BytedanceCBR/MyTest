@@ -31,6 +31,7 @@
 #import <TTTopBar.h>
 #import <FHHomeSearchPanelViewModel.h>
 #import <ExploreLogicSetting.h>
+#import <TTArticleTabBarController.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -365,6 +366,8 @@ static CGFloat const kSectionHeaderHeight = 38;
         }
     }
     
+    [FHEnvContext addTabUGCGuid];
+    
     [TTSandBoxHelper setAppFirstLaunchForAd];
 }
 
@@ -468,7 +471,7 @@ static CGFloat const kSectionHeaderHeight = 38;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.contentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width*4, 0);
-        _scrollView.backgroundColor = [UIColor orangeColor];
+        _scrollView.backgroundColor = [UIColor whiteColor];
     }
     return _scrollView;
 }

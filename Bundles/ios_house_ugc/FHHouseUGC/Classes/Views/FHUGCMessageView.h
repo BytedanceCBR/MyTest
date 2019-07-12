@@ -11,8 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCMessageView : UIView
 
-@property(nonatomic ,strong) UIImageView *icon;
-@property(nonatomic ,strong) UILabel *messageLabel;
+@property(nonatomic, strong) UIImageView *icon;
+@property(nonatomic, strong) UILabel *messageLabel;
+@property(nonatomic, copy) NSString *openUrl;
 
 - (void)refreshWithUrl:(NSString *)url messageCount:(NSInteger)messageCount;
 

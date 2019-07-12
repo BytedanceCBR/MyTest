@@ -91,6 +91,9 @@
                            @"houseType": @"house_type",
                            @"coreInfo": @"core_info",
                            @"logPb": @"log_pb",
+                           @"globalPricing":@"global_pricing",
+                           @"floorpanList":@"floorpan_list",
+                           @"userStatus":@"user_status",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

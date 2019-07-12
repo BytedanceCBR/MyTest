@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "FHUGCBaseCell.h"
 #import "FHDetailBaseModel.h"
+#import "FHUGCScialGroupModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 模型
 @interface FHPostDetailHeaderModel : FHDetailBaseModel
 
+@property (nonatomic, strong)   FHUGCScialGroupDataModel       *socialGroupModel;
+@property (nonatomic, copy)     NSDictionary       *tracerDict;
 
 @end
 

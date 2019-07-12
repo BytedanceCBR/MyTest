@@ -351,7 +351,7 @@
         }
  
         self.priceLabel.text = model.displayPricePerSqm;
-        FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
+        FHImageModel *imageModel = model.images.firstObject;
         [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
         
         [self updateOriginPriceLabelConstraints:nil];

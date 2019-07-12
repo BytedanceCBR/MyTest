@@ -32,6 +32,7 @@
 #import "WDAdapterSetting.h"
 #import "WDListTagImageView.h"
 #import "WDUIHelper.h"
+#import "WDListAnswerCellBottomView.h"
 
 @interface WDWendaListLightSingleImageCell ()<WDWendaListCellUserHeaderViewDelegate,WDWendaListCellActionFooterViewDelegate,UIGestureRecognizerDelegate>
 
@@ -56,6 +57,8 @@
 @property (nonatomic, assign) BOOL isViewHighlighted;
 @property (nonatomic, assign) BOOL isSelfFollow;
 @property (nonatomic, assign) BOOL needSendRedPackFlag;
+
+@property (nonatomic, strong)   WDListAnswerCellBottomView       *cellBottomView;
 
 @end
 
@@ -89,6 +92,7 @@
             self.contentView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
             self.bottomLabel.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
             self.rewardLabel.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+            self.cellBottomView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
             [self.headerView setHighlighted:highlighted];
             [self.characterView setHighlighted:highlighted];
             self.isViewHighlighted = YES;
@@ -98,6 +102,7 @@
             self.contentView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
             self.bottomLabel.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
             self.rewardLabel.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+            self.cellBottomView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
             [self.headerView setHighlighted:highlighted];
             [self.characterView setHighlighted:highlighted];
             self.isViewHighlighted = NO;
@@ -198,6 +203,7 @@
 - (CGFloat)refreshBottomViewContentAndLayout:(CGFloat)top {
     [self refreshBottomLabelContent];
     self.bottomLabel.top = top + self.cellLayoutModel.bottomLabelTopPadding;
+    self.cellBottomView.top = top + self.cellLayoutModel.bottomLabelTopPadding;
     CGFloat bottomOriginX = kWDCellLeftPadding;
     self.rewardIconImageView.hidden = YES;
     self.rewardLabel.hidden = !self.cellViewModel.isAnswerGetReward;
@@ -265,6 +271,13 @@
     [self.bottomLabel sizeToFit];
     self.bottomLabel.width = ceilf(self.bottomLabel.width);
     self.bottomLabel.height = [WDListCellLayoutModel answerReadCountsLineHeight];
+    self.bottomLabel.hidden = YES;
+    
+    self.cellBottomView.width = SSScreenWidth;
+    self.cellBottomView.height = [WDListCellLayoutModel answerReadCountsLineHeight];
+    self.cellBottomView.ansEntity = self.cellViewModel.ansEntity;
+    self.cellBottomView.apiParams = self.apiParams;
+    self.cellBottomView.gdExtJson = self.gdExtJson;
 }
 
 - (void)refreshDiggCount {
@@ -289,6 +302,7 @@
     [self.contentView addSubview:self.rewardIconImageView];
     [self.contentView addSubview:self.rewardLabel];
     [self.contentView addSubview:self.bottomLabel];
+    [self.contentView addSubview:self.cellBottomView];
     [self.contentView addSubview:self.actionView];
     [self.contentView addSubview:self.footerView];
 }
@@ -626,6 +640,13 @@
         _rewardLabel.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
     }
     return _rewardLabel;
+}
+
+- (WDListAnswerCellBottomView *)cellBottomView {
+    if (!_cellBottomView) {
+        _cellBottomView = [[WDListAnswerCellBottomView alloc] initWithFrame:CGRectZero];
+    }
+    return _cellBottomView;
 }
 
 - (SSThemedLabel *)bottomLabel {

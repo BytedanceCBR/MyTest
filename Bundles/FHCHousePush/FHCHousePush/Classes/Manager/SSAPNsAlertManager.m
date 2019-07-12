@@ -31,6 +31,9 @@
 
 #define kCouldShowActivePushAlertKey @"kCouldShowActivityPushAlertKey"
 
+// App 内收到push消息，不显示tips
+BOOL kFHInAppPushTipsHidden = NO;
+
 static SSAPNsAlertManager *s_manager;
 
 @interface SSAPNsAlertManager()
@@ -240,11 +243,14 @@ static NSString * const kTTAPNsImportanceKey = @"important";
     if ([TTAPNsRouting handlePushMsg:dict]) {
         return;
     }
-    
+    // 处理特殊情况下不展示 alert tips
+    if (kFHInAppPushTipsHidden) {
+        return;
+    }
     NSString *schemaString = [dict tt_stringValueForKey:kSSAPNsAlertManagerSchemaKey];
     
     // 暂时兼容的逻辑，如果是detail，走原有弹窗逻辑；否则透传给路由处理
-    NSLog(@"%@", [[TTStringHelper URLWithURLString:schemaString] host]);
+//    NSLog(@"%@", [[TTStringHelper URLWithURLString:schemaString] host]);
     if ([[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"detail"] ||
         [[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"wenda_detail"] ||
         [[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"awemevideo"]) {
@@ -382,8 +388,11 @@ static NSString * const kTTAPNsImportanceKey = @"important";
     //    id<TTPushAlertViewProtocol> pushAlert =
     [TTPushAlertManager showPushAlertViewWithModel:alertModel urgency:TTPushAlertUnimportance didTapBlock:^(NSInteger hideReason) {
 
-
-
+        if (hideReason == TTWeakPushAlertHideTypeTapClose) {
+            //用户关闭 不响应push
+            return ;
+        }
+        
         //有可能当前有视频全屏，等视频完全退出后再打开推送来的文章
         //在旧的navigation架构下，使用的是pushViewController:animated:方法，如果push的时候，还有presentedViewController在上面的话，UIKit会两次调用pushViewController:方法，而后一次由于TTNavigationController做了保护，而无法完成push操作
         //所以用让openURL操作慢0.1s，确保视频已经完全退出
