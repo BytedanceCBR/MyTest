@@ -25,6 +25,7 @@
 #import "FHDetailNeighborhoodInfoCell.h"
 #import "FHDetailNeighborhoodMapInfoCell.h"
 #import "FHDetailHouseSubscribeCell.h"
+#import "FHDetailBlankLineCell.h"
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
@@ -61,6 +62,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailNeighborhoodInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoModel class])];
     [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeModel class])];
+    [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
 }
 //// cell class
 //- (Class)cellClassForEntity:(id)model {
@@ -384,6 +386,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
+        FHDetailBlankLineModel *whiteLine = [[FHDetailBlankLineModel alloc] init];
+        [self.items addObject:whiteLine];
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.rent_neighborhoodInfo = model.data.neighborhoodInfo;
         infoModel.tableView = self.tableView;
