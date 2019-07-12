@@ -615,9 +615,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [logv3Dic setValue:@"default" forKey:@"enter_type"];
     [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
     
-    if(![FHEnvContext isUGCOpen]){
+//    if(![FHEnvContext isUGCOpen]){
         [FHEnvContext showFindTabRedDots];
-    }
+//    }
 }
 
 - (BOOL)isShowingConcernOrForumTab

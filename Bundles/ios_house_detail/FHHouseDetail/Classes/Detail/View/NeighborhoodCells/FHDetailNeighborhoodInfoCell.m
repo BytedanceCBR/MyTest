@@ -99,7 +99,7 @@
             make.height.mas_equalTo(self.topHeight);
         }];
         [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(46 + self.topHeight);
+            make.top.mas_equalTo(26 + self.topHeight);
         }];
         [self updateSchoolView:model.rent_neighborhoodInfo.schoolDictList];
     }
