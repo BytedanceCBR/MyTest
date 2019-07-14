@@ -80,7 +80,11 @@
 }
 
 - (void)requestData:(BOOL)isHead {
-    [self.requestTask cancel];
+    if(self.viewController.isLoadingData){
+        return;
+    }
+    
+    self.viewController.isLoadingData = YES;
     [self.viewController startLoading];
     
     __weak typeof(self) wself = self;
@@ -93,6 +97,7 @@
     CLLocation *currentLocaton = [FHLocManager sharedInstance].currentLocaton;
     self.requestTask = [FHHouseUGCAPI requestRecommendSocialGroupsWithSource:source latitude:currentLocaton.coordinate.latitude longitude:currentLocaton.coordinate.longitude class:[FHUGCMyInterestModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
+        wself.viewController.isLoadingData = NO;
         [wself.viewController endLoading];
         
         FHUGCMyInterestModel *interestModel = (FHUGCMyInterestModel *)model;

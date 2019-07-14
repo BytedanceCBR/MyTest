@@ -37,6 +37,7 @@
 @property(nonatomic, strong) UILabel *subTitleLabel;
 @property(nonatomic, strong) UIView *titleContainer;
 @property(nonatomic) BOOL scrollToTop;
+@property(nonatomic) BOOL isRefreshing;
 @property(nonatomic, strong) NSTimer *requestDataTimer;
 @property (nonatomic, assign)   BOOL       isViewAppear;
 
@@ -54,6 +55,7 @@
         [self initView];
         self.shouldShowUGcGuide = YES;
         self.isViewAppear = YES;
+        self.isRefreshing = NO;
     }
     return self;
 }
@@ -427,7 +429,7 @@
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView; {
     self.scrollToTop = NO;
-    if (scrollView.contentOffset.y < 0 && -scrollView.contentOffset.y > self.headerView.refreshView.toRefreshMinDistance) {
+    if (scrollView.contentOffset.y < 0 && -scrollView.contentOffset.y < self.headerView.refreshView.toRefreshMinDistance && !self.isRefreshing) {
         [self cancelRequestAfter];
     }
 }
@@ -447,6 +449,7 @@
         scrollView.contentInset = UIEdgeInsetsMake(self.headerView.refreshView.toRefreshMinDistance, 0, 0, 0);
         [self requestDataAfter];
         [self.headerView startRefresh];
+        self.isRefreshing = YES;
     }
 }
 
@@ -454,15 +457,19 @@
     WeakSelf;
     [UIView animateWithDuration:0.5 animations:^{
         StrongSelf;
-        wself.feedListController.tableView.contentOffset = CGPointMake(0, 0);
+        if(wself.feedListController.tableView.contentOffset.y < 0){
+            wself.feedListController.tableView.contentOffset = CGPointMake(0, 0);
+        }
         wself.feedListController.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     }completion:^(BOOL finished) {
+        wself.isRefreshing = NO;
         [wself.headerView stopRefresh];
     }];
 }
 
 - (void)requestDataAfter {
     WeakSelf;
+//    [self requestDataWithRefresh];
     [self cancelRequestAfter];
     self.requestDataTimer = [NSTimer scheduledNoRetainTimerWithTimeInterval:1.0f target:self selector:@selector(requestDataWithRefresh) userInfo:nil repeats:NO];
 }
