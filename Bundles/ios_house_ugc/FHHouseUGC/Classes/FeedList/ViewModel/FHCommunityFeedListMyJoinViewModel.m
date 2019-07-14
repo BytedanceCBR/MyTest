@@ -122,7 +122,11 @@
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
-    [super requestData:isHead first:isFirst];
+    if(self.viewController.isLoadingData){
+        return;
+    }
+    
+    self.viewController.isLoadingData = YES;
     
     if(self.isRefreshingTip){
         [self.tableView finishPullDownWithSuccess:YES];
@@ -145,11 +149,12 @@
     }
     
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        wself.viewController.isLoadingData = NO;
         if(isFirst){
-            [self.viewController endLoading];
+            [wself.viewController endLoading];
         }
         
-        [self.tableView finishPullDownWithSuccess:YES];
+        [wself.tableView finishPullDownWithSuccess:YES];
         
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         wself.feedListModel = feedListModel;
@@ -176,7 +181,7 @@
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
             
             if(isFirst){
-                [self.dataList removeAllObjects];
+                [wself.dataList removeAllObjects];
             }
             
             if(isHead){
@@ -207,7 +212,7 @@
                         wself.isRefreshingTip = NO;
                     });
                 }];
-                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
             }
         }
     }];
