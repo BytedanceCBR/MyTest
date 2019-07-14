@@ -403,8 +403,10 @@
     return -1;
 }
 
-- (void)commentClicked:(FHFeedUGCCellModel *)cellModel {
+- (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     [self trackClickComment:cellModel];
+    self.currentCellModel = cellModel;
+    self.currentCell = cell;
     [self jumpToPostDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
