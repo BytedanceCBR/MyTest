@@ -229,6 +229,21 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 - (void)keyboardWillHideNotifiction:(NSNotification *)notification {
     self.offsetY = 0;
+    FHDetailHouseSubscribeModel *model = (FHDetailHouseSubscribeModel *)self.currentData;
+    if(model.tableView.contentOffset.y + model.tableView.frame.size.height > model.tableView.contentSize.height){
+        //剩余不满一屏幕
+        NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+        NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
+        [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            FHDetailHouseSubscribeModel *model = (FHDetailHouseSubscribeModel *)self.currentData;
+            CGPoint point = model.tableView.contentOffset;
+            point.y = (model.tableView.contentSize.height - model.tableView.frame.size.height);
+            model.tableView.contentOffset = point;
+        } completion:^(BOOL finished) {
+            
+        }];
+    }
 }
 
 #pragma mark -- UITextFieldDelegate

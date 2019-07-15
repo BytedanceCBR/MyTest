@@ -25,10 +25,11 @@
 #import <FHCommonDefines.h>
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import "FHDetailSchoolInfoItemView.h"
+#import "FHDetailHeaderViewNoMargin.h"
 
 @interface FHDetailNeighborhoodInfoCell ()
 
-@property (nonatomic, strong)   FHDetailHeaderView       *headerView;
+@property (nonatomic, strong)   FHDetailHeaderViewNoMargin       *headerView;
 @property (nonatomic, strong)   UIView       *topView;
 @property (nonatomic, assign)   CGFloat       topHeight;
 //@property (nonatomic, strong)   UIView       *bottomView;
@@ -79,7 +80,7 @@
 
 // 租房
 - (void)updateRentCellData
-{
+{ 	
     CGFloat topHeight = 0;
     FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
     if (model) {
@@ -98,7 +99,7 @@
             make.height.mas_equalTo(self.topHeight);
         }];
         [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(46 + self.topHeight);
+            make.top.mas_equalTo(26 + self.topHeight);
         }];
         [self updateSchoolView:model.rent_neighborhoodInfo.schoolDictList];
     }
@@ -128,7 +129,7 @@
             make.height.mas_equalTo(self.topHeight);
         }];
         [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(46 + self.topHeight);
+            make.top.mas_equalTo(26 + self.topHeight);
         }];
         [self updateSchoolView:model.neighborhoodInfo.schoolDictList];
     }
@@ -172,7 +173,7 @@
         lastItemView = itemView;
     }
     [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(46 + self.topHeight);
+        make.top.mas_equalTo(26 + self.topHeight);
         make.height.mas_equalTo(sumHeight);
     }];
 }
@@ -240,13 +241,13 @@
 }
 
 - (void)setupUI {
-    _headerView = [[FHDetailHeaderView alloc] init];
+    _headerView = [[FHDetailHeaderViewNoMargin alloc] init];
     _headerView.label.text = @"小区 ";
     _headerView.isShowLoadMore = YES; // 点击可以跳转小区详情
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(46);
+        make.height.mas_equalTo(26);
     }];
     [self.headerView addTarget:self action:@selector(gotoNeighborhood) forControlEvents:UIControlEventTouchUpInside];
     
@@ -260,7 +261,7 @@
     
     [_topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-        make.top.mas_equalTo(46);
+        make.top.mas_equalTo(26);
         make.height.mas_equalTo(0);
     }];
     [_schoolView mas_makeConstraints:^(MASConstraintMaker *make) {

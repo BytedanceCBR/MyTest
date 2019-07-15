@@ -13,13 +13,28 @@
 #import "TTUGCTextView.h"
 #import "TTUGCSearchUserViewController.h"
 #import "TTUGCSearchHashtagViewController.h"
+#import "TTImagePickerController.h"
+
+@protocol TTUGCAddMultiImageProtocol
+
+- (void)presentMultiImagePickerView;
+
+@end
 
 @interface TTUGCTextViewMediator : NSObject <TTUGCTextViewDelegate, TTUGCToolbarDelegate, TTUGCSearchUserTableViewDelegate, TTUGCSearchHashtagTableViewDelegate>
 
 @property (nonatomic, strong) SSThemedView <TTUGCToolbarProtocol> *toolbar;
 @property (nonatomic, strong) TTUGCTextView *textView;
 
+@property (nonatomic, strong) SSThemedView <TTUGCAddMultiImageProtocol> *multiImageView;
+
 @property (nonatomic, assign) TTHashtagSuggestOption hashtagSuggestOption;
+
+@property (nonatomic, assign) BOOL showCanBeCreatedHashtag; // 是否展示可被创建的话题
+
+@property (nonatomic, copy)  NSString *richSpanColorHexStringForDay;
+
+@property (nonatomic, copy)  NSString *richSpanColorHexStringForNight;
 
 /**
  * at 人或话题选择器面板是否正在显示

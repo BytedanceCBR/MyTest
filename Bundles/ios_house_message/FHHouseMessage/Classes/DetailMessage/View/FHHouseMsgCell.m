@@ -17,6 +17,7 @@
 @interface FHHouseMsgCell()
 
 @property(nonatomic, strong) UIImageView *imgView;
+@property(nonatomic, strong) UIImageView *houseVideoImageView;
 @property(nonatomic, strong) UIView *infoPanel;
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *subTitleLabel;
@@ -70,6 +71,12 @@
     _imgView.layer.masksToBounds = YES;
     [self.contentView addSubview:_imgView];
     
+    self.houseVideoImageView = [[UIImageView alloc] init];
+    _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video"];
+    _houseVideoImageView.backgroundColor = [UIColor clearColor];
+    [self.contentView addSubview:_houseVideoImageView];
+
+    
     self.imageTopLeftLabelBgView = [[UIView alloc] init];
     _imageTopLeftLabelBgView.backgroundColor = [UIColor themeRed1];
     _imageTopLeftLabelBgView.hidden = YES;
@@ -112,6 +119,12 @@
         make.top.mas_equalTo(self.contentView).offset(20);
         make.width.mas_equalTo(114);
         make.height.mas_equalTo(85);
+    }];
+    
+    [self.houseVideoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.imgView);
+        make.width.mas_equalTo(30);
+        make.height.mas_equalTo(30);
     }];
     
     [self.imageTopLeftLabelBgView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -181,6 +194,9 @@
 }
 
 - (void)updateWithModel:(FHHouseMsgDataItemsItemsModel *)model {
+    
+    self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
+    
     self.titleLabel.text = model.title;
     self.subTitleLabel.text = model.desc;
     
@@ -191,7 +207,6 @@
         self.priceLabel.text = model.price;
         self.roomSpaceLabel.text = model.pricePerSqm;
     }
-    
     //超过1行时候，只显示一行，不能显示的tag就不显示了
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
     NSMutableAttributedString *temptext = [[NSMutableAttributedString alloc] init];
@@ -232,9 +247,11 @@
         self.imageTopLeftLabelBgView.hidden = YES;
     }
     
-    if([model.status integerValue] == 1){ // 已下架
-        self.priceLabel.textColor = [UIColor themeGray1];
-    }else{
+    if (model.status == 1) {
+        self.titleLabel.textColor = [UIColor themeGray3];
+        self.priceLabel.textColor = [UIColor themeGray3];
+    }else {
+        self.titleLabel.textColor = [UIColor themeGray1];
         self.priceLabel.textColor = [UIColor themeRed1];
     }
 }

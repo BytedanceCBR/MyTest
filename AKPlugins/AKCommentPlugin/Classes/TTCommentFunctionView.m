@@ -10,7 +10,8 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTUIWidget/TTAlphaThemedButton.h>
 #import <TTUGCAttributedLabel.h>
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 
 #define kTTCommentToolbarButtonSize 24
 //static NSString * const KKCCommentRepostSelected = @"repost_comment_repost_selected"; //评论并转发，☑️是否默认勾选，会记录
@@ -31,7 +32,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        _repostTitle = [TTKitchen getString:KKCCommentRepostFirstDetailText];
+        _repostTitle = [TTKitchen getString:kTTKCommentRepostFirstDetailText];
 
         [self addSubview:self.emojiButton];
         [self addSubview:self.atButton];
@@ -229,11 +230,12 @@
 }
 
 - (BOOL)shouldSetCheckedCommentRepostCheckButton {
-    return [TTKitchen getBOOL:KKCCommentRepostSelected];
+    return YES;
+//    return [TTKitchen getBOOL: @"repost_comment_repost_selected"];
 }
 
 - (void)setCommentRepostCheckButtonChecked:(BOOL)checked {
-    [TTKitchen setBOOL:checked forKey:KKCCommentRepostSelected];
+    // [TTKitchen setBOOL:checked forKey:@"repost_comment_repost_selected"];
 }
 
 @end

@@ -12,5 +12,6 @@
 @interface ArticleTabBarStyleNewsListViewController : SSViewControllerBase
 
 @property (nonatomic, strong) TTExploreMainViewController *mainVC;
+@property (nonatomic, assign) BOOL isShowTopSearchPanel;
 
 @end

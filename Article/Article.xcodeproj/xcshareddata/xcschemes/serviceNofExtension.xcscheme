@@ -15,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "61A95E132223DBC100E32A12"
+               BlueprintIdentifier = "619867782223E8EE0056B2EF"
                BuildableName = "serviceNofExtension.appex"
                BlueprintName = "serviceNofExtension"
                ReferencedContainer = "container:Article.xcodeproj">

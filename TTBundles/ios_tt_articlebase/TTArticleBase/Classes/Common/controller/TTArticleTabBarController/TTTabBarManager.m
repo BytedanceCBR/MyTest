@@ -25,7 +25,8 @@
 #import "TTStringHelper.h"
 #import "TTNetworkManager.h"
 #import "Singleton.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import "TTTabBarProvider.h"
 #import "TTArticleTabBarController.h"
 #import "UITabBarController+TabbarConfig.h"
@@ -49,7 +50,7 @@ NSString *kTTTabUnloginName = @"ak_mine_unlogin_tab"; //我的tab未登录图片
 NSString *kTTTabFeedPublishName = @"feed_publish"; //feed发布器图片
 //NSString *kTTTabBigActivityTabKey = @"tab_redpackage_big"; //春节运营活动大tab 标题&图片名
 NSString *kAKTabActivityTabKey = @"tab_ak_activity";//爱看活动tab 标题key&图片名
-NSString *kFHouseFindTabKey = @"tab_f_find";//房产找房key
+NSString *kFHouseFindTabKey = @"tab_f_find";//发现key
 NSString *kFHouseMessageTabKey = @"tab_message";
 NSString *kFHouseMineTabKey = @"tab_mine"; //房产首页key
 //Path
@@ -180,9 +181,9 @@ SINGLETON_GCD(TTTabBarManager);
 //                           kTTTabFollowTabKey:@"关注",
                            kFHouseMessageTabKey: @"消息",
                            kFHouseMineTabKey:@"我的",
-                           kFHouseFindTabKey:@"找房",
+                           kFHouseFindTabKey:@"发现",
 
-//                           kTTTabWeitoutiaoTabKey:[KitchenMgr getString:kKCUGCFeedNamesTab],
+//                           kTTTabWeitoutiaoTabKey:[KitchenMgr getString:kTTKUGCFeedNamesTab],
                            };
     
     _defaultImageNames = @{kTTTabHomeTabKey:@"tab-home",
@@ -492,7 +493,7 @@ SINGLETON_GCD(TTTabBarManager);
         
         if ([obj isEqualToString:kTTTabWeitoutiaoTabKey]) {
             //微头条的底tab标题由微头条文案下发逻辑控制
-            title = [TTKitchen getString:kKCUGCFeedNamesTab];
+            title = [TTKitchen getString:kTTKUGCFeedNamesTab];
         }
         [mutableTabTitles setValue:title forKey:obj];
     }];

@@ -330,13 +330,15 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     self.phoneCallName = contactTitle;
     [self.bottomBar refreshBottomBar:contactPhone contactTitle:contactTitle chatTitle:chatTitle];
     self.showenOnline = self.bottomBar.showIM;// 显示在线联系（详情图册页面）
-    [self tryTraceImElementShow];
-    if (contactPhone.showRealtorinfo) {
-        [self addRealtorShowLog:contactPhone];
-        [self addElementShowLog:contactPhone];
+    if (!contactPhone.isInstantData) {
+        //非列表页带入数据才报埋点
+        [self tryTraceImElementShow];
+        if (contactPhone.showRealtorinfo) {
+            [self addRealtorShowLog:contactPhone];
+            [self addElementShowLog:contactPhone];
+        }
+        [self addLeadShowLog:contactPhone];
     }
-    [self addLeadShowLog:contactPhone];
-    
     @try {
         // 可能会出现崩溃的代码
         if ([FHHouseDetailPhoneCallViewModel fhRNEnableChannels].count > 0 && [FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels].count > 0 && [[FHHouseDetailPhoneCallViewModel fhRNEnableChannels] containsObject:@"f_realtor_detail"] && [[FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels] containsObject:@"f_realtor_detail"] && contactPhone.showRealtorinfo && [FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"]) {
@@ -483,15 +485,18 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSString *title = nil;
     NSString *subtitle = nil;
     NSString *btnTitle = @"提交";
+    NSString *fromStr = nil;
 
     if (actionType == FHFollowActionTypeFloorPan) {
         title = @"开盘通知";
         subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机";
         btnTitle = @"提交";
+        fromStr = @"app_sellnotice";
     }else if (actionType == FHFollowActionTypePriceChanged) {
         title = @"变价通知";
         subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机";
         btnTitle = @"提交";
+        fromStr = @"app_pricenotice";
     }
     FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
     fillFormConfig.houseType = self.houseType;
@@ -517,6 +522,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [fillFormConfig setTraceParams:params];
     fillFormConfig.searchId = self.searchId;
     fillFormConfig.imprId = self.imprId;
+    fillFormConfig.fromStr = fromStr;
     fillFormConfig.chooseAgencyList = self.chooseAgencyList;
     [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
 }

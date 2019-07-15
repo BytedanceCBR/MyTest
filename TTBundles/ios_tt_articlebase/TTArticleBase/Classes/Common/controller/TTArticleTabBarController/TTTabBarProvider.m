@@ -36,6 +36,8 @@
 #import <BDABTestSDK/BDABTestManager.h>
 #import "SSCommonLogic.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import <FHHouseUGC/FHCommunityViewController.h>
+#import <FHHomeViewController.h>
 
 NSString *kTTMiddleTabDidChangeNotification = @"kTTMiddleTabDidChangeNotification";
 
@@ -71,7 +73,8 @@ static NSString *lastTabIdentifier;
 + (UIViewController *)rootVCForIdentifier:(NSString *)identifier {
     if ([identifier isEqualToString:kTTTabHomeTabKey]) {
         UIViewController *homeVC;
-        homeVC = [[ArticleTabBarStyleNewsListViewController alloc] init];
+        homeVC = [[FHHomeViewController alloc] init];
+//        homeVC = [[ArticleTabBarStyleNewsListViewController alloc] init];
         return homeVC;
     } else if ([identifier isEqualToString:kTTTabVideoTabKey]) {
         UIViewController *videoVC;
@@ -111,14 +114,16 @@ static NSString *lastTabIdentifier;
 //    }
     else if ([identifier isEqualToString:kFHouseFindTabKey]) {
 
-        UIViewController *houseFindVC = nil;
-        if ([SSCommonLogic findTabShowHouse] == 1) {
-            houseFindVC = [[FHHouseFindListViewController alloc]init];
-
-        }else {
-            houseFindVC = [[FHHouseFindViewController alloc] init];
-        }
-        return houseFindVC;
+//        UIViewController *houseFindVC = nil;
+//        if ([SSCommonLogic findTabShowHouse] == 1) {
+//            houseFindVC = [[FHHouseFindListViewController alloc]init];
+//
+//        }else {
+//            houseFindVC = [[FHHouseFindViewController alloc] init];
+//        }
+        FHCommunityViewController *communityVC = [[FHCommunityViewController alloc] init];
+        
+        return communityVC;
 
     } else if ([identifier isEqualToString:kFHouseMessageTabKey]) {
         FHMessageViewController* vc = [[FHMessageViewController alloc] init];

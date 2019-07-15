@@ -46,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isSendConfigFromFirstRemote;
 @property (nonatomic, assign) BOOL isRefreshFromAlertCitySwitch;
 @property (nonatomic, assign) BOOL isRefreshFromCitySwitch;
+@property (nonatomic, assign) BOOL isClickTab;
 @property (nonatomic, copy) NSString * refreshConfigRequestType;
 
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
@@ -80,6 +81,26 @@ NS_ASSUME_NONNULL_BEGIN
  判断用户选择城市和当前城市是否是同一个
  */
 + (BOOL)isSameLocCityToUserSelect;
+
+/*
+ 显示tab上的红点
+ */
++ (void)showFindTabRedDots;
+
+/*
+ 修改第二个tab名称
+ */
++ (void)changeFindTabTitle;
+
+/*
+ 增加引导
+ */
++ (void)addTabUGCGuid;
+
+/*
+ 隐藏tab上的红点
+ */
++ (void)hideFindTabRedDots;
 
 /*
   app启动调用
@@ -130,6 +151,12 @@ NS_ASSUME_NONNULL_BEGIN
  判断在房屋估价结果页中是否显示查看城市行情的按钮
  */
 + (BOOL)isPriceValuationShowHouseTrend;
+
+/*
+ 判断是否开通ugc模块
+ */
++ (BOOL)isUGCOpen;
+
 //返回origin_search id
 
 //接受config数据

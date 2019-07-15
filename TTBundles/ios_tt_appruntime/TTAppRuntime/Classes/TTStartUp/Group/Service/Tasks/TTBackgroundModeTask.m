@@ -23,6 +23,9 @@
 #import "CommonURLSetting.h"
 #import <TTArticleBase/Log.h>
 #import <TTBaseLib/TTBaseMacro.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTBackgroundModeTask",FHTaskTypeService,TASK_PRIORITY_HIGH+9);
 
 @interface TTBackgroundModeTask ()
 

@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak)     FHHouseDetailBaseViewModel       *baseViewModel;
 @property (nonatomic, strong , nullable) FHDetailOldDataHouseOverreviewModel *houseOverreview ;
+@property (nonatomic, assign)   BOOL       hideReport;
 
 @end
 

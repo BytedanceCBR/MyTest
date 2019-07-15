@@ -32,6 +32,9 @@
 #import <TTMonitor/TTMonitor.h>
 #import "SSCommonLogic.h"
 #import "CommonURLSetting.h"
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
 
 @implementation TTNetworkSerializerTask
 

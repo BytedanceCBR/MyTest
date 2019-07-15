@@ -187,7 +187,7 @@ extern NSString *const kFHToastCountKey;
     
     if((!buildYear || [buildYear isEqualToString:@""]) && _neighborhoodDetailModel){
         NSArray *baseInfos = _neighborhoodDetailModel.data.baseInfo;
-        for (FHDetailNeighborhoodDataBaseInfoModel *model in baseInfos) {
+        for (FHHouseBaseInfoModel *model in baseInfos) {
             if([model.attr isEqualToString:@"建造年代"]){
                 if(model.value.length >= 4){
                     buildYear = [model.value substringToIndex:4];

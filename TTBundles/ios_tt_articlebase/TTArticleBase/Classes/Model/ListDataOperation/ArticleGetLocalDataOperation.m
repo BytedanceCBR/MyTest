@@ -23,7 +23,8 @@
 //#import "FRCommentRepost.h"
 #import "TTMonitor.h"
 //#import "TTFollowCategoryFetchExtraManager.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import "SSCommonLogic.h"
 
 inline NSInteger getLocalNormalLoadCount() {

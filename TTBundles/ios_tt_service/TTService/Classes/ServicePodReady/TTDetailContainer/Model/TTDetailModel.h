@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) TTVideoShareMovie *shareMovie;
 
+@property (nonatomic, strong, nullable) NSDictionary *reportParams;
+
 /**
  *  adOpenUrl
  */

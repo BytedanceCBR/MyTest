@@ -1916,6 +1916,12 @@
     [params setValue:_list_entrance forKey:@"list_entrance"];
     [params setValue:_source forKey:@"source"];
     [params setValue:_gd_ext_json forKey:@"gd_ext_json"];
+    [params setValue:_answer_type forKey:@"answer_type"];
+    [params setValue:_content_rich_span forKey:@"content_rich_span"];
+    [params setValue:_image_uris forKey:@"image_uris"];
+    [params setValue:_video_id forKey:@"video_id"];
+    [params setValue:_video_poster forKey:@"video_poster"];
+    [params setValue:_video_duration forKey:@"video_duration"];
 
     return params;
 }

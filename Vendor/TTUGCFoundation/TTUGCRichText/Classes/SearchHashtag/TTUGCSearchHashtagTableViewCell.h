@@ -9,17 +9,27 @@
 
 #import "SSThemed.h"
 #import "FRApiModel.h"
+#import "TTUGCHashtagModel.h"
+#import <TTAvatar/SSAvatarView.h>
 
-@class SSAvatarView;
+@interface TTUGCSearchHashtagTableHeaderViewCell : SSThemedTableViewCell
+
+@property (nonatomic, strong) SSThemedLabel *titleLabel;
+@property (nonatomic, strong) SSThemedView *separatorView;
+
+- (void)configWithHashtagHeaderModel:(TTUGCHashtagHeaderModel *)hashtagHeaderModel;
+
+@end
 
 @interface TTUGCSearchHashtagTableViewCell : SSThemedTableViewCell
 
 @property (nonatomic, strong) SSAvatarView *avatarView;
 @property (nonatomic, strong) SSThemedLabel *nameLabel;
 @property (nonatomic, strong) SSThemedLabel *descLabel;
+@property (nonatomic, strong) SSThemedLabel *discussLabel;
 @property (nonatomic, strong) SSThemedImageView *cornerImageView;
 @property (nonatomic, strong) SSThemedView *bottomLineView;
 
-- (void)configWithHashtagModel:(FRPublishPostSearchHashtagStructModel *)hashtagModel row:(NSInteger)row;
+- (void)configWithHashtagModel:(TTUGCHashtagModel *)hashtagModel row:(NSInteger)row longSeparatorLine:(BOOL)longSeparatorLine;
 
 @end

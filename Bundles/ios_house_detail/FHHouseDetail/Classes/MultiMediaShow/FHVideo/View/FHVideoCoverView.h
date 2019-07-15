@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString *imageUrl;
 @property(nonatomic , weak) id<FHVideoCoverViewDelegate> delegate;
 
+-(void)showWithImageUrl:(NSString *)imageUrl placeHoder:(UIImage *)placeHolder;
+
 @end
 
 NS_ASSUME_NONNULL_END

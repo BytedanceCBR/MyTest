@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 // FHDetailPropertyListModel
 @interface FHDetailPropertyListModel : FHDetailBaseModel
 
-@property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) NSArray<FHHouseCoreInfoModel> *baseInfo;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraModel *extraInfo;
 @property (nonatomic, strong , nullable) FHRentDetailDataBaseExtraModel *rentExtraInfo;
 @property (nonatomic, strong , nullable) FHDetailDataCertificateModel *certificate ;

@@ -165,6 +165,7 @@
     @"groupId": @"group_id",
     @"salesInfo": @"sales_info",
     @"desc": @"description",
+    @"houseVideo": @"house_video"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -206,6 +207,7 @@
 //    houseItemsModel.displayStatsInfo = self.salesInfo;
     houseItemsModel.houseImage = self.images;
     houseItemsModel.tags = self.tags;
+    houseItemsModel.houseVideo = self.houseVideo;
     
     return houseItemsModel;
 }

@@ -11,6 +11,11 @@
 #import "SSADManager.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <FHEnvContext.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_MEDIUM);
+
+extern BOOL kFHInAppPushTipsHidden;
 
 @implementation TTOpenURLTask
 
@@ -25,11 +30,25 @@
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
     
     [FHEnvContext sharedInstance].refreshConfigRequestType = @"link_launch";
+    // 部分页面不支持Push跳转
+    if (kFHInAppPushTipsHidden) {
+        return NO;
+    }
     BOOL ret = [[TTRoute sharedRoute] canOpenURL:url];
     if (ret && [SharedAppDelegate appTopNavigationController]) {
         [SSADManager shareInstance].splashADShowType = SSSplashADShowTypeHide;
         [[self class] sendLaunchTrackIfNeededWithUrl:url];
         [[TTRoute sharedRoute] openURLByPushViewController:url];
+    }else if ([url.host isEqualToString:@"main"]){
+        //snssdk1370://main?select_tab=tab_message
+        TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
+        NSDictionary* params = [obj queryParams];
+        if (params != nil) {
+            NSString* target = params[@"select_tab"];
+            if (target != nil && target.length > 0) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
+            }
+        }
     }
     
     return ret;

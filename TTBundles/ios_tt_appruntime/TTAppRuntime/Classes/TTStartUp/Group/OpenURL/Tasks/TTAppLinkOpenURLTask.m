@@ -9,6 +9,9 @@
 #import "TTAppLinkOpenURLTask.h"
 #import "TTAppLinkManager.h"
 #import <TTArticleBase/ExploreLogicSetting.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTAppLinkOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_HIGH+3);
 
 @implementation TTAppLinkOpenURLTask
 

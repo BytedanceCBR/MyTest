@@ -29,6 +29,8 @@
         _tipLabel.font = [UIFont themeFontRegular:14];
         _tipLabel.textColor = [UIColor themeGray3];
         _tipLabel.text = @"网络异常，请检查网络连接";
+        _tipLabel.numberOfLines = 2;
+        _tipLabel.textAlignment = NSTextAlignmentCenter;
         [_tipLabel sizeToFit];
         
         _retryButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -50,7 +52,7 @@
         
         [_tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self);
-            make.height.mas_equalTo(20);
+//            make.height.mas_equalTo(20);
             make.left.mas_greaterThanOrEqualTo(20);
             make.right.mas_lessThanOrEqualTo(self).offset(-20);
             make.centerY.mas_equalTo(self).offset(20);
@@ -131,6 +133,13 @@
     UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return theImage;
+}
+
+- (void)setUpHomeRedBtn
+{
+    _retryButton.titleLabel.font = [UIFont themeFontMedium:14];
+    [_retryButton setBackgroundImage:[self createImageWithColor:[UIColor themeRed1]] forState:UIControlStateNormal];
+    [_retryButton setBackgroundImage:[self createImageWithColor:[[UIColor themeRed1] colorWithAlphaComponent:0.1]] forState:UIControlStateHighlighted];
 }
 
 - (void)showEmptyWithTip:(NSString *)tips errorImageName:(NSString *)imageName showRetry:(BOOL)showen {

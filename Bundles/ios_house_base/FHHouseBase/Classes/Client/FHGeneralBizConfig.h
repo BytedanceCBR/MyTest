@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString *const kFHPhoneNumberCacheKey;
+
 @interface FHGeneralBizConfig : NSObject
 @property (nonatomic, strong) FHConfigDataModel *configCache;
 

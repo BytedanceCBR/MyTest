@@ -8,6 +8,10 @@
 #import <JSONModel/JSONModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
+@protocol FHImageModel <NSObject>
+
+
+@end
 
 @interface FHImageModel : JSONModel
 

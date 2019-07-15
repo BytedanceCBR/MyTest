@@ -52,12 +52,22 @@
     }];
 }
 
-- (void)setImageUrl:(NSString *)imageUrl {
+-(void)showWithImageUrl:(NSString *)imageUrl placeHoder:(UIImage *)placeHolder
+{
     _imageUrl = imageUrl;
     
     NSURL *url = [NSURL URLWithString:imageUrl];
-    [self.coverView bd_setImageWithURL:url placeholder:self.placeHolder];
+    if(!placeHolder){
+        placeHolder = self.placeHolder;
+    }
+    [self.coverView bd_setImageWithURL:url placeholder:placeHolder];
 }
+
+- (void)setImageUrl:(NSString *)imageUrl {
+
+    [self showWithImageUrl:imageUrl placeHoder:nil];
+}
+
 
 - (void)playVideo {
     if(self.delegate && [self.delegate respondsToSelector:@selector(playVideo)]){

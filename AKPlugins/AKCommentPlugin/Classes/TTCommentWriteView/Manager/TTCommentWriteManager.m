@@ -24,7 +24,8 @@
 #import "TTCommentDataManager.h"
 #import "TTCommentDefines.h"
 #import "TTCommentWriteView.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import "FHTraceEventUtils.h"
 
 #define Persistence [TTPersistence persistenceWithName:NSStringFromClass(self.class)]
@@ -110,6 +111,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
 
     self = [super init];
     if (self) {
+        self.enter_type = @"comment";
         self.delegate = commentViewDelegate;
         self.commentRepostParamsBlock = [commentRepostBlock copy];
         self.extraTrackDict = [extraTrackDict copy];
@@ -193,7 +195,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
     }
 
     //settings配置
-    BOOL isConfigureShow = [TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable];
+    BOOL isConfigureShow = [TTKitchen getBOOL:kTTKCommentRepostFirstDetailEnable];
 
     NSNumber *conditionIsShowRepostEntrance = [conditions tt_objectForKey:@"kQuickInputViewConditionShowRepostEntrance"];
     //外部条件
@@ -604,11 +606,14 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
             
             NSMutableDictionary *params = [NSMutableDictionary dictionary];
             if (self.enterFrom.length > 0) {
-                
                 [params setObject:self.enterFrom forKey:@"enter_from"];
-                [params setObject:@"comment" forKey:@"enter_type"];
+            }
+            if (self.enter_type.length > 0) {
+                [params setObject:self.enter_type forKey:@"enter_type"];
             }
 
+            params[@"from_ugc"] = @(YES);
+            
             [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
                 if (type == TTAccountAlertCompletionEventTypeDone) {
                     //登录成功 走发送逻辑

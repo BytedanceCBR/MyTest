@@ -8,6 +8,7 @@
 #import "WDAnswerService.h"
 #import <TTBaseLib/JSONAdditions.h>
 #import "WDNetWorkPluginManager.h"
+#import "FHCommonApi.h"
 
 @interface WDAnswerService ()
 
@@ -77,13 +78,31 @@
     requestModel.digg_type = @(diggType);
     requestModel.enter_from = enterFrom;
     requestModel.api_param = [apiParam tt_JSONRepresentation];
-    
-    [[WDNetWorkPluginManager sharedInstance_tt] requestModel:requestModel callback:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel) {
+    NSInteger action = 0;
+    if (diggType == WDDiggTypeDigg) {
+        action = 1;
+    } else if (diggType == WDDiggTypeUnDigg) {
+        action = 0;
+    }
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    dict[@"enter_from"] = enterFrom;
+    dict[@"page_type"] = apiParam[@"page_type"];
+    if (!apiParam[@"page_type"]) {
+        dict[@"page_type"] = @"answer";
+    }
+    // 新接口
+    [FHCommonApi requestCommonDigg:ansID groupType:FHDetailDiggTypeANSWER action:action tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (finishBlock) {
             finishBlock(error);
         }
         [[WDAnswerService sharedInstance] broadcastAnswerWithAnsId:ansID actionType:WDAnswerActionTypeDigg error:error];
     }];
+//    [[WDNetWorkPluginManager sharedInstance_tt] requestModel:requestModel callback:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel) {
+//        if (finishBlock) {
+//            finishBlock(error);
+//        }
+//        [[WDAnswerService sharedInstance] broadcastAnswerWithAnsId:ansID actionType:WDAnswerActionTypeDigg error:error];
+//    }];
 }
 
 + (void)buryWithAnswerID:(NSString *)ansID
@@ -190,6 +209,7 @@
     }
     WDWendaCommitPostanswerRequestModel *request = [[WDWendaCommitPostanswerRequestModel alloc] init];
     request.qid = qid;
+    request.answer_type = @(WDAnswerTypeRichText); // 目前定义的枚举和服务端对应
     request.content = content;
     request.api_param = [apiParameter tt_JSONRepresentation];
     request.ban_comment = isBanComment ? @(1): (0);
@@ -233,6 +253,56 @@
             finishBlock((WDWendaCommitEditanswerResponseModel *)responseModel, error);
         }
         [[WDAnswerService sharedInstance] broadcastAnswerWithAnsId:ansID actionType:WDAnswerActionTypeEdit error:error];
+    }];
+}
+
+
++ (void)postAnswerWithQid:(NSString *)qid
+               answerType:(WDAnswerType)answerType
+                  content:(NSString *)content
+             richSpanText:(NSString *)richSpanText
+                imageUris:(NSArray<NSString *> *)imageUris
+                  videoID:(NSString *)videoID
+            videoCoverURI:(NSString *)videoCoverURI
+            videoDuration:(NSNumber *)videoDuration
+             isBanComment:(BOOL)isBanComment
+             apiParameter:(NSDictionary *)apiParameter
+                   source:(NSString *)source
+             listEntrance:(NSString *)listEntrance
+                gdExtJson:(NSString *)gdExtJson
+              finishBlock:(void(^)(WDWendaCommitPostanswerResponseModel * responseModel, NSError * error))finishBlock {
+    if (isEmptyString(qid)) {
+        return;
+    }
+    WDWendaCommitPostanswerRequestModel *request = [[WDWendaCommitPostanswerRequestModel alloc] init];
+    request.qid = qid;
+    request.answer_type = @(answerType); // 目前定义的枚举和服务端对应
+    request.content = content;
+    request.content_rich_span = richSpanText;
+    request.image_uris = [imageUris tt_JSONRepresentation];
+    request.video_id = videoID;
+    request.video_poster = videoCoverURI;
+    request.video_duration = videoDuration ? @(videoDuration.unsignedIntegerValue) : nil; // 问答服务端只解析int32类型，不解析double
+    request.api_param = [apiParameter tt_JSONRepresentation];
+    request.ban_comment = isBanComment ? @(1): (0);
+    if (!isEmptyString(source)) {
+        request.source = source;
+    }
+    if (!isEmptyString(listEntrance)) {
+        request.list_entrance = listEntrance;
+    }
+    if (!isEmptyString(gdExtJson)) {
+        request.gd_ext_json = gdExtJson;
+    }
+    [[WDNetWorkPluginManager sharedInstance_tt] requestModel:request callback:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel) {
+        WDWendaCommitPostanswerResponseModel *resp = (WDWendaCommitPostanswerResponseModel *)responseModel;
+        if (finishBlock) {
+            finishBlock(resp, error);
+        }
+        [[WDAnswerService sharedInstance] broadcastAnswerWithAnsId:resp.ansid actionType:WDAnswerActionTypePost error:error];
+        if (!error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:TTWDFollowPublishQASuccessForPushGuideNotification object:nil userInfo:@{@"reason": @(WDPushNoteGuideFireReasonWDPublishAnswer)}];
+        }
     }];
 }
 

@@ -31,7 +31,9 @@
 //#import <TTAppRuntime/TTIntroduceViewTask.h>
 #import <TTAppRuntime/TTStartupTasksTracker.h>
 #import <TTAppRuntime/TTProjectLogicManager.h>
+#import "TTLaunchDefine.h"
 
+DEC_TASK_N(FHCHandleAPNSTask,FHTaskTypeSerial,TASK_PRIORITY_HIGH+12);
 
 static NSString * const kTTAPNSRemoteNotificationDict = @"kTTAPNSRemoteNotificationDict";
 static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
@@ -89,6 +91,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions
 {
+    [NewsBaseDelegate startRegisterRemoteNotification];
     //如果展示开屏广告时候有弹窗延迟弹出
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(splashViewDisappearAnimationDidFinished:) name:@"kTTAdSplashShowFinish" object:nil];
     
@@ -102,7 +105,6 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
             [[ArticleAPNsManager sharedManager] handleRemoteNotification:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]];
         });
     }
-    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:0.5];
 }
 
 #pragma mark - APNsManagerDelegate
@@ -194,12 +196,12 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     SSLog(@">>>>> Launch: receiveRemoteNoti: %@", userInfo);
-    if (!SSIsEmptyDictionary(userInfo)) {
-        NSString *userInfoStr = [NSString stringWithFormat:@"%@",userInfo];
-        if (!isEmptyString(userInfoStr)) {
-            [UIPasteboard generalPasteboard].string = userInfoStr;
-        }
-    }
+//    if (!SSIsEmptyDictionary(userInfo)) {
+//        NSString *userInfoStr = [NSString stringWithFormat:@"%@",userInfo];
+//        if (!isEmptyString(userInfoStr)) {
+//            [UIPasteboard generalPasteboard].string = userInfoStr;
+//        }
+//    }
     if (userInfo != nil) {
         [TTAdSplashMediator shareInstance].splashADShowType = TTAdSplashShowTypeHide;
     }

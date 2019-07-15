@@ -27,7 +27,7 @@
 #import <TTPlatformUIModel/TTGroupModel.h>
 #import <TTServiceKit/TTModuleBridge.h>
 #import <TTNetworkManager/TTNetworkUtil.h>
-
+#import "FHUserTracker.h"
 
 
 static NSString *kTTUniversalCommentCellLiteIdentifier = @"TTUniversalCommentCellLiteIdentifier";
@@ -412,8 +412,15 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
     [dic setValue:model.userID forKey:@"to_user_id"];
     [dic setValue:model.commentID forKey:@"comment_id"];
     [dic setValue:@"detail" forKey:@"position"];
-    
-    [TTTracker eventV3:@"comment_enter" params:dic];
+    if (self.enter_from.length > 0) {
+        [dic setValue:self.enter_from forKey:@"enter_from"];
+    }
+    if ([self.tracerDict isKindOfClass:[NSDictionary class]]) {
+        dic[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
+        dic[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+        dic[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
+    }
+    [FHUserTracker writeEvent:@"comment_enter" params:dic];
 }
 
 - (void)p_profileFillAction {
@@ -726,6 +733,7 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
         commentCell.delegate = self;
         TTUniversalCommentLayout *layout = layoutArray[indexPath.row];
         [commentCell tt_refreshConditionWithLayout:layout model:commentModel];
+        commentCell.tracerDict = [self.tracerDict copy];
         return commentCell;
     } else {
         return [[UITableViewCell alloc] init];
@@ -840,6 +848,9 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
             UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"确定删除此评论?" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确认删除" otherButtonTitles:nil, nil];
             actionSheet.tag = kDeleteCommentActionSheetTag;
             [actionSheet showInView:self.view];
+        }
+        if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentViewController:deleteCommentWithCommentModel:)]) {
+            [self.delegate tt_commentViewController:self deleteCommentWithCommentModel:model];
         }
     } else {
         self.needDeleteCommentModel = nil;

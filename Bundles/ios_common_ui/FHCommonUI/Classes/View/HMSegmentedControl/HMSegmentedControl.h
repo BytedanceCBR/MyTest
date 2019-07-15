@@ -64,6 +64,21 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
 @property (nonatomic, strong) NSArray<UIImage *> *sectionSelectedImages;
 
 /**
+ 目前只在HMSegmentedControlTypeText模式下支持
+ 
+ 格式 @[@1,@0]  1为显示 0为不显示
+ */
+@property (nonatomic, strong) NSArray *sectionRedPoints;
+
+/**
+ 目前只在HMSegmentedControlTypeText模式下支持
+ 
+ 格式 @[@"2",@"",@""]
+ */
+@property (nonatomic, strong) NSArray *sectionMessageTips;
+
+
+/**
   增加是否需要判断网络
  */
 @property (nonatomic, assign) BOOL isNeedNetworkCheck;
@@ -75,6 +90,11 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
  Alternativly, you could use `addTarget:action:forControlEvents:`
  */
 @property (nonatomic, copy) IndexChangeBlock indexChangeBlock;
+
+/*
+ 相同按钮重复点击事件
+ */
+@property (nonatomic, copy) IndexChangeBlock indexRepeatBlock;
 
 /**
  Used to apply custom text styling to titles when set.
@@ -246,6 +266,11 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
 @property (nonatomic, readwrite) UIEdgeInsets selectionIndicatorEdgeInsets;
 
 /**
+ 设置indicator为图片。需要同时设置width和height才能生效
+ */
+@property (nonatomic, readwrite) UIImage *selectionIndicatorImage;
+
+/**
  Inset left and right edges of segments.
  
  Default is UIEdgeInsetsMake(0, 5, 0, 5)
@@ -266,4 +291,5 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
 - (void)setIndexChangeBlock:(IndexChangeBlock)indexChangeBlock;
 - (void)setTitleFormatter:(HMTitleFormatterBlock)titleFormatter;
 - (CGFloat)totalSegmentedControlWidth;
+- (void)setScrollValue:(CGFloat)value isDirectionLeft:(BOOL)isDirectionLeft;
 @end

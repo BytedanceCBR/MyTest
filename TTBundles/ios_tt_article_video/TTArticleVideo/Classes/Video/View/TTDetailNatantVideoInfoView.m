@@ -42,7 +42,8 @@
 #import "TTActivityShareSequenceManager.h"
 #import "TTMessageCenter.h"
 #import "NSDictionary+TTGeneratedContent.h"
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
@@ -1150,7 +1151,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     }else if (itemType == TTActivityTypeDingTalk){
         return @"钉钉";
     }else {
-        return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
+        return [TTKitchen getString:kTTKUGCRepostWordingShareIconTitle];
     }
 }
 

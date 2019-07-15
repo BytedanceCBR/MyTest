@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/18.
 //
 //
-
+#if 0
 #import "TTStartupGroup.h"
 
 @interface TTStartupUIGroup : TTStartupGroup
@@ -22,3 +22,4 @@ typedef NS_ENUM(NSUInteger, TTUIStartupType) {
 + (TTStartupUIGroup *)webviewGroup;
 
 @end
+#endif

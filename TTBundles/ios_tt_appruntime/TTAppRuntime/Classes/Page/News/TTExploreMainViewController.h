@@ -29,6 +29,9 @@
 //用来在打点show时区分是否是频道切换的标志位
 @property (nonatomic, assign)BOOL isChangeChannel;
 
+//首页改造新增
+@property (nonatomic, assign) BOOL isShowTopSearchPanel;
+
 + (TTSeachBarView *)searchBar;
 
 + (BOOL)isNewFeed;

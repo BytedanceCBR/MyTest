@@ -16,6 +16,9 @@
 #import "SSCommonLogic.h"
 #import <TTArticleBase/ExploreLogicSetting.h>
 #import <TTBaseLib/TTBaseMacro.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTCleanDatabaseTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+8);
 
 @implementation TTCleanDatabaseTask
 

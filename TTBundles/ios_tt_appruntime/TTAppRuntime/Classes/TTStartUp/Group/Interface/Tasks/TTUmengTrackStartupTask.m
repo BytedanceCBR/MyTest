@@ -10,7 +10,9 @@
 #import "NewsBaseDelegate.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/TTStringHelper.h>
+#import "TTLaunchDefine.h"
 
+DEC_TASK("TTUmengTrackStartupTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+3);
 
 @implementation TTUmengTrackStartupTask
 

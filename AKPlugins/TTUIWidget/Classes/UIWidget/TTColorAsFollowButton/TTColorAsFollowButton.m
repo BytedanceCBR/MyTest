@@ -9,7 +9,8 @@
 #import "TTColorAsFollowButton.h"
 #import <TTUGCAttributedLabel.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTKitchen/TTKitchenHeader.h>
+#import <TTKitchen/TTKitchen.h> 
+#import <TTKitchen/TTCommonKitchenConfig.h>
 
 @implementation TTColorAsFollowButton
 
@@ -49,7 +50,7 @@
 }
 
 - (BOOL)followButtonColorStyleIsRed {
-    NSString *colorStyle = [TTKitchen getString:kKCUGCFollowButtonColorStyle];
+    NSString *colorStyle = [TTKitchen getString:kTTKUGCFollowButtonColorStyle];
 
     return [colorStyle isEqualToString:@"red"];
 }

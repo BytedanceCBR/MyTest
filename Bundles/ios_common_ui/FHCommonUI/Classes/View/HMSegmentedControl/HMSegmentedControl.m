@@ -11,6 +11,7 @@
 #import <math.h>
 #import "FHEnvContext.h"
 #import "ToastManager.h"
+#import "TTBadgeNumberView.h"
 
 @interface HMScrollView : UIScrollView
 @end
@@ -23,6 +24,7 @@
 @property (nonatomic, readwrite) CGFloat segmentWidth;
 @property (nonatomic, readwrite) NSArray<NSNumber *> *segmentWidthsArray;
 @property (nonatomic, strong) HMScrollView *scrollView;
+@property (nonatomic, strong) TTBadgeNumberView *tipView;
 
 @end
 
@@ -186,6 +188,20 @@
     [self setNeedsDisplay];
 }
 
+- (void)setSectionRedPoints:(NSArray *)sectionRedPoints {
+    _sectionRedPoints = sectionRedPoints;
+    
+    [self setNeedsLayout];
+    [self setNeedsDisplay];
+}
+
+- (void)setSectionMessageTips:(NSArray *)sectionMessageTips {
+    _sectionMessageTips = sectionMessageTips;
+    
+    [self setNeedsLayout];
+    [self setNeedsDisplay];
+}
+
 - (void)setSectionImages:(NSArray<UIImage *> *)sectionImages {
     _sectionImages = sectionImages;
     
@@ -279,8 +295,13 @@
     
     self.selectionIndicatorArrowLayer.backgroundColor = self.selectionIndicatorColor.CGColor;
     
-    self.selectionIndicatorStripLayer.backgroundColor = self.selectionIndicatorColor.CGColor;
-    self.selectionIndicatorStripLayer.cornerRadius = self.selectionIndicatorCornerRadius;
+    if(self.selectionIndicatorImage){
+        self.selectionIndicatorStripLayer.contents = (__bridge id)self.selectionIndicatorImage.CGImage;
+        self.selectionIndicatorStripLayer.contentsGravity = kCAGravityResizeAspect;
+    }else{
+        self.selectionIndicatorStripLayer.backgroundColor = self.selectionIndicatorColor.CGColor;
+        self.selectionIndicatorStripLayer.cornerRadius = self.selectionIndicatorCornerRadius;
+    }
     
     self.selectionIndicatorBoxLayer.backgroundColor = self.selectionIndicatorBoxColor.CGColor;
     self.selectionIndicatorBoxLayer.borderColor = self.selectionIndicatorBoxColor.CGColor;
@@ -341,6 +362,45 @@
             titleLayer.contentsScale = [[UIScreen mainScreen] scale];
             
             [self.scrollView.layer addSublayer:titleLayer];
+            
+            //显示红点
+            if(idx < _sectionRedPoints.count){
+                BOOL isShowRed = [_sectionRedPoints[idx] boolValue];
+                if(isShowRed){
+                    UIImage *icon = [UIImage imageNamed:@"seg_red_point"];
+                    CGFloat imageWidth = icon.size.width;
+                    CGFloat imageHeight = icon.size.height;
+                    CGFloat red_y = roundf(CGRectGetMinY(rect)  - imageHeight/2.0f + 3.0f);
+                    CGFloat red_x = roundf(CGRectGetMaxX(rect)  - imageWidth/2.0f);
+                    CGRect redPointRect = CGRectMake(red_x, red_y, imageWidth, imageHeight);
+                    
+                    CALayer *imageLayer = [CALayer layer];
+                    imageLayer.frame = redPointRect;
+                    imageLayer.contents = (id)icon.CGImage;
+                    [self.scrollView.layer addSublayer:imageLayer];
+                }
+            }
+            
+            //显示数字
+            if(idx < _sectionMessageTips.count){
+                NSInteger tipsCount = [_sectionMessageTips[idx] integerValue];
+                if(tipsCount > 0){
+                    self.tipView = [[TTBadgeNumberView alloc] init];
+                    _tipView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
+                    _tipView.badgeNumber = tipsCount;
+                    
+                    CGFloat width = self.tipView.frame.size.width;
+                    CGFloat height = self.tipView.frame.size.height;
+                    CGFloat red_y = roundf(CGRectGetMinY(rect) - height/2 + 1.0f);
+                    CGFloat red_x = roundf(CGRectGetMaxX(rect) - 5.0f);
+                    CGRect redPointRect = CGRectMake(red_x, red_y, width, height);
+                    
+                    _tipView.frame = redPointRect;
+                    [self.scrollView.layer addSublayer:_tipView.layer];
+                }else{
+                    self.tipView.badgeNumber = TTBadgeNumberHidden;
+                }
+            }
             
             // Vertical Divider
             if (self.isVerticalDividerEnabled && idx > 0) {
@@ -647,7 +707,11 @@
                 
                 if (self.selectedSegmentIndex < self.segmentWidthsArray.count) {
                     
-                    return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
+                    if (self.selectionIndicatorWidth != CGFLOAT_MIN) {
+                        return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left + ([[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorWidth) / 2, indicatorYOffset, self.selectionIndicatorWidth - (self.selectionIndicatorEdgeInsets.left + self.selectionIndicatorEdgeInsets.right), self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
+                    } else {
+                        return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
+                    }
                 }
             }
             
@@ -818,10 +882,15 @@
             sectionsCount = [self.sectionTitles count];
         }
         
-        if (segment != self.selectedSegmentIndex && segment < sectionsCount) {
-            // Check if we have to do anything with the touch event
-            if (self.isTouchEnabled)
+        // Check if we have to do anything with the touch event
+        if (segment < sectionsCount && self.isTouchEnabled) {
+            if(segment != self.selectedSegmentIndex){
                 [self setSelectedSegmentIndex:segment animated:self.shouldAnimateUserSelection notify:YES];
+            }else{
+                if(self.indexRepeatBlock){
+                    self.indexRepeatBlock(segment);
+                }
+            }
         }
     }
 }
@@ -888,13 +957,6 @@
 }
 
 - (void)setSelectedSegmentIndex:(NSUInteger)index animated:(BOOL)animated notify:(BOOL)notify {
-    
-    if (self.isNeedNetworkCheck) {
-        if (![FHEnvContext isNetworkConnected]) {
-            [[ToastManager manager] showToast:@"网络异常"];
-            return;
-        }
-    }
     
     _selectedSegmentIndex = index;
     [self setNeedsDisplay];
@@ -997,6 +1059,23 @@
     }
     
     return [resultingAttrs copy];
+}
+
+- (void)setScrollValue:(CGFloat)value isDirectionLeft:(BOOL)isDirectionLeft {
+    CGFloat width = self.segmentWidth;
+    if (self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic) {
+        if(isDirectionLeft && (self.selectedSegmentIndex - 1) >= 0){
+            width = ([[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex - 1)] floatValue] + [[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex)] floatValue])/2;
+        }else if(!isDirectionLeft && (self.selectedSegmentIndex + 1) < self.segmentWidthsArray.count){
+            width = ([[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex + 1)] floatValue] + [[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex)] floatValue])/2;
+        }else{
+            width = [[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex)] floatValue];
+        }
+    }
+    CGRect frame = self.selectionIndicatorStripLayer.frame;
+    CGFloat diff = value * width;
+    frame.origin.x += diff;
+    self.selectionIndicatorStripLayer.frame = frame;
 }
 
 @end

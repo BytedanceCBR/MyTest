@@ -20,6 +20,9 @@
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTBaseLib/TTBaseMacro.h>
+#import "TTLaunchDefine.h"
+
+DEC_TASK("TTUniversalLinksTask",FHTaskTypeService,TASK_PRIORITY_HIGH+7);
 
 @implementation TTUniversalLinksTask
 

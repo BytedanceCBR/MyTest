@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTUIWidget/TTUGCAttributedLabel.h>
+#import <TTUGCFoundation/TTUGCAttributedLabel.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import "TTCommentDetailReplyCommentModel.h"
 

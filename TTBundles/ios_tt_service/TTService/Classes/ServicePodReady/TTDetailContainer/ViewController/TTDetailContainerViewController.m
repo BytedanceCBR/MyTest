@@ -30,6 +30,7 @@
 #import "TTArticleDetailViewController.h"
 #import <FHCHousePush/FHPushAuthorizeManager.h>
 #import <FHHouseBase/FHTraceEventUtils.h>
+#import <FHUtils.h>
 
 @interface TTDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol>
 
@@ -43,6 +44,17 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         TTDetailContainerViewModel * viewModel = [[TTDetailContainerViewModel alloc] initWithRouteParamObj:paramObj];
+        if([paramObj.allParams[@"report_params"] isKindOfClass:[NSString class]])
+        {
+            NSDictionary *reportDict = [FHUtils dictionaryWithJsonString:paramObj.allParams[@"report_params"]];
+            
+            if([reportDict isKindOfClass:[NSDictionary class]])
+            {
+                viewModel.reportParams = reportDict;
+                viewModel.detailModel.reportParams = reportDict;
+            }
+        }
+        
         self.viewModel = viewModel;
     }
     return self;

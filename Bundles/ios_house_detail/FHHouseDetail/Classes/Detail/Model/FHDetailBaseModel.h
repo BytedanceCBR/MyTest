@@ -8,7 +8,10 @@
 #import <Foundation/Foundation.h>
 #import "FHHouseListModel.h"
 #import "FHBaseModelProtocol.h"
+#import "FHHouseType.h"
 #import <FHHouseBase/FHFillFormAgencyListItemModel.h>
+#import <FHHouseBase/FHImageModel.h>
+#import <FHHouseBase/FHHouseCoreInfoModel.h>
 
 @class FHDetailNewDataSmallImageGroupModel;
 
@@ -21,18 +24,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@protocol FHDetailHouseDataItemsHouseImageModel<NSObject>
-@end
-
-@interface  FHDetailHouseDataItemsHouseImageModel  : JSONModel<FHDetailPhotoHeaderModelProtocol>
-
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
-
-@end
+//@protocol FHDetailHouseDataItemsHouseImageModel<NSObject>
+//@end
+//
+//@interface  FHDetailHouseDataItemsHouseImageModel  : JSONModel<FHDetailPhotoHeaderModelProtocol>
+//
+//@property (nonatomic, copy , nullable) NSString *url;
+//@property (nonatomic, copy , nullable) NSString *width;
+//@property (nonatomic, strong , nullable) NSArray *urlList;
+//@property (nonatomic, copy , nullable) NSString *uri;
+//@property (nonatomic, copy , nullable) NSString *height;
+//
+//@end
 
 @interface FHDetailBaseModel : NSObject
 
@@ -41,7 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailPhotoHeaderModel : FHDetailBaseModel
 @property (nonatomic,assign)BOOL isNewHouse;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel *> *smallImageGroup;
-@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel *> *houseImage;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel *> *houseImage;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel *> *instantHouseImages;//列表页小图
+@property (nonatomic, assign) BOOL isInstantData;
 @end
 
 @interface FHDetailShareInfoModel : JSONModel
@@ -51,6 +56,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy , nullable) NSString *shareUrl;
 @property (nonatomic, copy , nullable) NSString *title;
+@end
+
+@interface FHDetailContactImageTagModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *imageUrl;
+
 @end
 
 @protocol FHDetailContactModel<NSObject>
@@ -81,6 +92,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *imprId;
 
 @property (nonatomic, copy , nullable) NSString *noticeDesc;
+@property (nonatomic, strong , nullable) FHDetailContactImageTagModel *imageTag;
+
+@property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 
 - (nonnull id)copyWithZone:(nullable NSZone *)zone;
 
@@ -134,8 +148,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 // 二手房、租房共用 协议
-@protocol FHDetailDataBaseInfoModel<NSObject>
-@end
+//@protocol FHDetailDataBaseInfoModel<NSObject>
+//@end
 
 @protocol FHDetailPriceTrendModel<NSObject>
 @end
@@ -185,4 +199,28 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *reportUrl;
 @end
 
+@interface FHDetailCommunityEntryActiveCountInfoModel : JSONModel
+@property (nonatomic, copy , nullable) NSNumber *count;
+@property (nonatomic, copy , nullable) NSString *numColor;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@end
+
+
+@interface FHDetailCommunityEntryActiveInfoModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *activeUserAvatar;
+@property (nonatomic, copy , nullable) NSString *suggestInfo;
+@property (nonatomic, copy , nullable) NSString *suggestInfoColor;
+@end
+
+@protocol FHDetailCommunityEntryActiveInfoModel;
+
+@interface FHDetailCommunityEntryModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *socialGroupId;
+@property (nonatomic, strong , nullable) FHDetailCommunityEntryActiveCountInfoModel *activeCountInfo;
+@property (nonatomic, strong , nullable) NSArray<FHDetailCommunityEntryActiveInfoModel> *activeInfo;
+@property (nonatomic, copy , nullable) NSString *socialGroupSchema;
+@property (nonatomic, assign) FHHouseType houseType;
+@property (nonatomic, copy) NSDictionary *logPb;
+@end
 NS_ASSUME_NONNULL_END
