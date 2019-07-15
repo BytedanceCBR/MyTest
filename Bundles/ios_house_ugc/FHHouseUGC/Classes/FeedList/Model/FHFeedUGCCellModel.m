@@ -9,6 +9,7 @@
 #import "FHMainApi.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "TTBaseMacro.h"
+#import "FHUGCCellHelper.h"
 
 @implementation FHFeedUGCCellCommunityModel
 
@@ -113,6 +114,8 @@
         cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.openUrl;
         
+        [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
+        
         if(!isEmptyString(model.openUrl) && !isEmptyString(model.sourceDesc)){
             //针对问答的情况
             cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
@@ -161,6 +164,8 @@
     cellModel.groupId = model.threadId;
     cellModel.logPb = model.logPb;
     cellModel.showLookMore = YES;
+    
+    [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
     
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     community.name = model.community.name;

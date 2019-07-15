@@ -112,4 +112,118 @@
     }
 }
 
++ (void)setRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width {
+    TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
+    TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:model.content richSpans:richSpans];
+    
+    TTRichSpanText *threadContent = [[TTRichSpanText alloc] initWithText:@"" richSpanLinks:nil imageInfoModelDictionary:nil];
+    
+    if (!isEmptyString(model.title)) {
+        [threadContent appendText:[NSString stringWithFormat:@"【%@】",model.title]];
+    }
+    if (!isEmptyString(model.content)) {
+        [threadContent appendRichSpanText:richContent];
+    }
+    
+    if (!isEmptyString(threadContent.text)) {
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16];
+        if (attrStr) {
+            UIFont *font = [UIFont themeFontRegular:16];
+            NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
+            NSMutableDictionary *attributes = @{}.mutableCopy;
+            [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
+            [attributes setValue:font forKey:NSFontAttributeName];
+            
+            NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            
+            paragraphStyle.minimumLineHeight = 21;
+            paragraphStyle.maximumLineHeight = 21;
+            paragraphStyle.lineSpacing = 2;
+            
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+            
+            [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
+            
+            model.contentAStr = mutableAttributedString;
+            
+            NSInteger numberOfLines = 5;
+            
+            CGSize size = [self sizeThatFitsAttributedString:mutableAttributedString
+                                                              withConstraints:CGSizeMake(width, FLT_MAX)
+                                                             maxNumberOfLines:numberOfLines
+                                                       limitedToNumberOfLines:&numberOfLines];
+            model.contentHeight = size.height;
+        }
+    }
+}
+
++ (void)setArticleRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width {
+    TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
+    TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:model.title richSpans:richSpans];
+    
+    TTRichSpanText *threadContent = [[TTRichSpanText alloc] initWithText:@"" richSpanLinks:nil imageInfoModelDictionary:nil];
+    
+    if (!isEmptyString(model.title)) {
+        [threadContent appendRichSpanText:richContent];
+    }
+    
+    if (!isEmptyString(threadContent.text)) {
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16];
+        if (attrStr) {
+            UIFont *font = [UIFont themeFontRegular:16];
+            NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
+            NSMutableDictionary *attributes = @{}.mutableCopy;
+            [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
+            [attributes setValue:font forKey:NSFontAttributeName];
+            
+            NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            
+            paragraphStyle.minimumLineHeight = 21;
+            paragraphStyle.maximumLineHeight = 21;
+            paragraphStyle.lineSpacing = 2;
+            
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+            
+            [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
+            
+            model.contentAStr = mutableAttributedString;
+            
+            NSInteger numberOfLines = 3;
+            
+            CGSize size = [self sizeThatFitsAttributedString:mutableAttributedString
+                                             withConstraints:CGSizeMake(width, FLT_MAX)
+                                            maxNumberOfLines:numberOfLines
+                                      limitedToNumberOfLines:&numberOfLines];
+            model.contentHeight = size.height;
+        }
+    }
+}
+
++ (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model {
+    //内容
+    [label setText:model.contentAStr];
+    if(model.showLookMore){
+        label.attributedTruncationToken = [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:16]
+                                                             contentColor:[UIColor themeGray1]
+                                                                    color:[UIColor themeRed3]];
+    }
+}
+
++ (CGSize)sizeThatFitsAttributedString:(NSAttributedString *)attrStr
+                       withConstraints:(CGSize)size
+                      maxNumberOfLines:(NSUInteger)maxLine
+                limitedToNumberOfLines:(NSUInteger*)numberOfLines {
+    long lines = [TTUGCAttributedLabel numberOfLinesAttributedString:attrStr withConstraints:size.width];
+    
+    if (lines <= maxLine) { //用最大行数能显示全，就用最大行数显示
+        *numberOfLines = maxLine;
+    }
+    
+    return [TTUGCAttributedLabel sizeThatFitsAttributedString:attrStr
+                                              withConstraints:CGSizeMake(size.width, FLT_MAX)
+                                       limitedToNumberOfLines:*numberOfLines];
+}
+
 @end

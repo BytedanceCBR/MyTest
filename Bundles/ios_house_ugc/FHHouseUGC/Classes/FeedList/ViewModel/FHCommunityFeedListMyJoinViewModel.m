@@ -318,13 +318,15 @@
 
 #pragma mark - UITableViewDelegate
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
-    NSNumber *cellHeight = self.cellHeightCaches[tempKey];
-    if (cellHeight) {
-        return [cellHeight floatValue];
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
+        if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
+            return [cellClass heightForData:cellModel];
+        }
     }
-    return UITableViewAutomaticDimension;
+    return 44;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

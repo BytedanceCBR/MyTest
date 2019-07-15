@@ -7,10 +7,17 @@
 
 #import "FHArticlePureTitleCell.h"
 #import "FHArticleCellBottomView.h"
+#import "FHUGCCellHelper.h"
+#import "TTBaseMacro.h"
+
+#define maxLines 3
+#define bottomViewHeight 39
+#define guideViewHeight 27
+#define topMargin 15
 
 @interface FHArticlePureTitleCell ()
 
-@property(nonatomic ,strong) UILabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
 @property(nonatomic ,strong) FHArticleCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
@@ -40,8 +47,8 @@
 }
 
 - (void)initViews {
-    self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeGray1]];
-    _contentLabel.numberOfLines = 3;
+    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    _contentLabel.numberOfLines = maxLines;
     [self.contentView addSubview:_contentLabel];
     
     self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectZero];
@@ -82,7 +89,13 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         self.cellModel = cellModel;
-        self.contentLabel.text = cellModel.title;
+        //内容
+        if(isEmptyString(cellModel.title)){
+            self.contentLabel.hidden = YES;
+        }else{
+            self.contentLabel.hidden = NO;
+            [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+        }
         
         self.bottomView.cellModel = cellModel;
         self.bottomView.descLabel.attributedText = cellModel.desc;
@@ -95,14 +108,28 @@
     }
 }
 
++ (CGFloat)heightForData:(id)data {
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        CGFloat height = cellModel.contentHeight + bottomViewHeight + topMargin + 10;
+        
+        if(cellModel.isInsertGuideCell){
+            height += guideViewHeight;
+        }
+        
+        return height;
+    }
+    return 44;
+}
+
 - (void)showGuideView {
     if(_cellModel.isInsertGuideCell){
         [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(66);
+            make.height.mas_equalTo(bottomViewHeight + guideViewHeight);
         }];
     }else{
         [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(39);
+            make.height.mas_equalTo(bottomViewHeight);
         }];
     }
 }

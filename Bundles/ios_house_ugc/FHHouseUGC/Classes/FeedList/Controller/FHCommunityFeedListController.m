@@ -99,7 +99,7 @@
     
     _tableView.sectionFooterHeight = 0.0;
     
-    _tableView.estimatedRowHeight = 85;
+    _tableView.estimatedRowHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
     

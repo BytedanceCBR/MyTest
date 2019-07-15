@@ -25,6 +25,7 @@
 @property(nonatomic, assign) CGFloat imageWidth;
 @property(nonatomic, strong) NSArray *largeImageList;
 @property(nonatomic, strong) UILabel *infoLabel;
+@property(nonatomic, assign) CGFloat viewHeight;
 
 @end
 
@@ -82,6 +83,7 @@
     
     if(self.count == 1){
         _imageWidth = self.bounds.size.width;
+        _viewHeight = self.imageWidth * 9.0f/16.0f;
         UIImageView *imageView = [self.imageViewList firstObject];
         [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.left.bottom.mas_equalTo(self);
@@ -90,6 +92,7 @@
         }];
     }else if(self.count == 2){
         _imageWidth = (self.bounds.size.width - itemPadding)/2;
+        _viewHeight = self.imageWidth * 124.0f/165.0f;
         UIView *firstView = self;
         for (UIImageView *imageView in self.imageViewList) {
             [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -107,6 +110,10 @@
         }
     }else if(self.count >= 3){
         _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
+        
+        NSInteger row = (self.count - 1)/3;
+        _viewHeight = _imageWidth * (row + 1) + itemPadding * row;
+        
         UIView *topView = self;
         for (NSInteger i = 0; i < self.imageViewList.count; i++) {
             UIImageView *imageView = self.imageViewList[i];
@@ -242,6 +249,20 @@
         }
     }
     return photoObjs;
+}
+
++ (CGFloat)viewHeightForCount:(CGFloat)count width:(CGFloat)width {
+    if(count == 1){
+        return width * 9.0f/16.0f;
+    }else if(count == 2){
+        CGFloat imageWidth = (width - itemPadding)/2;
+        return imageWidth * 124.0f/165.0f;
+    }else if(count >= 3){
+        CGFloat imageWidth = (width - itemPadding * 2)/3;
+        NSInteger row = (count - 1)/3;
+        return imageWidth * (row + 1) + itemPadding * row;
+    }
+    return 0;
 }
 
 @end

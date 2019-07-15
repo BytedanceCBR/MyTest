@@ -15,6 +15,9 @@
 #define rightMargin 20
 #define cellId @"cellId"
 
+#define headerViewHeight 40
+#define bottomSepViewHeight 5
+
 @interface FHUGCRecommendCell ()<UITableViewDelegate,UITableViewDataSource,FHUGCRecommendSubCellDelegate>
 
 @property(nonatomic ,strong) FHUGCCellHeaderView *headerView;
@@ -105,7 +108,7 @@
 - (void)initConstraints {
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(40);
+        make.height.mas_equalTo(headerViewHeight);
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -117,7 +120,7 @@
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.tableView.mas_bottom).offset(15);
         make.bottom.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(5);
+        make.height.mas_equalTo(bottomSepViewHeight);
     }];
 }
 
@@ -136,6 +139,21 @@
         self.sourceList = [_model.recommendSocialGroupList mutableCopy];
         [self refreshData:YES];
     }
+}
+
++ (CGFloat)heightForData:(id)data {
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        CGFloat height = headerViewHeight + bottomSepViewHeight + 20;
+        
+        if(cellModel.recommendSocialGroupList.count > 0){
+            CGFloat tableViewHeight = cellModel.recommendSocialGroupList.count < 3 ? 60 * cellModel.recommendSocialGroupList.count : 180;
+            height += tableViewHeight;
+        }
+        
+        return height;
+    }
+    return 245;
 }
 
 - (void)refreshData:(BOOL)isFirst {

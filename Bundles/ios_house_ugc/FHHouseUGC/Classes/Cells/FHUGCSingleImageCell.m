@@ -17,6 +17,11 @@
 #define rightMargin 20
 #define maxLines 5
 
+#define userInfoViewHeight 40
+#define bottomViewHeight 49
+#define guideViewHeight 17
+#define topMargin 20
+
 @interface FHUGCSingleImageCell ()<TTUGCAttributedLabelDelegate>
 
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
@@ -55,6 +60,7 @@
     [self.contentView addSubview:_userInfoView];
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    _contentLabel.numberOfLines = maxLines;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
@@ -126,7 +132,7 @@
         //内容
         if(isEmptyString(cellModel.content)){
             self.contentLabel.hidden = YES;
-            [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            [self.multiImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
                 make.left.mas_equalTo(self.contentView).offset(leftMargin);
                 make.right.mas_equalTo(self.contentView).offset(-rightMargin);
@@ -138,13 +144,30 @@
                 make.left.mas_equalTo(self.contentView).offset(leftMargin);
                 make.right.mas_equalTo(self.contentView).offset(-rightMargin);
             }];
-            [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:maxLines];
+            [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
         }
         //图片
         [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
         
         [self showGuideView];
     }
+}
+
++ (CGFloat)heightForData:(id)data {
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 30;
+        
+        CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:1 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
+        height += imageViewheight;
+        
+        if(cellModel.isInsertGuideCell){
+            height += guideViewHeight;
+        }
+        
+        return height;
+    }
+    return 44;
 }
 
 - (void)showGuideView {

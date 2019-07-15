@@ -64,6 +64,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *contentRichSpan;
 @property (nonatomic, copy , nullable) NSString *content;
 @property (nonatomic, copy , nullable) NSString *behotTime;
+//计算高度相关
+@property (nonatomic, strong , nullable) NSAttributedString *contentAStr;
+@property (nonatomic, assign) CGFloat contentHeight;
 //是否显示查看全文
 @property (nonatomic, assign) BOOL showLookMore;
 //跳转详情页的scheme
