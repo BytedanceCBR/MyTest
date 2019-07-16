@@ -30,6 +30,7 @@
 }
 
 - (void)setupUI {
+    _followed = YES;
     _rightImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fh_ugc_arrow_feed"]];
     [self addSubview:_rightImageView];
     _nameLabel = [[UILabel alloc] init];
