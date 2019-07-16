@@ -492,10 +492,17 @@
     tracerDic[@"enter_from"] = enterFrom;
     tracerDic[@"log_pb"] = self.listLogPB ?: @"be_null";
     [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
-    if ([TTAccountManager isLogin]) {
+    
+    if(self.houseType == FHHouseTypeSecondHandHouse)
+    {
         [self gotoReportVC:model];
-    } else {
-        [self gotoLogin:model enterFrom:enterFrom];
+    }else
+    {
+        if ([TTAccountManager isLogin]) {
+            [self gotoReportVC:model];
+        } else {
+            [self gotoLogin:model enterFrom:enterFrom];
+        }
     }
 }
 
