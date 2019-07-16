@@ -34,9 +34,12 @@
 - (instancetype)initWithFrame:(CGRect)frame count:(NSInteger)count {
     self = [super initWithFrame:frame];
     if (self) {
-        
         _imageViewList = [[NSMutableArray alloc] init];
         _count = count;
+        
+        if(_count > kMaxCount){
+            _count = kMaxCount;
+        }
         
         [self initViews];
         [self initConstraints];

@@ -81,6 +81,7 @@
     [self setupUI];
     self.tableView.hidden = YES;
     self.commentViewController.view.hidden = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -419,7 +420,6 @@
 
 - (void)p_digg {
     self.user_digg = (self.user_digg == 1) ? 0 : 1;
-    self.digg_count = self.user_digg == 1 ? (self.digg_count + 1) : MAX(0, (self.digg_count - 1));
     
     if (!self.itemActionManager) {
         self.itemActionManager = [[ExploreItemActionManager alloc] init];
@@ -433,8 +433,34 @@
     [FHCommonApi requestCommonDigg:self.groupModel.groupID groupType:FHDetailDiggTypeTHREAD action:self.user_digg tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
     }];
-    
-    [self p_refreshToolbarView];
+}
+
+- (void)likeStateChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    if(userInfo){
+        NSInteger user_digg = [userInfo[@"action"] integerValue];
+        NSInteger diggCount = self.digg_count;
+        NSInteger groupType = [userInfo[@"group_type"] integerValue];
+        NSString *groupId = userInfo[@"group_id"];
+        
+        if(groupType == FHDetailDiggTypeTHREAD && [groupId isEqualToString:self.groupModel.groupID]){
+            // 刷新UI
+            if(user_digg == 0){
+                //取消点赞
+                self.user_digg = 0;
+                if(diggCount > 0){
+                    diggCount = diggCount - 1;
+                }
+            }else{
+                //点赞
+                self.user_digg = 1;
+                diggCount = diggCount + 1;
+            }
+            
+            self.digg_count = diggCount;
+        }
+        [self p_refreshToolbarView];
+    }
 }
 
 - (void)p_willShowSharePannel {

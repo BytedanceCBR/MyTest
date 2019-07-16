@@ -33,8 +33,17 @@
     if (self) {
         [self initViews];
         [self initConstraints];
+        [self initNotification];
     }
     return self;
+}
+
+- (void)initNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)initViews {
@@ -221,28 +230,59 @@
     }
     
     [self trackClickLike];
-    // 刷新UI
-    NSInteger user_digg = [self.cellModel.userDigg integerValue];
-    NSInteger diggCount = [self.cellModel.diggCount integerValue];
-    if(user_digg == 1){
-        //已点赞
-        self.cellModel.userDigg = @"0";
-        if(diggCount > 0){
-            diggCount = diggCount - 1;
-        }
-    }else{
-        //未点赞
-        self.cellModel.userDigg = @"1";
-        diggCount = diggCount + 1;
-    }
+    //    // 刷新UI
+    NSInteger user_digg = [self.cellModel.userDigg integerValue] == 0 ? 1 : 0;
     
-    self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
-    [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
+    
+    //    NSInteger diggCount = [self.cellModel.diggCount integerValue];
+    //    if(user_digg == 1){
+    //        //已点赞
+    //        self.cellModel.userDigg = @"0";
+    //        if(diggCount > 0){
+    //            diggCount = diggCount - 1;
+    //        }
+    //    }else{
+    //        //未点赞
+    //        self.cellModel.userDigg = @"1";
+    //        diggCount = diggCount + 1;
+    //    }
+    //
+    //    self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
+    //    [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
     NSMutableDictionary *dict = [NSMutableDictionary new];
     dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"];
     dict[@"element_from"] = self.cellModel.tracerDic[@"element_from"];
     dict[@"page_type"] = self.cellModel.tracerDic[@"page_type"];
-    [FHCommonApi requestCommonDigg:self.cellModel.groupId groupType:FHDetailDiggTypeTHREAD action:[self.cellModel.userDigg integerValue] tracerParam:dict completion:nil];
+    [FHCommonApi requestCommonDigg:self.cellModel.groupId groupType:FHDetailDiggTypeTHREAD action:user_digg tracerParam:dict completion:nil];
+}
+
+- (void)likeStateChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    
+    if(userInfo){
+        NSInteger user_digg = [userInfo[@"action"] integerValue];
+        NSInteger diggCount = [self.cellModel.diggCount integerValue];
+        NSInteger groupType = [userInfo[@"group_type"] integerValue];
+        NSString *groupId = userInfo[@"group_id"];
+        
+        if(groupType == FHDetailDiggTypeTHREAD && [groupId isEqualToString:self.cellModel.groupId]){
+            // 刷新UI
+            if(user_digg == 0){
+                //取消点赞
+                self.cellModel.userDigg = @"0";
+                if(diggCount > 0){
+                    diggCount = diggCount - 1;
+                }
+            }else{
+                //点赞
+                self.cellModel.userDigg = @"1";
+                diggCount = diggCount + 1;
+            }
+            
+            self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
+            [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
+        }
+    }
 }
 
 - (void)trackClickLike {
