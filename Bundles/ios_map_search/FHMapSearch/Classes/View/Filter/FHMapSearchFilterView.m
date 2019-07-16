@@ -21,10 +21,12 @@
 #define NORMAL_CELL_ID @"normal_cell_id"
 #define HEADER_ID      @"header_id"
 
-#define CONTAINER_WIDTH      271
-#define BOTTOM_BAR_HEIGHT    60
-#define BOTTOM_BUTTON_WIDTH  115
-#define BOTTOM_BUTTON_HEIGHT 40
+#define PRICE_TYPE     @"price"
+
+#define CONTAINER_WIDTH          271
+#define BOTTOM_BAR_HEIGHT        60
+#define BOTTOM_BUTTON_WIDTH      115
+#define BOTTOM_BUTTON_HEIGHT     40
 #define BOTTOM_BUTTON_HOR_MARGIN 15
 #define ITEM_HOR_MARGIN          15
 
@@ -122,7 +124,7 @@
 {
     UIEdgeInsets safeArea = UIEdgeInsetsZero;
     if (@available(iOS 11.0 , *)) {
-       safeArea = [UIApplication sharedApplication].delegate.window.safeAreaInsets;
+        safeArea = [UIApplication sharedApplication].delegate.window.safeAreaInsets;
     }
     
     [_leftControl mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -134,7 +136,7 @@
         make.top.right.bottom.mas_equalTo(self);
         make.width.mas_equalTo(CONTAINER_WIDTH);
     }];
-
+    
     [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(safeArea.top);
         make.bottom.mas_equalTo(-safeArea.bottom);
@@ -194,7 +196,7 @@
 -(void)onConfirmAction
 {
     NSString *query = [self.selectionModel selectedQuery];
-    NSLog(@"[FILTER] query is: %@",query);
+//    NSLog(@"[FILTER] query is: %@",query);
     if (self.confirmWithQueryBlock) {
         self.confirmWithQueryBlock(query);
     }
@@ -237,25 +239,98 @@
 
 -(void)updateWithRentFilter:(NSArray<FHSearchFilterConfigItem> *)filter
 {
-    NSMutableArray *showFilters = [NSMutableArray new];
-    for (FHSearchFilterConfigItem *item in filter) {
-        if (item.tabId.integerValue != FHMapSearchTabIdTypeRegion) {
-            //把区域排除
-            if (item.tabId.integerValue == FHMapSearchTabIdTypePrice) {
-                for (NSInteger i = 0 ; i < item.options.count; i++) {
-                    FHSearchFilterConfigOption *option = item.options[i];
-                    if ([option.type.lowercaseString isEqualToString:@"price"]) {
-                        self.filterPriceSection = showFilters.count+i;
+    [self updateWithOldFilter:filter];
+    //    NSMutableArray *showFilters = [NSMutableArray new];
+    //    for (FHSearchFilterConfigItem *item in filter) {
+    //        if (item.tabId.integerValue != FHMapSearchTabIdTypeRegion) {
+    //            //把区域排除
+    //            if (item.tabId.integerValue == FHMapSearchTabIdTypePrice) {
+    //                for (NSInteger i = 0 ; i < item.options.count; i++) {
+    //                    FHSearchFilterConfigOption *option = item.options[i];
+    //                    if ([option.type.lowercaseString isEqualToString:@"price"]) {
+    //                        self.filterPriceSection = showFilters.count+i;
+    //                    }
+    //                }
+    //                self.filterPriceItem = item;
+    //            }
+    //            [showFilters addObjectsFromArray:item.options];
+    //        }
+    //    }
+    //    self.filter = showFilters;
+    //    self.originFilter = filter;
+    //    [self.collectionView reloadData];
+}
+
+-(void)selectedWithOpenUrl:(NSString *)openUrl
+{
+    if (self.filter.count == 0) {
+        return;
+    }
+    
+    NSMutableArray *noneFilterItems = [[NSMutableArray alloc] init];
+    
+    NSURL *url = [NSURL URLWithString:openUrl];
+    NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
+    for (NSURLQueryItem *qitem in components.queryItems) {
+        NSInteger index = 0 ;
+        for (; index < self.filter.count ; index++) {
+            FHSearchFilterConfigOption *option = self.filter[index];
+            if ([option.type isEqualToString:qitem.name] || [[NSString stringWithFormat:@"%@[]",option.type] isEqualToString:qitem.name]) {
+                //find
+                NSInteger itemIndex = 0;
+                for ( ; itemIndex < option.options.count ; itemIndex++) {
+                    FHSearchFilterConfigOption *op = option.options[itemIndex];
+                    if ([op.value isEqualToString:qitem.value]) {
+                        //find
+                        break;
                     }
                 }
-                self.filterPriceItem = item;
+                if(itemIndex < option.options.count){
+                    if ([option.type.lowercaseString isEqualToString:PRICE_TYPE]) {
+                        itemIndex++;
+                    }
+                    [self handleSelectForIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:index]];
+                    break;
+                }else if ([option.type.lowercaseString isEqualToString:PRICE_TYPE] && qitem.value.length > 0){
+                    //价格
+                    NSString *value = [qitem.value stringByReplacingOccurrencesOfString:@" " withString:@""];
+                    if ([value hasPrefix:@"["] && [value hasSuffix:@"]"]) {
+                        value = [value substringWithRange:NSMakeRange(1, value.length -2)];
+                        NSArray *prices = [value componentsSeparatedByString:@","];
+                        if (prices.count == 2) {
+                            NSString *lowPrice = [prices firstObject];
+                            NSString *highPrice = [prices lastObject];
+                            
+                            FHMapSearchSelectItemModel *selectItem = [self selectItemForSection:index];
+                            selectItem.lowerPrice = lowPrice;
+                            selectItem.higherPrice = highPrice;
+                            
+                        }
+                    }
+                    break;
+                }
             }
-            [showFilters addObjectsFromArray:item.options];
+        }
+        
+        if (index >= self.filter.count) {
+            [noneFilterItems addObject:qitem];
         }
     }
-    self.filter = showFilters;
-    self.originFilter = filter;
+    
     [self.collectionView reloadData];
+    
+    self.noneFilterQuery = nil;
+    if (noneFilterItems.count > 0) {
+        NSMutableString *nquery = [NSMutableString new];
+        for (NSURLQueryItem *qitem in noneFilterItems) {
+            if (nquery.length > 0) {
+                [nquery appendString:@"&"];
+            }
+            [nquery appendFormat:@"%@=%@",qitem.name,qitem.value];
+        }
+        self.noneFilterQuery = nquery;
+    }
+    
 }
 
 -(FHSearchFilterConfigItem *)configItemForOptions:(FHSearchFilterConfigOption *)option
@@ -271,6 +346,63 @@
     return nil;
 }
 
+-(FHMapSearchSelectItemModel *)selectItemForSection:(NSInteger)section
+{
+    if (section >= self.filter.count) {
+        return nil;
+    }
+    FHSearchFilterConfigOption *option =  self.filter[section];
+    
+    FHSearchFilterConfigItem *item = [self configItemForOptions:option];
+    FHMapSearchSelectItemModel *selectItem = [self.selectionModel selectItemWithTabId:[item.tabId integerValue] section:section];
+    if (!selectItem) {
+        selectItem = [self.selectionModel makeItemWithTabId:item.tabId.integerValue section:section];
+    }
+    if (!selectItem.configOption) {
+        selectItem.configOption = option;
+    }
+    return selectItem;
+}
+
+-(void)handleSelectForIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger section = indexPath.section;
+    
+    if (self.filter.count > section) {
+        
+        FHSearchFilterConfigOption *option =  self.filter[section];
+        FHMapSearchSelectItemModel *selectItem = [self selectItemForSection:section];
+        
+        //        FHSearchFilterConfigItem *item = [self configItemForOptions:option];
+        //        FHMapSearchSelectItemModel *selectItem = [self.selectionModel selectItemWithTabId:[item.tabId integerValue] section:section];
+        //        if (!selectItem) {
+        //            selectItem = [self.selectionModel makeItemWithTabId:item.tabId.integerValue section:section];
+        //        }
+        //        if (!selectItem.configOption) {
+        //            selectItem.configOption = option;
+        //        }
+        
+        NSInteger index = indexPath.item;
+        if ([option.type.lowercaseString isEqualToString:PRICE_TYPE] &&[self.filterPriceItem.options containsObject:option]) {
+            selectItem.lowerPrice = nil;
+            selectItem.higherPrice = nil;
+            [self.priceCell updateWithLowerPrice:nil higherPrice:nil];
+            index--;
+        }
+        
+        if([self.selectionModel selecteItem:selectItem containIndex:index]){
+            //反选
+            [self.selectionModel delSelecteItem:selectItem withIndex:index];
+        }else{
+            //添加选择
+            if ([option.supportMulti boolValue]) {
+                [self.selectionModel addSelecteItem:selectItem withIndex:index];
+            }else{
+                [self.selectionModel clearAddSelecteItem:selectItem withIndex:index];
+            }
+        }
+    }
+}
 
 #pragma mark - price cell delegate
 -(void)updateLowerPrice:(NSString *)price inCell:(FHMapSearchPriceCell *)cell
@@ -451,36 +583,38 @@
     
     if (filter.count > section) {
         
-        FHSearchFilterConfigOption *option =  filter[section];
+        //        FHSearchFilterConfigOption *option =  filter[section];
+        //
+        //        FHSearchFilterConfigItem *item = [self configItemForOptions:option];
+        //        FHMapSearchSelectItemModel *selectItem = [self.selectionModel selectItemWithTabId:[item.tabId integerValue] section:section];
+        //        if (!selectItem) {
+        //            selectItem = [self.selectionModel makeItemWithTabId:item.tabId.integerValue section:section];
+        //        }
+        //        if (!selectItem.configOption) {
+        //            selectItem.configOption = option;
+        //        }
+        //
+        //        NSInteger index = indexPath.item;
+        //        if ([option.type.lowercaseString isEqualToString:PRICE_TYPE] &&[self.filterPriceItem.options containsObject:option]) {
+        //            selectItem.lowerPrice = nil;
+        //            selectItem.higherPrice = nil;
+        //            [self.priceCell updateWithLowerPrice:nil higherPrice:nil];
+        //            index--;
+        //        }
+        //
+        //        if([self.selectionModel selecteItem:selectItem containIndex:index]){
+        //            //反选
+        //            [self.selectionModel delSelecteItem:selectItem withIndex:index];
+        //        }else{
+        //            //添加选择
+        //            if ([option.supportMulti boolValue]) {
+        //                [self.selectionModel addSelecteItem:selectItem withIndex:index];
+        //            }else{
+        //                [self.selectionModel clearAddSelecteItem:selectItem withIndex:index];
+        //            }
+        //        }
         
-        FHSearchFilterConfigItem *item = [self configItemForOptions:option];
-        FHMapSearchSelectItemModel *selectItem = [self.selectionModel selectItemWithTabId:[item.tabId integerValue] section:section];
-        if (!selectItem) {
-            selectItem = [self.selectionModel makeItemWithTabId:item.tabId.integerValue section:section];
-        }
-        if (!selectItem.configOption) {
-            selectItem.configOption = option;
-        }
-
-        NSInteger index = indexPath.item;
-        if ([option.type.lowercaseString isEqualToString:@"price"] &&[self.filterPriceItem.options containsObject:option]) {
-            selectItem.lowerPrice = nil;
-            selectItem.higherPrice = nil;
-            [self.priceCell updateWithLowerPrice:nil higherPrice:nil];
-            index--;
-        }
-        
-        if([self.selectionModel selecteItem:selectItem containIndex:index]){
-            //反选
-            [self.selectionModel delSelecteItem:selectItem withIndex:index];
-        }else{
-            //添加选择
-            if ([option.supportMulti boolValue]) {
-                [self.selectionModel addSelecteItem:selectItem withIndex:index];
-            }else{
-                [self.selectionModel clearAddSelecteItem:selectItem withIndex:index];
-            }
-        }
+        [self handleSelectForIndexPath:indexPath];
         
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
@@ -517,11 +651,11 @@
 }
 
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+ // Only override drawRect: if you perform custom drawing.
+ // An empty implementation adversely affects performance during animation.
+ - (void)drawRect:(CGRect)rect {
+ // Drawing code
+ }
+ */
 
 @end

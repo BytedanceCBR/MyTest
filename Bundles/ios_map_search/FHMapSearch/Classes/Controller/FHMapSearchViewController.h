@@ -50,6 +50,8 @@ typedef  void (^_Nullable HouseListOpenUrlCallback)(NSString *openUrl);
 
 -(BOOL)isShowingMaskView;
 
+-(void)backAction;
+
 @end
 
 

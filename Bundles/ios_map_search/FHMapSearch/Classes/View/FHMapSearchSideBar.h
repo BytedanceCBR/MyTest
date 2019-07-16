@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showWithTypes:(NSArray *)types;
 
+-(NSArray *)currentTypes;
+
 @end
 
 NS_ASSUME_NONNULL_END

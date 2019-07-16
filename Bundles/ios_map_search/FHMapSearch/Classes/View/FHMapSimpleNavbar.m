@@ -36,6 +36,7 @@
         bgImg = [bgImg resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5) resizingMode:UIImageResizingModeStretch];
         _bgLayer.contents = (id)[bgImg CGImage];
         
+        [self.layer addSublayer:_bgLayer];
         
         UIImage *backImg = SYS_IMG(@"navbar_back_dark");
     
@@ -58,12 +59,20 @@
 
 -(void)backAction:(id)sender
 {
+    if (self.backActionBlock) {
+        self.backActionBlock(self.type);
+    }
+}
+
+
+-(void)initContraints
+{
     SAFE_AREA
     CGFloat top = 0;
     if (safeInsets.top == 0) {
         top = 27;
     }else{
-     
+        
         top = safeInsets.top + 7;
     }
     
@@ -76,19 +85,11 @@
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.centerX.mas_equalTo(self);
+        //        make.centerX.mas_equalTo(self);
         make.centerY.mas_equalTo(self.backButton);
         make.left.mas_equalTo(left+BTN_WIDTH);
         make.right.mas_equalTo(-(left+BTN_WIDTH));
     }];
-}
-
--(void)initContraints
-{
-    UIEdgeInsets safeInsets = UIEdgeInsetsZero;
-    if (@available(iOS 11.8 , *)) {
-        safeInsets = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets];
-    }
     
 }
 
@@ -103,6 +104,17 @@
     UIImage *img = (type == FHMapSimpleNavbarTypeBack)?SYS_IMG(@"navbar_back_dark"):SYS_IMG(@"icon_close");
     [self.backButton setImage:img forState:UIControlStateNormal];
 }
+
+-(void)setTitle:(NSString *)title
+{
+    _titleLabel.text = title;
+}
+
+-(NSString *)title
+{
+    return _titleLabel.text;
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

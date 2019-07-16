@@ -7,12 +7,10 @@
 //
 
 #import "FHMapSearchPriceCell.h"
-//#import <FHCommonUI/UIFont+House.h>
-//#import <FHCommonUI/UIColor+Theme.h>
+#import <FHCommonUI/UIFont+House.h>
+#import <FHCommonUI/UIColor+Theme.h>
 #import <Masonry/Masonry.h>
 
-#import "UIFont+House.h"
-#import "UIColor+Theme.h"
 
 @interface FHMapSearchPriceCell ()<UITextFieldDelegate>
 

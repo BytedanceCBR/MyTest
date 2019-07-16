@@ -10,8 +10,8 @@
 #import <Masonry/Masonry.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
-#import "UIImage+IconFont.h"
-#import "UIViewAdditions.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
+#import <TTBaseLib/UIViewAdditions.h>
 
 #define BTN_WIDTH  24
 

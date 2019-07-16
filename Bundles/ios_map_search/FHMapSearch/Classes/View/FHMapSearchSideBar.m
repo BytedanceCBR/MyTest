@@ -7,10 +7,11 @@
 //
 
 #import "FHMapSearchSideBar.h"
-#import "UIFont+House.h"
-#import "UIImage+IconFont.h"
-#import "UIColor+Theme.h"
-#import "UIViewAdditions.h"
+#import <FHCommonUI/UIFont+House.h>
+#import <FHCommonUI/UIColor+Theme.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
+#import <TTBaseLib/UIViewAdditions.h>
+
 
 #define ITEM_WIDTH 36
 #define ITEM_HEIGHT 60
@@ -33,6 +34,7 @@
 @property(nonatomic , strong) FHMapSearchSideBarItemView *circleItem;
 @property(nonatomic , strong) FHMapSearchSideBarItemView *filterItem;
 @property(nonatomic , strong) FHMapSearchSideBarItemView *listItem;
+@property(nonatomic , strong) NSArray *types;
 
 @end
 
@@ -87,7 +89,7 @@
 
 -(void)showWithTypes:(NSArray *)types
 {
-    
+    self.types = types;
     NSMutableDictionary *itemViewDict = @{
                                    @(FHMapSearchSideBarItemTypeSubway):self.subwayItem,
                                    @(FHMapSearchSideBarItemTypeCircle):self.circleItem,
@@ -124,6 +126,11 @@
     
     self.height = top;
     
+}
+
+-(NSArray *)currentTypes
+{
+    return self.types;
 }
 
 -(void)onItemClickAction:(FHMapSearchSideBarItemView *)item
