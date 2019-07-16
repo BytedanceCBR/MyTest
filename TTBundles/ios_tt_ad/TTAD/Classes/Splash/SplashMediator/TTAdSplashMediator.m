@@ -40,6 +40,7 @@
 #import <TTMonitor/TTMonitor.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回最长忍耐时间 30 000ms
 

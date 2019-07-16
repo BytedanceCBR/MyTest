@@ -134,7 +134,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         }
         CGFloat widthOffset = leftOffset * 2;
         UILabel *cityLabel = [[UILabel alloc] init];
-        cityLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
+        cityLabel.textColor = [UIColor tt_themedColorForKey:@"grey1"];
         cityLabel.text = dataModel.currentCityName;
         cityLabel.font = [UIFont themeFontRegular:14];
         
@@ -191,7 +191,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         UILabel *topTipForCityLabel = [UILabel new];
         topTipForCityLabel.text = @"找房服务即将开通，敬请期待";
         topTipForCityLabel.font = [UIFont themeFontRegular:tipsFontSize];
-        topTipForCityLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
+        topTipForCityLabel.textColor = [UIColor tt_themedColorForKey:@"grey3"];
         [self.topUnAvalibleCityContainer addSubview:topTipForCityLabel];
         
         [topTipForCityLabel mas_makeConstraints:^(MASConstraintMaker *make) {

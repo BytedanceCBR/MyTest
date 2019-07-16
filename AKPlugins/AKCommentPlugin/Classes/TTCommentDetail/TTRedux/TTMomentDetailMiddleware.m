@@ -15,7 +15,7 @@
 #import "TTCommentWriteView.h"
 #import <TTFriendRelation/TTBlockManager.h>
 #import <TTFriendRelation/TTFollowManager.h>
-#import <TTBaseLib/SSIndicatorTipsManager.h>
+#import <TTNewsAccountBusiness/SSIndicatorTipsManager.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTNewsAccountBusiness/TTAccountBusiness.h>

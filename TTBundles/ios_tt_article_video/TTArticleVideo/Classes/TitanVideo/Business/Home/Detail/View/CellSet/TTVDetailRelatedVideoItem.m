@@ -220,8 +220,8 @@ static const CGFloat KLabelInfoHeight = 20;
     if (item.tags.count > 0) {
         [self refreshTitleWithTags:item.tags];
     }
-    _fromLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey2];
-    _commentCountLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey2];
+    _fromLabel.textColor = [UIColor tt_themedColorForKey:@"grey4"];
+    _commentCountLabel.textColor = [UIColor tt_themedColorForKey:@"grey4"];
 }
 
 - (void)refreshTitleUI
@@ -456,7 +456,7 @@ static const CGFloat KLabelInfoHeight = 20;
         for (NSString * tag in tags) {
             NSRange range = [title rangeOfString:tag];
             if (range.location != NSNotFound) {
-                [attrTitle addAttribute:NSForegroundColorAttributeName value:SSGetThemedColorWithKey(kFHColorCharcoalGrey) range:range];
+                [attrTitle addAttribute:NSForegroundColorAttributeName value:SSGetThemedColorWithKey(@"grey1") range:range];
             }
         }
         return attrTitle;

@@ -330,7 +330,7 @@ NSString * const WDMoreListCellUnDiggButtonClickTrackerEvent = @"rt_unlike";
 #pragma mark - getter
 
 - (NSAttributedString *)tokenAttributeString {
-    NSString *textColor = kFHColorCharcoalGrey;
+    NSString *textColor = @"grey1";
     CGFloat fontSize = [WDMoreListCellLayoutModel answerAbstractContentFontSize];
     NSMutableAttributedString *token = [[NSMutableAttributedString alloc] initWithString:@"...全文"
                                                                               attributes:@{

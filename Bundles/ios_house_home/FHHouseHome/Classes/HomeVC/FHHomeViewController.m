@@ -31,6 +31,7 @@
 #import <TTTopBar.h>
 #import <FHHomeSearchPanelViewModel.h>
 #import <ExploreLogicSetting.h>
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 #import <TTArticleTabBarController.h>
 
 static CGFloat const kShowTipViewHeight = 32;
