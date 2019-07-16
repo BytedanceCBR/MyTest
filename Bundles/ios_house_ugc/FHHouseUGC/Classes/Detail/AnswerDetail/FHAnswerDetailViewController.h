@@ -6,10 +6,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHBaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHAnswerDetailViewController : UIViewController
+// 回答详情
+@interface FHAnswerDetailViewController : FHBaseViewController
 
 @end
 
