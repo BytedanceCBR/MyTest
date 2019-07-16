@@ -5,21 +5,21 @@
 //  Created by 张元科 on 2019/6/3.
 //
 
-#import "FHCommentDetailViewModel.h"
+#import "FHCommentBaseDetailViewModel.h"
 #import "FHHouseUGCAPI.h"
 #import "TTHttpTask.h"
 #import "FHPostDetailViewModel.h"
 
-@interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHCommentBaseDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong)   NSMutableDictionary       *cellHeightCaches;
 
 @end
 
-@implementation FHCommentDetailViewModel
+@implementation FHCommentBaseDetailViewModel
 
-+(instancetype)createDetailViewModelWithPostType:(FHUGCPostType)postType withController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView {
-    FHCommentDetailViewModel *viewModel = NULL;
++(instancetype)createDetailViewModelWithPostType:(FHUGCPostType)postType withController:(FHCommentBaseDetailViewController *)viewController tableView:(UITableView *)tableView {
+    FHCommentBaseDetailViewModel *viewModel = NULL;
     switch (postType) {
         case FHUGCPostTypePost:
             viewModel = [[FHPostDetailViewModel alloc] initWithController:viewController tableView:tableView postType:postType];
@@ -28,7 +28,7 @@
     return viewModel;
 }
 
--(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType{
+-(instancetype)initWithController:(FHCommentBaseDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType{
     self = [super init];
     if (self) {
         _cellHeightCaches = [NSMutableDictionary new];

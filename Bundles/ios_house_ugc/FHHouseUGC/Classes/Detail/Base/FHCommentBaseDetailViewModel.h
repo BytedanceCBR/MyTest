@@ -7,21 +7,21 @@
 
 #import <Foundation/Foundation.h>
 #import "FHUGCBaseViewModel.h"
-#import "FHCommentDetailViewController.h"
+#import "FHCommentBaseDetailViewController.h"
 #import "FHUGCBaseCell.h"
 #import "TTHttpTask.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHCommentDetailViewModel : FHUGCBaseViewModel
+@interface FHCommentBaseDetailViewModel : FHUGCBaseViewModel
 
-+(instancetype)createDetailViewModelWithPostType:(FHUGCPostType)postType withController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView;
--(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView;
--(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType;
++(instancetype)createDetailViewModelWithPostType:(FHUGCPostType)postType withController:(FHCommentBaseDetailViewController *)viewController tableView:(UITableView *)tableView;
+-(instancetype)initWithController:(FHCommentBaseDetailViewController *)viewController tableView:(UITableView *)tableView;
+-(instancetype)initWithController:(FHCommentBaseDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType;
 @property (nonatomic, assign)   FHUGCPostType postType; // 帖子类型
 
 @property(nonatomic , weak) UITableView *tableView;
-@property(nonatomic , weak) FHCommentDetailViewController *detailController;
+@property(nonatomic , weak) FHCommentBaseDetailViewController *detailController;
 @property (nonatomic, strong) NSMutableArray *items;// 子类维护的数据源
 @property(nonatomic , weak) TTHttpTask *httpTask;
 

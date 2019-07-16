@@ -5,7 +5,7 @@
 //  Created by 张元科 on 2019/6/2.
 //
 
-#import "FHCommentDetailViewController.h"
+#import "FHCommentBaseDetailViewController.h"
 #import "FHExploreDetailToolbarView.h"
 #import "SSCommonLogic.h"
 #import "TTUIResponderHelper.h"
@@ -26,7 +26,7 @@
 #import "TTTrackerWrapper.h"
 #import "AKHelper.h"
 #import "FHCommonDefines.h"
-#import "FHCommentDetailViewModel.h"
+#import "FHCommentBaseDetailViewModel.h"
 #import "ExploreDetailToolbarView.h"
 #import "ExploreDetailNavigationBar.h"
 #import "ExploreSearchViewController.h"
@@ -44,7 +44,7 @@
 #import "TTAccountManager.h"
 #import "FHUserTracker.h"
 
-@interface FHCommentDetailViewController ()<UIScrollViewDelegate>
+@interface FHCommentBaseDetailViewController ()<UIScrollViewDelegate>
 
 @property (nonatomic, strong)   UIScrollView       *mainScrollView;
 @property (nonatomic, strong)   FHExploreDetailToolbarView       *toolbarView;
@@ -61,7 +61,7 @@
 
 @end
 
-@implementation FHCommentDetailViewController
+@implementation FHCommentBaseDetailViewController
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
@@ -139,7 +139,7 @@
     _mainScrollView.frame = CGRectMake(0, navOffset, SCREEN_WIDTH, SCREEN_HEIGHT - navOffset - self.toolbarView.height);
     _mainScrollView.delegate = self;
     [self configTableView];
-    self.viewModel = [FHCommentDetailViewModel createDetailViewModelWithPostType:self.postType withController:self tableView:_tableView];
+    self.viewModel = [FHCommentBaseDetailViewModel createDetailViewModelWithPostType:self.postType withController:self tableView:_tableView];
     [self.mainScrollView addSubview:_tableView];
     _tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, _mainScrollView.frame.size.height);
     // 评论
