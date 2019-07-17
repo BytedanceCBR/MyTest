@@ -113,7 +113,11 @@
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
-    [super requestData:isHead first:isFirst];
+    if(self.viewController.isLoadingData){
+        return;
+    }
+    
+    self.viewController.isLoadingData = YES;
     
     if(isFirst){
         [self.viewController startLoading];
@@ -131,7 +135,7 @@
     }
     
     self.requestTask = [FHHouseUGCAPI requestForumFeedListWithForumId:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        
+        wself.viewController.isLoadingData = NO;
         if(isFirst){
             [wself.viewController endLoading];
         }
@@ -166,7 +170,7 @@
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
             
             if(isFirst){
-                [self.dataList removeAllObjects];
+                [wself.dataList removeAllObjects];
             }
             
             if(isHead){
@@ -198,7 +202,7 @@
                         wself.isRefreshingTip = NO;
                     });
                 }];
-                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
             }
         }
     }];
@@ -399,8 +403,10 @@
     return -1;
 }
 
-- (void)commentClicked:(FHFeedUGCCellModel *)cellModel {
+- (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     [self trackClickComment:cellModel];
+    self.currentCellModel = cellModel;
+    self.currentCell = cell;
     [self jumpToPostDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 

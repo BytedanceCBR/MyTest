@@ -37,7 +37,9 @@
 @property(nonatomic, strong) UILabel *subTitleLabel;
 @property(nonatomic, strong) UIView *titleContainer;
 @property(nonatomic) BOOL scrollToTop;
+@property(nonatomic) BOOL isRefreshing;
 @property(nonatomic, strong) NSTimer *requestDataTimer;
+@property (nonatomic, assign)   BOOL       isViewAppear;
 
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic) BOOL shouldShowUGcGuide;
@@ -52,6 +54,8 @@
         self.viewController = viewController;
         [self initView];
         self.shouldShowUGcGuide = YES;
+        self.isViewAppear = YES;
+        self.isRefreshing = NO;
     }
     return self;
 }
@@ -98,6 +102,7 @@
 }
 
 - (void)dealloc {
+    [self cancelRequestAfter];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -177,8 +182,16 @@
     [self.feedListController viewWillAppear];
 }
 
+- (void)viewDidAppear {
+    self.isViewAppear = YES;
+    if (self.feedListController.tableView) {
+        [self scrollViewDidScroll:self.feedListController.tableView];
+    }
+}
+
 - (void)viewWillDisappear {
     [self.feedListController viewWillDisappear];
+    self.isViewAppear = NO;
 }
 
 - (void)requestData:(BOOL) userPull refreshFeed:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed showToast:(BOOL) showToast{
@@ -304,6 +317,7 @@
     dic[@"select_group_id"] = self.data.socialGroupId;
     dic[@"select_group_name"] = self.data.socialGroupName;
     dic[TRACER_KEY] = traceParam;
+    dic[VCTITLE_KEY] = @"发帖";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
     NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
     [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
@@ -317,6 +331,9 @@
 }
 
 - (void)updateNavBarWithAlpha:(CGFloat)alpha {
+    if (!self.isViewAppear) {
+        return;
+    }
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     if (alpha <= 0.1f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
@@ -412,7 +429,7 @@
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView; {
     self.scrollToTop = NO;
-    if (scrollView.contentOffset.y < 0 && -scrollView.contentOffset.y > self.headerView.refreshView.toRefreshMinDistance) {
+    if (scrollView.contentOffset.y < 0 && -scrollView.contentOffset.y < self.headerView.refreshView.toRefreshMinDistance && !self.isRefreshing) {
         [self cancelRequestAfter];
     }
 }
@@ -432,6 +449,7 @@
         scrollView.contentInset = UIEdgeInsetsMake(self.headerView.refreshView.toRefreshMinDistance, 0, 0, 0);
         [self requestDataAfter];
         [self.headerView startRefresh];
+        self.isRefreshing = YES;
     }
 }
 
@@ -439,15 +457,19 @@
     WeakSelf;
     [UIView animateWithDuration:0.5 animations:^{
         StrongSelf;
-        wself.feedListController.tableView.contentOffset = CGPointMake(0, 0);
+        if(wself.feedListController.tableView.contentOffset.y < 0){
+            wself.feedListController.tableView.contentOffset = CGPointMake(0, 0);
+        }
         wself.feedListController.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     }completion:^(BOOL finished) {
+        wself.isRefreshing = NO;
         [wself.headerView stopRefresh];
     }];
 }
 
 - (void)requestDataAfter {
     WeakSelf;
+//    [self requestDataWithRefresh];
     [self cancelRequestAfter];
     self.requestDataTimer = [NSTimer scheduledNoRetainTimerWithTimeInterval:1.0f target:self selector:@selector(requestDataWithRefresh) userInfo:nil repeats:NO];
 }

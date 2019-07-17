@@ -115,7 +115,7 @@
     if (!entryModel.activeInfo) {
         return;
     }
-
+    
     NSString *numStr = [NSString stringWithFormat:@"%@", entryModel.activeCountInfo.count];
     NSString *textStr = [NSString stringWithFormat:@" %@", entryModel.activeCountInfo.text];
     NSString *combineStr = [NSString stringWithFormat:@"%@%@", numStr, textStr];
@@ -132,7 +132,7 @@
 
 - (void)updateBubble {
     FHDetailCommunityEntryModel *entryModel = self.currentData;
-    if (!entryModel.activeInfo) {
+    if (!entryModel.activeInfo || entryModel.activeInfo.count <= 0) {
         return;
     }
     FHDetailCommunityEntryActiveInfoModel *model = entryModel.activeInfo[self.curWheelIndex];

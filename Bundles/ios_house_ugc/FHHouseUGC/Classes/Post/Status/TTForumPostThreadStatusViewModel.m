@@ -36,6 +36,8 @@
 #import "ToastManager.h"
 #import "FHEnvContext.h"
 #import "FHPostUGCProgressView.h"
+#import "FHMessageNotificationManager.h"
+#import "FHMessageNotificationTipsManager.h"
 
 @interface TTPostThreadTaskStatusModel ()
 
@@ -160,6 +162,11 @@ TTAccountMulticastProtocol
         self.followTaskStatusModels = nil;
         // 刷新UI 数据
         [[FHPostUGCProgressView sharedInstance] updatePostData];
+    }
+    //切城市 消息系统
+    if(currentCityName.length > 0 && ![currentCityName isEqualToString:self.cityName]){
+        [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
+        [[FHMessageNotificationManager sharedManager] startPeriodicalFetchUnreadMessageNumberWithChannel:nil];
     }
     if (currentCityName.length > 0) {
         self.cityName = currentCityName;
@@ -412,7 +419,12 @@ TTAccountMulticastProtocol
     
     TTPostThreadTaskStatusModel *statusModel = [[TTPostThreadTaskStatusModel alloc] initWithPostThreadTask:task];
     
-    if (isEmptyString(modelName)) {
+    if (isEmptyString(modelName) || statusModel == nil) {
+        return;
+    }
+    
+    NSMutableArray *arr = [self mutableArrayValueForKey:modelName];
+    if (arr == nil) {
         return;
     }
     

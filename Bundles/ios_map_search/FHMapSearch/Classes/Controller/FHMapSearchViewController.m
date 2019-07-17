@@ -31,6 +31,7 @@
 #import "FHMapSearchWayChooseView.h"
 #import <TTUIWidget/TTNavigationController.h>
 #import "FHMapSearchBottomBar.h"
+#import <TTReachability/TTReachability.h>
 
 #define kTapDistrictZoomLevel  16
 #define kFilterBarHeight 44
@@ -346,6 +347,11 @@
     self.title = _viewModel.navTitle;
     [self.navBar setTitle:self.title];
     [self.view bringSubviewToFront:self.navBar];
+    
+    if (![TTReachability isNetworkConnected]) {
+        [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
+        return;
+    }
 }
 
 -(void)enablePan:(BOOL)enable

@@ -124,7 +124,8 @@
     [self startLoadData];
     self.isViewDidDisapper = NO;
     
-    if(![SSCommonLogic disableDetailInstantShow]){
+    if(![SSCommonLogic disableDetailInstantShow] && [TTReachability isNetworkConnected]){
+        //有网且打开秒开的情况下才显示
         if (self.instantData) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.viewModel handleInstantData:self.instantData];
@@ -202,9 +203,10 @@
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
-        if (!self.instantData) {
+        //无网就显示蒙层
+//        if (!self.instantData) {
             [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-        }
+//        }
     }
 }
 

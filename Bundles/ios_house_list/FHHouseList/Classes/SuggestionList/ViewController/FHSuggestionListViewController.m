@@ -15,6 +15,8 @@
 #import "ToastManager.h"
 #import "TTNavigationController.h"
 #import "FHSugSubscribeListViewController.h"
+#import <HMDTTMonitor.h>
+#import <TTInstallIDManager.h>
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -453,6 +455,17 @@
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:tempInfos];
         
         NSURL *url = [NSURL URLWithString:openUrl];
+        
+        if (!url) {
+            NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
+            [paramsExtra setValue:@"跳转错误" forKey:@"desc"];
+            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"guess_you_want_error" status:1 extra:paramsExtra];
+        }else
+        {
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"guess_you_want_error" status:0 extra:nil];
+        }
+        
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
 }

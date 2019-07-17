@@ -33,6 +33,7 @@
 
 - (CGFloat)emojiSize {
     switch ([TTDeviceHelper getDeviceType]) {
+        case TTDeviceMode896:
         case TTDeviceModePad:
         case TTDeviceMode736:
         case TTDeviceMode667:
@@ -228,6 +229,7 @@ static const NSUInteger kNumberOfEmojisPerPage = 20; // 不包括删除按钮
 
 - (CGFloat)emojiSize {
     switch ([TTDeviceHelper getDeviceType]) {
+        case TTDeviceMode896:
         case TTDeviceModePad:
         case TTDeviceMode736:
         case TTDeviceMode667:
@@ -241,6 +243,7 @@ static const NSUInteger kNumberOfEmojisPerPage = 20; // 不包括删除按钮
 
 - (CGFloat)lineSpacing {
     switch ([TTDeviceHelper getDeviceType]) {
+        case TTDeviceMode896:
         case TTDeviceModePad:
         case TTDeviceMode736: return 13.f;
         case TTDeviceMode667:

@@ -105,7 +105,14 @@ static NSString *const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNo
     if (!isEmptyString(channel)) {
         params[@"from"] = channel;
     }
-
+    
+    if(![TTAccountManager isLogin] || ![FHEnvContext isUGCOpen]){
+        if (callback) {
+            callback(nil);
+        }
+        return;
+    }
+    
     [FHMessageAPI requestUgcUnreadMessageWithChannel:channel completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         if (error || ![model isKindOfClass:[FHUGCUnreadMsgModel class]] || [model.status integerValue] != 0) {
             if (callback) {

@@ -161,8 +161,8 @@
 
 // 评论点击
 - (void)commentBtnClick {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:)]){
-        [self.delegate commentClicked:self.cellModel];
+    if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:cell:)]){
+        [self.delegate commentClicked:self.cellModel cell:self];
     }
 }
 
