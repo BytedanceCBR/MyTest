@@ -145,6 +145,14 @@ static NSInteger const kMaxPostImageCount = 9;
             } else {
                 self.hasSocialGroup = YES;
             }
+            // H5传递过来的参数
+            NSString *report_params = params[@"report_params"];
+            if ([report_params isKindOfClass:[NSString class]]) {
+                NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+                if (report_params_dic) {
+                    [self.tracerDict addEntriesFromDictionary:report_params_dic];
+                }
+            }
             self.trackDict = [self.tracerDict copy];
             // 添加google地图注册
             [[TTLocationManager sharedManager] registerReverseGeocoder:[TTGoogleMapGeocoder sharedGeocoder] forKey:NSStringFromClass([TTGoogleMapGeocoder class])];
@@ -1301,6 +1309,21 @@ static NSInteger const kMaxPostImageCount = 9;
     [FHBubbleTipManager shareInstance].canShowTip = self.lastCanShowMessageTip;
     // App 内push
     kFHInAppPushTipsHidden = self.lastInAppPushTipsHidden;// 展示
+}
+
+- (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
+    NSMutableDictionary *retDic = nil;
+    if (jsonString.length > 0) {
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        retDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+        if ([retDic isKindOfClass:[NSDictionary class]] && error == nil) {
+            return retDic;
+        } else {
+            return nil;
+        }
+    }
+    return retDic;
 }
 
 #pragma mark - FHUGCFollowListDelegate
