@@ -37,6 +37,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
 - (YYCache *)sendPhoneNumberCache;
 
 - (YYCache *)subscribeHouseCache;
+//保存已经显示的房源详情反馈弹窗
+- (YYCache *)detailFeedbackCache;
 
 @end
 

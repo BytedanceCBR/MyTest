@@ -183,7 +183,12 @@
         contactConfig.searchId = model.searchId;
         contactConfig.imprId = model.imprId;
         contactConfig.from = @"app_oldhouse_mulrealtor";
-        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
+        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
+            if(success && [model.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
+                FHHouseDetailViewController *vc = (FHHouseDetailViewController *)model.belongsVC;
+                vc.isPhoneCallShow = YES;
+            }
+        }];
 
         FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:extraDict error:nil];
         configModel.houseType = self.baseViewModel.houseType;
