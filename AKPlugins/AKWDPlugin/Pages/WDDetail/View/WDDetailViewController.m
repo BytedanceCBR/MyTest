@@ -838,7 +838,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     WeakSelf;
     [self.natantViewModel tt_startFetchInformationWithFinishBlock:^(WDDetailModel *detailModel, NSError *error) {
         StrongSelf;
-        if (!error) {
+        if (!error || self.detailModel.answerEntity) {
             [self.detailView tt_serverRequestTimeMonitorWithName:WDDetailInfoTimeService error:error];
             
             self.infoLoadFinished = YES;
