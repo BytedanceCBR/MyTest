@@ -136,7 +136,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         STTableViewCellItem *rnBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"RN_Debug" target:self action:@selector(_openRNBridge)];
         rnBridgeDebugItem.switchStyle = NO;
         [itemArray addObject:rnBridgeDebugItem];
-        
 
         STTableViewCellItem *shortVideoDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"小视频调试选项点这里" target:self action:@selector(_openShortVideoDebug)];
         shortVideoDebugItem.switchStyle = NO;
@@ -167,6 +166,12 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         item_01.checked = [ExploreCellHelper getFeedUGCTest];
         self.itemAB = item_01;
         [itemArray addObject:item_01];
+        
+        STTableViewCellItem *ugcDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"ugc模块测试" target:self action:NULL];
+        ugcDebugItem.switchStyle = YES;
+        ugcDebugItem.switchAction = @selector(_ugcDebugTest:);
+        ugcDebugItem.checked = [self _shouldUGCDebug];
+        [itemArray addObject:ugcDebugItem];
         
         STTableViewCellItem *item_11 = [[STTableViewCellItem alloc] initWithTitle:@"下方头像露出" target:self action:NULL];
         item_11.switchStyle = YES;
@@ -653,6 +658,11 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+- (void)_ugcDebugTest:(UISwitch *)uiswitch {
+    [[NSUserDefaults standardUserDefaults] setBool:uiswitch.isOn forKey:@"kUGCDebugConfigKey"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 - (void)_openHtmlBridge
 {
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"请输入调试地址" message:nil preferredType:TTThemedAlertControllerTypeAlert];
@@ -744,6 +754,10 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 
 - (BOOL)_shouldSaveApplog {
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"kShouldSaveApplogKey"];
+}
+
+- (BOOL)_shouldUGCDebug {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"kUGCDebugConfigKey"];
 }
 
 - (void)_logUmengActionFired:(UISwitch *)uiswitch {
