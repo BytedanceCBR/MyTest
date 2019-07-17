@@ -6,10 +6,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHCommentDetailViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCommentDetailViewModel : NSObject
+
+-(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView;
+
+- (void)startLoadData;
 
 @end
 

@@ -15,4 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+extern CGFloat FHExploreDetailGetToolbarHeight(void);
+
 NS_ASSUME_NONNULL_END
