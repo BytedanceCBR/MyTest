@@ -43,6 +43,7 @@
 #import "ToastManager.h"
 #import "FHUserTracker.h"
 #import "FHBubbleTipManager.h"
+#import "FHUGCConfig.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -100,7 +101,7 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, copy) NSString *enterConcernID; //entrance为concern时有意义
 
 @property (nonatomic, strong)   FHPostUGCMainView       *selectView;
-@property (nonatomic, copy)     NSString       *selectGroupId;// 选中的小区id 小区位置不能点击
+@property (nonatomic, copy)     NSString       *selectGroupId;// 选中的小区id 小区位置不能点击 默认是已关注
 @property (nonatomic, copy)     NSString       *selectGroupName; // 选中的小区name
 @property (nonatomic, assign)   BOOL       hasSocialGroup;// 外部传入小区
 
@@ -143,6 +144,14 @@ static NSInteger const kMaxPostImageCount = 9;
                 self.selectGroupName = nil;
             } else {
                 self.hasSocialGroup = YES;
+            }
+            // H5传递过来的参数
+            NSString *report_params = params[@"report_params"];
+            if ([report_params isKindOfClass:[NSString class]]) {
+                NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+                if (report_params_dic) {
+                    [self.tracerDict addEntriesFromDictionary:report_params_dic];
+                }
             }
             self.trackDict = [self.tracerDict copy];
             // 添加google地图注册
@@ -621,6 +630,7 @@ static NSInteger const kMaxPostImageCount = 9;
     [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSString *inputText = richSpanText.text;
     
+    // 网络连接已判断
     if (![self isValidateWithInputText:inputText]) {
         return;
     }
@@ -639,10 +649,28 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)sendThreadWithLoginState:(NSInteger)loginState withTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
     if (self && [TTAccountManager isLogin]) {
         TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
-        [self postThreadWithTitleText:titleText inputText:inputText phoneText:userInfo.mobile];
+        [self followAndPostThreadWithTitleText:titleText inputText:inputText phoneText:userInfo.mobile];
     } else {
         // 应该不会走到当前位置，UGC外面限制强制登录
         [self gotoLogin];
+    }
+}
+
+// 先关注再发帖
+- (void)followAndPostThreadWithTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
+    if (self.selectView.followed) {
+        // 已关注，直接发帖
+        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+    } else {
+        // 先关注
+        __weak typeof(self) weakSelf = self;
+        [[FHUGCConfig sharedInstance] followUGCBy:self.selectView.groupId isFollow:YES completion:^(BOOL isSuccess) {
+            if (isSuccess) {
+                [weakSelf postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+            } else {
+                [[ToastManager manager] showToast:@"发帖失败"];
+            }
+        }];
     }
 }
 
@@ -873,6 +901,7 @@ static NSInteger const kMaxPostImageCount = 9;
     if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
         self.selectView.groupId = self.selectGroupId;
         self.selectView.communityName = self.selectGroupName;
+        self.selectView.followed = YES;
         self.selectView.rightImageView.hidden = YES;
     }
 }
@@ -1282,12 +1311,28 @@ static NSInteger const kMaxPostImageCount = 9;
     kFHInAppPushTipsHidden = self.lastInAppPushTipsHidden;// 展示
 }
 
+- (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
+    NSMutableDictionary *retDic = nil;
+    if (jsonString.length > 0) {
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        retDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+        if ([retDic isKindOfClass:[NSDictionary class]] && error == nil) {
+            return retDic;
+        } else {
+            return nil;
+        }
+    }
+    return retDic;
+}
+
 #pragma mark - FHUGCFollowListDelegate
 - (void)selectedItem:(FHUGCScialGroupDataModel *)item {
     // 选择 小区圈子
     if (item) {
         self.selectView.groupId = item.socialGroupId;
         self.selectView.communityName = item.socialGroupName;
+        self.selectView.followed = [item.hasFollow boolValue];
         [self refreshPostButtonUI];
         
         NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;

@@ -71,7 +71,7 @@
     return NSStringFromClass(cls);
 }
 
--(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType {
+-(instancetype)initWithController:(FHCommentBaseDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType {
     self = [super initWithController:viewController tableView:tableView postType:postType];
     self.threadID = 0;
     self.forumID = 0;

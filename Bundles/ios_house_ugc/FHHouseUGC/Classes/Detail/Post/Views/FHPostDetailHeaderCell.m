@@ -77,7 +77,7 @@
     self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:15] textColor:[UIColor themeGray1]];
     [self.contentView addSubview:_titleLabel];
     
-    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor themeGray3]];
+    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self.contentView addSubview:_descLabel];
     
     self.joinBtn = [[FHUGCFollowButton alloc] init];
@@ -134,7 +134,7 @@
         make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(1);
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(self.titleLabel);
-        make.height.mas_equalTo(14);
+        make.height.mas_equalTo(17);
     }];
 }
 

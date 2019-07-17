@@ -14,7 +14,7 @@
 #import "AKTaskSettingHelper.h"
 #import "AKProfileBenefitManager.h"
 #import "AKMinePhotoCarouselEntry.h"
-#import "AKLoginTrafficViewController.h"
+//#import "AKLoginTrafficViewController.h"
 #import "AKProfilePhotoCarouselViewCell.h"
 #import "TTProfileFunctionCell.h"
 #import "TTProfileTopFunctionCell.h"
@@ -62,7 +62,6 @@
 #import "BDTAccountClientManager.h"
 #import "TTAccountBindingMobileViewController.h"
 #import "TTTabBarProvider.h"
-#import "AKLoginTrafficViewController.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 
@@ -151,7 +150,7 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     self.tableView.tableFooterView = [SSThemedView new];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, [TTDeviceUIUtils tt_padding:30.f/2], 0, 0);
     self.tableView.separatorColor = [UIColor tt_themedColorForKey:kColorLine1];
-    self.tableView.disableTTStyledSeparatorEdge = YES;
+    self.tableView.enableTTStyledSeparator = NO;
     [self.tableView registerClass:[AKProfilePhotoCarouselViewCell class] forCellReuseIdentifier:kAKIdenfitierPhotoCarouselKey];
     [self updateHeaderControls];
     [[TTSettingMineTabManager sharedInstance_tt] reloadSectionsIfNeeded];
@@ -535,11 +534,20 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     } else {
         TTSettingMineTabEntry *entry = [[self class] entryForIndexPath:indexPath];
         if (entry.AKRequireLogin) {
-            [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
-                if (result) {
-                    operation();
+            
+            [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+                if (type == TTAccountAlertCompletionEventTypeDone) {
+                    //登录成功 走发送逻辑
+                    if ([TTAccountManager isLogin]) {
+                        operation();
+                    }
                 }
             }];
+//            [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
+//                if (result) {
+//                    operation();
+//                }
+//            }];
         } else {
             operation();
         }
@@ -653,11 +661,19 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     if ([TTAccount sharedAccount].isLogin) {
         operation();
     } else {
-        [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
-            if (result) {
-                operation();
+        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                //登录成功 走发送逻辑
+                if ([TTAccountManager isLogin]) {
+                    operation();
+                }
             }
         }];
+//        [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
+//            if (result) {
+//                operation();
+//            }
+//        }];
     }
 }
 

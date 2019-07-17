@@ -28,6 +28,7 @@
 #import "FHUGCConfigModel.h"
 #import <TTTabBarManager.h>
 #import <TTTabBarItem.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import <TTArticleTabBarController.h>
 
 static NSInteger kGetLightRequestRetryCount = 3;

@@ -117,7 +117,7 @@
         defaultContact = ContactViewNoInputTip;
     }
     _contactField.placeholder = defaultContact;
-    _contactField.placeholderColorThemeKey = kFHColorCoolGrey3;
+    _contactField.placeholderColorThemeKey = @"grey3";
     [_contactView addSubview:_contactField];
     
 
@@ -125,7 +125,7 @@
     [_tipLabel setText:NSLocalizedString(@"您的联系方式有助于我们沟通和解决问题，仅工作人员可见", nil)];
     _tipLabel.backgroundColor = [UIColor clearColor];
     _tipLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:TipLabelFontSize];
-    _tipLabel.textColorThemeKey = kFHColorCharcoalGrey;
+    _tipLabel.textColorThemeKey = @"grey1";
     [_containerView addSubview:_tipLabel];
 
     [self ssLayoutSubviews];

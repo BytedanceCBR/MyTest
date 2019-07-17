@@ -588,18 +588,18 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
     [self.commentButton setImage:[UIImage themedImageNamed:@"comment"] forState:UIControlStateNormal];
     [self.commentButton setImage:[UIImage themedImageNamed:@"comment"] forState:UIControlStateHighlighted];
     [self.commentButton updateThemes];
-    [self.commentButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3] forState:UIControlStateNormal];
-    [self.commentButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3] forState:UIControlStateHighlighted];
+    [self.commentButton setTitleColor:[UIColor tt_themedColorForKey:@"grey3"] forState:UIControlStateNormal];
+    [self.commentButton setTitleColor:[UIColor tt_themedColorForKey:@"grey3"] forState:UIControlStateHighlighted];
     
     
     [self.shareButton setImage:[UIImage themedImageNamed:@"tab_share"] forState:UIControlStateNormal];
     [self.shareButton setImage:[UIImage themedImageNamed:@"tab_share"] forState:UIControlStateHighlighted];
     [self.shareButton updateThemes];
-    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3] forState:UIControlStateNormal];
-    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3] forState:UIControlStateHighlighted];
+    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:@"grey3"] forState:UIControlStateNormal];
+    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:@"grey3"] forState:UIControlStateHighlighted];
     
-    [self.shareTitleButton setTitleColorThemeKey:kFHColorCoolGrey3];
-    [self.shareTitleButton setHighlightedTitleColorThemeKey:kFHColorCoolGrey3];
+    [self.shareTitleButton setTitleColorThemeKey:@"grey3"];
+    [self.shareTitleButton setHighlightedTitleColorThemeKey:@"grey3"];
     if (self.isShowShareView && self.shareView){
         UIImage *firstImg = [self activityImageNameWithActivity:self.firstShareButton.activityType];
         UIImage *secondImg = [self activityImageNameWithActivity:self.secondShareButton.activityType];

@@ -536,13 +536,13 @@ TTAccountMulticastProtocol
         _segmentView.delegate = self;
         [_segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont) {
             *norColorKey = kColorText1;
-            *selColorKey = kAKMainColorHex;
+            *selColorKey = @"akmain";
             *titleFont = [UIFont systemFontOfSize:15];
         }];
         [_segmentView setUpUnderLineEffect:^(BOOL *isUnderLineDelayScroll, CGFloat *underLineH, NSString *__autoreleasing *underLineColorKey, BOOL *isUnderLineEqualTitleWidth) {
             *isUnderLineDelayScroll = NO;
             *underLineH = 2;
-            *underLineColorKey = kAKMainColorHex;
+            *underLineColorKey = @"akmain";
             *isUnderLineEqualTitleWidth = YES;
         }];
     }

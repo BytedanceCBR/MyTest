@@ -12,7 +12,7 @@
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
-#import "FHCommentDetailViewModel.h"
+#import "FHCommentBaseDetailViewModel.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -58,12 +58,12 @@
     [self.contentView addSubview:_userInfoView];
     __weak typeof(self) weakSelf = self;
     self.userInfoView.deleteCellBlock = ^{
-        FHCommentDetailViewModel *viewModel = weakSelf.baseViewModel;
+        FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
         [viewModel.detailController goBack];
     };
     
     self.userInfoView.reportSuccessBlock = ^{
-        FHCommentDetailViewModel *viewModel = weakSelf.baseViewModel;
+        FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
         [viewModel.detailController goBack];
     };
     
