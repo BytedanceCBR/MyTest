@@ -23,7 +23,7 @@
 @property(nonatomic , weak) FHCommentDetailViewController *detailVC;
 @property(nonatomic , weak) TTHttpTask *httpTask;
 @property(nonatomic , weak) TTHttpTask *httpListTask;
-@property (nonatomic, strong)   NSMutableArray       *items;
+@property (nonatomic, strong)   id       detailData;// 详情数据
 @property (nonatomic, assign)   NSInteger       offset;
 @property (nonatomic, assign)   NSInteger       count;
 
@@ -40,7 +40,6 @@
     if (self) {
         self.detailVC = viewController;
         self.tableView = tableView;
-        self.items = [NSMutableArray new];
         self.offset = 0;
         self.count = 20;
         self.totalComments = [NSMutableArray new];
@@ -60,13 +59,11 @@
 
 - (void)startLoadData {
     self.offset = 0;
-    [self.items removeAllObjects]; // 详情
+    self.detailData = nil;
     [self.totalComments removeAllObjects];
     [self.totalCommentLayouts removeAllObjects];
     // 请求评论详情
     [self requestCommentDetailData];
-    // 请求回复列表
-    [self requestReplyListData];
 }
 
 // 请求评论详情数据
@@ -75,15 +72,26 @@
         [self.httpTask cancel];
     }
     __weak typeof(self) wself = self;
-//    self.httpTask = [FHHouseUGCAPI requestRentHouseSearchWithQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHHouseRentModel class] completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
-//        [wself processQueryData:model error:error];
-//    }];
+    self.httpTask = [FHHouseUGCAPI requestCommentDetailDataWithCommentId:self.comment_id class:[FHDetailReplyCommentModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        [wself processQueryData:model error:error];
+    }];
 }
 
 // 处理网络数据返回，详情返回直接展示
 - (void)processQueryData:(id<FHBaseModelProtocol>)model error:(NSError *)error {
-    if (model != NULL && error == NULL) {
-        
+    if (model != NULL) {
+        // 有详情数据
+        self.tableView.hidden = NO;
+        [self.detailVC.emptyView hideEmptyView];
+        self.detailVC.hasValidateData = YES;
+        // 详情data
+        self.detailData = model;
+        // 请求回复列表
+        [self requestReplyListData];
+    } else {
+        self.detailVC.hasValidateData = NO;
+        self.tableView.hidden = YES;
+        [self.detailVC.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
     }
 }
 
@@ -119,7 +127,7 @@
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 2;// 详情 + 回复列表
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

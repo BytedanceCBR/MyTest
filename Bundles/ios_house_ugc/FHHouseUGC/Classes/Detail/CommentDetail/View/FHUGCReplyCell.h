@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 评论详情回复cell
+// 评论详情回复cell，暂时无用
 @interface FHUGCReplyCell : FHUGCBaseCell
 
 @end
