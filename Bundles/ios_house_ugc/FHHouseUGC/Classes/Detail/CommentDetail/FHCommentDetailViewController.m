@@ -52,7 +52,7 @@
 
 - (void)setupUI {
     [self setupDefaultNavBar:NO];
-    
+    self.comment_id = @"6712727097456623627";
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
     [self configTableView];

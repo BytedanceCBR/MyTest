@@ -13,13 +13,17 @@
 #import "FHUGCBaseCell.h"
 #import "FHUGCReplyCell.h"
 #import "FHHouseUGCAPI.h"
+#import "FHDetailReplyCommentModel.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHCommentDetailViewController *detailVC;
 @property(nonatomic , weak) TTHttpTask *httpTask;
+@property(nonatomic , weak) TTHttpTask *httpListTask;
 @property (nonatomic, strong)   NSMutableArray       *items;
+@property (nonatomic, assign)   NSInteger       offset;
+@property (nonatomic, assign)   NSInteger       count;
 
 @end
 
@@ -31,6 +35,8 @@
         self.detailVC = viewController;
         self.tableView = tableView;
         self.items = [NSMutableArray new];
+        self.offset = 0;
+        self.count = 20;
         [self configTableView];
     }
     return self;
@@ -45,7 +51,10 @@
 }
 
 - (void)startLoadData {
+    // 请求评论详情
     [self requestCommentDetailData];
+    // 请求回复列表
+    [self requestReplyListData];
 }
 
 // 请求评论详情数据
@@ -57,7 +66,6 @@
 //    self.httpTask = [FHHouseUGCAPI requestRentHouseSearchWithQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHHouseRentModel class] completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
 //        [wself processQueryData:model error:error];
 //    }];
-    
 }
 
 // 处理网络数据返回，详情返回直接展示
@@ -67,9 +75,15 @@
     }
 }
 
-// 请求回复列表数据
+// 请求回复列表数据，返回后直接处理回复列表是否展示和刷新就好
 - (void)requestReplyListData {
-    
+    if (self.httpListTask) {
+        [self.httpListTask cancel];
+    }
+    __weak typeof(self) wself = self;
+    self.httpListTask = [FHHouseUGCAPI requestReplyListWithCommentId:self.comment_id offset:self.offset class:[FHDetailReplyCommentModel class] completion:^(id<FHBaseModelProtocol> _Nonnull model, NSError * _Nonnull error) {
+        NSLog(@"%@",model);
+    }];
 }
 
 
