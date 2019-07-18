@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)setRichContent:(TTUGCAttributedLabel *)label content:(NSString *)content font:(UIFont *)font numberOfLines:(NSInteger)numberOfLines;
 
-+ (void)setRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width;
++ (void)setRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
 
 + (void)setArticleRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width;
 

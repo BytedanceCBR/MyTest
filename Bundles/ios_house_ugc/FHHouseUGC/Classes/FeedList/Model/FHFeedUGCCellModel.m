@@ -165,8 +165,6 @@
     cellModel.logPb = model.logPb;
     cellModel.showLookMore = YES;
     
-    [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
-    
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     community.name = model.community.name;
     community.url = model.community.url;
@@ -178,6 +176,8 @@
     user.avatarUrl = model.user.avatarUrl;
     user.userId = model.user.userId;
     cellModel.user = user;
+    
+    NSInteger numberOfLines = 3;
     
     NSMutableArray *cellImageList = [NSMutableArray array];
     if(model.ugcU13CutImageList.count > 0){
@@ -220,11 +220,13 @@
             }
         }else{
             //纯文本
-//            cellModel.showLookMore = YES;
+            numberOfLines = 5;
         }
     }
     
     cellModel.imageList = cellImageList;
+    
+    [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:numberOfLines];
     
     NSMutableArray *cellLargeImageList = [NSMutableArray array];
     if(model.largeImageList.count > 0){

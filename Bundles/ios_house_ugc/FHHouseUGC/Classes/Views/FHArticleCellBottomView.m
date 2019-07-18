@@ -17,6 +17,7 @@
 @interface FHArticleCellBottomView ()
 
 @property(nonatomic ,strong) UIView *bottomSepView;
+@property(nonatomic ,strong) UIImageView *positionImageView;
 
 @end
 
@@ -38,6 +39,10 @@
     _positionView.layer.masksToBounds= YES;
     _positionView.layer.cornerRadius = 4;
     [self addSubview:_positionView];
+    
+    self.positionImageView = [[UIImageView alloc] init];
+    _positionImageView.image = [UIImage imageNamed:@"fh_ugc_community_icon"];
+    [self.positionView addSubview:_positionImageView];
     
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeRed3]];
     [_position sizeToFit];
@@ -74,8 +79,14 @@
         make.height.mas_equalTo(24);
     }];
     
-    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.positionImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.positionView).offset(6);
+        make.centerY.mas_equalTo(self.positionView);
+        make.width.height.mas_equalTo(12);
+    }];
+    
+    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.positionImageView.mas_right).offset(2);
         make.right.mas_equalTo(self.positionView).offset(-6);
         make.centerY.mas_equalTo(self.positionView);
         make.height.mas_equalTo(18);

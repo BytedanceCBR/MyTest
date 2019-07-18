@@ -23,6 +23,7 @@
 @property(nonatomic ,strong) UILabel *likeLabel;
 @property(nonatomic ,strong) UIView *bottomSepView;
 @property (nonatomic, copy)  NSString *saveDiggGroupId;
+@property(nonatomic ,strong) UIImageView *positionImageView;
 
 @end
 
@@ -55,6 +56,10 @@
     _positionView.userInteractionEnabled = YES;
     _positionView.hidden = YES;
     [self addSubview:_positionView];
+    
+    self.positionImageView = [[UIImageView alloc] init];
+    _positionImageView.image = [UIImage imageNamed:@"fh_ugc_community_icon"];
+    [self.positionView addSubview:_positionImageView];
     
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeRed3]];
     [_position sizeToFit];
@@ -105,8 +110,14 @@
         make.height.mas_equalTo(24);
     }];
     
-    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.positionImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.positionView).offset(6);
+        make.centerY.mas_equalTo(self.positionView);
+        make.width.height.mas_equalTo(12);
+    }];
+    
+    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.positionImageView.mas_right).offset(2);
         make.right.mas_equalTo(self.positionView).offset(-6);
         make.centerY.mas_equalTo(self.positionView);
         make.height.mas_equalTo(18);
@@ -171,7 +182,12 @@
 }
 
 - (void)updateLikeState:(NSString *)diggCount userDigg:(NSString *)userDigg {
-    self.likeLabel.text = diggCount;
+    NSInteger count = [diggCount integerValue];
+    if(count == 0){
+        self.likeLabel.text = @"赞";
+    }else{
+        self.likeLabel.text = diggCount;
+    }
     if([userDigg boolValue]){
         self.likeImageView.image = [UIImage imageNamed:@"fh_ugc_like_selected"];
         self.likeLabel.textColor = [UIColor themeRed1];
@@ -232,23 +248,7 @@
     [self trackClickLike];
     //    // 刷新UI
     NSInteger user_digg = [self.cellModel.userDigg integerValue] == 0 ? 1 : 0;
-    
-    
-    //    NSInteger diggCount = [self.cellModel.diggCount integerValue];
-    //    if(user_digg == 1){
-    //        //已点赞
-    //        self.cellModel.userDigg = @"0";
-    //        if(diggCount > 0){
-    //            diggCount = diggCount - 1;
-    //        }
-    //    }else{
-    //        //未点赞
-    //        self.cellModel.userDigg = @"1";
-    //        diggCount = diggCount + 1;
-    //    }
-    //
-    //    self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
-    //    [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
+
     NSMutableDictionary *dict = [NSMutableDictionary new];
     dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"];
     dict[@"element_from"] = self.cellModel.tracerDic[@"element_from"];

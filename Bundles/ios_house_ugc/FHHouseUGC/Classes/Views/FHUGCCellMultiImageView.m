@@ -89,7 +89,7 @@
         _viewHeight = self.imageWidth * 9.0f/16.0f;
         UIImageView *imageView = [self.imageViewList firstObject];
         [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.left.bottom.mas_equalTo(self);
+            make.top.left.mas_equalTo(self);
             make.width.mas_equalTo(self.imageWidth);
             make.height.mas_equalTo(self.imageWidth * 9.0f/16.0f);
         }];
@@ -102,7 +102,7 @@
                 make.top.mas_equalTo(self);
                 if(firstView == self){
                     make.left.mas_equalTo(firstView);
-                    make.bottom.mas_equalTo(firstView);
+//                    make.bottom.mas_equalTo(firstView);
                 }else{
                     make.left.mas_equalTo(firstView.mas_right).offset(itemPadding);
                 }
@@ -130,9 +130,9 @@
                 make.width.mas_equalTo(self.imageWidth);
                 make.height.mas_equalTo(self.imageWidth);
                 //整个view的高度到最后一个imageView的底部
-                if(i == self.imageViewList.count - 1){
-                    make.bottom.mas_equalTo(self);
-                }
+//                if(i == self.imageViewList.count - 1){
+//                    make.bottom.mas_equalTo(self);
+//                }
             }];
         }
     }else{

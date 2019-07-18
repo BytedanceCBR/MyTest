@@ -106,10 +106,12 @@
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
     }];
     
+    CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:self.imageCount width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
     [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        make.height.mas_equalTo(imageViewheight);
     }];
     
     if (self.showCommunity) {

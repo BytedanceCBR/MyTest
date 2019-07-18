@@ -117,7 +117,12 @@
         self.bottomView.position.text = cellModel.community.name;
         [self.bottomView showPositionView:showCommunity];
         
-        [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
+        NSInteger commentCount = [cellModel.commentCount integerValue];
+        if(commentCount == 0){
+            [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
+        }else{
+            [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
+        }
         [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
         //内容
         if(isEmptyString(cellModel.content)){
