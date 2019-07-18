@@ -111,6 +111,24 @@
             }];
             firstView = imageView;
         }
+    }else if(self.count == 4){
+        _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
+        _viewHeight = _imageWidth * 2 + itemPadding;
+        
+        UIView *topView = self;
+        for (NSInteger i = 0; i < self.imageViewList.count; i++) {
+            UIImageView *imageView = self.imageViewList[i];
+            NSInteger row = i/2; // 0,1,2
+            NSInteger column = i%2; //0,1,2
+            CGFloat topMargin = row * _imageWidth + itemPadding * row;
+            CGFloat leftMargin = column * _imageWidth + itemPadding * column;
+            [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self).offset(topMargin);
+                make.left.mas_equalTo(self).offset(leftMargin);
+                make.width.mas_equalTo(self.imageWidth);
+                make.height.mas_equalTo(self.imageWidth);
+            }];
+        }
     }else if(self.count >= 3){
         _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
         
@@ -129,10 +147,6 @@
                 make.left.mas_equalTo(self).offset(leftMargin);
                 make.width.mas_equalTo(self.imageWidth);
                 make.height.mas_equalTo(self.imageWidth);
-                //整个view的高度到最后一个imageView的底部
-//                if(i == self.imageViewList.count - 1){
-//                    make.bottom.mas_equalTo(self);
-//                }
             }];
         }
     }else{
@@ -260,6 +274,9 @@
     }else if(count == 2){
         CGFloat imageWidth = (width - itemPadding)/2;
         return imageWidth * 124.0f/165.0f;
+    }else if(count == 4){
+        CGFloat imageWidth = (width - itemPadding * 2)/3;
+        return imageWidth * 2 + itemPadding;
     }else if(count >= 3){
         CGFloat imageWidth = (width - itemPadding * 2)/3;
         NSInteger row = (count - 1)/3;
