@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)startLoadData;
 
+@property (nonatomic, copy)     NSString       *comment_id;
+
 @end
 
 NS_ASSUME_NONNULL_END

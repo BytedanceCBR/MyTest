@@ -29,6 +29,7 @@
 @property (nonatomic, strong)   UITableView       *tableView;
 @property (nonatomic, strong)   FHExploreDetailToolbarView       *toolbarView; // 临时toolbar
 @property (nonatomic, strong)   FHCommentDetailViewModel      *viewModel;
+@property (nonatomic, copy)     NSString       *comment_id;
 
 @end
 
@@ -37,7 +38,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        
+        self.comment_id = @"6712727097456623627";
     }
     return self;
 }
@@ -56,6 +57,8 @@
     
     [self configTableView];
     [self.view addSubview:_tableView];
+    self.viewModel = [[FHCommentDetailViewModel alloc] initWithController:self tableView:_tableView];
+    self.viewModel.comment_id = self.comment_id;
     [self setupToolbarView];
 //    _tableView.dataSource = self;
 //    _tableView.delegate = self;

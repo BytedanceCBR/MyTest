@@ -276,4 +276,13 @@
     }];
 }
 
++ (TTHttpTask *)requestCommentDetailDataWithCommentId:(NSString *)comment_id class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/2/comment/v1/detail";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (comment_id.length > 0) {
+        paramDic[@"comment_id"] = comment_id;
+    }
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end
