@@ -36,6 +36,11 @@
     [self.viewModel viewWillAppear];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.viewModel viewDidAppear];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear];

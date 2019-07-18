@@ -190,7 +190,7 @@
 }
 
 - (void)scrollToTopAndRefresh {
-    if(self.viewModel.isRefreshingTip){
+    if(self.viewModel.isRefreshingTip || self.isLoadingData){
         return;
     }
     [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
@@ -262,6 +262,7 @@
     traceParam[@"page_type"] = @"feed_publisher";
     traceParam[@"enter_from"] = page_type;
     dict[TRACER_KEY] = traceParam;
+    dict[VCTITLE_KEY] = @"发帖";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
     NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];

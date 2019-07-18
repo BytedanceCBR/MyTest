@@ -149,6 +149,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL isAlreadyShowedGuideView;
+@property(nonatomic, assign) BOOL hasShowDots;
 
 @end
 
@@ -613,8 +614,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [logv3Dic setValue:@"default" forKey:@"enter_type"];
     [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
     
-    if(![FHEnvContext isUGCOpen]){
+    if (!self.hasShowDots) {
         [FHEnvContext showFindTabRedDots];
+        self.hasShowDots = YES;
     }
 }
 

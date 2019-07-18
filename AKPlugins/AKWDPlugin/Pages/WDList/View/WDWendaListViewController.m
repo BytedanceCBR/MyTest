@@ -422,6 +422,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     tracerDict[@"enter_type"] = @"click";
     tracerDict[@"log_pb"] = self.goDetailDict[@"log_pb"];
     dict[@"tracer"] = tracerDict;
+    dict[@"title"] = @"发帖";
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];

@@ -138,6 +138,8 @@
                 [self.homeViewController.emptyView hideEmptyView];
             }
             
+            [self checkCityStatus];
+            
             self.headerHeight = [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
             if (xConfigDataModel.houseTypeList.count <= 1) {
                 self.headerHeight += KFHHomeSectionHeight;
