@@ -88,6 +88,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)showFindTabRedDots;
 
 /*
+ 修改第二个tab名称
+ */
++ (void)changeFindTabTitle;
+
+/*
+ 增加引导
+ */
++ (void)addTabUGCGuid;
+
+/*
  隐藏tab上的红点
  */
 + (void)hideFindTabRedDots;
@@ -141,6 +151,12 @@ NS_ASSUME_NONNULL_BEGIN
  判断在房屋估价结果页中是否显示查看城市行情的按钮
  */
 + (BOOL)isPriceValuationShowHouseTrend;
+
+/*
+ 判断是否开通ugc模块
+ */
++ (BOOL)isUGCOpen;
+
 //返回origin_search id
 
 //接受config数据

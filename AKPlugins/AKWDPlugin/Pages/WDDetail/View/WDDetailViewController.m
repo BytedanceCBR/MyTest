@@ -267,13 +267,12 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     if (!originEtag || ![originEtag isEqualToString:_natantViewModel.etag]) {
         [_detailModel.answerEntity deleteObject];
     }
-    
+    [self.commentWriteView.inputTextView resignFirstResponder];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     _isCommentViewWillShow = NO;
     self.infoLoadFinished = NO;
     self.infoLoadFailed = NO;
@@ -337,9 +336,9 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self.detailView didAppear];
     
     _hasDisappear = NO;
-    
+    __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.toolbarView showSupportsEmojiInputBubbleViewIfNeeded];
+        [weakSelf.toolbarView showSupportsEmojiInputBubbleViewIfNeeded];
     });
 }
 
@@ -357,7 +356,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    
     if (self.commentShowDate) {
         NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.commentShowDate];
         self.commentShowTimeTotal += timeInterval*1000;
@@ -2107,15 +2105,16 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)tt_commentViewControllerDidFetchCommentsWithError:(NSError *)error 
 {
+    __weak typeof(self) weakSelf = self;
     if (self.detailModel.isJumpComment) {
         self.detailModel.isJumpComment = NO;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self p_willShowComment];
+            [weakSelf p_willShowComment];
         });
     } else if (!isEmptyString(self.detailModel.msgId)) {
         self.detailModel.msgId = @"";
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self p_willShowComment];
+            [weakSelf p_willShowComment];
         });
     }
    
@@ -2268,6 +2267,9 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"qid"]  forKey:@"qid"];
     [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"log_pb"]  forKey:@"log_pb"];
     [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
+    if (!params[@"group_id"]) {
+        params[@"group_id"] = params[@"qid"] ?: @"be_null";
+    }
     [TTTracker eventV3:@"rt_post_comment" params:params];
     
     commentWriteManager.delegate = nil;

@@ -103,7 +103,7 @@ extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
             _avatarLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:14]];
         }
         _avatarLabel.textAlignment = NSTextAlignmentLeft;
-        _avatarLabel.textColorThemeKey = kFHColorCharcoalGrey;
+        _avatarLabel.textColorThemeKey = @"grey1";
         [self addSubview:_avatarLabel];
     }
     return _avatarLabel;

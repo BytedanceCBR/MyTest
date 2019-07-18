@@ -32,6 +32,8 @@
 
 @property (nonatomic, strong) ExploreOrderedData *orderedData;
 
+@property (nonatomic, assign) BOOL isJumpComment;
+
 @end
 
 @implementation WDDetailContainerViewController
@@ -51,8 +53,12 @@
 
     self = [super init];
     if (self) {
+        self.isJumpComment = NO;
         self.paramObj = paramObj;
         self.hidesBottomBarWhenPushed = YES;
+        if(paramObj.allParams[@"is_jump_comment"]) {
+            self.isJumpComment = [paramObj.allParams[@"is_jump_comment"] boolValue];
+        }
         WDDetailContainerViewModel *viewModel = [[WDDetailContainerViewModel alloc] initWithRouteParamObj:paramObj];
         self.viewModel = viewModel;
         NSDictionary *extraParams = paramObj.userInfo.extra;
@@ -64,6 +70,7 @@
         }
         else {
             self.viewModel.detailModel.dataSource = self;
+            self.viewModel.detailModel.isJumpComment = self.isJumpComment;
         }
     }
     return self;

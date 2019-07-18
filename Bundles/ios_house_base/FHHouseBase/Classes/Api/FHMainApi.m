@@ -11,7 +11,7 @@
 #import "FHHouseType.h"
 #import "FHCommonDefines.h"
 #import <TTSandBoxHelper.h>
-#import "TTSandBoxHelper.h"
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 #import "FHJSONHTTPRequestSerializer.h"
 #import "FHEnvContext.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
@@ -233,7 +233,6 @@
             
     }];
 }
-
 
 #pragma mark 找房频道首页相关
 +(TTHttpTask *)requestHomeSearchRoll:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion

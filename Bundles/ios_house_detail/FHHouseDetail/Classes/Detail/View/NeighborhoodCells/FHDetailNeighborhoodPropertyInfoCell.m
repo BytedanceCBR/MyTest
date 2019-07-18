@@ -13,15 +13,15 @@
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
 #import "TTRoute.h"
-#import "FHDetailHeaderView.h"
 #import "FHExtendHotAreaButton.h"
 #import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
+#import "FHDetailHeaderViewNoMargin.h"
 
 @interface FHDetailNeighborhoodPropertyInfoCell ()
 
-@property (nonatomic, strong)   FHDetailHeaderView       *headerView;
+@property (nonatomic, strong)   FHDetailHeaderViewNoMargin       *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong)   FHDetailFoldViewButton       *foldButton;
 
@@ -110,12 +110,12 @@
 }
 
 - (void)setupUI {
-    _headerView = [[FHDetailHeaderView alloc] init];
+    _headerView = [[FHDetailHeaderViewNoMargin alloc] init];
     _headerView.label.text = @"小区概况";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(46);
+        make.height.mas_equalTo(26);
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;

@@ -932,12 +932,14 @@
                                         tempModel.rank = obj1.rank;
                                         tempModel.type = obj1.type;
                                         [tempData removeObjectAtIndex:index];
+                                        
+                                        if (open_url) {
+                                            [guessArray addObject:tempModel];
+                                        }
                                         break;
                                     }
                                     index += 1;
                                 }
-                                
-                                [guessArray addObject:tempModel];
                             }
                         }
                     }];

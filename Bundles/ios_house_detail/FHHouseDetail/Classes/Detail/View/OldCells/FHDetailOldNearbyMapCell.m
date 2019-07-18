@@ -610,7 +610,7 @@ UITableViewDataSource>
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"table cell click!!!");
+//    NSLog(@"table cell click!!!");
 }
 
 // 地图截屏

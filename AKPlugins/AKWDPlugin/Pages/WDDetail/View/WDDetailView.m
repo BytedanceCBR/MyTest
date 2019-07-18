@@ -193,6 +193,13 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
     [v3Dic removeObjectForKey:@"article_type"];
     [v3Dic removeObjectForKey:@"pct"];
     v3Dic[@"event_type"] = @"house_app2c_v2";
+    
+    if (self.detailModel.apiParam[@"enter_from"]
+        && [self.detailModel.apiParam[@"enter_from"] isKindOfClass:[NSString class]]
+        && [self.detailModel.apiParam[@"enter_from"] isEqualToString:@"question"]) {
+        // 来源于问答相关（回答详情）
+        [v3Dic setValue:@"answer" forKey:@"page_type"];
+    }
 
     [TTTracker eventV3:@"read_pct" params:v3Dic isDoubleSending:NO];
 }

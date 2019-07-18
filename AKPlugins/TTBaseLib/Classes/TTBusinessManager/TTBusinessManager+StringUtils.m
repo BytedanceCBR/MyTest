@@ -16,6 +16,7 @@ static NSDateFormatter *simpleFormatter;
 static NSDateFormatter *onlyDateFormatter;
 static NSDateFormatter *onlyTimeFormatter;
 static NSDateFormatter *wordDateFormatter;
+static NSDateFormatter *noSecondformatter;
 static NSDateFormatter *singleYearFormatter;
 static NSDateFormatter *noYearWordDateFormatter;
 static NSTimeInterval midnightInterval;//午夜时间
@@ -53,6 +54,9 @@ static NSTimeInterval midnightYYInterval;//今年1月1号0点0分0秒
     
     noYearWordDateFormatter = [[NSDateFormatter alloc] init];
     [noYearWordDateFormatter setDateFormat:@"M月d日"];
+    
+    noSecondformatter = [[NSDateFormatter alloc] init];
+    [noSecondformatter setDateFormat:@"yyyy-MM-dd HH:mm"];
     
 #ifndef SS_TODAY_EXTENSTION
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshMidnightInterval) name:UIApplicationSignificantTimeChangeNotification object:nil];
@@ -139,6 +143,10 @@ static NSTimeInterval midnightYYInterval;//今年1月1号0点0分0秒
 
 + (NSString*)noYearStringSince:(NSTimeInterval)timerInterval {
     return [noYearWordDateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:timerInterval]];
+}
+
++ (NSString*)noSecondStringSince:(NSTimeInterval)timerInterval {
+    return [noSecondformatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:timerInterval]];
 }
 
 
@@ -299,6 +307,70 @@ static NSTimeInterval midnightYYInterval;//今年1月1号0点0分0秒
     return retString;
 }
 
++ (NSString*)ugcCustomtimeAndCustomdateStringSince1970:(NSTimeInterval)timeInterval
+{
+    NSString *retString = nil;
+    if (midnightInterval == 0) {
+        [TTBusinessManager refreshMidnightInterval];
+    }
+    if (midnightYDInterval == 0) {
+        [TTBusinessManager refreshMidnightYDInterval];
+    }
+    if (midnightDBYInterval == 0) {
+        [TTBusinessManager refreshMidnightDBYInterval];
+    }
+    if (midnightNDAInterval == 0) {
+        [TTBusinessManager refreshMidnightNDAInterval];
+    }
+    if (midnightYYInterval == 0) {
+        [TTBusinessManager refreshMidnightYYInterval];
+    }
+    
+    // 时间点超过零点之后重新刷新缓存数据
+    if ([[NSDate date] timeIntervalSince1970] - midnightInterval > 24 * 3600) {
+        [TTBusinessManager refreshMidnightInterval];
+        [TTBusinessManager refreshMidnightYDInterval];
+        [TTBusinessManager refreshMidnightDBYInterval];
+        [TTBusinessManager refreshMidnightNDAInterval];
+        [TTBusinessManager refreshMidnightYYInterval];
+    }
+    
+    if (timeInterval >= midnightYYInterval) {
+        NSDate *now = [NSDate date];
+        int t = [now timeIntervalSince1970] - timeInterval;
+        if(t < 60) {
+            retString = NSLocalizedString(@"刚刚", nil);
+        }
+        else if (t < 3600) {
+            int val = t / 60;
+            retString = [NSString stringWithFormat:NSLocalizedString(@"%d分钟前", nil), val];
+        }
+        else if(t < 24 * 3600) {
+            int val = t / 3600;
+            retString = [NSString stringWithFormat:NSLocalizedString(@"%d小时前", nil), val];
+        }
+        else if(timeInterval > midnightYDInterval) {
+            retString = [NSString stringWithFormat:NSLocalizedString(@"昨天%@", nil),[TTBusinessManager formateDateStringSince:timeInterval formaterType:TTTimeFormatterNoDate]];
+        }
+//        else if(timeInterval > midnightDBYInterval){
+//            retString = [NSString stringWithFormat:NSLocalizedString(@"前天%@", nil),[TTBusinessManager formateDateStringSince:timeInterval formaterType:TTTimeFormatterNoDate]];
+//        }
+//        else if(timeInterval > midnightNDAInterval){
+//            //restTime:当前时间与前一天凌晨24:00的时间差
+//            int restTime = [now timeIntervalSince1970] - midnightInterval;
+//            int val = (t - restTime) / (24 * 3600) + 1;
+//            retString = [NSString stringWithFormat:NSLocalizedString(@"%d天前", nil), val];
+//        }
+        else{
+            retString = [TTBusinessManager formateDateStringSince:timeInterval formaterType:TTTimeFormatterSimple];
+        }
+    }
+    else{
+        retString = [TTBusinessManager formateDateStringSince:timeInterval formaterType:TTTimeFormatterNormalNoSecond];
+    }
+    return retString;
+}
+
 + (NSString *)formateDateStringSince:(NSTimeInterval)timeInterval formaterType:(TTTimeFormatterType)type {
     switch (type) {
         case TTTimeFormatterSimple:
@@ -324,6 +396,8 @@ static NSTimeInterval midnightYYInterval;//今年1月1号0点0分0秒
             break;
         case TTTimeFormatterWordNoTime:
             return [TTBusinessManager wordDateStringSince:timeInterval];
+        case TTTimeFormatterNormalNoSecond:
+            return [TTBusinessManager noSecondStringSince:timeInterval];
         default:
             NSLog(@"no current TTTimeFormatterType");
             break;

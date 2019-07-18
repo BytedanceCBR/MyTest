@@ -437,7 +437,6 @@
                 [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             } else {
                 if (self.searchType == FHSugListSearchTypePriceValuation) {
-                    // add by zyk 空页面图需要替换，合并alpha代码后替换
                     [self.listController.emptyView showEmptyWithTip:@"未能找到对应小区" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
                 }else {
                     self.listController.emptyView.hidden = YES;

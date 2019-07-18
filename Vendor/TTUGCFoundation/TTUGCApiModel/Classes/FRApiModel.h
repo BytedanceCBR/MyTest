@@ -3772,6 +3772,8 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSString<Optional> *promotion_id;
 @property (strong, nonatomic) NSNumber<Optional> *flipchat_sync;
 @property (strong, nonatomic) NSString<Optional> *sdk_params;
+@property (nonatomic, copy)     NSString<Optional>       *social_group_id;
+@property (nonatomic, copy)   NSDictionary<Optional> * extraTrack;
 @end
 
 @interface  FRUgcPublishPostV5CommitResponseModel : JSONModel<TTResponseModelProtocol>
@@ -3779,6 +3781,12 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) FRUgcDataStructModel<Optional> *thread;
 @property (strong, nonatomic) NSString<Optional> *err_tips;
 @property (strong, nonatomic) FRUGCPublishGuideInfoStructModel<Optional> *guide_info;
+@end
+
+@interface FHUgcPublishPostResponseModel : JSONModel<TTResponseModelProtocol>
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) NSDictionary *data ;
 @end
 
 @interface  FRUserProfileStickV1RequestModel : TTRequestModel

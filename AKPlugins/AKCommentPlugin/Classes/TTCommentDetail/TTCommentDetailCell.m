@@ -241,7 +241,7 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
 - (void)themeChanged:(NSNotification *)notification {
     [self refreshContent];
 
-    self.timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
+    self.timeLabel.textColor = [UIColor tt_themedColorForKey:@"grey3"];
     self.userInfoLabel.textColor = [UIColor tt_themedColorForKey:kColorText13];
 }
 
@@ -415,7 +415,7 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
         _timeLabel = [[TTAsyncLabel alloc] init];
         _timeLabel.frame = CGRectMake(self.nameView.left, self.contentLabel.bottom, self.width - [TTCommentDetailCellHelper cellHorizontalPadding] - [TTCommentDetailCellHelper avatarSize] - [TTCommentDetailCellHelper avatarRightPadding], [TTDeviceUIUtils tt_newPadding:16.5f]);
         _timeLabel.font = [TTCommentDetailCellHelper timeLabelFont];
-        _timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
+        _timeLabel.textColor = [UIColor tt_themedColorForKey:@"grey3"];
         _timeLabel.numberOfLines = 1;
         _timeLabel.backgroundColor = [UIColor clearColor];
         _timeLabel.layer.backgroundColor = [UIColor clearColor].CGColor;

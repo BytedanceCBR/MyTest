@@ -14,7 +14,7 @@
 #import "AKTaskSettingHelper.h"
 #import "AKProfileBenefitManager.h"
 #import "AKMinePhotoCarouselEntry.h"
-#import "AKLoginTrafficViewController.h"
+//#import "AKLoginTrafficViewController.h"
 #import "AKProfilePhotoCarouselViewCell.h"
 #import "TTProfileFunctionCell.h"
 #import "TTProfileTopFunctionCell.h"
@@ -54,15 +54,14 @@
 #import "NSObject+FBKVOController.h"
 #import "TTBadgeTrackerHelper.h"
 #import "TTRoute.h"
-#import "TTMessageNotificationTipsManager.h"
-#import "TTMessageNotificationMacro.h"
+#import "FHMessageNotificationTipsManager.h"
+#import "FHMessageNotificationMacro.h"
 //#import "TTPLManager.h"
 #import <TTTracker.h>
 //#import "TTCommonwealManager.h"
 #import "BDTAccountClientManager.h"
 #import "TTAccountBindingMobileViewController.h"
 #import "TTTabBarProvider.h"
-#import "AKLoginTrafficViewController.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 
@@ -151,7 +150,7 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     self.tableView.tableFooterView = [SSThemedView new];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, [TTDeviceUIUtils tt_padding:30.f/2], 0, 0);
     self.tableView.separatorColor = [UIColor tt_themedColorForKey:kColorLine1];
-    self.tableView.disableTTStyledSeparatorEdge = YES;
+    self.tableView.enableTTStyledSeparator = NO;
     [self.tableView registerClass:[AKProfilePhotoCarouselViewCell class] forCellReuseIdentifier:kAKIdenfitierPhotoCarouselKey];
     [self updateHeaderControls];
     [[TTSettingMineTabManager sharedInstance_tt] reloadSectionsIfNeeded];
@@ -187,18 +186,18 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     } else {
         [self refreshUserInfoView];
     }
-    
-    TTMessageNotificationTipsManager *manager = [TTMessageNotificationTipsManager sharedManager];
-    [manager saveLastImportantMessageID];
-    //切换到我的tab时
-    if([[TTSettingMineTabManager sharedInstance_tt] getEntryForType:TTSettingMineTabEntyTypeMessage]){
-        if(manager.isImportantMessage){
-            wrapperTrackEventWithCustomKeys(@"message_list", @"vip_show", manager.msgID, nil, kTTMessageNotificationTrackExtra(manager.actionType));
-        }
-        else if(manager.unreadNumber > 0){
-            wrapperTrackEventWithCustomKeys(@"message_list", @"show", nil, nil, kTTMessageNotificationTrackExtra(manager.actionType));
-        }
-    }
+
+//    FHMessageNotificationTipsManager *manager = [FHMessageNotificationTipsManager sharedManager];
+//    [manager saveLastImportantMessageID];
+//    //切换到我的tab时
+//    if([[TTSettingMineTabManager sharedInstance_tt] getEntryForType:TTSettingMineTabEntyTypeMessage]){
+//        if(manager.isImportantMessage){
+//            wrapperTrackEventWithCustomKeys(@"message_list", @"vip_show", manager.msgID, nil, kTTMessageNotificationTrackExtra(manager.actionType));
+//        }
+//        else if(manager.unreadNumber > 0){
+//            wrapperTrackEventWithCustomKeys(@"message_list", @"show", nil, nil, kTTMessageNotificationTrackExtra(manager.actionType));
+//        }
+//    }
     
     [self updateTaskEntryDisplayIfNeed];
 }
@@ -535,11 +534,20 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     } else {
         TTSettingMineTabEntry *entry = [[self class] entryForIndexPath:indexPath];
         if (entry.AKRequireLogin) {
-            [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
-                if (result) {
-                    operation();
+            
+            [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+                if (type == TTAccountAlertCompletionEventTypeDone) {
+                    //登录成功 走发送逻辑
+                    if ([TTAccountManager isLogin]) {
+                        operation();
+                    }
                 }
             }];
+//            [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
+//                if (result) {
+//                    operation();
+//                }
+//            }];
         } else {
             operation();
         }
@@ -653,11 +661,19 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     if ([TTAccount sharedAccount].isLogin) {
         operation();
     } else {
-        [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
-            if (result) {
-                operation();
+        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                //登录成功 走发送逻辑
+                if ([TTAccountManager isLogin]) {
+                    operation();
+                }
             }
         }];
+//        [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
+//            if (result) {
+//                operation();
+//            }
+//        }];
     }
 }
 

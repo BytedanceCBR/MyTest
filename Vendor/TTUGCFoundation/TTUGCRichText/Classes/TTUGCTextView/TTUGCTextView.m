@@ -307,6 +307,11 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)]) {
         return [self.delegate textView:self shouldChangeTextInRange:range replacementText:text];
     }
+    
+    // 限制输入框文本长度
+    if (self.textLenDelegate && [self.textLenDelegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)]) {
+        return [self.textLenDelegate textView:self shouldChangeTextInRange:range replacementText:text];
+    }
 
     return YES;
 }
@@ -333,6 +338,11 @@
 
     // 处理 Undo 事件
     if (cursor == ULONG_MAX || start > originText.length || start > currentText.length) {
+        return;
+    }
+    
+    if (currentText.length > 2000) {
+        self.text = originText;
         return;
     }
 

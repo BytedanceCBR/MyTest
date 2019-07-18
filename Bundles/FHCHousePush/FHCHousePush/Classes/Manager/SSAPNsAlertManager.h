@@ -17,6 +17,7 @@
 #define kSSAPNsAlertManagerImportanceKey    @"kSSAPNsAlertManagerImportanceKey"     // 紧急程度
 #define kSSAPNsAlertManagerAttachmentKey    @"kSSAPNsAlertManagerAttachmentKey"     // 附件
 
+extern BOOL kFHInAppPushTipsHidden; // 应用内弹窗 隐藏
 
 @interface SSAPNsAlertManager : NSObject
 

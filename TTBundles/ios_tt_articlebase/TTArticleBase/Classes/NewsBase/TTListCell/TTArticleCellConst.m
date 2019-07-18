@@ -203,7 +203,7 @@ inline CGFloat kUFSourceLabelFontSize() {
 
 /** 来源字体颜色 */
 inline NSString* kSourceViewTextColor() {
-    return kFHColorCoolGrey2;
+    return @"grey4";
 }
 
 inline NSString* kVerifiedContentSeprateLineColor() {

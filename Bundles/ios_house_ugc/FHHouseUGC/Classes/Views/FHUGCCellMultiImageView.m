@@ -86,7 +86,7 @@
         [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.left.bottom.mas_equalTo(self);
             make.width.mas_equalTo(self.imageWidth);
-            make.height.mas_equalTo(self.imageWidth * 251.0f/355.0f);
+            make.height.mas_equalTo(self.imageWidth * 9.0f/16.0f);
         }];
     }else if(self.count == 2){
         _imageWidth = (self.bounds.size.width - itemPadding)/2;
@@ -142,7 +142,7 @@
             CGFloat height = [imageModel.height floatValue];
             [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
             //只对单图做重新布局，多图都是1：1
-            if(self.count == 1){
+            if(self.count == 1 && !self.fixedSingleImage){
                 [imageView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.height.mas_equalTo(self.imageWidth * height/width);
                 }];
@@ -158,12 +158,17 @@
             imageView.userInteractionEnabled = NO;
         }
         
-        if(imageList.count > self.count){
-            self.infoLabel.hidden = NO;
-            self.infoLabel.text = [NSString stringWithFormat:@"共%i张",imageList.count];
-        }else{
-            self.infoLabel.hidden = YES;
+        //三图模式下多余三张图，最后一张图不能点击进入大图，直接进详情页
+        if(self.count == 3 && imageList.count > self.count && i == 2){
+            imageView.userInteractionEnabled = NO;
         }
+    }
+    
+    if(imageList.count > self.count){
+        self.infoLabel.hidden = NO;
+        self.infoLabel.text = [NSString stringWithFormat:@"共%i张",imageList.count];
+    }else{
+        self.infoLabel.hidden = YES;
     }
 }
 

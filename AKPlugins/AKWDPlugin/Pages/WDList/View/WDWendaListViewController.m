@@ -51,6 +51,9 @@
 #import "WDListCellDataModel.h"
 #import <TTImpression/TTRelevantDurationTracker.h>
 #import <TTVideoService/TTFFantasyTracker.h>
+#import "WDListBottomButton.h"
+#import "TTAccountManager.h"
+#import "FHUserTracker.h"
 
 #define kListBottomBarHeight (self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44)
 
@@ -84,6 +87,13 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 
 @property (nonatomic, strong) NSMutableDictionary *layoutModelDict;
 @property (nonatomic, copy) NSString *rid;
+
+@property (nonatomic, strong)   WDListBottomButton       *bottomButton;
+@property (nonatomic, assign)   CGFloat       bottomButtonHeight;
+@property (nonatomic, copy)   NSString *       qid;
+@property (nonatomic, copy)   NSString *       ansid;
+@property (nonatomic, assign)   BOOL       needReloadData;
+@property (nonatomic, strong)   NSDictionary       *goDetailDict;
 
 @end
 
@@ -165,7 +175,12 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         self.viewModel = [[WDListViewModel alloc] initWithQid:qID gdExtJson:baseCondition apiParameter:apiParameter needReturn:needReturn];
         _readAnswerArray = @[].mutableCopy;
         _rid = [rid copy];
-
+        self.needReloadData = NO;
+        self.qid = qID;
+        self.ansid = [baseCondition tt_stringValueForKey:@"ansid"];
+        if (self.qid.length <= 0) {
+            self.qid = [baseCondition tt_stringValueForKey:@"qid"];
+        }
         WeakSelf;
         self.viewModel.editBlock = ^(void){
             StrongSelf;
@@ -188,15 +203,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         [self sendTrackWithDict:dict];
         
         //go detail
-        NSMutableDictionary * goDetailDict = [NSMutableDictionary dictionaryWithDictionary:self.viewModel.gdExtJson];
-//        [goDetailDict setValue:@"go_detail" forKey:@"tag"];
-//        [goDetailDict setValue:[self enterFrom] forKey:@"label"];
-//        [goDetailDict setValue:self.viewModel.qID forKey:@"value"];
-//        [goDetailDict setValue:@"umeng" forKey:@"category"];
-
-//        if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-//            [TTTrackerWrapper eventData:goDetailDict];
-//        }
+        self.goDetailDict = [NSMutableDictionary dictionaryWithDictionary:self.viewModel.gdExtJson];
         
 
         //Wenda_V3_DoubleSending
@@ -221,6 +228,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         [v3Dic removeObjectForKey:@"pct"];
         [v3Dic setValue:self.viewModel.qID forKey:@"group_id"];
         [TTTracker eventV3:@"go_detail" params:v3Dic isDoubleSending:NO];
+        self.goDetailDict = v3Dic;
 
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fontChanged) name:kSettingFontSizeChangedNotification object:nil];
@@ -258,6 +266,10 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 {
     [super viewDidAppear:animated];
     self.lastStatusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
+    if (self.needReloadData) {
+        [self.answerListView setContentOffset:CGPointZero animated:NO];
+        [self secondLoadContent];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -298,7 +310,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     [super viewDidLoad];
     
     [self _regist];
-    
+    self.bottomButtonHeight = 48;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     //导航
@@ -310,8 +322,28 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     UIBarButtonItem *moreButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self moreButton]];
     self.navigationItem.rightBarButtonItems = @[moreButtonItem];
  
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postAnswerSuccess:) name:@"kFHWDAnswerPictureTextPostSuccessNotification" object:nil];
+    
     [self firstLoadContent];
     [self reloadThemeUI];
+}
+
+- (void)postAnswerSuccess:(NSNotification *)noti {
+    NSDictionary *userInfo = noti.userInfo;
+    NSString *qid = [userInfo tt_stringValueForKey:@"qid"];
+    // NSString *ansid = [userInfo tt_stringValueForKey:@"ansid"];
+    NSString *scheme = [userInfo tt_stringValueForKey:@"scheme"];
+    if ([qid isEqualToString:self.qid] && scheme.length > 0) {
+        // 先跳转详情页，之后返回刷新
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            weakSelf.needReloadData = YES;
+            NSURL *openUrl = [NSURL URLWithString:scheme];
+            if (openUrl) {
+                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+            }
+        });
+    }
 }
 
 - (void)addSubviewsIfNeeded {
@@ -335,9 +367,18 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         [self.view addSubview:self.topBgView];
         [self.view addSubview:self.answerListView];
     }
-    
+    CGFloat bottomSafeHeight = 0;
+    if (@available(iOS 11.0 , *)) {
+        bottomSafeHeight = self.view.tt_safeAreaInsets.bottom;
+    }
+    self.bottomButtonHeight = 48 + bottomSafeHeight;
+    self.bottomButton = [[WDListBottomButton alloc] init];
+    [self.view addSubview:self.bottomButton];
+    self.bottomButton.frame = CGRectMake(0, SSScreenHeight - self.bottomButtonHeight, SSScreenWidth, self.bottomButtonHeight);
+    [self.bottomButton addTarget:self action:@selector(writeAnswer) forControlEvents:UIControlEventTouchUpInside];
 //    //底部tab
 //    [self.view addSubview:self.bottomTabView];
+    [self feed_answer_element_show];
     
     //监听变化
     WeakSelf;
@@ -351,19 +392,93 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
             self.answerListView.tableHeaderView = self.questionHeader;
             [self.answerListView setContentOffset:CGPointMake(0, offsetY)];
         }
-    }];}
+    }];
+}
 
-- (void)firstLoadContent
-{
-    [self tt_startUpdate];
-    [self.viewModel refresh];
+// 写答案
+- (void)writeAnswer {
+    // 埋点
+    [self feed_click_want_answer];
+    if ([TTAccountManager isLogin]) {
+        [self gotoPostWDAnswer];
+    } else {
+        [self gotoLogin];
+    }
+}
 
+- (void)gotoPostWDAnswer {
+    NSString *routeUrl = @"sslocal://ugc_post_wd_answer";
+    NSURL *openUrl = [NSURL URLWithString:routeUrl];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    if (self.qid.length > 0) {
+        dict[@"qid"] = self.qid;
+    }
+    if (self.ansid.length > 0) {
+        dict[@"ansid"] = self.ansid;
+    }
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"origin_from"] = self.goDetailDict[@"enter_from"];
+    tracerDict[@"enter_from"] = @"question";
+    tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"log_pb"] = self.goDetailDict[@"log_pb"];
+    dict[@"tracer"] = tracerDict;
+    dict[@"title"] = @"发帖";
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:@"question" forKey:@"enter_from"];
+    [params setObject:@"want_answer" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(NO) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                [wSelf gotoPostWDAnswer];
+            }
+            // 移除登录页面
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [wSelf delayRemoveLoginVC];
+            });
+        }
+    }];
+}
+
+- (void)delayRemoveLoginVC {
+    UINavigationController *navVC = self.navigationController;
+    NSInteger count = navVC.viewControllers.count;
+    if (navVC && count >= 1) {
+        NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:navVC.viewControllers];
+        if (vcs.count == count) {
+            [vcs removeLastObject];
+            [self.navigationController setViewControllers:vcs];
+        }
+    }
+}
+
+- (void)secondLoadContent {
     WeakSelf;
     [self.viewModel requestFinishBlock:^(NSError *error) {
         StrongSelf;
-
         self.error = error;
+        [self tt_endUpdataData:NO error:error];
+        self.ttErrorView.hidden = YES;
+        [self.answerListView reloadData];
+    }];
+}
 
+static void extracted(WDWendaListViewController *object, WDWendaListViewController *const __weak wself) {
+    [object.viewModel requestFinishBlock:^(NSError *error) {
+        StrongSelf;
+        
+        self.error = error;
+        
         [self tt_endUpdataData:NO error:error];
         
         if (error.code == TTNetworkErrorCodeSuccess) {
@@ -379,6 +494,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
                 [self.view bringSubviewToFront:self.answerListView];
             }
             [self.view bringSubviewToFront:self.bottomTabView];
+            [self.view bringSubviewToFront:self.bottomButton];
             
             [self reloadListViewNeedRefreshHeader:YES];
             
@@ -390,7 +506,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
                 }
             }
             //刷新底部tab按钮数据
-//            [self.bottomTabView refresh];
+            //            [self.bottomTabView refresh];
         } else {
             if (error.code == 67686) {
                 self.ttErrorView.viewType = TTFullScreenErrorViewTypeDeleted;
@@ -399,8 +515,16 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
             [self sendTrackWithLabel:@"enter_api_fail"];
         }
         
-//        [self buildTitleView];
+        //        [self buildTitleView];
     }];
+}
+
+- (void)firstLoadContent
+{
+    [self tt_startUpdate];
+    [self.viewModel refresh];
+    WeakSelf;
+    extracted(self, wself);
 }
 
 - (void)_loadMore
@@ -487,17 +611,24 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
             [self.listFooterView setTitle:@"暂无回答" isShowArrow:NO isNoAnswers:YES isNew:YES clickedBlock:nil];
         }
         else if (_needShowFoldView && [self isFoldTipViewDataAvailable]) {
-            if (!_listFooterView) {
-                self.listFooterView = [[WDWendaListFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kWDWendaListFooterViewHeight + bottom)];
-                self.listFooterView.viewModel = self.viewModel;
+            if (self.viewModel.questionEntity.normalAnsCount.longLongValue > 0) {
+                if (!_listFooterView) {
+                    self.listFooterView = [[WDWendaListFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kWDWendaListFooterViewHeight + bottom)];
+                    self.listFooterView.viewModel = self.viewModel;
+                }
+                self.listFooterView.height = kWDWendaListFooterViewHeight + bottom;
+                _answerListView.tableFooterView = self.listFooterView;
+                WeakSelf;
+                [self.listFooterView setTitle:[NSString stringWithFormat:@"%@",self.viewModel.moreListAnswersTitle] isShowArrow:YES isNoAnswers:NO clickedBlock:^{
+                    StrongSelf;
+                    [self _enterMoreListController];
+                }];
+            } else {
+                // 查看0个折叠回答
+                UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 35)];
+                v.backgroundColor = [UIColor whiteColor];
+                _answerListView.tableFooterView = v;
             }
-            self.listFooterView.height = kWDWendaListFooterViewHeight + bottom;
-            _answerListView.tableFooterView = self.listFooterView;
-            WeakSelf;
-            [self.listFooterView setTitle:[NSString stringWithFormat:@"%@",self.viewModel.moreListAnswersTitle] isShowArrow:YES isNoAnswers:NO clickedBlock:^{
-                StrongSelf;
-                [self _enterMoreListController];
-            }];
         }
         else {
             _answerListView.tableFooterView = nil;
@@ -531,7 +662,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     
     //需要及时根据参数更新位置
     CGRect frame = [self p_frameForListView];
-    CGFloat bottomHeight = 0;
+    CGFloat bottomHeight = 48;
     frame.size.height -= bottomHeight;
     self.answerListView.frame = frame;
     
@@ -575,8 +706,9 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         percent = 100.0f;
     }
     
-    [dict setValue:@(percent) forKey:@"pct"];
+    [dict setValue:@(percent) forKey:@"percent"];
     [dict setValue:@(pageCount) forKey:@"page_count"];
+    [dict setValue:@"question" forKey:@"page_type"];
     if ([dict objectForKey:@"ansid"]) {
         [dict setValue:[dict objectForKey:@"ansid"] forKey:@"group_id"];
     } else {
@@ -646,7 +778,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         self.lastStatusBarHeight = newStatusBarHeight;
         
         CGRect frame = [self p_frameForListView];
-        CGFloat bottomHeight = kListBottomBarHeight;
+        CGFloat bottomHeight = 48;
         frame.size.height -= bottomHeight;
         self.answerListView.frame = frame;
         
@@ -965,7 +1097,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     if (!_answerListView) {
         CGRect frame = [self p_frameForListView];
         _answerListView = [[SSThemedTableView alloc] initWithFrame:frame style:UITableViewStylePlain];
-        _answerListView.backgroundColor = [UIColor clearColor];
+        _answerListView.backgroundColor = [UIColor whiteColor];
         _answerListView.delegate = self;
         _answerListView.dataSource = self;
         _answerListView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -1030,6 +1162,20 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 - (UIView *)suitableFinishBackView
 {
     return _answerListView;
+}
+
+#pragma mark - tracer key
+
+- (void)feed_answer_element_show {
+    NSMutableDictionary *tracerDict = self.goDetailDict.mutableCopy;
+    tracerDict[@"element_type"] = @"want_answer";
+    [FHUserTracker writeEvent:@"feed_answer_element_show" params:tracerDict];
+}
+
+- (void)feed_click_want_answer {
+    NSMutableDictionary *tracerDict = self.goDetailDict.mutableCopy;
+    tracerDict[@"click_position"] = @"want_answer";
+    [FHUserTracker writeEvent:@"feed_click_want_answer" params:tracerDict];
 }
 
 @end

@@ -11,7 +11,7 @@
 #import "TTInstallIDManager.h"
 #import "NSDataAdditions.h"
 #import "NSDictionary+TTAdditions.h"
-#import "TTVersionHelper.h"
+#import <TTVersionHelper/TTVersionHelper.h>
 #import "NetworkUtilities.h"
 #import "TTDeviceHelper.h"
 #import "TTRoute.h"

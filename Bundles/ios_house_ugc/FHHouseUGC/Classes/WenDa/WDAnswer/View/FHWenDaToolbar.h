@@ -29,4 +29,7 @@
  */
 - (void)markKeyboardAsVisible;
 
+// 图片按钮点击blk
+@property (nonatomic, copy)     dispatch_block_t       picButtonClkBlk;
+
 @end
