@@ -18,6 +18,7 @@
 #import "UIView+TTFFrame.h"
 #import "FHRefreshCustomFooter.h"
 #import "FHDetailCommentAllFooter.h"
+#import "FHUGCReplyListEmptyView.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -30,8 +31,8 @@
 @property (nonatomic, assign)   NSInteger       offset;
 @property (nonatomic, assign)   NSInteger       count;
 @property (nonatomic, assign)   BOOL       hasMore;
-@property (nonatomic, assign)   NSInteger       comment_count;
 @property (nonatomic, strong)   FHDetailCommentAllFooter       *commentAllFooter;
+@property (nonatomic, strong)   FHUGCReplyListEmptyView       *replayListEmptyView;
 
 // 评论回复列表数据源
 @property (nonatomic, strong) NSMutableArray<TTCommentDetailReplyCommentModel *> *totalComments;//dataSource
@@ -49,6 +50,8 @@
         self.offset = 0;
         self.count = 20;
         self.comment_count = 0;
+        self.user_digg = 0;
+        self.digg_count = 0;
         self.hasMore = NO;
         self.totalComments = [NSMutableArray new];
         self.totalCommentLayouts = [NSMutableArray new];
@@ -68,7 +71,7 @@
         [wself loadMore];
     }];
     self.tableView.mj_footer = _refreshFooter;
-    [_refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
+    [_refreshFooter setUpNoMoreDataText:@" " offsetY:-3];
     _refreshFooter.hidden = YES;
     
     [_tableView registerClass:[TTCommentDetailCell class] forCellReuseIdentifier:NSStringFromClass([TTCommentDetailReplyCommentModel class])];
@@ -163,6 +166,7 @@
     if (self.totalComments.count == 0) {
         self.tableView.mj_footer.hidden = YES;
         // 显示 暂无评论，点击抢沙发
+        self.tableView.tableFooterView = self.replayListEmptyView;
     } else {
         self.tableView.mj_footer.hidden = NO;
         self.tableView.tableFooterView = nil;
@@ -184,6 +188,20 @@
         commentStr = [NSString stringWithFormat:@"全部评论(0)"];
     }
     self.commentAllFooter.allCommentLabel.text = commentStr;
+}
+
+- (FHUGCReplyListEmptyView *)replayListEmptyView {
+    if (_replayListEmptyView == nil) {
+        _replayListEmptyView = [[FHUGCReplyListEmptyView alloc] initWithFrame:CGRectMake(0, 0, self.detailVC.view.width, 100)];
+        _replayListEmptyView.descLabel.text = @"暂无评论，点击抢沙发";
+        [_replayListEmptyView addTarget:self action:@selector(commentFirst) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _replayListEmptyView;
+}
+
+// 抢沙发点击
+- (void)commentFirst {
+    
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource

@@ -18,6 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy)     NSString       *comment_id;
 
+@property (nonatomic, assign)   int64_t       comment_count;// 评论数
+@property (nonatomic, assign)   int64_t       digg_count;// 点赞数
+@property (nonatomic, assign)   NSInteger       user_digg;// 当前用户是否点赞
+
 @end
 
 NS_ASSUME_NONNULL_END
