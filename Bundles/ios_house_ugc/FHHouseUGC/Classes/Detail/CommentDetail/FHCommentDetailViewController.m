@@ -26,6 +26,8 @@
 #import "TTAccountManager.h"
 #import "TTAccountLoginManager.h"
 #import "FHCommonApi.h"
+#import "FHUGCReplyCommentWriteView.h"
+#import "TTCommentDetailReplyWriteManager.h"
 
 @interface FHCommentDetailViewController ()
 
@@ -33,6 +35,7 @@
 @property (nonatomic, strong)   FHExploreDetailToolbarView       *toolbarView; // 临时toolbar
 @property (nonatomic, strong)   FHCommentDetailViewModel      *viewModel;
 @property (nonatomic, copy)     NSString       *comment_id;
+@property (nonatomic, strong)   FHUGCReplyCommentWriteView       *commentWriteView;
 
 @end
 
@@ -56,7 +59,7 @@
 - (void)setupUI {
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"详情";
-    self.comment_id = @"6714431339993235463";
+    self.comment_id = @"6712727097456623627";
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
     [self configTableView];
@@ -175,21 +178,43 @@
 //    NSInteger percent = MAX(0, MIN((NSInteger)(readPct * 100), 100));
 //    qualityModel.readPct = @(percent);
 //    //    qualityModel.stayTimeMs = @([self.detailModel.sharedDetailManager currentStayDuration]);
-//
+////
 //    __weak typeof(self) wSelf = self;
-//
+////
 //    TTCommentWriteManager *commentManager = [[TTCommentWriteManager alloc] initWithCommentCondition:condition commentViewDelegate:self commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
 //        *willRepostFwID = fwID;
 //        [wSelf clickSubmitComment];
 //    } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
 //    commentManager.enterFrom = @"feed_detail";
 //    commentManager.enter_type = @"submit_comment";
-//
-//    self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
-//
-//    self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
-//
-//    [self.commentWriteView showInView:self.view animated:YES];
+////
+    WeakSelf;
+    // action.replyCommentModel? :[self pageState].defaultRelyModel
+    TTCommentDetailReplyWriteManager *replyManager = [[TTCommentDetailReplyWriteManager alloc] initWithCommentDetailModel:self.viewModel.commentDetailModel replyCommentModel:nil commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
+
+        *willRepostFwID = [self.viewModel.commentDetailModel.repost_params tt_stringValueForKey:@"fw_id"];
+
+    } publishCallback:^(id<TTCommentDetailReplyCommentModelProtocol>replyModel, NSError *error) {
+        StrongSelf;
+        if (error) {
+            return;
+        }
+        NSLog(@"%@",replyModel);
+//        TTMomentDetailAction *publishAction = [TTMomentDetailAction actionWithType:TTMomentDetailActionTypePublishComment comment:nil];
+//        publishAction.replyCommentModel = replyModel;
+//        publishAction.shouldMiddlewareHandle = NO;
+//        [self.store dispatch:publishAction];
+
+    } getReplyCommentModelClassBlock:nil commentRepostWithPreRichSpanText:nil commentSource:nil];
+    
+        replyManager.enterFrom = @"feed_detail";
+//        replyManager.enter_type = @"submit_comment";
+    
+    self.commentWriteView = [[FHUGCReplyCommentWriteView alloc] initWithCommentManager:replyManager];
+
+    self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
+
+    [self.commentWriteView showInView:self.view animated:YES];
 }
 
 // 去点赞
@@ -258,6 +283,13 @@
     } else {
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
+}
+
+// 点击回复
+- (void)clickSubmitComment {
+//    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+//    tracerDict[@"click_position"] = @"submit_comment";
+//    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
 }
 
 @end

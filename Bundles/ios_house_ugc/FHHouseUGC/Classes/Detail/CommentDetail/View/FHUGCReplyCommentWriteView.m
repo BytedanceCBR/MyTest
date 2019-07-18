@@ -5,7 +5,7 @@
 //  Created by ranny_90 on 2018/1/4.
 //
 
-#import "FHPostDetailCommentWriteView.h"
+#import "FHUGCReplyCommentWriteView.h"
 #import <TTUGCFoundation/TTUGCTextView.h>
 #import <TTUGCFoundation/TTUGCTextViewMediator.h>
 #import <TTUGCFoundation/TTUGCEmojiInputView.h>
@@ -32,7 +32,7 @@
 static struct timeval kFHCommentTimeval;
 
 
-@interface FHPostDetailCommentWriteView() <TTCommentFunctionDelegate,UIGestureRecognizerDelegate, TTUGCTextViewDelegate>
+@interface FHUGCReplyCommentWriteView() <TTCommentFunctionDelegate,UIGestureRecognizerDelegate, TTUGCTextViewDelegate>
 
 @property (nonatomic, strong) SSThemedView *containerViewBackgroundView;
 @property (nonatomic, strong) SSThemedView *containerView;
@@ -61,7 +61,7 @@ static struct timeval kFHCommentTimeval;
 @property (nonatomic, weak) UIViewController *belongVC; // 当前view所属VC
 @end
 
-@implementation FHPostDetailCommentWriteView
+@implementation FHUGCReplyCommentWriteView
 
 + (CGRect)frameForCommentInputView {
     CGRect frame = [UIApplication sharedApplication].keyWindow.bounds;
@@ -89,7 +89,7 @@ static struct timeval kFHCommentTimeval;
 
 - (instancetype)initWithCommentManager:(id<TTCommentManagerProtocol>)commentManager {
 
-    CGRect frame = [FHPostDetailCommentWriteView frameForCommentInputView];
+    CGRect frame = [FHUGCReplyCommentWriteView frameForCommentInputView];
     self = [super initWithFrame:frame];
     if (self) {
 
@@ -374,7 +374,7 @@ static struct timeval kFHCommentTimeval;
 
 - (void)orientationDidChangeNotification:(NSNotification *)notification{
     //统一处理视图发生旋转
-    self.frame = [FHPostDetailCommentWriteView frameForCommentInputView];
+    self.frame = [FHUGCReplyCommentWriteView frameForCommentInputView];
     [self dismissAnimated:YES];
 }
 

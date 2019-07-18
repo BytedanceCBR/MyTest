@@ -16,7 +16,7 @@
 @class TTCommentWriteManager,TTCommentDetailReplyWriteManager;
 
 
-@interface FHPostDetailCommentWriteView : SSThemedView
+@interface FHUGCReplyCommentWriteView : SSThemedView
 
 @property (nonatomic, strong) TTUGCTextView * inputTextView;
 

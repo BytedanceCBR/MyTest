@@ -19,6 +19,7 @@
 #import "FHRefreshCustomFooter.h"
 #import "FHDetailCommentAllFooter.h"
 #import "FHUGCReplyListEmptyView.h"
+#import "TTCommentDetailModel.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -27,7 +28,6 @@
 @property(nonatomic , weak) TTHttpTask *httpTask;
 @property(nonatomic , weak) TTHttpTask *httpListTask;
 @property (nonatomic, strong)   FHRefreshCustomFooter       *refreshFooter;
-@property (nonatomic, strong)   id       detailData;// 详情数据
 @property (nonatomic, assign)   NSInteger       offset;
 @property (nonatomic, assign)   NSInteger       count;
 @property (nonatomic, assign)   BOOL       hasMore;
@@ -79,7 +79,7 @@
 
 - (void)startLoadData {
     self.offset = 0;
-    self.detailData = nil;
+    self.commentDetailModel = nil;
     [self.totalComments removeAllObjects];
     [self.totalCommentLayouts removeAllObjects];
     // 请求评论详情
@@ -92,20 +92,23 @@
         [self.httpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.httpTask = [FHHouseUGCAPI requestCommentDetailDataWithCommentId:self.comment_id class:[FHDetailReplyCommentModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.httpTask = [FHHouseUGCAPI requestCommentDetailDataWithCommentId:self.comment_id class:[FHUGCCommentDetailModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         [wself processQueryData:model error:error];
     }];
 }
 
 // 处理网络数据返回，详情返回直接展示
-- (void)processQueryData:(id<FHBaseModelProtocol>)model error:(NSError *)error {
+- (void)processQueryData:(FHUGCCommentDetailModel *)model error:(NSError *)error {
     if (model != NULL) {
         // 有详情数据
         self.tableView.hidden = NO;
         [self.detailVC.emptyView hideEmptyView];
         self.detailVC.hasValidateData = YES;
         // 详情data
-        self.detailData = model;
+        if (model.data && [model.data isKindOfClass:[NSDictionary class]]) {
+            TTCommentDetailModel *dModel = [[TTCommentDetailModel alloc] initWithDictionary:model.data error:nil];
+            self.commentDetailModel = dModel;
+        }
         // 请求回复列表
         [self requestReplyListData];
     } else {
