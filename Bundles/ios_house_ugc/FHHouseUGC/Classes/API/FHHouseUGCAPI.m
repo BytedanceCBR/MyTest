@@ -276,4 +276,25 @@
     }];
 }
 
++ (TTHttpTask *)requestCommentDetailDataWithCommentId:(NSString *)comment_id class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/2/comment/v1/detail/";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (comment_id.length > 0) {
+        paramDic[@"comment_id"] = comment_id;
+    }
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestReplyListWithCommentId:(NSString *)comment_id offset:(NSInteger)offset class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/2/comment/v1/reply_list/";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"id"] = comment_id ?: @"";
+    paramDic[@"count"] = @(20);
+    paramDic[@"offset"] = @(offset);
+    paramDic[@"is_repost"] = @(0);// 不知道干嘛的
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end

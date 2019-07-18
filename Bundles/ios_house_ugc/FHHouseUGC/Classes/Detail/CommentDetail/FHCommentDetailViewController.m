@@ -29,6 +29,7 @@
 @property (nonatomic, strong)   UITableView       *tableView;
 @property (nonatomic, strong)   FHExploreDetailToolbarView       *toolbarView; // 临时toolbar
 @property (nonatomic, strong)   FHCommentDetailViewModel      *viewModel;
+@property (nonatomic, copy)     NSString       *comment_id;
 
 @end
 
@@ -37,7 +38,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        
+        self.comment_id = @"6714466747832877060";//  6712727097456623627
     }
     return self;
 }
@@ -51,11 +52,14 @@
 
 - (void)setupUI {
     [self setupDefaultNavBar:NO];
-    
+    self.customNavBarView.title.text = @"详情";
+    self.comment_id = @"6714466747832877060";
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
     [self configTableView];
     [self.view addSubview:_tableView];
+    self.viewModel = [[FHCommentDetailViewModel alloc] initWithController:self tableView:_tableView];
+    self.viewModel.comment_id = self.comment_id;
     [self setupToolbarView];
 //    _tableView.dataSource = self;
 //    _tableView.delegate = self;
@@ -70,13 +74,13 @@
 }
 
 - (void)configTableView {
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.backgroundColor = [UIColor whiteColor];
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    _tableView.estimatedRowHeight = 80;
+    _tableView.estimatedRowHeight = 0;//
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
 }

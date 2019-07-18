@@ -47,6 +47,12 @@ NS_ASSUME_NONNULL_BEGIN
 // 删除帖子
 + (TTHttpTask *)postDelete:(NSString *)groupId socialGroupId:(NSString *)socialGroupId enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void(^)(bool success , NSError *error))completion;
 
+// 评论详情
++ (TTHttpTask *)requestCommentDetailDataWithCommentId:(NSString *)comment_id class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 评论回复列表
++ (TTHttpTask *)requestReplyListWithCommentId:(NSString *)comment_id offset:(NSInteger)offset class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
