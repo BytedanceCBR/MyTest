@@ -29,6 +29,7 @@
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
+@property(nonatomic ,assign) CGFloat imageViewheight;
 
 @end
 
@@ -67,6 +68,7 @@
     self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:1];
     _multiImageView.fixedSingleImage = YES;
     [self.contentView addSubview:_multiImageView];
+    self.imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:1 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
@@ -94,13 +96,13 @@
         make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        make.height.mas_equalTo(self.imageViewheight);
     }];
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
         make.height.mas_equalTo(49);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView);
     }];
 }
 
@@ -141,6 +143,7 @@
                 make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
                 make.left.mas_equalTo(self.contentView).offset(leftMargin);
                 make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+                make.height.mas_equalTo(self.imageViewheight);
             }];
         }else{
             self.contentLabel.hidden = NO;
@@ -148,6 +151,7 @@
                 make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
                 make.left.mas_equalTo(self.contentView).offset(leftMargin);
                 make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+                make.height.mas_equalTo(self.imageViewheight);
             }];
             [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
         }

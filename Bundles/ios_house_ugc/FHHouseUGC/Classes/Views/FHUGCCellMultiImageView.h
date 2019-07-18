@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //单图时固定尺寸
 @property(nonatomic, assign) BOOL fixedSingleImage;
+@property(nonatomic, assign) CGFloat viewHeight;
 
 @end
 
