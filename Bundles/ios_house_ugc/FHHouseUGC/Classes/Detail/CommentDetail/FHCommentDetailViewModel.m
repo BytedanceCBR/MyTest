@@ -14,6 +14,8 @@
 #import "FHUGCReplyCell.h"
 #import "FHHouseUGCAPI.h"
 #import "FHDetailReplyCommentModel.h"
+#import "TTCommentDetailCell.h"
+#import "UIView+TTFFrame.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -24,6 +26,10 @@
 @property (nonatomic, strong)   NSMutableArray       *items;
 @property (nonatomic, assign)   NSInteger       offset;
 @property (nonatomic, assign)   NSInteger       count;
+
+// 评论回复列表数据源
+@property (nonatomic, strong) NSMutableArray<TTCommentDetailReplyCommentModel *> *totalComments;//dataSource
+@property (nonatomic, strong) NSMutableArray<TTCommentDetailCellLayout *>  *totalCommentLayouts;
 
 @end
 
@@ -37,6 +43,8 @@
         self.items = [NSMutableArray new];
         self.offset = 0;
         self.count = 20;
+        self.totalComments = [NSMutableArray new];
+        self.totalCommentLayouts = [NSMutableArray new];
         [self configTableView];
     }
     return self;
@@ -47,10 +55,14 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     
-    [_tableView registerClass:[FHUGCReplyCell class] forCellReuseIdentifier:NSStringFromClass([FHUGCReplyCellModel class])];
+    [_tableView registerClass:[TTCommentDetailCell class] forCellReuseIdentifier:NSStringFromClass([TTCommentDetailReplyCommentModel class])];
 }
 
 - (void)startLoadData {
+    self.offset = 0;
+    [self.items removeAllObjects]; // 详情
+    [self.totalComments removeAllObjects];
+    [self.totalCommentLayouts removeAllObjects];
     // 请求评论详情
     [self requestCommentDetailData];
     // 请求回复列表
@@ -82,32 +94,63 @@
     }
     __weak typeof(self) wself = self;
     self.httpListTask = [FHHouseUGCAPI requestReplyListWithCommentId:self.comment_id offset:self.offset class:[FHDetailReplyCommentModel class] completion:^(id<FHBaseModelProtocol> _Nonnull model, NSError * _Nonnull error) {
-        NSLog(@"%@",model);
+        [wself processReplyListData:model error:error];
     }];
+}
+
+- (void)processReplyListData:(FHDetailReplyCommentModel *)model error:(NSError *)error {
+    if (model) {
+        if (model.data.allCommentModels.count > 0) {
+            // 转化
+            NSArray *layouts = [TTCommentDetailCellLayout arrayOfLayoutsFromModels:model.data.allCommentModels containViewWidth:self.detailVC.view.width];
+            if (layouts.count > 0) {
+                // 布局
+                [self.totalComments addObjectsFromArray:model.data.allCommentModels];
+                [self.totalCommentLayouts addObjectsFromArray:layouts];
+            }
+            [self.tableView reloadData];
+        }
+    } else {
+        // hasmore = no
+    }
 }
 
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 0;
+    if (section == 0) {
+        // 头部详情
+        return 1;
+    }
+    // 回复
+    return self.totalComments.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSInteger section = indexPath.section;
+    if (section == 0) {
+        // 头部详情
+        return [[FHUGCBaseCell alloc] init];
+    }
+    // reply list
     NSInteger row = indexPath.row;
-    if (row >= 0 && row < self.items.count) {
-        id data = self.items[row];
+    if (row >= 0 && row < self.totalComments.count && row < self.totalCommentLayouts.count) {
+        id data = self.totalComments[row];
+        id layout = self.totalCommentLayouts[row];
         NSString *identifier = data ? NSStringFromClass([data class]) : @"";
         if (identifier.length > 0) {
-            FHUGCBaseCell *cell = (FHUGCBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-            cell.baseViewModel = self;
-            [cell refreshWithData:data];
+            UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            if ([cell isKindOfClass:[TTCommentDetailCell class]]) {
+                TTCommentDetailCell *tempCell = cell;
+                [tempCell tt_refreshConditionWithLayout:layout model:data];
+            }
             return cell;
         }
     }
@@ -121,7 +164,15 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 70;
+    NSInteger section = indexPath.section;
+    if (section == 0) {
+        // 头部详情
+        return 200;
+    }
+    if (indexPath.row < self.totalCommentLayouts.count) {
+        return self.totalCommentLayouts[indexPath.row].cellHeight;
+    }
+    return CGFLOAT_MIN;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
