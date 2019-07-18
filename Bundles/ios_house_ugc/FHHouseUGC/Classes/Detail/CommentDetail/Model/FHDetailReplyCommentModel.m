@@ -40,3 +40,21 @@
 }
 @end
 
+@implementation FHUGCCommentDetailModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"banFace": @"ban_face",
+                           @"errNo": @"err_no",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end

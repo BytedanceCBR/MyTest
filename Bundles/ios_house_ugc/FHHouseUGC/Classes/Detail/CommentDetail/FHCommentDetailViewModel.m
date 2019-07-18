@@ -18,6 +18,8 @@
 #import "UIView+TTFFrame.h"
 #import "FHRefreshCustomFooter.h"
 #import "FHDetailCommentAllFooter.h"
+#import "FHUGCReplyListEmptyView.h"
+#import "TTCommentDetailModel.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -26,12 +28,11 @@
 @property(nonatomic , weak) TTHttpTask *httpTask;
 @property(nonatomic , weak) TTHttpTask *httpListTask;
 @property (nonatomic, strong)   FHRefreshCustomFooter       *refreshFooter;
-@property (nonatomic, strong)   id       detailData;// 详情数据
 @property (nonatomic, assign)   NSInteger       offset;
 @property (nonatomic, assign)   NSInteger       count;
 @property (nonatomic, assign)   BOOL       hasMore;
-@property (nonatomic, assign)   NSInteger       comment_count;
 @property (nonatomic, strong)   FHDetailCommentAllFooter       *commentAllFooter;
+@property (nonatomic, strong)   FHUGCReplyListEmptyView       *replayListEmptyView;
 
 // 评论回复列表数据源
 @property (nonatomic, strong) NSMutableArray<TTCommentDetailReplyCommentModel *> *totalComments;//dataSource
@@ -49,6 +50,8 @@
         self.offset = 0;
         self.count = 20;
         self.comment_count = 0;
+        self.user_digg = 0;
+        self.digg_count = 0;
         self.hasMore = NO;
         self.totalComments = [NSMutableArray new];
         self.totalCommentLayouts = [NSMutableArray new];
@@ -68,7 +71,7 @@
         [wself loadMore];
     }];
     self.tableView.mj_footer = _refreshFooter;
-    [_refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
+    [_refreshFooter setUpNoMoreDataText:@" " offsetY:-3];
     _refreshFooter.hidden = YES;
     
     [_tableView registerClass:[TTCommentDetailCell class] forCellReuseIdentifier:NSStringFromClass([TTCommentDetailReplyCommentModel class])];
@@ -76,7 +79,7 @@
 
 - (void)startLoadData {
     self.offset = 0;
-    self.detailData = nil;
+    self.commentDetailModel = nil;
     [self.totalComments removeAllObjects];
     [self.totalCommentLayouts removeAllObjects];
     // 请求评论详情
@@ -89,20 +92,23 @@
         [self.httpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.httpTask = [FHHouseUGCAPI requestCommentDetailDataWithCommentId:self.comment_id class:[FHDetailReplyCommentModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.httpTask = [FHHouseUGCAPI requestCommentDetailDataWithCommentId:self.comment_id class:[FHUGCCommentDetailModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         [wself processQueryData:model error:error];
     }];
 }
 
 // 处理网络数据返回，详情返回直接展示
-- (void)processQueryData:(id<FHBaseModelProtocol>)model error:(NSError *)error {
+- (void)processQueryData:(FHUGCCommentDetailModel *)model error:(NSError *)error {
     if (model != NULL) {
         // 有详情数据
         self.tableView.hidden = NO;
         [self.detailVC.emptyView hideEmptyView];
         self.detailVC.hasValidateData = YES;
         // 详情data
-        self.detailData = model;
+        if (model.data && [model.data isKindOfClass:[NSDictionary class]]) {
+            TTCommentDetailModel *dModel = [[TTCommentDetailModel alloc] initWithDictionary:model.data error:nil];
+            self.commentDetailModel = dModel;
+        }
         // 请求回复列表
         [self requestReplyListData];
     } else {
@@ -163,6 +169,7 @@
     if (self.totalComments.count == 0) {
         self.tableView.mj_footer.hidden = YES;
         // 显示 暂无评论，点击抢沙发
+        self.tableView.tableFooterView = self.replayListEmptyView;
     } else {
         self.tableView.mj_footer.hidden = NO;
         self.tableView.tableFooterView = nil;
@@ -184,6 +191,20 @@
         commentStr = [NSString stringWithFormat:@"全部评论(0)"];
     }
     self.commentAllFooter.allCommentLabel.text = commentStr;
+}
+
+- (FHUGCReplyListEmptyView *)replayListEmptyView {
+    if (_replayListEmptyView == nil) {
+        _replayListEmptyView = [[FHUGCReplyListEmptyView alloc] initWithFrame:CGRectMake(0, 0, self.detailVC.view.width, 100)];
+        _replayListEmptyView.descLabel.text = @"暂无评论，点击抢沙发";
+        [_replayListEmptyView addTarget:self action:@selector(commentFirst) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _replayListEmptyView;
+}
+
+// 抢沙发点击
+- (void)commentFirst {
+    
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
