@@ -16,6 +16,8 @@
 #import "FHDetailReplyCommentModel.h"
 #import "TTCommentDetailCell.h"
 #import "UIView+TTFFrame.h"
+#import "FHRefreshCustomFooter.h"
+#import "FHDetailCommentAllFooter.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -23,9 +25,13 @@
 @property(nonatomic , weak) FHCommentDetailViewController *detailVC;
 @property(nonatomic , weak) TTHttpTask *httpTask;
 @property(nonatomic , weak) TTHttpTask *httpListTask;
+@property (nonatomic, strong)   FHRefreshCustomFooter       *refreshFooter;
 @property (nonatomic, strong)   id       detailData;// 详情数据
 @property (nonatomic, assign)   NSInteger       offset;
 @property (nonatomic, assign)   NSInteger       count;
+@property (nonatomic, assign)   BOOL       hasMore;
+@property (nonatomic, assign)   NSInteger       comment_count;
+@property (nonatomic, strong)   FHDetailCommentAllFooter       *commentAllFooter;
 
 // 评论回复列表数据源
 @property (nonatomic, strong) NSMutableArray<TTCommentDetailReplyCommentModel *> *totalComments;//dataSource
@@ -42,9 +48,12 @@
         self.tableView = tableView;
         self.offset = 0;
         self.count = 20;
+        self.comment_count = 0;
+        self.hasMore = NO;
         self.totalComments = [NSMutableArray new];
         self.totalCommentLayouts = [NSMutableArray new];
         [self configTableView];
+        [self commentCountChanged];
     }
     return self;
 }
@@ -53,6 +62,14 @@
 {
     _tableView.delegate = self;
     _tableView.dataSource = self;
+    
+    __weak typeof(self) wself = self;
+    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+        [wself loadMore];
+    }];
+    self.tableView.mj_footer = _refreshFooter;
+    [_refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
+    _refreshFooter.hidden = YES;
     
     [_tableView registerClass:[TTCommentDetailCell class] forCellReuseIdentifier:NSStringFromClass([TTCommentDetailReplyCommentModel class])];
 }
@@ -95,6 +112,12 @@
     }
 }
 
+- (void)loadMore {
+    if (self.hasMore) {
+        [self requestReplyListData];
+    }
+}
+
 // 请求回复列表数据，返回后直接处理回复列表是否展示和刷新就好
 - (void)requestReplyListData {
     if (self.httpListTask) {
@@ -118,11 +141,50 @@
             }
             [self.tableView reloadData];
         }
+        self.hasMore = model.data.hasMore;
+        self.offset = [model.data.offset integerValue];
+        self.comment_count = [model.data.totalCount integerValue];
+        [self commentCountChanged];
     } else {
         // hasmore = no
+        self.hasMore = NO;
+    }
+    [self updateTableViewWithMoreData:self.hasMore];
+}
+
+- (void)updateTableViewWithMoreData:(BOOL)hasMore {
+    self.tableView.mj_footer.hidden = NO;
+    if (hasMore == NO) {
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }else {
+        [self.tableView.mj_footer endRefreshing];
+    }
+    // 没有评论
+    if (self.totalComments.count == 0) {
+        self.tableView.mj_footer.hidden = YES;
+        // 显示 暂无评论，点击抢沙发
+    } else {
+        self.tableView.mj_footer.hidden = NO;
+        self.tableView.tableFooterView = nil;
     }
 }
 
+- (void)commentCountChanged {
+    if (self.commentAllFooter == nil) {
+        self.commentAllFooter = [[FHDetailCommentAllFooter alloc] initWithFrame:CGRectMake(0, 0, self.detailVC.view.width, 52)];
+        UIView *bottomSepView = [[UIView alloc] initWithFrame:CGRectMake(20, 0, self.detailVC.view.width - 40, 0.5)];
+        bottomSepView.backgroundColor = [UIColor themeGray6];
+        [self.commentAllFooter addSubview:bottomSepView];
+    }
+    // 全部评论
+    NSString *commentStr = @"全部评论";
+    if (self.comment_count > 0) {
+        commentStr = [NSString stringWithFormat:@"全部评论(%ld)",self.comment_count];
+    } else {
+        commentStr = [NSString stringWithFormat:@"全部评论(0)"];
+    }
+    self.commentAllFooter.allCommentLabel.text = commentStr;
+}
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
@@ -185,8 +247,27 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
+    if (section == 0) {
+        // 头部详情
+        return CGFLOAT_MIN;
+    }
+    if (section == 1) {
+        return 52;
+    }
     return CGFLOAT_MIN;
 }
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (section == 0) {
+        // 头部详情
+        return nil;
+    }
+    if (section == 1) {
+        return self.commentAllFooter;
+    }
+    return nil;
+}
+
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return CGFLOAT_MIN;
