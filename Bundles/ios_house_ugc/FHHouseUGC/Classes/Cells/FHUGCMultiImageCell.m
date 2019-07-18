@@ -16,7 +16,7 @@
 
 #define leftMargin 20
 #define rightMargin 20
-#define maxLines 5
+#define maxLines 3
 
 #define userInfoViewHeight 40
 #define bottomViewHeight 49
@@ -128,7 +128,12 @@
         self.bottomView.position.text = cellModel.community.name;
         [self.bottomView showPositionView:showCommunity];
 
-        [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
+        NSInteger commentCount = [cellModel.commentCount integerValue];
+        if(commentCount == 0){
+            [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
+        }else{
+            [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
+        }
         [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
         //内容
         if(isEmptyString(cellModel.content)){
@@ -158,6 +163,10 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 30;
+        
+        if(isEmptyString(cellModel.content)){
+            height -= 10;
+        }
         
         CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
         height += imageViewheight;

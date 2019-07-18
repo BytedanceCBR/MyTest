@@ -112,7 +112,7 @@
     }
 }
 
-+ (void)setRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width {
++ (void)setRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
     TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
     TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:model.content richSpans:richSpans];
     
@@ -146,8 +146,6 @@
             [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
             
             model.contentAStr = mutableAttributedString;
-            
-            NSInteger numberOfLines = 5;
             
             CGSize size = [self sizeThatFitsAttributedString:mutableAttributedString
                                                               withConstraints:CGSizeMake(width, FLT_MAX)
