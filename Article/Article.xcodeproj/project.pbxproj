@@ -1501,6 +1501,7 @@
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_fullLoading@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
+				"${PODS_CONFIGURATION_BUILD_DIR}/BDUGDeepLink/BDUGDeepLinkResource.bundle",
 				"${PODS_ROOT}/../../Bundles/FHCHousePush/FHCHousePush/Assets/push.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
@@ -1568,7 +1569,6 @@
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
 				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/BDUGDeepLink/BDUGDeepLinkResource.bundle",
 				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -1612,6 +1612,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_fullLoading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDUGDeepLinkResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/push.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
@@ -1679,7 +1680,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/images.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_house_im.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDUGDeepLinkResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EditImage.xcassets",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1776,6 +1776,7 @@
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_fullLoading@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
+				"${PODS_CONFIGURATION_BUILD_DIR}/BDUGDeepLink/BDUGDeepLinkResource.bundle",
 				"${PODS_ROOT}/../../Bundles/FHCHousePush/FHCHousePush/Assets/push.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
@@ -1885,6 +1886,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_fullLoading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDUGDeepLinkResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/push.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
@@ -2441,6 +2443,7 @@
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_fullLoading@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
+				"${PODS_CONFIGURATION_BUILD_DIR}/BDUGDeepLink/BDUGDeepLinkResource.bundle",
 				"${PODS_ROOT}/../../Bundles/FHCHousePush/FHCHousePush/Assets/push.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
@@ -2550,6 +2553,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_fullLoading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDUGDeepLinkResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/push.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
