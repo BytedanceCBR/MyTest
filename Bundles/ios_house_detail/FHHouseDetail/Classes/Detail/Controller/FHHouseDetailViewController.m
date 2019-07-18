@@ -612,15 +612,8 @@
         _feedbackView = [[FHDetailFeedbackView alloc] initWithFrame:self.view.bounds];
         _feedbackView.navVC = self.navigationController;
         _feedbackView.viewModel = self.viewModel;
-        _feedbackView.clickBlock = ^{
-            [wself hideFeedBackView];
-        };
     }
     return _feedbackView;
-}
-
-- (void)hideFeedBackView {
-    [self.feedbackView hide];
 }
 
 @end

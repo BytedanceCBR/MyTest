@@ -21,6 +21,7 @@
 #import "ToastManager.h"
 #import "FHHouseDetailAPI.h"
 #import "TTReachability.h"
+#import "FHUserTracker.h"
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
@@ -40,12 +41,17 @@
 @property(nonatomic, strong) YYLabel *reportLabel;
 @property(nonatomic, strong) UIView *bottomView;
 
+@property(nonatomic, copy) NSString *realtorId;
+@property(nonatomic, copy) NSString *imprId;
+
 @end
 
 @implementation FHDetailFeedbackView
 
 - (void)show:(UIView *)parentView {
     [parentView addSubview:self];
+    [self initVars];
+    [self traceRealtorEvaluatePopupShow];
 }
 
 - (void)hide {
@@ -69,7 +75,7 @@
     _emptyView.userInteractionEnabled = YES;
     [self addSubview:_emptyView];
     
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click)];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(close)];
     [_emptyView addGestureRecognizer:tapGesture];
     
     self.containerView = [[UIView alloc] init];
@@ -219,9 +225,12 @@
     return btn;
 }
 
-- (void)click {
-    if(self.clickBlock){
-        self.clickBlock();
+- (void)initVars {
+    id data = self.viewModel.detailData;
+    if([data isKindOfClass:[FHDetailOldModel class]]){
+        FHDetailOldModel *model = (FHDetailOldModel *)data;
+        self.realtorId = model.data.contact.realtorId;
+        self.imprId = model.data.imprId;
     }
 }
 
@@ -234,17 +243,9 @@
     UIButton *btn = (UIButton *)sender;
     NSInteger tag = btn.tag;
     [self hide];
+    [self traceRealtorEvaluatePopupClick:[NSString stringWithFormat:@"%i",tag]];
     
-    NSString *realtorId = nil;
-    NSString *imprId = nil;
-    id data = self.viewModel.detailData;
-    if([data isKindOfClass:[FHDetailOldModel class]]){
-        FHDetailOldModel *model = (FHDetailOldModel *)data;
-        realtorId = model.data.contact.realtorId;
-        imprId = model.data.imprId;
-    }
-    
-    [FHHouseDetailAPI requestPhoneFeedback:self.viewModel.houseId houseType:self.viewModel.houseType realtorId:self.viewModel.realtorId imprId:@"" score:tag completion:^(bool succss, NSError * _Nonnull error) {
+    [FHHouseDetailAPI requestPhoneFeedback:self.viewModel.houseId houseType:self.viewModel.houseType realtorId:self.realtorId imprId:self.imprId score:tag completion:^(bool succss, NSError * _Nonnull error) {
         if(succss){
             [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
         }else{
@@ -254,6 +255,8 @@
 }
 
 - (void)goToReport {
+    [self traceClickFeedback];
+    
     NSDictionary *jsonDic = nil;
     NSString *reportUrl = nil;
     id data = self.viewModel.detailData;
@@ -292,6 +295,28 @@
 
 - (void)close {
     [self hide];
+    [self traceRealtorEvaluatePopupClick:@"cancel"];
+}
+
+#pragma mark - 埋点相关
+
+- (void)traceRealtorEvaluatePopupShow {
+    NSMutableDictionary *tracerDic = [self.viewModel.detailTracerDic mutableCopy];
+    tracerDic[@"realtor_id"] = self.realtorId ? self.realtorId : @"be_null";
+    TRACK_EVENT(@"realtor_evaluate_popup_show", tracerDic);
+}
+
+- (void)traceRealtorEvaluatePopupClick:(NSString *)position {
+    NSMutableDictionary *tracerDic = [self.viewModel.detailTracerDic mutableCopy];
+    tracerDic[@"realtor_id"] = self.realtorId ? self.realtorId : @"be_null";
+    tracerDic[@"click_position"] = position ? position : @"be_null";
+    TRACK_EVENT(@"realtor_evaluate_popup_click", tracerDic);
+}
+
+- (void)traceClickFeedback {
+    NSMutableDictionary *tracerDic = [self.viewModel.detailTracerDic mutableCopy];
+    tracerDic[@"enter_from"] = @"realtor_evaluate_popup";
+    TRACK_EVENT(@"click_feedback", tracerDic);
 }
 
 @end

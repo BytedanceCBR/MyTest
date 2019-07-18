@@ -18,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)hide;
 
-@property(nonatomic, copy) void(^clickBlock)(void);
 @property(nonatomic, weak) UINavigationController *navVC;
 @property (nonatomic, strong) FHHouseDetailBaseViewModel *viewModel;
 
