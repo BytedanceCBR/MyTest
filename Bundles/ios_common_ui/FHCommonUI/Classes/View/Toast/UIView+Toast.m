@@ -456,16 +456,16 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
             if (style.isCustomPosition) {
                 return CGPointMake(style.customX - toast.frame.size.width / 2.0, (toast.frame.size.height / 2.0) + customTopPadding + style.verticalOffset);
             }
-            return CGPointMake(self.bounds.size.width / 2.0, (toast.frame.size.height / 2.0) + topPadding);
+            return CGPointMake(self.bounds.size.width / 2.0, (toast.frame.size.height / 2.0) + topPadding + style.verticalOffset);
         } else if([point caseInsensitiveCompare:CSToastPositionCenter] == NSOrderedSame) {
-            return CGPointMake(self.bounds.size.width / 2.0, self.bounds.size.height / 2.0);
+            return CGPointMake(self.bounds.size.width / 2.0, self.bounds.size.height / 2.0 + style.verticalOffset);
         }
     } else if ([point isKindOfClass:[NSValue class]]) {
         return [point CGPointValue];
     }
     
     // default to bottom
-    return CGPointMake(self.bounds.size.width / 2.0, (self.bounds.size.height - (toast.frame.size.height / 2.0)) - bottomPadding);
+    return CGPointMake(self.bounds.size.width / 2.0, (self.bounds.size.height - (toast.frame.size.height / 2.0)) - bottomPadding + style.verticalOffset);
 }
 
 @end

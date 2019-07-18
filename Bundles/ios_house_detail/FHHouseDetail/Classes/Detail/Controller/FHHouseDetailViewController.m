@@ -554,21 +554,20 @@
 
 - (BOOL)isShowFeedbackView {
     //满足这两个条件，在回来时候显示反馈弹窗
-//    self.isPhoneCallPickUp && self.isPhoneCallShow &&
-    if((self.viewModel.houseType == FHHouseTypeSecondHandHouse || self.viewModel.houseType == FHHouseTypeRentHouse)){
+    if(self.isPhoneCallPickUp && self.isPhoneCallShow && (self.viewModel.houseType == FHHouseTypeSecondHandHouse)){
         NSString *houseId = self.viewModel.houseId;
         NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
         NSString *cacheKey = @"";
-        
+
         if(!isEmptyString(houseId)){
             cacheKey = [cacheKey stringByAppendingString:houseId];
         }
-        
+
         if(!isEmptyString(deviceId)){
             cacheKey = [cacheKey stringByAppendingString:@"_"];
             cacheKey = [cacheKey stringByAppendingString:deviceId];
         }
-        
+
         if(!isEmptyString(cacheKey)){
             NSTimeInterval dayStartTime = [[self dayStart:[NSDate date]] timeIntervalSince1970];
             YYCache *detailFeedbackCache = [[FHEnvContext sharedInstance].generalBizConfig detailFeedbackCache];

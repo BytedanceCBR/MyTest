@@ -25,6 +25,7 @@
 #import <BDAgileLog.h>
 #import <FHHouseBase/FHMainApi.h>
 #import <TTInstallService/TTInstallIDManager.h>
+#import "TTBaseMacro.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -642,6 +643,37 @@
     param[@"source"] = source;
     param[@"device_id"] = @([[[TTInstallIDManager sharedInstance] deviceID] longLongValue]);
     param[@"feed_back"] = @(feedType);
+    
+    return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
+        BOOL success = NO;
+        if (result) {
+            success = (result[@"status"] && [result[@"status"] integerValue] == 0);
+            if (!success) {
+                error = [NSError errorWithDomain:result[@"message"]?:@"请求失败" code:-1 userInfo:nil];
+            }
+        }
+        if (completion) {
+            completion(success , error);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestPhoneFeedback:(NSString *)houseId houseType:(FHHouseType)houseType realtorId:(NSString *)realtorId imprId:(NSString *)imprId score:(NSInteger)score completion:(void (^)(bool, NSError * _Nonnull))completion {
+    NSString *path = @"/f100/api/phone/feedback";
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    
+    param[@"target_id"] = @(houseId.longLongValue);
+    param[@"target_type"] = @(houseType);
+    param[@"feedback_score"] = @(score);
+    if(houseType == FHHouseTypeSecondHandHouse){
+        param[@"enterfrom"] = @"app_oldhouse";
+    }
+    if(!isEmptyString(imprId)){
+        param[@"impr_id"] = imprId;
+    }
+    if(!isEmptyString(realtorId)){
+        param[@"realtor_id"] = realtorId;
+    }
     
     return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
         BOOL success = NO;

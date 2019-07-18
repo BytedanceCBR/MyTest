@@ -12,11 +12,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 #define SHOW_TOAST(toast) [[ToastManager manager] showToast:toast]
 
+typedef NS_ENUM(NSInteger, FHToastViewStyle)
+{
+    FHToastViewStyleDefault = 0,                //默认
+    FHToastViewStyleOrange,                     //橘色
+};
+
+typedef NS_ENUM(NSInteger, FHToastViewPosition)
+{
+    FHToastViewPositionCenter = 0,              //居中
+    FHToastViewPositionTop,                     //顶部
+    FHToastViewPositionBottom,                  //底部
+};
+
 @interface ToastManager : NSObject
 
 + (instancetype)manager;
 
 - (void)showToast:(NSString *)message;
+- (void)showToast:(NSString *)message style:(FHToastViewStyle)style;
+- (void)showToast:(NSString *)message style:(FHToastViewStyle)style position:(FHToastViewPosition)position verticalOffset:(CGFloat)verticalOffset;
 - (void)showToast:(NSString *)message duration:(NSTimeInterval)duration isUserInteraction:(BOOL)isUserInteraction;
 
 - (void)showCustomLoading:(NSString *)message;

@@ -16,6 +16,11 @@
 #import "FHEnvContext.h"
 #import "FHDetailOldModel.h"
 #import "FHDetailRentModel.h"
+#import "FHDetailHouseOutlineInfoCell.h"
+#import "FHURLSettings.h"
+#import "ToastManager.h"
+#import "FHHouseDetailAPI.h"
+#import "TTReachability.h"
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
@@ -33,6 +38,7 @@
 @property(nonatomic, strong) UIButton *likeBtn;
 
 @property(nonatomic, strong) YYLabel *reportLabel;
+@property(nonatomic, strong) UIView *bottomView;
 
 @end
 
@@ -87,13 +93,13 @@
     [_closeBtn addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
     [self.containerView addSubview:_closeBtn];
     
-    self.normalBtn = [self buttonWithText:@"一般" imageName:@"detail_feedback_normal" tag:1];
+    self.normalBtn = [self buttonWithText:@"一般" imageName:@"detail_feedback_normal" selectedImageName:@"detail_feedback_normal_selected" tag:2];
     [self.containerView addSubview:_normalBtn];
     
-    self.unLikeBtn = [self buttonWithText:@"不专业" imageName:@"detail_feedback_unlike" tag:2];
+    self.unLikeBtn = [self buttonWithText:@"不专业" imageName:@"detail_feedback_unlike" selectedImageName:@"detail_feedback_unlike_selected" tag:1];
     [self.containerView addSubview:_unLikeBtn];
     
-    self.likeBtn = [self buttonWithText:@"专业" imageName:@"detail_feedback_like" tag:3];
+    self.likeBtn = [self buttonWithText:@"专业" imageName:@"detail_feedback_like" selectedImageName:@"detail_feedback_like_selected" tag:3];
     [self.containerView addSubview:_likeBtn];
     
     self.reportLabel = [[YYLabel alloc] init];
@@ -116,12 +122,21 @@
     
     _reportLabel.attributedText = attrText;
     _reportLabel.textAlignment = NSTextAlignmentCenter;
+    
+    self.bottomView = [[UIView alloc] init];
+    _bottomView.backgroundColor = [UIColor themeGray7];
+    [self.containerView addSubview:_bottomView];
 }
 
 - (void)initConstaints {
+    CGFloat bottom = 0;
+    if (@available(iOS 11.0 , *)) {
+        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+    }
+    
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(self);
-        make.height.mas_equalTo(300);
+        make.height.mas_equalTo(300 + bottom);
     }];
     
     [self.emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -166,8 +181,14 @@
     }];
     
     [self.reportLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.left.right.mas_equalTo(self.containerView);
+        make.left.right.mas_equalTo(self.containerView);
+        make.bottom.mas_equalTo(self.containerView).offset(-bottom);
         make.height.mas_equalTo(50);
+    }];
+    
+    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.left.right.mas_equalTo(self.containerView);
+        make.height.mas_equalTo(bottom);
     }];
 }
 
@@ -178,11 +199,13 @@
     return label;
 }
 
-- (UIButton *)buttonWithText:(NSString *)text imageName:(NSString *)imageName tag:(NSInteger)tag {
+- (UIButton *)buttonWithText:(NSString *)text imageName:(NSString *)imageName selectedImageName:(NSString *)selectedImageName tag:(NSInteger)tag {
     UIButton *btn = [[UIButton alloc] init];
     btn.imageView.contentMode = UIViewContentModeCenter;
     [btn setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+    [btn setImage:[UIImage imageNamed:selectedImageName] forState:UIControlStateHighlighted];
     [btn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor themeRed] forState:UIControlStateHighlighted];
     btn.titleLabel.font = [UIFont themeFontRegular:16];
     btn.tag = tag;
     [btn setTitle:text forState:UIControlStateNormal];
@@ -203,87 +226,68 @@
 }
 
 - (void)btnClick:(id)sender {
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    
     UIButton *btn = (UIButton *)sender;
     NSInteger tag = btn.tag;
+    [self hide];
     
-    //调用接口
-}
-
-- (void)goToReport {
-//    if ([TTAccountManager isLogin]) {
-//        [self gotoReportVC];
-//    } else {
-//        [self gotoLogin];
-//    }
-}
-
-- (void)gotoLogin {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-//    [params setObject:@"rent_feedback" forKey:@"enter_from"];
-//    [params setObject:@"feedback" forKey:@"enter_type"];
-    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
-    [params setObject:@(NO) forKey:@"need_pop_vc"];
-    __weak typeof(self) wSelf = self;
-    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-        if (type == TTAccountAlertCompletionEventTypeDone) {
-            // 登录成功
-            if ([TTAccountManager isLogin]) {
-                [wSelf gotoReportVC];
-            }
-            // 移除登录页面
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [wSelf delayRemoveLoginVC];
-            });
+    NSString *realtorId = nil;
+    NSString *imprId = nil;
+    id data = self.viewModel.detailData;
+    if([data isKindOfClass:[FHDetailOldModel class]]){
+        FHDetailOldModel *model = (FHDetailOldModel *)data;
+        realtorId = model.data.contact.realtorId;
+        imprId = model.data.imprId;
+    }
+    
+    [FHHouseDetailAPI requestPhoneFeedback:self.viewModel.houseId houseType:self.viewModel.houseType realtorId:self.viewModel.realtorId imprId:@"" score:tag completion:^(bool succss, NSError * _Nonnull error) {
+        if(succss){
+            [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
+        }else{
+            [[ToastManager manager] showToast:@"提交失败"];
         }
     }];
 }
 
-- (void)delayRemoveLoginVC {
-//    if(self.navVC){
-        NSInteger count = self.navigationController.viewControllers.count;
-        if (self.navigationController && count >= 2) {
-            NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:self.navigationController.viewControllers];
-            if (vcs.count == count) {
-                [vcs removeObjectAtIndex:count - 2];
-                [self.navigationController setViewControllers:vcs];
-            }
-        }
-//    }
-}
-
-- (void)gotoReportVC {
+- (void)goToReport {
     NSDictionary *jsonDic = nil;
+    NSString *reportUrl = nil;
     id data = self.viewModel.detailData;
-    if([data isKindOfClass:[FHDetailOldDataModel class]]){
-        FHDetailOldDataModel *model = (FHDetailOldDataModel *)data;
-        jsonDic = [model toDictionary];
-    }else if([data isKindOfClass:[FHRentDetailResponseModel class]]){
-        FHRentDetailResponseModel *model = (FHRentDetailResponseModel *)data;
-        jsonDic = [model toDictionary];
+    if([data isKindOfClass:[FHDetailOldModel class]]){
+        FHDetailOldModel *model = (FHDetailOldModel *)data;
+        jsonDic = [model.data toDictionary];
     }
     
-//    NSMutableArray *items = self.viewModel.items;
-    
-//    FHRentDetailResponseModel *rentData = (FHRentDetailResponseModel *)self.viewModel.baseViewModel.detailData;
-//    NSDictionary *jsonDic = [self.viewModel.detailData toDictionary];
-//    if (model && model.houseOverreview.reportUrl.length > 0 && jsonDic) {
-//
-//        NSString *openUrl = @"sslocal://webview";
-//        NSDictionary *pageData = @{@"data":jsonDic};
-//        NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
-//        if (commonParams == nil) {
-//            commonParams = @{};
-//        }
-//        NSDictionary *commonParamsData = @{@"data":commonParams};
-//        NSDictionary *jsParams = @{@"requestPageData":pageData,
-//                                   @"getNetCommonParams":commonParamsData
-//                                   };
-//        NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-//        NSString *urlStr = [NSString stringWithFormat:@"%@%@",host,model.houseOverreview.reportUrl];
-//        NSDictionary *info = @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"};
-//        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
-//    }
+    NSMutableArray *items = self.viewModel.items;
+    for (id item in items) {
+        if([item isKindOfClass:[FHDetailHouseOutlineInfoModel class]]){
+            FHDetailHouseOutlineInfoModel *infoModel = (FHDetailHouseOutlineInfoModel *)item;
+            reportUrl = infoModel.houseOverreview.reportUrl;
+            break;
+        }
+    }
+
+    if (reportUrl && reportUrl.length > 0 && jsonDic) {
+        NSString *openUrl = @"sslocal://webview";
+        NSDictionary *pageData = @{@"data":jsonDic};
+        NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+        if (commonParams == nil) {
+            commonParams = @{};
+        }
+        NSDictionary *commonParamsData = @{@"data":commonParams};
+        NSDictionary *jsParams = @{@"requestPageData":pageData,
+                                   @"getNetCommonParams":commonParamsData
+                                   };
+        NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+        NSString *urlStr = [NSString stringWithFormat:@"%@%@",host,reportUrl];
+        NSDictionary *info = @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
+    }
 }
 
 - (void)close {

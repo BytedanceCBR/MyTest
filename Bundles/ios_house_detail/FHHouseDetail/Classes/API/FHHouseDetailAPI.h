@@ -114,6 +114,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 +(TTHttpTask *)requstQualityFeedback:(NSString *)houseId houseType:(FHHouseType)houseType source:(NSString *)source feedBack:(NSInteger)feedType agencyId:(NSString *)agencyId completion:(void (^)(bool succss , NSError *error))completion;
 
+/*
+ * 拨打电话后用户反馈
+ * @score: 1不专业，2一般，3专业
+ */
++(TTHttpTask *)requestPhoneFeedback:(NSString *)houseId houseType:(FHHouseType)houseType realtorId:(NSString *)realtorId imprId:(NSString *)imprId score:(NSInteger)score completion:(void (^)(bool succss , NSError *error))completion;
+
 @end
 
 
