@@ -3,7 +3,7 @@
 //  TTAppRuntime
 //
 //  Created by wangzhizhou on 2019/7/16.
-//
+//  需求文档： https://wiki.bytedance.net/pages/viewpage.action?pageId=356855332
 //  Zlink接入文档： https://bytedance.feishu.cn/space/doc/doccnuHdgqOlAFbjAYuLHMGYmna#
 
 #import "TTZlinkSDKRegister.h"
