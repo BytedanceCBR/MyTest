@@ -171,10 +171,10 @@ static NSInteger const kMaxPostImageCount = 9;
     [self addImagesViewSizeChanged];
     [self addObserverAndNoti];
     [self restoreData];
-//    __weak typeof(self) weakSelf = self;
-//    self.panBeginAction = ^{
-//        [weakSelf.naviBar.searchInput resignFirstResponder];
-//    };
+    __weak typeof(self) weakSelf = self;
+    self.panBeginAction = ^{
+        [weakSelf.inputTextView resignFirstResponder];
+    };
     // 顶部 消息 弹窗tips
     self.lastCanShowMessageTip = [FHBubbleTipManager shareInstance].canShowTip;
     [FHBubbleTipManager shareInstance].canShowTip = NO;
