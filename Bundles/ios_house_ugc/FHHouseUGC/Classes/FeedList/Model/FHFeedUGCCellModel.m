@@ -59,7 +59,7 @@
         Class cls = nil;
         if(type == FHUGCFeedListCellTypeUGC){
             cls = [FHFeedUGCContentModel class];
-        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend){
+        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeAnswer || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -110,6 +110,34 @@
     cellModel.imageList = cellImageList;
     //处理其他数据
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
+        cellModel.title = model.title;
+        cellModel.behotTime = model.behotTime;
+        cellModel.openUrl = model.openUrl;
+        
+        [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
+        
+        if(!isEmptyString(model.openUrl) && !isEmptyString(model.sourceDesc)){
+            //针对问答的情况
+            cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
+        }else{
+            cellModel.desc = [self generateArticleDesc:model];
+        }
+        cellModel.detailScheme = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
+        
+        FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
+        community.name = model.community.name;
+        community.url = model.community.url;
+        community.socialGroupId = model.community.socialGroupId;
+        cellModel.community = community;
+        
+        if(cellModel.imageList.count == 1){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleSingleImage;
+        }else if(cellModel.imageList.count > 1){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleMultiImage;
+        }else{
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
+        }
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
         cellModel.title = model.title;
         cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.openUrl;

@@ -130,6 +130,7 @@
     @"mediaName": @"media_name",
     @"banComment": @"ban_comment",
     @"imageList": @"image_list",
+    @"largeImageList": @"large_image_list",
     @"readCount": @"read_count",
     @"isSubject": @"is_subject",
     @"articleType": @"article_type",
@@ -184,7 +185,7 @@
     @"openUrl": @"open_url",
     @"sourceDesc": @"source_desc",
     @"recommendSocialGroupList": @"recommend_social_group_list",
-    
+    @"rawData": @"raw_data",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -301,6 +302,126 @@
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
   }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataContentModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"defaultLines": @"default_lines",
+                           @"imageType": @"image_type",
+                           @"commentSchema": @"comment_schema",
+                           @"maxLines": @"max_lines",
+                           @"filterWords": @"filter_words",
+                           @"recommendReason": @"recommend_reason",
+                           @"layoutType": @"layout_type",
+                           @"repostParams": @"repost_params",
+                           @"jumpType": @"jump_type",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataContentQuestionAnswerUserListModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"userId": @"user_id",
+                           @"isVerify": @"is_verify",
+                           @"userSchema": @"user_schema",
+                           @"avatarUrl": @"avatar_url",
+                           @"isFollowing": @"is_following",
+                           @"vIcon": @"v_icon",
+                           @"userAuthInfo": @"user_auth_info",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataContentAnswerModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"answerType": @"answer_type",
+                           @"answerDetailSchema": @"answer_detail_schema",
+                           @"abstractText": @"abstract_text",
+                           @"forwardCount": @"forward_count",
+                           @"diggCount": @"digg_count",
+                           @"videoType": @"video_type",
+                           @"commentCount": @"comment_count",
+                           @"createTime": @"create_time",
+                           @"thumbImageList": @"thumb_image_list",
+                           @"largeImageList": @"large_image_list",
+                           @"browCount": @"brow_count",
+                           @"isDigg": @"is_digg",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataContentRepostParamsModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"optIdType": @"opt_id_type",
+                           @"fwIdType": @"fw_id_type",
+                           @"fwId": @"fw_id",
+                           @"coverUrl": @"cover_url",
+                           @"optId": @"opt_id",
+                           @"repostType": @"repost_type",
+                           @"fwUserId": @"fw_user_id",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataContentQuestionModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"answerUserList": @"answer_user_list",
+                           @"isAnonymous": @"is_anonymous",
+                           @"followCount": @"follow_count",
+                           @"niceAnsCount": @"nice_ans_count",
+                           @"answerCountDescription": @"answer_count_description",
+                           @"isQuestionDelete": @"is_question_delete",
+                           @"writeAnswerSchema": @"write_answer_schema",
+                           @"createTime": @"create_time",
+                           @"questionListSchema": @"question_list_schema",
+                           @"normalAnsCount": @"normal_ans_count",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
 }
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {

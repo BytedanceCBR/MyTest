@@ -11,6 +11,7 @@
 #import <UIImageView+BDWebImage.h>
 #import "TTUGCAttributedLabel.h"
 #import "FHUGCCellHelper.h"
+#import "FHUGCCellOriginItemView.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -20,6 +21,7 @@
 #define bottomViewHeight 49
 #define guideViewHeight 17
 #define topMargin 20
+#define originViewHeight 80
 
 @interface FHUGCPureTitleCell ()<TTUGCAttributedLabelDelegate>
 
@@ -27,6 +29,7 @@
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
+@property(nonatomic ,strong) FHUGCCellOriginItemView *originView;
 
 @end
 
@@ -64,6 +67,10 @@
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
+    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
+//    _originView.hidden = YES;
+    [self.contentView addSubview:_originView];
+    
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
@@ -87,9 +94,16 @@
     }];
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10 + originViewHeight + 10);
         make.height.mas_equalTo(bottomViewHeight);
         make.left.right.mas_equalTo(self.contentView);
+    }];
+    
+    [self.originView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
+        make.height.mas_equalTo(originViewHeight);
+        make.left.mas_equalTo(self.contentView).offset(leftMargin);
+        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
     }];
 }
 
@@ -130,6 +144,8 @@
             self.contentLabel.hidden = NO;
             [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
         }
+        //origin
+        [self.originView refreshWithdata:cellModel];
         
         [self showGuideView];
     }
@@ -139,6 +155,8 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 20;
+        
+        height += (originViewHeight + 10);
         
         if(cellModel.isInsertGuideCell){
             height += guideViewHeight;
