@@ -20,8 +20,10 @@
 #import "FHDetailCommentAllFooter.h"
 #import "FHUGCReplyListEmptyView.h"
 #import "TTCommentDetailModel.h"
+#import "TTMomentDetailAction.h"
+#import "TTMomentDetailStore.h"
 
-@interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,TTCommentDetailCellDelegate>
 
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHCommentDetailViewController *detailVC;
@@ -33,6 +35,7 @@
 @property (nonatomic, assign)   BOOL       hasMore;
 @property (nonatomic, strong)   FHDetailCommentAllFooter       *commentAllFooter;
 @property (nonatomic, strong)   FHUGCReplyListEmptyView       *replayListEmptyView;
+@property (nonatomic, strong)   TTMomentDetailStore       *store;
 
 // 评论回复列表数据源
 @property (nonatomic, strong) NSMutableArray<TTCommentDetailReplyCommentModel *> *totalComments;//dataSource
@@ -57,6 +60,12 @@
         self.totalCommentLayouts = [NSMutableArray new];
         [self configTableView];
         [self commentCountChanged];
+        [self store];
+        //  add by zyk
+//        self.store.enterFrom = self.enterFrom;
+//        self.store.categoryID = self.categoryID;
+//        self.store.logPb = self.logPb;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delCommentDetailReplySuccess:) name:kFHUGCDelCommentDetailReplyNotification object:nil];
     }
     return self;
 }
@@ -108,6 +117,9 @@
         if (model.data && [model.data isKindOfClass:[NSDictionary class]]) {
             TTCommentDetailModel *dModel = [[TTCommentDetailModel alloc] initWithDictionary:model.data error:nil];
             self.commentDetailModel = dModel;
+            self.user_digg = self.commentDetailModel.userDigg ? 1 : 0;
+            self.digg_count = self.commentDetailModel.diggCount;
+            [self.detailVC refreshUI];
         }
         // 请求回复列表
         [self requestReplyListData];
@@ -204,7 +216,93 @@
 
 // 抢沙发点击
 - (void)commentFirst {
-    
+    [self.detailVC openWriteCommentViewWithReplyCommentModel:nil];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+// 删除回复通知
+/*
+ [postParams setValue:commentID forKey:@"id"];
+ [postParams setValue:commentReplyID forKey:@"reply_id"];
+ */
+- (void)delCommentDetailReplySuccess:(NSNotification *)noti {
+    NSString *commentId = noti.userInfo[@"id"];
+    NSString *replyId = noti.userInfo[@"reply_id"];
+    // 删除指定的回复
+    if (commentId.length > 0 && replyId.length > 0) {
+        if ([self.commentDetailModel.commentID isEqualToString:commentId]) {
+            __block NSInteger findIndex = -1;
+            [self.totalComments enumerateObjectsUsingBlock:^(TTCommentDetailReplyCommentModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj.commentID isEqualToString:replyId]) {
+                    findIndex = idx;
+                    *stop = YES;
+                }
+            }];
+            if (findIndex >= 0 && findIndex  < self.totalComments.count && findIndex < self.totalCommentLayouts.count) {
+                [self.totalComments removeObjectAtIndex:findIndex];
+                [self.totalCommentLayouts removeObjectAtIndex:findIndex];
+                // 删除
+                self.offset -= 1;
+                if (self.offset < 0) {
+                    self.offset = 0;
+                }
+                self.comment_count -= 1;
+                [self commentCountChanged];
+            }
+            if (self.totalComments.count == 0 && self.hasMore) {
+                // 加载更多
+                [self loadMore];
+            } else {
+                [self updateTableViewWithMoreData:self.hasMore];
+            }
+            [self.tableView reloadData];
+        }
+    }
+}
+
+// 写评论回复成功之后调用，插入第一行
+- (void)insertReplyData:(TTCommentDetailReplyCommentModel *)model {
+    if (model && [model isKindOfClass:[TTCommentDetailReplyCommentModel class]]) {
+        // 转化
+        NSArray *layout = [[TTCommentDetailCellLayout alloc] initWithCommentModel:model containViewWidth:self.detailVC.view.width];
+        if (layout) {
+            [self.totalComments insertObject:model  atIndex:0];
+            [self.totalCommentLayouts insertObject:layout  atIndex:0];
+            self.offset += 1;
+            self.comment_count += 1;
+            [self commentCountChanged];
+            [self.tableView reloadData];
+            [self updateTableViewWithMoreData:self.hasMore];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+            // 先看是否需要滚动
+            NSArray *arrCells = [self.tableView visibleCells];
+            if (arrCells.count > 0) {
+                UITableViewCell *firstCell = [arrCells firstObject];
+                NSIndexPath *ip = [self.tableView indexPathForCell:firstCell];
+                NSInteger section1 = ip.section;
+                NSInteger row1 = ip.row;
+                UITableViewCell *lastCell = [arrCells lastObject];
+                ip = [self.tableView indexPathForCell:lastCell];
+                NSInteger section2 = ip.section;
+                NSInteger row2 = ip.row;
+                // 上面显示详情
+                if (section1 == 0) {
+                    // 不跳转
+                } else {
+                    if (row1 >= 0) {
+                        __weak typeof(self) weakSelf = self;
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [weakSelf.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                        });
+                    }
+                }
+            }
+        }
+    }
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
@@ -240,6 +338,7 @@
             UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             if ([cell isKindOfClass:[TTCommentDetailCell class]]) {
                 TTCommentDetailCell *tempCell = cell;
+                tempCell.delegate = self;
                 [tempCell tt_refreshConditionWithLayout:layout model:data];
             }
             return cell;
@@ -297,7 +396,75 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSInteger section = indexPath.section;
+    if (section == 0) {
+        // 头部详情
+    } else if (section == 1) {
+        if (indexPath.row < self.totalComments.count) {
+            id data = self.totalComments[indexPath.row];
+            if (data) {
+                [self.detailVC openWriteCommentViewWithReplyCommentModel:data];
+            }
+        }
+    }
 }
 
+// TTMomentDetailStore
+- (TTMomentDetailStore *)store {
+    if (!_store) {
+        _store = [[TTMomentDetailStore alloc] init];
+    }
+    return _store;
+}
+
+
+#pragma mark - TTCommentDetailCellDelegate
+
+- (void)tt_commentCell:(UITableViewCell *)view avatarTappedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+
+}
+
+- (void)tt_commentCell:(UITableViewCell *)view deleteCommentWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+    TTMomentDetailAction *action = [TTMomentDetailAction actionWithType:TTMomentDetailActionTypeDeleteComment payload:nil];
+    action.commentDetailModel = self.commentDetailModel;
+    action.replyCommentModel = model;
+    action.source = TTMomentDetailActionSourceTypeComment;
+    action.shouldMiddlewareHandle = YES;
+    // 不想修改之前的代码
+    [self.store dispatch:action];
+}
+
+- (void)tt_commentCell:(UITableViewCell *)view digCommentWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+//    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+//    [params setValue:_groupId forKey:@"group_Id"];
+//    [params setValue:_groupId forKey:@"item_Id"];
+//    [params setValue:_logPb forKey:@"log_pd"];
+//    [params setValue:_categoryName  forKey:@"category_name"];
+//    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+//    [params setValue:@"replay" forKey:@"position"];
+//    [params setValue:_commentModel.commentID forKey:@"comment_id"];
+//    if (!isEmptyString(_qid)) {
+//        [params setValue:_qid forKey:@"qid"];
+//        [params setValue:_groupId forKey:@"ansid"];
+//    }
+//
+//    if (!model.userDigg) {
+//        [TTTracker eventV3:@"rt_like" params:params];
+//    }
+//    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithReplyCommentModel:model];
+//    self.detailAction = action;
+//    action.commentDetailModel = self.commentDetailModel;
+//    [self.store subscribe:self];
+//    [self.store dispatch:action];
+}
+
+- (void)tt_commentCell:(UITableViewCell *)view nameViewonClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+
+}
+
+- (void)tt_commentCell:(UITableViewCell *)view quotedNameOnClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+
+}
 
 @end
