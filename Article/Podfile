@@ -292,7 +292,7 @@ def appPods
     #--------------------------------------------------基础工具库-----------------------------------------------#
     #--------------------------------------------------基础工具库-----------------------------------------------#
     #-----头条基础库-----
-    pod 'TTBaseLib','2.0.0', :subspecs => [
+    pod_binary 'TTBaseLib','2.0.0', :subspecs => [
     'TTBaseTool',
     'TTBusinessManager',
     'TTCategory',
@@ -307,7 +307,7 @@ def appPods
     #-----头条主题库-----
 #    pod 'TTThemed', :path => '../AKPlugins/AKThemed', :inhibit_warnings => false
 
-    pod 'TTThemed','0.1.36'
+    pod_binary 'TTThemed','0.1.36'
 
     #-----头条UI组件库-----
     pod 'TTUIWidget', :path => '../AKPlugins/TTUIWidget', :inhibit_warnings => false
