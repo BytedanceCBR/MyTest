@@ -275,11 +275,28 @@
             [self.tableView reloadData];
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
             // 先看是否需要滚动
-            
-            __weak typeof(self) weakSelf = self;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [weakSelf.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-            });
+            NSArray *arrCells = [self.tableView visibleCells];
+            if (arrCells.count > 0) {
+                UITableViewCell *firstCell = [arrCells firstObject];
+                NSIndexPath *ip = [self.tableView indexPathForCell:firstCell];
+                NSInteger section1 = ip.section;
+                NSInteger row1 = ip.row;
+                UITableViewCell *lastCell = [arrCells lastObject];
+                ip = [self.tableView indexPathForCell:lastCell];
+                NSInteger section2 = ip.section;
+                NSInteger row2 = ip.row;
+                // 上面显示详情
+                if (section1 == 0) {
+                    // 不跳转
+                } else {
+                    if (row1 >= 0) {
+                        __weak typeof(self) weakSelf = self;
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [weakSelf.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                        });
+                    }
+                }
+            }
         }
     }
 }
