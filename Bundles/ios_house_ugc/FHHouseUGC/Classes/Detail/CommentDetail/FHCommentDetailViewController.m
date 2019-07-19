@@ -54,6 +54,12 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     [self startLoadData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setupUI {
@@ -134,6 +140,14 @@
         // 取消点赞
         self.toolbarView.digCountLabel.textColor = [UIColor themeGray1];
     }
+}
+
+- (void)refreshUI {
+    [self refreshToolbarView];
+}
+
+- (void)refreshToolbarView {
+    [self p_refreshToolbarView];
 }
 
 - (void)toolBarButtonClicked:(id)sender
@@ -257,12 +271,38 @@
 //    dict[@"element_from"] = self.tracerDict[@"element_from"];
 //    dict[@"page_type"] = self.tracerDict[@"page_type"];
     
-    [FHCommonApi requestCommonDigg:self.comment_id groupType:FHDetailDiggTypeTHREAD action:self.viewModel.user_digg tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHCommonApi requestCommonDigg:self.comment_id groupType:FHDetailDiggTypeCOMMENT action:self.viewModel.user_digg tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
     }];
 }
 
-
+- (void)likeStateChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    if(userInfo){
+        NSInteger user_digg = [userInfo[@"action"] integerValue];
+        NSInteger diggCount = self.viewModel.digg_count;
+        NSInteger groupType = [userInfo[@"group_type"] integerValue];
+        NSString *groupId = userInfo[@"group_id"];
+        
+        if(groupType == FHDetailDiggTypeCOMMENT && [groupId isEqualToString:self.comment_id]){
+            // 刷新UI
+            if(user_digg == 0) {
+                //取消点赞
+                self.viewModel.user_digg = 0;
+                if(diggCount > 0){
+                    diggCount = diggCount - 1;
+                }
+            }else{
+                //点赞
+                self.viewModel.user_digg = 1;
+                diggCount = diggCount + 1;
+            }
+            
+            self.viewModel.digg_count = diggCount;
+        }
+        [self p_refreshToolbarView];
+    }
+}
 
 - (CGRect)p_frameForToolBarView
 {

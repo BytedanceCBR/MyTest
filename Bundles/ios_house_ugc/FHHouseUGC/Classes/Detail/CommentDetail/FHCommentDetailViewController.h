@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 评论详情
 @interface FHCommentDetailViewController : FHBaseViewController
 
+- (void)refreshUI;
+
 @end
 
 extern CGFloat FHExploreDetailGetToolbarHeight(void);

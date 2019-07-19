@@ -117,6 +117,9 @@
         if (model.data && [model.data isKindOfClass:[NSDictionary class]]) {
             TTCommentDetailModel *dModel = [[TTCommentDetailModel alloc] initWithDictionary:model.data error:nil];
             self.commentDetailModel = dModel;
+            self.user_digg = self.commentDetailModel.userDigg ? 1 : 0;
+            self.digg_count = self.commentDetailModel.diggCount;
+            [self.detailVC refreshUI];
         }
         // 请求回复列表
         [self requestReplyListData];
