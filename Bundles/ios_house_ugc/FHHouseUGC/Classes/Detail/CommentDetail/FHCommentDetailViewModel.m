@@ -20,8 +20,10 @@
 #import "FHDetailCommentAllFooter.h"
 #import "FHUGCReplyListEmptyView.h"
 #import "TTCommentDetailModel.h"
+#import "TTMomentDetailAction.h"
+#import "TTMomentDetailStore.h"
 
-@interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,TTCommentDetailCellDelegate>
 
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHCommentDetailViewController *detailVC;
@@ -33,6 +35,7 @@
 @property (nonatomic, assign)   BOOL       hasMore;
 @property (nonatomic, strong)   FHDetailCommentAllFooter       *commentAllFooter;
 @property (nonatomic, strong)   FHUGCReplyListEmptyView       *replayListEmptyView;
+@property (nonatomic, strong)   TTMomentDetailStore       *store;
 
 // 评论回复列表数据源
 @property (nonatomic, strong) NSMutableArray<TTCommentDetailReplyCommentModel *> *totalComments;//dataSource
@@ -57,6 +60,11 @@
         self.totalCommentLayouts = [NSMutableArray new];
         [self configTableView];
         [self commentCountChanged];
+        [self store];
+        //  add by zyk
+//        self.store.enterFrom = self.enterFrom;
+//        self.store.categoryID = self.categoryID;
+//        self.store.logPb = self.logPb;
     }
     return self;
 }
@@ -207,6 +215,11 @@
     
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -240,6 +253,7 @@
             UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             if ([cell isKindOfClass:[TTCommentDetailCell class]]) {
                 TTCommentDetailCell *tempCell = cell;
+                tempCell.delegate = self;
                 [tempCell tt_refreshConditionWithLayout:layout model:data];
             }
             return cell;
@@ -299,5 +313,62 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+// TTMomentDetailStore
+- (TTMomentDetailStore *)store {
+    if (!_store) {
+        _store = [[TTMomentDetailStore alloc] init];
+    }
+    return _store;
+}
+
+
+#pragma mark - TTCommentDetailCellDelegate
+
+- (void)tt_commentCell:(UITableViewCell *)view avatarTappedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+
+}
+
+- (void)tt_commentCell:(UITableViewCell *)view deleteCommentWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+    TTMomentDetailAction *action = [TTMomentDetailAction actionWithType:TTMomentDetailActionTypeDeleteComment payload:nil];
+    action.commentDetailModel = self.commentDetailModel;
+    action.replyCommentModel = model;
+    action.source = TTMomentDetailActionSourceTypeComment;
+    action.shouldMiddlewareHandle = YES;
+    // 不想修改之前的代码
+    [self.store dispatch:action];
+}
+
+- (void)tt_commentCell:(UITableViewCell *)view digCommentWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+//    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+//    [params setValue:_groupId forKey:@"group_Id"];
+//    [params setValue:_groupId forKey:@"item_Id"];
+//    [params setValue:_logPb forKey:@"log_pd"];
+//    [params setValue:_categoryName  forKey:@"category_name"];
+//    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+//    [params setValue:@"replay" forKey:@"position"];
+//    [params setValue:_commentModel.commentID forKey:@"comment_id"];
+//    if (!isEmptyString(_qid)) {
+//        [params setValue:_qid forKey:@"qid"];
+//        [params setValue:_groupId forKey:@"ansid"];
+//    }
+//
+//    if (!model.userDigg) {
+//        [TTTracker eventV3:@"rt_like" params:params];
+//    }
+//    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithReplyCommentModel:model];
+//    self.detailAction = action;
+//    action.commentDetailModel = self.commentDetailModel;
+//    [self.store subscribe:self];
+//    [self.store dispatch:action];
+}
+
+- (void)tt_commentCell:(UITableViewCell *)view nameViewonClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+
+}
+
+- (void)tt_commentCell:(UITableViewCell *)view quotedNameOnClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+
+}
 
 @end

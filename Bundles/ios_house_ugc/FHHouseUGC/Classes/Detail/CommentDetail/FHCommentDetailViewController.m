@@ -59,7 +59,7 @@
 - (void)setupUI {
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"详情";
-    self.comment_id = @"6712727097456623627";
+    self.comment_id = @"6714466747832877060";
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
     [self configTableView];
@@ -200,14 +200,11 @@
             return;
         }
         NSLog(@"%@",replyModel);
-//        TTMomentDetailAction *publishAction = [TTMomentDetailAction actionWithType:TTMomentDetailActionTypePublishComment comment:nil];
-//        publishAction.replyCommentModel = replyModel;
-//        publishAction.shouldMiddlewareHandle = NO;
-//        [self.store dispatch:publishAction];
+        // 插入评论第一个，修改offset
 
     } getReplyCommentModelClassBlock:nil commentRepostWithPreRichSpanText:nil commentSource:nil];
     
-        replyManager.enterFrom = @"feed_detail";
+    replyManager.enterFrom = @"comment_detail";
 //        replyManager.enter_type = @"submit_comment";
     
     self.commentWriteView = [[FHUGCReplyCommentWriteView alloc] initWithCommentManager:replyManager];
