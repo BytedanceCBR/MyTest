@@ -106,12 +106,11 @@
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
     }];
     
-    CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:self.imageCount width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
     [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-        make.height.mas_equalTo(imageViewheight);
+        make.height.mas_equalTo(self.multiImageView.viewHeight);
     }];
     
     if (self.showCommunity) {
@@ -201,6 +200,11 @@
     [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:kFHMaxLines];
     // 图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
+    if(self.imageCount == 1){
+        [self.multiImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(self.multiImageView.viewHeight);
+        }];
+    }
     // 小区
     self.position.text = cellModel.community.name;
     [self.position sizeToFit];

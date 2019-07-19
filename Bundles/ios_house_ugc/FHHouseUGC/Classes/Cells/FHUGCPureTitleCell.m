@@ -90,7 +90,6 @@
         make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
         make.height.mas_equalTo(bottomViewHeight);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView);
     }];
 }
 

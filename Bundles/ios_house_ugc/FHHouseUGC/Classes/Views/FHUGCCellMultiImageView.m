@@ -25,7 +25,6 @@
 @property(nonatomic, assign) CGFloat imageWidth;
 @property(nonatomic, strong) NSArray *largeImageList;
 @property(nonatomic, strong) UILabel *infoLabel;
-@property(nonatomic, assign) CGFloat viewHeight;
 
 @end
 
@@ -167,8 +166,9 @@
             [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
             //只对单图做重新布局，多图都是1：1
             if(self.count == 1 && !self.fixedSingleImage){
+                self.viewHeight = self.imageWidth * height/width;
                 [imageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.height.mas_equalTo(self.imageWidth * height/width);
+                    make.height.mas_equalTo(self.viewHeight);
                 }];
             }
         }else{
