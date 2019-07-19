@@ -216,7 +216,7 @@
 
 // 抢沙发点击
 - (void)commentFirst {
-    
+    [self.detailVC openWriteCommentViewWithReplyCommentModel:nil];
 }
 
 - (void)dealloc
@@ -276,6 +276,7 @@
             self.comment_count += 1;
             [self commentCountChanged];
             [self.tableView reloadData];
+            [self updateTableViewWithMoreData:self.hasMore];
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
             // 先看是否需要滚动
             NSArray *arrCells = [self.tableView visibleCells];

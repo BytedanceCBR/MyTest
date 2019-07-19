@@ -65,7 +65,7 @@
 - (void)setupUI {
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"详情";
-    self.comment_id = @"6714466747832877060";
+    self.comment_id = @"6712727097456623627";
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
     [self configTableView];
