@@ -435,28 +435,31 @@
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view digCommentWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-//    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
-//    [params setValue:_groupId forKey:@"group_Id"];
-//    [params setValue:_groupId forKey:@"item_Id"];
-//    [params setValue:_logPb forKey:@"log_pd"];
-//    [params setValue:_categoryName  forKey:@"category_name"];
-//    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
-//    [params setValue:@"replay" forKey:@"position"];
-//    [params setValue:_commentModel.commentID forKey:@"comment_id"];
-//    if (!isEmptyString(_qid)) {
-//        [params setValue:_qid forKey:@"qid"];
-//        [params setValue:_groupId forKey:@"ansid"];
-//    }
-//
-//    if (!model.userDigg) {
-//        [TTTracker eventV3:@"rt_like" params:params];
-//    }
-//    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithReplyCommentModel:model];
-//    self.detailAction = action;
-//    action.commentDetailModel = self.commentDetailModel;
-//    [self.store subscribe:self];
-//    [self.store dispatch:action];
+    // @"rt_like" 是否需要埋点
+    NSInteger action = 0;
+    if (model.userDigg) {
+        action = 0;
+        model.diggCount -= 1;
+        if (model.diggCount < 0) {
+            model.diggCount = 0;
+        }
+        model.userDigg = NO;
+    } else {
+        action = 1;
+        model.diggCount += 1;
+        model.userDigg = YES;
+    }
+    // 新接口
+    [FHCommonApi requestCommonDigg: model.commentID groupType:FHDetailDiggTypeREPLY action:action completion:nil];
+    // 刷新UI
+    if (model) {
+        NSInteger index = [self.totalComments indexOfObject:model];
+        if (index >= 0 && index < self.totalCommentLayouts.count) {
+            id layout = [self.totalCommentLayouts objectAtIndex:index];
+            TTCommentDetailCell *tempCell = (TTCommentDetailCell *)view;
+            [tempCell tt_refreshConditionWithLayout:layout model:model];
+        }
+    }
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view nameViewonClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
