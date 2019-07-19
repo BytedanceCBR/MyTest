@@ -270,9 +270,45 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *jumpType;
 @end
 
+@interface FHFeedContentRawDataOriginGroupModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, copy , nullable) NSString *groupId;
+@property (nonatomic, copy , nullable) NSString *source;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, assign) BOOL hasVideo;
+@property (nonatomic, copy , nullable) NSString *titleRichSpan;
+@property (nonatomic, copy , nullable) NSString *itemIdStr;
+@property (nonatomic, copy , nullable) NSString *articleUrl;
+@property (nonatomic, copy , nullable) NSString *itemId;
+@property (nonatomic, copy , nullable) NSString *groupIdStr;
+@property (nonatomic, strong , nullable) FHFeedContentImageListModel *middleImage ;
+@property (nonatomic, copy , nullable) NSString *aggrType;
+@end
+
+@interface FHFeedContentRawDataCommentBaseModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *contentDecoration;
+@property (nonatomic, copy , nullable) NSString *richContent;
+@property (nonatomic, copy , nullable) NSString *detailSchema;
+@property (nonatomic, copy , nullable) NSString *commentSchema;
+@property (nonatomic, copy , nullable) NSString *contentRichSpan;
+@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *createTime;
+@property (nonatomic, copy , nullable) NSString *groupSource;
+@property (nonatomic, copy , nullable) NSString *itemId;
+@property (nonatomic, copy , nullable) NSString *groupId;
+@property (nonatomic, copy , nullable) NSString *composition;
+@property (nonatomic, copy , nullable) NSString *repostStatus;
+@end
+
 @interface FHFeedContentRawDataModel : JSONModel
 
 @property (nonatomic, strong , nullable) FHFeedContentRawDataContentModel *content ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseModel *commentBase ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginGroupModel *originGroup ;
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, copy , nullable) NSString *groupId;
 @end
@@ -334,6 +370,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *level;
 @property (nonatomic, copy , nullable) NSString *userVerified;
 @property (nonatomic, copy , nullable) NSString *diggCount;
+@property (nonatomic, copy , nullable) NSString *userDigg;
 @property (nonatomic, copy , nullable) NSString *behotTime;
 @property (nonatomic, copy , nullable) NSString *hot;
 @property (nonatomic, copy , nullable) NSString *cursor;

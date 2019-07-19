@@ -27,6 +27,10 @@
 
 @end
 
+@implementation FHFeedUGCOriginItemModel
+
+@end
+
 @implementation FHFeedUGCCellModel
 
 - (instancetype)init {
@@ -59,7 +63,7 @@
         Class cls = nil;
         if(type == FHUGCFeedListCellTypeUGC){
             cls = [FHFeedUGCContentModel class];
-        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeAnswer || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend){
+        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeAnswer || type == FHUGCFeedListCellTypeArticleComment || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -108,6 +112,26 @@
         [cellImageList addObject:cellImageModel];
     }
     cellModel.imageList = cellImageList;
+    //处理大图
+    NSMutableArray *cellLargeImageList = [NSMutableArray array];
+    for (FHFeedContentImageListModel *imageModel in model.largeImageList) {
+        FHFeedUGCCellImageListModel *cellImageModel = [[FHFeedUGCCellImageListModel alloc] init];
+        cellImageModel.uri = imageModel.uri;
+        cellImageModel.url = imageModel.url;
+        cellImageModel.width = imageModel.width;
+        cellImageModel.height = imageModel.height;
+        
+        NSMutableArray *cellImageModelUrlList = [NSMutableArray array];
+        for (FHFeedUGCCellImageListUrlListModel *urlListModel in imageModel.urlList) {
+            FHFeedUGCCellImageListUrlListModel *cellUrlListModel = [[FHFeedUGCCellImageListUrlListModel alloc] init];
+            cellUrlListModel.url = urlListModel.url;
+            [cellImageModelUrlList addObject:cellUrlListModel];
+        }
+        cellImageModel.urlList = cellImageModelUrlList;
+        
+        [cellLargeImageList addObject:cellImageModel];
+    }
+    cellModel.largeImageList = cellLargeImageList;
     //处理其他数据
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         cellModel.title = model.title;
@@ -138,19 +162,17 @@
             cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
-        cellModel.title = model.title;
+        cellModel.content = model.title;
         cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.openUrl;
         
-        [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
+        double time = [model.publishTime doubleValue];
+        NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+        cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
         
-        if(!isEmptyString(model.openUrl) && !isEmptyString(model.sourceDesc)){
-            //针对问答的情况
-            cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
-        }else{
-            cellModel.desc = [self generateArticleDesc:model];
-        }
-        cellModel.detailScheme = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
+        cellModel.diggCount = model.diggCount;
+        cellModel.commentCount = model.commentCount;
+        cellModel.userDigg = model.userDigg;
         
         FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
         community.name = model.community.name;
@@ -158,13 +180,74 @@
         community.socialGroupId = model.community.socialGroupId;
         cellModel.community = community;
         
+        FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
+        user.name = model.userInfo.name;
+        user.avatarUrl = model.userInfo.avatarUrl;
+        user.userId = model.userInfo.userId;
+        cellModel.user = user;
+        
+        FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
+        originItemModel.type = @"[问答]";
+        originItemModel.content = model.rawData.content.question.title;
+        originItemModel.openUrl = model.rawData.content.question.questionListSchema;
+        cellModel.originItemModel = originItemModel;
+        
+        NSInteger numberOfLines = 3;
+        
         if(cellModel.imageList.count == 1){
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleSingleImage;
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
         }else if(cellModel.imageList.count > 1){
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleMultiImage;
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeMultiImage;
         }else{
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
+            cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
+            numberOfLines = 5;
         }
+        
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:numberOfLines];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
+        cellModel.content = model.rawData.commentBase.content;
+        cellModel.behotTime = model.behotTime;
+        cellModel.openUrl = model.rawData.commentBase.detailSchema;
+        
+        double time = [model.publishTime doubleValue];
+        NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+        cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
+        
+        cellModel.diggCount = model.diggCount;
+        cellModel.commentCount = model.commentCount;
+        cellModel.userDigg = model.userDigg;
+        
+        FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
+        community.name = model.community.name;
+        community.url = model.community.url;
+        community.socialGroupId = model.community.socialGroupId;
+        cellModel.community = community;
+        
+        FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
+        user.name = model.userInfo.name;
+        user.avatarUrl = model.userInfo.avatarUrl;
+        user.userId = model.userInfo.userId;
+        cellModel.user = user;
+        
+        FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
+        originItemModel.type = @"[文章]";
+        originItemModel.content = model.rawData.originGroup.title;
+        originItemModel.openUrl = model.rawData.originGroup.schema;
+        originItemModel.imageModel = model.rawData.originGroup.middleImage;
+        cellModel.originItemModel = originItemModel;
+        
+        NSInteger numberOfLines = 3;
+        
+        if(cellModel.imageList.count == 1){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
+        }else if(cellModel.imageList.count > 1){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeMultiImage;
+        }else{
+            cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
+            numberOfLines = 5;
+        }
+        
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:numberOfLines];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBanner;
         cellModel.openUrl = model.url;

@@ -139,6 +139,7 @@
     @"hasM3u8Video": @"has_m3u8_video",
     @"hasMp4Video": @"has_mp4_video",
     @"diggCount": @"digg_count",
+    @"userDigg": @"user_digg",
     @"aggrType": @"aggr_type",
     @"cellLayoutStyle": @"cell_layout_style",
     @"articleSubType": @"article_sub_type",
@@ -418,6 +419,129 @@
                            @"createTime": @"create_time",
                            @"questionListSchema": @"question_list_schema",
                            @"normalAnsCount": @"normal_ans_count",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"itemId": @"item_id",
+                           @"groupId": @"group_id",
+                           @"commentBase": @"comment_base",
+                           @"originGroup": @"origin_group",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataContentFilterWordsModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"isSelected": @"is_selected",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataContentQuestionContentModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"thumbImageList": @"thumb_image_list",
+                           @"largeImageList": @"large_image_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataContentUserModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"userId": @"user_id",
+                           @"isVerify": @"is_verify",
+                           @"userSchema": @"user_schema",
+                           @"avatarUrl": @"avatar_url",
+                           @"isFollowing": @"is_following",
+                           @"vIcon": @"v_icon",
+                           @"userAuthInfo": @"user_auth_info",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginGroupModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"groupIdStr": @"group_id_str",
+                           @"hasVideo": @"has_video",
+                           @"titleRichSpan": @"title_rich_span",
+                           @"itemId": @"item_id",
+                           @"articleUrl": @"article_url",
+                           @"itemIdStr": @"item_id_str",
+                           @"groupId": @"group_id",
+                           @"middleImage": @"middle_image",
+                           @"aggrType": @"aggr_type",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataCommentBaseModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"contentDecoration": @"content_decoration",
+                           @"richContent": @"rich_content",
+                           @"detailSchema": @"detail_schema",
+                           @"commentSchema": @"comment_schema",
+                           @"contentRichSpan": @"content_rich_span",
+                           @"createTime": @"create_time",
+                           @"groupSource": @"group_source",
+                           @"itemId": @"item_id",
+                           @"groupId": @"group_id",
+                           @"repostStatus": @"repost_status",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -43,6 +43,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHFeedUGCOriginItemModel : NSObject
+
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *type;
+@property (nonatomic, copy , nullable) FHFeedContentImageListModel *imageModel;
+
+@end
+
 @interface FHFeedUGCCellModel : NSObject
 
 @property (nonatomic, assign) FHUGCFeedListCellType cellType;
@@ -89,6 +98,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedUGCCellCommunityModel *community ;
 //是否显示圈子名称，默认为YES
 @property (nonatomic, assign) BOOL showCommunity;
+//原始文章或者问答
+@property (nonatomic, strong , nullable) FHFeedUGCOriginItemModel *originItemModel;
 
 //埋点相关
 @property (nonatomic, strong , nullable) NSDictionary *logPb;

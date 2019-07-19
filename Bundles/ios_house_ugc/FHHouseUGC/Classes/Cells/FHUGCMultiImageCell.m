@@ -13,6 +13,7 @@
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
+#import "FHUGCCellOriginItemView.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -22,6 +23,7 @@
 #define bottomViewHeight 49
 #define guideViewHeight 17
 #define topMargin 20
+#define originViewHeight 80
 
 @interface FHUGCMultiImageCell ()<TTUGCAttributedLabelDelegate>
 
@@ -30,6 +32,7 @@
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
+@property(nonatomic ,strong) FHUGCCellOriginItemView *originView;
 @property(nonatomic ,assign) CGFloat imageViewheight;
 
 @end
@@ -71,6 +74,10 @@
     [self.contentView addSubview:_multiImageView];
     self.imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
     
+    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
+    _originView.hidden = YES;
+    [self.contentView addSubview:_originView];
+    
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
@@ -104,6 +111,13 @@
         make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
         make.height.mas_equalTo(49);
         make.left.right.mas_equalTo(self.contentView);
+    }];
+    
+    [self.originView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
+        make.height.mas_equalTo(originViewHeight);
+        make.left.mas_equalTo(self.contentView).offset(leftMargin);
+        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
     }];
 }
 
@@ -158,6 +172,19 @@
         }
         //图片
         [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
+        //origin
+        if(cellModel.originItemModel){
+            self.originView.hidden = NO;
+            [self.originView refreshWithdata:cellModel];
+            [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(originViewHeight + 20);
+            }];
+        }else{
+            self.originView.hidden = YES;
+            [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
+            }];
+        }
         
         [self showGuideView];
     }
@@ -174,6 +201,10 @@
         
         CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
         height += imageViewheight;
+        
+        if(cellModel.originItemModel){
+            height += (originViewHeight + 10);
+        }
         
         if(cellModel.isInsertGuideCell){
             height += guideViewHeight;

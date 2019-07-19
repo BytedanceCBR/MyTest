@@ -68,7 +68,7 @@
     [self.contentView addSubview:_contentLabel];
     
     self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
-//    _originView.hidden = YES;
+    _originView.hidden = YES;
     [self.contentView addSubview:_originView];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
@@ -145,7 +145,18 @@
             [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
         }
         //origin
-        [self.originView refreshWithdata:cellModel];
+        if(cellModel.originItemModel){
+            self.originView.hidden = NO;
+            [self.originView refreshWithdata:cellModel];
+            [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(originViewHeight + 20);
+            }];
+        }else{
+            self.originView.hidden = YES;
+            [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
+            }];
+        }
         
         [self showGuideView];
     }
@@ -156,7 +167,9 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 20;
         
-        height += (originViewHeight + 10);
+        if(cellModel.originItemModel){
+            height += (originViewHeight + 10);
+        }
         
         if(cellModel.isInsertGuideCell){
             height += guideViewHeight;
