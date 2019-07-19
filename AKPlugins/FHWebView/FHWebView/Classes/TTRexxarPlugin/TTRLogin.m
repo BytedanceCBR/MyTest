@@ -62,7 +62,7 @@ extern NSString * TTAccountPlatformDidAuthorizeCompletionNotification;
     
     BOOL isAK = [param tt_boolValueForKey:@"use_new"];
     if (isAK && [platform isEqualToString:@"weixin"]) {
-        NSURL *url = [NSURL URLWithString:@"sslocal://ak_login_traffic?"];
+        NSURL *url = [NSURL URLWithString:@"sslocal://flogin"];
         if ([[TTRoute sharedRoute] canOpenURL:url]) {
             [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
             return;

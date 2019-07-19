@@ -126,10 +126,14 @@
         _field.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:16]];
         _field.textColorThemeKey = kColorText1;
         _field.textAlignment = NSTextAlignmentLeft;
-        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:2];
-        [dict setValue:[UIColor colorWithHexString:@"999999"] forKey:NSForegroundColorAttributeName];
-        [dict setValue:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]] forKey:NSFontAttributeName];
-        _field.placeholderAttributedDict = dict;
+        _field.placeholderColorThemeKey = @"grey3";
+        _field.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]];
+        // add by zjing for test
+        
+//        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:2];
+//        [dict setValue:[UIColor colorWithHexString:@"999999"] forKey:NSForegroundColorAttributeName];
+//        [dict setValue:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]] forKey:NSFontAttributeName];
+//        _field.placeholderAttributedDict = dict;
     }
     return _field;
 }

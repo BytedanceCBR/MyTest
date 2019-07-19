@@ -186,7 +186,7 @@
 {
     if(!_infoLabel){
         _infoLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];
-        _infoLabel.textColorThemeKey = kFHColorCoolGrey3;
+        _infoLabel.textColorThemeKey = @"grey3";
 //        _infoLabel.backgroundColorThemeKey = kColorBackground4;
         _infoLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _infoLabel.numberOfLines = 1;

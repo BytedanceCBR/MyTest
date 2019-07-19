@@ -39,7 +39,7 @@
 #import "TTShareConstants.h"
 //#import "SSPayManager.h"
 
-#import "TTVersionHelper.h"
+#import <TTVersionHelper/TTVersionHelper.h>
 #import "TTDeviceHelper.h"
 #import "TTURLUtils.h"
 #import "NSObject+TTAdditions.h"

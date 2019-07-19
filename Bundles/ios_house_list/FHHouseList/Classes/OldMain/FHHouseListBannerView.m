@@ -11,6 +11,7 @@
 #import <Masonry.h>
 #import <BDWebImage/BDWebImage.h>
 #import <TTBaseLib/TTDeviceHelper.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 @implementation FHHouseListBannerItem
 

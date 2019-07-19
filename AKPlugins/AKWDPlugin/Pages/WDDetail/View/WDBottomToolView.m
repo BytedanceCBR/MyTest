@@ -57,9 +57,9 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         _writeButton.borderColors = nil;
         _writeButton.borderColorThemeKey = kColorLine1;
         _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
-        _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
+        _writeButton.titleColorThemeKey = @"grey3";
         _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
-        _writeButton.backgroundColorThemeKey = kFHColorPaleGrey;
+        _writeButton.backgroundColorThemeKey = @"grey7";
         _writeButton.layer.masksToBounds = YES;
         
 //        [_writeButton setImageName:@"write_new"];

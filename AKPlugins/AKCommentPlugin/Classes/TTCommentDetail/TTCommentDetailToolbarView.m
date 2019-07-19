@@ -45,7 +45,7 @@
         writeButton.borderColorThemeKey = kColorLine1;
         writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         writeButton.borderColors = nil;
-        writeButton.titleColorThemeKey = kFHColorCoolGrey3;
+        writeButton.titleColorThemeKey = @"grey3";
         writeButton.layer.cornerRadius = writeButton.height / 2.f;
         writeButton.layer.masksToBounds = YES;
         writeButton.backgroundColorThemeKey = kColorBackground3;

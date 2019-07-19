@@ -11,7 +11,7 @@
 #import "FHEditingInfoViewModel.h"
 #import "FHEditableUserInfo.h"
 #import "HPGrowingTextView.h"
-#import "NSString+TTLength.h"
+#import <FHHouseBase/NSString+Emoji.h>
 
 @interface FHEditingInfoController ()<UITextFieldDelegate>
 

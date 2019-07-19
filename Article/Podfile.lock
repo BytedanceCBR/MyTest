@@ -89,6 +89,7 @@ PODS:
   - FHHouseTrend (0.1.0)
   - FHHouseUGC (0.1.0)
   - FHMapSearch (0.1.0)
+  - FHPushAuthorizationManager (0.1.2)
   - FHRNKit (0.1.0)
   - FHWebView (0.1.0)
   - FLAnimatedImage (1.0.12.1-binary)
@@ -290,23 +291,14 @@ PODS:
   - TTArticleVideo (0.1.0)
   - TTAudio (0.1.6.1-binary)
   - TTAvatar (0.1.0)
-  - TTBaseLib (0.1.0):
-    - TTBaseLib/TTBaseTool (= 0.1.0)
-    - TTBaseLib/TTBusinessManager (= 0.1.0)
-    - TTBaseLib/TTCategory (= 0.1.0)
-    - TTBaseLib/TTDeviceHelper (= 0.1.0)
-    - TTBaseLib/TTNetworkHelper (= 0.1.0)
-    - TTBaseLib/TTRobust (= 0.1.0)
-    - TTBaseLib/TTSandBoxHelper (= 0.1.0)
-    - TTBaseLib/TTUIResponderHelper (= 0.1.0)
-  - TTBaseLib/TTBaseTool (0.1.0)
-  - TTBaseLib/TTBusinessManager (0.1.0)
-  - TTBaseLib/TTCategory (0.1.0)
-  - TTBaseLib/TTDeviceHelper (0.1.0)
-  - TTBaseLib/TTNetworkHelper (0.1.0)
-  - TTBaseLib/TTRobust (0.1.0)
-  - TTBaseLib/TTSandBoxHelper (0.1.0)
-  - TTBaseLib/TTUIResponderHelper (0.1.0)
+  - TTBaseLib/TTBaseTool (2.0.0)
+  - TTBaseLib/TTBusinessManager (2.0.0)
+  - TTBaseLib/TTCategory (2.0.0)
+  - TTBaseLib/TTDeviceHelper (2.0.0)
+  - TTBaseLib/TTLabelTextHelper (2.0.0)
+  - TTBaseLib/TTNetworkHelper (2.0.0)
+  - TTBaseLib/TTSandBoxHelper (2.0.0)
+  - TTBaseLib/TTUIResponderHelper (2.0.0)
   - TTBatchItemAction (0.1.8.1-binary)
   - TTDebug (0.1.0)
   - TTDebugAssistant (0.2.33.1-binary)
@@ -392,27 +384,15 @@ PODS:
   - TTNewsAccountBusiness/SSCookieManager (0.2.4)
   - TTPersistence (0.2.3.1-binary)
   - TTPhotoScrollVC (0.1.6)
-  - TTPlatformBaseLib (0.2.13):
-    - TTPlatformBaseLib/ArticleJSManager (= 0.2.13)
-    - TTPlatformBaseLib/TTCategoryManager (= 0.2.13)
-    - TTPlatformBaseLib/TTIconFontDefine (= 0.2.13)
-    - TTPlatformBaseLib/TTKeyChainStorage (= 0.2.13)
-    - TTPlatformBaseLib/TTPlatformSwitcher (= 0.2.13)
-    - TTPlatformBaseLib/TTPostDataSerializer (= 0.2.13)
-    - TTPlatformBaseLib/TTProfileFillManager (= 0.2.13)
-    - TTPlatformBaseLib/TTTAssetCountHelper (= 0.2.13)
-    - TTPlatformBaseLib/TTTrackerWrapper (= 0.2.13)
-    - TTPlatformBaseLib/TTURLDomainHelper (= 0.2.13)
-  - TTPlatformBaseLib/ArticleJSManager (0.2.13)
-  - TTPlatformBaseLib/TTCategoryManager (0.2.13)
-  - TTPlatformBaseLib/TTIconFontDefine (0.2.13)
-  - TTPlatformBaseLib/TTKeyChainStorage (0.2.13)
-  - TTPlatformBaseLib/TTPlatformSwitcher (0.2.13)
-  - TTPlatformBaseLib/TTPostDataSerializer (0.2.13)
-  - TTPlatformBaseLib/TTProfileFillManager (0.2.13)
-  - TTPlatformBaseLib/TTTAssetCountHelper (0.2.13)
-  - TTPlatformBaseLib/TTTrackerWrapper (0.2.13)
-  - TTPlatformBaseLib/TTURLDomainHelper (0.2.13)
+  - TTPlatformBaseLib (1.3.1):
+    - TTPlatformBaseLib/TTIconFontDefine (= 1.3.1)
+    - TTPlatformBaseLib/TTProfileFillManager (= 1.3.1)
+    - TTPlatformBaseLib/TTTrackerWrapper (= 1.3.1)
+    - TTPlatformBaseLib/TTURLDomainHelper (= 1.3.1)
+  - TTPlatformBaseLib/TTIconFontDefine (1.3.1)
+  - TTPlatformBaseLib/TTProfileFillManager (1.3.1)
+  - TTPlatformBaseLib/TTTrackerWrapper (1.3.1)
+  - TTPlatformBaseLib/TTURLDomainHelper (1.3.1)
   - TTPlatformUIModel (0.2.39):
     - TTPlatformUIModel/HPGrowingTextView (= 0.2.39)
     - TTPlatformUIModel/TTActionSheet (= 0.2.39)
@@ -443,10 +423,9 @@ PODS:
   - TTPlayerSDK (2.9.9.10)
   - TTPostBase (0.1.4)
   - TTPreloaderSDK (1.4.20-rc.0)
-  - TTPushAuthorizationManager (0.1.3)
   - TTPushManager (0.0.13.4)
   - TTPushSDK (0.1.1.1-binary)
-  - TTReachability (0.1.8.1-binary)
+  - TTReachability (0.5.1.1-binary)
   - TTReporter (0.2.1.1-binary)
   - TTRexxar/Core (0.8.10.1-binary)
   - TTRexxar/PackageApp (0.8.10.1-binary)
@@ -502,7 +481,7 @@ PODS:
   - TTShare/TTShareBusiness/TTShareWeiboBusiness (0.3.3)
   - TTShare/TTShareService (0.3.3)
   - TTTAttributedLabel (1.13.3.1-binary)
-  - TTThemed (0.1.0)
+  - TTThemed (0.1.36)
   - TTThirdPartySDKs/QQSDK (0.0.4)
   - TTThirdPartySDKs/WeChatSDK (0.0.4)
   - TTThirdPartySDKs/WeiboSDK (0.0.4)
@@ -525,6 +504,7 @@ PODS:
   - TTUserSettings (0.3.4.1-binary)
   - TTVContainerScrollView (0.1.2.1-binary)
   - TTVerifyKit (0.3.0.1-binary)
+  - TTVersionHelper (1.0.0.1-binary)
   - TTVideo (1.1.1.1-binary)
   - TTVideoEngine (1.9.3.24.1-binary)
   - TTVideoService (0.1.71.1-binary):
@@ -616,6 +596,7 @@ DEPENDENCIES:
   - FHHouseTrend (from `../Bundles/ios_house_trend`)
   - FHHouseUGC (from `../Bundles/ios_house_ugc`)
   - FHMapSearch (from `../Bundles/ios_map_search`)
+  - FHPushAuthorizationManager (= 0.1.2)
   - FHRNKit (from `../Bundles/ios_common_rn`)
   - FHWebView (from `../AKPlugins/FHWebView`)
   - FLAnimatedImage (= 1.0.12.1-binary)
@@ -719,7 +700,14 @@ DEPENDENCIES:
   - TTArticleVideo (from `../TTBundles/ios_tt_article_video`)
   - TTAudio (= 0.1.6.1-binary)
   - TTAvatar (from `../AKPlugins/TTAvatar`)
-  - TTBaseLib (from `../AKPlugins/TTBaseLib`)
+  - TTBaseLib/TTBaseTool (= 2.0.0)
+  - TTBaseLib/TTBusinessManager (= 2.0.0)
+  - TTBaseLib/TTCategory (= 2.0.0)
+  - TTBaseLib/TTDeviceHelper (= 2.0.0)
+  - TTBaseLib/TTLabelTextHelper (= 2.0.0)
+  - TTBaseLib/TTNetworkHelper (= 2.0.0)
+  - TTBaseLib/TTSandBoxHelper (= 2.0.0)
+  - TTBaseLib/TTUIResponderHelper (= 2.0.0)
   - TTBatchItemAction (= 0.1.8.1-binary)
   - TTDebug (from `../TTBundles/ios_tt_debug`)
   - TTDebugAssistant (= 0.2.33.1-binary)
@@ -775,15 +763,14 @@ DEPENDENCIES:
   - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
   - TTPersistence (= 0.2.3.1-binary)
   - TTPhotoScrollVC (from `../AKPlugins/TTPhotoScrollVC`)
-  - TTPlatformBaseLib (from `../AKPlugins/TTPlatformBaseLib`)
+  - TTPlatformBaseLib (= 1.3.1)
   - TTPlatformUIModel (from `../AKPlugins/AKPlatformUIModel`)
   - TTPlayerSDK (= 2.9.9.10)
   - TTPostBase (from `../AKPlugins/TTPostBase`)
   - TTPreloaderSDK (= 1.4.20-rc.0)
-  - TTPushAuthorizationManager (from `../AKPlugins/AKPushAuthorizationManager`)
   - TTPushManager (= 0.0.13.4)
   - TTPushSDK (= 0.1.1.1-binary)
-  - TTReachability (= 0.1.8.1-binary)
+  - TTReachability (= 0.5.1.1-binary)
   - TTReporter (= 0.2.1.1-binary)
   - TTRexxar/Core (= 0.8.10.1-binary)
   - TTRexxar/PackageApp (= 0.8.10.1-binary)
@@ -799,7 +786,7 @@ DEPENDENCIES:
   - TTSettingsManager/Performance (= 0.4.16)
   - TTShare (from `../AKPlugins/TTShare`)
   - TTTAttributedLabel (= 1.13.3.1-binary)
-  - TTThemed (from `../AKPlugins/AKThemed`)
+  - TTThemed (= 0.1.36)
   - TTThirdPartySDKs/QQSDK (= 0.0.4)
   - TTThirdPartySDKs/WeChatSDK (= 0.0.4)
   - TTThirdPartySDKs/WeiboSDK (= 0.0.4)
@@ -810,6 +797,7 @@ DEPENDENCIES:
   - TTUserSettings (= 0.3.4.1-binary)
   - TTVContainerScrollView (= 0.1.2.1-binary)
   - TTVerifyKit (= 0.3.0.1-binary)
+  - TTVersionHelper (= 1.0.0.1-binary)
   - TTVideo (= 1.1.1.1-binary)
   - TTVideoEngine (= 1.9.3.24.1-binary)
   - TTVideoService (= 0.1.71.1-binary)
@@ -898,8 +886,6 @@ EXTERNAL SOURCES:
     :path: ../TTBundles/ios_tt_article_video
   TTAvatar:
     :path: ../AKPlugins/TTAvatar
-  TTBaseLib:
-    :path: ../AKPlugins/TTBaseLib
   TTDebug:
     :path: ../TTBundles/ios_tt_debug
   TTDiggButton:
@@ -920,14 +906,10 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/TTNewsAccountBusiness
   TTPhotoScrollVC:
     :path: ../AKPlugins/TTPhotoScrollVC
-  TTPlatformBaseLib:
-    :path: ../AKPlugins/TTPlatformBaseLib
   TTPlatformUIModel:
     :path: ../AKPlugins/AKPlatformUIModel
   TTPostBase:
     :path: ../AKPlugins/TTPostBase
-  TTPushAuthorizationManager:
-    :path: ../AKPlugins/AKPushAuthorizationManager
   TTRoute:
     :branch: array_type_query
     :git: git@code.byted.org:TTIOS/tt_pods_route.git
@@ -946,8 +928,6 @@ EXTERNAL SOURCES:
       - TTShareBusiness/TTShareCopyBusiness
       - TTShareBusiness/TTShareQQBusiness
       - TTShareBusiness/TTShareWeChatBusiness
-  TTThemed:
-    :path: ../AKPlugins/AKThemed
   TTUGCFoundation:
     :path: ../Vendor/TTUGCFoundation
   TTUIWidget:
@@ -1006,7 +986,7 @@ SPEC CHECKSUMS:
   Fabric: ecf0d69c8b5cd1c6330c8cd7ae413e6d4aa12af2
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
   FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
-  FHHouseBase: c3b414517c0e6c2e012691129e9bacfc0af79fba
+  FHHouseBase: 5fbabfec581c1abd825241efa60fe5de79d5e4a8
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
   FHHouseHome: e6f78062259c79d7354a352b5ccf97dd0d4f6e1e
@@ -1016,6 +996,7 @@ SPEC CHECKSUMS:
   FHHouseTrend: feb4c9736617882d2bd7181262e6a3e2d4ebad4f
   FHHouseUGC: e29aa4a9f3170024b600f1cb8e5b8c6ed2e40400
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
+  FHPushAuthorizationManager: e92e4fa7b03b0acbb4d369c1133349b0c27d557f
   FHRNKit: b8966b198eb601696630a3fd4bc72aac277258be
   FHWebView: 1c354474ccc25e8a56b77e34b7b3a52bb4c6e414
   FLAnimatedImage: c103d911f434514c39961a5eed4c0e29c6cdae48
@@ -1072,7 +1053,7 @@ SPEC CHECKSUMS:
   TTArticleVideo: 6f1853b56a61152991807c7c07d5474b4667aa80
   TTAudio: e9a692e3b6387c2c5efa5a74b44d7f73712fdc1e
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
-  TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299
+  TTBaseLib: d9c0d1d9718f2fcdffb15e2f67feaea982608395
   TTBatchItemAction: 6e6ed79565823fe6f3ee77d66d6e3ec5fec4d52f
   TTDebug: b8ba18669b70deaf52dbd0775578e2163cf07c45
   TTDebugAssistant: c1c106b1cef486fb07833e7a9a6316cf2711df5d
@@ -1103,15 +1084,14 @@ SPEC CHECKSUMS:
   TTNewsAccountBusiness: 50125377b67c11155b3677cf0e6d3d02ed718a03
   TTPersistence: e0685fe3f0cfd826ccf6917ab5e8227fd6331947
   TTPhotoScrollVC: f34664f26861dbfbf617e47385a2522ba8bf1755
-  TTPlatformBaseLib: 4d690f459522050397f6ca58188c617ffa453fad
+  TTPlatformBaseLib: 46cc48c57de16b6c48527ca5266f8932d4e60e65
   TTPlatformUIModel: 42e1baaadf68615bd4911b3a0fce24683b955105
   TTPlayerSDK: 64564c57c01b3448059203e9fe48d6d07520d641
   TTPostBase: 91071b89ed5d95c7ac3d96354a31c65d77a6c94e
   TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
-  TTPushAuthorizationManager: 97925f80e95c63085f31471d5faa744261a0b5f2
   TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
   TTPushSDK: 3302f3e57c39cf8e14233769b28cb07d5f403966
-  TTReachability: 4e06b9cf45c975780366c8cacd2250b15c5caa5f
+  TTReachability: 2ccada0bc62de6ad2c8d9cb86b843ecb6b24ccfc
   TTReporter: 55c6785c79fb8b35a44105d760ac3493cc2ed365
   TTRexxar: 40c20cd090918e9816f74b0decced7094f000647
   TTRoute: 20e9092cabb90f759cc2e7c6f5ab3acb075d9d86
@@ -1122,7 +1102,7 @@ SPEC CHECKSUMS:
   TTSettingsManager: 6c9f2451b51d836979ea8e7e51ac8397a9b74b06
   TTShare: e5faa4ed799189e7dec34372f61794c6a011c2a6
   TTTAttributedLabel: dc7f8eada1e3d7fa25244fb05f50615d692d8d3e
-  TTThemed: c441f202fc9c8833863bf6f8473fd833cd5e3ac6
+  TTThemed: e145197286bdf6c9888781f0512afbe3c75d0380
   TTThirdPartySDKs: 0c0f991cd09a2839cbc372659f68c21bc0d05d07
   TTTracker: 8fdfc910c2a593f625d8dce8b045b3b6aedc6ddd
   TTUGCFoundation: f67fd0f474fef086cd3e986a4ad2c8bb79220d94
@@ -1131,6 +1111,7 @@ SPEC CHECKSUMS:
   TTUserSettings: ae3d4a3efeb987e7a2fe528545cfdb87a7798c72
   TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932
   TTVerifyKit: 6043790bd8baa07857e93e07abb4ccbf3cb87c82
+  TTVersionHelper: b7026ffa771b7aabd7c5f240ad98c8bc2e04d616
   TTVideo: f4a5d888a2bbd06c82e906e449c1f419d63f1e5b
   TTVideoEngine: 96de9bfd7a80a311a51a9042a973e4eab4135ee1
   TTVideoService: 24104b18dd058cf284d1c5dff0af9a5d55f604a0
