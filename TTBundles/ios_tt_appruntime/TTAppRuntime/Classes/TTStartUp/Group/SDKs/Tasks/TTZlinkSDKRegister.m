@@ -10,9 +10,6 @@
 #import "TTLaunchDefine.h"
 #import "BDUGDeepLinkManager.h"
 #import "NewsBaseDelegate.h"
-#import "TTVersionHelper.h"
-#import "TTInstallIDManager.h"
-#import "TTSandBoxHelper.h"
 
 DEC_TASK("TTZlinkSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
 
