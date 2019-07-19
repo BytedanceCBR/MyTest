@@ -199,9 +199,9 @@
         if (error) {
             return;
         }
-        NSLog(@"%@",replyModel);
-        // 插入评论第一个，修改offset
-
+        if (replyModel) {
+            [wself.viewModel insertReplyData:replyModel];
+        }
     } getReplyCommentModelClassBlock:nil commentRepostWithPreRichSpanText:nil commentSource:nil];
     
     replyManager.enterFrom = @"comment_detail";

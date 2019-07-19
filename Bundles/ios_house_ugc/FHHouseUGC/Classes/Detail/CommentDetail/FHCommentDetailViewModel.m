@@ -261,6 +261,29 @@
     }
 }
 
+// 写评论回复成功之后调用，插入第一行
+- (void)insertReplyData:(TTCommentDetailReplyCommentModel *)model {
+    if (model && [model isKindOfClass:[TTCommentDetailReplyCommentModel class]]) {
+        // 转化
+        NSArray *layout = [[TTCommentDetailCellLayout alloc] initWithCommentModel:model containViewWidth:self.detailVC.view.width];
+        if (layout) {
+            [self.totalComments insertObject:model  atIndex:0];
+            [self.totalCommentLayouts insertObject:layout  atIndex:0];
+            self.offset += 1;
+            self.comment_count += 1;
+            [self commentCountChanged];
+            [self.tableView reloadData];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+            // 先看是否需要滚动
+            
+            __weak typeof(self) weakSelf = self;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [weakSelf.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            });
+        }
+    }
+}
+
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
