@@ -12,6 +12,7 @@
 #import "FHMessageNotificationTipsManager.h"
 #import "FHUnreadMsgModel.h"
 #import "FHUserTracker.h"
+#import "FHCommunityList.h"
 
 #define cellId @"cellId"
 #define neighbourhoodViewHeight 194
@@ -188,15 +189,15 @@
 - (void)gotoMore {
     [self trackMore];
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"title"] = @"我关注的小区";
-    dict[@"action_type"] = @(0);
+    dict[@"action_type"] = @(FHCommunityListTypeFollow);
+    dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdFollow);
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_type"] = @"click";
     traceParam[@"enter_from"] = @"my_join_list";
     traceParam[@"element_from"] = @"my_joined_neighborhood";
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 

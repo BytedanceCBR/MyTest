@@ -12,6 +12,7 @@
 #import "FHUserTracker.h"
 #import "FHFakeInputNavbar.h"
 #import "FHConditionFilterFactory.h"
+#import "FHUGCScialGroupModel.h"
 #import "SSNavigationBar.h"
 #import "UIView+Refresh_ErrorHandler.h"
 #import "UIViewController+NavbarItem.h"
@@ -25,6 +26,10 @@
 #import "FHUGCModel.h"
 #import "ToastManager.h"
 #import "FHUGCConfig.h"
+#import "FHUGCCommunityListViewController.h"
+
+@implementation FHUGCSearchCommunityItemData
+@end
 
 @interface FHUGCSearchListController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -39,6 +44,8 @@
 @property(nonatomic, strong) NSMutableDictionary *showCache;
 @property(nonatomic, assign) NSInteger associatedCount;
 
+@property(nonatomic, assign) FHCommunityListType listType;
+@property(nonatomic, weak) id <FHUGCCommunityChooseDelegate> chooseDelegate;
 @end
 
 @implementation FHUGCSearchListController
@@ -46,6 +53,12 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.listType = FHCommunityListTypeFollow;
+        if (paramObj.allParams[@"action_type"]) {
+            self.listType = [paramObj.allParams[@"action_type"] integerValue];
+        }
+        NSHashTable <FHUGCCommunityChooseDelegate> *choose_delegate = paramObj.allParams[@"choose_delegate"];
+        self.chooseDelegate = choose_delegate.anyObject;
         self.showCache = [NSMutableDictionary dictionary];
         self.associatedCount = 0;
     }
@@ -194,12 +207,12 @@
 
 // 文本框文字变化，进行sug请求
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {
-    
+
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-    
+
     NSInteger maxCount = 80;
     NSString *text = self.naviBar.searchInput.text;
     UITextRange *selectedRange = [self.naviBar.searchInput markedTextRange];
@@ -289,10 +302,36 @@
         tracerDic[@"log_pb"] = data.logPb ?: @"be_null";
         cell.tracerDic = tracerDic;
         // 刷新数据
-        [cell refreshWithData:data];
+
+        FHUGCSearchCommunityItemData *wrapData = [[FHUGCSearchCommunityItemData alloc] init];
+        wrapData.model = data;
+        wrapData.listType = self.listType;
+        [cell refreshWithData:wrapData];
     }
 
     return cell;
+}
+
+-(void)onItemSelected:(FHUGCScialGroupDataModel*)item{
+    NSMutableArray<UIViewController *> *viewControllers = [self.navigationController.viewControllers mutableCopy];
+
+    UIViewController *last = viewControllers.lastObject;
+    UIViewController *pre = nil;
+
+    if (self.chooseDelegate) {
+        [self.chooseDelegate selectedItem:item];
+    }
+
+    //至少存在根控制器
+    if(viewControllers.count > 2){
+        pre = viewControllers[viewControllers.count - 2];
+    }
+    if(last == self && [pre isKindOfClass:[FHUGCCommunityListViewController class]]){
+        [viewControllers removeObject:pre];
+        self.navigationController.viewControllers = [viewControllers copy];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -320,6 +359,11 @@
         //
         FHUGCScialGroupDataModel *data = self.items[row];
         [self addCommunityClickLog:data rank:row];
+
+        if (self.listType == FHCommunityListTypeChoose) {
+            [self onItemSelected:data];
+            return;
+        }
 
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = data.socialGroupId;

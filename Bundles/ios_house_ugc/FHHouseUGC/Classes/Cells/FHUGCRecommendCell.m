@@ -10,6 +10,7 @@
 #import "FHUGCRecommendSubCell.h"
 #import <TTRoute.h>
 #import "FHUserTracker.h"
+#import "FHCommunityList.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -279,11 +280,11 @@
     [self trackClickMore];
     
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"tracer"] = @{
-                        @"enter_from":@"nearby_list"
-                        };
+    dict[@"action_type"] = @(FHCommunityListTypeFollow);
+    dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdRecommend);
+    dict[@"tracer"] = @{@"enter_from":@"nearby_list"};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_my_interest"];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 

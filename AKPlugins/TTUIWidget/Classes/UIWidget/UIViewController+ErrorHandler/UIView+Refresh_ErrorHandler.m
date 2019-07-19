@@ -272,10 +272,11 @@ CGFloat const kTipDurationInfinite = -1.0f;
     [self.ttIndicator stopAnimating];
     self.ttIndicator.hidden = YES;
 
+    if(self.ttLoadingView){
+        [self.ttLoadingView performSelector:@selector(stopLoadingAnimation)];
+    }
     self.ttLoadingView.hidden = YES;
     self.ttErrorView.hidden = YES;
-    
-    
 }
 
 - (void)tt_endUpdataData:(BOOL)isCache error:(NSError *)error {

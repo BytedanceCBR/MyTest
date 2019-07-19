@@ -176,6 +176,7 @@
 "ugc_message_list" = "FHMessageListController";
 "ugc_follow_communitys" = "FHUGCFollowListController";
 "ugc_search_list" = "FHUGCSearchListController";
+"ugc_community_list" = "FHUGCCommunityListViewController";
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";

@@ -44,6 +44,7 @@
 #import "FHUserTracker.h"
 #import "FHBubbleTipManager.h"
 #import "FHUGCConfig.h"
+#import "FHUGCCommunityListViewController.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -433,18 +434,18 @@ static NSInteger const kMaxPostImageCount = 9;
     self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
     [self endEditing];
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"title"] = @"选择小区";
-    dict[@"action_type"] = @(1);
-    NSHashTable *ugcDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-    [ugcDelegateTable addObject:self];
-    dict[@"ugc_delegate"] = ugcDelegateTable;
+    dict[@"action_type"] = @(FHCommunityListTypeChoose);
+    dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdFollow);
+    NSHashTable *chooseDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [chooseDelegateTable addObject:self];
+    dict[@"choose_delegate"] = chooseDelegateTable;
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_type"] = @"click";
     traceParam[@"enter_from"] = @"feed_publisher";
     traceParam[@"element_from"] = @"select_like_publisher_neighborhood";
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
