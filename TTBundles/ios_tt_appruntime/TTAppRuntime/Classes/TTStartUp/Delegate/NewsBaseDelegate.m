@@ -438,12 +438,6 @@ static NSTimeInterval lastTime;
     return YES;
 }
 
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
-{
-    [[BDUGDeepLinkManager shareInstance] deepLinkWithType:BDUGDeepLinkTypeScheme uri:[url absoluteString]];
-    return YES;
-}
-
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     [self.residentTasks enumerateObjectsUsingBlock:^(TTStartupTask * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
