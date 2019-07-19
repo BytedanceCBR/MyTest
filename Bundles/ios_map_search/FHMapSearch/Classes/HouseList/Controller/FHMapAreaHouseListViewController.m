@@ -30,8 +30,9 @@
 @property (nonatomic , strong) UIControl *filterBgControl;
 @property (nonatomic , strong) id houseFilterViewModel;
 @property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
+@property (nonatomic , strong) UITableView *tableView;
+@property (nonatomic , strong) UIView *topSplitView;
+@property (nonatomic , strong) UIView *topSplitLine;
 
 @end
 
@@ -50,11 +51,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
-    [self setupFilter];
-    
+        
     [self setupUI];
-    [self setupData];
+//    [self setupData];
     
     [self.viewModel loadData];
     
@@ -74,84 +73,58 @@
     [self setupDefaultNavBar:YES];
     self.ttNeedHideBottomLine = YES;
     
-    CGFloat height = [FHFakeInputNavbar perferredHeight];
+    CGFloat height = 0;
     
-    [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(44);
-        make.top.equalTo(self.view).offset(height);
+    _topSplitView = [[UIView alloc] initWithFrame:CGRectZero];
+    _topSplitLine = [[UIView alloc]initWithFrame:CGRectZero];
+    _topSplitLine.backgroundColor = [UIColor themeGray5];
+    _topSplitLine.layer.cornerRadius = 1.5;
+    _topSplitLine.layer.masksToBounds = YES;
+    
+    [_topSplitView addSubview:_topSplitLine];
+    [self.view addSubview:_topSplitView];
+    
+    [self.topSplitView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.right.mas_equalTo(self.view);
+        make.height.mas_equalTo(20);
     }];
-    
-    [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.bottom.right.mas_equalTo(self.view);
-        make.top.equalTo(self.filterPanel.mas_bottom);
+    [self.topSplitLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(24, 3));
+        make.center.mas_equalTo(self.topSplitView);
     }];
     
     [self configTableView];
     self.viewModel = [[FHMapAreaHouseListViewModel alloc] initWithWithController:self tableView:_tableView userInfo:self.userInfo];
     [self.view addSubview:_tableView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.filterPanel.mas_bottom);
-        make.bottom.mas_equalTo(self.view);
+        make.left.right.bottom.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.topSplitView.mas_bottom);
     }];
     
-    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.width, 32)];
-    [self.view addSubview:self.notifyBarView];
-    [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.tableView);
-        make.height.mas_equalTo(32);
-    }];
-    _viewModel.notifyBarView = _notifyBarView;
-    
-    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(44, 0, 0, 0)];
-    [self.view bringSubviewToFront:self.filterPanel];
-    [self.view bringSubviewToFront:self.filterBgControl];
+    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsZero];
 }
 
--(void)setupFilter
-{
-    id<FHHouseFilterBridge> bridge = [[FHHouseBridgeManager sharedInstance] filterBridge];
-    self.houseFilterBridge = bridge;
-    
-    self.houseFilterViewModel = [bridge filterViewModelWithType:self.houseType showAllCondition:NO showSort:NO];
-    self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
-    self.filterBgControl = (UIControl *)[bridge filterBgView:self.houseFilterViewModel];
-    self.houseFilterViewModel = bridge;
-    [bridge showBottomLine:NO];
-    
-    UIView *bottomLine = [[UIView alloc] init];
-    bottomLine.backgroundColor = [UIColor themeGray6];
-    [self.filterPanel addSubview:bottomLine];
-    [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.and.bottom.mas_equalTo(0);
-        make.height.mas_equalTo(0.5);
-    }];
-    
-    [self.view addSubview:self.filterPanel];
-    [self.view addSubview:self.filterBgControl];
-}
 
 - (void)configTableView {
     _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    UIEdgeInsets insets = UIEdgeInsetsZero;
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        insets = [[[[UIApplication sharedApplication]delegate] window] safeAreaInsets];
     }
     _tableView.estimatedRowHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
-    if ([TTDeviceHelper isIPhoneXDevice]) {
-        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-    }
+    _tableView.contentInset = UIEdgeInsetsMake(0, 0, insets.bottom, 0);
 }
 
-- (void)setupData {
-    
-    self.viewModel.houseFilterBridge = self.houseFilterBridge;
-    self.viewModel.houseFilterViewModel = self.houseFilterViewModel;
-    [self.houseFilterBridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
-}
+//- (void)setupData {
+//
+//    self.viewModel.houseFilterBridge = self.houseFilterBridge;
+//    self.viewModel.houseFilterViewModel = self.houseFilterViewModel;
+//    [self.houseFilterBridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
+//}
 
 
 - (void)retryLoadData {

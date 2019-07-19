@@ -40,8 +40,9 @@
 @property(nonatomic , strong) NSMutableDictionary * houseShowTracerDic; // 埋点key记录
 @property(nonatomic , strong) TTHttpTask *requestTask;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
-@property(nonatomic , copy)   NSString *filterCondition;
+//@property(nonatomic , copy)   NSString *filterCondition;
 @property(nonatomic , assign) BOOL hasEnterCategory;
+@property(nonatomic , copy)   NSString *currentFilter;
 
 /*
  * 多边形，经纬度用","分割，不同点之间用";"分割。
@@ -77,7 +78,7 @@
         
         NSString *filter = userInfo[@"filter"];
         if (!IS_EMPTY_STRING(filter)) {
-            self.filterCondition = filter;
+            self.currentFilter = filter;
         }
         
     }
@@ -160,22 +161,13 @@
     }
 }
 
-- (void)showNotify:(NSString *)message 
+-(void)refreshWithFilter:(NSString *)filter
 {
-    UIEdgeInsets inset = self.tableView.contentInset;
-    inset.top = self.notifyBarView.height;
-    self.tableView.contentInset = inset;
-    
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:0.3 animations:^{
-            UIEdgeInsets finset = self.tableView.contentInset;
-            finset.top = 0;
-            self.tableView.contentInset = finset;
-        }];
-    });
-    
+    if([_currentFilter isEqualToString:filter]){
+        return;
+    }
+    self.currentFilter = filter;
+    [self requestData:YES];
 }
 
 #pragma mark - Request
@@ -194,8 +186,8 @@
     NSMutableDictionary *param = [NSMutableDictionary new];
     NSMutableString *query = [[NSMutableString alloc] init];//
     
-    if (self.filterCondition) {
-        [query appendString:self.filterCondition];
+    if (self.currentFilter) {
+        [query appendString:self.currentFilter];
     }
         
     if (query.length > 0 && ![query hasSuffix:@"&"]) {
@@ -315,10 +307,6 @@
             [self updateTableViewWithMoreData:hasMore];
             
             if (isHead) {
-                if (refreshTip.length > 0){
-                    [self showNotify:refreshTip];                    
-//                    self.listController.title = refreshTip;
-                }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
                 });
@@ -364,12 +352,9 @@
 
 -(void)overwriteFilter:(NSString *)openUrl
 {
-    NSURL *url = [NSURL URLWithString:openUrl];
-    TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
-    if (paramObj) {
-        [self.houseFilterBridge resetFilter:self.houseFilterViewModel withQueryParams:paramObj.queryParams updateFilterOnly:YES];
+    if([self.delegate respondsToSelector:@selector(overwriteWithOpenUrl:andViewModel:)]){
+        [self.delegate overwriteWithOpenUrl:openUrl andViewModel:self];
     }
-    
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
@@ -394,8 +379,8 @@
     if (self.listController.hasValidateData == YES) {
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
         FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+        [cell refreshTopMargin:(indexPath.row == 0)?0:20];
         [cell updateWithHouseCellModel:cellModel];
-        [cell refreshTopMargin: 20];
         return cell;
     } else {
         // PlaceholderCell
@@ -424,6 +409,11 @@
         if (indexPath.row < self.houseList.count) {
             FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
             CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+            if(indexPath.row == 0){
+                //第一行顶部不留空白
+                return 86 + reasonHeight;
+            }
+            
             BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
             return (isLastCell ? 125 : 106)+reasonHeight;
         }
@@ -457,26 +447,6 @@
         cellModel.rentModel = obj;
     }
     return cellModel;
-}
-
-
-
-
-#pragma mark - filter delegate
--(void)onConditionChanged:(NSString *)condition
-{
-    self.filterCondition = condition;
-    [self requestData:YES];
-}
-
--(void)onConditionPanelWillDisplay
-{
-    
-}
-
--(void)onConditionPanelWillDisappear
-{
-    
 }
 
 #pragma mark tracer

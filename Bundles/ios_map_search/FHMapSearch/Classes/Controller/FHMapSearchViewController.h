@@ -38,7 +38,7 @@ typedef  void (^_Nullable HouseListOpenUrlCallback)(NSString *openUrl);
  * ratio 0 : hide
  * ratio 1 : show
  */
--(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated hideLocation:(BOOL)hideLocation;
+-(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated;
 
 -(void)insertHouseListView:(UIView *)houseListView;
 

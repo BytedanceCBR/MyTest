@@ -69,6 +69,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)tryUpdateSideBar;
 
+//附近或区域列表页
+-(void)hideAreaHouseList;
+
+-(void)showFilterForAreaHouseList;
+
 @end
 
 NS_ASSUME_NONNULL_END

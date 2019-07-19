@@ -203,6 +203,25 @@
     [self dismiss:NO];
 }
 
+-(void)showInView:(UIView *)view animated:(BOOL)animated
+{
+    [view addSubview:self];
+    if(animated){
+        
+        CGRect frame = _containerView.frame;
+        frame.origin.x = self.width;
+        _containerView.frame = frame;
+        [UIView animateWithDuration:0.3 animations:^{
+            CGRect nframe = frame;
+            nframe.origin.x = self.width - CONTAINER_WIDTH;
+            self.containerView.frame = nframe;
+        } completion:^(BOOL finished) {
+            
+        }];
+        
+    }
+}
+
 -(void)dismiss:(BOOL)animated
 {
     [self removeFromSuperview];

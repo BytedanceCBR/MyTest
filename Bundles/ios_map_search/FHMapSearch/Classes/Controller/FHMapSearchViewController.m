@@ -188,12 +188,13 @@
 {
     if (!_topInfoBar) {
         _topInfoBar = [[FHMapSearchInfoTopBar alloc]initWithFrame:CGRectMake(0, 0, self.view.width-20, TOP_INFO_BAR_HEIGHT)];
+        __weak typeof(self) wself = self;
         _topInfoBar.backBlock = ^{
-            
+            [wself.viewModel hideAreaHouseList];
         };
         
         _topInfoBar.filterBlock = ^{
-            
+            [wself.viewModel showFilterForAreaHouseList];
         };
         _topInfoBar.hidden = YES;
     }
@@ -481,7 +482,7 @@
     self.simpleNavBar.type = (FHMapSearchShowModeMap == mode ? FHMapSimpleNavbarTypeBack : FHMapSimpleNavbarTypeClose);
 }
 
--(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated hideLocation:(BOOL)hideLocation
+-(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated
 {
     if(ratio < 0 || ratio > 1){
         return;
@@ -516,7 +517,7 @@
     self.bottomBar.hidden = YES;
     self.sideBar.hidden = NO;
     [self switchNavbarMode:FHMapSearchShowModeMap];
-    [self showNavTopViews:1 animated:NO hideLocation:NO];
+    [self showNavTopViews:1 animated:NO];
     [self enablePan:YES];
 }
 
@@ -535,9 +536,6 @@
 -(void)enterMapDrawMode
 {
     [self switchNavbarMode:FHMapSearchShowModeDrawLine];
-//    [self showNavTopViews:0 animated:NO hideLocation:YES];
-//    [self.houseFilterBridge closeConditionFilterPanel];
-//    self.chooseView.hidden = YES;
     self.bottomBar.hidden = YES;
     self.sideBar.hidden = YES;
     self.locationButton.alpha = 0;
@@ -545,6 +543,7 @@
     [self.view addSubview:self.drawMaskView];
     TTNavigationController *navController = (TTNavigationController *)self.navigationController;
     navController.panRecognizer.enabled = NO;
+    [self.view bringSubviewToFront:self.simpleNavBar];
 }
 
 -(void)enterSubwayMode

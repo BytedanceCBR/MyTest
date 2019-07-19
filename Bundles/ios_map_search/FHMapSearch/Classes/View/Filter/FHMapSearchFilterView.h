@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)dismiss:(BOOL)animated;
 
+-(void)showInView:(UIView *)view animated:(BOOL)animated;
+
 @end
 
 NS_ASSUME_NONNULL_END

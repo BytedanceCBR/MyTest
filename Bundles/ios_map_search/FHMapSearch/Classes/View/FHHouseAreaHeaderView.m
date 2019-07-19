@@ -120,7 +120,7 @@
 
 -(void)hideTopTip:(BOOL)hide
 {
-    self.topTipView.hidden = hide;
+//    self.topTipView.hidden = hide;
 }
 
 /*
