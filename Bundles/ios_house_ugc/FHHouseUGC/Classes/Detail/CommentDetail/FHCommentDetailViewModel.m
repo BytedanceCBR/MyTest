@@ -395,6 +395,17 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSInteger section = indexPath.section;
+    if (section == 0) {
+        // 头部详情
+    } else if (section == 1) {
+        if (indexPath.row < self.totalComments.count) {
+            id data = self.totalComments[indexPath.row];
+            if (data) {
+                [self.detailVC openWriteCommentViewWithReplyCommentModel:data];
+            }
+        }
+    }
 }
 
 // TTMomentDetailStore

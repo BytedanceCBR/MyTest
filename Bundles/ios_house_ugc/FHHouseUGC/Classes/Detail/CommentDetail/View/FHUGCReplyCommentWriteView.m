@@ -628,7 +628,7 @@ static struct timeval kFHCommentTimeval;
 
 - (TTUGCTextView *)inputTextView {
     if (!_inputTextView) {
-        _inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(20.f, [TTDeviceUIUtils tt_newPadding:8.f], self.width - 20.f - 106.f, [TTDeviceUIUtils tt_newPadding:32.f])];
+        _inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(20.f, [TTDeviceUIUtils tt_newPadding:8.f], self.width - 20.f - 67.f, [TTDeviceUIUtils tt_newPadding:32.f])];
         _inputTextView.isBanHashtag = YES;
         if ([TTDeviceHelper isPadDevice]) {
             _inputTextView.isBanHashtag = YES;
@@ -710,6 +710,7 @@ static struct timeval kFHCommentTimeval;
 //        _emojButton.disabledTitleColorThemeKey = @"grey4";
         [_emojButton addTarget:self action:@selector(emojClick:) forControlEvents:UIControlEventTouchUpInside];
         _emojButton.enabled = YES;
+        _emojButton.hidden = YES;
     }
     
     return _emojButton;

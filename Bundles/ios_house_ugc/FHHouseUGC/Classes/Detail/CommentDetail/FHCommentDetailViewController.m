@@ -153,24 +153,8 @@
 - (void)toolBarButtonClicked:(id)sender
 {
     if (sender == self.toolbarView.writeButton) {
-//        if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
-//            [self tt_commentViewController:self.commentViewController didSelectWithInfo:({
-//                NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
-//                [baseCondition setValue:self.groupModel forKey:@"groupModel"];
-//                [baseCondition setValue:@(1) forKey:@"from"];
-//                [baseCondition setValue:@(YES) forKey:@"writeComment"];
-//                [baseCondition setValue:self.commentViewController.tt_defaultReplyCommentModel forKey:@"commentModel"];
-//                [baseCondition setValue:@(ArticleMomentSourceTypeArticleDetail) forKey:@"sourceType"];
-//                baseCondition;
-//            })];
-//            if ([self.commentViewController respondsToSelector:@selector(tt_clearDefaultReplyCommentModel)]) {
-//                [self.commentViewController tt_clearDefaultReplyCommentModel];
-//            }
-//            [self.toolbarView.writeButton setTitle:@"说点什么..." forState:UIControlStateNormal];
-//            return;
-//        }
-//        [self clickCommentFieldTracer];
-        [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
+        // 输入框
+        [self p_willOpenWriteCommentViewWithReplyCommentModel:nil];
     }
     else if (sender == _toolbarView.digButton) {
         // 点赞
@@ -178,35 +162,18 @@
     }
 }
 
-- (void)p_willOpenWriteCommentViewWithReservedText:(NSString *)reservedText switchToEmojiInput:(BOOL)switchToEmojiInput  {
-    
-//    NSMutableDictionary *condition = [NSMutableDictionary dictionaryWithCapacity:10];
-//    [condition setValue:self.groupModel forKey:kQuickInputViewConditionGroupModel];
-//    [condition setValue:reservedText forKey:kQuickInputViewConditionInputViewText];
-//    [condition setValue:@(NO) forKey:kQuickInputViewConditionHasImageKey];
-//
-//    NSString *fwID = self.groupModel.groupID;
-//
-//    TTArticleReadQualityModel *qualityModel = [[TTArticleReadQualityModel alloc] init];
-//    double readPct = (self.mainScrollView.contentOffset.y + self.mainScrollView.frame.size.height) / self.mainScrollView.contentSize.height;
-//    NSInteger percent = MAX(0, MIN((NSInteger)(readPct * 100), 100));
-//    qualityModel.readPct = @(percent);
-//    //    qualityModel.stayTimeMs = @([self.detailModel.sharedDetailManager currentStayDuration]);
-////
-//    __weak typeof(self) wSelf = self;
-////
-//    TTCommentWriteManager *commentManager = [[TTCommentWriteManager alloc] initWithCommentCondition:condition commentViewDelegate:self commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
-//        *willRepostFwID = fwID;
-//        [wSelf clickSubmitComment];
-//    } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
-//    commentManager.enterFrom = @"feed_detail";
-//    commentManager.enter_type = @"submit_comment";
-////
+// 点击回复 进行评论
+- (void)openWriteCommentViewWithReplyCommentModel:(id<TTCommentDetailReplyCommentModelProtocol>)replyCommentModel {
+    [self p_willOpenWriteCommentViewWithReplyCommentModel:replyCommentModel];
+}
+
+- (void)p_willOpenWriteCommentViewWithReplyCommentModel:(id<TTCommentDetailReplyCommentModelProtocol>)replyCommentModel   {
+
     WeakSelf;
     // action.replyCommentModel? :[self pageState].defaultRelyModel
-    TTCommentDetailReplyWriteManager *replyManager = [[TTCommentDetailReplyWriteManager alloc] initWithCommentDetailModel:self.viewModel.commentDetailModel replyCommentModel:nil commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
-
-        *willRepostFwID = [self.viewModel.commentDetailModel.repost_params tt_stringValueForKey:@"fw_id"];
+    TTCommentDetailReplyWriteManager *replyManager = [[TTCommentDetailReplyWriteManager alloc] initWithCommentDetailModel:self.viewModel.commentDetailModel replyCommentModel:replyCommentModel commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
+        StrongSelf;
+        *willRepostFwID = [wself.viewModel.commentDetailModel.repost_params tt_stringValueForKey:@"fw_id"];
 
     } publishCallback:^(id<TTCommentDetailReplyCommentModelProtocol>replyModel, NSError *error) {
         StrongSelf;
@@ -223,7 +190,7 @@
     
     self.commentWriteView = [[FHUGCReplyCommentWriteView alloc] initWithCommentManager:replyManager];
 
-    self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
+    self.commentWriteView.emojiInputViewVisible = NO;
 
     [self.commentWriteView showInView:self.view animated:YES];
 }
