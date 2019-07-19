@@ -434,6 +434,13 @@ static NSTimeInterval lastTime;
 //        return YES;
 //    }
     
+    [[BDUGDeepLinkManager shareInstance] deepLinkWithType:BDUGDeepLinkTypeScheme uri:[url absoluteString]];
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+    [[BDUGDeepLinkManager shareInstance] deepLinkWithType:BDUGDeepLinkTypeScheme uri:[url absoluteString]];
     return YES;
 }
 
@@ -561,6 +568,8 @@ static NSTimeInterval lastTime;
         }
     }
 #pragma clang diagnostic pop
+    NSURL *webpageURL = userActivity.webpageURL;
+    [[BDUGDeepLinkManager shareInstance] deepLinkWithType:BDUGDeepLinkTypeUniversalLink uri:[webpageURL absoluteString]];
     return YES;
 }
 
