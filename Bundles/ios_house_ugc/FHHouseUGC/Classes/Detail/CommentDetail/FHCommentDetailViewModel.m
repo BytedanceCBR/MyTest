@@ -65,6 +65,7 @@
 //        self.store.enterFrom = self.enterFrom;
 //        self.store.categoryID = self.categoryID;
 //        self.store.logPb = self.logPb;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delCommentDetailReplySuccess:) name:kFHUGCDelCommentDetailReplyNotification object:nil];
     }
     return self;
 }
@@ -218,6 +219,46 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+// 删除回复通知
+/*
+ [postParams setValue:commentID forKey:@"id"];
+ [postParams setValue:commentReplyID forKey:@"reply_id"];
+ */
+- (void)delCommentDetailReplySuccess:(NSNotification *)noti {
+    NSString *commentId = noti.userInfo[@"id"];
+    NSString *replyId = noti.userInfo[@"reply_id"];
+    // 删除指定的回复
+    if (commentId.length > 0 && replyId.length > 0) {
+        if ([self.commentDetailModel.commentID isEqualToString:commentId]) {
+            __block NSInteger findIndex = -1;
+            [self.totalComments enumerateObjectsUsingBlock:^(TTCommentDetailReplyCommentModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj.commentID isEqualToString:replyId]) {
+                    findIndex = idx;
+                    *stop = YES;
+                }
+            }];
+            if (findIndex >= 0 && findIndex  < self.totalComments.count && findIndex < self.totalCommentLayouts.count) {
+                [self.totalComments removeObjectAtIndex:findIndex];
+                [self.totalCommentLayouts removeObjectAtIndex:findIndex];
+                // 删除
+                self.offset -= 1;
+                if (self.offset < 0) {
+                    self.offset = 0;
+                }
+                self.comment_count -= 1;
+                [self commentCountChanged];
+            }
+            if (self.totalComments.count == 0 && self.hasMore) {
+                // 加载更多
+                [self loadMore];
+            } else {
+                [self updateTableViewWithMoreData:self.hasMore];
+            }
+            [self.tableView reloadData];
+        }
+    }
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource

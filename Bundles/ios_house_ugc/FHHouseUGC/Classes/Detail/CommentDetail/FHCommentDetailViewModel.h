@@ -11,6 +11,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 删除评论中回复成功通知 数据放在userinfo中
+static NSString *const kFHUGCDelCommentDetailReplyNotification = @"k_fh_ugc_del_comment_detail_reply";
+
 @interface FHCommentDetailViewModel : NSObject
 
 -(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView;
