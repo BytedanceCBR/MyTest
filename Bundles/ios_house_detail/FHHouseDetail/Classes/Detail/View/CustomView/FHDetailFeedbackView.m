@@ -246,11 +246,11 @@
     [self traceRealtorEvaluatePopupClick:[NSString stringWithFormat:@"%i",tag]];
     
     [FHHouseDetailAPI requestPhoneFeedback:self.viewModel.houseId houseType:self.viewModel.houseType realtorId:self.realtorId imprId:self.imprId score:tag completion:^(bool succss, NSError * _Nonnull error) {
-        if(succss){
+//        if(succss){
             [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
-        }else{
-            [[ToastManager manager] showToast:@"提交失败"];
-        }
+//        }else{
+//            [[ToastManager manager] showToast:@"提交失败"];
+//        }
     }];
 }
 
