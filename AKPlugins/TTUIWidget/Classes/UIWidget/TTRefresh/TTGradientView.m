@@ -63,6 +63,10 @@
     [self.loadingView play];
 }
 
+-(void)stopAnimation {
+    [self.loadingView stop];
+}
+
 //- (void)willMoveToSuperview:(UIView *)newSuperview
 //{
 //    [super willMoveToSuperview:newSuperview];

@@ -297,4 +297,19 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
++ (TTHttpTask *)requestCommunityList:(NSInteger)districtId source:(NSString *)source latitude:(CGFloat)latitude longitude:(CGFloat)longitude class:(Class)cls completion:(void (^)(id <FHBaseModelProtocol> model, NSError *error))completion;{
+    NSString *queryPath = @"/f100/ugc/social_group_district";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+
+    paramDic[@"district_id"] = @(districtId);
+    if(latitude != 0){
+        paramDic[@"latitude"] = @(latitude);
+    }
+
+    if(longitude != 0){
+        paramDic[@"longitude"] = @(longitude);
+    }
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end

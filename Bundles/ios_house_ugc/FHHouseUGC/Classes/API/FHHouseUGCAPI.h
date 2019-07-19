@@ -53,6 +53,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 评论回复列表
 + (TTHttpTask *)requestReplyListWithCommentId:(NSString *)comment_id offset:(NSInteger)offset class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion;
 
+// 小区列表（按区域，推荐，关注等获取）
++ (TTHttpTask *)requestCommunityList:(NSInteger)districtId source:(NSString *)source latitude:(CGFloat)latitude longitude:(CGFloat)longitude class:(Class)cls completion:(void (^)(id <FHBaseModelProtocol> model, NSError *error))completion;
 @end
 
 NS_ASSUME_NONNULL_END
