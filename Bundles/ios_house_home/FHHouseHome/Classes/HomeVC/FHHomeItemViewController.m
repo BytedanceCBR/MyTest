@@ -99,6 +99,8 @@ extern NSString *const INSTANT_DATA_KEY;
     [self registerCells];
     
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+    
+    self.tableView.scrollsToTop = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
