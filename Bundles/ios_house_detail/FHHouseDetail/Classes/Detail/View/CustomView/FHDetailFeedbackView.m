@@ -22,6 +22,7 @@
 #import "FHHouseDetailAPI.h"
 #import "TTReachability.h"
 #import "FHUserTracker.h"
+#import "TTDeviceHelper.h"
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
@@ -43,6 +44,7 @@
 
 @property(nonatomic, copy) NSString *realtorId;
 @property(nonatomic, copy) NSString *imprId;
+@property(nonatomic, copy) NSString *searchId;
 
 @end
 
@@ -140,6 +142,13 @@
         bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
     }
     
+    if([TTDeviceHelper isIPhoneXSeries]){
+        bottom -= 25;
+        if(bottom < 0){
+            bottom = 0;
+        }
+    }
+    
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(self);
         make.height.mas_equalTo(300 + bottom);
@@ -230,7 +239,13 @@
     if([data isKindOfClass:[FHDetailOldModel class]]){
         FHDetailOldModel *model = (FHDetailOldModel *)data;
         self.realtorId = model.data.contact.realtorId;
-        self.imprId = model.data.imprId;
+        if(model.data.logPb[@"impr_id"]){
+            self.imprId = model.data.logPb[@"impr_id"];
+        }
+        
+        if(model.data.logPb[@"search_id"]){
+            self.searchId = model.data.logPb[@"search_id"];
+        }
     }
 }
 
@@ -245,12 +260,12 @@
     [self hide];
     [self traceRealtorEvaluatePopupClick:[NSString stringWithFormat:@"%i",tag]];
     
-    [FHHouseDetailAPI requestPhoneFeedback:self.viewModel.houseId houseType:self.viewModel.houseType realtorId:self.realtorId imprId:self.imprId score:tag completion:^(bool succss, NSError * _Nonnull error) {
-//        if(succss){
+    [FHHouseDetailAPI requestPhoneFeedback:self.viewModel.houseId houseType:self.viewModel.houseType realtorId:self.realtorId imprId:self.imprId searchId:self.searchId score:tag completion:^(bool succss, NSError * _Nonnull error) {
+        if(succss){
             [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
-//        }else{
-//            [[ToastManager manager] showToast:@"提交失败"];
-//        }
+        }else{
+            [[ToastManager manager] showToast:@"提交失败"];
+        }
     }];
 }
 
