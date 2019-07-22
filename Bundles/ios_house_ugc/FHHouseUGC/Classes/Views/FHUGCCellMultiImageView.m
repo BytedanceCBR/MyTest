@@ -159,7 +159,7 @@
     for (NSInteger i = 0; i < self.imageViewList.count; i++) {
         UIImageView *imageView = self.imageViewList[i];
         if(i < imageList.count){
-            FHFeedUGCCellImageListModel *imageModel = imageList[i];
+            FHFeedContentImageListModel *imageModel = imageList[i];
             imageView.hidden = NO;
             CGFloat width = [imageModel.width floatValue];
             CGFloat height = [imageModel.height floatValue];
@@ -218,14 +218,14 @@
     }
     NSMutableArray * infoModels = [NSMutableArray arrayWithCapacity:10];
     for (NSInteger i = 0; i < picCount; i++) {
-        FHFeedUGCCellImageListModel *imageModel = self.largeImageList[i];
+        FHFeedContentImageListModel *imageModel = self.largeImageList[i];
         NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:10];
         [dict setValue:imageModel.uri forKey:kTTImageURIKey];
         [dict setValue:imageModel.url forKey:TTImageInfosModelURL];
         [dict setValue:imageModel.width forKey:kTTImageWidthKey];
         [dict setValue:imageModel.height forKey:kTTImageHeightKey];
         NSMutableArray * urls = [NSMutableArray arrayWithCapacity:10];
-        for (FHFeedUGCCellImageListUrlListModel *urlListModel in imageModel.urlList) {
+        for (FHFeedContentImageListUrlListModel *urlListModel in imageModel.urlList) {
             if (!isEmptyString(urlListModel.url)) {
                 [urls addObject:@{TTImageInfosModelURL : urlListModel.url}];
             }

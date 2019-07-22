@@ -87,7 +87,7 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         self.cellModel = cellModel;
         //图片
-        FHFeedUGCCellImageListModel *imageModel = [cellModel.imageList firstObject];
+        FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
         if(imageModel){
             [self.bannerImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
         }

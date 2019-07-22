@@ -15,13 +15,13 @@
 
 @end
 
-@implementation FHFeedUGCCellImageListUrlListModel
-
-@end
-
-@implementation FHFeedUGCCellImageListModel
-
-@end
+//@implementation FHFeedUGCCellImageListUrlListModel
+//
+//@end
+//
+//@implementation FHFeedUGCCellImageListModel
+//
+//@end
 
 @implementation FHFeedUGCCellUserModel
 
@@ -93,45 +93,9 @@
     cellModel.groupId = model.groupId;
     cellModel.logPb = model.logPb;
     //处理图片
-    NSMutableArray *cellImageList = [NSMutableArray array];
-    for (FHFeedContentImageListModel *imageModel in model.imageList) {
-        FHFeedUGCCellImageListModel *cellImageModel = [[FHFeedUGCCellImageListModel alloc] init];
-        cellImageModel.uri = imageModel.uri;
-        cellImageModel.url = imageModel.url;
-        cellImageModel.width = imageModel.width;
-        cellImageModel.height = imageModel.height;
-        
-        NSMutableArray *cellImageModelUrlList = [NSMutableArray array];
-        for (FHFeedContentImageListUrlListModel *urlListModel in imageModel.urlList) {
-            FHFeedUGCCellImageListUrlListModel *cellUrlListModel = [[FHFeedUGCCellImageListUrlListModel alloc] init];
-            cellUrlListModel.url = urlListModel.url;
-            [cellImageModelUrlList addObject:cellUrlListModel];
-        }
-        cellImageModel.urlList = cellImageModelUrlList;
-        
-        [cellImageList addObject:cellImageModel];
-    }
-    cellModel.imageList = cellImageList;
+    cellModel.imageList = model.imageList;
     //处理大图
-    NSMutableArray *cellLargeImageList = [NSMutableArray array];
-    for (FHFeedContentImageListModel *imageModel in model.largeImageList) {
-        FHFeedUGCCellImageListModel *cellImageModel = [[FHFeedUGCCellImageListModel alloc] init];
-        cellImageModel.uri = imageModel.uri;
-        cellImageModel.url = imageModel.url;
-        cellImageModel.width = imageModel.width;
-        cellImageModel.height = imageModel.height;
-        
-        NSMutableArray *cellImageModelUrlList = [NSMutableArray array];
-        for (FHFeedUGCCellImageListUrlListModel *urlListModel in imageModel.urlList) {
-            FHFeedUGCCellImageListUrlListModel *cellUrlListModel = [[FHFeedUGCCellImageListUrlListModel alloc] init];
-            cellUrlListModel.url = urlListModel.url;
-            [cellImageModelUrlList addObject:cellUrlListModel];
-        }
-        cellImageModel.urlList = cellImageModelUrlList;
-        
-        [cellLargeImageList addObject:cellImageModel];
-    }
-    cellModel.largeImageList = cellLargeImageList;
+    cellModel.largeImageList = model.largeImageList;
     //处理其他数据
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         cellModel.title = model.title;
@@ -293,42 +257,11 @@
     NSMutableArray *cellImageList = [NSMutableArray array];
     if(model.ugcU13CutImageList.count > 0){
         //单图
-        FHFeedUGCContentUgcU13CutImageListModel *imageModel = [model.ugcU13CutImageList firstObject];
-        FHFeedUGCCellImageListModel *cellImageModel = [[FHFeedUGCCellImageListModel alloc] init];
-        cellImageModel.uri = imageModel.uri;
-        cellImageModel.url = imageModel.url;
-        cellImageModel.width = imageModel.width;
-        cellImageModel.height = imageModel.height;
-        
-        NSMutableArray *cellImageModelUrlList = [NSMutableArray array];
-        for (FHFeedUGCContentUgcU13CutImageListUrlListModel *urlListModel in imageModel.urlList) {
-            FHFeedUGCCellImageListUrlListModel *cellUrlListModel = [[FHFeedUGCCellImageListUrlListModel alloc] init];
-            cellUrlListModel.url = urlListModel.url;
-            [cellImageModelUrlList addObject:cellUrlListModel];
-        }
-        cellImageModel.urlList = cellImageModelUrlList;
-        
-        [cellImageList addObject:cellImageModel];
+        [cellImageList addObject:[model.ugcU13CutImageList firstObject]];
     }else{
         if(model.thumbImageList.count > 0){
             //多图
-            for (FHFeedUGCContentThumbImageListModel *imageModel in model.thumbImageList) {
-                FHFeedUGCCellImageListModel *cellImageModel = [[FHFeedUGCCellImageListModel alloc] init];
-                cellImageModel.uri = imageModel.uri;
-                cellImageModel.url = imageModel.url;
-                cellImageModel.width = imageModel.width;
-                cellImageModel.height = imageModel.height;
-                
-                NSMutableArray *cellImageModelUrlList = [NSMutableArray array];
-                for (FHFeedUGCContentThumbImageListUrlListModel *urlListModel in imageModel.urlList) {
-                    FHFeedUGCCellImageListUrlListModel *cellUrlListModel = [[FHFeedUGCCellImageListUrlListModel alloc] init];
-                    cellUrlListModel.url = urlListModel.url;
-                    [cellImageModelUrlList addObject:cellUrlListModel];
-                }
-                cellImageModel.urlList = cellImageModelUrlList;
-                
-                [cellImageList addObject:cellImageModel];
-            }
+            [cellImageList addObjectsFromArray:model.thumbImageList];
         }else{
             //纯文本
             numberOfLines = 5;
@@ -336,31 +269,9 @@
     }
     
     cellModel.imageList = cellImageList;
+    cellModel.largeImageList = model.largeImageList;
     
     [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:numberOfLines];
-    
-    NSMutableArray *cellLargeImageList = [NSMutableArray array];
-    if(model.largeImageList.count > 0){
-        //大图
-        for (FHFeedUGCContentLargeImageListModel *imageModel in model.largeImageList) {
-            FHFeedUGCCellImageListModel *cellImageModel = [[FHFeedUGCCellImageListModel alloc] init];
-            cellImageModel.uri = imageModel.uri;
-            cellImageModel.url = imageModel.url;
-            cellImageModel.width = imageModel.width;
-            cellImageModel.height = imageModel.height;
-            
-            NSMutableArray *cellImageModelUrlList = [NSMutableArray array];
-            for (FHFeedUGCContentLargeImageListUrlListModel *urlListModel in imageModel.urlList) {
-                FHFeedUGCCellImageListUrlListModel *cellUrlListModel = [[FHFeedUGCCellImageListUrlListModel alloc] init];
-                cellUrlListModel.url = urlListModel.url;
-                [cellImageModelUrlList addObject:cellUrlListModel];
-            }
-            cellImageModel.urlList = cellImageModelUrlList;
-            
-            [cellLargeImageList addObject:cellImageModel];
-        }
-    }
-    cellModel.largeImageList = cellLargeImageList;
     
     if(cellModel.imageList.count == 1){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;

@@ -160,7 +160,7 @@
         for (NSInteger i = 0; i < self.imageViewList.count; i++) {
             UIImageView *imageView = self.imageViewList[i];
             if(i < imageList.count){
-                FHFeedUGCCellImageListModel *imageModel = imageList[i];
+                FHFeedContentImageListModel *imageModel = imageList[i];
                 imageView.hidden = NO;
                 [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
             }else{

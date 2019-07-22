@@ -38,8 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *comment_type;
 @property (nonatomic, copy , nullable) NSString *comment_id;
 @property (nonatomic, strong , nullable) NSDictionary * comment_base ;
-@property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentThumbImageListModel> *thumbImageList;
-@property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentLargeImageListModel> *largeImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *thumbImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *largeImageList;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginGroupModel *originGroup ;
 
 @end

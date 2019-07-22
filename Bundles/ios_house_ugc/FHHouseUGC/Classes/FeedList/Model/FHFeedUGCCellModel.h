@@ -21,20 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
 @end
 
-@interface FHFeedUGCCellImageListUrlListModel : NSObject
-
-@property (nonatomic, copy , nullable) NSString *url;
-@end
-
-@interface FHFeedUGCCellImageListModel : NSObject
-
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, copy , nullable) NSString *height;
-@property (nonatomic, strong , nullable) NSArray<FHFeedUGCCellImageListUrlListModel *> *urlList;
-@end
-
 @interface FHFeedUGCCellUserModel : NSObject
 
 @property (nonatomic, copy , nullable) NSString *name;
@@ -62,9 +48,9 @@ NS_ASSUME_NONNULL_BEGIN
 //问答跳转链接，优先使用这个值跳转
 @property (nonatomic, copy , nullable) NSString *openUrl;
 //列表页小图
-@property (nonatomic, strong , nullable) NSArray<FHFeedUGCCellImageListModel *> *imageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel *> *imageList;
 //点击小图放大后的大图
-@property (nonatomic, strong , nullable) NSArray<FHFeedUGCCellImageListModel *> *largeImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel *> *largeImageList;
 //帖子相关
 @property (nonatomic, strong , nullable) FHFeedUGCCellUserModel *user ;
 @property (nonatomic, copy , nullable) NSString *diggCount;
