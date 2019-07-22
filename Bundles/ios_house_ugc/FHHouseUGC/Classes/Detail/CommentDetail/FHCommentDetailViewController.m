@@ -28,6 +28,9 @@
 #import "FHCommonApi.h"
 #import "FHUGCReplyCommentWriteView.h"
 #import "TTCommentDetailReplyWriteManager.h"
+#import "FHPostDetailNavHeaderView.h"
+#import "FHUGCFollowButton.h"
+#import "FHCommonDefines.h"
 
 @interface FHCommentDetailViewController ()
 
@@ -36,6 +39,8 @@
 @property (nonatomic, strong)   FHCommentDetailViewModel      *viewModel;
 @property (nonatomic, copy)     NSString       *comment_id;
 @property (nonatomic, strong)   FHUGCReplyCommentWriteView       *commentWriteView;
+@property (nonatomic, strong)   FHPostDetailNavHeaderView       *naviHeaderView;
+@property (nonatomic, strong)   FHUGCFollowButton       *followButton;// 关注
 
 @end
 
@@ -68,6 +73,8 @@
 
 - (void)setupUI {
     [self setupDefaultNavBar:NO];
+    // 导航栏
+    [self setupDetailNaviBar];
     self.customNavBarView.title.text = @"详情";
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
@@ -83,6 +90,59 @@
     }];
     [self addDefaultEmptyViewFullScreen];
 }
+
+- (void)setupDetailNaviBar {
+    self.customNavBarView.title.text = @"详情";
+    // 关注按钮
+    self.followButton = [[FHUGCFollowButton alloc] init];
+    self.followButton.followed = YES;
+    self.followButton.tracerDic = self.tracerDict.mutableCopy;
+    self.followButton.groupId = @"";
+    [self.customNavBarView addSubview:_followButton];
+    [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(58);
+        make.right.mas_equalTo(-20);
+        make.height.mas_equalTo(24);
+        make.bottom.mas_equalTo(-10);
+    }];
+    
+    self.naviHeaderView = [[FHPostDetailNavHeaderView alloc] init];
+    [self.customNavBarView addSubview:_naviHeaderView];
+    [self.naviHeaderView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(35);
+        make.centerX.mas_equalTo(self.customNavBarView);
+        make.bottom.mas_equalTo(self.customNavBarView.mas_bottom).offset(-3.5);
+        make.width.mas_equalTo(SCREEN_WIDTH - 78 * 2 - 10);
+    }];
+    self.naviHeaderView.hidden = YES;
+    self.followButton.hidden = YES;
+}
+
+- (void)headerInfoChanged {
+    if (self.viewModel.detailHeaderModel) {
+        self.naviHeaderView.titleLabel.text = self.viewModel.detailHeaderModel.socialGroupModel.socialGroupName;
+        self.naviHeaderView.descLabel.text = self.viewModel.detailHeaderModel.socialGroupModel.countText;
+        // 关注按钮
+        self.followButton.followed = [self.viewModel.detailHeaderModel.socialGroupModel.hasFollow boolValue];
+        self.followButton.groupId = self.viewModel.detailHeaderModel.socialGroupModel.socialGroupId;
+    }
+}
+
+// 子类滚动方法
+- (void)sub_scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.viewModel.detailHeaderModel) {
+        // 有头部数据
+        CGFloat offsetY = scrollView.contentOffset.y;
+        if (offsetY > 78) {
+            self.naviHeaderView.hidden = NO;
+            self.followButton.hidden = NO;
+        } else {
+            self.naviHeaderView.hidden = YES;
+            self.followButton.hidden = YES;
+        }
+    }
+}
+
 
 - (void)configTableView {
     _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];

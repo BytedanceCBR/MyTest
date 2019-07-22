@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshUI;
 - (void)openWriteCommentViewWithReplyCommentModel:(id<TTCommentDetailReplyCommentModelProtocol>)replyCommentModel;
+- (void)sub_scrollViewDidScroll:(UIScrollView *)scrollView;
+- (void)headerInfoChanged;
 
 @end
 

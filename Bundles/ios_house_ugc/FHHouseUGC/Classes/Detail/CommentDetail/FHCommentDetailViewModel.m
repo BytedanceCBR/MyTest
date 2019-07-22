@@ -23,6 +23,7 @@
 #import "TTMomentDetailAction.h"
 #import "TTMomentDetailStore.h"
 #import "FHPostDetailHeaderCell.h"
+#import "FHUGCConfig.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,TTCommentDetailCellDelegate>
 
@@ -41,7 +42,7 @@
 // 详情数据
 @property (nonatomic, strong)   NSMutableArray       *detailItems;
 @property (nonatomic, strong)   NSMutableArray       *detailHeights;// 高度缓存
-@property (nonatomic, strong)   FHPostDetailHeaderModel *detailHeaderModel;
+@property (nonatomic, copy)     NSString       *social_group_id;
 
 // 评论回复列表数据源
 @property (nonatomic, strong) NSMutableArray<TTCommentDetailReplyCommentModel *> *totalComments;//dataSource
@@ -74,6 +75,7 @@
 //        self.store.categoryID = self.categoryID;
 //        self.store.logPb = self.logPb;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delCommentDetailReplySuccess:) name:kFHUGCDelCommentDetailReplyNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     }
     return self;
 }
@@ -158,12 +160,12 @@
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
             headerModel.socialGroupModel = socialGroupModel;
 //            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
-//            self.social_group_id = socialGroupModel.socialGroupId;
+            self.social_group_id = socialGroupModel.socialGroupId;
             [self.detailItems addObject:headerModel];
             self.detailHeaderModel = headerModel;
             CGFloat headerHeight = [FHPostDetailHeaderCell heightForData:headerModel];
             [self.detailHeights addObject:@(headerHeight)];// 高度提前计算
-//            [self.detailController headerInfoChanged];
+            [self.detailVC headerInfoChanged];
             //
 //            FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
 //            [self.items addObject:grayLine];
@@ -175,6 +177,27 @@
         self.detailVC.hasValidateData = NO;
         self.tableView.hidden = YES;
         [self.detailVC.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+    }
+}
+
+// 关注状态改变
+- (void)followStateChanged:(NSNotification *)notification {
+    if (notification) {
+        NSDictionary *userInfo = notification.userInfo;
+        BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
+        NSString *groupId = notification.userInfo[@"social_group_id"];
+        NSString *currentGroupId = self.social_group_id;
+        if(groupId.length > 0 && currentGroupId.length > 0) {
+            if (self.detailHeaderModel) {
+                // 有头部信息
+                if ([groupId isEqualToString:currentGroupId]) {
+                    // 替换关注人数 AA关注BB热帖 替换：AA
+                    [[FHUGCConfig sharedInstance] updateScialGroupDataModel:self.detailHeaderModel.socialGroupModel byFollowed:followed];
+                    [self.detailVC headerInfoChanged];
+                    [self.tableView reloadData];
+                }
+            }
+        }
     }
 }
 
@@ -471,6 +494,10 @@
             }
         }
     }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.detailVC sub_scrollViewDidScroll:scrollView];
 }
 
 // TTMomentDetailStore
