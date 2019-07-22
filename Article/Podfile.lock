@@ -151,7 +151,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.0)
+  - ios_house_im (0.1.3)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -290,14 +290,14 @@ PODS:
   - TTArticleVideo (0.1.0)
   - TTAudio (0.1.6.1-binary)
   - TTAvatar (0.1.0)
-  - TTBaseLib/TTBaseTool (2.0.0)
-  - TTBaseLib/TTBusinessManager (2.0.0)
-  - TTBaseLib/TTCategory (2.0.0)
-  - TTBaseLib/TTDeviceHelper (2.0.0)
-  - TTBaseLib/TTLabelTextHelper (2.0.0)
-  - TTBaseLib/TTNetworkHelper (2.0.0)
-  - TTBaseLib/TTSandBoxHelper (2.0.0)
-  - TTBaseLib/TTUIResponderHelper (2.0.0)
+  - TTBaseLib/TTBaseTool (2.0.0.1-binary)
+  - TTBaseLib/TTBusinessManager (2.0.0.1-binary)
+  - TTBaseLib/TTCategory (2.0.0.1-binary)
+  - TTBaseLib/TTDeviceHelper (2.0.0.1-binary)
+  - TTBaseLib/TTLabelTextHelper (2.0.0.1-binary)
+  - TTBaseLib/TTNetworkHelper (2.0.0.1-binary)
+  - TTBaseLib/TTSandBoxHelper (2.0.0.1-binary)
+  - TTBaseLib/TTUIResponderHelper (2.0.0.1-binary)
   - TTBatchItemAction (0.1.8.1-binary)
   - TTDebug (0.1.0)
   - TTDebugAssistant (0.2.33.1-binary)
@@ -480,7 +480,7 @@ PODS:
   - TTShare/TTShareBusiness/TTShareWeiboBusiness (0.3.3)
   - TTShare/TTShareService (0.3.3)
   - TTTAttributedLabel (1.13.3.1-binary)
-  - TTThemed (0.1.36)
+  - TTThemed (0.1.36.1-binary)
   - TTThirdPartySDKs/QQSDK (0.0.4)
   - TTThirdPartySDKs/WeChatSDK (0.0.4)
   - TTThirdPartySDKs/WeiboSDK (0.0.4)
@@ -629,7 +629,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `6f17a1a165de083d5140c79225175a07f8849cb8`)
+  - ios_house_im (= 0.1.3)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -698,14 +698,14 @@ DEPENDENCIES:
   - TTArticleVideo (from `../TTBundles/ios_tt_article_video`)
   - TTAudio (= 0.1.6.1-binary)
   - TTAvatar (from `../AKPlugins/TTAvatar`)
-  - TTBaseLib/TTBaseTool (= 2.0.0)
-  - TTBaseLib/TTBusinessManager (= 2.0.0)
-  - TTBaseLib/TTCategory (= 2.0.0)
-  - TTBaseLib/TTDeviceHelper (= 2.0.0)
-  - TTBaseLib/TTLabelTextHelper (= 2.0.0)
-  - TTBaseLib/TTNetworkHelper (= 2.0.0)
-  - TTBaseLib/TTSandBoxHelper (= 2.0.0)
-  - TTBaseLib/TTUIResponderHelper (= 2.0.0)
+  - TTBaseLib/TTBaseTool (= 2.0.0.1-binary)
+  - TTBaseLib/TTBusinessManager (= 2.0.0.1-binary)
+  - TTBaseLib/TTCategory (= 2.0.0.1-binary)
+  - TTBaseLib/TTDeviceHelper (= 2.0.0.1-binary)
+  - TTBaseLib/TTLabelTextHelper (= 2.0.0.1-binary)
+  - TTBaseLib/TTNetworkHelper (= 2.0.0.1-binary)
+  - TTBaseLib/TTSandBoxHelper (= 2.0.0.1-binary)
+  - TTBaseLib/TTUIResponderHelper (= 2.0.0.1-binary)
   - TTBatchItemAction (= 0.1.8.1-binary)
   - TTDebug (from `../TTBundles/ios_tt_debug`)
   - TTDebugAssistant (= 0.2.33.1-binary)
@@ -784,7 +784,7 @@ DEPENDENCIES:
   - TTSettingsManager/Performance (= 0.4.16)
   - TTShare (from `../AKPlugins/TTShare`)
   - TTTAttributedLabel (= 1.13.3.1-binary)
-  - TTThemed (= 0.1.36)
+  - TTThemed (= 0.1.36.1-binary)
   - TTThirdPartySDKs/QQSDK (= 0.0.4)
   - TTThirdPartySDKs/WeChatSDK (= 0.0.4)
   - TTThirdPartySDKs/WeiboSDK (= 0.0.4)
@@ -863,9 +863,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/FHWebView
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
-  ios_house_im:
-    :commit: 6f17a1a165de083d5140c79225175a07f8849cb8
-    :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAD:
@@ -938,9 +935,6 @@ EXTERNAL SOURCES:
     :path: ../ReactCommon/yoga
 
 CHECKOUT OPTIONS:
-  ios_house_im:
-    :commit: 6f17a1a165de083d5140c79225175a07f8849cb8
-    :git: git@code.byted.org:fproject/ios_house_im.git
   TTRoute:
     :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa
     :git: git@code.byted.org:TTIOS/tt_pods_route.git
@@ -1008,7 +1002,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 93431910eb6de50b0b84130f90d5eabb85849261
+  ios_house_im: 72b22a7314ceba57d473bd83dbc1059918737d3d
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1050,7 +1044,7 @@ SPEC CHECKSUMS:
   TTArticleVideo: 6f1853b56a61152991807c7c07d5474b4667aa80
   TTAudio: e9a692e3b6387c2c5efa5a74b44d7f73712fdc1e
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
-  TTBaseLib: d9c0d1d9718f2fcdffb15e2f67feaea982608395
+  TTBaseLib: e7b79508c1e559bd44fa073f0a7e3e1d7c237f0e
   TTBatchItemAction: 6e6ed79565823fe6f3ee77d66d6e3ec5fec4d52f
   TTDebug: b8ba18669b70deaf52dbd0775578e2163cf07c45
   TTDebugAssistant: c1c106b1cef486fb07833e7a9a6316cf2711df5d
@@ -1099,7 +1093,7 @@ SPEC CHECKSUMS:
   TTSettingsManager: 6c9f2451b51d836979ea8e7e51ac8397a9b74b06
   TTShare: e5faa4ed799189e7dec34372f61794c6a011c2a6
   TTTAttributedLabel: dc7f8eada1e3d7fa25244fb05f50615d692d8d3e
-  TTThemed: e145197286bdf6c9888781f0512afbe3c75d0380
+  TTThemed: 921e544fa8ca8c34b3a091af38b8612609c18480
   TTThirdPartySDKs: 0c0f991cd09a2839cbc372659f68c21bc0d05d07
   TTTracker: 8fdfc910c2a593f625d8dce8b045b3b6aedc6ddd
   TTUGCFoundation: f67fd0f474fef086cd3e986a4ad2c8bb79220d94
@@ -1128,6 +1122,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 065f8c9de5c0621f366c9584968f22bbf4d33f88
+PODFILE CHECKSUM: 5d00301954d4ccdb4e3b0ea26bbc54357975d72c
 
 COCOAPODS: 1.4.0
