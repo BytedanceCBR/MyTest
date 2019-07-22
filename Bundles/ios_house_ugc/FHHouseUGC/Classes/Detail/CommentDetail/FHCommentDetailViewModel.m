@@ -22,6 +22,7 @@
 #import "TTCommentDetailModel.h"
 #import "TTMomentDetailAction.h"
 #import "TTMomentDetailStore.h"
+#import "FHPostDetailHeaderCell.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,TTCommentDetailCellDelegate>
 
@@ -36,6 +37,8 @@
 @property (nonatomic, strong)   FHDetailCommentAllFooter       *commentAllFooter;
 @property (nonatomic, strong)   FHUGCReplyListEmptyView       *replayListEmptyView;
 @property (nonatomic, strong)   TTMomentDetailStore       *store;
+
+@property (nonatomic, strong)   NSMutableArray       *detailItems;
 
 // 评论回复列表数据源
 @property (nonatomic, strong) NSMutableArray<TTCommentDetailReplyCommentModel *> *totalComments;//dataSource
@@ -56,6 +59,7 @@
         self.user_digg = 0;
         self.digg_count = 0;
         self.hasMore = NO;
+        self.detailItems = [NSMutableArray new];
         self.totalComments = [NSMutableArray new];
         self.totalCommentLayouts = [NSMutableArray new];
         [self configTableView];
@@ -84,6 +88,7 @@
     _refreshFooter.hidden = YES;
     
     [_tableView registerClass:[TTCommentDetailCell class] forCellReuseIdentifier:NSStringFromClass([TTCommentDetailReplyCommentModel class])];
+    [_tableView registerClass:[FHPostDetailHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHPostDetailHeaderModel class])];
 }
 
 - (void)startLoadData {
@@ -314,8 +319,8 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0) {
-        // 头部详情
-        return 1;
+        // 头部 详情
+        return self.detailItems.count;
     }
     // 回复
     return self.totalComments.count;
@@ -325,7 +330,18 @@
 {
     NSInteger section = indexPath.section;
     if (section == 0) {
-        // 头部详情
+        // 头部 详情
+        NSInteger row = indexPath.row;
+        if (row >= 0 && row < self.detailItems.count) {
+            id data = self.detailItems[row];
+            NSString *identifier = data ? NSStringFromClass([data class]) : @"";
+            if (identifier.length > 0) {
+                FHUGCBaseCell *cell = (FHUGCBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+                cell.baseViewModel = self;
+                [cell refreshWithData:data];
+                return cell;
+            }
+        }
         return [[FHUGCBaseCell alloc] init];
     }
     // reply list
