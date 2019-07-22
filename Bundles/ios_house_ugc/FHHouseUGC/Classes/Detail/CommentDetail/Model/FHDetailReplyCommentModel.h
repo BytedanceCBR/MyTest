@@ -3,6 +3,7 @@
 #import "TTCommentDetailReplyCommentModel.h"
 #import "FHUGCScialGroupModel.h"
 #import "FHFeedUGCContentModel.h"
+#import "FHFeedContentModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol TTCommentDetailReplyCommentModel <NSObject>
@@ -39,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSDictionary * comment_base ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentThumbImageListModel> *thumbImageList;
 @property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentLargeImageListModel> *largeImageList;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginGroupModel *originGroup ;
 
 @end
 

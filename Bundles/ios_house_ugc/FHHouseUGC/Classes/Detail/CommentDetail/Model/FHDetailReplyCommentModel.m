@@ -48,6 +48,7 @@
                            @"comment_id": @"id",
                            @"thumbImageList": @"thumb_image_list",
                            @"largeImageList": @"large_image_list",
+                           @"originGroup" : @"origin_group",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

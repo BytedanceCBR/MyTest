@@ -24,6 +24,9 @@
 #import "TTMomentDetailStore.h"
 #import "FHPostDetailHeaderCell.h"
 #import "FHUGCConfig.h"
+#import "FHHouseUGCHeader.h"
+#import "FRCommonURLSetting.h"
+#import "FRApiModel.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,TTCommentDetailCellDelegate>
 
@@ -129,12 +132,17 @@
         // 详情data
         if (model.commentDetail) {
             NSMutableDictionary *detailDic = [NSMutableDictionary new];
+            FHFeedContentRawDataCommentBaseModel *commentBase = nil;
+            FRCommonUserStructModel *userModel = nil;
             if ([model.commentDetail.comment_base isKindOfClass:[NSDictionary class]]) {
                 [detailDic addEntriesFromDictionary:model.commentDetail.comment_base];
                 // 添加 评论数等数据
                 if ([model.commentDetail.comment_base[@"action"] isKindOfClass:[NSDictionary class]]) {
                     [detailDic addEntriesFromDictionary:model.commentDetail.comment_base[@"action"]];
                 }
+                commentBase = [[FHFeedContentRawDataCommentBaseModel alloc] initWithDictionary:model.commentDetail.comment_base error:nil];
+                if ([model.commentDetail.comment_base[@"user"] isKindOfClass:[NSDictionary class]]) {
+                    userModel = [[FRCommonUserStructModel alloc] initWithDictionary:model.commentDetail.comment_base[@"user"] error:nil];               }
             }
             if (detailDic.count > 0) {
                 // 构建之前的评论详情数据，后面有用到
@@ -151,6 +159,28 @@
             }
             self.user_digg = self.commentDetailModel.userDigg ? 1 : 0;
             self.digg_count = self.commentDetailModel.diggCount;
+            // 构建新的cellmodel
+            FHFeedContentRawDataModel *rawData = [[FHFeedContentRawDataModel alloc] init];
+            rawData.commentBase = commentBase;
+            rawData.originGroup = model.commentDetail.originGroup;
+            FHFeedContentModel *feedContent = [[FHFeedContentModel alloc] init];
+            feedContent.logPb = model.logPb;
+            feedContent.imageList = model.commentDetail.thumbImageList;
+            feedContent.largeImageList = model.commentDetail.largeImageList;
+            feedContent.rawData = rawData;
+            feedContent.community = nil;// 记得修改
+            feedContent.groupId = self.comment_id;// 评论id
+            feedContent.cellType = [NSString stringWithFormat:@"%ld",FHUGCFeedListCellTypeArticleComment];
+            if (userModel) {
+                FHFeedContentUserInfoModel *userInfoModel = [[FHFeedContentUserInfoModel alloc] init];
+                userInfoModel.name = userModel.info.name;
+                userInfoModel.avatarUrl = userModel.info.avatar_url;
+                userInfoModel.userId = userModel.info.user_id;
+                userInfoModel.schema = userModel.info.schema;
+                feedContent.userInfo = userInfoModel;
+            }
+            FHFeedUGCCellModel *ugcCellModel = [FHFeedUGCCellModel modelFromFeedContent:feedContent];
+            //
             [self.detailVC refreshUI];
         }
         // 圈子详情数据
@@ -179,6 +209,56 @@
         [self.detailVC.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
     }
 }
+
+//- (FHFeedUGCCellModel *)createFeedModel {
+//    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+//    cellModel.cellType = [model.cellType integerValue];
+//    cellModel.groupId = model.groupId;
+//    cellModel.logPb = model.logPb;
+//    cellModel.content = model.rawData.commentBase.content;
+//    cellModel.behotTime = model.behotTime;
+//    cellModel.openUrl = model.rawData.commentBase.detailSchema;
+//
+//    double time = [model.publishTime doubleValue];
+//    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+//    cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
+//
+//    cellModel.diggCount = model.diggCount;
+//    cellModel.commentCount = model.commentCount;
+//    cellModel.userDigg = model.userDigg;
+//
+//    FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
+//    community.name = model.community.name;
+//    community.url = model.community.url;
+//    community.socialGroupId = model.community.socialGroupId;
+//    cellModel.community = community;
+//
+//    FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
+//    user.name = model.userInfo.name;
+//    user.avatarUrl = model.userInfo.avatarUrl;
+//    user.userId = model.userInfo.userId;
+//    cellModel.user = user;
+//
+//    FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
+//    originItemModel.type = @"[文章]";
+//    originItemModel.content = model.rawData.originGroup.title;
+//    originItemModel.openUrl = model.rawData.originGroup.schema;
+//    originItemModel.imageModel = model.rawData.originGroup.middleImage;
+//    cellModel.originItemModel = originItemModel;
+//
+//    NSInteger numberOfLines = 3;
+//
+//    if(cellModel.imageList.count == 1){
+//        cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
+//    }else if(cellModel.imageList.count > 1){
+//        cellModel.cellSubType = FHUGCFeedListCellSubTypeMultiImage;
+//    }else{
+//        cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
+//        numberOfLines = 5;
+//    }
+//
+//    [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:numberOfLines];
+//}
 
 // 关注状态改变
 - (void)followStateChanged:(NSNotification *)notification {
