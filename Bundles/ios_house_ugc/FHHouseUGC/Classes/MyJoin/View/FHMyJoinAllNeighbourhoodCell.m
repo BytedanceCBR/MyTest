@@ -30,7 +30,7 @@
 }
 
 - (void)refreshWithData:(id)data {
-
+    [self setShowText:NO];
 }
 
 - (void)initView {
@@ -46,7 +46,6 @@
     _titleLabel.numberOfLines = 0;
     [_titleLabel sizeToFit];
     [self.contentView addSubview:_titleLabel];
-    [self setShowText:NO];
 }
 
 - (NSDictionary *)titleLabelAttributes {

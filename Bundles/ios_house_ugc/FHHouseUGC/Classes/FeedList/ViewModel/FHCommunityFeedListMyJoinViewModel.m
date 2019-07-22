@@ -289,12 +289,6 @@
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     if(indexPath.row < self.dataList.count){
-        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-        Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
-        if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
-            NSNumber *cellHeight = [NSNumber numberWithFloat:[cellClass heightForData:cellModel]];
-            self.cellHeightCaches[tempKey] = cellHeight;
-        }
         [self traceClientShowAtIndexPath:indexPath];
     }
 }
@@ -325,17 +319,11 @@
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
-    NSNumber *cellHeight = self.cellHeightCaches[tempKey];
-    if (cellHeight) {
-        return [cellHeight floatValue];
-    }else{
-        if(indexPath.row < self.dataList.count){
-            FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-            Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
-            if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
-                return [cellClass heightForData:cellModel];
-            }
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
+        if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
+            return [cellClass heightForData:cellModel];
         }
     }
     return 100;
