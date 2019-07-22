@@ -110,6 +110,12 @@
     }
     return self;
 }
+
+- (NSString *)fromStrBySourceUrl:(NSString *)host
+{
+    NSString *fromStr = @"";
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupUI];

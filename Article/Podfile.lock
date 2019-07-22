@@ -290,14 +290,14 @@ PODS:
   - TTArticleVideo (0.1.0)
   - TTAudio (0.1.6.1-binary)
   - TTAvatar (0.1.0)
-  - TTBaseLib/TTBaseTool (2.0.0)
-  - TTBaseLib/TTBusinessManager (2.0.0)
-  - TTBaseLib/TTCategory (2.0.0)
-  - TTBaseLib/TTDeviceHelper (2.0.0)
-  - TTBaseLib/TTLabelTextHelper (2.0.0)
-  - TTBaseLib/TTNetworkHelper (2.0.0)
-  - TTBaseLib/TTSandBoxHelper (2.0.0)
-  - TTBaseLib/TTUIResponderHelper (2.0.0)
+  - TTBaseLib/TTBaseTool (2.0.0.1-binary)
+  - TTBaseLib/TTBusinessManager (2.0.0.1-binary)
+  - TTBaseLib/TTCategory (2.0.0.1-binary)
+  - TTBaseLib/TTDeviceHelper (2.0.0.1-binary)
+  - TTBaseLib/TTLabelTextHelper (2.0.0.1-binary)
+  - TTBaseLib/TTNetworkHelper (2.0.0.1-binary)
+  - TTBaseLib/TTSandBoxHelper (2.0.0.1-binary)
+  - TTBaseLib/TTUIResponderHelper (2.0.0.1-binary)
   - TTBatchItemAction (0.1.8.1-binary)
   - TTDebug (0.1.0)
   - TTDebugAssistant (0.2.33.1-binary)
@@ -480,7 +480,7 @@ PODS:
   - TTShare/TTShareBusiness/TTShareWeiboBusiness (0.3.3)
   - TTShare/TTShareService (0.3.3)
   - TTTAttributedLabel (1.13.3.1-binary)
-  - TTThemed (0.1.36)
+  - TTThemed (0.1.36.1-binary)
   - TTThirdPartySDKs/QQSDK (0.0.4)
   - TTThirdPartySDKs/WeChatSDK (0.0.4)
   - TTThirdPartySDKs/WeiboSDK (0.0.4)
@@ -698,14 +698,14 @@ DEPENDENCIES:
   - TTArticleVideo (from `../TTBundles/ios_tt_article_video`)
   - TTAudio (= 0.1.6.1-binary)
   - TTAvatar (from `../AKPlugins/TTAvatar`)
-  - TTBaseLib/TTBaseTool (= 2.0.0)
-  - TTBaseLib/TTBusinessManager (= 2.0.0)
-  - TTBaseLib/TTCategory (= 2.0.0)
-  - TTBaseLib/TTDeviceHelper (= 2.0.0)
-  - TTBaseLib/TTLabelTextHelper (= 2.0.0)
-  - TTBaseLib/TTNetworkHelper (= 2.0.0)
-  - TTBaseLib/TTSandBoxHelper (= 2.0.0)
-  - TTBaseLib/TTUIResponderHelper (= 2.0.0)
+  - TTBaseLib/TTBaseTool (= 2.0.0.1-binary)
+  - TTBaseLib/TTBusinessManager (= 2.0.0.1-binary)
+  - TTBaseLib/TTCategory (= 2.0.0.1-binary)
+  - TTBaseLib/TTDeviceHelper (= 2.0.0.1-binary)
+  - TTBaseLib/TTLabelTextHelper (= 2.0.0.1-binary)
+  - TTBaseLib/TTNetworkHelper (= 2.0.0.1-binary)
+  - TTBaseLib/TTSandBoxHelper (= 2.0.0.1-binary)
+  - TTBaseLib/TTUIResponderHelper (= 2.0.0.1-binary)
   - TTBatchItemAction (= 0.1.8.1-binary)
   - TTDebug (from `../TTBundles/ios_tt_debug`)
   - TTDebugAssistant (= 0.2.33.1-binary)
@@ -784,7 +784,7 @@ DEPENDENCIES:
   - TTSettingsManager/Performance (= 0.4.16)
   - TTShare (from `../AKPlugins/TTShare`)
   - TTTAttributedLabel (= 1.13.3.1-binary)
-  - TTThemed (= 0.1.36)
+  - TTThemed (= 0.1.36.1-binary)
   - TTThirdPartySDKs/QQSDK (= 0.0.4)
   - TTThirdPartySDKs/WeChatSDK (= 0.0.4)
   - TTThirdPartySDKs/WeiboSDK (= 0.0.4)
@@ -997,7 +997,7 @@ SPEC CHECKSUMS:
   FHRNKit: b8966b198eb601696630a3fd4bc72aac277258be
   FHWebView: 1c354474ccc25e8a56b77e34b7b3a52bb4c6e414
   FLAnimatedImage: c103d911f434514c39961a5eed4c0e29c6cdae48
-  FLEX: a9a617d07fa5909d1eb9e3c5791f6965ba5f9ccf
+  FLEX: 41f5c73df50a2c8100e3c38f2eba75fdacf788e2
   FMDB: 20748cf597d147c452903c32d101953e46dcb4b5
   Gaia: 8d07f88e57c49364734d1fb5ea331f37c225c619
   Godzippa: d9e858886267fa9026eb4eb1e2e4ce5e0df2d680
@@ -1050,7 +1050,7 @@ SPEC CHECKSUMS:
   TTArticleVideo: 6f1853b56a61152991807c7c07d5474b4667aa80
   TTAudio: e9a692e3b6387c2c5efa5a74b44d7f73712fdc1e
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
-  TTBaseLib: d9c0d1d9718f2fcdffb15e2f67feaea982608395
+  TTBaseLib: e7b79508c1e559bd44fa073f0a7e3e1d7c237f0e
   TTBatchItemAction: 6e6ed79565823fe6f3ee77d66d6e3ec5fec4d52f
   TTDebug: b8ba18669b70deaf52dbd0775578e2163cf07c45
   TTDebugAssistant: c1c106b1cef486fb07833e7a9a6316cf2711df5d
@@ -1099,7 +1099,7 @@ SPEC CHECKSUMS:
   TTSettingsManager: 6c9f2451b51d836979ea8e7e51ac8397a9b74b06
   TTShare: e5faa4ed799189e7dec34372f61794c6a011c2a6
   TTTAttributedLabel: dc7f8eada1e3d7fa25244fb05f50615d692d8d3e
-  TTThemed: e145197286bdf6c9888781f0512afbe3c75d0380
+  TTThemed: 921e544fa8ca8c34b3a091af38b8612609c18480
   TTThirdPartySDKs: 0c0f991cd09a2839cbc372659f68c21bc0d05d07
   TTTracker: 8fdfc910c2a593f625d8dce8b045b3b6aedc6ddd
   TTUGCFoundation: f67fd0f474fef086cd3e986a4ad2c8bb79220d94
@@ -1128,6 +1128,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 065f8c9de5c0621f366c9584968f22bbf4d33f88
+PODFILE CHECKSUM: 1b6248326bacf390f1b5876ef75593847aa9c336
 
 COCOAPODS: 1.4.0
