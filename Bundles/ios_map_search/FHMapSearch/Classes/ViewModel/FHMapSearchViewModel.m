@@ -588,7 +588,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         extraParams[CHANNEL_ID] = CHANNEL_ID_SUBWAY_SEARCH;
     } else {
-        extraParams[CHANNEL_ID] = CHANNEL_ID_MAP_FIND_HOUSE;
+//        extraParams[CHANNEL_ID] = CHANNEL_ID_MAP_FIND_HOUSE;
     }
     
     __weak typeof(self) wself = self;
