@@ -37,6 +37,9 @@ NSString const *CHANNEL_ID_RECOMMEND_SEARCH = @"94349532281"; //猜你想找 ✅
 NSString const *CHANNEL_ID_GUESS_SEARCH = @"94349534262"; //猜你想搜 ❎
 NSString const *CHANNEL_ID_SEARCH_NEIGHBORHOOD_DEAL = @"94349535162"; //查成交 ✅
 
+NSString const *CHANNEL_ID_HELP_ME_FIND_HOUSE = @"94349538586"; // 帮我找房
+NSString const *CHANNEL_ID_SUBWAY_HOUSE_HOUSE_LIST = @"94349538945"; // 地铁找房房源列表
+NSString const *CHANNEL_ID_MAP_FIND_RENT = @"94349538463"; //租房地图找房列表页
 
 @implementation FHSearchChannelTypes
 

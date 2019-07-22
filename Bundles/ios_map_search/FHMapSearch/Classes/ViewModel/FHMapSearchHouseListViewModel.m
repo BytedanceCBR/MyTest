@@ -415,9 +415,13 @@
     }
     
     if (self.currentBubble.lastShowMode == FHMapSearchShowModeSubway) {
-        param[CHANNEL_ID] = CHANNEL_ID_SUBWAY_SEARCH;
+        param[CHANNEL_ID] = CHANNEL_ID_SUBWAY_HOUSE_HOUSE_LIST;
+        if (query.length > 0) {
+            query = [NSString stringWithFormat:@"%@&%@=%@",query,CHANNEL_ID,CHANNEL_ID_SUBWAY_HOUSE_HOUSE_LIST];
+        }else {
+            query = [NSString stringWithFormat:@"%@=%@",CHANNEL_ID,CHANNEL_ID_SUBWAY_HOUSE_HOUSE_LIST];
+        }
     }
-    
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.houseList.count needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
         
