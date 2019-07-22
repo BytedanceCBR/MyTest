@@ -53,7 +53,9 @@
     self.isLoading = NO;
     self.enabled = YES;
     self.loadingAnimateView.hidden = YES;
-    [self setTitle:self.originText forState:UIControlStateNormal];
+    if(self.originText){
+        [self setTitle:self.originText forState:UIControlStateNormal];
+    }
     [self.loadingAnimateView.layer removeAllAnimations];
 }
 

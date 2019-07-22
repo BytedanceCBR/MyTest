@@ -550,6 +550,8 @@
 
 - (void)applicationDidBecomeActive {
     if([self isShowFeedbackView]){
+        self.isPhoneCallPickUp = NO;
+        self.isPhoneCallShow = NO;
         [self addFeedBackView];
     }
 }
