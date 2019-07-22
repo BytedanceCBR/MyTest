@@ -38,7 +38,7 @@
     
     self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
     _headerView.titleLabel.text = @"我关注的小区圈";
-    [_headerView.moreBtn addTarget:self action:@selector(goToMore) forControlEvents:UIControlEventTouchUpInside];
+    _headerView.moreBtn.hidden = YES;
     [self addSubview:_headerView];
     
     [self initCollectionView];
@@ -50,8 +50,7 @@
 
 - (void)initCollectionView {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-    flowLayout.itemSize = CGSizeMake(120, 128);
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 0);
     flowLayout.minimumLineSpacing = 8;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
