@@ -177,6 +177,7 @@
 "ugc_follow_communitys" = "FHUGCFollowListController";
 "ugc_search_list" = "FHUGCSearchListController";
 "ugc_community_list" = "FHUGCCommunityListViewController";
+"ugc_comment_detail" = "FHCommentDetailViewController";
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";

@@ -44,7 +44,11 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        self.comment_id = @"6714466747832877060";//  6712727097456623627  6714431339993235463
+        NSDictionary * params = paramObj.allParams;
+        if ([params isKindOfClass:[NSDictionary class]]) {
+            // 6714466747832877060  6712727097456623627  6714431339993235463
+            self.comment_id = [params tt_stringValueForKey:@"comment_id"];
+        }
     }
     return self;
 }
@@ -65,7 +69,6 @@
 - (void)setupUI {
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"详情";
-    self.comment_id = @"6712727097456623627";
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
     [self configTableView];
@@ -73,10 +76,6 @@
     self.viewModel = [[FHCommentDetailViewModel alloc] initWithController:self tableView:_tableView];
     self.viewModel.comment_id = self.comment_id;
     [self setupToolbarView];
-//    _tableView.dataSource = self;
-//    _tableView.delegate = self;
-//    [_tableView registerClass:[FHUGCFollowListCell class] forCellReuseIdentifier:@"FHUGCFollowListCell"];
-//    [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.view).offset(height);
@@ -98,6 +97,10 @@
 }
 
 - (void)startLoadData {
+    if (self.comment_id.length <= 0) {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+        return;
+    }
     if ([TTReachability isNetworkConnected]) {
         [self startLoading];
         self.isLoadingData = YES;
