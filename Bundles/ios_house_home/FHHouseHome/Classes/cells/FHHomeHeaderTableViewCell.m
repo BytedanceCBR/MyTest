@@ -19,6 +19,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.contentTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        self.contentTableView.scrollsToTop = NO;
         self.tableViewDelegate = [[FHHomeTableViewDelegate alloc] init];
         [self setUpViews];
     }
