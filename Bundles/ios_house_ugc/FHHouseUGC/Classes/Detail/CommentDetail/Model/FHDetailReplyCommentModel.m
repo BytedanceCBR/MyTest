@@ -45,8 +45,9 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
-                           @"banFace": @"ban_face",
-                           @"errNo": @"err_no",
+                           @"comment_id": @"id",
+                           @"thumbImageList": @"thumb_image_list",
+                           @"largeImageList": @"large_image_list",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -56,5 +57,26 @@
 {
     return YES;
 }
+
+@end
+
+@implementation FHUGCSocialGroupCommentDetailModel
+
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"logPb": @"log_pb",
+                           @"commentDetail" : @"data",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
 
 @end

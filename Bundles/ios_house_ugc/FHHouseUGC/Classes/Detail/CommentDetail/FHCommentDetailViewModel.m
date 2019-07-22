@@ -22,6 +22,7 @@
 #import "TTCommentDetailModel.h"
 #import "TTMomentDetailAction.h"
 #import "TTMomentDetailStore.h"
+#import "FHPostDetailHeaderCell.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,TTCommentDetailCellDelegate>
 
@@ -36,6 +37,11 @@
 @property (nonatomic, strong)   FHDetailCommentAllFooter       *commentAllFooter;
 @property (nonatomic, strong)   FHUGCReplyListEmptyView       *replayListEmptyView;
 @property (nonatomic, strong)   TTMomentDetailStore       *store;
+
+// 详情数据
+@property (nonatomic, strong)   NSMutableArray       *detailItems;
+@property (nonatomic, strong)   NSMutableArray       *detailHeights;// 高度缓存
+@property (nonatomic, strong)   FHPostDetailHeaderModel *detailHeaderModel;
 
 // 评论回复列表数据源
 @property (nonatomic, strong) NSMutableArray<TTCommentDetailReplyCommentModel *> *totalComments;//dataSource
@@ -56,6 +62,8 @@
         self.user_digg = 0;
         self.digg_count = 0;
         self.hasMore = NO;
+        self.detailHeights = [NSMutableArray new];
+        self.detailItems = [NSMutableArray new];
         self.totalComments = [NSMutableArray new];
         self.totalCommentLayouts = [NSMutableArray new];
         [self configTableView];
@@ -84,6 +92,7 @@
     _refreshFooter.hidden = YES;
     
     [_tableView registerClass:[TTCommentDetailCell class] forCellReuseIdentifier:NSStringFromClass([TTCommentDetailReplyCommentModel class])];
+    [_tableView registerClass:[FHPostDetailHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHPostDetailHeaderModel class])];
 }
 
 - (void)startLoadData {
@@ -91,6 +100,8 @@
     self.commentDetailModel = nil;
     [self.totalComments removeAllObjects];
     [self.totalCommentLayouts removeAllObjects];
+    [self.detailItems removeAllObjects];
+    [self.detailHeights removeAllObjects];
     // 请求评论详情
     [self requestCommentDetailData];
 }
@@ -101,25 +112,62 @@
         [self.httpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.httpTask = [FHHouseUGCAPI requestCommentDetailDataWithCommentId:self.comment_id class:[FHUGCCommentDetailModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.httpTask = [FHHouseUGCAPI requestCommentDetailDataWithCommentId:self.comment_id class:[FHUGCSocialGroupCommentDetailModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         [wself processQueryData:model error:error];
     }];
 }
 
 // 处理网络数据返回，详情返回直接展示
-- (void)processQueryData:(FHUGCCommentDetailModel *)model error:(NSError *)error {
+- (void)processQueryData:(FHUGCSocialGroupCommentDetailModel *)model error:(NSError *)error {
     if (model != NULL) {
         // 有详情数据
         self.tableView.hidden = NO;
         [self.detailVC.emptyView hideEmptyView];
         self.detailVC.hasValidateData = YES;
         // 详情data
-        if (model.data && [model.data isKindOfClass:[NSDictionary class]]) {
-            TTCommentDetailModel *dModel = [[TTCommentDetailModel alloc] initWithDictionary:model.data error:nil];
-            self.commentDetailModel = dModel;
+        if (model.commentDetail) {
+            NSMutableDictionary *detailDic = [NSMutableDictionary new];
+            if ([model.commentDetail.comment_base isKindOfClass:[NSDictionary class]]) {
+                [detailDic addEntriesFromDictionary:model.commentDetail.comment_base];
+                // 添加 评论数等数据
+                if ([model.commentDetail.comment_base[@"action"] isKindOfClass:[NSDictionary class]]) {
+                    [detailDic addEntriesFromDictionary:model.commentDetail.comment_base[@"action"]];
+                }
+            }
+            if (detailDic.count > 0) {
+                // 构建之前的评论详情数据，后面有用到
+                TTCommentDetailModel *dModel = [[TTCommentDetailModel alloc] init];
+                dModel.commentID = [NSString stringWithFormat:@"%@",detailDic[@"id"]];
+                dModel.content = detailDic[@"content"];
+                dModel.createTime = detailDic[@"create_time"];
+                dModel.userDigg = [detailDic[@"user_digg"] boolValue];
+                dModel.diggCount = [detailDic[@"digg_count"] integerValue];
+                dModel.commentCount = [detailDic[@"comment_count"] integerValue];
+                dModel.contentRichSpanJSONString = detailDic[@"content_rich_span"];
+                
+                self.commentDetailModel = dModel;
+            }
             self.user_digg = self.commentDetailModel.userDigg ? 1 : 0;
             self.digg_count = self.commentDetailModel.diggCount;
             [self.detailVC refreshUI];
+        }
+        // 圈子详情数据
+        FHUGCScialGroupDataModel *socialGroupModel = model.social_group;
+        if (socialGroupModel && ![socialGroupModel.hasFollow boolValue]) {
+            // 未关注
+            FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
+            headerModel.socialGroupModel = socialGroupModel;
+//            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
+//            self.social_group_id = socialGroupModel.socialGroupId;
+            [self.detailItems addObject:headerModel];
+            self.detailHeaderModel = headerModel;
+            CGFloat headerHeight = [FHPostDetailHeaderCell heightForData:headerModel];
+            [self.detailHeights addObject:@(headerHeight)];// 高度提前计算
+//            [self.detailController headerInfoChanged];
+            //
+//            FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
+//            [self.items addObject:grayLine];
+//            cellModel.showCommunity = NO;
         }
         // 请求回复列表
         [self requestReplyListData];
@@ -314,8 +362,8 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0) {
-        // 头部详情
-        return 1;
+        // 头部 详情
+        return self.detailItems.count;
     }
     // 回复
     return self.totalComments.count;
@@ -325,7 +373,18 @@
 {
     NSInteger section = indexPath.section;
     if (section == 0) {
-        // 头部详情
+        // 头部 详情
+        NSInteger row = indexPath.row;
+        if (row >= 0 && row < self.detailItems.count) {
+            id data = self.detailItems[row];
+            NSString *identifier = data ? NSStringFromClass([data class]) : @"";
+            if (identifier.length > 0) {
+                FHUGCBaseCell *cell = (FHUGCBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+                cell.baseViewModel = self;
+                [cell refreshWithData:data];
+                return cell;
+            }
+        }
         return [[FHUGCBaseCell alloc] init];
     }
     // reply list
@@ -356,8 +415,13 @@
 {
     NSInteger section = indexPath.section;
     if (section == 0) {
-        // 头部详情
-        return 200;
+        // 头部 详情
+        NSInteger row = indexPath.row;
+        if (row >= 0 && row < self.detailHeights.count) {
+            id dataHeight = self.detailHeights[row];
+            return [dataHeight floatValue];
+        }
+        return CGFLOAT_MIN;
     }
     if (indexPath.row < self.totalCommentLayouts.count) {
         return self.totalCommentLayouts[indexPath.row].cellHeight;

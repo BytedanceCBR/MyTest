@@ -37,6 +37,9 @@
     // Configure the view for the selected state
 }
 
++ (CGFloat)heightForData:(id)data {
+    return 78;
+}
 
 - (void)refreshWithData:(id)data {
     if (![data isKindOfClass:[FHPostDetailHeaderModel class]]) {

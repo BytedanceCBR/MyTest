@@ -1,6 +1,8 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 #import "TTCommentDetailReplyCommentModel.h"
+#import "FHUGCScialGroupModel.h"
+#import "FHFeedUGCContentModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol TTCommentDetailReplyCommentModel <NSObject>
@@ -32,11 +34,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCCommentDetailModel :JSONModel
 
-@property (nonatomic, assign) BOOL banFace;
+@property (nonatomic, copy , nullable) NSString *comment_type;
+@property (nonatomic, copy , nullable) NSString *comment_id;
+@property (nonatomic, strong , nullable) NSDictionary * comment_base ;
+@property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentThumbImageListModel> *thumbImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentLargeImageListModel> *largeImageList;
+
+@end
+
+@interface FHUGCSocialGroupCommentDetailModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
-@property (nonatomic, copy , nullable) NSString *errNo;
-@property (nonatomic, strong , nullable) NSDictionary * data ;
-@property (nonatomic, assign) BOOL stable;
+@property (nonatomic, strong , nullable) FHUGCCommentDetailModel *commentDetail;
+@property (nonatomic, strong , nullable) NSDictionary *logPb ;
+@property (nonatomic, strong , nullable) FHUGCScialGroupDataModel *social_group ;
 @end
 
 
