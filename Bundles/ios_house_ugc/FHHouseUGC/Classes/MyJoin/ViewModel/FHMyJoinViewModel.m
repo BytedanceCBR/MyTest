@@ -13,11 +13,15 @@
 #import "FHUnreadMsgModel.h"
 #import "FHUserTracker.h"
 #import "FHCommunityList.h"
+#import "FHMyJoinAllNeighbourhoodCell.h"
 
 #define cellId @"cellId"
+#define allCellId @"allCellId"
 #define neighbourhoodViewHeight 194
+#define maxFollowItem 6
+#define leaveOffSet 60
 
-@interface FHMyJoinViewModel () <UICollectionViewDelegate, UICollectionViewDataSource, FHMyJoinNeighbourhoodViewDelegate>
+@interface FHMyJoinViewModel () <UICollectionViewDelegate, UICollectionViewDataSource, FHMyJoinNeighbourhoodViewDelegate,UICollectionViewDelegateFlowLayout,UIScrollViewDelegate>
 
 @property(nonatomic, strong) UICollectionView *collectionView;
 @property(nonatomic, weak) FHMyJoinViewController *viewController;
@@ -25,6 +29,7 @@
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, assign) BOOL isShowMessage;
 @property(nonatomic, assign) CGFloat messageViewHeight;
+@property(nonatomic, strong) FHMyJoinAllNeighbourhoodCell *allCell;
 
 @end
 
@@ -46,6 +51,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
 
         [_collectionView registerClass:[FHMyJoinNeighbourhoodCell class] forCellWithReuseIdentifier:cellId];
+        [_collectionView registerClass:[FHMyJoinAllNeighbourhoodCell class] forCellWithReuseIdentifier:allCellId];
         __weak typeof(self) weakSelf = self;
         self.viewController.neighbourhoodView.progressView.refreshViewBlk = ^{
             [weakSelf updateJoinProgressView];
@@ -62,10 +68,22 @@
 
 - (void)requestData {
     [self.dataList removeAllObjects];
-    [self.dataList addObjectsFromArray:[[FHUGCConfig sharedInstance] followList]];
-
+    if([[FHUGCConfig sharedInstance] followList].count > maxFollowItem){
+        NSArray *followList = [[FHUGCConfig sharedInstance] followList];
+        NSArray *subFollowList = [followList subarrayWithRange:NSMakeRange(0, maxFollowItem)];
+        [self.dataList addObjectsFromArray:subFollowList];
+    }else{
+        [self.dataList addObjectsFromArray:[[FHUGCConfig sharedInstance] followList]];
+    }
+    [self addAllItem];
     [self updateJoinProgressView];
     [self.collectionView reloadData];
+}
+
+- (void)addAllItem {
+    FHUGCScialGroupDataModel *model = [[FHUGCScialGroupDataModel alloc] init];
+    model.socialGroupId = @"-1";
+    [self.dataList addObject:model];
 }
 
 - (void)onUnreadMessageChange {
@@ -141,15 +159,32 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    FHMyJoinNeighbourhoodCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
+    NSString *reuseId = cellId;
+    if(indexPath.row == self.dataList.count - 1){
+        reuseId = allCellId;
+    }
+
+    FHUGCBaseCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseId forIndexPath:indexPath];
     if (indexPath.row < self.dataList.count) {
         [cell refreshWithData:self.dataList[indexPath.row]];
     }
+    
+    if(indexPath.row == self.dataList.count - 1){
+        self.allCell = (FHMyJoinAllNeighbourhoodCell *)cell;
+    }
+    
     return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
+    
+    //最后一个为全部
+    if(indexPath.row == self.dataList.count - 1){
+        [self gotoMore];
+        return;
+    }
+    
     FHUGCScialGroupDataModel *model = self.dataList[indexPath.row];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"community_id"] = model.socialGroupId;
@@ -163,17 +198,13 @@
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
-//埋点
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-//    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
-//    if ([self.houseShowCache valueForKey:tempKey]) {
-//        return;
-//    }
-//    [self.houseShowCache setValue:@(YES) forKey:tempKey];
-//    // 添加埋点
-//    if (self.displayCellBlk) {
-//        self.displayCellBlk(indexPath.row);
-//    }
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    //最后一个为全部
+    if(indexPath.row == self.dataList.count - 1){
+        return CGSizeMake(32, 128);
+    }
+    
+    return CGSizeMake(120, 128);
 }
 
 - (void)trackMore {
@@ -182,6 +213,24 @@
     tracerDict[@"page_type"] = @"my_join_list";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     TRACK_EVENT(@"click_more", tracerDict);
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if(scrollView == self.collectionView){
+        CGFloat diff = scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width - scrollView.contentSize.width;
+        [self.allCell setShowText:(diff > leaveOffSet)];
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if(scrollView == self.collectionView){
+        CGFloat diff = scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width - scrollView.contentSize.width;
+        if(diff > leaveOffSet){
+            [self gotoMore];
+        }
+    }
 }
 
 #pragma mark - FHMyJoinNeighbourhoodViewDelegate
