@@ -228,8 +228,18 @@
     
     if(self.houseType == FHHouseTypeSecondHandHouse){
         param[CHANNEL_ID] = CHANNEL_ID_CIRCEL_SEARCH;
+        if (query.length > 0) {
+            query = [NSString stringWithFormat:@"%@&%@=%@",query,CHANNEL_ID,CHANNEL_ID_CIRCEL_SEARCH];
+        }else {
+            query = [NSString stringWithFormat:@"%@=%@",CHANNEL_ID,CHANNEL_ID_CIRCEL_SEARCH];
+        }
         self.requestTask = [self requsetSecondHouse:query param:param isHead:isHead];
     }else if (self.houseType == FHHouseTypeRentHouse){
+        if (query.length > 0) {
+            query = [NSString stringWithFormat:@"%@&%@=%@",query,CHANNEL_ID,CHANNEL_ID_MAP_FIND_RENT];
+        }else {
+            query = [NSString stringWithFormat:@"%@=%@",CHANNEL_ID,CHANNEL_ID_MAP_FIND_RENT];
+        }
         self.requestTask = [self requsetRentHouse:query param:param isHead:isHead];
     }
     if (!isHead) {

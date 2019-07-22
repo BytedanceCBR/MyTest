@@ -421,6 +421,19 @@
         }else {
             query = [NSString stringWithFormat:@"%@=%@",CHANNEL_ID,CHANNEL_ID_SUBWAY_HOUSE_HOUSE_LIST];
         }
+    }else if (self.currentBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
+
+        if (query.length > 0) {
+            query = [NSString stringWithFormat:@"%@&%@=%@",query,CHANNEL_ID,CHANNEL_ID_CIRCEL_SEARCH];
+        }else {
+            query = [NSString stringWithFormat:@"%@=%@",CHANNEL_ID,CHANNEL_ID_CIRCEL_SEARCH];
+        }
+    } else {
+        if (query.length > 0) {
+            query = [NSString stringWithFormat:@"%@&%@=%@",query,CHANNEL_ID,CHANNEL_ID_MAP_FIND_HOUSE];
+        }else {
+            query = [NSString stringWithFormat:@"%@=%@",CHANNEL_ID,CHANNEL_ID_MAP_FIND_HOUSE];
+        }
     }
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.houseList.count needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
@@ -537,7 +550,11 @@
         }
         return ;
     }
-    
+    if (query.length > 0) {
+        query = [NSString stringWithFormat:@"%@&%@=%@",query,CHANNEL_ID,CHANNEL_ID_MAP_FIND_RENT];
+    }else {
+        query = [NSString stringWithFormat:@"%@=%@",CHANNEL_ID,CHANNEL_ID_MAP_FIND_RENT];
+    }
     __weak typeof(self) wself = self;
     /*
      +(TTHttpTask *)searchRent:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam completion:(void(^_Nullable)(FHHouseRentModel *model , NSError *error))completion
