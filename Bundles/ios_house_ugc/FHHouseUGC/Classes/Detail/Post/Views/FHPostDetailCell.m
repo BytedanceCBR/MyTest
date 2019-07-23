@@ -78,6 +78,7 @@
     };
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    _contentLabel.numberOfLines = 0;
     [self.contentView addSubview:_contentLabel];
     
     self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:self.imageCount];
@@ -118,6 +119,7 @@
         make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        make.height.mas_equalTo(0);
     }];
     
     [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -163,7 +165,7 @@
             make.top.mas_equalTo(self.positionView.mas_bottom).offset(20);
             make.left.mas_equalTo(self.contentView).offset(leftMargin);
             make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-            make.bottom.mas_equalTo(self.contentView).offset(0);
+//            make.bottom.mas_equalTo(self.contentView).offset(0);
             make.height.mas_equalTo(0.5);
         }];
     } else {
@@ -188,7 +190,7 @@
             make.top.mas_equalTo(lastView.mas_bottom).offset(topOffset);
             make.left.mas_equalTo(self.contentView).offset(leftMargin);
             make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-            make.bottom.mas_equalTo(self.contentView).offset(0);
+//            make.bottom.mas_equalTo(self.contentView).offset(0);
             make.height.mas_equalTo(0.5);
         }];
     }
@@ -240,7 +242,10 @@
     self.userInfoView.descLabel.attributedText = cellModel.desc;
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     // 内容
-    [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:kFHMaxLines];
+    [self.contentLabel setText:cellModel.contentAStr];
+    [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(cellModel.contentHeight);
+    }];
     // 图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     if(self.imageCount == 1) {
@@ -263,7 +268,8 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = topMargin + userInfoViewHeight + 10 + cellModel.contentHeight + 20;
+        
+        CGFloat height = topMargin + userInfoViewHeight + 10 + cellModel.contentHeight + 20.5;
         
         if(isEmptyString(cellModel.content)){
             height -= 10;

@@ -29,6 +29,7 @@
 #import "FRApiModel.h"
 #import "FHUGCDetailGrayLineCell.h"
 #import "FHPostDetailCell.h"
+#import "FHUGCCellHelper.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,TTCommentDetailCellDelegate>
 
@@ -191,7 +192,7 @@
                 feedContent.userInfo = userInfoModel;
             }
             cellModel = [FHFeedUGCCellModel modelFromFeedContent:feedContent];
-            //
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:0];
             [self.detailVC refreshUI];
         }
         // 圈子详情数据
