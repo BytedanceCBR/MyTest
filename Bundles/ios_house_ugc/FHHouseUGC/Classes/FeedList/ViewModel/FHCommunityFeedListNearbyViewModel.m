@@ -330,8 +330,14 @@
         //根据url跳转
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-    }else{
-        //什么都不做
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
+        // 评论
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
+        // 问题 回答
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
     }
 }
 

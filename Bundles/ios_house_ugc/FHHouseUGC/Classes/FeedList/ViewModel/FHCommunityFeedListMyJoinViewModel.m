@@ -363,6 +363,14 @@
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
         [self jumpToPostDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
+        // 评论
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
+        // 问题 回答
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
     }
 }
 
