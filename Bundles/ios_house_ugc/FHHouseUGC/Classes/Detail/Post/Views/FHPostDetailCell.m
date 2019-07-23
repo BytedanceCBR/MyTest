@@ -111,6 +111,9 @@
     
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCommunityDetail)];
     [self.positionView addGestureRecognizer:singleTap];
+    
+    UITapGestureRecognizer* singleOriginTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoOriginDetail)];
+    [self.originView addGestureRecognizer:singleOriginTap];
 }
 
 - (void)setupConstraints {
@@ -220,6 +223,7 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         NSDictionary *log_pb = cellModel.tracerDic[@"log_pb"];
         dict[@"community_id"] = cellModel.community.socialGroupId;
+        // add by zyk 要改
         dict[@"tracer"] = @{@"enter_from":@"feed_detail",
                             @"enter_type":@"click",
                             @"log_pb":log_pb ?: @"be_null"};
@@ -227,6 +231,20 @@
         // 跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
+}
+
+- (void)gotoOriginDetail {
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
+    if (cellModel.cellType == FHUGCFeedListCellTypeArticleComment) {
+        // 评论详情
+        if (cellModel.originItemModel.openUrl.length > 0) {
+            NSURL *openUrl = [NSURL URLWithString:cellModel.originItemModel.openUrl];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        }
+    } else if (cellModel.cellType == FHUGCFeedListCellTypeArticleComment) {
+        // 问答详情
+        //
     }
 }
 
