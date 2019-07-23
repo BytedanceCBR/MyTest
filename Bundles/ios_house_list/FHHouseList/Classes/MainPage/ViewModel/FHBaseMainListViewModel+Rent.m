@@ -13,6 +13,7 @@
 #import <FHHouseBase/FHBaseViewController.h>
 #import <FHHouseBase/FHEnvContext.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 @implementation FHBaseMainListViewModel (Rent)
 
@@ -22,8 +23,8 @@
     if (!isHead) {
         offset = self.houseList.count;
     }
-    
-    return   [FHMainApi searchRent:query params:nil offset:offset searchId:self.searchId sugParam:nil completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
+    NSDictionary *params = @{CHANNEL_ID:CHANNEL_ID_SEARCH_RENT_WITH_BANNER};
+    return   [FHMainApi searchRent:query params:params offset:offset searchId:self.searchId sugParam:nil completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
         if (completion) {
             completion(model,error);
         }

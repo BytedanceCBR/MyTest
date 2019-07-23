@@ -14,6 +14,7 @@
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import "FHJSONHTTPRequestSerializer.h"
 #import "FHEnvContext.h"
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -160,7 +161,8 @@
     if (searchId) {
         param[@"searchId"] = searchId;
     }
-    
+    param[CHANNEL_ID] = CHANNEL_ID_SAME_NEIGHBORHOOD_RENT;
+
     if (![query containsString:@"house_type"] && !queryParam[@"house_type"]) {
         param[@"house_type"] = @(FHHouseTypeRentHouse);
     }

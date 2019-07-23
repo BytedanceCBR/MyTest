@@ -48,6 +48,7 @@
 #import "FHHouseListAPI.h"
 #import "FHCommuteManager.h"
 #import "FHSuggestionRealHouseTopCell.h"
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -348,7 +349,12 @@ extern NSString *const INSTANT_DATA_KEY;
         }];
         
     }else{
-        
+        NSString *channelId = _mainListPage ? CHANNEL_ID_SEARCH_HOUSE_WITH_BANNER : CHANNEL_ID_SEARCH_HOUSE;
+        if ([query isKindOfClass:[NSString class]] && query.length > 0) {
+            query = [query stringByAppendingString:[NSString stringWithFormat:@"&%@=%@",CHANNEL_ID,channelId]];
+        }else{
+            query = [NSString stringWithFormat:@"%@=%@",CHANNEL_ID,channelId];
+        }
         self.requestTask = [self loadData:isHead fromRecommend:self.isFromRecommend query:query completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
             [wself processData:model error:error isRefresh:isHead];
         }];

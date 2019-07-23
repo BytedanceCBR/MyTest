@@ -20,6 +20,7 @@
 #import "FHHouseFindResultViewController.h"
 #import <FHUtils.h>
 #import <FHEnvContext.h>
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 #define kBaseCellId @"kBaseCellId"
 #define kBaseErrorCellId @"kErrorCell"
@@ -248,6 +249,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     NSMutableDictionary *paramsRequest = [NSMutableDictionary new];
     [paramsRequest setValue:@(self.houseType) forKey:@"house_type"];
     [paramsRequest setValue:@(50) forKey:@"count"];
+    paramsRequest[CHANNEL_ID] = CHANNEL_ID_HELP_ME_FIND_HOUSE;
+    
     [self.currentViewController startLoading];
     
     self.houseList = [NSMutableArray array];
