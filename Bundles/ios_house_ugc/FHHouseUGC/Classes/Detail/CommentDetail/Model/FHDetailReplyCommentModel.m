@@ -46,7 +46,7 @@
 {
     NSDictionary *dict = @{
                            @"comment_id": @"id",
-                           @"thumbImageList": @"thumb_image_list",
+                           @"thumbImageList": @"image_list",
                            @"largeImageList": @"large_image_list",
                            @"originGroup" : @"origin_group",
                            };

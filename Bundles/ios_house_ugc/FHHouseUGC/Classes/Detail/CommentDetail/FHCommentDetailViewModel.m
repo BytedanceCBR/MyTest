@@ -148,6 +148,13 @@
                 commentBase = [[FHFeedContentRawDataCommentBaseModel alloc] initWithDictionary:model.commentDetail.comment_base error:nil];
                 if ([model.commentDetail.comment_base[@"user"] isKindOfClass:[NSDictionary class]]) {
                     userModel = [[FRCommonUserStructModel alloc] initWithDictionary:model.commentDetail.comment_base[@"user"] error:nil];               }
+                // 图片
+                if ([model.commentDetail.comment_base[@"image_list"] isKindOfClass:[NSArray class]]) {
+                    model.commentDetail.thumbImageList = [FHFeedContentImageListModel arrayOfModelsFromDictionaries:model.commentDetail.comment_base[@"image_list"] error:nil];
+                }
+                if ([model.commentDetail.comment_base[@"large_image_list"] isKindOfClass:[NSArray class]]) {
+                    model.commentDetail.largeImageList = [FHFeedContentImageListModel arrayOfModelsFromDictionaries:model.commentDetail.comment_base[@"large_image_list"] error:nil];
+                }
             }
             if (detailDic.count > 0) {
                 // 构建之前的评论详情数据，后面有用到
@@ -173,7 +180,6 @@
             feedContent.imageList = model.commentDetail.thumbImageList;
             feedContent.largeImageList = model.commentDetail.largeImageList;
             feedContent.rawData = rawData;
-            feedContent.community = nil;// 记得修改
             feedContent.groupId = self.comment_id;// 评论id
             feedContent.cellType = [NSString stringWithFormat:@"%ld",FHUGCFeedListCellTypeArticleComment];
             if (userModel) {
@@ -206,7 +212,15 @@
             FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
             [self.detailItems addObject:grayLine];
             [self.detailHeights addObject:@(5)];// 高度提前计算
-//            cellModel.showCommunity = NO;
+            cellModel.showCommunity = NO;
+        } else if (socialGroupModel && socialGroupModel.socialGroupId.length > 0 && socialGroupModel.socialGroupName.length > 0) {
+            // 挽救一下 balabala
+            cellModel.community = [[FHFeedUGCCellCommunityModel alloc] init];
+            cellModel.community.name = socialGroupModel.socialGroupName;
+            cellModel.community.socialGroupId = socialGroupModel.socialGroupId;
+            cellModel.showCommunity = YES;
+        } else {
+            cellModel.showCommunity = NO;
         }
         
         // 更新点赞以及评论数
@@ -217,6 +231,7 @@
             [self.detailVC headerInfoChanged];
             [self.detailVC refreshUI];
         }
+        [self.tableView reloadData];
         
         // 请求回复列表
         [self requestReplyListData];
@@ -285,6 +300,7 @@
         // hasmore = no
         self.hasMore = NO;
     }
+    self.commentAllFooter.hidden = NO;
     [self updateTableViewWithMoreData:self.hasMore];
 }
 
@@ -309,9 +325,7 @@
 - (void)commentCountChanged {
     if (self.commentAllFooter == nil) {
         self.commentAllFooter = [[FHDetailCommentAllFooter alloc] initWithFrame:CGRectMake(0, 0, self.detailVC.view.width, 52)];
-//        UIView *bottomSepView = [[UIView alloc] initWithFrame:CGRectMake(20, 0, self.detailVC.view.width - 40, 0.5)];
-//        bottomSepView.backgroundColor = [UIColor themeGray6];
-//        [self.commentAllFooter addSubview:bottomSepView];
+        self.commentAllFooter.hidden = YES;
     }
     // 全部评论
     NSString *commentStr = @"全部评论";
