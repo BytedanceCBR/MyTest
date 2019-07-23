@@ -460,11 +460,7 @@
         if(wself.feedListController.tableView.contentOffset.y < 0){
             wself.feedListController.tableView.contentOffset = CGPointMake(0, 0);
         }
-        
-        UIEdgeInsets edgeInsets = wself.feedListController.tableView.contentInset;
-        edgeInsets.top = 0;
-        wself.feedListController.tableView.contentInset = edgeInsets;
-        
+        wself.feedListController.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     }completion:^(BOOL finished) {
         wself.isRefreshing = NO;
         [wself.headerView stopRefresh];
