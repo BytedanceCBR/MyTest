@@ -137,6 +137,7 @@
         // 详情data
         FHFeedUGCCellModel *cellModel = nil;
         if (model.commentDetail) {
+            NSString *create_time = @"0";
             NSMutableDictionary *detailDic = [NSMutableDictionary new];
             FHFeedContentRawDataCommentBaseModel *commentBase = nil;
             FRCommonUserStructModel *userModel = nil;
@@ -155,6 +156,10 @@
                 }
                 if ([model.commentDetail.comment_base[@"large_image_list"] isKindOfClass:[NSArray class]]) {
                     model.commentDetail.largeImageList = [FHFeedContentImageListModel arrayOfModelsFromDictionaries:model.commentDetail.comment_base[@"large_image_list"] error:nil];
+                }
+                // create_time
+                if (model.commentDetail.comment_base[@"create_time"]) {
+                    create_time = [NSString stringWithFormat:@"%lld",[(id)model.commentDetail.comment_base[@"create_time"] longLongValue]];
                 }
             }
             if (detailDic.count > 0) {
@@ -183,6 +188,7 @@
             feedContent.rawData = rawData;
             feedContent.groupId = self.comment_id;// 评论id
             feedContent.cellType = [NSString stringWithFormat:@"%ld",FHUGCFeedListCellTypeArticleComment];
+            feedContent.publishTime = create_time;
             if (userModel) {
                 FHFeedContentUserInfoModel *userInfoModel = [[FHFeedContentUserInfoModel alloc] init];
                 userInfoModel.name = userModel.info.name;
