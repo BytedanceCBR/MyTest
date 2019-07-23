@@ -155,6 +155,7 @@
     self.followButton = [[FHUGCFollowButton alloc] init];
 
     [self.contentView addSubview:_followButton];
+    [self.contentView addSubview:self.chooseButton];
 
     [self setupConstraints];
 }
@@ -190,13 +191,16 @@
 
     [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(58);
-        make.right.mas_equalTo(-20);
+        make.right.mas_equalTo(self.contentView).offset(-20);
         make.height.mas_equalTo(24);
-        make.centerY.mas_equalTo(self);
+        make.centerY.mas_equalTo(self.contentView);
     }];
 
     [self.chooseButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.followButton);
+        make.width.mas_equalTo(58);
+        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.height.mas_equalTo(24);
+        make.centerY.mas_equalTo(self.contentView);
     }];
 }
 
@@ -210,7 +214,6 @@
 
 - (UIButton *)chooseButton {
     if (!_chooseButton) {
-        _chooseButton = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero style:FHUGCFollowButtonStyleBorder];
         _chooseButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _chooseButton.layer.cornerRadius = 4;
         _chooseButton.layer.borderColor = [UIColor themeRed1].CGColor;

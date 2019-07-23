@@ -9,6 +9,7 @@
 #import "FHUGCCommunityDistrictTabView.h"
 #import "FHUGCCommunityListViewModel.h"
 #import "FHUGCScialGroupModel.h"
+#import "FHUserTracker.h"
 
 @interface FHUGCCommunityListViewController ()
 @property(nonatomic, strong) UIView *loadingView;
@@ -55,6 +56,8 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    [self.viewModel viewWillDidLoad];
+    [self.viewModel addEnterCategoryLog];
 }
 
 - (void)initNavBar {
@@ -68,6 +71,8 @@
     self.searchBar.searchTint = @"搜索小区圈";
     WeakSelf;
     self.searchBar.searchClickBlk = ^() {
+        StrongSelf;
+        [wself addCickSearchLog];
         NSString *routeUrl = @"sslocal://ugc_search_list";
         NSURL *openUrl = [NSURL URLWithString:routeUrl];
         NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
@@ -75,6 +80,11 @@
         [chooseDelegateTable addObject:self.chooseDelegate];
         paramDic[@"choose_delegate"] = chooseDelegateTable;
         paramDic[@"action_type"] = @(self.listType);
+        
+        NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
+        searchTracerDict[@"element_type"] = @"all_community_list";
+        searchTracerDict[@"enter_from"] = @"all_community_list";
+        paramDic[@"tracer"] = searchTracerDict;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:paramDic];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     };
@@ -125,6 +135,7 @@
            districtTitleLabel:self.districtListTitleLabel
                    controller:self
                      listType:self.listType];
+    self.viewModel.tracerDict = self.tracerDict;
 }
 
 - (void)retryLoadData {
@@ -140,22 +151,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.viewModel viewWillDisappear];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.viewModel viewWillAppear];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [self.viewModel viewDidAppear];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    [self.viewModel viewDidDisappear];
+    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
 }
 
 - (void)startLoading {
@@ -239,6 +236,14 @@
         [self.view addSubview:_loadingView];
     }
     return _loadingView;
+}
+
+-(void)addCickSearchLog{
+    NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+    reportParams[@"page_type"] = @"all_community_list";
+    reportParams[@"origin_from"] = @"all_community_list";
+    reportParams[@"origin_search_id"] = @"be_null";
+    [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
 }
 
 @end

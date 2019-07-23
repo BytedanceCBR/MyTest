@@ -297,8 +297,9 @@
         NSMutableDictionary *tracerDic = @{}.mutableCopy;
         tracerDic[@"card_type"] = @"left_pic";
         tracerDic[@"page_type"] = @"community_search";
-        tracerDic[@"enter_from"] = @"neighborhood_tab";
+        tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
         tracerDic[@"rank"] = @(row);
+        tracerDic[@"click_position"] = @"join_like";
         tracerDic[@"log_pb"] = data.logPb ?: @"be_null";
         cell.tracerDic = tracerDic;
         // 刷新数据
@@ -356,19 +357,21 @@
     if (row >= 0 && row < self.items.count) {
         // 键盘是否显示
         self.isKeybordShow = self.keyboardVisible;
-        //
+        
         FHUGCScialGroupDataModel *data = self.items[row];
-        [self addCommunityClickLog:data rank:row];
-
         if (self.listType == FHCommunityListTypeChoose) {
+            [self addSelectLog:data rank:row];
             [self onItemSelected:data];
             return;
         }
 
+        //点击埋点
+        [self addCommunityClickLog:data rank:row];
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = data.socialGroupId;
         dict[@"tracer"] = @{@"enter_from":@"community_search_show",
                             @"enter_type":@"click",
+                            @"rank":@(row),
                             @"log_pb":data.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         // 跳转到圈子详情页
@@ -405,7 +408,7 @@
     tracerDic[@"associate_cnt"] = @(self.associatedCount);
     tracerDic[@"associate_type"] = @"community_group";
     tracerDic[@"community_cnt"] = @(wordList.count);
-    tracerDic[@"element_type"] = @"community_search";
+    tracerDic[@"element_type"] = self.tracerDict[@"element_type"] ?: @"be_null";
     tracerDic[@"log_pb"] = logPb;
     [FHUserTracker writeEvent:@"associate_community_show" params:tracerDic];
 }
@@ -437,11 +440,22 @@
     tracerDic[@"associate_cnt"] = @(self.associatedCount);
     tracerDic[@"associate_type"] = @"community_group";
     tracerDic[@"community_cnt"] = @(wordList.count);
-    tracerDic[@"element_type"] = @"community_search";
+    tracerDic[@"element_type"] = self.tracerDict[@"element_type"] ?: @"be_null";
     tracerDic[@"word_id"] = model.socialGroupId;
     tracerDic[@"rank"] = @(rank);
     tracerDic[@"log_pb"] = model.logPb;
     [FHUserTracker writeEvent:@"associate_community_click" params:tracerDic];
+}
+
+-(void)addSelectLog:(FHUGCScialGroupDataModel *)model rank:(NSInteger)rank{
+    NSMutableDictionary *tracerDic = @{}.mutableCopy;
+    tracerDic[@"card_type"] = @"left_pic";
+    tracerDic[@"page_type"] = @"community_search";
+    tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    tracerDic[@"rank"] = @(rank);
+    tracerDic[@"log_pb"] = model.logPb ?: @"be_null";
+    tracerDic[@"click_position"] = @"select_like";
+    [FHUserTracker writeEvent:@"click_join" params:tracerDic];
 }
 
 @end

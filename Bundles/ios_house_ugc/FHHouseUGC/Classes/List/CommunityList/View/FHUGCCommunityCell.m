@@ -5,7 +5,6 @@
 #import "FHUGCCommunityCell.h"
 #import "FHUGCScialGroupModel.h"
 #import "BDWebImage.h"
-#import "FHUGCFollowButton.h"
 #import "UIViewAdditions.h"
 
 @interface FHUGCCommunityCell ()
@@ -14,7 +13,6 @@
 @property(nonatomic, strong) UILabel *descLabel; //帖子数与关注数
 @property(nonatomic, strong) UIImageView *icon; //头像
 @property(nonatomic, strong) UILabel *suggestionLabel; //推荐列表下推荐理由
-@property(nonatomic, strong) FHUGCFollowButton *followButton;//关注button
 @property(nonatomic, strong) UIButton *chooseButton;//选择模式下选择button
 
 @property(nonatomic, strong) UIView *infoContainer;//名字，帖子数，推荐理由等view的父view 用于辅助布局
@@ -178,7 +176,6 @@
 
 - (UIButton *)chooseButton {
     if (!_chooseButton) {
-        _chooseButton = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero style:FHUGCFollowButtonStyleBorder];
         _chooseButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _chooseButton.layer.cornerRadius = 4;
         _chooseButton.layer.borderColor = [UIColor themeRed1].CGColor;

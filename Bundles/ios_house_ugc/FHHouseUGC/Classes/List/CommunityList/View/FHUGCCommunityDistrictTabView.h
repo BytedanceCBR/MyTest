@@ -5,10 +5,15 @@
 #import <Foundation/Foundation.h>
 #import "FHUGCCommunityDistrictTabCell.h"
 
+typedef NS_ENUM(NSInteger,FHUGCCommunityDistrictTabSelectType){
+    FHUGCCommunityDistrictTabSelectTypeClick,
+    FHUGCCommunityDistrictTabSelectTypeDefault,
+};
+
 @protocol FHUGCCommunityCategoryViewDelegate<NSObject>
 
 @optional
-- (void)onCategorySelect:(FHUGCCommunityDistrictTabModel *)select before:(FHUGCCommunityDistrictTabModel *)before;
+- (void)onCategorySelect:(FHUGCCommunityDistrictTabModel *)select before:(FHUGCCommunityDistrictTabModel *)before selectType:(FHUGCCommunityDistrictTabSelectType)selectType;
 
 @end
 
@@ -18,5 +23,5 @@
 //默认全部为非选中状态,
 - (void)refreshWithCategories:(NSArray<FHUGCCommunityDistrictTabModel *> *)categories;
 
-- (void)select:(NSInteger)categoryId;
+- (void)select:(NSInteger)categoryId selectType:(FHUGCCommunityDistrictTabSelectType)selectType;
 @end
