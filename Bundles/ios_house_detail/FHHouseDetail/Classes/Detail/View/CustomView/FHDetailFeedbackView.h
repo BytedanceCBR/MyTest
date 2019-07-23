@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, weak) UINavigationController *navVC;
 @property (nonatomic, strong) FHHouseDetailBaseViewModel *viewModel;
+@property(nonatomic, copy) NSString *realtorId;
 
 @end
 

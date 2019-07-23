@@ -553,6 +553,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if(success && [wself.phoneCallViewModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
             FHHouseDetailViewController *vc = (FHHouseDetailViewController *)wself.phoneCallViewModel.belongsVC;
             vc.isPhoneCallShow = YES;
+            vc.phoneCallRealtorId = contactConfig.realtorId;
         }
     }];
     

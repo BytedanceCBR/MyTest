@@ -187,6 +187,7 @@
             if(success && [model.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
                 FHHouseDetailViewController *vc = (FHHouseDetailViewController *)model.belongsVC;
                 vc.isPhoneCallShow = YES;
+                vc.phoneCallRealtorId = contactConfig.realtorId;
             }
         }];
 

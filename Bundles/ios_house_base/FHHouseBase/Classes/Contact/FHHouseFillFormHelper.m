@@ -192,6 +192,7 @@ extern NSString *const kFHToastCountKey;
         if(success && [configModel.topViewController isKindOfClass:[FHHouseDetailViewController class]]){
             FHHouseDetailViewController *vc = (FHHouseDetailViewController *)configModel.topViewController;
             vc.isPhoneCallShow = YES;
+            vc.phoneCallRealtorId = contactConfig.realtorId;
         }
     }];
 }

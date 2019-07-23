@@ -18,6 +18,7 @@
 #import "FHSingleImageInfoCellModel.h"
 #import "FHHomeHouseModel.h"
 #import "FHHouseRecommendReasonView.h"
+#import "UIButton+TTAdditions.h"
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -56,6 +57,7 @@
 @property(nonatomic, strong) UIImageView *fakeImageView;
 @property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
+@property(nonatomic, strong) UIButton *closeBtn; //x按钮
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 
@@ -237,6 +239,16 @@
     return _recReasonView;
 }
 
+- (UIButton *)closeBtn {
+    if (!_closeBtn) {
+        _closeBtn = [[UIButton alloc] init];
+        [_closeBtn setImage:[UIImage imageNamed:@"small_icon_close"] forState:UIControlStateNormal];
+        [_closeBtn addTarget:self action:@selector(dislike) forControlEvents:UIControlEventTouchUpInside];
+        _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-3, -3, -3, -3);
+    }
+    return _closeBtn;
+}
+
 -(CGFloat)contentMaxWidth
 {
     return  SCREEN_WIDTH - 170; //根据UI图 直接计算出来
@@ -390,7 +402,6 @@
 //        layout.marginBottom = YGPointValue(0);
     }];
     
-    
     [_rightInfoView addSubview:self.recReasonView];
     [_recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isIncludedInLayout = NO;
@@ -528,6 +539,7 @@
     [_priceBgView addSubview:self.priceLabel];
 //    [_priceBgView addSubview:self.originPriceLabel];
     [_priceBgView addSubview:self.pricePerSqmLabel];
+    [_priceBgView addSubview:self.closeBtn];
     [_priceBgView setBackgroundColor:[UIColor whiteColor]];
     [_priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -566,6 +578,13 @@
         layout.isEnabled = YES;
         layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
         //        layout.marginBottom = YGPointValue(0);
+    }];
+    
+    [_closeBtn configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.marginTop = YGPointValue(8);
+        layout.width = YGPointValue(8);
+        layout.height = YGPointValue(8);
     }];
 //
     [_rightInfoView addSubview:self.recReasonView];
@@ -1220,6 +1239,10 @@
     [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, originPrice.length)];
     [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray3] range:NSMakeRange(0, originPrice.length)];
     return attri;
+}
+
+- (void)dislike {
+    NSLog(@"dislike");
 }
 
 

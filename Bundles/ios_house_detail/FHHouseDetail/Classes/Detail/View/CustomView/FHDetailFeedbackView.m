@@ -42,7 +42,6 @@
 @property(nonatomic, strong) YYLabel *reportLabel;
 @property(nonatomic, strong) UIView *bottomView;
 
-@property(nonatomic, copy) NSString *realtorId;
 @property(nonatomic, copy) NSString *imprId;
 @property(nonatomic, copy) NSString *searchId;
 
@@ -238,7 +237,7 @@
     id data = self.viewModel.detailData;
     if([data isKindOfClass:[FHDetailOldModel class]]){
         FHDetailOldModel *model = (FHDetailOldModel *)data;
-        self.realtorId = model.data.contact.realtorId;
+
         if(model.data.logPb[@"impr_id"]){
             self.imprId = model.data.logPb[@"impr_id"];
         }

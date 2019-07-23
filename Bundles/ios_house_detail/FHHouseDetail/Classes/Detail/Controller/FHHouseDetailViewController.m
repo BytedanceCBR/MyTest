@@ -553,47 +553,49 @@
         self.isPhoneCallPickUp = NO;
         self.isPhoneCallShow = NO;
         [self addFeedBackView];
+        self.phoneCallRealtorId = nil;
     }
 }
 
 - (BOOL)isShowFeedbackView {
     //满足这两个条件，在回来时候显示反馈弹窗
-    if(self.isPhoneCallPickUp && self.isPhoneCallShow && (self.viewModel.houseType == FHHouseTypeSecondHandHouse)){
-        NSString *houseId = self.viewModel.houseId;
-        NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
-        NSString *cacheKey = @"";
-
-        if(!isEmptyString(houseId)){
-            cacheKey = [cacheKey stringByAppendingString:houseId];
-        }
-
-        if(!isEmptyString(deviceId)){
-            cacheKey = [cacheKey stringByAppendingString:@"_"];
-            cacheKey = [cacheKey stringByAppendingString:deviceId];
-        }
-
-        if(!isEmptyString(cacheKey)){
-            NSTimeInterval dayStartTime = [[self dayStart:[NSDate date]] timeIntervalSince1970];
-            YYCache *detailFeedbackCache = [[FHEnvContext sharedInstance].generalBizConfig detailFeedbackCache];
-            if([detailFeedbackCache containsObjectForKey:cacheKey]){
-                //已经显示过该房源
-                id value = [detailFeedbackCache objectForKey:cacheKey];
-                NSTimeInterval lastDayStartTime = [value doubleValue];
-                //超过一天清空所有记录，再次显示
-                if(dayStartTime - lastDayStartTime >= 24 * 60 * 60){
-                    [detailFeedbackCache removeAllObjects];
-                    [detailFeedbackCache setObject:@(dayStartTime) forKey:cacheKey];
-                    return YES;
-                }
-            }else{
-                //未显示过
-                [detailFeedbackCache setObject:@(dayStartTime) forKey:cacheKey];
-                return YES;
-            }
-        }
-    }
-
-    return NO;
+//    if(self.isPhoneCallPickUp && self.isPhoneCallShow && self.phoneCallRealtorId && (self.viewModel.houseType == FHHouseTypeSecondHandHouse)){
+//        NSString *houseId = self.viewModel.houseId;
+//        NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
+//        NSString *cacheKey = @"";
+//
+//        if(!isEmptyString(houseId)){
+//            cacheKey = [cacheKey stringByAppendingString:houseId];
+//        }
+//
+//        if(!isEmptyString(deviceId)){
+//            cacheKey = [cacheKey stringByAppendingString:@"_"];
+//            cacheKey = [cacheKey stringByAppendingString:deviceId];
+//        }
+//
+//        if(!isEmptyString(cacheKey)){
+//            NSTimeInterval dayStartTime = [[self dayStart:[NSDate date]] timeIntervalSince1970];
+//            YYCache *detailFeedbackCache = [[FHEnvContext sharedInstance].generalBizConfig detailFeedbackCache];
+//            if([detailFeedbackCache containsObjectForKey:cacheKey]){
+//                //已经显示过该房源
+//                id value = [detailFeedbackCache objectForKey:cacheKey];
+//                NSTimeInterval lastDayStartTime = [value doubleValue];
+//                //超过一天清空所有记录，再次显示
+//                if(dayStartTime - lastDayStartTime >= 24 * 60 * 60){
+//                    [detailFeedbackCache removeAllObjects];
+//                    [detailFeedbackCache setObject:@(dayStartTime) forKey:cacheKey];
+//                    return YES;
+//                }
+//            }else{
+//                //未显示过
+//                [detailFeedbackCache setObject:@(dayStartTime) forKey:cacheKey];
+//                return YES;
+//            }
+//        }
+//    }
+//
+//    return NO;
+    return YES;
 }
 
 - (NSDate *)dayStart:(NSDate *)date {
@@ -605,6 +607,7 @@
 }
 
 - (void)addFeedBackView {
+    self.feedbackView.realtorId = self.phoneCallRealtorId;
     [self.feedbackView show:self.view];
 }
 
