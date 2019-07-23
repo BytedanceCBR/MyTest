@@ -309,9 +309,9 @@
 - (void)commentCountChanged {
     if (self.commentAllFooter == nil) {
         self.commentAllFooter = [[FHDetailCommentAllFooter alloc] initWithFrame:CGRectMake(0, 0, self.detailVC.view.width, 52)];
-        UIView *bottomSepView = [[UIView alloc] initWithFrame:CGRectMake(20, 0, self.detailVC.view.width - 40, 0.5)];
-        bottomSepView.backgroundColor = [UIColor themeGray6];
-        [self.commentAllFooter addSubview:bottomSepView];
+//        UIView *bottomSepView = [[UIView alloc] initWithFrame:CGRectMake(20, 0, self.detailVC.view.width - 40, 0.5)];
+//        bottomSepView.backgroundColor = [UIColor themeGray6];
+//        [self.commentAllFooter addSubview:bottomSepView];
     }
     // 全部评论
     NSString *commentStr = @"全部评论";

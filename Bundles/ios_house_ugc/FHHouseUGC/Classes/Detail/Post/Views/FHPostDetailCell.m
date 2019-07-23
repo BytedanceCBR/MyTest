@@ -13,10 +13,17 @@
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
 #import "FHCommentBaseDetailViewModel.h"
+#import "FHUGCCellOriginItemView.h"
 
 #define leftMargin 20
 #define rightMargin 20
 #define kFHMaxLines 0
+
+#define userInfoViewHeight 40
+#define bottomViewHeight 49
+#define guideViewHeight 17
+#define topMargin 20
+#define originViewHeight 80
 
 @interface FHPostDetailCell ()
 
@@ -28,6 +35,8 @@
 @property(nonatomic ,strong) UILabel *position;
 @property(nonatomic ,strong) UIView *positionView;
 @property(nonatomic, assign)   BOOL       showCommunity;
+@property (nonatomic, assign)   BOOL       hasOriginItem;
+@property(nonatomic ,strong) FHUGCCellOriginItemView *originView;
 
 @end
 
@@ -43,6 +52,7 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         self.showCommunity = NO;
+        self.hasOriginItem = NO;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
@@ -89,6 +99,10 @@
     [_position sizeToFit];
     [_positionView addSubview:_position];
     
+    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
+    _originView.hidden = YES;
+    [self.contentView addSubview:_originView];
+    
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCommunityDetail)];
     [self.positionView addGestureRecognizer:singleTap];
 }
@@ -119,9 +133,22 @@
         if (self.imageCount <= 0) {
             lastView = self.contentLabel;
         }
+        [self.originView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+            make.height.mas_equalTo(originViewHeight);
+            make.left.mas_equalTo(self.contentView).offset(leftMargin);
+            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        }];
+        
+        CGFloat topOffset = 10;
+        if (self.hasOriginItem) {
+            topOffset += originViewHeight;
+            topOffset += 10;
+        }
+        
         [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(20);
-            make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+            make.top.mas_equalTo(lastView.mas_bottom).offset(topOffset);
             make.height.mas_equalTo(24);
         }];
         
@@ -145,8 +172,20 @@
         if (self.imageCount <= 0) {
             lastView = self.contentLabel;
         }
+        [self.originView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+            make.height.mas_equalTo(originViewHeight);
+            make.left.mas_equalTo(self.contentView).offset(leftMargin);
+            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        }];
+        CGFloat topOffset = 20;
+        if (self.hasOriginItem) {
+            topOffset = 10;
+            topOffset += originViewHeight;
+            topOffset += 20;
+        }
         [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(lastView.mas_bottom).offset(20);
+            make.top.mas_equalTo(lastView.mas_bottom).offset(topOffset);
             make.left.mas_equalTo(self.contentView).offset(leftMargin);
             make.right.mas_equalTo(self.contentView).offset(-rightMargin);
             make.bottom.mas_equalTo(self.contentView).offset(0);
@@ -189,7 +228,11 @@
     }
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
     self.imageCount = cellModel.largeImageList.count;
+    if (self.imageCount > 9) {
+        self.imageCount = 9;
+    }
     self.showCommunity = cellModel.showCommunity;
+    self.hasOriginItem = cellModel.originItemModel != nil;
     [self setupUIs];
     // 设置userInfo
     self.userInfoView.cellModel = cellModel;
@@ -205,10 +248,46 @@
             make.height.mas_equalTo(self.multiImageView.viewHeight);
         }];
     }
+    // origin
+    if(cellModel.originItemModel){
+        self.originView.hidden = NO;
+        [self.originView refreshWithdata:cellModel];
+    }else{
+        self.originView.hidden = YES;
+    }
     // 小区
     self.position.text = cellModel.community.name;
     [self.position sizeToFit];
 }
+
++ (CGFloat)heightForData:(id)data {
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 30;
+        
+        if(isEmptyString(cellModel.content)){
+            height -= 10;
+        }
+        NSInteger imageCount = cellModel.largeImageList.count;
+        if (imageCount > 9) {
+            imageCount = 9;
+        }
+        CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:imageCount width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
+        height += imageViewheight;
+        
+        if(cellModel.originItemModel){
+            height += (originViewHeight + 10);
+        }
+        
+        if(cellModel.isInsertGuideCell){
+            height += guideViewHeight;
+        }
+        
+        return height;
+    }
+    return 44;
+}
+
 
 @end
 
