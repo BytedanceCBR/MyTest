@@ -151,7 +151,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.0)
+  - ios_house_im (0.1.3)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -629,7 +629,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `6f17a1a165de083d5140c79225175a07f8849cb8`)
+  - ios_house_im (= 0.1.3)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -863,9 +863,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/FHWebView
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
-  ios_house_im:
-    :commit: 6f17a1a165de083d5140c79225175a07f8849cb8
-    :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAD:
@@ -938,9 +935,6 @@ EXTERNAL SOURCES:
     :path: ../ReactCommon/yoga
 
 CHECKOUT OPTIONS:
-  ios_house_im:
-    :commit: 6f17a1a165de083d5140c79225175a07f8849cb8
-    :git: git@code.byted.org:fproject/ios_house_im.git
   TTRoute:
     :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa
     :git: git@code.byted.org:TTIOS/tt_pods_route.git
@@ -997,7 +991,7 @@ SPEC CHECKSUMS:
   FHRNKit: b8966b198eb601696630a3fd4bc72aac277258be
   FHWebView: 1c354474ccc25e8a56b77e34b7b3a52bb4c6e414
   FLAnimatedImage: c103d911f434514c39961a5eed4c0e29c6cdae48
-  FLEX: 41f5c73df50a2c8100e3c38f2eba75fdacf788e2
+  FLEX: a9a617d07fa5909d1eb9e3c5791f6965ba5f9ccf
   FMDB: 20748cf597d147c452903c32d101953e46dcb4b5
   Gaia: 8d07f88e57c49364734d1fb5ea331f37c225c619
   Godzippa: d9e858886267fa9026eb4eb1e2e4ce5e0df2d680
@@ -1008,7 +1002,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 93431910eb6de50b0b84130f90d5eabb85849261
+  ios_house_im: 72b22a7314ceba57d473bd83dbc1059918737d3d
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1128,6 +1122,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 1b6248326bacf390f1b5876ef75593847aa9c336
+PODFILE CHECKSUM: 5d00301954d4ccdb4e3b0ea26bbc54357975d72c
 
 COCOAPODS: 1.4.0

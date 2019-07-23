@@ -65,8 +65,8 @@
         }
         if ([paramObj.sourceURL.absoluteString containsString:@"floor_plan_detail"]) {
             self.customHouseId = paramObj.allParams[@"floor_plan_id"];
-            self.fromStr = @"app_floorplan";
         }
+        self.fromStr = [self fromStrBySourceUrl:paramObj.host];
         
         if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
             self.houseId = paramObj.allParams[@"neighborhood_id"];
@@ -114,6 +114,16 @@
 - (NSString *)fromStrBySourceUrl:(NSString *)host
 {
     NSString *fromStr = @"";
+    if ([host isEqualToString:@"floor_plan_detail"]) {
+        fromStr = @"app_floorplan";
+    }else if ([host isEqualToString:@"floor_coreinfo_detail"]) {
+        fromStr = @"app_newhouse_detail";
+    }else if ([host isEqualToString:@"floor_timeline_detail"]) {
+        fromStr = @"app_newhouse_news";
+    }else if ([host isEqualToString:@"floor_pan_list"]) {
+        fromStr = @"app_newhouse_apartmentlist";
+    }
+    return fromStr;
 }
 
 - (void)viewDidLoad {
