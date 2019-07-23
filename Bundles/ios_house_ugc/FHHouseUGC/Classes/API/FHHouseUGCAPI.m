@@ -216,7 +216,7 @@
 }
 
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)categoryId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
-    NSString *queryPath = @"/f100/ugc/recommend_feeds";
+    NSString *queryPath = @"/f100/ugc/v1/recommend_feeds";
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"channel_id"] = categoryId;
