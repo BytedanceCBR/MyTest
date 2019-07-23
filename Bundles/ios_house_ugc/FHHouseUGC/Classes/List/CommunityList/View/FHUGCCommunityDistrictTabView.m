@@ -43,7 +43,7 @@
     [self.categoryView reloadData];
 }
 
-- (void)select:(NSInteger)categoryId {
+- (void)select:(NSInteger)categoryId selectType:(FHUGCCommunityDistrictTabSelectType)selectType;{
     if (self.categories.count <= 0) {
         return;
     }
@@ -77,10 +77,10 @@
         [self.categoryView reloadItemsAtIndexPaths:indexPaths];
     }];
 
-    if (self.delegate && [self.delegate respondsToSelector:@selector(onCategorySelect:before:)]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onCategorySelect:before:selectType:)]) {
         FHUGCCommunityDistrictTabModel *beforeItem = before < 0 ? nil : self.categories[before];
         FHUGCCommunityDistrictTabModel *curItem = current < 0 ? nil : self.categories[current];
-        [self.delegate onCategorySelect:curItem before:beforeItem];
+        [self.delegate onCategorySelect:curItem before:beforeItem selectType:selectType];
     }
 }
 
@@ -125,8 +125,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     FHUGCCommunityDistrictTabModel *cellModel = self.categories[indexPath.row];
-    [self select:cellModel.categoryId];
+    [self select:cellModel.categoryId selectType:FHUGCCommunityDistrictTabSelectTypeClick];
 }
-
 
 @end

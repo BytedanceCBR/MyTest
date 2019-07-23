@@ -282,7 +282,11 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"action_type"] = @(FHCommunityListTypeFollow);
     dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdRecommend);
-    dict[@"tracer"] = @{@"enter_from":@"nearby_list"};
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[@"enter_type"] = @"click";
+    traceParam[@"enter_from"] = @"nearby_list";
+    traceParam[@"element_from"] = @"like_neighborhood";
+    dict[@"tracer"] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];

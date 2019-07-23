@@ -4,6 +4,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHUGCBaseCell.h"
+#import "FHUGCFollowButton.h"
 
 typedef NS_ENUM(NSInteger, FHUGCCommunityCellType) {
     FHUGCCommunityCellTypeFollow,
@@ -13,6 +14,7 @@ typedef NS_ENUM(NSInteger, FHUGCCommunityCellType) {
 
 @interface FHUGCCommunityCell : UITableViewCell
 @property(nonatomic, weak, nullable) id currentData;
+@property(nonatomic, strong) FHUGCFollowButton *followButton;//关注button
 
 + (Class)cellViewClass;
 

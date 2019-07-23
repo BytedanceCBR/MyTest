@@ -10,20 +10,19 @@
 @class FHUGCCommunityCategoryView;
 
 @interface FHUGCCommunityListViewModel : NSObject
+@property(nonatomic,copy) NSDictionary* tracerDict;
 - (instancetype)initWithTableView:(UITableView *)tableView
                      categoryView:(FHUGCCommunityCategoryView *)categoryView
                districtTitleLabel:(UILabel *)districtTitleLabel
                        controller:(FHUGCCommunityListViewController *)viewController
                          listType:(FHCommunityListType)listType;
 
+- (void)addEnterCategoryLog;
+
+- (void)addStayCategoryLog:(NSTimeInterval)stayTime;
+
 - (void)retryLoadData;
 
-- (void)viewWillAppear;
-
-- (void)viewWillDisappear;
-
-- (void)viewDidAppear;
-
-- (void)viewDidDisappear;
+- (void)viewWillDidLoad;
 
 @end

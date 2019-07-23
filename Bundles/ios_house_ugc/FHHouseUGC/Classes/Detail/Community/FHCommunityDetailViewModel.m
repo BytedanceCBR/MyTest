@@ -37,7 +37,7 @@
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *subTitleLabel;
 @property(nonatomic, strong) UIView *titleContainer;
-@property(nonatomic, weak) MJRefreshHeader *refreshHeader;
+@property(nonatomic, strong) MJRefreshHeader *refreshHeader;
 @property (nonatomic, assign)   BOOL       isViewAppear;
 
 @property(nonatomic, strong) FHUGCGuideView *guideView;
