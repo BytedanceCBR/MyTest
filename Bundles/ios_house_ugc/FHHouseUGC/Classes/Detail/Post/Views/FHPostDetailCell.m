@@ -243,7 +243,7 @@
     [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:kFHMaxLines];
     // 图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
-    if(self.imageCount == 1){
+    if(self.imageCount == 1) {
         [self.multiImageView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(self.multiImageView.viewHeight);
         }];
@@ -263,7 +263,7 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 30;
+        CGFloat height = topMargin + userInfoViewHeight + 10 + cellModel.contentHeight + 20;
         
         if(isEmptyString(cellModel.content)){
             height -= 10;
@@ -273,16 +273,24 @@
             imageCount = 9;
         }
         CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:imageCount width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
-        height += imageViewheight;
+        if (imageCount == 1) {
+            // 单独计算单图显示高度
+            FHFeedContentImageListModel *imageData = [cellModel.imageList firstObject];
+            if (imageData && [imageData isKindOfClass:[FHFeedContentImageListModel class]] && [imageData.width floatValue] > 0) {
+                imageViewheight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * [imageData.height floatValue] / [imageData.width floatValue];
+            }
+        }
+        if (imageCount > 0) {
+            height += (imageViewheight + 10);
+        }
         
         if(cellModel.originItemModel){
             height += (originViewHeight + 10);
         }
         
-        if(cellModel.isInsertGuideCell){
-            height += guideViewHeight;
+        if (cellModel.showCommunity) {
+            height += (24 + 10);
         }
-        
         return height;
     }
     return 44;
