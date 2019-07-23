@@ -45,6 +45,7 @@
 #import <BDALog/BDAgileLog.h>
 #import "FHSuggestionRealHouseTopCell.h"
 #import <TTBaseLib/NSString+URLEncoding.h>
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -342,10 +343,9 @@ extern NSString *const INSTANT_DATA_KEY;
                 [self requestRecommendErshouHouseListData:isRefresh query:query offset:offset searchId:self.recommendSearchId];
             } else {
                 if ([query isKindOfClass:[NSString class]] && query.length > 0) {
-                    query = [query stringByAppendingString:@"&channel_id=94349530167"];
-                }else
-                {
-                    query = @"channel_id=94349530167";
+                    query = [query stringByAppendingString:[NSString stringWithFormat:@"&%@=%@",CHANNEL_ID,CHANNEL_ID_SEARCH_HOUSE]];
+                }else{
+                    query = [NSString stringWithFormat:@"%@=%@",CHANNEL_ID,CHANNEL_ID_SEARCH_HOUSE];
                 }
                 self.query = query;
                 [self requestErshouHouseListData:isRefresh query:query offset:offset searchId:searchId];
@@ -353,6 +353,12 @@ extern NSString *const INSTANT_DATA_KEY;
             break;
             
         case FHHouseTypeRentHouse:
+            if ([query isKindOfClass:[NSString class]] && query.length > 0) {
+                query = [query stringByAppendingString:[NSString stringWithFormat:@"&%@=%@",CHANNEL_ID,CHANNEL_ID_SEARCH_RENT]];
+            }else{
+                query = [NSString stringWithFormat:@"%@=%@",CHANNEL_ID,CHANNEL_ID_SEARCH_RENT];
+            }
+            self.query = query;
             [self requestRentHouseListData:isRefresh query:query offset:offset searchId:searchId];
             break;
             
@@ -510,7 +516,7 @@ extern NSString *const INSTANT_DATA_KEY;
     if (searchId.length > 0) {
         param[@"search_id"] = searchId;
     }
-    
+    param[CHANNEL_ID] = CHANNEL_ID_RENT_COMMUTING;
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseListAPI requestCommute:cityId query:query location:location houseType:_houseType duration:duration type:manager.commuteType param:param offset:offset completion:^(FHHouseRentModel * _Nullable model, NSError * _Nullable error) {
         if (!wself) {

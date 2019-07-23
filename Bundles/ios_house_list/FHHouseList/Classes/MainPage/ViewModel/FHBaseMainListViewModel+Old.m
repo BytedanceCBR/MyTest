@@ -14,6 +14,7 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import <Masonry/Masonry.h>
 #import <FHHouseHome/FHCityListViewModel.h>
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 @implementation FHBaseMainListViewModel (Old)
 
@@ -27,13 +28,6 @@
 {
     NSInteger offset = 0;
     NSMutableDictionary *param = [NSMutableDictionary new];
-    
-    if ([query isKindOfClass:[NSString class]] && query.length > 0) {
-        query = [query stringByAppendingString:@"&channel_id=94349537953"];
-    }else
-    {
-        query = @"channel_id=94349537953";
-    }
     
     if (isRefresh) {
         if (!self.isFirstLoad && self.canChangeHouseSearchDic) {
