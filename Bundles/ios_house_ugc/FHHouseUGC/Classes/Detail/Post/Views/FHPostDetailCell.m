@@ -37,6 +37,7 @@
 @property(nonatomic, assign)   BOOL       showCommunity;
 @property (nonatomic, assign)   BOOL       hasOriginItem;
 @property(nonatomic ,strong) FHUGCCellOriginItemView *originView;
+@property (nonatomic, strong)   UIImageView       *positionImageView;
 
 @end
 
@@ -96,6 +97,10 @@
     _positionView.hidden = YES;
     [self.contentView addSubview:_positionView];
     
+    self.positionImageView = [[UIImageView alloc] init];
+    _positionImageView.image = [UIImage imageNamed:@"fh_ugc_community_icon"];
+    [self.positionView addSubview:_positionImageView];
+    
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeRed3]];
     [_position sizeToFit];
     [_positionView addSubview:_position];
@@ -154,8 +159,14 @@
             make.height.mas_equalTo(24);
         }];
         
-        [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.positionImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.positionView).offset(6);
+            make.centerY.mas_equalTo(self.positionView);
+            make.width.height.mas_equalTo(12);
+        }];
+        
+        [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.positionImageView.mas_right).offset(2);
             make.right.mas_equalTo(self.positionView).offset(-6);
             make.centerY.mas_equalTo(self.positionView);
             make.height.mas_equalTo(18);
