@@ -52,8 +52,6 @@ typedef void (^FHHouseDislikeBlock)(FHHouseDislikeView * view);
 
 + (void)disable;
 
-+ (BOOL)isFeedDislikeRefactorEnabled;
-
 @end
 
 NS_ASSUME_NONNULL_END
