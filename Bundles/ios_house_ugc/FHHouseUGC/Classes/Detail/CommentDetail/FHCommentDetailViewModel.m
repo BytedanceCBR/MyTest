@@ -27,6 +27,8 @@
 #import "FHHouseUGCHeader.h"
 #import "FRCommonURLSetting.h"
 #import "FRApiModel.h"
+#import "FHUGCDetailGrayLineCell.h"
+#import "FHPostDetailCell.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,TTCommentDetailCellDelegate>
 
@@ -98,6 +100,8 @@
     
     [_tableView registerClass:[TTCommentDetailCell class] forCellReuseIdentifier:NSStringFromClass([TTCommentDetailReplyCommentModel class])];
     [_tableView registerClass:[FHPostDetailHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHPostDetailHeaderModel class])];
+    [_tableView registerClass:[FHUGCDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHUGCDetailGrayLineModel class])];
+    [_tableView registerClass:[FHPostDetailCell class] forCellReuseIdentifier:NSStringFromClass([FHFeedUGCCellModel class])];
 }
 
 - (void)startLoadData {
@@ -130,6 +134,7 @@
         [self.detailVC.emptyView hideEmptyView];
         self.detailVC.hasValidateData = YES;
         // 详情data
+        FHFeedUGCCellModel *cellModel = nil;
         if (model.commentDetail) {
             NSMutableDictionary *detailDic = [NSMutableDictionary new];
             FHFeedContentRawDataCommentBaseModel *commentBase = nil;
@@ -179,7 +184,7 @@
                 userInfoModel.schema = userModel.info.schema;
                 feedContent.userInfo = userInfoModel;
             }
-            FHFeedUGCCellModel *ugcCellModel = [FHFeedUGCCellModel modelFromFeedContent:feedContent];
+            cellModel = [FHFeedUGCCellModel modelFromFeedContent:feedContent];
             //
             [self.detailVC refreshUI];
         }
@@ -189,6 +194,7 @@
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
             headerModel.socialGroupModel = socialGroupModel;
+            // add by zyk
 //            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
             self.social_group_id = socialGroupModel.socialGroupId;
             [self.detailItems addObject:headerModel];
@@ -197,10 +203,21 @@
             [self.detailHeights addObject:@(headerHeight)];// 高度提前计算
             [self.detailVC headerInfoChanged];
             //
-//            FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
-//            [self.items addObject:grayLine];
+            FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
+            [self.detailItems addObject:grayLine];
+            [self.detailHeights addObject:@(5)];// 高度提前计算
 //            cellModel.showCommunity = NO;
         }
+        
+        // 更新点赞以及评论数
+        if (cellModel) {
+            [self.detailItems addObject:cellModel];
+            CGFloat headerHeight = [FHPostDetailCell heightForData:cellModel];
+            [self.detailHeights addObject:@(headerHeight)];// 高度提前计算
+            [self.detailVC headerInfoChanged];
+            [self.detailVC refreshUI];
+        }
+        
         // 请求回复列表
         [self requestReplyListData];
     } else {
@@ -209,56 +226,6 @@
         [self.detailVC.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
     }
 }
-
-//- (FHFeedUGCCellModel *)createFeedModel {
-//    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
-//    cellModel.cellType = [model.cellType integerValue];
-//    cellModel.groupId = model.groupId;
-//    cellModel.logPb = model.logPb;
-//    cellModel.content = model.rawData.commentBase.content;
-//    cellModel.behotTime = model.behotTime;
-//    cellModel.openUrl = model.rawData.commentBase.detailSchema;
-//
-//    double time = [model.publishTime doubleValue];
-//    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
-//    cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
-//
-//    cellModel.diggCount = model.diggCount;
-//    cellModel.commentCount = model.commentCount;
-//    cellModel.userDigg = model.userDigg;
-//
-//    FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
-//    community.name = model.community.name;
-//    community.url = model.community.url;
-//    community.socialGroupId = model.community.socialGroupId;
-//    cellModel.community = community;
-//
-//    FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
-//    user.name = model.userInfo.name;
-//    user.avatarUrl = model.userInfo.avatarUrl;
-//    user.userId = model.userInfo.userId;
-//    cellModel.user = user;
-//
-//    FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
-//    originItemModel.type = @"[文章]";
-//    originItemModel.content = model.rawData.originGroup.title;
-//    originItemModel.openUrl = model.rawData.originGroup.schema;
-//    originItemModel.imageModel = model.rawData.originGroup.middleImage;
-//    cellModel.originItemModel = originItemModel;
-//
-//    NSInteger numberOfLines = 3;
-//
-//    if(cellModel.imageList.count == 1){
-//        cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
-//    }else if(cellModel.imageList.count > 1){
-//        cellModel.cellSubType = FHUGCFeedListCellSubTypeMultiImage;
-//    }else{
-//        cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
-//        numberOfLines = 5;
-//    }
-//
-//    [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:numberOfLines];
-//}
 
 // 关注状态改变
 - (void)followStateChanged:(NSNotification *)notification {
