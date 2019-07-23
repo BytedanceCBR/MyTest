@@ -165,6 +165,7 @@
             make.top.mas_equalTo(self.positionView.mas_bottom).offset(20);
             make.left.mas_equalTo(self.contentView).offset(leftMargin);
             make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+            make.bottom.mas_equalTo(self.contentView).offset(0);
             make.height.mas_equalTo(0.5);
         }];
     } else {
@@ -189,6 +190,7 @@
             make.top.mas_equalTo(lastView.mas_bottom).offset(topOffset);
             make.left.mas_equalTo(self.contentView).offset(leftMargin);
             make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+            make.bottom.mas_equalTo(self.contentView).offset(0);
             make.height.mas_equalTo(0.5);
         }];
     }

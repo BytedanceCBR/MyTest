@@ -32,6 +32,7 @@
 #import "FHFeedContentModel.h"
 #import "FHUGCScialGroupModel.h"
 #import "FHUGCConfig.h"
+#import "FHUGCCellHelper.h"
 
 @interface FHPostDetailViewModel ()
 
@@ -185,6 +186,7 @@
             }
         }
         //
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:0];
         [self.items addObject:cellModel];
         
         // 更新点赞以及评论数
