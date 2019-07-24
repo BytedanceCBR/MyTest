@@ -236,6 +236,7 @@
 {
     if (sender == self.toolbarView.writeButton) {
         // 输入框
+        [self clickCommentFieldTracer];
         [self p_willOpenWriteCommentViewWithReplyCommentModel:nil];
     }
     else if (sender == _toolbarView.digButton) {
@@ -246,19 +247,20 @@
 
 // 点击回复 进行评论
 - (void)openWriteCommentViewWithReplyCommentModel:(id<TTCommentDetailReplyCommentModelProtocol>)replyCommentModel {
+    [self clickReplyComment:replyCommentModel.commentID];
     [self p_willOpenWriteCommentViewWithReplyCommentModel:replyCommentModel];
 }
 
 - (void)p_willOpenWriteCommentViewWithReplyCommentModel:(id<TTCommentDetailReplyCommentModelProtocol>)replyCommentModel   {
 
     WeakSelf;
-    // action.replyCommentModel? :[self pageState].defaultRelyModel
     TTCommentDetailReplyWriteManager *replyManager = [[TTCommentDetailReplyWriteManager alloc] initWithCommentDetailModel:self.viewModel.commentDetailModel replyCommentModel:replyCommentModel commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
         StrongSelf;
         *willRepostFwID = [wself.viewModel.commentDetailModel.repost_params tt_stringValueForKey:@"fw_id"];
-
     } publishCallback:^(id<TTCommentDetailReplyCommentModelProtocol>replyModel, NSError *error) {
         StrongSelf;
+        // 回复 按钮点击成功之后的埋点上报，点击的时机不好获取
+        [wself clickSubmitComment];
         if (error) {
             return;
         }
@@ -267,8 +269,8 @@
         }
     } getReplyCommentModelClassBlock:nil commentRepostWithPreRichSpanText:nil commentSource:nil];
     
-    replyManager.enterFrom = @"comment_detail";
-//        replyManager.enter_type = @"submit_comment";
+    replyManager.enterFrom = self.tracerDict[@"page_type"];
+    replyManager.logPb = self.tracerDict[@"log_pb"];
     
     self.commentWriteView = [[FHUGCReplyCommentWriteView alloc] initWithCommentManager:replyManager];
 
@@ -325,17 +327,39 @@
     }];
 }
 
+// 点击回复
+- (void)clickSubmitComment {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"submit_comment";
+    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
+}
+
+// 点击回复他人的评论中的“回复”按钮
+- (void)clickReplyComment:(NSString *)comment_id {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_comment";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_comment" params:tracerDict];
+}
+
+// 点击评论
+- (void)clickCommentFieldTracer {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"comment_field";
+    [FHUserTracker writeEvent:@"click_comment_field" params:tracerDict];
+}
+
 // 详情 点赞
 - (void)click_feed_like {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"feed_like";
+    tracerDict[@"click_position"] = @"comment_like";
     [FHUserTracker writeEvent:@"click_like" params:tracerDict];
 }
 
 // 详情页 取消点赞
 - (void)click_feed_dislike {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"feed_dislike";
+    tracerDict[@"click_position"] = @"comment_dislike";
     [FHUserTracker writeEvent:@"click_dislike" params:tracerDict];
 }
 
@@ -383,13 +407,6 @@
     } else {
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
-}
-
-// 点击回复
-- (void)clickSubmitComment {
-//    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-//    tracerDict[@"click_position"] = @"submit_comment";
-//    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
 }
 
 

@@ -350,7 +350,7 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
 -(void)addSelectLog:(NSInteger)position data:(FHUGCScialGroupDataModel *)data{
     NSMutableDictionary* selectTracerDict = [self joinTracerDict:position data:data];
     selectTracerDict[@"click_position"] = @"select_like";
-    [FHUserTracker writeEvent:@"click_join" params:selectTracerDict];
+    [FHUserTracker writeEvent:@"click_select" params:selectTracerDict];
 }
 
 -(void)addClickOptionsLog:(FHUGCCommunityDistrictTabSelectType)selectType{

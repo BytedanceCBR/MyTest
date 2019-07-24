@@ -12,6 +12,7 @@
 @property(nonatomic, strong) UIButton *searchAreaPanel;
 @property(nonatomic, strong) UILabel *searchLabel;
 @property(nonatomic, strong) UIImageView *searchIcon;
+@property(nonatomic, strong) UIView *separatorLine;
 @end
 
 @implementation FHUGCCommunityListSearchBar
@@ -49,6 +50,10 @@
     _searchLabel.font = [UIFont themeFontRegular:12];
     _searchLabel.textColor = [UIColor themeGray3];
     [_searchAreaPanel addSubview:_searchLabel];
+    
+    _separatorLine = [[UIView alloc] init];
+    _separatorLine.backgroundColor = [UIColor themeGray6];
+    [self addSubview:_separatorLine];
 }
 
 -(void)initConstraints{
@@ -68,6 +73,11 @@
         make.height.mas_equalTo(17);
         make.centerY.mas_equalTo(self.searchAreaPanel);
         make.right.mas_equalTo(self.searchAreaPanel).offset(-8);
+    }];
+    
+    [self.separatorLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self);
+        make.height.mas_equalTo(0.5);
     }];
 }
 

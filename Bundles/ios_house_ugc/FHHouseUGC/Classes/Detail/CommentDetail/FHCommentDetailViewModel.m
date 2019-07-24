@@ -34,7 +34,7 @@
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,TTCommentDetailCellDelegate>
 
 @property(nonatomic , weak) UITableView *tableView;
-@property(nonatomic , weak) FHCommentDetailViewController *detailVC;
+@property(nonatomic , weak) FHCommentDetailViewController *detailController;
 @property(nonatomic , weak) TTHttpTask *httpTask;
 @property(nonatomic , weak) TTHttpTask *httpListTask;
 @property (nonatomic, strong)   FHRefreshCustomFooter       *refreshFooter;
@@ -61,7 +61,7 @@
 -(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView
 {   self = [super init];
     if (self) {
-        self.detailVC = viewController;
+        self.detailController = viewController;
         self.tableView = tableView;
         self.offset = 0;
         self.count = 20;
@@ -76,10 +76,8 @@
         [self configTableView];
         [self commentCountChanged];
         [self store];
-        //  add by zyk
-//        self.store.enterFrom = self.enterFrom;
-//        self.store.categoryID = self.categoryID;
-//        self.store.logPb = self.logPb;
+        self.store.enterFrom = self.detailController.tracerDict[@"enter_from"];
+        self.store.logPb = self.detailController.tracerDict[@"log_pb"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delCommentDetailReplySuccess:) name:kFHUGCDelCommentDetailReplyNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     }
@@ -132,8 +130,8 @@
     if (model != NULL) {
         // 有详情数据
         self.tableView.hidden = NO;
-        [self.detailVC.emptyView hideEmptyView];
-        self.detailVC.hasValidateData = YES;
+        [self.detailController.emptyView hideEmptyView];
+        self.detailController.hasValidateData = YES;
         // 详情data
         FHFeedUGCCellModel *cellModel = nil;
         if (model.commentDetail) {
@@ -198,9 +196,9 @@
                 feedContent.userInfo = userInfoModel;
             }
             cellModel = [FHFeedUGCCellModel modelFromFeedContent:feedContent];
-            cellModel.tracerDic = self.detailVC.tracerDict.mutableCopy;
+            cellModel.tracerDic = self.detailController.tracerDict.mutableCopy;
             [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:0];
-            [self.detailVC refreshUI];
+            [self.detailController refreshUI];
         }
         // 圈子详情数据
         FHUGCScialGroupDataModel *socialGroupModel = model.social_group;
@@ -208,13 +206,13 @@
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
             headerModel.socialGroupModel = socialGroupModel;
-            headerModel.tracerDict = self.detailVC.tracerDict.mutableCopy;
+            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
             self.social_group_id = socialGroupModel.socialGroupId;
             [self.detailItems addObject:headerModel];
             self.detailHeaderModel = headerModel;
             CGFloat headerHeight = [FHPostDetailHeaderCell heightForData:headerModel];
             [self.detailHeights addObject:@(headerHeight)];// 高度提前计算
-            [self.detailVC headerInfoChanged];
+            [self.detailController headerInfoChanged];
             //
             FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
             [self.detailItems addObject:grayLine];
@@ -235,17 +233,17 @@
             [self.detailItems addObject:cellModel];
             CGFloat headerHeight = [FHPostDetailCell heightForData:cellModel];
             [self.detailHeights addObject:@(headerHeight)];// 高度提前计算
-            [self.detailVC headerInfoChanged];
-            [self.detailVC refreshUI];
+            [self.detailController headerInfoChanged];
+            [self.detailController refreshUI];
         }
         [self.tableView reloadData];
         
         // 请求回复列表
         [self requestReplyListData];
     } else {
-        self.detailVC.hasValidateData = NO;
+        self.detailController.hasValidateData = NO;
         self.tableView.hidden = YES;
-        [self.detailVC.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
     }
 }
 
@@ -262,7 +260,7 @@
                 if ([groupId isEqualToString:currentGroupId]) {
                     // 替换关注人数 AA关注BB热帖 替换：AA
                     [[FHUGCConfig sharedInstance] updateScialGroupDataModel:self.detailHeaderModel.socialGroupModel byFollowed:followed];
-                    [self.detailVC headerInfoChanged];
+                    [self.detailController headerInfoChanged];
                     [self.tableView reloadData];
                 }
             }
@@ -291,7 +289,7 @@
     if (model) {
         if (model.data.allCommentModels.count > 0) {
             // 转化
-            NSArray *layouts = [TTCommentDetailCellLayout arrayOfLayoutsFromModels:model.data.allCommentModels containViewWidth:self.detailVC.view.width];
+            NSArray *layouts = [TTCommentDetailCellLayout arrayOfLayoutsFromModels:model.data.allCommentModels containViewWidth:self.detailController.view.width];
             if (layouts.count > 0) {
                 // 布局
                 [self.totalComments addObjectsFromArray:model.data.allCommentModels];
@@ -337,7 +335,7 @@
 
 - (void)commentCountChanged {
     if (self.commentAllFooter == nil) {
-        self.commentAllFooter = [[FHDetailCommentAllFooter alloc] initWithFrame:CGRectMake(0, 0, self.detailVC.view.width, 52)];
+        self.commentAllFooter = [[FHDetailCommentAllFooter alloc] initWithFrame:CGRectMake(0, 0, self.detailController.view.width, 52)];
         self.commentAllFooter.hidden = YES;
     }
     // 全部评论
@@ -352,7 +350,7 @@
 
 - (FHUGCReplyListEmptyView *)replayListEmptyView {
     if (_replayListEmptyView == nil) {
-        _replayListEmptyView = [[FHUGCReplyListEmptyView alloc] initWithFrame:CGRectMake(0, 0, self.detailVC.view.width, 100)];
+        _replayListEmptyView = [[FHUGCReplyListEmptyView alloc] initWithFrame:CGRectMake(0, 0, self.detailController.view.width, 100)];
         _replayListEmptyView.descLabel.text = @"暂无评论，点击抢沙发";
         [_replayListEmptyView addTarget:self action:@selector(commentFirst) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -361,7 +359,7 @@
 
 // 抢沙发点击
 - (void)commentFirst {
-    [self.detailVC openWriteCommentViewWithReplyCommentModel:nil];
+    [self.detailController openWriteCommentViewWithReplyCommentModel:nil];
 }
 
 - (void)dealloc
@@ -413,7 +411,7 @@
 - (void)insertReplyData:(TTCommentDetailReplyCommentModel *)model {
     if (model && [model isKindOfClass:[TTCommentDetailReplyCommentModel class]]) {
         // 转化
-        NSArray *layout = [[TTCommentDetailCellLayout alloc] initWithCommentModel:model containViewWidth:self.detailVC.view.width];
+        NSArray *layout = [[TTCommentDetailCellLayout alloc] initWithCommentModel:model containViewWidth:self.detailController.view.width];
         if (layout) {
             [self.totalComments insertObject:model  atIndex:0];
             [self.totalCommentLayouts insertObject:layout  atIndex:0];
@@ -594,14 +592,14 @@
         if (indexPath.row < self.totalComments.count) {
             id data = self.totalComments[indexPath.row];
             if (data) {
-                [self.detailVC openWriteCommentViewWithReplyCommentModel:data];
+                [self.detailController openWriteCommentViewWithReplyCommentModel:data];
             }
         }
     }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [self.detailVC sub_scrollViewDidScroll:scrollView];
+    [self.detailController sub_scrollViewDidScroll:scrollView];
 }
 
 // TTMomentDetailStore
@@ -630,7 +628,6 @@
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view digCommentWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-    // @"rt_like" 是否需要埋点
     NSInteger action = 0;
     if (model.userDigg) {
         action = 0;
@@ -639,10 +636,12 @@
             model.diggCount = 0;
         }
         model.userDigg = NO;
+        [self click_rt_dislike:model.commentID];
     } else {
         action = 1;
         model.diggCount += 1;
         model.userDigg = YES;
+        [self click_rt_like:model.commentID];
     }
     // 新接口
     [FHCommonApi requestCommonDigg: model.commentID groupType:FHDetailDiggTypeREPLY action:action completion:nil];
@@ -663,6 +662,24 @@
 
 - (void)tt_commentCell:(UITableViewCell *)view quotedNameOnClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
 
+}
+
+#pragma mark - Tracer
+
+// 评论 点赞
+- (void)click_rt_like:(NSString *)comment_id {
+    NSMutableDictionary *tracerDict = self.detailController.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_like";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_like" params:tracerDict];
+}
+
+// 评论 取消点赞
+- (void)click_rt_dislike:(NSString *)comment_id  {
+    NSMutableDictionary *tracerDict = self.detailController.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_dislike";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_dislike" params:tracerDict];
 }
 
 @end
