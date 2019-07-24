@@ -76,10 +76,8 @@
         [self configTableView];
         [self commentCountChanged];
         [self store];
-        //  add by zyk
-//        self.store.enterFrom = self.enterFrom;
-//        self.store.categoryID = self.categoryID;
-//        self.store.logPb = self.logPb;
+        self.store.enterFrom = self.detailVC.tracerDict[@"enter_from"];
+        self.store.logPb = self.detailVC.tracerDict[@"log_pb"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delCommentDetailReplySuccess:) name:kFHUGCDelCommentDetailReplyNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     }
@@ -198,6 +196,7 @@
                 feedContent.userInfo = userInfoModel;
             }
             cellModel = [FHFeedUGCCellModel modelFromFeedContent:feedContent];
+            cellModel.tracerDic = self.detailVC.tracerDict.mutableCopy;
             [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:0];
             [self.detailVC refreshUI];
         }
@@ -207,8 +206,7 @@
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
             headerModel.socialGroupModel = socialGroupModel;
-            // add by zyk
-//            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
+            headerModel.tracerDict = self.detailVC.tracerDict.mutableCopy;
             self.social_group_id = socialGroupModel.socialGroupId;
             [self.detailItems addObject:headerModel];
             self.detailHeaderModel = headerModel;
@@ -303,6 +301,12 @@
         self.offset = [model.data.offset integerValue];
         self.comment_count = [model.data.totalCount integerValue];
         [self commentCountChanged];
+        // 点击评论进入文章时跳转到评论区
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf p_scrollToCommentIfNeeded];
+            weakSelf.beginShowComment = NO;
+        });
     } else {
         // hasmore = no
         self.hasMore = NO;
@@ -444,6 +448,30 @@
     }
 }
 
+- (void)p_scrollToCommentIfNeeded
+{
+    if (self.beginShowComment) {
+        // 跳转到评论 区域
+        CGFloat totalHeight = self.tableView.contentSize.height;
+        CGFloat frameHeight = self.tableView.bounds.size.height;
+        CGFloat detailHeight = 0;// 详情高度
+        for (int i = 0; i < self.detailHeights.count; i++) {
+            CGFloat hei = [self.detailHeights[i] floatValue];
+            detailHeight += hei;
+        }
+        
+        if (totalHeight - detailHeight > frameHeight) {
+            [self.tableView setContentOffset:CGPointMake(0, detailHeight) animated:YES];
+        } else if (totalHeight > frameHeight) {
+            CGFloat offset = totalHeight - frameHeight - 1;
+            if (offset > 0) {
+                [self.tableView setContentOffset:CGPointMake(0, offset) animated:YES];
+            }
+        }
+    }
+}
+
+
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -554,6 +582,12 @@
     NSInteger section = indexPath.section;
     if (section == 0) {
         // 头部详情
+        FHUGCBaseCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if ([cell isKindOfClass:[FHPostDetailHeaderCell class]]) {
+            if (cell.didClickCellBlk) {
+                cell.didClickCellBlk();
+            }
+        }
     } else if (section == 1) {
         if (indexPath.row < self.totalComments.count) {
             id data = self.totalComments[indexPath.row];
@@ -594,7 +628,6 @@
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view digCommentWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-    // @"rt_like" 是否需要埋点
     NSInteger action = 0;
     if (model.userDigg) {
         action = 0;
@@ -603,10 +636,12 @@
             model.diggCount = 0;
         }
         model.userDigg = NO;
+        [self click_rt_dislike:model.commentID];
     } else {
         action = 1;
         model.diggCount += 1;
         model.userDigg = YES;
+        [self click_rt_like:model.commentID];
     }
     // 新接口
     [FHCommonApi requestCommonDigg: model.commentID groupType:FHDetailDiggTypeREPLY action:action completion:nil];
@@ -627,6 +662,24 @@
 
 - (void)tt_commentCell:(UITableViewCell *)view quotedNameOnClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
 
+}
+
+#pragma mark - Tracer
+
+// 评论 点赞
+- (void)click_rt_like:(NSString *)comment_id {
+    NSMutableDictionary *tracerDict = self.detailVC.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_like";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_like" params:tracerDict];
+}
+
+// 评论 取消点赞
+- (void)click_rt_dislike:(NSString *)comment_id  {
+    NSMutableDictionary *tracerDict = self.detailVC.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_dislike";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_dislike" params:tracerDict];
 }
 
 @end

@@ -333,7 +333,7 @@
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
     self.currentCellModel = cellModel;
     self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-    [self jumpToDetail:cellModel];
+    [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
 #pragma UISCrollViewDelegate
@@ -342,7 +342,7 @@
     [self.viewController.scrollViewDelegate scrollViewDidScroll:scrollView];
 }
 
-- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel {
+- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         BOOL canOpenURL = NO;
         if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
@@ -362,15 +362,32 @@
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
-        [self jumpToPostDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+        [self jumpToPostDetail:cellModel showComment:showComment enterType:enterType];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
         // 评论
+        NSMutableDictionary *dict = [NSMutableDictionary new];
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = @"my_join_feed";
+        traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+        traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+        traceParam[@"log_pb"] = cellModel.logPb;
+        dict[TRACER_KEY] = traceParam;
+        
+        dict[@"data"] = cellModel;
+        dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
         // 问题 回答
+        BOOL jump_comment = NO;
+        if (showComment) {
+            jump_comment = YES;
+        }
+        NSDictionary *dict = @{@"is_jump_comment":@(jump_comment)};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
@@ -426,7 +443,7 @@
     [self trackClickComment:cellModel];
     self.currentCellModel = cellModel;
     self.currentCell = cell;
-    [self jumpToPostDetail:cellModel showComment:YES enterType:@"feed_comment"];
+    [self jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
 - (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
@@ -447,7 +464,7 @@
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     self.currentCellModel = cellModel;
     self.currentCell = cell;
-    [self jumpToDetail:cellModel];
+    [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
 #pragma mark - 埋点

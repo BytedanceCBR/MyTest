@@ -17,6 +17,7 @@
 #import "FHUserTracker.h"
 #import "TTUGCAttributedLabel.h"
 #import <UIImageView+BDWebImage.h>
+#import "TTRoute.h"
 
 @interface FHUGCCellOriginItemView ()
 
@@ -40,8 +41,12 @@
     self.backgroundColor = [UIColor themeGray7];
     self.layer.cornerRadius = 4;
     
+    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToDetail:)];
+    [self addGestureRecognizer:singleTap];
+    
     self.iconView = [[UIImageView alloc] init];
     _iconView.hidden = YES;
+    _iconView.backgroundColor = [UIColor whiteColor];
     [self addSubview:_iconView];
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
@@ -123,6 +128,15 @@
     [attri addAttribute:NSForegroundColorAttributeName value:[UIColor themeGray2] range:NSMakeRange(0, content.length)];
     [attri addAttribute:NSFontAttributeName value:[UIFont themeFontRegular:16] range:NSMakeRange(0, content.length)];
     return attri;
+}
+
+
+- (void)goToDetail:(UITapGestureRecognizer *)sender {
+    NSString *routeUrl = self.cellModel.originItemModel.openUrl;
+    if(routeUrl){
+        NSURL *openUrl = [NSURL URLWithString:routeUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }
 }
 
 @end

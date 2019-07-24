@@ -31,6 +31,7 @@
 #import "FHPostDetailNavHeaderView.h"
 #import "FHUGCFollowButton.h"
 #import "FHCommonDefines.h"
+#import "FHFeedOperationView.h"
 
 @interface FHCommentDetailViewController ()
 
@@ -41,6 +42,7 @@
 @property (nonatomic, strong)   FHUGCReplyCommentWriteView       *commentWriteView;
 @property (nonatomic, strong)   FHPostDetailNavHeaderView       *naviHeaderView;
 @property (nonatomic, strong)   FHUGCFollowButton       *followButton;// 关注
+@property (nonatomic, assign) BOOL beginShowComment;// 点击评论按钮
 
 @end
 
@@ -53,6 +55,14 @@
         if ([params isKindOfClass:[NSDictionary class]]) {
             // 6714466747832877060  6712727097456623627  6714431339993235463
             self.comment_id = [params tt_stringValueForKey:@"comment_id"];
+            // 埋点
+            self.tracerDict[@"page_type"] = @"ugc_comment_detail";
+            self.ttTrackStayEnable = YES;
+            // 点击评论按钮
+            self.beginShowComment = NO;
+            if(paramObj.allParams[@"begin_show_comment"]) {
+                self.beginShowComment = [paramObj.allParams[@"begin_show_comment"] boolValue];
+            }
         }
     }
     return self;
@@ -64,6 +74,14 @@
     [self setupUI];
     [self startLoadData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
+    [self addGoDetailLog];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self addStayPageLog];
+    //跳页时关闭举报的弹窗
+    [FHFeedOperationView dismissIfVisible];
 }
 
 - (void)dealloc
@@ -82,6 +100,7 @@
     [self.view addSubview:_tableView];
     self.viewModel = [[FHCommentDetailViewModel alloc] initWithController:self tableView:_tableView];
     self.viewModel.comment_id = self.comment_id;
+    self.viewModel.beginShowComment = self.beginShowComment;
     [self setupToolbarView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
@@ -217,6 +236,7 @@
 {
     if (sender == self.toolbarView.writeButton) {
         // 输入框
+        [self clickCommentFieldTracer];
         [self p_willOpenWriteCommentViewWithReplyCommentModel:nil];
     }
     else if (sender == _toolbarView.digButton) {
@@ -227,19 +247,20 @@
 
 // 点击回复 进行评论
 - (void)openWriteCommentViewWithReplyCommentModel:(id<TTCommentDetailReplyCommentModelProtocol>)replyCommentModel {
+    [self clickReplyComment:replyCommentModel.commentID];
     [self p_willOpenWriteCommentViewWithReplyCommentModel:replyCommentModel];
 }
 
 - (void)p_willOpenWriteCommentViewWithReplyCommentModel:(id<TTCommentDetailReplyCommentModelProtocol>)replyCommentModel   {
 
     WeakSelf;
-    // action.replyCommentModel? :[self pageState].defaultRelyModel
     TTCommentDetailReplyWriteManager *replyManager = [[TTCommentDetailReplyWriteManager alloc] initWithCommentDetailModel:self.viewModel.commentDetailModel replyCommentModel:replyCommentModel commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
         StrongSelf;
         *willRepostFwID = [wself.viewModel.commentDetailModel.repost_params tt_stringValueForKey:@"fw_id"];
-
     } publishCallback:^(id<TTCommentDetailReplyCommentModelProtocol>replyModel, NSError *error) {
         StrongSelf;
+        // 回复 按钮点击成功之后的埋点上报，点击的时机不好获取
+        [wself clickSubmitComment];
         if (error) {
             return;
         }
@@ -248,8 +269,8 @@
         }
     } getReplyCommentModelClassBlock:nil commentRepostWithPreRichSpanText:nil commentSource:nil];
     
-    replyManager.enterFrom = @"comment_detail";
-//        replyManager.enter_type = @"submit_comment";
+    replyManager.enterFrom = self.tracerDict[@"page_type"];
+    replyManager.logPb = self.tracerDict[@"log_pb"];
     
     self.commentWriteView = [[FHUGCReplyCommentWriteView alloc] initWithCommentManager:replyManager];
 
@@ -263,10 +284,10 @@
     // 点赞埋点
     if (self.viewModel.user_digg == 1) {
         // 取消点赞
-//        [self click_feed_dislike];
+        [self click_feed_dislike];
     } else {
         // 点赞
-//        [self click_feed_like];
+        [self click_feed_like];
     }
     if ([TTAccountManager isLogin]) {
         [self p_digg];
@@ -297,13 +318,49 @@
     self.viewModel.user_digg = (self.viewModel.user_digg == 1) ? 0 : 1;
     
     NSMutableDictionary *dict = [NSMutableDictionary new];
-//    dict[@"enter_from"] = self.tracerDict[@"enter_from"];
-//    dict[@"element_from"] = self.tracerDict[@"element_from"];
-//    dict[@"page_type"] = self.tracerDict[@"page_type"];
+    dict[@"enter_from"] = self.tracerDict[@"enter_from"];
+    dict[@"element_from"] = self.tracerDict[@"element_from"];
+    dict[@"page_type"] = self.tracerDict[@"page_type"];
     
     [FHCommonApi requestCommonDigg:self.comment_id groupType:FHDetailDiggTypeCOMMENT action:self.viewModel.user_digg tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
     }];
+}
+
+// 点击回复
+- (void)clickSubmitComment {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"submit_comment";
+    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
+}
+
+// 点击回复他人的评论中的“回复”按钮
+- (void)clickReplyComment:(NSString *)comment_id {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_comment";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_comment" params:tracerDict];
+}
+
+// 点击评论
+- (void)clickCommentFieldTracer {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"comment_field";
+    [FHUserTracker writeEvent:@"click_comment_field" params:tracerDict];
+}
+
+// 详情 点赞
+- (void)click_feed_like {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"comment_like";
+    [FHUserTracker writeEvent:@"click_like" params:tracerDict];
+}
+
+// 详情页 取消点赞
+- (void)click_feed_dislike {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"comment_dislike";
+    [FHUserTracker writeEvent:@"click_dislike" params:tracerDict];
 }
 
 - (void)likeStateChange:(NSNotification *)notification {
@@ -352,11 +409,42 @@
     }
 }
 
-// 点击回复
-- (void)clickSubmitComment {
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayPageLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+#pragma mark - Tracer
+
+-(void)addGoDetailLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
+}
+
+-(void)addStayPageLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
+    [self tt_resetStayTime];
+}
+
+- (void)addReadPct {
 //    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-//    tracerDict[@"click_position"] = @"submit_comment";
-//    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
+//    tracerDict[@"page_count"] = @"1";
+//    tracerDict[@"percent"] = @"100";
+//    tracerDict[@"item_id"] = self.comment_id ?: @"be_null";
+//    [FHUserTracker writeEvent:@"read_pct" params:tracerDict];
 }
 
 @end
