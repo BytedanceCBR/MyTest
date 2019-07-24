@@ -359,8 +359,14 @@
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
         // 问题 回答
+        BOOL jump_comment = NO;
+        if (showComment) {
+            jump_comment = YES;
+        }
+        NSDictionary *dict = @{@"is_jump_comment":@(jump_comment)};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
