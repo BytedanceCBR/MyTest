@@ -42,6 +42,7 @@
 #import <TTArticleBase/ExploreLogicSetting.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTLaunchDefine.h"
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 
 DEC_TASK("TTStartupNotificationTask",FHTaskTypeNotification,TASK_PRIORITY_HIGH);
 

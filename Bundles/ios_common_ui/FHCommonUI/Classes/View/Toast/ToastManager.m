@@ -16,7 +16,8 @@
 
 @property (nonatomic, strong)   FHToastView       *toastView;
 @property (nonatomic, strong)   CSToastStyle      *toastStyle;
-
+@property (nonatomic, assign)   FHToastViewStyle  style;
+@property (nonatomic, assign)   FHToastViewPosition position;
 @property (nonatomic, strong)   UIView       *loadingView;
 
 @end
@@ -35,7 +36,7 @@
 {
     self = [super init];
     if (self) {
-        [self createDefaultStyle];
+//        [self createDefaultStyle];
     }
     return self;
 }
@@ -51,7 +52,45 @@
     _toastStyle.messageColor = UIColor.whiteColor;
 }
 
+- (void)createOrangeStyle {
+    _toastStyle = [[CSToastStyle alloc] initWithDefaultStyle];
+    _toastStyle.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:1];
+    _toastStyle.cornerRadius = 15.0;
+    _toastStyle.messageFont = [UIFont themeFontRegular:12];
+    _toastStyle.messageAlignment = NSTextAlignmentCenter;
+    _toastStyle.verticalPadding = 6;
+    _toastStyle.horizontalPadding = 10;
+    _toastStyle.messageColor = UIColor.whiteColor;
+    _toastStyle.displayShadow = YES;
+    _toastStyle.shadowColor = [UIColor themeRed3];
+    _toastStyle.shadowOpacity = 0.4;
+    _toastStyle.shadowRadius = 2;
+    _toastStyle.shadowOffset = CGSizeMake(0, 2);
+}
+
+- (void)createStyle {
+    if(_style == FHToastViewStyleOrange){
+        [self createOrangeStyle];
+    }else{
+        [self createDefaultStyle];
+    }
+}
+
 - (void)showToast:(NSString *)message {
+    [self showToast:message style:FHToastViewStyleDefault];
+}
+
+- (void)showToast:(NSString *)message style:(FHToastViewStyle)style {
+    [self showToast:message style:style position:FHToastViewPositionCenter verticalOffset:0];
+}
+
+- (void)showToast:(NSString *)message style:(FHToastViewStyle)style position:(FHToastViewPosition)position verticalOffset:(CGFloat)verticalOffset {
+    _style = style;
+    [self createStyle];
+    
+    _position = position;
+    _toastStyle.verticalOffset = verticalOffset;
+    
     [self showToast:message duration:1.0 isUserInteraction:NO];
 }
 
@@ -63,11 +102,39 @@
     [window addSubview:_toastView];
     __weak typeof(self) wSelf = self;
     __weak FHToastView * wToast = _toastView;
-    [_toastView makeToast:message duration:duration position:CSToastPositionCenter title:NULL image:NULL style:self.toastStyle completion:^(BOOL didTap) {
+    
+    NSString *position = [self getCSTOastPosition];
+    
+    [_toastView makeToast:message duration:duration position:position title:NULL image:NULL style:self.toastStyle completion:^(BOOL didTap) {
         if (wToast) {
             [wToast removeFromSuperview];
         }
     }];
+}
+
+- (NSString *)getCSTOastPosition {
+    NSString *position = nil;
+    switch (_position) {
+        case FHToastViewPositionTop:
+            position = CSToastPositionTop;
+            break;
+        case FHToastViewPositionBottom:
+            position = CSToastPositionBottom;
+            break;
+        case FHToastViewPositionCenter:
+            position = CSToastPositionCenter;
+            break;
+            
+        default:
+            break;
+    }
+    
+    //防止意外情况
+    if(!position){
+        position = CSToastPositionCenter;
+    }
+    
+    return position;
 }
 
 - (void)dismissToast {

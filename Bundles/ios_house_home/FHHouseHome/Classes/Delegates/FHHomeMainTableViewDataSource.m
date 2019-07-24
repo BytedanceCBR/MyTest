@@ -25,6 +25,7 @@
 #import <TTDeviceHelper.h>
 #import "FHHomePlaceHolderCell.h"
 #import "FHhomeHouseTypeBannerCell.h"
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)NSMutableDictionary *traceRecordDict;

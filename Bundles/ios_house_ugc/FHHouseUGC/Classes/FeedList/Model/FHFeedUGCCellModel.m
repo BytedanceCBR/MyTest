@@ -7,7 +7,7 @@
 
 #import "FHFeedUGCCellModel.h"
 #import "FHMainApi.h"
-#import "TTBusinessManager+StringUtils.h"
+#import <FHHouseBase/FHBusinessManager.h>
 #import "TTBaseMacro.h"
 
 @implementation FHFeedUGCCellCommunityModel
@@ -258,7 +258,7 @@
 + (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [model.createTime doubleValue];
-    NSString *publishTime = [TTBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
     
     if(![publishTime isEqualToString:@""]){
         NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
@@ -295,10 +295,11 @@
         }
         NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:comment];
         [desc appendAttributedString:publishTimeAStr];
+        
     }
     
     double time = [model.publishTime doubleValue];
-    NSString *publishTime = [TTBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
     
     if(![publishTime isEqualToString:@""]){
         if(desc.length > 0){

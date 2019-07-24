@@ -14,6 +14,7 @@
 #import "UIView+House.h"
 #import <FHHouseBase/FHHouseAgencyListSugDelegate.h>
 #import "FHFillFormAgencyListItemModel.h"
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 @interface FHDetailNoticeAlertView () <UITextFieldDelegate, FHHouseAgencyListSugDelegate>
 

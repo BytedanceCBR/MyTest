@@ -251,12 +251,12 @@
         
         if (self.statusModel.status == TTPostTaskStatusFailed) {
             self.stateLabel.text = @"发布失败";
-            [self.progressBar setForegroundColorThemeKey:kFHColorCoolGrey2];
+            [self.progressBar setForegroundColorThemeKey:@"grey4"];
             self.retryBtn.hidden = NO;
             self.delBtn.hidden = NO;
         } else {
             self.stateLabel.text = @"正在发布...";
-            [self.progressBar setForegroundColorThemeKey:kFHColorCoral];
+            [self.progressBar setForegroundColorThemeKey:@"red1"];
             self.retryBtn.hidden = YES;
             self.delBtn.hidden = YES;
         }
@@ -297,7 +297,7 @@
     [self.contentView addSubview:_delBtn];
     
     self.progressBar = [[TTThemedUploadingStatusCellProgressBar alloc] initWithFrame:CGRectMake(0, 39, [UIScreen mainScreen].bounds.size.width, 1)];
-    [self.progressBar setForegroundColorThemeKey:kFHColorCoral];
+    [self.progressBar setForegroundColorThemeKey:@"red1"];
     [self.contentView addSubview:self.progressBar];
     
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
