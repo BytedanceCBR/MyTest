@@ -636,12 +636,12 @@
             model.diggCount = 0;
         }
         model.userDigg = NO;
-        [self click_rt_dislike];
+        [self click_rt_dislike:model.commentID];
     } else {
         action = 1;
         model.diggCount += 1;
         model.userDigg = YES;
-        [self click_rt_like];
+        [self click_rt_like:model.commentID];
     }
     // 新接口
     [FHCommonApi requestCommonDigg: model.commentID groupType:FHDetailDiggTypeREPLY action:action completion:nil];
@@ -667,17 +667,19 @@
 #pragma mark - Tracer
 
 // 评论 点赞
-- (void)click_rt_like {
+- (void)click_rt_like:(NSString *)comment_id {
     NSMutableDictionary *tracerDict = self.detailVC.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"reply_like";
-    [FHUserTracker writeEvent:@"rt_like" params:tracerDict];
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_like" params:tracerDict];
 }
 
 // 评论 取消点赞
-- (void)click_rt_dislike {
+- (void)click_rt_dislike:(NSString *)comment_id  {
     NSMutableDictionary *tracerDict = self.detailVC.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"reply_dislike";
-    [FHUserTracker writeEvent:@"rt_dislike" params:tracerDict];
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_dislike" params:tracerDict];
 }
 
 @end
