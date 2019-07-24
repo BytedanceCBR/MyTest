@@ -108,6 +108,86 @@ static NSMutableSet * noNightModeFileNameSet = nil;//保存没有夜间模式的
     return nil;
 }
 
++ (UIImage *)themedImageNamed:(NSString *)name inBundle:(NSBundle *)bundle {
+    if (isEmptyString(name)) {
+        return nil;
+    }
+    
+    NSString * fixedName = name;
+    
+    BOOL widthScreen = ([TTDeviceHelper is667Screen] || [TTDeviceHelper is736Screen]);
+    
+    NSString * (^ hdImageNamed)(NSString *, BOOL) = ^(NSString * name, BOOL nightMode){
+        NSRange dot = [name rangeOfString:@"." options:NSBackwardsSearch];
+        if (widthScreen) {
+            NSString * prefix = name;
+            NSString * suffix = @"";
+            if (dot.location != NSNotFound) {
+                prefix = [name substringToIndex:dot.location];
+                suffix = [name substringFromIndex:dot.location + 1];
+            }
+            NSString * dayExtension = [TTDeviceHelper is667Screen] ? @"-667h":@"-736h";
+            NSString * nightExtension = [TTDeviceHelper is667Screen] ? @"_night-667h":@"_night-736h";
+            if ([suffix isEqualToString:@"png"]) {
+                suffix = @"";
+            }
+            if (suffix.length > 0) {
+                suffix = [@"." stringByAppendingString:suffix];
+            }
+            if (!nightMode) {
+                return [NSString stringWithFormat:@"%@%@%@", prefix, dayExtension, suffix];
+            }
+            return [NSString stringWithFormat:@"%@%@%@", prefix, nightExtension, suffix];
+        }
+        return name;
+    };
+    
+    if ([[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeNight) {
+        if (noNightModeFileNameSet == nil) {
+            noNightModeFileNameSet = [[NSMutableSet alloc] initWithCapacity:100];
+        }
+        if ([noNightModeFileNameSet containsObject:fixedName]) {
+            return [UIImage imageNamed:fixedName inBundle:bundle compatibleWithTraitCollection:nil];
+        }
+        if ([TTDeviceHelper is667Screen] || [TTDeviceHelper is736Screen]) {
+            NSString * name = hdImageNamed(fixedName, YES);
+            UIImage * image = [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
+            if (image) {
+                [noNightModeFileNameSet addObject:name];
+                return image;
+            }
+            name = hdImageNamed(fixedName, NO);
+            image = [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
+            if (image) {
+                [noNightModeFileNameSet addObject:name];
+                return image;
+            }
+        }
+        
+        NSString * fileNameWithNightModelSuffix = [self fileNameAddNightModelSuffix:fixedName];
+        
+        UIImage * img = [UIImage imageNamed:fileNameWithNightModelSuffix inBundle:bundle compatibleWithTraitCollection:nil];
+        if (img != nil) {
+            return img;
+        }
+        [noNightModeFileNameSet addObject:fixedName];
+        return [UIImage imageNamed:fixedName inBundle:bundle compatibleWithTraitCollection:nil];
+        
+    }
+    else {//日间模式，及其他
+        if ([TTDeviceHelper is667Screen] || [TTDeviceHelper is736Screen]) {
+            NSString * name = hdImageNamed(fixedName, NO);
+            UIImage * image = [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
+            if (image) {
+                return image;
+            }
+        }
+        return [UIImage imageNamed:fixedName inBundle:bundle compatibleWithTraitCollection:nil];
+    }
+    
+    return nil;
+}
+
 #pragma mark - private
 
 + (NSString *)fileNameAddExploreModelPrefix:(NSString *)originName

@@ -18,7 +18,6 @@
 
 @interface FHHomeSearchPanelView()
 {
-    NSTimer *timer;
 }
 @property(nonatomic, strong) UIImageView * bgView;
 @property(nonatomic, strong) UILabel * categoryPlaceholderLabel;
@@ -26,7 +25,8 @@
 @property(nonatomic, strong) UILabel * categoryLabel2;
 @property(nonatomic, strong) UIView * categoryBgView;
 @property(nonatomic, assign) NSUInteger searchTitleIndex;
- 
+@property (nonatomic, strong)   NSTimer       *timer;
+
 @end
 
 
@@ -252,13 +252,13 @@
 
 - (void)setUpRollScreenTimer
 {
-   if (timer)
+   if (self.timer)
    {
-       [timer invalidate];
-       timer = nil;
+       [self.timer invalidate];
+       self.timer = nil;
    }
     
-   timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(animateTitle) userInfo:nil repeats:YES];
+   self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(animateTitle) userInfo:nil repeats:YES];
 }
 
 - (void)animateTitle

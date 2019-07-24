@@ -26,6 +26,7 @@
 @property (nonatomic, assign) BOOL isPortraitPanGesture;
 @property (nonatomic, assign) CGFloat beginDragContentOffsetY;
 @property (nonatomic, assign) CGFloat origNaiVCTopPadding;
+@property (nonatomic, assign)    UIStatusBarStyle      lastStatusBarStyle;
 
 @end
 
@@ -52,6 +53,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    self.lastStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
     self.ttStatusBarStyle = UIStatusBarStyleLightContent;
     self.ttHideNavigationBar = YES;
     self.ttNeedIgnoreZoomAnimation = YES;
@@ -253,6 +255,12 @@
     if ([self.delegate respondsToSelector:@selector(modalWrapController:closeButtonOnClick:)]) {
         [self.delegate modalWrapController:self closeButtonOnClick:sender];
     }
+    [UIApplication sharedApplication].statusBarStyle = self.lastStatusBarStyle;
+}
+
+- (void)dealloc
+{
+     [UIApplication sharedApplication].statusBarStyle = self.lastStatusBarStyle;
 }
 
 - (void)popToLastModalController {

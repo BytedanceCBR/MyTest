@@ -64,7 +64,7 @@
     if(isFirst){
         [self.viewController startLoading];
     }
-    
+
     if(isHead){
         self.maxCursor = nil;
     }else{

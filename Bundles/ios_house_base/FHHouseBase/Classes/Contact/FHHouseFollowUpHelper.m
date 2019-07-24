@@ -18,6 +18,7 @@
 #import "FHHouseType.h"
 #import "FHMainApi+Contact.h"
 #import <FHCHousePush/FHPushAuthorizeManager.h>
+#import "FHUGCConfig.h"
 
 NSString *const kFHDetailFollowUpNotification = @"follow_up_did_changed";
 NSString *const kFHToastCountKey = @"kFHToastCountKey";
@@ -80,6 +81,9 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                 userInfo[@"followId"] = followId;
                 userInfo[@"followStatus"] = @(1);
                 [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
+                if(model.data.socialGroupFollowStatus == 0 && model.data.socialGroupId){
+                    [[FHUGCConfig sharedInstance] followUGCBy:model.data.socialGroupId isFollow:YES completion:nil];
+                }
             }
         }
     }];
@@ -125,6 +129,9 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                 userInfo[@"followId"] = followId;
                 userInfo[@"followStatus"] = @(1);
                 [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
+                if(model.data.socialGroupFollowStatus == 0 && model.data.socialGroupId){
+                    [[FHUGCConfig sharedInstance] followUGCBy:model.data.socialGroupId isFollow:YES completion:nil];
+                }
             }
         }
     }];

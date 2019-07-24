@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)resetConversations:(NSArray<IMConversation*>*)conversations;
 
--(void)resetSystemChannels:(NSArray<FHUnreadMsgDataUnreadModel*>*)channels;
+-(void)resetSystemChannels:(NSArray<FHUnreadMsgDataUnreadModel*>*)channels ugcUnreadMsg:(FHUnreadMsgDataUnreadModel*)ugcUnreadMsg;
 
 -(NSUInteger)numberOfItems;
 

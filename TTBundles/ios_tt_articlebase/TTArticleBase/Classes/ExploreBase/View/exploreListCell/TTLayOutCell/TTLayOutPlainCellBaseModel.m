@@ -141,7 +141,7 @@
         }
         
         self.sourceLabelFontSize = kCellInfoLabelFontSize;
-        self.sourceLabelTextColorThemeKey = kFHColorCoolGrey2;
+        self.sourceLabelTextColorThemeKey = @"grey4";
         self.sourceLabelHidden = NO;
         left += self.sourceLabelFrame.size.width;
         infoMaxWidth -= self.sourceLabelFrame.size.width;
@@ -186,7 +186,7 @@
     }
     
     self.infoLabelFontSize = kCellInfoLabelFontSize;
-    self.infoLabelTextColorThemeKey = kFHColorCoolGrey2;
+    self.infoLabelTextColorThemeKey = @"grey4";
     self.infoLabelFrame = infoLabelFrame;
     self.infoLabelHidden = NO;
     

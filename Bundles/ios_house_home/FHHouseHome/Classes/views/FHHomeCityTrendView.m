@@ -16,6 +16,7 @@
 #import <BDABTestSDK/BDABTestManager.h>
 #import <TTRoute/TTRoute.h>
 #import <TTUIResponderHelper.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 @interface FHHomeCityTrendView()
 
@@ -102,8 +103,8 @@
     self.leftView.titleLabel.text = [NSString stringWithFormat:@"%@%@",model.cityName,model.cityTitleDesc];
     self.leftView.subtitleLabel.text = [NSString stringWithFormat:@"%@",model.cityDetailDesc];
     self.leftView.icon.image = [UIImage imageNamed:@"home_setting_arrow"];
-    self.leftView.leftPadding = 20 * WIDTHSCALE;
-    self.leftView.rightPadding = 10 * WIDTHSCALE;
+    self.leftView.leftPadding = 20 * [TTDeviceHelper scaleToScreen375];
+    self.leftView.rightPadding = 10 * [TTDeviceHelper scaleToScreen375];
     
     CGFloat largeFontSize = self.largeFontSize;
     CGFloat smallFontSize = self.smallFontSize;
@@ -211,7 +212,7 @@
     self.line.left = self.leftView.right;
     self.line.centerY = self.leftView.centerY;
     
-    self.rightArrow.size = CGSizeMake(16 * WIDTHSCALE, 16 * WIDTHSCALE);
+    self.rightArrow.size = CGSizeMake(16 * [TTDeviceHelper scaleToScreen375], 16 * [TTDeviceHelper scaleToScreen375]);
     self.rightArrow.left = self.width - 15 - self.rightArrow.width;
     self.rightArrow.centerY = self.leftView.centerY;
     

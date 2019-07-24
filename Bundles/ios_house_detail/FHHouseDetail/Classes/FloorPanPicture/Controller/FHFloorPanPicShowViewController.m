@@ -11,6 +11,7 @@
 #import "UIFont+House.h"
 #import <TTDeviceHelper.h>
 #import <UIViewController+Track.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 #define FH_FLOOR_PIC_HEADER_HEIGHT 30
 

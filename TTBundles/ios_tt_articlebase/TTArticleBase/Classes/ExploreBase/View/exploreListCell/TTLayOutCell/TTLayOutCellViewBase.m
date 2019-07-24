@@ -609,9 +609,9 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         self.titleLabel.attributedText = cellLayOut.titleAttributedStr;
         self.titleLabel.frame = cellLayOut.titleLabelFrame;
 //        self.titleLabel.frame = CGRectMake(cellLayOut.titleLabelFrame.origin.x, 10, cellLayOut.titleLabelFrame.size.width, cellLayOut.titleLabelFrame.size.height);
-        self.titleLabel.textColorThemeKey = kFHColorCharcoalGrey;
+        self.titleLabel.textColorThemeKey = @"grey1";
         if ([cellLayOut.orderedData.article.hasRead isKindOfClass:[NSNumber class]] && [cellLayOut.orderedData.article.hasRead isEqualToNumber:@(1)]) {
-            self.titleLabel.textColorThemeKey = kFHColorCoolGrey3;
+            self.titleLabel.textColorThemeKey = @"grey3";
         }
         // 增加@和hashtag功能
         [self.titleLabel removeAllLinkAttributes];
@@ -749,8 +749,8 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         if ([self.orderedData isPlainCell]){
             if (self.orderedData.originalData.userRepined &&
                 self.listType != ExploreOrderedDataListTypeFavorite && self.listType != ExploreOrderedDataListTypeReadHistory && self.listType != ExploreOrderedDataListTypePushHistory) {
-                self.typeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoral];
-                self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:kFHColorCoral].CGColor;
+                self.typeLabel.textColor = [UIColor tt_themedColorForKey:@"red1"];
+                self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:@"red1"].CGColor;
             }
             else{
                 [ExploreCellHelper colorTypeLabel:self.typeLabel orderedData:self.orderedData];
@@ -761,8 +761,8 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
                 self.typeLabel.textColor = [UIColor tt_themedColorForKey:kTagViewLineColorBlue()];
                 self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:kTagViewLineColorBlue()].CGColor;
             } else {
-                self.typeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoral];
-                self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:kFHColorCoral].CGColor;
+                self.typeLabel.textColor = [UIColor tt_themedColorForKey:@"red1"];
+                self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:@"red1"].CGColor;
             }
         }
     }

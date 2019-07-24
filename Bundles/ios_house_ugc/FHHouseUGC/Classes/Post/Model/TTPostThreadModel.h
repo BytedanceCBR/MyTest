@@ -41,5 +41,6 @@
 @property (nonatomic, assign) int64_t insertMixCardID;
 @property (nonatomic, copy) NSString * relatedForumSubjectID;//从专题页面进入时带入的专题的forum_id
 @property (nonatomic, copy) NSString *sdkParams;// sdk 分享相关参数
+@property (nonatomic, copy)     NSString       *social_group_id;
 
 @end

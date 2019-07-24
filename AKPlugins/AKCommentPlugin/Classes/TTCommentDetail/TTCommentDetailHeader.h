@@ -43,5 +43,7 @@
 @property (nonatomic,copy) dispatch_block_t willAppearBlock;
 @property (nonatomic,copy) dispatch_block_t willDisAppearBlock;
 @property (nonatomic,assign) NSInteger viewState;
+//ugc模块下进入隐藏下方的部分
+@property (nonatomic,assign) BOOL hidePost;
 
 @end

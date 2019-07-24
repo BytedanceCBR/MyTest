@@ -18,6 +18,8 @@
 #import "FHSingleImageInfoCellModel.h"
 #import "FHHomeHouseModel.h"
 #import "FHHouseRecommendReasonView.h"
+#import "UIButton+TTAdditions.h"
+#import "FHHouseDislikeView.h"
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -36,6 +38,8 @@
 @interface FHHouseBaseItemCell ()
 
 @property(nonatomic, strong) FHSingleImageInfoCellModel *cellModel;
+//首页的小图model
+@property(nonatomic, strong) FHHomeHouseDataItemsModel *homeItemModel;
 
 @property(nonatomic, strong) UIView *leftInfoView;
 
@@ -56,6 +60,7 @@
 @property(nonatomic, strong) UIImageView *fakeImageView;
 @property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
+//@property(nonatomic, strong) UIButton *closeBtn; //x按钮
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 
@@ -237,6 +242,17 @@
     return _recReasonView;
 }
 
+//- (UIButton *)closeBtn {
+//    if (!_closeBtn) {
+//        _closeBtn = [[UIButton alloc] init];
+//        _closeBtn.hidden = YES;
+//        [_closeBtn setImage:[UIImage imageNamed:@"small_icon_close"] forState:UIControlStateNormal];
+//        [_closeBtn addTarget:self action:@selector(dislike) forControlEvents:UIControlEventTouchUpInside];
+//        _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -10, -5, -5);
+//    }
+//    return _closeBtn;
+//}
+
 -(CGFloat)contentMaxWidth
 {
     return  SCREEN_WIDTH - 170; //根据UI图 直接计算出来
@@ -390,7 +406,6 @@
 //        layout.marginBottom = YGPointValue(0);
     }];
     
-    
     [_rightInfoView addSubview:self.recReasonView];
     [_recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isIncludedInLayout = NO;
@@ -433,6 +448,18 @@
         layout.top = YGPointValue(10.f);
         layout.width = YGPointValue(70.0f);
         layout.height = YGPointValue(54.0f);
+    }];
+    
+    [self.leftInfoView addSubview:self.houseVideoImageView];
+    _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video_small"];
+    
+    [_houseVideoImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.position = YGPositionTypeAbsolute;
+        layout.top = YGPointValue(27.0f);
+        layout.left = YGPointValue(25.0f);
+        layout.width = YGPointValue(20.0f);
+        layout.height = YGPointValue(20.0f);
     }];
     
     [_imageTagLabelBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -516,6 +543,7 @@
     [_priceBgView addSubview:self.priceLabel];
 //    [_priceBgView addSubview:self.originPriceLabel];
     [_priceBgView addSubview:self.pricePerSqmLabel];
+//    [_priceBgView addSubview:self.closeBtn];
     [_priceBgView setBackgroundColor:[UIColor whiteColor]];
     [_priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -555,6 +583,13 @@
         layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
         //        layout.marginBottom = YGPointValue(0);
     }];
+    
+//    [_closeBtn configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+//        layout.isEnabled = YES;
+//        layout.marginTop = YGPointValue(8);
+//        layout.width = YGPointValue(8);
+//        layout.height = YGPointValue(8);
+//    }];
 //
     [_rightInfoView addSubview:self.recReasonView];
     [_recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -637,6 +672,13 @@
 
 -(void)updateHomeSmallImageHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel andType:(FHHouseType)houseType
 {
+//    self.homeItemModel = commonModel;
+//    if(houseType == FHHouseTypeSecondHandHouse || houseType == FHHouseTypeRentHouse){
+//        self.closeBtn.hidden = NO;
+//    }else{
+//        self.closeBtn.hidden = YES;
+//    }
+    
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
     self.mainTitleLabel.text = commonModel.displayTitle;
     self.subTitleLabel.text = commonModel.displayDescription;
@@ -1210,5 +1252,50 @@
     return attri;
 }
 
+- (void)dislike {
+//    __weak typeof(self) wself = self;
+//    FHHouseDislikeView *dislikeView = [[FHHouseDislikeView alloc] init];
+//    FHHouseDislikeViewModel *viewModel = [[FHHouseDislikeViewModel alloc] init];
+//    viewModel.keywords = @[
+//                           @{
+//                               @"id" : @"1",
+//                               @"name":@"看过了看过了",
+//                               @"mutual_exclusive_ids":@[@2,@5],
+//                               },
+//                           @{
+//                               @"id" : @"2",
+//                               @"name":@"内容太水"
+//                               },
+//                           @{
+//                               @"id" : @"3",
+//                               @"name":@"不想看",
+//                               @"mutual_exclusive_ids":@[@4],
+//                               },
+//                           @{
+//                               @"id" : @"4",
+//                               @"name":@"不想看不想看",
+//                               @"mutual_exclusive_ids":@[@3],
+//                               },
+//                           @{
+//                               @"id" : @"5",
+//                               @"name":@"一点意思都没有"
+//                               },
+//                           ];
+//    viewModel.groupID = self.cellModel.houseId;
+////    viewModel.logExtra = self.orderedData.log_extra;
+//    [dislikeView refreshWithModel:viewModel];
+//    CGPoint point = self.closeBtn.center;
+//    [dislikeView showAtPoint:point
+//                    fromView:self.closeBtn
+//             didDislikeBlock:^(FHHouseDislikeView * _Nonnull view) {
+//                 [wself dislikeConfirm:view];
+//             }];
+}
+
+- (void)dislikeConfirm:(FHHouseDislikeView *)view {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(dislikeConfirm:)] && self.homeItemModel){
+        [self.delegate dislikeConfirm:self.homeItemModel.idx];
+    }
+}
 
 @end

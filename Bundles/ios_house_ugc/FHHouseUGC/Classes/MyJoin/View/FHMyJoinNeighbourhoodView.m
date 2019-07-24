@@ -10,6 +10,7 @@
 #import "UIFont+House.h"
 #import <Masonry.h>
 #import "FHUGCCellHeaderView.h"
+#import "FHUserTracker.h"
 
 @interface FHMyJoinNeighbourhoodView ()
 
@@ -24,6 +25,7 @@
     if (self) {
         [self initViews];
         [self initConstraints];
+        [self trackElementShow];
     }
     return self;
 }
@@ -31,9 +33,11 @@
 - (void)initViews {
     
     self.backgroundColor = [UIColor themeGray7];
+    self.progressView = [FHPostUGCProgressView sharedInstance];
+    [self addSubview:self.progressView];
     
     self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
-    _headerView.titleLabel.text = @"我加入的小区";
+    _headerView.titleLabel.text = @"我关注的小区圈";
     [_headerView.moreBtn addTarget:self action:@selector(goToMore) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_headerView];
     
@@ -47,7 +51,7 @@
 - (void)initCollectionView {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-    flowLayout.itemSize = CGSizeMake(130, 135);
+    flowLayout.itemSize = CGSizeMake(120, 128);
     flowLayout.minimumLineSpacing = 8;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
@@ -60,14 +64,15 @@
 
 - (void)initConstraints {
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self);
-        make.height.mas_equalTo(44);
+        make.top.mas_equalTo(self.progressView.mas_bottom);
+        make.left.right.mas_equalTo(self);
+        make.height.mas_equalTo(50);
     }];
     
     [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(7);
+        make.top.mas_equalTo(self.headerView.mas_bottom);
         make.left.right.mas_equalTo(self);
-        make.height.mas_equalTo(135);
+        make.height.mas_equalTo(128);
     }];
     
     [self.messageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -98,6 +103,15 @@
     if(self.delegate && [self.delegate respondsToSelector:@selector(gotoMore)]){
         [self.delegate gotoMore];
     }
+}
+
+- (void)trackElementShow {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"element_type"] = @"my_joined_neighborhood";
+    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"enter_from"] = @"neighborhood_tab";
+    tracerDict[@"card_type"] = @"large";
+    TRACK_EVENT(@"element_show", tracerDict);
 }
 
 @end

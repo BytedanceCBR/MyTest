@@ -61,7 +61,7 @@
     for (NSInteger index =0; index < guessYouWantItems.count; index++) {
         FHGuessYouWantResponseDataDataModel *dataItem = guessYouWantItems[index];
         if ([dataItem isKindOfClass:[FHGuessYouWantResponseDataDataModel class]]) {
-            if (dataItem.type == 1 && dataItem.rank >= 0) {
+            if (dataItem.type == 1 && dataItem.rank >= 0 && guessItems.count > dataItem.rank) {
                 [guessItems exchangeObjectAtIndex:dataItem.rank withObjectAtIndex:index];
             }
         }
@@ -263,6 +263,7 @@
     
     while (vArray.count > 0) {
         FHGuessYouWantResponseDataDataModel *item = [vArray firstObject];
+        
         if (item.text.length > 0) {
             CGFloat len = [self guessYouWantTextLength:item.text];
             if (len > remainWidth) {
@@ -320,7 +321,24 @@
             [retArray removeLastObject];
             return retArray;
         }
-        NSArray *tempArray = [array fh_randomArray];
+        NSArray <FHGuessYouWantResponseDataDataModel *>*tempArray = [array fh_randomArray];
+        
+        NSMutableArray *arrayTmp = [NSMutableArray new];
+        if (arrayTmp) {
+            [arrayTmp addObjectsFromArray:tempArray];
+        }
+        
+        for (NSInteger index = 0; index < arrayTmp.count; index ++) {
+            FHGuessYouWantResponseDataDataModel *itemTmp = arrayTmp[index];
+            if ([itemTmp isKindOfClass:[FHGuessYouWantResponseDataDataModel class]] && itemTmp.type == 1) {
+                if(itemTmp.rank >= 0 && arrayTmp.count > itemTmp.rank)
+                {
+                    [arrayTmp exchangeObjectAtIndex:itemTmp.rank withObjectAtIndex:index];
+                }
+            }
+        }
+        tempArray = arrayTmp;
+        
         return [self firstLineGreaterThanSecond:firstWords array:tempArray count:count + 1];
     }
 }
@@ -338,6 +356,12 @@
 
 - (void)trackShowEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
     NSString *wordType = [self wordTypeFor:model.guessSearchType];
+    if (model.type == 1) {
+        wordType = @"web";
+        if (model.rank >= 0) {
+            rank = model.rank;
+        }
+    }
     NSDictionary *tracerDic = @{
                                 @"word":model.text.length > 0 ? model.text : @"be_null",
                                 @"word_id":model.guessSearchId.length > 0 ? model.guessSearchId : @"be_null",
@@ -349,6 +373,12 @@
 
 - (void)trackClickEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
     NSString *wordType = [self wordTypeFor:model.guessSearchType];
+    if (model.type == 1) {
+        wordType = @"web";
+        if (model.rank >= 0) {
+            rank = model.rank;
+        }
+    }
     NSDictionary *tracerDic = @{
                                 @"word":model.text.length > 0 ? model.text : @"be_null",
                                 @"word_id":model.guessSearchId.length > 0 ? model.guessSearchId : @"be_null",

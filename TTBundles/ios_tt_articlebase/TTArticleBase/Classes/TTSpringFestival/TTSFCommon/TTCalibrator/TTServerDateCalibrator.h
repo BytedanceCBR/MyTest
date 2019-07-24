@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTBaseLib/Singleton.h>
+#import <TTArticleBase/Singleton.h>
 
 // 校准精度
 #define TTDispatchTimerUpdateInterval   0.5

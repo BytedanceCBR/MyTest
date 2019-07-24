@@ -251,6 +251,8 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *explainContent;
 @property (nonatomic, copy , nullable) NSString *subTitle;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *icon;
+
 @end
 
 @interface FHDetailDataBaseExtraDetectiveDetectiveInfoModel : JSONModel
@@ -268,6 +270,7 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *icon;
 @property (nonatomic, copy , nullable) NSString *tips;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraDialogsModel *dialogs ;
+@property (nonatomic, assign) BOOL fromDetail;
 
 @end
 
@@ -339,6 +342,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodPriceRangeModel *neighborhoodPriceRange ;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraModel *baseExtra;
+@property (nonatomic, strong , nullable) FHDetailCommunityEntryModel *ugcSocialGroup;
 
 @end
 

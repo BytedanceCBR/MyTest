@@ -271,7 +271,7 @@
         _fontSize = fontSize;
         _ownerType = TTOwnerType_CommentAuthor;
         self.centerY = baselineOriginPoint.y;
-        _textColorThemedKey = kFHColorCharcoalGrey;
+        _textColorThemedKey = @"grey1";
         _titleClickActionExtendToLogos = YES;
 
         _logoModelArray = [NSMutableArray arrayWithCapacity:logoCount];
@@ -280,7 +280,7 @@
         _titleLabel = [[TTAsyncLabel alloc] initWithFrame:CGRectZero];
         _titleLabel.backgroundColor = [UIColor clearColor];
 //        _titleLabel.textColorThemeKey = _textColorThemedKey;
-        _titleLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
+        _titleLabel.textColor = [UIColor tt_themedColorForKey:@"grey1"];
         _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:fontSize] ? : [UIFont boldSystemFontOfSize:fontSize];
         _titleLabel.numberOfLines = 1;
         _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
@@ -342,6 +342,9 @@
     [self buildRelationLabelIfNeed];
     [self buildOwnerViewIfNeed];
     CGSize size = [TTLabelTextHelper sizeOfText:title fontSize:_fontSize forWidth:_maxWidth forLineHeight:_titleLabel.font.lineHeight constraintToMaxNumberOfLines:1 firstLineIndent:0 textAlignment:NSTextAlignmentLeft lineBreakMode:_titleLabel.lineBreakMode];
+    if (size.width < _maxWidth - 3) {
+        size.width += 3;
+    }
     _titleLabel.left = 0;
     _titleLabel.centerY = self.height / 2;
     _titleLabel.width = ceilf(size.width);

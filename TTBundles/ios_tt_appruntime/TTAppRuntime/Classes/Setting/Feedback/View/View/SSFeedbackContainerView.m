@@ -52,7 +52,7 @@ typedef enum SSFeedbackSegmentType {
     self = [super initWithFrame:frame];
     if (self) {
         self.topLine = [[UIView alloc] init];
-        _topLine.backgroundColor = [UIColor tt_themedColorForKey:kFHColorSilver2];
+        _topLine.backgroundColor = [UIColor tt_themedColorForKey:@"grey6"];
         [self addSubview:_topLine];
         
         self.bgButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -60,7 +60,7 @@ typedef enum SSFeedbackSegmentType {
         [self addSubview:_bgButton];
         
         self.bgView = [[UIView alloc] init];
-        _bgView.backgroundColor = [UIColor tt_themedColorForKey:kFHColorPaleGrey];
+        _bgView.backgroundColor = [UIColor tt_themedColorForKey:@"grey7"];
         _bgView.layer.cornerRadius = 4;
         _bgView.userInteractionEnabled = NO;
         [self addSubview:_bgView];
@@ -70,7 +70,7 @@ typedef enum SSFeedbackSegmentType {
         [_inputTitleLabel sizeToFit];
         _inputTitleLabel.backgroundColor = [UIColor clearColor];
         _inputTitleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
-        [_inputTitleLabel setTextColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3]];
+        [_inputTitleLabel setTextColor:[UIColor tt_themedColorForKey:@"grey3"]];
         [self addSubview:_inputTitleLabel];
         [self refreshUI];
     }

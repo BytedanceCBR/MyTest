@@ -27,10 +27,13 @@
 #import <TTBaseLib/UIImageAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "SDImageCache.h"
+#import <Masonry.h>
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
 
 #define NumberOfImagesPerRow 3
-#define ImagesInterval 3.f
-#define kImageHeightInterval 3.f
+#define ImagesInterval 4.f
+#define kImageHeightInterval 4.f
 
 @interface FRAddMultiImagesView() <FRPostAssetViewColumnDelegate, UIActionSheetDelegate,TTImagePickerControllerDelegate,TTImagePreviewViewControllerDelegate>
 {
@@ -63,14 +66,17 @@
     self = [super initWithFrame:frame];
     if (self)
     {
+        _dragEnable = YES;
         _imageSize = (self.width - (NumberOfImagesPerRow - 1) * ImagesInterval) / NumberOfImagesPerRow;
         self.backgroundColor = [UIColor clearColor];
         self.selectionLimit = DefaultImagesSelectionLimit;
         self.selectedImageViews = [NSMutableArray array];
         self.selectedImageCacheTasks = [NSMutableArray array];
         
-        self.addImagesButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.addImagesButton = [FHAddPhotoButton buttonWithType:UIButtonTypeCustom];
         self.addImagesButton.frame = CGRectMake(0, 0, _imageSize, _imageSize);
+        self.addImagesButton.layer.cornerRadius = 4.0;
+        self.addImagesButton.backgroundColor = [UIColor themeGray7];
         [self.addImagesButton addTarget:self action:@selector(showImagePicker) forControlEvents:UIControlEventTouchUpInside];
         
         [self addSubview:self.addImagesButton];
@@ -124,7 +130,7 @@
 
 - (void)changeHeight:(CGFloat)height notiy:(BOOL)notify {
     self.height = height;
-    
+    [self hideAddImagesButtonIfNeed];
     if (notify && self.delegate && [self.delegate respondsToSelector:@selector(addMultiImagesView:changeToSize:)]) {
         [self.delegate addMultiImagesView:self changeToSize:self.frame.size];
     }
@@ -132,11 +138,6 @@
 
 - (void)themeChanged:(NSNotification *)notification {
     [super themeChanged:notification];
-
-    self.addImagesButton.backgroundColor = SSGetThemedColorWithKey(kColorBackground3);
-    [self.addImagesButton setImage:[UIImage themedImageNamed:@"addicon_repost"] forState:UIControlStateNormal];
-    [self.addImagesButton setImage:[UIImage themedImageNamed:@"addicon_repost_press"] forState:UIControlStateHighlighted];
-    self.addImagesButton.layer.borderColor = SSGetThemedColorWithKey(kColorLine1).CGColor;
 }
 
 - (void)appendSelectedImage:(UIImage *)image {
@@ -150,6 +151,9 @@
 
 - (void)appendAssetViewColumnByImage:(UIImage *)image task:(TTUGCImageCompressTask *)task {
     FRPostAssetViewColumn * assetViewColumn = [[FRPostAssetViewColumn alloc] initWithFrame:self.addImagesButton.frame];
+    assetViewColumn.dragEnable = self.dragEnable;
+    assetViewColumn.layer.cornerRadius = 4;
+    assetViewColumn.clipsToBounds = YES;
     assetViewColumn.modeChangeActionType = ModeChangeActionTypeMask;
     
     if (image) {
@@ -243,6 +247,7 @@
     TTImagePickerController *imgPick = [[TTImagePickerController alloc] initWithDelegate:self];
     imgPick.maxImagesCount = self.selectionLimit - [self.selectedImageCacheTasks count];
     imgPick.isRequestPhotosBack = NO;
+    imgPick.isAllowGifPhoto = NO;
     [imgPick presentOn:self.viewController.navigationController];
     
     [TTTrackerWrapper eventV3:@"click_add_image" params:nil];
@@ -526,6 +531,53 @@
         return;
     }
     [self removeAssetViewColumnWithIndex:index];
+}
+
+@end
+
+
+// FHAddPhotoButton
+@interface FHAddPhotoButton ()
+
+@property (nonatomic, strong)   UIImageView       *addImageView;
+@property (nonatomic, strong)   UILabel       *addLabel;
+
+@end
+
+@implementation FHAddPhotoButton
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI {
+    _addImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fh_ugc_add_pic_normal"]];
+    [self addSubview:_addImageView];
+    _addLabel = [[UILabel alloc] init];
+    _addLabel.text = @"添加照片";
+    _addLabel.textColor = [UIColor themeGray3];
+    _addLabel.font = [UIFont themeFontRegular:14];
+    _addLabel.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:_addLabel];
+    CGFloat w = ([UIScreen mainScreen].bounds.size.width - (NumberOfImagesPerRow - 1) * ImagesInterval) / NumberOfImagesPerRow;
+    CGFloat offset = (w - 69) / 2;
+    // 布局
+    [self.addImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self).offset(offset);
+        make.centerX.mas_equalTo(self);
+        make.height.width.mas_equalTo(40);
+    }];
+    [self.addLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.addImageView.mas_bottom).offset(9);
+        make.centerX.mas_equalTo(self);
+        make.width.mas_equalTo(self);
+        make.height.mas_equalTo(20);
+    }];
 }
 
 @end

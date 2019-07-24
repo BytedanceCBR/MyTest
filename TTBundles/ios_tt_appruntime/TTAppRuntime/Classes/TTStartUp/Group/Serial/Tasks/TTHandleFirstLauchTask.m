@@ -12,6 +12,7 @@
 //#import "FRLogicManager.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTLaunchDefine.h"
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 
 DEC_TASK("TTHandleFirstLauchTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+13);
 

@@ -106,6 +106,8 @@ typedef NS_ENUM(NSUInteger, TTPostThreadTaskErrorPosition) {
 // sdk 分享相关参数
 @property (nonatomic, copy) NSString *sdkParams;
 
+@property (nonatomic, copy)     NSString       *social_group_id;
+
 // 在初始化时确定Task的类型，默认为发普通帖子
 - (instancetype)initWithTaskType:(TTPostTaskType)taskType;
 

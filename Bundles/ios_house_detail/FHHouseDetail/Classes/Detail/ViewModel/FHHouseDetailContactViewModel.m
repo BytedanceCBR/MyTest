@@ -44,6 +44,7 @@
 #import <HMDTTMonitor.h>
 #import <FHIESGeckoManager.h>
 #import "FHHouseDetailPhoneCallViewModel.h"
+#import "FHHouseDetailViewController.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -87,7 +88,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         
         __weak typeof(self)wself = self;
         _bottomBar.bottomBarContactBlock = ^{
-            [wself contactActionWithExtraDict:nil];
+            NSMutableDictionary *extraDic = @{}.mutableCopy;
+            if (wself.fromStr.length > 0) {
+                extraDic[@"from"] = wself.fromStr;
+            }
+            [wself contactActionWithExtraDict:extraDic];
         };
         _bottomBar.bottomBarLicenseBlock = ^{
             [wself licenseAction];
@@ -485,15 +490,18 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSString *title = nil;
     NSString *subtitle = nil;
     NSString *btnTitle = @"提交";
+    NSString *fromStr = nil;
 
     if (actionType == FHFollowActionTypeFloorPan) {
         title = @"开盘通知";
         subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机";
         btnTitle = @"提交";
+        fromStr = @"app_sellnotice";
     }else if (actionType == FHFollowActionTypePriceChanged) {
         title = @"变价通知";
         subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机";
         btnTitle = @"提交";
+        fromStr = @"app_pricenotice";
     }
     FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
     fillFormConfig.houseType = self.houseType;
@@ -519,12 +527,14 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [fillFormConfig setTraceParams:params];
     fillFormConfig.searchId = self.searchId;
     fillFormConfig.imprId = self.imprId;
+    fillFormConfig.fromStr = fromStr;
     fillFormConfig.chooseAgencyList = self.chooseAgencyList;
     [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
 }
 
 // 拨打电话
 - (void)callActionWithExtraDict:(NSDictionary *)extraDict {
+    WeakSelf;
     NSMutableDictionary *params = @{}.mutableCopy;
     if (self.tracerDict) {
         [params addEntriesFromDictionary:self.tracerDict];
@@ -543,7 +553,13 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (extraDict[@"from"]) {
         contactConfig.from = extraDict[@"from"];
     }
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
+        if(success && [wself.phoneCallViewModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
+            FHHouseDetailViewController *vc = (FHHouseDetailViewController *)wself.phoneCallViewModel.belongsVC;
+            vc.isPhoneCallShow = YES;
+            vc.phoneCallRealtorId = contactConfig.realtorId;
+        }
+    }];
     
     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
     configModel.houseType = self.houseType;

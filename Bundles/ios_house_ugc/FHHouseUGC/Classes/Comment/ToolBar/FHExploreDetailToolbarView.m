@@ -203,6 +203,6 @@
 @end
 
 CGFloat FHExploreDetailGetToolbarHeight(void) {
-    return ([TTDeviceHelper isPadDevice] ? 50 : 44) + [TTDeviceHelper ssOnePixel];
+    return ([TTDeviceHelper isPadDevice] ? 50 : 48) + [TTDeviceHelper ssOnePixel];
 }
 

@@ -10,13 +10,18 @@
 #import "FHUtils.h"
 #import "FHEnvContext.h"
 #import "FHLazyLoadModel.h"
+#import "FHUGCConfigModel.h"
+
+
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
+static NSString *const kUGCConfigKey = @"ugcConfig";
 static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 static NSString *const kUserDefaultCityNamePre05_Key = @"currentcitytext"; // 0.5版本之前保存的当前城市名称
 NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 NSString *const kFHPLoginhoneNumberCacheKey = @"loginPhoneNumber";
 static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
+static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
 
 
 @interface FHGeneralBizConfig ()
@@ -26,6 +31,7 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 @property (nonatomic, strong) YYCache *userDefaultSelectCityCache;
 @property(nonatomic , strong) YYCache *sendPhoneNumberCache;
 @property(nonatomic , strong) YYCache *subscribeHouseCache;
+@property(nonatomic , strong) YYCache *detailFeedbackCache;
 
 @end
 
@@ -110,6 +116,16 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
     }
 }
 
+- (void)saveUGCConfigCache:(FHUGCConfigModel *)configValue
+{
+    if([configValue.data isKindOfClass:[FHUGCConfigModel class]])
+    {
+        NSString *configJsonStr = configValue.data.toJSONString;
+        if ([configJsonStr isKindOfClass:[NSString class]]) {
+            [self.generalConfigCache setObject:configJsonStr forKey:kUGCConfigKey];
+        }
+    }
+}
 
 - (void)updateUserSelectDiskCacheIndex:(NSNumber *)indexNum
 {
@@ -249,6 +265,14 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
         _subscribeHouseCache = [YYCache cacheWithName:kFHSubscribeHouseCacheKey];
     }
     return _subscribeHouseCache;
+}
+
+- (YYCache *)detailFeedbackCache
+{
+    if (!_detailFeedbackCache) {
+        _detailFeedbackCache = [YYCache cacheWithName:kFHDetailFeedbackCacheKey];
+    }
+    return _detailFeedbackCache;
 }
 
 @end
