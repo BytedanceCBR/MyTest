@@ -583,7 +583,7 @@ def appPods
     pod_binary  'BDABTestSDK', '1.0.2-rc.3'
     #pod 'BDABTestSDK', '1.0.0'
 
-
+    pod_binary 'BDUGDeepLink', '1.0.1'
 end
 target 'NewsLite' do
     fhPods
