@@ -35,11 +35,10 @@ typedef enum : NSUInteger {
     NSString *realtorId = configModel.realtorId;
     NSString *searchId = configModel.searchId;
     NSString *imprId = configModel.imprId;
-//    if (phone.length < 1 || houseId.length < 1 || realtorId.length < 1 || searchId.length < 1 || imprId.length < 1) {
-    if (realtorId.length < 1) {
-        NSAssert(NO, @"请校验以上必填字段！");
-        return NO;
-    }
+//    if (realtorId.length < 1) {
+//        NSAssert(NO, @"请校验以上必填字段！");
+//        return NO;
+//    }
     return YES;
 }
 
