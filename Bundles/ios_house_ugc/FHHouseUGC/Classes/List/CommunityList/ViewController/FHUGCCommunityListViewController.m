@@ -3,13 +3,14 @@
 //
 
 #import "FHUGCCommunityListViewController.h"
-#import "FHCommunityList.h"
 #import "UIViewController+Track.h"
 #import "FHUGCCommunityListSearchBar.h"
 #import "FHUGCCommunityDistrictTabView.h"
 #import "FHUGCCommunityListViewModel.h"
 #import "FHUGCScialGroupModel.h"
 #import "FHUserTracker.h"
+#import "TTUIResponderHelper.h"
+#import "UIViewAdditions.h"
 
 @interface FHUGCCommunityListViewController ()
 @property(nonatomic, strong) UIView *loadingView;
@@ -189,6 +190,8 @@
         _tableView.estimatedRowHeight = 0;
         _tableView.estimatedSectionHeaderHeight = 0;
         _tableView.estimatedSectionFooterHeight = 0;
+        UIEdgeInsets sageArea = [TTUIResponderHelper mainWindow].tt_safeAreaInsets;
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 10 + sageArea.bottom, 0);
         [self.view addSubview:_tableView];
     }
     return _tableView;
@@ -197,6 +200,9 @@
 - (FHUGCCommunityCategoryView *)categoryView {
     if (!_categoryView) {
         _categoryView = [[FHUGCCommunityCategoryView alloc] initWithFrame:CGRectZero];
+
+        UIEdgeInsets sageArea = [TTUIResponderHelper mainWindow].tt_safeAreaInsets;
+        _categoryView.contentInset = UIEdgeInsetsMake(10, 0, 10 + sageArea.bottom, 0);
         [self.view addSubview:_categoryView];
     }
     return _categoryView;

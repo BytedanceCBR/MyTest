@@ -455,7 +455,7 @@
     tracerDic[@"rank"] = @(rank);
     tracerDic[@"log_pb"] = model.logPb ?: @"be_null";
     tracerDic[@"click_position"] = @"select_like";
-    [FHUserTracker writeEvent:@"click_join" params:tracerDic];
+    [FHUserTracker writeEvent:@"click_select" params:tracerDic];
 }
 
 @end
