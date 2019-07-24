@@ -25,11 +25,8 @@
 #import <BDAgileLog.h>
 #import <FHHouseBase/FHMainApi.h>
 #import <TTInstallService/TTInstallIDManager.h>
-<<<<<<< HEAD
 #import "TTBaseMacro.h"
-=======
 #import <FHHouseBase/FHSearchChannelTypes.h>
->>>>>>> feature/0_7_2
 
 #define GET @"GET"
 #define POST @"POST"
