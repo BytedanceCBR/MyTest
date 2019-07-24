@@ -23,6 +23,7 @@
 #import "FHHousePhoneCallUtils.h"
 #import "FHHouseFollowUpHelper.h"
 #import "FHFillFormAgencyListItemModel.h"
+#import "FHHouseDetailViewController.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHToastCountKey;
@@ -187,7 +188,13 @@ extern NSString *const kFHToastCountKey;
     contactConfig.realtorId = configModel.realtorId;
     contactConfig.searchId = configModel.searchId;
     contactConfig.imprId = configModel.imprId;
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
+        if(success && [configModel.topViewController isKindOfClass:[FHHouseDetailViewController class]]){
+            FHHouseDetailViewController *vc = (FHHouseDetailViewController *)configModel.topViewController;
+            vc.isPhoneCallShow = YES;
+            vc.phoneCallRealtorId = contactConfig.realtorId;
+        }
+    }];
 }
 
 + (void)fillOnlineFormActionWithConfig:(NSDictionary *)config

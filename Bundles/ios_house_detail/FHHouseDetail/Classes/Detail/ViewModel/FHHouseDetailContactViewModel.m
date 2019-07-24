@@ -44,6 +44,7 @@
 #import <HMDTTMonitor.h>
 #import <FHIESGeckoManager.h>
 #import "FHHouseDetailPhoneCallViewModel.h"
+#import "FHHouseDetailViewController.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -533,6 +534,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 // 拨打电话
 - (void)callActionWithExtraDict:(NSDictionary *)extraDict {
+    WeakSelf;
     NSMutableDictionary *params = @{}.mutableCopy;
     if (self.tracerDict) {
         [params addEntriesFromDictionary:self.tracerDict];
@@ -551,7 +553,13 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (extraDict[@"from"]) {
         contactConfig.from = extraDict[@"from"];
     }
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
+        if(success && [wself.phoneCallViewModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
+            FHHouseDetailViewController *vc = (FHHouseDetailViewController *)wself.phoneCallViewModel.belongsVC;
+            vc.isPhoneCallShow = YES;
+            vc.phoneCallRealtorId = contactConfig.realtorId;
+        }
+    }];
     
     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
     configModel.houseType = self.houseType;
