@@ -101,8 +101,8 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         NSDictionary *log_pb = data.logPb;
         dict[@"community_id"] = data.socialGroupId;
-        // add by zyk 要改
-        dict[@"tracer"] = @{@"enter_from":@"feed_detail",
+        NSString *enter_from = headerModel.tracerDict[@"page_type"] ?: @"be_null";
+        dict[@"tracer"] = @{@"enter_from":enter_from,
                             @"enter_type":@"click",
                             @"log_pb":log_pb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];

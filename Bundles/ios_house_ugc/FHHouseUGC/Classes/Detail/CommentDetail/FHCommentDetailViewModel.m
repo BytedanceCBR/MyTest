@@ -198,6 +198,7 @@
                 feedContent.userInfo = userInfoModel;
             }
             cellModel = [FHFeedUGCCellModel modelFromFeedContent:feedContent];
+            cellModel.tracerDic = self.detailVC.tracerDict.mutableCopy;
             [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:0];
             [self.detailVC refreshUI];
         }
@@ -583,6 +584,12 @@
     NSInteger section = indexPath.section;
     if (section == 0) {
         // 头部详情
+        FHUGCBaseCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if ([cell isKindOfClass:[FHPostDetailHeaderCell class]]) {
+            if (cell.didClickCellBlk) {
+                cell.didClickCellBlk();
+            }
+        }
     } else if (section == 1) {
         if (indexPath.row < self.totalComments.count) {
             id data = self.totalComments[indexPath.row];
