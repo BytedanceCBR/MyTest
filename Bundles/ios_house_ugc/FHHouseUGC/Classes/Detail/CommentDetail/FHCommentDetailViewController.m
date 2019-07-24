@@ -31,6 +31,7 @@
 #import "FHPostDetailNavHeaderView.h"
 #import "FHUGCFollowButton.h"
 #import "FHCommonDefines.h"
+#import "FHFeedOperationView.h"
 
 @interface FHCommentDetailViewController ()
 
@@ -53,6 +54,9 @@
         if ([params isKindOfClass:[NSDictionary class]]) {
             // 6714466747832877060  6712727097456623627  6714431339993235463
             self.comment_id = [params tt_stringValueForKey:@"comment_id"];
+            // 埋点
+            self.tracerDict[@"page_type"] = @"ugc_comment_detail";
+            self.ttTrackStayEnable = YES;
         }
     }
     return self;
@@ -64,6 +68,14 @@
     [self setupUI];
     [self startLoadData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
+    [self addGoDetailLog];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self addStayPageLog];
+    //跳页时关闭举报的弹窗
+    [FHFeedOperationView dismissIfVisible];
 }
 
 - (void)dealloc
@@ -357,6 +369,44 @@
 //    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
 //    tracerDict[@"click_position"] = @"submit_comment";
 //    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
+}
+
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayPageLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+#pragma mark - Tracer
+
+-(void)addGoDetailLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
+}
+
+-(void)addStayPageLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
+    [self tt_resetStayTime];
+}
+
+- (void)addReadPct {
+//    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+//    tracerDict[@"page_count"] = @"1";
+//    tracerDict[@"percent"] = @"100";
+//    tracerDict[@"item_id"] = self.comment_id ?: @"be_null";
+//    [FHUserTracker writeEvent:@"read_pct" params:tracerDict];
 }
 
 @end
