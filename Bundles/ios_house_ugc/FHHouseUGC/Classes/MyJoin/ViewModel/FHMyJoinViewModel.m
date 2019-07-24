@@ -138,7 +138,7 @@
         TTRouteUserInfo *ugcUserInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDictForUgc}];
         [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:ugcUserInfo];
     }
-    [self trackClickOptions];
+    [self trackClickOptions:@"feed_message_tips_card"];
 }
 
 // 更新发帖进度视图
@@ -189,6 +189,7 @@
     
     //最后一个为全部
     if(indexPath.row == self.dataList.count - 1){
+        [self trackClickOptions:@"all_community"];
         [self gotoMore];
         return;
     }
@@ -244,7 +245,7 @@
 #pragma mark - FHMyJoinNeighbourhoodViewDelegate
 
 - (void)gotoMore {
-    [self trackMore];
+//    [self trackMore];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"action_type"] = @(FHCommunityListTypeFollow);
     dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdFollow);
@@ -268,7 +269,7 @@
     TRACK_EVENT(@"element_show", tracerDict);
 }
 
-- (void)trackClickOptions {
+- (void)trackClickOptions:(NSString *)position {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     tracerDict[@"click_position"] = @"feed_message_tips_card";
     tracerDict[@"page_type"] = @"my_join_list";
@@ -307,6 +308,5 @@
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     TRACK_EVENT(@"element_show", tracerDict);
 }
-
 
 @end
