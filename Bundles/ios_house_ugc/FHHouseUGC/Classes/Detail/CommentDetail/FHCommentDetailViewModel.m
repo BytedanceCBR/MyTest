@@ -302,6 +302,12 @@
         self.offset = [model.data.offset integerValue];
         self.comment_count = [model.data.totalCount integerValue];
         [self commentCountChanged];
+        // 点击评论进入文章时跳转到评论区
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf p_scrollToCommentIfNeeded];
+            weakSelf.beginShowComment = NO;
+        });
     } else {
         // hasmore = no
         self.hasMore = NO;
@@ -442,6 +448,30 @@
         }
     }
 }
+
+- (void)p_scrollToCommentIfNeeded
+{
+    if (self.beginShowComment) {
+        // 跳转到评论 区域
+        CGFloat totalHeight = self.tableView.contentSize.height;
+        CGFloat frameHeight = self.tableView.bounds.size.height;
+        CGFloat detailHeight = 0;// 详情高度
+        for (int i = 0; i < self.detailHeights.count; i++) {
+            CGFloat hei = [self.detailHeights[i] floatValue];
+            detailHeight += hei;
+        }
+        
+        if (totalHeight - detailHeight > frameHeight) {
+            [self.tableView setContentOffset:CGPointMake(0, detailHeight) animated:YES];
+        } else if (totalHeight > frameHeight) {
+            CGFloat offset = totalHeight - frameHeight - 1;
+            if (offset > 0) {
+                [self.tableView setContentOffset:CGPointMake(0, offset) animated:YES];
+            }
+        }
+    }
+}
+
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
