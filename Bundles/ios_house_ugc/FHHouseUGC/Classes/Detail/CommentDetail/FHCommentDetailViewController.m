@@ -42,6 +42,7 @@
 @property (nonatomic, strong)   FHUGCReplyCommentWriteView       *commentWriteView;
 @property (nonatomic, strong)   FHPostDetailNavHeaderView       *naviHeaderView;
 @property (nonatomic, strong)   FHUGCFollowButton       *followButton;// 关注
+@property (nonatomic, assign) BOOL beginShowComment;// 点击评论按钮
 
 @end
 
@@ -57,6 +58,11 @@
             // 埋点
             self.tracerDict[@"page_type"] = @"ugc_comment_detail";
             self.ttTrackStayEnable = YES;
+            // 点击评论按钮
+            self.beginShowComment = NO;
+            if(paramObj.allParams[@"begin_show_comment"]) {
+                self.beginShowComment = [paramObj.allParams[@"begin_show_comment"] boolValue];
+            }
         }
     }
     return self;
@@ -94,6 +100,7 @@
     [self.view addSubview:_tableView];
     self.viewModel = [[FHCommentDetailViewModel alloc] initWithController:self tableView:_tableView];
     self.viewModel.comment_id = self.comment_id;
+    self.viewModel.beginShowComment = self.beginShowComment;
     [self setupToolbarView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);

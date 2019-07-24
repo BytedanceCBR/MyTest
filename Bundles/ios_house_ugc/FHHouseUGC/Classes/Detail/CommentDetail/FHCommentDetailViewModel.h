@@ -29,6 +29,8 @@ static NSString *const kFHUGCDelCommentDetailReplyNotification = @"k_fh_ugc_del_
 @property (nonatomic, assign)   int64_t       digg_count;// 点赞数
 @property (nonatomic, assign)   NSInteger       user_digg;// 当前用户是否点赞
 
+@property (nonatomic, assign) BOOL beginShowComment;// 点击评论按钮
+
 @property (nonatomic, weak)   FHPostDetailHeaderModel *detailHeaderModel;
 
 // 插入新回复的数据
