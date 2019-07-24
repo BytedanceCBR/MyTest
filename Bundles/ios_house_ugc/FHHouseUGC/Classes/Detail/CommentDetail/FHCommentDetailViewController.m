@@ -236,6 +236,7 @@
 {
     if (sender == self.toolbarView.writeButton) {
         // 输入框
+        [self clickCommentFieldTracer];
         [self p_willOpenWriteCommentViewWithReplyCommentModel:nil];
     }
     else if (sender == _toolbarView.digButton) {
@@ -252,7 +253,6 @@
 - (void)p_willOpenWriteCommentViewWithReplyCommentModel:(id<TTCommentDetailReplyCommentModelProtocol>)replyCommentModel   {
 
     WeakSelf;
-    // action.replyCommentModel? :[self pageState].defaultRelyModel
     TTCommentDetailReplyWriteManager *replyManager = [[TTCommentDetailReplyWriteManager alloc] initWithCommentDetailModel:self.viewModel.commentDetailModel replyCommentModel:replyCommentModel commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
         StrongSelf;
         *willRepostFwID = [wself.viewModel.commentDetailModel.repost_params tt_stringValueForKey:@"fw_id"];
@@ -267,8 +267,8 @@
         }
     } getReplyCommentModelClassBlock:nil commentRepostWithPreRichSpanText:nil commentSource:nil];
     
-    replyManager.enterFrom = @"comment_detail";
-//        replyManager.enter_type = @"submit_comment";
+    replyManager.enterFrom = self.tracerDict[@"page_type"];
+    replyManager.logPb = self.tracerDict[@"log_pb"];
     
     self.commentWriteView = [[FHUGCReplyCommentWriteView alloc] initWithCommentManager:replyManager];
 
@@ -325,18 +325,27 @@
     }];
 }
 
+// 点击评论
+- (void)clickCommentFieldTracer {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"comment_field";
+    [FHUserTracker writeEvent:@"click_comment_field" params:tracerDict];
+}
+
 // 详情 点赞
 - (void)click_feed_like {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"feed_like";
-    [FHUserTracker writeEvent:@"click_like" params:tracerDict];
+    tracerDict[@"click_position"] = @"reply_like";
+    tracerDict[@"comment_id"] = self.comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_like" params:tracerDict];
 }
 
 // 详情页 取消点赞
 - (void)click_feed_dislike {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"feed_dislike";
-    [FHUserTracker writeEvent:@"click_dislike" params:tracerDict];
+    tracerDict[@"click_position"] = @"reply_dislike";
+    tracerDict[@"comment_id"] = self.comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_dislike" params:tracerDict];
 }
 
 - (void)likeStateChange:(NSNotification *)notification {

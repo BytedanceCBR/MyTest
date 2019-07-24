@@ -76,10 +76,8 @@
         [self configTableView];
         [self commentCountChanged];
         [self store];
-        //  add by zyk
-//        self.store.enterFrom = self.enterFrom;
-//        self.store.categoryID = self.categoryID;
-//        self.store.logPb = self.logPb;
+        self.store.enterFrom = self.detailVC.tracerDict[@"enter_from"];
+        self.store.logPb = self.detailVC.tracerDict[@"log_pb"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delCommentDetailReplySuccess:) name:kFHUGCDelCommentDetailReplyNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     }
@@ -630,7 +628,6 @@
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view digCommentWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-    // @"rt_like" 是否需要埋点
     NSInteger action = 0;
     if (model.userDigg) {
         action = 0;
@@ -639,10 +636,12 @@
             model.diggCount = 0;
         }
         model.userDigg = NO;
+        [self click_rt_dislike];
     } else {
         action = 1;
         model.diggCount += 1;
         model.userDigg = YES;
+        [self click_rt_like];
     }
     // 新接口
     [FHCommonApi requestCommonDigg: model.commentID groupType:FHDetailDiggTypeREPLY action:action completion:nil];
@@ -663,6 +662,22 @@
 
 - (void)tt_commentCell:(UITableViewCell *)view quotedNameOnClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
 
+}
+
+#pragma mark - Tracer
+
+// 评论 点赞
+- (void)click_rt_like {
+    NSMutableDictionary *tracerDict = self.detailVC.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_like";
+    [FHUserTracker writeEvent:@"rt_like" params:tracerDict];
+}
+
+// 评论 取消点赞
+- (void)click_rt_dislike {
+    NSMutableDictionary *tracerDict = self.detailVC.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_dislike";
+    [FHUserTracker writeEvent:@"rt_dislike" params:tracerDict];
 }
 
 @end
