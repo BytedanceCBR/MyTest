@@ -344,8 +344,19 @@
         [self jumpToPostDetail:cellModel showComment:showComment enterType:enterType];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
         // 评论
+        NSMutableDictionary *dict = [NSMutableDictionary new];
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = @"community_group_detail";
+        traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+        traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+        traceParam[@"log_pb"] = cellModel.logPb;
+        dict[TRACER_KEY] = traceParam;
+        
+        dict[@"data"] = cellModel;
+        dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
         // 问题 回答
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
