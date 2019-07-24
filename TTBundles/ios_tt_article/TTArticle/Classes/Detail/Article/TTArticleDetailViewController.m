@@ -1782,6 +1782,10 @@
     commentManager.enterFromStr = self.detailModel.clickLabel;
     commentManager.categoryID = self.detailModel.categoryID;
     commentManager.logPb = self.detailModel.logPb;
+    
+    if(self.detailModel.reportParams){
+        commentManager.reportParams = self.detailModel.reportParams;
+    }
 
     self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
 
@@ -2634,6 +2638,11 @@
         [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
         [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
+        
+        if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]){
+            [params addEntriesFromDictionary:self.detailModel.reportParams];
+        }
+        
         [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
     } else {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
@@ -2646,6 +2655,11 @@
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
         [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
         [params setValue:@"comment" forKey:@"position"];
+        
+        if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]){
+            [params addEntriesFromDictionary:self.detailModel.reportParams];
+        }
+        
         [TTTrackerWrapper eventV3:@"rt_like" params:params];
     }
 }

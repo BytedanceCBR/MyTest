@@ -104,13 +104,13 @@
         
         [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
         
-        if(!isEmptyString(model.openUrl) && !isEmptyString(model.sourceDesc)){
+        if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
             //针对问答的情况
             cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
         }else{
             cellModel.desc = [self generateArticleDesc:model];
         }
-        cellModel.detailScheme = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
+//        cellModel.detailScheme = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
         
         FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
         community.name = model.community.name;

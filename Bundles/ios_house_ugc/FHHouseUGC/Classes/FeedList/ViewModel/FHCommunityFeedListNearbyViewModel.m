@@ -316,11 +316,10 @@
             }
             else if([[TTRoute sharedRoute] canOpenURL:url]){
                 canOpenURL = YES;
-                //问答
+                //优先跳转openurl
                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
             }
         }else{
-            //文章
             NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
         }

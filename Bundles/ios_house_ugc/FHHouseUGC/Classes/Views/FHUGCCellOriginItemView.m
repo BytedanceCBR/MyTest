@@ -133,14 +133,6 @@
 
 
 - (void)goToDetail:(UITapGestureRecognizer *)sender {
-//    NSDictionary *dic = @{
-//                         @"enter_from":@"test",
-//                         @"element_from":@"high_level"
-//                         };
-//    NSString *str = [[dic tt_JSONRepresentation] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-//    NSString *routeUrl = @"sslocal://detail?groupid=6698944131420389895&item_id=6698944131420389895&report_params=%7b%22element_from%22%3a%22high_level%22%2c%22enter_from%22%3a%22test%22%7d";
-    
     NSString *routeUrl = self.cellModel.originItemModel.openUrl;
     if(routeUrl){
         NSURL *openUrl = [NSURL URLWithString:routeUrl];
