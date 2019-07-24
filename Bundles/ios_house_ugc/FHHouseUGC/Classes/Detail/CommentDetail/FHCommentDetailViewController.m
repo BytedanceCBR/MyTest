@@ -275,10 +275,10 @@
     // 点赞埋点
     if (self.viewModel.user_digg == 1) {
         // 取消点赞
-//        [self click_feed_dislike];
+        [self click_feed_dislike];
     } else {
         // 点赞
-//        [self click_feed_like];
+        [self click_feed_like];
     }
     if ([TTAccountManager isLogin]) {
         [self p_digg];
@@ -309,13 +309,27 @@
     self.viewModel.user_digg = (self.viewModel.user_digg == 1) ? 0 : 1;
     
     NSMutableDictionary *dict = [NSMutableDictionary new];
-//    dict[@"enter_from"] = self.tracerDict[@"enter_from"];
-//    dict[@"element_from"] = self.tracerDict[@"element_from"];
-//    dict[@"page_type"] = self.tracerDict[@"page_type"];
+    dict[@"enter_from"] = self.tracerDict[@"enter_from"];
+    dict[@"element_from"] = self.tracerDict[@"element_from"];
+    dict[@"page_type"] = self.tracerDict[@"page_type"];
     
     [FHCommonApi requestCommonDigg:self.comment_id groupType:FHDetailDiggTypeCOMMENT action:self.viewModel.user_digg tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
     }];
+}
+
+// 详情 点赞
+- (void)click_feed_like {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"feed_like";
+    [FHUserTracker writeEvent:@"click_like" params:tracerDict];
+}
+
+// 详情页 取消点赞
+- (void)click_feed_dislike {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"feed_dislike";
+    [FHUserTracker writeEvent:@"click_dislike" params:tracerDict];
 }
 
 - (void)likeStateChange:(NSNotification *)notification {

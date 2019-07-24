@@ -111,9 +111,6 @@
     
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCommunityDetail)];
     [self.positionView addGestureRecognizer:singleTap];
-    
-    UITapGestureRecognizer* singleOriginTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoOriginDetail)];
-    [self.originView addGestureRecognizer:singleOriginTap];
 }
 
 - (void)setupConstraints {
@@ -231,20 +228,6 @@
         // 跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    }
-}
-
-- (void)gotoOriginDetail {
-    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
-    if (cellModel.cellType == FHUGCFeedListCellTypeArticleComment) {
-        // 评论详情
-        if (cellModel.originItemModel.openUrl.length > 0) {
-            NSURL *openUrl = [NSURL URLWithString:cellModel.originItemModel.openUrl];
-            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-        }
-    } else if (cellModel.cellType == FHUGCFeedListCellTypeArticleComment) {
-        // 问答详情
-        //
     }
 }
 
