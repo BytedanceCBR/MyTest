@@ -18,6 +18,7 @@ typedef NS_ENUM(NSInteger,FHUGCCommunityDistrictTabSelectType){
 @end
 
 @interface FHUGCCommunityCategoryView : UIView
+@property(nonatomic, assign) UIEdgeInsets contentInset;
 @property(nonatomic, weak) id <FHUGCCommunityCategoryViewDelegate> delegate;
 
 //默认全部为非选中状态,

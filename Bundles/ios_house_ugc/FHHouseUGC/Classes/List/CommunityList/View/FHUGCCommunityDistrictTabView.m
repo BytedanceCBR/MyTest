@@ -32,6 +32,10 @@
     }];
 }
 
+-(void)setContentInset:(UIEdgeInsets)contentInset {
+    self.categoryView.contentInset = contentInset;
+}
+
 - (void)refreshWithCategories:(NSArray<FHUGCCommunityDistrictTabModel *> *)categories{
     if (!categories) {
         return;
