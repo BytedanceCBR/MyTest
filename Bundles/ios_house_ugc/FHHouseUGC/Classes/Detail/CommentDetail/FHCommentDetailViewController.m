@@ -247,6 +247,7 @@
 
 // 点击回复 进行评论
 - (void)openWriteCommentViewWithReplyCommentModel:(id<TTCommentDetailReplyCommentModelProtocol>)replyCommentModel {
+    [self clickReplyComment:replyCommentModel.commentID];
     [self p_willOpenWriteCommentViewWithReplyCommentModel:replyCommentModel];
 }
 
@@ -256,9 +257,10 @@
     TTCommentDetailReplyWriteManager *replyManager = [[TTCommentDetailReplyWriteManager alloc] initWithCommentDetailModel:self.viewModel.commentDetailModel replyCommentModel:replyCommentModel commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
         StrongSelf;
         *willRepostFwID = [wself.viewModel.commentDetailModel.repost_params tt_stringValueForKey:@"fw_id"];
-
     } publishCallback:^(id<TTCommentDetailReplyCommentModelProtocol>replyModel, NSError *error) {
         StrongSelf;
+        // 回复 按钮点击成功之后的埋点上报，点击的时机不好获取
+        [wself clickSubmitComment];
         if (error) {
             return;
         }
@@ -323,6 +325,21 @@
     [FHCommonApi requestCommonDigg:self.comment_id groupType:FHDetailDiggTypeCOMMENT action:self.viewModel.user_digg tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
     }];
+}
+
+// 点击回复
+- (void)clickSubmitComment {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"submit_comment";
+    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
+}
+
+// 点击回复他人的评论中的“回复”按钮
+- (void)clickReplyComment:(NSString *)comment_id {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"click_position"] = @"reply_comment";
+    tracerDict[@"comment_id"] = comment_id ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_reply_comment" params:tracerDict];
 }
 
 // 点击评论
@@ -390,13 +407,6 @@
     } else {
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
-}
-
-// 点击回复
-- (void)clickSubmitComment {
-//    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-//    tracerDict[@"click_position"] = @"submit_comment";
-//    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
 }
 
 
