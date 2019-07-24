@@ -30,6 +30,7 @@
 @property(nonatomic, assign) BOOL isShowMessage;
 @property(nonatomic, assign) CGFloat messageViewHeight;
 @property(nonatomic, strong) FHMyJoinAllNeighbourhoodCell *allCell;
+@property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 
 @end
 
@@ -68,6 +69,7 @@
 
 - (void)requestData {
     [self.dataList removeAllObjects];
+    [self.clientShowDict removeAllObjects];
     if([[FHUGCConfig sharedInstance] followList].count > maxFollowItem){
         NSArray *followList = [[FHUGCConfig sharedInstance] followList];
         NSArray *subFollowList = [followList subarrayWithRange:NSMakeRange(0, maxFollowItem)];
@@ -156,6 +158,12 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    if(indexPath.row < self.dataList.count){
+        [self traceClientShowAtIndexPath:indexPath];
+    }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -266,6 +274,38 @@
     tracerDict[@"page_type"] = @"my_join_list";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     TRACK_EVENT(@"click_options", tracerDict);
+}
+
+- (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
+    if (indexPath.row >= self.dataList.count) {
+        return;
+    }
+    
+    FHUGCScialGroupDataModel *cellModel = self.dataList[indexPath.row];
+    
+    if (!self.clientShowDict) {
+        self.clientShowDict = [NSMutableDictionary new];
+    }
+    
+    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+    NSString *groupId = cellModel.socialGroupId;
+    if(groupId){
+        if (self.clientShowDict[groupId] || ![groupId isEqualToString:@"-1"]) {
+            return;
+        }
+        
+        self.clientShowDict[groupId] = @(indexPath.row);
+        [self trackClientShow:cellModel rank:indexPath.row];
+    }
+}
+
+- (void)trackClientShow:(FHUGCScialGroupDataModel *)cellModel rank:(NSInteger)rank {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    
+    tracerDict[@"element_type"] = @"all_community";
+    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"enter_from"] = @"neighborhood_tab";
+    TRACK_EVENT(@"element_show", tracerDict);
 }
 
 
