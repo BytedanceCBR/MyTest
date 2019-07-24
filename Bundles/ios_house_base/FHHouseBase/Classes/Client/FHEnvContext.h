@@ -175,6 +175,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSDictionary *)getGetOriginFromAndOriginId;
 
+/*
+ DeepLink Zlink
+ */
+- (void)checkZLink;
+
 @end
 
 NS_ASSUME_NONNULL_END
