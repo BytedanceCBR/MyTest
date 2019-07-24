@@ -389,9 +389,17 @@
 - (void)deleteCell:(FHFeedUGCCellModel *)cellModel {
     NSInteger row = [self getCellIndex:cellModel];
     if(row < self.dataList.count && row >= 0){
+//        NSLog(@"bef__tableview____offset:%f,height:%f",self.tableView.contentOffset.y,self.tableView.contentSize.height);
+//        CGPoint beforeOffset = self.tableView.contentOffset;
+//        CGSize beforeContentSize = self.tableView.contentSize;
+        [self.tableView beginUpdates];
         [self.dataList removeObjectAtIndex:row];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView layoutIfNeeded];
+        [self.tableView endUpdates];
+//        NSLog(@"aft__tableview____offset:%f,height:%f",self.tableView.contentOffset.y,self.tableView.contentSize.height);
+//        [self.tableView reloadData];
     }
 }
 
