@@ -43,7 +43,7 @@ PODS:
   - BDTFactoryConfigurator (0.1.0.1-binary)
   - BDTSharedHeaders (0.1.0)
   - BDUGContainer (1.1.2)
-  - BDUGDeepLink (1.0.1-rc.0)
+  - BDUGDeepLink (1.0.1.1-binary)
   - BDUGMonitorInterface (1.0.0):
     - BDUGMonitorInterface/Core (= 1.0.0)
   - BDUGMonitorInterface/Core (1.0.0)
@@ -565,7 +565,7 @@ DEPENDENCIES:
   - BDTFactoryConfigurator (= 0.1.0.1-binary)
   - BDTSharedHeaders (from `../Vendor/BDTSharedHeaders`)
   - BDUGContainer (= 1.1.2)
-  - BDUGDeepLink (= 1.0.1-rc.0)
+  - BDUGDeepLink (= 1.0.1.1-binary)
   - BDUGMonitorInterface (= 1.0.0)
   - BDUGTrackerInterface (= 1.1.1)
   - BDUGUnionSDK (= 0.1.2.1-binary)
@@ -966,7 +966,7 @@ SPEC CHECKSUMS:
   BDTFactoryConfigurator: c14af7870fcd1fa9c52142d0c01635775543e42d
   BDTSharedHeaders: 7ce2d05979120782a343993b31287684065e06a8
   BDUGContainer: 28193629e67c7c9244f5d5836bfed611bf631321
-  BDUGDeepLink: 47378e3f5b5bf66a05bcf91eeb57c610a51b8f12
+  BDUGDeepLink: d13d5c43947b20ed3bf3d9839fd01e81e384f1b4
   BDUGMonitorInterface: e64b2d5bcb2a3283af8f83daeaa0599a160351f1
   BDUGTrackerInterface: c41760f7de16c6f4b84395e71e85875a4cd87611
   BDUGUnionSDK: 837abef87c8d0f8cce87fb945dc18f2317d3d838
@@ -1125,6 +1125,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 77609e2ff97f58520d6a89962b7bc57a7e1aec87
+PODFILE CHECKSUM: ddf11d204f6ad1619d15ff42345fa256cfbd00fd
 
 COCOAPODS: 1.4.0
