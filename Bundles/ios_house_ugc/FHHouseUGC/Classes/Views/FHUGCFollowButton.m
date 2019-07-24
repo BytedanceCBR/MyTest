@@ -166,8 +166,7 @@
     }
     [self startLoading];
     if (self.followed) {
-        // 取消关注埋点
-        [self unFollowTracer];
+        // 取消关注埋点 在点击的时候报吧 ~~~
     } else {
         // 关注埋点
         [self followTracer];
@@ -203,6 +202,7 @@
 }
 
 - (void)showDeleteAlert {
+    [self unFollowTracer];
     [self cancelJoinPopupShow];
     __weak typeof(self) wself = self;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确认要取消关注吗？"
