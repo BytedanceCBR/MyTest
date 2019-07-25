@@ -213,6 +213,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHHomeHouseDataItemsDislikeInfoModel<NSObject>
+@end
+
+@interface FHHomeHouseDataItemsDislikeInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, strong , nullable) NSArray *mutualExclusiveIds;
+@property (nonatomic, copy , nullable) NSString *id;
+@end
+
 
 //@protocol FHHomeHouseDataItemsImagesModel<NSObject>
 //
@@ -272,6 +282,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *pricePerSqmNum;
 @property (nonatomic, copy , nullable) NSString *pricePerSqmUnit;
 @property (nonatomic, strong , nullable) NSArray<FHRentFacilitiesModel> *facilities;
+@property (nonatomic, strong , nullable) NSArray<FHHomeHouseDataItemsDislikeInfoModel> *dislikeInfo;
 
 @end
 

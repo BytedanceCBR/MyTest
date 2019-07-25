@@ -20,6 +20,9 @@
 #import "FHHouseRecommendReasonView.h"
 #import "UIButton+TTAdditions.h"
 #import "FHHouseDislikeView.h"
+#import "FHHomeRequestAPI.h"
+#import "ToastManager.h"
+#import "TTReachability.h"
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -673,7 +676,7 @@
 -(void)updateHomeSmallImageHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel andType:(FHHouseType)houseType
 {
     self.homeItemModel = commonModel;
-    if(houseType == FHHouseTypeSecondHandHouse || houseType == FHHouseTypeRentHouse){
+    if((houseType == FHHouseTypeSecondHandHouse || houseType == FHHouseTypeRentHouse) && commonModel.dislikeInfo){
         self.closeBtn.hidden = NO;
     }else{
         self.closeBtn.hidden = YES;
@@ -1253,49 +1256,64 @@
 }
 
 - (void)dislike {
-    __weak typeof(self) wself = self;
-    FHHouseDislikeView *dislikeView = [[FHHouseDislikeView alloc] init];
-    FHHouseDislikeViewModel *viewModel = [[FHHouseDislikeViewModel alloc] init];
-    viewModel.keywords = @[
-                           @{
-                               @"id" : @"1",
-                               @"name":@"看过了看过了",
-                               @"mutual_exclusive_ids":@[@2,@5],
-                               },
-                           @{
-                               @"id" : @"2",
-                               @"name":@"内容太水"
-                               },
-                           @{
-                               @"id" : @"3",
-                               @"name":@"不想看",
-                               @"mutual_exclusive_ids":@[@4],
-                               },
-                           @{
-                               @"id" : @"4",
-                               @"name":@"不想看不想看",
-                               @"mutual_exclusive_ids":@[@3],
-                               },
-                           @{
-                               @"id" : @"5",
-                               @"name":@"一点意思都没有"
-                               },
-                           ];
-    viewModel.groupID = self.cellModel.houseId;
-//    viewModel.logExtra = self.orderedData.log_extra;
-    [dislikeView refreshWithModel:viewModel];
-    CGPoint point = self.closeBtn.center;
-    [dislikeView showAtPoint:point
-                    fromView:self.closeBtn
-             didDislikeBlock:^(FHHouseDislikeView * _Nonnull view) {
-                 [wself dislikeConfirm:view];
-             }];
+    NSArray *dislikeInfo = self.homeItemModel.dislikeInfo;
+    if(dislikeInfo && [dislikeInfo isKindOfClass:[NSArray class]]){
+        __weak typeof(self) wself = self;
+        FHHouseDislikeView *dislikeView = [[FHHouseDislikeView alloc] init];
+        FHHouseDislikeViewModel *viewModel = [[FHHouseDislikeViewModel alloc] init];
+        
+        NSMutableArray *keywords = [NSMutableArray array];
+        for (FHHomeHouseDataItemsDislikeInfoModel *infoModel in dislikeInfo) {
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            if(infoModel.id){
+                [dic setObject:infoModel.id forKey:@"id"];
+            }
+            if(infoModel.text){
+                [dic setObject:infoModel.text forKey:@"name"];
+            }
+            if(infoModel.mutualExclusiveIds){
+                [dic setObject:infoModel.mutualExclusiveIds forKey:@"mutual_exclusive_ids"];
+            }
+            [keywords addObject:dic];
+        }
+        
+        viewModel.keywords = keywords;
+        viewModel.groupID = self.cellModel.houseId;
+        //    viewModel.logExtra = self.orderedData.log_extra;
+        [dislikeView refreshWithModel:viewModel];
+        CGPoint point = self.closeBtn.center;
+        [dislikeView showAtPoint:point
+                        fromView:self.closeBtn
+                 didDislikeBlock:^(FHHouseDislikeView * _Nonnull view) {
+                     [wself dislikeConfirm:view];
+                 }];
+    }
 }
 
 - (void)dislikeConfirm:(FHHouseDislikeView *)view {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(dislikeConfirm:)] && self.homeItemModel){
-        [self.delegate dislikeConfirm:self.homeItemModel.idx];
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
     }
+    
+    NSMutableArray *dislikeInfo = [NSMutableArray array];
+    for (FHHouseDislikeWord *word in view.dislikeWords) {
+        if(word.isSelected){
+            [dislikeInfo addObject:@([word.ID integerValue])];
+        }
+    }
+    //发起请求
+    [FHHomeRequestAPI requestHomeHouseDislike:self.homeItemModel.idx houseType:[self.homeItemModel.houseType integerValue] dislikeInfo:dislikeInfo completion:^(bool success, NSError * _Nonnull error) {
+        if(success){
+            [[ToastManager manager] showToast:@"感谢反馈，将减少推荐类似房源"];
+            //代理
+            if(self.delegate && [self.delegate respondsToSelector:@selector(dislikeConfirm:cell:)] && self.homeItemModel){
+                [self.delegate dislikeConfirm:self.homeItemModel cell:self];
+            }
+        }else{
+            [[ToastManager manager] showToast:@"反馈失败"];
+        }
+    }];
 }
 
 @end

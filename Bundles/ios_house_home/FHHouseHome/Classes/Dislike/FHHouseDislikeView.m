@@ -7,7 +7,6 @@
 
 #import "FHHouseDislikeView.h"
 #import "FHHouseDislikeKeywordsView.h"
-#import "FHHouseDislikeWord.h"
 #import "SSThemed.h"
 
 #import "TTThemeConst.h"
@@ -44,7 +43,6 @@ static FHHouseDislikeView *__visibleDislikeView;
 @property(nonatomic,strong)SSThemedButton *okBtn;
 @property(nonatomic, strong)UIImageView *arrowImageView;
 @property(nonatomic, strong)FHHouseDislikeKeywordsView *keywordsView;
-@property(nonatomic, strong)NSMutableArray *dislikeWords;
 @property(nonatomic, strong)SSThemedButton *dislikeBtn;
 @property(nonatomic, copy)NSString *adLogExtra;
 @property(nonatomic, strong)FHHouseDislikeBlock didDislikeBlock;
