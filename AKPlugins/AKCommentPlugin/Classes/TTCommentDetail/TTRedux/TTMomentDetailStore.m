@@ -60,6 +60,16 @@
     }
 }
 
+- (void)setElement_from:(NSString *)element_from {
+    _element_from = element_from;
+    if ([self.middleware isKindOfClass:[TTMomentDetailMiddleware class]]) {
+        
+        TTMomentDetailMiddleware *middleware = (TTMomentDetailMiddleware *)self.middleware;
+        middleware.element_from = element_from;
+        
+    }
+}
+
 -(void)setCategoryID:(NSString *)categoryID {
     
     _categoryID = categoryID;

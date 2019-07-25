@@ -66,6 +66,7 @@
 @property (nonatomic, strong) TTMomentDetailIndependenceState *state;
 
 @property (nonatomic, copy) NSString *enterFrom;
+@property (nonatomic, copy) NSString *element_from;
 @property (nonatomic, copy) NSString *categoryID;
 @property (nonatomic, strong) NSDictionary *logPb;
 

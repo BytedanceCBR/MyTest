@@ -21,6 +21,7 @@
 
 @property (nonatomic, copy) NSString *enterFrom;
 @property (nonatomic, copy) NSString *categoryID;
+@property (nonatomic, copy) NSString *element_from;
 @property (nonatomic, strong) NSDictionary *logPb;
 
 - (instancetype)initWithCommentDetailModel:(id<TTCommentDetailModelProtocol>)commentDetailModel
