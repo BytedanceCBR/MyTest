@@ -15,9 +15,11 @@
 #import "TTDeviceHelper.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTDeviceUIUtils.h"
-#import "TTTracker.h"
+//#import "TTTracker.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import "FHUserTracker.h"
+#import "JSONAdditions.h"
 
 #define kMaskViewTag 20141209
 
@@ -46,6 +48,8 @@ static FHHouseDislikeView *__visibleDislikeView;
 @property(nonatomic, strong)SSThemedButton *dislikeBtn;
 @property(nonatomic, copy)NSString *adLogExtra;
 @property(nonatomic, strong)FHHouseDislikeBlock didDislikeBlock;
+@property(nonatomic, strong)FHHouseDislikeViewModel *model;
+
 @end
 
 
@@ -129,6 +133,7 @@ static FHHouseDislikeView *__visibleDislikeView;
 }
 
 - (void)refreshWithModel:(nullable FHHouseDislikeViewModel *)model {
+    self.model = model;
     NSArray *keywords = model.keywords;
     NSString *groupID = model.groupID;
     
@@ -156,18 +161,8 @@ static FHHouseDislikeView *__visibleDislikeView;
         [_keywordsView refreshWithData:self.dislikeWords];
         
     }
-    
-    NSMutableDictionary *extValueDic = [NSMutableDictionary dictionary];
-    if (self.adLogExtra) {
-        extValueDic[@"log_extra"] = self.adLogExtra;
-    }
-    
-    if (model.extrasDict) {
-        [extValueDic addEntriesFromDictionary:model.extrasDict];
-    }
-    
-    NSString *source = model.source;
-    ttTrackEventWithCustomKeys(@"dislike", keywords.count > 0 ? @"menu_with_reason" : @"menu_no_reason", __lastGroupID, source, extValueDic);
+
+    TRACK_EVENT(@"house_dislike_popup_show", model.extrasDict);
 }
 
 - (void)refreshArrowUI {
@@ -225,7 +220,6 @@ static FHHouseDislikeView *__visibleDislikeView;
 }
 
 - (void)okBtnClicked:(id)sender {
-    
     if (self.didDislikeBlock) {
         self.didDislikeBlock(self);
     }
@@ -237,17 +231,38 @@ static FHHouseDislikeView *__visibleDislikeView;
     
     if (self.dislikeWords.count > 0) {
         [self dismiss];
-        
-        ttTrackEventWithCustomKeys(@"dislike", @"confirm_with_reason", __lastGroupID, nil, extValueDic);
-        
         __lastDislikedWords = nil;
         __lastGroupID = nil;
         
+        if([self.okBtn.titleLabel.text isEqualToString:@"确定"]){
+            [self trackHouseDislikePopupClick:YES];
+        }else{
+            [self trackHouseDislikePopupClick:NO];
+        }
+        
     } else {
         [self showDislikeButton:NO atPoint:self.origin];
-        
-        ttTrackEventWithCustomKeys(@"dislike", @"confirm_no_reason", __lastGroupID, nil, extValueDic);
     }
+}
+
+- (void)trackHouseDislikePopupClick:(BOOL)isConfirm {
+    NSMutableDictionary *tracerDict = [self.model.extrasDict mutableCopy];
+    if(isConfirm){
+        tracerDict[@"click_position"] = @"confirm";
+        
+        NSMutableDictionary *dislikeInfo = [NSMutableDictionary dictionary];
+        for (FHHouseDislikeWord *word in self.dislikeWords) {
+            if(word.isSelected){
+                [dislikeInfo setObject:word.name forKey:word.ID];
+            }
+        }
+        
+        NSString *result = [dislikeInfo tt_JSONRepresentation];
+        tracerDict[@"result"] = result;
+    }else{
+        tracerDict[@"click_position"] = @"no_evaluate";
+    }
+    TRACK_EVENT(@"click_house_recommend", tracerDict);
 }
 
 - (void)clickMask {

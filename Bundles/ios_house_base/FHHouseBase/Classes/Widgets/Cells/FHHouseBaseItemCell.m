@@ -23,6 +23,7 @@
 #import "FHHomeRequestAPI.h"
 #import "ToastManager.h"
 #import "TTReachability.h"
+#import "FHUserTracker.h"
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -1256,6 +1257,7 @@
 }
 
 - (void)dislike {
+    [self trackClickHouseDislke];
     NSArray *dislikeInfo = self.homeItemModel.dislikeInfo;
     if(dislikeInfo && [dislikeInfo isKindOfClass:[NSArray class]]){
         __weak typeof(self) wself = self;
@@ -1279,7 +1281,7 @@
         
         viewModel.keywords = keywords;
         viewModel.groupID = self.cellModel.houseId;
-        //    viewModel.logExtra = self.orderedData.log_extra;
+        viewModel.extrasDict = self.homeItemModel.tracerDict;
         [dislikeView refreshWithModel:viewModel];
         CGPoint point = self.closeBtn.center;
         [dislikeView showAtPoint:point
@@ -1314,6 +1316,16 @@
             [[ToastManager manager] showToast:@"反馈失败"];
         }
     }];
+}
+
+#pragma mark - dislike埋点
+
+- (void)trackClickHouseDislke {
+    if(self.homeItemModel.tracerDict){
+        NSMutableDictionary *tracerDict = [self.homeItemModel.tracerDict mutableCopy];
+        tracerDict[@"click_position"] = @"house_dislike";
+        TRACK_EVENT(@"click_house_dislike", tracerDict);
+    }
 }
 
 @end

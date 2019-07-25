@@ -283,6 +283,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *pricePerSqmUnit;
 @property (nonatomic, strong , nullable) NSArray<FHRentFacilitiesModel> *facilities;
 @property (nonatomic, strong , nullable) NSArray<FHHomeHouseDataItemsDislikeInfoModel> *dislikeInfo;
+//埋点使用
+@property (nonatomic, strong , nullable) NSDictionary *tracerDict;
 
 @end
 

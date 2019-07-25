@@ -24,6 +24,7 @@
 #import <FHHomeSearchPanelViewModel.h>
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import "FHUserTracker.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -613,6 +614,7 @@ extern NSString *const INSTANT_DATA_KEY;
             __weak typeof(self) weakSelf = self;
             [noDataErrorView.retryButton setTitle:@"推荐更多" forState:UIControlStateNormal];
             noDataErrorView.retryBlock = ^{
+                [weakSelf trackClickHouseRecommend];
                 if (weakSelf.panelVM) {
                     [weakSelf.panelVM fetchSearchPanelRollData];
                 }
@@ -674,6 +676,8 @@ extern NSString *const INSTANT_DATA_KEY;
             tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
             tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
             [tracerDict removeObjectForKey:@"element_from"];
+            
+            cellModel.tracerDict = [tracerDict copy];
             
             if (tracerDict && !self.isOriginShowSelf) {
                 [self.traceNeedUploadCache addObject:tracerDict];
@@ -799,6 +803,14 @@ extern NSString *const INSTANT_DATA_KEY;
         return index;
     }
     return -1;
+}
+
+- (void)trackClickHouseRecommend {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"page_type"] = [self pageTypeString];
+    tracerDict[@"element_type"] = @"maintab_list";
+    tracerDict[@"click_position"] = @"house_recommend_more";
+    TRACK_EVENT(@"click_house_recommend", tracerDict);
 }
 
 @end
