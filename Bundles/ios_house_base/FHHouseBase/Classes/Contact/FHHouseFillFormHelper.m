@@ -226,7 +226,8 @@ extern NSString *const kFHToastCountKey;
             [sendPhoneNumberCache setObject:phone forKey:kFHPhoneNumberCacheKey];
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
         }else {
-            [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
+            NSString *message = model.message ? : @"提交失败";
+            [[ToastManager manager] showToast:message];
         }
     }];
     // 静默关注功能

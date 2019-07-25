@@ -22,6 +22,7 @@
 #import "FHHomeListViewModel.h"
 #import "TTSandBoxHelper.h"
 #import <FHHomeSearchPanelViewModel.h>
+#import <FHHouseBase/FHSearchChannelTypes.h>
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 extern NSString *const INSTANT_DATA_KEY;
@@ -288,7 +289,13 @@ extern NSString *const INSTANT_DATA_KEY;
     [requestDictonary setValue:@(self.houseType) forKey:@"house_type"];
     [requestDictonary setValue:@(self.itemCount) forKey:@"count"];
     
-
+    if (self.houseType == FHHouseTypeNewHouse) {
+        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_COURT;
+    } else if (self.houseType == FHHouseTypeSecondHandHouse) {
+        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND;
+    } else if (self.houseType == FHHouseTypeRentHouse) {
+        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_RENT;
+    }
 
     self.requestTask = nil;
     
@@ -680,7 +687,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!self.showPlaceHolder) {
+    if (!self.showPlaceHolder && indexPath.section == 1) {
         [self jumpToDetailPage:indexPath];
     }
 }

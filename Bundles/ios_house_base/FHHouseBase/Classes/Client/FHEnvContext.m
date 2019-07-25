@@ -648,6 +648,22 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return homePageCommonMap;
 }
 
+- (void)checkZLink {
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf checkDeepLinkScheme];
+    });
+}
+
+- (void)checkDeepLinkScheme {
+    id schemeStr = [[NSUserDefaults standardUserDefaults] valueForKey:@"kFHDeepLinkFirstLaunchKey"];
+    if (schemeStr && [schemeStr isKindOfClass:[NSString class]]) {
+        NSURL *url = [NSURL URLWithString:schemeStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kFHDeepLinkFirstLaunchKey"];
+    }
+}
+
 @end
 
 // 升级TTRoute后需要验当前场景

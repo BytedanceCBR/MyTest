@@ -88,7 +88,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         
         __weak typeof(self)wself = self;
         _bottomBar.bottomBarContactBlock = ^{
-            [wself contactActionWithExtraDict:nil];
+            NSMutableDictionary *extraDic = @{}.mutableCopy;
+            if (wself.fromStr.length > 0) {
+                extraDic[@"from"] = wself.fromStr;
+            }
+            [wself contactActionWithExtraDict:extraDic];
         };
         _bottomBar.bottomBarLicenseBlock = ^{
             [wself licenseAction];

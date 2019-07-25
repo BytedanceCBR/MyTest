@@ -26,6 +26,7 @@
 #import <FHHouseBase/FHMainApi.h>
 #import <TTInstallService/TTInstallIDManager.h>
 #import "TTBaseMacro.h"
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -195,6 +196,8 @@
         paramDic[@"rent_id"] = rentId;
     }
     paramDic[@"count"] = @(5);
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_RENT;
+
     __weak typeof(self)wself = self;
     return [[TTNetworkManager shareInstance]
             requestForBinaryWithURL:url
@@ -239,6 +242,7 @@
         paramDic[@"neighborhood_id"] = neighborhoodId;
     }
     paramDic[@"count"] = @(5);
+    paramDic[CHANNEL_ID] = CHANNEL_ID_SAME_NEIGHBORHOOD_RENT;
     __weak typeof(self)wself = self;
     return [[TTNetworkManager shareInstance]
             requestForBinaryWithURL:url
@@ -284,6 +288,7 @@
     if (![url containsString:@"count"]) {
         paramDic[@"count"] = @(count);
     }
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_HOUSE;
     __weak typeof(self)wself = self;
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
 
@@ -331,6 +336,7 @@
     if (searchId.length > 0) {
         paramDic[@"search_id"] = searchId;
     }
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_NEIGHBORHOOD;
     __weak typeof(self)wself = self;
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
@@ -427,6 +433,7 @@
     } else {
         paramDic[@"offset"] = @"0";
     }
+    paramDic[CHANNEL_ID] = CHANNEL_ID_SAME_NEIGHBORHOOD_HOUSE;
     __weak typeof(self)wself = self;
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
@@ -467,7 +474,7 @@
     if (query.length > 0) {
         url = [NSString stringWithFormat:@"%@&%@",url,query];
     }
-
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_COURT;
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
         FHDetailRelatedCourtModel *model = nil;
