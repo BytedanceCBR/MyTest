@@ -195,7 +195,7 @@
 }
 
 + (TTHttpTask *)requestForumFeedListWithForumId:(NSString *)forumId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-    NSString *queryPath = @"/f100/ugc/forum_feeds";
+    NSString *queryPath = @"/f100/ugc/feed/v1/forum_feeds";
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"forum_id"] = forumId;
@@ -216,7 +216,7 @@
 }
 
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)categoryId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
-    NSString *queryPath = @"/f100/ugc/v1/recommend_feeds";
+    NSString *queryPath = @"/f100/ugc/feed/v1/recommend_feeds";
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"channel_id"] = categoryId;
@@ -277,7 +277,7 @@
 }
 
 + (TTHttpTask *)requestCommentDetailDataWithCommentId:(NSString *)comment_id class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-    NSString *queryPath = @"/f100/ugc/v0/comment_detail";
+    NSString *queryPath = @"/f100/ugc/material/v0/comment_detail";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (comment_id.length > 0) {
         paramDic[@"comment_id"] = comment_id;
