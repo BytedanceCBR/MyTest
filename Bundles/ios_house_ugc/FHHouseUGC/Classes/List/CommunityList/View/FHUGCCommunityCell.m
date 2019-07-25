@@ -70,6 +70,7 @@
         self.buttonContainer.hidden = YES;
     }
     self.followButton.groupId = model.socialGroupId;
+    self.followButton.followed = [model.hasFollow boolValue];
     self.titleLabel.text = model.socialGroupName;
     self.descLabel.text = model.countText;
     if (isEmptyString(model.suggestReason)) {

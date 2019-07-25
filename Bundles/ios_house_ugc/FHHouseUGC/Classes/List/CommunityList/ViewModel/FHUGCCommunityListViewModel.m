@@ -67,8 +67,14 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
         self.listType = listType;
         [self initData];
         [self initView];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     }
     return self;
+}
+
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewWillDidLoad;{
@@ -200,6 +206,31 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
     [self.tableView setContentOffset:offset animated:NO];
 }
 
+- (void)followStateChanged:(NSNotification *)notification {
+    BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
+    NSString *socialGroupId = notification.userInfo[@"social_group_id"];
+    
+    if(!self.dataDic || [self.dataDic allValues].count <= 0 || isEmptyString(socialGroupId)){
+        return;
+    }
+    NSMutableDictionary *dataDic = [self.dataDic mutableCopy];
+    
+    BOOL shoulReloadData;
+    for(FHCommunityCategoryListStateModel* item in [self.dataDic allValues]){
+        if(!item || item.communityList.count <= 0){
+            continue;
+        }
+        for(FHUGCScialGroupDataModel* community in item.communityList){
+            if([socialGroupId isEqualToString:community.socialGroupId]){
+                community.hasFollow = followed ? @"1" : @"0";
+                shoulReloadData = YES;
+            }
+        }
+    }
+    [self onCateStateChange:self.curCategory reload:NO];
+}
+
+
 - (void)showNetWorkError {
     [self hideLoading];
     self.tableView.hidden = YES;
@@ -305,7 +336,19 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
 - (NSArray<FHUGCCommunityDistrictTabModel *> *)categoriesFromUgcConfig {
     NSArray *ugcDistrict = [[FHUGCConfig sharedInstance] configData].data.ugcDistrict;
     if (ugcDistrict.count <= 0) {
-        return [NSArray array];
+        //ugc config没有，返回关注与推荐
+        NSMutableArray<FHUGCCommunityDistrictTabModel *> *mockArray = [NSMutableArray array];
+        FHUGCCommunityDistrictTabModel* recommond = [[FHUGCCommunityDistrictTabModel alloc] init];
+        recommond.categoryId = FHUGCCommunityDistrictTabIdRecommend;
+        recommond.title = @"推荐";
+        
+        FHUGCCommunityDistrictTabModel* follow = [[FHUGCCommunityDistrictTabModel alloc] init];
+        follow.categoryId = FHUGCCommunityDistrictTabIdFollow;
+        follow.title = @"关注";
+        
+        [mockArray addObject:follow];
+        [mockArray addObject:recommond];
+        return [mockArray copy];
     }
     
     NSMutableArray<FHUGCCommunityDistrictTabModel *> *mutableArray = [NSMutableArray array];
