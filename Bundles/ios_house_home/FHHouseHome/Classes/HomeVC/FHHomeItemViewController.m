@@ -658,7 +658,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!self.showPlaceHolder) {
+    if (!self.showPlaceHolder && indexPath.section == 1) {
         [self jumpToDetailPage:indexPath];
     }
 }
