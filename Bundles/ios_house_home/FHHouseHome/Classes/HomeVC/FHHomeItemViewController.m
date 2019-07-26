@@ -75,7 +75,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     [FHHomeCellHelper registerCells:self.tableView];
     
-    _itemCount = 5;
+    _itemCount = 20;
     
     WeakSelf;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
