@@ -76,6 +76,7 @@
         _diggButton.imageName = @"fh_ugc_toolbar_like_normal";
         _diggButton.selectedImageName = @"fh_ugc_toolbar_like_selected";
         _diggButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
+        _diggButton.selectedTintColorThemeKey = @"red1";
         [self addSubview:digButton];
 
         _separatorView = [[SSThemedView alloc] init];

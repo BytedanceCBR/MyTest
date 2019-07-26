@@ -42,6 +42,8 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 
 - (void)checkCityStatus;
 
+- (void)setUpTableScrollOffsetZero;
+
 @end
 
 NS_ASSUME_NONNULL_END

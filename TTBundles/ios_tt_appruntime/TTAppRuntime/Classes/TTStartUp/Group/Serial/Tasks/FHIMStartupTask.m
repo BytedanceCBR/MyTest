@@ -81,7 +81,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     [[FHBubbleTipManager shareInstance] tryShowBubbleTip:msg openUrl:@""];
 }
 
-- (void)tryGetPhoneNumber:(nonnull NSString *)userId withImprId:(nonnull NSString *)imprId withBlock:(nullable PhoneCallback)finishBlock{
+- (void)tryGetPhoneNumber:(nonnull NSString *)userId withImprId:(nonnull NSString *)imprId tracer:(nonnull NSDictionary *)tracer withBlock:(nullable PhoneCallback)finishBlock{
     if (isEmptyString(userId)) {
         finishBlock(@"click_call", imprId);
         [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_EMPTY_UID extra:@{@"client_type":@"client_c"}];

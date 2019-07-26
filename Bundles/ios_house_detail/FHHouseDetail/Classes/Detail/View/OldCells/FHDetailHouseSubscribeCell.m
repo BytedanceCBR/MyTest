@@ -266,6 +266,9 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 - (void)textFieldDidChange:(NSNotification *)notification {
+    if (!self.textField.isFirstResponder) {
+        return;
+    }
     if (self.textField.text.length > 11) {
         self.textField.text = [self.textField.text substringToIndex:11];
     }
