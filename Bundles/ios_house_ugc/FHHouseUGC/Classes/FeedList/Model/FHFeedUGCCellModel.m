@@ -101,6 +101,7 @@
         cellModel.title = model.title;
         cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.openUrl;
+        cellModel.numberOfLines = 5;
         
         [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
         
@@ -130,6 +131,7 @@
         cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.openUrl;
         cellModel.showLookMore = YES;
+        cellModel.numberOfLines = 3;
         
         double time = [model.publishTime doubleValue];
         NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
@@ -156,24 +158,23 @@
         originItemModel.content = model.rawData.content.question.title;
         originItemModel.openUrl = model.rawData.content.question.questionListSchema;
         cellModel.originItemModel = originItemModel;
-        
-        NSInteger numberOfLines = 3;
-        
+    
         if(cellModel.imageList.count == 1){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
         }else if(cellModel.imageList.count > 1){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeMultiImage;
         }else{
             cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
-            numberOfLines = 5;
+            cellModel.numberOfLines = 3;
         }
         
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:numberOfLines];
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
         cellModel.content = model.rawData.commentBase.content;
         cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.rawData.commentBase.detailSchema;
         cellModel.showLookMore = YES;
+        cellModel.numberOfLines = 3;
         
         double time = [model.publishTime doubleValue];
         NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
@@ -202,18 +203,16 @@
         originItemModel.imageModel = model.rawData.originGroup.middleImage;
         cellModel.originItemModel = originItemModel;
         
-        NSInteger numberOfLines = 3;
-        
         if(cellModel.imageList.count == 1){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
         }else if(cellModel.imageList.count > 1){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeMultiImage;
         }else{
             cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
-            numberOfLines = 5;
+            cellModel.numberOfLines = 5;
         }
         
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:numberOfLines];
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBanner;
         cellModel.openUrl = model.url;
@@ -241,6 +240,7 @@
     cellModel.groupId = model.threadId;
     cellModel.logPb = model.logPb;
     cellModel.showLookMore = YES;
+    cellModel.numberOfLines = 3;
     
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     community.name = model.community.name;
@@ -254,8 +254,6 @@
     user.userId = model.user.userId;
     cellModel.user = user;
     
-    NSInteger numberOfLines = 3;
-    
     NSMutableArray *cellImageList = [NSMutableArray array];
     if(model.ugcU13CutImageList.count > 0){
         //单图
@@ -266,14 +264,14 @@
             [cellImageList addObjectsFromArray:model.thumbImageList];
         }else{
             //纯文本
-            numberOfLines = 5;
+            cellModel.numberOfLines = 5;
         }
     }
     
     cellModel.imageList = cellImageList;
     cellModel.largeImageList = model.largeImageList;
     
-    [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:numberOfLines];
+    [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
     
     if(cellModel.imageList.count == 1){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
