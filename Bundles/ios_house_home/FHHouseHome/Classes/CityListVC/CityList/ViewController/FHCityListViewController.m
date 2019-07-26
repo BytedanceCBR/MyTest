@@ -66,6 +66,8 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterForegroundNotification:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willTerminateNotification:) name:UIApplicationWillTerminateNotification object:nil];
 }
 
 - (void)setupUI {
@@ -231,6 +233,11 @@
 - (void)enterForegroundNotification:(NSNotification *)noti {
     // 进入前台
     [self checkLocAuthorization];
+}
+
+- (void)willTerminateNotification:(NSNotification *)noti {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kFHDeepLinkFirstLaunchKey"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)setupNaviBar {
@@ -409,6 +416,7 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[FHEnvContext sharedInstance] checkZLink];
 }
 
 #pragma mark - FHIndexSectionDelegate

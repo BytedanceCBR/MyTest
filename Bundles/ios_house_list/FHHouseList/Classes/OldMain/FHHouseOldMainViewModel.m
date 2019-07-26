@@ -31,6 +31,7 @@
 #import "FHHouseListBannerView.h"
 #import <FHCommonUI/UIView+House.h>
 #import <FHHouseBase/FHHouseBaseItemCell.h>
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 #define kFHHouseOldMainCellId @"kFHHouseOldMainCellId"
 #define kFHHouseOldMainRecommendTitleCellId @"kFHHouseOldMainRecommendTitleCellId"
@@ -363,6 +364,11 @@
     if (isFromRecommend) {
         [self requestRecommendErshouHouseListData:isRefresh query:query offset:offset searchId:self.recommendSearchId];
     } else {
+        if ([query isKindOfClass:[NSString class]] && query.length > 0) {
+            query = [query stringByAppendingString:[NSString stringWithFormat:@"&%@=%@",CHANNEL_ID,CHANNEL_ID_SEARCH_HOUSE_WITH_BANNER]];
+        }else{
+            query = [NSString stringWithFormat:@"%@=%@",CHANNEL_ID,CHANNEL_ID_SEARCH_HOUSE_WITH_BANNER];
+        }
         [self requestErshouHouseListData:isRefresh query:query offset:offset searchId:searchId];
     }
 
