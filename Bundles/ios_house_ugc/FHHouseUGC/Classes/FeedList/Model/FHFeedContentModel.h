@@ -389,6 +389,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedContentCommunityModel *community ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataModel *rawData ;
+@property (nonatomic, assign)   BOOL       isFromDetail;// 详情页
 @end
 
 

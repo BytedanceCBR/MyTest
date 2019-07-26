@@ -103,6 +103,10 @@
         cellModel.openUrl = model.openUrl;
         cellModel.numberOfLines = 5;
         
+        if (model.isFromDetail) {
+            cellModel.numberOfLines = 0;
+        }
+        
         [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
         
         if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
@@ -167,6 +171,9 @@
             cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
             cellModel.numberOfLines = 3;
         }
+        if (model.isFromDetail) {
+            cellModel.numberOfLines = 0;
+        }
         
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
@@ -210,6 +217,9 @@
         }else{
             cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
             cellModel.numberOfLines = 5;
+        }
+        if (model.isFromDetail) {
+            cellModel.numberOfLines = 0;
         }
         
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
@@ -266,6 +276,10 @@
             //纯文本
             cellModel.numberOfLines = 5;
         }
+    }
+    
+    if (model.isFromDetail) {
+        cellModel.numberOfLines = 0;
     }
     
     cellModel.imageList = cellImageList;

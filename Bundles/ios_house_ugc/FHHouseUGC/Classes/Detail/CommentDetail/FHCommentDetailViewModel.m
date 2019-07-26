@@ -195,9 +195,9 @@
                 userInfoModel.schema = userModel.info.schema;
                 feedContent.userInfo = userInfoModel;
             }
+            feedContent.isFromDetail = YES;
             cellModel = [FHFeedUGCCellModel modelFromFeedContent:feedContent];
             cellModel.tracerDic = self.detailController.tracerDict.mutableCopy;
-            [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:0];
             [self.detailController refreshUI];
         }
         // 圈子详情数据

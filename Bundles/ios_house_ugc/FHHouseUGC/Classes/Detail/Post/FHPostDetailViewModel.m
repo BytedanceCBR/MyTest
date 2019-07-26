@@ -149,6 +149,7 @@
     if (model && [model isKindOfClass:[FHFeedUGCContentModel class]]) {
         [self.items removeAllObjects];
         // 网络请求返回
+        model.isFromDetail = YES;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
         if (cellModel.community.socialGroupId.length <= 0) {
             cellModel.community = self.detailData.community;
@@ -186,7 +187,6 @@
             }
         }
         //
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:0];
         [self.items addObject:cellModel];
         
         // 更新点赞以及评论数
