@@ -134,7 +134,7 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
         districtListTitle = @"我关注的小区圈";
     }
     self.districtListTitleLabel.text = districtListTitle;
-    [self onCateStateChange:self.curCategory reload:YES];
+    [self onCateStateChange:self.curCategory reload:YES resetOffset:YES];
 }
 
 - (void)requestCommunityList:(FHUGCCommunityDistrictTabModel *)category {
@@ -148,12 +148,12 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
     
     if (![TTReachability isNetworkConnected]) {
         stateModel.state = FHCommunityCategoryListStateNetError;
-        [self onCateStateChange:category reload:NO];
+        [self onCateStateChange:category reload:NO resetOffset:YES];
         return;
     }
     
     stateModel.state = FHCommunityCategoryListStateLoading;
-    [self onCateStateChange:category reload:NO];
+    [self onCateStateChange:category reload:NO resetOffset:YES];
     
     CLLocation *currentLocation = [FHLocManager sharedInstance].currentLocaton;
     WeakSelf;
@@ -162,18 +162,18 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
         if (error || !listModel || !(listModel.data)) {
             if (error.code != -999) {
                 stateModel.state = FHCommunityCategoryListStateNetError;
-                [wself onCateStateChange:category reload:NO];
+                [wself onCateStateChange:category reload:NO resetOffset:YES];
             }
             return;
         }
         stateModel.state = FHCommunityCategoryListStateOK;
         stateModel.offsetY = 0.0f;
         stateModel.communityList = listModel.data.socialGroupList ?: [NSArray array];
-        [wself onCateStateChange:category reload:NO];
+        [wself onCateStateChange:category reload:NO resetOffset:YES];
     }];
 }
 
-- (void)onCateStateChange:(FHUGCCommunityDistrictTabModel *)category reload:(BOOL)reload{
+- (void)onCateStateChange:(FHUGCCommunityDistrictTabModel *)category reload:(BOOL)reload resetOffset:(BOOL)resetOffset{
     if (!self.curCategory) {
         return;
     }
@@ -196,11 +196,11 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
         }
         
     } else if (stateModel.state == FHCommunityCategoryListStateOK) {
-        [self showLoaded];
+        [self showLoaded:resetOffset];
     }
 }
 
-- (void)showLoaded {
+- (void)showLoaded:(BOOL)resetOffset{
     if (!self.curCategory) {
         return;
     }
@@ -215,9 +215,11 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
     self.viewController.errorView.hidden = YES;
     self.tableView.hidden = NO;
     [self.tableView reloadData];
-    CGPoint offset = self.tableView.contentOffset;
-    offset.y = stateModel.offsetY;
-    [self.tableView setContentOffset:offset animated:NO];
+    if(resetOffset){
+        CGPoint offset = self.tableView.contentOffset;
+        offset.y = stateModel.offsetY;
+        [self.tableView setContentOffset:offset animated:NO];
+    }
 }
 
 - (void)followStateChanged:(NSNotification *)notification {
@@ -240,7 +242,7 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
             shoulReloadData = YES;
         }
     }
-    [self onCateStateChange:self.curCategory reload:NO];
+    [self onCateStateChange:self.curCategory reload:NO resetOffset:NO];
 }
 
 
