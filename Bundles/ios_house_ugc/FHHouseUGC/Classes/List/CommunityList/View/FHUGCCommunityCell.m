@@ -48,15 +48,12 @@
 }
 
 - (void)refreshWithData:(id)data type:(FHUGCCommunityCellType)type {
-    if (self.currentData == data || ![data isKindOfClass:[FHUGCScialGroupDataModel class]]) {
+    if (![data isKindOfClass:[FHUGCScialGroupDataModel class]]) {
         return;
     }
     self.currentData = data;
 
     FHUGCScialGroupDataModel *model = self.currentData;
-    if (![model isKindOfClass:[FHUGCScialGroupDataModel class]]) {
-        return;
-    }
     [self updateConstraints:type hasSuggestion:!isEmptyString(model.suggestReason)];
     if (type == FHUGCCommunityCellTypeFollow) {
         self.buttonContainer.hidden = NO;

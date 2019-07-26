@@ -435,7 +435,8 @@ static NSInteger const kMaxPostImageCount = 9;
     [self endEditing];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"action_type"] = @(FHCommunityListTypeChoose);
-    dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdFollow);
+    //无关注定位到推荐
+    dict[@"select_district_tab"] = [FHUGCConfig sharedInstance].followList.count > 0 ? @(FHUGCCommunityDistrictTabIdFollow) :  @(FHUGCCommunityDistrictTabIdRecommend);
     NSHashTable *chooseDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [chooseDelegateTable addObject:self];
     dict[@"choose_delegate"] = chooseDelegateTable;

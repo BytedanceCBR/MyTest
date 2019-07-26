@@ -26,6 +26,7 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
 @property(nonatomic, assign) FHCommunityCategoryListState state;
 @property(nonatomic, assign) CGFloat offsetY;
 @property(nonatomic, strong) NSArray *communityList;
+@property(nonatomic, strong) NSMutableDictionary *followDic;
 @end
 
 @implementation FHCommunityCategoryListStateModel
@@ -35,8 +36,21 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
         self.state = FHCommunityCategoryListStateIdle;
         self.offsetY = 0.1f;
         self.communityList = [NSArray array];
+        self.followDic = [NSMutableDictionary dictionary];
     }
     return self;
+}
+
+- (void)setCommunityList:(NSArray *)communityList{
+    _communityList = communityList;
+    if(_communityList){
+        [self.followDic removeAllObjects];
+        [_communityList enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if([obj isKindOfClass:[FHUGCScialGroupDataModel class]] && obj.socialGroupId.length > 0){
+                [self.followDic setValue:obj forKey:obj.socialGroupId];
+            }
+        }];
+    }
 }
 @end
 
@@ -220,11 +234,10 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
         if(!item || item.communityList.count <= 0){
             continue;
         }
-        for(FHUGCScialGroupDataModel* community in item.communityList){
-            if([socialGroupId isEqualToString:community.socialGroupId]){
-                community.hasFollow = followed ? @"1" : @"0";
-                shoulReloadData = YES;
-            }
+        FHUGCScialGroupDataModel* community = item.followDic[socialGroupId];
+        if(community){
+            [[FHUGCConfig sharedInstance] updateScialGroupDataModel:community byFollowed:followed];
+            shoulReloadData = YES;
         }
     }
     [self onCateStateChange:self.curCategory reload:NO];
