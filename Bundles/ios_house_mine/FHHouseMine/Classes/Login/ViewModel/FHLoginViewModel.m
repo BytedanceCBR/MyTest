@@ -103,17 +103,17 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     BOOL disableTelecom = NO;
     BOOL disableUnicom = NO;
-    BOOL disableMobile = YES;
+    BOOL disableMobile = NO;
     NSDictionary *fhSettings = [FHLoginViewModel fhSettings];
     NSDictionary *loginSettings = [fhSettings tt_dictionaryValueForKey:@"login_settings"];
     if (loginSettings) {
         disableTelecom = [loginSettings tt_boolValueForKey:@"disable_telecom"];
         disableUnicom = [loginSettings tt_boolValueForKey:@"disable_unicom"];
-//        disableMobile = [loginSettings tt_boolValueForKey:@"disable_mobile"];
+        disableMobile = [loginSettings tt_boolValueForKey:@"disable_mobile"];
     }
     NSString *service = [TTAccount sharedAccount].service;
     if ([service isEqualToString:TTAccountMobile]) {
-        return YES;
+        return disableMobile;
     }else if ([service isEqualToString:TTAccountUnion]) {
         return disableUnicom;
     }else if ([service isEqualToString:TTAccountTelecom]) {
