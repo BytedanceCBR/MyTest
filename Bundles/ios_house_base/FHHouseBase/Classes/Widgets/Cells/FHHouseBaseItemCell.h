@@ -12,7 +12,17 @@ NS_ASSUME_NONNULL_BEGIN
 //当图图片cell
 @class FHSingleImageInfoCellModel;
 @class FHHomeHouseDataItemsModel;
+
+@protocol FHHouseBaseItemCellDelegate <NSObject>
+
+@optional
+- (void)dislikeConfirm:(NSString *)houseId;
+
+@end
+
 @interface FHHouseBaseItemCell : UITableViewCell
+
+@property(nonatomic , weak) id<FHHouseBaseItemCellDelegate> delegate;
 @property(nonatomic, strong) UIImageView *mainImageView;
 
 -(void)initUI;

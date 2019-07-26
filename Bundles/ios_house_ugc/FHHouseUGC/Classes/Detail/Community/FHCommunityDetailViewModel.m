@@ -408,6 +408,11 @@
         [self addUgcGuide];
     }
     self.shouldShowUGcGuide = NO;
+    
+    [self.headerView setNeedsLayout];
+    [self.headerView layoutIfNeeded];
+
+    self.feedListController.tableView.tableHeaderView = self.headerView;
 }
 
 - (void)updateJoinUI:(BOOL)followed {

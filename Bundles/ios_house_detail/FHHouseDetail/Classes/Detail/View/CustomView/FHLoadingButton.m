@@ -12,6 +12,7 @@
 
 @property(nonatomic , assign) BOOL isLoading;
 @property(nonatomic , strong) UIImageView *loadingAnimateView;
+@property(nonatomic , copy) NSString *originText;
 @end
 
 @implementation FHLoadingButton
@@ -37,6 +38,8 @@
     self.isLoading = YES;
     self.enabled = NO;
     self.loadingAnimateView.hidden = NO;
+    self.originText = self.titleLabel.text;
+    [self setTitle:@"" forState:UIControlStateNormal];
     CFTimeInterval duration = 0.4;
     CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
     rotationAnimation.toValue = @(M_PI * 2);
@@ -50,6 +53,9 @@
     self.isLoading = NO;
     self.enabled = YES;
     self.loadingAnimateView.hidden = YES;
+    if(self.originText){
+        [self setTitle:self.originText forState:UIControlStateNormal];
+    }
     [self.loadingAnimateView.layer removeAllAnimations];
 }
 
@@ -58,9 +64,10 @@
     [super layoutSubviews];
     if (self.isLoading) {
         [self.titleLabel sizeToFit];
-        self.loadingAnimateView.centerY = self.height / 2;
-        self.loadingAnimateView.left = (self.width - self.loadingAnimateView.width - self.titleLabel.width - 4) / 2;
-        self.titleLabel.left = self.loadingAnimateView.right + 4;
+        self.loadingAnimateView.centerY = self.height/2;
+//        self.loadingAnimateView.left = (self.width - self.loadingAnimateView.width - self.titleLabel.width - 4) / 2;
+        self.loadingAnimateView.centerX = self.width/2;
+//        self.titleLabel.left = self.loadingAnimateView.right + 4;
     }else {
         self.titleLabel.centerY = self.height / 2;
         self.titleLabel.centerX = self.width / 2;

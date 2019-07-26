@@ -24,6 +24,7 @@
 @property(nonatomic ,strong) UIView *bottomSepView;
 @property (nonatomic, copy)  NSString *saveDiggGroupId;
 @property(nonatomic ,strong) UIImageView *positionImageView;
+@property (nonatomic, assign)   FHDetailDiggType       diggType;
 
 @end
 
@@ -93,6 +94,8 @@
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
     [self addSubview:_bottomSepView];
+    
+    self.diggType = FHDetailDiggTypeTHREAD;
 }
 
 - (FHUGCFeedGuideView *)guideView {
@@ -157,6 +160,28 @@
 
 - (void)setCellModel:(FHFeedUGCCellModel *)cellModel {
     _cellModel = cellModel;
+    if (cellModel) {
+        switch (cellModel.cellType) {
+                case FHUGCFeedListCellTypeArticle:
+                    self.diggType = FHDetailDiggTypeITEM;
+                break;
+                case FHUGCFeedListCellTypeAnswer:
+                    self.diggType = FHDetailDiggTypeANSWER;
+                break;
+                case FHUGCFeedListCellTypeQuestion:
+                    self.diggType = FHDetailDiggTypeQUESTION;
+                break;
+                case FHUGCFeedListCellTypeArticleComment:
+                    self.diggType = FHDetailDiggTypeCOMMENT;
+                break;
+                case FHUGCFeedListCellTypeUGC:
+                    self.diggType = FHDetailDiggTypeTHREAD;
+                break;
+            default:
+                self.diggType = FHDetailDiggTypeTHREAD;
+                break;
+        }
+    }
     //设置是否显示引导
     if(cellModel.isInsertGuideCell){
         self.guideView.hidden = NO;
@@ -253,7 +278,7 @@
     dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"];
     dict[@"element_from"] = self.cellModel.tracerDic[@"element_from"];
     dict[@"page_type"] = self.cellModel.tracerDic[@"page_type"];
-    [FHCommonApi requestCommonDigg:self.cellModel.groupId groupType:FHDetailDiggTypeTHREAD action:user_digg tracerParam:dict completion:nil];
+    [FHCommonApi requestCommonDigg:self.cellModel.groupId groupType:self.diggType action:user_digg tracerParam:dict completion:nil];
 }
 
 - (void)likeStateChange:(NSNotification *)notification {
@@ -265,7 +290,7 @@
         NSInteger groupType = [userInfo[@"group_type"] integerValue];
         NSString *groupId = userInfo[@"group_id"];
         
-        if(groupType == FHDetailDiggTypeTHREAD && [groupId isEqualToString:self.cellModel.groupId]){
+        if(groupType == self.diggType && [groupId isEqualToString:self.cellModel.groupId]){
             // 刷新UI
             if(user_digg == 0){
                 //取消点赞
