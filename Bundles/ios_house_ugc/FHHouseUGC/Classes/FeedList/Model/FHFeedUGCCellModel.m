@@ -129,6 +129,7 @@
         cellModel.content = model.title;
         cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.openUrl;
+        cellModel.showLookMore = YES;
         
         double time = [model.publishTime doubleValue];
         NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
@@ -172,6 +173,7 @@
         cellModel.content = model.rawData.commentBase.content;
         cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.rawData.commentBase.detailSchema;
+        cellModel.showLookMore = YES;
         
         double time = [model.publishTime doubleValue];
         NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
