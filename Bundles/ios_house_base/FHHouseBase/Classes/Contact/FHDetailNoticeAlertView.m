@@ -14,7 +14,8 @@
 #import "UIView+House.h"
 #import <FHHouseBase/FHHouseAgencyListSugDelegate.h>
 #import "FHFillFormAgencyListItemModel.h"
-#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import "TTDeviceHelper+FHHouse.h"
+#import "UIImage+FIconFont.h"
 
 @interface FHDetailNoticeAlertView () <UITextFieldDelegate, FHHouseAgencyListSugDelegate>
 
@@ -502,8 +503,9 @@
 {
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc]init];
-        [_closeBtn setImage:[UIImage imageNamed:@"detail_alert_closed"] forState:UIControlStateNormal];
-        [_closeBtn setImage:[UIImage imageNamed:@"detail_alert_closed"] forState:UIControlStateHighlighted];
+        UIImage *img = ICON_FONT_IMG(12, @"\U0000e673", nil);
+        [_closeBtn setImage:img forState:UIControlStateNormal];
+        [_closeBtn setImage:img forState:UIControlStateHighlighted];
     }
     return _closeBtn;
 }

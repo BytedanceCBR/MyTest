@@ -23,6 +23,7 @@
 #import "TTReachability.h"
 #import "FHUserTracker.h"
 #import "TTDeviceHelper.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
@@ -95,7 +96,8 @@
     [self.containerView addSubview:_subTitleLabel];
     
     self.closeBtn = [[UIButton alloc] init];
-    [_closeBtn setImage:[UIImage imageNamed:@"detail_alert_closed"] forState:UIControlStateNormal];
+    UIImage *img = ICON_FONT_IMG(24, @"\U0000e673", nil);
+    [_closeBtn setImage:img forState:UIControlStateNormal];
     _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [_closeBtn addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
     [self.containerView addSubview:_closeBtn];
