@@ -252,7 +252,7 @@
         _closeBtn.hidden = YES;
         [_closeBtn setImage:[UIImage imageNamed:@"small_icon_close"] forState:UIControlStateNormal];
         [_closeBtn addTarget:self action:@selector(dislike) forControlEvents:UIControlEventTouchUpInside];
-        _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -10, -5, -5);
+        _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     }
     return _closeBtn;
 }
@@ -552,19 +552,20 @@
     [_priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.flexDirection = YGFlexDirectionColumn;
-        layout.width = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
-        layout.height = YGPointValue(60);
-        layout.right = YGPointValue(20);
+        layout.width = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 10);
+        layout.height = YGPointValue(75);
+        layout.right = YGPointValue(10);
 //        layout.marginRight = YGPointValue(20);
         layout.justifyContent = YGJustifyCenter;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(5);
+//        layout.top = YGPointValue(5);
         layout.alignItems = YGAlignFlexEnd;
     }];
 
     
     [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
+        layout.right = YGPointValue(10);
         //        layout.height = YGPointValue(20);
         layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
         //        layout.alignSelf = YGAlignFlexEnd;
@@ -584,12 +585,15 @@
 //    [_pricePerSqmLabel setBackgroundColor:[UIColor yellowColor]];
     [_pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
+        layout.marginTop = YGPointValue(2);
+        layout.right = YGPointValue(10);
         layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
         //        layout.marginBottom = YGPointValue(0);
     }];
     
     [_closeBtn configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
+        layout.right = YGPointValue(10);
         layout.marginTop = YGPointValue(8);
         layout.width = YGPointValue(8);
         layout.height = YGPointValue(8);
