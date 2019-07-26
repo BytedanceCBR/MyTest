@@ -143,6 +143,7 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         self.cellModel= cellModel;
         //内容
+        self.contentLabel.numberOfLines = cellModel.numberOfLines;
         if(isEmptyString(cellModel.title)){
             self.contentLabel.hidden = YES;
         }else{

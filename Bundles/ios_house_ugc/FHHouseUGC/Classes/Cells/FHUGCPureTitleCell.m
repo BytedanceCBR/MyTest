@@ -138,6 +138,7 @@
         }
         [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
         //内容
+        self.contentLabel.numberOfLines = cellModel.numberOfLines;
         if(isEmptyString(cellModel.content)){
             self.contentLabel.hidden = YES;
         }else{

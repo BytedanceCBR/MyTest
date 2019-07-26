@@ -64,6 +64,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat contentHeight;
 //是否显示查看全文
 @property (nonatomic, assign) BOOL showLookMore;
+//文字的显示行数,默认是0
+@property (nonatomic, assign) NSInteger numberOfLines;
 //跳转详情页的scheme
 @property (nonatomic, copy , nullable) NSString *detailScheme;
 //原始数据
