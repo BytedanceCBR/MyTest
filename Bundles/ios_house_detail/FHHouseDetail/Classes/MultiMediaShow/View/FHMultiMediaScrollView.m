@@ -316,11 +316,13 @@
         }
         
         NSInteger index = indexPath ? [self indexForIndexPath:indexPath] : (curPage - 1);
-        FHMultiMediaItemModel *itemModel = self.medias[index];
-        NSString *groupType = itemModel.groupType;
-        [self.itemView selectedItem:groupType];
-        
-        self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
+        if (index >= 0 && index < self.medias.count) {
+            FHMultiMediaItemModel *itemModel = self.medias[index];
+            NSString *groupType = itemModel.groupType;
+            [self.itemView selectedItem:groupType];
+            
+            self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
+        }
     }
 }
 
