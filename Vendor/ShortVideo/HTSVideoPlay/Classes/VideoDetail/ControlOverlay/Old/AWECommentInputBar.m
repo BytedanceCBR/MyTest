@@ -43,7 +43,7 @@
         
         _textBgView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         _textBgView.borderColorThemeKey = kColorLine1;
-        _textBgView.backgroundColorThemeKey = kFHColorPaleGrey;
+        _textBgView.backgroundColorThemeKey = @"grey7";
         _textBgView.layer.cornerRadius = _textBgView.frame.size.height / 2;
         _textBgView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         _textBgView.layer.masksToBounds = YES;
@@ -55,7 +55,7 @@
         _textView.backgroundColor = [UIColor clearColor];
         _textView.textColor = [UIColor tt_themedColorForKey:kColorText1];
         _textView.placeholder = @"优质评论将会被优先展示";
-        _textView.placeholderColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
+        _textView.placeholderColor = [UIColor tt_themedColorForKey:@"grey3"];
         _textView.delegate = self;
         CGFloat verticalMargin = (self.textView.internalTextView.frame.size.height - [UIFont systemFontOfSize:16.0f].pointSize - 4.f) / 2.f;
         _textView.internalTextView.textContainerInset = UIEdgeInsetsMake(verticalMargin, self.textView.internalTextView.textContainerInset.left, verticalMargin, self.textView.internalTextView.textContainerInset.right);
@@ -74,7 +74,7 @@
             _sendButton.titleLabel.font = [UIFont systemFontOfSize:16.0f];
         }
         
-        _sendButton.titleColorThemeKey = kFHColorCoral;
+        _sendButton.titleColorThemeKey = @"red1";
 //        _sendButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
         _sendButton.disabledTitleColorThemeKey = kColorText9;
         _sendButton.enabled = NO;

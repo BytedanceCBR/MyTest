@@ -12,7 +12,7 @@
 #import <TTReachability/TTReachability.h>
 #import <NetworkUtilities.h>
 #import <TTImageDownloader.h>
-#import <TTVersionHelper.h>
+#import <TTVersionHelper/TTVersionHelper.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTMonitor/TTMonitor.h>

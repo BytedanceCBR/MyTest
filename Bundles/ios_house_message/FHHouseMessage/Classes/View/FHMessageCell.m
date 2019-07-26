@@ -127,9 +127,13 @@
     } else {
         [self.msgStateView setHidden:YES];
     }
-    
+    [self updateLayoutForMsgState:msg.state];
+}
+
+-(void)updateLayoutForMsgState:(ChatMsgState)state
+{
     [self.subTitleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        if (msg.state != ChatMsgStateSuccess) {
+        if (state != ChatMsgStateSuccess) {
             make.left.mas_equalTo(self.titleLabel.mas_left).offset(16);
         } else {
             make.left.mas_equalTo(self.titleLabel.mas_left);
@@ -138,7 +142,6 @@
         make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
         make.height.mas_equalTo(20);
     }];
-    
 }
 
 -(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor
@@ -157,6 +160,11 @@
     self.timeLabel.text = [self timeLabelByDate:date];
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:model.icon] placeholder:[UIImage imageNamed:@"default_image"]];
     self.unreadView.badgeNumber = [model.unread integerValue] == 0 ? TTBadgeNumberHidden : [model.unread integerValue];
+    if(!_msgStateView.hidden){
+        //im 复用cell
+        self.msgStateView.hidden = YES;
+        [self updateLayoutForMsgState:ChatMsgStateSuccess];
+    }
 }
 
 - (void)updateWithChat:(IMConversation*)conversation {

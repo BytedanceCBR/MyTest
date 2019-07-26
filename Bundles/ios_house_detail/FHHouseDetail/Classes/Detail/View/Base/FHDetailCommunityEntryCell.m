@@ -201,6 +201,11 @@
     [self stopWheel];
 }
 
+- (void)dealloc
+{
+    [self stopWheel];
+}
+
 - (void)startWheel {
     if (self.wheelTimer) {
         [self.wheelTimer invalidate];

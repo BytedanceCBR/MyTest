@@ -81,9 +81,9 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     [[FHBubbleTipManager shareInstance] tryShowBubbleTip:msg openUrl:@""];
 }
 
-- (void)tryGetPhoneNumber:(nonnull NSString *)userId withImprId:(nonnull NSString *)imprId withBlock:(nullable PhoneCallback)finishBlock{
+- (void)tryGetPhoneNumber:(nonnull NSString *)userId withImprId:(nonnull NSString *)imprId tracer:(nonnull NSDictionary *)tracer withBlock:(nullable PhoneCallback)finishBlock{
     if (isEmptyString(userId)) {
-        finishBlock(@"click_call", imprId);
+        finishBlock(@"click_call", imprId,true);
         [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_EMPTY_UID extra:@{@"client_type":@"client_c"}];
         return;
     }
@@ -120,7 +120,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
             phone = [number stringByReplacingOccurrencesOfString:@"" withString:@""];
             isAssociate = YES;
             
-            finishBlock(@"click_call", serverImprId);
+            finishBlock(@"click_call", serverImprId,true);
             if (phone.length == 0) {
                 [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_NUMBER_EMPTY extra:monitorParams];
                 [[ToastManager manager] showToast:@"获取电话号码失败"];
@@ -138,7 +138,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
             [[ToastManager manager] showToast:@"获取电话失败，请重试"];
             [monitorParams setValue:error forKey:@"server_error"];
             [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_SERVER_ERROR extra:monitorParams];
-            finishBlock(@"click_call", imprId);
+            finishBlock(@"click_call", imprId,true);
         }
     }];
 }

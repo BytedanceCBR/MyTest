@@ -261,7 +261,7 @@ extern const NSString * CSToastPositionBottom;
  */
 @property (assign, nonatomic) CGFloat verticalPadding;
 
-// add by zjing custom UI
+// add by zjing custom UI, edit by xiesiming，改为在当前的基础上改变弹窗的位置，数字为正是向下调整，数值为负是向上调整。
 @property (assign, nonatomic) CGFloat verticalOffset;
 
 @property (assign, nonatomic) BOOL isCustomPosition;

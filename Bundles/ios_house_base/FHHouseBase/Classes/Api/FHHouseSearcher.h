@@ -14,13 +14,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+//搜索、推荐、相关场景补充channel id，具体见 https://bytedance.feishu.cn/space/doc/doccn6SwjREwBwk5kkA5wC8Y9wc
+
 extern NSString const * EXCLUDE_ID_KEY ;
 extern NSString const * NEIGHBORHOOD_ID_KEY;
 extern NSString const *HOUSE_TYPE_KEY ;
 extern NSString const *SUGGESTION_PARAMS_KEY;
-extern NSString const *CHANNEL_ID ;
-extern NSString const *CHANNEL_ID_CIRCEL_SEARCH ;
-extern NSString const *CHANNEL_ID_SUBWAY_SEARCH;
 
 @interface FHHouseSearcher : NSObject
 

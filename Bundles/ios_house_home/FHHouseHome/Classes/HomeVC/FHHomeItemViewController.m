@@ -22,10 +22,12 @@
 #import "FHHomeListViewModel.h"
 #import "TTSandBoxHelper.h"
 #import <FHHomeSearchPanelViewModel.h>
+#import <FHHouseBase/FHSearchChannelTypes.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 
-@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
+@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate>
 
 @property (nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property (nonatomic , assign) NSInteger itemCount;
@@ -98,6 +100,8 @@ extern NSString *const INSTANT_DATA_KEY;
     [self registerCells];
     
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+    
+    self.tableView.scrollsToTop = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -282,7 +286,13 @@ extern NSString *const INSTANT_DATA_KEY;
     [requestDictonary setValue:@(self.houseType) forKey:@"house_type"];
     [requestDictonary setValue:@(20) forKey:@"count"];
     
-
+    if (self.houseType == FHHouseTypeNewHouse) {
+        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_COURT;
+    } else if (self.houseType == FHHouseTypeSecondHandHouse) {
+        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND;
+    } else if (self.houseType == FHHouseTypeRentHouse) {
+        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_RENT;
+    }
 
     self.requestTask = nil;
     
@@ -590,6 +600,7 @@ extern NSString *const INSTANT_DATA_KEY;
         
         //to do 房源cell
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
+        cell.delegate = self;
         if (indexPath.row < self.houseDataItemsModel.count) {
             JSONModel *model = self.houseDataItemsModel[indexPath.row];
             [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
@@ -647,7 +658,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!self.showPlaceHolder) {
+    if (!self.showPlaceHolder && indexPath.section == 1) {
         [self jumpToDetailPage:indexPath];
     }
 }
@@ -718,6 +729,27 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - FHHouseBaseItemCellDelegate
+
+- (void)dislikeConfirm:(NSString *)houseId {
+    NSInteger row = [self getCellIndex:houseId];
+    if(row < self.houseDataItemsModel.count && row >= 0){
+        [self.houseDataItemsModel removeObjectAtIndex:row];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:1];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+    }
+}
+
+- (NSInteger)getCellIndex:(NSString *)houseId {
+    for (NSInteger i = 0; i < self.houseDataItemsModel.count; i++) {
+        FHHomeHouseDataItemsModel *model = self.houseDataItemsModel[i];
+        if([model.idx isEqualToString:houseId]){
+            return i;
+        }
+    }
+    return -1;
 }
 
 @end

@@ -315,7 +315,7 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     }
     
     if ([SSDebugViewController supportDebugSubitem:SSDebugSubitemFakeLocation]) {
-        STTableViewCellItem *item10 = [[STTableViewCellItem alloc] initWithTitle:@"是否手动选择过城市" target:self action:NULL];
+        STTableViewCellItem *item10 = [[STTableViewCellItem alloc] initWithTitle:@"是否开启模拟定位" target:self action:NULL];
         item10.switchStyle = YES;
         item10.checked = [self _shouldAutomaticallyChangeCity];
         item10.switchAction = @selector(_userSelectActionFired:);
@@ -720,22 +720,90 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     [ExploreCellHelper setSourceImgTest:uiswitch.on];
 }
 
+
+
+
 - (void)_userSelectActionFired:(UISwitch *)uiswitch {
     if (!uiswitch.on && [self _shouldAutomaticallyChangeCity]) {
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:2];
-        [parameters setValue:[TTAccountManager userID] forKey:@"user_id"];
-        [parameters setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-        [[TTNetworkManager shareInstance] requestForJSONWithURL:@"http://ic.snssdk.com/location/rmlbsmhxzkhlinfo/" params:parameters method:@"GET" needCommonParams:NO callback:^(NSError *error, id jsonObj) {
-            if (!error) {
-                [self _setShouldAutomaticallyChangeCity:uiswitch.on];
-            }
-        }];
-    } else {
         [self _setShouldAutomaticallyChangeCity:uiswitch.on];
+       
+//        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//        NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:2];
+//        [parameters setValue:[TTAccountManager userID] forKey:@"user_id"];
+//        [parameters setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+//        [[TTNetworkManager shareInstance] requestForJSONWithURL:@"http://ic.snssdk.com/location/rmlbsmhxzkhlinfo/" params:parameters method:@"GET" needCommonParams:NO callback:^(NSError *error, id jsonObj) {
+//            if (!error) {
+//                [self _setShouldAutomaticallyChangeCity:uiswitch.on];
+//            }
+//        }];
+    } else {
+        
+     
+//        [self _setShouldAutomaticallyChangeCity:uiswitch.on];
     }
     
 }
+
+- (void)_fakeUserLocationActionFired {
+    
+    TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"请输入调试地址" message:nil preferredType:TTThemedAlertControllerTypeAlert];
+    
+    //    [alertVC addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+    //        textField.placeholder = @"请输入调试地址";
+    //    }];
+    
+    [alertVC addTextViewWithConfigurationHandler:^(UITextView *textView) {
+
+    }];
+
+    
+    if ([[FHUtils contentForKey:@"k_fh_debug_lat"] isKindOfClass:[NSString class]]) {
+        [alertVC uniqueTextView].text = [FHUtils contentForKey:@"k_fh_debug_lat"];
+    }
+    
+    alertVC.title = @"请输入经纬度";
+    
+    [alertVC addActionWithTitle:@"取消" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+        
+    }];
+    
+    __block TTThemedAlertController *alertVCWeak = alertVC;
+    [alertVC addActionWithTitle:@"开始模拟" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+        UITextView *textView = [alertVC uniqueTextView];
+        NSLog(@"text view = %@",textView.text);
+        NSArray *paramsArrary = [textView.text componentsSeparatedByString:@","];
+        NSLog(@"paramsArrary = %@",paramsArrary);
+
+        [FHUtils setContent:@"" forKey:@"k_fh_debug_lat"];
+        
+    }];
+    
+    UIViewController *topVC = [TTUIResponderHelper topmostViewController];
+    if (topVC) {
+        [alertVC showFrom:topVC animated:YES];
+    }
+    
+    //    SSLocationPickerController *pickerController = [[SSLocationPickerController alloc] init];
+    //    [self.navigationController pushViewController:pickerController animated:YES];
+    //    UIWindow *window = self.view.window;
+    //    pickerController.completionHandler = ^(SSLocationPickerController *pickerViewController){
+    //        // reverse 城市
+    //        if ([SSLocationPickerController cachedFakeLocationCoordinate].longitude * [SSLocationPickerController cachedFakeLocationCoordinate].latitude > 0) {
+    //            TTIndicatorView *indicator = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView indicatorText:nil indicatorImage:nil dismissHandler:nil];
+    //            indicator.showDismissButton = NO;
+    //            indicator.autoDismiss = NO;
+    //            [indicator showFromParentView:window];
+    ////            [[TTLocationManager sharedManager] regeocodeWithCompletionHandler:^(NSArray *placemarks) {
+    ////                [self.tableView reloadData];
+    ////                [indicator dismissFromParentView];
+    ////                [pickerViewController.navigationController popViewControllerAnimated:YES];
+    ////            }];
+    //        } else {
+    //            [pickerViewController.navigationController popViewControllerAnimated:YES];
+    //        }
+    //    };
+}
+
 
 - (void)_setShouldSaveApplog:(UISwitch *)uiswitch {
     [[NSUserDefaults standardUserDefaults] setBool:uiswitch.isOn forKey:@"kShouldSaveApplogKey"];
@@ -900,28 +968,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         };
         [self presentViewController:viewController animated:YES completion:NULL];
     }
-}
-
-- (void)_fakeUserLocationActionFired {
-    SSLocationPickerController *pickerController = [[SSLocationPickerController alloc] init];
-    [self.navigationController pushViewController:pickerController animated:YES];
-    UIWindow *window = self.view.window;
-    pickerController.completionHandler = ^(SSLocationPickerController *pickerViewController){
-        // reverse 城市
-        if ([SSLocationPickerController cachedFakeLocationCoordinate].longitude * [SSLocationPickerController cachedFakeLocationCoordinate].latitude > 0) {
-            TTIndicatorView *indicator = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView indicatorText:nil indicatorImage:nil dismissHandler:nil];
-            indicator.showDismissButton = NO;
-            indicator.autoDismiss = NO;
-            [indicator showFromParentView:window];
-//            [[TTLocationManager sharedManager] regeocodeWithCompletionHandler:^(NSArray *placemarks) {
-//                [self.tableView reloadData];
-//                [indicator dismissFromParentView];
-//                [pickerViewController.navigationController popViewControllerAnimated:YES];
-//            }];
-        } else {
-            [pickerViewController.navigationController popViewControllerAnimated:YES];
-        }
-    };
 }
 
 - (void)_testPingActionFired {

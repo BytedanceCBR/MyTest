@@ -351,7 +351,7 @@ typedef NS_ENUM(NSInteger, TTVVideoDetailNatantInfoShareViewShareAction)
     self.digButton.selected = self.viewModel.infoModel.userDiged.boolValue;
     [self.digButton setDiggCount:self.viewModel.infoModel.digCount.integerValue];
     if (self.viewModel.infoModel.userDiged.boolValue) {
-        self.digButton.borderColorThemeKey = @"ff0031";
+        self.digButton.borderColorThemeKey = @"red1";
     }else{
         self.digButton.borderColorThemeKey = kColorLine7;
     }

@@ -127,8 +127,8 @@
             _titleLabel.textColorThemeKey = kColorText12;
             _maskTitleLabel.textColorThemeKey = kColorText12;
         }else if (self.style == TTCategorySelectorViewLightStyle || self.style == TTCategorySelectorViewNewVideoStyle) {
-            _titleLabel.textColorThemeKey = kFHColorCoolGrey3;
-            _maskTitleLabel.textColorThemeKey = kFHColorCharcoalGrey;
+            _titleLabel.textColorThemeKey = @"grey3";
+            _maskTitleLabel.textColorThemeKey = @"grey1";
         }else if (self.style == TTCategorySelectorViewVideoStyle) {
             _titleLabel.textColorThemeKey = kColorText1;
             _maskTitleLabel.textColorThemeKey = kColorText4;

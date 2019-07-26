@@ -23,6 +23,7 @@
 #import "FHHousePhoneCallUtils.h"
 #import "FHHouseFollowUpHelper.h"
 #import "FHFillFormAgencyListItemModel.h"
+#import "FHHouseDetailViewController.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHToastCountKey;
@@ -187,7 +188,13 @@ extern NSString *const kFHToastCountKey;
     contactConfig.realtorId = configModel.realtorId;
     contactConfig.searchId = configModel.searchId;
     contactConfig.imprId = configModel.imprId;
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
+        if(success && [configModel.topViewController isKindOfClass:[FHHouseDetailViewController class]]){
+            FHHouseDetailViewController *vc = (FHHouseDetailViewController *)configModel.topViewController;
+            vc.isPhoneCallShow = YES;
+            vc.phoneCallRealtorId = contactConfig.realtorId;
+        }
+    }];
 }
 
 + (void)fillOnlineFormActionWithConfig:(NSDictionary *)config
@@ -219,7 +226,8 @@ extern NSString *const kFHToastCountKey;
             [sendPhoneNumberCache setObject:phone forKey:kFHPhoneNumberCacheKey];
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
         }else {
-            [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
+            NSString *message = model.message ? : @"提交失败";
+            [[ToastManager manager] showToast:message];
         }
     }];
     // 静默关注功能

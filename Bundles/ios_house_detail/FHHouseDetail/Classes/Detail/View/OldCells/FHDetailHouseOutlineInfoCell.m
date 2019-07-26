@@ -137,11 +137,11 @@
     NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
     [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
-    if ([TTAccountManager isLogin]) {
+//    if ([TTAccountManager isLogin]) {
         [self gotoReportVC];
-    } else {
-        [self gotoLogin];
-    }
+//    } else {
+//        [self gotoLogin];
+//    }
 }
 
 - (void)gotoLogin {
