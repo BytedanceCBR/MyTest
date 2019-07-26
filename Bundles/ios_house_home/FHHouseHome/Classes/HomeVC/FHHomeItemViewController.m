@@ -609,7 +609,7 @@ extern NSString *const INSTANT_DATA_KEY;
             //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
             [cellError.contentView addSubview:noDataErrorView];
             
-            [noDataErrorView showEmptyWithTip:@"猜中您的喜好有点难，点击为您继续推荐" errorImageName:@"group-9"
+            [noDataErrorView showEmptyWithTip:@"点击为您推荐更多房源" errorImageName:@"group-9"
                                     showRetry:YES];
             __weak typeof(self) weakSelf = self;
             [noDataErrorView.retryButton setTitle:@"推荐更多" forState:UIControlStateNormal];
