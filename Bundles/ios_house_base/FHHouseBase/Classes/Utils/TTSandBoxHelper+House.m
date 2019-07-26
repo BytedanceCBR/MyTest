@@ -59,7 +59,7 @@
     NSString * buildVersionNew = [buildVersionRaw stringByReplacingOccurrencesOfString:@"." withString:@""];
     //除非误操作info.plist文件，否则版本一直会有
     if (!buildVersionNew) {
-        buildVersionNew = @"67201";
+        buildVersionNew = @"67301";
     }
     return buildVersionNew;
 }
