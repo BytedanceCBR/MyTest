@@ -220,7 +220,7 @@ static CGFloat const rewardLabelLeftInset = 9;
     [self.digButton setDiggCount:digCnt];
     if ([self.detailModel.article.userLike boolValue]) {
         [self.digButton setSelected:YES];
-        self.digButton.borderColorThemeKey = @"ff0031";
+        self.digButton.borderColorThemeKey = @"red1";
     } else {
         [self.digButton setSelected:NO];
         self.digButton.borderColorThemeKey = kColorLine7;

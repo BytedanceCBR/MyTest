@@ -76,7 +76,7 @@
         _diggButton.selectedImageName = @"digup_tabbar_press";
         _diggButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
         _diggButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        _diggButton.selectedTintColorThemeKey = @"ff0031";
+        _diggButton.selectedTintColorThemeKey = @"red1";
         [self addSubview:digButton];
 
         _separatorView = [[SSThemedView alloc] init];

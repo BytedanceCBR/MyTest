@@ -312,13 +312,14 @@
 }
 
 - (void)setupCallCenter {
+    __weak typeof(self) wself = self;
     self.callCenter = [[CTCallCenter alloc] init];
     _callCenter.callEventHandler = ^(CTCall* call){
         if ([call.callState isEqualToString:CTCallStateDisconnected]){
             //未接通
         }else if ([call.callState isEqualToString:CTCallStateConnected]){
             //通话中
-            self.isPhoneCallPickUp = YES;
+            wself.isPhoneCallPickUp = YES;
         }else if([call.callState isEqualToString:CTCallStateIncoming]){
             //来电话
         }else if ([call.callState isEqualToString:CTCallStateDialing]){
