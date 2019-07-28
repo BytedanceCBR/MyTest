@@ -301,6 +301,8 @@ static NSInteger const kMaxPostImageCount = 9;
             tracerDict[@"group_id"] = @"be_null";
         }
         [FHUserTracker writeEvent:@"element_show" params:tracerDict];
+    } else {
+        self.selectView = [[FHPostUGCMainView alloc] init];
     }
     
     CGFloat y = 0;
@@ -697,10 +699,6 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)postThreadWithTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
-    
-    if (!SSIsEmptyDictionary(self.sdkParamsDict)) {
-        // 鉴权
-    }
     
     TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
     [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
