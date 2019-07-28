@@ -211,13 +211,6 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
     if (_emojiDictionary.count > 0) {
         return _emojiDictionary;
     }
-//    NSDictionary *emojiDic = [[NSUserDefaults standardUserDefaults] objectForKey:kTTUserExpressionConfigEmojiDicKey];
-//    if (emojiDic == nil) {
-//        NSString *emojiPath = [TTUGCEmojiParser pathForFileName:@"emoji"];
-//        emojiDic = [[NSDictionary alloc] initWithContentsOfFile:emojiPath];
-//        [[NSUserDefaults standardUserDefaults] setObject:emojiDic forKey:kTTUserExpressionConfigEmojiDicKey];
-//    }
-//    return emojiDic;
     NSDictionary *emojiDic = (NSDictionary *)[self.emojiCache objectForKey:kTTUserExpressionConfigEmojiDicKey];
     if (emojiDic == nil) {
         NSString *emojiPath = [TTUGCEmojiParser pathForFileName:@"emoji"];
@@ -232,12 +225,6 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
     if (_emojiSortArray.count > 0) {
         return _emojiSortArray;
     }
-//    NSArray *emojiSort = [[NSUserDefaults standardUserDefaults] objectForKey:kTTUserExpressionConfigSortArrayKey];
-//    if (emojiSort == nil) {
-//        NSString *emojiPath = [TTUGCEmojiParser pathForFileName:@"emoji_sort"];
-//        emojiSort = [[NSDictionary alloc] initWithContentsOfFile:emojiPath];
-//        [[NSUserDefaults standardUserDefaults] setObject:emojiSort forKey:kTTUserExpressionConfigSortArrayKey];
-//    }
     NSArray *emojiSort = (NSArray *)[self.emojiCache objectForKey:kTTUserExpressionConfigSortArrayKey];
     if (emojiSort == nil) {
         NSString *emojiPath = [TTUGCEmojiParser pathForFileName:@"emoji_sort"];
@@ -252,12 +239,6 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
     if (_emojiMappingDictionary) {
         return _emojiMappingDictionary;
     }
-//    NSDictionary *emojiMappingDic = [[NSUserDefaults standardUserDefaults] objectForKey:kTTUserExpressionConfigEmojiMappingKey];
-//    if (emojiMappingDic == nil) {
-//        NSString *emojiPath = [TTUGCEmojiParser pathForFileName:@"emoji_mapping"];
-//        emojiMappingDic = [[NSDictionary alloc] initWithContentsOfFile:emojiPath];
-//        [[NSUserDefaults standardUserDefaults] setObject:emojiMappingDic forKey:kTTUserExpressionConfigEmojiMappingKey];
-//    }
     NSDictionary *emojiMappingDic = (NSDictionary *)[self.emojiCache objectForKey:kTTUserExpressionConfigEmojiMappingKey];
     if (emojiMappingDic == nil) {
         NSString *emojiPath = [TTUGCEmojiParser pathForFileName:@"emoji_mapping"];
