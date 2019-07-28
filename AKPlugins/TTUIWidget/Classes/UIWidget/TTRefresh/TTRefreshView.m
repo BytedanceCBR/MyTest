@@ -268,38 +268,30 @@ CGFloat const gestureMinimumTranslation = 20.0;
         return;
     }
     
-//    NSString *tmp;
-    
-    
     switch (state) {
         case PULL_REFRESH_STATE_INIT:
             
             self.hasNotifiedOverAttachView = NO;
             self.hasNotifiedShowAttachView = NO;
             
+            [self hideAnimationView];
+             
+             break;
+             case PULL_REFRESH_STATE_PULL:
+             
+             break;
+             case PULL_REFRESH_STATE_PULL_OVER:
+             
+             break;
+             
+             case PULL_REFRESH_STATE_LOADING:
+                [self showAnimationView];
+                if (self.refreshAnimateView && [self.refreshAnimateView respondsToSelector:@selector(startLoading)]) {
+                    [self.refreshAnimateView performSelector:@selector(startLoading)];
+                }
             
-            [self showAnimationView];
-    
-            break;
-        case PULL_REFRESH_STATE_PULL:
-            
-            break;
-        case PULL_REFRESH_STATE_PULL_OVER:
-            
-            break;
-            
-        case PULL_REFRESH_STATE_LOADING:
-            
-            if (self.refreshAnimateView && [self.refreshAnimateView respondsToSelector:@selector(startLoading)]) {
-                [self.refreshAnimateView performSelector:@selector(startLoading)];
-            }
-            
-            break;
+             break;
         case PULL_REFRESH_STATE_NO_MORE:
-            
-            
-//            _refreshAnimationView.hidden = YES;
-            
             
             break;
         default:
@@ -760,6 +752,7 @@ CGFloat const gestureMinimumTranslation = 20.0;
     if (self.refreshAnimateView) {
         self.refreshAnimateView.hidden = NO;
     }
+    self.bgView.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)hideAnimationView {
@@ -767,6 +760,7 @@ CGFloat const gestureMinimumTranslation = 20.0;
     if (self.refreshAnimateView) {
         self.refreshAnimateView.hidden = YES;
     }
+    self.bgView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)triggerRefreshAndHideAnimationView {
