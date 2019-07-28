@@ -64,7 +64,7 @@
 - (void)toastWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
     NSString *title = [param tt_stringValueForKey:@"title"];
-
+    
     if ([title isKindOfClass:[NSString class]] && title.length > 0) {
         [[ToastManager manager] showToast:title];
     }
@@ -78,7 +78,7 @@
 - (void)appInfoWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
- 
+    
     NSString *appName = [TTSandBoxHelper appName]?:@"f101";
     [data setValue:appName forKey:@"appName"];
     [data setValue:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"AppName"] forKey:@"innerAppName"];
@@ -125,10 +125,10 @@
 
 - (void)call_phoneWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
-
+    
     NSString *houseType = [param tt_stringValueForKey:@"houseType"];
     NSString *realtorId = [param tt_stringValueForKey:@"realtorId"];
-//    NSString *reportParams = [param tt_stringValueForKey:@"report_params"];
+    //    NSString *reportParams = [param tt_stringValueForKey:@"report_params"];
     NSString *reportParamsStr = [param tt_stringValueForKey:@"report_params"];
     NSMutableString *processString = [NSMutableString stringWithString:reportParamsStr];
     NSString *character = nil;
@@ -184,12 +184,12 @@
             }
         }];
     }
-
+    
     if (callParams[@"follow_id"]) {
         callParams[@"hide_toast"] = @(YES);
         [FHHouseFollowUpHelper silentFollowHouseWithConfig:callParams];
     }
-
+    
 }
 
 - (void)monitor_durationWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
@@ -269,7 +269,7 @@
     if (!TTNetworkConnected()) {
         NSString *stringRes = @"\{\"message\": \"failed\"\}";
         callback(TTBridgeMsgSuccess, @{ @"response": stringRes, @"status": @(0),
-                                           @"code":@(0)},nil);
+                                        @"code":@(0)},nil);
         return;
     }
     
@@ -311,18 +311,18 @@
     if ([method isEqualToString:@"GET"]) {
         [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
             NSString *result = @"";
-
+            
             if([obj isKindOfClass:[NSData class]]){
                 result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
             }
             
-//            callback(TTBridgeMsgSuccess,nil);
+            //            callback(TTBridgeMsgSuccess,nil);
             if (callback) {
                 callback(TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
-                                                          @"status": @(response.statusCode),
-                                                          @"code": error?@(0): @(1),
-                                                          @"beginReqNetTime": startTime
-                                                          },nil);
+                                               @"status": @(response.statusCode),
+                                               @"code": error?@(0): @(1),
+                                               @"beginReqNetTime": startTime
+                                               },nil);
             }
         }];
     }else
@@ -334,11 +334,11 @@
                     result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
                 }
                 callback(TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
-                                                          @"response": result,
-                                                          @"status": @(response.statusCode),
-                                                          @"code": error?@(0): @(1),
-                                                          @"beginReqNetTime":startTime
-                                                          },nil);
+                                               @"response": result,
+                                               @"status": @(response.statusCode),
+                                               @"code": error?@(0): @(1),
+                                               @"beginReqNetTime":startTime
+                                               },nil);
             }
         }];
     }
@@ -351,7 +351,7 @@
     if ([[topVC.viewControllers lastObject] isKindOfClass:[FHRNBaseViewController class]]) {
         currentVC = [topVC.viewControllers lastObject];
     }
-
+    
     NSMutableString * openURL = param[@"url"];
     NSString * type = [param objectForKey:@"type"];
     if([type isEqualToString:@"webview"]) {
