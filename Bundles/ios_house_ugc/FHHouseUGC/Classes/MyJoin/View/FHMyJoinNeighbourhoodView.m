@@ -56,6 +56,7 @@
 
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
     _collectionView.showsHorizontalScrollIndicator = NO;
+    _collectionView.alwaysBounceHorizontal = YES;
     _collectionView.backgroundColor = [UIColor themeGray7];
     
     [self addSubview:_collectionView];
