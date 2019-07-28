@@ -554,7 +554,7 @@ TTRefreshViewDelegate
     
     NSString * categoryStartName = [SSCommonLogic feedStartCategory];
 
-    if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"] && [categoryStartName isEqualToString:@"f_house_news"]) {
+    if ([categoryStartName isKindOfClass:[NSString class]] && [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"] && [categoryStartName isEqualToString:@"f_house_news"]) {
         self.refreshShouldLastReadUpate = YES;
         self.refreshFromType = ListDataOperationReloadFromTypeAuto;
         [self pullAndRefresh];
