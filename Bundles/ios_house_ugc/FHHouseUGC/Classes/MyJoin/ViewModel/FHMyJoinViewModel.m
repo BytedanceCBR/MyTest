@@ -31,6 +31,7 @@
 @property(nonatomic, assign) CGFloat messageViewHeight;
 @property(nonatomic, strong) FHMyJoinAllNeighbourhoodCell *allCell;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
+@property(nonatomic, assign) CGFloat beiginOffset;
 
 @end
 
@@ -228,17 +229,33 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if(scrollView == self.collectionView){
-        CGFloat diff = scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width - scrollView.contentSize.width;
+        CGFloat diff = 0;
+        if(scrollView.contentSize.width <= [UIScreen mainScreen].bounds.size.width){
+            diff = scrollView.contentOffset.x - self.beiginOffset;
+        }else{
+            diff = scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width - scrollView.contentSize.width;
+        }
         [self.allCell setShowText:(diff > leaveOffSet)];
     }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if(scrollView == self.collectionView){
-        CGFloat diff = scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width - scrollView.contentSize.width;
+        CGFloat diff = 0;
+        if(scrollView.contentSize.width <= [UIScreen mainScreen].bounds.size.width){
+            diff = scrollView.contentOffset.x - self.beiginOffset;
+        }else{
+            diff = scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width - scrollView.contentSize.width;
+        }
         if(diff > leaveOffSet){
             [self gotoMore];
         }
+    }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if(scrollView == self.collectionView){
+        self.beiginOffset = scrollView.contentOffset.x;
     }
 }
 
