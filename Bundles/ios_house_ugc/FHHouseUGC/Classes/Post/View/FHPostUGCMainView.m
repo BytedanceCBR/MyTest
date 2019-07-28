@@ -9,6 +9,7 @@
 #import <Masonry.h>
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHPostUGCMainView ()
 
@@ -30,7 +31,7 @@
 }
 
 - (void)setupUI {
-    _rightImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fh_ugc_arrow_feed"]];
+    _rightImageView = [[UIImageView alloc] initWithImage:ICON_FONT_IMG(16, @"\U0000e670", [UIColor themeGray4])]; //@"fh_ugc_arrow_feed"
     [self addSubview:_rightImageView];
     _nameLabel = [[UILabel alloc] init];
     _nameLabel.text = @"小区：";

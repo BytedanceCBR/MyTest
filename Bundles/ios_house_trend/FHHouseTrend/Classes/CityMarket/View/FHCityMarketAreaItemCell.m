@@ -9,6 +9,8 @@
 #import <Masonry.h>
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
+
 @interface FHCityMarketAreaItemCell ()
 
 @end
@@ -88,7 +90,7 @@
     }];
 
     self.arrawView = [[UIImageView alloc] init];
-    _arrawView.image = [UIImage imageNamed:@"arrowicon-detail"];
+    _arrawView.image = ICON_FONT_IMG(14, @"\U0000e670", [UIColor themeGray1]);//@"arrowicon-detail"
     [self.contentView addSubview:_arrawView];
     [_arrawView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.titleLabel.mas_right);

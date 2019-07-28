@@ -15,6 +15,7 @@
 #import "FHFeedOperationView.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 NSString *const FeedDislikeNeedReportNotification = @"FeedDislikeNeedReportNotification";
 
@@ -48,9 +49,10 @@ NSString *const FeedDislikeNeedReportNotification = @"FeedDislikeNeedReportNotif
         [self addSubview:_backgroundView];
         
         _backButton = ({
+            UIImage *img = ICON_FONT_IMG(10, @"\U0000e68c", [UIColor themeGray4]); //fh_ugc_arrow_left
             UIButton *v = [[UIButton alloc] init];
             [v setTitle:@"返回" forState:UIControlStateNormal];
-            [v setImage:[UIImage imageNamed:@"fh_ugc_arrow_left"] forState:UIControlStateNormal];
+            [v setImage:img forState:UIControlStateNormal];
             [v setTitleColor:[UIColor themeGray3]  forState:UIControlStateNormal];
             v.titleLabel.font = [UIFont themeFontRegular:16];
             [v setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];

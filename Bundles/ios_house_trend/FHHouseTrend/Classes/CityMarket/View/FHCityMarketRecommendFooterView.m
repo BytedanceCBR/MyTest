@@ -8,7 +8,8 @@
 #import "FHCityMarketRecommendFooterView.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import <Masonry/Masonry.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHCityMarketRecommendFooterView ()
 @property (nonatomic, strong) UIImageView* arrawView;
@@ -37,7 +38,8 @@
         make.centerY.mas_equalTo(self);
     }];
 
-    self.arrawView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-detail"]];
+    UIImage *img = ICON_FONT_IMG(14, @"\U0000e670", [UIColor themeGray1]);//@"arrowicon-detail"
+    self.arrawView = [[UIImageView alloc] initWithImage:img];
     [self addSubview:_arrawView];
     [_arrawView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.textLabel.mas_right);
