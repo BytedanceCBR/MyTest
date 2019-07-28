@@ -270,7 +270,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
     [self.tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kFHHouseListRecommendTitleCellId];
     [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
-    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kBaseCellId];
+    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kFHHouseListCellId];
 }
 
 
@@ -1282,7 +1282,7 @@ extern NSString *const INSTANT_DATA_KEY;
             return cell;
         } else {
             if (indexPath.section == 0) {
-                FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
+                FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListCellId];
                 if (indexPath.row < self.houseList.count) {
                     
                     FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
@@ -1354,7 +1354,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
                 return cell;
             } else {
-                FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
+                FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListCellId];
                 BOOL isFirstCell = (indexPath.row == 0);
                 BOOL isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
                 

@@ -87,7 +87,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        if (reuseIdentifier && [reuseIdentifier isEqualToString:@"FHHomeSmallImageItemCell"]) {
+        if (reuseIdentifier && ([reuseIdentifier isEqualToString:@"FHHomeSmallImageItemCell"] || [reuseIdentifier isEqualToString:@"kFHHouseListCellId"])) {
             [self initSmallImageUI];
         }else
         {
