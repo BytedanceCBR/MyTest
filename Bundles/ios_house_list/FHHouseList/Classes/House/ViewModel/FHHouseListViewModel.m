@@ -32,7 +32,8 @@
 #import "FHRecommendSecondhandHouseTitleModel.h"
 #import "FHHouseBridgeManager.h"
 #import "FHCityListViewModel.h"
-#import <FHHouseBase/FHHouseBaseItemCell.h>
+//#import <FHHouseBase/FHHouseBaseItemCell.h>
+#import <FHHouseBase/FHHouseBaseSmallItemCell.h>
 #import "HMDTTMonitor.h"
 #import "TTInstallIDManager.h"
 #import "FHSugSubscribeModel.h"
@@ -270,7 +271,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
     [self.tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kFHHouseListRecommendTitleCellId];
     [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
-    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kFHHouseListCellId];
+    [self.tableView registerClass:[FHHouseBaseSmallItemCell class] forCellReuseIdentifier:kFHHouseListCellId];
 }
 
 
@@ -1282,7 +1283,7 @@ extern NSString *const INSTANT_DATA_KEY;
             return cell;
         } else {
             if (indexPath.section == 0) {
-                FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListCellId];
+                FHHouseBaseSmallItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListCellId];
                 if (indexPath.row < self.houseList.count) {
                     
                     FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
@@ -1338,10 +1339,10 @@ extern NSString *const INSTANT_DATA_KEY;
                     }
 
                     
-                    CGFloat topMargin = 20;
+                    CGFloat topMargin = 10;
                     if (self.isCommute && indexPath.row == 0) {
                         //通勤找房 筛选器没有底部线
-                        topMargin = 10;
+                        topMargin = 0;
                     }
                     
                     [cell refreshTopMargin: topMargin];
@@ -1354,13 +1355,13 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
                 return cell;
             } else {
-                FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListCellId];
+                FHHouseBaseSmallItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListCellId];
                 BOOL isFirstCell = (indexPath.row == 0);
                 BOOL isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
                 
                 if (indexPath.row < self.sugesstHouseList.count) {
                     FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
-                    [cell refreshTopMargin: 20];
+                    [cell refreshTopMargin: 10];
                     [cell updateWithHouseCellModel:cellModel];
                 }
                 return cell;
@@ -1468,17 +1469,17 @@ extern NSString *const INSTANT_DATA_KEY;
                 cellModel = self.sugesstHouseList[indexPath.row];
             }
             
-            CGFloat normalHeight = 105;
+            CGFloat normalHeight = 75;
             if (self.isCommute && indexPath.row == 0) {
-                normalHeight = 95;//通勤找房第一个缩小间距
+                normalHeight -= 10;//通勤找房第一个缩小间距
             }
             
-            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseSmallItemCell recommendReasonHeight] : 0;
             return (isLastCell ? 125 : normalHeight)+reasonHeight;
         }
     }
 
-    return 105;
+    return 75;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
