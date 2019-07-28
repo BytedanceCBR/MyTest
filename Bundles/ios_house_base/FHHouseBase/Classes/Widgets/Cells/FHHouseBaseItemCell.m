@@ -681,10 +681,17 @@
 -(void)updateHomeSmallImageHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel andType:(FHHouseType)houseType
 {
     self.homeItemModel = commonModel;
+    //不感兴趣x按钮
     if((houseType == FHHouseTypeSecondHandHouse || houseType == FHHouseTypeRentHouse) && commonModel.dislikeInfo){
         self.closeBtn.hidden = NO;
+        [self.closeBtn configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.isIncludedInLayout = YES;
+        }];
     }else{
         self.closeBtn.hidden = YES;
+        [self.closeBtn configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.isIncludedInLayout = NO;
+        }];
     }
     
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
