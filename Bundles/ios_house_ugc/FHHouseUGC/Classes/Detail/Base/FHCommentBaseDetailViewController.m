@@ -43,6 +43,7 @@
 #import "FHCommonApi.h"
 #import "TTAccountManager.h"
 #import "FHUserTracker.h"
+#import "TTCommentModel.h"
 
 @interface FHCommentBaseDetailViewController ()<UIScrollViewDelegate>
 
@@ -58,6 +59,8 @@
 @property (nonatomic, strong) ExploreItemActionManager *itemActionManager;
 @property (nonatomic, assign)   BOOL       hasLoadedComment;
 @property (nonatomic, assign)   BOOL       isRebuildCommentViewController;
+@property (nonatomic, weak)     TTCommentModel       *wCommentModel;
+@property (nonatomic, assign)   NSInteger       lastCommentReplyCount;
 
 @end
 
@@ -615,6 +618,11 @@
     
     [mdict setValue:@"favorite" forKey:@"categoryID"];
     
+    self.wCommentModel = mdict[@"commentModel"];
+    if (self.wCommentModel && [self.wCommentModel isKindOfClass:[TTCommentModel class]]) {
+        self.lastCommentReplyCount = [self.wCommentModel.replyCount integerValue];
+    }
+    
     TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(mdict.copy)];
     
 //    detailRoot.categoryID = self.detailModel.categoryID;
@@ -727,6 +735,18 @@
     if ([self.commentViewController respondsToSelector:@selector(tt_reloadData)]) {
         [self.commentViewController tt_reloadData];
     }
+    if (self.wCommentModel && [self.wCommentModel isKindOfClass:[TTCommentModel class]]) {
+        NSInteger replyCount = [self.wCommentModel.replyCount integerValue];
+        if (replyCount != self.lastCommentReplyCount) {
+            NSInteger change = replyCount - self.lastCommentReplyCount;
+            if (fabs(change) < self.comment_count) {
+                self.comment_count += change;
+                [self commentCountChanged];
+            }
+        }
+    }
+    self.wCommentModel = nil;
+    self.lastCommentReplyCount = 0;
     [self scrollViewDidScroll:self.mainScrollView];
     // 续上评论列表时间
     self.commentShowDate = [NSDate date];
