@@ -310,14 +310,14 @@
     NSString *startTime = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
     if ([method isEqualToString:@"GET"]) {
         [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
-            NSString *result = @"\{\"message\": \"failed\"\}";
+            NSString *result = @"";
             
             if([obj isKindOfClass:[NSData class]]){
                 result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
             }
             
-            if (!result) {
-                return;
+            if (!result || error) {
+                result = @"\{\"message\": \"failed\"\}";
             }
             
             NSMutableDictionary *resultDict = [NSMutableDictionary new];
@@ -326,7 +326,7 @@
             [resultDict setValue:@(response.statusCode) forKey:@"status"];
             [resultDict setValue:error?@(0): @(1) forKey:@"code"];
             [resultDict setValue:startTime forKey:@"beginReqNetTime"];
-
+            
             if (callback) {
                 callback(TTBridgeMsgSuccess, resultDict,nil);
             }
@@ -335,12 +335,13 @@
     {
         [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:[FHRNHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
             if (callback) {
-                NSString *result = @"\{\"message\": \"failed\"\}";
+                NSString *result = @"";
                 if([obj isKindOfClass:[NSData class]]){
                     result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
                 }
-                if (!result) {
-                    return;
+                
+                if (!result || error) {
+                    result = @"\{\"message\": \"failed\"\}";
                 }
                 
                 NSMutableDictionary *resultDict = [NSMutableDictionary new];
