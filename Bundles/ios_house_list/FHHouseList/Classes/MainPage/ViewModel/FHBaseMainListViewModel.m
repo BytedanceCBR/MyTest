@@ -461,9 +461,18 @@ extern NSString *const INSTANT_DATA_KEY;
                         topInfoModel.fakeTitle = houseModel.externalSite.fakeTitle;
                     }
 
-                    if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-                        self.showRealHouseTop = YES;
-                        [items insertObject:topInfoModel atIndex:0];
+                    if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]] && !houseModel.hasMore) {
+                        if(items.count <= 10 && items.count > 1)
+                        {
+                            self.showRealHouseTop = YES;
+                            [items insertObject:topInfoModel atIndex:items.count - 1];
+                        }else
+                        {
+                            if (items.count > 0) {
+                                self.showRealHouseTop = YES;
+                                [items addObject:topInfoModel];
+                            }
+                        }
                     }
                 }
             }
@@ -1180,7 +1189,7 @@ extern NSString *const INSTANT_DATA_KEY;
         
         if (cellModel.isRealHouseTopCell) {
             if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-                return 71;
+                return 50;
             }
         }
         
@@ -1801,9 +1810,9 @@ extern NSString *const INSTANT_DATA_KEY;
         [param removeObjectForKey:@"rank"];
         [param removeObjectForKey:@"card_type"];
         [param setValue:@"be_null" forKey:@"element_from"];
-        [param setValue:@"filter_false_old" forKey:@"element_type"];
+        [param setValue:@"filter_false_tip" forKey:@"element_type"];
 
-        TRACK_EVENT(@"real_house_show", param);
+        TRACK_EVENT(@"filter_false_tip_show", param);
     }else
     {
         TRACK_EVENT(@"house_show", param);

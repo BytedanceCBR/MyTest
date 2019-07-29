@@ -62,13 +62,13 @@
     NSString *stringVersion = [FHEnvContext getToutiaoVersionCode];
     
     NSDictionary *rnInitKitParams = @{TTRNKitUserId:@"user",                                  //gecko的userID，无实用意义
-                                  TTRNKitScheme:@"sslocal://",                           //js与oc交互时使用的scheme
-                                  TTRNKitAppName:@"f100",
-                                  TTRNKitInnerAppName:@"Inner_Example",
-                                  //       TTRNKitCommonBundlePath:commonBundlePath,
-                                  //       TTRNKitCommonBundleMetaPath:commonBundleMetaPath,
-                                  //TTRNKitGeckoDomain:@"gecko-sg.byteoversea.com"        //如果是海外资源，或者有自定义域名，请添加此行参数，
-                                  };
+                                      TTRNKitScheme:@"sslocal://",                           //js与oc交互时使用的scheme
+                                      TTRNKitAppName:@"f100",
+                                      TTRNKitInnerAppName:@"Inner_Example",
+                                      //       TTRNKitCommonBundlePath:commonBundlePath,
+                                      //       TTRNKitCommonBundleMetaPath:commonBundleMetaPath,
+                                      //TTRNKitGeckoDomain:@"gecko-sg.byteoversea.com"        //如果是海外资源，或者有自定义域名，请添加此行参数，
+                                      };
     
     NSMutableDictionary *rnKitParams = [NSMutableDictionary dictionaryWithDictionary:rnInitKitParams];
     
@@ -122,7 +122,7 @@
         
         self.isAppeared = NO;
         _traceCache = [NSMutableArray new];
-
+        
         if ([paramObj.sourceURL respondsToSelector:@selector(absoluteString)]) {
             _shemeUrlStr = [paramObj.sourceURL absoluteString];
         }
@@ -235,7 +235,7 @@
         }
         
         NSString *url = [NSString stringWithFormat:@"%@",_shemeUrlStr];
-   
+        
         self.ttRNKit.delegate = self;
         [self.ttRNKit handleUrl:url];
     }else
@@ -272,7 +272,7 @@
     [self setupUI];
     
     self.customNavBarView.title.text = _titleStr;
-
+    
     _container = [[UIView alloc] init];
     [self.view addSubview:_container];
     
@@ -315,7 +315,7 @@
     [super viewDidAppear:animated];
     
     [self.navigationController setNavigationBarHidden:YES animated:NO];
-
+    
     [[UIApplication sharedApplication] setStatusBarHidden:_hideStatusBar];
     
     if (_statusBarHighLight) {
@@ -324,7 +324,7 @@
     {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     }
-
+    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         _container.hidden = NO;
         if (_viewWrapper && _canPreLoad && _isLoadFinish) {
@@ -376,9 +376,9 @@
 
 - (void)destroyRNView
 {
-
+    
     [[FHRNHelper sharedInstance] removeCountChannel:_channelStr];
-
+    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         if (self.ttRNKit.bridgeInfos) {
@@ -389,7 +389,7 @@
             }
         }
         
-//        if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
+        //        if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
         ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
         if (self.ttRNKit) {
             [self.ttRNKit clearRNResourceForChannel:_channelStr];
@@ -397,12 +397,12 @@
         if (((RCTRootView *)_viewWrapper.rnView).bridge && [((RCTRootView *)_viewWrapper.rnView).bridge respondsToSelector:@selector(invalidate)]) {
             [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
         }
-//        }
+        //        }
         if (_container) {
             [_container removeFromSuperview];
             self.container = nil;
         }
-
+        
         if ((RCTRootView *)_viewWrapper.rnView) {
             [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
             _viewWrapper.rnView = nil;
@@ -484,8 +484,8 @@
 {
     if (![_container.subviews containsObject:viewWrapper]) {
         [_container addSubview:viewWrapper];
-//        TTRNBridgeEngine *bridgeEngine = ((RCTRootView *)_viewWrapper.rnView).bridge.tt_engine;
-//        bridgeEngine.sourceController = self;
+        //        TTRNBridgeEngine *bridgeEngine = ((RCTRootView *)_viewWrapper.rnView).bridge.tt_engine;
+        //        bridgeEngine.sourceController = self;
         [viewWrapper setFrame:self.container.bounds];
     }
 }
@@ -512,7 +512,7 @@
             [self addViewWrapper:wrapper];
         }
         _viewWrapper = wrapper;
-
+        
     } else if (specialHost) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:specialHost message:nil preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -545,7 +545,7 @@
     initParams[RNModuleName] = moduleName ?: _moduleNameStr;
     [initParams setValue:self forKey:@"sourcevc"];
     [initParams setValue:[NSString stringWithFormat:@"%ld",self.hash] forKey:@"bundle_cache_key"];
-
+    
     TTRNKitViewWrapper *wrapper = [[TTRNKitViewWrapper alloc] init];
     [self.manager registerObserver:wrapper];
     _viewWrapper = wrapper;
@@ -570,9 +570,9 @@
 
 - (void)callPhone:(void (^)(NSDictionary * _Nonnull))excute
 {
-//    if (excute) {
-//        excute()
-//    }
+    //    if (excute) {
+    //        excute()
+    //    }
 }
 
 #pragma mark TTBridgeEngine
@@ -581,14 +581,14 @@
     return self;
 }
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 
 - (void)dealloc
