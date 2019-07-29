@@ -1406,8 +1406,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 return;
             }
             
-            if (cellModel.groupId.length > 0 && ![self.houseShowCache.allKeys containsObject:cellModel.groupId]) {
-                
+            if (cellModel.groupId.length > 0 && ![self.houseShowCache.allKeys containsObject:cellModel.groupId] && !cellModel.isSubscribCell && !cellModel.isRealHouseTopCell) {
                 [self addHouseShowLog:cellModel withRank:indexPath.row - (_showRealHouseTop ? 1 : 0)];
                 self.houseShowCache[cellModel.groupId] = @"1";
             }
