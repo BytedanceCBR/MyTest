@@ -16,7 +16,7 @@
 #import "FHNewHouseItemModel.h"
 
 #import "FHSingleImageInfoCellModel.h"
-#import "FHPlaceHolderCell.h"
+#import "FHHomePlaceHolderCell.h"
 #import "TTReachability.h"
 #import "FHMainManager+Toast.h"
 #import <UIScrollView+Refresh.h>
@@ -270,7 +270,7 @@ extern NSString *const INSTANT_DATA_KEY;
     [self.tableView registerClass:[FHSuggestionRealHouseTopCell class] forCellReuseIdentifier:kFHHouseListTopRealInfoCellId];
 
     [self.tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kFHHouseListRecommendTitleCellId];
-    [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
+    [self.tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
     [self.tableView registerClass:[FHHouseBaseSmallItemCell class] forCellReuseIdentifier:kFHHouseListCellId];
 }
 
@@ -1368,7 +1368,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }
         }
     } else {
-        FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListPlaceholderCellId];
+        FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListPlaceholderCellId];
         return cell;
     }
 

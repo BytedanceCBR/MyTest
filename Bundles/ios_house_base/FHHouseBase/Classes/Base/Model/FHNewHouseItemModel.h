@@ -65,6 +65,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displayDescription;
 @property (nonatomic, copy , nullable) NSString *houseId;
 @property (nonatomic, copy , nullable) NSString *displayPricePerSqm;
+@property (nonatomic, copy , nullable) NSString *pricePerSqmNum;
+@property (nonatomic, copy , nullable) NSString *pricePerSqmUnit;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *searchId;

@@ -216,11 +216,7 @@
 {
     if (!_pricePerSqmLabel) {
         _pricePerSqmLabel = [[UILabel alloc]init];
-        if ([TTDeviceHelper isScreenWidthLarge320]) {
-            _pricePerSqmLabel.font = [UIFont themeFontRegular:12];
-        }else {
-            _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-        }
+        _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
         _pricePerSqmLabel.textColor = [UIColor themeGray3];
     }
     return _pricePerSqmLabel;
@@ -543,18 +539,7 @@
         self.subTitleLabel.text = commonModel.subtitle;
         self.priceLabel.text = commonModel.pricingNum;
         self.pricePerSqmLabel.text = commonModel.pricingUnit;
-        
-        
-        if ([TTDeviceHelper isScreenWidthLarge320]) {
-            _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
-            _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-            _pricePerSqmLabel.textColor = [UIColor themeRed1];
-        }else {
-            _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
-            _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-            _pricePerSqmLabel.textColor = [UIColor themeRed1];
-        }
-        
+        self.pricePerSqmLabel.textColor = [UIColor themeRed1];
         
         FHImageModel *imageModel = [commonModel.houseImage firstObject];
         [self updateMainImageWithUrl:imageModel.url];
@@ -668,26 +653,12 @@
     
     self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = model.displayDescription;
-    self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
+    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:model.tags];
+    self.tagLabel.attributedText =  attributeString;
     
-    self.priceLabel.text = model.displayPricePerSqm;
-    
-    self.originPriceLabel.text = nil;
-    self.pricePerSqmLabel.text = nil;
-    self.originPriceLabel.hidden = YES;
-    self.pricePerSqmLabel.hidden = YES;
-    if (self.pricePerSqmLabel.yoga.isIncludedInLayout == self.pricePerSqmLabel.hidden) {
-        [self.pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.isIncludedInLayout = self.pricePerSqmLabel.hidden;
-        }];
-        [self.pricePerSqmLabel.yoga markDirty];
-    }
-    if (self.originPriceLabel.yoga.isIncludedInLayout == self.originPriceLabel.hidden) {
-        [self.originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.isIncludedInLayout = self.originPriceLabel.hidden;
-        }];
-        [self.originPriceLabel.yoga markDirty];
-    }
+    self.priceLabel.text = model.pricePerSqmNum;
+    self.pricePerSqmLabel.text = model.pricePerSqmUnit;
+    self.pricePerSqmLabel.textColor = [UIColor themeRed1];
     
     [self hideRecommendReason];
     
@@ -788,72 +759,12 @@
     self.houseVideoImageView.hidden = YES;
     self.mainTitleLabel.text = model.title;
     self.subTitleLabel.text = model.subtitle;
-    self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
-    self.priceLabel.text = model.pricing;
-    self.pricePerSqmLabel.text = nil;
-    self.originPriceLabel.text = nil;
-    if (!self.originPriceLabel.hidden) {
-        self.originPriceLabel.hidden = YES;
-        [self.originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.isIncludedInLayout = NO;
-        }];
-    }
-    
-    
-    NSArray *firstRow = [model.bottomText firstObject];
-    NSDictionary *bottomText = nil;
-    if ([firstRow isKindOfClass:[NSArray class]]) {
-        NSDictionary *info = [firstRow firstObject];
-        if ([info isKindOfClass:[NSDictionary class]]) {
-            bottomText = info;
-        }
-    }
-    
-    NSString *infoText = bottomText[@"text"];
-    
-    if (bottomText && bottomText[@"color"] && !IS_EMPTY_STRING(infoText)) {
-        
-        NSMutableAttributedString *commuteAttr = [[NSMutableAttributedString alloc]init];
-        
-        UIImage *clockImg =  SYS_IMG(@"clock_small");
-        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
-        attachment.image = clockImg;
-        attachment.bounds = CGRectMake(0, -1.5, 12, 12);
-        
-        NSAttributedString *clockAttr = [NSAttributedString attributedStringWithAttachment:attachment];
-        
-        [commuteAttr appendAttributedString:clockAttr];
-        
-        UIColor *textColor = [UIColor colorWithHexStr:bottomText[@"color"]]?:[UIColor themeGray3];
-        
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:textColor};
-        NSAttributedString *timeAttr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",infoText] attributes:attr];
-        
-        [commuteAttr appendAttributedString:timeAttr];
-        
-        self.distanceLabel.attributedText = commuteAttr;
-        
-        if (!_distanceLabel){
-            [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                layout.isEnabled = YES;
-                layout.marginLeft = YGPointValue(10);
-                layout.alignSelf = YGAlignCount;
-                layout.flexGrow = 1;
-            }];
-        }
-        [self.priceBgView addSubview:self.distanceLabel];
-        //因为有表情 强制计算宽度
-        [self.distanceLabel sizeToFit];
-        [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.width = YGPointValue(ceil(self.distanceLabel.frame.size.width));//x 设备上会出现因为小数计算显示不全的，改为上取整
-        }];
-        _priceBgView.yoga.justifyContent = YGJustifySpaceBetween;
-        [self.distanceLabel.yoga markDirty];
-    }else{
-        [_distanceLabel removeFromSuperview];
-        _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
-    }
-    
+    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags];
+    self.tagLabel.attributedText =  attributeString;
+    self.priceLabel.text = model.pricingNum;
+    self.pricePerSqmLabel.text = model.pricingUnit;
+    self.pricePerSqmLabel.textColor = [UIColor themeRed1];
+
     FHImageModel *imageModel = [model.houseImage firstObject];
     [self updateMainImageWithUrl:imageModel.url];
     
@@ -867,21 +778,6 @@
     }
     
     [self updateImageTopLeft];
-    
-    if (self.pricePerSqmLabel.yoga.isIncludedInLayout) {
-        [self.pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.isIncludedInLayout = NO;
-        }];
-        [self.pricePerSqmLabel.yoga markDirty];
-    }
-    
-    if (self.originPriceLabel.yoga.isIncludedInLayout) {
-        [self.originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.isIncludedInLayout = NO;
-        }];
-        [self.originPriceLabel.yoga markDirty];
-    }
-    
     [self hideRecommendReason];
     [self updateTitlesLayout:self.cellModel.tagsAttrStr.length > 0];
     [self.contentView.yoga applyLayoutPreservingOrigin:NO];
