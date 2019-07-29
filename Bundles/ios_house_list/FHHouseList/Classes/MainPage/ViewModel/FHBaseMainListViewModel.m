@@ -30,7 +30,9 @@
 #import <FHHouseBase/FHRecommendSecondhandHouseTitleModel.h>
 #import <FHHouseBase/FHSingleImageInfoCellModel.h>
 #import <FHHouseBase/FHRecommendSecondhandHouseTitleCell.h>
-#import <FHHouseBase/FHHouseBaseItemCell.h>
+//#import <FHHouseBase/FHHouseBaseItemCell.h>
+#import <FHHouseBase/FHHouseBaseSmallItemCell.h>
+#import <FHHouseBase/FHHomePlaceHolderCell.h>
 #import <FHHouseBase/FHMapSearchOpenUrlDelegate.h>
 
 #import "FHMainListTopView.h"
@@ -83,9 +85,9 @@ extern NSString *const INSTANT_DATA_KEY;
         
         [_tableView registerClass:[FHSuggestionSubscribCell class] forCellReuseIdentifier:kSubscribMainPage];
         [_tableView registerClass:[FHSuggestionRealHouseTopCell class] forCellReuseIdentifier:kRealHouseMainPage];
-        [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kSingleCellId];
+        [_tableView registerClass:[FHHouseBaseSmallItemCell class] forCellReuseIdentifier:kSingleCellId];
         [_tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kSugCellId];
-        [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceCellId];
+        [_tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kPlaceCellId];
         
         __weak typeof(self) wself = self;
         FHRefreshCustomFooter *footer = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
@@ -1065,7 +1067,7 @@ extern NSString *const INSTANT_DATA_KEY;
             cell = scell;
         } else {
             
-            FHHouseBaseItemCell *scell = [tableView dequeueReusableCellWithIdentifier:kSingleCellId];
+            FHHouseBaseSmallItemCell *scell = [tableView dequeueReusableCellWithIdentifier:kSingleCellId];
             BOOL isLastCell = NO;
             FHSingleImageInfoCellModel *cellModel = nil;
             if (indexPath.section == 0) {
@@ -1124,8 +1126,8 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
             }
             if (cellModel) {
-                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0; //显示榜单推荐
-                [scell refreshTopMargin: 20];
+                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseSmallItemCell recommendReasonHeight] : 0; //显示榜单推荐
+//                [scell refreshTopMargin: 20];
                 [scell updateWithHouseCellModel:cellModel];
             }
             
@@ -1149,7 +1151,7 @@ extern NSString *const INSTANT_DATA_KEY;
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (_showPlaceHolder) {
-        return 105;
+        return 75;
     }
     
     if (indexPath.section == 1 && [self.sugesstHouseList[indexPath.row] isKindOfClass:[FHRecommendSecondhandHouseTitleModel class]]) {
@@ -1190,12 +1192,12 @@ extern NSString *const INSTANT_DATA_KEY;
             }
         }
         
-        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-        return (isLastCell ? 125 : 105)+reasonHeight;
+        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseSmallItemCell recommendReasonHeight] : 0;
+        return (isLastCell ? 95 : 75)+reasonHeight;
         
     }
     
-    return 105;
+    return 75;
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
