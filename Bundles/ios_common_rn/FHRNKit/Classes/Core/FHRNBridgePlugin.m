@@ -316,8 +316,11 @@
                 result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
             }
             
+            if (!result) {
+                return;
+            }
             //            callback(TTBridgeMsgSuccess,nil);
-            if (callback && result) {
+            if (callback) {
                 callback(TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
                                                @"status": @(response.statusCode),
                                                @"code": error?@(0): @(1),
@@ -337,7 +340,7 @@
                     return;
                 }
                 callback(TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
-                                               @"response": result,
+                                               @"response": result ? result : @"",
                                                @"status": @(response.statusCode),
                                                @"code": error?@(0): @(1),
                                                @"beginReqNetTime":startTime
