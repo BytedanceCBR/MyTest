@@ -8,7 +8,7 @@
 #import "TTBaseMacro.h"
 #import "IMConsDefine.h"
 #import "FHCommunitySuggestionBubble.h"
-
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHDetailCommunityEntryCell () <FHDetailVCViewLifeCycleProtocol>
 @property(nonatomic, strong) UILabel *activeCountInfoLabel;
@@ -56,7 +56,7 @@
     _flowBubble = [[FHCommunitySuggestionBubble alloc] initWithFrame:CGRectMake(_backView.frame.size.width - 22 - 160, 40, 160, 20)];
 
     _arrowView = [[UIImageView alloc] init];
-    _arrowView.image = [UIImage imageNamed:@"detail_red_arrow_right"];
+    _arrowView.image = ICON_FONT_IMG(12, @"\U0000e670", [UIColor themeRed1]);//@"detail_red_arrow_right"
     _arrowView.frame = CGRectMake(SCREEN_WIDTH - 40 - 6 - 12, 14, 12, 12);
 
     [_backView addSubview:_activeCountInfoLabel];
@@ -115,7 +115,7 @@
     if (!entryModel.activeInfo) {
         return;
     }
-
+    
     NSString *numStr = [NSString stringWithFormat:@"%@", entryModel.activeCountInfo.count];
     NSString *textStr = [NSString stringWithFormat:@" %@", entryModel.activeCountInfo.text];
     NSString *combineStr = [NSString stringWithFormat:@"%@%@", numStr, textStr];
@@ -132,7 +132,7 @@
 
 - (void)updateBubble {
     FHDetailCommunityEntryModel *entryModel = self.currentData;
-    if (!entryModel.activeInfo) {
+    if (!entryModel.activeInfo || entryModel.activeInfo.count <= 0) {
         return;
     }
     FHDetailCommunityEntryActiveInfoModel *model = entryModel.activeInfo[self.curWheelIndex];
@@ -198,6 +198,11 @@
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {
+    [self stopWheel];
+}
+
+- (void)dealloc
+{
     [self stopWheel];
 }
 

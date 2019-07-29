@@ -57,16 +57,21 @@
          
          */
         
-        [text drawAtPoint:CGPointZero withAttributes:@{NSFontAttributeName:font, NSForegroundColorAttributeName:color}];
+        NSMutableDictionary *attrDict = @{NSFontAttributeName:font}.mutableCopy;
+        if(color) {
+            attrDict[NSForegroundColorAttributeName] = color;
+        }
+        
+        [text drawAtPoint:CGPointZero withAttributes:attrDict];
         
     } else {
         
 #pragma clang diagnostic push
         
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        
-        CGContextSetFillColorWithColor(context, color.CGColor);
-        
+        if(color){
+            CGContextSetFillColorWithColor(context, color.CGColor);
+        }
         [text drawAtPoint:CGPointMake(0, 0) withFont:font];
         
 #pragma clang pop

@@ -26,6 +26,7 @@
 #import <TTThemed/UIImage+TTThemeExtension.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <FHCommonUI/UIColor+Theme.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 #define kAvatarImageWidth 36.f
 
@@ -387,7 +388,7 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
     if (!_multiTextArrow) {
         _multiTextArrow = [[UIImageView alloc] initWithFrame:CGRectZero];
         _multiTextArrow.contentMode = UIViewContentModeCenter;
-        _multiTextArrow.image = [UIImage imageNamed:@"message_merge_arrow"];
+        _multiTextArrow.image =  ICON_FONT_IMG(12, @"\U0000e670", [UIColor themeRed1]);//@"message_merge_arrow"
     }
     return _multiTextArrow;
 }

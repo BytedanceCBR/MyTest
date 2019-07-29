@@ -17,6 +17,8 @@
 
 - (void)viewWillAppear;
 
+- (void)viewDidAppear;
+
 - (void)viewWillDisappear;
 
 -(void)addGoDetailLog;

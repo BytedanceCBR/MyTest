@@ -34,7 +34,7 @@
 #import <AKWebViewBundlePlugin/TTDetailWebviewGIFManager.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTBaseLib/TTSandBoxHelper.h>
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 
 @interface TTArticleDetailViewModel ()
 
@@ -46,7 +46,8 @@
 @implementation TTArticleDetailViewModel
 
 //#if INHOUSE
-+ (void)load {
++ (void)load
+{
     if ([TTSandBoxHelper isInHouseApp]) {
         NSString *feArticleTestHost = [[NSUserDefaults standardUserDefaults] valueForKey:@"FEArticleTestHost"];
         if (!feArticleTestHost) {

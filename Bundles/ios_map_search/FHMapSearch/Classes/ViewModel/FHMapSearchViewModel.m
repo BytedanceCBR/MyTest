@@ -39,6 +39,8 @@
 #import "FHMapStationAnnotationView.h"
 #import "FHMapSearchFilterView.h"
 #import "FHMapAreaHouseListViewController.h"
+#import <FHHouseBase/FHSearchChannelTypes.h>
+
 
 #define kTipDuration 3
 
@@ -630,12 +632,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }else{
         query = self.filterConditionParams;
     }
-    NSMutableDictionary *extraParams = nil;
+    NSMutableDictionary *extraParams = [NSMutableDictionary new];
     NSString *targetType = nil;
     if (_showMode == FHMapSearchShowModeDrawLine) {
+//        extraParams[CHANNEL_ID] = CHANNEL_ID_CIRCEL_SEARCH;
         targetType = @"neighborhood";
     }else if (_showMode == FHMapSearchShowModeSubway || (_lastShowMode == FHMapSearchShowModeSubway && _showMode == FHMapSearchShowModeHalfHouseList)){
-        extraParams = [NSMutableDictionary new];
         if (!(([query containsString:@"line"]||[query containsString:@"station"]))) {
             if ([self.selectionStation.value isEqualToString:self.selectedLine.value]) {
 //                targetType = @"segment";
@@ -647,6 +649,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
         }
         extraParams[CHANNEL_ID] = CHANNEL_ID_SUBWAY_SEARCH;
+    } else {
+//        extraParams[CHANNEL_ID] = CHANNEL_ID_MAP_FIND_HOUSE;
     }
     
     __weak typeof(self) wself = self;

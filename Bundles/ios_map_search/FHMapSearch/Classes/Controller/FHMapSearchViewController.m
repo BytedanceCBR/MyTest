@@ -34,6 +34,7 @@
 #import "FHMapSimpleNavbar.h"
 #import "FHMapSearchInfoTopBar.h"
 #import "FHMapSearchSideBar.h"
+#import <TTReachability/TTReachability.h>
 
 #define kTapDistrictZoomLevel  16
 #define kFilterBarHeight 44
@@ -346,6 +347,11 @@
     
     [_viewModel tryUpdateSideBar];
     [self switchNavbarMode:FHMapSearchShowModeMap];
+
+    if (![TTReachability isNetworkConnected]) {
+        [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
+        return;
+    }
 }
 
 -(void)enablePan:(BOOL)enable

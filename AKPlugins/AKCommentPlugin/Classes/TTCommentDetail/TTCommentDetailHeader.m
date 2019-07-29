@@ -75,7 +75,7 @@
     return [self fitSizeWithiPhone6:14.f iPhone5:13.f];
 }
 + (NSString *)nameViewTextColorKey {
-    return kFHColorCharcoalGrey;
+    return @"grey1";
 }
 
 + (CGFloat)nameViewBottomPadding {
@@ -119,7 +119,7 @@
 }
 
 + (NSString *)timeLabelTextColorKey {
-    return kFHColorCoolGrey3;
+    return @"grey3";
 }
 
 #pragma mark - followButton
@@ -674,7 +674,7 @@
     if (!_timeLabel) {
         _timeLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];
         _timeLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:12]];
-        _timeLabel.textColorThemeKey = kFHColorCoolGrey3;
+        _timeLabel.textColorThemeKey = @"grey3";
     }
     return _timeLabel;
 }
@@ -735,7 +735,7 @@
     if (!_reportButton) {
         _reportButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         _reportButton.titleLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:12]];
-        _reportButton.titleColorThemeKey = kFHColorCoral;
+        _reportButton.titleColorThemeKey = @"red1";
         _reportButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         [_reportButton setTitle:@"举报" forState:UIControlStateNormal];
         [_reportButton sizeToFit];

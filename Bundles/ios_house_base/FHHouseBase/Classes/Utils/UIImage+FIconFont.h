@@ -8,7 +8,7 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-// text使用Unicode格式，需求在前面加  \U0000  
+// text使用Unicode格式，需求在前面加  \U0000
 #define ICON_FONT_IMG(fontSize,t,c)  [UIImage imageWithIconFontSize:fontSize text:t color:c]
 
 @interface UIImage (FIconFont)

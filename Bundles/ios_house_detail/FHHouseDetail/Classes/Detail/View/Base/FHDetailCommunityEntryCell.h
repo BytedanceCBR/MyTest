@@ -7,5 +7,4 @@
 
 
 @interface FHDetailCommunityEntryCell : FHDetailBaseCell
-@property(nonatomic, weak)UITableView *tableView;
 @end

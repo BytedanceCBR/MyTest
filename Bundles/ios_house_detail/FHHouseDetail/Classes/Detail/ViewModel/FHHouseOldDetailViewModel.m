@@ -376,16 +376,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         agentListModel.houseType = self.houseType;
         [self.items addObject:agentListModel];
     }
-    // 房源概况
-    if (model.data.houseOverreview.list.count > 0) {
-        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-        FHDetailHouseOutlineInfoModel *infoModel = [[FHDetailHouseOutlineInfoModel alloc] init];
-        infoModel.houseOverreview = model.data.houseOverreview;
-        infoModel.baseViewModel = self;
-        [self.items addObject:infoModel];
-    }
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线

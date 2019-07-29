@@ -433,7 +433,7 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
 - (SSThemedLabel *)infoLabel{
     if(!_infoLabel){
         _infoLabel = [[SSThemedLabel alloc] init];
-        _infoLabel.textColorThemeKey = kFHColorCoolGrey2;
+        _infoLabel.textColorThemeKey = @"grey4";
         _infoLabel.numberOfLines = 1;
         _infoLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _infoLabel.font = [UIFont systemFontOfSize:10];

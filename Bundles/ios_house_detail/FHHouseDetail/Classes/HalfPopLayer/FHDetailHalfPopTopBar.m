@@ -10,7 +10,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <Masonry/Masonry.h>
-
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHDetailHalfPopTopBar ()
 
@@ -26,7 +26,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        UIImage *img = [UIImage imageNamed:@"icon_close"];
+        UIImage *img = ICON_FONT_IMG(13, @"\U0000e673", nil);//"icon_close"
         _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_closeButton setImage:img forState:UIControlStateNormal];
         [_closeButton setImage:img forState:UIControlStateHighlighted];

@@ -12,6 +12,7 @@
 #import "TTUIResponderHelper.h"
 #import "TTDeviceHelper.h"
 #import "FHIMHouseShareView.h"
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 @interface FHIMShareAlertView ()
 @property (nonatomic , strong) UIView *bgView;

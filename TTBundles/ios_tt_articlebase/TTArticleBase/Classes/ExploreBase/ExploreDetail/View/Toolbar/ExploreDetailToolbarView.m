@@ -72,7 +72,7 @@
         _topButton.hidden = YES;
 
         self.badgeLabel = [[SSThemedLabel alloc] init];
-        self.badgeLabel.backgroundColorThemeKey = kFHColorCoral;
+        self.badgeLabel.backgroundColorThemeKey = @"red1";
         self.badgeLabel.textColorThemeKey = kColorText8;
         self.badgeLabel.font = [UIFont systemFontOfSize:8];
         self.badgeLabel.layer.cornerRadius = 5;
@@ -482,7 +482,7 @@
 
         if ([TTDeviceHelper isPadDevice]) {
             
-            _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
+            _writeButton.titleColorThemeKey = @"grey3";
             _writeButton.backgroundColor = [UIColor clearColor];
             _writeButton.borderColorThemeKey = kColorLine8;
             _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
@@ -490,7 +490,7 @@
             
         } else {
             
-            _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
+            _writeButton.titleColorThemeKey = @"grey3";
             _writeButton.backgroundColor = [[UIColor colorWithHexString:@"#FFFFFF"] colorWithAlphaComponent:.1f];
             
             _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
@@ -510,11 +510,11 @@
         _collectButton.selectedImageName = @"tab_collect_press";
         _shareButton.imageName = [self _shareIconName];
         _writeButton.borderColors = nil;
-        _writeButton.borderColorThemeKey = kFHColorSilver2;
+        _writeButton.borderColorThemeKey = @"grey6";
         _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
-        _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
+        _writeButton.titleColorThemeKey = @"grey3";
         _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
-        _writeButton.backgroundColorThemeKey = kFHColorPaleGrey;
+        _writeButton.backgroundColorThemeKey = @"grey7";
         _writeButton.layer.masksToBounds = YES;
         
 //        [_writeButton setImageName:@"write_new"];
@@ -549,7 +549,7 @@
         _writeButton.borderColorThemeKey = kColorLine1;
         _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         _writeButton.borderColors = nil;
-        _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
+        _writeButton.titleColorThemeKey = @"grey3";
         _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
         _writeButton.layer.masksToBounds = YES;
         _writeButton.backgroundColorThemeKey = kColorBackground3;
@@ -568,7 +568,7 @@
         _writeButton.borderColorThemeKey = kColorLine1;
         _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         _writeButton.borderColors = nil;
-        _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
+        _writeButton.titleColorThemeKey = @"grey3";
         _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
         _writeButton.layer.masksToBounds = YES;
         _writeButton.backgroundColorThemeKey = kColorBackground3;

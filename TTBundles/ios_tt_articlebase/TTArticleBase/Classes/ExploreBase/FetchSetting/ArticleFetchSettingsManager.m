@@ -1415,7 +1415,7 @@
     
     if ([dSettings objectForKey:@"tt_reachability_detect_optimize_enabled"]) {
         BOOL enabled = [dSettings tt_boolValueForKey:@"tt_reachability_detect_optimize_enabled"];
-        [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:TTReachabilityDetectOptimizeKey];
+//        [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:TTReachabilityDetectOptimizeKey];
     }
     
     if ([dSettings objectForKey:@"tt_clear_badge_bugfix_rollback"]) {

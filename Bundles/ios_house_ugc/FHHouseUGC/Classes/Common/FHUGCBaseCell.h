@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 - (void)deleteCell:(FHFeedUGCCellModel *)cellModel;
 
-- (void)commentClicked:(FHFeedUGCCellModel *)cellModel;
+- (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
 
 - (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel;
 

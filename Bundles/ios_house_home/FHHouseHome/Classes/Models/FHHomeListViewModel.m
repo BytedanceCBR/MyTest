@@ -25,6 +25,7 @@
 #import <TTSandBoxHelper.h>
 #import "FHHomeItemViewController.h"
 #import "FHHomeSearchPanelViewModel.h"
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
@@ -136,6 +137,8 @@
             {
                 [self.homeViewController.emptyView hideEmptyView];
             }
+            
+            [self checkCityStatus];
             
             self.headerHeight = [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
             if (xConfigDataModel.houseTypeList.count <= 1) {

@@ -9,6 +9,8 @@
 #import <Masonry.h>
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
+
 @interface FHCityMarketHeaderPropertyItemView ()
 {
 
@@ -59,18 +61,25 @@
 }
 
 -(void)setArraw:(NSInteger)flag {
+    NSString *text = nil;
+    UIColor *textColor = nil;
     switch (flag) {
         case 1:
-            _arrawView.image = [UIImage imageNamed:@"arraw-up"];
+            text = @"\U0000e67f"; //arraw-up
+            textColor = [UIColor themeRed];
             [_arrawView setHidden:NO];
             break;
         case -1:
-            _arrawView.image = [UIImage imageNamed:@"arrow-down"];
+            text = @"\U0000e677"; // arraw-down
+            textColor = [UIColor themeGreen1];
             [_arrawView setHidden:NO];
             break;
         default:
             [_arrawView setHidden:YES];
             break;
+    }
+    if(text){
+        _arrawView.image  =  ICON_FONT_IMG(12, text, textColor);
     }
 }
 /*
