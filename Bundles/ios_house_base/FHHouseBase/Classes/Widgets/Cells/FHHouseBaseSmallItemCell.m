@@ -397,6 +397,7 @@
     _pricePerSqmLabel.textAlignment = 2;
     [_pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
+        layout.marginTop = YGPointValue(2);
         layout.height = YGPointValue(14);
         layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
     }];
@@ -742,15 +743,21 @@
     self.priceLabel.text = model.displayPrice;
     self.pricePerSqmLabel.text = model.displayPricePerSqm;
     
-    BOOL originPriceEnable = self.cellModel.originPriceAttrStr.string.length > 0;
-    if (originPriceEnable || ( self.originPriceLabel.yoga.isIncludedInLayout != originPriceEnable)) {
-        self.originPriceLabel.attributedText = self.cellModel.originPriceAttrStr;
-        [self.originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.isIncludedInLayout = originPriceEnable;
-        }];
-        [self.originPriceLabel.yoga markDirty];
+    if (model.originPrice) {
+        self.pricePerSqmLabel.attributedText = [self originPriceAttr:model.originPrice];
+    }else{
+        self.pricePerSqmLabel.text = model.displayPricePerSqm;
     }
-    self.originPriceLabel.hidden = !originPriceEnable;
+    
+//    BOOL originPriceEnable = self.cellModel.originPriceAttrStr.string.length > 0;
+//    if (originPriceEnable || ( self.originPriceLabel.yoga.isIncludedInLayout != originPriceEnable)) {
+//        self.originPriceLabel.attributedText = self.cellModel.originPriceAttrStr;
+//        [self.originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+//            layout.isIncludedInLayout = originPriceEnable;
+//        }];
+//        [self.originPriceLabel.yoga markDirty];
+//    }
+//    self.originPriceLabel.hidden = !originPriceEnable;
     
     [self.pricePerSqmLabel.yoga markDirty];
     
