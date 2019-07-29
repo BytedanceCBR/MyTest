@@ -365,15 +365,6 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
     }
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView;{
-    NSLog(@"zlj:scrollH:%f contentInsetT:%f contentInsetB:%f offsetY:%f contentSizeH:%f",
-          scrollView.bounds.size.height,
-          scrollView.contentInset.top,
-          scrollView.contentInset.bottom,
-          scrollView.contentOffset.y,
-          scrollView.contentSize.height);
-}
-
 - (NSArray<FHUGCCommunityDistrictTabModel *> *)categoriesFromUgcConfig {
     NSArray *ugcDistrict = [[FHUGCConfig sharedInstance] configData].data.ugcDistrict;
     if (ugcDistrict.count <= 0) {
