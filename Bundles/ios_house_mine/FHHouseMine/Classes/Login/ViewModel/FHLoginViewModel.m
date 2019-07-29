@@ -113,7 +113,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     NSString *service = [TTAccount sharedAccount].service;
     if ([service isEqualToString:TTAccountMobile]) {
-        return NO;
+        return disableMobile;
     }else if ([service isEqualToString:TTAccountUnion]) {
         return disableUnicom;
     }else if ([service isEqualToString:TTAccountTelecom]) {
