@@ -1720,7 +1720,14 @@ extern NSString *const INSTANT_DATA_KEY;
         return;
     }
     
-    if (_showHouseDict[cellModel.groupId]) {
+    
+    NSString *hashString = [NSString stringWithFormat:@"%ld",cellModel.hash];
+    
+    if (cellModel.isSubscribCell && self.showHouseDict[hashString]) {
+        return;
+    }else if (cellModel.isRealHouseTopCell && self.showHouseDict[hashString]) {
+        return;
+    } else if (_showHouseDict[cellModel.groupId] && !cellModel.isRealHouseTopCell && !cellModel.isSubscribCell) {
         //already add log
         return;
     }
@@ -1799,6 +1806,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [param removeObjectForKey:@"group_id"];
         self.subScribeShowDict = param;
         TRACK_EVENT(@"subscribe_show", param);
+        self.showHouseDict[hashString] = @"1";
 
     }else if (cellModel.isRealHouseTopCell) {
         
@@ -1811,8 +1819,8 @@ extern NSString *const INSTANT_DATA_KEY;
         [param removeObjectForKey:@"card_type"];
         [param setValue:@"be_null" forKey:@"element_from"];
         [param setValue:@"filter_false_tip" forKey:@"element_type"];
-
         TRACK_EVENT(@"filter_false_tip_show", param);
+        self.showHouseDict[hashString] = @"1";
     }else
     {
         TRACK_EVENT(@"house_show", param);
