@@ -120,7 +120,7 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
     //记录之前选则分类内容的滚动位置
     if (before) {
         FHCommunityCategoryListStateModel *beforeState = self.dataDic[@(before.categoryId)];
-        beforeState.offsetY = self.tableView.contentOffset.y;
+        beforeState.offsetY = fmaxf(0.0f,self.tableView.contentOffset.y);
     }
     
     FHCommunityCategoryListStateModel *stateModel = self.dataDic[@(select.categoryId)];
@@ -173,6 +173,10 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
     }];
 }
 
+/**
+ ** reload 如果当前状态为家在错误，是否reload
+ ** resetOffset 如果切换回到某一个列表，是否需要恢复之前的offset
+ **/
 - (void)onCateStateChange:(FHUGCCommunityDistrictTabModel *)category reload:(BOOL)reload resetOffset:(BOOL)resetOffset{
     if (!self.curCategory) {
         return;
@@ -200,6 +204,9 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
     }
 }
 
+/**
+ ** resetOffset 如果切换回到某一个列表，是否需要恢复之前的offset
+ **/
 - (void)showLoaded:(BOOL)resetOffset{
     if (!self.curCategory) {
         return;
