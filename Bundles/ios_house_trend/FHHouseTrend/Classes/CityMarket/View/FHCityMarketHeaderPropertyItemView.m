@@ -67,7 +67,6 @@
         case 1:
             text = @"\U0000e67f"; //arraw-up
             textColor = [UIColor themeRed];
-            _arrawView.image = [UIImage imageNamed:@"arraw-up"];
             [_arrawView setHidden:NO];
             break;
         case -1:

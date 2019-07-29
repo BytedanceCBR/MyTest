@@ -38,8 +38,9 @@
         make.centerY.mas_equalTo(self);
     }];
 
-    UIImage *img = ICON_FONT_IMG(14, @"\U0000e670", [UIColor themeGray1]);//@"arrowicon-detail"
+    UIImage *img = ICON_FONT_IMG(8, @"\U0000e670", [UIColor themeGray6]);//@"arrowicon-detail"
     self.arrawView = [[UIImageView alloc] initWithImage:img];
+    _arrawView.contentMode = UIViewContentModeCenter;
     [self addSubview:_arrawView];
     [_arrawView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.textLabel.mas_right);

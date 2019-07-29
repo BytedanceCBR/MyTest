@@ -55,7 +55,8 @@
     }];
 
     self.arrawView = [[UIImageView alloc] init];
-    _arrawView.image = ICON_FONT_IMG(14, @"\U0000e670", [UIColor themeGray2]);//@"arrowicon-detail-gray"
+    _arrawView.image = ICON_FONT_IMG(10, @"\U0000e670", [UIColor themeGray2]);//@"arrowicon-detail-gray"
+    _arrawView.contentMode = UIViewContentModeCenter;
     [self addSubview:_arrawView];
     [_arrawView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.with.mas_equalTo(14);

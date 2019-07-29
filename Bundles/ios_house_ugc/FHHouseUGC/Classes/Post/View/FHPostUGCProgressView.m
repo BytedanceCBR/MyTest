@@ -18,7 +18,6 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHUserTracker.h"
-#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHPostUGCProgressView ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -288,12 +287,12 @@
     [self.contentView addSubview:_stateLabel];
     
     self.retryBtn = [[UIButton alloc] init];
-    [_retryBtn setImage:ICON_FONT_IMG(24, @"\U0000e673", nil) forState:UIControlStateNormal];//fh_ugc_refresh_normal
+    [_retryBtn setImage:[UIImage imageNamed:@"fh_ugc_refresh_normal"] forState:UIControlStateNormal];
     [_retryBtn addTarget:self action:@selector(retryBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_retryBtn];
     
     self.delBtn = [[UIButton alloc] init];
-    [_delBtn setImage:ICON_FONT_IMG(24, @"\U0000e673", [UIColor blackColor]) forState:UIControlStateNormal];//@"fh_ugc_close_normal"
+    [_delBtn setImage:[UIImage imageNamed:@"fh_ugc_close_normal"] forState:UIControlStateNormal];
     [_delBtn addTarget:self action:@selector(delBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_delBtn];
     

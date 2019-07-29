@@ -90,7 +90,8 @@
     }];
 
     self.arrawView = [[UIImageView alloc] init];
-    _arrawView.image = ICON_FONT_IMG(14, @"\U0000e670", [UIColor themeGray1]);//@"arrowicon-detail"
+    _arrawView.image = ICON_FONT_IMG(10, @"\U0000e670", [UIColor themeGray1]);//@"arrowicon-detail"
+    _arrawView.contentMode = UIViewContentModeCenter;
     [self.contentView addSubview:_arrawView];
     [_arrawView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.titleLabel.mas_right);

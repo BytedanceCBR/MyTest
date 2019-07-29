@@ -249,7 +249,7 @@
     }];
     [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(0);
-        make.centerY.mas_equalTo(self.agencyView);
+        make.centerY.mas_equalTo(self.agencyView);        
     }];
     
     [self.submitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -503,7 +503,7 @@
 {
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc]init];
-        UIImage *img = ICON_FONT_IMG(12, @"\U0000e673", nil);
+        UIImage *img = ICON_FONT_IMG(13, @"\U0000e673", nil);
         [_closeBtn setImage:img forState:UIControlStateNormal];
         [_closeBtn setImage:img forState:UIControlStateHighlighted];
     }
@@ -575,7 +575,7 @@
 - (UIImageView *)rightArrow
 {
     if (!_rightArrow) {
-        _rightArrow = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"house_right_arrow"]];
+        _rightArrow = [[UIImageView alloc]initWithImage:ICON_FONT_IMG(10, @"\U0000e670", nil)];//house_right_arrow
     }
     return _rightArrow;
 }
