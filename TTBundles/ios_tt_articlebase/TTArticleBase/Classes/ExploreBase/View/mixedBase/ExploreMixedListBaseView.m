@@ -551,7 +551,10 @@ TTRefreshViewDelegate
         [self.listView reloadData];
     }
     
-    if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"]) {
+    
+    NSString * categoryStartName = [SSCommonLogic feedStartCategory];
+
+    if ([categoryStartName isKindOfClass:[NSString class]] && [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"] && [categoryStartName isEqualToString:@"f_house_news"]) {
         self.refreshShouldLastReadUpate = YES;
         self.refreshFromType = ListDataOperationReloadFromTypeAuto;
         if (self.fetchListManager.items.count == 0) {
