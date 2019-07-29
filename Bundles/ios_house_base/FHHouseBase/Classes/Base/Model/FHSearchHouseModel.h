@@ -243,6 +243,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHSearchRealHouseAgencyInfo <NSObject>
+
+@end
+
+@interface FHSearchRealHouseAgencyInfo : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *agencyTotal;
+@property (nonatomic, copy , nullable) NSString *houseTotal;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
+
 
 @interface  FHSearchHouseDataModel  : JSONModel
 
@@ -257,6 +269,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *bottomTip;
 @property (nonatomic, copy , nullable) FHImageModel *banner;
 @property (nonatomic, strong , nullable) FHSearchRealHouseExtModel *externalSite;
+@property (nonatomic, strong , nullable) FHSearchRealHouseAgencyInfo *agencyInfo;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic, strong, nullable) FHRecommendSecondhandHouseDataModel *recommendSearchModel;
 @property (nonatomic, strong, nullable) FHSugSubscribeDataDataSubscribeInfoModel *subscribeInfo;

@@ -53,6 +53,25 @@
 
 @end
 
+@implementation FHSearchRealHouseAgencyInfo
+
++ (JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+                           @"agencyTotal": @"agency_total",
+                           @"houseTotal": @"house_total",
+                           @"openUrl": @"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
 @implementation FHSearchHouseDataItemsFakeReasonModel
 
 + (JSONKeyMapper *)keyMapper {
@@ -124,6 +143,7 @@
                            @"recommendSearchModel": @"recommend_search",
                            @"subscribeInfo": @"subscribe_info",
                            @"externalSite": @"external_site",
+                           @"agencyInfo": @"agency_info",
                            @"topTip":@"top_tip",
                            @"bottomTip":@"bottom_tip",
                            };
