@@ -677,7 +677,10 @@ extern NSString *const INSTANT_DATA_KEY;
             tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
             [tracerDict removeObjectForKey:@"element_from"];
             
-            cellModel.tracerDict = [tracerDict copy];
+            NSMutableDictionary *dic = [tracerDict mutableCopy];
+            dic[@"enter_from"] = @"maintab";
+            dic[@"element_from"] = @"maintab_list";
+            cellModel.tracerDict = [dic copy];
             
             if (tracerDict && !self.isOriginShowSelf) {
                 [self.traceNeedUploadCache addObject:tracerDict];
@@ -808,7 +811,8 @@ extern NSString *const INSTANT_DATA_KEY;
 - (void)trackClickHouseRecommend {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     tracerDict[@"page_type"] = [self pageTypeString];
-    tracerDict[@"element_type"] = @"maintab_list";
+    tracerDict[@"enter_from"] = @"maintab";
+    tracerDict[@"element_from"] = @"maintab_list";
     tracerDict[@"click_position"] = @"house_recommend_more";
     TRACK_EVENT(@"click_house_recommend", tracerDict);
 }

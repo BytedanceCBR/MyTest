@@ -162,7 +162,9 @@ static FHHouseDislikeView *__visibleDislikeView;
         
     }
 
-    TRACK_EVENT(@"house_dislike_popup_show", model.extrasDict);
+    NSMutableDictionary *tracerDict = [model.extrasDict mutableCopy];
+    [tracerDict removeObjectsForKeys:@[@"element_type"]];
+    TRACK_EVENT(@"house_dislike_popup_show", tracerDict);
 }
 
 - (void)refreshArrowUI {
@@ -262,7 +264,8 @@ static FHHouseDislikeView *__visibleDislikeView;
     }else{
         tracerDict[@"click_position"] = @"no_evaluate";
     }
-    TRACK_EVENT(@"click_house_recommend", tracerDict);
+    [tracerDict removeObjectsForKeys:@[@"element_type"]];
+    TRACK_EVENT(@"house_dislike_popup_click", tracerDict);
 }
 
 - (void)clickMask {

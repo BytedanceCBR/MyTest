@@ -1335,6 +1335,7 @@
     if(self.homeItemModel.tracerDict){
         NSMutableDictionary *tracerDict = [self.homeItemModel.tracerDict mutableCopy];
         tracerDict[@"click_position"] = @"house_dislike";
+        [tracerDict removeObjectsForKeys:@[@"enter_from",@"element_from"]];
         TRACK_EVENT(@"click_house_dislike", tracerDict);
     }
 }
