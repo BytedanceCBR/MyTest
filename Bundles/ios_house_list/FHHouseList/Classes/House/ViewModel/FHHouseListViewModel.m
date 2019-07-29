@@ -736,7 +736,7 @@ extern NSString *const INSTANT_DATA_KEY;
                         }else
                         {
                             if (itemArray.count > 0) {
-                                [itemArray insertObject:topInfoModel atIndex:itemArray.count - 1];
+                                [itemArray addObject:topInfoModel];
                             }
                         }
                     }
