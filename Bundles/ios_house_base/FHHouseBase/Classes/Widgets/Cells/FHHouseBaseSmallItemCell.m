@@ -622,18 +622,9 @@
     self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = model.displaySubtitle;
     self.tagLabel.text = model.displayStatsInfo;
-    self.priceLabel.text = model.displayPrice;
-    
-    self.originPriceLabel.text = nil;
-    self.pricePerSqmLabel.text = nil;
-    self.originPriceLabel.hidden = YES;
-    self.pricePerSqmLabel.hidden = YES;
-    
-    if (self.tagLabel.yoga.marginLeft.value != 0) {
-        [self.tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.marginLeft = YGPointValue(0);
-        }];
-    }
+    self.priceLabel.text = model.pricePerSqmNum;
+    self.pricePerSqmLabel.text = model.pricePerSqmUnit;
+    self.pricePerSqmLabel.textColor = [UIColor themeRed1];
     
     [self hideRecommendReason];
     [self updateTitlesLayout:YES];
@@ -759,7 +750,7 @@
     self.houseVideoImageView.hidden = YES;
     self.mainTitleLabel.text = model.title;
     self.subTitleLabel.text = model.subtitle;
-    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags];
+    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:model.tags];
     self.tagLabel.attributedText =  attributeString;
     self.priceLabel.text = model.pricingNum;
     self.pricePerSqmLabel.text = model.pricingUnit;
