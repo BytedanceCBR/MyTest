@@ -131,8 +131,14 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
             if([obj isKindOfClass:[NSData class]]){
                 result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
             }
+            
+            if(!result)
+            {
+                return;
+            }
+            
             callback(error? -1: FHBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
-                                                      @"response": result,
+                                                      @"response": result ? result : @"",
                                                       @"status": @(response.statusCode),
                                                       @"code": error?@(0): @(1),
                                                       @"beginReqNetTime": startTime
