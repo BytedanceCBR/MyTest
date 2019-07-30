@@ -718,7 +718,7 @@
         self.imageTagLabelBgView.hidden = YES;
     }
     
-    if (model.skyEyeTag) {
+    if (model.skyEyeTag.content && model.skyEyeTag.backgroundColor && model.skyEyeTag.textColor) {
         self.trueHouseLabel.textColor = [UIColor colorWithHexString:model.skyEyeTag.textColor];
         self.trueHouseLabel.text = model.skyEyeTag.content;
         self.trueHouseLabel.backgroundColor = [UIColor colorWithHexString:model.skyEyeTag.backgroundColor];
