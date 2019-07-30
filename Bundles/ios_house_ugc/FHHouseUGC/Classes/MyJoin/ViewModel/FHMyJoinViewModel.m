@@ -288,7 +288,7 @@
 
 - (void)trackClickOptions:(NSString *)position {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
-    tracerDict[@"click_position"] = @"feed_message_tips_card";
+    tracerDict[@"click_position"] = position;
     tracerDict[@"page_type"] = @"my_join_list";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     TRACK_EVENT(@"click_options", tracerDict);

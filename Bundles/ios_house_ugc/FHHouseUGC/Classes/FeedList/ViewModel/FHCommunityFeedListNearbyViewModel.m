@@ -19,7 +19,7 @@
 #import "FHUGCConfig.h"
 #import "ToastManager.h"
 
-@interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
+@interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
 @property(nonatomic, strong) FHFeedUGCCellModel *guideCellModel;
 @property(nonatomic, assign) BOOL alreadShowFeedGuide;
@@ -303,6 +303,17 @@
     self.currentCellModel = cellModel;
     self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
     [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+}
+
+#pragma UISCrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.viewController.scrollViewDelegate scrollViewDidScroll:scrollView];
+    if(scrollView == self.tableView){
+        if (scrollView.isDragging) {
+            [self.viewController.notifyBarView performSelector:@selector(hideIfNeeds) withObject:nil];
+        }
+    }
 }
 
 - (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
