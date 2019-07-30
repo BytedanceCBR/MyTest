@@ -353,6 +353,8 @@
     replyManager.categoryID = self.categoryID;
     replyManager.logPb = self.logPb;
     replyManager.element_from = self.element_from;
+    replyManager.ansid = self.ansid;
+    replyManager.qid = self.qid;
     
     replyManager.serviceID = self.pageState.serviceID;
     TTCommentWriteView *replyView = [[TTCommentWriteView alloc] initWithCommentManager:replyManager];

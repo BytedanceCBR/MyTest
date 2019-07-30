@@ -131,7 +131,9 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     self.store.categoryID = self.categoryID;
     self.store.logPb = self.logPb;
     self.store.element_from = self.element_from;
-
+    self.store.ansid = self.groupId;
+    self.store.qid = self.qid;
+    
     self.hidePost = [baseCondition[@"hidePost"] boolValue];
     
 }

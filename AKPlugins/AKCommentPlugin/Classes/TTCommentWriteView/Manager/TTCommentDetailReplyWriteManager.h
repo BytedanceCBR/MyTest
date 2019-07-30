@@ -23,6 +23,8 @@
 @property (nonatomic, copy) NSString *categoryID;
 @property (nonatomic, copy) NSString *element_from;
 @property (nonatomic, strong) NSDictionary *logPb;
+@property (nonatomic, copy) NSString *ansid;
+@property (nonatomic, copy) NSString *qid;
 
 - (instancetype)initWithCommentDetailModel:(id<TTCommentDetailModelProtocol>)commentDetailModel
                          replyCommentModel:(id<TTCommentDetailReplyCommentModelProtocol> )replyCommentModel
