@@ -153,7 +153,7 @@
     
     self.model.medias = itemArray;
     FHDetailMediaHeaderModel * detailMediaHeaderModel = self.currentData;
-    self.model.isShow_skyeye_logo = detailMediaHeaderModel.isShow_skyeye_logo;
+    self.model.isShowSkyEyeLogo = detailMediaHeaderModel.isShowSkyEyeLogo;
 }
 
 -(void)showImagesWithCurrentIndex:(NSInteger)index

@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHMultiMediaModel : NSObject
 
 @property(nonatomic, strong) NSArray<FHMultiMediaItemModel *> *medias;
-@property (nonatomic, assign) BOOL isShow_skyeye_logo;
+@property (nonatomic, assign) BOOL isShowSkyEyeLogo;
 @end
 
 NS_ASSUME_NONNULL_END

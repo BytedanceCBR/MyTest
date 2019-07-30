@@ -434,7 +434,7 @@
     self.medias = model.medias;
     [self.colletionView reloadData];
     
-    BOOL isShowBottomBannerView = model.isShow_skyeye_logo;
+    BOOL isShowBottomBannerView = model.isShowSkyEyeLogo;
     self.bottomBannerView.hidden = !isShowBottomBannerView;
     if(isShowBottomBannerView && [self.delegate respondsToSelector:@selector(bottomBannerViewDidShow)]) {
         [self.delegate bottomBannerViewDidShow];

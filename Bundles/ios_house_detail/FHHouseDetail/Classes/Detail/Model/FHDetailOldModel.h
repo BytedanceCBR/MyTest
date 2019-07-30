@@ -259,7 +259,7 @@ typedef enum : NSInteger {
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel> *detectiveList;
 @property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, assign) BOOL show_skyeye_logo;
+@property (nonatomic, assign) BOOL showSkyEyeLogo;
 @end
 
 @interface FHDetailDataBaseExtraDetectiveModel : JSONModel
