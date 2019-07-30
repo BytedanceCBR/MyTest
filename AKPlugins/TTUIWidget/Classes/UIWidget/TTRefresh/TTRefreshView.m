@@ -271,18 +271,19 @@ CGFloat const gestureMinimumTranslation = 20.0;
     switch (state) {
         case PULL_REFRESH_STATE_INIT:
             
-            self.hasNotifiedOverAttachView = NO;
-            self.hasNotifiedShowAttachView = NO;
+                self.hasNotifiedOverAttachView = NO;
+                self.hasNotifiedShowAttachView = NO;
             
-            [self hideAnimationView];
+                [self hideAnimationView];
              
-             break;
+                break;
              case PULL_REFRESH_STATE_PULL:
+                [self showAnimationView];
              
-             break;
+                break;
              case PULL_REFRESH_STATE_PULL_OVER:
-             
-             break;
+            
+                break;
              
              case PULL_REFRESH_STATE_LOADING:
                 [self showAnimationView];
@@ -290,7 +291,7 @@ CGFloat const gestureMinimumTranslation = 20.0;
                     [self.refreshAnimateView performSelector:@selector(startLoading)];
                 }
             
-             break;
+                break;
         case PULL_REFRESH_STATE_NO_MORE:
             
             break;
