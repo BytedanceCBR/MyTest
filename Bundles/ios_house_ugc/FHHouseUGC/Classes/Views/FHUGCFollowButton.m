@@ -257,6 +257,10 @@
         if(tracerDic[@"show_type"]){
             self.tracerParams[@"show_type"] = tracerDic[@"show_type"];
         }
+        
+        if(tracerDic[@"calssify_label"]){
+            self.tracerParams[@"calssify_label"] = tracerDic[@"calssify_label"];
+        }
     }
 }
 
