@@ -2261,12 +2261,6 @@
     [dic setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
 //    [dic setValue:self.detailModel.article.aggrType forKey:@"aggr_type"];
 
-    if (![@"push" isEqualToString: enterFrom]) {
-        if (self.detailModel.relateReadFromGID) {
-            [dic setValue:[NSString stringWithFormat:@"%@",self.detailModel.relateReadFromGID] forKey:@"from_gid"];
-        }
-    }
-
 //    BOOL hasZzComment = self.detailModel.article.zzComments.count > 0;
 //    [dic setValue:@(hasZzComment?1:0) forKey:@"has_zz_comment"];
 //    if (hasZzComment) {
@@ -2289,6 +2283,12 @@
     if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]])
     {
         [dic addEntriesFromDictionary:self.detailModel.reportParams];
+    }
+    
+    if (![@"push" isEqualToString: dic[@"enter_from"]]) {
+        if (self.detailModel.relateReadFromGID) {
+            [dic setValue:[NSString stringWithFormat:@"%@",self.detailModel.relateReadFromGID] forKey:@"from_gid"];
+        }
     }
     
     [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
