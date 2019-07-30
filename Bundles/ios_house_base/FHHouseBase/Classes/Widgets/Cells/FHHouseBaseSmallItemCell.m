@@ -62,6 +62,7 @@
 @property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 //@property(nonatomic, strong) UIButton *closeBtn; //x按钮
+@property(nonatomic, strong) YYLabel *trueHouseLabel; // 天眼验真
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 
@@ -250,6 +251,22 @@
 //    return _closeBtn;
 //}
 
+-(YYLabel *)trueHouseLabel
+{
+    if (!_trueHouseLabel) {
+        _trueHouseLabel = [[YYLabel alloc]init];
+        _trueHouseLabel.font = [UIFont themeFontRegular:10];
+        _trueHouseLabel.textColor = [UIColor whiteColor];
+        _trueHouseLabel.backgroundColor = [UIColor themeRed1];
+        _trueHouseLabel.layer.masksToBounds = YES;
+        _trueHouseLabel.layer.cornerRadius = 2;
+        _trueHouseLabel.textContainerInset = UIEdgeInsetsMake(0, 4, 0, 4);
+        _trueHouseLabel.text = @"天眼验真";
+        _trueHouseLabel.hidden = YES;
+    }
+    return _trueHouseLabel;
+}
+
 -(CGFloat)contentMaxWidth
 {
     return  SCREEN_WIDTH - HOR_MARGIN * 2 - YOGA_RIGHT_PRICE_WIDITH - MAIN_IMG_WIDTH - INFO_TO_ICON_MARGIN; //根据UI图 直接计算出来
@@ -383,6 +400,7 @@
     [_priceBgView addSubview:self.priceLabel];
     [_priceBgView addSubview:self.pricePerSqmLabel];
     //    [_priceBgView addSubview:self.closeBtn];
+    [_priceBgView addSubview:self.trueHouseLabel];
     
     [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -396,6 +414,12 @@
         layout.marginTop = YGPointValue(2);
         layout.height = YGPointValue(14);
         layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
+    }];
+    
+    [_trueHouseLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isIncludedInLayout = NO;
+        layout.marginTop = YGPointValue(5);
+        layout.height = YGPointValue(14);
     }];
     
     //    [_closeBtn configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -694,6 +718,23 @@
         self.imageTagLabelBgView.hidden = YES;
     }
     
+    if (model.skyEyeTag) {
+        self.trueHouseLabel.textColor = [UIColor colorWithHexString:model.skyEyeTag.textColor];
+        self.trueHouseLabel.text = model.skyEyeTag.content;
+        self.trueHouseLabel.backgroundColor = [UIColor colorWithHexString:model.skyEyeTag.backgroundColor];
+        self.trueHouseLabel.hidden = NO;
+        [_trueHouseLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.isIncludedInLayout = YES;
+        }];
+        [_trueHouseLabel.yoga markDirty];
+    }else {
+        self.trueHouseLabel.hidden = YES;
+        [_trueHouseLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.isIncludedInLayout = NO;
+        }];
+        [_trueHouseLabel.yoga markDirty];
+    }
+    
     [self updateImageTopLeft];
     
     self.mainTitleLabel.text = model.displayTitle;
@@ -710,17 +751,7 @@
     }else{
         self.pricePerSqmLabel.text = model.displayPricePerSqm;
     }
-    
-//    BOOL originPriceEnable = self.cellModel.originPriceAttrStr.string.length > 0;
-//    if (originPriceEnable || ( self.originPriceLabel.yoga.isIncludedInLayout != originPriceEnable)) {
-//        self.originPriceLabel.attributedText = self.cellModel.originPriceAttrStr;
-//        [self.originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-//            layout.isIncludedInLayout = originPriceEnable;
-//        }];
-//        [self.originPriceLabel.yoga markDirty];
-//    }
-//    self.originPriceLabel.hidden = !originPriceEnable;
-    
+
     [self.pricePerSqmLabel.yoga markDirty];
     
     if (model.recommendReasons.count > 0) {

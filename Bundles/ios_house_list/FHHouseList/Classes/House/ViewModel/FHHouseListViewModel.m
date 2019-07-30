@@ -1475,7 +1475,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }
             
             CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseSmallItemCell recommendReasonHeight] : 0;
-            return (isLastCell ? 125 : normalHeight)+reasonHeight;
+            return (isLastCell ? 95 : normalHeight)+reasonHeight;
         }
     }
 
