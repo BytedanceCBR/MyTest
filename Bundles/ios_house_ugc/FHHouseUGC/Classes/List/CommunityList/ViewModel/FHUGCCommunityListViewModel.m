@@ -116,7 +116,6 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
     if (!select) {
         return;
     }
-    [self addClickOptionsLog:selectType];
     //记录之前选则分类内容的滚动位置
     if (before) {
         FHCommunityCategoryListStateModel *beforeState = self.dataDic[@(before.categoryId)];
@@ -146,6 +145,7 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
     }
     self.districtListTitleLabel.text = districtListTitle;
     [self onCateStateChange:self.curCategory reload:YES resetOffset:YES];
+    [self addClickOptionsLog:selectType];
 }
 
 - (void)requestCommunityList:(FHUGCCommunityDistrictTabModel *)category {
@@ -401,10 +401,11 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
 
 -(NSMutableDictionary*)joinTracerDict:(NSInteger)position data:(FHUGCScialGroupDataModel *)data{
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    //enter_from 会当做origin_from
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
-    params[@"category_name"] = [self categoryName];
-    params[@"page_type"] = [self categoryName];
+    //enter_from 当做page_type传进去，里边会读出来变为enter_from,里边上报的page_type是写死的，我要死了
+    params[@"page_type"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     params[@"card_type"] = @"left_pic";
     params[@"house_type"] = @"community";
     params[@"rank"] = @(position);

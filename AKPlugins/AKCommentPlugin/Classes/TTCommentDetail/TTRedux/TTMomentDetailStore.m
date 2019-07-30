@@ -81,6 +81,26 @@
 
 }
 
+-(void)setAnsid:(NSString *)ansid {
+    
+    _ansid = ansid;
+    if ([self.middleware isKindOfClass:[TTMomentDetailMiddleware class]]) {
+        
+        TTMomentDetailMiddleware *middleware = (TTMomentDetailMiddleware *)self.middleware;
+        middleware.ansid = ansid;
+    }
+}
+
+-(void)setQid:(NSString *)qid {
+    
+    _qid = qid;
+    if ([self.middleware isKindOfClass:[TTMomentDetailMiddleware class]]) {
+        
+        TTMomentDetailMiddleware *middleware = (TTMomentDetailMiddleware *)self.middleware;
+        middleware.qid = qid;
+    }
+}
+
 -(void)setLogPb:(NSDictionary *)logPb {
     
     _logPb = logPb;

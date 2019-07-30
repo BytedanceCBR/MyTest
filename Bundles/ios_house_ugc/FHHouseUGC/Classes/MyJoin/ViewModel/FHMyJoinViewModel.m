@@ -191,7 +191,7 @@
     //最后一个为全部
     if(indexPath.row == self.dataList.count - 1){
         [self trackClickOptions:@"all_community"];
-        [self gotoMore];
+        [self gotoMore:@"click"];
         return;
     }
     
@@ -248,7 +248,7 @@
             diff = scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width - scrollView.contentSize.width;
         }
         if(diff > leaveOffSet){
-            [self gotoMore];
+            [self gotoMore:@"default"];
         }
     }
 }
@@ -261,13 +261,13 @@
 
 #pragma mark - FHMyJoinNeighbourhoodViewDelegate
 
-- (void)gotoMore {
+- (void)gotoMore:(NSString *)enterType {
 //    [self trackMore];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"action_type"] = @(FHCommunityListTypeFollow);
     dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdFollow);
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_type"] = @"click";
+    traceParam[@"enter_type"] = enterType;
     traceParam[@"enter_from"] = @"my_join_list";
     traceParam[@"element_from"] = @"my_joined_neighborhood";
     dict[TRACER_KEY] = traceParam;
