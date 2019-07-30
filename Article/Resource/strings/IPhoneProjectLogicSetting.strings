@@ -174,7 +174,6 @@
 "ugc_my_interest" = "FHUGCMyInterestedController";
 "ugc_post_wd_answer" = "FHWDAnswerPictureTextViewController";
 "ugc_message_list" = "FHMessageListController";
-"ugc_follow_communitys" = "FHUGCFollowListController";
 "ugc_search_list" = "FHUGCSearchListController";
 "ugc_community_list" = "FHUGCCommunityListViewController";
 "ugc_comment_detail" = "FHCommentDetailViewController";

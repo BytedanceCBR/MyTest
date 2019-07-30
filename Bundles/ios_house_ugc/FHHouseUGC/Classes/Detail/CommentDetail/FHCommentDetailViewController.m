@@ -18,7 +18,6 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "TTDeviceHelper.h"
 #import "FHUGCConfig.h"
-#import "FHUGCFollowListCell.h"
 #import "UIViewController+Track.h"
 #import "TTUIResponderHelper.h"
 #import "FHExploreDetailToolbarView.h"
