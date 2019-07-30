@@ -152,8 +152,10 @@
     }
     
     self.model.medias = itemArray;
-    FHDetailMediaHeaderModel * detailMediaHeaderModel = self.currentData;
-    self.model.isShowSkyEyeLogo = detailMediaHeaderModel.isShowSkyEyeLogo;
+    if([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
+        FHDetailOldModel *detailOldModel = self.baseViewModel.detailData;
+        self.model.isShowSkyEyeLogo = detailOldModel.data.baseExtra.detective.detectiveInfo.showSkyEyeLogo;
+    }
 }
 
 -(void)showImagesWithCurrentIndex:(NSInteger)index

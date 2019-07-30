@@ -25,6 +25,5 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, strong, nullable)   FHMultiMediaItemModel       *vedioModel;// 视频模型
 @property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, assign) BOOL isInstantData;
-@property (nonatomic, assign) BOOL isShowSkyEyeLogo; // 是否显示天眼验真banner
 
 @end

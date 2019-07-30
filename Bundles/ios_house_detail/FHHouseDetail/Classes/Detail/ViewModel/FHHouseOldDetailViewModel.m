@@ -220,7 +220,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         
         FHDetailMediaHeaderModel *headerCellModel = [[FHDetailMediaHeaderModel alloc] init];
         headerCellModel.houseImageDictList = model.data.houseImageDictList;
-        headerCellModel.isShowSkyEyeLogo = model.data.baseExtra.detective.detectiveInfo.showSkyEyeLogo;
         if (!isInstant) {
             FHDetailOldDataHouseImageDictListModel *imgModel = [headerCellModel.houseImageDictList firstObject];
             imgModel.instantHouseImageList = [self instantHouseImages];
