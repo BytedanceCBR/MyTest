@@ -111,7 +111,13 @@ UITableViewDataSource>
 - (void)willMoveToWindow:(UIWindow *)newWindow
 {
     if (_isFirst) {
-        [self requestPoiInfo:self.centerPoint andKeyWord:_nameArray.firstObject];
+        __weak typeof(self) wself = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if(!wself){
+                return ;
+            }
+            [wself requestPoiInfo:wself.centerPoint andKeyWord:_nameArray.firstObject];
+        });
         _isFirst = NO;
     }
 }
@@ -185,7 +191,7 @@ UITableViewDataSource>
     CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 160);
     __weak typeof(self) weakSelf = self;
     // 延时绘制地图
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf snapshotMap];
     });
 
@@ -625,7 +631,7 @@ UITableViewDataSource>
 - (void)preShowMapviewSnapshot {
     if (self.mapImageView.image == nil && self.isFirstSnapshot) {
          __weak typeof(self) weakSelf = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if (weakSelf.mapImageView.image == nil && !weakSelf.baseViewModel.detailController.isViewDidDisapper) {
                 weakSelf.mapView.hidden = NO;
                 [weakSelf.mapView forceRefresh];
