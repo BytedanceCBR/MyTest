@@ -120,7 +120,18 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
     //记录之前选则分类内容的滚动位置
     if (before) {
         FHCommunityCategoryListStateModel *beforeState = self.dataDic[@(before.categoryId)];
-        beforeState.offsetY = fmaxf(0.0f,self.tableView.contentOffset.y);
+        CGFloat offsetY = self.tableView.contentOffset.y;
+        //这个地方是处理向上滑到顶部继续拉或者向下滑到底部继续拉的同时，另一只手点击tab切换的情况
+        if(offsetY <= 0){
+            offsetY = fmaxf(-self.tableView.contentInset.top, offsetY);
+        }else{
+            CGFloat tableViewHeight = self.tableView.bounds.size.height;
+            CGFloat tableViewContentHeight = self.tableView.contentSize.height;
+            CGFloat tableViewInsetBottom = self.tableView.contentInset.bottom;
+            CGFloat maxOffSetY = fmaxf((tableViewContentHeight + tableViewInsetBottom) - tableViewHeight,0.0f);
+            offsetY = fminf(offsetY,maxOffSetY);
+        }
+        beforeState.offsetY = offsetY;
     }
     
     FHCommunityCategoryListStateModel *stateModel = self.dataDic[@(select.categoryId)];
@@ -353,7 +364,6 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
         [self addCommunityGroupShowLog:row data:data];
     }
 }
-
 
 - (NSArray<FHUGCCommunityDistrictTabModel *> *)categoriesFromUgcConfig {
     NSArray *ugcDistrict = [[FHUGCConfig sharedInstance] configData].data.ugcDistrict;
