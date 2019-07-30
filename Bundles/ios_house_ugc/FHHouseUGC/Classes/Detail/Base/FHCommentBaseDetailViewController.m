@@ -739,10 +739,11 @@
         NSInteger replyCount = [self.wCommentModel.replyCount integerValue];
         if (replyCount != self.lastCommentReplyCount) {
             NSInteger change = replyCount - self.lastCommentReplyCount;
-            if (fabs(change) < self.comment_count) {
-                self.comment_count += change;
-                [self commentCountChanged];
+            self.comment_count += change;
+            if (self.comment_count < 0) {
+                self.comment_count = 0;
             }
+            [self commentCountChanged];
         }
     }
     self.wCommentModel = nil;
