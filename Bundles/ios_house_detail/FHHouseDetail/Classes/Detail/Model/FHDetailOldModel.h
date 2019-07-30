@@ -242,6 +242,30 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *icon;
 @end
 
+@protocol FHDetailDataBaseExtraDetectiveReasonListItem <NSObject>
+@end
+
+@interface FHDetailDataBaseExtraDetectiveReasonListItem : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, assign) NSInteger status;
+
+@end
+
+@protocol FHDetailDataBaseExtraDetectiveReasonInfo <NSObject>
+@end
+
+@interface FHDetailDataBaseExtraDetectiveReasonInfo : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *subTitle;
+@property (nonatomic, copy , nullable) NSString *buttonText;
+@property (nonatomic, copy , nullable) NSString *feedbackContent;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseExtraDetectiveReasonListItem> *reasonList;
+
+@end
+
 @protocol FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel<NSObject>
 @end
 
@@ -252,6 +276,7 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *subTitle;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *icon;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDetectiveReasonInfo *reasonInfo;
 
 @end
 

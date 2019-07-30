@@ -760,6 +760,11 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         trackInfo[UT_ENTER_FROM] = position;
         [popLayer showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)model trackInfo:trackInfo];
         
+    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
+        // add by zjing for test
+        position = @"official_inspection";
+        trackInfo[UT_ENTER_FROM] = position;
+        [popLayer showDetectiveReasonInfoData:(FHDetailDataBaseExtraDetectiveReasonInfo *)model trackInfo:trackInfo];
     }
 //    else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
 //        position = @"happiness_eye";

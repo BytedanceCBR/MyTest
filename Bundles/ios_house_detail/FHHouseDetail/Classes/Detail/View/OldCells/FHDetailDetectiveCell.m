@@ -15,6 +15,8 @@
 #import "FHDetectiveItemView.h"
 #import "FHDetailHalfPopFooter.h"
 
+extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
+
 @interface FHDetailDetectiveCell ()
 
 @property (nonatomic, strong) FHDetectiveTopView *topView;
@@ -43,9 +45,13 @@
         }
         UIView *lastView = nil;
         NSArray *detectiveList = model.detective.detectiveInfo.detectiveList;
+        __weak typeof(self)wself = self;
         for (NSInteger index = 0; index < detectiveList.count; index++) {
             FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel *item = detectiveList[index];
             FHDetectiveItemView *itemView = [[FHDetectiveItemView alloc]initWithFrame:CGRectZero];
+            itemView.actionBlock = ^(id reasonInfoData) {
+                [wself showReasonInfoView:reasonInfoData];
+            };
             [itemView updateWithModel:item];
             [self.detectiveView addSubview:itemView];
             CGFloat height = [FHDetectiveItemView heightForTile:item.title tip:item.explainContent];
@@ -67,6 +73,11 @@
         }
     }
     [_footer showTip:model.detective.dialogs.feedbackContent type:FHDetailHalfPopFooterTypeChoose positiveTitle:@"是" negativeTitle:@"否"];
+}
+
+- (void)showReasonInfoView:(id)reasonInfoData
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:DETAIL_SHOW_POP_LAYER_NOTIFICATION object:nil userInfo:@{@"cell":self,@"model":reasonInfoData?:@""}];
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
