@@ -368,14 +368,18 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
 }
 
 + (NSAttributedString *)parseInTextKitContext:(NSString *)text fontSize:(CGFloat)fontSize {
-    return [[self class] parse:text context:TTUGCEmojiTextKitContext fontSize:fontSize];
+    return [[self class] parse:text context:TTUGCEmojiTextKitContext fontSize:fontSize needParseCount:-1];
 }
 
 + (NSAttributedString *)parseInCoreTextContext:(NSString *)text fontSize:(CGFloat)fontSize {
-    return [[self class] parse:text context:TTUGCEmojiCoreTextContext fontSize:fontSize];
+    return [[self class] parse:text context:TTUGCEmojiCoreTextContext fontSize:fontSize needParseCount:-1];
 }
 
-+ (NSAttributedString *)parse:(NSString *)text context:(TTUGCEmojiContext)context fontSize:(CGFloat)fontSize {
++ (NSAttributedString *)parseInCoreTextContext:(NSString *)text fontSize:(CGFloat)fontSize needParseCount:(NSInteger)needParseCount {
+    return [[self class] parse:text context:TTUGCEmojiCoreTextContext fontSize:fontSize needParseCount:needParseCount];
+}
+
++ (NSAttributedString *)parse:(NSString *)text context:(TTUGCEmojiContext)context fontSize:(CGFloat)fontSize needParseCount:(NSInteger)needParseCount {
     if (!text) return nil;
 
     [TTUGCEmojiParser sharedManager];
@@ -384,7 +388,12 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
     UIFont *font = [UIFont systemFontOfSize:fontSize];
 
     NSArray *emojiMatches = [emojiRegex matchesInString:text options:0 range:NSMakeRange(0, text.length)];
-
+    BOOL needProcessEmoji = NO;
+    if (emojiMatches.count > 20) {
+        if (needParseCount > 0) {
+            needProcessEmoji = YES;
+        }
+    }
     // 文本处理位置
     NSUInteger location = 0;
     for (NSTextCheckingResult *match in emojiMatches) {
@@ -449,6 +458,12 @@ static NSString *const kUserExpressionConfigTimeInterval = @"tt_user_expression_
                 CFRelease(delegate);
 
                 [attributedString appendAttributedString:space];
+            }
+        }
+        // 需要截断处理，不需处理所有表情解析
+        if (needProcessEmoji) {
+            if (location > needParseCount) {
+                return [attributedString copy];
             }
         }
     }

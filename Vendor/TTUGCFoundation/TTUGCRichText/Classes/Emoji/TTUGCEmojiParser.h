@@ -65,6 +65,16 @@ extern NSString *const kTTUGCEmojiManyPeopleReplacementText;
 + (NSAttributedString *)parseInCoreTextContext:(NSString *)text fontSize:(CGFloat)fontSize;
 
 /**
+ * 将包含 [微笑] 这样的纯文本转成 Emoji 小表情的 NSAttributedString
+ * 0xFFFC 占位符方式实现，用于 CoreText
+ * @param text 未转前的富文本 里面有[微笑]样式
+ * @param fontSize 正文文本字体大小
+ * @param needParseCount 当不需解析所有富文本时，传入count
+ * @return attributedText
+ */
++ (NSAttributedString *)parseInCoreTextContext:(NSString *)text fontSize:(CGFloat)fontSize needParseCount:(NSInteger)needParseCount;
+
+/**
  * 解析纯文本中包含的 Emoji 小表情的 Range
  * @param text 未转前的富文本 里面有[微笑]样式
  * @return emojis
