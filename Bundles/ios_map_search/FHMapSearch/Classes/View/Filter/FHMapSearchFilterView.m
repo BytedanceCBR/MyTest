@@ -42,6 +42,7 @@
 @property(nonatomic , strong) NSArray<FHSearchFilterConfigItem *> *originFilter;
 @property(nonatomic , strong) FHSearchFilterConfigItem *filterPriceItem;
 @property(nonatomic , assign) NSInteger filterPriceSection;
+//@property(nonatomic , assign) NSInteger priceRate;
 @property(nonatomic , strong) FHMapSearchPriceCell *priceCell ;
 
 @end
@@ -242,7 +243,7 @@
             if (item.tabId.integerValue == FHMapSearchTabIdTypePrice) {
                 for (NSInteger i = 0 ; i < item.options.count; i++) {
                     FHSearchFilterConfigOption *option = item.options[i];
-                    if ([option.type.lowercaseString isEqualToString:@"price"]) {
+                    if ([option.type.lowercaseString isEqualToString:PRICE_TYPE]) {
                         self.filterPriceSection = showFilters.count+i;
                     }
                 }
@@ -297,10 +298,12 @@
             if ([option.type isEqualToString:qitem.name] || [[NSString stringWithFormat:@"%@[]",option.type] isEqualToString:qitem.name]) {
                 //find
                 NSInteger itemIndex = 0;
+                FHSearchFilterConfigOption *currentOp = nil;
                 for ( ; itemIndex < option.options.count ; itemIndex++) {
                     FHSearchFilterConfigOption *op = option.options[itemIndex];
                     if ([op.value isEqualToString:qitem.value]) {
                         //find
+                        currentOp = op;
                         break;
                     }
                 }
@@ -319,6 +322,18 @@
                         if (prices.count == 2) {
                             NSString *lowPrice = [prices firstObject];
                             NSString *highPrice = [prices lastObject];
+                            
+                            NSInteger rate = self.filterPriceItem.rate.integerValue;
+                            if( rate > 0){
+                                NSInteger lowPriceValue = [lowPrice integerValue];
+                                if(lowPriceValue > 0){
+                                    lowPrice = [NSString stringWithFormat:@"%ld",lowPriceValue/rate];
+                                }
+                                NSInteger highPriceValue = [highPrice integerValue];
+                                if(highPriceValue > 0){
+                                    highPrice = [NSString stringWithFormat:@"%ld",highPriceValue/rate];
+                                }
+                            }
                             
                             FHMapSearchSelectItemModel *selectItem = [self selectItemForSection:index];
                             selectItem.lowerPrice = lowPrice;
@@ -449,7 +464,6 @@
     FHMapSearchSelectItemModel *priceItem = [self.selectionModel selectItemWithTabId:FHMapSearchTabIdTypePrice section:_filterPriceSection];
     if (!priceItem) {
         priceItem = [self.selectionModel makeItemWithTabId:FHMapSearchTabIdTypePrice section:_filterPriceSection];
-        
     }
     return priceItem;
 }

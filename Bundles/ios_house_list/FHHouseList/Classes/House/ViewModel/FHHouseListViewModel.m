@@ -1162,6 +1162,9 @@ extern NSString *const INSTANT_DATA_KEY;
             [query appendString:[NSString stringWithFormat:@"&search_id=%@",self.searchId ? : @"be_null"]];
             
         }
+        
+        [query appendFormat:@"&enter_from_list=1"];
+        
         if (query.length > 0) {
             
             openUrl = [NSString stringWithFormat:@"%@&%@",openUrl,query];

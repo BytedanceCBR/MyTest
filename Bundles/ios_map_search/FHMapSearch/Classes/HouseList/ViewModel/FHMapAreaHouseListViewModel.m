@@ -458,7 +458,7 @@
     }
     
     CGFloat minTop =  [self.delegate areaListMinTop];
-    if (self.listController.view.top > minTop) {
+    if (self.listController.view.top - scrollView.contentOffset.y > minTop) {
         [UIView animateWithDuration:0.1 animations:^{
             self.listController.view.top -= scrollView.contentOffset.y;
         }];
@@ -480,9 +480,11 @@
 -(void)checkScrollMoveEffect:(UIScrollView *)scrollview
 {
     CGFloat minTop = [self.delegate areaListMinTop];
-    if (self.listController.view.top < minTop + 100) {
+    if (self.listController.view.top < minTop + 50) {
         //back to top
-
+        [UIView  animateWithDuration:0.3 animations:^{
+            self.listController.view.top = minTop;
+        }];
     }else{
         //dismiss
         [self handleDismiss:0.3];
@@ -504,6 +506,7 @@
 -(void)handleDismiss:(CGFloat)duration
 {
 //    [UIView ];
+    [self.delegate areaListDismissed:self];
 }
 
 

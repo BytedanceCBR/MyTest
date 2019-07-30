@@ -27,8 +27,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.lowerTextField = [self textField:@"最低价"];
-        self.higherTextField = [self textField:@"最高价"];
+        self.lowerTextField = [self textField:@"最低价(万)"];
+        self.higherTextField = [self textField:@"最高价(万)"];
         
         self.splitLine = [[UIView alloc] init];
         self.splitLine.backgroundColor = [UIColor themeGray6];

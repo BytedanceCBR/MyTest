@@ -253,13 +253,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //        r.image = image;
 //        [_mapView updateUserLocationRepresentation:r];
         
-        
-//        NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_map_style.data" ofType:nil];
-//        NSData *styleData = [NSData dataWithContentsOfFile:stylePath];
-//        if (styleData) {
-//            _mapView.customMapStyleEnabled = YES;
-//            [_mapView setCustomMapStyleWithWebData:styleData];
-//        }
     }
     return _mapView;
 }
@@ -317,6 +310,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }else if(self.configModel.houseType == FHHouseTypeRentHouse){
             [_filterView updateWithRentFilter:configModel.rentFilter];
         }
+        
+        if(_configModel.mapOpenUrl){
+            [_filterView selectedWithOpenUrl:_configModel.mapOpenUrl];
+        }else if(_configModel.conditionParams){
+            
+        }
     }
     return _filterView;
 }
@@ -331,6 +330,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     if(self.areaHouseListController.view.superview){
         [self.areaHouseListController.viewModel refreshWithFilter:query];
+        [self.lastBubble overwriteFliter:query];
         self.needReload = YES;
     }else{
         [self.lastBubble overwriteFliter:query];
@@ -678,8 +678,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (showTip && wself.showMode == FHMapSearchShowModeMap) {
             NSString *tip = model.tips;
             if (tip) {
-                CGFloat topY = [wself.viewController topBarBottom];
-                [wself.tipView showIn:wself.viewController.view at:CGPointMake(0, topY) content:tip duration:kTipDuration above:wself.viewController.locationButton];
+                CGFloat topY = [wself.viewController topBarBottom] - 40 ;
+                [wself.tipView showIn:wself.viewController.view at:CGPointMake(wself.viewController.view.width/2, topY) content:tip duration:kTipDuration above:wself.viewController.navBarView];
             }
         }
         wself.searchId = model.searchId;
@@ -1278,40 +1278,65 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 #pragma mark - area house list
 -(void)showSiderHouseList
 {
-    if(self.areaHouseListController){
-        [self.areaHouseListController.view removeFromSuperview];
-        [self.areaHouseListController removeFromParentViewController];
+    [self addNavSwitchHouseListLog];
+    
+    if ([self.configModel.enterFrom isEqualToString:@"city_market"] || [self.configModel.enterFrom isEqualToString:@"maintab"] || !self.configModel.enterFromList) {
+        //从城市行情进入的 要先跳到二手房列表页 QA确认
+        NSString *strUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld",self.configModel.houseType];
+        NSString *houseListOpenUrl = [self backHouseListOpenUrl];
+        NSURL *openUrl = [NSURL URLWithString:houseListOpenUrl];
+        if( [openUrl query].length > 0) {
+            strUrl = [strUrl stringByAppendingFormat:@"&%@",[openUrl query]];
+        }
+        NSURL *url = [NSURL URLWithString:strUrl];
+        NSMutableDictionary *traceInfo = [NSMutableDictionary new];
+        [traceInfo addEntriesFromDictionary:[self.configModel toDictionary]];
+        traceInfo[@"enter_from"] = @"mapfind";
+        NSDictionary *info = @{@"tracer":traceInfo};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        
+        [self.viewController.navigationController popViewControllerAnimated:NO];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        return;
     }
     
-    NSString *title = @"二手房";
+    [self.viewController.navigationController popViewControllerAnimated:YES];
     
-    NSMutableDictionary *logParam = [self logBaseParams];
-    logParam[UT_ENTER_FROM] = @"circlefind";
-    logParam[UT_ENTER_TYPE] = @"click";
-    logParam[UT_ELEMENT_FROM] = @"bottom_district";
-    logParam[UT_CATEGORY_NAME] = @"circlefind_list";//(self.configModel.houseType == FHHouseTypeRentHouse)?@"rent_list":@"old_list";
     
-    FHMapSearchBubbleModel *bubble = [self houseListSearchBubble];
-    
-    NSURL *url = [NSURL URLWithString:@"sslocal://mapfind_area_house_list"];
-    NSDictionary *userInfoDict = @{COORDINATE_ENCLOSURE:[self drawLineCoordinates]?:@"",
-                                   NEIGHBORHOOD_IDS:[self drawLineNeighborIds]?:@"",
-                                   HOUSE_TYPE_KEY:@(self.configModel.houseType),
-                                   @"filter":bubble.query?:@"",
-                                   @"title":title,
-                                   TRACER_KEY:logParam
-                                   };
-    
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-    //    [[TTRoute sharedRoute] openURLByViewController:url userInfo:userInfo];
-    WeakSelf;
-    [[TTRoute sharedRoute] openURL:url userInfo:userInfo objHandler:^(TTRouteObject *routeObj) {
-        wself.areaHouseListController = routeObj.instance;
-        wself.areaHouseListController.title = title;
-        [wself showAreaHouseList];
-    }];
-    
-    [self showAreaHouseList];
+//    if(self.areaHouseListController){
+//        [self.areaHouseListController.view removeFromSuperview];
+//        [self.areaHouseListController removeFromParentViewController];
+//    }
+//
+//    NSString *title = @"二手房";
+//
+//    NSMutableDictionary *logParam = [self logBaseParams];
+//    logParam[UT_ENTER_FROM] = @"circlefind";
+//    logParam[UT_ENTER_TYPE] = @"click";
+//    logParam[UT_ELEMENT_FROM] = @"bottom_district";
+//    logParam[UT_CATEGORY_NAME] = @"circlefind_list";//(self.configModel.houseType == FHHouseTypeRentHouse)?@"rent_list":@"old_list";
+//
+//    FHMapSearchBubbleModel *bubble = [self houseListSearchBubble];
+//
+//    NSURL *url = [NSURL URLWithString:@"sslocal://mapfind_area_house_list"];
+//    NSDictionary *userInfoDict = @{COORDINATE_ENCLOSURE:[self drawLineCoordinates]?:@"",
+//                                   NEIGHBORHOOD_IDS:[self drawLineNeighborIds]?:@"",
+//                                   HOUSE_TYPE_KEY:@(self.configModel.houseType),
+//                                   @"filter":bubble.query?:@"",
+//                                   @"title":title,
+//                                   TRACER_KEY:logParam
+//                                   };
+//
+//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+//    //    [[TTRoute sharedRoute] openURLByViewController:url userInfo:userInfo];
+//    WeakSelf;
+//    [[TTRoute sharedRoute] openURL:url userInfo:userInfo objHandler:^(TTRouteObject *routeObj) {
+//        wself.areaHouseListController = routeObj.instance;
+//        wself.areaHouseListController.title = title;
+//        [wself showAreaHouseList];
+//    }];
+//
+//    [self showAreaHouseList];
 }
 
 -(void)showAreaHouseList
@@ -1378,6 +1403,16 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     //open url 回写
     [self updateBubble:openUrl];
+}
+
+-(CGFloat)areaListMinTop
+{
+    return self.topInfoBar.bottom + 10;
+}
+
+-(void)areaListDismissed:(FHMapAreaHouseListViewModel *)viewModel
+{
+    [self hideAreaHouseList];
 }
 
 
@@ -1463,7 +1498,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 }
 
 #pragma mark - filter delegate
-//-(void)onConditionChangedWithCondition:(NSString *)condition
 -(void)onConditionChanged:(NSString *)condition
 {
     BOOL mapViewFilterShouldChange = NO;

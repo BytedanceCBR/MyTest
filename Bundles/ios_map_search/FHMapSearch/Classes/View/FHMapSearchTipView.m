@@ -7,11 +7,13 @@
 
 #import "FHMapSearchTipView.h"
 #import <UIColor+TTThemeExtension.h>
-#import "UIColor+Theme.h"
-#import <UIViewAdditions.h>
+#import <FHCommonUI/UIColor+Theme.h>
+#import <FHCommonUI/UIFont+House.h>
+#import <TTBaseLib/UIViewAdditions.h>
+#import <FHHouseBase/FHCommonDefines.h>
 
-#define kHorPadding 13
-#define kViewHeight 25
+#define kHorPadding 20
+#define kViewHeight 46
 
 @interface FHMapSearchTipView ()
 
@@ -31,38 +33,55 @@
 //        [self addSubview:frost];
         
         _tipLabel = [[UILabel alloc] init];
-        _tipLabel.font = [UIFont systemFontOfSize:12];
+        _tipLabel.font = [UIFont themeFontRegular:12];
         _tipLabel.textAlignment = NSTextAlignmentCenter;
-        _tipLabel.textColor = [UIColor themeRed3];
+        _tipLabel.textColor = [UIColor themeGray1];
         [self addSubview:_tipLabel];
         
-        self.backgroundColor = [UIColor themeRed2];
+        UIImage *img = SYS_IMG(@"mapsearch_round_white_bg");
+        img = [img resizableImageWithCapInsets:UIEdgeInsetsMake(40, 40, 40, 40)];
+        self.layer.contents = (id)[img CGImage];
         
-        self.layer.cornerRadius = 20;
-        self.layer.borderColor = [[UIColor themeRed3]CGColor];
-        self.layer.borderWidth = 0.5;
-        self.layer.masksToBounds = YES;
+//        self.backgroundColor = [UIColor themeRed2];
+//
+//        self.layer.cornerRadius = 20;
+//        self.layer.borderColor = [[UIColor themeRed3]CGColor];
+//        self.layer.borderWidth = 0.5;
+//        self.layer.masksToBounds = YES;
     }
     return self;
 }
 
 -(void)removeTip
 {
-    [self removeFromSuperview];
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        self.top -= self.height/2;
+        self.alpha = 0;
+        
+    } completion:^(BOOL finished) {
+        [self removeFromSuperview];
+    }];
+    
 }
 
--(void)showIn:(UIView *)view at:(CGPoint)topLeft content:(NSString *)content duration:(NSTimeInterval)duration above:(UIView *)aboveView
+-(void)showIn:(UIView *)view at:(CGPoint)topCenter content:(NSString *)content duration:(NSTimeInterval)duration above:(UIView *)aboveView
 {
     if (view == self) {
         return;
     }
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(removeTip) object:nil];
-    self.frame = CGRectMake(topLeft.x, topLeft.y, view.width, kViewHeight);
+    
+    CGFloat width = SCREEN_WIDTH - 2*HOR_MARGIN;
     _tipLabel.text = content;
     [_tipLabel sizeToFit];
-    if (_tipLabel.width > self.width - 2*kHorPadding) {
+    if (_tipLabel.width > width - 2*kHorPadding) {
         _tipLabel.width = self.width - 2*kHorPadding;
+    }else{
+        width = _tipLabel.width + 2*kHorPadding;
     }
+    
+    self.frame = CGRectMake(topCenter.x - width/2, topCenter.y, width, kViewHeight);
     _tipLabel.center = CGPointMake(self.width/2, kViewHeight/2);
     
     if (aboveView) {
@@ -73,6 +92,7 @@
     
     self.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 1);
     [UIView animateWithDuration:0.25 animations:^{
+        self.alpha = 1;
         self.transform = CGAffineTransformIdentity;
     }];
     [self performSelector:@selector(removeTip) withObject:nil afterDelay:duration];

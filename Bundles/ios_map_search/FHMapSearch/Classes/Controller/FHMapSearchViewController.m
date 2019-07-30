@@ -49,13 +49,9 @@
 @property(nonatomic , strong) FHMapSearchConfigModel *configModel;
 @property(nonatomic , strong) FHMapSearchViewModel *viewModel;
 @property(nonatomic , strong) FHMapSearchTipView *tipView;
-@property(nonatomic , strong) UIBarButtonItem *showHouseListBarItem;
-@property(nonatomic , strong) UIBarButtonItem *showMapBarItem;
-@property(nonatomic , strong) UILabel *navTitleLabel;
 @property(nonatomic , strong) UIButton *locationButton;
 
 @property(nonatomic , strong) FHMapDrawMaskView *drawMaskView;
-//@property(nonatomic , strong) FHMapSearchWayChooseView *chooseView;
 @property(nonatomic , strong) FHMapSearchBottomBar *bottomBar;
 
 @end
@@ -141,23 +137,23 @@
     return _tipView;
 }
 
--(UIBarButtonItem *)showHouseListBarItem
-{
-    if (!_showHouseListBarItem) {
-        UIImage *img = [UIImage imageNamed:@"mapsearch_nav_list"];
-        _showHouseListBarItem= [[UIBarButtonItem alloc]initWithImage:img style:UIBarButtonItemStylePlain target:self action:@selector(showHouseList)];
-    }
-    return _showHouseListBarItem;
-}
+//-(UIBarButtonItem *)showHouseListBarItem
+//{
+//    if (!_showHouseListBarItem) {
+//        UIImage *img = [UIImage imageNamed:@"mapsearch_nav_list"];
+//        _showHouseListBarItem= [[UIBarButtonItem alloc]initWithImage:img style:UIBarButtonItemStylePlain target:self action:@selector(showHouseList)];
+//    }
+//    return _showHouseListBarItem;
+//}
 
--(UIBarButtonItem *)showMapBarItem
-{
-    if (!_showMapBarItem) {
-        UIImage *img =[UIImage imageNamed:@"navbar_showmap"];
-        _showMapBarItem = [[UIBarButtonItem alloc]initWithImage:img style:UIBarButtonItemStylePlain target:self action:@selector(showMap)];
-    }
-    return _showMapBarItem;
-}
+//-(UIBarButtonItem *)showMapBarItem
+//{
+//    if (!_showMapBarItem) {
+//        UIImage *img =[UIImage imageNamed:@"navbar_showmap"];
+//        _showMapBarItem = [[UIBarButtonItem alloc]initWithImage:img style:UIBarButtonItemStylePlain target:self action:@selector(showMap)];
+//    }
+//    return _showMapBarItem;
+//}
 
 -(UIButton *)locationButton
 {
@@ -202,6 +198,11 @@
     return _topInfoBar;
 }
 
+-(UIView *)navBarView
+{
+    return self.simpleNavBar;
+}
+
 -(void)backAction
 {
     if (self.viewModel.showMode == FHMapSearchShowModeMap || self.viewModel.showMode == FHMapSearchShowModeSubway) {
@@ -217,41 +218,6 @@
 -(void)locationAction
 {
     [self.viewModel moveToUserLocation];
-}
-
--(void)showHouseList
-{
-//    [self.houseFilterBridge closeConditionFilterPanel];
-    [self.viewModel addNavSwitchHouseListLog];
-    
-    if ([self.configModel.enterFrom isEqualToString:@"city_market"]) {
-        //从城市行情进入的 要先跳到二手房列表页 QA确认
-        NSString *strUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld",self.configModel.houseType];
-        NSString *houseListOpenUrl = [self.viewModel backHouseListOpenUrl];
-        NSURL *openUrl = [NSURL URLWithString:houseListOpenUrl];
-        if( [openUrl query].length > 0) {
-            strUrl = [strUrl stringByAppendingFormat:@"&%@",[openUrl query]];
-        }
-        NSURL *url = [NSURL URLWithString:strUrl];
-        NSMutableDictionary *traceInfo = [NSMutableDictionary new];
-        [traceInfo addEntriesFromDictionary:[self.configModel toDictionary]];
-        traceInfo[@"enter_from"] = @"mapfind";
-        NSDictionary *info = @{@"tracer":traceInfo};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-        
-        [self.navigationController popViewControllerAnimated:NO];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-        return;
-    }
-    
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
--(void)showMap
-{
-//    [self.houseFilterBridge closeConditionFilterPanel];
-    [self switchNavbarMode:FHMapSearchShowModeMap];
-    [self.viewModel showMap];
 }
 
 -(void)initNavbar
@@ -273,24 +239,6 @@
         }
     };
     [self.view addSubview:_simpleNavBar];
-    
-//    self.navBar = [[FHMapNavigationBar alloc] initWithFrame:frame];
-//
-//
-//    _navBar.backActionBlock = ^{
-//        [wself backAction];
-//    };
-//
-//    _navBar.listActionBlock = ^{
-//        [wself showHouseList];
-//    };
-//
-//    _navBar.mapActionBlock = ^{
-//        [wself showMap];
-//    };
-//
-//    [self.view addSubview:self.navBar];
-    
 }
 
 - (void)viewDidLoad {
@@ -306,7 +254,6 @@
         
         NSURL *url = [NSURL URLWithString:self.configModel.mapOpenUrl];
         TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
-//        [bridge resetFilter:self.houseFilterViewModel withQueryParams:paramObj.allParams updateFilterOnly:NO];
         
     }else if (self.configModel.conditionParams) {
 //        [bridge resetFilter:self.houseFilterViewModel withQueryParams:_configModel.conditionParams updateFilterOnly:NO];
@@ -326,7 +273,6 @@
     MAMapView *mapView = self.viewModel.mapView;
     [self.view addSubview:mapView];
     if (showDraw) {
-//        [self.view addSubview:_chooseView];
         [self.view addSubview:_bottomBar];
     }
     if (!self.locationButton.hidden) {

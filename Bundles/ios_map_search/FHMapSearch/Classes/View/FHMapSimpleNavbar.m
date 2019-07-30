@@ -10,6 +10,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <Masonry/Masonry.h>
 #import <FHHouseBase/FHCommonDefines.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 #define BTN_WIDTH  24
 #define BG_LAYER_HEIGHT 100
@@ -100,8 +101,14 @@
     }
     
     _type = type;
+    
+    UIImage *img = nil;
+    if(type == FHMapSimpleNavbarTypeClose){
+        img = ICON_FONT_IMG(20, @"\U0000e673",[UIColor themeGray1]);
+    }else{
+        img = ICON_FONT_IMG(22, @"\U0000e68a",[UIColor themeGray1]);
+    }
 
-    UIImage *img = (type == FHMapSimpleNavbarTypeBack)?SYS_IMG(@"navbar_back_dark"):SYS_IMG(@"icon_close");
     [self.backButton setImage:img forState:UIControlStateNormal];
 }
 
