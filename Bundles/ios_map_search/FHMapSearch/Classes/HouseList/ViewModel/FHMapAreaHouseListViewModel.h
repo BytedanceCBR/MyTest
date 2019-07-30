@@ -38,6 +38,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)overwriteWithOpenUrl:(NSString *)openUrl andViewModel:(FHMapAreaHouseListViewModel *)viewModel;
 
+-(CGFloat)areaListMinTop;
+
+-(void)areaListDismissed:(FHMapAreaHouseListViewModel *)viewModel;
+
 @end
 
 NS_ASSUME_NONNULL_END

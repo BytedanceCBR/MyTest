@@ -449,6 +449,64 @@
     [self jump2DetailPage:indexPath];
 }
 
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (!scrollView.scrollEnabled) {
+        //不是用户主动滑动
+        scrollView.contentOffset = CGPointZero;
+        return;
+    }
+    
+    CGFloat minTop =  [self.delegate areaListMinTop];
+    if (self.listController.view.top > minTop) {
+        [UIView animateWithDuration:0.1 animations:^{
+            self.listController.view.top -= scrollView.contentOffset.y;
+        }];
+        scrollView.contentOffset = CGPointZero;
+    }
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [self checkScrollMoveEffect:scrollView];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self checkScrollMoveEffect:scrollView];
+}
+
+-(void)checkScrollMoveEffect:(UIScrollView *)scrollview
+{
+    CGFloat minTop = [self.delegate areaListMinTop];
+    if (self.listController.view.top < minTop + 100) {
+        //back to top
+
+    }else{
+        //dismiss
+        [self handleDismiss:0.3];
+    }
+
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    if (scrollView.contentOffset.y < 1 && (self.listController.view.top > [self.delegate areaListMinTop]) && velocity.y < -2.5) {
+        //quickly swipe done
+        [self handleDismiss:0.1];
+    }
+    if (scrollView.contentOffset.y > 50 && velocity.y < -2) {
+        *targetContentOffset =  CGPointMake(0, 0.5);
+    }
+}
+
+-(void)handleDismiss:(CGFloat)duration
+{
+//    [UIView ];
+}
+
+
 -(FHSingleImageInfoCellModel *)houseItemByModel:(id)obj {
     
     FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc] init];
