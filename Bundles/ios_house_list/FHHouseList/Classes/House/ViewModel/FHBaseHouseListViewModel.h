@@ -18,6 +18,7 @@
 #define kBaseCellId @"kBaseCellId"
 #define kFHHouseListRecommendTitleCellId @"kFHHouseListRecommendTitleCellId"
 #define kFHHouseListPlaceholderCellId @"kFHHouseListPlaceholderCellId"
+#define kAgencyInfoCellId @"kAgencyInfoCellId"
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHHouseListViewModelDelegate;
