@@ -309,7 +309,6 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
         }
         [cell refreshWithData:model type:cellType];
         NSMutableDictionary* followTracerDict = [self joinTracerDict:indexPath.row data:model];
-        followTracerDict[@"click_position"] = @"join_like";
         cell.followButton.tracerDic = followTracerDict;
         return cell;
     }
