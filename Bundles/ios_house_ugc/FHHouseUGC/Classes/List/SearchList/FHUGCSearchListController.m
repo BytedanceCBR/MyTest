@@ -450,7 +450,7 @@
 -(void)addSelectLog:(FHUGCScialGroupDataModel *)model rank:(NSInteger)rank{
     NSMutableDictionary *tracerDic = @{}.mutableCopy;
     tracerDic[@"card_type"] = @"left_pic";
-    tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+    tracerDic[@"page_type"] = @"community_search";
     tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     tracerDic[@"rank"] = @(rank);
     tracerDic[@"log_pb"] = model.logPb ?: @"be_null";
