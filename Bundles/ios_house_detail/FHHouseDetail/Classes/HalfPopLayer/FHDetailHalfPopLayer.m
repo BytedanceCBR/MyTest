@@ -68,6 +68,7 @@
         _menu = [[FHDetailHalfPopTopBar alloc] initWithFrame:CGRectZero];
         _menu.headerActionBlock = ^(BOOL isClose) {
             if (isClose) {
+                [self addPopClickLog:@"cancel"];
                 [wself dismiss:YES];
             }else{
                 [wself report];
@@ -168,6 +169,7 @@
     if (CGRectContainsPoint(_bgView.frame, location)) {
         return;
     }
+    [self addPopClickLog:@"cancel"];
     [self dismiss:YES];
 }
 
@@ -179,6 +181,8 @@
             [wself updateFooterFeedback:success];
         });
         [wself addClickAgreeLogType:type];
+        NSString *clickPosition = (type == 1)?@"yes":@"no";
+        [self addPopClickLog:clickPosition];
     }
     self.footer.actionButton.enabled = NO;
     self.footer.negativeButton.enabled = NO;
@@ -253,6 +257,10 @@
     self.tableView.tableHeaderView = header;
     
     [self.tableView reloadData];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self addPopShowLog];
+    });
 }
 
 -(void)showDealData:(FHRentDetailDataBaseExtraModel *)data trackInfo:(NSDictionary *)trackInfo
@@ -316,6 +324,7 @@
         case UIGestureRecognizerStateCancelled:
         {
             if (self.dragOffset + self.bgTop > self.height/2 && self.dragOffset > self.bgView.height/3) {
+                [self addPopClickLog:@"cancel"];
                 [self dismiss:YES];
             }else{
                 self.bgView.top = self.bgTop;
@@ -349,6 +358,7 @@
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     if (self.dragOffset + self.bgTop > self.height/2 && self.dragOffset > self.bgView.height/3) {
+        [self addPopClickLog:@"cancel"];
         [self dismiss:YES];
     }else{
         [UIView animateWithDuration:0.3 animations:^{
@@ -564,16 +574,24 @@
 
 - (void)addPopShowLog
 {
+    if (![self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
+        return;
+    }
     NSMutableDictionary *param = [NSMutableDictionary new];
     [param addEntriesFromDictionary:self.trackInfo];
-    
+    param[@"element_from"] = @"low_price_cause";
+
     TRACK_EVENT(@"happinesseye_cause_popup_show", param);
 }
 
 - (void)addPopClickLog:(NSString *)clickPosition
 {
+    if (![self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
+        return;
+    }
     NSMutableDictionary *param = [NSMutableDictionary new];
     [param addEntriesFromDictionary:self.trackInfo];
+    param[@"element_from"] = @"low_price_cause";
     param[@"click_position"] = clickPosition;
     
     TRACK_EVENT(@"happinesseye_cause_popup_click", param);
