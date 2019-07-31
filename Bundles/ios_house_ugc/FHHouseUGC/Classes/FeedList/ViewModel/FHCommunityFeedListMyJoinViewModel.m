@@ -288,9 +288,9 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
-    NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
-    self.cellHeightCaches[tempKey] = cellHeight;
-    [self traceClientShowAtIndexPath:indexPath];
+    if(indexPath.row < self.dataList.count){
+        [self traceClientShowAtIndexPath:indexPath];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -318,41 +318,36 @@
 
 #pragma mark - UITableViewDelegate
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
-    NSNumber *cellHeight = self.cellHeightCaches[tempKey];
-    if (cellHeight) {
-        return [cellHeight floatValue];
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
+        if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
+            return [cellClass heightForData:cellModel];
+        }
     }
-    return UITableViewAutomaticDimension;
+    return 100;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
     self.currentCellModel = cellModel;
     self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-    [self jumpToDetail:cellModel];
+    [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
 #pragma UISCrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self.viewController.scrollViewDelegate scrollViewDidScroll:scrollView];
+    if(scrollView == self.tableView){
+        if (scrollView.isDragging) {
+            [self.viewController.notifyBarView performSelector:@selector(hideIfNeeds) withObject:nil];
+        }
+    }
 }
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [self.viewController.scrollViewDelegate scrollViewWillBeginDragging:scrollView];
-}
-
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-    [self.viewController.scrollViewDelegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    [self.viewController.scrollViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
-}
-
-- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel {
+- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         BOOL canOpenURL = NO;
         if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
@@ -363,16 +358,40 @@
             }
             else if([[TTRoute sharedRoute] canOpenURL:url]){
                 canOpenURL = YES;
-                //问答
+                //优先跳转openurl
                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
             }
         }else{
-            //文章
             NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
-        [self jumpToPostDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+        [self jumpToPostDetail:cellModel showComment:showComment enterType:enterType];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
+        // 评论
+        NSMutableDictionary *dict = [NSMutableDictionary new];
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = @"my_join_feed";
+        traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+        traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+        traceParam[@"log_pb"] = cellModel.logPb;
+        dict[TRACER_KEY] = traceParam;
+        
+        dict[@"data"] = cellModel;
+        dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
+        // 问题 回答
+        BOOL jump_comment = NO;
+        if (showComment) {
+            jump_comment = YES;
+        }
+        NSDictionary *dict = @{@"is_jump_comment":@(jump_comment)};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
@@ -428,7 +447,7 @@
     [self trackClickComment:cellModel];
     self.currentCellModel = cellModel;
     self.currentCell = cell;
-    [self jumpToPostDetail:cellModel showComment:YES enterType:@"feed_comment"];
+    [self jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
 - (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
@@ -449,7 +468,7 @@
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     self.currentCellModel = cellModel;
     self.currentCell = cell;
-    [self jumpToDetail:cellModel];
+    [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
 #pragma mark - 埋点

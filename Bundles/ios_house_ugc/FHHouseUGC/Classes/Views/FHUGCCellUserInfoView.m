@@ -18,6 +18,7 @@
 #import "FHUGCConfig.h"
 #import "TTUIResponderHelper.h"
 #import "FHUserTracker.h"
+#import "TTAccountManager.h"
 
 @implementation FHUGCCellUserInfoView
 
@@ -84,6 +85,17 @@
     label.font = font;
     label.textColor = textColor;
     return label;
+}
+
+- (void)setCellModel:(FHFeedUGCCellModel *)cellModel {
+    _cellModel = cellModel;
+    //针对一下两种类型，隐藏...按钮
+    if(cellModel.cellType == FHUGCFeedListCellTypeAnswer || cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
+        BOOL hideDelete = [TTAccountManager isLogin] && [[TTAccountManager userID] isEqualToString:cellModel.user.userId];
+        self.moreBtn.hidden = hideDelete;
+    }else{
+        self.moreBtn.hidden = NO;
+    }
 }
 
 - (void)moreOperation {

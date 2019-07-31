@@ -44,7 +44,7 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear];
-    [self.viewModel addStayPageLog:self.ttTrackStartTime];
+    [self.viewModel addStayPageLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
 }
 
@@ -77,16 +77,6 @@
 
 - (void)retryLoadData {
     [self.viewModel requestData:NO refreshFeed:YES showEmptyIfFailed:YES showToast:NO];
-}
-
-- (void)trackEndedByAppWillEnterBackground {
-    [self.viewModel addStayPageLog:self.ttTrackStayTime];
-    [self tt_resetStayTime];
-}
-
-- (void)trackStartedByAppWillEnterForground {
-    [self tt_resetStayTime];
-    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
 @end

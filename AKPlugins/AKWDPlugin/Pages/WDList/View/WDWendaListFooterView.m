@@ -80,6 +80,7 @@
     } else {
         [_tipLabel setText:title];
     }
+    self.rightArrowImgV.hidden = !isShowArrow;
     
     [_tipLabel sizeToFit];
     
@@ -114,6 +115,7 @@
     } else {
         [_tipLabel setText:title];
     }
+    self.rightArrowImgV.hidden = !isShowArrow;
     
     [_tipLabel sizeToFit];
     

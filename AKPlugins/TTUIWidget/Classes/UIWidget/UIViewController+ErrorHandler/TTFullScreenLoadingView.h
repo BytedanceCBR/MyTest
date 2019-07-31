@@ -16,4 +16,6 @@
 
 - (void)startLoadingAnimation;
 
+- (void)stopLoadingAnimation;
+
 @end

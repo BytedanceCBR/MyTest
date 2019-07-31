@@ -1,5 +1,5 @@
 //
-//  FHCommentDetailViewController.h
+//  FHCommentBaseDetailViewController.h
 //  FHHouseUGC
 //
 //  Created by 张元科 on 2019/6/2.
@@ -17,14 +17,14 @@ typedef NS_ENUM (NSInteger , FHUGCPostType){
     FHUGCPostTypeWenDa      = 2, // 问答
 };
 
-@class FHCommentDetailViewModel;
+@class FHCommentBaseDetailViewModel;
 
 // 带有评论的 详情页基类
-@interface FHCommentDetailViewController : FHBaseViewController
+@interface FHCommentBaseDetailViewController : FHBaseViewController
 
 @property (nonatomic, assign)   FHUGCPostType       postType;
 @property (nonatomic, strong)   UITableView       *tableView;
-@property (nonatomic, strong)   FHCommentDetailViewModel       *viewModel;
+@property (nonatomic, strong)   FHCommentBaseDetailViewModel       *viewModel;
 @property (nonatomic, strong)   TTGroupModel       *groupModel;
 @property (nonatomic, assign)   int64_t       comment_count;// 评论数
 @property (nonatomic, assign)   int64_t       digg_count;// 点赞数

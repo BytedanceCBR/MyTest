@@ -23,6 +23,8 @@
 @property(nonatomic ,strong) UILabel *likeLabel;
 @property(nonatomic ,strong) UIView *bottomSepView;
 @property (nonatomic, copy)  NSString *saveDiggGroupId;
+@property(nonatomic ,strong) UIImageView *positionImageView;
+@property (nonatomic, assign)   FHDetailDiggType       diggType;
 
 @end
 
@@ -33,8 +35,17 @@
     if (self) {
         [self initViews];
         [self initConstraints];
+        [self initNotification];
     }
     return self;
+}
+
+- (void)initNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)initViews {
@@ -46,6 +57,10 @@
     _positionView.userInteractionEnabled = YES;
     _positionView.hidden = YES;
     [self addSubview:_positionView];
+    
+    self.positionImageView = [[UIImageView alloc] init];
+    _positionImageView.image = [UIImage imageNamed:@"fh_ugc_community_icon"];
+    [self.positionView addSubview:_positionImageView];
     
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeRed3]];
     [_position sizeToFit];
@@ -79,6 +94,8 @@
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
     [self addSubview:_bottomSepView];
+    
+    self.diggType = FHDetailDiggTypeTHREAD;
 }
 
 - (FHUGCFeedGuideView *)guideView {
@@ -96,8 +113,14 @@
         make.height.mas_equalTo(24);
     }];
     
-    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.positionImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.positionView).offset(6);
+        make.centerY.mas_equalTo(self.positionView);
+        make.width.height.mas_equalTo(12);
+    }];
+    
+    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.positionImageView.mas_right).offset(2);
         make.right.mas_equalTo(self.positionView).offset(-6);
         make.centerY.mas_equalTo(self.positionView);
         make.height.mas_equalTo(18);
@@ -137,6 +160,28 @@
 
 - (void)setCellModel:(FHFeedUGCCellModel *)cellModel {
     _cellModel = cellModel;
+    if (cellModel) {
+        switch (cellModel.cellType) {
+                case FHUGCFeedListCellTypeArticle:
+                    self.diggType = FHDetailDiggTypeITEM;
+                break;
+                case FHUGCFeedListCellTypeAnswer:
+                    self.diggType = FHDetailDiggTypeANSWER;
+                break;
+                case FHUGCFeedListCellTypeQuestion:
+                    self.diggType = FHDetailDiggTypeQUESTION;
+                break;
+                case FHUGCFeedListCellTypeArticleComment:
+                    self.diggType = FHDetailDiggTypeCOMMENT;
+                break;
+                case FHUGCFeedListCellTypeUGC:
+                    self.diggType = FHDetailDiggTypeTHREAD;
+                break;
+            default:
+                self.diggType = FHDetailDiggTypeTHREAD;
+                break;
+        }
+    }
     //设置是否显示引导
     if(cellModel.isInsertGuideCell){
         self.guideView.hidden = NO;
@@ -162,7 +207,12 @@
 }
 
 - (void)updateLikeState:(NSString *)diggCount userDigg:(NSString *)userDigg {
-    self.likeLabel.text = diggCount;
+    NSInteger count = [diggCount integerValue];
+    if(count == 0){
+        self.likeLabel.text = @"赞";
+    }else{
+        self.likeLabel.text = diggCount;
+    }
     if([userDigg boolValue]){
         self.likeImageView.image = [UIImage imageNamed:@"fh_ugc_like_selected"];
         self.likeLabel.textColor = [UIColor themeRed1];
@@ -221,28 +271,43 @@
     }
     
     [self trackClickLike];
-    // 刷新UI
-    NSInteger user_digg = [self.cellModel.userDigg integerValue];
-    NSInteger diggCount = [self.cellModel.diggCount integerValue];
-    if(user_digg == 1){
-        //已点赞
-        self.cellModel.userDigg = @"0";
-        if(diggCount > 0){
-            diggCount = diggCount - 1;
-        }
-    }else{
-        //未点赞
-        self.cellModel.userDigg = @"1";
-        diggCount = diggCount + 1;
-    }
-    
-    self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
-    [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
+    //    // 刷新UI
+    NSInteger user_digg = [self.cellModel.userDigg integerValue] == 0 ? 1 : 0;
+
     NSMutableDictionary *dict = [NSMutableDictionary new];
     dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"];
     dict[@"element_from"] = self.cellModel.tracerDic[@"element_from"];
     dict[@"page_type"] = self.cellModel.tracerDic[@"page_type"];
-    [FHCommonApi requestCommonDigg:self.cellModel.groupId groupType:FHDetailDiggTypeTHREAD action:[self.cellModel.userDigg integerValue] tracerParam:dict completion:nil];
+    [FHCommonApi requestCommonDigg:self.cellModel.groupId groupType:self.diggType action:user_digg tracerParam:dict completion:nil];
+}
+
+- (void)likeStateChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    
+    if(userInfo){
+        NSInteger user_digg = [userInfo[@"action"] integerValue];
+        NSInteger diggCount = [self.cellModel.diggCount integerValue];
+        NSInteger groupType = [userInfo[@"group_type"] integerValue];
+        NSString *groupId = userInfo[@"group_id"];
+        
+        if(groupType == self.diggType && [groupId isEqualToString:self.cellModel.groupId]){
+            // 刷新UI
+            if(user_digg == 0){
+                //取消点赞
+                self.cellModel.userDigg = @"0";
+                if(diggCount > 0){
+                    diggCount = diggCount - 1;
+                }
+            }else{
+                //点赞
+                self.cellModel.userDigg = @"1";
+                diggCount = diggCount + 1;
+            }
+            
+            self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
+            [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
+        }
+    }
 }
 
 - (void)trackClickLike {
