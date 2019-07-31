@@ -324,7 +324,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewWillAppear:animated];
     self.isShowing = YES;
-
+    
     if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
         [self.homeListViewModel checkCityStatus];
     }
@@ -345,7 +345,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewWillDisappear:animated];
     self.isShowing = NO;
-
+    
     if(_isMainTabVC && self.mainTableView.contentOffset.y <= [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType])
     {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
