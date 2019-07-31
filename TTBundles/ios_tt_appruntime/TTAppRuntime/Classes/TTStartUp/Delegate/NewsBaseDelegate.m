@@ -81,6 +81,7 @@
 #import "TTLaunchManager.h"
 #import "GAIAEngine+TTBase.h"
 #import "BDUGDeepLinkManager.h"
+#import <Heimdallr/HMDTTMonitor.h>
 
 ///...
 //#import "TVLManager.h"
@@ -666,6 +667,11 @@ static NSTimeInterval lastTime;
         TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)self.window.rootViewController;
         if ([rootTabController isKindOfClass:[TTArticleTabBarController class]]) {
             _navigationController = (TTNavigationController*)rootTabController.selectedViewController;
+            if(![_navigationController isKindOfClass:[UINavigationController class]]){
+                
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"route_nav_controller_wrong" attributes:@{@"class":[NSString stringWithFormat:@"%@",_navigationController]?:@"unknown"}];
+                _navigationController = nil;
+            }
         }
     }
     
