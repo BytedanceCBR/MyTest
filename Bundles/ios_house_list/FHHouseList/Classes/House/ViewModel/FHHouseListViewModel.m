@@ -1433,7 +1433,11 @@ extern NSString *const INSTANT_DATA_KEY;
                 self.houseShowCache[hashString] = @"1";
                 return;
             }
-            
+            if (cellModel.isAgencyInfoCell && !self.houseShowCache[hashString]) {
+                [self addHouseShowLog:cellModel withRank:indexPath.row];
+                self.houseShowCache[hashString] = @"1";
+                return;
+            }
             if (cellModel.isRealHouseTopCell && !self.houseShowCache[hashString]) {
                 [self addHouseShowLog:cellModel withRank:indexPath.row];
                 self.houseShowCache[hashString] = @"1";
@@ -1613,21 +1617,21 @@ extern NSString *const INSTANT_DATA_KEY;
     if ([model isKindOfClass:[FHSearchRealHouseAgencyInfo class]] &&[model.openUrl isKindOfClass:[NSString class]]) {
         
         NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
-        NSString *urlStr = nil;
-        if ([tracerDict isKindOfClass:[NSDictionary class]] && model.openUrl) {
-            NSMutableDictionary *reprotParams = [NSMutableDictionary new];
-            [reprotParams addEntriesFromDictionary:tracerDict];
-
-            [reprotParams setValue:tracerDict[@"category_name"] forKey:@"enter_from"];
-            if ([model.openUrl containsString:@"?"]) {
-                urlStr = [NSString stringWithFormat:@"%@&report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
-            }else
-            {
-                urlStr = [NSString stringWithFormat:@"%@?report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
-            }
-        }else {
-            urlStr = model.openUrl;
-        }
+        NSString *urlStr = model.openUrl;
+//        if ([tracerDict isKindOfClass:[NSDictionary class]] && model.openUrl) {
+//            NSMutableDictionary *reprotParams = [NSMutableDictionary new];
+//            [reprotParams addEntriesFromDictionary:tracerDict];
+//
+//            [reprotParams setValue:tracerDict[@"category_name"] forKey:@"enter_from"];
+//            if ([model.openUrl containsString:@"?"]) {
+//                urlStr = [NSString stringWithFormat:@"%@&report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
+//            }else
+//            {
+//                urlStr = [NSString stringWithFormat:@"%@?report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
+//            }
+//        }else {
+//            urlStr = model.openUrl;
+//        }
         
         if ([urlStr isKindOfClass:[NSString class]]) {
             NSDictionary *info = @{@"url":urlStr,@"fhJSParams":@{},@"title":@" "};
@@ -1901,8 +1905,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [tracerDict removeObjectForKey:@"group_id"];
         self.subScribeShowDict = tracerDict;
         [FHUserTracker writeEvent:@"subscribe_show" params:tracerDict];
-    }else if(cellModel.isRealHouseTopCell)
-    {
+    }else if(cellModel.isRealHouseTopCell) {
         
         [tracerDict removeObjectForKey:@"impr_id"];
         [tracerDict removeObjectForKey:@"search_id"];
@@ -1915,6 +1918,18 @@ extern NSString *const INSTANT_DATA_KEY;
         [tracerDict setValue:@"filter_false_tip" forKey:@"element_type"];
 
         [FHUserTracker writeEvent:@"filter_false_tip_show" params:tracerDict];
+    }else if(cellModel.isAgencyInfoCell) {
+        [tracerDict removeObjectForKey:@"impr_id"];
+        [tracerDict removeObjectForKey:@"search_id"];
+        [tracerDict removeObjectForKey:@"group_id"];
+        [tracerDict removeObjectForKey:@"log_pb"];
+        [tracerDict removeObjectForKey:@"house_type"];
+        [tracerDict removeObjectForKey:@"rank"];
+        [tracerDict removeObjectForKey:@"card_type"];
+        [tracerDict setValue:@"be_null" forKey:@"element_from"];
+        [tracerDict setValue:@"selection_preference_tip" forKey:@"element_type"];
+        
+        [FHUserTracker writeEvent:@"selection_preference_tip_show" params:tracerDict];
     }
     else
     {

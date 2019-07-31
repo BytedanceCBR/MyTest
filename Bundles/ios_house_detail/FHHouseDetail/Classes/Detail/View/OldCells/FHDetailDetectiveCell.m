@@ -24,6 +24,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 @property (nonatomic, strong) UIView *detectiveView;
 @property(nonatomic , strong) FHDetailHalfPopFooter *footer;
 @property (nonatomic, strong) FHRoundShadowView *shadowView;
+@property (nonatomic, assign) BOOL showPriceCause;
 
 @end
 
@@ -48,6 +49,9 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         __weak typeof(self)wself = self;
         for (NSInteger index = 0; index < detectiveList.count; index++) {
             FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel *item = detectiveList[index];
+            if (item.reasonInfo) {
+                self.showPriceCause = YES;
+            }
             FHDetectiveItemView *itemView = [[FHDetectiveItemView alloc]initWithFrame:CGRectZero];
             itemView.actionBlock = ^(id reasonInfoData) {
                 [wself showReasonInfoView:reasonInfoData];
@@ -90,8 +94,13 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     return self;
 }
 
-- (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @"happiness_eye_detail";
+- (NSArray *)elementTypeStringArray:(FHHouseType)houseType
+{
+    NSMutableArray *array = @[@"happiness_eye_detail"];
+    if (self.showPriceCause) {
+        [array addObject:@"low_price_cause"];
+    }
+    return array;
 }
 
 - (void)setupUI {

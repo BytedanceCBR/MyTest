@@ -1034,6 +1034,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     [self.filterOpenUrlMdodel overwriteFliter:condition];
     [self.tableView triggerPullDown];
+    self.fromRecommend = NO;
     [self requestData:YES];
 }
 
@@ -1431,22 +1432,22 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     if ([model isKindOfClass:[FHSearchRealHouseAgencyInfo class]] &&[model.openUrl isKindOfClass:[NSString class]]) {
         
-        NSString *urlStr = nil;
-        if ([self.viewController.tracerDict isKindOfClass:[NSDictionary class]] && model.openUrl) {
-            NSMutableDictionary *reprotParams = [NSMutableDictionary new];
-            if ([self.viewController.tracerDict isKindOfClass:[NSMutableDictionary class]]) {
-                [reprotParams addEntriesFromDictionary:self.viewController.tracerDict];
-            }
-            [reprotParams setValue:self.viewController.tracerDict[@"category_name"] forKey:@"enter_from"];
-            if ([model.openUrl containsString:@"?"]) {
-                urlStr = [NSString stringWithFormat:@"%@&report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
-            }else
-            {
-                urlStr = [NSString stringWithFormat:@"%@?report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
-            }
-        }else {
-            urlStr = model.openUrl;
-        }
+        NSString *urlStr = model.openUrl;
+//        if ([self.viewController.tracerDict isKindOfClass:[NSDictionary class]] && model.openUrl) {
+//            NSMutableDictionary *reprotParams = [NSMutableDictionary new];
+//            if ([self.viewController.tracerDict isKindOfClass:[NSMutableDictionary class]]) {
+//                [reprotParams addEntriesFromDictionary:self.viewController.tracerDict];
+//            }
+//            [reprotParams setValue:self.viewController.tracerDict[@"category_name"] forKey:@"enter_from"];
+//            if ([model.openUrl containsString:@"?"]) {
+//                urlStr = [NSString stringWithFormat:@"%@&report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
+//            }else
+//            {
+//                urlStr = [NSString stringWithFormat:@"%@?report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
+//            }
+//        }else {
+//            urlStr = model.openUrl;
+//        }
         
         if ([urlStr isKindOfClass:[NSString class]]) {
             NSDictionary *info = @{@"url":urlStr,@"fhJSParams":@{},@"title":@" "};

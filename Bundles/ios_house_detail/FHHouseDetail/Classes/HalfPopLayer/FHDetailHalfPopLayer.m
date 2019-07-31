@@ -562,4 +562,21 @@
     TRACK_EVENT(@"stay_category", param);
 }
 
+- (void)addPopShowLog
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    [param addEntriesFromDictionary:self.trackInfo];
+    
+    TRACK_EVENT(@"happinesseye_cause_popup_show", param);
+}
+
+- (void)addPopClickLog:(NSString *)clickPosition
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    [param addEntriesFromDictionary:self.trackInfo];
+    param[@"click_position"] = clickPosition;
+    
+    TRACK_EVENT(@"happinesseye_cause_popup_click", param);
+}
+
 @end
