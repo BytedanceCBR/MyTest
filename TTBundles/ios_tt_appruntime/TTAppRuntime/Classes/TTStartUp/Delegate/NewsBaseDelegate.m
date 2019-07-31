@@ -661,19 +661,18 @@ static NSTimeInterval lastTime;
 
 - (UINavigationController*)appTopNavigationController {
     
-    if ([TTDeviceHelper isPadDevice]) {
-        _navigationController = (TTNavigationController*)(self.window.rootViewController);
-    } else {
+//    if ([TTDeviceHelper isPadDevice]) {
+//        _navigationController = (TTNavigationController*)(self.window.rootViewController);
+//    } else {
         TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)self.window.rootViewController;
         if ([rootTabController isKindOfClass:[TTArticleTabBarController class]]) {
             _navigationController = (TTNavigationController*)rootTabController.selectedViewController;
-            if(![_navigationController isKindOfClass:[UINavigationController class]]){
-                
+            if(![_navigationController isKindOfClass:[UINavigationController class]]){                
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"route_nav_controller_wrong" attributes:@{@"class":[NSString stringWithFormat:@"%@",_navigationController]?:@"unknown"}];
                 _navigationController = nil;
             }
         }
-    }
+//    }
     
     return _navigationController;
 }
