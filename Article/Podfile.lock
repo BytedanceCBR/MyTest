@@ -251,7 +251,15 @@ PODS:
   - SDWebImage/Core (4.4.1.1-binary)
   - SDWebImage/GIF (4.4.1.1-binary)
   - SDWebImage/WebP (4.4.1.1-binary)
-  - SecGuard (0.8.10.5.1-binary)
+  - SecGuard (0.8.12.9.1-binary):
+    - SecGuard/Core (= 0.8.12.9.1-binary)
+    - SecGuard/Encrypt (= 0.8.12.9.1-binary)
+    - SecGuard/ForceCrash (= 0.8.12.9.1-binary)
+    - SecGuard/Verification (= 0.8.12.9.1-binary)
+  - SecGuard/Core (0.8.12.9.1-binary)
+  - SecGuard/Encrypt (0.8.12.9.1-binary)
+  - SecGuard/ForceCrash (0.8.12.9.1-binary)
+  - SecGuard/Verification (0.8.12.9.1-binary)
   - SocketRocket (0.5.1.1-binary)
   - SQLiteRepairKit (1.2.1.1-binary)
   - SSZipArchive (1.6.3.1-binary)
@@ -674,7 +682,7 @@ DEPENDENCIES:
   - SDWebImage/Core (= 4.4.1.1-binary)
   - SDWebImage/GIF (= 4.4.1.1-binary)
   - SDWebImage/WebP (= 4.4.1.1-binary)
-  - SecGuard (= 0.8.10.5.1-binary)
+  - SecGuard (= 0.8.12.9.1-binary)
   - SocketRocket (= 0.5.1.1-binary)
   - SQLiteRepairKit (= 1.2.1.1-binary)
   - SSZipArchive (= 1.6.3.1-binary)
@@ -1026,7 +1034,7 @@ SPEC CHECKSUMS:
   RSSwizzle: 9b7cf78908bc6b249f1403926c168f730f840e91
   RXCollections: fc5eb6c41b5a3646601e6a01c1ee444c354a9bfc
   SDWebImage: abd373dadf531cf5d1738f6a8e9487f7f4a12f14
-  SecGuard: 0c9ebebd0992c9efd94a3a026832eb721ae0cc15
+  SecGuard: fc8f77291dcc9cc67e928c4cef281212d7faf796
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
   SQLiteRepairKit: 272cadce05957d8b36df6ac573dc8a596649ed28
   SSZipArchive: cc2e2411672daf4be9f5f61d4184ba66f15bcd2b
@@ -1105,7 +1113,7 @@ SPEC CHECKSUMS:
   TTUserSettings: ae3d4a3efeb987e7a2fe528545cfdb87a7798c72
   TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932
   TTVerifyKit: 6043790bd8baa07857e93e07abb4ccbf3cb87c82
-  TTVersionHelper: b7026ffa771b7aabd7c5f240ad98c8bc2e04d616
+  TTVersionHelper: a6f1edf1b2c2e8f593be79cf0cf2e128bc4e440f
   TTVideo: f4a5d888a2bbd06c82e906e449c1f419d63f1e5b
   TTVideoEngine: 96de9bfd7a80a311a51a9042a973e4eab4135ee1
   TTVideoService: 24104b18dd058cf284d1c5dff0af9a5d55f604a0
@@ -1125,6 +1133,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: c9c24db653a166259f1261b1c72f97806dff4ccf
+PODFILE CHECKSUM: 81901c647965555b1f9d57c994e32087185ec32e
 
 COCOAPODS: 1.4.0
