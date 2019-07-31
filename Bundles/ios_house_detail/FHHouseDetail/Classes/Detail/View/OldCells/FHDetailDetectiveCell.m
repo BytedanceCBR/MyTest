@@ -96,7 +96,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 
 - (NSArray *)elementTypeStringArray:(FHHouseType)houseType
 {
-    NSMutableArray *array = @[@"happiness_eye_detail"];
+    NSMutableArray *array = @[@"happiness_eye_detail"].mutableCopy;
     if (self.showPriceCause) {
         [array addObject:@"low_price_cause"];
     }

@@ -608,6 +608,8 @@
         source = @"detective";
     }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         source = @"safety_tips";
+    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]){
+        source = @"skyeye_price_abnormal";
     }
     
     [FHHouseDetailAPI requstQualityFeedback:self.houseId houseType:self.houseType source:source feedBack:type agencyId:agencyId completion:^(bool succss, NSError * _Nonnull error) {
