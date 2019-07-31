@@ -31,6 +31,11 @@
     // sub implements.........
 }
 
++ (CGFloat)heightForData:(id)data {
+    //默认返回cell的默认值44;
+    return 44;
+}
+
 @end
 
 // FHUGCBaseCollectionCell

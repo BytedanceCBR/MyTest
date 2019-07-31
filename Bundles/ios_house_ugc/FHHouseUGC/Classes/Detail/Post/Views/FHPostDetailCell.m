@@ -12,11 +12,18 @@
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
-#import "FHCommentDetailViewModel.h"
+#import "FHCommentBaseDetailViewModel.h"
+#import "FHUGCCellOriginItemView.h"
 
 #define leftMargin 20
 #define rightMargin 20
 #define kFHMaxLines 0
+
+#define userInfoViewHeight 40
+#define bottomViewHeight 49
+#define guideViewHeight 17
+#define topMargin 20
+#define originViewHeight 80
 
 @interface FHPostDetailCell ()
 
@@ -28,6 +35,9 @@
 @property(nonatomic ,strong) UILabel *position;
 @property(nonatomic ,strong) UIView *positionView;
 @property(nonatomic, assign)   BOOL       showCommunity;
+@property (nonatomic, assign)   BOOL       hasOriginItem;
+@property(nonatomic ,strong) FHUGCCellOriginItemView *originView;
+@property (nonatomic, strong)   UIImageView       *positionImageView;
 
 @end
 
@@ -43,6 +53,7 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         self.showCommunity = NO;
+        self.hasOriginItem = NO;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
@@ -58,16 +69,17 @@
     [self.contentView addSubview:_userInfoView];
     __weak typeof(self) weakSelf = self;
     self.userInfoView.deleteCellBlock = ^{
-        FHCommentDetailViewModel *viewModel = weakSelf.baseViewModel;
+        FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
         [viewModel.detailController goBack];
     };
     
     self.userInfoView.reportSuccessBlock = ^{
-        FHCommentDetailViewModel *viewModel = weakSelf.baseViewModel;
+        FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
         [viewModel.detailController goBack];
     };
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    _contentLabel.numberOfLines = 0;
     [self.contentView addSubview:_contentLabel];
     
     self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:self.imageCount];
@@ -85,9 +97,17 @@
     _positionView.hidden = YES;
     [self.contentView addSubview:_positionView];
     
+    self.positionImageView = [[UIImageView alloc] init];
+    _positionImageView.image = [UIImage imageNamed:@"fh_ugc_community_icon"];
+    [self.positionView addSubview:_positionImageView];
+    
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeRed3]];
     [_position sizeToFit];
     [_positionView addSubview:_position];
+    
+    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
+    _originView.hidden = YES;
+    [self.contentView addSubview:_originView];
     
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCommunityDetail)];
     [self.positionView addGestureRecognizer:singleTap];
@@ -104,12 +124,14 @@
         make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        make.height.mas_equalTo(0);
     }];
     
     [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        make.height.mas_equalTo(self.multiImageView.viewHeight);
     }];
     
     if (self.showCommunity) {
@@ -118,14 +140,33 @@
         if (self.imageCount <= 0) {
             lastView = self.contentLabel;
         }
+        [self.originView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+            make.height.mas_equalTo(originViewHeight);
+            make.left.mas_equalTo(self.contentView).offset(leftMargin);
+            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        }];
+        
+        CGFloat topOffset = 10;
+        if (self.hasOriginItem) {
+            topOffset += originViewHeight;
+            topOffset += 10;
+        }
+        
         [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(20);
-            make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+            make.top.mas_equalTo(lastView.mas_bottom).offset(topOffset);
             make.height.mas_equalTo(24);
         }];
         
-        [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.positionImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.positionView).offset(6);
+            make.centerY.mas_equalTo(self.positionView);
+            make.width.height.mas_equalTo(12);
+        }];
+        
+        [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.positionImageView.mas_right).offset(2);
             make.right.mas_equalTo(self.positionView).offset(-6);
             make.centerY.mas_equalTo(self.positionView);
             make.height.mas_equalTo(18);
@@ -144,8 +185,20 @@
         if (self.imageCount <= 0) {
             lastView = self.contentLabel;
         }
+        [self.originView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+            make.height.mas_equalTo(originViewHeight);
+            make.left.mas_equalTo(self.contentView).offset(leftMargin);
+            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        }];
+        CGFloat topOffset = 20;
+        if (self.hasOriginItem) {
+            topOffset = 10;
+            topOffset += originViewHeight;
+            topOffset += 20;
+        }
         [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(lastView.mas_bottom).offset(20);
+            make.top.mas_equalTo(lastView.mas_bottom).offset(topOffset);
             make.left.mas_equalTo(self.contentView).offset(leftMargin);
             make.right.mas_equalTo(self.contentView).offset(-rightMargin);
             make.bottom.mas_equalTo(self.contentView).offset(0);
@@ -167,7 +220,8 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         NSDictionary *log_pb = cellModel.tracerDic[@"log_pb"];
         dict[@"community_id"] = cellModel.community.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"feed_detail",
+        NSString *enter_from = cellModel.tracerDic[@"page_type"] ?: @"be_null";
+        dict[@"tracer"] = @{@"enter_from":enter_from,
                             @"enter_type":@"click",
                             @"log_pb":log_pb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -188,7 +242,11 @@
     }
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
     self.imageCount = cellModel.largeImageList.count;
+    if (self.imageCount > 9) {
+        self.imageCount = 9;
+    }
     self.showCommunity = cellModel.showCommunity;
+    self.hasOriginItem = cellModel.originItemModel != nil;
     [self setupUIs];
     // 设置userInfo
     self.userInfoView.cellModel = cellModel;
@@ -196,13 +254,66 @@
     self.userInfoView.descLabel.attributedText = cellModel.desc;
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     // 内容
-    [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel numberOfLines:kFHMaxLines];
+    [self.contentLabel setText:cellModel.contentAStr];
+    [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(cellModel.contentHeight);
+    }];
     // 图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
+    if(self.imageCount == 1) {
+        [self.multiImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(self.multiImageView.viewHeight);
+        }];
+    }
+    // origin
+    if(cellModel.originItemModel){
+        self.originView.hidden = NO;
+        [self.originView refreshWithdata:cellModel];
+    }else{
+        self.originView.hidden = YES;
+    }
     // 小区
     self.position.text = cellModel.community.name;
     [self.position sizeToFit];
 }
+
++ (CGFloat)heightForData:(id)data {
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        
+        CGFloat height = topMargin + userInfoViewHeight + 10 + cellModel.contentHeight + 20.5;
+        
+        if(isEmptyString(cellModel.content)){
+            height -= 10;
+        }
+        NSInteger imageCount = cellModel.largeImageList.count;
+        if (imageCount > 9) {
+            imageCount = 9;
+        }
+        CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:imageCount width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
+        if (imageCount == 1) {
+            // 单独计算单图显示高度
+            FHFeedContentImageListModel *imageData = [cellModel.imageList firstObject];
+            if (imageData && [imageData isKindOfClass:[FHFeedContentImageListModel class]] && [imageData.width floatValue] > 0) {
+                imageViewheight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * [imageData.height floatValue] / [imageData.width floatValue];
+            }
+        }
+        if (imageCount > 0) {
+            height += (imageViewheight + 10);
+        }
+        
+        if(cellModel.originItemModel){
+            height += (originViewHeight + 10);
+        }
+        
+        if (cellModel.showCommunity) {
+            height += (24 + 10);
+        }
+        return height;
+    }
+    return 44;
+}
+
 
 @end
 

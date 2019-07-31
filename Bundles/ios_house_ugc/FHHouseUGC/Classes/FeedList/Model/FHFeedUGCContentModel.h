@@ -1,5 +1,6 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
+#import "FHFeedContentModel.h"
 NS_ASSUME_NONNULL_BEGIN
 @interface FHFeedUGCContentCommunityModel : JSONModel
 
@@ -86,12 +87,12 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHFeedUGCContentUgcCutImageListUrlListModel<NSObject>
 @end
 
-@interface FHFeedUGCContentUgcCutImageListUrlListModel : JSONModel 
+@interface FHFeedUGCContentUgcCutImageListUrlListModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *url;
 @end
 
-@interface FHFeedUGCContentUgcCutImageListModel : JSONModel 
+@interface FHFeedUGCContentUgcCutImageListModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentUgcCutImageListUrlListModel> *urlList;
@@ -140,12 +141,12 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHFeedUGCContentThumbImageListUrlListModel<NSObject>
 @end
 
-@interface FHFeedUGCContentThumbImageListUrlListModel : JSONModel 
+@interface FHFeedUGCContentThumbImageListUrlListModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *url;
 @end
 
-@interface FHFeedUGCContentThumbImageListModel : JSONModel 
+@interface FHFeedUGCContentThumbImageListModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentThumbImageListUrlListModel> *urlList;
@@ -161,12 +162,12 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHFeedUGCContentLargeImageListUrlListModel<NSObject>
 @end
 
-@interface FHFeedUGCContentLargeImageListUrlListModel : JSONModel 
+@interface FHFeedUGCContentLargeImageListUrlListModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *url;
 @end
 
-@interface FHFeedUGCContentLargeImageListModel : JSONModel 
+@interface FHFeedUGCContentLargeImageListModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentLargeImageListUrlListModel> *urlList;
@@ -284,7 +285,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *commentCount;
 @property (nonatomic, copy , nullable) NSString *hasEdit;
 @property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentFilterWordsModel> *filterWords;
-@property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentUgcU13CutImageListModel> *ugcU13CutImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *ugcU13CutImageList;
 @property (nonatomic, copy , nullable) NSString *groupSource;
 @property (nonatomic, assign) BOOL allowDownload;
 @property (nonatomic, copy , nullable) NSString *shareCount;
@@ -293,7 +294,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *preload;
 @property (nonatomic, copy , nullable) NSString *uiType;
 @property (nonatomic, assign) BOOL showDislike;
-@property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentUgcCutImageListModel> *ugcCutImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *ugcCutImageList;
 @property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentActionListModel> *actionList;
 @property (nonatomic, copy , nullable) NSString *followButtonStyle;
 @property (nonatomic, copy , nullable) NSString *richContent;
@@ -304,8 +305,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *videoStyle;
 @property (nonatomic, copy , nullable) NSString *itemVersion;
 @property (nonatomic, copy , nullable) NSString *verifiedContent;
-@property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentThumbImageListModel> *thumbImageList;
-@property (nonatomic, strong , nullable) NSArray<FHFeedUGCContentLargeImageListModel> *largeImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *thumbImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *largeImageList;
 @property (nonatomic, copy , nullable) NSString *maxTextLine;
 @property (nonatomic, copy , nullable) NSString *userDigg;
 @property (nonatomic, assign) BOOL isSubject;
@@ -333,6 +334,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedUGCContentUserModel *user ;
 @property (nonatomic, strong , nullable) FHFeedUGCContentCommunityModel *community ;
 @property (nonatomic, assign)   NSInteger       ugcStatus;
+@property (nonatomic, assign)   BOOL       isFromDetail;// 详情页
 @end
 
 

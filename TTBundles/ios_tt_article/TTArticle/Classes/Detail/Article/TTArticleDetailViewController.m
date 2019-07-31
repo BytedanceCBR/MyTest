@@ -1782,6 +1782,10 @@
     commentManager.enterFromStr = self.detailModel.clickLabel;
     commentManager.categoryID = self.detailModel.categoryID;
     commentManager.logPb = self.detailModel.logPb;
+    
+    if(self.detailModel.reportParams){
+        commentManager.reportParams = self.detailModel.reportParams;
+    }
 
     self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
 
@@ -2257,12 +2261,6 @@
     [dic setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
 //    [dic setValue:self.detailModel.article.aggrType forKey:@"aggr_type"];
 
-    if (![@"push" isEqualToString: enterFrom]) {
-        if (self.detailModel.relateReadFromGID) {
-            [dic setValue:[NSString stringWithFormat:@"%@",self.detailModel.relateReadFromGID] forKey:@"from_gid"];
-        }
-    }
-
 //    BOOL hasZzComment = self.detailModel.article.zzComments.count > 0;
 //    [dic setValue:@(hasZzComment?1:0) forKey:@"has_zz_comment"];
 //    if (hasZzComment) {
@@ -2285,6 +2283,12 @@
     if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]])
     {
         [dic addEntriesFromDictionary:self.detailModel.reportParams];
+    }
+    
+    if (![@"push" isEqualToString: dic[@"enter_from"]]) {
+        if (self.detailModel.relateReadFromGID) {
+            [dic setValue:[NSString stringWithFormat:@"%@",self.detailModel.relateReadFromGID] forKey:@"from_gid"];
+        }
     }
     
     [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
@@ -2634,6 +2638,11 @@
         [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
         [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
+        
+        if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]){
+            [params addEntriesFromDictionary:self.detailModel.reportParams];
+        }
+        
         [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
     } else {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
@@ -2646,6 +2655,11 @@
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
         [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
         [params setValue:@"comment" forKey:@"position"];
+        
+        if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]){
+            [params addEntriesFromDictionary:self.detailModel.reportParams];
+        }
+        
         [TTTrackerWrapper eventV3:@"rt_like" params:params];
     }
 }

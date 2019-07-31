@@ -33,9 +33,12 @@
 - (instancetype)initWithFrame:(CGRect)frame count:(NSInteger)count {
     self = [super initWithFrame:frame];
     if (self) {
-        
         _imageViewList = [[NSMutableArray alloc] init];
         _count = count;
+        
+        if(_count > kMaxCount){
+            _count = kMaxCount;
+        }
         
         [self initViews];
         [self initConstraints];
@@ -82,21 +85,23 @@
     
     if(self.count == 1){
         _imageWidth = self.bounds.size.width;
+        _viewHeight = self.imageWidth * 9.0f/16.0f;
         UIImageView *imageView = [self.imageViewList firstObject];
         [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.left.bottom.mas_equalTo(self);
+            make.top.left.mas_equalTo(self);
             make.width.mas_equalTo(self.imageWidth);
             make.height.mas_equalTo(self.imageWidth * 9.0f/16.0f);
         }];
     }else if(self.count == 2){
         _imageWidth = (self.bounds.size.width - itemPadding)/2;
+        _viewHeight = self.imageWidth * 124.0f/165.0f;
         UIView *firstView = self;
         for (UIImageView *imageView in self.imageViewList) {
             [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self);
                 if(firstView == self){
                     make.left.mas_equalTo(firstView);
-                    make.bottom.mas_equalTo(firstView);
+//                    make.bottom.mas_equalTo(firstView);
                 }else{
                     make.left.mas_equalTo(firstView.mas_right).offset(itemPadding);
                 }
@@ -105,8 +110,30 @@
             }];
             firstView = imageView;
         }
+    }else if(self.count == 4){
+        _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
+        _viewHeight = _imageWidth * 2 + itemPadding;
+        
+        UIView *topView = self;
+        for (NSInteger i = 0; i < self.imageViewList.count; i++) {
+            UIImageView *imageView = self.imageViewList[i];
+            NSInteger row = i/2; // 0,1,2
+            NSInteger column = i%2; //0,1,2
+            CGFloat topMargin = row * _imageWidth + itemPadding * row;
+            CGFloat leftMargin = column * _imageWidth + itemPadding * column;
+            [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self).offset(topMargin);
+                make.left.mas_equalTo(self).offset(leftMargin);
+                make.width.mas_equalTo(self.imageWidth);
+                make.height.mas_equalTo(self.imageWidth);
+            }];
+        }
     }else if(self.count >= 3){
         _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
+        
+        NSInteger row = (self.count - 1)/3;
+        _viewHeight = _imageWidth * (row + 1) + itemPadding * row;
+        
         UIView *topView = self;
         for (NSInteger i = 0; i < self.imageViewList.count; i++) {
             UIImageView *imageView = self.imageViewList[i];
@@ -119,10 +146,6 @@
                 make.left.mas_equalTo(self).offset(leftMargin);
                 make.width.mas_equalTo(self.imageWidth);
                 make.height.mas_equalTo(self.imageWidth);
-                //整个view的高度到最后一个imageView的底部
-                if(i == self.imageViewList.count - 1){
-                    make.bottom.mas_equalTo(self);
-                }
             }];
         }
     }else{
@@ -136,15 +159,16 @@
     for (NSInteger i = 0; i < self.imageViewList.count; i++) {
         UIImageView *imageView = self.imageViewList[i];
         if(i < imageList.count){
-            FHFeedUGCCellImageListModel *imageModel = imageList[i];
+            FHFeedContentImageListModel *imageModel = imageList[i];
             imageView.hidden = NO;
             CGFloat width = [imageModel.width floatValue];
             CGFloat height = [imageModel.height floatValue];
             [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
             //只对单图做重新布局，多图都是1：1
             if(self.count == 1 && !self.fixedSingleImage){
+                self.viewHeight = self.imageWidth * height/width;
                 [imageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.height.mas_equalTo(self.imageWidth * height/width);
+                    make.height.mas_equalTo(self.viewHeight);
                 }];
             }
         }else{
@@ -194,14 +218,14 @@
     }
     NSMutableArray * infoModels = [NSMutableArray arrayWithCapacity:10];
     for (NSInteger i = 0; i < picCount; i++) {
-        FHFeedUGCCellImageListModel *imageModel = self.largeImageList[i];
+        FHFeedContentImageListModel *imageModel = self.largeImageList[i];
         NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:10];
         [dict setValue:imageModel.uri forKey:kTTImageURIKey];
         [dict setValue:imageModel.url forKey:TTImageInfosModelURL];
         [dict setValue:imageModel.width forKey:kTTImageWidthKey];
         [dict setValue:imageModel.height forKey:kTTImageHeightKey];
         NSMutableArray * urls = [NSMutableArray arrayWithCapacity:10];
-        for (FHFeedUGCCellImageListUrlListModel *urlListModel in imageModel.urlList) {
+        for (FHFeedContentImageListUrlListModel *urlListModel in imageModel.urlList) {
             if (!isEmptyString(urlListModel.url)) {
                 [urls addObject:@{TTImageInfosModelURL : urlListModel.url}];
             }
@@ -242,6 +266,23 @@
         }
     }
     return photoObjs;
+}
+
++ (CGFloat)viewHeightForCount:(CGFloat)count width:(CGFloat)width {
+    if(count == 1){
+        return width * 9.0f/16.0f;
+    }else if(count == 2){
+        CGFloat imageWidth = (width - itemPadding)/2;
+        return imageWidth * 124.0f/165.0f;
+    }else if(count == 4){
+        CGFloat imageWidth = (width - itemPadding * 2)/3;
+        return imageWidth * 2 + itemPadding;
+    }else if(count >= 3){
+        CGFloat imageWidth = (width - itemPadding * 2)/3;
+        NSInteger row = (count - 1)/3;
+        return imageWidth * (row + 1) + itemPadding * row;
+    }
+    return 0;
 }
 
 @end

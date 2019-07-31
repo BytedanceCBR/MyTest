@@ -32,6 +32,7 @@
 #import "FHFeedContentModel.h"
 #import "FHUGCScialGroupModel.h"
 #import "FHUGCConfig.h"
+#import "FHUGCCellHelper.h"
 
 @interface FHPostDetailViewModel ()
 
@@ -71,7 +72,7 @@
     return NSStringFromClass(cls);
 }
 
--(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType {
+-(instancetype)initWithController:(FHCommentBaseDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType {
     self = [super initWithController:viewController tableView:tableView postType:postType];
     self.threadID = 0;
     self.forumID = 0;
@@ -148,6 +149,7 @@
     if (model && [model isKindOfClass:[FHFeedUGCContentModel class]]) {
         [self.items removeAllObjects];
         // 网络请求返回
+        model.isFromDetail = YES;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
         if (cellModel.community.socialGroupId.length <= 0) {
             cellModel.community = self.detailData.community;

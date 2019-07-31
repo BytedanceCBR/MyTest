@@ -8,6 +8,8 @@
 #import <Foundation/Foundation.h>
 #import "FHHomeRollModel.h"
 #import "FHMainApi.h"
+#import <FHHouseBase/FHURLSettings.h>
+#import <FHHouseBase/FHHouseType.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (TTHttpTask *)requestRecommendForLoadMore:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion;
 
 + (TTHttpTask *)requestCitySearchByQuery:(NSString *)query class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
+//首页房源不感兴趣
++ (TTHttpTask *)requestHomeHouseDislike:(NSString *)houseId houseType:(FHHouseType)houseType dislikeInfo:(NSArray *)dislikeInfo completion:(void(^)(bool success , NSError *error))completion;
 
 @end
 

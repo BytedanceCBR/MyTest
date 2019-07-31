@@ -19,6 +19,12 @@
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (group_id.length > 0 ) {
         paramDic[@"group_id"] = group_id;
+        // digg notification
+        NSMutableDictionary *userInfo = @{}.mutableCopy;
+        userInfo[@"group_id"] = group_id;
+        userInfo[@"group_type"] = @(group_type);
+        userInfo[@"action"] = @(action);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCDiggStateChangeNotification" object:nil userInfo:userInfo];
     }
     paramDic[@"group_type"] = @(group_type);
     paramDic[@"action"] = @(action);
