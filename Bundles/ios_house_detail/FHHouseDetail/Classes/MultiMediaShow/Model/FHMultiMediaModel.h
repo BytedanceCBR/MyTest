@@ -27,13 +27,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *infoSubTitle;
 @property (nonatomic, copy , nullable) NSString *infoTitle;
 @property(nonatomic, copy) NSString *instantImageUrl;
-
 @end
 
 @interface FHMultiMediaModel : NSObject
 
 @property(nonatomic, strong) NSArray<FHMultiMediaItemModel *> *medias;
-
+@property (nonatomic, assign) BOOL isShowSkyEyeLogo;
 @end
 
 NS_ASSUME_NONNULL_END

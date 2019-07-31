@@ -37,7 +37,7 @@
 @property(nonatomic, assign) NSTimeInterval enterTimestamp;
 @property(nonatomic, assign)   CGFloat       photoCellHeight;
 @property(nonatomic, assign) BOOL instantShift;//秒开数据首次设置偏移
-
+@property(nonatomic, strong) UIView *bottomGradientView;
 @end
 
 @implementation FHDetailPhotoHeaderCell
@@ -99,6 +99,9 @@
         
         [self.contentView addSubview:_colletionView];
         
+        // 底部渐变蒙层
+        [self.contentView addSubview:self.bottomGradientView];
+        
         _infoLabel = [[UILabel alloc] init];
         _infoLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
         _infoLabel.textAlignment = NSTextAlignmentCenter;
@@ -129,9 +132,37 @@
             make.height.mas_equalTo(self.photoCellHeight);
         }];
         
+        [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.equalTo(self.contentView);
+            make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
+        }];
         
     }
     return self;
+}
+
+-(UIView *)bottomGradientView {
+    if(!_bottomGradientView){
+        
+        CGFloat aspect = 375.0 / 65;
+        CGFloat width = SCREEN_WIDTH;
+        CGFloat height = width / aspect;
+        CGRect frame = CGRectMake(0, 0, width, height);
+        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+        gradientLayer.frame = frame;
+        gradientLayer.colors = @[
+                                 (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor,
+                                 (__bridge id)[UIColor colorWithWhite:1 alpha:1].CGColor
+                                 ];
+        gradientLayer.startPoint = CGPointMake(0.5, 0);
+        gradientLayer.endPoint = CGPointMake(0.5, 1);
+    
+        _bottomGradientView = [[UIView alloc] initWithFrame:frame];
+        [_bottomGradientView.layer addSublayer:gradientLayer];
+        
+        _bottomGradientView.hidden = YES;
+    }
+    return _bottomGradientView;
 }
 
 -(UIImage *)placeHolder
@@ -167,6 +198,9 @@
             _noDataImageView.image = [UIImage imageNamed:@"default_image"];
         }
     }
+    
+    // 二手房头图头显示底部渐变层
+    self.bottomGradientView.hidden = !(self.baseViewModel.houseType == FHHouseTypeSecondHandHouse);
 }
 
 //埋点
