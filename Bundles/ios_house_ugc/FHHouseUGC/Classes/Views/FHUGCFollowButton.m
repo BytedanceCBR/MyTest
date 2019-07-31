@@ -289,7 +289,6 @@
     tracerDict[@"enter_from"] = page_type ?: @"be_null";
     [tracerDict removeObjectForKey:@"enter_type"];
     [tracerDict removeObjectForKey:@"rank"];
-    tracerDict[@"click_position"] = @"cancel_like";
     
     [FHUserTracker writeEvent:@"cancel_join_popup_show" params:tracerDict];
 }
