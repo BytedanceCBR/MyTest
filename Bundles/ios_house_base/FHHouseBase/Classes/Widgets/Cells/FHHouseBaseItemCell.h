@@ -12,11 +12,12 @@ NS_ASSUME_NONNULL_BEGIN
 //当图图片cell
 @class FHSingleImageInfoCellModel;
 @class FHHomeHouseDataItemsModel;
+@class FHHouseBaseItemCell;
 
 @protocol FHHouseBaseItemCellDelegate <NSObject>
 
 @optional
-- (void)dislikeConfirm:(NSString *)houseId;
+- (void)dislikeConfirm:(FHHomeHouseDataItemsModel *)model cell:(FHHouseBaseItemCell *)cell ;
 
 @end
 

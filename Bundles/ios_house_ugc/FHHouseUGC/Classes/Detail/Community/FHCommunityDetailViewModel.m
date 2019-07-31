@@ -15,15 +15,16 @@
 #import "UILabel+House.h"
 #import "FHUGCFollowButton.h"
 #import "FHUGCFollowHelper.h"
-#import "TTThemedAlertController.h"
 #import "FHUGCGuideView.h"
 #import "FHUGCGuideHelper.h"
 #import "FHUGCScialGroupModel.h"
 #import "FHUGCConfig.h"
 #import "TTAccountManager.h"
 #import "FHUserTracker.h"
-#import "FHCommunityDetailRefreshView.h"
-#import "NSTimer+NoRetain.h"
+#import "FHCommunityDetailMJRefreshHeader.h"
+#import "MJRefresh.h"
+#import "FHCommonDefines.h"
+#import "TTUIResponderHelper.h"
 
 
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
@@ -36,9 +37,7 @@
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *subTitleLabel;
 @property(nonatomic, strong) UIView *titleContainer;
-@property(nonatomic) BOOL scrollToTop;
-@property(nonatomic) BOOL isRefreshing;
-@property(nonatomic, strong) NSTimer *requestDataTimer;
+@property(nonatomic, strong) MJRefreshHeader *refreshHeader;
 @property (nonatomic, assign)   BOOL       isViewAppear;
 
 @property(nonatomic, strong) FHUGCGuideView *guideView;
@@ -55,7 +54,6 @@
         [self initView];
         self.shouldShowUGcGuide = YES;
         self.isViewAppear = YES;
-        self.isRefreshing = NO;
     }
     return self;
 }
@@ -76,6 +74,12 @@
     self.feedListController.scrollViewDelegate = self;
     self.feedListController.listType = FHCommunityFeedListTypePostDetail;
     self.feedListController.forumId = self.viewController.communityId;
+    MJWeakSelf;
+    self.refreshHeader = [FHCommunityDetailMJRefreshHeader headerWithRefreshingBlock:^{
+        [weakSelf requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+    }];
+    self.refreshHeader.mj_h = 14;
+    self.refreshHeader.alpha = 0.0f;
 
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
     self.headerView.followButton.groupId = self.viewController.communityId;
@@ -86,8 +90,6 @@
     randomImageIndex = randomImageIndex < 0 ? 0 : randomImageIndex;
     NSString *imageName = [NSString stringWithFormat:@"fh_ugc_community_detail_header_back%d", randomImageIndex];
     self.headerView.topBack.image = [UIImage imageNamed:imageName];
-
-    self.feedListController.tableHeaderView = self.headerView;
 
     [self.viewController addChildViewController:self.feedListController];
     [self.feedListController didMoveToParentViewController:self.viewController];
@@ -102,7 +104,6 @@
 }
 
 - (void)dealloc {
-    [self cancelRequestAfter];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -184,6 +185,10 @@
 
 - (void)viewDidAppear {
     self.isViewAppear = YES;
+    self.feedListController.tableView.mj_header = self.refreshHeader;
+    self.refreshHeader.ignoredScrollViewContentInsetTop = -([TTDeviceHelper isIPhoneXSeries] ? 44 + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.top : 64);
+    self.feedListController.tableView.tableHeaderView = self.headerView;
+    [self.feedListController.tableView bringSubviewToFront:self.feedListController.tableView.mj_header];
     if (self.feedListController.tableView) {
         [self scrollViewDidScroll:self.feedListController.tableView];
     }
@@ -198,7 +203,7 @@
     if (![TTReachability isNetworkConnected]) {
         [self onNetworError:showEmptyIfFailed showToast:showToast];
         if(userPull){
-            [self endRefresh];
+            [self.feedListController.tableView.mj_header endRefreshing];
         }
         return;
     }
@@ -207,14 +212,14 @@
     [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
         if(userPull){
-            [self endRefresh];
+            [wself.feedListController.tableView.mj_header endRefreshing];
         }
         if (model && (error == nil)) {
             FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
             [wself updateUIWithData:responseModel.data];
             return;
         }
-        [self onNetworError:showEmptyIfFailed showToast:showToast];
+        [wself onNetworError:showEmptyIfFailed showToast:showToast];
     }];
     if (refreshFeed) {
         [self.feedListController startLoadData];
@@ -358,18 +363,6 @@
     [self.viewController.customNavBarView refreshAlpha:alpha];
 }
 
-- (void)resizeHeader:(CGPoint)contentOffset {
-    CGFloat offsetY = contentOffset.y;
-    if (offsetY >= 0.0f) {
-        return;
-    }
-    [self.headerView.topBack mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(offsetY);
-        make.height.mas_greaterThanOrEqualTo(self.headerView.headerBackHeight - offsetY);
-    }];
-    self.feedListController.tableView.tableHeaderView = self.headerView;
-}
-
 // 关注状态改变
 - (void)followStateChanged:(NSNotification *)notification {
     if (notification) {
@@ -410,13 +403,16 @@
     self.titleLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
     self.subTitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
 
-    self.feedListController.tableView.tableHeaderView = self.headerView;
-
     //仅仅在未关注时显示引导页
     if (![data.hasFollow boolValue] && self.shouldShowUGcGuide) {
         [self addUgcGuide];
     }
     self.shouldShowUGcGuide = NO;
+    
+    [self.headerView setNeedsLayout];
+    [self.headerView layoutIfNeeded];
+
+    self.feedListController.tableView.tableHeaderView = self.headerView;
 }
 
 - (void)updateJoinUI:(BOOL)followed {
@@ -427,61 +423,14 @@
 
 #pragma UIScrollViewDelegate
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView; {
-    self.scrollToTop = NO;
-    if (scrollView.contentOffset.y < 0 && -scrollView.contentOffset.y < self.headerView.refreshView.toRefreshMinDistance && !self.isRefreshing) {
-        [self cancelRequestAfter];
-    }
-}
-
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset NS_AVAILABLE_IOS(5_0); {
-}
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [self resizeHeader:scrollView.contentOffset];
     [self refreshContentOffset:scrollView.contentOffset];
-    [self.headerView updateWhenScrolledWithContentOffset:scrollView.contentOffset isScrollTop:self.scrollToTop];
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    if (scrollView.contentOffset.y < 0 && -scrollView.contentOffset.y > self.headerView.refreshView.toRefreshMinDistance) {
-        self.scrollToTop = YES;
-        scrollView.contentInset = UIEdgeInsetsMake(self.headerView.refreshView.toRefreshMinDistance, 0, 0, 0);
-        [self requestDataAfter];
-        [self.headerView startRefresh];
-        self.isRefreshing = YES;
-    }
-}
-
-- (void)endRefresh {
-    WeakSelf;
-    [UIView animateWithDuration:0.5 animations:^{
-        StrongSelf;
-        if(wself.feedListController.tableView.contentOffset.y < 0){
-            wself.feedListController.tableView.contentOffset = CGPointMake(0, 0);
-        }
-        wself.feedListController.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-    }completion:^(BOOL finished) {
-        wself.isRefreshing = NO;
-        [wself.headerView stopRefresh];
-    }];
-}
-
-- (void)requestDataAfter {
-    WeakSelf;
-//    [self requestDataWithRefresh];
-    [self cancelRequestAfter];
-    self.requestDataTimer = [NSTimer scheduledNoRetainTimerWithTimeInterval:1.0f target:self selector:@selector(requestDataWithRefresh) userInfo:nil repeats:NO];
-}
-
--(void)requestDataWithRefresh{
-    [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
-}
-
-- (void)cancelRequestAfter {
-    if (self.requestDataTimer) {
-        [self.requestDataTimer invalidate];
-        self.requestDataTimer = nil;
+    [self.headerView updateWhenScrolledWithContentOffset:scrollView.contentOffset isScrollTop:NO];
+    if(scrollView.contentOffset.y < 0){
+        CGFloat alpha = self.refreshHeader.mj_h <= 0 ? 0.0f : fminf(1.0f,fabsf(scrollView.contentOffset.y / self.refreshHeader.mj_h));
+        self.refreshHeader.alpha = alpha;
+    }else{
+        self.refreshHeader.alpha = 0;
     }
 }
 

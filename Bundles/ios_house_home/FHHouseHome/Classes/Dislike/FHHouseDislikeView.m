@@ -7,7 +7,6 @@
 
 #import "FHHouseDislikeView.h"
 #import "FHHouseDislikeKeywordsView.h"
-#import "FHHouseDislikeWord.h"
 #import "SSThemed.h"
 
 #import "TTThemeConst.h"
@@ -16,9 +15,11 @@
 #import "TTDeviceHelper.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTDeviceUIUtils.h"
-#import "TTTracker.h"
+//#import "TTTracker.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import "FHUserTracker.h"
+#import "JSONAdditions.h"
 
 #define kMaskViewTag 20141209
 
@@ -44,10 +45,11 @@ static FHHouseDislikeView *__visibleDislikeView;
 @property(nonatomic,strong)SSThemedButton *okBtn;
 @property(nonatomic, strong)UIImageView *arrowImageView;
 @property(nonatomic, strong)FHHouseDislikeKeywordsView *keywordsView;
-@property(nonatomic, strong)NSMutableArray *dislikeWords;
 @property(nonatomic, strong)SSThemedButton *dislikeBtn;
 @property(nonatomic, copy)NSString *adLogExtra;
 @property(nonatomic, strong)FHHouseDislikeBlock didDislikeBlock;
+@property(nonatomic, strong)FHHouseDislikeViewModel *model;
+
 @end
 
 
@@ -131,6 +133,7 @@ static FHHouseDislikeView *__visibleDislikeView;
 }
 
 - (void)refreshWithModel:(nullable FHHouseDislikeViewModel *)model {
+    self.model = model;
     NSArray *keywords = model.keywords;
     NSString *groupID = model.groupID;
     
@@ -158,18 +161,10 @@ static FHHouseDislikeView *__visibleDislikeView;
         [_keywordsView refreshWithData:self.dislikeWords];
         
     }
-    
-    NSMutableDictionary *extValueDic = [NSMutableDictionary dictionary];
-    if (self.adLogExtra) {
-        extValueDic[@"log_extra"] = self.adLogExtra;
-    }
-    
-    if (model.extrasDict) {
-        [extValueDic addEntriesFromDictionary:model.extrasDict];
-    }
-    
-    NSString *source = model.source;
-    ttTrackEventWithCustomKeys(@"dislike", keywords.count > 0 ? @"menu_with_reason" : @"menu_no_reason", __lastGroupID, source, extValueDic);
+
+    NSMutableDictionary *tracerDict = [model.extrasDict mutableCopy];
+    [tracerDict removeObjectsForKeys:@[@"element_type"]];
+    TRACK_EVENT(@"house_dislike_popup_show", tracerDict);
 }
 
 - (void)refreshArrowUI {
@@ -227,7 +222,6 @@ static FHHouseDislikeView *__visibleDislikeView;
 }
 
 - (void)okBtnClicked:(id)sender {
-    
     if (self.didDislikeBlock) {
         self.didDislikeBlock(self);
     }
@@ -239,17 +233,39 @@ static FHHouseDislikeView *__visibleDislikeView;
     
     if (self.dislikeWords.count > 0) {
         [self dismiss];
-        
-        ttTrackEventWithCustomKeys(@"dislike", @"confirm_with_reason", __lastGroupID, nil, extValueDic);
-        
         __lastDislikedWords = nil;
         __lastGroupID = nil;
         
+        if(self.selectedWords.count > 0){
+            [self trackHouseDislikePopupClick:YES];
+        }else{
+            [self trackHouseDislikePopupClick:NO];
+        }
+        
     } else {
         [self showDislikeButton:NO atPoint:self.origin];
-        
-        ttTrackEventWithCustomKeys(@"dislike", @"confirm_no_reason", __lastGroupID, nil, extValueDic);
     }
+}
+
+- (void)trackHouseDislikePopupClick:(BOOL)isConfirm {
+    NSMutableDictionary *tracerDict = [self.model.extrasDict mutableCopy];
+    if(isConfirm){
+        tracerDict[@"click_position"] = @"confirm";
+        
+        NSMutableDictionary *dislikeInfo = [NSMutableDictionary dictionary];
+        for (FHHouseDislikeWord *word in self.dislikeWords) {
+            if(word.isSelected){
+                [dislikeInfo setObject:word.name forKey:word.ID];
+            }
+        }
+        
+        NSString *result = [dislikeInfo tt_JSONRepresentation];
+        tracerDict[@"result"] = result;
+    }else{
+        tracerDict[@"click_position"] = @"no_evaluate";
+    }
+    [tracerDict removeObjectsForKeys:@[@"element_type"]];
+    TRACK_EVENT(@"house_dislike_popup_click", tracerDict);
 }
 
 - (void)clickMask {
@@ -292,7 +308,7 @@ static FHHouseDislikeView *__visibleDislikeView;
         NSString * title = [NSString stringWithFormat:@"已选%lu个理由", (unsigned long)self.selectedWords.count];
         NSRange range = NSMakeRange(2, 1);
         NSMutableAttributedString * atrrTitle = [[NSMutableAttributedString alloc] initWithString:title];
-        [atrrTitle setAttributes:@{ NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:@"red1"] } range:range];
+        [atrrTitle setAttributes:@{ NSForegroundColorAttributeName : [UIColor themeRed1] } range:range];
         [self.titleLabel setAttributedText:atrrTitle];
     } else {
         [self.titleLabel setText:@"可选理由，精准屏蔽"];

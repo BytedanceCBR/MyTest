@@ -16,6 +16,7 @@
 //NS_ASSUME_NONNULL_END
 
 #import "TTFeedPopupView.h"
+#import "FHHouseDislikeWord.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -37,6 +38,8 @@ typedef void (^FHHouseDislikeBlock)(FHHouseDislikeView * view);
 //------------------------------------------------------------------
 
 @interface FHHouseDislikeView : TTFeedPopupView
+
+@property(nonatomic, strong)NSMutableArray *dislikeWords;
 
 - (void)refreshWithModel:(nullable FHHouseDislikeViewModel *)model;
 
