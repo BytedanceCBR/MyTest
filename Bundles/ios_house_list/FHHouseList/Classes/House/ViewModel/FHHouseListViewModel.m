@@ -270,6 +270,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     [self.tableView registerClass:[FHSuggestionSubscribCell class] forCellReuseIdentifier:kFHHouseListSubscribCellId];
     [self.tableView registerClass:[FHSuggestionRealHouseTopCell class] forCellReuseIdentifier:kFHHouseListTopRealInfoCellId];
+    [_tableView registerClass:[FHHouseListAgencyInfoCell class] forCellReuseIdentifier:kAgencyInfoCellId];
 
     [self.tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kFHHouseListRecommendTitleCellId];
     [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
@@ -296,6 +297,25 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     
     NSString *query = self.condition;
+    if (self.originFrom.length > 0) {
+        if ([query isKindOfClass:[NSString class]] && query.length > 0) {
+            query = [query stringByAppendingString:[NSString stringWithFormat:@"&origin_from=%@",self.originFrom]];
+        }else{
+            query = [NSString stringWithFormat:@"origin_from=%@",self.originFrom];
+        }
+    }
+    NSString *originSearchId = self.originSearchId ? : @"be_null";
+    if ([query isKindOfClass:[NSString class]] && query.length > 0) {
+        query = [query stringByAppendingString:[NSString stringWithFormat:@"&origin_search_id=%@",originSearchId]];
+    }else{
+        query = [NSString stringWithFormat:@"origin_search_id=%@",originSearchId];
+    }
+    NSString *enterFrom = [self pageTypeString];
+    if ([query isKindOfClass:[NSString class]] && query.length > 0) {
+        query = [query stringByAppendingString:[NSString stringWithFormat:@"&enter_from=%@",enterFrom]];
+    }else{
+        query = [NSString stringWithFormat:@"enter_from=%@",enterFrom];
+    }
     NSInteger offset = 0;
     NSMutableDictionary *param = [NSMutableDictionary new];
 
@@ -848,21 +868,11 @@ extern NSString *const INSTANT_DATA_KEY;
             FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
             if (cellModel) {
                 cellModel.isRecommendCell = NO;
-                if ([cellModel.subscribModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
-                    cellModel.isSubscribCell = YES;
-                }else
-                {
-                    cellModel.isSubscribCell = NO;
-                }
-                
                 if ([cellModel.agencyInfoModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
-                    cellModel.isRealHouseTopCell = YES;
                     _showRealHouseTop = YES;
                 }
-         
                 [self.houseList addObject:cellModel];
             }
-
         }];
         
         [recommendItemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -940,20 +950,16 @@ extern NSString *const INSTANT_DATA_KEY;
         
     }else if ([obj isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
         
-        FHSugSubscribeDataDataSubscribeInfoModel *item = (FHSugSubscribeDataDataSubscribeInfoModel *)obj;
         cellModel.subscribModel = obj;
-        
+        cellModel.isSubscribCell = YES;
     }else if ([obj isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
         
-        FHSugListRealHouseTopInfoModel *item = (FHSugListRealHouseTopInfoModel *)obj;
         cellModel.realHouseTopModel = obj;
         cellModel.isRealHouseTopCell = YES;
     }else if ([obj isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
         
-        FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
         cellModel.agencyInfoModel = obj;
         cellModel.isAgencyInfoCell = YES;
-        [self.houseList addObject:cellModel];
     }
     return cellModel;
     
@@ -1397,7 +1403,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 return cell;
             } else {
                 FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
-                BOOL isFirstCell = (indexPath.row == 0);
                 BOOL isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
                 
                 if (indexPath.row < self.sugesstHouseList.count) {

@@ -336,6 +336,12 @@ extern NSString *const INSTANT_DATA_KEY;
     }else{
         query = [NSString stringWithFormat:@"origin_search_id=%@",originSearchId];
     }
+    NSString *enterFrom = [self pageTypeString];
+    if ([query isKindOfClass:[NSString class]] && query.length > 0) {
+        query = [query stringByAppendingString:[NSString stringWithFormat:@"&enter_from=%@",enterFrom]];
+    }else{
+        query = [NSString stringWithFormat:@"enter_from=%@",enterFrom];
+    }
     NSInteger offset = 0;
     if (!isHead) {
         offset = _houseList.count;
@@ -385,7 +391,7 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     if (error.code != NSURLErrorCancelled) {
         //不是主动取消
-        if (isRefresh) {
+        if (!isRefresh) {
             [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
         }else {
             FHEmptyMaskViewType tip = FHEmptyMaskViewTypeNoData;
@@ -1923,6 +1929,18 @@ extern NSString *const INSTANT_DATA_KEY;
         [param setValue:@"filter_false_tip" forKey:@"element_type"];
         TRACK_EVENT(@"filter_false_tip_show", param);
         self.showHouseDict[hashString] = @"1";
+    }else if(cellModel.isAgencyInfoCell) {
+        [param removeObjectForKey:@"impr_id"];
+        [param removeObjectForKey:@"search_id"];
+        [param removeObjectForKey:@"group_id"];
+        [param removeObjectForKey:@"log_pb"];
+        [param removeObjectForKey:@"house_type"];
+        [param removeObjectForKey:@"rank"];
+        [param removeObjectForKey:@"card_type"];
+        [param setValue:@"be_null" forKey:@"element_from"];
+        [param setValue:@"selection_preference_tip" forKey:@"element_type"];
+        
+        [FHUserTracker writeEvent:@"selection_preference_tip_show" params:param];
     }else
     {
         TRACK_EVENT(@"house_show", param);
