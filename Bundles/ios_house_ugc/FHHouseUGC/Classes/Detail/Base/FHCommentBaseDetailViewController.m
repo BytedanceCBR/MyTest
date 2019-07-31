@@ -5,7 +5,7 @@
 //  Created by 张元科 on 2019/6/2.
 //
 
-#import "FHCommentDetailViewController.h"
+#import "FHCommentBaseDetailViewController.h"
 #import "FHExploreDetailToolbarView.h"
 #import "SSCommonLogic.h"
 #import "TTUIResponderHelper.h"
@@ -26,7 +26,7 @@
 #import "TTTrackerWrapper.h"
 #import "AKHelper.h"
 #import "FHCommonDefines.h"
-#import "FHCommentDetailViewModel.h"
+#import "FHCommentBaseDetailViewModel.h"
 #import "ExploreDetailToolbarView.h"
 #import "ExploreDetailNavigationBar.h"
 #import "ExploreSearchViewController.h"
@@ -43,8 +43,9 @@
 #import "FHCommonApi.h"
 #import "TTAccountManager.h"
 #import "FHUserTracker.h"
+#import "TTCommentModel.h"
 
-@interface FHCommentDetailViewController ()<UIScrollViewDelegate>
+@interface FHCommentBaseDetailViewController ()<UIScrollViewDelegate>
 
 @property (nonatomic, strong)   UIScrollView       *mainScrollView;
 @property (nonatomic, strong)   FHExploreDetailToolbarView       *toolbarView;
@@ -58,10 +59,12 @@
 @property (nonatomic, strong) ExploreItemActionManager *itemActionManager;
 @property (nonatomic, assign)   BOOL       hasLoadedComment;
 @property (nonatomic, assign)   BOOL       isRebuildCommentViewController;
+@property (nonatomic, weak)     TTCommentModel       *wCommentModel;
+@property (nonatomic, assign)   NSInteger       lastCommentReplyCount;
 
 @end
 
-@implementation FHCommentDetailViewController
+@implementation FHCommentBaseDetailViewController
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
@@ -81,6 +84,7 @@
     [self setupUI];
     self.tableView.hidden = YES;
     self.commentViewController.view.hidden = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -138,7 +142,7 @@
     _mainScrollView.frame = CGRectMake(0, navOffset, SCREEN_WIDTH, SCREEN_HEIGHT - navOffset - self.toolbarView.height);
     _mainScrollView.delegate = self;
     [self configTableView];
-    self.viewModel = [FHCommentDetailViewModel createDetailViewModelWithPostType:self.postType withController:self tableView:_tableView];
+    self.viewModel = [FHCommentBaseDetailViewModel createDetailViewModelWithPostType:self.postType withController:self tableView:_tableView];
     [self.mainScrollView addSubview:_tableView];
     _tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, _mainScrollView.frame.size.height);
     // 评论
@@ -419,7 +423,6 @@
 
 - (void)p_digg {
     self.user_digg = (self.user_digg == 1) ? 0 : 1;
-    self.digg_count = self.user_digg == 1 ? (self.digg_count + 1) : MAX(0, (self.digg_count - 1));
     
     if (!self.itemActionManager) {
         self.itemActionManager = [[ExploreItemActionManager alloc] init];
@@ -433,8 +436,34 @@
     [FHCommonApi requestCommonDigg:self.groupModel.groupID groupType:FHDetailDiggTypeTHREAD action:self.user_digg tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
     }];
-    
-    [self p_refreshToolbarView];
+}
+
+- (void)likeStateChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    if(userInfo){
+        NSInteger user_digg = [userInfo[@"action"] integerValue];
+        NSInteger diggCount = self.digg_count;
+        NSInteger groupType = [userInfo[@"group_type"] integerValue];
+        NSString *groupId = userInfo[@"group_id"];
+        
+        if(groupType == FHDetailDiggTypeTHREAD && [groupId isEqualToString:self.groupModel.groupID]){
+            // 刷新UI
+            if(user_digg == 0){
+                //取消点赞
+                self.user_digg = 0;
+                if(diggCount > 0){
+                    diggCount = diggCount - 1;
+                }
+            }else{
+                //点赞
+                self.user_digg = 1;
+                diggCount = diggCount + 1;
+            }
+            
+            self.digg_count = diggCount;
+        }
+        [self p_refreshToolbarView];
+    }
 }
 
 - (void)p_willShowSharePannel {
@@ -589,6 +618,11 @@
     
     [mdict setValue:@"favorite" forKey:@"categoryID"];
     
+    self.wCommentModel = mdict[@"commentModel"];
+    if (self.wCommentModel && [self.wCommentModel isKindOfClass:[TTCommentModel class]]) {
+        self.lastCommentReplyCount = [self.wCommentModel.replyCount integerValue];
+    }
+    
     TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(mdict.copy)];
     
 //    detailRoot.categoryID = self.detailModel.categoryID;
@@ -701,6 +735,19 @@
     if ([self.commentViewController respondsToSelector:@selector(tt_reloadData)]) {
         [self.commentViewController tt_reloadData];
     }
+    if (self.wCommentModel && [self.wCommentModel isKindOfClass:[TTCommentModel class]]) {
+        NSInteger replyCount = [self.wCommentModel.replyCount integerValue];
+        if (replyCount != self.lastCommentReplyCount) {
+            NSInteger change = replyCount - self.lastCommentReplyCount;
+            self.comment_count += change;
+            if (self.comment_count < 0) {
+                self.comment_count = 0;
+            }
+            [self commentCountChanged];
+        }
+    }
+    self.wCommentModel = nil;
+    self.lastCommentReplyCount = 0;
     [self scrollViewDidScroll:self.mainScrollView];
     // 续上评论列表时间
     self.commentShowDate = [NSDate date];

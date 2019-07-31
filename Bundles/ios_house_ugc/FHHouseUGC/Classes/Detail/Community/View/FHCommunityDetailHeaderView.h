@@ -5,7 +5,7 @@
 #import <Foundation/Foundation.h>
 
 @class FHUGCFollowButton;
-@class FHCommunityDetailRefreshView;
+@class FHCommunityDetailMJRefreshHeader;
 
 
 @interface FHCommunityDetailHeaderView : UIView
@@ -19,7 +19,6 @@
 @property(nonatomic, strong) UILabel *publicationsLabel;
 @property(nonatomic, strong) UILabel *publicationsContentLabel;
 @property(nonatomic) CGFloat headerBackHeight;
-@property(nonatomic, strong) FHCommunityDetailRefreshView *refreshView;
 
 - (void)startRefresh;
 

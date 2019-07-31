@@ -33,6 +33,8 @@
 #import "TTReportDefine.h"
 #import "UIView+CustomTimingFunction.h"
 #import "TTFeedDislikeConfig.h"
+#import "TTSandBoxHelper.h"
+#import "TTIndicatorView.h"
 
 #define kMaskViewTag 20141209
 
@@ -907,6 +909,12 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
                 }
             };
             
+            if ([TTSandBoxHelper isInHouseApp] && [self shouldShowDebug]) {
+                UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressSelectorView:)];
+                gesture.minimumPressDuration = 1.0;
+                [v addGestureRecognizer:gesture];
+            }
+            
             v;
         });
         
@@ -918,6 +926,14 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startReportProcess:) name:FeedDislikeNeedReportNotification object:nil];
     }
     return self;
+}
+
+- (void)didLongPressSelectorView:(UILongPressGestureRecognizer *)gesture {
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        pasteboard.string = [NSString stringWithFormat:@"%@", self.viewModel.groupID];
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
+    }
 }
 
 - (void)modern_refreshWithModel:(nullable FHFeedOperationViewModel *)model {
@@ -966,7 +982,18 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
     self.optionSelectorView.commonTrackingParameters = commonTrackingParameters;
     
     NSArray<FHFeedOperationWord *> *items = [TTFeedDislikeConfig operationWordList:self.viewModel.userID];
+    
+    if ([TTSandBoxHelper isInHouseApp] && [self shouldShowDebug]) {
+        for (FHFeedOperationWord *word in items) {
+            word.title = [word.title stringByAppendingString:[NSString stringWithFormat:@"  jid:%@",self.viewModel.groupID]];
+        }
+    }
+    
     [self.optionSelectorView refreshWithkeywords:items];
+}
+
+- (BOOL)shouldShowDebug {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"kUGCDebugConfigKey"];
 }
 
 - (void)modern_showAtPoint:(CGPoint)p

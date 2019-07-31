@@ -1105,7 +1105,7 @@ SPEC CHECKSUMS:
   TTUserSettings: ae3d4a3efeb987e7a2fe528545cfdb87a7798c72
   TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932
   TTVerifyKit: 6043790bd8baa07857e93e07abb4ccbf3cb87c82
-  TTVersionHelper: b7026ffa771b7aabd7c5f240ad98c8bc2e04d616
+  TTVersionHelper: a6f1edf1b2c2e8f593be79cf0cf2e128bc4e440f
   TTVideo: f4a5d888a2bbd06c82e906e449c1f419d63f1e5b
   TTVideoEngine: 96de9bfd7a80a311a51a9042a973e4eab4135ee1
   TTVideoService: 24104b18dd058cf284d1c5dff0af9a5d55f604a0

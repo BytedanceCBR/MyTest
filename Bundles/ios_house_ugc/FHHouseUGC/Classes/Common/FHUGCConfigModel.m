@@ -19,6 +19,7 @@
 {
   NSDictionary *dict = @{
     @"leadSuggest": @"lead_suggest",
+    @"ugcDistrict": @"ugc_district",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -37,3 +38,19 @@
 }
 @end
 
+@implementation FHUGCConfigDataDistrictModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+            @"districtId": @"district_id",
+            @"districtName": @"district_name",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
