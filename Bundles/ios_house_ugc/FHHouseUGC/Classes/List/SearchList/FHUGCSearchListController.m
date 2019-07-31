@@ -296,7 +296,7 @@
         // 埋点
         NSMutableDictionary *tracerDic = @{}.mutableCopy;
         tracerDic[@"card_type"] = @"left_pic";
-        tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+        tracerDic[@"page_type"] = @"community_search";
         tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
         tracerDic[@"rank"] = @(row);
         tracerDic[@"click_position"] = @"join_like";

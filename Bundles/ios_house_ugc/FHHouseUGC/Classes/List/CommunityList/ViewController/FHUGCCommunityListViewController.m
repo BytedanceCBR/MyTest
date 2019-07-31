@@ -73,7 +73,7 @@
     WeakSelf;
     self.searchBar.searchClickBlk = ^() {
         StrongSelf;
-        [wself addCickSearchLog];
+        [wself addClickSearchLog];
         NSString *routeUrl = @"sslocal://ugc_search_list";
         NSURL *openUrl = [NSURL URLWithString:routeUrl];
         NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
@@ -85,7 +85,6 @@
         NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
         searchTracerDict[@"element_type"] = @"all_community_list";
         searchTracerDict[@"enter_from"] = @"all_community_list";
-        searchTracerDict[@"page_type"] = @"all_community_list";
         paramDic[@"tracer"] = searchTracerDict;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:paramDic];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
@@ -245,7 +244,7 @@
     return _loadingView;
 }
 
--(void)addCickSearchLog{
+-(void)addClickSearchLog{
     NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
     reportParams[@"page_type"] = @"all_community_list";
     reportParams[@"origin_from"] = @"all_community_list";
