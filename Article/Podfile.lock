@@ -152,7 +152,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.4)
+  - ios_house_im (0.1.0)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -251,7 +251,15 @@ PODS:
   - SDWebImage/Core (4.4.1.1-binary)
   - SDWebImage/GIF (4.4.1.1-binary)
   - SDWebImage/WebP (4.4.1.1-binary)
-  - SecGuard (0.8.10.5.1-binary)
+  - SecGuard (0.8.12.5.1-binary):
+    - SecGuard/Core (= 0.8.12.5.1-binary)
+    - SecGuard/Encrypt (= 0.8.12.5.1-binary)
+    - SecGuard/ForceCrash (= 0.8.12.5.1-binary)
+    - SecGuard/Verification (= 0.8.12.5.1-binary)
+  - SecGuard/Core (0.8.12.5.1-binary)
+  - SecGuard/Encrypt (0.8.12.5.1-binary)
+  - SecGuard/ForceCrash (0.8.12.5.1-binary)
+  - SecGuard/Verification (0.8.12.5.1-binary)
   - SocketRocket (0.5.1.1-binary)
   - SQLiteRepairKit (1.2.1.1-binary)
   - SSZipArchive (1.6.3.1-binary)
@@ -631,7 +639,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.4)
+  - ios_house_im (from `../../../Bundles/ios_house_im`)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -674,7 +682,7 @@ DEPENDENCIES:
   - SDWebImage/Core (= 4.4.1.1-binary)
   - SDWebImage/GIF (= 4.4.1.1-binary)
   - SDWebImage/WebP (= 4.4.1.1-binary)
-  - SecGuard (= 0.8.10.5.1-binary)
+  - SecGuard (= 0.8.12.5.1-binary)
   - SocketRocket (= 0.5.1.1-binary)
   - SQLiteRepairKit (= 1.2.1.1-binary)
   - SSZipArchive (= 1.6.3.1-binary)
@@ -865,6 +873,8 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/FHWebView
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
+  ios_house_im:
+    :path: ../../../Bundles/ios_house_im
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAD:
@@ -1005,7 +1015,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 2de71cb2daec371a530b40e41e5c0ff30e744967
+  ios_house_im: bff4c982d4baf0938adadeae3712e66e4ec0e324
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1026,7 +1036,7 @@ SPEC CHECKSUMS:
   RSSwizzle: 9b7cf78908bc6b249f1403926c168f730f840e91
   RXCollections: fc5eb6c41b5a3646601e6a01c1ee444c354a9bfc
   SDWebImage: abd373dadf531cf5d1738f6a8e9487f7f4a12f14
-  SecGuard: 0c9ebebd0992c9efd94a3a026832eb721ae0cc15
+  SecGuard: 9856bf35c9f68bb7be092d646cd573b5719c760a
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
   SQLiteRepairKit: 272cadce05957d8b36df6ac573dc8a596649ed28
   SSZipArchive: cc2e2411672daf4be9f5f61d4184ba66f15bcd2b
@@ -1105,7 +1115,7 @@ SPEC CHECKSUMS:
   TTUserSettings: ae3d4a3efeb987e7a2fe528545cfdb87a7798c72
   TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932
   TTVerifyKit: 6043790bd8baa07857e93e07abb4ccbf3cb87c82
-  TTVersionHelper: b7026ffa771b7aabd7c5f240ad98c8bc2e04d616
+  TTVersionHelper: a6f1edf1b2c2e8f593be79cf0cf2e128bc4e440f
   TTVideo: f4a5d888a2bbd06c82e906e449c1f419d63f1e5b
   TTVideoEngine: 96de9bfd7a80a311a51a9042a973e4eab4135ee1
   TTVideoService: 24104b18dd058cf284d1c5dff0af9a5d55f604a0
@@ -1125,6 +1135,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: c9c24db653a166259f1261b1c72f97806dff4ccf
+PODFILE CHECKSUM: 15d5a84dfb9c9f0f6a212bfc3ae1a8526be943d3
 
 COCOAPODS: 1.4.0
