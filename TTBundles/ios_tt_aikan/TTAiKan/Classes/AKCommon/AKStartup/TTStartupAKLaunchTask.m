@@ -15,6 +15,7 @@
 #import <TTInstallService/TTInstallIDManager.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTLaunchDefine.h"
+#import <CoreLocation/CoreLocation.h>
 
 DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeService,TASK_PRIORITY_HIGH+15);
 
