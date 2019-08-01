@@ -732,18 +732,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     
     id model = notification.userInfo[@"model"];
-    
-    FHDetailPropertyListModel *propertyModel = nil;
-    for (id item in self.items) {
-        if ([item isKindOfClass:[FHDetailPropertyListModel class]]) {
-            propertyModel = (FHDetailPropertyListModel *)item;
-            break;
-        }
-    }
-    
-    if (!propertyModel) {
-        return;
-    }
 
     NSMutableDictionary *trackInfo = [NSMutableDictionary new];
     trackInfo[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE];
@@ -760,6 +748,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         trackInfo[UT_ENTER_FROM] = position;
         [popLayer showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)model trackInfo:trackInfo];
         
+    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
+        position = @"low_price_cause";
+        trackInfo[UT_ENTER_FROM] = position;
+        [popLayer showDetectiveReasonInfoData:(FHDetailDataBaseExtraDetectiveReasonInfo *)model trackInfo:trackInfo];
     }
 //    else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
 //        position = @"happiness_eye";
@@ -767,7 +759,9 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 //        [popLayer showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)model trackInfo:trackInfo];
 //
 //    }
+    
     [self addClickOptionLog:position];
+
     self.tableView.scrollsToTop = NO;
     [self enableController:NO];
 }
@@ -776,6 +770,24 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 {
     NSMutableDictionary *param = [NSMutableDictionary new];
 
+    param[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE];
+    param[UT_ENTER_FROM] = self.detailTracerDic[UT_ENTER_FROM];
+    param[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];
+    param[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
+    param[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
+    
+    param[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM]?:UT_BE_NULL;
+    
+    [param addEntriesFromDictionary:self.detailTracerDic];
+    param[@"click_position"] = position;
+    
+    TRACK_EVENT(@"click_options", param);
+}
+
+- (void)addPopShowLog:(NSString *)position
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    
     param[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE];
     param[UT_ENTER_FROM] = self.detailTracerDic[UT_ENTER_FROM];
     param[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];

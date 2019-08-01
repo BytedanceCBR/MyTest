@@ -32,7 +32,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        [self setupUI];
+        [self setupUITypeBottom];
     }
     return self;
 }
@@ -212,6 +212,59 @@
         make.width.mas_equalTo(40);
     }];
     
+    self.backgroundColor = [UIColor themeGray7];
+    
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+
+- (void)setupUITypeBottom
+{
+    UIView *backColorView = [UIView new];
+    [backColorView setBackgroundColor:[UIColor themeGray7]];
+    [self.contentView addSubview:backColorView];
+    [backColorView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.contentView);
+        make.centerY.equalTo(self.contentView).offset(10);
+        make.height.mas_equalTo(30);
+    }];
+    
+    _falseHouseLabel = [[UILabel alloc] init];
+    _falseHouseLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 12 : 10];
+    _falseHouseLabel.textColor = [UIColor themeGray3];
+    _falseHouseLabel.textAlignment = NSTextAlignmentLeft;
+    [backColorView addSubview:_falseHouseLabel];
+    [_falseHouseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(backColorView).offset(-15);
+        make.centerY.equalTo(backColorView);
+        make.height.mas_equalTo(30);
+    }];
+
+    _allFalseHouseBtn = [FHExtendHotAreaButton buttonWithType:UIButtonTypeCustom];
+    _allFalseHouseBtn.isExtend = YES;
+    [_allFalseHouseBtn setImage:[UIImage imageNamed:@"house_list_real_arrow"] forState:UIControlStateNormal];
+    [_allFalseHouseBtn addTarget:self action:@selector(allFalseHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_allFalseHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [backColorView addSubview:_allFalseHouseBtn];
+    
+    
+    [_allFalseHouseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.falseHouseLabel.mas_right).offset(5);
+        make.centerY.equalTo(_falseHouseLabel);
+        make.width.mas_equalTo(12);
+        make.height.mas_equalTo(12);
+    }];
+    
+    _maskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_maskBtn setBackgroundColor:[UIColor clearColor]];
+    [backColorView addSubview:_maskBtn];
+    [_maskBtn addTarget:self action:@selector(allFalseHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_maskBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.falseHouseNumLabel).offset(-3);
+        make.right.equalTo(backColorView);
+        make.height.mas_equalTo(30);
+        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width * 0.65);
+    }];
+
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
@@ -281,13 +334,10 @@
     if ([data isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
         FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)data;
         self.currentModel = model;
-        
-        _titleLabel.text = model.totalTitle;
-        _realHouseLabel.text = model.trueTitle;
-      
-        _realHouseNumLabel.text = [NSString stringWithFormat:@" %@",model.trueHouseTotal ? : @"0"];
-        _falseHouseLabel.text = model.fakeTitle;
-        _falseHouseNumLabel.text = [NSString stringWithFormat:@" %@",model.fakeHouseTotal ? : @"0"];;
+        [_falseHouseLabel setBackgroundColor:[UIColor clearColor]];
+        if ([model.fakeHouseTotal isKindOfClass:[NSString class]]) {
+            _falseHouseLabel.text = [NSString stringWithFormat:@"已成功为您过滤%d套可疑房源",model.fakeHouseTotal.integerValue];
+        }
         if([model.fakeHouseTotal integerValue] == 0)
         {
             _allFalseHouseBtn.hidden = YES;
@@ -298,6 +348,27 @@
         
         [self layoutIfNeeded];
     }
+//    return;
+//    if ([data isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+//        FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)data;
+//        self.currentModel = model;
+//
+//        _titleLabel.text = model.totalTitle;
+//        _realHouseLabel.text = model.trueTitle;
+//
+//        _realHouseNumLabel.text = [NSString stringWithFormat:@" %@",model.trueHouseTotal ? : @"0"];
+//        _falseHouseLabel.text = model.fakeTitle;
+//        _falseHouseNumLabel.text = [NSString stringWithFormat:@" %@",model.fakeHouseTotal ? : @"0"];;
+//        if([model.fakeHouseTotal integerValue] == 0)
+//        {
+//            _allFalseHouseBtn.hidden = YES;
+//        }else
+//        {
+//            _allFalseHouseBtn.hidden = NO;
+//        }
+//
+//        [self layoutIfNeeded];
+//    }
 }
 
 - (void)awakeFromNib {

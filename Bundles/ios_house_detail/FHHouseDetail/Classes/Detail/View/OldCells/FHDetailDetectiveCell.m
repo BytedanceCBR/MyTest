@@ -15,6 +15,8 @@
 #import "FHDetectiveItemView.h"
 #import "FHDetailHalfPopFooter.h"
 
+extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
+
 @interface FHDetailDetectiveCell ()
 
 @property (nonatomic, strong) FHDetectiveTopView *topView;
@@ -22,6 +24,7 @@
 @property (nonatomic, strong) UIView *detectiveView;
 @property(nonatomic , strong) FHDetailHalfPopFooter *footer;
 @property (nonatomic, strong) FHRoundShadowView *shadowView;
+@property (nonatomic, assign) BOOL showPriceCause;
 
 @end
 
@@ -43,9 +46,16 @@
         }
         UIView *lastView = nil;
         NSArray *detectiveList = model.detective.detectiveInfo.detectiveList;
+        __weak typeof(self)wself = self;
         for (NSInteger index = 0; index < detectiveList.count; index++) {
             FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel *item = detectiveList[index];
+            if (item.reasonInfo) {
+                self.showPriceCause = YES;
+            }
             FHDetectiveItemView *itemView = [[FHDetectiveItemView alloc]initWithFrame:CGRectZero];
+            itemView.actionBlock = ^(id reasonInfoData) {
+                [wself showReasonInfoView:reasonInfoData];
+            };
             [itemView updateWithModel:item];
             [self.detectiveView addSubview:itemView];
             CGFloat height = [FHDetectiveItemView heightForTile:item.title tip:item.explainContent];
@@ -69,6 +79,11 @@
     [_footer showTip:model.detective.dialogs.feedbackContent type:FHDetailHalfPopFooterTypeChoose positiveTitle:@"是" negativeTitle:@"否"];
 }
 
+- (void)showReasonInfoView:(id)reasonInfoData
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:DETAIL_SHOW_POP_LAYER_NOTIFICATION object:nil userInfo:@{@"cell":self,@"model":reasonInfoData?:@""}];
+}
+
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style
@@ -79,8 +94,13 @@
     return self;
 }
 
-- (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @"happiness_eye_detail";
+- (NSArray *)elementTypeStringArray:(FHHouseType)houseType
+{
+    NSMutableArray *array = @[@"happiness_eye_detail"].mutableCopy;
+    if (self.showPriceCause) {
+        [array addObject:@"low_price_cause"];
+    }
+    return array;
 }
 
 - (void)setupUI {
