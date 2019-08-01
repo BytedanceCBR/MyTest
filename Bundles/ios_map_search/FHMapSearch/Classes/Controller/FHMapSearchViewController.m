@@ -173,10 +173,6 @@
 {
     if (!_sideBar) {
         _sideBar = [[FHMapSearchSideBar alloc]initWithFrame:CGRectMake(0, 0, 36, 246)];
-        [_sideBar showWithTypes:@[ @(FHMapSearchSideBarItemTypeSubway) , @(FHMapSearchSideBarItemTypeCircle) , @(FHMapSearchSideBarItemTypeFilter) , @(FHMapSearchSideBarItemTypeList)]];
-        _sideBar.chooseTypeBlock = ^(FHMapSearchSideBarItemType type) {
-            
-        };
     }
     return _sideBar;
 }
@@ -210,9 +206,7 @@
         [self tryCallbackOpenUrl];
     }else{
         [self.viewModel dismissHouseListView];
-//        [self.houseFilterBridge closeConditionFilterPanel];
-    }
-    
+    }    
 }
 
 -(void)locationAction
@@ -248,18 +242,6 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.ttNeedIgnoreZoomAnimation = YES;
     self.viewModel = [[FHMapSearchViewModel alloc]initWithConfigModel:_configModel viewController:self];
-    __weak typeof(self) wself = self;
-    
-    if (self.configModel.mapOpenUrl.length > 0) {
-        
-        NSURL *url = [NSURL URLWithString:self.configModel.mapOpenUrl];
-        TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
-        
-    }else if (self.configModel.conditionParams) {
-//        [bridge resetFilter:self.houseFilterViewModel withQueryParams:_configModel.conditionParams updateFilterOnly:NO];
-    }
-    
-//    [bridge setViewModel:self.houseFilterViewModel withDelegate:_viewModel];
     
     BOOL showDraw = (self.configModel.houseType == FHHouseTypeSecondHandHouse);
 
@@ -314,9 +296,9 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
-    if (self.viewModel.showMode == FHMapSearchShowModeDrawLine || self.viewModel.showMode == FHMapSearchShowModeSubway) {
+//    if (self.viewModel.showMode == FHMapSearchShowModeDrawLine || self.viewModel.showMode == FHMapSearchShowModeSubway) {
         [self enablePan:NO];
-    }
+//    }
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
@@ -371,17 +353,6 @@
     [self.viewModel.mapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.and.left.bottom.right.mas_equalTo(self.view);
     }];
-    
-//    [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.bottom.right.mas_equalTo(self.view);
-//        make.top.equalTo(self.filterPanel.mas_bottom);
-//    }];
-//
-//    [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(navHeight);
-//        make.left.right.mas_equalTo(self.view);
-//        make.height.mas_equalTo(kFilterBarHeight);
-//    }];
     
     if (self.locationButton.superview) {
         [self.locationButton mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -149,7 +149,6 @@
 
 -(NSString *)selectedQuery
 {
-    
     if (self.items.count > 0) {
         NSMutableString *mquery = [[NSMutableString alloc] init];
         for (FHMapSearchSelectItemModel *item in _items) {

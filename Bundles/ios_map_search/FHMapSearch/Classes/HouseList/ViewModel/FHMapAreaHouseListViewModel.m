@@ -296,9 +296,9 @@
             self.searchId = searchId;
         }
         if (isHead) {
-            if (openUrl) {
-                [self overwriteFilter:openUrl];
-            }
+//            if (openUrl) {
+//                [self overwriteFilter:openUrl];
+//            }
         
             [self.houseList removeAllObjects];
             [self.houseShowTracerDic removeAllObjects];

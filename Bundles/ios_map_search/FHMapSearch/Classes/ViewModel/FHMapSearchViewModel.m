@@ -82,7 +82,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , assign) BOOL firstEnterLogAdded;
 @property(nonatomic , assign) BOOL needReload;
 @property(nonatomic , copy) NSString *houseListOpenUrl;//返回列表页时的openurl
-//@property(nonatomic , copy) NSString *mapFindHouseOpenUrl;
 @property(nonatomic , strong) FHMapSearchBubbleModel *lastBubble;
 @property(nonatomic , assign) BOOL movingToCenter;
 @property(nonatomic , assign) BOOL configUserLocationLayer;
@@ -95,7 +94,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) NSDate *enterDrawLineTime;
 @property(nonatomic , assign) FHMapSearchShowMode lastShowMode;//画圈使用
 @property(nonatomic , strong) NSDictionary *filterParam;
-//@property(nonatomic , strong) FHMapSubwayDataModel *subwayModel;
 @property(nonatomic , strong) FHSearchFilterConfigOption *selectedLine;
 @property(nonatomic , strong) FHSearchFilterConfigOption *selectionStation;
 @property(nonatomic , strong) FHMapSubwayPickerView *subwayPicker;
@@ -120,7 +118,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _lastRecordZoomLevel = configModel.resizeLevel;
         
         if (self.configModel.mapOpenUrl) {
-            //            _lastBubble = [FHMapSearchBubbleModel bubbleFromUrl:self.configModel.mapOpenUrl];
             dispatch_async(dispatch_get_main_queue(), ^{                
                 [self updateBubble:self.configModel.mapOpenUrl];
                 if (_lastBubble) {
@@ -321,9 +318,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 }
 
 -(void)showFilter
-{
+{    
+    NSString *query =  [self.lastBubble query];
+    NSString *url = [NSString stringWithFormat:@"https:a?%@",query];
+    [self.filterView selectedWithOpenUrl:url];
     [self.filterView showInView:self.viewController.view animated:YES];
-    [self.filterView selectedWithOpenUrl:self.lastBubble.query];
 }
 
 -(void)changeFilter:(NSString *)query
@@ -402,11 +401,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self.viewController showNavTopViews:alpha animated:animated];
     
 }
-
-//-(BOOL)conditionChanged
-//{
-//    return ![_originCondition isEqualToString: _configModel.conditionQuery];
-//}
 
 -(void)setFilterConditionParams:(NSString *)filterConditionParams
 {
@@ -1419,12 +1413,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 #pragma mark - sidebar
 -(void)tryUpdateSideBar
 {
-    if (self.configModel.houseType != FHHouseTypeSecondHandHouse) {
-        return;
-    }
-    
     CGFloat zoomLevel = self.mapView.zoomLevel;
-    BOOL showCircle = zoomLevel >= 13;
+    BOOL showCircle = (self.configModel.houseType == FHHouseTypeSecondHandHouse) && (zoomLevel >= 13);
     NSArray *types = nil;
     if(self.showMode == FHMapSearchShowModeSubway){
         types = @[@(FHMapSearchSideBarItemTypeSubway)];
@@ -1438,14 +1428,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             types = @[@(FHMapSearchSideBarItemTypeSubway) , @(FHMapSearchSideBarItemTypeFilter) , @(FHMapSearchSideBarItemTypeList)];
         }
         
-        if([[self.sideBar currentTypes] isEqualToArray:types]){
+        if(types && [[self.sideBar currentTypes] isEqualToArray:types]){
             types = nil;
         }
     }
     
-    if (types) {
+    if (types && self.sideBar.height > 0) {
         [self.sideBar showWithTypes:types];
-        CGFloat height = self.sideBar.height;
+        CGFloat height = self.sideBar.height;      
         [self.sideBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(height);
         }];
@@ -1497,39 +1487,39 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     return bubble;
 }
 
-#pragma mark - filter delegate
--(void)onConditionChanged:(NSString *)condition
-{
-    BOOL mapViewFilterShouldChange = NO;
-    if (!(self.showMode == FHMapSearchShowModeHouseList && (self.lastShowMode == FHMapSearchShowModeDrawLine))) {
-        //在非画圈找房进入列表页时才更新
-        mapViewFilterShouldChange = YES;
-    }
-    if (mapViewFilterShouldChange) {
-        [self.lastBubble overwriteFliter:condition];
-    }
-    
-    if (![self.filterConditionParams isEqualToString:condition]) {
-        
-        if (mapViewFilterShouldChange) {
-            //在非画圈找房进入列表页时才更新
-            self.filterConditionParams = condition;
-        }
-        if (![TTReachability isNetworkConnected]) {
-            [[FHMainManager sharedInstance]showToast:@"网络异常" duration:1];
-            if (self.showMode != FHMapSearchShowModeMap) {
-                [self.houseListViewController.viewModel overwirteCondition:condition];
-            }            
-            return;
-        }
-        if (self.showMode == FHMapSearchShowModeHouseList || self.showMode == FHMapSearchShowModeHalfHouseList) {
-            [self.houseListViewController.viewModel reloadingHouseData:condition];
-            self.needReload = mapViewFilterShouldChange;
-        }else{
-            [self requestHouses:NO showTip:YES];
-        }
-    }
-}
+//#pragma mark - filter delegate
+//-(void)onConditionChanged:(NSString *)condition
+//{
+//    BOOL mapViewFilterShouldChange = NO;
+//    if (!(self.showMode == FHMapSearchShowModeHouseList && (self.lastShowMode == FHMapSearchShowModeDrawLine))) {
+//        //在非画圈找房进入列表页时才更新
+//        mapViewFilterShouldChange = YES;
+//    }
+//    if (mapViewFilterShouldChange) {
+//        [self.lastBubble overwriteFliter:condition];
+//    }
+//
+//    if (![self.filterConditionParams isEqualToString:condition]) {
+//
+//        if (mapViewFilterShouldChange) {
+//            //在非画圈找房进入列表页时才更新
+//            self.filterConditionParams = condition;
+//        }
+//        if (![TTReachability isNetworkConnected]) {
+//            [[FHMainManager sharedInstance]showToast:@"网络异常" duration:1];
+//            if (self.showMode != FHMapSearchShowModeMap) {
+//                [self.houseListViewController.viewModel overwirteCondition:condition];
+//            }
+//            return;
+//        }
+//        if (self.showMode == FHMapSearchShowModeHouseList || self.showMode == FHMapSearchShowModeHalfHouseList) {
+//            [self.houseListViewController.viewModel reloadingHouseData:condition];
+//            self.needReload = mapViewFilterShouldChange;
+//        }else{
+//            [self requestHouses:NO showTip:YES];
+//        }
+//    }
+//}
 
 
 
@@ -1538,37 +1528,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (openUrl.length == 0 ) {
         return;
     }
-//    self.mapFindHouseOpenUrl = openUrl;
     self.lastBubble = [FHMapSearchBubbleModel bubbleFromUrl:openUrl];
-    NSURL *url = [NSURL URLWithString:openUrl];
-    TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
-    if (self.resetConditionBlock) {
-        self.filterParam = paramObj.queryParams;
-        self.resetConditionBlock(paramObj.queryParams);
-        self.filterConditionParams = self.getFilterConditionBlock();
-    }
-    
-    if (self.conditionNoneFilterBlock) {
-        NSString *noneFilter = self.conditionNoneFilterBlock(paramObj.queryParams);
-        self.lastBubble.noneFilterQuery = noneFilter;
-    }
+    [self.filterView selectedWithOpenUrl:openUrl];
+    self.lastBubble.noneFilterQuery = self.filterView.noneFilterQuery;
+        
 }
 
--(void)updateFilter:(NSString *)condition
-{
-    if (condition.length > 0) {
-        NSURL *url = [NSURL URLWithString:condition];
-        TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
-        if (self.resetConditionBlock) {
-            self.filterParam = paramObj.queryParams;
-            self.resetConditionBlock(paramObj.queryParams);
-        }
-        
-        if (self.conditionNoneFilterBlock) {
-            NSString *noneFilter = self.conditionNoneFilterBlock(paramObj.queryParams);
-        }
-    }
-}
 
 -(NSString *)backHouseListOpenUrl
 {
@@ -2076,14 +2041,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //进入地图找房模块埋点
 -(void)addEnterMapSearchLog
 {
-    /*
-     let enterParams = TracerParams.momoid() <|>
-     toTracerParams(enterFrom, key: "enter_from") <|>
-     toTracerParams(categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
-     toTracerParams(originFrom, key: "origin_from") <|>
-     toTracerParams(originSearchId, key: "origin_search_id")
-     recordEvent(key: TraceEventName.enter_mapfind, params: enterParams)
-     */
     NSMutableDictionary *param = [self logBaseParams];
     param[@"search_id"] = self.searchId?:@"be_null";
     

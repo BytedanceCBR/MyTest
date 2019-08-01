@@ -165,6 +165,14 @@
     
 }
 
+-(void)didMoveToSuperview
+{
+    [super didMoveToSuperview];
+    if(self.superview){
+        [self.collectionView reloadData];
+    }
+}
+
 -(UIButton *)buttonWithTitle:(NSString *)title titleColor:(UIColor *)titleColor font:(UIFont *)font bgColor:(UIColor *)bgColor action:(SEL)action
 {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -197,7 +205,7 @@
 -(void)onConfirmAction
 {
     NSString *query = [self.selectionModel selectedQuery];
-    //    NSLog(@"[FILTER] query is: %@",query);
+    NSLog(@"[FILTER] query is: %@",query);
     if (self.confirmWithQueryBlock) {
         self.confirmWithQueryBlock(query);
     }
@@ -217,6 +225,12 @@
             nframe.origin.x = self.width - CONTAINER_WIDTH;
             self.containerView.frame = nframe;
         } completion:^(BOOL finished) {
+            //刷新数据
+            [self.collectionView performBatchUpdates:^{
+                [self.collectionView reloadData];
+                [self.collectionView scrollRectToVisible:CGRectZero animated:YES];
+//                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
+            } completion:nil];
             
         }];
         
@@ -314,7 +328,10 @@
                     }
                 }
                 if(itemIndex < option.options.count){
-                    [self handleSelectForIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:index]];
+                    if([option.type.lowercaseString isEqualToString:PRICE_TYPE]){
+                        itemIndex++;
+                    }
+                    [self handleSelectForIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:index] byUser:NO];
                     break;
                 }else if ([option.type.lowercaseString isEqualToString:PRICE_TYPE] && qitem.value.length > 0){
                     //价格
@@ -357,7 +374,7 @@
             if (nquery.length > 0) {
                 [nquery appendString:@"&"];
             }
-            [nquery appendFormat:@"%@=%@",qitem.name,qitem.value];
+            [nquery appendFormat:@"%@=%@",qitem.name,[qitem.value stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         }
         self.noneFilterQuery = nquery;
     }
@@ -391,6 +408,9 @@
     FHMapSearchSelectItemModel *selectItem = [self.selectionModel selectItemWithTabId:[item.tabId integerValue] section:section];
     if (!selectItem) {
         selectItem = [self.selectionModel makeItemWithTabId:item.tabId.integerValue section:section];
+        if(self.filterPriceItem && self.filterPriceItem.tabId.integerValue == item.tabId.integerValue){
+            selectItem.rate = self.filterPriceItem.rate;
+        }
     }
     if (!selectItem.configOption) {
         selectItem.configOption = option;
@@ -398,7 +418,7 @@
     return selectItem;
 }
 
--(void)handleSelectForIndexPath:(NSIndexPath *)indexPath
+-(void)handleSelectForIndexPath:(NSIndexPath *)indexPath byUser:(BOOL)byUser
 {
     NSInteger section = indexPath.section;
     
@@ -415,7 +435,7 @@
             index--;
         }
         
-        if([self.selectionModel selecteItem:selectItem containIndex:index]){
+        if([self.selectionModel selecteItem:selectItem containIndex:index] && byUser){
             //反选
             [self.selectionModel delSelecteItem:selectItem withIndex:index];
         }else{
@@ -455,7 +475,7 @@
     FHMapSearchSelectItemModel *priceItem = [self.selectionModel selectItemWithTabId:FHMapSearchTabIdTypePrice section:_filterPriceSection];
     if (!priceItem) {
         priceItem = [self.selectionModel makeItemWithTabId:FHMapSearchTabIdTypePrice section:_filterPriceSection];
-        
+        priceItem.rate = self.filterPriceItem.rate;
     }
     return priceItem;
 }
@@ -551,7 +571,7 @@
                 FHMapSearchSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue] section:section];
                 selected = [model selecteItem:selectItem containIndex:index];
             }
-            
+
             [tcell updateWithTitle:text highlighted:selected];
             
             return tcell;
@@ -607,7 +627,7 @@
     NSInteger section = indexPath.section;
     
     if (filter.count > section) {
-        [self handleSelectForIndexPath:indexPath];
+        [self handleSelectForIndexPath:indexPath byUser:YES];
         
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
