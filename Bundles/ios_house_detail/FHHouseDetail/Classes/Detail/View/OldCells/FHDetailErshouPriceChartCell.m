@@ -281,7 +281,7 @@
     }];
     [self.chartBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.mas_equalTo(0);
-        make.height.mas_equalTo(207 + 110);
+        make.height.mas_equalTo(207 + 120);
     }];
     [self.chartBgView addSubview:self.titleView];
     [self.chartBgView addSubview:self.priceLabel];
@@ -358,7 +358,7 @@
     FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
     CGFloat bottomHeight = model.bottomHeight;
     [self.bottomBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(207 + 110);
+        make.height.mas_equalTo(207 + 120);
     }];
 }
 
