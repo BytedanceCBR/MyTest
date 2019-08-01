@@ -477,6 +477,8 @@ extern NSString *const INSTANT_DATA_KEY;
                     {
                         [items addObject:subscribeMode];
                     }
+                    
+                    self.isShowSubscribeCell = YES;
                 }
                                 
                 if (houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue) {
