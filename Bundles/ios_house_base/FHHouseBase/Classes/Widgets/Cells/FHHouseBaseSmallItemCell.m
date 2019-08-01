@@ -740,9 +740,15 @@
     self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = model.displaySubtitle;
 
-    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:model.tags];
-    self.tagLabel.attributedText =  attributeString;
     
+    if (model.externalInfo && model.externalInfo.isExternalSite.boolValue) {
+        [self updateThirdPartHouseSourceStr:model.externalInfo.externalName];
+    }else
+    {
+        NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:model.tags];
+        self.tagLabel.attributedText =  attributeString;
+    }
+
     self.priceLabel.text = model.displayPrice;
     self.pricePerSqmLabel.text = model.displayPricePerSqm;
     
@@ -768,10 +774,14 @@
         [self.recReasonView.yoga markDirty];
     }
     
-    [self updateTitlesLayout:self.cellModel.tagsAttrStr.length > 0];
+    if (model.externalInfo && model.externalInfo.isExternalSite.boolValue) {
+        [self updateTitlesLayout:YES];
+    }else
+    {
+        [self updateTitlesLayout:self.cellModel.tagsAttrStr.length > 0];
+    }
     
     [self.contentView.yoga applyLayoutPreservingOrigin:NO];
-    
 }
 
 
@@ -872,7 +882,7 @@
 
 - (void)updateThirdPartHouseSourceStr:(NSString *)sourceStr
 {
-    self.tagLabel.text = [NSString stringWithFormat:@" %@",sourceStr];
+    self.tagLabel.text = [NSString stringWithFormat:@"%@",sourceStr];
     self.tagLabel.textColor = [UIColor themeGray3];
     self.tagLabel.font = [UIFont themeFontRegular:12];
 }
