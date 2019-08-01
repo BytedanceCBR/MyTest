@@ -251,7 +251,15 @@ PODS:
   - SDWebImage/Core (4.4.1.1-binary)
   - SDWebImage/GIF (4.4.1.1-binary)
   - SDWebImage/WebP (4.4.1.1-binary)
-  - SecGuard (0.8.10.5.1-binary)
+  - SecGuard (0.8.12.9.1-binary):
+    - SecGuard/Core (= 0.8.12.9.1-binary)
+    - SecGuard/Encrypt (= 0.8.12.9.1-binary)
+    - SecGuard/ForceCrash (= 0.8.12.9.1-binary)
+    - SecGuard/Verification (= 0.8.12.9.1-binary)
+  - SecGuard/Core (0.8.12.9.1-binary)
+  - SecGuard/Encrypt (0.8.12.9.1-binary)
+  - SecGuard/ForceCrash (0.8.12.9.1-binary)
+  - SecGuard/Verification (0.8.12.9.1-binary)
   - SocketRocket (0.5.1.1-binary)
   - SQLiteRepairKit (1.2.1.1-binary)
   - SSZipArchive (1.6.3.1-binary)
@@ -674,7 +682,7 @@ DEPENDENCIES:
   - SDWebImage/Core (= 4.4.1.1-binary)
   - SDWebImage/GIF (= 4.4.1.1-binary)
   - SDWebImage/WebP (= 4.4.1.1-binary)
-  - SecGuard (= 0.8.10.5.1-binary)
+  - SecGuard (= 0.8.12.9.1-binary)
   - SocketRocket (= 0.5.1.1-binary)
   - SQLiteRepairKit (= 1.2.1.1-binary)
   - SSZipArchive (= 1.6.3.1-binary)
@@ -1026,7 +1034,7 @@ SPEC CHECKSUMS:
   RSSwizzle: 9b7cf78908bc6b249f1403926c168f730f840e91
   RXCollections: fc5eb6c41b5a3646601e6a01c1ee444c354a9bfc
   SDWebImage: abd373dadf531cf5d1738f6a8e9487f7f4a12f14
-  SecGuard: 0c9ebebd0992c9efd94a3a026832eb721ae0cc15
+  SecGuard: fc8f77291dcc9cc67e928c4cef281212d7faf796
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
   SQLiteRepairKit: 272cadce05957d8b36df6ac573dc8a596649ed28
   SSZipArchive: cc2e2411672daf4be9f5f61d4184ba66f15bcd2b
@@ -1125,6 +1133,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: d4d97dc458e1af1eaa4be3d76a8d5ddfbac338dd
+PODFILE CHECKSUM: 4c760e04c5df653bfae7d1181ed97ff96b51e986
 
 COCOAPODS: 1.4.0
