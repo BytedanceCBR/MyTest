@@ -27,6 +27,7 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <FHHouseBase/FHUserTracker.h>
 #import <TTBaseLib/TTDeviceHelper.h>
+#import <FHHouseBase/FHCommonDefines.h>
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20

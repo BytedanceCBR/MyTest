@@ -9,6 +9,7 @@
 #import "FHHomeCellHelper.h"
 #import <TTDeviceHelper.h>
 #import <FHHomeCellHelper.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 @implementation FHHomeEntrancesCell
 

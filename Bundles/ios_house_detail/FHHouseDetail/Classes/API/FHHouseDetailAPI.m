@@ -25,6 +25,8 @@
 #import <BDAgileLog.h>
 #import <FHHouseBase/FHMainApi.h>
 #import <TTInstallService/TTInstallIDManager.h>
+#import "TTBaseMacro.h"
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -194,6 +196,8 @@
         paramDic[@"rent_id"] = rentId;
     }
     paramDic[@"count"] = @(5);
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_RENT;
+
     __weak typeof(self)wself = self;
     return [[TTNetworkManager shareInstance]
             requestForBinaryWithURL:url
@@ -238,6 +242,7 @@
         paramDic[@"neighborhood_id"] = neighborhoodId;
     }
     paramDic[@"count"] = @(5);
+    paramDic[CHANNEL_ID] = CHANNEL_ID_SAME_NEIGHBORHOOD_RENT;
     __weak typeof(self)wself = self;
     return [[TTNetworkManager shareInstance]
             requestForBinaryWithURL:url
@@ -283,6 +288,7 @@
     if (![url containsString:@"count"]) {
         paramDic[@"count"] = @(count);
     }
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_HOUSE;
     __weak typeof(self)wself = self;
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
 
@@ -330,6 +336,7 @@
     if (searchId.length > 0) {
         paramDic[@"search_id"] = searchId;
     }
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_NEIGHBORHOOD;
     __weak typeof(self)wself = self;
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
@@ -426,6 +433,7 @@
     } else {
         paramDic[@"offset"] = @"0";
     }
+    paramDic[CHANNEL_ID] = CHANNEL_ID_SAME_NEIGHBORHOOD_HOUSE;
     __weak typeof(self)wself = self;
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
@@ -466,7 +474,7 @@
     if (query.length > 0) {
         url = [NSString stringWithFormat:@"%@&%@",url,query];
     }
-
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_COURT;
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
         FHDetailRelatedCourtModel *model = nil;
@@ -642,6 +650,40 @@
     param[@"source"] = source;
     param[@"device_id"] = @([[[TTInstallIDManager sharedInstance] deviceID] longLongValue]);
     param[@"feed_back"] = @(feedType);
+    
+    return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
+        BOOL success = NO;
+        if (result) {
+            success = (result[@"status"] && [result[@"status"] integerValue] == 0);
+            if (!success) {
+                error = [NSError errorWithDomain:result[@"message"]?:@"请求失败" code:-1 userInfo:nil];
+            }
+        }
+        if (completion) {
+            completion(success , error);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestPhoneFeedback:(NSString *)houseId houseType:(FHHouseType)houseType realtorId:(NSString *)realtorId imprId:(NSString *)imprId searchId:(NSString *)searchId score:(NSInteger)score completion:(void (^)(bool, NSError * _Nonnull))completion {
+    NSString *path = @"/f100/api/phone/feedback";
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    
+    param[@"target_id"] = @(houseId.longLongValue);
+    param[@"target_type"] = @(houseType);
+    param[@"feedback_score"] = @(score);
+    if(houseType == FHHouseTypeSecondHandHouse){
+        param[@"enterfrom"] = @"app_oldhouse";
+    }
+    if(!isEmptyString(imprId)){
+        param[@"impr_id"] = imprId;
+    }
+    if(!isEmptyString(searchId)){
+        param[@"search_id"] = searchId;
+    }
+    if(!isEmptyString(realtorId)){
+        param[@"realtor_id"] = @(realtorId.longLongValue);;
+    }
     
     return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
         BOOL success = NO;

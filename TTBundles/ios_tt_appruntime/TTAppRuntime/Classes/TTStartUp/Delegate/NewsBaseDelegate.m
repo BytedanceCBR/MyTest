@@ -39,7 +39,7 @@
 #import "TTShareConstants.h"
 //#import "SSPayManager.h"
 
-#import "TTVersionHelper.h"
+#import <TTVersionHelper/TTVersionHelper.h>
 #import "TTDeviceHelper.h"
 #import "TTURLUtils.h"
 #import "NSObject+TTAdditions.h"
@@ -80,6 +80,8 @@
 #import <Crashlytics/Crashlytics.h>
 #import "TTLaunchManager.h"
 #import "GAIAEngine+TTBase.h"
+#import "BDUGDeepLinkManager.h"
+#import <Heimdallr/HMDTTMonitor.h>
 
 ///...
 //#import "TVLManager.h"
@@ -91,7 +93,7 @@ static NSTimeInterval lastTime;
 
 //static NSString *const kTTUseWebViewLaunch = @"kTTUseWebViewLaunch";
 
-@interface NewsBaseDelegate()<CrashlyticsDelegate, TTWeChatSharePayDelegate, TTWeChatShareRequestDelegate>{
+@interface NewsBaseDelegate()<CrashlyticsDelegate, TTWeChatSharePayDelegate, TTWeChatShareRequestDelegate, BDUGDeepLinkDelegate>{
     NSUInteger _reportTryCount;
     NSMutableDictionary * _remotoNotificationDict;
 }
@@ -433,6 +435,7 @@ static NSTimeInterval lastTime;
 //        return YES;
 //    }
     
+    [[BDUGDeepLinkManager shareInstance] deepLinkWithType:BDUGDeepLinkTypeScheme uri:[url absoluteString]];
     return YES;
 }
 
@@ -560,6 +563,8 @@ static NSTimeInterval lastTime;
         }
     }
 #pragma clang diagnostic pop
+    NSURL *webpageURL = userActivity.webpageURL;
+    [[BDUGDeepLinkManager shareInstance] deepLinkWithType:BDUGDeepLinkTypeUniversalLink uri:[webpageURL absoluteString]];
     return YES;
 }
 
@@ -656,14 +661,18 @@ static NSTimeInterval lastTime;
 
 - (UINavigationController*)appTopNavigationController {
     
-    if ([TTDeviceHelper isPadDevice]) {
-        _navigationController = (TTNavigationController*)(self.window.rootViewController);
-    } else {
+//    if ([TTDeviceHelper isPadDevice]) {
+//        _navigationController = (TTNavigationController*)(self.window.rootViewController);
+//    } else {
         TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)self.window.rootViewController;
         if ([rootTabController isKindOfClass:[TTArticleTabBarController class]]) {
             _navigationController = (TTNavigationController*)rootTabController.selectedViewController;
+            if(![_navigationController isKindOfClass:[UINavigationController class]]){                
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"route_nav_controller_wrong" attributes:@{@"class":[NSString stringWithFormat:@"%@",_navigationController]?:@"unknown"}];
+                _navigationController = nil;
+            }
         }
-    }
+//    }
     
     return _navigationController;
 }
@@ -715,6 +724,16 @@ static NSTimeInterval lastTime;
 
 - (NSTimeInterval)startTime {
     return startTime;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    CGPoint location = [[[event allTouches] anyObject] locationInView:self.window];
+    CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
+    
+    if (CGRectContainsPoint(statusBarFrame, location)) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kScrollToTopKey" object:nil];
+    }
 }
 
 #pragma mark - TTWeChatSharePayDelegate

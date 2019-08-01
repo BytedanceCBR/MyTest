@@ -57,13 +57,13 @@ typedef enum {
 - (void)stupSubview
 {
     SSThemedLabel *numberLabel = [[SSThemedLabel alloc] init];
-    numberLabel.textColorThemeKey = @"222222";
+    numberLabel.textColorThemeKey = @"Text15";
     numberLabel.font = [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_newPadding:17]];
     [self addSubview:numberLabel];
     self.numberLabel = numberLabel;
     
     SSThemedLabel *unitLabel = [[SSThemedLabel alloc] init];
-    unitLabel.textColorThemeKey = @"222222";
+    unitLabel.textColorThemeKey = @"Text15";
     unitLabel.font = [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_newPadding:14]];
     [self addSubview:unitLabel];
     self.unitlabel = unitLabel;

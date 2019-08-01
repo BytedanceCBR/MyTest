@@ -71,7 +71,6 @@
 #import "TTSettingsManager.h"
 #import "TSVStartupTabManager.h"
 #import "TTShortVideoHelper.h"
-#import "TSVTabViewController.h"
 #import "TSVTabTipManager.h"
 #import "TTTabBarProvider.h"
 #import "TSVTabManager.h"
@@ -86,7 +85,6 @@
 //爱看
 #import "AKImageAlertManager.h"
 #import "AKProfileBenefitManager.h"
-#import "AKLoginTrafficViewController.h"
 //#import "Bubble-Swift.h"
 #import <FHEnvContext.h>
 #import <BDABTestSDK/BDABTestManager.h>

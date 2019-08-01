@@ -45,7 +45,7 @@
         writeButton.borderColorThemeKey = kColorLine1;
         writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         writeButton.borderColors = nil;
-        writeButton.titleColorThemeKey = kFHColorCoolGrey3;
+        writeButton.titleColorThemeKey = @"grey3";
         writeButton.layer.cornerRadius = writeButton.height / 2.f;
         writeButton.layer.masksToBounds = YES;
         writeButton.backgroundColorThemeKey = kColorBackground3;
@@ -76,7 +76,7 @@
         _diggButton.selectedImageName = @"digup_tabbar_press";
         _diggButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
         _diggButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        _diggButton.selectedTintColorThemeKey = @"ff0031";
+        _diggButton.selectedTintColorThemeKey = @"red1";
         [self addSubview:digButton];
 
         _separatorView = [[SSThemedView alloc] init];
