@@ -120,8 +120,8 @@
     UIViewController *contentVC = self.contentViewController;
     [self createRNView:initParams bundleURL:jsCodeLocation inWrapper:wrapper];
     [self.navigationController pushViewController:contentVC animated:YES];
-//    [contentVC.navigationController setNavigationBarHidden:YES animated:NO];
-//    [contentVC.navigationItem setHidesBackButton:YES];
+    //    [contentVC.navigationController setNavigationBarHidden:YES animated:NO];
+    //    [contentVC.navigationItem setHidesBackButton:YES];
     
 }
 

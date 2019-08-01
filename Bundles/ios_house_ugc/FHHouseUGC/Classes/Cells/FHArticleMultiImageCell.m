@@ -8,6 +8,13 @@
 #import "FHArticleMultiImageCell.h"
 #import "FHArticleCellBottomView.h"
 #import <UIImageView+BDWebImage.h>
+#import "FHUGCCellHelper.h"
+#import "TTBaseMacro.h"
+
+#define maxLines 3
+#define bottomViewHeight 39
+#define guideViewHeight 27
+#define topMargin 15
 
 #define leftMargin 20
 #define rightMargin 20
@@ -15,7 +22,7 @@
 
 @interface FHArticleMultiImageCell ()
 
-@property(nonatomic ,strong) UILabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
 @property(nonatomic ,strong) NSMutableArray *imageViewList;
 @property(nonatomic ,strong) UIView *imageViewContainer;
 @property(nonatomic ,strong) FHArticleCellBottomView *bottomView;
@@ -53,8 +60,8 @@
 }
 
 - (void)initViews {
-    self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeGray1]];
-    _contentLabel.numberOfLines = 3;
+    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    _contentLabel.numberOfLines = maxLines;
     [self.contentView addSubview:_contentLabel];
     
     self.imageViewContainer = [[UIView alloc] init];
@@ -89,9 +96,9 @@
 
 - (void)initConstraints {
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(15);
-        make.left.mas_equalTo(self.contentView).offset(20);
-        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.top.mas_equalTo(self.contentView).offset(topMargin);
+        make.left.mas_equalTo(self.contentView).offset(leftMargin);
+        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
     }];
     
     [self.imageViewContainer mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -103,7 +110,7 @@
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.imageViewContainer.mas_bottom).offset(10);
-        make.height.mas_equalTo(39);
+        make.height.mas_equalTo(bottomViewHeight);
         make.left.right.mas_equalTo(self.contentView);
         make.bottom.mas_equalTo(self.contentView);
     }];
@@ -136,7 +143,13 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         self.cellModel= cellModel;
         //内容
-        self.contentLabel.text = cellModel.title;
+        self.contentLabel.numberOfLines = cellModel.numberOfLines;
+        if(isEmptyString(cellModel.title)){
+            self.contentLabel.hidden = YES;
+        }else{
+            self.contentLabel.hidden = NO;
+            [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+        }
         self.bottomView.cellModel = cellModel;
         self.bottomView.descLabel.attributedText = cellModel.desc;
         
@@ -148,7 +161,7 @@
         for (NSInteger i = 0; i < self.imageViewList.count; i++) {
             UIImageView *imageView = self.imageViewList[i];
             if(i < imageList.count){
-                FHFeedUGCCellImageListModel *imageModel = imageList[i];
+                FHFeedContentImageListModel *imageModel = imageList[i];
                 imageView.hidden = NO;
                 [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
             }else{
@@ -160,14 +173,31 @@
     }
 }
 
++ (CGFloat)heightForData:(id)data {
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        CGFloat height = cellModel.contentHeight + + bottomViewHeight + topMargin + 20;
+        
+        CGFloat imageViewHeight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - imagePadding * 2)/3 * 82.0f/109.0f;
+        height += imageViewHeight;
+        
+        if(cellModel.isInsertGuideCell){
+            height += guideViewHeight;
+        }
+        
+        return height;
+    }
+    return 44;
+}
+
 - (void)showGuideView {
     if(_cellModel.isInsertGuideCell){
         [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(66);
+            make.height.mas_equalTo(bottomViewHeight + guideViewHeight);
         }];
     }else{
         [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(39);
+            make.height.mas_equalTo(bottomViewHeight);
         }];
     }
 }

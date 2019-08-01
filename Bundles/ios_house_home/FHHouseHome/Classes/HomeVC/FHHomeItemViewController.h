@@ -28,6 +28,7 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic,assign) FHHouseType houseType;
 @property (nonatomic, assign) BOOL showNoDataErrorView;
 @property (nonatomic, assign) BOOL showRequestErrorView;
+@property (nonatomic, assign) BOOL showDislikeNoDataView;
 @property (nonatomic, assign) BOOL showPlaceHolder;
 @property (nonatomic, assign) BOOL isOriginShowSelf;//当前显示的是不是自己这个类型的房源
 @property (nonatomic , strong) FHTracerModel *tracerModel;

@@ -33,6 +33,7 @@
 #import <ExploreLogicSetting.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import <TTArticleTabBarController.h>
+#import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -66,7 +67,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.ttNeedIgnoreZoomAnimation = YES;
     [self.view addSubview:self.topBar];
     
     FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
@@ -324,7 +325,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewWillAppear:animated];
     self.isShowing = YES;
-
+    
     if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
         [self.homeListViewModel checkCityStatus];
     }
@@ -345,7 +346,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewWillDisappear:animated];
     self.isShowing = NO;
-
+    
     if(_isMainTabVC && self.mainTableView.contentOffset.y <= [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType])
     {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];

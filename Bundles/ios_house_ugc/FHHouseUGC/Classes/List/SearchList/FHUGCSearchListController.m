@@ -12,6 +12,7 @@
 #import "FHUserTracker.h"
 #import "FHFakeInputNavbar.h"
 #import "FHConditionFilterFactory.h"
+#import "FHUGCScialGroupModel.h"
 #import "SSNavigationBar.h"
 #import "UIView+Refresh_ErrorHandler.h"
 #import "UIViewController+NavbarItem.h"
@@ -25,6 +26,10 @@
 #import "FHUGCModel.h"
 #import "ToastManager.h"
 #import "FHUGCConfig.h"
+#import "FHUGCCommunityListViewController.h"
+
+@implementation FHUGCSearchCommunityItemData
+@end
 
 @interface FHUGCSearchListController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -39,6 +44,8 @@
 @property(nonatomic, strong) NSMutableDictionary *showCache;
 @property(nonatomic, assign) NSInteger associatedCount;
 
+@property(nonatomic, assign) FHCommunityListType listType;
+@property(nonatomic, weak) id <FHUGCCommunityChooseDelegate> chooseDelegate;
 @end
 
 @implementation FHUGCSearchListController
@@ -46,6 +53,12 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.listType = FHCommunityListTypeFollow;
+        if (paramObj.allParams[@"action_type"]) {
+            self.listType = [paramObj.allParams[@"action_type"] integerValue];
+        }
+        NSHashTable <FHUGCCommunityChooseDelegate> *choose_delegate = paramObj.allParams[@"choose_delegate"];
+        self.chooseDelegate = choose_delegate.anyObject;
         self.showCache = [NSMutableDictionary dictionary];
         self.associatedCount = 0;
     }
@@ -194,12 +207,12 @@
 
 // 文本框文字变化，进行sug请求
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {
-    
+
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-    
+
     NSInteger maxCount = 80;
     NSString *text = self.naviBar.searchInput.text;
     UITextRange *selectedRange = [self.naviBar.searchInput markedTextRange];
@@ -284,15 +297,42 @@
         NSMutableDictionary *tracerDic = @{}.mutableCopy;
         tracerDic[@"card_type"] = @"left_pic";
         tracerDic[@"page_type"] = @"community_search";
-        tracerDic[@"enter_from"] = @"neighborhood_tab";
+        tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
         tracerDic[@"rank"] = @(row);
+        tracerDic[@"click_position"] = @"join_like";
         tracerDic[@"log_pb"] = data.logPb ?: @"be_null";
         cell.tracerDic = tracerDic;
         // 刷新数据
-        [cell refreshWithData:data];
+
+        FHUGCSearchCommunityItemData *wrapData = [[FHUGCSearchCommunityItemData alloc] init];
+        wrapData.model = data;
+        wrapData.listType = self.listType;
+        [cell refreshWithData:wrapData];
     }
 
     return cell;
+}
+
+-(void)onItemSelected:(FHUGCScialGroupDataModel*)item{
+    NSMutableArray<UIViewController *> *viewControllers = [self.navigationController.viewControllers mutableCopy];
+
+    UIViewController *last = viewControllers.lastObject;
+    UIViewController *pre = nil;
+
+    if (self.chooseDelegate) {
+        [self.chooseDelegate selectedItem:item];
+    }
+
+    //至少存在根控制器
+    if(viewControllers.count > 2){
+        pre = viewControllers[viewControllers.count - 2];
+    }
+    if(last == self && [pre isKindOfClass:[FHUGCCommunityListViewController class]]){
+        [viewControllers removeObject:pre];
+        self.navigationController.viewControllers = [viewControllers copy];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -317,14 +357,21 @@
     if (row >= 0 && row < self.items.count) {
         // 键盘是否显示
         self.isKeybordShow = self.keyboardVisible;
-        //
+        
         FHUGCScialGroupDataModel *data = self.items[row];
-        [self addCommunityClickLog:data rank:row];
+        if (self.listType == FHCommunityListTypeChoose) {
+            [self addSelectLog:data rank:row];
+            [self onItemSelected:data];
+            return;
+        }
 
+        //点击埋点
+        [self addCommunityClickLog:data rank:row];
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = data.socialGroupId;
         dict[@"tracer"] = @{@"enter_from":@"community_search_show",
                             @"enter_type":@"click",
+                            @"rank":@(row),
                             @"log_pb":data.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         // 跳转到圈子详情页
@@ -361,7 +408,7 @@
     tracerDic[@"associate_cnt"] = @(self.associatedCount);
     tracerDic[@"associate_type"] = @"community_group";
     tracerDic[@"community_cnt"] = @(wordList.count);
-    tracerDic[@"element_type"] = @"community_search";
+    tracerDic[@"element_type"] = self.tracerDict[@"element_type"] ?: @"be_null";
     tracerDic[@"log_pb"] = logPb;
     [FHUserTracker writeEvent:@"associate_community_show" params:tracerDic];
 }
@@ -393,11 +440,22 @@
     tracerDic[@"associate_cnt"] = @(self.associatedCount);
     tracerDic[@"associate_type"] = @"community_group";
     tracerDic[@"community_cnt"] = @(wordList.count);
-    tracerDic[@"element_type"] = @"community_search";
+    tracerDic[@"element_type"] = self.tracerDict[@"element_type"] ?: @"be_null";
     tracerDic[@"word_id"] = model.socialGroupId;
     tracerDic[@"rank"] = @(rank);
     tracerDic[@"log_pb"] = model.logPb;
     [FHUserTracker writeEvent:@"associate_community_click" params:tracerDic];
+}
+
+-(void)addSelectLog:(FHUGCScialGroupDataModel *)model rank:(NSInteger)rank{
+    NSMutableDictionary *tracerDic = @{}.mutableCopy;
+    tracerDic[@"card_type"] = @"left_pic";
+    tracerDic[@"page_type"] = @"community_search";
+    tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    tracerDic[@"rank"] = @(rank);
+    tracerDic[@"log_pb"] = model.logPb ?: @"be_null";
+    tracerDic[@"click_position"] = @"select_like";
+    [FHUserTracker writeEvent:@"click_select" params:tracerDic];
 }
 
 @end

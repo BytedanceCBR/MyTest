@@ -29,6 +29,7 @@
 @property (nonatomic, copy) NSString *enterFromStr;
 @property (nonatomic, copy) NSString *categoryID;
 @property (nonatomic, strong) NSDictionary *logPb;
+@property (nonatomic, strong) NSDictionary *reportParams;    //add by xsm 埋点补充数据，会覆盖前面的值
 
 /** 外部接口
  评论时使用
