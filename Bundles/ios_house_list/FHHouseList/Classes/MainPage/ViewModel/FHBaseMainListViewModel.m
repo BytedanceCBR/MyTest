@@ -504,16 +504,14 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
                 
                 if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]] ) {
-                    if(self.houseList.count <= 10 && self.houseList.count > 1)
+                    if(self.houseList.count <= 10 && items.count <= 10 && items.count > 1)
                     {
                         //                            self.showRealHouseTop = YES;
                         [items insertObject:topInfoModel atIndex:items.count - 1];
                     }else
                     {
-                        if (self.houseList.count > 0) {
                             //                                self.showRealHouseTop = YES;
-                            [items addObject:topInfoModel];
-                        }
+                        [items addObject:topInfoModel];
                     }
                     
                     self.showFakeHouseTop = YES;
