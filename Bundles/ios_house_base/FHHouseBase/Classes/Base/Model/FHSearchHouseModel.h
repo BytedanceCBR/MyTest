@@ -164,6 +164,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHSearchHouseDataItemsSkyEyeTagModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@end
+
 @interface  FHSearchHouseDataItemsModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
@@ -197,6 +205,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsHouseImageTagModel *houseImageTag ;
 @property (nonatomic, copy , nullable) NSString *originPrice;
 @property (nonatomic, strong) NSArray* bottomText;
+@property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ;
 
 @end
 

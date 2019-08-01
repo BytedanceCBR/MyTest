@@ -293,6 +293,22 @@
 
 @end
 
+@implementation FHSearchHouseDataItemsSkyEyeTagModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"backgroundColor": @"background_color",
+                           @"textColor": @"text_color",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 @implementation  FHSearchHouseDataItemsModel
 
@@ -328,6 +344,7 @@
                            @"bottomText": @"bottom_text",
                            @"fakeReason": @"fake_reason",
                            @"externalInfo": @"external_info",
+                           @"skyEyeTag": @"sky_eye_tag",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
