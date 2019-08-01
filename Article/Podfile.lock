@@ -152,7 +152,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.4)
+  - ios_house_im (0.1.5)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -631,7 +631,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.4)
+  - ios_house_im (= 0.1.5)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -1005,7 +1005,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 2de71cb2daec371a530b40e41e5c0ff30e744967
+  ios_house_im: 5262144f1627faf666fb92abe658744f9ee02535
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1105,7 +1105,7 @@ SPEC CHECKSUMS:
   TTUserSettings: ae3d4a3efeb987e7a2fe528545cfdb87a7798c72
   TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932
   TTVerifyKit: 6043790bd8baa07857e93e07abb4ccbf3cb87c82
-  TTVersionHelper: b7026ffa771b7aabd7c5f240ad98c8bc2e04d616
+  TTVersionHelper: a6f1edf1b2c2e8f593be79cf0cf2e128bc4e440f
   TTVideo: f4a5d888a2bbd06c82e906e449c1f419d63f1e5b
   TTVideoEngine: 96de9bfd7a80a311a51a9042a973e4eab4135ee1
   TTVideoService: 24104b18dd058cf284d1c5dff0af9a5d55f604a0
@@ -1125,6 +1125,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: c9c24db653a166259f1261b1c72f97806dff4ccf
+PODFILE CHECKSUM: d4d97dc458e1af1eaa4be3d76a8d5ddfbac338dd
 
 COCOAPODS: 1.4.0
