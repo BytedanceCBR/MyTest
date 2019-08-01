@@ -483,39 +483,42 @@ extern NSString *const INSTANT_DATA_KEY;
                     
                     self.isShowSubscribeCell = YES;
                 }
-                                
-                if (houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue) {
-                    FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
-                    
-                    if ([houseModel.externalSite isKindOfClass:[FHSearchRealHouseExtModel class]]) {
-                        topInfoModel.fakeHouse = houseModel.externalSite.fakeHouse;
-                        topInfoModel.houseTotal = houseModel.externalSite.houseTotal;
-                        topInfoModel.openUrl = houseModel.externalSite.openUrl;
-                        topInfoModel.trueTitle = houseModel.externalSite.trueTitle;
-                        topInfoModel.fakeHouseTotal = houseModel.externalSite.fakeHouseTotal;
-                        topInfoModel.trueHouseTotal = houseModel.externalSite.trueHouseTotal;
-                        topInfoModel.enableFakeHouse = houseModel.externalSite.enableFakeHouse;
-                        topInfoModel.totalTitle = houseModel.externalSite.totalTitle;
-                        topInfoModel.searchId = houseModel.searchId;
-                        topInfoModel.fakeTitle = houseModel.externalSite.fakeTitle;
-                    }
-
-                    if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]] && !houseModel.hasMore) {
-                        if(items.count <= 10 && items.count > 1)
-                        {
-//                            self.showRealHouseTop = YES;
-                            [items insertObject:topInfoModel atIndex:items.count - 1];
-                        }else
-                        {
-                            if (items.count > 0) {
-//                                self.showRealHouseTop = YES;
-                                [items addObject:topInfoModel];
-                            }
-                        }
-                    }
-                }
+                
+                self.showFakeHouseTop = NO;
             }
             
+            if (houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue && !houseModel.hasMore) {
+                FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
+                
+                if ([houseModel.externalSite isKindOfClass:[FHSearchRealHouseExtModel class]]) {
+                    topInfoModel.fakeHouse = houseModel.externalSite.fakeHouse;
+                    topInfoModel.houseTotal = houseModel.externalSite.houseTotal;
+                    topInfoModel.openUrl = houseModel.externalSite.openUrl;
+                    topInfoModel.trueTitle = houseModel.externalSite.trueTitle;
+                    topInfoModel.fakeHouseTotal = houseModel.externalSite.fakeHouseTotal;
+                    topInfoModel.trueHouseTotal = houseModel.externalSite.trueHouseTotal;
+                    topInfoModel.enableFakeHouse = houseModel.externalSite.enableFakeHouse;
+                    topInfoModel.totalTitle = houseModel.externalSite.totalTitle;
+                    topInfoModel.searchId = houseModel.searchId;
+                    topInfoModel.fakeTitle = houseModel.externalSite.fakeTitle;
+                }
+                
+                if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]] ) {
+                    if(self.houseList.count <= 10 && self.houseList.count > 1)
+                    {
+                        //                            self.showRealHouseTop = YES;
+                        [items insertObject:topInfoModel atIndex:items.count - 1];
+                    }else
+                    {
+                        if (self.houseList.count > 0) {
+                            //                                self.showRealHouseTop = YES;
+                            [items addObject:topInfoModel];
+                        }
+                    }
+                    
+                    self.showFakeHouseTop = YES;
+                }
+            }
         }else if ([model isKindOfClass:[FHHouseRentModel class]]){ //租房大类页
             FHHouseRentDataModel *rentModel = [(FHHouseRentModel *)model data];
             
@@ -1112,8 +1115,11 @@ extern NSString *const INSTANT_DATA_KEY;
             FHRecommendSecondhandHouseTitleModel *model = self.sugesstHouseList[indexPath.row];
             [scell bindData:model];
             
-            if (self.isShowSubscribeCell) {
+            if ((self.isShowSubscribeCell && self.houseList.count <= 10) || self.showFakeHouseTop) {
                 [scell hideSeprateLine:self.houseList.count > 1 ? NO : YES];
+            }else
+            {
+                [scell showSeaprateLine];
             }
             
             cell = scell;

@@ -75,6 +75,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 @property(nonatomic , assign) BOOL showPlaceHolder;
 @property(nonatomic , assign) BOOL showRealHouseTop;
+@property(nonatomic , assign) BOOL showFakeHouseTop;
 @property(nonatomic , assign) BOOL lastHasMore;
 
 @property (nonatomic , assign) BOOL isRefresh;
@@ -509,6 +510,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if (offset == 0) {
        _showRealHouseTop = NO;
+        _showFakeHouseTop = NO;
     }
     
     TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
@@ -745,37 +747,38 @@ extern NSString *const INSTANT_DATA_KEY;
                     }
                     self.isShowSubscribeCell = YES;
                 }
-                
-                if (houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue) {
-                    FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
-                    if ([houseModel.externalSite isKindOfClass:[FHSearchRealHouseExtModel class]]) {
-                        topInfoModel.fakeHouse = houseModel.externalSite.fakeHouse;
-                        topInfoModel.houseTotal = houseModel.externalSite.houseTotal;
-                        topInfoModel.openUrl = houseModel.externalSite.openUrl;
-                        topInfoModel.trueTitle = houseModel.externalSite.trueTitle;
-                        topInfoModel.fakeHouseTotal = houseModel.externalSite.fakeHouseTotal;
-                        topInfoModel.trueHouseTotal = houseModel.externalSite.trueHouseTotal;
-                        topInfoModel.enableFakeHouse = houseModel.externalSite.enableFakeHouse;
-                        topInfoModel.searchId = houseModel.searchId;
-                        topInfoModel.fakeTitle = houseModel.externalSite.fakeTitle;
-                        topInfoModel.totalTitle = houseModel.externalSite.totalTitle;
-                    }
-
-                    if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]] && !houseModel.hasMore) {
-                        if(itemArray.count <= 10 && itemArray.count > 1)
-                        {
-                            [itemArray insertObject:topInfoModel atIndex:itemArray.count - 1];
-                        }else
-                        {
-                            if (itemArray.count > 0) {
-                                [itemArray addObject:topInfoModel];
-                            }
-                        }
-                    }
-                }
     
             }
-    
+
+            if (houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue && !houseModel.hasMore) {
+                FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
+                if ([houseModel.externalSite isKindOfClass:[FHSearchRealHouseExtModel class]]) {
+                    topInfoModel.fakeHouse = houseModel.externalSite.fakeHouse;
+                    topInfoModel.houseTotal = houseModel.externalSite.houseTotal;
+                    topInfoModel.openUrl = houseModel.externalSite.openUrl;
+                    topInfoModel.trueTitle = houseModel.externalSite.trueTitle;
+                    topInfoModel.fakeHouseTotal = houseModel.externalSite.fakeHouseTotal;
+                    topInfoModel.trueHouseTotal = houseModel.externalSite.trueHouseTotal;
+                    topInfoModel.enableFakeHouse = houseModel.externalSite.enableFakeHouse;
+                    topInfoModel.searchId = houseModel.searchId;
+                    topInfoModel.fakeTitle = houseModel.externalSite.fakeTitle;
+                    topInfoModel.totalTitle = houseModel.externalSite.totalTitle;
+                }
+                
+                if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]] ) {
+                    if(self.houseList.count <= 10 && self.houseList.count > 1)
+                    {
+                        [itemArray insertObject:topInfoModel atIndex:itemArray.count - 1];
+                    }else
+                    {
+                        if (self.houseList.count > 0) {
+                            [itemArray addObject:topInfoModel];
+                        }
+                    }
+                    self.showFakeHouseTop = YES;
+                }
+            }
+            
         } else if ([model isKindOfClass:[FHNewHouseListResponseModel class]]) {
             
             FHNewHouseListDataModel *houseModel = ((FHNewHouseListResponseModel *)model).data;
@@ -1305,8 +1308,11 @@ extern NSString *const INSTANT_DATA_KEY;
 
             [cell bindData:model];
             
-            if (self.isShowSubscribeCell) {
+            if ((self.isShowSubscribeCell && self.houseList.count <= 10) || self.showFakeHouseTop) {
                 [cell hideSeprateLine:self.houseList.count > 1 ? NO : YES];
+            }else
+            {
+                [cell showSeaprateLine];
             }
             
             return cell;
