@@ -366,7 +366,7 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     if (error.code != NSURLErrorCancelled) {
         //不是主动取消
-        if (isRefresh) {
+        if (!isRefresh) {
             [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
         }else {
             FHEmptyMaskViewType tip = FHEmptyMaskViewTypeNoData;
@@ -987,7 +987,8 @@ extern NSString *const INSTANT_DATA_KEY;
     if ([self.conditionFilter isEqualToString:condition]) {
         return;
     }
-    
+    self.fromRecommend = NO;
+
     self.conditionFilter = condition;
     
     [self.filterOpenUrlMdodel overwriteFliter:condition];
