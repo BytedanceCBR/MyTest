@@ -740,7 +740,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     trackInfo[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
     trackInfo[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
     trackInfo[@"rank"] = self.detailTracerDic[@"rank"];
-    
+    trackInfo[UT_ENTER_FROM] = self.detailTracerDic[UT_ENTER_FROM];
+
     NSString *position = nil;
     FHDetailHalfPopLayer *popLayer = [self popLayer];
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
@@ -750,7 +751,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         
     }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
         position = @"low_price_cause";
-        trackInfo[UT_ENTER_FROM] = position;
+//        trackInfo[UT_ENTER_FROM] = position;
         [popLayer showDetectiveReasonInfoData:(FHDetailDataBaseExtraDetectiveReasonInfo *)model trackInfo:trackInfo];
     }
 //    else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){

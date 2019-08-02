@@ -564,6 +564,9 @@
 
 -(void)addStayLog
 {
+    if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
+        return;
+    }
     NSMutableDictionary *param = [NSMutableDictionary new];
     [param addEntriesFromDictionary:self.trackInfo];
     
