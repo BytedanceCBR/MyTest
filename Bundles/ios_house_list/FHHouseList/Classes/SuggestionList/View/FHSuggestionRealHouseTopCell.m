@@ -336,7 +336,7 @@
         self.currentModel = model;
         [_falseHouseLabel setBackgroundColor:[UIColor clearColor]];
         if ([model.fakeHouseTotal isKindOfClass:[NSString class]]) {
-            _falseHouseLabel.text = [NSString stringWithFormat:@"已成功为您过滤%d套可疑房源",model.fakeHouseTotal.integerValue];
+            _falseHouseLabel.text = [NSString stringWithFormat:@"已成功为您过滤%ld套可疑房源",model.fakeHouseTotal.longLongValue];
         }
         if([model.fakeHouseTotal integerValue] == 0)
         {
