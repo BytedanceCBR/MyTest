@@ -1041,7 +1041,8 @@ extern NSString *const INSTANT_DATA_KEY;
     if ([self.conditionFilter isEqualToString:condition]) {
         return;
     }
-    
+    self.fromRecommend = NO;
+
     self.conditionFilter = condition;
     
     [self.filterOpenUrlMdodel overwriteFliter:condition];
