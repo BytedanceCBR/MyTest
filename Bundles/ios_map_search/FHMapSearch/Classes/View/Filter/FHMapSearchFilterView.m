@@ -139,7 +139,7 @@
     }];
     
     [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(safeArea.top);
+        make.top.mas_equalTo(safeArea.top>0?safeArea.top:20);
         make.bottom.mas_equalTo(-safeArea.bottom);
         make.left.and.right.mas_equalTo(0);
     }];

@@ -110,6 +110,7 @@
     CGFloat top = 0;
     for (FHMapSearchSideBarItemView *v in items) {
         v.top = top;
+        v.left = (self.width - v.width)/2;
         top = v.bottom;
         v.hidden = NO;
         v.bottomLine.hidden = NO;

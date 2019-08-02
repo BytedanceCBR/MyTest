@@ -22,6 +22,8 @@ typedef NS_ENUM(NSInteger , FHMapSimpleNavbarType) {
 
 @property(nonatomic , copy) void (^backActionBlock)(FHMapSimpleNavbarType type);
 
+-(CGFloat)titleBottom;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -122,6 +122,11 @@
     return _titleLabel.text;
 }
 
+-(CGFloat)titleBottom
+{
+    return CGRectGetMaxY(self.titleLabel.frame);
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

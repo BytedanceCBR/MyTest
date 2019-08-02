@@ -318,7 +318,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 }
 
 -(void)showFilter
-{    
+{
     NSString *query =  [self.lastBubble query];
     NSString *url = [NSString stringWithFormat:@"https:a?%@",query];
     [self.filterView selectedWithOpenUrl:url];
@@ -634,17 +634,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }else if (_showMode == FHMapSearchShowModeSubway || (_lastShowMode == FHMapSearchShowModeSubway && _showMode == FHMapSearchShowModeHalfHouseList)){
         if (!(([query containsString:@"line"]||[query containsString:@"station"]))) {
             if ([self.selectionStation.value isEqualToString:self.selectedLine.value]) {
-//                targetType = @"segment";
                 extraParams[@"line[]"] = self.selectedLine.value;
             }else{
-//                targetType = @"station";
                 extraParams[@"station[]"] = self.selectionStation.value;
                 extraParams[@"line[]"] = self.selectedLine.value;
             }
         }
         extraParams[CHANNEL_ID] = CHANNEL_ID_SUBWAY_SEARCH;
-    } else {
-//        extraParams[CHANNEL_ID] = CHANNEL_ID_MAP_FIND_HOUSE;
     }
     
     __weak typeof(self) wself = self;
@@ -672,7 +668,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (showTip && wself.showMode == FHMapSearchShowModeMap) {
             NSString *tip = model.tips;
             if (tip) {
-                CGFloat topY = [wself.viewController topBarBottom] - 40 ;
+                CGFloat topY = [wself.viewController topBarBottom] + 20 ;
                 [wself.tipView showIn:wself.viewController.view at:CGPointMake(wself.viewController.view.width/2, topY) content:tip duration:kTipDuration above:wself.viewController.navBarView];
             }
         }
@@ -1463,6 +1459,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     FHMapSearchBubbleModel *houseListBubble = [self bubleFromOpenUrl:model.houseListOpenUrl];
     houseListBubble.lastShowMode = self.lastShowMode;
     
+    [self.viewController.view bringSubviewToFront:self.houseListViewController.view];
     [self.houseListViewController showNeighborHouses:model bubble:houseListBubble];
     
     if (![TTReachability isNetworkConnected]) {

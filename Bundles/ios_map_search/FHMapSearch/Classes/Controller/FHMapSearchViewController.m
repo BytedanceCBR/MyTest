@@ -160,8 +160,8 @@
     if (!_locationButton) {
         _locationButton = [UIButton buttonWithType:UIButtonTypeCustom];
         UIImage *img = [UIImage imageNamed:@"mapsearch_location"];
-        [_locationButton setImage:img forState:UIControlStateNormal];
-        [_locationButton setImage:img forState:UIControlStateHighlighted];
+        [_locationButton setBackgroundImage:img forState:UIControlStateNormal];
+        [_locationButton setBackgroundImage:img forState:UIControlStateHighlighted];
         _locationButton.backgroundColor = [UIColor clearColor];
         [_locationButton addTarget:self action:@selector(locationAction) forControlEvents:UIControlEventTouchUpInside];
         _locationButton.hidden = YES;
@@ -356,16 +356,16 @@
     
     if (self.locationButton.superview) {
         [self.locationButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(-5);
-            make.bottom.mas_equalTo(self.view).offset(-(20+bottomSafeInset));
-            make.size.mas_equalTo(CGSizeMake(58, 58));
+            make.right.mas_equalTo(-7);
+            make.bottom.mas_equalTo(self.view).offset(-(26+bottomSafeInset));
+            make.size.mas_equalTo(CGSizeMake(44, 44));
         }];
     }
 
     [self.sideBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-11);
         make.bottom.mas_equalTo(self.view).offset(-(96+bottomSafeInset));
-        make.width.mas_equalTo(40);
+        make.width.mas_equalTo(36);
     }];
     
     [self.topInfoBar mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -395,7 +395,7 @@
 
 -(CGFloat)topBarBottom
 {
-    return  self.simpleNavBar.height;//self.filterPanel.bottom;
+    return  [self.simpleNavBar titleBottom];
 }
 
 -(void)switchNavbarMode:(FHMapSearchShowMode)mode
