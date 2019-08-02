@@ -150,13 +150,13 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     model.detective.fromDetail = YES;
     if (model.feedBack) {
         __weak typeof(self) wself = self;
+        self.footer.actionButton.enabled = NO;
+        self.footer.negativeButton.enabled = NO;
         model.feedBack(type, model.detective, ^(BOOL success) {
             [wself updateFooterFeedback:success];
         });
         [wself addClickAgreeLogType:type];
     }
-    self.footer.actionButton.enabled = NO;
-    self.footer.negativeButton.enabled = NO;
 }
 
 - (void)updateFooterFeedback:(BOOL)success

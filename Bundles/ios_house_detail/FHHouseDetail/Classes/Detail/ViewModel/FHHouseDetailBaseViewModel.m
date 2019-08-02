@@ -599,6 +599,11 @@
 
 -(void)poplayerFeedBack:(id)model type:(NSInteger)type completion:(void (^)(BOOL success))completion
 {
+    if (![TTReachability isNetworkConnected]) {
+        SHOW_TOAST(@"网络异常");
+        completion(NO);
+        return;
+    }
     NSString *source = nil;
     NSString *agencyId = nil;
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
@@ -622,6 +627,7 @@
             }else{
                 SHOW_TOAST(error.domain);
             }
+            completion(NO);
         }
         
     } ];

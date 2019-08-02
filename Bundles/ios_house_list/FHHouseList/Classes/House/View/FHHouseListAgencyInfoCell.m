@@ -39,10 +39,13 @@
     [_allWebHouseBtn addTarget:self action:@selector(allWebHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_allWebHouseBtn];
     
+    CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 6 - 14;
+    
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.mas_equalTo(20);
         make.height.mas_equalTo(20);
         make.bottom.mas_equalTo(0);
+        make.width.mas_lessThanOrEqualTo(maxWidth);
     }];
     [_allWebHouseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(14);

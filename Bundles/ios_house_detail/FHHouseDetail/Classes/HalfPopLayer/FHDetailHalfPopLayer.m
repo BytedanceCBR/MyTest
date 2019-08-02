@@ -177,6 +177,8 @@
 {
     if (self.feedBack) {
         __weak typeof(self) wself = self;
+        self.footer.actionButton.enabled = NO;
+        self.footer.negativeButton.enabled = NO;
         self.feedBack(type, self.data, ^(BOOL success) {            
             [wself updateFooterFeedback:success];
         });
@@ -184,8 +186,6 @@
         NSString *clickPosition = (type == 1)?@"yes":@"no";
         [self addPopClickLog:clickPosition];
     }
-    self.footer.actionButton.enabled = NO;
-    self.footer.negativeButton.enabled = NO;
 }
 
 -(void)updateFooterFeedback:(BOOL)success
