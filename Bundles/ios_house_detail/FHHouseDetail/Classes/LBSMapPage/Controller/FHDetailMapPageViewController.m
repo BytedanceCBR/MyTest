@@ -30,6 +30,8 @@
 static NSInteger const kBottomBarTagValue = 100;
 static NSInteger const kBottomButtonLabelTagValue = 1000;
 
+static MAMapView *kFHPageMapView = nil;
+
 @interface FHDetailMapPageViewController () <TTRouteInitializeProtocol,AMapSearchDelegate,MAMapViewDelegate>
 
 @property (nonatomic, strong) FHDetailMapPageNaviBarView *naviBar;
@@ -355,8 +357,10 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         bottomHeight = 43;
     }
     CGRect mapFrame = CGRectMake(0, 0, self.view.width, self.view.height - navHeight - bottomHeight);
-    // _mapView = [[MAMapView alloc] init];
-    _mapView = [[FHDetailMapView sharedInstance] nearbyMapviewWithFrame:mapFrame];
+    if (!kFHPageMapView) {
+        kFHPageMapView = [[MAMapView alloc] initWithFrame:mapFrame];// 不会同时出两个页面
+    }
+    _mapView = kFHPageMapView;
     _mapView.delegate = self;
     _mapView.showsCompass = NO;
     _mapView.showsScale = YES;
@@ -377,7 +381,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 - (void)dealloc
 {
     [self cleanAllAnnotations];
-    [[FHDetailMapView sharedInstance] resetDetailMapView];
+    [_mapView removeFromSuperview];
 }
 
 - (void)createMenu
@@ -477,7 +481,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     for (NSInteger i = 0; i < self.poiAnnotations.count; i++) {
         [self.mapView addAnnotation:self.poiAnnotations[i]];
     }
-    _mapView.zoomLevel  = 15;
+//    _mapView.zoomLevel  = 15;
     
     FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
     userAnna.type = @"user";
@@ -489,6 +493,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     self.pointCenterAnnotation = userAnna;
     
     [self.mapView setCenterCoordinate:self.centerPoint];
+    [self.mapView showAnnotations:self.mapView.annotations edgePadding:UIEdgeInsetsMake(20, 20, 20, 20) animated:YES];
 }
 
 #pragma poi Delegate
