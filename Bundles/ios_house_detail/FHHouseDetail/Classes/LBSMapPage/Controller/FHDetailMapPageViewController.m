@@ -359,6 +359,8 @@ static MAMapView *kFHPageMapView = nil;
     CGRect mapFrame = CGRectMake(0, 0, self.view.width, self.view.height - navHeight - bottomHeight);
     if (!kFHPageMapView) {
         kFHPageMapView = [[MAMapView alloc] initWithFrame:mapFrame];// 不会同时出两个页面
+        kFHPageMapView.zoomLevel  = 15;
+        [kFHPageMapView setCenterCoordinate:self.centerPoint];
     }
     _mapView = kFHPageMapView;
     _mapView.delegate = self;
@@ -367,8 +369,6 @@ static MAMapView *kFHPageMapView = nil;
     _mapView.zoomEnabled = YES;
     _mapView.scrollEnabled = YES;
     _mapView.showsUserLocation = NO;
-    _mapView.zoomLevel  = 15;
-    [_mapView setCenterCoordinate:self.centerPoint];
     [_mapContainer addSubview:_mapView];
     [_mapView setBackgroundColor:[UIColor whiteColor]];
     [_mapView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -481,7 +481,6 @@ static MAMapView *kFHPageMapView = nil;
     for (NSInteger i = 0; i < self.poiAnnotations.count; i++) {
         [self.mapView addAnnotation:self.poiAnnotations[i]];
     }
-//    _mapView.zoomLevel  = 15;
     
     FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
     userAnna.type = @"user";
@@ -492,7 +491,6 @@ static MAMapView *kFHPageMapView = nil;
     [self.mapView addAnnotation:userAnna];
     self.pointCenterAnnotation = userAnna;
     
-    [self.mapView setCenterCoordinate:self.centerPoint];
     [self.mapView showAnnotations:self.mapView.annotations edgePadding:UIEdgeInsetsMake(20, 20, 20, 20) animated:YES];
 }
 
