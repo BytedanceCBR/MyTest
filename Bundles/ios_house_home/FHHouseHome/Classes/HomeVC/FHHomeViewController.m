@@ -33,6 +33,7 @@
 #import <ExploreLogicSetting.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import <TTArticleTabBarController.h>
+#import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -66,7 +67,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.ttNeedIgnoreZoomAnimation = YES;
     [self.view addSubview:self.topBar];
     
     FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
