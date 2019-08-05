@@ -491,7 +491,7 @@ static MAMapView *kFHPageMapView = nil;
     [self.mapView addAnnotation:userAnna];
     self.pointCenterAnnotation = userAnna;
     
-    [self.mapView showAnnotations:self.mapView.annotations edgePadding:UIEdgeInsetsMake(20, 20, 20, 20) animated:YES];
+    [self.mapView showAnnotations:self.mapView.annotations edgePadding:UIEdgeInsetsMake(20, 20, 20, 20) animated:NO];
 }
 
 #pragma poi Delegate
