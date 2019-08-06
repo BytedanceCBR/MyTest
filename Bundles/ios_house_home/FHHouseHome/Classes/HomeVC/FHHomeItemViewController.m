@@ -16,7 +16,7 @@
 #import <FHHomePlaceHolderCell.h>
 #import "FHhomeHouseTypeBannerCell.h"
 #import "TTDeviceHelper.h"
-#import <FHHouseBaseSmallItemCell.h>
+#import <FHHouseBaseItemCell.h>
 #import <FHHomeCellHelper.h>
 #import <FHPlaceHolderCell.h>
 #import "FHHomeListViewModel.h"
@@ -28,7 +28,7 @@
 
 extern NSString *const INSTANT_DATA_KEY;
 
-@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseSmallItemCellDelegate>
+@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate>
 
 @property (nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property (nonatomic , assign) NSInteger itemCount;
@@ -166,7 +166,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)registerCells
 {
-    [self.tableView registerClass:[FHHouseBaseSmallItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
+    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
     
     [self.tableView  registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
     
@@ -630,7 +630,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         
         //to do 房源cell
-        FHHouseBaseSmallItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
         cell.delegate = self;
         if (indexPath.row < self.houseDataItemsModel.count) {
             JSONModel *model = self.houseDataItemsModel[indexPath.row];
