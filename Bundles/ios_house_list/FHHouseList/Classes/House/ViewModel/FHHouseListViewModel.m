@@ -1369,6 +1369,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }
     } else {
         FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListPlaceholderCellId];
+        cell.topOffset = 20;
         return cell;
     }
 
