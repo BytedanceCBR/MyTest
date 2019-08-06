@@ -9,6 +9,8 @@
 #import "FHArticleCellBottomView.h"
 #import <UIImageView+BDWebImage.h>
 
+#define topMargin 20
+
 @interface FHUGCBannerCell ()
 
 @property(nonatomic ,strong) UIImageView *bannerImageView;
@@ -60,7 +62,7 @@
     self.imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
     
     [self.bannerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(20);
+        make.top.mas_equalTo(self.contentView).offset(topMargin);
         make.left.mas_equalTo(self.contentView).offset(20);
         make.width.mas_equalTo(self.imageWidth);
         make.height.mas_equalTo(self.imageWidth * 58.0/335.0);
@@ -68,7 +70,7 @@
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.bannerImageView.mas_bottom).offset(20);
-        make.bottom.left.right.mas_equalTo(self.contentView);
+        make.left.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(5);
     }];
 }
@@ -85,11 +87,19 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         self.cellModel = cellModel;
         //图片
-        FHFeedUGCCellImageListModel *imageModel = [cellModel.imageList firstObject];
+        FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
         if(imageModel){
             [self.bannerImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
         }
     }
+}
+
++ (CGFloat)heightForData:(id)data {
+    CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
+    CGFloat imageHeight = imageWidth * 58.0/335.0;
+    CGFloat height = imageHeight + topMargin + 25;
+    
+    return height;
 }
 
 - (void)deleteCell {

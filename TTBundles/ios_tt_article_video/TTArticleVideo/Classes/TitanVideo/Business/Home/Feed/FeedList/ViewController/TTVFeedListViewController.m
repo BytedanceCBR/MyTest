@@ -1267,7 +1267,7 @@ TTRefreshViewDelegate>
 
 - (void)fetchFromLocal:(BOOL)fromLocal fromRemote:(BOOL)fromRemote getMore:(BOOL)getMore isPreload:(BOOL)isPreload getRemoteWhenLocalEmpty:(BOOL)getRemoteWhenLocalEmpty
 {
-    self.ttLoadingView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+    self.ttLoadingView.backgroundColor = [UIColor whiteColor];//[UIColor tt_themedColorForKey:kColorBackground3];
     self.ttTargetView = self.tableView;
     if (!isPreload) {
         [self tt_startUpdate];

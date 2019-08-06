@@ -575,8 +575,13 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                 }
                 [paramsDict setValue:[self categoryName] forKey:@"category_name"];
                 [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
-                if (self.enterFrom.length > 0) {
+                if (self.enterFrom.length > 0 || self.reportParams) {
                     [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]]  forKey:@"enter_from"];
+                    
+                    if([self.reportParams isKindOfClass:[NSDictionary class]]){
+                        [paramsDict addEntriesFromDictionary:self.reportParams];
+                    }
+                    
                     [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
                 }
 

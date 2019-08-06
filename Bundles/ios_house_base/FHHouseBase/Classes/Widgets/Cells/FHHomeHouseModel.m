@@ -339,6 +339,21 @@
 
 @end
 
+@implementation FHHomeHouseDataItemsDislikeInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"mutualExclusiveIds": @"mutual_exclusive_ids",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 @implementation  FHHomeHouseDataItemsModel
 
@@ -374,6 +389,7 @@
                            @"pricingUnit":@"pricing_unit",
                            @"pricePerSqmNum":@"price_per_sqm_num",
                            @"pricePerSqmUnit":@"price_per_sqm_unit",
+                           @"dislikeInfo": @"dislike_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

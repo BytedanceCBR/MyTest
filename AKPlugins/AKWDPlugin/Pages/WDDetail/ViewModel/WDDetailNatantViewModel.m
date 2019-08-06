@@ -277,6 +277,7 @@
         [params setValue:[self.detailModel.gdExtJsonDict tta_stringForKey:@"category_name"]  forKey:@"category_name"];
         [params setValue:[self.detailModel.gdExtJsonDict tta_stringForKey:@"qid"]  forKey:@"qid"];
         [params setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"log_pb"]  forKey:@"log_pb"];
+        [params setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"element_from"] forKey:@"element_from"];
         [params setValue:@"detail" forKey:@"position"];
         if (self.detailModel.apiParam[@"enter_from"]
             && [self.detailModel.apiParam[@"enter_from"] isKindOfClass:[NSString class]]

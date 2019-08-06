@@ -72,10 +72,10 @@
 
         TTAlphaThemedButton *digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _diggButton = digButton;
-        _diggButton.imageName = @"digup_tabbar";
-        _diggButton.selectedImageName = @"digup_tabbar_press";
-        _diggButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
         _diggButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
+        _diggButton.imageName = @"fh_ugc_toolbar_like_normal";
+        _diggButton.selectedImageName = @"fh_ugc_toolbar_like_selected";
+        _diggButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
         _diggButton.selectedTintColorThemeKey = @"red1";
         [self addSubview:digButton];
 
