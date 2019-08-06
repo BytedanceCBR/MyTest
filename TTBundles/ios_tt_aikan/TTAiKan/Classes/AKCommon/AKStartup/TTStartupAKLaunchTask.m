@@ -15,6 +15,8 @@
 #import <TTInstallService/TTInstallIDManager.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTLaunchDefine.h"
+#import <CoreLocation/CoreLocation.h>
+#import <SecGuard/SGMHostManager.h>
 
 DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeService,TASK_PRIORITY_HIGH+15);
 
@@ -114,7 +116,7 @@ void fhPreFcActionAlert(forceCrashMask mask)
 
 - (void)registerSafeGuardService
 {
-    [[SGMSafeGuardManager sharedManager] setCurrentHost:[CommonURLSetting xlogBaseURL]];
+    [[SGMSafeGuardManager sharedManager]setHostDic:@{@(SGMHostCategoryInfo):[CommonURLSetting xlogBaseURL]}];
     SGMSafeGuardConfig *config = [SGMSafeGuardConfig configWithPlatform:SGMSafeGuardPlatformAweme
                                                                   appID:@"1370"
                                                                hostType:SGMSafeGuardHostTypeDomestic

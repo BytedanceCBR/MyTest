@@ -369,6 +369,7 @@ static NSMutableArray  * _Nullable identifierArr;
         countItems = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
     }
     
+    UIImage *placeHolder = [UIImage imageNamed:@"icon_placeholder"];
     NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
     for (int index = 0; index < countItems; index++) {
         FHSpringboardIconItemView *itemView = nil;
@@ -402,7 +403,7 @@ static NSMutableArray  * _Nullable identifierArr;
             FHConfigDataOpData2ItemsImageModel * imageModel = itemModel.image[0];
             if (imageModel.url && [imageModel.url isKindOfClass:[NSString class]]) {
 
-                [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
+                [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:placeHolder];
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     if (index < [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount) {
                         make.top.mas_equalTo(8);

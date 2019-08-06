@@ -13,6 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(instancetype)sharedInstance;
 
++ (NSTimeInterval)processStartTime;//timestamp in ms
+
++(void)dumpLaunchDuration;
+
 -(void)launchWithApplication:(UIApplication *)application andOptions:(NSDictionary *)options;
 
 @end

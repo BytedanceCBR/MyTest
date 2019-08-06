@@ -10,6 +10,8 @@
 #import "FHUtils.h"
 #import "FHEnvContext.h"
 #import "FHLazyLoadModel.h"
+#import <YYModel/YYModel.h>
+
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
 static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
@@ -202,7 +204,7 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
     configKey = @"sale_history_filter";
     cache[@"saleHistoryFilter"] = theConfig[configKey];
     theConfig[configKey] = nil;
-    FHConfigDataModel *configModel = [[FHConfigDataModel alloc] initWithDictionary:theConfig error:nil];
+    FHConfigDataModel *configModel = [FHConfigDataModel yy_modelWithJSON:theConfig];//[[FHConfigDataModel alloc] initWithDictionary:theConfig error:nil];
 
     [cache enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         id model = [self modelWithClass:@"FHSearchFilterConfigItem" withData:obj];

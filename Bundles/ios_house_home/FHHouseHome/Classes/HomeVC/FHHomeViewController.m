@@ -114,9 +114,9 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.mainTableView.decelerationRate = 0.5;
     self.mainTableView.showsVerticalScrollIndicator = NO;
     
-    if (_isMainTabVC) {
-        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
-    }
+//    if (_isMainTabVC) {
+//        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
+//    }
     
     [self.view addSubview:self.mainTableView];
     
@@ -366,6 +366,9 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     
     [TTSandBoxHelper setAppFirstLaunchForAd];
+    if (!self.homeListViewModel && _isMainTabVC) {
+        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
+    }
 }
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {

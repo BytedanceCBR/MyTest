@@ -14,6 +14,7 @@
 #import "TTSandBoxHelper.h"
 #import "FHJSONHTTPRequestSerializer.h"
 #import "FHEnvContext.h"
+#import <YYModel/YYModel.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -93,7 +94,7 @@
         __block NSError *backError = error;
 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&backError];
+            FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&backError useYYModel:NO];
 
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -181,6 +182,11 @@
 
 +(JSONModel *)generateModel:(NSData *)jsonData class:(Class)class error:(NSError *__autoreleasing *)error
 {
+    return [self generateModel:jsonData class:class error:error useYYModel:NO];
+}
+
++(JSONModel *)generateModel:(NSData *)jsonData class:(Class)class error:(NSError *__autoreleasing *)error useYYModel:(BOOL)useYYModel
+{
     if (*error) {
         //there is error
         return nil;
@@ -192,7 +198,12 @@
     }
     
     NSError *jerror = nil;
-    JSONModel *model = [[class alloc]initWithData:jsonData error:&jerror];
+    JSONModel *model = nil;
+    if(useYYModel){
+        model = [class yy_modelWithJSON:jsonData];
+    }else{
+        model = [[class alloc]initWithData:jsonData error:&jerror];
+    }
     if (jerror) {
 #if DEBUG
         NSLog(@" %s %ld API [%@] make json failed",__FILE__,__LINE__,NSStringFromClass(class));
@@ -241,10 +252,15 @@
         if (!completion) {
             return ;
         }
-        FHHomeRollModel *model = (FHHomeRollModel *)[self generateModel:obj class:[FHHomeRollModel class] error:&error];
-        if (completion) {
-            completion(model,error);
-        }
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHHomeRollModel *model = (FHHomeRollModel *)[self generateModel:obj class:[FHHomeRollModel class] error:&backError];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
     }];
 }
 
@@ -256,10 +272,15 @@
         if (!completion) {
             return ;
         }
-        FHHomeHouseModel *model = (FHHomeHouseModel *)[self generateModel:obj class:[FHHomeHouseModel class] error:&error];
-        if (completion) {
-            completion(model,error);
-        }
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHHomeHouseModel *model = (FHHomeHouseModel *)[self generateModel:obj class:[FHHomeHouseModel class] error:&backError];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
     }];
 }
 
@@ -285,7 +306,7 @@
             id rmodel = [self  generateModel:obj class:clazz error:&backError];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(rmodel,error);
+                    completion(rmodel,backError);
                 });
             }
         });
