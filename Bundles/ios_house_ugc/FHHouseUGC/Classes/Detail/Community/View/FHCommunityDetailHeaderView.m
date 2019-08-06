@@ -11,9 +11,11 @@
 #import "FHUGCFollowButton.h"
 #import "SSViewBase.h"
 #import "TTDeviceHelper.h"
-#import "FHCommunityDetailRefreshView.h"
+#import "FHCommunityDetailMJRefreshHeader.h"
 
 @interface FHCommunityDetailHeaderView ()
+
+@property(nonatomic, strong) UIView *infoContainer;
 @end
 
 @implementation FHCommunityDetailHeaderView
@@ -31,8 +33,11 @@
     self.headerBackHeight = [TTDeviceHelper isIPhoneXSeries] ? 214 : 190;
     self.backgroundColor = [UIColor themeGray7];
 
+
     self.topBack = [[UIImageView alloc] init];
     self.topBack.contentMode = UIViewContentModeScaleAspectFill;
+    
+    self.infoContainer = [[UIView alloc] init];
 
     self.avatar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"default_avatar"]];
     self.avatar.layer.borderWidth = 0.5;
@@ -76,27 +81,26 @@
     self.publicationsContainer.layer.shadowOpacity = 0.1;//0.8;//阴影透明度，默认0
     self.publicationsContainer.layer.shadowRadius = 4;//8;//阴影半径，默认3
 
-    self.refreshView = [[FHCommunityDetailRefreshView alloc] initWithFrame:CGRectMake(0, 20.f + ([TTDeviceHelper isIPhoneXSeries] ? 44 : 20), 0, 0)];
-    self.refreshView.alpha = 0.0f;
-
     [self addSubview:self.topBack];
+    [self addSubview:self.infoContainer];
     [self addSubview:self.avatar];
     [self addSubview:self.labelContainer];
     [self addSubview:self.followButton];
     [self addSubview:self.publicationsContainer];
-    [self addSubview:self.refreshView];
 }
 
 - (void)initConstraints {
-    [self.topBack mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.topBack.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight);
+
+    [self.infoContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.mas_equalTo(0);
         make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_greaterThanOrEqualTo(self.headerBackHeight);
     }];
-    
+
     [self.avatar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.topBack).offset(20);
-        make.bottom.mas_equalTo(self.topBack).offset(-46);
+        make.left.mas_equalTo(self.infoContainer).offset(20);
+        make.bottom.mas_equalTo(self.infoContainer).offset(-46);
         make.width.height.mas_equalTo(50);
     }];
 
@@ -128,7 +132,7 @@
         make.left.mas_equalTo(self).offset(20);
         make.right.mas_equalTo(self).offset(-20);
         make.height.mas_greaterThanOrEqualTo(50);
-        make.top.mas_equalTo(self.topBack.mas_bottom).offset(-30);
+        make.top.mas_equalTo(self.infoContainer.mas_bottom).offset(-30);
     }];
 
     [self.publicationsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -153,27 +157,13 @@
 }
 
 - (void)updateWhenScrolledWithContentOffset:(CGPoint)contentOffset isScrollTop:(BOOL)isScrollTop {
-    if (-contentOffset.y <= 0) {
-        self.refreshView.alpha = 0.0f;
+    CGFloat offsetY = contentOffset.y;
+    if (offsetY < 0) {
+        CGFloat height = self.headerBackHeight - offsetY;
+        self.topBack.frame = CGRectMake(0, offsetY, SCREEN_WIDTH, height);
+    } else {
+        self.topBack.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight);
     }
-    if (-contentOffset.y <= self.refreshView.toRefreshMinDistance) {
-        self.refreshView.alpha = fmaxf(0.0f, fminf((-contentOffset.y / self.refreshView.toRefreshMinDistance), 1.0f));
-    }
-    if (-contentOffset.y > self.refreshView.toRefreshMinDistance) {
-        self.refreshView.alpha = 1.0f;
-    }
-    if (isScrollTop) {
-        return;
-    }
-    [self.refreshView updateWithContentOffsetY:-contentOffset.y];
-}
-
-- (void)startRefresh {
-    [self.refreshView beginRefresh];
-}
-
-- (void)stopRefresh {
-    [self.refreshView endRefresh];
 }
 
 @end

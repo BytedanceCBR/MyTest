@@ -116,9 +116,15 @@
         return;
     }
     
-    NSString *numStr = [NSString stringWithFormat:@"%@", entryModel.activeCountInfo.count];
+    NSInteger numValue = [entryModel.activeCountInfo.count integerValue];
+    NSString *numStr = [NSString stringWithFormat:@"%ld", numValue];
     NSString *textStr = [NSString stringWithFormat:@" %@", entryModel.activeCountInfo.text];
     NSString *combineStr = [NSString stringWithFormat:@"%@%@", numStr, textStr];
+    if (numValue < 0) {
+        numStr = nil;
+        textStr = [NSString stringWithFormat:@"%@", entryModel.activeCountInfo.text];
+        combineStr = textStr;
+    }
     NSMutableAttributedString *aStr = [[NSMutableAttributedString alloc] initWithString:combineStr];
     UIColor *numColor = isEmptyString(entryModel.activeCountInfo.numColor) ? [UIColor themeRed1] : [UIColor colorWithHexStr:entryModel.activeCountInfo.numColor];
     UIColor *textColor = isEmptyString(entryModel.activeCountInfo.textColor) ? [UIColor themeGray1] : [UIColor colorWithHexStr:entryModel.activeCountInfo.textColor];

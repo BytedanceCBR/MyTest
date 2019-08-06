@@ -30,6 +30,7 @@
 }
 
 - (void)setupUI {
+    _followed = YES;
     _rightImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fh_ugc_arrow_feed"]];
     [self addSubview:_rightImageView];
     _nameLabel = [[UILabel alloc] init];
@@ -77,11 +78,19 @@
 - (void)setCommunityName:(NSString *)communityName {
     _communityName = communityName;
     if (communityName.length > 0) {
+        self.nameLabel.text = @"发布到：";
         self.valueLabel.text = communityName;
         self.valueLabel.textColor = [UIColor themeGray1];
+        [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(65);
+        }];
     } else {
+        self.nameLabel.text = @"小区：";
         self.valueLabel.text = @"选择想要发布帖子的小区圈";
         self.valueLabel.textColor = [UIColor themeGray3];
+        [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(49);
+        }];
     }
 }
 

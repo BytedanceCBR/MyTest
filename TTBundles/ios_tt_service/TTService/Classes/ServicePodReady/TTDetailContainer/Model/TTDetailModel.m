@@ -125,6 +125,11 @@ extern NSString * const assertDesc_articleType;
         extValueDic[@"enter_from"] = [self enterFromString];
         extValueDic[@"category_name"] = [self categoryName];
         extValueDic[@"event_type"] = @"house_app2c_v2";
+        
+        if([self.reportParams isKindOfClass:[NSDictionary class]]){
+            [extValueDic addEntriesFromDictionary:self.reportParams];
+        }
+        
         [TTTracker eventV3:@"rt_share_to_platform" params:extValueDic];
 //        wrapperTrackEventWithCustomKeys(tag, label, groupId, source, extValueDic);
         return;
@@ -162,6 +167,11 @@ extern NSString * const assertDesc_articleType;
     extValueDic[@"enter_from"] = [self enterFromString];
     extValueDic[@"category_name"] = [self categoryName];
     extValueDic[@"event_type"] = @"house_app2c_v2";
+    
+    if([self.reportParams isKindOfClass:[NSDictionary class]]){
+        [extValueDic addEntriesFromDictionary:self.reportParams];
+    }
+    
     [TTTracker eventV3:@"rt_share_to_platform" params:extValueDic];
 //    wrapperTrackEventWithCustomKeys(tag, label, groupId, source, extValueDic);
 }

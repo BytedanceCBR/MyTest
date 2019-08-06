@@ -21,6 +21,7 @@
                            @"hasMore": @"has_more",
                            @"searchId": @"search_id",
                            @"externalSite": @"external_site",
+                           @"agencyInfo": @"agency_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

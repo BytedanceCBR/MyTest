@@ -127,11 +127,14 @@
         [self.finishedButton setEnabled:YES];
     }
     self.titleView.hidden = NO;
-    [self.inputTextView performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.f];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf.inputTextView becomeFirstResponder];
+    });
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

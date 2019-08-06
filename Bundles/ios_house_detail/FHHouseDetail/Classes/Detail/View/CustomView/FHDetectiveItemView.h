@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetectiveItemView : UIView
 
+@property(nonatomic , copy) void(^actionBlock)(id reasonInfoData);
+
 - (void)updateWithModel:(FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel *)model;
 - (void)showBottomLine:(BOOL)isShow;
 + (CGFloat)heightForTile:(NSString *)title tip:(NSString *)tip;

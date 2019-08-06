@@ -324,10 +324,15 @@
 - (void)goToSearch {
     [self hideGuideView];
     [self addGoToSearchLog];
-
     NSString *routeUrl = @"sslocal://ugc_search_list";
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
+    NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
+    searchTracerDict[@"element_type"] = @"community_search";
+    searchTracerDict[@"enter_from"] = @"neighborhood_tab";
+    paramDic[@"tracer"] = searchTracerDict;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:paramDic];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 - (void)addGoToSearchLog {
