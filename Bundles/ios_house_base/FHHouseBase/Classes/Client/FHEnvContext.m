@@ -582,16 +582,56 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return [[FHEnvContext sharedInstance] getConfigFromCache].ugcCitySwitch;
 }
 
++ (NSDictionary *)ugcTabName {
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    FHConfigDataUgcCategoryConfigModel *ugcCategoryConfig = [[FHEnvContext sharedInstance] getConfigFromCache].ugcCategoryConfig;
+    if(ugcCategoryConfig.myJoinList){
+        [dic setObject:ugcCategoryConfig.myJoinList forKey:kUGCTitleMyJoinList];
+    }
+    if(ugcCategoryConfig.nearbyList){
+        [dic setObject:ugcCategoryConfig.nearbyList forKey:kUGCTitleNearbyList];
+    }
+    
+    return dic;
+}
+
++ (NSString *)secondTabName {
+    NSArray *tabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].tabConfig;
+    for (FHConfigDataTabConfigModel *model in tabConfig) {
+        if([model.key isEqualToString:kSecondTab]){
+            if(model.name.length > 0){
+                return model.name;
+            }
+        }
+    }
+    return nil;
+}
+
 + (void)changeFindTabTitle
 {
-    if ([self isUGCOpen]) {
-        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
-        [tabItem setTitle:@"邻里"];
-        //        tabItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
-    }else
-    {
-        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
-        [tabItem setTitle:@"发现"];
+//    if ([self isUGCOpen]) {
+//        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+//        NSString *name = [self secondTabName];
+//        if(name.length > 0){
+//            [tabItem setTitle:name];
+//        }else{
+//            [tabItem setTitle:@"邻里"];
+//        }
+//    }else
+//    {
+//        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+//        [tabItem setTitle:@"发现"];
+//    }
+    TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+    NSString *name = [self secondTabName];
+    if(name){
+        [tabItem setTitle:name];
+    }else{
+        if ([self isUGCOpen]) {
+            [tabItem setTitle:@"邻里"];
+        }else{
+            [tabItem setTitle:@"发现"];
+        }
     }
 }
 

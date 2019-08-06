@@ -62,6 +62,7 @@
         if (self.isUgcOpen != xConfigDataModel.ugcCitySwitch) {
             self.isUgcOpen = xConfigDataModel.ugcCitySwitch;
             [self initViewModel];
+            self.segmentControl.sectionTitles = [self getSegmentTitles];
         }
     }];
 
@@ -208,7 +209,7 @@
 }
 
 - (void)setupSetmentedControl {
-    _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:@[@"关注", @"附近", @"发现"]];
+    _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
 
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
             NSForegroundColorAttributeName: [UIColor themeGray3]};
@@ -236,6 +237,31 @@
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
         [weakSelf.viewModel refreshCell];
     };
+}
+
+- (NSArray *)getSegmentTitles {
+    NSMutableArray *titles = [NSMutableArray array];
+    
+    NSDictionary *ugcTitles = [FHEnvContext ugcTabName];
+    if(ugcTitles[kUGCTitleMyJoinList]){
+        [titles addObject:ugcTitles[kUGCTitleMyJoinList]];
+    }else{
+        [titles addObject:@"关注"];
+    }
+    
+    if(ugcTitles[kUGCTitleNearbyList]){
+        [titles addObject:ugcTitles[kUGCTitleNearbyList]];
+    }else{
+        [titles addObject:@"附近"];
+    }
+        
+    [titles addObject:@"发现"];
+    
+    if(titles.count == 3){
+        return titles;
+    }
+    
+    return @[@"关注", @"附近", @"发现"];
 }
 
 - (void)initConstraints {
