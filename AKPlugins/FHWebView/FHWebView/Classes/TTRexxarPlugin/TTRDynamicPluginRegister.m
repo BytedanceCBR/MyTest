@@ -27,6 +27,7 @@
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.copyToClipboard" for:@"copyToClipboard"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.isAppInstalled" for:@"isAppInstalled"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.appInfo" for:@"appInfo"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.saveWebPhone" for:@"saveWebPhone"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.config" for:@"config"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.getStatusBarInfo" for:@"getStatusBarInfo"];
 

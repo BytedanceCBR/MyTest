@@ -15,7 +15,7 @@
 #import "TTCommentWriteView.h"
 #import <TTFriendRelation/TTBlockManager.h>
 #import <TTFriendRelation/TTFollowManager.h>
-#import <TTBaseLib/SSIndicatorTipsManager.h>
+#import <TTNewsAccountBusiness/SSIndicatorTipsManager.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTNewsAccountBusiness/TTAccountBusiness.h>
@@ -352,6 +352,9 @@
     replyManager.enterFrom = self.enterFrom;
     replyManager.categoryID = self.categoryID;
     replyManager.logPb = self.logPb;
+    replyManager.element_from = self.element_from;
+    replyManager.ansid = self.ansid;
+    replyManager.qid = self.qid;
     
     replyManager.serviceID = self.pageState.serviceID;
     TTCommentWriteView *replyView = [[TTCommentWriteView alloc] initWithCommentManager:replyManager];

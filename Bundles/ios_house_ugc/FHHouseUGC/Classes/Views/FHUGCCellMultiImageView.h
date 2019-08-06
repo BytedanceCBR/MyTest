@@ -15,6 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateImageView:(NSArray *)imageList largeImageList:(NSArray *)largeImageList;
 
++ (CGFloat)viewHeightForCount:(CGFloat)count width:(CGFloat)width;
+
+//单图时固定尺寸
+@property(nonatomic, assign) BOOL fixedSingleImage;
+@property(nonatomic, assign) CGFloat viewHeight;
+
 @end
 
 NS_ASSUME_NONNULL_END

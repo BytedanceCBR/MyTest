@@ -25,8 +25,11 @@
 #import "FHIESGeckoManager.h"
 #import <TTDeviceHelper.h>
 #import <BDALog/BDAgileLog.h>
+#import "FHUGCConfigModel.h"
 #import <TTTabBarManager.h>
 #import <TTTabBarItem.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import <TTArticleTabBarController.h>
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -259,12 +262,12 @@ static NSInteger kGetLightRequestRetryCount = 3;
     NSString *stringKey = [FHUtils stringFromNSDateDay:[NSDate date]];
     
     if (stringKey) {
-       NSNumber *countNum = [FHUtils contentForKey:stringKey];
+        NSNumber *countNum = [FHUtils contentForKey:stringKey];
         if (!countNum || [countNum isKindOfClass:[NSNumber class]]) {
             NSInteger hadCount = [countNum integerValue];
             if (hadCount < 3) {
-              TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
-              tabItem.ttBadgeView.badgeNumber = TTBadgeNumberPoint;
+                TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+                tabItem.ttBadgeView.badgeNumber = TTBadgeNumberPoint;
             }
         }
     }
@@ -297,6 +300,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 - (void)saveGeneralConfig:(FHConfigModel *)model
+{
+    [self.generalBizConfig saveCurrentConfigCache:model];
+}
+
+- (void)saveUGCConfig:(FHUGCConfigModel *)model
 {
     [self.generalBizConfig saveCurrentConfigCache:model];
 }
@@ -334,7 +342,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     CGFloat f_density = [UIScreen mainScreen].scale;
     CGFloat f_memory = [TTDeviceHelper getTotalCacheSpace];
-
+    
     if (f_density) {
         requestParam[@"f_density"] = @(f_density);
     }
@@ -380,27 +388,27 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     //开始网络监听通知
     [self.reachability startNotifier];
-
+    
     
     if (![FHEnvContext sharedInstance].refreshConfigRequestType) {
         [FHEnvContext sharedInstance].refreshConfigRequestType = @"launch";
     }
-
+    
     //开始生成config缓存
     [self.generalBizConfig onStartAppGeneralCache];
-
-
+    
+    
     //开始定位
     [self startLocation];
     
     //检测是否需要打开城市列表
     [self check2CityList];
-
+    
     //更新公共参数
     [self updateRequestCommonParams];
-
+    
     NSString *startFeedCatgegory = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getFeedStartCategoryName];
-
+    
     if (![startFeedCatgegory isEqualToString:@"f_house_news"] && startFeedCatgegory != nil) {
         //轮询红点
         [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
@@ -413,16 +421,16 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [FHIESGeckoManager configGeckoInfo];
         [FHIESGeckoManager configIESWebFalcon];
     });
-
+    
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
 {
     if (configDict && [configDict isKindOfClass:[NSDictionary class]]) {
         FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
-//        self.generalBizConfig.configCache = dataModel;
+        //        self.generalBizConfig.configCache = dataModel;
         [FHEnvContext saveCurrentUserCityId:dataModel.currentCityId];
-//        [self.generalBizConfig saveCurrentConfigDataCache:dataModel];
+        //        [self.generalBizConfig saveCurrentConfigDataCache:dataModel];
         [self.configDataReplay sendNext:dataModel];
     }
 }
@@ -430,9 +438,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
 - (void)acceptConfigDataModel:(FHConfigDataModel *)configModel
 {
     if (configModel && [configModel isKindOfClass:[FHConfigDataModel class]]) {
-//        self.generalBizConfig.configCache = configModel;
+        //        self.generalBizConfig.configCache = configModel;
         [FHEnvContext saveCurrentUserCityId:configModel.currentCityId];
-//        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
+        //        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
         [self.configDataReplay sendNext:configModel];
     }
 }
@@ -569,6 +577,37 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return [[FHEnvContext sharedInstance] getConfigFromCache].entranceSwitch.isPriceValuationShowHouseTrend;
 }
 
++ (BOOL)isUGCOpen
+{
+    return [[FHEnvContext sharedInstance] getConfigFromCache].ugcCitySwitch;
+}
+
++ (void)changeFindTabTitle
+{
+    if ([self isUGCOpen]) {
+        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+        [tabItem setTitle:@"邻里"];
+        //        tabItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
+    }else
+    {
+        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+        [tabItem setTitle:@"发现"];
+    }
+}
+
+/*
+ 增加引导
+ */
++ (void)addTabUGCGuid
+{
+    UIWindow * mainWindow = [[UIApplication sharedApplication].delegate window];
+    
+    TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)mainWindow.rootViewController;
+    if ([mainWindow.rootViewController isKindOfClass:[TTArticleTabBarController class]]) {
+        [rootTabController addUgcGuide];
+    }
+}
+
 - (TTReachability *)reachability
 {
     if (!_reachability) {
@@ -607,6 +646,22 @@ static NSInteger kGetLightRequestRetryCount = 3;
     [homePageCommonMap setValue:self.commonPageModel.originFrom forKey:@"origin_from"];
     [homePageCommonMap setValue:self.commonPageModel.originSearchId forKey:@"origin_search_id"];
     return homePageCommonMap;
+}
+
+- (void)checkZLink {
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf checkDeepLinkScheme];
+    });
+}
+
+- (void)checkDeepLinkScheme {
+    id schemeStr = [[NSUserDefaults standardUserDefaults] valueForKey:@"kFHDeepLinkFirstLaunchKey"];
+    if (schemeStr && [schemeStr isKindOfClass:[NSString class]]) {
+        NSURL *url = [NSURL URLWithString:schemeStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kFHDeepLinkFirstLaunchKey"];
+    }
 }
 
 @end

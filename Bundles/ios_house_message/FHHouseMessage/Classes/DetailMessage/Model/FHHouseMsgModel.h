@@ -38,9 +38,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *textColor;
 @end
 
+@interface FHHouseMsgItemHouseVideo : JSONModel
+
+@property (nonatomic, assign)   BOOL   hasVideo;
+@end
+
+
 @interface FHHouseMsgDataItemsItemsModel : JSONModel 
 
-@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, assign) NSInteger status;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *desc;
@@ -55,6 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, strong , nullable) FHHouseMsgDataItemsItemsHouseImageTagModel *houseImageTag ;  
 @property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, strong, nullable) FHHouseMsgItemHouseVideo* houseVideo;
 @end
 
 @interface FHHouseMsgDataItemsModel : JSONModel 
@@ -67,6 +74,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *moreLabel;
 @property (nonatomic, copy , nullable) NSString *dateStr;
 @property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, assign) BOOL isSoldout;
+
 @end
 
 @interface FHHouseMsgDataModel : JSONModel 
@@ -75,6 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHHouseMsgDataItemsModel> *items;
 @property (nonatomic, copy , nullable) NSString *minCursor;
 @property (nonatomic, copy , nullable) NSString *searchId;
+
 @end
 
 @interface FHHouseMsgModel : JSONModel 

@@ -35,6 +35,7 @@
 NSString *const kMainTabbarClickedNotificationUserInfoHasTipKey  = @"kMainTabbarClickedNotificationUserInfoHasTipKey";
 NSString *const kMainTabbarClickedNotificationUserInfoShowFriendLabelKey  = @"kMainTabbarClickedNotificationUserInfoShowFriendLabelKey";
 NSString *const kMainTabbarKeepClickedNotification      = @"kMainTabbarKeepClickedNotification";
+NSString *const kFindTabbarKeepClickedNotification      = @"kFindTabbarKeepClickedNotification";
 NSString *const kMomentTabbarKeepClickedNotification    = @"kMomentTabbarKeepClickedNotification";
 NSString *const kMineTabbarKeepClickedNotification      = @"kMineTabbarKeepClickedNotification";
 NSString *const kVideoTabbarKeepClickedNotification   = @"kVideoTabbarKeepClickedNotification";

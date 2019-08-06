@@ -21,6 +21,7 @@
 #import "TTImagePickerTrackManager.h"
 #import "TTImagePickerAlert.h"
 #import "UIViewAdditions.h"
+#import "FHBubbleTipManager.h"
 
 @interface TTImagePickerController ()<UICollectionViewDelegate,UICollectionViewDataSource,TTImagePickerNavDelegate,TTImageAlbumSelectViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,TTImagePreviewViewControllerDelegate,UIGestureRecognizerDelegate,TTImagePickerBackGestureViewDelegate>
 {
@@ -52,6 +53,8 @@
 
 @property (nonatomic,assign) UIStatusBarStyle lastStyle;
 @property (nonatomic,assign) BOOL lastHidden;
+@property (nonatomic, assign)   BOOL       lastCanShowMessageTip;
+@property (nonatomic, assign)   BOOL       lastInAppPushTipsHidden;
 
 @end
 
@@ -78,7 +81,7 @@
         
         self.isAllowPhoto = YES;
         self.isAllowVideo = NO;
-       
+        self.isAllowGifPhoto = YES;
     }
     return self;
 }
@@ -108,6 +111,12 @@
 
 - (void)presentOn:(UIViewController *)parentViewController;
 {
+    // 顶部 消息 弹窗tips
+    self.lastCanShowMessageTip = [FHBubbleTipManager shareInstance].canShowTip;
+    [FHBubbleTipManager shareInstance].canShowTip = NO;
+    // App 内push
+    self.lastInAppPushTipsHidden = kFHInAppPushTipsHidden;
+    kFHInAppPushTipsHidden = YES;// 不展示
     WeakSelf;
     [[TTImagePickerManager manager] startAuthAlbumWithSuccess:^{
         StrongSelf;
@@ -176,7 +185,9 @@
 //        [[UIApplication sharedApplication] setStatusBarStyle:self.lastStyle animated:NO];
 //        [[UIApplication sharedApplication] setStatusBarHidden:self.lastHidden];
 //    });
-
+     [FHBubbleTipManager shareInstance].canShowTip = self.lastCanShowMessageTip;
+    // App 内push
+    kFHInAppPushTipsHidden = self.lastInAppPushTipsHidden;// 展示
 }
 
 - (void)showPromptViewAtBottomViewTop:(UIView *)promptView {
@@ -318,6 +329,31 @@
     
 }
 
+- (void)removeGifByTTAlbumModel:(TTAlbumModel *)model {
+    if (self.isAllowGifPhoto) {
+        return;
+    }
+    if (model && model.models.count > 0) {
+        NSMutableArray<TTAssetModel *> *models = [NSMutableArray new];
+        [models addObjectsFromArray:model.models];
+        NSMutableArray *removeArr = [NSMutableArray new];
+        [models enumerateObjectsUsingBlock:^(TTAssetModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.type == TTAssetModelMediaTypePhotoGif) {
+                // 是Gif
+                [removeArr addObject:obj];
+            }
+        }];
+        if (removeArr.count > 0) {
+            NSInteger removeCount = removeArr.count;
+            model.count -= removeCount;
+            if (model.count <= 0) {
+                model.count = 0;
+            }
+            [models removeObjectsInArray:removeArr];
+            model.models = models;
+        }
+    }
+}
 
 #pragma mark - Get & Set
 - (void)_getCurrentImages
@@ -325,6 +361,7 @@
     __weak typeof(self) weakSelf = self;
     
     [[TTImagePickerManager manager] getCameraRollAlbum:self.isAllowVideo allowPickingImage:self.isAllowPhoto completion:^(TTAlbumModel *model) {
+        [weakSelf removeGifByTTAlbumModel:model];
         weakSelf.currentAlbumModel = model;
         if (self.imagePickerMode == TTImagePickerModePhoto) {
             if (model.count > 0) {
@@ -363,10 +400,12 @@
 }
 - (void)_getAllAlbums
 {
+     __weak typeof(self) weakSelf = self;
     //相册选择视图
     [[TTImagePickerManager manager] getAllAlbums:self.isAllowVideo allowPickingImage:self.isAllowPhoto completion:^(NSArray<TTAlbumModel *> *models) {
-    
-        
+        [models enumerateObjectsUsingBlock:^(TTAlbumModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [weakSelf removeGifByTTAlbumModel:obj];
+        }];
         if (_customAlmumNav && [_customAlmumNav respondsToSelector:@selector(didCompletedTheRequestWithAlbums:)]) {
             [_customAlmumNav didCompletedTheRequestWithAlbums:models];
         }

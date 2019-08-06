@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *feedFlag;
 @property (nonatomic, copy , nullable) NSString *actionToLastStick;
 @property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, copy , nullable) NSString *lastOffset;
 @property (nonatomic, assign) BOOL hasMoreToRefresh;
 @property (nonatomic, strong , nullable) NSArray<FHFeedListDataModel> *data;
 @property (nonatomic, strong , nullable) FHFeedListTipsModel *tips ;  

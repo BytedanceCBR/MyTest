@@ -17,6 +17,12 @@
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import <FHRNHelper.h>
+#import <TTArticleBase/SSCommonLogic.h>
+#import <CoreTelephony/CTCallCenter.h>
+#import <CoreTelephony/CTCall.h>
+#import "FHDetailFeedbackView.h"
+#import "FHEnvContext.h"
+#import "TTInstallIDManager.h"
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -25,6 +31,7 @@
 @property (nonatomic, strong) UILabel *bottomStatusBar;
 @property (nonatomic, strong) UIView *bottomMaskView;
 @property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
+@property (nonatomic, strong) FHDetailFeedbackView *feedbackView;
 
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
@@ -38,6 +45,10 @@
 @property (nonatomic, copy)   NSString* imprId;
 @property (nonatomic, assign)   BOOL isDisableGoDetail;
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
+//@property (nonatomic, strong) id instantData;
+@property (nonatomic, strong) CTCallCenter *callCenter;
+//是否拨打电话已接通
+@property (nonatomic, assign) BOOL isPhoneCallPickUp;
 
 @end
 
@@ -109,6 +120,8 @@
         }else {
             [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_schema_error" metric:nil category:@{@"status":@(0)} extra:nil];
         }
+        
+        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
     }
     return self;
 }
@@ -117,9 +130,21 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
+    [self setupCallCenter];
     [self startLoadData];
     self.isViewDidDisapper = NO;
     
+    if(![SSCommonLogic disableDetailInstantShow] && [TTReachability isNetworkConnected]){
+        //有网且打开秒开的情况下才显示
+        if (self.instantData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.viewModel handleInstantData:self.instantData];
+            });
+        }
+    }else{
+        self.instantData = nil;
+    }
+        
     if (!self.isDisableGoDetail) {
         [self.viewModel addGoDetailLog];
     }
@@ -135,6 +160,7 @@
     [super viewWillAppear:animated];
     [self.viewModel.contactViewModel refreshMessageDot];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -151,6 +177,7 @@
     [self.viewModel addStayPageLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -182,11 +209,16 @@
 
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
-        [self startLoading];
+        if (!self.instantData) {
+            [self startLoading];
+        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
-        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        //无网就显示蒙层
+//        if (!self.instantData) {
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+//        }
     }
 }
 
@@ -233,7 +265,7 @@
     [self.view addSubview:_bottomBar];
     self.viewModel.bottomBar = _bottomBar;
     _bottomBar.hidden = YES;
-
+    
     _bottomStatusBar = [[UILabel alloc]init];
     _bottomStatusBar.textAlignment = NSTextAlignmentCenter;
     _bottomStatusBar.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
@@ -277,6 +309,25 @@
     }];
     
     [self.view bringSubviewToFront:_navBar];
+}
+
+- (void)setupCallCenter {
+    __weak typeof(self) wself = self;
+    self.callCenter = [[CTCallCenter alloc] init];
+    _callCenter.callEventHandler = ^(CTCall* call){
+        if ([call.callState isEqualToString:CTCallStateDisconnected]){
+            //未接通
+        }else if ([call.callState isEqualToString:CTCallStateConnected]){
+            //通话中
+            wself.isPhoneCallPickUp = YES;
+        }else if([call.callState isEqualToString:CTCallStateIncoming]){
+            //来电话
+        }else if ([call.callState isEqualToString:CTCallStateDialing]){
+            //正在拨号
+        }else{
+            //doNothing
+        }
+    };
 }
 
 // 埋点数据处理:1、paramObj.allParams中的"tracer"字段，2、allParams中的origin_from、report_params等字段
@@ -498,4 +549,78 @@
     [self.viewModel.contactViewModel updateLoadFinish];
 }
 
+- (void)applicationDidBecomeActive {
+    if([self isShowFeedbackView]){
+        self.isPhoneCallPickUp = NO;
+        self.isPhoneCallShow = NO;
+        [self addFeedBackView];
+        self.phoneCallRealtorId = nil;
+    }
+}
+
+- (BOOL)isShowFeedbackView {
+    //满足这两个条件，在回来时候显示反馈弹窗
+    if(self.isPhoneCallPickUp && self.isPhoneCallShow && self.phoneCallRealtorId && (self.viewModel.houseType == FHHouseTypeSecondHandHouse)){
+        NSString *houseId = self.viewModel.houseId;
+        NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
+        NSString *cacheKey = @"";
+
+        if(!isEmptyString(houseId)){
+            cacheKey = [cacheKey stringByAppendingString:houseId];
+        }
+
+        if(!isEmptyString(deviceId)){
+            cacheKey = [cacheKey stringByAppendingString:@"_"];
+            cacheKey = [cacheKey stringByAppendingString:deviceId];
+        }
+
+        if(!isEmptyString(cacheKey)){
+            NSTimeInterval dayStartTime = [[self dayStart:[NSDate date]] timeIntervalSince1970];
+            YYCache *detailFeedbackCache = [[FHEnvContext sharedInstance].generalBizConfig detailFeedbackCache];
+            if([detailFeedbackCache containsObjectForKey:cacheKey]){
+                //已经显示过该房源
+                id value = [detailFeedbackCache objectForKey:cacheKey];
+                NSTimeInterval lastDayStartTime = [value doubleValue];
+                //超过一天清空所有记录，再次显示
+                if(dayStartTime - lastDayStartTime >= 24 * 60 * 60){
+                    [detailFeedbackCache removeAllObjects];
+                    [detailFeedbackCache setObject:@(dayStartTime) forKey:cacheKey];
+                    return YES;
+                }
+            }else{
+                //未显示过
+                [detailFeedbackCache setObject:@(dayStartTime) forKey:cacheKey];
+                return YES;
+            }
+        }
+    }
+
+    return NO;
+}
+
+- (NSDate *)dayStart:(NSDate *)date {
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDate *now = [NSDate date];
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:now];
+    NSDate *startDate = [calendar dateFromComponents:components];
+    return startDate;
+}
+
+- (void)addFeedBackView {
+    self.feedbackView.realtorId = self.phoneCallRealtorId;
+    [self.feedbackView show:self.view];
+}
+
+- (FHDetailFeedbackView *)feedbackView {
+    if (!_feedbackView) {
+        __weak typeof(self) wself = self;
+        _feedbackView = [[FHDetailFeedbackView alloc] initWithFrame:self.view.bounds];
+        _feedbackView.navVC = self.navigationController;
+        _feedbackView.viewModel = self.viewModel;
+    }
+    return _feedbackView;
+}
+
 @end
+
+NSString *const INSTANT_DATA_KEY = @"_INSTANT_DATA_KEY_";

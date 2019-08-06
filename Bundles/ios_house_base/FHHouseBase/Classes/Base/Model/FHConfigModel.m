@@ -264,6 +264,7 @@
                            @"entranceSwitch": @"entrance_switch",
                            @"houseTypeDefault":@"house_type_default",
                            @"jump2AdRecommend":@"jump_2_ad_recommend",
+                           @"ugcCitySwitch":@"ugc_city_switch",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

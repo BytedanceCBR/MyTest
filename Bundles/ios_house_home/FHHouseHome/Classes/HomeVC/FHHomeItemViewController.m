@@ -21,8 +21,14 @@
 #import <FHPlaceHolderCell.h>
 #import "FHHomeListViewModel.h"
 #import "TTSandBoxHelper.h"
+#import <FHHomeSearchPanelViewModel.h>
+#import <FHHouseBase/FHSearchChannelTypes.h>
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import "FHUserTracker.h"
 
-@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate>
+extern NSString *const INSTANT_DATA_KEY;
+
+@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate>
 
 @property (nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property (nonatomic , assign) NSInteger itemCount;
@@ -38,6 +44,7 @@
 @property (nonatomic, assign) BOOL isOriginRequest;
 @property (nonatomic, assign) BOOL isDisAppeared;
 @property (nonatomic, weak) FHHomeListViewModel *listModel;
+@property (nonatomic, assign) NSInteger lastOffset;
 @end
 
 @implementation FHHomeItemViewController
@@ -53,7 +60,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.houseDataItemsModel = [NSMutableArray new];
     self.isRetryedPullDownRefresh = NO;
     self.hasMore = YES;
@@ -69,7 +75,7 @@
     
     [FHHomeCellHelper registerCells:self.tableView];
     
-    _itemCount = 30;
+    _itemCount = 20;
     
     WeakSelf;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
@@ -95,6 +101,8 @@
     [self registerCells];
     
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+    
+    self.tableView.scrollsToTop = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -136,6 +144,9 @@
     if (self.showRequestErrorView) {
         [self showPlaceHolderCells];
         [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+        if (self.panelVM) {
+            [self.panelVM fetchSearchPanelRollData];
+        }
     }
     
     self.stayTime = [self getCurrentTime];
@@ -198,6 +209,7 @@
 {
     self.showNoDataErrorView = NO;
     self.showRequestErrorView = NO;
+    self.showDislikeNoDataView = NO;
     self.showPlaceHolder = YES;
     [self.tableView reloadData];
 }
@@ -210,6 +222,7 @@
     [self.tableView.mj_footer endRefreshingWithNoMoreData];
     self.showNoDataErrorView = isNoData;
     self.showRequestErrorView = !isNoData;
+    self.showDislikeNoDataView = NO;
     self.showPlaceHolder = NO;
     [self.tableView reloadData];
 }
@@ -219,6 +232,7 @@
 {
     self.showNoDataErrorView = NO;
     self.showRequestErrorView = NO;
+    self.showDislikeNoDataView = NO;
     self.showPlaceHolder = NO;
     [self.tableView reloadData];
 }
@@ -260,17 +274,30 @@
     
     NSMutableDictionary *requestDictonary = [NSMutableDictionary new];
     [requestDictonary setValue:[FHEnvContext getCurrentSelectCityIdFromLocal] forKey:@"city_id"];
-    NSInteger offsetValue = self.houseDataItemsModel.count;
-    
+    NSInteger offsetValue = self.lastOffset;
+
     if (isFirst || pullType == FHHomePullTriggerTypePullDown) {
         [requestDictonary setValue:@(0) forKey:@"offset"];
     }else
     {
+        if(self.currentSearchId)
+        {
+            [requestDictonary setValue:self.currentSearchId forKey:@"search_id"];
+        }
+        
         [requestDictonary setValue:@(offsetValue) forKey:@"offset"];
     }
     [requestDictonary setValue:@(self.houseType) forKey:@"house_type"];
-    [requestDictonary setValue:@(20) forKey:@"count"];
+    [requestDictonary setValue:@(self.itemCount) forKey:@"count"];
     
+    if (self.houseType == FHHouseTypeNewHouse) {
+        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_COURT;
+    } else if (self.houseType == FHHouseTypeSecondHandHouse) {
+        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND;
+    } else if (self.houseType == FHHouseTypeRentHouse) {
+        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_RENT;
+    }
+
     self.requestTask = nil;
     
     WeakSelf;
@@ -313,10 +340,12 @@
         if (pullType == FHHomePullTriggerTypePullDown) {
             self.originSearchId = model.data.searchId;
             self.houseDataItemsModel = [NSMutableArray arrayWithArray:model.data.items];
+            self.lastOffset = model.data.items.count;
         }else
         {
             if (model.data.items && self.houseDataItemsModel && model.data.items.count != 0) {
-                self.houseDataItemsModel = [self.houseDataItemsModel arrayByAddingObjectsFromArray:model.data.items];
+                [self.houseDataItemsModel addObjectsFromArray:model.data.items];
+                self.lastOffset += model.data.items.count;
             }
         }
         self.currentSearchId = model.data.searchId;
@@ -467,7 +496,7 @@
         return 0;
     }
     
-    if (self.showNoDataErrorView || self.showRequestErrorView) {
+    if (self.showNoDataErrorView || self.showRequestErrorView || self.showDislikeNoDataView) {
         return 1;
     }
     
@@ -492,7 +521,7 @@
         return 0;
     }else
     {
-        if (self.showNoDataErrorView || self.showRequestErrorView) {
+        if (self.showNoDataErrorView || self.showRequestErrorView || self.showDislikeNoDataView) {
             return [self getHeightShowNoData];
         }
         
@@ -540,7 +569,10 @@
                                         showRetry:YES];
                 __weak typeof(self) weakSelf = self;
                 noDataErrorView.retryBlock = ^{
-                    [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+                    if (weakSelf.panelVM) {
+                        [weakSelf.panelVM fetchSearchPanelRollData];
+                    }
+                    [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                 };
             }else
             {
@@ -555,11 +587,39 @@
                             }
                         }else
                         {
-                            [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+                            if (weakSelf.panelVM) {
+                                [weakSelf.panelVM fetchSearchPanelRollData];
+                            }
+                            [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                         }
                     }
                 };
             }
+            
+            return cellError;
+        }
+        
+        if (self.showDislikeNoDataView) {
+            UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+            for (UIView *subView in cellError.contentView.subviews) {
+                [subView removeFromSuperview];
+            }
+            cellError.selectionStyle = UITableViewCellSelectionStyleNone;
+            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [self getHeightShowNoData])];
+            //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
+            [cellError.contentView addSubview:noDataErrorView];
+            
+            [noDataErrorView showEmptyWithTip:@"点击为您推荐更多房源" errorImageName:@"group-9"
+                                    showRetry:YES];
+            __weak typeof(self) weakSelf = self;
+            [noDataErrorView.retryButton setTitle:@"推荐更多" forState:UIControlStateNormal];
+            noDataErrorView.retryBlock = ^{
+                [weakSelf trackClickHouseRecommend];
+                if (weakSelf.panelVM) {
+                    [weakSelf.panelVM fetchSearchPanelRollData];
+                }
+                [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+            };
             
             return cellError;
         }
@@ -571,6 +631,7 @@
         
         //to do 房源cell
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
+        cell.delegate = self;
         if (indexPath.row < self.houseDataItemsModel.count) {
             JSONModel *model = self.houseDataItemsModel[indexPath.row];
             [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
@@ -616,6 +677,11 @@
             tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
             [tracerDict removeObjectForKey:@"element_from"];
             
+            NSMutableDictionary *dic = [tracerDict mutableCopy];
+            dic[@"enter_from"] = @"maintab";
+            dic[@"element_from"] = @"maintab_list";
+            cellModel.tracerDict = [dic copy];
+            
             if (tracerDict && !self.isOriginShowSelf) {
                 [self.traceNeedUploadCache addObject:tracerDict];
             }else
@@ -628,7 +694,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!self.showPlaceHolder) {
+    if (!self.showPlaceHolder && indexPath.section == 1) {
         [self jumpToDetailPage:indexPath];
     }
 }
@@ -660,12 +726,11 @@
         {
             houseType = self.houseType;
         }
-        
-        
-        NSDictionary *dict = @{@"house_type":@(houseType),
+                
+        NSMutableDictionary *dict = @{@"house_type":@(houseType),
                                @"tracer": traceParam
-                               };
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                               }.mutableCopy;
+        dict[INSTANT_DATA_KEY] = theModel;
         
         NSURL *jumpUrl = nil;
         
@@ -680,6 +745,7 @@
         }
         
         if (jumpUrl != nil) {
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
         }
     }
@@ -693,12 +759,62 @@
         _tableView.delegate = self;
         //        _tableView.decelerationRate = 0.1;
         _tableView.showsVerticalScrollIndicator = NO;
+        _tableView.estimatedRowHeight = 0;
+        if (@available(iOS 11.0 , *)) {
+            self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }else{
+            self.automaticallyAdjustsScrollViewInsets = NO;
+        }
     }
     return _tableView;
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - FHHouseBaseItemCellDelegate
+
+- (void)dislikeConfirm:(FHHomeHouseDataItemsModel *)model cell:(id)cell {
+    NSInteger row = [self getCellIndex:model];
+    if(row < self.houseDataItemsModel.count && row >= 0){
+        [self.houseDataItemsModel removeObjectAtIndex:row];
+        if(self.houseDataItemsModel.count == 0){
+            self.showDislikeNoDataView = YES;
+            self.tableView.hasMore = NO;
+            self.tableView.mj_footer.hidden = YES;
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            [self.tableView reloadData];
+        }else{
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:1];
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            //当数据少于一页的时候，拉下一页数据填充
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if(self.houseDataItemsModel.count < self.itemCount && self.tableView.hasMore){
+                        [self requestDataForRefresh:FHHomePullTriggerTypePullUp andIsFirst:NO];
+                    }
+                });
+            });
+        }
+    }
+}
+
+- (NSInteger)getCellIndex:(FHHomeHouseDataItemsModel *)model {
+    NSInteger index = [self.houseDataItemsModel indexOfObject:model];
+    if(index >= 0 && index < self.houseDataItemsModel.count){
+        return index;
+    }
+    return -1;
+}
+
+- (void)trackClickHouseRecommend {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"page_type"] = [self pageTypeString];
+    tracerDict[@"enter_from"] = @"maintab";
+    tracerDict[@"element_from"] = @"maintab_list";
+    tracerDict[@"click_position"] = @"house_recommend_more";
+    TRACK_EVENT(@"click_house_recommend", tracerDict);
 }
 
 @end

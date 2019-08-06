@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong) UIImageView *imageV;
 @property (nonatomic,strong) UILabel *lab;
-@property (nonatomic,strong) FHDetailHouseDataItemsHouseImageModel *dataModel;
+@property (nonatomic,strong) FHImageModel *dataModel;
 
 @end
 

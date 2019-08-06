@@ -8,8 +8,9 @@
 #import "FHTopicListController.h"
 #import "FHTopicListViewModel.h"
 #import "FHRefreshCustomFooter.h"
-#import "TTReachability.h"
 #import "TTBaseMacro.h"
+#import "UIScrollView+Refresh.h"
+#import "UIViewAdditions.h"
 
 @interface FHTopicListController ()
 @property(nonatomic, copy) NSString *topicId;
@@ -30,6 +31,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     [self initView];
     [self initConstraints];
     [self initViewModel];
@@ -37,49 +39,62 @@
 
 - (void)initView {
     [self setupDefaultNavBar:YES];
-
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
-    [self.customNavBarView setNaviBarTransparent:YES];
     [self setTitle:@"小区话题"];
-
 
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     [self.view addSubview:self.tableView];
+    
+    if (@available(iOS 11.0 , *)) {
+        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    
+//    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+//    _tableView.tableHeaderView = headerView;
+//    
+//    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+//    _tableView.tableFooterView = footerView;
+    
+    _tableView.estimatedRowHeight = 85;
+    _tableView.estimatedSectionHeaderHeight = 0;
+    _tableView.estimatedSectionFooterHeight = 0;
 
     WeakSelf;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-        [wself loadMore];
+        StrongSelf;
+        [wself loadData:NO];
     }];
     self.tableView.mj_footer = self.refreshFooter;
 
-    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(44, 0, 0, 0)];
+    [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
+        StrongSelf;
+        [self loadData:YES];
+    }];
+
+    [self addDefaultEmptyViewFullScreen];
 }
 
 - (void)initConstraints {
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.bottom.mas_equalTo(self.view);
+        if (@available(iOS 11.0, *)) {
+            make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top);
+        } else {
+            make.top.mas_equalTo(64);
+        }
+        make.left.right.bottom.mas_equalTo(self.view);
     }];
 }
 
 - (void)initViewModel {
     self.viewModel = [[FHTopicListViewModel alloc] initWithController:self tableView:self.tableView];
-    [self.viewModel requestData:NO];
+    [self.viewModel requestData:YES];
 }
 
 - (void)retryLoadData {
     [self loadData:NO];
 }
 
-- (void)loadMore {
-    [self loadData:YES];
-}
-
-- (void)loadData:(BOOL)isLoadMore {
-    if (![TTReachability isNetworkConnected]) {
-        return;
-    }
-    [self.viewModel requestData:isLoadMore];
+- (void)loadData:(BOOL)isRefresh {
+    [self.viewModel requestData:isRefresh];
 }
 
 @end

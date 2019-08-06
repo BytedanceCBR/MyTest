@@ -916,6 +916,7 @@
                             NSInteger houseType  = [obj[@"house_type"] integerValue];
                             NSString *open_url = obj[@"open_url"];
                             NSString *guess_search_id = obj[@"guess_search_id"];
+                        
                             if (text.length > 0 && houseType == wself.houseType) {
                                 NSInteger index = 0;
                                 FHGuessYouWantResponseDataDataModel *tempModel  = [[FHGuessYouWantResponseDataDataModel alloc] init];
@@ -923,22 +924,31 @@
                                 tempModel.openUrl = open_url;
                                 tempModel.guessSearchId = guess_search_id;
                                 tempModel.houseType = [NSString stringWithFormat:@"%ld",houseType];
-                                for (FHGuessYouWantResponseDataDataModel *obj in tempData) {
-                                    if ([obj.text isEqualToString:text]) {
-                                        tempModel = obj;
+                                
+                                for (FHGuessYouWantResponseDataDataModel *obj1 in tempData) {
+                                    if ([obj1.text isEqualToString:text] || [obj1.guessSearchId isEqualToString:guess_search_id]) {
+                                        tempModel = obj1;
+                                        tempModel.imageUrl = obj1.imageUrl;
+                                        tempModel.rank = obj1.rank;
+                                        tempModel.type = obj1.type;
                                         [tempData removeObjectAtIndex:index];
+                                        
+                                        if (open_url) {
+                                            [guessArray addObject:tempModel];
+                                        }
                                         break;
                                     }
                                     index += 1;
                                 }
-                                [guessArray addObject:tempModel];
                             }
                         }
                     }];
+                    
                     if (guessArray.count > 0) {
                         if (guessArray.count > 3) {
                             guessArray = [guessArray subarrayWithRange:NSMakeRange(0, 3)];
                         }
+                        
                         FHGuessYouWantFirstWords *firsetWords = [wself.guessYouWantView firstThreeWords:guessArray];
                         tempData = [wself.guessYouWantView firstLineGreaterThanSecond:firsetWords array:tempData count:1];
                         NSMutableArray *temp = [NSMutableArray new];

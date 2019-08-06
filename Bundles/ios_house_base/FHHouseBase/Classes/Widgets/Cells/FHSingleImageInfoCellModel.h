@@ -37,9 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable, readonly) NSAttributedString *tagsAttrStr;
 @property (nonatomic, strong , nullable, readonly) NSAttributedString *originPriceAttrStr;
 
-+(NSAttributedString *)tagsStringWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList;
++(NSAttributedString *)tagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList;
 
-+(NSAttributedString *)tagsStringSmallImageWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList;
++(NSAttributedString *)tagsStringSmallImageWithTagList:(NSArray<FHHouseTagsModel *> *)tagList;
 
 #pragma mark log
 -(NSString *)imprId;

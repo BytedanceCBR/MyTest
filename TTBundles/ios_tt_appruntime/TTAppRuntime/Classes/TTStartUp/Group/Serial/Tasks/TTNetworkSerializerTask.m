@@ -33,6 +33,7 @@
 #import "SSCommonLogic.h"
 #import "CommonURLSetting.h"
 #import "TTLaunchDefine.h"
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 
 DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
 

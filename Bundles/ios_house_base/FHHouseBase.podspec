@@ -20,7 +20,9 @@ Pod::Spec.new do |s|
   s.source_files = 'FHHouseBase/Classes/**/*.{h,m,mm}'
   
   s.resources = ['FHHouseBase/Assets/*.xcassets']
-  
+  s.resource_bundles = {
+      'FHHouseBase' => ['FHHouseBase/Assets/**/*.plist']
+  }
   # s.resource_bundles = {
   #   'FHHouseBase' => ['FHHouseBase/Assets/*.png']
   # }

@@ -412,7 +412,8 @@ static struct timeval commentTimeval;
     CGFloat targetY = CGRectGetMinY(keyboardScreenFrame) - CGRectGetHeight(frame); // 键盘弹出状态位置
 
     // 为了保证从上往下收起动画效果的完整性
-    if (CGRectGetMinY(keyboardScreenFrame) >= self.height) { // 收起，这里采用 self.height 而不是 window.height，因为 present 方式弹出时高度不一致
+    // self.height - 1 是为了解决XSMax 九宫格表情问题
+    if (CGRectGetMinY(keyboardScreenFrame) >= self.height - 1) { // 收起，这里采用 self.height 而不是 window.height，因为 present 方式弹出时高度不一致
         if (self.emojiInputViewVisible) { // 切换到表情输入，收起键盘
             targetY = CGRectGetHeight(self.frame) - CGRectGetHeight(self.containerView.frame);
 
@@ -615,7 +616,7 @@ static struct timeval commentTimeval;
             _inputTextView.isBanAt = YES;
         }
         _inputTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        _inputTextView.backgroundColorThemeKey = kFHColorPaleGrey;
+        _inputTextView.backgroundColorThemeKey = @"grey7";
 //        _inputTextView.borderColorThemeKey = kColorLine1;
 
 //        _inputTextView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
@@ -634,7 +635,7 @@ static struct timeval commentTimeval;
         internalTextView.placeholder = kCommentInputPlaceHolder;
         internalTextView.backgroundColor = [UIColor clearColor];
         internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
-        internalTextView.placeholderColor = SSGetThemedColorWithKey(kFHColorCoolGrey3);
+        internalTextView.placeholderColor = SSGetThemedColorWithKey(@"grey3");
         internalTextView.internalTextView.placeHolderFont = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:14.f]];
         _inputTextView.layer.cornerRadius = _inputTextView.height / 2;
         _inputTextView.richSpanText = [[TTRichSpanText alloc] initWithText:@"" richSpans:nil];
@@ -665,8 +666,8 @@ static struct timeval commentTimeval;
         _publishButton.titleLabel.font = [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]];
         [_publishButton sizeToFit];
         _publishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
-        _publishButton.titleColorThemeKey = kFHColorCoral;
-        _publishButton.disabledTitleColorThemeKey = kFHColorCoolGrey2;
+        _publishButton.titleColorThemeKey = @"red1";
+        _publishButton.disabledTitleColorThemeKey = @"grey4";
         [_publishButton addTarget:self action:@selector(publish:) forControlEvents:UIControlEventTouchUpInside];
         _publishButton.enabled = NO;
     }

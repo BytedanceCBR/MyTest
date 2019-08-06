@@ -17,6 +17,8 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
     FHHomeCategoryTraceTypeRefresh = 3  //刷新
 };
 
+@class FHHomeSearchPanelViewModel;
+
 @interface FHHomeListViewModel : NSObject
 @property (nonatomic, assign) BOOL hasShowedData;
 @property (nonatomic, strong) NSString *enterType; //当前enterType，用于enter_category
@@ -24,8 +26,9 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) FHHouseType houseType;
 @property (nonatomic, assign) BOOL isResetingOffsetZero;
+@property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
 
-- (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC;
+- (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC andPanelVM:(FHHomeSearchPanelViewModel *)panelVM;
 
 - (void)reloadHomeTableHeaderSection;
 
@@ -38,6 +41,8 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 - (void)updateCategoryViewSegmented:(BOOL)isFirstChange;
 
 - (void)checkCityStatus;
+
+- (void)setUpTableScrollOffsetZero;
 
 @end
 

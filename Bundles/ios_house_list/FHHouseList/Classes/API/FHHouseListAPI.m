@@ -6,6 +6,7 @@
 //
 
 #import "FHHouseListAPI.h"
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 @implementation FHHouseListAPI
 
@@ -21,7 +22,7 @@
     paramDic[@"search_id"] = searchId ?: @"";
     paramDic[@"offset"] = @(offset);
     paramDic[@"count"] = @(count);
-    
+    paramDic[CHANNEL_ID] = CHANNEL_ID_SAME_NEIGHBORHOOD_HOUSE;
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
@@ -38,7 +39,8 @@
     paramDic[@"search_id"] = searchId ?: @"";
     paramDic[@"offset"] = @(offset);
     paramDic[@"count"] = @(count);
-    
+    paramDic[CHANNEL_ID] = CHANNEL_ID_SAME_NEIGHBORHOOD_RENT;
+
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
@@ -53,7 +55,8 @@
     paramDic[@"house_id"] = houseId ?: @"";
     paramDic[@"offset"] = @(offset);
     paramDic[@"count"] = @(count);
-    
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_HOUSE;
+
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
@@ -70,7 +73,8 @@
     paramDic[@"search_id"] = searchId ?: @"";
     paramDic[@"offset"] = @(offset);
     paramDic[@"count"] = @(count);
-    
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_RENT;
+
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
@@ -127,7 +131,6 @@
     if (sugParam) {
         qparam[@"suggestion_params"] = sugParam;
     }
-    
     return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
     
 }
@@ -157,7 +160,7 @@
     if (sugParam) {
         qparam[@"suggestion_params"] = sugParam;
     }
-    
+    qparam[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_SEARCH;
     return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
     
 }
@@ -186,7 +189,8 @@
     if (sugParam) {
         qparam[@"suggestion_params"] = sugParam;
     }
-    
+    qparam[CHANNEL_ID] = CHANNEL_ID_SEARCH_COURT;
+
     return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
 
 }
@@ -201,7 +205,7 @@
  */
 +(TTHttpTask *)searchNeighborhoodList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion
 {
-    NSString *queryPath = @"/f100/api/search_neighborhood?";
+    NSString *queryPath = @"/f100/api/search_neighborhood";
 
     NSMutableDictionary *qparam = [NSMutableDictionary new];
     if (query.length > 0) {
@@ -215,7 +219,7 @@
     if (sugParam) {
         qparam[@"suggestion_params"] = sugParam;
     }
-    
+    qparam[CHANNEL_ID] = CHANNEL_ID_SEARCH_NEIGHBORHOOD;
     return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
 
 }
@@ -237,6 +241,7 @@
     if (searchType.length > 0) {
         qparam[@"search_type"] = searchType;
     }
+    qparam[CHANNEL_ID] = CHANNEL_ID_SEARCH_NEIGHBORHOOD_DEAL;
     return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
     
 }
@@ -379,5 +384,6 @@
     
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
+
 
 @end

@@ -16,12 +16,12 @@
 #import "TTCategoryDefine.h"
 #import "TTFollowNotifyServer.h"
 #import "TTDeviceHelper.h"
-#import "TTMessageNotificationTipsManager.h"
+#import "FHMessageNotificationTipsManager.h"
 //#import "TTPLManager.h"
 #import "TTSettingMineTabManager.h"
 #import "TTBadgeTrackerHelper.h"
 #import "TTRelationshipDefine.h"
-#import "TTMessageNotificationManager.h"
+#import "FHMessageNotificationManager.h"
 #import "ArticleMessageManager.h"
 #define fetchUpdateCountTimeInterval 180
 
@@ -204,10 +204,10 @@ static ArticleBadgeManager * badgeManager;
             self.followNumber = @0;
             [ArticleMessageManager invalidate];
             //停止新版消息通知轮询
-            [[TTMessageNotificationManager sharedManager] stopPeriodicalFetchUnreadMessageNumber];
+            [[FHMessageNotificationManager sharedManager] stopPeriodicalFetchUnreadMessageNumber];
             //新版消息通知，私信红点数清空
             self.messageNotificationNumber = @0;
-            [[TTMessageNotificationTipsManager sharedManager] clearTipsModel];
+            [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
             
             [self notify];
 
@@ -232,7 +232,7 @@ static ArticleBadgeManager * badgeManager;
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
     //新消息通知定时轮询未读消息
-    [[TTMessageNotificationManager sharedManager] startPeriodicalFetchUnreadMessageNumberWithChannel:nil];
+    [[FHMessageNotificationManager sharedManager] startPeriodicalFetchUnreadMessageNumberWithChannel:nil];
     [ArticleMessageManager startPeriodicalGetFollowNumber];
 }
 
@@ -240,7 +240,7 @@ static ArticleBadgeManager * badgeManager;
 {
     [ArticleMessageManager invalidate];
     //停止新版消息通知轮询
-    [[TTMessageNotificationManager sharedManager] stopPeriodicalFetchUnreadMessageNumber];
+    [[FHMessageNotificationManager sharedManager] stopPeriodicalFetchUnreadMessageNumber];
 }
 
 - (void)receiveFollowBadgeChangeNotification:(NSNotification *)notification
@@ -259,7 +259,7 @@ static ArticleBadgeManager * badgeManager;
 - (void)receiveMessageNotificationBadgeChangeNotification:(NSNotification *)notification
 {
     NSUInteger originNum = self.messageNotificationNumber.unsignedIntegerValue;
-    self.messageNotificationNumber = @([[TTMessageNotificationTipsManager sharedManager] unreadNumber]);
+    self.messageNotificationNumber = @([[FHMessageNotificationTipsManager sharedManager] unreadNumber]);
     
     [self notify];
     [[TTSettingMineTabManager sharedInstance_tt] reloadSectionsIfNeeded];

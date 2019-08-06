@@ -325,12 +325,12 @@
             return;
         }
         
-        self.task.uploadProgress = 0.2;
-        
         StrongSelf;
         self.startTime = [NSObject currentUnixTime];
         
-        self.task.uploadProgress = 0.1;
+        if (self.task.uploadProgress < 0.2) {
+            self.task.uploadProgress = 0.2;
+        }
         
         if ([self.task needUploadImg]) {
             [self uploadImages];
@@ -365,7 +365,6 @@
             return;
         }
         self.task.uploadProgress = 0.2 + ((CGFloat)([self.task.images count] - expectCount + receivedCount)/ (CGFloat)[self.task.images count]) * (TTForumPostVideoThreadTaskBeforePostThreadProgress - 0.2);
-        
     } finishBlock:^(NSError *error, NSArray<FRUploadImageModel*> *finishUpLoadModels) {
         StrongSelf;
         if (self.state != TTPostThreadOperationStateResumed) {
@@ -441,6 +440,9 @@
         [monitorDictionary setValue:@(networkConsume) forKey:@"network"];
         [monitorDictionary setValue:@(self.task.images.count) forKey:@"img_count"];
         NSMutableDictionary *responseDic = nil;
+        if ([respondObj isKindOfClass:[NSDictionary class]]) {
+            responseDic = [respondObj mutableCopy];
+        } else
         if ([respondObj isKindOfClass:[NSDictionary class]] && [[respondObj objectForKey:@"thread"] isKindOfClass:[NSDictionary class]]) {
             responseDic = [NSMutableDictionary dictionaryWithDictionary:[respondObj objectForKey:@"thread"]];
             if (![responseDic objectForKey:@"thread_id"]) {
@@ -464,14 +466,14 @@
             }
             [TTTrackerWrapper eventData:topicPostTrackerDic];
         } else {
-            if ([responseDic isKindOfClass:[NSDictionary class]]) {
-                [responseDic setValue:[(NSDictionary *)responseDic objectForKey:@"thread_id"] forKey:@"uniqueID"];
-                if ([respondObj isKindOfClass:[NSDictionary class]] && [[respondObj objectForKey:@"guide_info"] isKindOfClass:[NSDictionary class]]) {
-                    if (((NSDictionary *)[respondObj objectForKey:@"guide_info"]).count > 0) {
-                        [responseDic setValue:[(NSDictionary *)respondObj objectForKey:@"guide_info"] forKey:@"guide_info"];
-                    }
-                }
-            }
+//            if ([responseDic isKindOfClass:[NSDictionary class]]) {
+//                [responseDic setValue:[(NSDictionary *)responseDic objectForKey:@"thread_id"] forKey:@"uniqueID"];
+//                if ([respondObj isKindOfClass:[NSDictionary class]] && [[respondObj objectForKey:@"guide_info"] isKindOfClass:[NSDictionary class]]) {
+//                    if (((NSDictionary *)[respondObj objectForKey:@"guide_info"]).count > 0) {
+//                        [responseDic setValue:[(NSDictionary *)respondObj objectForKey:@"guide_info"] forKey:@"guide_info"];
+//                    }
+//                }
+//            }
             [monitorDictionary setValue:@(1) forKey:@"data_valid"];
             [monitorDictionary setValue:@(1) forKey:@"status"];
             uint64_t endTime = [NSObject currentUnixTime];

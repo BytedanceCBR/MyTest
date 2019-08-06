@@ -11,9 +11,12 @@
 #import <mach-o/getsect.h>
 #import "TTStartupTask.h"
 #import "NewsBaseDelegate.h"
+<<<<<<< HEAD
 #import <sys/sysctl.h>
 #import <mach/mach.h>
 #import "SSCommonLogic.h"
+=======
+>>>>>>> f_master
 
 @interface TTLaunchManager ()
 {
@@ -131,6 +134,7 @@
     
     NSMutableArray *taskList = [NSMutableArray new];
     
+    task_header_info taskInfo;
     for (NSInteger type = 0 ; type <= FHTaskTypeAfterLaunch ; type++) {
 #ifndef DEBUG
         if (type == FHTaskTypeDebug) {

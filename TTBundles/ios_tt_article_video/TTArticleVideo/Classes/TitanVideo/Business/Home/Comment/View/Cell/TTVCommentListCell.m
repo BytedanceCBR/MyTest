@@ -380,12 +380,12 @@
 - (NSAttributedString *)attributedTruncationToken {
     NSMutableAttributedString *truncationToken = [[NSMutableAttributedString alloc] initWithString:@"...全文" attributes:@{
         NSFontAttributeName : [TTVCommentListCellHelper contentLabelFont],
-        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kFHColorCoral),
+        NSForegroundColorAttributeName : SSGetThemedColorWithKey(@"red1"),
         NSLinkAttributeName : [NSURL URLWithString:kTTCommentContentLabelTruncationTokenURLString],
     }];
 
     [truncationToken addAttributes:@{
-        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kFHColorCharcoalGrey)
+        NSForegroundColorAttributeName : SSGetThemedColorWithKey(@"grey1")
     } range:NSMakeRange(0, 3)];
 
     return truncationToken;
@@ -505,7 +505,7 @@
         CGFloat maxWidth = self.width - [TTVCommentListCellHelper cellHorizontalPadding] - [TTVCommentListCellHelper avatarSize] - [TTVCommentListCellHelper avatarRightPadding] - [TTVCommentListCellHelper cellRightPadding] - 30.f - [TTVCommentListCellHelper nameViewRightPadding];
         _nameView = [[TTUserInfoView alloc] initWithBaselineOrigin:CGPointMake(0, 0) maxWidth:maxWidth limitHeight:[UIFont systemFontOfSize:[TTVCommentListCellHelper nameViewFontSize]].lineHeight title:nil fontSize:[TTVCommentListCellHelper nameViewFontSize] verifiedInfo:nil verified:NO owner:NO appendLogoInfoArray:nil];
         _nameView.frame = CGRectMake(self.avatarView.right + [TTVCommentListCellHelper avatarRightPadding], [TTVCommentListCellHelper cellVerticalPadding], maxWidth, [TTDeviceUIUtils tt_newPadding:20.f]);
-        _nameView.titleLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
+        _nameView.titleLabel.textColor = [UIColor tt_themedColorForKey:@"grey1"];
         WeakSelf;
         __weak typeof(_nameView) weakNameView = _nameView;
         [_nameView clickTitleWithAction:^(NSString *title) {
@@ -539,7 +539,7 @@
         _userInfoLabel = [[TTAsyncLabel alloc] init];
         _userInfoLabel.frame = CGRectMake(self.nameView.left, self.nameView.bottom, self.width - [TTVCommentListCellHelper cellHorizontalPadding] - [TTVCommentListCellHelper avatarSize] - [TTVCommentListCellHelper avatarRightPadding], [TTDeviceUIUtils tt_newPadding:16.5f]);
         _userInfoLabel.font = [TTVCommentListCellHelper userInfoLabelFont];
-        _userInfoLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
+        _userInfoLabel.textColor = [UIColor tt_themedColorForKey:@"grey1"];
         _userInfoLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _userInfoLabel.backgroundColor = [UIColor clearColor];
         _userInfoLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
@@ -553,7 +553,7 @@
         _timeLabel = [[TTAsyncLabel alloc] init];
         _timeLabel.frame = CGRectMake(self.nameView.left, self.contentLabel.bottom, self.width - [TTVCommentListCellHelper cellHorizontalPadding] - [TTVCommentListCellHelper avatarSize] - [TTVCommentListCellHelper avatarRightPadding], [TTDeviceUIUtils tt_newPadding:16.5f]);
         _timeLabel.font = [TTVCommentListCellHelper timeLabelFont];
-        _timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
+        _timeLabel.textColor = [UIColor tt_themedColorForKey:@"grey3"];
         _timeLabel.numberOfLines = 1;
         _timeLabel.backgroundColor = [UIColor clearColor];
         _timeLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
@@ -591,8 +591,8 @@
         _replyButton.hidden = YES;
         _replyButton.layer.cornerRadius = _replyButton.height / 2.f;
         _replyButton.layer.masksToBounds = YES;
-        _replyButton.backgroundColorThemeKey = kFHColorPaleGrey;
-        _replyButton.titleColorThemeKey = kFHColorCharcoalGrey;
+        _replyButton.backgroundColorThemeKey = @"grey7";
+        _replyButton.titleColorThemeKey = @"grey1";
         _replyButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     }
     return _replyButton;

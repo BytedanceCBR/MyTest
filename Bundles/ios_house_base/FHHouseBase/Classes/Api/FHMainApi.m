@@ -11,10 +11,11 @@
 #import "FHHouseType.h"
 #import "FHCommonDefines.h"
 #import <TTSandBoxHelper.h>
-#import "TTSandBoxHelper.h"
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 #import "FHJSONHTTPRequestSerializer.h"
 #import "FHEnvContext.h"
 #import <YYModel/YYModel.h>
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -161,7 +162,8 @@
     if (searchId) {
         param[@"searchId"] = searchId;
     }
-    
+    param[CHANNEL_ID] = CHANNEL_ID_SAME_NEIGHBORHOOD_RENT;
+
     if (![query containsString:@"house_type"] && !queryParam[@"house_type"]) {
         param[@"house_type"] = @(FHHouseTypeRentHouse);
     }
@@ -242,7 +244,6 @@
             
     }];
 }
-
 
 #pragma mark 找房频道首页相关
 +(TTHttpTask *)requestHomeSearchRoll:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion

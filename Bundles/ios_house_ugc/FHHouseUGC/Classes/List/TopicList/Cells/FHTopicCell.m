@@ -4,6 +4,8 @@
 //
 
 #import "FHTopicCell.h"
+#import "FHTopicListModel.h"
+#import "BDWebImage.h"
 
 
 @interface FHTopicCell ()
@@ -70,7 +72,13 @@
 }
 
 - (void)refreshWithData:(id)data {
-    self.contentLabel.text = @"据说经常看美女可以防止猝死";
+    if (![data isKindOfClass:FHTopicListResponseItemModel.class]) {
+        return;
+    }
+    FHTopicListResponseItemModel* itemData = (FHTopicListResponseModel *)data;
+    self.contentLabel.text = itemData.title;
+    [self.singleImageView bd_setImageWithURL:[NSURL URLWithString:itemData.des] placeholder:nil];
+
 }
 
 @end

@@ -52,4 +52,6 @@
 //指定presentingViewController并显示popOver（iPad only）
 - (void)showFrom:(nonnull UIViewController *)viewController sourceView:(nullable UIView *)sourceView sourceRect:(CGRect)sourceRect sourceBarButton:(nullable UIBarButtonItem *)barButtonItem animated:(BOOL)animated;
 
+- (void)dismissSelfFromParentViewControllerDidCancel;
+
 @end

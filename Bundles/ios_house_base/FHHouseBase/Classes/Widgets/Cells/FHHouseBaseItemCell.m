@@ -18,6 +18,12 @@
 #import "FHSingleImageInfoCellModel.h"
 #import "FHHomeHouseModel.h"
 #import "FHHouseRecommendReasonView.h"
+#import "UIButton+TTAdditions.h"
+#import "FHHouseDislikeView.h"
+#import "FHHomeRequestAPI.h"
+#import "ToastManager.h"
+#import "TTReachability.h"
+#import "FHUserTracker.h"
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -36,6 +42,8 @@
 @interface FHHouseBaseItemCell ()
 
 @property(nonatomic, strong) FHSingleImageInfoCellModel *cellModel;
+//首页的小图model
+@property(nonatomic, strong) FHHomeHouseDataItemsModel *homeItemModel;
 
 @property(nonatomic, strong) UIView *leftInfoView;
 
@@ -56,6 +64,7 @@
 @property(nonatomic, strong) UIImageView *fakeImageView;
 @property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
+@property(nonatomic, strong) UIButton *closeBtn; //x按钮
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 
@@ -237,6 +246,17 @@
     return _recReasonView;
 }
 
+- (UIButton *)closeBtn {
+    if (!_closeBtn) {
+        _closeBtn = [[UIButton alloc] init];
+        _closeBtn.hidden = YES;
+        [_closeBtn setImage:[UIImage imageNamed:@"small_icon_close"] forState:UIControlStateNormal];
+        [_closeBtn addTarget:self action:@selector(dislike) forControlEvents:UIControlEventTouchUpInside];
+        _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -20, -10, -20);
+    }
+    return _closeBtn;
+}
+
 -(CGFloat)contentMaxWidth
 {
     return  SCREEN_WIDTH - 170; //根据UI图 直接计算出来
@@ -390,7 +410,6 @@
 //        layout.marginBottom = YGPointValue(0);
     }];
     
-    
     [_rightInfoView addSubview:self.recReasonView];
     [_recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isIncludedInLayout = NO;
@@ -433,6 +452,18 @@
         layout.top = YGPointValue(10.f);
         layout.width = YGPointValue(70.0f);
         layout.height = YGPointValue(54.0f);
+    }];
+    
+    [self.leftInfoView addSubview:self.houseVideoImageView];
+    _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video_small"];
+    
+    [_houseVideoImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.position = YGPositionTypeAbsolute;
+        layout.top = YGPointValue(27.0f);
+        layout.left = YGPointValue(25.0f);
+        layout.width = YGPointValue(20.0f);
+        layout.height = YGPointValue(20.0f);
     }];
     
     [_imageTagLabelBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -516,23 +547,25 @@
     [_priceBgView addSubview:self.priceLabel];
 //    [_priceBgView addSubview:self.originPriceLabel];
     [_priceBgView addSubview:self.pricePerSqmLabel];
+    [_priceBgView addSubview:self.closeBtn];
     [_priceBgView setBackgroundColor:[UIColor whiteColor]];
     [_priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.flexDirection = YGFlexDirectionColumn;
-        layout.width = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
-        layout.height = YGPointValue(60);
-        layout.right = YGPointValue(20);
+        layout.width = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 20);
+        layout.height = YGPointValue(75);
+        layout.right = YGPointValue(0);
 //        layout.marginRight = YGPointValue(20);
         layout.justifyContent = YGJustifyCenter;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(5);
+//        layout.top = YGPointValue(5);
         layout.alignItems = YGAlignFlexEnd;
     }];
 
     
     [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
+        layout.right = YGPointValue(20);
         //        layout.height = YGPointValue(20);
         layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
         //        layout.alignSelf = YGAlignFlexEnd;
@@ -552,10 +585,20 @@
 //    [_pricePerSqmLabel setBackgroundColor:[UIColor yellowColor]];
     [_pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
+        layout.marginTop = YGPointValue(2);
+        layout.right = YGPointValue(20);
         layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
         //        layout.marginBottom = YGPointValue(0);
     }];
-//
+    
+    [_closeBtn configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.right = YGPointValue(20);
+        layout.marginTop = YGPointValue(8);
+        layout.width = YGPointValue(8);
+        layout.height = YGPointValue(8);
+    }];
+
     [_rightInfoView addSubview:self.recReasonView];
     [_recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isIncludedInLayout = NO;
@@ -587,11 +630,11 @@
     
     self.priceLabel.text = commonModel.displayPricePerSqm;
 //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
-    FHSearchHouseDataItemsHouseImageModel *imageModel = commonModel.images.firstObject;
+    FHImageModel *imageModel = commonModel.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
     if (houseType == FHHouseTypeSecondHandHouse) {
-        FHHomeHouseDataItemsImagesModel *imageModel = commonModel.houseImage.firstObject;
+        FHImageModel *imageModel = commonModel.houseImage.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
         self.subTitleLabel.text = commonModel.displaySubtitle;
         self.priceLabel.text = commonModel.displayPrice;
@@ -612,7 +655,7 @@
         self.subTitleLabel.text = commonModel.subtitle;
         self.priceLabel.text = commonModel.pricing;
         self.pricePerSqmLabel.text = nil;
-        FHSearchHouseDataItemsHouseImageModel *imageModel = [commonModel.houseImage firstObject];
+        FHImageModel *imageModel = [commonModel.houseImage firstObject];
         [self updateMainImageWithUrl:imageModel.url];
         
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
@@ -637,6 +680,20 @@
 
 -(void)updateHomeSmallImageHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel andType:(FHHouseType)houseType
 {
+    self.homeItemModel = commonModel;
+    //不感兴趣x按钮
+    if((houseType == FHHouseTypeSecondHandHouse || houseType == FHHouseTypeRentHouse) && commonModel.dislikeInfo){
+        self.closeBtn.hidden = NO;
+        [self.closeBtn configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.isIncludedInLayout = YES;
+        }];
+    }else{
+        self.closeBtn.hidden = YES;
+        [self.closeBtn configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.isIncludedInLayout = NO;
+        }];
+    }
+    
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
     self.mainTitleLabel.text = commonModel.displayTitle;
     self.subTitleLabel.text = commonModel.displayDescription;
@@ -644,11 +701,11 @@
     self.tagLabel.attributedText =  attributeString;
     self.priceLabel.text = commonModel.displayPricePerSqm;
     //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
-    FHSearchHouseDataItemsHouseImageModel *imageModel = commonModel.images.firstObject;
+    FHImageModel *imageModel = commonModel.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
     if (houseType == FHHouseTypeSecondHandHouse) {
-        FHHomeHouseDataItemsImagesModel *imageModel = commonModel.houseImage.firstObject;
+        FHImageModel *imageModel = commonModel.houseImage.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
         self.subTitleLabel.text = commonModel.displaySubtitle;
         
@@ -696,7 +753,7 @@
         }
         
         
-        FHSearchHouseDataItemsHouseImageModel *imageModel = [commonModel.houseImage firstObject];
+        FHImageModel *imageModel = [commonModel.houseImage firstObject];
         [self updateMainImageWithUrl:imageModel.url];
         
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
@@ -769,7 +826,7 @@
 {
     self.houseVideoImageView.hidden = YES;
     _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
+    FHImageModel *imageModel = model.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
     self.imageTagLabelBgView.hidden = YES;
@@ -802,7 +859,7 @@
 -(void)updateWithNewHouseModel:(FHNewHouseItemModel *)model {
     self.houseVideoImageView.hidden = YES;
     _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
+    FHImageModel *imageModel = model.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
     self.imageTagLabelBgView.hidden = YES;
@@ -853,7 +910,7 @@
         self.tagLabel.attributedText =  attributeString;
         
         self.priceLabel.text = model.displayPricePerSqm;
-        FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
+        FHImageModel *imageModel = model.images.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
     }
 }
@@ -863,7 +920,7 @@
 {
     self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
     _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
+    FHImageModel *imageModel = model.houseImage.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
@@ -989,7 +1046,7 @@
         _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     }
     
-    FHSearchHouseDataItemsHouseImageModel *imageModel = [model.houseImage firstObject];
+    FHImageModel *imageModel = [model.houseImage firstObject];
     [self updateMainImageWithUrl:imageModel.url];
     
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
@@ -1210,5 +1267,77 @@
     return attri;
 }
 
+- (void)dislike {
+    [self trackClickHouseDislke];
+    NSArray *dislikeInfo = self.homeItemModel.dislikeInfo;
+    if(dislikeInfo && [dislikeInfo isKindOfClass:[NSArray class]]){
+        __weak typeof(self) wself = self;
+        FHHouseDislikeView *dislikeView = [[FHHouseDislikeView alloc] init];
+        FHHouseDislikeViewModel *viewModel = [[FHHouseDislikeViewModel alloc] init];
+        
+        NSMutableArray *keywords = [NSMutableArray array];
+        for (FHHomeHouseDataItemsDislikeInfoModel *infoModel in dislikeInfo) {
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            if(infoModel.id){
+                [dic setObject:infoModel.id forKey:@"id"];
+            }
+            if(infoModel.text){
+                [dic setObject:infoModel.text forKey:@"name"];
+            }
+            if(infoModel.mutualExclusiveIds){
+                [dic setObject:infoModel.mutualExclusiveIds forKey:@"mutual_exclusive_ids"];
+            }
+            [keywords addObject:dic];
+        }
+        
+        viewModel.keywords = keywords;
+        viewModel.groupID = self.cellModel.houseId;
+        viewModel.extrasDict = self.homeItemModel.tracerDict;
+        [dislikeView refreshWithModel:viewModel];
+        CGPoint point = self.closeBtn.center;
+        [dislikeView showAtPoint:point
+                        fromView:self.closeBtn
+                 didDislikeBlock:^(FHHouseDislikeView * _Nonnull view) {
+                     [wself dislikeConfirm:view];
+                 }];
+    }
+}
+
+- (void)dislikeConfirm:(FHHouseDislikeView *)view {
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    
+    NSMutableArray *dislikeInfo = [NSMutableArray array];
+    for (FHHouseDislikeWord *word in view.dislikeWords) {
+        if(word.isSelected){
+            [dislikeInfo addObject:@([word.ID integerValue])];
+        }
+    }
+    //发起请求
+    [FHHomeRequestAPI requestHomeHouseDislike:self.homeItemModel.idx houseType:[self.homeItemModel.houseType integerValue] dislikeInfo:dislikeInfo completion:^(bool success, NSError * _Nonnull error) {
+        if(success){
+            [[ToastManager manager] showToast:@"感谢反馈，将减少推荐类似房源"];
+            //代理
+            if(self.delegate && [self.delegate respondsToSelector:@selector(dislikeConfirm:cell:)] && self.homeItemModel){
+                [self.delegate dislikeConfirm:self.homeItemModel cell:self];
+            }
+        }else{
+            [[ToastManager manager] showToast:@"反馈失败"];
+        }
+    }];
+}
+
+#pragma mark - dislike埋点
+
+- (void)trackClickHouseDislke {
+    if(self.homeItemModel.tracerDict){
+        NSMutableDictionary *tracerDict = [self.homeItemModel.tracerDict mutableCopy];
+        tracerDict[@"click_position"] = @"house_dislike";
+        [tracerDict removeObjectsForKeys:@[@"enter_from",@"element_from"]];
+        TRACK_EVENT(@"click_house_dislike", tracerDict);
+    }
+}
 
 @end

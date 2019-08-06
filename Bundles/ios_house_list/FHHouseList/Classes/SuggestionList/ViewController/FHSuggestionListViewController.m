@@ -15,6 +15,8 @@
 #import "ToastManager.h"
 #import "TTNavigationController.h"
 #import "FHSugSubscribeListViewController.h"
+#import <HMDTTMonitor.h>
+#import <TTInstallIDManager.h>
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -419,7 +421,7 @@
     if (openUrl.length <= 0) {
         openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,queryText,placeholder];
     }
-    if (self.suggestDelegate != NULL) {
+    if (self.suggestDelegate != NULL && ![openUrl containsString:@"webview"]) {
         // 1、suggestDelegate说明需要回传sug数据
         // 2、如果是从租房大类页和二手房大类页向下个页面跳转，则需要移除搜索列表相关的页面
         // 3、如果是从列表页和找房Tab列表页进入搜索，则还需pop到对应的列表页
@@ -453,6 +455,17 @@
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:tempInfos];
         
         NSURL *url = [NSURL URLWithString:openUrl];
+        
+        if (!url) {
+            NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
+            [paramsExtra setValue:@"跳转错误" forKey:@"desc"];
+            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"guess_you_want_error" status:1 extra:paramsExtra];
+        }else
+        {
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"guess_you_want_error" status:0 extra:nil];
+        }
+        
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
 }

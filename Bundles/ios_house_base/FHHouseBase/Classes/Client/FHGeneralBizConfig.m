@@ -11,14 +11,18 @@
 #import "FHEnvContext.h"
 #import "FHLazyLoadModel.h"
 #import <YYModel/YYModel.h>
+#import "FHUGCConfigModel.h"
+
 
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
+static NSString *const kUGCConfigKey = @"ugcConfig";
 static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 static NSString *const kUserDefaultCityNamePre05_Key = @"currentcitytext"; // 0.5版本之前保存的当前城市名称
 NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 NSString *const kFHPLoginhoneNumberCacheKey = @"loginPhoneNumber";
 static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
+static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
 
 
 @interface FHGeneralBizConfig ()
@@ -28,6 +32,7 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 @property (nonatomic, strong) YYCache *userDefaultSelectCityCache;
 @property(nonatomic , strong) YYCache *sendPhoneNumberCache;
 @property(nonatomic , strong) YYCache *subscribeHouseCache;
+@property(nonatomic , strong) YYCache *detailFeedbackCache;
 
 @end
 
@@ -88,8 +93,8 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 
 - (void)saveCurrentConfigCache:(FHConfigModel *)configValue
 {
-//    self.configCache = configValuedata;
-
+    //    self.configCache = configValuedata;
+    
     if([configValue.data isKindOfClass:[FHConfigDataModel class]])
     {
         NSString *configJsonStr = configValue.data.toJSONString;
@@ -101,8 +106,8 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 
 - (void)saveCurrentConfigDataCache:(FHConfigDataModel *)configValue
 {
-//    self.configCache = configValue;
-
+    //    self.configCache = configValue;
+    
     if([configValue isKindOfClass:[FHConfigDataModel class]])
     {
         NSString *configJsonStr = configValue.toJSONString;
@@ -112,6 +117,16 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
     }
 }
 
+- (void)saveUGCConfigCache:(FHUGCConfigModel *)configValue
+{
+    if([configValue.data isKindOfClass:[FHUGCConfigModel class]])
+    {
+        NSString *configJsonStr = configValue.data.toJSONString;
+        if ([configJsonStr isKindOfClass:[NSString class]]) {
+            [self.generalConfigCache setObject:configJsonStr forKey:kUGCConfigKey];
+        }
+    }
+}
 
 - (void)updateUserSelectDiskCacheIndex:(NSNumber *)indexNum
 {
@@ -126,7 +141,7 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
     if ([objectIndex isKindOfClass:[NSNumber class]]) {
         return  objectIndex;
     }
-   return  @(0);
+    return  @(0);
 }
 
 
@@ -134,7 +149,7 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 {
     NSString *configJsonStr = [self.generalConfigCache objectForKey:kGeneralKey];
     NSDictionary *configDict = [FHUtils dictionaryWithJsonString:configJsonStr];
-
+    
     if ([configDict isKindOfClass:[NSDictionary class]]) {
         FHConfigDataModel *configModel = [self lazyInitConfig:configDict];
         self.configCache = configModel;
@@ -154,56 +169,57 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
     NSMutableDictionary* theConfig = [config mutableCopy];
     NSDictionary* cityList = theConfig[@"city_list"];
     theConfig[@"city_list"] = nil;
-
+    
     NSMutableDictionary* cache = [[NSMutableDictionary alloc] init];
     NSString* configKey = @"filter";
     cache[configKey] = theConfig[configKey];
     theConfig[configKey] = nil;
-
+    
     configKey = @"filter_order";
     cache[@"filterOrder"] = theConfig[configKey];
     theConfig[configKey] = nil;
-
+    
     configKey = @"court_filter";
     cache[@"courtFilter"] = theConfig[configKey];
     theConfig[configKey] = nil;
-
-
+    
+    
     configKey = @"rent_filter";
     cache[@"rentFilter"] = theConfig[configKey];
     theConfig[configKey] = nil;
-
+    
     configKey = @"rent_filter_order";
     cache[@"rentFilterOrder"] = theConfig[configKey];
     theConfig[configKey] = nil;
-
+    
     configKey = @"neighborhood_filter";
     cache[@"neighborhoodFilter"] = theConfig[configKey];
     theConfig[configKey] = nil;
-
+    
     configKey = @"neighborhood_filter_order";
     cache[@"neighborhoodFilterOrder"] = theConfig[configKey];
     theConfig[configKey] = nil;
-
+    
     configKey = @"search_tab_neighborhood_filter";
     cache[@"searchTabNeighborhoodFilter"] = theConfig[configKey];
     theConfig[configKey] = nil;
-
+    
     configKey = @"search_tab_court_filter";
     cache[@"searchTabCourtFilter"] = theConfig[configKey];
     theConfig[configKey] = nil;
-
+    
     configKey = @"search_tab_rent_filter";
     cache[@"searchTabRentFilter"] = theConfig[configKey];
     theConfig[configKey] = nil;
-
+    
     configKey = @"search_tab_filter";
     cache[@"searchTabFilter"] = theConfig[configKey];
     theConfig[configKey] = nil;
-
+    
     configKey = @"sale_history_filter";
     cache[@"saleHistoryFilter"] = theConfig[configKey];
     theConfig[configKey] = nil;
+
     FHConfigDataModel *configModel = [FHConfigDataModel yy_modelWithJSON:theConfig];//[[FHConfigDataModel alloc] initWithDictionary:theConfig error:nil];
 
     [cache enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
@@ -251,6 +267,14 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
         _subscribeHouseCache = [YYCache cacheWithName:kFHSubscribeHouseCacheKey];
     }
     return _subscribeHouseCache;
+}
+
+- (YYCache *)detailFeedbackCache
+{
+    if (!_detailFeedbackCache) {
+        _detailFeedbackCache = [YYCache cacheWithName:kFHDetailFeedbackCacheKey];
+    }
+    return _detailFeedbackCache;
 }
 
 @end

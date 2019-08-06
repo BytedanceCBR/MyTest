@@ -19,7 +19,7 @@
 #import <Crashlytics/Crashlytics/Answers.h>
 #import <TTUGCFoundation/FRActionDataService.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
-
+#import "FHCommonApi.h"
 
 extern NSString * const TTCommentSuccessForPushGuideNotification;
 
@@ -498,6 +498,9 @@ static TTCommentDataManager *sharedManager;
     [postParams setValue:commentID forKey:@"id"];
     [postParams setValue:commentReplyID forKey:@"reply_id"];
     [[TTNetworkManager shareInstance] requestForJSONWithURL:[TTCommentDataManager deleteCommentReplyURLString] params:postParams method:@"POST" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        if (jsonObj) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"k_fh_ugc_del_comment_detail_reply" object:nil userInfo:postParams];
+        }
         if (finishBlock) {
             finishBlock(error);
         }
@@ -567,7 +570,16 @@ static TTCommentDataManager *sharedManager;
     [param setValue:commentID forKey:@"id"];
     [param setValue:commentReplyID forKey:@"reply_id"];
     [param setValue:isDigg ? @"cancel_digg": @"digg" forKey:@"action"];
-    [[TTNetworkManager shareInstance] requestForJSONWithURL:[TTCommentDataManager diggCommentReplyURLString] params:param method:@"GET" needCommonParams:YES callback:nil];
+    
+    NSInteger action = 0;
+    if (isDigg) {
+        action = 0;
+    } else {
+        action = 1;
+    }
+    // 新接口
+    [FHCommonApi requestCommonDigg: commentReplyID groupType:FHDetailDiggTypeREPLY action:action completion:nil];
+//    [[TTNetworkManager shareInstance] requestForJSONWithURL:[TTCommentDataManager diggCommentReplyURLString] params:param method:@"GET" needCommonParams:YES callback:nil];
 }
 
 #pragma mark - URLString

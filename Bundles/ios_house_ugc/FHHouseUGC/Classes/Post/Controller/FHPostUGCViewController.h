@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #define kUpdateGoodsItemInfomationNotification @"kUpdateGoodsItemInfomationNotification"
 
+NSString * const kFHUGCForumPostThreadFinish = @"kFHUGCForumPostThreadFinish";
+
 @interface FHPostUGCViewController : FHBaseViewController
 
 @end

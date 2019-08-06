@@ -6,10 +6,17 @@
 //
 
 #import "FHBaseViewController.h"
+#import "FHCommunityFeedListController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNearbyViewController : FHBaseViewController
+
+@property(nonatomic ,strong) FHCommunityFeedListController *feedVC;
+
+- (void)viewWillAppear;
+
+- (void)viewWillDisappear;
 
 @end
 

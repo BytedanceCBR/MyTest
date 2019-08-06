@@ -262,7 +262,7 @@ NSString * const kWDDetailHeaderViewAnswerText = @"回答";
         CGFloat naviHeight = 0;
         _questionContentLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
         _questionContentLabel.top = naviHeight;
-        _questionContentLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
+        _questionContentLabel.textColor = [UIColor tt_themedColorForKey:@"grey1"];
         _questionContentLabel.backgroundColor = [UIColor clearColor];
         _questionContentLabel.numberOfLines = 0;
         _questionContentLabel.font = [UIFont boldSystemFontOfSize:WDFontSize(24)];
@@ -286,7 +286,7 @@ NSString * const kWDDetailHeaderViewAnswerText = @"回答";
         _checkAnswerButton = [[TTAlphaThemedButton alloc] init];
         _checkAnswerButton.frame = CGRectMake(0, SSMaxY(self.questionContentLabel) + WDPadding(10), 0, 20); // 71, 59
         _checkAnswerButton.titleLabel.font = [UIFont systemFontOfSize:WDFontSize(14)];
-        _checkAnswerButton.titleColorThemeKey = kFHColorCoolGrey3;
+        _checkAnswerButton.titleColorThemeKey = @"grey3";
         [_checkAnswerButton addTarget:self action:@selector(allAnswerButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _checkAnswerButton;

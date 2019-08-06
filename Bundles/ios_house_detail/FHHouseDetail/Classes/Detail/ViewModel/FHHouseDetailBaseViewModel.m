@@ -28,6 +28,7 @@
 @property (nonatomic, strong)   NSHashTable               *weakedCellTable;
 @property (nonatomic, strong)   NSHashTable               *weakedVCLifeCycleCellTable;
 @property (nonatomic, assign)   CGPoint       lastPointOffset;
+@property (nonatomic, assign)   BOOL          scretchingWhenLoading;
 
 @end
 
@@ -83,10 +84,15 @@
     
     CGRect frame = self.tableView.frame;
     [self.tableView reloadData];
-    self.tableView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width,10000);//设置大frame 强制计算cell高度
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.tableView.frame = frame;
-    });
+    if (!self.scretchingWhenLoading) {
+        self.tableView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width,10000);//设置大frame 强制计算cell高度
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.tableView.frame = frame;
+        });
+        if (![self currentIsInstantData]) {
+            self.scretchingWhenLoading = YES;
+        }
+    }
 }
 
 // 回调方法
@@ -116,6 +122,16 @@
         }];
     }
     [self removePopLayerNotification];
+}
+
+-(void)handleInstantData:(id)data
+{
+    
+}
+
+-(BOOL)currentIsInstantData
+{
+    return NO;
 }
 
 #pragma mark - 需要子类实现的方法
@@ -159,12 +175,17 @@
     NSInteger row = indexPath.row;
     if (row >= 0 && row < self.items.count) {
         id data = self.items[row];
-        NSString *identifier = [self cellIdentifierForEntity:data];
+        NSString *identifier = NSStringFromClass([data class]);//[self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-            cell.baseViewModel = self;
-            [cell refreshWithData:data];
-            return cell;
+            if (cell) {
+                cell.baseViewModel = self;
+                [cell refreshWithData:data];
+                return cell;
+            }else{
+                NSLog(@"nil cell for data: %@",data);
+            }
+
         }
     }
     return [[UITableViewCell alloc] init];
@@ -198,6 +219,12 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if ([self currentIsInstantData]) {
+        //当前是列表页带入的数据，不上报埋点
+        return;
+    }
+    
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
@@ -256,6 +283,14 @@
             [tracerDic removeObjectForKey:@"element_from"];
             [FHUserTracker writeEvent:@"house_show" params:tracerDic];
         }
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath NS_AVAILABLE_IOS(6_0);{
+    // end display
+    if ([cell isKindOfClass:[FHDetailBaseCell class]]) {
+        FHDetailBaseCell *tCell = (FHDetailBaseCell *)cell;
+        [tCell fh_didEndDisplayingCell];
     }
 }
 
@@ -447,12 +482,15 @@
 
 -(void)popLayerReport:(id)model
 {
-    
     NSString *enterFrom = @"be_null";
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
         enterFrom = @"official_inspection";
     }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
         enterFrom = @"happiness_eye";
+        FHDetailDataBaseExtraDetectiveModel *detective = (FHDetailDataBaseExtraDetectiveModel *)model;
+        if (detective.fromDetail) {
+            enterFrom = @"happiness_eye_detail";
+        }
     }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         enterFrom = @"transaction_remind";
     }
@@ -461,10 +499,17 @@
     tracerDic[@"enter_from"] = enterFrom;
     tracerDic[@"log_pb"] = self.listLogPB ?: @"be_null";
     [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
-    if ([TTAccountManager isLogin]) {
+    
+    if(self.houseType == FHHouseTypeSecondHandHouse)
+    {
         [self gotoReportVC:model];
-    } else {
-        [self gotoLogin:model enterFrom:enterFrom];
+    }else
+    {
+        if ([TTAccountManager isLogin]) {
+            [self gotoReportVC:model];
+        } else {
+            [self gotoLogin:model enterFrom:enterFrom];
+        }
     }
 }
 

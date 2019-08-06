@@ -23,6 +23,7 @@
 #import <HMDTTMonitor.h>
 #import <TTInstallIDManager.h>
 #import <TTArticleCategoryManager.h>
+#import "FHHouseUGCAPI.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -160,7 +161,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     [alertVC addActionWithTitle:@"切换" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         if (openUrl) {
             [FHEnvContext sharedInstance].refreshConfigRequestType = @"switch_alert";
-
+            
             [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = YES;
             [FHEnvContext openSwitchCityURL:openUrl completion:^(BOOL isSuccess) {
                 // 进历史
@@ -300,7 +301,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             [uploadParams setValue:statusNumber forKey:@"location_status"];
             [uploadParams setValue:netStatusNumber forKey:@"network_status"];
             
-
+            
             [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" status:statusNum extra:paramsExtra];
             
             NSLog(@"定位错误:%@",error.localizedDescription);
@@ -370,19 +371,19 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
                 }
-
+                
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 [wSelf updateAllConfig:model isNeedDiff:NO];
-   
                 
-                BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
                 
-                if (!isHasFindHouseCategory && [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
-                    [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
-                        
-                    }];
-                }
-
+                //                BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+                //
+                //                if (!isHasFindHouseCategory && [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+                //                    [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
+                //
+                //                    }];
+                //                }
+                
                 wSelf.retryConfigCount = 3;
             }];
         }
@@ -441,6 +442,9 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     if (model.data) {
         [[FHEnvContext sharedInstance] acceptConfigDataModel:model.data];
     }
+    
+    // config 加载完成，请求参数更新完成，请求UGC Config
+    [FHHouseUGCAPI loadUgcConfigEntrance];
     
     // 告诉城市列表config加载ok
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHAllConfigLoadSuccessNotice object:nil];

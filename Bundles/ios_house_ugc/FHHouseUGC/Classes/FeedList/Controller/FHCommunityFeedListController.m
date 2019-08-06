@@ -10,39 +10,69 @@
 #import "FHCommunityFeedListBaseViewModel.h"
 #import "FHCommunityFeedListNearbyViewModel.h"
 #import "FHCommunityFeedListMyJoinViewModel.h"
+#import "FHCommunityFeedListPostDetailViewModel.h"
 #import "TTReachability.h"
-#import "ArticleListNotifyBarView.h"
 #import <UIViewAdditions.h>
 #import "TTDeviceHelper.h"
 #import <TTRoute.h>
+#import "TTAccountManager.h"
+#import "TTAccount+Multicast.h"
+#import "FHEnvContext.h"
+#import "FHUserTracker.h"
+#import <UIScrollView+Refresh.h>
+#import "FHFeedOperationView.h"
 
 @interface FHCommunityFeedListController ()
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
-@property(nonatomic, strong) UITableView *tableView;
-@property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
-@property(nonatomic, strong) UIButton *publishBtn;
+@property(nonatomic, assign) BOOL needReloadData;
+@property(nonatomic, copy) void(^notifyCompletionBlock)(void);
 
 @end
 
 @implementation FHCommunityFeedListController
 
+-(instancetype)init{
+    self = [super init];
+    if(self){
+        _tableViewNeedPullDown = YES;
+        _showErrorView = YES;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self initVars];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    
+    [TTAccount addMulticastDelegate:self];
 }
 
-//- (void)viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
-//    [self startLoadData];
-//}
+- (void)dealloc
+{
+    [TTAccount removeMulticastDelegate:self];
+}
 
-- (void)initVars {
-    self.tableViewNeedPullDown = YES;
+- (void)viewWillAppear {
+    [self.viewModel viewWillAppear];
+    
+    if(self.viewModel.dataList.count > 0){
+        if (self.needReloadData) {
+            self.needReloadData = NO;
+            [self scrollToTopAndRefreshAllData];
+        }
+    }else{
+        self.needReloadData = NO;
+        [self scrollToTopAndRefreshAllData];
+    }
+}
+
+- (void)viewWillDisappear {
+    [FHFeedOperationView dismissIfVisible];
 }
 
 - (void)initView {
@@ -50,7 +80,9 @@
     [self initNotifyBarView];
     [self initPublishBtn];
     
-    [self addDefaultEmptyViewFullScreen];
+    if(self.showErrorView){
+        [self addDefaultEmptyViewFullScreen];
+    }
 }
 
 - (void)initTableView {
@@ -66,9 +98,7 @@
     
     _tableView.sectionFooterHeight = 0.0;
     
-    _tableView.estimatedRowHeight = 85;
-    _tableView.estimatedSectionHeaderHeight = 0;
-    _tableView.estimatedSectionFooterHeight = 0;
+    _tableView.estimatedRowHeight = 0;
     
     if (@available(iOS 11.0 , *)) {
         self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -111,7 +141,7 @@
     }];
     
     [self.publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.view).offset(-self.publishBtnBottomHeight);
         make.right.mas_equalTo(self.view).offset(-12);
         make.width.height.mas_equalTo(64);
     }];
@@ -122,14 +152,23 @@
 
     if(self.listType == FHCommunityFeedListTypeNearby){
         viewModel = [[FHCommunityFeedListNearbyViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = @"weitoutiao";
+        viewModel.categoryId = @"94349537888";
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = @"f_wenda";
+        viewModel.categoryId = @"94349537893";
+    }else if(self.listType == FHCommunityFeedListTypePostDetail) {
+        viewModel = [[FHCommunityFeedListPostDetailViewModel alloc] initWithTableView:_tableView controller:self];
+        viewModel.categoryId = self.forumId;
     }
     
     self.viewModel = viewModel;
-    [self startLoadData];
+    self.needReloadData = YES;
+    //切换开关
+    WeakSelf;
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        StrongSelf;
+        self.needReloadData = YES;
+    }];
 }
 
 - (void)startLoadData {
@@ -142,33 +181,152 @@
     }
 }
 
+- (void)scrollToTopAndRefreshAllData {
+    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO]; 
+    [self startLoadData];
+}
+
+- (void)scrollToTopAndRefresh {
+    if(self.viewModel.isRefreshingTip || self.isLoadingData){
+        return;
+    }
+    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+    [self.tableView triggerPullDown];
+}
+
 - (void)retryLoadData {
     [self startLoadData];
 }
 
 - (void)goToPublish {
-    //跳转到发布器
+    if(self.publishBlock){
+        self.publishBlock();
+        return;
+    }
+    [self gotoPostThreadVC];
+}
+
+// 发布按钮点击
+- (void)gotoPostThreadVC {
+    if ([TTAccountManager isLogin]) {
+        [self gotoPostVC];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *page_type = @"nearby_list";
+    if (self.listType == FHCommunityFeedListTypeMyJoin) {
+        page_type = @"my_join_list";
+    } else  if (self.listType == FHCommunityFeedListTypeNearby) {
+        page_type = @"nearby_list";
+    }
+    [params setObject:page_type forKey:@"enter_from"];
+    [params setObject:@"click_publisher" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [wSelf gotoPostVC];
+                });
+            }
+        }
+    }];
+}
+
+- (void)gotoPostVC {
+    // 跳转到发布器
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"element_type"] = @"feed_publisher";
+    NSString *page_type = @"nearby_list";
+    if (self.listType == FHCommunityFeedListTypeMyJoin) {
+        page_type = @"my_join_list";
+    } else  if (self.listType == FHCommunityFeedListTypeNearby) {
+        page_type = @"nearby_list";
+    }
+    tracerDict[@"page_type"] = page_type;// “附近”：’nearby_list‘；“我加入的”：’my_join_list‘；'小区圈子详情页‘：community_group_detail‘
+    [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
+    
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    traceParam[@"page_type"] = @"feed_publisher";
+    traceParam[@"enter_from"] = page_type;
+    dict[TRACER_KEY] = traceParam;
+    dict[VCTITLE_KEY] = @"发帖";
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
     NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
 }
 
 #pragma mark - show notify
 
-- (void)showNotify:(NSString *)message {
+- (void)showNotify:(NSString *)message
+{
+    [self showNotify:message completion:nil];
+}
+
+- (void)showNotify:(NSString *)message completion:(void(^)())completion{
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
     self.tableView.contentInset = inset;
+    self.notifyCompletionBlock = completion;
     [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:0.3 animations:^{
-            if ([TTDeviceHelper isIPhoneXDevice]) {
-                self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-            }else{
-                self.tableView.contentInset = UIEdgeInsetsZero;
-            }
-        }];
-    });
+    [self performSelector:@selector(hideIfNeeds) withObject:nil afterDelay:1];
+    
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [UIView animateWithDuration:0.3 animations:^{
+//
+//            if ([TTDeviceHelper isIPhoneXDevice]) {
+//                self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+//            }else{
+//                self.tableView.contentInset = UIEdgeInsetsZero;
+//            }
+//            self.tableView.originContentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+//
+//        }completion:^(BOOL finished) {
+//            if (completion) {
+//                completion();
+//            }
+//        }];
+//    });
+}
+
+- (void)hideIfNeeds {
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+        }else{
+            self.tableView.contentInset = UIEdgeInsetsZero;
+        }
+        self.tableView.originContentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+        
+    }completion:^(BOOL finished) {
+        if (self.notifyCompletionBlock) {
+            self.notifyCompletionBlock();
+        }
+    }];
+}
+
+- (void)hideImmediately {
+    [self.notifyBarView hideImmediately];
+}
+
+#pragma mark - TTAccountMulticaastProtocol
+
+// 帐号切换
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
+{
+    self.needReloadData = YES;
 }
 
 

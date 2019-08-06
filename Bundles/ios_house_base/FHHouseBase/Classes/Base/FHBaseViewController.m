@@ -36,7 +36,7 @@
         self.isFirstViewDidAppear = YES;
         self.needRemoveLastVC = NO;
 
-        self.titleName = [paramObj.userInfo.allInfo objectForKey:VCTITLE_KEY];
+        self.titleName = [paramObj.allParams objectForKey:VCTITLE_KEY];
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];
         if (paramObj.allParams[@"fh_needRemoveLastVC_key"]) {
             self.needRemoveLastVC = [paramObj.allParams[@"fh_needRemoveLastVC_key"] boolValue];

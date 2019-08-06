@@ -31,6 +31,9 @@
 #import <TTTopBar.h>
 #import <FHHomeSearchPanelViewModel.h>
 #import <ExploreLogicSetting.h>
+#import <FHHouseBase/TTSandBoxHelper+House.h>
+#import <TTArticleTabBarController.h>
+#import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -45,9 +48,9 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
 @property (nonatomic) BOOL adColdHadJump;
 @property (nonatomic, strong) TTTopBar *topBar;
-@property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
+@property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
-
+@property (nonatomic, assign) BOOL isShowing;
 @end
 
 @implementation FHHomeViewController
@@ -64,7 +67,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.ttNeedIgnoreZoomAnimation = YES;
     [self.view addSubview:self.topBar];
     
     FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
@@ -84,6 +87,8 @@ static CGFloat const kSectionHeaderHeight = 38;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollMainTableToTop) name:@"kScrollToTopKey" object:nil];
+    
     //如果是inhouse的，弹升级弹窗
     if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
         //#if INHOUSE
@@ -100,8 +105,16 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     
     [self.view bringSubviewToFront:self.topBar];
+    
+    self.mainTableView.scrollsToTop = YES;
 }
 
+- (void)scrollMainTableToTop
+{
+    if (self.isShowing) {
+        [self.homeListViewModel setUpTableScrollOffsetZero];
+    }
+}
 
 //初始化main table
 - (void)resetMaintableView
@@ -114,9 +127,9 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.mainTableView.decelerationRate = 0.5;
     self.mainTableView.showsVerticalScrollIndicator = NO;
     
-//    if (_isMainTabVC) {
-//        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
-//    }
+    if (_isMainTabVC) {
+        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
+    }
     
     [self.view addSubview:self.mainTableView];
     
@@ -311,6 +324,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.isShowing = YES;
     
     if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
         [self.homeListViewModel checkCityStatus];
@@ -325,12 +339,15 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     
     self.stayTime = [[NSDate date] timeIntervalSince1970];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    if(_isMainTabVC)
+    self.isShowing = NO;
+    
+    if(_isMainTabVC && self.mainTableView.contentOffset.y <= [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType])
     {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
     }
@@ -341,6 +358,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    
     
     //开屏广告启动不会展示，保留逻辑代码
     if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
@@ -365,10 +384,9 @@ static CGFloat const kSectionHeaderHeight = 38;
         }
     }
     
+    [FHEnvContext addTabUGCGuid];
+    
     [TTSandBoxHelper setAppFirstLaunchForAd];
-    if (!self.homeListViewModel && _isMainTabVC) {
-        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
-    }
 }
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {
@@ -461,6 +479,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+
 #pragma mark init views
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
@@ -470,8 +489,9 @@ static CGFloat const kSectionHeaderHeight = 38;
         _scrollView.bounces = NO;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.showsHorizontalScrollIndicator = NO;
+        _scrollView.scrollsToTop = NO;
         _scrollView.contentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width*4, 0);
-        _scrollView.backgroundColor = [UIColor orangeColor];
+        _scrollView.backgroundColor = [UIColor whiteColor];
     }
     return _scrollView;
 }

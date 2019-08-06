@@ -1,4 +1,5 @@
 #import "FRApiModel.h"
+#import "FHURLSettings.h"
 @implementation FRApiRequestModel
 - (instancetype) init {
     self = [super init];
@@ -7915,9 +7916,9 @@
     self = [super init];
     if (self) {
         self._method = @"POST";
-        self._host = [FRCommonURLSetting baseURL];
-        self._uri = @"/ugc/publish/post/v5/commit";
-        self._response = @"FRUgcPublishPostV5CommitResponseModel";
+        self._host = [FHURLSettings baseURL];
+        self._uri = @"/f100/ugc/post_publish";//@"/ugc/publish/post/v5/commit";
+        self._response = @"FRPublishPostResponseModel";
     }
 
     return self;
@@ -7949,12 +7950,34 @@
     [params setValue:_promotion_id forKey:@"promotion_id"];
     [params setValue:_flipchat_sync forKey:@"flipchat_sync"];
     [params setValue:_sdk_params forKey:@"sdk_params"];
+    [params setValue:_social_group_id forKey:@"social_group_id"];
+    // 埋点参数
+    if (self.extraTrack) {
+        NSString *enter_from = self.extraTrack[@"enter_from"];
+        NSString *element_from = self.extraTrack[@"element_from"];
+        NSString *page_type = self.extraTrack[@"page_type"];
+        if (enter_from.length > 0) {
+            [params setValue:enter_from forKey:@"enter_from"];
+        }
+        if (element_from.length > 0) {
+            [params setValue:element_from forKey:@"element_from"];
+        }
+        if (page_type.length > 0) {
+            [params setValue:page_type forKey:@"page_type"];
+        }
+    }
 
     return params;
 }
 
 @end
 
+@implementation FHUgcPublishPostResponseModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 @implementation FRUgcPublishPostV5CommitResponseModel
 - (instancetype) init

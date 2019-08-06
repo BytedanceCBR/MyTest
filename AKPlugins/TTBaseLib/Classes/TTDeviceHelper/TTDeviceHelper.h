@@ -35,6 +35,18 @@ typedef NS_ENUM(NSUInteger, TTDeviceMode) {
     TTDeviceMode480
 };
 
+// 设备 portrait 状态下基于屏幕宽度对设备进行分类。之所以增加这个是因为头条App在做字体及间距等差异化时是基于屏幕宽度而不是高度，而苹果手机在升级时宽度变化是极少的
+typedef NS_ENUM(NSUInteger, TTDeviceWidthMode) {
+    // iPad
+    TTDeviceWidthModePad,
+    // iPhone 6 plus, iPhone 6S Plus, iPhone 7 plus, iPhone 7S plus, iPhone 8 plus, iPhone XS Max, iPhone XR
+    TTDeviceWidthMode414,
+    // iPhone 6, iPhone 6S, iPhone 7, iPhone 7S, iPhone 8, iPhone X, iPhone XS
+    TTDeviceWidthMode375,
+    // iPhone 4, iPhone 4S, iPhone 5, iPhone 5s, iPhone 5C, iPhone 5S, iPhone SE
+    TTDeviceWidthMode320
+};
+
 @interface TTDeviceHelper : NSObject
 
 /**
@@ -43,6 +55,9 @@ typedef NS_ENUM(NSUInteger, TTDeviceMode) {
  *  @return "iPhone"/"iPad"
  */
 + (nullable NSString *)platformName;
+
+// 获取设备类型
++ (TTDeviceWidthMode)deviceWidthType;
 
 /**
  *  判断设备是iPhone4, iPhone4S

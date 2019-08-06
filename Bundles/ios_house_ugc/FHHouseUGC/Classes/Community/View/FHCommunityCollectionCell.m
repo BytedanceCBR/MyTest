@@ -13,7 +13,7 @@
 
 @interface FHCommunityCollectionCell ()
 
-@property(nonatomic, strong) UIViewController *vc;
+@property(nonatomic, strong) FHBaseViewController *vc;
 
 @end
 
@@ -30,13 +30,42 @@
 }
 
 - (void)setType:(FHCommunityCollectionCellType)type {
-    if(_type == FHCommunityCollectionCellTypeNone){
+    if(_type != type){
         _type = type;
         [self initViews];
+    }else{
+        if(self.type == FHCommunityCollectionCellTypeNearby || self.type == FHCommunityCollectionCellTypeMyJoin){
+            self.vc.tracerDict = [self traceDic].mutableCopy;
+        }
+//        [self.vc viewWillAppear:NO];
+        
+        if(self.type == FHCommunityCollectionCellTypeNearby){
+            FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
+            [vc viewWillAppear];
+        }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
+            FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
+            [vc viewWillAppear];
+        }
+    }
+}
+
+- (void)cellDisappear {
+    if(self.type == FHCommunityCollectionCellTypeNearby){
+        FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
+        [vc viewWillDisappear];
+    }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
+        FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
+        [vc viewWillDisappear];
     }
 }
 
 - (void)initViews {
+    if(self.vc){
+        [self.vc.view removeFromSuperview];
+        [self.vc removeFromParentViewController];
+        self.vc = nil;
+    }
+    
     if(self.type == FHCommunityCollectionCellTypeNearby){
         FHNearbyViewController *vc = [[FHNearbyViewController alloc] init];
         self.vc = vc;
@@ -51,10 +80,36 @@
         
     }
     
+    if(self.type == FHCommunityCollectionCellTypeNearby || self.type == FHCommunityCollectionCellTypeMyJoin){
+        self.vc.tracerDict = [self traceDic].mutableCopy;
+    }
+    
     if(self.vc){
         self.vc.view.frame = self.bounds;
         [self.contentView addSubview:self.vc.view];
     }
+}
+
+- (UIViewController *)contentViewController {
+    return _vc;
+}
+
+- (void)refreshData {
+    if([self.vc isKindOfClass:[FHNearbyViewController class]]){
+        FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
+        [vc.feedVC scrollToTopAndRefresh];
+    }else if([self.vc isKindOfClass:[FHMyJoinViewController class]]){
+        FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
+        [vc.feedListVC scrollToTopAndRefresh];
+    }
+}
+
+- (NSDictionary *)traceDic {
+    NSString *enterType = self.enterType ? self.enterType : @"default";
+    return @{
+             @"enter_from":@"neighborhood_tab",
+             @"enter_type":self.enterType,
+             };
 }
 
 @end

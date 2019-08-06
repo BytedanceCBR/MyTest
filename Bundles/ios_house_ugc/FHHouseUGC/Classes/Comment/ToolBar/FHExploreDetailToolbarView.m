@@ -162,7 +162,7 @@
     int64_t value = [commentBadgeValue longLongValue];
     commentBadgeValue = [TTBusinessManager formatCommentCount:value];
     if ([commentBadgeValue integerValue] == 0) {
-        commentBadgeValue = nil;
+        commentBadgeValue = @"赞";
     }
     _digCountValue = commentBadgeValue;
     self.digCountLabel.text = commentBadgeValue;
@@ -203,6 +203,6 @@
 @end
 
 CGFloat FHExploreDetailGetToolbarHeight(void) {
-    return ([TTDeviceHelper isPadDevice] ? 50 : 44) + [TTDeviceHelper ssOnePixel];
+    return ([TTDeviceHelper isPadDevice] ? 50 : 48) + [TTDeviceHelper ssOnePixel];
 }
 

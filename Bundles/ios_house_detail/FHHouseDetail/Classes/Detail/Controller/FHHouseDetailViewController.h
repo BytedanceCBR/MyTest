@@ -7,12 +7,20 @@
 
 #import "FHBaseViewController.h"
 
+extern NSString *const INSTANT_DATA_KEY;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDetailViewController : FHBaseViewController
 
 //是否显示
 @property (nonatomic, assign)   BOOL     isViewDidDisapper;
+//列表页带入的数据
+@property (nonatomic, strong) id instantData;
+//是否显示拨打电话
+@property (nonatomic, assign) BOOL isPhoneCallShow;
+//正在拨打电话的经纪人id
+@property (nonatomic, copy) NSString *phoneCallRealtorId;
 
 //设置状态栏
 - (void)refreshContentOffset:(CGPoint)contentOffset;

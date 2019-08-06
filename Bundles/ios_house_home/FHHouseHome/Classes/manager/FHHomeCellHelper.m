@@ -29,6 +29,7 @@
 #import <FHHouseList/FHCommuteManager.h>
 #import "FHhomeHouseTypeBannerCell.h"
 #import "FHHomePlaceHolderCell.h"
+#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 static NSMutableArray  * _Nullable identifierArr;
 

@@ -1,12 +1,12 @@
 #—————————————pod私有源--------------------------------------
-source 'git@code.byted.org:iOS_Library/toutiao_binary_repo.git' #TTRNKit 二进制版本在此仓库中
-source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git' #TTRNKit 源码在此仓库中
-source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'#一定要把这个源放在publicthird_source_repo.git之前，才能引用到正确的React组件
-source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
-source 'git@code.byted.org:ugc/UGCSpecs.git'
-#source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
-
-source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
+#source 'git@code.byted.org:iOS_Library/toutiao_binary_repo.git' #TTRNKit 二进制版本在此仓库中
+#source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git' #TTRNKit 源码在此仓库中
+#source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'#一定要把这个源放在publicthird_source_repo.git之前，才能引用到正确的React组件
+#source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
+#source 'git@code.byted.org:ugc/UGCSpecs.git'
+##source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+#
+#source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
 
 require File.dirname(__FILE__)+'/pod_binary.rb'
 install! 'cocoapods', :warn_for_multiple_pod_sources => false
@@ -27,13 +27,13 @@ bd_use_binary!
 platform :ios, '8.0' 
 
 inhibit_all_warnings!
-def appPods
+
+# F100 业务线库
+def fhPods
     
-    #---------------------------------------------------各业务线插件化库--------------------------------------------------#
-    #---------------------------------------------------各业务线插件化库--------------------------------------------------#
     pod 'FHCommonUI'  , :path => '../Bundles/ios_common_ui' # :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/develop' #
     pod 'FHHouseBase' , :path => '../Bundles/ios_house_base' # :git => 'git@code.byted.org:fproject/ios_house_base.git' ,:branch => 'feature/develop' #
-#    pod 'FHHouseRent' , :path => '../Bundles/ios_house_rent' #:git => 'git@code.byted.org:fproject/ios_house_rent.git' ,:branch => 'feature/develop' #
+    #    pod 'FHHouseRent' , :path => '../Bundles/ios_house_rent' #:git => 'git@code.byted.org:fproject/ios_house_rent.git' ,:branch => 'feature/develop' #
     pod 'FHMapSearch' , :path => '../Bundles/ios_map_search' # :git => 'git@code.byted.org:fproject/ios_map_search.git' ,:branch => 'feature/develop' #
     pod 'FHHouseHome' , :path => '../Bundles/ios_house_home' # :git => 'git@code.byted.org:fproject/ios_house_home.git' ,:branch => 'feature/develop' #
     pod 'FHHouseDetail' , :path => '../Bundles/ios_house_detail' # :git => 'git@code.byted.org:fproject/ios_house_detail.git' , :branch => 'feature/develop'
@@ -44,14 +44,21 @@ def appPods
     pod 'FHHouseUGC' , :path => '../Bundles/ios_house_ugc'
     pod 'FHHouseTrend' , :path => '../Bundles/ios_house_trend'
     pod 'FHCHousePush' , :path => '../Bundles/FHCHousePush'#,:git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
-#    pod 'FHCHousePush' , :git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
-
+    #    pod 'FHCHousePush' , :git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
+    
     pod 'FHWebView', :path => '../AKPlugins/FHWebView'
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '898fbc9d6beb4e7e9094487eea1b2ffeb16f618b' #:branch => 'feature/develop'
-#    pod 'ios_house_im' , :path => '../../../f_pods/ios_house_im'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => 'e61e37eeacd3586be530affd8aaf25f93b02216d' #:branch => 'feature/develop'
+    pod 'ios_house_im' , '0.1.5'
+    #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
+    pod 'ios_house_filter' , '1.0.1'
 
-    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
+end
+
+
+def appPods
+    #---------------------------------------------------各业务线插件化库--------------------------------------------------#
+    #---------------------------------------------------各业务线插件化库--------------------------------------------------#
 
     #---------------------------------------------------头条业务源码库--------------------------------------------------#
     pod 'TTAD', :path => '../TTBundles/ios_tt_ad'
@@ -69,7 +76,6 @@ def appPods
     
     #pod_binary 'SecGuard', '0.8.10.5'#'0.8.10.1'
     pod 'SecGuard' , '0.8.14.5'
-    
     
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
 
@@ -271,8 +277,8 @@ def appPods
     #-----头条网络业务库------
     pod_binary 'TTNetBusiness', '0.0.10'
 
-    #-----授权----
-    pod 'TTPushAuthorizationManager', :path => '../AKPlugins/AKPushAuthorizationManager', :inhibit_warnings => false
+    #-----授权管理----
+    pod 'FHPushAuthorizationManager','0.1.2'
     
     #----头条Settihngs----
 #    pod_binary 'TTSettingsManager', '0.4.1'
@@ -288,10 +294,23 @@ def appPods
     #--------------------------------------------------基础工具库-----------------------------------------------#
     #--------------------------------------------------基础工具库-----------------------------------------------#
     #-----头条基础库-----
-    pod 'TTBaseLib', :path => '../AKPlugins/TTBaseLib', :inhibit_warnings => false
+    pod_binary 'TTBaseLib','2.0.0', :subspecs => [
+    'TTBaseTool',
+    'TTBusinessManager',
+    'TTCategory',
+    'TTDeviceHelper',
+    'TTLabelTextHelper',
+    'TTSandBoxHelper',
+    'TTUIResponderHelper',
+    'TTNetworkHelper'
+    ]
+    pod_binary 'TTVersionHelper', '1.0.0'
 
     #-----头条主题库-----
-    pod 'TTThemed', :path => '../AKPlugins/AKThemed', :inhibit_warnings => false
+#    pod 'TTThemed', :path => '../AKPlugins/AKThemed', :inhibit_warnings => false
+
+    pod_binary 'TTThemed','0.1.36'
+
     #-----头条UI组件库-----
     pod 'TTUIWidget', :path => '../AKPlugins/TTUIWidget', :inhibit_warnings => false
 
@@ -355,8 +374,8 @@ def appPods
 #    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'
     pod_binary 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
     pod 'TTPushManager', '0.0.13.4'
-    pod_binary 'TTReachability', '0.1.8'
-    pod 'Protobuf', '3.0.1-ttv'
+    pod_binary 'TTReachability', '0.5.1'
+    pod_binary 'Protobuf', '3.0.1-ttv'
     #----- 存储库 -----
     pod_binary 'TTPersistence', '0.2.3'
     pod_binary 'TTEntityBase', '0.2.4'
@@ -387,7 +406,7 @@ def appPods
     #-----平台化基础库-----
     #pod 'TTPlatformBaseLib', git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :commit => '36ce9794e63c3aa58bb2cc125453c68dec035e18'
     
-    pod 'TTPlatformBaseLib', :path => '../AKPlugins/TTPlatformBaseLib' #git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :branch =>'dev_bubble'
+    pod 'TTPlatformBaseLib','1.3.1'
 
     #-----平台化UIModel库-----
     pod 'TTPlatformUIModel', :path => '../AKPlugins/AKPlatformUIModel', :inhibit_warnings => false
@@ -399,7 +418,7 @@ def appPods
     #pod 'TTAVRecorder', '1.1.1'
 
     #----弹窗互斥---
-    pod 'TTDialogDirector', :git => 'git@code.byted.org:TTIOS/TTDialogDirector.git', :commit => '8ed5beb', :subspecs => [
+    pod 'TTDialogDirector', '0.1.4' , :subspecs => [ #:git => 'git@code.byted.org:TTIOS/TTDialogDirector.git', :commit => '8ed5beb',
     'Core',
     'PhotoLibrary',
     'Microphone',
@@ -439,7 +458,7 @@ def appPods
     pod 'BDUGContainer', '1.1.2'
     pod 'BDUGTrackerInterface', '1.1.1'
     pod 'BDUGMonitorInterface', '1.0.0'
-    pod_binary 'TYRZApiSDK', '1.2.0'
+    pod 'TYRZApiSDK' , '1.2.1'
     pod_binary 'EAccountApiSDK', '1.1.1'
     pod_binary 'BDUGUnionSDK', '0.1.2'
 
@@ -510,27 +529,27 @@ def appPods
 
 
     pod 'TTIMSDK', '0.7.7', :subspecs => [
-    'IMKit',
-    'IMKit_WebSocket',
-    'Feature_ApplicationStatus',
-    'IMKit_Core',
-    'Foundation_Plugin_TTNetwork',
-    'Foundation',
-    'Feature_WebSocket',
-    'Feature_Essential_PB',
-    'Feature_Essential',
-    'Feature_Core_Store',
-    'Feature_Core_Sender',
-    'Feature_Core_Puller',
-    'Feature_Core_Notifier',
-    'Feature_Core_Logger',
-    'Feature_Core_ErrorHandler',
-    'Feature_Core_CurrentUser',
-    'Feature_Core_ConversationInfo',
-    'Feature_Core_Config',
-    'Feature_Core',
-    'Feature_ApplicationStatus',
-    'Bridges'
+        'IMKit',
+        'IMKit_WebSocket',
+        'Feature_ApplicationStatus',
+        'IMKit_Core',
+        'Foundation_Plugin_TTNetwork',
+        'Foundation',
+        'Feature_WebSocket',
+        'Feature_Essential_PB',
+        'Feature_Essential',
+        'Feature_Core_Store',
+        'Feature_Core_Sender',
+        'Feature_Core_Puller',
+        'Feature_Core_Notifier',
+        'Feature_Core_Logger',
+        'Feature_Core_ErrorHandler',
+        'Feature_Core_CurrentUser',
+        'Feature_Core_ConversationInfo',
+        'Feature_Core_Config',
+        'Feature_Core',
+        'Feature_ApplicationStatus',
+        'Bridges'
     ]
     
     pod_binary 'IGListKit','3.4.0'
@@ -565,13 +584,15 @@ def appPods
     pod_binary  'BDABTestSDK', '1.0.2-rc.3'
     #pod 'BDABTestSDK', '1.0.0'
 
-
+    pod_binary 'BDUGDeepLink', '1.0.1'
 end
 target 'NewsLite' do
+    fhPods
     appPods
 end
 
 target 'f100' do
+    fhPods
     appPods
     #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine'
     script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
@@ -583,6 +604,7 @@ target 'NewsLiteInHouse' do
     pod_binary 'TTSettingsManager/Debug'
     pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
     #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine_inhouse'
+    fhPods
     appPods
     script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
 
@@ -594,6 +616,7 @@ target 'NewsLiteChannel' do
     pod_binary 'TTSettingsManager/Debug'
     pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
     #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine_inhouse'
+    fhPods
     appPods
     script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
     
@@ -652,6 +675,33 @@ post_install do |installer|
             target.build_configurations.each do |config|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
             end
+        end
+        if target.name == "TTArticleBase"
+            target.build_configurations.each do |config|
+                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','SD_WEBP=1']
+            end
+        end
+    end
+    
+    # Xcode 11目前和CocoaPods有兼容问题，会导致Assets.car这个文件，由于出现在两处Output File而报错
+    # 一处是Xcode自带的Copy Bundle Resources，一处是CocoaPods的[CP] Copy Pods Resources
+    # 这个问题在Xcode 10上也有小概率发生，现在统一临时Fix下，参考CocoaPods/CocoaPods#8122
+    installer.aggregate_targets.each do |target|
+        if ['Pods-f100', 'Pods-NewsLiteInHouse','Pods-NewsLite','Pods-NewsLiteChannel'].include?(target.name)
+            patched = false
+            target.user_targets.first.build_phases.each do |phase|
+                if phase.display_name == '[CP] Copy Pods Resources'
+                    assets_car_path = '${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car'
+                    if !phase.input_paths
+                        phase.input_paths = []
+                    end
+                    if !phase.input_paths.include?(assets_car_path)
+                        phase.input_paths << assets_car_path
+                        patched = true
+                    end
+                end
+            end
+            target.user_project.save if patched
         end
     end
 end

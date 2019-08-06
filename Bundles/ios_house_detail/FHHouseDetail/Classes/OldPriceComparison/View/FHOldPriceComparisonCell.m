@@ -314,7 +314,7 @@
 
 #pragma mark 二手房
 -(void)updateWithSecondHouseModel:(FHSearchHouseDataItemsModel *)model {
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
+    FHImageModel *imageModel = model.houseImage.firstObject;
     [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHOldPriceComparisonCell placeholderImage]];
     
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
@@ -361,7 +361,7 @@
     NSString *orientation = @"";
     NSString *floor = @"";
     
-    for (FHSearchHouseDataItemsBaseInfoModel *infoModel in model.baseInfo) {
+    for (FHHouseBaseInfoModel *infoModel in model.baseInfo) {
         if([infoModel.attr isEqualToString:@"户型"]){
             roomType = infoModel.value;
         }else if([infoModel.attr isEqualToString:@"面积"]){

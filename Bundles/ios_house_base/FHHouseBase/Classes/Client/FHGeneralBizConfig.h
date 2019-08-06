@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString *const kFHPhoneNumberCacheKey;
+
 @interface FHGeneralBizConfig : NSObject
 @property (nonatomic, strong) FHConfigDataModel *configCache;
 
@@ -35,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (YYCache *)sendPhoneNumberCache;
 
 - (YYCache *)subscribeHouseCache;
+//保存已经显示的房源详情反馈弹窗
+- (YYCache *)detailFeedbackCache;
 
 @end
 

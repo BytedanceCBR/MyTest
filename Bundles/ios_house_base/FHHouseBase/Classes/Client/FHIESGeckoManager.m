@@ -20,11 +20,11 @@
 + (void)configGeckoInfo
 {
     [IESGeckoKit setDeviceID:[[TTInstallIDManager sharedInstance] deviceID]];
-
+    
     NSString *stringVersion = [FHEnvContext getToutiaoVersionCode];
     NSArray *geckoChannels = [FHIESGeckoManager fhGeckoChannels];
     NSMutableArray *localChannels = [NSMutableArray new];
-
+    
     if ([geckoChannels isKindOfClass:[NSArray class]]) {
         [localChannels addObjectsFromArray:geckoChannels];
     }
@@ -73,7 +73,7 @@
 + (BOOL)isHasCacheForChannel:(NSString *)channel
 { 
     if ([channel isKindOfClass:[NSString class]]) {
-      return  [IESGeckoCacheManager hasCacheForPath:nil accessKey:[FHIESGeckoManager getGeckoKey] channel:channel];
+        return  [IESGeckoCacheManager hasCacheForPath:nil accessKey:[FHIESGeckoManager getGeckoKey] channel:channel];
     }
     return NO;
 }

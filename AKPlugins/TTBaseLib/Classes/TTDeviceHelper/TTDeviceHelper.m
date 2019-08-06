@@ -26,6 +26,32 @@ static TTDeviceMode tt_deviceMode;
     return result;
 }
 
++ (TTDeviceWidthMode)deviceWidthType {
+    static TTDeviceWidthMode tt_deviceWithType = TTDeviceWidthMode375;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if ([TTDeviceHelper judgePadDevice]) {
+            tt_deviceWithType = TTDeviceWidthModePad;
+        } else {
+            CGFloat portraitWidth = MIN([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+            if (portraitWidth == 320.0) {
+                tt_deviceWithType = TTDeviceWidthMode320;
+            } else if (portraitWidth == 375.0) {
+                tt_deviceWithType = TTDeviceWidthMode375;
+            } else if (portraitWidth == 414.0) {
+                tt_deviceWithType = TTDeviceWidthMode414;
+            } else {
+                tt_deviceWithType = TTDeviceWidthMode375;
+                NSAssert(false, @"需要适配新的屏幕宽度。");
+            }
+        }
+    });
+    
+    return tt_deviceWithType;
+    
+}
+
 + (BOOL)is480Screen {
     return [TTDeviceHelper getDeviceType] == TTDeviceMode480;
 }

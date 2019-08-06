@@ -18,6 +18,7 @@
     int _lineTag;
     UIView* _highlightView;
 }
+@property (nonatomic, strong) UITextField *addressTextField;
 @end
 
 @implementation LogViewerSettingViewController
@@ -27,7 +28,11 @@
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:[UIColor whiteColor]];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(back:)];
+#if TARGET_OS_SIMULATOR
+    [self configForSimulator];
+#else
     [self configCamera];
+#endif
 }
 
 
@@ -42,6 +47,39 @@
 
 -(void)back:(id)sender {
     [[self navigationController] popViewControllerAnimated:YES];
+}
+
+-(void)configForSimulator {
+    
+    UILabel *label = [UILabel new];
+    label.text = @"数据提交地址:";
+    [label sizeToFit];
+    
+    self.addressTextField = [UITextField new];
+    self.addressTextField.frame = CGRectMake(0, 0, self.view.bounds.size.width - 32, 20);
+    self.addressTextField.borderStyle = UITextBorderStyleRoundedRect;
+    self.addressTextField.placeholder = @"https://data.bytedance.net/et_api/logview/verify/";
+    self.addressTextField.font = [UIFont systemFontOfSize:12];
+    
+    UIButton *confirmBtn = [UIButton buttonWithType: UIButtonTypeCustom];
+    [confirmBtn setTitle:@"确定" forState:UIControlStateNormal];
+    [confirmBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [confirmBtn sizeToFit];
+    [confirmBtn addTarget:self action:@selector(confirmBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:label];
+    [self.view addSubview:self.addressTextField];
+    [self.view addSubview:confirmBtn];
+    
+    label.center = CGPointMake(self.view.center.x, self.view.center.y - 30);
+    self.addressTextField.center = self.view.center;
+    confirmBtn.center = CGPointMake(self.view.center.x, self.view.center.y + 30);
+}
+
+- (void)confirmBtnAction: (UIButton *)sender {
+    NSString *address = self.addressTextField.text.length > 0 ? self.addressTextField.text : self.addressTextField.placeholder;
+    [[TTTracker sharedInstance] setDebugLogServerAddress: address];
+    [self back:nil];
 }
 
 -(void)configCamera {

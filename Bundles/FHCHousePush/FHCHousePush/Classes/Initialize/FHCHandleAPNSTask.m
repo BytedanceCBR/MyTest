@@ -196,12 +196,12 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     SSLog(@">>>>> Launch: receiveRemoteNoti: %@", userInfo);
-    if (!SSIsEmptyDictionary(userInfo)) {
-        NSString *userInfoStr = [NSString stringWithFormat:@"%@",userInfo];
-        if (!isEmptyString(userInfoStr)) {
-            [UIPasteboard generalPasteboard].string = userInfoStr;
-        }
-    }
+//    if (!SSIsEmptyDictionary(userInfo)) {
+//        NSString *userInfoStr = [NSString stringWithFormat:@"%@",userInfo];
+//        if (!isEmptyString(userInfoStr)) {
+//            [UIPasteboard generalPasteboard].string = userInfoStr;
+//        }
+//    }
     if (userInfo != nil) {
         [TTAdSplashMediator shareInstance].splashADShowType = TTAdSplashShowTypeHide;
     }
