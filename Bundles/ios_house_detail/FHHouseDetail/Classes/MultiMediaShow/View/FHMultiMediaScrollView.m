@@ -130,7 +130,7 @@
         
         CGFloat aspect = 375.0 / 65;
         CGFloat width = SCREEN_WIDTH;
-        CGFloat height = width / aspect;
+        CGFloat height = round(width / aspect + 0.5);
         CGRect frame = CGRectMake(0, 0, width, height);
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
         gradientLayer.frame = frame;
