@@ -59,7 +59,7 @@
 
 + (CGFloat)cellHeight {
     CGFloat photoCellHeight = 300.0; // 默认300
-    photoCellHeight = [UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight;
+    photoCellHeight = round([UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight + 0.5);
     return photoCellHeight;
 }
 
@@ -146,7 +146,7 @@
         
         CGFloat aspect = 375.0 / 65;
         CGFloat width = SCREEN_WIDTH;
-        CGFloat height = width / aspect;
+        CGFloat height = round(width / aspect + 0.5);
         CGRect frame = CGRectMake(0, 0, width, height);
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
         gradientLayer.frame = frame;
