@@ -31,6 +31,7 @@
 @property (nonatomic, strong)   FHPostDetailNavHeaderView       *naviHeaderView;
 @property (nonatomic, strong)   FHUGCFollowButton       *followButton;// 关注
 @property (nonatomic, assign)   BOOL       isViewAppearing;
+@property (nonatomic, copy)     NSString       *lastPageSocialGroupId;
 
 @end
 
@@ -44,6 +45,7 @@
         NSDictionary *params = paramObj.allParams;
         int64_t tid = [[paramObj.allParams objectForKey:@"tid"] longLongValue];
         int64_t fid = [[paramObj.allParams objectForKey:@"fid"] longLongValue];
+        self.lastPageSocialGroupId = [params objectForKey:@"social_group_id"];
         // 帖子id
         self.tid = tid;// 1636215424527368  1636223115260939    1636223457031179    1636222717073420
         self.fid = fid;// 6564242300        1621706233835550    6564242300          86578926583
@@ -71,6 +73,7 @@
     self.weakViewModel.threadID = self.tid;
     self.weakViewModel.forumID = self.fid;
     self.weakViewModel.category = @"thread_detail";
+    self.weakViewModel.lastPageSocialGroupId = self.lastPageSocialGroupId;
     // 导航栏
     [self setupDetailNaviBar];
     // 全部评论
