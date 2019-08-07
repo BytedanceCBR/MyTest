@@ -42,6 +42,7 @@
     if (self) {
         // 帖子
         self.postType = FHUGCPostTypePost;
+        self.fromUGC = YES;
         NSDictionary *params = paramObj.allParams;
         int64_t tid = [[paramObj.allParams objectForKey:@"tid"] longLongValue];
         int64_t fid = [[paramObj.allParams objectForKey:@"fid"] longLongValue];
