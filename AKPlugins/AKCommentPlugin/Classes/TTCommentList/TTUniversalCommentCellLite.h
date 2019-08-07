@@ -39,6 +39,7 @@
 @property (nonatomic, strong) id<TTCommentModelProtocol> commentModel;
 @property (nonatomic, weak) id<TTCommentCellDelegate> delegate;
 @property (nonatomic, assign) BOOL impressionShown;
+@property (nonatomic, assign)  BOOL fromUGC;//来源是ugc模块新功能，区别以前的评论部分
 @property (nonatomic, copy)     NSDictionary       *tracerDict;
 
 - (void)tt_refreshConditionWithLayout:(TTUniversalCommentLayout *)layout model:(id<TTCommentModelProtocol>)model;
