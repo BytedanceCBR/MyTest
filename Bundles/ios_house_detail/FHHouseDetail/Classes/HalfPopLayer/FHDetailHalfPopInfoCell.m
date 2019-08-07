@@ -103,8 +103,18 @@
     self.stateLabel.attributedText = [[NSAttributedString alloc] initWithString:model.subTitle?:@"" attributes:attr];
     
     self.tipLabel.text = model.explainContent;
-    
-    
+}
+
+-(void)updateWithReasonInfoItem:(FHDetailDataBaseExtraDetectiveReasonListItem *)reasonInfoItem
+{
+    BOOL ok = reasonInfoItem.status == 0;
+    self.tipImageView.image = [UIImage imageNamed: ok?@"detail_check_ok":@"detail_check_failed"];
+    self.titleLabel.text  = reasonInfoItem.title;
+    self.stateLabel.hidden = YES;
+    self.tipLabel.text = reasonInfoItem.content;
+    [self.tipLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(4);
+    }];
 }
 
 

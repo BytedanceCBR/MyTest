@@ -10,6 +10,9 @@
 #import "TTLaunchDefine.h"
 #import "BDUGDeepLinkManager.h"
 #import "NewsBaseDelegate.h"
+#import "TTInstallIDManager.h"
+#import "TTSandBoxHelper.h"
+#import "TTNetworkHelper.h"
 
 DEC_TASK("TTZlinkSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
 
@@ -39,6 +42,11 @@ DEC_TASK("TTZlinkSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
         
         BDUGDeepLinkInfo *info = [BDUGDeepLinkInfo new];
         info.schemas = schemas;
+        info.package = [TTSandBoxHelper bundleIdentifier];
+        info.appVersion = [TTSandBoxHelper versionName];
+        info.did = [[TTInstallIDManager sharedInstance] deviceID];
+        info.appId = [[TTInstallIDManager sharedInstance] appID];
+        info.ip = [[[TTNetworkHelper getIPAddresses] allValues] firstObject];
         [manager registerDeepLinkWithInfo:info];
     }
     return YES;

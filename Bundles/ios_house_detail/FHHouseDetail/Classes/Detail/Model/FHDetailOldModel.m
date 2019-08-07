@@ -239,6 +239,34 @@
 {
     NSDictionary *dict = @{
                            @"detectiveList": @"detective_list",
+                           @"showSkyEyeLogo": @"show_skyeye_logo"
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailDataBaseExtraDetectiveReasonListItem
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailDataBaseExtraDetectiveReasonInfo
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"subTitle": @"sub_title",
+                           @"buttonText": @"button_text",
+                           @"reasonList": @"reason_list",
+                           @"feedbackContent": @"feedback_content",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -256,6 +284,7 @@
     NSDictionary *dict = @{
                            @"explainContent": @"explain_content",
                            @"subTitle": @"sub_title",
+                           @"reasonInfo": @"reason_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

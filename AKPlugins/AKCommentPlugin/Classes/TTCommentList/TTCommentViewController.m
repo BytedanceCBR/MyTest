@@ -499,6 +499,7 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
             [baseCondition setValue:@(5) forKey:@"source_type"]; // ArticleMomentSourceTypeArticleDetail
             [baseCondition setValue:@(comment.isStick) forKey:@"from_message"];
             [baseCondition setValue:self.serviceID forKey:@"serviceID"]; // serviceID
+            [baseCondition setValue:@(self.fromUGC) forKey:@"fromUGC"]; 
             [self.delegate tt_commentViewController:self didSelectWithInfo:baseCondition];
         }
     }
@@ -729,6 +730,7 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
     NSInteger rightIndex = indexPath.row;
     if ([layoutArray count] > 0 && rightIndex < [layoutArray count]) {
         TTUniversalCommentCellLite *commentCell = (TTUniversalCommentCellLite *)[tableView dequeueReusableCellWithIdentifier:kTTUniversalCommentCellLiteIdentifier forIndexPath:indexPath];
+        commentCell.fromUGC = self.fromUGC;
         id<TTCommentModelProtocol> commentModel = [modelArray objectAtIndex:rightIndex];
         commentCell.delegate = self;
         TTUniversalCommentLayout *layout = layoutArray[indexPath.row];

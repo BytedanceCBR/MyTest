@@ -51,6 +51,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *dealOpenUrl;
 @property (nonatomic, strong , nullable) NSDictionary *neighborhoodInfo; //带入详情页，当前不解析
 @property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
+@property (nonatomic, copy , nullable) NSString *pricePerSqmNum;
+@property (nonatomic, copy , nullable) NSString *pricePerSqmUnit;
 
 @end
 

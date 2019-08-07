@@ -10,6 +10,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <Masonry/Masonry.h>
+#import <TTBaseLib/UIViewAdditions.h>
 
 
 @interface FHDetailHalfPopTopBar ()
@@ -65,12 +66,15 @@
     }
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+- (void)hideReportBtn
+{
+    _reportButton.hidden = YES;
+    _closeButton.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
+    [_closeButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-10);
+        make.top.mas_equalTo(10);
+        make.width.height.mas_equalTo(24);
+    }];
 }
-*/
 
 @end

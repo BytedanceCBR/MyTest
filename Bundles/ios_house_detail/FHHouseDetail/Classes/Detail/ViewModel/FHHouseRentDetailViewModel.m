@@ -452,8 +452,14 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         //  同小区房源
         if (self.sameNeighborhoodHouseData && self.sameNeighborhoodHouseData.items.count > 0) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
-            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-            [self.items addObject:grayLine];
+            if (self.items.count > 0) {
+                id item = [self.items lastObject];
+                if (![item isKindOfClass:[FHDetailNeighborhoodMapInfoModel class]]) {
+                    // 地图模块
+                    FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+                    [self.items addObject:grayLine];
+                }
+            }
             FHDetailRentSameNeighborhoodHouseModel *infoModel = [[FHDetailRentSameNeighborhoodHouseModel alloc] init];
             infoModel.sameNeighborhoodHouseData = self.sameNeighborhoodHouseData;
             [self.items addObject:infoModel];
@@ -461,8 +467,14 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         // 周边房源
         if (self.relatedHouseData && self.relatedHouseData.items.count > 0) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
-            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-            [self.items addObject:grayLine];
+            if (self.items.count > 0) {
+                id item = [self.items lastObject];
+                if (![item isKindOfClass:[FHDetailNeighborhoodMapInfoModel class]]) {
+                    // 地图模块
+                    FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+                    [self.items addObject:grayLine];
+                }
+            }
             FHDetailRentRelatedHouseModel *infoModel = [[FHDetailRentRelatedHouseModel alloc] init];
             infoModel.relatedHouseData = self.relatedHouseData;
             [self.items addObject:infoModel];

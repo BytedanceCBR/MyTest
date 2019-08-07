@@ -501,9 +501,9 @@
         [tracerDict removeObjectForKey:@"rank"];
         [tracerDict removeObjectForKey:@"card_type"];
         [tracerDict setValue:@"be_null" forKey:@"element_from"];
-        [tracerDict setValue:@"filter_false_old" forKey:@"element_type"];
+        [tracerDict setValue:@"filter_false_tip" forKey:@"element_type"];
         
-        [FHUserTracker writeEvent:@"real_house_show" params:tracerDict];
+        [FHUserTracker writeEvent:@"filter_false_tip_show" params:tracerDict];
         return;
     }
     

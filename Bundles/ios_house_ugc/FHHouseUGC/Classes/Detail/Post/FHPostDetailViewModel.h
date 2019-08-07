@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak)   FHFeedUGCCellModel       *detailData;
 
 @property (nonatomic, weak)     FHPostDetailHeaderModel       *detailHeaderModel;
+@property (nonatomic, copy)     NSString       *lastPageSocialGroupId;
 
 @end
 
