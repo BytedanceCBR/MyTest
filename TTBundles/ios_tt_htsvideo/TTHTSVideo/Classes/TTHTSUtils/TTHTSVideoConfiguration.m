@@ -39,7 +39,7 @@
         [commonParams setValue:[TTNetworkHelper connectMethodName] forKey:@"cx"];
         [commonParams setValue:[TTDeviceHelper platformName] forKey:@"device_platform"];
         [commonParams setValue:[TTSandBoxHelper versionName] forKey:@"version_code"];
-        [commonParams setValue:[TTExtensions buildVersion] forKey:@"update_version_code"];
+        [commonParams setValue:[TTSandBoxHelper buildVerion] forKey:@"update_version_code"];
         return [commonParams copy];
     }];
     

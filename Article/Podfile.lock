@@ -35,7 +35,7 @@ PODS:
   - BDABTestSDK/Core (1.0.2-rc.3.1.binary)
   - BDAccountSessionSDK (0.1.11.1-binary)
   - BDALog (0.1.12.1-binary)
-  - BDAlogProtocol (0.1.6)
+  - BDAlogProtocol (0.1.7)
   - BDAssert/Core (2.0.0)
   - BDTArticle (0.2.3)
   - BDTBasePlayer (0.3.47)
@@ -94,32 +94,35 @@ PODS:
   - FHWebView (0.1.0)
   - FLAnimatedImage (1.0.12.1-binary)
   - FLEX (2.1.1.1-binary)
-  - FMDB (2.6.2.1-binary):
-    - FMDB/standard (= 2.6.2.1-binary)
-  - FMDB/standard (2.6.2.1-binary)
+  - FMDB/standard (2.7.5.1-binary)
   - Gaia (1.0.7-rc.1)
   - Godzippa (1.1.0.1-binary)
-  - Heimdallr/ALog (0.6.27-rc.0.1.binary)
-  - Heimdallr/CloudCommand (0.6.27-rc.0.1.binary)
-  - Heimdallr/Core (0.6.27-rc.0.1.binary)
-  - Heimdallr/CrashDetector (0.6.27-rc.0.1.binary)
-  - Heimdallr/DeviceInfo (0.6.27-rc.0.1.binary)
-  - Heimdallr/FMDB (0.6.27-rc.0.1.binary)
-  - Heimdallr/HMDANR (0.6.27-rc.0.1.binary)
-  - Heimdallr/HMDConfig (0.6.27-rc.0.1.binary)
-  - Heimdallr/HMDOOM (0.6.27-rc.0.1.binary)
-  - Heimdallr/HMDSession (0.6.27-rc.0.1.binary)
-  - Heimdallr/HMDStart (0.6.27-rc.0.1.binary)
-  - Heimdallr/HMDStore (0.6.27-rc.0.1.binary)
-  - Heimdallr/Log (0.6.27-rc.0.1.binary)
-  - Heimdallr/Mach (0.6.27-rc.0.1.binary)
-  - Heimdallr/MemorySnapshot (0.6.27-rc.0.1.binary)
-  - Heimdallr/Monitors (0.6.27-rc.0.1.binary)
-  - Heimdallr/TTMonitor (0.6.27-rc.0.1.binary)
-  - Heimdallr/TTNet (0.6.27-rc.0.1.binary)
-  - Heimdallr/UITracker (0.6.27-rc.0.1.binary)
-  - Heimdallr/Upload (0.6.27-rc.0.1.binary)
-  - Heimdallr/Utility (0.6.27-rc.0.1.binary)
+  - Heimdallr/ALog (0.7.6)
+  - Heimdallr/CloudCommand (0.7.6)
+  - Heimdallr/Core (0.7.6)
+  - Heimdallr/CrashDetector (0.7.6)
+  - Heimdallr/DeviceInfo (0.7.6)
+  - Heimdallr/HMDANR (0.7.6)
+  - Heimdallr/HMDConfig (0.7.6)
+  - Heimdallr/HMDOOM (0.7.6)
+  - Heimdallr/HMDOOMCrash (0.7.6)
+  - Heimdallr/HMDSession (0.7.6)
+  - Heimdallr/HMDStart (0.7.6)
+  - Heimdallr/HMDStore (0.7.6)
+  - Heimdallr/HMDURLProtocolTracker (0.7.6)
+  - Heimdallr/HMDWatchDog (0.7.6)
+  - Heimdallr/HTTPRequestTracker (0.7.6)
+  - Heimdallr/Log (0.7.6)
+  - Heimdallr/Mach (0.7.6)
+  - Heimdallr/MemorySnapshot (0.7.6)
+  - Heimdallr/Monitors (0.7.6)
+  - Heimdallr/Network (0.7.6)
+  - Heimdallr/TTMonitor (0.7.6)
+  - Heimdallr/TTNet (0.7.6)
+  - Heimdallr/UITracker (0.7.6)
+  - Heimdallr/Upload (0.7.6)
+  - Heimdallr/UserException (0.7.6)
+  - Heimdallr/Utility (0.7.6)
   - HTSVideoPlay (0.3.9):
     - HTSVideoPlay/Yoga (= 0.3.9)
     - HTSVideoPlay/YogaKit (= 0.3.9)
@@ -382,7 +385,12 @@ PODS:
   - TTKitchen/TTCommonConfig (1.6.0)
   - TTLCSService (0.1.1.1-binary)
   - TTLocationManager (1.0.22)
-  - TTMonitor (0.7.9.44)
+  - TTMacroManager (1.0.1)
+  - TTMonitor (0.7.11.0):
+    - TTMonitor/BackTrace (= 0.7.11.0)
+    - TTMonitor/Monitor (= 0.7.11.0)
+  - TTMonitor/BackTrace (0.7.11.0)
+  - TTMonitor/Monitor (0.7.11.0)
   - TTNetBusiness (0.0.10.1-binary)
   - TTNetworkManager (2.2.8.55-rc.1.1.binary)
   - TTNewsAccountBusiness (0.2.4):
@@ -433,7 +441,7 @@ PODS:
   - TTPreloaderSDK (1.4.20-rc.0)
   - TTPushManager (0.0.13.4)
   - TTPushSDK (0.1.1.1-binary)
-  - TTReachability (0.5.1.1-binary)
+  - TTReachability (0.5.2.1-binary)
   - TTReporter (0.2.1.1-binary)
   - TTRexxar/Core (0.8.10.1-binary)
   - TTRexxar/PackageApp (0.8.10.1-binary)
@@ -565,7 +573,7 @@ DEPENDENCIES:
   - BDABTestSDK (= 1.0.2-rc.3.1.binary)
   - BDAccountSessionSDK (= 0.1.11.1-binary)
   - BDALog (= 0.1.12.1-binary)
-  - BDAlogProtocol (= 0.1.6)
+  - BDAlogProtocol (= 0.1.7)
   - BDAssert/Core (= 2.0.0)
   - BDTArticle (from `../AKPlugins/BDTArticle`)
   - BDTBasePlayer (from `../AKPlugins/BDTBasePlayer`)
@@ -609,30 +617,35 @@ DEPENDENCIES:
   - FHWebView (from `../AKPlugins/FHWebView`)
   - FLAnimatedImage (= 1.0.12.1-binary)
   - FLEX (= 2.1.1.1-binary)
-  - FMDB (= 2.6.2.1-binary)
+  - FMDB/standard (= 2.7.5.1-binary)
   - Gaia (= 1.0.7-rc.1)
   - Godzippa (= 1.1.0.1-binary)
-  - Heimdallr/ALog (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/CloudCommand (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/Core (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/CrashDetector (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/DeviceInfo (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/FMDB (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/HMDANR (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/HMDConfig (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/HMDOOM (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/HMDSession (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/HMDStart (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/HMDStore (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/Log (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/Mach (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/MemorySnapshot (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/Monitors (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/TTMonitor (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/TTNet (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/UITracker (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/Upload (= 0.6.27-rc.0.1.binary)
-  - Heimdallr/Utility (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/ALog (= 0.7.6)
+  - Heimdallr/CloudCommand (= 0.7.6)
+  - Heimdallr/Core (= 0.7.6)
+  - Heimdallr/CrashDetector (= 0.7.6)
+  - Heimdallr/DeviceInfo (= 0.7.6)
+  - Heimdallr/HMDANR (= 0.7.6)
+  - Heimdallr/HMDConfig (= 0.7.6)
+  - Heimdallr/HMDOOM (= 0.7.6)
+  - Heimdallr/HMDOOMCrash (= 0.7.6)
+  - Heimdallr/HMDSession (= 0.7.6)
+  - Heimdallr/HMDStart (= 0.7.6)
+  - Heimdallr/HMDStore (= 0.7.6)
+  - Heimdallr/HMDURLProtocolTracker (= 0.7.6)
+  - Heimdallr/HMDWatchDog (= 0.7.6)
+  - Heimdallr/HTTPRequestTracker (= 0.7.6)
+  - Heimdallr/Log (= 0.7.6)
+  - Heimdallr/Mach (= 0.7.6)
+  - Heimdallr/MemorySnapshot (= 0.7.6)
+  - Heimdallr/Monitors (= 0.7.6)
+  - Heimdallr/Network (= 0.7.6)
+  - Heimdallr/TTMonitor (= 0.7.6)
+  - Heimdallr/TTNet (= 0.7.6)
+  - Heimdallr/UITracker (= 0.7.6)
+  - Heimdallr/Upload (= 0.7.6)
+  - Heimdallr/UserException (= 0.7.6)
+  - Heimdallr/Utility (= 0.7.6)
   - HTSVideoPlay (from `../Vendor/ShortVideo`)
   - IESGeckoKit (= 0.4.0.1-binary)
   - IESVideoPlayer (= 0.1.16)
@@ -765,7 +778,8 @@ DEPENDENCIES:
   - TTKitchen/TTCommonConfig (= 1.6.0)
   - TTLCSService (= 0.1.1.1-binary)
   - TTLocationManager (= 1.0.22)
-  - TTMonitor (from `../AKPlugins/TTMonitor`)
+  - TTMacroManager (= 1.0.1)
+  - TTMonitor (= 0.7.11.0)
   - TTNetBusiness (= 0.0.10.1-binary)
   - TTNetworkManager (= 2.2.8.55-rc.1.1.binary)
   - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
@@ -778,7 +792,7 @@ DEPENDENCIES:
   - TTPreloaderSDK (= 1.4.20-rc.0)
   - TTPushManager (= 0.0.13.4)
   - TTPushSDK (= 0.1.1.1-binary)
-  - TTReachability (= 0.5.1.1-binary)
+  - TTReachability (= 0.5.2.1-binary)
   - TTReporter (= 0.2.1.1-binary)
   - TTRexxar/Core (= 0.8.10.1-binary)
   - TTRexxar/PackageApp (= 0.8.10.1-binary)
@@ -905,8 +919,6 @@ EXTERNAL SOURCES:
     :path: ../TTBundles/ios_tt_htsvideo
   TTImagePicker:
     :path: ../AKPlugins/AKImagePicker
-  TTMonitor:
-    :path: ../AKPlugins/TTMonitor
   TTNewsAccountBusiness:
     :path: ../AKPlugins/TTNewsAccountBusiness
   TTPhotoScrollVC:
@@ -966,7 +978,7 @@ SPEC CHECKSUMS:
   BDABTestSDK: 8d0452c001637b0922644d4a9aee347a29d34bd0
   BDAccountSessionSDK: 1b21928204da418d25fb12d6a51e81587264fd6d
   BDALog: 2c34fe6b9e0f7107abb36d41ca3baf1ee33113bb
-  BDAlogProtocol: 3079beb0afd725ea0e209a617dc4381158aa151f
+  BDAlogProtocol: 187e7105123599bef3b935ec41b40f49112b5fd8
   BDAssert: 7b1b4dd1138bd7ab31cabd3d75b340a49f6902d7
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: eed47dd8f845dde6c955f2d527b255a823d40665
@@ -1003,10 +1015,10 @@ SPEC CHECKSUMS:
   FHWebView: 1c354474ccc25e8a56b77e34b7b3a52bb4c6e414
   FLAnimatedImage: c103d911f434514c39961a5eed4c0e29c6cdae48
   FLEX: a9a617d07fa5909d1eb9e3c5791f6965ba5f9ccf
-  FMDB: 20748cf597d147c452903c32d101953e46dcb4b5
+  FMDB: 1b67d801da397eeec6cb5f1453f37ce301235e39
   Gaia: 8d07f88e57c49364734d1fb5ea331f37c225c619
   Godzippa: d9e858886267fa9026eb4eb1e2e4ce5e0df2d680
-  Heimdallr: 6f61359ac15e725ddc5a421bd679c98bf855c7f5
+  Heimdallr: 870d6babe7d2f51988383707e2b0be473a93ba27
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
   IESGeckoKit: e6cca571ecaf0b5a9af925cd34eda889aa9311de
   IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
@@ -1080,7 +1092,8 @@ SPEC CHECKSUMS:
   TTKitchen: b7fcce48014799914152c0b90e6c513ee0e9b1a4
   TTLCSService: d9fc936bba13993ecc454b486a15a403a9fdbdc4
   TTLocationManager: 4e294fc0d5a8e0d263af7a96d48fb37fe4489665
-  TTMonitor: 2677003dc3428a13b1fbbc93a0c49344c1adc1b1
+  TTMacroManager: 915aadf3841523767f16a230fd97fe546aa800eb
+  TTMonitor: e13bbd46ff10da6a6bf91e198f6ef7049e4ee1ad
   TTNetBusiness: e436bc6d648bf01946cc01756c86adfd0d718e5c
   TTNetworkManager: 6afdda81f4f04c85b9d38c22d1d542d24b5d9141
   TTNewsAccountBusiness: 50125377b67c11155b3677cf0e6d3d02ed718a03
@@ -1093,7 +1106,7 @@ SPEC CHECKSUMS:
   TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
   TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
   TTPushSDK: 3302f3e57c39cf8e14233769b28cb07d5f403966
-  TTReachability: 2ccada0bc62de6ad2c8d9cb86b843ecb6b24ccfc
+  TTReachability: bc8685b98fd9fcd949811a8a31236b5d5a3ec931
   TTReporter: 55c6785c79fb8b35a44105d760ac3493cc2ed365
   TTRexxar: 40c20cd090918e9816f74b0decced7094f000647
   TTRoute: 20e9092cabb90f759cc2e7c6f5ab3acb075d9d86
@@ -1133,6 +1146,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 4c760e04c5df653bfae7d1181ed97ff96b51e986
+PODFILE CHECKSUM: 878444489a71ad0d313d861a158bc2d1f381fe76
 
 COCOAPODS: 1.4.0
