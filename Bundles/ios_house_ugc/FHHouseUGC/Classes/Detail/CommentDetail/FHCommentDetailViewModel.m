@@ -120,7 +120,7 @@
         [self.httpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.httpTask = [FHHouseUGCAPI requestCommentDetailDataWithCommentId:self.comment_id class:[FHUGCSocialGroupCommentDetailModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.httpTask = [FHHouseUGCAPI requestCommentDetailDataWithCommentId:self.comment_id socialGroupId:self.lastPageSocialGroupId  class:[FHUGCSocialGroupCommentDetailModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         [wself processQueryData:model error:error];
     }];
 }

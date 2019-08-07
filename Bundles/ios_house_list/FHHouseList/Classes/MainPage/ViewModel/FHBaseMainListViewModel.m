@@ -1107,7 +1107,9 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     UITableViewCell *cell = nil;
     if (_showPlaceHolder) {        
-        cell = [tableView dequeueReusableCellWithIdentifier:kPlaceCellId];
+        FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kPlaceCellId];
+        cell.topOffset = 20;
+        return cell;
     }else{
         if (indexPath.section == 1 &&  [self.sugesstHouseList[indexPath.row] isKindOfClass:[FHRecommendSecondhandHouseTitleModel class]]) {
             FHRecommendSecondhandHouseTitleCell *scell = [tableView dequeueReusableCellWithIdentifier:kSugCellId];

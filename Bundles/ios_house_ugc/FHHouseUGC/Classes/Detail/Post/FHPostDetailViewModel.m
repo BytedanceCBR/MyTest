@@ -222,6 +222,9 @@
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         [param setValue:@(self.threadID) forKey:@"thread_id"];
         [param setValue:self.category forKey:@"category"];
+        if (self.lastPageSocialGroupId.length > 0) {
+            [param setValue:self.lastPageSocialGroupId forKey:@"social_group_id"];
+        }
         uint64_t startTime = [NSObject currentUnixTime];
         WeakSelf;
         NSString *host = [FHURLSettings baseURL];
