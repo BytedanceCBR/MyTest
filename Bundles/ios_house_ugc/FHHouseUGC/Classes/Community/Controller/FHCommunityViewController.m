@@ -62,8 +62,8 @@
         if (self.isUgcOpen != xConfigDataModel.ugcCitySwitch) {
             self.isUgcOpen = xConfigDataModel.ugcCitySwitch;
             [self initViewModel];
-            self.segmentControl.sectionTitles = [self getSegmentTitles];
         }
+        self.segmentControl.sectionTitles = [self getSegmentTitles];
     }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
@@ -244,13 +244,21 @@
     
     NSDictionary *ugcTitles = [FHEnvContext ugcTabName];
     if(ugcTitles[kUGCTitleMyJoinList]){
-        [titles addObject:ugcTitles[kUGCTitleMyJoinList]];
+        NSString *name = ugcTitles[kUGCTitleMyJoinList];
+        if(name.length > 2){
+            name = [name substringToIndex:2];
+        }
+        [titles addObject:name];
     }else{
         [titles addObject:@"关注"];
     }
     
     if(ugcTitles[kUGCTitleNearbyList]){
-        [titles addObject:ugcTitles[kUGCTitleNearbyList]];
+        NSString *name = ugcTitles[kUGCTitleNearbyList];
+        if(name.length > 2){
+            name = [name substringToIndex:2];
+        }
+        [titles addObject:name];
     }else{
         [titles addObject:@"附近"];
     }

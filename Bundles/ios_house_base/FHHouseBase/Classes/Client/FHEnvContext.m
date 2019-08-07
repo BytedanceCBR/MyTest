@@ -624,7 +624,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
 //    }
     TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
     NSString *name = [self secondTabName];
+    name = @"我在这里";
     if(name){
+        if(name.length > 2){
+            name = [name substringToIndex:2];
+        }
         [tabItem setTitle:name];
     }else{
         if ([self isUGCOpen]) {
