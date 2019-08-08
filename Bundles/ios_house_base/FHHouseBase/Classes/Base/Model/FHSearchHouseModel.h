@@ -164,6 +164,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHSearchHouseDataItemsSkyEyeTagModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@end
+
 @interface  FHSearchHouseDataItemsModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
@@ -197,6 +205,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsHouseImageTagModel *houseImageTag ;
 @property (nonatomic, copy , nullable) NSString *originPrice;
 @property (nonatomic, strong) NSArray* bottomText;
+@property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ;
 
 @end
 
@@ -231,6 +240,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSearchRealHouseExtModel : JSONModel
 
+@property (nonatomic, copy , nullable) NSString *fakeText;
 @property (nonatomic, copy , nullable) NSString *fakeHouse;
 @property (nonatomic, copy , nullable) NSString *fakeTitle;
 @property (nonatomic, copy , nullable) NSString *enableFakeHouse;
@@ -240,6 +250,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *trueHouseTotal;
 @property (nonatomic, copy , nullable) NSString *trueTitle;
 @property (nonatomic, copy , nullable) NSString *totalTitle;
+
+@end
+
+@protocol FHSearchRealHouseAgencyInfo <NSObject>
+
+@end
+
+@interface FHSearchRealHouseAgencyInfo : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *agencyTotal;
+@property (nonatomic, copy , nullable) NSString *houseTotal;
+@property (nonatomic, copy , nullable) NSString *openUrl;
 
 @end
 
@@ -257,6 +279,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *bottomTip;
 @property (nonatomic, copy , nullable) FHImageModel *banner;
 @property (nonatomic, strong , nullable) FHSearchRealHouseExtModel *externalSite;
+@property (nonatomic, strong , nullable) FHSearchRealHouseAgencyInfo *agencyInfo;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic, strong, nullable) FHRecommendSecondhandHouseDataModel *recommendSearchModel;
 @property (nonatomic, strong, nullable) FHSugSubscribeDataDataSubscribeInfoModel *subscribeInfo;

@@ -248,15 +248,17 @@
 
     self.contentLabel.text = attributedString;
     self.richSpanText = richSpanText;
-
-    NSArray <TTRichSpanLink *> *richSpanLinks = [richSpanText richSpanLinksOfAttributedString];
-    for (TTRichSpanLink *richSpanLink in richSpanLinks) {
-        NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
-        if (NSMaxRange(range) <= self.contentLabel.attributedText.length) {
-            if (richSpanLink.type == TTRichSpanLinkTypeQuotedCommentUser) {
-                [self.contentLabel addLinkToURL:[NSURL URLWithString:kTTCommentContentLabelQuotedCommentUserURLString] withRange:range];
-            } else {
-                [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+    
+    if(!self.fromUGC){
+        NSArray <TTRichSpanLink *> *richSpanLinks = [richSpanText richSpanLinksOfAttributedString];
+        for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+            NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
+            if (NSMaxRange(range) <= self.contentLabel.attributedText.length) {
+                if (richSpanLink.type == TTRichSpanLinkTypeQuotedCommentUser) {
+                    [self.contentLabel addLinkToURL:[NSURL URLWithString:kTTCommentContentLabelQuotedCommentUserURLString] withRange:range];
+                } else {
+                    [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                }
             }
         }
     }

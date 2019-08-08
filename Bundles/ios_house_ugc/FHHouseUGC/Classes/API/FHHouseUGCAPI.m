@@ -276,11 +276,14 @@
     }];
 }
 
-+ (TTHttpTask *)requestCommentDetailDataWithCommentId:(NSString *)comment_id class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
++ (TTHttpTask *)requestCommentDetailDataWithCommentId:(NSString *)comment_id socialGroupId:(NSString *)socialGroupId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/material/v0/comment_detail";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (comment_id.length > 0) {
         paramDic[@"comment_id"] = comment_id;
+    }
+    if (socialGroupId.length > 0) {
+        paramDic[@"social_group_id"] = socialGroupId;
     }
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
