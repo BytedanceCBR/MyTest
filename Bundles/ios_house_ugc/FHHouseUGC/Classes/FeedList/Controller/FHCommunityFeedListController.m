@@ -278,10 +278,9 @@
     inset.top = self.notifyBarView.height;
     self.tableView.contentInset = inset;
     self.notifyCompletionBlock = completion;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView) {
-        WeakSelf;
-        [wself performSelector:@selector(hideIfNeeds)];
-    }];
+    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
+    
+    [self performSelector:@selector(hideIfNeeds) withObject:nil afterDelay:1];
 }
 
 - (void)hideIfNeeds {
