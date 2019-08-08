@@ -101,6 +101,7 @@
     };
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onGlobalFollowListLoad:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
 }
 
 - (void)dealloc {
@@ -371,13 +372,25 @@
         NSString *currentGroupId = self.viewController.communityId;
         if (groupId.length > 0 && currentGroupId.length > 0) {
             if ([groupId isEqualToString:currentGroupId]) {
-                if (self.data) {
-                    // 替换关注人数 AA关注BB热帖 替换：AA
-                    [[FHUGCConfig sharedInstance] updateScialGroupDataModel:self.data byFollowed:followed];
-                    [self updateUIWithData:self.data];
-                }
+                [self updateFollowStatus:followed];
             }
         }
+    }
+}
+
+-(void)updateFollowStatus:(BOOL)followed{
+    [[FHUGCConfig sharedInstance] updateScialGroupDataModel:self.data byFollowed:followed];
+    [self updateUIWithData:self.data];
+}
+
+// 未登录状态下进入圈子详情页，点击发帖，这时候跳转登录，如果登录用户已经关注这个圈子，收取通知来更新状态
+-(void)onGlobalFollowListLoad:(NSNotification *)notification{
+    FHUGCScialGroupDataModel *dataInFollowList = [[FHUGCConfig sharedInstance] socialGroupData:self.data.socialGroupId];
+    if(!dataInFollowList){
+        return;
+    }
+    if([dataInFollowList.hasFollow boolValue] != [self.data.hasFollow boolValue]){
+        [self updateFollowStatus:[dataInFollowList.hasFollow boolValue]];
     }
 }
 
