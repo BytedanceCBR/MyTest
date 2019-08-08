@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)selectItem:(NSString *)title;
 
+- (void)bottomBannerViewDidShow;
+
 @end
 
 @interface FHMultiMediaScrollView : UIView

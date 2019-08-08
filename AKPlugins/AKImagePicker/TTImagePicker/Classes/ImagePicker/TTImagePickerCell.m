@@ -147,6 +147,7 @@
         self.representedAssetIdentifier = [[TTImagePickerManager manager] getAssetIdentifier:model.asset];
     }
     
+    __weak typeof(self) wself = self;
     PHImageRequestID imageRequestID = [[TTImagePickerManager manager] getPhotoWithAsset:model.asset photoWidth:self.width completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
     
         if (!photo) {
@@ -154,17 +155,17 @@
         }
         
         if (!iOS8Later) {
-            self.img.image = photo; return;
+            wself.img.image = photo; return;
         }
-        if ([self.representedAssetIdentifier isEqualToString:[[TTImagePickerManager manager] getAssetIdentifier:model.asset]]) {
-            self.img.image = photo;
-            model.thumbImage = photo;
+        if ([wself.representedAssetIdentifier isEqualToString:[[TTImagePickerManager manager] getAssetIdentifier:model.asset]]) {
+            wself.img.image = photo;
+//            model.thumbImage = photo;
         } else {
-            [[PHImageManager defaultManager] cancelImageRequest:self.imageRequestID];
+            [[PHImageManager defaultManager] cancelImageRequest:wself.imageRequestID];
         }
         //是否是高质量图，高质量图清空id
         if (!isDegraded) {
-            self.imageRequestID = 0;
+            wself.imageRequestID = 0;
         }
         
     } progressHandler:nil isIcloudEabled:NO isSingleTask:NO];

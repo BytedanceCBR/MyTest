@@ -163,25 +163,27 @@
     } range:NSMakeRange(0, attributedString.length)];
 
     self.contentLabel.text = [attributedString copy];
-
+    self.contentLabel.attributedTruncationToken = [self attributedTruncationToken];
+    
     NSDictionary *linkAttributes = @{
-        NSParagraphStyleAttributeName: [TTUniversalCommentCellLiteHelper contentLabelParagraphStyle],
-        NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
-        NSFontAttributeName : [TTUniversalCommentCellLiteHelper contentLabelFont]
-    };
+                                     NSParagraphStyleAttributeName: [TTUniversalCommentCellLiteHelper contentLabelParagraphStyle],
+                                     NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
+                                     NSFontAttributeName : [TTUniversalCommentCellLiteHelper contentLabelFont]
+                                     };
     self.contentLabel.linkAttributes = linkAttributes;
     self.contentLabel.activeLinkAttributes = linkAttributes;
     self.contentLabel.inactiveLinkAttributes = linkAttributes;
-    self.contentLabel.attributedTruncationToken = [self attributedTruncationToken];
-
-    NSArray <TTRichSpanLink *> *richSpanLinks = [self.layout.contentLayout.richSpanText richSpanLinksOfAttributedString];
-    for (TTRichSpanLink *richSpanLink in richSpanLinks) {
-        NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
-        if (NSMaxRange(range) <= self.layout.contentLayout.attributedText.length) {
-            if (richSpanLink.type == TTRichSpanLinkTypeQuotedCommentUser) {
-                [self.contentLabel addLinkToURL:[NSURL URLWithString:kTTCommentContentLabelQuotedCommentUserURLString] withRange:range];
-            } else {
-                [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+    
+    if(!self.fromUGC){
+        NSArray <TTRichSpanLink *> *richSpanLinks = [self.layout.contentLayout.richSpanText richSpanLinksOfAttributedString];
+        for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+            NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
+            if (NSMaxRange(range) <= self.layout.contentLayout.attributedText.length) {
+                if (richSpanLink.type == TTRichSpanLinkTypeQuotedCommentUser) {
+                    [self.contentLabel addLinkToURL:[NSURL URLWithString:kTTCommentContentLabelQuotedCommentUserURLString] withRange:range];
+                } else {
+                    [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                }
             }
         }
     }

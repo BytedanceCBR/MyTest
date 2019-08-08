@@ -379,6 +379,7 @@
         
         dict[@"data"] = cellModel;
         dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
+        dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
@@ -407,6 +408,7 @@
     
     dict[@"data"] = cellModel;
     dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
+    dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     FHFeedUGCContentModel *contentModel = cellModel.originData;
     NSString *routeUrl = @"sslocal://thread_detail";

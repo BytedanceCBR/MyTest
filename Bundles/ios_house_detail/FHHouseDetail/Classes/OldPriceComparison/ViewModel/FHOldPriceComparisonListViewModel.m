@@ -115,7 +115,11 @@
     [_requestTask cancel];
     __weak typeof(self) wself = self;
     
-    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+    NSDictionary *params = @{
+                             @"page_type":@"price_analysis_list"
+                             };
+    
+    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:params offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
             return ;
