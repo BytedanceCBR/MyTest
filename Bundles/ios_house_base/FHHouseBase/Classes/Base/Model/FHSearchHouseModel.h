@@ -240,6 +240,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSearchRealHouseExtModel : JSONModel
 
+@property (nonatomic, copy , nullable) NSString *fakeText;
 @property (nonatomic, copy , nullable) NSString *fakeHouse;
 @property (nonatomic, copy , nullable) NSString *fakeTitle;
 @property (nonatomic, copy , nullable) NSString *enableFakeHouse;

@@ -750,7 +750,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
             }
 
-            if (houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue && !houseModel.hasMore) {
+            if (houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue && !houseModel.hasMore && houseModel.externalSite.fakeHouseTotal.integerValue != 0 && houseModel.externalSite.fakeText) {
                 FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
                 if ([houseModel.externalSite isKindOfClass:[FHSearchRealHouseExtModel class]]) {
                     topInfoModel.fakeHouse = houseModel.externalSite.fakeHouse;
@@ -763,6 +763,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     topInfoModel.searchId = houseModel.searchId;
                     topInfoModel.fakeTitle = houseModel.externalSite.fakeTitle;
                     topInfoModel.totalTitle = houseModel.externalSite.totalTitle;
+                    topInfoModel.fakeText = houseModel.externalSite.fakeText;
                 }
                 
                 if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]] ) {

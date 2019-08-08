@@ -112,6 +112,7 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
         customHeader[@"city_name"] = currentCityName;
         customHeader[@"province_name"] = provinceName;
         customHeader[@"house_city"] =  [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+        customHeader[@"update_version_code"] = [TTSandBoxHelper buildVerion];
         return [customHeader copy];
     }];
 }
