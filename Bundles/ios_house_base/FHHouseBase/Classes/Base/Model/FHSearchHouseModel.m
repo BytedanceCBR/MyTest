@@ -32,6 +32,7 @@
 
 + (JSONKeyMapper *)keyMapper {
     NSDictionary *dict = @{
+                           @"fakeText":@"fake_text",
                            @"fakeHouse": @"fake_house",
                            @"enableFakeHouse": @"enable_fake_house",
                            @"fakeHouseTotal": @"fake_house_total",

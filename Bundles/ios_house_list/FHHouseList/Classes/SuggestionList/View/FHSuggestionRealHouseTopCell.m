@@ -335,9 +335,10 @@
         FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)data;
         self.currentModel = model;
         [_falseHouseLabel setBackgroundColor:[UIColor clearColor]];
-        if ([model.fakeHouseTotal isKindOfClass:[NSString class]]) {
-            _falseHouseLabel.text = [NSString stringWithFormat:@"已成功为您过滤%ld套可疑房源",model.fakeHouseTotal.longLongValue];
+        if ([model.fakeText isKindOfClass:[NSString class]]) {
+            _falseHouseLabel.text = model.fakeText;
         }
+        
         if([model.fakeHouseTotal integerValue] == 0)
         {
             _allFalseHouseBtn.hidden = YES;
