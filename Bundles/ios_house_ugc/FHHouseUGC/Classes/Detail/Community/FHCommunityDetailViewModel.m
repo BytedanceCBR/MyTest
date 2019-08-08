@@ -387,6 +387,9 @@
 // 未登录状态下进入圈子详情页，点击发帖，这时候跳转登录，如果登录用户已经关注这个圈子，收取通知来更新状态
 -(void)onGlobalFollowListLoad:(NSNotification *)notification{
     FHUGCScialGroupDataModel *dataInFollowList = [[FHUGCConfig sharedInstance] socialGroupData:self.data.socialGroupId];
+    if(!dataInFollowList){
+        return;
+    }
     if([dataInFollowList.hasFollow boolValue] != [self.data.hasFollow boolValue]){
         [self updateFollowStatus:[dataInFollowList.hasFollow boolValue]];
     }
