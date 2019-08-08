@@ -295,6 +295,7 @@
 - (void)p_buildCommentViewController
 {
     self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:CGRectMake(0, _mainScrollView.frame.size.height, self.view.width, _mainScrollView.frame.size.height) dataSource:self delegate:self];
+    self.commentViewController.fromUGC = self.fromUGC;
     NSString *enter_from = self.tracerDict[@"enter_from"];
     self.commentViewController.enter_from = enter_from;
     self.commentViewController.enableImpressionRecording = YES;

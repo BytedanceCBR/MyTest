@@ -42,6 +42,7 @@
 @property (nonatomic, strong)   FHPostDetailNavHeaderView       *naviHeaderView;
 @property (nonatomic, strong)   FHUGCFollowButton       *followButton;// 关注
 @property (nonatomic, assign) BOOL beginShowComment;// 点击评论按钮
+@property (nonatomic, copy)     NSString       *lastPageSocialGroupId;
 
 @end
 
@@ -54,6 +55,7 @@
         if ([params isKindOfClass:[NSDictionary class]]) {
             // 6714466747832877060  6712727097456623627  6714431339993235463
             self.comment_id = [params tt_stringValueForKey:@"comment_id"];
+            self.lastPageSocialGroupId = [params objectForKey:@"social_group_id"];
             // 埋点
             self.tracerDict[@"page_type"] = @"ugc_comment_detail";
             self.ttTrackStayEnable = YES;
@@ -100,6 +102,7 @@
     self.viewModel = [[FHCommentDetailViewModel alloc] initWithController:self tableView:_tableView];
     self.viewModel.comment_id = self.comment_id;
     self.viewModel.beginShowComment = self.beginShowComment;
+    self.viewModel.lastPageSocialGroupId = self.lastPageSocialGroupId;
     [self setupToolbarView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);

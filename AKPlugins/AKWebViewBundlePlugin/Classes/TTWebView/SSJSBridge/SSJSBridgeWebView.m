@@ -28,6 +28,7 @@
 #import <TTTracker/TTTracker.h>
 #import <TTUsersettings/TTUserSettingsManager+FontSettings.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import <FHEnvContext.h>
 
 static NSString *const kHasMessageHost = @"dispatch_message";
 static NSString *const kJSBridgeScheme = @"bytedance";
@@ -181,6 +182,10 @@ NSString *const TTWebViewRequestKey = @"request";
             [[UIApplication sharedApplication] openURL:request.URL];
             return YES;
         }
+        NSMutableDictionary *traceParams = [NSMutableDictionary new];
+        [traceParams setValue:@"old_detail" forKey:@"page_type"];
+        [traceParams setValue:URL.absoluteString forKey:@"url"];
+        [FHEnvContext recordEvent:traceParams andEventKey:@"outside_event_show"];
     }
     
 

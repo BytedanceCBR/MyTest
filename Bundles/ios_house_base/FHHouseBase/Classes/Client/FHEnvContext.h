@@ -22,6 +22,10 @@
 #define MAIN_SCREEN_WIDTH   [UIScreen mainScreen].bounds.size.width
 #define MAIN_SCREENH_HEIGHT [UIScreen mainScreen].bounds.size.height
 
+#define kUGCTitleMyJoinList @"my_join_list"
+#define kUGCTitleNearbyList @"nearby_list"
+#define kSecondTab @"tab_community"
+
 static NSString *const kFHUserSelectCityNotification = @"k_fh_user_select_city";
 
 static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
@@ -156,6 +160,15 @@ NS_ASSUME_NONNULL_BEGIN
  判断是否开通ugc模块
  */
 + (BOOL)isUGCOpen;
+/*
+ ugc tab 显示的文案
+ */
++ (NSDictionary *)ugcTabName;
+/*
+ tabbar第二个tab显示的文案
+ */
++ (NSString *)secondTabName;
+
 
 //返回origin_search id
 
