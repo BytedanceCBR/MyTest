@@ -77,6 +77,7 @@
     self.threadID = 0;
     self.forumID = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followListDataChanged:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     return self;
 }
 
@@ -87,6 +88,7 @@
         self.threadID = threadID;
         self.forumID = forumID;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followListDataChanged:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     }
     return self;
 }
@@ -99,6 +101,25 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+// 关注列表改变
+- (void)followListDataChanged:(NSNotification *)notification {
+    if (notification) {
+        NSString *currentGroupId = self.social_group_id;
+        if (currentGroupId.length > 0 && self.detailHeaderModel) {
+            FHUGCScialGroupDataModel *groupData = [[FHUGCConfig sharedInstance] socialGroupData:currentGroupId];
+            if (groupData) {
+                FHUGCScialGroupDataModel *currentGroupData = self.detailHeaderModel.socialGroupModel;
+                if (![currentGroupData.hasFollow isEqualToString:groupData.hasFollow]) {
+                    currentGroupData.hasFollow = groupData.hasFollow;
+                    currentGroupData.countText = groupData.countText;
+                    [self.detailController headerInfoChanged];
+                    [self reloadData];
+                }
+            }
+        }
+    }
 }
 
 // 关注状态改变
