@@ -365,7 +365,16 @@
             
             //显示红点
             if(idx < _sectionRedPoints.count){
-                BOOL isShowRed = [_sectionRedPoints[idx] boolValue];
+                //这里同时存在红点和消息数的时候，优先消息数
+                BOOL isHaveMessageTips = NO;
+                if(idx < _sectionMessageTips.count){
+                    NSInteger tipsCount = [_sectionMessageTips[idx] integerValue];
+                    if(tipsCount > 0){
+                        isHaveMessageTips = YES;
+                    }
+                }
+                
+                BOOL isShowRed = [_sectionRedPoints[idx] boolValue] && !isHaveMessageTips;
                 if(isShowRed){
                     UIImage *icon = [UIImage imageNamed:@"seg_red_point"];
                     CGFloat imageWidth = icon.size.width;

@@ -20,7 +20,6 @@
 @property(nonatomic , weak) FHCommunityViewController *viewController;
 @property(nonatomic , strong) NSMutableArray *cellArray;
 @property(nonatomic , strong) NSArray *dataArray;
-@property(nonatomic , assign) NSInteger currentTabIndex;
 @property(nonatomic , assign) BOOL isFirstLoad;
 
 @property(nonatomic , assign) CGPoint beginOffSet;
@@ -141,6 +140,11 @@
         [self.viewController addChildViewController:cell.contentViewController];
         
         _lastCell = cell;
+        
+        //切换到关注tab时候去掉红点的显示
+        if(self.currentTabIndex == 0){
+            [self.viewController onFocusHaveNewContents];
+        }
     }
 }
 

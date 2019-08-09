@@ -25,7 +25,8 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
 @property (nonatomic, strong)   YYCache       *followListCache;
 @property (nonatomic, strong)   YYCache       *ugcConfigCache;
-@property (nonatomic, copy)     NSString       *followListDataKey;// 关注数据 用户相关 存储key
+@property (nonatomic, copy)     NSString      *followListDataKey;// 关注数据 用户相关 存储key
+@property (nonatomic, strong)   NSTimer       *focusTimer;//关注是否有新内容的轮训timer
 
 @end
 
@@ -49,6 +50,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         [self loadFollowListData];
         [self loadLocalUgcConfigData];
         [self registerNoti];
+        [self initFocusTimer];
     }
     return self;
 }
@@ -60,6 +62,10 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     //    static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
+}
+
+- (void)initFocusTimer {
+    
 }
 
 // 发帖成功通知
