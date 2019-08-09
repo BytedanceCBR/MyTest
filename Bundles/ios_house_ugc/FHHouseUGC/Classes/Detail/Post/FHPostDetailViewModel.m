@@ -175,11 +175,11 @@
         if (cellModel.community.socialGroupId.length <= 0) {
             cellModel.community = self.detailData.community;
         }
-        // 兼容 服务端返回的数据不一致的问题
-        if (self.detailController.comment_count > 0) {
-            // 直接用评论接口返回的个数
-            cellModel.commentCount = [NSString stringWithFormat:@"%lld",self.detailController.comment_count];
-        }
+        // 兼容 服务端返回的数据不一致的问题，目前直接使用服务端返回的数据
+//        if (self.detailController.comment_count > 0) {
+//            // 直接用评论接口返回的个数
+//            cellModel.commentCount = [NSString stringWithFormat:@"%lld",self.detailController.comment_count];
+//        }
         cellModel.tracerDic = [self.detailController.tracerDict copy];
         if (socialGroupModel && ![socialGroupModel.hasFollow boolValue]) {
             // 未关注
