@@ -226,14 +226,22 @@ static CGFloat const kSectionHeaderHeight = 38;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
     
-    [self.notifyBar showMessage:message actionButtonTitle:@"" delayHide:YES duration:1.8 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView) {
-        [UIView animateWithDuration:0.3 animations:^{
-            UIEdgeInsets inset = self.mainTableView.contentInset;
-            inset.top = 0;
-            self.mainTableView.contentInset = inset;
-            [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-            self.homeListViewModel.isResetingOffsetZero = NO;
-        }];
+    [self.notifyBar showMessage:message
+              actionButtonTitle:@""
+                      delayHide:YES
+                       duration:1.8
+            bgButtonClickAction:nil
+         actionButtonClickBlock:nil
+                   didHideBlock:nil
+                  willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {                      
+                      [UIView animateWithDuration:0.3 animations:^{
+                          UIEdgeInsets inset = self.mainTableView.contentInset;
+                          inset.top = 0;
+                          self.mainTableView.contentInset = inset;
+                          [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
+                          self.homeListViewModel.isResetingOffsetZero = NO;
+                      }];
+                      
     }];
 }
 

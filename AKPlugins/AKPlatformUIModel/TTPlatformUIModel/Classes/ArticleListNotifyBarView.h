@@ -16,7 +16,7 @@
 
 typedef void (^XPNotifyBarButtonBlock)(UIButton * button);
 typedef void (^XPNotifyBarHideBlock)(ArticleListNotifyBarView * barView);
-typedef void (^XPNotifyBarWillHideBlock)(ArticleListNotifyBarView * barView);
+typedef void (^XPNotifyBarWillHideBlock)(ArticleListNotifyBarView * barView, BOOL isImmediately);
 
 @interface ArticleListNotifyBarView : SSViewBase <ErrorToastProtocal>
 

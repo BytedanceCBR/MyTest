@@ -277,9 +277,17 @@
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
     self.tableView.contentInset = inset;
+    self.tableView.contentOffset = CGPointMake(0, -inset.top);
     self.notifyCompletionBlock = completion;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView) {
-        [self performSelector:@selector(hideIfNeeds) withObject:nil afterDelay:0];
+    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
+        WeakSelf;
+        if(!isImmediately) {
+            [wself hideIfNeeds];
+        } else {
+            if(wself.notifyCompletionBlock) {
+                wself.notifyCompletionBlock();
+            }
+        }
     }];
 }
 

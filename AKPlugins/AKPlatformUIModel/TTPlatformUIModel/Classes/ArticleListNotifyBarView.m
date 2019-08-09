@@ -181,7 +181,7 @@ actionButtonClickBlock:(XPNotifyBarButtonBlock)actionButtonBlock
     self.hidden = YES;
     __weak typeof(self) weakSelf = self;
     if(_willHideBlock) {
-        _willHideBlock(weakSelf);
+        _willHideBlock(weakSelf, YES);
     }
     if (_hideBlock) {
         _hideBlock(weakSelf);
@@ -200,7 +200,7 @@ actionButtonClickBlock:(XPNotifyBarButtonBlock)actionButtonBlock
 
     if(self.willHideBlock) {
         WeakSelf;
-        self.willHideBlock(wself);
+        self.willHideBlock(wself, NO);
     }
     // 注意，0.3s与TTRefreshView收起列表的动画时间一致
     [UIView animateWithDuration:0.3f animations:^{
