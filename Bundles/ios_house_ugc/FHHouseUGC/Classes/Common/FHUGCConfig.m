@@ -488,4 +488,8 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     return self.configData.data.permission;
 }
 
+- (BOOL)ugcFocusHasNew {
+    return YES;
+}
+
 @end

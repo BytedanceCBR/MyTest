@@ -124,7 +124,8 @@
 
 - (void)onFocusHaveNewContents {
     BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
-    if(self.viewModel.currentTabIndex != 0 && hasSocialGroups){
+    BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
+    if(self.viewModel.currentTabIndex != 0 && hasSocialGroups && hasNew){
         _segmentControl.sectionRedPoints = @[@1];
     }else{
         _segmentControl.sectionRedPoints = @[@0];
