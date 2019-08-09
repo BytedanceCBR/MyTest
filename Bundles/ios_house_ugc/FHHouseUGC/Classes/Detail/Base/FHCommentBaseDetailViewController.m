@@ -702,24 +702,50 @@
     [self.commentWriteView showInView:self.view animated:YES];
 }
 
+- (void)scrollToCommentIfNeeded {
+    self.beginShowComment = YES;
+    [self p_scrollToCommentIfNeeded];
+}
+
 - (void)p_scrollToCommentIfNeeded
 {
     if (self.beginShowComment && [self p_needShowToolBarView]) {
         // 跳转到评论 区域
+        self.beginShowComment = NO;
         CGFloat totalHeight = self.tableView.contentSize.height + self.commentViewController.commentTableView.contentSize.height;
         CGFloat frameHeight = self.mainScrollView.bounds.size.height;
 
         if (totalHeight > frameHeight) {
             CGFloat topOffset = self.topTableViewContentHeight;
-            CGFloat commentHeight = self.commentViewController.commentTableView.contentSize.height; // 评论高度
-            if (commentHeight < frameHeight) {
-                topOffset = topOffset - (frameHeight - commentHeight) - 1;
+            BOOL needSetOffset = NO;
+            CGFloat mainOffsetY = self.mainScrollView.contentOffset.y;
+            if (topOffset - mainOffsetY < frameHeight) {
+                // 说明有评论漏出
+                if (topOffset < mainOffsetY) {
+                    // 说明显示的全是评论
+                    needSetOffset = YES;
+                } else {
+                    // 说明显示的既有评论也有帖子内容
+                }
+            } else {
+                // 说明显示的全是帖子内容
+                needSetOffset = YES;
             }
-            if (topOffset <= 0) {
-                topOffset = 0;
+            if (needSetOffset) {
+                CGFloat commentHeight = self.commentViewController.commentTableView.contentSize.height; // 评论高度
+                if (commentHeight < frameHeight) {
+                    topOffset = topOffset - (frameHeight - commentHeight) - 1;
+                }
+                if (self.postType == FHUGCPostTypePost) {
+                    // 帖子 -- 减去全部评论的高度
+                    topOffset -= 52;
+                }
+                if (topOffset <= 0) {
+                    topOffset = 0;
+                }
+                
+                [self.mainScrollView setContentOffset:CGPointMake(0, topOffset) animated:YES];
             }
-            
-            [self.mainScrollView setContentOffset:CGPointMake(0, topOffset) animated:YES];
         }
     }
 }
@@ -797,6 +823,10 @@
         NSMutableDictionary * data = [NSMutableDictionary dictionaryWithDictionary:[responseData objectForKey:@"data"]];
         [self.commentViewController tt_insertCommentWithDict:data];
         [self.commentViewController tt_markStickyCellNeedsAnimation];
+        __weak typeof(self) wSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [wSelf scrollToCommentIfNeeded];
+        });
     }
 }
 

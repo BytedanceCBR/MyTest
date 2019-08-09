@@ -80,6 +80,7 @@
         self.store.logPb = self.detailController.tracerDict[@"log_pb"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delCommentDetailReplySuccess:) name:kFHUGCDelCommentDetailReplyNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followListDataChanged:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     }
     return self;
 }
@@ -244,6 +245,25 @@
         self.detailController.hasValidateData = NO;
         self.tableView.hidden = YES;
         [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+    }
+}
+
+// 关注列表改变
+- (void)followListDataChanged:(NSNotification *)notification {
+    if (notification) {
+        NSString *currentGroupId = self.social_group_id;
+        if (currentGroupId.length > 0 && self.detailHeaderModel) {
+            FHUGCScialGroupDataModel *groupData = [[FHUGCConfig sharedInstance] socialGroupData:currentGroupId];
+            if (groupData) {
+                FHUGCScialGroupDataModel *currentGroupData = self.detailHeaderModel.socialGroupModel;
+                if (![currentGroupData.hasFollow isEqualToString:groupData.hasFollow]) {
+                    currentGroupData.hasFollow = groupData.hasFollow;
+                    currentGroupData.countText = groupData.countText;
+                    [self.detailController headerInfoChanged];
+                    [self.tableView reloadData];
+                }
+            }
+        }
     }
 }
 
