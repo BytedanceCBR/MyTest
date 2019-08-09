@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isSubscribCell;
 @property (nonatomic, assign) BOOL isRealHouseTopCell;
 @property (nonatomic, assign) BOOL isAgencyInfoCell;
+@property (nonatomic, assign) BOOL isNoHousePlaceHoderCell;
 
 @property (nonatomic, assign) FHHouseType houseType;
 @property (nonatomic, copy , nullable) NSString *houseId;
