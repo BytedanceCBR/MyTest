@@ -653,8 +653,9 @@
 - (void)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController
              refreshCommentCount:(int)count
 {
-    self.comment_count = count;
-    [self commentCountChanged];
+    // 暂时注释掉，只用服务端返回的帖子内容中的评论数
+    // self.comment_count = count;
+    // [self commentCountChanged];
 }
 
 - (void)tt_commentViewControllerFooterCellClicked:(nonnull id<TTCommentViewControllerProtocol>)ttController
