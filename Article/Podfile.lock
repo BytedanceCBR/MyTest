@@ -451,7 +451,7 @@ PODS:
   - TTSearch (0.1.0)
   - TTService (0.1.0)
   - TTServiceKit (0.4.1.1-binary)
-  - TTServiceProtocols (0.0.5)
+  - TTServiceProtocols (0.3.59)
   - TTSettingsManager/Core (0.4.16)
   - TTSettingsManager/Debug (0.4.16)
   - TTSettingsManager/Performance (0.4.16)
@@ -802,7 +802,7 @@ DEPENDENCIES:
   - TTSearch (from `../TTBundles/ios_tt_search`)
   - TTService (from `../TTBundles/ios_tt_service`)
   - TTServiceKit (= 0.4.1.1-binary)
-  - TTServiceProtocols (from `../AKPlugins/AKServiceProtocols`)
+  - TTServiceProtocols (= 0.3.59)
   - TTSettingsManager/Core (= 0.4.16)
   - TTSettingsManager/Debug
   - TTSettingsManager/Performance (= 0.4.16)
@@ -934,8 +934,6 @@ EXTERNAL SOURCES:
     :path: ../TTBundles/ios_tt_search
   TTService:
     :path: ../TTBundles/ios_tt_service
-  TTServiceProtocols:
-    :path: ../AKPlugins/AKServiceProtocols
   TTShare:
     :path: ../AKPlugins/TTShare
     :subspects:
@@ -1113,7 +1111,7 @@ SPEC CHECKSUMS:
   TTSearch: 812276e1b1c7f1d1fce932fe766e9a75359d18d3
   TTService: 61600ce842ad99be7776dbbf3e614301ef706f7b
   TTServiceKit: 94210c3f54f65e5ba8ddde3e498837fa04649d57
-  TTServiceProtocols: 155d69fde3ee30af409edd22f53735c75f5b77ad
+  TTServiceProtocols: 377db7b58021a7516d2c247372dfa07cc7c45921
   TTSettingsManager: 6c9f2451b51d836979ea8e7e51ac8397a9b74b06
   TTShare: e5faa4ed799189e7dec34372f61794c6a011c2a6
   TTTAttributedLabel: dc7f8eada1e3d7fa25244fb05f50615d692d8d3e
@@ -1146,6 +1144,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 878444489a71ad0d313d861a158bc2d1f381fe76
+PODFILE CHECKSUM: 613d80bbd1d517e3e1aed98cc828c783a1f87971
 
 COCOAPODS: 1.4.0
