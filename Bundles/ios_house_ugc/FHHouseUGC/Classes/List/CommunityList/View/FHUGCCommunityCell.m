@@ -83,7 +83,7 @@
     self.icon = [[UIImageView alloc] init];
     self.icon.contentMode = UIViewContentModeScaleAspectFill;
     self.icon.layer.masksToBounds = YES;
-    self.icon.layer.cornerRadius = 24;
+    self.icon.layer.cornerRadius = 4;
     self.icon.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:self.icon];
 
