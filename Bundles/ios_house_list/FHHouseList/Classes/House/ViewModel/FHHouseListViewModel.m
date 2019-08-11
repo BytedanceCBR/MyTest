@@ -49,9 +49,11 @@
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import "FHHouseListAgencyInfoCell.h"
 #import <FHHouseBase/FHUtils.h>
+#import "FHHouseListNoHouseCell.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
+#define NO_HOUSE_CELL_ID @"no_house_cell"
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
@@ -277,6 +279,8 @@ extern NSString *const INSTANT_DATA_KEY;
     [self.tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kFHHouseListRecommendTitleCellId];
     [self.tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
     [self.tableView registerClass:[FHHouseBaseSmallItemCell class] forCellReuseIdentifier:kFHHouseListCellId];
+    [self.tableView registerClass:[FHHouseListNoHouseCell class] forCellReuseIdentifier:NO_HOUSE_CELL_ID];
+    
 }
 
 
@@ -889,11 +893,26 @@ extern NSString *const INSTANT_DATA_KEY;
             
         }];
         
+        BOOL addNoHouseCell = NO;
+        if(self.houseList.count == 1 && self.sugesstHouseList.count == 0){
+            //只有一个筛选提示时 增加无数据提示
+            FHSingleImageInfoCellModel *cellModel = [self.houseList firstObject];
+            if (cellModel.isSubscribCell) {
+                //add place holder
+                cellModel = [[FHSingleImageInfoCellModel alloc] init];
+                cellModel.isNoHousePlaceHoderCell = YES;
+                [self.houseList addObject:cellModel];
+                addNoHouseCell = YES;
+            }
+        }
+        
         [self.tableView reloadData];
         
-        
-        [self updateTableViewWithMoreData:hasMore];
-        
+        if(addNoHouseCell){
+            self.tableView.mj_footer.hidden = YES;
+        }else{
+            [self updateTableViewWithMoreData:hasMore];
+        }
         if (self.houseType != FHHouseTypeSecondHandHouse) {
             if (!hasMore && self.houseList.count < 10) {
                 self.refreshFooter.hidden = YES;
@@ -1321,6 +1340,12 @@ extern NSString *const INSTANT_DATA_KEY;
                 if (indexPath.row < self.houseList.count) {
                     
                     FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+                    if(cellModel.isNoHousePlaceHoderCell){
+                        FHHouseListNoHouseCell *noHouseCell = [tableView dequeueReusableCellWithIdentifier:NO_HOUSE_CELL_ID];
+                        return noHouseCell;
+                    }
+                    
+                    
                     if (cellModel.isAgencyInfoCell) {
                         __weak typeof(self)wself = self;
                         if ([cellModel.agencyInfoModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
@@ -1507,6 +1532,10 @@ extern NSString *const INSTANT_DATA_KEY;
             if (indexPath.section == 0) {
             
                 cellModel = self.houseList[indexPath.row];
+                if(cellModel.isNoHousePlaceHoderCell){
+                    return CGRectGetHeight(self.tableView.frame) - 64 - 121;
+                }
+                
                 if (cellModel.isAgencyInfoCell) {
                     if ([cellModel.agencyInfoModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
                         return 40;
