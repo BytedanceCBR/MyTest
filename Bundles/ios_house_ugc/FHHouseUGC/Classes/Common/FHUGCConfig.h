@@ -43,7 +43,7 @@ static NSString *const kFHUGCFocusTabHasNewNotification = @"k_fh_ugc_focus_tab_h
 // 关注列表
 - (NSArray<FHUGCScialGroupDataModel> *)followList;
 
-// 根据groupid去关注的列表中获取最新的关注数据信息，取消关注可能获取的数据为nil
+// 根据groupid去关注的列表中获取最新的关注数据信息，取消关注可能获取的数据为nil【后面修改，不再是关注列表中数据】
 - (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id;
 
 // 关注变化导致的数据更新，followed为最新的关注状态 groupid要一样
@@ -54,6 +54,9 @@ static NSString *const kFHUGCFocusTabHasNewNotification = @"k_fh_ugc_focus_tab_h
 
 // 删帖成功 更新帖子数 - 1
 - (void)updatePostDelSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model;
+
+// 非关注列表中的小区圈子数据 更新
+- (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model;// 内容更新
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 /*

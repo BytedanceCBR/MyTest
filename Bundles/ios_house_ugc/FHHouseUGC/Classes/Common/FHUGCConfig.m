@@ -22,6 +22,18 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
 static const NSString *kFHUGCConfigCacheKey = @"cache_ugc_config_key";
 static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
+
+// 小区圈子数据统一内存数据缓存
+@interface FHUGCSocialGroupData : NSObject
+
++ (instancetype)sharedInstance;
+- (void)resetSocialGroupDataWith:(NSArray<FHUGCScialGroupDataModel> *)followList;// 重新设置缓存数据
+- (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model;// 内容更新
+- (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id;
+
+@end
+
+
 @interface FHUGCConfig ()
 
 @property (nonatomic, strong)   YYCache       *followListCache;
@@ -141,6 +153,9 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
             FHUGCModel *u_model = model;
             dispatch_async(dispatch_get_main_queue(), ^{
                 wself.followData = u_model;
+                if ([wself.followData.data.userFollowSocialGroups isKindOfClass:[NSArray class]]) {
+                    [[FHUGCSocialGroupData sharedInstance] resetSocialGroupDataWith:self.followData.data.userFollowSocialGroups];
+                }
                 [wself updateFollowData];
                 [wself setFocusTimerState];
             });
@@ -176,6 +191,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
             }
             self.followData.data.userFollowSocialGroups = sGroups;
             [self updateFollowData];
+            [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:social_group];
         }
     }
 }
@@ -195,6 +211,8 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
             }];
             if (findData) {
                 [sGroups removeObject:findData];
+                findData.hasFollow = @"0";
+                [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:findData];
             }
         }
         self.followData.data.userFollowSocialGroups = sGroups;
@@ -222,6 +240,12 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 }
 
 - (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id {
+    // 先去小区圈专门内存中取（包含关注列表中的数据，优化后）
+    FHUGCScialGroupDataModel * model = [[FHUGCSocialGroupData sharedInstance] socialGroupData:social_group_id];
+    if (model) {
+        return model;
+    }
+    // 关注列表中数据
     __block FHUGCScialGroupDataModel *groupData = nil;
     if (social_group_id.length > 0 && self.followData.data.userFollowSocialGroups.count > 0) {
         [self.followData.data.userFollowSocialGroups enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -295,7 +319,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         // 替换第二个数字（热帖个数）
         NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
         // 有数据而且不是起始位置的数据
-        if (range.location > 0 && range.length > 0) {
+        if (range.location >= 0 && range.length > 0) {
             countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
             model.contentCount = replaceContentCountStr;
         } else {
@@ -319,7 +343,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         // 替换第二个数字（热帖个数）
         NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
         // 有数据而且不是起始位置的数据
-        if (range.location > 0 && range.length > 0) {
+        if (range.location >= 0 && range.length > 0) {
             countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
             model.contentCount = replaceContentCountStr;
         } else {
@@ -327,6 +351,10 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         }
         model.countText = countText;
     }
+}
+
+- (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model {
+    [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:model];
 }
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
@@ -528,6 +556,68 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     //每隔一段时候调用接口
     self.ugcFocusHasNew = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
+}
+
+@end
+
+
+// FHUGCSocialGroupData
+@interface FHUGCSocialGroupData ()
+
+// 包含关注列表数据
+@property (nonatomic, strong)   NSMutableDictionary       *groupDataDic;
+
+@end
+
+@implementation FHUGCSocialGroupData
+
++ (instancetype)sharedInstance {
+    static FHUGCSocialGroupData *_sharedInstance = nil;
+    if (!_sharedInstance) {
+        _sharedInstance = [[FHUGCSocialGroupData alloc] init];
+    }
+    return _sharedInstance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _groupDataDic = [NSMutableDictionary new];
+    }
+    return self;
+}
+
+- (void)resetSocialGroupDataWith:(NSArray<FHUGCScialGroupDataModel> *)followList {
+    [_groupDataDic removeAllObjects];
+    if ([followList isKindOfClass:[NSArray class]]) {
+        [followList enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.socialGroupId.length > 0) {
+                [_groupDataDic setObject:obj forKey:obj.socialGroupId];
+            }
+        }];
+    }
+}
+
+- (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model {
+    if (model && model.socialGroupId.length > 0) {
+        FHUGCScialGroupDataModel *socialData = [self.groupDataDic objectForKey:model.socialGroupId];
+        if (socialData) {
+            socialData.countText = model.countText;
+            socialData.hasFollow = model.hasFollow;
+            socialData.followerCount = model.followerCount;
+            socialData.contentCount = model.contentCount;
+        } else {
+            [_groupDataDic setObject:model forKey:model.socialGroupId];
+        }
+    }
+}
+
+- (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id {
+    if (social_group_id.length > 0) {
+        return [self.groupDataDic objectForKey:social_group_id];
+    }
+    return nil;
 }
 
 @end

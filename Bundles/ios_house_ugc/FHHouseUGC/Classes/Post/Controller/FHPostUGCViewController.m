@@ -107,6 +107,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 @property (nonatomic, assign)   BOOL       lastCanShowMessageTip;
 @property (nonatomic, assign)   BOOL       lastInAppPushTipsHidden;
+@property (nonatomic, weak)     TTNavigationController       *navVC;
 
 @end
 
@@ -449,7 +450,6 @@ static NSInteger const kMaxPostImageCount = 9;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    [(TTNavigationController*)self.navigationController panRecognizer].enabled = YES;
 }
 
 - (void)parseOutInputImagesWithParamDic:(NSDictionary *)params {
@@ -1230,7 +1230,17 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [UIApplication sharedApplication].statusBarHidden = NO;
-    [(TTNavigationController*)self.navigationController panRecognizer].enabled = NO;
+    if ([self.navigationController isKindOfClass:[TTNavigationController class]]) {
+        [(TTNavigationController*)self.navigationController panRecognizer].enabled = NO;
+        self.navVC = self.navigationController;
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    if (self.navVC) {
+        [self.navVC panRecognizer].enabled = YES;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
