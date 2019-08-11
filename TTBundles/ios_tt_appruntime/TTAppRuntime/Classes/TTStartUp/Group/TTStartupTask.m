@@ -17,20 +17,20 @@ NSString *const AbnormalTaskIdentifier = @"abnormal_task_identifier";
 
 @implementation TTStartupTask
 
-- (instancetype)init {
-    if (self = [super init]) {
-        if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
-            NSString *key = [TTStartupProtectPrefix stringByAppendingString:[self taskIdentifier]];
-            if (![[NSUserDefaults standardUserDefaults] objectForKey:key]) {
-                [[NSUserDefaults standardUserDefaults] setValue:@(YES) forKey:key];
-            }
-        }
-        else {
-            [[NSUserDefaults standardUserDefaults] registerDefaults:@{[TTStartupProtectPrefix stringByAppendingString:[self taskIdentifier]]:@(YES)}];
-        }
-    }
-    return self;
-}
+//- (instancetype)init {
+//    if (self = [super init]) {
+//        if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
+//            NSString *key = [TTStartupProtectPrefix stringByAppendingString:[self taskIdentifier]];
+//            if (![[NSUserDefaults standardUserDefaults] objectForKey:key]) {
+//                [[NSUserDefaults standardUserDefaults] setValue:@(YES) forKey:key];
+//            }
+//        }
+//        else {
+//            [[NSUserDefaults standardUserDefaults] registerDefaults:@{[TTStartupProtectPrefix stringByAppendingString:[self taskIdentifier]]:@(YES)}];
+//        }
+//    }
+//    return self;
+//}
 
 - (BOOL)shouldExecuteForApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     return YES;
@@ -57,7 +57,6 @@ NSString *const AbnormalTaskIdentifier = @"abnormal_task_identifier";
     [self startWithApplication:application options:launchOptions];
     int64_t end = [NSObject currentUnixTime];
     double millisecond = [NSObject machTimeToSecs:(end - start)] * 1000;
-//NSLog(@"[LAUNCH] execute for %@ is %f ",NSStringFromClass(self.class),millisecond);
     [[TTStartupTasksTracker sharedTracker] trackStartupTaskInItsThread:[self taskIdentifier] withInterval:millisecond];
     [[TTStartupTasksTracker sharedTracker] removeInitializeDevLog:devLog];
 }

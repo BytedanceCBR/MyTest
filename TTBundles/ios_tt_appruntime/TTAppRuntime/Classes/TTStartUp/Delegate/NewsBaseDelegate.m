@@ -190,7 +190,9 @@ static NSTimeInterval lastTime;
 #pragma clang diagnostic pop
     
     BOOL result = [self application:application onlineBoundleWithOptions:launchOptions];
+#if DEBUG
     [TTLaunchManager dumpLaunchDuration];
+#endif
     return result;
 }
     

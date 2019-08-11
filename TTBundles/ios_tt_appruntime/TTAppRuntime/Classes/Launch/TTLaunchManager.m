@@ -11,12 +11,12 @@
 #import <mach-o/getsect.h>
 #import "TTStartupTask.h"
 #import "NewsBaseDelegate.h"
-<<<<<<< HEAD
 #import <sys/sysctl.h>
 #import <mach/mach.h>
 #import "SSCommonLogic.h"
-=======
->>>>>>> f_master
+
+
+static NSDate *preMainDate = nil;
 
 @interface TTLaunchManager ()
 {
@@ -36,6 +36,11 @@
         manager = [[TTLaunchManager alloc]init];
     });
     return manager;
+}
+
++(void)setPreMainDate:(NSDate *)date
+{
+    preMainDate = date;
 }
 
 -(instancetype)init
@@ -130,11 +135,11 @@
 -(void)launchWithApplication:(UIApplication *)application andOptions:(NSDictionary *)options
 {
     NSDate *s = [NSDate date];
+    
     task_header_info taskInfo;
     
     NSMutableArray *taskList = [NSMutableArray new];
     
-    task_header_info taskInfo;
     for (NSInteger type = 0 ; type <= FHTaskTypeAfterLaunch ; type++) {
 #ifndef DEBUG
         if (type == FHTaskTypeDebug) {
@@ -170,8 +175,11 @@
     
     TTStartupTask *task = [[taskClass alloc] init];
     if ([task shouldExecuteForApplication:application options:options]) {
-        if ([self isConcurrentFotType:headerInfo->type] || [task isConcurrent]) {
-            dispatch_async(SharedAppDelegate.barrierQueue, ^{
+        if ([self isConcurrentFotType:headerInfo->type] || [task isConcurrent]) {            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                
+//            })
+//            dispatch_async(SharedAppDelegate.barrierQueue, ^{
                 [task startAndTrackWithApplication:application options:options];
             });
         } else {
@@ -201,23 +209,23 @@
 
 -(void)updateTaskRecords:(NSArray *)tasks
 {
-//    if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
-//        for(TTStartupTask *task in tasks){
-//            NSString *key = [TTStartupProtectPrefix stringByAppendingString:[task taskIdentifier]];
-//            if (![[NSUserDefaults standardUserDefaults] objectForKey:key]) {
-//                [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:key];
-//            }
-//        }
-//    }
-//    else {
-//        
-//        NSMutableDictionary *defaultDict = [NSMutableDictionary new];
-//        for(TTStartupTask *task in tasks){
-//            defaultDict[[TTStartupProtectPrefix stringByAppendingString:[task taskIdentifier]]] = @(YES);
-//        }
-//        
-//        [[NSUserDefaults standardUserDefaults] registerDefaults:defaultDict];
-//    }
+    if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
+        for(TTStartupTask *task in tasks){
+            NSString *key = [TTStartupProtectPrefix stringByAppendingString:[task taskIdentifier]];
+            if (![[NSUserDefaults standardUserDefaults] objectForKey:key]) {
+                [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:key];
+            }
+        }
+    }
+    else {
+        
+        NSMutableDictionary *defaultDict = [NSMutableDictionary new];
+        for(TTStartupTask *task in tasks){
+            defaultDict[[TTStartupProtectPrefix stringByAppendingString:[task taskIdentifier]]] = @(YES);
+        }
+        
+        [[NSUserDefaults standardUserDefaults] registerDefaults:defaultDict];
+    }
 }
 
 
@@ -244,7 +252,10 @@
     NSDate *now = [NSDate date];
     NSTimeInterval laucnhTS = [self processStartTime];
     NSTimeInterval nowTS = [now timeIntervalSince1970]*1000;
-    NSLog(@"[LAUNCH] launch takes: %f ms",(nowTS - laucnhTS));
+    NSLog(@"[LAUNCH] whole launch takes: %f ms",(nowTS - laucnhTS));
+    if(preMainDate){
+        NSLog(@"[LAUNCH] after main launch takes: %f ms",nowTS - [preMainDate timeIntervalSince1970]*1000);
+    }
 }
 
 @end

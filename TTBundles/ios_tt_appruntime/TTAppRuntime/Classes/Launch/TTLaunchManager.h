@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(instancetype)sharedInstance;
 
++(void)setPreMainDate:(NSDate *)date;
+
 + (NSTimeInterval)processStartTime;//timestamp in ms
 
 +(void)dumpLaunchDuration;
