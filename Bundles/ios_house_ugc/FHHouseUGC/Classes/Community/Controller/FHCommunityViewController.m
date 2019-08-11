@@ -53,6 +53,7 @@
     [self initViewModel];
 
     [self onUnreadMessageChange];
+    [self onFocusHaveNewContents];
 
     //切换开关
     WeakSelf;
@@ -69,6 +70,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
     //tabbar双击的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeMyJoinTab) name:kFHUGCForumPostThreadFinish object:nil];
@@ -117,6 +119,16 @@
         _segmentControl.sectionMessageTips = @[@(count)];
     } else {
         _segmentControl.sectionMessageTips = @[@(0)];
+    }
+}
+
+- (void)onFocusHaveNewContents {
+    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
+    BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
+    if(self.viewModel.currentTabIndex != 0 && hasSocialGroups && hasNew){
+        _segmentControl.sectionRedPoints = @[@1];
+    }else{
+        _segmentControl.sectionRedPoints = @[@0];
     }
 }
 

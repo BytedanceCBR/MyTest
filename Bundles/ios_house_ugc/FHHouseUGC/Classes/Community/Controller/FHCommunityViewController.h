@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showSegmentControl:(BOOL)isShow;
 - (void)hideGuideView;
+- (void)onFocusHaveNewContents;
 
 @end
 

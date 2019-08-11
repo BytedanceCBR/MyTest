@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHCommunityViewModel : NSObject
 
 @property(nonatomic, weak) UIButton *searchBtn;
+@property(nonatomic , assign) NSInteger currentTabIndex;
 
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(UIViewController *)viewController;
 

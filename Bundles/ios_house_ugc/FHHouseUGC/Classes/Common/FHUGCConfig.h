@@ -21,6 +21,8 @@ static NSString *const kFHUGCPostSuccessNotification = @"k_fh_ugc_post_finish";
 static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
 // 举报帖子成功通知 数放在userinfo的：cellModel
 static NSString *const kFHUGCReportPostNotification = @"k_fh_ugc_report_post_finish";
+// 关注tab是否有新内容的通知
+static NSString *const kFHUGCFocusTabHasNewNotification = @"k_fh_ugc_focus_tab_has_new";
 
 @interface FHUGCConfig : NSObject
 
@@ -35,6 +37,8 @@ static NSString *const kFHUGCReportPostNotification = @"k_fh_ugc_report_post_fin
 @property (nonatomic, strong) FHUGCConfigModel *configData;
 // 是否已经显示出feed引导
 @property (nonatomic, assign) BOOL isAlreadyShowFeedGuide;
+// 是否关注列表有新内容
+@property (nonatomic, assign) BOOL ugcFocusHasNew;
 
 // 关注列表
 - (NSArray<FHUGCScialGroupDataModel> *)followList;
