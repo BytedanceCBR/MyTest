@@ -14,6 +14,7 @@
 #import "TTAccount+Multicast.h"
 #import "TTAccountManager.h"
 #import "TTForumPostThreadStatusViewModel.h"
+#import "FHEnvContext.h"
 
 static const NSString *kFHFollowListCacheKey = @"cache_follow_list_key";
 static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
@@ -134,12 +135,14 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
 // App启动的时候需要加载
 - (void)loadFollowData {
+    __weak typeof(self) wself = self;
     [FHHouseUGCAPI requestFollowListByType:1 class:[FHUGCModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (model && [model isKindOfClass:[FHUGCModel class]]) {
             FHUGCModel *u_model = model;
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.followData = u_model;
-                [self updateFollowData];
+                wself.followData = u_model;
+                [wself updateFollowData];
+                [wself setFocusTimerState];
             });
         }
     }];
@@ -203,6 +206,15 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 - (void)updateFollowData {
     [self saveFollowListData];
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCLoadFollowDataFinishedNotification object:nil];
+}
+
+- (void)setFocusTimerState {
+    //关注列表有数据，才会触发小红点逻辑
+    if([FHEnvContext isUGCOpen] && self.followList.count > 0){
+        [self startTimer];
+    }else{
+        [self stopTimer];
+    }
 }
 
 - (NSArray<FHUGCScialGroupDataModel> *)followList {
@@ -488,8 +500,34 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     return self.configData.data.permission;
 }
 
-- (BOOL)ugcFocusHasNew {
-    return YES;
+//- (BOOL)ugcFocusHasNew {
+//    return YES;
+//}
+
+- (void)startTimer {
+    if(_focusTimer){
+        [self stopTimer];
+    }
+    [self.focusTimer fire];
+}
+
+- (void)stopTimer {
+    [_focusTimer invalidate];
+    _focusTimer = nil;
+}
+
+- (NSTimer *)focusTimer {
+    if(!_focusTimer){
+        _focusTimer  =  [NSTimer timerWithTimeInterval:5 target:self selector:@selector(getHasNewForTimer) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:_focusTimer forMode:NSRunLoopCommonModes];
+    }
+    return _focusTimer;
+}
+
+- (void)getHasNewForTimer {
+    //每隔一段时候调用接口
+    self.ugcFocusHasNew = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
 }
 
 @end

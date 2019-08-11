@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (UIViewController *)contentViewController;
 
-- (void)refreshData;
+- (void)refreshData:(BOOL)isHead;
 
 - (void)cellDisappear;
 

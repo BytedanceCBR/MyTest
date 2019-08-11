@@ -94,13 +94,21 @@
     return _vc;
 }
 
-- (void)refreshData {
+- (void)refreshData:(BOOL)isHead {
     if([self.vc isKindOfClass:[FHNearbyViewController class]]){
         FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
-        [vc.feedVC scrollToTopAndRefresh];
+        if(isHead){
+            [vc.feedVC scrollToTopAndRefreshAllData];
+        }else{
+            [vc.feedVC scrollToTopAndRefresh];
+        }
     }else if([self.vc isKindOfClass:[FHMyJoinViewController class]]){
         FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
-        [vc.feedListVC scrollToTopAndRefresh];
+        if(isHead){
+            [vc.feedListVC scrollToTopAndRefreshAllData];
+        }else{
+            [vc.feedListVC scrollToTopAndRefresh];
+        }
     }
 }
 

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showUGC:(BOOL)isShow;
 
-- (void)refreshCell;
+- (void)refreshCell:(BOOL)isHead;
 
 - (void)changeMyJoinTab;
 

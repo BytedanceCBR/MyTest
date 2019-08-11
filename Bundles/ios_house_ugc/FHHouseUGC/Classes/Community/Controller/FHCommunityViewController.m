@@ -35,6 +35,7 @@
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
+@property(nonatomic, assign) BOOL hasFocusTips;
 
 @end
 
@@ -127,8 +128,16 @@
     BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
     if(self.viewModel.currentTabIndex != 0 && hasSocialGroups && hasNew){
         _segmentControl.sectionRedPoints = @[@1];
-    }else{
-        _segmentControl.sectionRedPoints = @[@0];
+        self.hasFocusTips = YES;
+    }
+}
+
+- (void)hideRedPoint {
+    if(self.viewModel.currentTabIndex == 0 && self.hasFocusTips){
+        self.hasFocusTips = NO;
+        [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+        self.segmentControl.sectionRedPoints = @[@0];
+        [self.viewModel refreshCell:YES];
     }
 }
 
@@ -152,7 +161,6 @@
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
 
-//    [self setupCollectionView];
     [self setupSetmentedControl];
 }
 
@@ -168,9 +176,20 @@
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     [self addUgcGuide];
 
-    if (!self.hasShowDots) {
+    if(self.isUgcOpen){
+        //去掉邻里tab的红点
         [FHEnvContext hideFindTabRedDots];
-        self.hasShowDots = YES;
+        //去掉关注红点的同时刷新tab
+        if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].ugcFocusHasNew){
+            self.hasFocusTips = NO;
+            [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+            [self.viewModel refreshCell:YES];
+        }
+    }else{
+        if (!self.hasShowDots) {
+            [FHEnvContext hideFindTabRedDotsLimitCount];
+            self.hasShowDots = YES;
+        }
     }
 }
 
@@ -247,7 +266,7 @@
     };
     
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
-        [weakSelf.viewModel refreshCell];
+        [weakSelf.viewModel refreshCell:NO];
     };
 }
 
@@ -357,7 +376,7 @@
 }
 
 - (void)refreshData {
-    [self.viewModel refreshCell];
+    [self.viewModel refreshCell:NO];
 }
 
 - (void)changeMyJoinTab {

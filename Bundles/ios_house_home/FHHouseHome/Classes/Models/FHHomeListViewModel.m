@@ -156,6 +156,7 @@
             [self configIconRowCountAndHeight];
             
             [FHEnvContext changeFindTabTitle];
+            [FHEnvContext showRedPointForNoUgc];
             
             //更新冷启动默认选项
             if (xConfigDataModel.houseTypeDefault && (xConfigDataModel.houseTypeDefault.integerValue > 0) && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
