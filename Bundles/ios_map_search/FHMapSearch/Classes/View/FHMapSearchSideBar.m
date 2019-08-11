@@ -125,7 +125,7 @@
         }
     }
     
-    self.height = top;
+    self.height = (top+8);
     
 }
 

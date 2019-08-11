@@ -311,9 +311,9 @@
 
 -(void)checkScrollMoveEffect:(UIScrollView *)scrollview
 {
-    if (self.listController.view.top > self.listController.view.height*0.6) {
+    if (self.listController.view.top > self.listController.view.height*0.5) {
         [self handleDismiss:0.3];
-    }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < 50)){
+    }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < 80)){
         //吸附都顶部
         [self.headerView hideTopTip:YES];
         [self.listController moveTop:0];
