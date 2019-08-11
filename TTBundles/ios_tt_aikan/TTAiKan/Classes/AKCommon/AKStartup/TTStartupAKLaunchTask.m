@@ -9,7 +9,6 @@
 #import "AKHelper.h"
 #import <SecGuard/SGMSafeGuardManager.h>
 #import <TTRoute.h>
-#import "UIAlertView+FHAlertView.h"
 #import "CommonURLSetting.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTInstallService/TTInstallIDManager.h>

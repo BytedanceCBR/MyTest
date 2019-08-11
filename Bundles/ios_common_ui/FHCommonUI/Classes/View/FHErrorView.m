@@ -158,10 +158,10 @@
     self.hidden = YES;
 }
 
--(void)willMoveToSuperview:(UIView *)newSuperview
+-(void)willMoveToWindow:(UIWindow *)newWindow
 {
-    [super willMoveToSuperview:newSuperview];
-    if(newSuperview && !self.errorImageView.image){
+    [super willMoveToWindow:newWindow];
+    if(newWindow && !self.errorImageView.image){
         self.errorImageView.image = [UIImage imageNamed:kFHErrorMaskNoNetWorkImageName];
     }
 }

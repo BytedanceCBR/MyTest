@@ -402,6 +402,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL ugcCitySwitch;
 @property (nonatomic, strong , nullable) NSString *diffCode;
 
+//@property (nonatomic, strong , nullable) NSDictionary *originDict;
+
 @end
 
 
@@ -412,5 +414,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHConfigDataModel *data ;
 
 @end
+
+//@interface FHConfigDataModel (SimpleInit)
+//
+//-(instancetype)initWithDictShadow:(NSDictionary *)dict;
+//
+//@end
 
 NS_ASSUME_NONNULL_END

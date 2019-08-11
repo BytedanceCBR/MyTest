@@ -100,6 +100,7 @@
         CGSize iconSize = CGSizeMake(ceil(NORMAL_ICON_WIDTH*ratio), ceil(NORMAL_ICON_WIDTH*ratio));
         for (NSInteger i = _itemViews.count; i < totalCount; i++) {
             FHHomeEntranceItemView *itemView = [[FHHomeEntranceItemView alloc] initWithFrame:itemFrame iconSize:iconSize];
+            [itemView addTarget:self action:@selector(onItemAction:) forControlEvents:UIControlEventTouchUpInside];
             itemView.tag = ITEM_TAG_BASE+i;
             [self.itemViews addObject:itemView];
             [self.contentView addSubview:itemView];
@@ -131,11 +132,6 @@
     }
 }
 
--(void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-}
 
 @end
 

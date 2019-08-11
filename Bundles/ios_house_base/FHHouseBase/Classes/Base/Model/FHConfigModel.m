@@ -1070,3 +1070,17 @@
 
 
 
+//@implementation FHConfigDataModel (SimpleInit)
+//
+//-(instancetype)initWithDictShadow:(NSDictionary *)dict
+//{
+//    self = [super init];
+//    if(self){
+//        self.originDict = dict;
+//        //init
+//        
+//    }
+//    
+//}
+//
+//@end

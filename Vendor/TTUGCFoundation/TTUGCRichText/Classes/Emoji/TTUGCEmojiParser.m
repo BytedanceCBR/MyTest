@@ -114,8 +114,8 @@ static NSRegularExpression *emojiRegex;
 @implementation TTUGCEmojiParser
 
 
-+ (void)load
-{
+//+ (void)load
+//{
 //    [[TTModuleBridge sharedInstance_tt] registerAction:@"TTUGCEmojiParser.stringify" withBlock:^id _Nullable(id  _Nullable object, id  _Nullable params) {
 //        NSAttributedString *text = (NSAttributedString *)[params valueForKey:@"stringifyText"];
 //        NSString *result = nil;
@@ -134,7 +134,7 @@ static NSRegularExpression *emojiRegex;
 //        }
 //        return result;
 //    }];
-}
+//}
 
 + (instancetype)sharedManager {
     static dispatch_once_t onceToken;

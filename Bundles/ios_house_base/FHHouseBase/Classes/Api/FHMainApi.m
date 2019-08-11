@@ -95,7 +95,7 @@
         __block NSError *backError = error;
 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&backError useYYModel:NO];
+            FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&backError useYYModel:YES];
 
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
