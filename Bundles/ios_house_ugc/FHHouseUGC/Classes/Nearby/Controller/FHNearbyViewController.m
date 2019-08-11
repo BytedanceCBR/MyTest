@@ -138,6 +138,7 @@
         [wself trackLocationAuthClick:YES];
         wself.needRefresh = YES;
         [wself initView];
+        wself.lastRequestTime = [[NSDate date] timeIntervalSince1970];
     }];
     
     [_alertVC addActionWithTitle:@"开启定位" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
