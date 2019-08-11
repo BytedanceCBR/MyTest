@@ -323,6 +323,8 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         task.userID = [[TTAccount sharedAccount] userIdString];//[[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID];
         task.concernID = postThreadModel.concernID;
         task.social_group_id = postThreadModel.social_group_id;
+        task.social_group_name = postThreadModel.social_group_name;
+        task.hasSocialGroup = postThreadModel.hasSocialGroup;
         task.categoryID = postThreadModel.categoryID;
         [task addTaskImages:postThreadModel.taskImages thumbImages:postThreadModel.thumbImages];
         task.source = 2;//来源于话题
