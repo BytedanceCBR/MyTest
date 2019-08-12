@@ -85,6 +85,8 @@
     self.icon.layer.masksToBounds = YES;
     self.icon.layer.cornerRadius = 4;
     self.icon.backgroundColor = [UIColor themeGray7];
+    self.icon.layer.borderWidth = 0.5;
+    self.icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:self.icon];
 
     self.infoContainer = [[UIView alloc] initWithFrame:CGRectZero];
@@ -109,7 +111,7 @@
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentView);
         make.left.mas_equalTo(self.contentView).offset(10);
-        make.width.height.mas_equalTo(48);
+        make.width.height.mas_equalTo(50);
     }];
 
     [self.buttonContainer mas_makeConstraints:^(MASConstraintMaker *make) {
