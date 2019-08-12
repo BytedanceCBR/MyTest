@@ -585,17 +585,6 @@ def appPods
 
     pod_binary 'BDUGDeepLink', '1.0.1'
 end
-target 'NewsLite' do
-    fhPods
-    appPods
-end
-
-target 'f100' do
-    fhPods
-    appPods
-    #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine'
-    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
-end
 
 target 'NewsLiteInHouse' do
     pod_binary 'TTDebugAssistant', '0.2.33'
@@ -609,18 +598,12 @@ target 'NewsLiteInHouse' do
 
 end
 
-target 'NewsLiteChannel' do
-    pod_binary 'TTDebugAssistant', '0.2.33'
-    pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
-    pod_binary 'TTSettingsManager/Debug'
-    pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
-    #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine_inhouse'
+target 'f100' do
     fhPods
     appPods
+    #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine'
     script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
-    
 end
-
 
 # POD POST_INSTALL
 post_install do |installer|
