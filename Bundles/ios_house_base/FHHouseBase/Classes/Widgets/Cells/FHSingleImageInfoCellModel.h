@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isRecommendCell;
 @property (nonatomic, assign) BOOL isSubscribCell;
 @property (nonatomic, assign) BOOL isRealHouseTopCell;
+@property (nonatomic, assign) BOOL isAgencyInfoCell;
+@property (nonatomic, assign) BOOL isNoHousePlaceHoderCell;
 
 @property (nonatomic, assign) FHHouseType houseType;
 @property (nonatomic, copy , nullable) NSString *houseId;
@@ -31,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) JSONModel *subscribModel;//搜索订阅数据model
 
 @property (nonatomic, strong , nullable) JSONModel *realHouseTopModel;//头部真假房源视图
+
+@property (nonatomic, strong , nullable) JSONModel *agencyInfoModel;
 
 @property (nonatomic, assign) CGSize titleSize;
 

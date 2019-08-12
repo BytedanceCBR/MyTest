@@ -33,6 +33,8 @@ static NSString *const kFHUGCDelCommentDetailReplyNotification = @"k_fh_ugc_del_
 
 @property (nonatomic, weak)   FHPostDetailHeaderModel *detailHeaderModel;
 
+@property (nonatomic, copy)     NSString       *lastPageSocialGroupId;
+
 // 插入新回复的数据
 - (void)insertReplyData:(TTCommentDetailReplyCommentModel *)model;
 

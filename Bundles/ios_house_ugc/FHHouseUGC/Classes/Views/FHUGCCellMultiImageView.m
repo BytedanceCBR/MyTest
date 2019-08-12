@@ -24,6 +24,7 @@
 @property(nonatomic, strong) NSMutableArray *imageViewList;
 @property(nonatomic, assign) CGFloat imageWidth;
 @property(nonatomic, strong) NSArray *largeImageList;
+@property(nonatomic, strong) NSArray *imageList;
 @property(nonatomic, strong) UILabel *infoLabel;
 
 @end
@@ -160,9 +161,16 @@
         UIImageView *imageView = self.imageViewList[i];
         if(i < imageList.count){
             FHFeedContentImageListModel *imageModel = imageList[i];
+            
             imageView.hidden = NO;
             CGFloat width = [imageModel.width floatValue];
             CGFloat height = [imageModel.height floatValue];
+            if(self.imageList && self.imageList.count == imageList.count){
+                FHFeedContentImageListModel *oldImageModel = self.imageList[i];
+                if([oldImageModel.uri isEqualToString:imageModel.uri]){
+                    continue;
+                }
+            }
             [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
             //只对单图做重新布局，多图都是1：1
             if(self.count == 1 && !self.fixedSingleImage){
@@ -194,6 +202,8 @@
     }else{
         self.infoLabel.hidden = YES;
     }
+    
+    self.imageList = imageList;
 }
 
 #pragma mark - 处理大图逻辑

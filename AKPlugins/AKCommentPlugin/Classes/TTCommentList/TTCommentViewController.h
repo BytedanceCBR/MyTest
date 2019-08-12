@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSString *serviceID;            // 评论服务所属 serviceID, 评论接口使用
 @property (nonatomic, copy)     NSString       *enter_from; // 外部 传入
 @property(nonatomic , copy) NSDictionary *tracerDict; // 外部 传入
+@property (nonatomic, assign)  BOOL fromUGC;//来源是ugc模块新功能，区别以前的评论部分
 
 - (nonnull instancetype)initWithViewFrame:(CGRect)frame
                                dataSource:(nullable id<TTCommentDataSource>)dataSource
