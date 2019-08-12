@@ -394,6 +394,34 @@
     }
 }
 
+// 更新运营位
+- (void)updateOperationInfo:(FHUGCSocialGroupOperationModel *)model {
+    
+    BOOL hasOperation = model.hasOperation;
+    NSString *linkUrlString = model.linkUrl;
+    NSString *imageUrlString = model.imageUrl;
+ 
+    self.headerView.gotoOperationBlock = ^{
+        NSURLComponents *urlComponents = [NSURLComponents new];
+        urlComponents.scheme = @"fschema";
+        urlComponents.host = @"webview";
+        urlComponents.queryItems = @[
+                                     [[NSURLQueryItem alloc] initWithName:@"url" value: linkUrlString]
+                                     ];
+        
+        NSURL *url = urlComponents.URL;
+        [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+    };
+    NSURL *imageUrl = [NSURL URLWithString: imageUrlString];
+    WeakSelf;
+    [self.headerView.operationBannerImageView bd_setImageWithURL:imageUrl placeholder:nil options:BDImageRequestDefaultOptions completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+        StrongSelf;
+        BOOL isShowOperationInfo = (hasOperation && !error);
+        [self.headerView updateOperationInfo: isShowOperationInfo];
+    }];
+    
+}
+
 - (void)updateUIWithData:(FHUGCScialGroupDataModel *)data {
     if (!data) {
         self.feedListController.view.hidden = YES;
@@ -412,6 +440,10 @@
     } else {
         self.headerView.publicationsContentLabel.text = data.announcement;
     }
+    
+    // 配置运营位
+    [self updateOperationInfo:data.operation];
+    
     [self updateJoinUI:[data.hasFollow boolValue]];
     self.titleLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
     self.subTitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;

@@ -16,6 +16,7 @@
 @interface FHCommunityDetailHeaderView ()
 
 @property(nonatomic, strong) UIView *infoContainer;
+@property(nonatomic, strong) UIView *operationBannerContainer;
 @end
 
 @implementation FHCommunityDetailHeaderView
@@ -26,6 +27,34 @@
         [self initConstraints];
     }
     return self;
+}
+
+-(UIView *)operationBannerContainer {
+    if(!_operationBannerContainer) {
+        _operationBannerContainer = [UIView new];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoOperationDetail:)];
+        [_operationBannerContainer addGestureRecognizer:tap];
+        
+        [_operationBannerContainer addSubview:self.operationBannerImageView];
+        [self.operationBannerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.left.right.equalTo(self.operationBannerContainer);
+        }];
+    }
+    return _operationBannerContainer;
+}
+
+- (UIImageView *)operationBannerImageView {
+    if(!_operationBannerImageView) {
+        _operationBannerImageView = [UIImageView new];
+        _operationBannerImageView.contentMode = UIViewContentModeScaleAspectFit;
+    }
+    return _operationBannerImageView;
+}
+
+-(void)gotoOperationDetail:(UITapGestureRecognizer *)tap {
+    if(self.gotoOperationBlock) {
+        self.gotoOperationBlock();
+    }
 }
 
 - (void)initView {
@@ -87,6 +116,7 @@
     [self addSubview:self.labelContainer];
     [self addSubview:self.followButton];
     [self addSubview:self.publicationsContainer];
+    [self addSubview:self.operationBannerContainer];
 }
 
 - (void)initConstraints {
@@ -99,59 +129,65 @@
     }];
 
     [self.avatar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.infoContainer).offset(20);
-        make.bottom.mas_equalTo(self.infoContainer).offset(-46);
+        make.left.equalTo(self.infoContainer).offset(20);
+        make.bottom.equalTo(self.infoContainer).offset(-46);
         make.width.height.mas_equalTo(50);
     }];
 
     [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.avatar);
+        make.centerY.equalTo(self.avatar);
         make.height.mas_equalTo(26);
         make.width.mas_equalTo(56);
-        make.right.mas_equalTo(self).offset(-20);
+        make.right.equalTo(self).offset(-20);
     }];
 
     [self.labelContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.avatar);
+        make.centerY.equalTo(self.avatar);
         make.height.mas_equalTo(44);
-        make.left.mas_equalTo(self.avatar.mas_right).offset(8);
-        make.right.mas_equalTo(self.followButton.mas_left).offset(-8);
+        make.left.equalTo(self.avatar.mas_right).offset(8);
+        make.right.equalTo(self.followButton.mas_left).offset(-8);
     }];
 
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.labelContainer);
+        make.left.top.right.equalTo(self.labelContainer);
         make.height.mas_equalTo(22);
     }];
 
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.bottom.right.mas_equalTo(self.labelContainer);
+        make.left.bottom.right.equalTo(self.labelContainer);
         make.height.mas_equalTo(17);
     }];
 
     [self.publicationsContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(20);
-        make.right.mas_equalTo(self).offset(-20);
+        make.left.equalTo(self).offset(20);
+        make.right.equalTo(self).offset(-20);
         make.height.mas_greaterThanOrEqualTo(50);
-        make.top.mas_equalTo(self.infoContainer.mas_bottom).offset(-30);
+        make.top.equalTo(self.infoContainer.mas_bottom).offset(-30);
     }];
 
     [self.publicationsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(self.publicationsContainer).offset(15);
+        make.left.top.equalTo(self.publicationsContainer).offset(15);
         make.width.mas_equalTo(26);
         make.height.mas_equalTo(20);
     }];
 
     [self.publicationsContentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.publicationsContainer).offset(15);
-        make.left.mas_equalTo(self.publicationsLabel.mas_right).offset(10);
-        make.right.mas_equalTo(self.publicationsContainer).offset(-15);
-        make.bottom.mas_equalTo(self.publicationsContainer.mas_bottom).offset(-15);
+        make.top.equalTo(self.publicationsContainer).offset(15);
+        make.left.equalTo(self.publicationsLabel.mas_right).offset(10);
+        make.right.equalTo(self.publicationsContainer).offset(-15);
+        make.bottom.equalTo(self.publicationsContainer.mas_bottom).offset(-15);
         make.height.mas_greaterThanOrEqualTo(20);
     }];
+     
+     [self.operationBannerContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+         make.height.mas_equalTo(0);
+         make.left.right.equalTo(self);
+         make.top.equalTo(self.publicationsContainer.mas_bottom).offset(10);
+     }];
 
     [self mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.topBack);
-        make.bottom.mas_equalTo(self.publicationsContainer).offset(10);
+        make.left.top.right.equalTo(self.topBack);
+        make.bottom.equalTo(self.operationBannerContainer);
     }];
 
 }
@@ -166,4 +202,13 @@
     }
 }
 
+- (void)updateOperationInfo:(BOOL)isShow {
+    // 运营位banner
+    CGSize imageSize = self.operationBannerImageView.image.size;
+    CGFloat whRatio =  isShow ? imageSize.height / imageSize.width : 0;
+    CGFloat height = round(self.bounds.size.width * whRatio + 0.5);
+    [self.operationBannerContainer mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(height);
+    }];
+}
 @end

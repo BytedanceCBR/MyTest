@@ -18,6 +18,7 @@
     @"countText": @"count_text",
     @"socialGroupName": @"social_group_name",
     @"hasFollow": @"has_follow",
+    @"operation": @"operation",
     @"logPb":@"log_pb",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -30,3 +31,20 @@
 }
 @end
 
+@implementation FHUGCSocialGroupOperationModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"imageUrl": @"image_url",
+                           @"linkUrl": @"link_url",
+                           @"hasOperation": @"has_operation",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end

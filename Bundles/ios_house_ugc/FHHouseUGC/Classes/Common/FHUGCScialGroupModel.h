@@ -6,6 +6,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHUGCSocialGroupOperationModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *imageUrl;
+@property (nonatomic, copy , nullable) NSString *linkUrl;
+@property (nonatomic, assign) BOOL hasOperation;
+@end
+
 @interface FHUGCScialGroupDataModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *announcement;
@@ -17,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *countText;
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
 @property (nonatomic, copy , nullable) NSString *hasFollow;
+@property (nonatomic, strong, nullable) FHUGCSocialGroupOperationModel *operation;
 @property (nonatomic, copy , nullable) NSDictionary *logPb;
 
 @end
