@@ -233,6 +233,16 @@
     if (self.feedListController.tableView) {
         [self scrollViewDidScroll:self.feedListController.tableView];
     }
+    // 帖子数同步逻辑
+    FHUGCScialGroupDataModel *tempModel = self.data;
+    if (tempModel) {
+        NSString *socialGroupId = tempModel.socialGroupId;
+        FHUGCScialGroupDataModel *model = [[FHUGCConfig sharedInstance] socialGroupData:socialGroupId];
+        if (model && (![model.countText isEqualToString:tempModel.countText] || ![model.hasFollow isEqualToString:tempModel.hasFollow])) {
+            self.data = model;
+            [self updateUIWithData:model];
+        }
+    }
 }
 
 - (void)viewWillDisappear {
@@ -258,6 +268,10 @@
         if (model && (error == nil)) {
             FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
             [wself updateUIWithData:responseModel.data];
+            if (responseModel.data) {
+                // 更新圈子数据
+                [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:responseModel.data];
+            }
             return;
         }
         [wself onNetworError:showEmptyIfFailed showToast:showToast];
