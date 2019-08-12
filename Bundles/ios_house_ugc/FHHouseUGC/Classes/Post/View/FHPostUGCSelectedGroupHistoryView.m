@@ -7,6 +7,7 @@
 
 #import "FHPostUGCSelectedGroupHistoryView.h"
 #import "Masonry.h"
+#import <TTThemed/UIColor+TTThemeExtension.h>
 
 @implementation FHPostUGCSelectedGroupModel
 - (void)encodeWithCoder:(NSCoder *)aCoder {
@@ -48,7 +49,7 @@
         
         [self.historyButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.titleLabel.mas_centerY);
-            make.left.equalTo(self.titleLabel.mas_right).offset(5);
+            make.left.equalTo(self.titleLabel.mas_right).offset(10);
             make.right.lessThanOrEqualTo(self).offset(-20);
         }];
     }
@@ -60,7 +61,7 @@
         _titleLabel = [UILabel new];
         _titleLabel.text = @"上次选择:";
         _titleLabel.font = [UIFont systemFontOfSize:16];
-        _titleLabel.textColor = [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1];
+        _titleLabel.textColor = [UIColor tt_themedColorForKey:@"grey1"];
     }
     return _titleLabel;
 }
@@ -69,12 +70,11 @@
     if(!_historyButton) {
         _historyButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_historyButton setTitle: self.model.socialGroupName forState:UIControlStateNormal];
-        _historyButton.titleLabel.font = [UIFont systemFontOfSize:14];
-        [_historyButton setTitleColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1] forState:UIWindowLevelNormal];
-        _historyButton.contentEdgeInsets = UIEdgeInsetsMake(2, 10, 2, 10);
-        
-        _historyButton.layer.borderColor = [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1].CGColor;
-        _historyButton.layer.borderWidth = 1;
+        _historyButton.titleLabel.font = [UIFont systemFontOfSize:16];
+        [_historyButton setTitleColor:[UIColor tt_themedColorForKey:@"grey1"] forState:UIWindowLevelNormal];
+        _historyButton.backgroundColor = [UIColor tt_themedColorForKey:@"grey7"];
+        _historyButton.contentEdgeInsets = UIEdgeInsetsMake(5, 10, 5, 10);
+        _historyButton.layer.cornerRadius = 4;
         
         [_historyButton addTarget:self action:@selector(historyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     }
