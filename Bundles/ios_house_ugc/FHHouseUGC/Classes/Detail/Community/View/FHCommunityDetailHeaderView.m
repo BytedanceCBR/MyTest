@@ -32,12 +32,16 @@
 -(UIView *)operationBannerContainer {
     if(!_operationBannerContainer) {
         _operationBannerContainer = [UIView new];
+        _operationBannerContainer.backgroundColor = [UIColor tt_themedColorForKey:@"gray7"];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoOperationDetail:)];
         [_operationBannerContainer addGestureRecognizer:tap];
         
         [_operationBannerContainer addSubview:self.operationBannerImageView];
         [self.operationBannerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.bottom.left.right.equalTo(self.operationBannerContainer);
+            make.left.equalTo(self.operationBannerContainer).offset(20);
+            make.right.equalTo(self.operationBannerContainer).offset(-20);
+            make.top.equalTo(self.operationBannerContainer).offset(5);
+            make.bottom.equalTo(self.operationBannerContainer).offset(-5);
         }];
     }
     return _operationBannerContainer;
@@ -181,15 +185,14 @@
      
      [self.operationBannerContainer mas_makeConstraints:^(MASConstraintMaker *make) {
          make.height.mas_equalTo(0);
-         make.left.right.equalTo(self);
-         make.top.equalTo(self.publicationsContainer.mas_bottom).offset(10);
+         make.left.right.bottom.equalTo(self);
+         make.top.equalTo(self.publicationsContainer.mas_bottom);
      }];
 
     [self mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.equalTo(self.topBack);
         make.bottom.equalTo(self.operationBannerContainer);
     }];
-
 }
 
 - (void)updateWhenScrolledWithContentOffset:(CGPoint)contentOffset isScrollTop:(BOOL)isScrollTop {
@@ -206,7 +209,7 @@
     // 运营位banner
     CGSize imageSize = self.operationBannerImageView.image.size;
     CGFloat whRatio =  isShow ? imageSize.height / imageSize.width : 0;
-    CGFloat height = round(self.bounds.size.width * whRatio + 0.5);
+    CGFloat height = round((self.bounds.size.width - 40) * whRatio + 0.5) + 10;
     [self.operationBannerContainer mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
     }];
