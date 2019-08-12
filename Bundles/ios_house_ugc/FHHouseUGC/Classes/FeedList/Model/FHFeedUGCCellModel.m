@@ -109,11 +109,15 @@
         
         [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
         
-        if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
+        if(cellModel.openUrl && !isEmptyString(cellModel.openUrl)){
             //针对问答的情况
-            cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
+            if(model.sourceDesc){
+                cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
+            }
         }else{
+            //文章
             cellModel.desc = [self generateArticleDesc:model];
+            cellModel.openUrl = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
         }
 //        cellModel.detailScheme = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
         

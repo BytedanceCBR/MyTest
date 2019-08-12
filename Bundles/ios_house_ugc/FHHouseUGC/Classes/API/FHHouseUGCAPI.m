@@ -39,7 +39,6 @@
 }
 
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-//    NSString *queryPath = @"/f100/api/v2/msg/system_list";
 
     NSString *queryPath = [ArticleURLSetting encrpytionStreamUrlString];
 
