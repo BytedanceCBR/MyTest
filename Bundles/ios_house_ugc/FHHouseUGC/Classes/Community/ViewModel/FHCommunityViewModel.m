@@ -20,7 +20,6 @@
 @property(nonatomic , weak) FHCommunityViewController *viewController;
 @property(nonatomic , strong) NSMutableArray *cellArray;
 @property(nonatomic , strong) NSArray *dataArray;
-@property(nonatomic , assign) NSInteger currentTabIndex;
 @property(nonatomic , assign) BOOL isFirstLoad;
 
 @property(nonatomic , assign) CGPoint beginOffSet;
@@ -115,7 +114,7 @@
 //顶部tabView点击事件
 - (void)segmentViewIndexChanged:(NSInteger)index {
     if(self.currentTabIndex == index){
-        [self refreshCell];
+        [self refreshCell:NO];
     }else{
         self.currentTabIndex = index;
         
@@ -141,13 +140,18 @@
         [self.viewController addChildViewController:cell.contentViewController];
         
         _lastCell = cell;
+        
+        //切换到关注tab时候去掉红点的显示
+        if(self.currentTabIndex == 0){
+            [self.viewController hideRedPoint];
+        }
     }
 }
 
-- (void)refreshCell {
+- (void)refreshCell:(BOOL)isHead {
     if([self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
         FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
-        [cell refreshData];
+        [cell refreshData:isHead];
     }
 }
 

@@ -35,6 +35,7 @@
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
+@property(nonatomic, assign) BOOL hasFocusTips;
 
 @end
 
@@ -53,6 +54,7 @@
     [self initViewModel];
 
     [self onUnreadMessageChange];
+    [self onFocusHaveNewContents];
 
     //切换开关
     WeakSelf;
@@ -69,6 +71,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
     //tabbar双击的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeMyJoinTab) name:kFHUGCForumPostThreadFinish object:nil];
@@ -120,6 +123,24 @@
     }
 }
 
+- (void)onFocusHaveNewContents {
+    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
+    BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
+    if(self.viewModel.currentTabIndex != 0 && hasSocialGroups && hasNew){
+        _segmentControl.sectionRedPoints = @[@1];
+        self.hasFocusTips = YES;
+    }
+}
+
+- (void)hideRedPoint {
+    if(self.viewModel.currentTabIndex == 0 && self.hasFocusTips){
+        self.hasFocusTips = NO;
+        [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+        self.segmentControl.sectionRedPoints = @[@0];
+        [self.viewModel refreshCell:YES];
+    }
+}
+
 - (void)initView {
     self.view.backgroundColor = [UIColor whiteColor];
 
@@ -140,7 +161,6 @@
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
 
-//    [self setupCollectionView];
     [self setupSetmentedControl];
 }
 
@@ -156,9 +176,20 @@
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     [self addUgcGuide];
 
-    if (!self.hasShowDots) {
+    if(self.isUgcOpen){
+        //去掉邻里tab的红点
         [FHEnvContext hideFindTabRedDots];
-        self.hasShowDots = YES;
+        //去掉关注红点的同时刷新tab
+        if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].ugcFocusHasNew){
+            self.hasFocusTips = NO;
+            [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+            [self.viewModel refreshCell:YES];
+        }
+    }else{
+        if (!self.hasShowDots) {
+            [FHEnvContext hideFindTabRedDotsLimitCount];
+            self.hasShowDots = YES;
+        }
     }
 }
 
@@ -235,7 +266,7 @@
     };
     
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
-        [weakSelf.viewModel refreshCell];
+        [weakSelf.viewModel refreshCell:NO];
     };
 }
 
@@ -345,7 +376,7 @@
 }
 
 - (void)refreshData {
-    [self.viewModel refreshCell];
+    [self.viewModel refreshCell:NO];
 }
 
 - (void)changeMyJoinTab {

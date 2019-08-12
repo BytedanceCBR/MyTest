@@ -103,6 +103,7 @@
                                         [self.dataList insertObject:cellModel atIndex:0];
                                     }
                                     [self.tableView reloadData];
+                                    self.needRefreshCell = NO;
                                 }
                             });
                         }

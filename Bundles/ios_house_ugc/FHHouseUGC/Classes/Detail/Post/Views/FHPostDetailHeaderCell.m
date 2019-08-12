@@ -73,7 +73,7 @@
     self.icon = [[UIImageView alloc] init];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
-    _icon.layer.cornerRadius = 24;
+    _icon.layer.cornerRadius = 4;
     _icon.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:_icon];
     
@@ -117,7 +117,7 @@
         make.top.mas_equalTo(self.contentView).offset(15);
         make.bottom.mas_equalTo(self.contentView).offset(-15);
         make.left.mas_equalTo(self.contentView).offset(20);
-        make.width.height.mas_equalTo(48);
+        make.width.height.mas_equalTo(50);
     }];
     
     [self.joinBtn mas_makeConstraints:^(MASConstraintMaker *make) {

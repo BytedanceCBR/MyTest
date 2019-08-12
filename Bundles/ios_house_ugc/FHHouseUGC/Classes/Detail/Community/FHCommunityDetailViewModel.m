@@ -102,6 +102,46 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onGlobalFollowListLoad:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
+}
+
+// 发帖成功通知
+- (void)postThreadSuccess:(NSNotification *)noti {
+    if (noti) {
+        NSString *groupId = noti.userInfo[@"social_group_id"];
+        if (groupId.length > 0) {
+            __weak typeof(self) weakSelf = self;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                FHUGCScialGroupDataModel *groupData = [[FHUGCConfig sharedInstance] socialGroupData:weakSelf.data.socialGroupId];
+                if (groupData) {
+                    weakSelf.data.contentCount = groupData.contentCount;
+                    weakSelf.data.countText = groupData.countText;
+                    weakSelf.data.hasFollow = groupData.hasFollow;
+                    weakSelf.data.followerCount = groupData.followerCount;
+                }
+                [weakSelf updateUIWithData:weakSelf.data];
+            });
+        }
+    }
+}
+
+// 删帖成功通知
+- (void)delPostThreadSuccess:(NSNotification *)noti {
+    NSString *groupId = noti.userInfo[@"social_group_id"];
+    if (groupId.length > 0) {
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            FHUGCScialGroupDataModel *groupData = [[FHUGCConfig sharedInstance] socialGroupData:weakSelf.data.socialGroupId];
+            if (groupData) {
+                weakSelf.data.contentCount = groupData.contentCount;
+                weakSelf.data.countText = groupData.countText;
+                weakSelf.data.hasFollow = groupData.hasFollow;
+                weakSelf.data.followerCount = groupData.followerCount;
+            }
+            [weakSelf updateUIWithData:weakSelf.data];
+        });
+    }
 }
 
 - (void)dealloc {
@@ -193,6 +233,16 @@
     if (self.feedListController.tableView) {
         [self scrollViewDidScroll:self.feedListController.tableView];
     }
+    // 帖子数同步逻辑
+    FHUGCScialGroupDataModel *tempModel = self.data;
+    if (tempModel) {
+        NSString *socialGroupId = tempModel.socialGroupId;
+        FHUGCScialGroupDataModel *model = [[FHUGCConfig sharedInstance] socialGroupData:socialGroupId];
+        if (model && (![model.countText isEqualToString:tempModel.countText] || ![model.hasFollow isEqualToString:tempModel.hasFollow])) {
+            self.data = model;
+            [self updateUIWithData:model];
+        }
+    }
 }
 
 - (void)viewWillDisappear {
@@ -218,6 +268,10 @@
         if (model && (error == nil)) {
             FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
             [wself updateUIWithData:responseModel.data];
+            if (responseModel.data) {
+                // 更新圈子数据
+                [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:responseModel.data];
+            }
             return;
         }
         [wself onNetworError:showEmptyIfFailed showToast:showToast];

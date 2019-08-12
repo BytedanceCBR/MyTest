@@ -152,7 +152,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.5)
+  - ios_house_im (0.1.6)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -377,7 +377,7 @@ PODS:
   - TTIMSDK/IMKit (0.7.7)
   - TTIMSDK/IMKit_Core (0.7.7)
   - TTIMSDK/IMKit_WebSocket (0.7.7)
-  - TTInstallService (1.0.0.6.1-binary)
+  - TTInstallService (1.3.1.1-binary)
   - TTKitchen/Core (1.6.0)
   - TTKitchen/TTCommonConfig (1.6.0)
   - TTLCSService (0.1.1.1-binary)
@@ -493,7 +493,7 @@ PODS:
   - TTThirdPartySDKs/QQSDK (0.0.4)
   - TTThirdPartySDKs/WeChatSDK (0.0.4)
   - TTThirdPartySDKs/WeiboSDK (0.0.4)
-  - TTTracker (1.0.6-rc.2.1.binary)
+  - TTTracker (10.0.5.1-binary)
   - TTUGCFoundation (0.1.3):
     - TTUGCFoundation/RequestMonitor (= 0.1.3)
     - TTUGCFoundation/TTUGCActionDataService (= 0.1.3)
@@ -639,7 +639,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.5)
+  - ios_house_im (= 0.1.6)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -760,7 +760,7 @@ DEPENDENCIES:
   - TTIMSDK/IMKit (= 0.7.7)
   - TTIMSDK/IMKit_Core (= 0.7.7)
   - TTIMSDK/IMKit_WebSocket (= 0.7.7)
-  - TTInstallService (= 1.0.0.6.1-binary)
+  - TTInstallService (= 1.3.1.1-binary)
   - TTKitchen/Core (= 1.6.0)
   - TTKitchen/TTCommonConfig (= 1.6.0)
   - TTLCSService (= 0.1.1.1-binary)
@@ -798,7 +798,7 @@ DEPENDENCIES:
   - TTThirdPartySDKs/QQSDK (= 0.0.4)
   - TTThirdPartySDKs/WeChatSDK (= 0.0.4)
   - TTThirdPartySDKs/WeiboSDK (= 0.0.4)
-  - TTTracker (= 1.0.6-rc.2.1.binary)
+  - TTTracker (= 10.0.5.1-binary)
   - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
   - TTUIWidget (from `../AKPlugins/TTUIWidget`)
   - TTUserProfile (from `../TTBundles/ios_tt_userprofile`)
@@ -1013,7 +1013,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 5262144f1627faf666fb92abe658744f9ee02535
+  ios_house_im: 04b03f01db051ef717cf96ffb3515fbfda057cf7
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1076,7 +1076,7 @@ SPEC CHECKSUMS:
   TTImagePreviewAnimateManager: 89284791379992856207b5b92662037d07cb08eb
   TTImpression: d2d80c26abef863c5be6dc8b6fe10ebef3331b84
   TTIMSDK: bc920322f0cb1a542bc0f6c7cfdef1f8576dbc3c
-  TTInstallService: e4d70620bc4b61384861f9a1f74de5225b27adfc
+  TTInstallService: 278ab1b8adf5f1a632507406386a2a80df58d84f
   TTKitchen: b7fcce48014799914152c0b90e6c513ee0e9b1a4
   TTLCSService: d9fc936bba13993ecc454b486a15a403a9fdbdc4
   TTLocationManager: 4e294fc0d5a8e0d263af7a96d48fb37fe4489665
@@ -1106,7 +1106,7 @@ SPEC CHECKSUMS:
   TTTAttributedLabel: dc7f8eada1e3d7fa25244fb05f50615d692d8d3e
   TTThemed: 921e544fa8ca8c34b3a091af38b8612609c18480
   TTThirdPartySDKs: 0c0f991cd09a2839cbc372659f68c21bc0d05d07
-  TTTracker: 8fdfc910c2a593f625d8dce8b045b3b6aedc6ddd
+  TTTracker: 53b746772e7240481e57bee23ae866924fdc0193
   TTUGCFoundation: f67fd0f474fef086cd3e986a4ad2c8bb79220d94
   TTUIWidget: d6b9ff5d35146e048c206d45a8362c2e490b7025
   TTUserProfile: e9f6d23e86b3c1232b15a79a239e5d3a27e5b2f3
@@ -1133,6 +1133,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 4c760e04c5df653bfae7d1181ed97ff96b51e986
+PODFILE CHECKSUM: 2ce7fffb8ea63536b8e14287cd978a2a07824382
 
 COCOAPODS: 1.4.0
