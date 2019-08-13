@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHTracerModel.h"
+#import "FHUserTrackerDefine.h"
 #import <BDUGTrackerInterface/BDUGTrackerInterface.h>
 
 #define TRACK_EVENT(event ,  param) [FHUserTracker writeEvent:event params:param]

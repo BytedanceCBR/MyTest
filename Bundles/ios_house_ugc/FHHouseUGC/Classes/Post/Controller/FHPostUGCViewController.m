@@ -310,6 +310,13 @@ static NSInteger const kMaxPostImageCount = 9;
         frame.origin.y = self.selectView.bottom;
         self.selectedGrouplHistoryView = [[FHPostUGCSelectedGroupHistoryView alloc] initWithFrame:frame delegate:self historyModel:selectedGroupHistory];
         [self.view addSubview:self.selectedGrouplHistoryView];
+        
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[UT_ELEMENT_TYPE] = @"last_published_neighborhood";
+        param[UT_PAGE_TYPE] = @"feed_publisher";
+        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+        param[@"group_id"] = selectedGroupHistory.socialGroupId;
+        TRACK_EVENT(@"element_show", param);
     }
     
     //Container View
@@ -1407,12 +1414,11 @@ static NSInteger const kMaxPostImageCount = 9;
         self.selectView.followed = NO;
         [self refreshPostButtonUI];
         
-        NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
-        tracerDict[@"element_type"] = @"select_like_publisher_neighborhood";
-        if (item.socialGroupId.length > 0) {
-            tracerDict[@"group_id"] = item.socialGroupId;
-        }
-        [FHUserTracker writeEvent:@"element_show" params:tracerDict];
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[UT_PAGE_TYPE] = @"feed_publisher";
+        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+        param[@"click_position"] = @"last_published_neighborhood";
+        TRACK_EVENT(@"click_last_published_neighborhood", param);
     }
 }
 @end
