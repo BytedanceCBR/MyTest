@@ -343,6 +343,100 @@
 }
 
 
+-(instancetype)initShadowWithDictionary:(NSDictionary *)dict error:(NSError *__autoreleasing *)error
+{
+    NSMutableDictionary *mdict = [[NSMutableDictionary alloc] initWithDictionary:dict];
+    NSArray *keys = @[
+                      @"op_data_2",
+                      @"op_data_2_list",
+                      @"op_data",
+                      @"rent_op_data",
+                      @"main_page_banner",
+                      @"house_op_data",
+                      @"hot_city_list",
+                      @"city_list",
+                      @"review_info",
+                      @"banners",
+                      @"search_tab_neighborhood_filter",
+                      @"rent_filter_order",
+                      @"search_tab_court_filter",
+                      @"neighborhood_filter",
+                      @"search_tab_rent_filter",
+                      @"filter",
+                      @"search_tab_filter",
+                      @"court_filter",
+                      @"house_filter_order",
+                      @"rent_filter",
+                      @"neighborhood_filter_order",
+                      @"court_filter_order",
+                      @"sale_history_filter",
+                      @"rent_banner"
+                      ];
+    for (NSString *key in keys) {
+        [mdict removeObjectForKey:key];
+    }
+    self = [super initWithDictionary:mdict error:error];
+    if(self){
+        self.originDict = dict;
+    }
+    return self;
+}
+
+#define DICT_PROP_GET(className , propertyName , key) \
+-(className *)propertyName {\
+if(!_##propertyName && _originDict){ \
+NSLog(@"[LAUNCH]config get %@",key); \
+NSDictionary *data =_originDict[key]; \
+_##propertyName = [[className alloc]initWithDictionary:data error:nil]; \
+}\
+return _##propertyName;\
+}
+
+#define ARRAY_PROP_GET(className , propertyName , key) \
+-(NSArray< className > *)propertyName { \
+if(!_##propertyName && _originDict){ \
+NSLog(@"[LAUNCH]config array get %@",key); \
+NSArray *jsons = _originDict[key]; \
+if([jsons isKindOfClass:[NSArray class]]){ \
+NSMutableArray *list = [NSMutableArray new]; \
+for (NSDictionary *json in jsons) { \
+className *model = [[className alloc] initWithDictionary:json error:nil]; \
+if(model){ \
+[list addObject:model]; \
+} \
+}\
+_##propertyName = list; \
+}\
+}\
+return _##propertyName; \
+}
+
+DICT_PROP_GET(FHConfigDataOpData2Model,opData2,@"op_data_2")
+ARRAY_PROP_GET(FHConfigDataOpData2ListModel,opData2list,@"op_data_2_list")
+DICT_PROP_GET(FHConfigDataOpDataModel,opData,@"op_data")
+DICT_PROP_GET(FHConfigDataRentOpDataModel,rentOpData,@"rent_op_data")
+DICT_PROP_GET(FHConfigDataMainPageBannerOpDataModel ,mainPageBannerOpData,@"main_page_banner")
+DICT_PROP_GET(FHConfigDataOpData2Model ,houseOpData,@"house_op_data")
+ARRAY_PROP_GET(FHConfigDataHotCityListModel, hotCityList,@"hot_city_list");
+ARRAY_PROP_GET(FHConfigDataCityListModel ,cityList,@"city_list")
+DICT_PROP_GET(FHConfigDataReviewInfoModel ,reviewInfo,@"review_info")
+ARRAY_PROP_GET(FHConfigDataBannersModel , banners , @"banners")
+ARRAY_PROP_GET(FHSearchFilterConfigItem,searchTabNeighborhoodFilter,@"search_tab_neighborhood_filter")
+ARRAY_PROP_GET(FHSearchFilterConfigItem,rentFilterOrder,@"rent_filter_order")
+ARRAY_PROP_GET(FHSearchFilterConfigItem,searchTabCourtFilter,@"search_tab_court_filter")
+ARRAY_PROP_GET(FHSearchFilterConfigItem,neighborhoodFilter,@"neighborhood_filter")
+ARRAY_PROP_GET(FHSearchFilterConfigItem,searchTabRentFilter,@"search_tab_rent_filter")
+ARRAY_PROP_GET(FHSearchFilterConfigItem,filter,@"filter")
+ARRAY_PROP_GET(FHSearchFilterConfigItem,searchTabFilter,@"search_tab_filter")
+ARRAY_PROP_GET(FHSearchFilterConfigItem,courtFilter,@"court_filter")
+ARRAY_PROP_GET(FHSearchFilterConfigItem,houseFilterOrder,@"house_filter_order")
+ARRAY_PROP_GET(FHSearchFilterConfigItem,rentFilter,@"rent_filter")
+ARRAY_PROP_GET(FHSearchFilterConfigItem,neighborhoodFilterOrder,@"neighborhood_filter_order")
+ARRAY_PROP_GET(FHSearchFilterConfigItem,courtFilterOrder,@"court_filter_order")
+ARRAY_PROP_GET(FHSearchFilterConfigItem,saleHistoryFilter,@"sale_history_filter")
+DICT_PROP_GET(FHConfigDataRentBannerModel,rentBanner,@"rent_banner")
+
+
 @end
 
 

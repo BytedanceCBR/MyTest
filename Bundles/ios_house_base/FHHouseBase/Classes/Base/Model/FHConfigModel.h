@@ -8,7 +8,6 @@
 #import "JSONModel.h"
 #import "FHBaseModelProtocol.h"
 #import "FHSearchConfigModel.h"
-#import <YYModel/YYModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -97,7 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, copy , nullable) NSString *openUrl;
-@property (nonatomic, copy , nullable) NSString *desc;//ription;
+@property (nonatomic, copy , nullable) NSString *description;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataOpDataItemsImageModel> *image;
 @property (nonatomic, copy , nullable) NSString *textColor;
@@ -402,7 +401,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL ugcCitySwitch;
 @property (nonatomic, strong , nullable) NSString *diffCode;
 
-//@property (nonatomic, strong , nullable) NSDictionary *originDict;
+@property (nonatomic, strong , nullable) NSDictionary *originDict;
+
+-(instancetype)initShadowWithDictionary:(NSDictionary *)dict error:(NSError *__autoreleasing *)err;
 
 @end
 
@@ -414,11 +415,5 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHConfigDataModel *data ;
 
 @end
-
-//@interface FHConfigDataModel (SimpleInit)
-//
-//-(instancetype)initWithDictShadow:(NSDictionary *)dict;
-//
-//@end
 
 NS_ASSUME_NONNULL_END
