@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHTracerModel.h"
+#import "FHUserTrackerDefine.h"
 #import <BDUGTrackerInterface/BDUGTrackerInterface.h>
 #import "FHUserTrackerDefine.h"
 
