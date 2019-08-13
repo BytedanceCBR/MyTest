@@ -525,10 +525,6 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     return self.configData.data.permission;
 }
 
-//- (BOOL)ugcFocusHasNew {
-//    return YES;
-//}
-
 - (void)startTimer {
     if(_focusTimer){
         [self stopTimer];
@@ -551,8 +547,13 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
 - (void)getHasNewForTimer {
     //每隔一段时候调用接口
-    self.ugcFocusHasNew = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
+//    __weak typeof(self) wself = self;
+//    [FHHouseUGCAPI refreshFeedTips:nil beHotTime:nil completion:^(bool hasNew, NSError * _Nonnull error) {
+//        if(!error && hasNew){
+//            self.ugcFocusHasNew = YES;
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
+//        }
+//    }];
 }
 
 @end
