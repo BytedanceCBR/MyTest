@@ -20,6 +20,7 @@
     @"hasFollow": @"has_follow",
     @"operation": @"operation",
     @"logPb":@"log_pb",
+    @"announcementUrl":@"announcement_url",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

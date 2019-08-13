@@ -473,7 +473,52 @@
         BOOL isShowOperationInfo = (hasOperation && !error);
         [self.headerView updateOperationInfo: isShowOperationInfo];
     }];
+}
+// 更新公告信息
+- (void)updatePublicationsWith:(FHUGCScialGroupDataModel *)data {
     
+    NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
+    
+    if(!isEmptyString(data.announcement)) {
+        UIFont *titleFont = [UIFont themeFontSemibold:12];
+        NSDictionary *announcementTitleAttributes = @{
+                                                      NSFontAttributeName: titleFont,
+                                                      NSForegroundColorAttributeName: [UIColor themeGray1]
+                                                      };
+        NSAttributedString *announcementTitle = [[NSAttributedString alloc] initWithString:@"[公告] " attributes: announcementTitleAttributes];
+        
+        UIFont *contentFont = [UIFont themeFontRegular:12];
+        NSDictionary *announcemenContentAttributes = @{
+                                                       NSFontAttributeName: contentFont,
+                                                       NSForegroundColorAttributeName: [UIColor themeGray1]
+                                                       };
+        NSAttributedString *announcementContent = [[NSAttributedString alloc] initWithString:data.announcement attributes:announcemenContentAttributes];
+        
+        [attributedText appendAttributedString:announcementTitle];
+        [attributedText appendAttributedString:announcementContent];
+        
+        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+        CGFloat lineHeight = 20;
+        paragraphStyle.minimumLineHeight = lineHeight;
+        paragraphStyle.maximumLineHeight = lineHeight;
+        
+        [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
+    }
+    
+    self.headerView.publicationsContentLabel.attributedText = attributedText;
+    self.headerView.gotoPublicationsDetailBlock = ^{
+        NSURLComponents *urlComponents = [NSURLComponents new];
+        urlComponents.scheme = @"fschema";
+        urlComponents.host = @"webview";
+        urlComponents.queryItems = @[
+                                     [[NSURLQueryItem alloc] initWithName:@"url" value: data.announcementUrl]
+                                     ];
+        NSURL *url = urlComponents.URL;
+        [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+    };
+    
+    [self.headerView updatePublicationsInfo: !isEmptyString(data.announcement)
+                               hasDetailBtn: !isEmptyString(data.announcementUrl)];
 }
 
 - (void)updateUIWithData:(FHUGCScialGroupDataModel *)data {
@@ -489,12 +534,9 @@
     self.headerView.nameLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
     NSString *subtitle = data.countText;// [self generateSubTitle:data];
     self.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
-    if (isEmptyString(data.announcement)) {
-        self.headerView.publicationsContainer.hidden = YES;
-    } else {
-        self.headerView.publicationsContentLabel.text = data.announcement;
-    }
     
+    // 配置公告
+    [self updatePublicationsWith:data];
     // 配置运营位
     [self updateOperationInfo:data.operation];
     

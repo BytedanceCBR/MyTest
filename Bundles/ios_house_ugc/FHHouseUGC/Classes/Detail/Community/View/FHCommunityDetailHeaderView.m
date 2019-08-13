@@ -12,27 +12,70 @@
 #import "SSViewBase.h"
 #import "TTDeviceHelper.h"
 #import "FHCommunityDetailMJRefreshHeader.h"
+#import <UIFont+House.h>
 
 @interface FHCommunityDetailHeaderView ()
 
 @property(nonatomic, strong) UIView *infoContainer;
 @property(nonatomic, strong) UIView *operationBannerContainer;
+@property(nonatomic, strong) UIView *publicationsDetailView;
 @end
 
 @implementation FHCommunityDetailHeaderView
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self initView];
-        [self initConstraints];
+
+
+- (UIButton *)publicationsDetailView {
+    if(!_publicationsDetailView) {
+        _publicationsDetailView = [UIView new];
+        _publicationsDetailView.clipsToBounds = YES;
+        
+        // 左边垂直分割线
+        UIView *vSepLine = [UIView new];
+        vSepLine.backgroundColor = [UIColor themeGray4];
+        [_publicationsDetailView addSubview:vSepLine];
+        
+        // 点击查看按钮
+        UILabel *detailText = [UILabel new];
+        detailText.textColor = [UIColor themeGray1];
+        detailText.font = [UIFont themeFontRegular:12];
+        detailText.text = @"点击查看";
+        [_publicationsDetailView addSubview:detailText];
+        
+        // 右箭头
+        UIImageView *arrowImageView = [UIImageView new];
+        arrowImageView.image = [UIImage imageNamed:@"arrow"];
+        [_publicationsDetailView addSubview:arrowImageView];
+        
+        
+        [vSepLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.top.bottom.equalTo(self.publicationsDetailView);
+            make.width.mas_equalTo(0.5);
+        }];
+        
+        [detailText mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(vSepLine).offset(10);
+            make.top.bottom.equalTo(vSepLine);
+            make.right.equalTo(arrowImageView.mas_left);
+        }];
+        
+        [arrowImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(detailText);
+            make.width.height.mas_equalTo(14);
+            make.right.equalTo(self.publicationsDetailView);
+            make.left.equalTo(detailText.mas_right);
+        }];
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoPublicationsDetail:)];
+        [_publicationsDetailView addGestureRecognizer:tap];
     }
-    return self;
+    
+    return _publicationsDetailView;
 }
 
--(UIView *)operationBannerContainer {
+- (UIView *)operationBannerContainer {
     if(!_operationBannerContainer) {
         _operationBannerContainer = [UIView new];
-        _operationBannerContainer.backgroundColor = [UIColor tt_themedColorForKey:@"gray7"];
+        _operationBannerContainer.backgroundColor = [UIColor themeGray7];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoOperationDetail:)];
         [_operationBannerContainer addGestureRecognizer:tap];
         
@@ -41,7 +84,7 @@
             make.left.equalTo(self.operationBannerContainer).offset(20);
             make.right.equalTo(self.operationBannerContainer).offset(-20);
             make.top.equalTo(self.operationBannerContainer).offset(5);
-            make.bottom.equalTo(self.operationBannerContainer).offset(-5);
+            make.bottom.equalTo(self.operationBannerContainer);
         }];
     }
     return _operationBannerContainer;
@@ -55,143 +98,147 @@
     return _operationBannerImageView;
 }
 
--(void)gotoOperationDetail:(UITapGestureRecognizer *)tap {
-    if(self.gotoOperationBlock) {
-        self.gotoOperationBlock();
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self initView];
+        [self initConstraints];
     }
+    return self;
 }
 
 - (void)initView {
-    //刘海平多出24
-    self.headerBackHeight = [TTDeviceHelper isIPhoneXSeries] ? 214 : 190;
     self.backgroundColor = [UIColor themeGray7];
 
-
-    self.topBack = [[UIImageView alloc] init];
+    /** 头部背景图 **/
+    CGFloat headerBackNormalHeight = 144;
+    CGFloat headerBackXSeriesHeight = headerBackNormalHeight + 24; //刘海平多出24
+    self.headerBackHeight = [TTDeviceHelper isIPhoneXSeries] ? headerBackXSeriesHeight : headerBackNormalHeight;
+    self.topBack = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight)];
+    self.topBack.clipsToBounds = YES;
     self.topBack.contentMode = UIViewContentModeScaleAspectFill;
     
+    /** 头部信息区 **/
     self.infoContainer = [[UIView alloc] init];
-
+    /* 左边头像 */
     self.avatar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"default_avatar"]];
-//    self.avatar.layer.borderWidth = 0.5;
-//    self.avatar.layer.borderColor = [UIColor themeGray6].CGColor;
     self.avatar.layer.cornerRadius = 4;
     self.avatar.clipsToBounds = YES;
 
-    self.nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    /* 中间标签区 */
+    self.labelContainer = [[UIView alloc] init];
+    // 主标题标签
+    self.nameLabel = [UILabel new];
+    self.nameLabel.font = [UIFont themeFontMedium:16];
     self.nameLabel.textColor = [UIColor themeWhite];
     self.nameLabel.numberOfLines = 1;
-
-    self.subtitleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    // 副标题标签
+    self.subtitleLabel = [UILabel new];
+    self.subtitleLabel.font = [UIFont themeFontRegular:12];
     self.subtitleLabel.textColor = [UIColor themeWhite];
     self.subtitleLabel.numberOfLines = 1;
-
-    self.labelContainer = [[UIView alloc] init];
+    
     [self.labelContainer addSubview:self.nameLabel];
     [self.labelContainer addSubview:self.subtitleLabel];
-
+    
+    /* 右边关注按钮 */
     self.followButton = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero style:FHUGCFollowButtonStyleNoBorder];
     self.followButton.followed = NO;
+    
+    [self.infoContainer addSubview:self.avatar];
+    [self.infoContainer addSubview:self.labelContainer];
+    [self.infoContainer addSubview:self.followButton];
+    
 
-    self.publicationsLabel = [UILabel createLabel:@"公告" textColor:@"" fontSize:13];
-    self.publicationsLabel.textColor = [UIColor themeRed1];
-
-    self.publicationsContentLabel = [UILabel createLabel:@"" textColor:@"" fontSize:13];
+    /** 下方公告区 **/
+    self.publicationsContainer = [[UIView alloc] init];
+    self.publicationsContainer.clipsToBounds = YES;
+    self.publicationsContainer.backgroundColor = [UIColor themeWhite];
+    // 公告内容
+    self.publicationsContentLabel = [UILabel new];
+    self.publicationsContentLabel.font = [UIFont themeFontRegular:12];
     self.publicationsContentLabel.textColor = [UIColor themeGray1];
     self.publicationsContentLabel.numberOfLines = 0;
     [self.publicationsContentLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
-
-    self.publicationsContainer = [[UIView alloc] init];
-    self.publicationsContainer.backgroundColor = [UIColor themeWhite];
-    [self.publicationsContainer addSubview:self.publicationsLabel];
+    
     [self.publicationsContainer addSubview:self.publicationsContentLabel];
-    [self.publicationsContainer.layer setCornerRadius:4.0f];
-    self.publicationsContainer.layer.borderWidth = 0.5f;
-    self.publicationsContainer.layer.borderColor = [UIColor themeGray6].CGColor;
-
-    self.publicationsContainer.layer.shadowColor = [UIColor blackColor].CGColor;//shadowColor阴影颜色
-    self.publicationsContainer.layer.shadowOffset = CGSizeMake(0, 2);//shadowOffset阴影偏移，默认(0, -3),这个跟shadowRadius配合使用
-    self.publicationsContainer.layer.shadowOpacity = 0.1;//0.8;//阴影透明度，默认0
-    self.publicationsContainer.layer.shadowRadius = 4;//8;//阴影半径，默认3
-
+    [self.publicationsContainer addSubview:self.publicationsDetailView]; // 公告点击查看按钮
+    
+    
+    /** 背景图 **/
     [self addSubview:self.topBack];
+    /** 信息区 **/
     [self addSubview:self.infoContainer];
-    [self addSubview:self.avatar];
-    [self addSubview:self.labelContainer];
-    [self addSubview:self.followButton];
+    /** 公告区 **/
     [self addSubview:self.publicationsContainer];
+    /** 运营位  **/
     [self addSubview:self.operationBannerContainer];
 }
 
 - (void)initConstraints {
-    self.topBack.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight);
-
+    
     [self.infoContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(0);
-        make.width.mas_equalTo(SCREEN_WIDTH);
-        make.height.mas_greaterThanOrEqualTo(self.headerBackHeight);
+        make.left.equalTo(self).offset(20);
+        make.right.equalTo(self).offset(-20);
+        make.bottom.equalTo(self.topBack.mas_bottom).offset(-15);
     }];
 
     [self.avatar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.infoContainer).offset(20);
-        make.bottom.equalTo(self.infoContainer).offset(-46);
+        make.left.top.bottom.equalTo(self.infoContainer);
         make.width.height.mas_equalTo(50);
     }];
-
-    [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.avatar);
-        make.height.mas_equalTo(26);
-        make.width.mas_equalTo(56);
-        make.right.equalTo(self).offset(-20);
-    }];
-
+    
     [self.labelContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.avatar);
-        make.height.mas_equalTo(44);
         make.left.equalTo(self.avatar.mas_right).offset(8);
         make.right.equalTo(self.followButton.mas_left).offset(-8);
+        make.top.equalTo(self.infoContainer).offset(3);
+        make.bottom.equalTo(self.infoContainer).offset(-3);
     }];
 
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.equalTo(self.labelContainer);
-        make.height.mas_equalTo(22);
     }];
 
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.greaterThanOrEqualTo(self.nameLabel).offset(5);
         make.left.bottom.right.equalTo(self.labelContainer);
-        make.height.mas_equalTo(17);
     }];
 
+    [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.avatar);
+        make.right.equalTo(self.infoContainer);
+        make.height.mas_equalTo(26);
+        make.width.mas_equalTo(58);
+    }];
+    
     [self.publicationsContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self).offset(20);
-        make.right.equalTo(self).offset(-20);
-        make.height.mas_greaterThanOrEqualTo(50);
-        make.top.equalTo(self.infoContainer.mas_bottom).offset(-30);
+        make.left.right.equalTo(self);
+        make.top.equalTo(self.topBack.mas_bottom);
     }];
-
-    [self.publicationsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.equalTo(self.publicationsContainer).offset(15);
-        make.width.mas_equalTo(26);
-        make.height.mas_equalTo(20);
-    }];
-
+    
     [self.publicationsContentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.publicationsContainer).offset(15);
-        make.left.equalTo(self.publicationsLabel.mas_right).offset(10);
-        make.right.equalTo(self.publicationsContainer).offset(-15);
-        make.bottom.equalTo(self.publicationsContainer.mas_bottom).offset(-15);
-        make.height.mas_greaterThanOrEqualTo(20);
+        make.top.equalTo(self.publicationsContainer).offset(10);
+        make.left.equalTo(self.publicationsContainer).offset(20);
+        make.right.equalTo(self.publicationsDetailView.mas_left).offset(-10);
+        make.bottom.equalTo(self.publicationsContainer.mas_bottom).offset(-10);
+    }];
+    
+    [self.publicationsDetailView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(0);
+        make.left.equalTo(self.publicationsContentLabel.mas_right).offset(10);
+        make.right.equalTo(self.publicationsContainer).offset(-15).priorityHigh();
+        make.top.bottom.equalTo(self.publicationsContentLabel);
     }];
      
      [self.operationBannerContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-         make.height.mas_equalTo(0);
          make.left.right.bottom.equalTo(self);
          make.top.equalTo(self.publicationsContainer.mas_bottom);
+         make.height.mas_equalTo(0);
      }];
 
     [self mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.equalTo(self.topBack);
-        make.bottom.equalTo(self.operationBannerContainer);
+        make.bottom.equalTo(self.operationBannerContainer).offset(5);
     }];
 }
 
@@ -208,10 +255,44 @@
 - (void)updateOperationInfo:(BOOL)isShow {
     // 运营位banner
     CGSize imageSize = self.operationBannerImageView.image.size;
-    CGFloat whRatio =  isShow ? imageSize.height / imageSize.width : 0;
-    CGFloat height = round((self.bounds.size.width - 40) * whRatio + 0.5) + 10;
+    CGFloat whRatio = imageSize.height / imageSize.width;
+    CGFloat height = isShow ? round((self.bounds.size.width - 40) * whRatio + 0.5) + 10 : 0;
     [self.operationBannerContainer mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
     }];
+}
+
+- (void)updatePublicationsInfo:(BOOL)isShow hasDetailBtn:(BOOL)hasDetailBtn {
+    
+    if(isShow) {
+        [self.publicationsContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.equalTo(self);
+            make.top.equalTo(self.topBack.mas_bottom);
+        }];
+    } else {
+        [self.publicationsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+    }
+    
+    [self.publicationsDetailView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(hasDetailBtn ? 74 : 0);
+    }];
+    
+    [self.publicationsContentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.publicationsDetailView.mas_left).offset(hasDetailBtn ? -10 : 0);
+    }];
+}
+
+- (void)gotoPublicationsDetail: (UITapGestureRecognizer *)gesture {
+    if(self.gotoPublicationsDetailBlock) {
+        self.gotoPublicationsDetailBlock();
+    }
+}
+
+-(void)gotoOperationDetail:(UITapGestureRecognizer *)tap {
+    if(self.gotoOperationBlock) {
+        self.gotoOperationBlock();
+    }
 }
 @end

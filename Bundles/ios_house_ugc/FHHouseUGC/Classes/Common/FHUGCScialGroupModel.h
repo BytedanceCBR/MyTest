@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHUGCScialGroupDataModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *announcement;
+@property (nonatomic, copy , nullable) NSString *announcementUrl;
 @property (nonatomic, copy , nullable) NSString *contentCount;
 @property (nonatomic, copy , nullable) NSString *socialGroupName;
 @property (nonatomic, copy , nullable) NSString *suggestReason;
