@@ -259,6 +259,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
  */
 + (void)showFindTabRedDots
 {
+    TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+    tabItem.ttBadgeView.badgeNumber = TTBadgeNumberPoint;
+}
+
++ (void)showFindTabRedDotsLimitCount {
     NSString *stringKey = [FHUtils stringFromNSDateDay:[NSDate date]];
     
     if (stringKey) {
@@ -266,8 +271,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
         if (!countNum || [countNum isKindOfClass:[NSNumber class]]) {
             NSInteger hadCount = [countNum integerValue];
             if (hadCount < 3) {
-                TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
-                tabItem.ttBadgeView.badgeNumber = TTBadgeNumberPoint;
+                [FHEnvContext sharedInstance].isShowDots = YES;
+                [self showFindTabRedDots];
             }
         }
     }
@@ -278,6 +283,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
  */
 + (void)hideFindTabRedDots
 {
+    TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+    tabItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
+}
+
++ (void)hideFindTabRedDotsLimitCount {
     NSString *stringKey = [FHUtils stringFromNSDateDay:[NSDate date]];
     if (stringKey) {
         NSNumber *countNum = [FHUtils contentForKey:stringKey];
@@ -290,8 +300,27 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [FHUtils setContent:countNum forKey:stringKey];
     }
     
-    TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
-    tabItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
+    [FHEnvContext sharedInstance].isShowDots = NO;
+    [self hideFindTabRedDots];
+}
+
++ (void)showRedPointForNoUgc
+{
+    if(![self isUGCOpen]){
+        if([FHEnvContext sharedInstance].hasShowDots){
+            //显示过
+            if([FHEnvContext sharedInstance].isShowDots){
+                [self showFindTabRedDots];
+            }else{
+                [self hideFindTabRedDots];
+            }
+        }else{
+            //没显示过
+            [self showFindTabRedDotsLimitCount];
+            [FHEnvContext sharedInstance].hasShowDots = YES;
+        }
+        
+    }
 }
 
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key
@@ -609,19 +638,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 + (void)changeFindTabTitle
 {
-//    if ([self isUGCOpen]) {
-//        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
-//        NSString *name = [self secondTabName];
-//        if(name.length > 0){
-//            [tabItem setTitle:name];
-//        }else{
-//            [tabItem setTitle:@"邻里"];
-//        }
-//    }else
-//    {
-//        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
-//        [tabItem setTitle:@"发现"];
-//    }
     TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
     NSString *name = [self secondTabName];
     if(name){
@@ -636,6 +652,16 @@ static NSInteger kGetLightRequestRetryCount = 3;
             [tabItem setTitle:@"发现"];
         }
     }
+}
+
++ (BOOL)hadFindTabShowRed
+{
+    UIWindow * mainWindow = [[UIApplication sharedApplication].delegate window];
+    TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)mainWindow.rootViewController;
+    if ([rootTabController isKindOfClass:[TTArticleTabBarController class]]) {
+        return rootTabController.hasShowDots;
+    }
+    return NO;
 }
 
 /*

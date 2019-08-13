@@ -40,9 +40,9 @@
     self.infoContainer = [[UIView alloc] init];
 
     self.avatar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"default_avatar"]];
-    self.avatar.layer.borderWidth = 0.5;
-    self.avatar.layer.borderColor = [UIColor themeGray6].CGColor;
-    self.avatar.layer.cornerRadius = 25;
+//    self.avatar.layer.borderWidth = 0.5;
+//    self.avatar.layer.borderColor = [UIColor themeGray6].CGColor;
+    self.avatar.layer.cornerRadius = 4;
     self.avatar.clipsToBounds = YES;
 
     self.nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];

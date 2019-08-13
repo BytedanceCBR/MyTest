@@ -207,6 +207,10 @@
                 cellModel.showCommunity = NO;
             }
         }
+        if (socialGroupModel) {
+            // 更新圈子数据
+            [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:socialGroupModel];
+        }
         //
         [self.items addObject:cellModel];
         

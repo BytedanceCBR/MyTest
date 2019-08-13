@@ -21,6 +21,8 @@ static NSString *const kFHUGCPostSuccessNotification = @"k_fh_ugc_post_finish";
 static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
 // 举报帖子成功通知 数放在userinfo的：cellModel
 static NSString *const kFHUGCReportPostNotification = @"k_fh_ugc_report_post_finish";
+// 关注tab是否有新内容的通知
+static NSString *const kFHUGCFocusTabHasNewNotification = @"k_fh_ugc_focus_tab_has_new";
 
 @interface FHUGCConfig : NSObject
 
@@ -35,11 +37,13 @@ static NSString *const kFHUGCReportPostNotification = @"k_fh_ugc_report_post_fin
 @property (nonatomic, strong) FHUGCConfigModel *configData;
 // 是否已经显示出feed引导
 @property (nonatomic, assign) BOOL isAlreadyShowFeedGuide;
+// 是否关注列表有新内容
+@property (nonatomic, assign) BOOL ugcFocusHasNew;
 
 // 关注列表
 - (NSArray<FHUGCScialGroupDataModel> *)followList;
 
-// 根据groupid去关注的列表中获取最新的关注数据信息，取消关注可能获取的数据为nil
+// 根据groupid去关注的列表中获取最新的关注数据信息，取消关注可能获取的数据为nil【后面修改，不再是关注列表中数据】
 - (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id;
 
 // 关注变化导致的数据更新，followed为最新的关注状态 groupid要一样
@@ -50,6 +54,9 @@ static NSString *const kFHUGCReportPostNotification = @"k_fh_ugc_report_post_fin
 
 // 删帖成功 更新帖子数 - 1
 - (void)updatePostDelSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model;
+
+// 非关注列表中的小区圈子数据 更新
+- (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model;// 内容更新
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 /*
