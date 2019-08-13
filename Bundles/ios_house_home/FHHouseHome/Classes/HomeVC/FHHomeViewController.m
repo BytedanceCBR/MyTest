@@ -115,6 +115,11 @@ static CGFloat const kSectionHeaderHeight = 38;
     });
 }
 
+- (void)setIsShowRefreshTip:(BOOL)isShowRefreshTip {
+    _isShowRefreshTip = isShowRefreshTip;
+    [self.homeListViewModel setIsShowRefreshTip:isShowRefreshTip];
+}
+
 // 处理becomeFirstResponder慢函数问题，第一次显示键盘调用becomeFirstResponder需要500ms左右，提前加载让用户使用的时候感觉不到卡顿
 - (void)firstLoadKeybord {
     UITextField *tempFreeField = [[UITextField alloc] init];
@@ -237,6 +242,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [self hideImmediately];
     
+    self.isShowRefreshTip = YES;
+    
     UIEdgeInsets inset = self.mainTableView.contentInset;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
@@ -252,6 +259,8 @@ static CGFloat const kSectionHeaderHeight = 38;
             [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
             self.homeListViewModel.isResetingOffsetZero = NO;
             //    [self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        } completion:^(BOOL finished) {
+            self.isShowRefreshTip = NO;
         }];
         //        [UIView animateWithDuration:0.3 animations:^{
         //
