@@ -61,15 +61,21 @@
 - (void)setFollowed:(BOOL)followed {
     _followed = followed;
     UIColor *borderColor = nil;
-    
+    self.backgroundColor = [UIColor whiteColor];
     if (followed) {
         self.titleStr = @"已关注";
         self.loadingImageName = @"fh_ugc_loading_gray";
-        borderColor = [UIColor themeGray4];
+        borderColor = self.followedTextColor ?:[UIColor themeGray4];
+        if(self.followedBackgroundColor) {
+            self.backgroundColor = self.followedBackgroundColor;
+        }
     } else {
         self.titleStr = @"关注";
         self.loadingImageName = @"fh_ugc_loading_red";
-        borderColor = [UIColor themeRed1];
+        borderColor = self.unFollowedTextColor?:[UIColor themeRed1];
+        if(self.unFollowedBackgroundColor) {
+            self.backgroundColor = self.unFollowedBackgroundColor;
+        }
     }
     
     if(self.style == FHUGCFollowButtonStyleBorder){

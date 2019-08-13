@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHTracerModel.h"
 #import <BDUGTrackerInterface/BDUGTrackerInterface.h>
+#import "FHUserTrackerDefine.h"
 
 #define TRACK_EVENT(event ,  param) [FHUserTracker writeEvent:event params:param]
 #define TRACK_MODEL(event ,  model) [FHUserTracker writeEvent:event withModel:model]

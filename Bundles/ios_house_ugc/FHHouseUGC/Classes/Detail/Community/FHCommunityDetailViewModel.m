@@ -448,6 +448,100 @@
     }
 }
 
+// 更新运营位
+- (void)updateOperationInfo:(FHUGCSocialGroupOperationModel *)model {
+    
+    BOOL hasOperation = model.hasOperation;
+    NSString *linkUrlString = model.linkUrl;
+    NSString *imageUrlString = model.imageUrl;
+ 
+    self.headerView.gotoOperationBlock = ^{
+        NSURLComponents *urlComponents = [NSURLComponents new];
+        urlComponents.scheme = @"fschema";
+        urlComponents.host = @"webview";
+        urlComponents.queryItems = @[
+                                     [[NSURLQueryItem alloc] initWithName:@"url" value: linkUrlString]
+                                     ];
+        
+        NSURL *url = urlComponents.URL;
+        [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+        
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[UT_PAGE_TYPE] = @"community_group_detail";
+        param[UT_ENTER_FROM] = @"community_group_operation";
+        param[@"operation_id"] = self.data.logPb[@"operation_id"];
+        TRACK_EVENT(@"operation_click", param);
+    };
+    NSURL *imageUrl = [NSURL URLWithString: imageUrlString];
+    WeakSelf;
+    [self.headerView.operationBannerImageView bd_setImageWithURL:imageUrl placeholder:nil options:BDImageRequestDefaultOptions completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+        StrongSelf;
+        BOOL isShowOperationInfo = (hasOperation && !error);
+        [self.headerView updateOperationInfo: isShowOperationInfo];
+        
+        if(isShowOperationInfo) {
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            param[UT_PAGE_TYPE] = @"community_group_detail";
+            param[UT_ELEMENT_TYPE] = @"community_group_operation";
+            param[@"operation_id"] = self.data.logPb[@"operation_id"];
+            TRACK_EVENT(@"operation_show", param);
+        }
+    }];
+}
+// 更新公告信息
+- (void)updatePublicationsWith:(FHUGCScialGroupDataModel *)data {
+    
+    NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
+    
+    if(!isEmptyString(data.announcement)) {
+        UIFont *titleFont = [UIFont themeFontSemibold:12];
+        NSDictionary *announcementTitleAttributes = @{
+                                                      NSFontAttributeName: titleFont,
+                                                      NSForegroundColorAttributeName: [UIColor themeGray1]
+                                                      };
+        NSAttributedString *announcementTitle = [[NSAttributedString alloc] initWithString:@"[公告] " attributes: announcementTitleAttributes];
+        
+        UIFont *contentFont = [UIFont themeFontRegular:12];
+        NSDictionary *announcemenContentAttributes = @{
+                                                       NSFontAttributeName: contentFont,
+                                                       NSForegroundColorAttributeName: [UIColor themeGray1]
+                                                       };
+        NSAttributedString *announcementContent = [[NSAttributedString alloc] initWithString:data.announcement attributes:announcemenContentAttributes];
+        
+        [attributedText appendAttributedString:announcementTitle];
+        [attributedText appendAttributedString:announcementContent];
+        
+        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+        CGFloat lineHeight = 20;
+        paragraphStyle.minimumLineHeight = lineHeight;
+        paragraphStyle.maximumLineHeight = lineHeight;
+        
+        [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
+    }
+    
+    self.headerView.publicationsContentLabel.attributedText = attributedText;
+    self.headerView.gotoPublicationsDetailBlock = ^{
+        NSURLComponents *urlComponents = [NSURLComponents new];
+        urlComponents.scheme = @"fschema";
+        urlComponents.host = @"webview";
+        urlComponents.queryItems = @[
+                                     [[NSURLQueryItem alloc] initWithName:@"url" value: data.announcementUrl]
+                                     ];
+        NSURL *url = urlComponents.URL;
+        [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+        
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[UT_ELEMENT_TYPE] = @"community_group_notice";
+        param[UT_PAGE_TYPE] = @"community_group_detail";
+        param[@"click_position"] = @"community_notice_more";
+        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+        TRACK_EVENT(@"click_community_notice_more", param);
+    };
+    
+    [self.headerView updatePublicationsInfo: !isEmptyString(data.announcement)
+                               hasDetailBtn: !isEmptyString(data.announcementUrl)];
+}
+
 - (void)updateUIWithData:(FHUGCScialGroupDataModel *)data {
     if (!data) {
         self.feedListController.view.hidden = YES;
@@ -457,15 +551,16 @@
     self.data = data;
     self.feedListController.view.hidden = NO;
     self.viewController.emptyView.hidden = YES;
-    [self.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar] placeholder:[UIImage imageNamed:@"default_avatar"]];
+    [self.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar]];
     self.headerView.nameLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
-    NSString *subtitle = data.countText;// [self generateSubTitle:data];
+    NSString *subtitle = data.countText;
     self.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
-    if (isEmptyString(data.announcement)) {
-        self.headerView.publicationsContainer.hidden = YES;
-    } else {
-        self.headerView.publicationsContentLabel.text = data.announcement;
-    }
+    
+    // 配置公告
+    [self updatePublicationsWith:data];
+    // 配置运营位
+    [self updateOperationInfo:data.operation];
+    
     [self updateJoinUI:[data.hasFollow boolValue]];
     self.titleLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
     self.subTitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
