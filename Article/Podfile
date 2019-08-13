@@ -337,7 +337,7 @@ def appPods
     #-----头条sercive中间件-----
     pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
-    pod 'TTMonitor','0.7.11.0'
+    pod_binary 'TTMonitor','0.7.11.0'
 #    pod 'TTMonitor', :path => '../AKPlugins/TTMonitor', :inhibit_warnings => false
 #    pod_binary 'Heimdallr','0.6.27-rc.0', :subspecs => [
 #    'Core',
@@ -363,7 +363,7 @@ def appPods
 #    'CloudCommand'
 #    #    'DiskManager'
 #    ]
-    pod 'Heimdallr','0.7.6', :subspecs => [
+    pod_binary 'Heimdallr','0.7.6', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
