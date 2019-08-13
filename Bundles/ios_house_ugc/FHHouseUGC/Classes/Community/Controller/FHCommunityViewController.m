@@ -35,7 +35,6 @@
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
-@property(nonatomic, assign) BOOL hasFocusTips;
 
 @end
 

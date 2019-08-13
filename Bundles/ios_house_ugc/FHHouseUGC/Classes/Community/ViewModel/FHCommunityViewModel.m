@@ -129,6 +129,13 @@
     if([self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
         FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
         cell.enterType = enterType;
+        
+        if(self.currentTabIndex == 0){
+            cell.withTips = self.viewController.hasFocusTips;
+        }else{
+            cell.withTips = NO;
+        }
+        
         cell.type = [self.dataArray[self.currentTabIndex] integerValue];
         
         //在进入之前报一下上一次tab的埋点

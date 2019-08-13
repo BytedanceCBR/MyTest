@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , assign) FHCommunityCollectionCellType type;
 
 @property(nonatomic , strong) NSString *enterType;
+//是否显示小红点，埋点使用
+@property(nonatomic , assign) BOOL withTips;
 
 - (UIViewController *)contentViewController;
 
