@@ -16,7 +16,7 @@
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTImage/TTImageInfosModel.h>
-#import <TTUGCFoundation/TTUGCEmojiParser.h>
+#import <FHCommonUI/TTUGCEmojiParser.h>
 #import <TTBaseLib/NSString-Extension.h>
 #import <TTUGCFoundation/TTRichSpanText+Emoji.h>
 #import <TTRoute/TTRoute.h>
