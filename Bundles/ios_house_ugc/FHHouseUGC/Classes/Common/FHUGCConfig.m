@@ -63,7 +63,6 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         [self loadFollowListData];
         [self loadLocalUgcConfigData];
         [self registerNoti];
-        [self initFocusTimer];
     }
     return self;
 }
@@ -75,10 +74,6 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     //    static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
-}
-
-- (void)initFocusTimer {
-    
 }
 
 // 发帖成功通知
@@ -191,6 +186,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
             }
             self.followData.data.userFollowSocialGroups = sGroups;
             [self updateFollowData];
+            [self setFocusTimerState];
             [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:social_group];
         }
     }
@@ -217,6 +213,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         }
         self.followData.data.userFollowSocialGroups = sGroups;
         [self updateFollowData];
+        [self setFocusTimerState];
     }
 }
 
@@ -546,7 +543,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
 - (NSTimer *)focusTimer {
     if(!_focusTimer){
-        _focusTimer  =  [NSTimer timerWithTimeInterval:5 target:self selector:@selector(getHasNewForTimer) userInfo:nil repeats:YES];
+        _focusTimer  =  [NSTimer timerWithTimeInterval:10 target:self selector:@selector(getHasNewForTimer) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:_focusTimer forMode:NSRunLoopCommonModes];
     }
     return _focusTimer;
@@ -554,7 +551,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
 - (void)getHasNewForTimer {
     //每隔一段时候调用接口
-    self.ugcFocusHasNew = NO;
+    self.ugcFocusHasNew = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
 }
 
