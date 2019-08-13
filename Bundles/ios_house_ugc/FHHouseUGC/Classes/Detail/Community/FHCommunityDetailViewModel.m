@@ -465,6 +465,12 @@
         
         NSURL *url = urlComponents.URL;
         [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+        
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[UT_PAGE_TYPE] = @"community_group_detail";
+        param[UT_ENTER_FROM] = @"community_group_operation";
+        param[@"operation_id"] = self.data.logPb[@"operation_id"];
+        TRACK_EVENT(@"operation_click", param);
     };
     NSURL *imageUrl = [NSURL URLWithString: imageUrlString];
     WeakSelf;
@@ -472,6 +478,14 @@
         StrongSelf;
         BOOL isShowOperationInfo = (hasOperation && !error);
         [self.headerView updateOperationInfo: isShowOperationInfo];
+        
+        if(isShowOperationInfo) {
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            param[UT_PAGE_TYPE] = @"community_group_detail";
+            param[UT_ELEMENT_TYPE] = @"community_group_operation";
+            param[@"operation_id"] = self.data.logPb[@"operation_id"];
+            TRACK_EVENT(@"operation_show", param);
+        }
     }];
 }
 // 更新公告信息
@@ -515,6 +529,13 @@
                                      ];
         NSURL *url = urlComponents.URL;
         [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+        
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[UT_ELEMENT_TYPE] = @"community_group_notice";
+        param[UT_PAGE_TYPE] = @"community_group_detail";
+        param[@"click_position"] = @"community_notice_more";
+        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+        TRACK_EVENT(@"click_community_notice_more", param);
     };
     
     [self.headerView updatePublicationsInfo: !isEmptyString(data.announcement)
@@ -530,9 +551,9 @@
     self.data = data;
     self.feedListController.view.hidden = NO;
     self.viewController.emptyView.hidden = YES;
-    [self.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar] placeholder:[UIImage imageNamed:@"default_avatar"]];
+    [self.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar]];
     self.headerView.nameLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
-    NSString *subtitle = data.countText;// [self generateSubTitle:data];
+    NSString *subtitle = data.countText;
     self.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
     
     // 配置公告

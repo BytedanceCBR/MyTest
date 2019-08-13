@@ -43,7 +43,7 @@
         
         // 右箭头
         UIImageView *arrowImageView = [UIImageView new];
-        arrowImageView.image = [UIImage imageNamed:@"arrow"];
+        arrowImageView.image = [UIImage imageNamed:@"fh_ugc_community_detail_header_right_arrow"];
         [_publicationsDetailView addSubview:arrowImageView];
         
         
@@ -120,9 +120,8 @@
     /** 头部信息区 **/
     self.infoContainer = [[UIView alloc] init];
     /* 左边头像 */
-    self.avatar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"default_avatar"]];
-    self.avatar.layer.cornerRadius = 4;
-    self.avatar.clipsToBounds = YES;
+    self.avatar = [UIImageView new];
+    self.avatar.backgroundColor = [UIColor themeGray7];
 
     /* 中间标签区 */
     self.labelContainer = [[UIView alloc] init];
@@ -142,7 +141,10 @@
     
     /* 右边关注按钮 */
     self.followButton = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero style:FHUGCFollowButtonStyleNoBorder];
+    self.followButton.followedBackgroundColor = [[UIColor themeWhite] colorWithAlphaComponent:0.4];
+    self.followButton.followedTextColor = [UIColor themeWhite];
     self.followButton.followed = NO;
+    
     
     [self.infoContainer addSubview:self.avatar];
     [self.infoContainer addSubview:self.labelContainer];
