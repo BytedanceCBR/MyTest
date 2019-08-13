@@ -115,6 +115,11 @@ static CGFloat const kSectionHeaderHeight = 38;
     });
 }
 
+- (void)setIsShowRefreshTip:(BOOL)isShowRefreshTip {
+    _isShowRefreshTip = isShowRefreshTip;
+    [self.homeListViewModel setIsShowRefreshTip:isShowRefreshTip];
+}
+
 // 处理becomeFirstResponder慢函数问题，第一次显示键盘调用becomeFirstResponder需要500ms左右，提前加载让用户使用的时候感觉不到卡顿
 - (void)firstLoadKeybord {
     UITextField *tempFreeField = [[UITextField alloc] init];
@@ -236,6 +241,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 -(void)showNotify:(NSString *)message
 {
     [self hideImmediately];
+    
+    self.isShowRefreshTip = YES;
     
     UIEdgeInsets inset = self.mainTableView.contentInset;
     inset.top = 32;

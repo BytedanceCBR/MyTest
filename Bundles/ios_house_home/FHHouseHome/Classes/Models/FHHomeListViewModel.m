@@ -321,6 +321,15 @@
     //    self.tableViewV.scrollEnabled = YES;
 }
 
+- (void)setIsShowRefreshTip:(BOOL)isShowRefreshTip {
+    for (FHHomeItemViewController *vc in self.itemsVCArray) {
+        if ([vc isKindOfClass:[FHHomeItemViewController class]]) {
+            FHHomeItemViewController *itemVC = (FHHomeItemViewController *)vc;
+            itemVC.isShowRefreshTip = isShowRefreshTip;
+        }
+    }
+}
+
 - (void)setUpSubtableIndex:(NSInteger)index
 {
     if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
