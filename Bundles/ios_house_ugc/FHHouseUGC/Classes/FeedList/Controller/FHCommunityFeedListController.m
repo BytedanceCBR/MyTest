@@ -277,27 +277,18 @@
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
     self.tableView.contentInset = inset;
+    self.tableView.contentOffset = CGPointMake(0, -inset.top);
     self.notifyCompletionBlock = completion;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
-    
-    [self performSelector:@selector(hideIfNeeds) withObject:nil afterDelay:1];
-    
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [UIView animateWithDuration:0.3 animations:^{
-//
-//            if ([TTDeviceHelper isIPhoneXDevice]) {
-//                self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-//            }else{
-//                self.tableView.contentInset = UIEdgeInsetsZero;
-//            }
-//            self.tableView.originContentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
-//
-//        }completion:^(BOOL finished) {
-//            if (completion) {
-//                completion();
-//            }
-//        }];
-//    });
+    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
+        WeakSelf;
+        if(!isImmediately) {
+            [wself hideIfNeeds];
+        } else {
+            if(wself.notifyCompletionBlock) {
+                wself.notifyCompletionBlock();
+            }
+        }
+    }];
 }
 
 - (void)hideIfNeeds {

@@ -449,6 +449,7 @@ static NSInteger const kMaxPostImageCount = 9;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    [(TTNavigationController*)self.navigationController panRecognizer].enabled = YES;
 }
 
 - (void)parseOutInputImagesWithParamDic:(NSDictionary *)params {
@@ -1229,6 +1230,7 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [UIApplication sharedApplication].statusBarHidden = NO;
+    [(TTNavigationController*)self.navigationController panRecognizer].enabled = NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated {

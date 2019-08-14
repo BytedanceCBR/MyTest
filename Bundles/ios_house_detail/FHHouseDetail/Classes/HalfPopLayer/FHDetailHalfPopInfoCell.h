@@ -10,10 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 // 信息质检
-@class FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel;
+@class FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel,FHDetailDataBaseExtraDetectiveReasonListItem;
 @interface FHDetailHalfPopInfoCell : UITableViewCell
 
 -(void)updateWithModel:(FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel *)model;
+-(void)updateWithReasonInfoItem:(FHDetailDataBaseExtraDetectiveReasonListItem *)reasonInfoItem;
 
 @end
 

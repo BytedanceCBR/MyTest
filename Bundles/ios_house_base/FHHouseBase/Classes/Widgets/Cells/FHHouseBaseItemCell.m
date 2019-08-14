@@ -1169,6 +1169,9 @@
     
     self.imageTagLabel.hidden = YES;
     self.imageTagLabelBgView.hidden = YES;
+    if (self.mainTitleLabel) {
+        self.mainTitleLabel.textColor = [UIColor themeGray2];
+    }
 }
 
 - (void)updateThirdPartHouseSourceStr:(NSString *)sourceStr

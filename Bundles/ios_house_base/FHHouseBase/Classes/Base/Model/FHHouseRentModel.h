@@ -42,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *pricing;
+@property (nonatomic, copy , nullable) NSString *pricingNum;
+@property (nonatomic, copy , nullable) NSString *pricingUnit;
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, strong , nullable) FHHouseRentDataItemsHouseImageTagModel *houseImageTag ;
 @property (nonatomic, copy , nullable) NSString *id;

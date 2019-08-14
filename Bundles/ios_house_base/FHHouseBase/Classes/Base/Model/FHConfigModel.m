@@ -223,6 +223,29 @@
 
 @end
 
+@implementation FHConfigDataTabConfigModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHConfigDataUgcCategoryConfigModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"myJoinList": @"my_join_list",
+                           @"nearbyList": @"nearby_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 @implementation  FHConfigDataModel
 
@@ -265,6 +288,8 @@
                            @"houseTypeDefault":@"house_type_default",
                            @"jump2AdRecommend":@"jump_2_ad_recommend",
                            @"ugcCitySwitch":@"ugc_city_switch",
+                           @"tabConfig": @"tab_config",
+                           @"ugcCategoryConfig": @"ugc_category_config",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

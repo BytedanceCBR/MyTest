@@ -13,6 +13,7 @@
 #import "FHUserTracker.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "FHMultiMediaVideoCell.h"
+#import <FHHouseBase/FHUserTrackerDefine.h>
 
 @interface FHDetailMediaHeaderCell ()<FHMultiMediaScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -57,7 +58,7 @@
 
 + (CGFloat)cellHeight {
     CGFloat photoCellHeight = 300.0; // 默认300
-    photoCellHeight = [UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight;
+    photoCellHeight = round([UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight + 0.5);
     return photoCellHeight;
 }
 
@@ -115,7 +116,6 @@
 - (void)generateModel {
     self.model = [[FHMultiMediaModel alloc] init];
     NSMutableArray *itemArray = [NSMutableArray array];
-    
     NSArray *houseImageDict = ((FHDetailMediaHeaderModel *)self.currentData).houseImageDictList;
     FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
     if (vedioModel && vedioModel.videoID.length > 0) {
@@ -152,6 +152,10 @@
     }
     
     self.model.medias = itemArray;
+    if([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
+        FHDetailOldModel *detailOldModel = self.baseViewModel.detailData;
+        self.model.isShowSkyEyeLogo = detailOldModel.data.baseExtra.detective.detectiveInfo.showSkyEyeLogo;
+    }
 }
 
 -(void)showImagesWithCurrentIndex:(NSInteger)index
@@ -448,6 +452,19 @@
 
 - (void)selectItem:(NSString *)title {
     [self trackClickOptions:title];
+}
+
+- (void)bottomBannerViewDidShow {
+    
+    NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_ELEMENT_TYPE] = @"happiness_eye_tip";
+    param[UT_PAGE_TYPE] = tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+    param[UT_ELEMENT_FROM] = tracerDict[UT_ELEMENT_FROM]?:UT_BE_NULL;
+    param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+    param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
+    param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;    
+    TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
 }
 
 #pragma mark - FHDetailScrollViewDidScrollProtocol
