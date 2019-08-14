@@ -24,6 +24,7 @@
 @property(nonatomic, strong) UILabel *sourceLabel;
 @property(nonatomic, strong) UIImageView *icon;
 @property(nonatomic, strong) FHUGCFollowButton *joinBtn;
+@property (nonatomic, assign)   NSInteger       currentRank;
 
 @property(nonatomic, strong) FHFeedContentRecommendSocialGroupListModel *model;
 
@@ -55,6 +56,7 @@
 
 - (void)initNotification {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(socialGroupDataChange:) name:@"kFHUGCSicialGroupDataChangeKey" object:nil];
 }
 
 - (void)dealloc {
@@ -63,6 +65,7 @@
 
 - (void)refreshWithData:(id)data rank:(NSInteger)rank {
     if([data isKindOfClass:[FHFeedContentRecommendSocialGroupListModel class]]){
+        self.currentRank = rank;
         FHFeedContentRecommendSocialGroupListModel *model = (FHFeedContentRecommendSocialGroupListModel *)data;
         _model = model;
         _titleLabel.text = model.socialGroupName;
@@ -167,6 +170,30 @@
     if([groupId isEqualToString:self.model.socialGroupId] && followed){
         if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
             [self.delegate joinIn:self.model cell:self];
+        }
+    }
+}
+
+- (void)socialGroupDataChange:(NSNotification *)notification {
+    if (notification) {
+        FHFeedContentRecommendSocialGroupListModel *tempModel = self.model;
+        if (tempModel && [tempModel isKindOfClass:[FHFeedContentRecommendSocialGroupListModel class]]) {
+            NSString *socialGroupId = tempModel.socialGroupId;
+            FHUGCScialGroupDataModel *model = [[FHUGCConfig sharedInstance] socialGroupData:socialGroupId];
+            if (model && (![model.countText isEqualToString:tempModel.countText] || ![model.hasFollow isEqualToString:tempModel.hasFollow])) {
+                tempModel.contentCount = model.contentCount;
+                tempModel.countText = model.countText;
+                tempModel.hasFollow = model.hasFollow;
+                tempModel.followerCount = model.followerCount;
+                [self refreshWithData:tempModel rank:self.currentRank];
+                
+                BOOL followed = [model.hasFollow boolValue];
+                if([socialGroupId isEqualToString:self.model.socialGroupId] && followed){
+                    if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
+                        [self.delegate joinIn:self.model cell:self];
+                    }
+                }
+            }
         }
     }
 }

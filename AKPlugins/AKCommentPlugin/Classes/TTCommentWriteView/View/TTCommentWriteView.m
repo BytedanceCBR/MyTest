@@ -8,10 +8,10 @@
 #import "TTCommentWriteView.h"
 #import <TTUGCFoundation/TTUGCTextView.h>
 #import <TTUGCFoundation/TTUGCTextViewMediator.h>
-#import <TTUGCFoundation/TTUGCEmojiInputView.h>
+#import <FHCommonUI/TTUGCEmojiInputView.h>
 #import <TTPlatformBaseLib/TTProfileFillManager.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
-#import <TTUGCFoundation/TTUGCEmojiParser.h>
+#import <FHCommonUI/TTUGCEmojiParser.h>
 #import <TTBaseLib/NSObject+MultiDelegates.h>
 #import <TTUIWidget/TTNavigationController.h>
 #import <TTBaseLib/TTUIResponderHelper.h>

@@ -352,6 +352,8 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
 - (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model {
     [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:model];
+    // 通知 附近 可能感兴趣的小区圈 帖子数变化
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCSicialGroupDataChangeKey" object:nil];
 }
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
