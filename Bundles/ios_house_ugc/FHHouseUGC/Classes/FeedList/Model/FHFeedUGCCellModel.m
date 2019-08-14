@@ -109,7 +109,8 @@
         
         [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
         
-        if(cellModel.openUrl && !isEmptyString(cellModel.openUrl)){
+//        if(cellModel.openUrl && !isEmptyString(cellModel.openUrl)){
+        if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
             //针对问答的情况
             if(model.sourceDesc){
                 cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
