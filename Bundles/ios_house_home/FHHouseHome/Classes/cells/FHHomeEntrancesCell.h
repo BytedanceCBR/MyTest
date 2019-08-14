@@ -13,7 +13,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeEntrancesCell : FHHomeBaseTableCell
 
-@property (nonatomic,strong) FHRowsView *boardView;
+@property (nonatomic,copy) void (^clickBlock)(NSInteger index);
+
++(CGFloat)rowHeight;
+
++(CGFloat)cellHeightForModel:(id)model;
+
+-(void)updateWithItems:(NSArray *)items;
 
 @end
 

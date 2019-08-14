@@ -15,7 +15,7 @@ install! 'cocoapods', :warn_for_multiple_pod_sources => false
 plugin 'cocoapods-bytedance-transform'
 # 用于开启依赖解析加速的服务，传true表示使用，false表示不使用
 bytedanceAnalyzeSpeed(true)
-bd_use_app("thirdParty","public","toutiao")
+bd_use_app("thirdParty","public","toutiao","ugc")
 
 #全部使用源码
 #bd_use_source!
@@ -74,8 +74,9 @@ def appPods
     pod 'TTUserProfile', :path => '../TTBundles/ios_tt_userprofile'
     pod 'TTArticleVideo', :path => '../TTBundles/ios_tt_article_video'
     
-    pod_binary 'SecGuard', '0.8.12.9'#'0.8.10.1'
-
+    #pod_binary 'SecGuard', '0.8.10.5'#'0.8.10.1'
+    pod 'SecGuard' , '0.8.14.5'
+    
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
 
 #    #-----安全组sdk-----#
@@ -237,8 +238,8 @@ def appPods
     pod_binary 'TTRexxar', '0.8.10', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
     #----头条组件协议库-----
 
-    pod 'TTServiceProtocols', :path => '../AKPlugins/AKServiceProtocols', :inhibit_warnings => false
-    
+    pod_binary 'TTServiceProtocols','0.3.59'
+
     #-----头条图片/视频选择器-----
     pod 'TTImagePicker', :path => '../AKPlugins/AKImagePicker', :inhibit_warnings => false
 #    :subspecs => [
@@ -337,12 +338,37 @@ def appPods
     #-----头条sercive中间件-----
     pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
-#    pod 'TTMonitor', '0.7.9.42'
-    pod 'TTMonitor', :path => '../AKPlugins/TTMonitor', :inhibit_warnings => false
-    pod_binary 'Heimdallr','0.6.27-rc.0', :subspecs => [
+    pod_binary 'TTMonitor','0.7.11.0'
+#    pod 'TTMonitor', :path => '../AKPlugins/TTMonitor', :inhibit_warnings => false
+#    pod_binary 'Heimdallr','0.6.27-rc.0', :subspecs => [
+#    'Core',
+#    'Monitors',
+#    'TTMonitor',
+#    'TTNet',
+#    'HMDStart',
+#    'Mach',
+#    'Utility',
+#    'DeviceInfo',
+#    'HMDANR',
+#    'HMDOOM',
+#    'CrashDetector',
+#    'Log',
+#    'UITracker',
+#    'MemorySnapshot',
+#    'Upload',
+#    'HMDSession',
+#    'HMDConfig',
+#    'HMDStore',
+#    'ALog',
+#    'FMDB' ,
+#    'CloudCommand'
+#    #    'DiskManager'
+#    ]
+    pod_binary 'Heimdallr','0.7.6', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
+    'HMDURLProtocolTracker', #
     'TTNet',
     'HMDStart',
     'Mach',
@@ -359,21 +385,25 @@ def appPods
     'HMDConfig',
     'HMDStore',
     'ALog',
-    'FMDB' ,
-    'CloudCommand'
-#    'DiskManager'
+    'CloudCommand',
+    'Network', #
+    'HTTPRequestTracker', #
+    'HMDOOMCrash', #
+    'HMDWatchDog', #
+    'UserException' #
     ]
-    
+    pod_binary 'TTMacroManager','1.0.1'
+
     pod_binary 'AWECloudCommand' , '1.0.7'
 
     pod_binary 'BDALog' , '0.1.12'
-    pod        'BDAlogProtocol', '0.1.6'
-    
+    pod_binary 'BDAlogProtocol','0.1.7'
+
     #----- 长连接 & IM -----
 #    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'
     pod_binary 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
     pod 'TTPushManager', '0.0.13.4'
-    pod_binary 'TTReachability', '0.5.1'
+    pod_binary 'TTReachability', '0.5.2'
     pod_binary 'Protobuf', '3.0.1-ttv'
     #----- 存储库 -----
     pod_binary 'TTPersistence', '0.2.3'
@@ -575,8 +605,9 @@ def appPods
     
     pod_binary 'AFNetworking' , '2.5.1'
     
-    pod_binary 'FMDB' , '2.6.2'
-    
+    pod_binary 'FMDB','2.7.5',:subspecs => [
+    'standard'
+    ]
     pod_binary 'AFgzipRequestSerializer' , '0.0.2'
     
     # ab test sdk
