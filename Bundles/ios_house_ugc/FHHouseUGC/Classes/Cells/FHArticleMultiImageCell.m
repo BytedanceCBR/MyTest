@@ -139,38 +139,41 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
-        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        self.cellModel= cellModel;
-        //内容
-        self.contentLabel.numberOfLines = cellModel.numberOfLines;
-        if(isEmptyString(cellModel.title)){
-            self.contentLabel.hidden = YES;
-        }else{
-            self.contentLabel.hidden = NO;
-            [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
-        }
-        self.bottomView.cellModel = cellModel;
-        self.bottomView.descLabel.attributedText = cellModel.desc;
-        
-        BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
-        self.bottomView.position.text = cellModel.community.name;
-        [self.bottomView showPositionView:showCommunity];
-        //图片
-        NSArray *imageList = cellModel.imageList;
-        for (NSInteger i = 0; i < self.imageViewList.count; i++) {
-            UIImageView *imageView = self.imageViewList[i];
-            if(i < imageList.count){
-                FHFeedContentImageListModel *imageModel = imageList[i];
-                imageView.hidden = NO;
-                [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
-            }else{
-                imageView.hidden = YES;
-            }
-        }
-        
-        [self showGuideView];
+    if (self.currentData == data || ![data isKindOfClass:[FHFeedUGCCellModel class]]) {
+        return;
     }
+    self.currentData = data;
+    
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    self.cellModel= cellModel;
+    //内容
+    self.contentLabel.numberOfLines = cellModel.numberOfLines;
+    if(isEmptyString(cellModel.title)){
+        self.contentLabel.hidden = YES;
+    }else{
+        self.contentLabel.hidden = NO;
+        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+    }
+    self.bottomView.cellModel = cellModel;
+    self.bottomView.descLabel.attributedText = cellModel.desc;
+    
+    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
+    self.bottomView.position.text = cellModel.community.name;
+    [self.bottomView showPositionView:showCommunity];
+    //图片
+    NSArray *imageList = cellModel.imageList;
+    for (NSInteger i = 0; i < self.imageViewList.count; i++) {
+        UIImageView *imageView = self.imageViewList[i];
+        if(i < imageList.count){
+            FHFeedContentImageListModel *imageModel = imageList[i];
+            imageView.hidden = NO;
+            [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+        }else{
+            imageView.hidden = YES;
+        }
+    }
+    
+    [self showGuideView];
 }
 
 + (CGFloat)heightForData:(id)data {

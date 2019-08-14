@@ -86,27 +86,30 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
-        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        self.cellModel = cellModel;
-        //内容
-        self.contentLabel.numberOfLines = cellModel.numberOfLines;
-        if(isEmptyString(cellModel.title)){
-            self.contentLabel.hidden = YES;
-        }else{
-            self.contentLabel.hidden = NO;
-            [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
-        }
-        
-        self.bottomView.cellModel = cellModel;
-        self.bottomView.descLabel.attributedText = cellModel.desc;
-        
-        BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
-        self.bottomView.position.text = cellModel.community.name;
-        [self.bottomView showPositionView:showCommunity];
-        
-        [self showGuideView];
+    if (self.currentData == data || ![data isKindOfClass:[FHFeedUGCCellModel class]]) {
+        return;
     }
+    self.currentData = data;
+    
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    self.cellModel = cellModel;
+    //内容
+    self.contentLabel.numberOfLines = cellModel.numberOfLines;
+    if(isEmptyString(cellModel.title)){
+        self.contentLabel.hidden = YES;
+    }else{
+        self.contentLabel.hidden = NO;
+        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+    }
+    
+    self.bottomView.cellModel = cellModel;
+    self.bottomView.descLabel.attributedText = cellModel.desc;
+    
+    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
+    self.bottomView.position.text = cellModel.community.name;
+    [self.bottomView showPositionView:showCommunity];
+    
+    [self showGuideView];
 }
 
 + (CGFloat)heightForData:(id)data {

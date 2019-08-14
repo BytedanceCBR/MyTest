@@ -92,6 +92,7 @@
     cellModel.cellType = [model.cellType integerValue];
     cellModel.groupId = model.groupId;
     cellModel.logPb = model.logPb;
+    cellModel.aggrType = model.aggrType;
     //处理图片
     cellModel.imageList = model.imageList;
     //处理大图
@@ -109,8 +110,8 @@
         
         [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
         
-//        if(cellModel.openUrl && !isEmptyString(cellModel.openUrl)){
-        if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
+        if(cellModel.openUrl && !isEmptyString(cellModel.openUrl)){
+//        if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
             //针对问答的情况
             if(model.sourceDesc){
                 cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];

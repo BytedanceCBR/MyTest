@@ -22,7 +22,7 @@
 #import <UIScrollView+Refresh.h>
 #import "FHFeedOperationView.h"
 
-@interface FHCommunityFeedListController ()
+@interface FHCommunityFeedListController ()<SSImpressionProtocol>
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic, assign) BOOL needReloadData;
@@ -49,11 +49,13 @@
     [self initConstraints];
     [self initViewModel];
     
+    [[SSImpressionManager shareInstance] addRegist:self];
     [TTAccount addMulticastDelegate:self];
 }
 
 - (void)dealloc
 {
+    [[SSImpressionManager shareInstance] removeRegist:self];
     [TTAccount removeMulticastDelegate:self];
 }
 
@@ -72,6 +74,7 @@
 }
 
 - (void)viewWillDisappear {
+    [self.viewModel viewWillDisappear];
     [FHFeedOperationView dismissIfVisible];
 }
 
@@ -152,8 +155,8 @@
 
     if(self.listType == FHCommunityFeedListTypeNearby){
         viewModel = [[FHCommunityFeedListNearbyViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = @"94349537888";
-//        viewModel.categoryId = @"weitoutiao";
+//        viewModel.categoryId = @"94349537888";
+        viewModel.categoryId = @"weitoutiao";
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = @"94349537893";
@@ -319,6 +322,32 @@
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
 {
     self.needReloadData = YES;
+}
+
+#pragma mark -- SSImpressionProtocol
+
+- (void)needRerecordImpressions {
+    if (self.viewModel.dataList.count == 0) {
+        return;
+    }
+
+    SSImpressionParams *params = [[SSImpressionParams alloc] init];
+    params.refer = self.viewModel.refer;
+
+    for (FHUGCBaseCell *cell in [self.tableView visibleCells]) {
+        if ([cell isKindOfClass:[FHUGCBaseCell class]]) {
+            id data = cell.currentData;
+            if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
+                FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+                if (self.viewModel.isShowing) {
+                    [self.viewModel recordGroupWithCellModel:cellModel status:SSImpressionStatusRecording];
+                }
+                else {
+                    [self.viewModel recordGroupWithCellModel:cellModel status:SSImpressionStatusSuspend];
+                }
+            }
+        }
+    }
 }
 
 

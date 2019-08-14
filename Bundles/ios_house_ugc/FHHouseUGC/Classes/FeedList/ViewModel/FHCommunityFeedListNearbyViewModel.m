@@ -86,90 +86,15 @@
     __weak typeof(self) wself = self;
     
     NSInteger listCount = self.dataList.count;
-    NSInteger offset = 0;
-
-    if(listCount > 0 && !isFirst){
-        if(self.feedListModel){
-            offset = [self.feedListModel.lastOffset integerValue];
-        }
-    }
-    
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        wself.viewController.isLoadingData = NO;
-        if(isFirst){
-            [wself.viewController endLoading];
-        }
-
-        [wself.tableView finishPullDownWithSuccess:YES];
-
-        FHFeedListModel *feedListModel = (FHFeedListModel *)model;
-        wself.feedListModel = feedListModel;
-
-        if (!wself) {
-            return;
-        }
-
-        if (error) {
-            //TODO: show handle error
-            if(isFirst){
-                if(error.code != -999){
-                    [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-                    wself.viewController.showenRetryButton = YES;
-                }
-            }else{
-                [[ToastManager manager] showToast:@"网络异常"];
-                [wself updateTableViewWithMoreData:YES];
-            }
-            return;
-        }
-
-        if(model){
-            NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
-
-            if(isFirst){
-                [wself.dataList removeAllObjects];
-            }
-            if(isHead){
-                if(result.count > 0){
-                    [wself.cellHeightCaches removeAllObjects];
-                }
-                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
-            }else{
-                [wself.dataList addObjectsFromArray:result];
-            }
-            wself.tableView.hasMore = feedListModel.hasMore;
-            wself.viewController.hasValidateData = wself.dataList.count > 0;
-
-            if(wself.dataList.count > 0){
-                [wself updateTableViewWithMoreData:feedListModel.hasMore];
-                [wself.viewController.emptyView hideEmptyView];
-                [wself insertGuideCell];
-            }else{
-                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-                wself.viewController.showenRetryButton = YES;
-            }
-            [wself.tableView reloadData];
-
-            NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
-                wself.isRefreshingTip = YES;
-                [wself.viewController showNotify:refreshTip completion:^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        wself.isRefreshingTip = NO;
-                    });
-                }];
-                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-            }
-        }
-    }];
-
-//    double behotTime = 0;
-//    if(!isHead && listCount > 0){
-//        FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
-//        behotTime = [cellModel.behotTime doubleValue];
+//    NSInteger offset = 0;
+//
+//    if(listCount > 0 && !isFirst){
+//        if(self.feedListModel){
+//            offset = [self.feedListModel.lastOffset integerValue];
+//        }
 //    }
 //
-//    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+//    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
 //        wself.viewController.isLoadingData = NO;
 //        if(isFirst){
 //            [wself.viewController endLoading];
@@ -205,9 +130,6 @@
 //                [wself.dataList removeAllObjects];
 //            }
 //            if(isHead){
-//                if(result.count > 0){
-//                    [wself.cellHeightCaches removeAllObjects];
-//                }
 //                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
 //            }else{
 //                [wself.dataList addObjectsFromArray:result];
@@ -237,6 +159,78 @@
 //            }
 //        }
 //    }];
+
+    double behotTime = 0;
+    if(!isHead && listCount > 0){
+        FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
+        behotTime = [cellModel.behotTime doubleValue];
+    }
+
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        wself.viewController.isLoadingData = NO;
+        if(isFirst){
+            [wself.viewController endLoading];
+        }
+
+        [wself.tableView finishPullDownWithSuccess:YES];
+
+        FHFeedListModel *feedListModel = (FHFeedListModel *)model;
+        wself.feedListModel = feedListModel;
+
+        if (!wself) {
+            return;
+        }
+
+        if (error) {
+            //TODO: show handle error
+            if(isFirst){
+                if(error.code != -999){
+                    [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+                    wself.viewController.showenRetryButton = YES;
+                }
+            }else{
+                [[ToastManager manager] showToast:@"网络异常"];
+                [wself updateTableViewWithMoreData:YES];
+            }
+            return;
+        }
+
+        if(model){
+            NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
+
+            if(isFirst){
+                [wself.dataList removeAllObjects];
+            }
+            if(isHead){
+                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
+            }else{
+                [wself.dataList addObjectsFromArray:result];
+            }
+            wself.tableView.hasMore = feedListModel.hasMore;
+            wself.viewController.hasValidateData = wself.dataList.count > 0;
+
+            if(wself.dataList.count > 0){
+                [wself updateTableViewWithMoreData:feedListModel.hasMore];
+                [wself.viewController.emptyView hideEmptyView];
+                [wself insertGuideCell];
+            }else{
+                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                wself.viewController.showenRetryButton = YES;
+            }
+            [wself.tableView reloadData];
+
+            NSString *refreshTip = feedListModel.tips.displayInfo;
+            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
+                wself.isRefreshingTip = YES;
+                [wself.viewController showNotify:refreshTip completion:^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        wself.isRefreshingTip = NO;
+                    });
+                }];
+                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+            }
+        }
+    }];
 }
 
 
@@ -332,9 +326,20 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     if(indexPath.row < self.dataList.count){
         [self traceClientShowAtIndexPath:indexPath];
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        /*impression统计相关*/
+        SSImpressionStatus impressionStatus = self.isShowing ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
+        [self recordGroupWithCellModel:cellModel status:impressionStatus];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    // impression统计
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        [self recordGroupWithCellModel:cellModel status:SSImpressionStatusEnd];
     }
 }
 

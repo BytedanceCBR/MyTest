@@ -133,13 +133,16 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
-        self.isReplace = NO;
-        self.currentIndex = 0;
-        _model = (FHFeedUGCCellModel *)data;
-        self.sourceList = [_model.recommendSocialGroupList mutableCopy];
-        [self refreshData:YES];
+    if (self.currentData == data || ![data isKindOfClass:[FHFeedUGCCellModel class]]) {
+        return;
     }
+    self.currentData = data;
+    
+    self.isReplace = NO;
+    self.currentIndex = 0;
+    _model = (FHFeedUGCCellModel *)data;
+    self.sourceList = [_model.recommendSocialGroupList mutableCopy];
+    [self refreshData:YES];
 }
 
 + (CGFloat)heightForData:(id)data {
