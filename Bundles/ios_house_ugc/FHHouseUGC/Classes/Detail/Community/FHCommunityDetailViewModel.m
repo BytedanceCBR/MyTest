@@ -271,6 +271,8 @@
             if (responseModel.data) {
                 // 更新圈子数据
                 [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:responseModel.data];
+                // 通知 附近 可能感兴趣的小区圈 帖子数变化
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCSicialGroupDataChangeKey" object:nil];
             }
             return;
         }
