@@ -1092,6 +1092,13 @@ static CGFloat maxAnimationHeight = 154;//超过这个高度才做动画
 }
 
 - (void)layoutSubviews {
+    if (@available(iOS 13, *)) {
+        //拖拽手势进行中
+        if (self.natantContaintView.top == 0) {
+            return;
+        }
+    }
+
     [super layoutSubviews];
     
     self.natantView.width = self.width;

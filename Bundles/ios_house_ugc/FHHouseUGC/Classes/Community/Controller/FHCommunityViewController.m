@@ -162,6 +162,17 @@
     }
 }
 
+-(BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+-(BOOL)prefersStatusBarHidden
+{
+    return NO;
+}
+
+
 - (void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;

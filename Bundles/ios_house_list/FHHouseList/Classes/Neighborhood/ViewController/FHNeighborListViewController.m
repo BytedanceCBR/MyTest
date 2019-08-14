@@ -20,6 +20,7 @@
 #import "UIViewController+NavbarItem.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "TTDeviceHelper.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHNeighborListViewController ()<FHHouseFilterDelegate>
 
@@ -182,7 +183,7 @@
 }
 
 - (void)configTableView {
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

@@ -20,6 +20,7 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import "FHHouseOldMainViewModel.h"
 #import <TTBaseLib/TTDeviceHelper.h>
+#import <FHHouseBase/FHBaseTableView.h>
 
 #define kFilterBarHeight 44
 
@@ -411,7 +412,7 @@
         CGFloat height = [FHFakeInputNavbar perferredHeight];
         CGRect frame = self.view.bounds;
         frame.size.height = self.view.height - height - kFilterBarHeight;
-        _tableView = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
+        _tableView = [[FHBaseTableView alloc] initWithFrame:frame style:UITableViewStylePlain];
         if (@available(iOS 11.0, *)) {
             
             _tableView.estimatedRowHeight = 0;

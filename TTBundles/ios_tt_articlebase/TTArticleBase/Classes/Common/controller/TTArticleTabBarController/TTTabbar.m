@@ -23,6 +23,7 @@
 @property (nonatomic, strong) TTImageView *backImageView;
 @property (nonatomic, assign) CGFloat tabItemWidth;
 @property (nonatomic, assign) NSUInteger selectedIndex;
+@property (nonatomic, assign) CGRect originFrame;
 
 @end
 
@@ -117,6 +118,23 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     [self setupTabBarItems];
+    _originFrame = self.frame;
+    NSLog(@"[TABBAR] layout frame is: %@",NSStringFromCGRect(self.frame));
+}
+
+-(void)setFrame:(CGRect)frame
+{
+    if(@available(iOS 13.0 , *)){
+        // iOS 全屏播放视频时目前会导致状态栏消失，此时会触发tabbar高度变化
+        if (frame.size.width < _originFrame.size.width) {
+            frame.size.width = _originFrame.size.width;
+        }
+        if(frame.size.height < _originFrame.size.height){
+            frame.origin.y -= (_originFrame.size.height - frame.size.height);
+            frame.size.height = _originFrame.size.height;
+        }
+    }
+    [super setFrame:frame];
 }
 
 #pragma mark - Configuration

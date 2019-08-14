@@ -20,6 +20,7 @@
 #import "FHUserTracker.h"
 #import "TTReachability.h"
 #import <ToastManager.h>
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHIMSharedUserListViewController () <TTRouteInitializeProtocol, FHIMShareUserListViewModelDelegate, FHIMShareAlertViewDelegate, IMChatStateObserver>
 {
@@ -43,7 +44,7 @@
         _rowIndex = NSUIntegerMax;
         self.listViewModel = [[FHIMShareUserListViewModel alloc] init];
         _listViewModel.delegate = self;
-        self.tableView = [[UITableView alloc] init];
+        self.tableView = [[FHBaseTableView alloc] init];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.showsVerticalScrollIndicator = NO;
         self.automaticallyAdjustsScrollViewInsets = NO;

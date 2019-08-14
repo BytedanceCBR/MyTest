@@ -6,10 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <FHHouseBase/FHBaseTableView.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHomeBaseTableView : UITableView
+@interface FHHomeBaseTableView : FHBaseTableView
 
 @end
 

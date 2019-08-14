@@ -20,7 +20,7 @@ PODS:
   - AMap3DMap (6.2.0.1-binary)
   - AMapFoundation (1.5.2.1-binary)
   - AMapLocation (2.6.0.1-binary)
-  - AMapSearch (6.1.1.1-binary)
+  - AMapSearch (6.9.0.1-binary)
   - Aspects (1.4.1.1-binary)
   - AWECloudCommand (1.0.7.1-binary):
     - AWECloudCommand/Core (= 1.0.7.1-binary)
@@ -152,7 +152,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.5)
+  - ios_house_im (0.1.6)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -558,7 +558,7 @@ DEPENDENCIES:
   - AMap3DMap (= 6.2.0.1-binary)
   - AMapFoundation (= 1.5.2.1-binary)
   - AMapLocation (= 2.6.0.1-binary)
-  - AMapSearch (= 6.1.1.1-binary)
+  - AMapSearch (= 6.9.0.1-binary)
   - Aspects (= 1.4.1.1-binary)
   - AWECloudCommand (= 1.0.7.1-binary)
   - AWEVideoPlayer (= 0.3.20.1-binary)
@@ -639,7 +639,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.5)
+  - ios_house_im (= 0.1.6)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -959,7 +959,7 @@ SPEC CHECKSUMS:
   AMap3DMap: ade5ca8605a03833fb799fdd6e7b489e83963941
   AMapFoundation: bc8d29843a0d4e0f83a175a77729d2b623c26026
   AMapLocation: 4ada3e0cb6933c1ac0b64038abb816b768d6311b
-  AMapSearch: 010f2224fd4b3d902e3df088856382370da84607
+  AMapSearch: 64c969de27b970351537d0c60550033c70beede7
   Aspects: 49ab2ffbcea7b491efa20fda09e60a3f629b7616
   AWECloudCommand: 60f409e41dc60fe48dca27e05028da89fe3e5f18
   AWEVideoPlayer: 79aef06155256984da6189dba3ac966c63b55098
@@ -1013,7 +1013,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 5262144f1627faf666fb92abe658744f9ee02535
+  ios_house_im: 04b03f01db051ef717cf96ffb3515fbfda057cf7
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1133,6 +1133,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 4c760e04c5df653bfae7d1181ed97ff96b51e986
+PODFILE CHECKSUM: 1fbdbc2d5619a76323d8cc3e948340ac80131c47
 
 COCOAPODS: 1.4.0

@@ -24,6 +24,7 @@
 
 #import "FHDetailOldModel.h"
 #import "FHDetailRentModel.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 #define HEADER_HEIGHT 50
 #define FOOTER_HEIGHT 60
@@ -75,7 +76,7 @@
             }
         };
         _containerView = [[UIView alloc]initWithFrame:self.bounds];
-        _tableView = [[UITableView alloc]initWithFrame:self.bounds style:UITableViewStyleGrouped];
+        _tableView = [[FHBaseTableView alloc]initWithFrame:self.bounds style:UITableViewStyleGrouped];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
