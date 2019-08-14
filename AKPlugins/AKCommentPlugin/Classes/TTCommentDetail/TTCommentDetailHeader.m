@@ -24,7 +24,7 @@
 #import <TTReporter/TTReportManager.h>
 #import "TTCommentDetailHeaderGroupItem.h"
 #import "TTCommentDetailHeaderDigItem.h"
-#import <TTUGCFoundation/TTUGCEmojiParser.h>
+#import <FHCommonUI/TTUGCEmojiParser.h>
 #import <TTUGCFoundation/TTUGCAttributedLabel.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
