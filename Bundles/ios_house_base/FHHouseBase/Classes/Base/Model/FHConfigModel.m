@@ -409,32 +409,31 @@
 
 #define DICT_PROP_GET(className , propertyName , key) \
 -(className *)propertyName {\
-if(!_##propertyName && _originDict){ \
-NSLog(@"[LAUNCH]config get %@",key); \
-NSDictionary *data =_originDict[key]; \
-_##propertyName = [[className alloc]initWithDictionary:data error:nil]; \
-}\
-return _##propertyName;\
+    if(!_##propertyName && _originDict){ \
+        NSDictionary *data =_originDict[key]; \
+        _##propertyName = [[className alloc]initWithDictionary:data error:nil]; \
+    }\
+    return _##propertyName;\
 }
 
 #define ARRAY_PROP_GET(className , propertyName , key) \
 -(NSArray< className > *)propertyName { \
-if(!_##propertyName && _originDict){ \
-NSLog(@"[LAUNCH]config array get %@",key); \
-NSArray *jsons = _originDict[key]; \
-if([jsons isKindOfClass:[NSArray class]]){ \
-NSMutableArray *list = [NSMutableArray new]; \
-for (NSDictionary *json in jsons) { \
-className *model = [[className alloc] initWithDictionary:json error:nil]; \
-if(model){ \
-[list addObject:model]; \
-} \
-}\
-_##propertyName = list; \
-}\
-}\
-return _##propertyName; \
+    if(!_##propertyName && _originDict){ \
+        NSArray *jsons = _originDict[key]; \
+        if([jsons isKindOfClass:[NSArray class]]){ \
+            NSMutableArray *list = [NSMutableArray new]; \
+            for (NSDictionary *json in jsons) { \
+                className *model = [[className alloc] initWithDictionary:json error:nil]; \
+                if(model){ \
+                    [list addObject:model]; \
+                } \
+            }\
+            _##propertyName = list; \
+        }\
+    }\
+    return _##propertyName; \
 }
+
 
 DICT_PROP_GET(FHConfigDataOpData2Model,opData2,@"op_data_2")
 ARRAY_PROP_GET(FHConfigDataOpData2ListModel,opData2list,@"op_data_2_list")
@@ -1187,19 +1186,3 @@ DICT_PROP_GET(FHConfigDataRentBannerModel,rentBanner,@"rent_banner")
 
 @end
 
-
-
-//@implementation FHConfigDataModel (SimpleInit)
-//
-//-(instancetype)initWithDictShadow:(NSDictionary *)dict
-//{
-//    self = [super init];
-//    if(self){
-//        self.originDict = dict;
-//        //init
-//        
-//    }
-//    
-//}
-//
-//@end
