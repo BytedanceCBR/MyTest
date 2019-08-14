@@ -99,9 +99,8 @@
     if(self.itemViews.count < totalCount){
         CGSize iconSize = CGSizeMake(ceil(NORMAL_ICON_WIDTH*ratio), ceil(NORMAL_ICON_WIDTH*ratio));
         for (NSInteger i = _itemViews.count; i < totalCount; i++) {
-            FHHomeEntranceItemView *itemView = [[FHHomeEntranceItemView alloc] initWithFrame:itemFrame iconSize:iconSize];
+            FHHomeEntranceItemView *itemView = [[FHHomeEntranceItemView alloc] initWithFrame:itemFrame iconSize:iconSize];       
             [itemView addTarget:self action:@selector(onItemAction:) forControlEvents:UIControlEventTouchUpInside];
-            itemView.tag = ITEM_TAG_BASE+i;
             [self.itemViews addObject:itemView];
             [self.contentView addSubview:itemView];
         }
@@ -116,6 +115,7 @@
     for (NSInteger i = 0 ; i < totalCount; i++) {
         FHConfigDataOpDataItemsModel *model = items[i];
         FHHomeEntranceItemView *itemView = _itemViews[i];
+        itemView.tag = ITEM_TAG_BASE+i;
         FHConfigDataOpDataItemsImageModel *imgModel = [model.image firstObject];
         [itemView updateWithIconUrl:imgModel.url name:model.title placeHolder:placeHolder];
         NSInteger row = i / countPerRow;
