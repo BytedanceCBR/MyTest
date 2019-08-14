@@ -838,7 +838,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     WeakSelf;
     [self.natantViewModel tt_startFetchInformationWithFinishBlock:^(WDDetailModel *detailModel, NSError *error) {
         StrongSelf;
-        if (!error) {
+        if (!error || self.detailModel.answerEntity) {
             [self.detailView tt_serverRequestTimeMonitorWithName:WDDetailInfoTimeService error:error];
             
             self.infoLoadFinished = YES;
@@ -2202,6 +2202,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [mdict setValue:self.detailModel.answerEntity.ansid forKey:@"groupId"];
     [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"qid"] forKey:@"qid"];
     [mdict setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"log_pb"] forKey:@"logPb"];
+    [mdict setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"element_from"] forKey:@"element_from"];
     
     if (self.isNewVersion) {
         if ([self.wdDelegate respondsToSelector:@selector(wd_commentViewController:didSelectWithInfo:)]) {

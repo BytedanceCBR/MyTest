@@ -168,7 +168,7 @@
     [self.currentItems addObject:waterModel];
 
     
-    if (model.data.permitList) {
+    if (model.data.permitList.count > 0) {
         [self.currentItems addObject:grayLine];
         
         FHFloorPanCorePermitCellModel *permitModel = [[FHFloorPanCorePermitCellModel alloc] init];

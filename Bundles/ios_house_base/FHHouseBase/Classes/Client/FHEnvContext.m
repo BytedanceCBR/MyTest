@@ -262,12 +262,12 @@ static NSInteger kGetLightRequestRetryCount = 3;
     NSString *stringKey = [FHUtils stringFromNSDateDay:[NSDate date]];
     
     if (stringKey) {
-       NSNumber *countNum = [FHUtils contentForKey:stringKey];
+        NSNumber *countNum = [FHUtils contentForKey:stringKey];
         if (!countNum || [countNum isKindOfClass:[NSNumber class]]) {
             NSInteger hadCount = [countNum integerValue];
             if (hadCount < 3) {
-              TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
-              tabItem.ttBadgeView.badgeNumber = TTBadgeNumberPoint;
+                TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+                tabItem.ttBadgeView.badgeNumber = TTBadgeNumberPoint;
             }
         }
     }
@@ -342,7 +342,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     CGFloat f_density = [UIScreen mainScreen].scale;
     CGFloat f_memory = [TTDeviceHelper getTotalCacheSpace];
-
+    
     if (f_density) {
         requestParam[@"f_density"] = @(f_density);
     }
@@ -388,27 +388,27 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     //开始网络监听通知
     [self.reachability startNotifier];
-
+    
     
     if (![FHEnvContext sharedInstance].refreshConfigRequestType) {
         [FHEnvContext sharedInstance].refreshConfigRequestType = @"launch";
     }
-
+    
     //开始生成config缓存
     [self.generalBizConfig onStartAppGeneralCache];
-
-
+    
+    
     //开始定位
     [self startLocation];
     
     //检测是否需要打开城市列表
     [self check2CityList];
-
+    
     //更新公共参数
     [self updateRequestCommonParams];
-
+    
     NSString *startFeedCatgegory = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getFeedStartCategoryName];
-
+    
     if (![startFeedCatgegory isEqualToString:@"f_house_news"] && startFeedCatgegory != nil) {
         //轮询红点
         [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
@@ -421,16 +421,16 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [FHIESGeckoManager configGeckoInfo];
         [FHIESGeckoManager configIESWebFalcon];
     });
-
+    
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
 {
     if (configDict && [configDict isKindOfClass:[NSDictionary class]]) {
         FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
-//        self.generalBizConfig.configCache = dataModel;
+        //        self.generalBizConfig.configCache = dataModel;
         [FHEnvContext saveCurrentUserCityId:dataModel.currentCityId];
-//        [self.generalBizConfig saveCurrentConfigDataCache:dataModel];
+        //        [self.generalBizConfig saveCurrentConfigDataCache:dataModel];
         [self.configDataReplay sendNext:dataModel];
     }
 }
@@ -438,9 +438,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
 - (void)acceptConfigDataModel:(FHConfigDataModel *)configModel
 {
     if (configModel && [configModel isKindOfClass:[FHConfigDataModel class]]) {
-//        self.generalBizConfig.configCache = configModel;
+        //        self.generalBizConfig.configCache = configModel;
         [FHEnvContext saveCurrentUserCityId:configModel.currentCityId];
-//        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
+        //        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
         [self.configDataReplay sendNext:configModel];
     }
 }
@@ -582,16 +582,59 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return [[FHEnvContext sharedInstance] getConfigFromCache].ugcCitySwitch;
 }
 
++ (NSDictionary *)ugcTabName {
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    FHConfigDataUgcCategoryConfigModel *ugcCategoryConfig = [[FHEnvContext sharedInstance] getConfigFromCache].ugcCategoryConfig;
+    if(ugcCategoryConfig.myJoinList){
+        [dic setObject:ugcCategoryConfig.myJoinList forKey:kUGCTitleMyJoinList];
+    }
+    if(ugcCategoryConfig.nearbyList){
+        [dic setObject:ugcCategoryConfig.nearbyList forKey:kUGCTitleNearbyList];
+    }
+    
+    return dic;
+}
+
++ (NSString *)secondTabName {
+    NSArray *tabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].tabConfig;
+    for (FHConfigDataTabConfigModel *model in tabConfig) {
+        if([model.key isEqualToString:kSecondTab]){
+            if(model.name.length > 0){
+                return model.name;
+            }
+        }
+    }
+    return nil;
+}
+
 + (void)changeFindTabTitle
 {
-    if ([self isUGCOpen]) {
-        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
-        [tabItem setTitle:@"邻里"];
-//        tabItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
-    }else
-    {
-        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
-        [tabItem setTitle:@"发现"];
+//    if ([self isUGCOpen]) {
+//        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+//        NSString *name = [self secondTabName];
+//        if(name.length > 0){
+//            [tabItem setTitle:name];
+//        }else{
+//            [tabItem setTitle:@"邻里"];
+//        }
+//    }else
+//    {
+//        TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+//        [tabItem setTitle:@"发现"];
+//    }
+    TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseFindTabKey];
+    NSString *name = [self secondTabName];
+    if(name){
+        if(name.length > 2){
+            name = [name substringToIndex:2];
+        }
+        [tabItem setTitle:name];
+    }else{
+        if ([self isUGCOpen]) {
+            [tabItem setTitle:@"邻里"];
+        }else{
+            [tabItem setTitle:@"发现"];
+        }
     }
 }
 

@@ -358,6 +358,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isPriceValuationShowHouseTrend;
 @end
 
+@protocol FHConfigDataTabConfigModel<NSObject>
+@end
+
+@interface FHConfigDataTabConfigModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *name;
+@property (nonatomic, copy , nullable) NSString *key;
+@end
+
+@interface FHConfigDataUgcCategoryConfigModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *myJoinList;
+@property (nonatomic, copy , nullable) NSString *nearbyList;
+@end
+
 @interface  FHConfigDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray *houseTypeList;
@@ -400,6 +415,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSString *jump2AdRecommend;
 @property (nonatomic, assign) BOOL ugcCitySwitch;
 @property (nonatomic, strong , nullable) NSString *diffCode;
+@property (nonatomic, strong , nullable) NSArray<FHConfigDataTabConfigModel> *tabConfig;
+@property (nonatomic, strong , nullable) FHConfigDataUgcCategoryConfigModel *ugcCategoryConfig ;
+
+@property (nonatomic, strong , nullable) NSDictionary *originDict;
+
+-(instancetype)initShadowWithDictionary:(NSDictionary *)dict error:(NSError *__autoreleasing *)err;
 
 @end
 

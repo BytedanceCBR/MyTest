@@ -712,7 +712,11 @@ TTAccountMulticastProtocol
     if (!fromLocal || fromRemote || !categoryNotChange || self.feedFetchManager.items.count <= 0) {
         if (fromRemote) {
             [self.feedFetchManager cancelAllOperations];
-            [_collectionView triggerPullDown];
+            if (self.feedFetchManager.items.count > 0) {
+                [_collectionView triggerPullDown];
+            } else {
+                [_collectionView triggerPullDownAndHideAnimationView];
+            }
         } else {
             [self fetchFromLocal:fromLocal fromRemote:fromRemote getMore:NO];
         }

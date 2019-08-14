@@ -447,6 +447,9 @@ static bool isTTCommentPublishing = NO;
     }
     [paramsDict setValue:[self categoryName] forKey:@"category_name"];
     [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
+    [paramsDict setValue:self.element_from forKey:@"element_from"];
+    [paramsDict setValue:self.ansid forKey:@"ansid"];
+    [paramsDict setValue:self.qid forKey:@"qid"];
     if (self.enterFrom.length > 0) {
         [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName] enterFrom:[self enterFrom]]  forKey:@"enter_from"];
     }

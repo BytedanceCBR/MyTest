@@ -33,6 +33,7 @@
 #import <ExploreLogicSetting.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import <TTArticleTabBarController.h>
+#import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -50,6 +51,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;
+@property (nonatomic, assign) BOOL initedViews;
+
 @end
 
 @implementation FHHomeViewController
@@ -66,7 +69,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.ttNeedIgnoreZoomAnimation = YES;
     [self.view addSubview:self.topBar];
     
     FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
@@ -76,17 +79,21 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     self.isRefreshing = NO;
     self.adColdHadJump = NO;
-    
-    [self registerNotifications];
-    
-    [self resetMaintableView];
-    
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollMainTableToTop) name:@"kScrollToTopKey" object:nil];
+    [self registerNotifications];        
+}
+
+- (void)scrollMainTableToTop
+{
+    if (self.isShowing) {
+        [self.homeListViewModel setUpTableScrollOffsetZero];
+    }
+}
+
+-(void)dealyIniViews
+{
+    [self resetMaintableView];
     
     //如果是inhouse的，弹升级弹窗
     if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
@@ -108,13 +115,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.mainTableView.scrollsToTop = YES;
 }
 
-- (void)scrollMainTableToTop
-{
-    if (self.isShowing) {
-        [self.homeListViewModel setUpTableScrollOffsetZero];
-    }
-}
-
 //初始化main table
 - (void)resetMaintableView
 {
@@ -126,9 +126,9 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.mainTableView.decelerationRate = 0.5;
     self.mainTableView.showsVerticalScrollIndicator = NO;
     
-    if (_isMainTabVC) {
-        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
-    }
+//    if (_isMainTabVC) {
+//        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
+//    }
     
     [self.view addSubview:self.mainTableView];
     
@@ -168,6 +168,12 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)registerNotifications
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainTabbarClicked:) name:kMainTabbarKeepClickedNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollMainTableToTop) name:@"kScrollToTopKey" object:nil];
+    
 }
 
 - (void)mainTabbarClicked:(NSNotification *)notification
@@ -225,25 +231,23 @@ static CGFloat const kSectionHeaderHeight = 38;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
     
-    [self.notifyBar showMessage:message actionButtonTitle:@"" delayHide:YES duration:1.8 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:0.3 animations:^{
-            UIEdgeInsets inset = self.mainTableView.contentInset;
-            inset.top = 0;
-            //            self.homeListViewModel
-            self.mainTableView.contentInset = inset;
-            [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-            self.homeListViewModel.isResetingOffsetZero = NO;
-            //    [self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-        }];
-        //        [UIView animateWithDuration:0.3 animations:^{
-        //
-        //        } completion:^(BOOL finished) {
-        //        }];
-        
-    });
-    
+    [self.notifyBar showMessage:message
+              actionButtonTitle:@""
+                      delayHide:YES
+                       duration:1.8
+            bgButtonClickAction:nil
+         actionButtonClickBlock:nil
+                   didHideBlock:nil
+                  willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {                      
+                      [UIView animateWithDuration:0.3 animations:^{
+                          UIEdgeInsets inset = self.mainTableView.contentInset;
+                          inset.top = 0;
+                          self.mainTableView.contentInset = inset;
+                          [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
+                          self.homeListViewModel.isResetingOffsetZero = NO;
+                      }];
+                      
+    }];
 }
 
 - (void)hideImmediately
@@ -323,8 +327,14 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    if(!_initedViews){
+        [self dealyIniViews];
+        _initedViews = YES;
+    }
+    
     self.isShowing = YES;
-
+    
     if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
         [self.homeListViewModel checkCityStatus];
     }
@@ -345,7 +355,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewWillDisappear:animated];
     self.isShowing = NO;
-
+    
     if(_isMainTabVC && self.mainTableView.contentOffset.y <= [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType])
     {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
@@ -358,6 +368,9 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewDidAppear:animated];
     
+    if(_isMainTabVC && !self.homeListViewModel){
+        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
+    }
     
     
     //开屏广告启动不会展示，保留逻辑代码

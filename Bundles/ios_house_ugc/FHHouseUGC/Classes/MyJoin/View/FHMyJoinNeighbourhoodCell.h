@@ -5,13 +5,11 @@
 //  Created by 谢思铭 on 2019/6/12.
 //
 
-#import <UIKit/UIKit.h>
+#import "FHUGCBaseCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHMyJoinNeighbourhoodCell : UICollectionViewCell
-
-- (void)refreshWithData:(id)data;
+@interface FHMyJoinNeighbourhoodCell : FHUGCBaseCollectionCell
 
 @end
 

@@ -8,6 +8,8 @@
 #import "FHHomePlaceHolderCell.h"
 #import <Masonry.h>
 #import "UIColor+Theme.h"
+#import <FHHouseBase/FHCommonDefines.h>
+#import <TTBaseLib/UIViewAdditions.h>
 
 #define HOR_MARGIN 20
 
@@ -35,8 +37,8 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
-        UIImage *image = [UIImage imageNamed:@"house_cell_placeholder"];
-        _placeHolderImageView = [[UIImageView alloc] initWithImage:image];
+//        UIImage *image = [UIImage imageNamed:@"house_cell_placeholder"];
+        _placeHolderImageView = [[UIImageView alloc] initWithImage:nil];
         
         [self.contentView addSubview:_placeHolderImageView];
         
@@ -44,34 +46,41 @@
         [self.contentView addSubview:self.view2];
         [self.contentView addSubview:self.view3];
         
-        [_placeHolderImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(HOR_MARGIN);
-            make.width.mas_equalTo(70);
-            make.height.mas_equalTo(54);
-            make.top.mas_equalTo(10);
-            make.bottom.mas_equalTo(self.contentView).offset(-10);
-        }];
+        CGFloat vleft = HOR_MARGIN+70+10;
+        CGFloat vWidth = (SCREEN_WIDTH - vleft - HOR_MARGIN);
+        _placeHolderImageView.frame = CGRectMake(HOR_MARGIN, 10, 70, 54);
+        _view1.frame = CGRectMake(vleft, 12, vWidth, 10);
+        _view2.frame = CGRectMake(vleft, _view1.bottom + 10, vWidth-44, 10);
+        _view3.frame = CGRectMake(vleft, _view2.bottom + 10, _view2.centerX - vleft + 10 , 10);
         
-        [self.view1 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.placeHolderImageView.mas_right).mas_offset(10);
-            make.right.mas_equalTo(-HOR_MARGIN);
-            make.top.mas_equalTo(self.placeHolderImageView).offset(2);
-            make.height.mas_equalTo(10);
-        }];
-        
-        [self.view2 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.view1);
-            make.right.mas_equalTo(-20 - 44);
-            make.top.mas_equalTo(self.view1.mas_bottom).mas_offset(10);
-            make.height.mas_equalTo(10);
-        }];
-        
-        [self.view3 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.view1);
-            make.right.mas_equalTo(self.view2.mas_centerX).mas_offset(10);
-            make.top.mas_equalTo(self.view2.mas_bottom).mas_offset(10);
-            make.height.mas_equalTo(10);
-        }];
+//        [_placeHolderImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(HOR_MARGIN);
+//            make.width.mas_equalTo(70);
+//            make.height.mas_equalTo(54);
+//            make.top.mas_equalTo(10);
+//            make.bottom.mas_equalTo(self.contentView).offset(-10);
+//        }];
+//
+//        [self.view1 mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(self.placeHolderImageView.mas_right).mas_offset(10);
+//            make.right.mas_equalTo(-HOR_MARGIN);
+//            make.top.mas_equalTo(self.placeHolderImageView).offset(2);
+//            make.height.mas_equalTo(10);
+//        }];
+//
+//        [self.view2 mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(self.view1);
+//            make.right.mas_equalTo(-20 - 44);
+//            make.top.mas_equalTo(self.view1.mas_bottom).mas_offset(10);
+//            make.height.mas_equalTo(10);
+//        }];
+//
+//        [self.view3 mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(self.view1);
+//            make.right.mas_equalTo(self.view2.mas_centerX).mas_offset(10);
+//            make.top.mas_equalTo(self.view2.mas_bottom).mas_offset(10);
+//            make.height.mas_equalTo(10);
+//        }];
         
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -127,5 +136,14 @@
     
     // Configure the view for the selected state
 }
+
+-(void)willMoveToSuperview:(UIView *)newSuperview
+{
+    [super willMoveToSuperview:newSuperview];
+    if(newSuperview && !_placeHolderImageView.image){
+        _placeHolderImageView.image = [UIImage imageNamed:@"house_cell_placeholder"];
+    }
+}
+
 
 @end

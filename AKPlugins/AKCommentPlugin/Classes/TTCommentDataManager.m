@@ -498,6 +498,9 @@ static TTCommentDataManager *sharedManager;
     [postParams setValue:commentID forKey:@"id"];
     [postParams setValue:commentReplyID forKey:@"reply_id"];
     [[TTNetworkManager shareInstance] requestForJSONWithURL:[TTCommentDataManager deleteCommentReplyURLString] params:postParams method:@"POST" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        if (jsonObj) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"k_fh_ugc_del_comment_detail_reply" object:nil userInfo:postParams];
+        }
         if (finishBlock) {
             finishBlock(error);
         }

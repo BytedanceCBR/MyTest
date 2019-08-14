@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , strong) NSDictionary * subScribeShowDict;
 @property (nonatomic , assign) BOOL isShowSubscribeCell;
 @property (nonatomic , assign) BOOL showRealHouseTop;
+@property (nonatomic , assign) BOOL showFakeHouseTop;
 @property (nonatomic , strong) NSString * realHouseQuery;
 
 -(instancetype)initWithTableView:(UITableView *)tableView houseType:(FHHouseType)houseType  routeParam:(TTRouteParamObj *)paramObj;

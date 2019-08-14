@@ -7,8 +7,10 @@
 
 #import "FHMapAreaHouseListViewModel.h"
 #import <FHHouseBase/FHSingleImageInfoCellModel.h>
-#import <FHHouseBase/FHHouseBaseItemCell.h>
-#import <FHHouseBase/FHPlaceHolderCell.h>
+//#import <FHHouseBase/FHHouseBaseItemCell.h>
+#import <FHHouseBase/FHHouseBaseSmallItemCell.h>
+//#import <FHHouseBase/FHPlaceHolderCell.h>
+#import <FHHouseBase/FHHomePlaceHolderCell.h>
 #import <MJRefresh/MJRefresh.h>
 #import <FHCommonUI/ToastManager.h>
 #import <FHHouseBase/FHHouseTypeManager.h>
@@ -92,8 +94,8 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     
-    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
-    [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
+    [_tableView registerClass:[FHHouseBaseSmallItemCell class] forCellReuseIdentifier:kSingleImageCellId];
+    [_tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
     
     __weak typeof(self) wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
@@ -389,14 +391,15 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.listController.hasValidateData == YES) {
-        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
+        FHHouseBaseSmallItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
         FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-        [cell refreshTopMargin:(indexPath.row == 0)?0:20];
+        [cell refreshTopMargin:10];
         [cell updateWithHouseCellModel:cellModel];
         return cell;
     } else {
         // PlaceholderCell
-        FHPlaceHolderCell *cell = (FHPlaceHolderCell *)[tableView dequeueReusableCellWithIdentifier:kPlaceholderCellId];
+        FHHomePlaceHolderCell *cell = (FHHomePlaceHolderCell *)[tableView dequeueReusableCellWithIdentifier:kPlaceholderCellId];
+        cell.topOffset = 20;
         return cell;
     }
     return [[UITableViewCell alloc] init];
@@ -420,18 +423,13 @@
     if (self.listController.hasValidateData) {
         if (indexPath.row < self.houseList.count) {
             FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-            if(indexPath.row == 0){
-                //第一行顶部不留空白
-                return 86 + reasonHeight;
-            }
-            
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseSmallItemCell recommendReasonHeight] : 0;
             BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-            return (isLastCell ? 125 : 106)+reasonHeight;
+            return (isLastCell ? 95 : 75)+reasonHeight;
         }
     }
     
-    return 105;
+    return 75;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

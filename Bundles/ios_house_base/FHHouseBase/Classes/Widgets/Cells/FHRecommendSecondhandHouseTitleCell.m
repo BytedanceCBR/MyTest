@@ -95,6 +95,11 @@
     }
 }
 
+- (void)showSeaprateLine
+{
+    self.divider.hidden = NO;
+}
+
 - (void)bindData:(FHRecommendSecondhandHouseTitleModel *)model {
     if ([model.noDataTip isEqualToString:@""]) {
         self.noDataTipLabel.hidden = YES;

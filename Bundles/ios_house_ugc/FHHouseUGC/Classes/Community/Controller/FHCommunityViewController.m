@@ -64,6 +64,7 @@
             self.isUgcOpen = xConfigDataModel.ugcCitySwitch;
             [self initViewModel];
         }
+        self.segmentControl.sectionTitles = [self getSegmentTitles];
     }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
@@ -209,7 +210,7 @@
 }
 
 - (void)setupSetmentedControl {
-    _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:@[@"关注", @"附近", @"发现"]];
+    _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
 
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
             NSForegroundColorAttributeName: [UIColor themeGray3]};
@@ -237,6 +238,39 @@
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
         [weakSelf.viewModel refreshCell];
     };
+}
+
+- (NSArray *)getSegmentTitles {
+    NSMutableArray *titles = [NSMutableArray array];
+    
+    NSDictionary *ugcTitles = [FHEnvContext ugcTabName];
+    if(ugcTitles[kUGCTitleMyJoinList]){
+        NSString *name = ugcTitles[kUGCTitleMyJoinList];
+        if(name.length > 2){
+            name = [name substringToIndex:2];
+        }
+        [titles addObject:name];
+    }else{
+        [titles addObject:@"关注"];
+    }
+    
+    if(ugcTitles[kUGCTitleNearbyList]){
+        NSString *name = ugcTitles[kUGCTitleNearbyList];
+        if(name.length > 2){
+            name = [name substringToIndex:2];
+        }
+        [titles addObject:name];
+    }else{
+        [titles addObject:@"附近"];
+    }
+        
+    [titles addObject:@"发现"];
+    
+    if(titles.count == 3){
+        return titles;
+    }
+    
+    return @[@"关注", @"附近", @"发现"];
 }
 
 - (void)initConstraints {
@@ -325,10 +359,15 @@
 - (void)goToSearch {
     [self hideGuideView];
     [self addGoToSearchLog];
-
     NSString *routeUrl = @"sslocal://ugc_search_list";
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
+    NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
+    searchTracerDict[@"element_type"] = @"community_search";
+    searchTracerDict[@"enter_from"] = @"neighborhood_tab";
+    paramDic[@"tracer"] = searchTracerDict;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:paramDic];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 - (void)addGoToSearchLog {

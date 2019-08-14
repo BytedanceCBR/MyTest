@@ -94,6 +94,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     self.pageState.from = [baseCondition tt_integerValueForKey:@"source_type"];
     self.pageState.uniqueID = [baseCondition tt_stringValueForKey:@"uniqueID"];
     self.pageState.serviceID = [baseCondition tt_stringValueForKey:@"serviceID"];
+    self.fromUGC = [baseCondition tt_boolValueForKey:@"fromUGC"];
     //从消息进入, 或者从置顶评论进入 都算isFromMessage
     self.pageState.isFromMessage = [baseCondition tt_boolValueForKey:@"from_message"] || !isEmptyString(self.pageState.stickID);
     //TODO: 后续各种id迁到 pageState中
@@ -125,11 +126,15 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         self.categoryID = _categoryName;
     }
     self.logPb = baseCondition[@"logPb"];
+    self.element_from = baseCondition[@"element_from"];
 
     self.store.enterFrom = self.enterFrom;
     self.store.categoryID = self.categoryID;
     self.store.logPb = self.logPb;
-
+    self.store.element_from = self.element_from;
+    self.store.ansid = self.groupId;
+    self.store.qid = self.qid;
+    
     self.hidePost = [baseCondition[@"hidePost"] boolValue];
     
 }
@@ -1069,6 +1074,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         CGRect frame = [TTUIResponderHelper splitViewFrameForView:self.view];
         CGFloat height = [TTCommentDetailHeader heightWithModel:self.pageState.detailModel width:frame.size.width];
         _headerView = [[TTCommentDetailHeader alloc] initWithModel:self.pageState.detailModel frame:CGRectMake(0, 0, frame.size.width, height) needShowGroupItem:!(self.pageState.from == TTCommentDetailSourceTypeDetail || self.pageState.from == TTCommentDetailSourceTypeThread)];
+        _headerView.fromUGC = self.fromUGC;
         _headerView.delegate = self;
         _headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _headerView.hidePost = self.hidePost;

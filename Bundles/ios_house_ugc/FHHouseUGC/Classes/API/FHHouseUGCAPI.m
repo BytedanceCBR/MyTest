@@ -195,7 +195,7 @@
 }
 
 + (TTHttpTask *)requestForumFeedListWithForumId:(NSString *)forumId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-    NSString *queryPath = @"/f100/ugc/forum_feeds";
+    NSString *queryPath = @"/f100/ugc/feed/v1/forum_feeds";
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"forum_id"] = forumId;
@@ -216,7 +216,7 @@
 }
 
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)categoryId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
-    NSString *queryPath = @"/f100/ugc/recommend_feeds";
+    NSString *queryPath = @"/f100/ugc/feed/v1/recommend_feeds";
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"channel_id"] = categoryId;
@@ -274,6 +274,45 @@
             completion(success,error);
         }
     }];
+}
+
++ (TTHttpTask *)requestCommentDetailDataWithCommentId:(NSString *)comment_id socialGroupId:(NSString *)socialGroupId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/material/v0/comment_detail";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (comment_id.length > 0) {
+        paramDic[@"comment_id"] = comment_id;
+    }
+    if (socialGroupId.length > 0) {
+        paramDic[@"social_group_id"] = socialGroupId;
+    }
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestReplyListWithCommentId:(NSString *)comment_id offset:(NSInteger)offset class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/2/comment/v1/reply_list/";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"id"] = comment_id ?: @"";
+    paramDic[@"count"] = @(20);
+    paramDic[@"offset"] = @(offset);
+    paramDic[@"is_repost"] = @(0);// 不知道干嘛的
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestCommunityList:(NSInteger)districtId source:(NSString *)source latitude:(CGFloat)latitude longitude:(CGFloat)longitude class:(Class)cls completion:(void (^)(id <FHBaseModelProtocol> model, NSError *error))completion;{
+    NSString *queryPath = @"/f100/ugc/social_group_district";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+
+    paramDic[@"district_id"] = @(districtId);
+    if(latitude != 0){
+        paramDic[@"latitude"] = @(latitude);
+    }
+
+    if(longitude != 0){
+        paramDic[@"longitude"] = @(longitude);
+    }
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
 @end

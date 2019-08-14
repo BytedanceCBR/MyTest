@@ -60,6 +60,16 @@
     }
 }
 
+- (void)setElement_from:(NSString *)element_from {
+    _element_from = element_from;
+    if ([self.middleware isKindOfClass:[TTMomentDetailMiddleware class]]) {
+        
+        TTMomentDetailMiddleware *middleware = (TTMomentDetailMiddleware *)self.middleware;
+        middleware.element_from = element_from;
+        
+    }
+}
+
 -(void)setCategoryID:(NSString *)categoryID {
     
     _categoryID = categoryID;
@@ -69,6 +79,26 @@
         middleware.categoryID = categoryID;
     }
 
+}
+
+-(void)setAnsid:(NSString *)ansid {
+    
+    _ansid = ansid;
+    if ([self.middleware isKindOfClass:[TTMomentDetailMiddleware class]]) {
+        
+        TTMomentDetailMiddleware *middleware = (TTMomentDetailMiddleware *)self.middleware;
+        middleware.ansid = ansid;
+    }
+}
+
+-(void)setQid:(NSString *)qid {
+    
+    _qid = qid;
+    if ([self.middleware isKindOfClass:[TTMomentDetailMiddleware class]]) {
+        
+        TTMomentDetailMiddleware *middleware = (TTMomentDetailMiddleware *)self.middleware;
+        middleware.qid = qid;
+    }
 }
 
 -(void)setLogPb:(NSDictionary *)logPb {

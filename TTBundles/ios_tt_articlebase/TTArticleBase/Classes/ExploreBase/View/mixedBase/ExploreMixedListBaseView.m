@@ -551,10 +551,17 @@ TTRefreshViewDelegate
         [self.listView reloadData];
     }
     
-    if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"]) {
+    
+    NSString * categoryStartName = [SSCommonLogic feedStartCategory];
+
+    if ([categoryStartName isKindOfClass:[NSString class]] && [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"] && [categoryStartName isEqualToString:@"f_house_news"]) {
         self.refreshShouldLastReadUpate = YES;
         self.refreshFromType = ListDataOperationReloadFromTypeAuto;
-        [self pullAndRefresh];
+        if (self.fetchListManager.items.count == 0) {
+            [self pullRefreshAndHideAnimationView];
+        } else {
+            [self pullAndRefresh];
+        }
         
         [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = NO;
         [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
@@ -1043,7 +1050,11 @@ TTRefreshViewDelegate
     }else if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse && [self.categoryID isEqualToString:@"f_house_news"]) {
         self.refreshShouldLastReadUpate = YES;
         self.refreshFromType = ListDataOperationReloadFromTypeAuto;
-        [self pullAndRefresh];
+        if (self.fetchListManager.items.count == 0) {
+            [self pullRefreshAndHideAnimationView];
+        } else {
+            [self pullAndRefresh];
+        }
         
         [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = NO;
         [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
@@ -2926,6 +2937,12 @@ TTRefreshViewDelegate
     //self.refreshFromType = ListDataOperationReloadFromTypeNone;为了刷新统计时发送正确的refreshfromType给传过去
     [[FHFeedHouseCellHelper sharedInstance]removeHouseCache];
     [self.listView triggerPullDown];
+}
+
+- (void)pullRefreshAndHideAnimationView {
+    // 第一次进入推荐 无下拉动画
+    [[FHFeedHouseCellHelper sharedInstance]removeHouseCache];
+    [self.listView triggerPullDownAndHideAnimationView];
 }
 
 - (void)scrollToBottomAndLoadmore
