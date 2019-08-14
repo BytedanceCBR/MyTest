@@ -122,6 +122,8 @@
     /* 左边头像 */
     self.avatar = [UIImageView new];
     self.avatar.backgroundColor = [UIColor themeGray7];
+    self.avatar.clipsToBounds = YES;
+    self.avatar.layer.cornerRadius = 4;
 
     /* 中间标签区 */
     self.labelContainer = [[UIView alloc] init];
