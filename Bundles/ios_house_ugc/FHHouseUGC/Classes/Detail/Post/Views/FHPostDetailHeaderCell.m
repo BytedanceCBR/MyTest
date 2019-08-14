@@ -75,6 +75,8 @@
     _icon.layer.masksToBounds = YES;
     _icon.layer.cornerRadius = 4;
     _icon.backgroundColor = [UIColor themeGray7];
+    _icon.layer.borderWidth = 0.5;
+    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_icon];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:15] textColor:[UIColor themeGray1]];
