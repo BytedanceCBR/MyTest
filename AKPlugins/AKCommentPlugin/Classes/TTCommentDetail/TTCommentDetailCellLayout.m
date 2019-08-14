@@ -12,7 +12,7 @@
 #import <TTBaseLib/TTLAbelTextHelper.h>
 #import <TTBaseLib/TTBusinessManager.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
-#import <TTUGCFoundation/TTUGCEmojiParser.h>
+#import <FHCommonUI/TTUGCEmojiParser.h>
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
 #import <TTUGCFoundation/TTRichSpanText+Link.h>
 #import <TTUGCFoundation/TTRichSpanText+Emoji.h>
