@@ -115,6 +115,11 @@ static CGFloat const kSectionHeaderHeight = 38;
     });
 }
 
+- (void)setIsShowRefreshTip:(BOOL)isShowRefreshTip {
+    _isShowRefreshTip = isShowRefreshTip;
+    [self.homeListViewModel setIsShowRefreshTip:isShowRefreshTip];
+}
+
 // 处理becomeFirstResponder慢函数问题，第一次显示键盘调用becomeFirstResponder需要500ms左右，提前加载让用户使用的时候感觉不到卡顿
 - (void)firstLoadKeybord {
     UITextField *tempFreeField = [[UITextField alloc] init];
@@ -237,29 +242,29 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [self hideImmediately];
     
+    self.isShowRefreshTip = YES;
+    
     UIEdgeInsets inset = self.mainTableView.contentInset;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
     
-    [self.notifyBar showMessage:message actionButtonTitle:@"" delayHide:YES duration:1.8 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:0.3 animations:^{
-            UIEdgeInsets inset = self.mainTableView.contentInset;
-            inset.top = 0;
-            //            self.homeListViewModel
-            self.mainTableView.contentInset = inset;
-            [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-            self.homeListViewModel.isResetingOffsetZero = NO;
-            //    [self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-        }];
-        //        [UIView animateWithDuration:0.3 animations:^{
-        //
-        //        } completion:^(BOOL finished) {
-        //        }];
-        
-    });
-    
+    [self.notifyBar showMessage:message
+              actionButtonTitle:@""
+                      delayHide:YES
+                       duration:1.8
+            bgButtonClickAction:nil
+         actionButtonClickBlock:nil
+                   didHideBlock:nil
+                  willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {                      
+                      [UIView animateWithDuration:0.3 animations:^{
+                          UIEdgeInsets inset = self.mainTableView.contentInset;
+                          inset.top = 0;
+                          self.mainTableView.contentInset = inset;
+                          [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
+                          self.homeListViewModel.isResetingOffsetZero = NO;
+                      }];
+                      
+    }];
 }
 
 - (void)hideImmediately

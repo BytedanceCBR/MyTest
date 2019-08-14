@@ -44,6 +44,8 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 
 - (void)setUpTableScrollOffsetZero;
 
+- (void)setIsShowRefreshTip:(BOOL)isShowRefreshTip;
+
 @end
 
 NS_ASSUME_NONNULL_END
