@@ -478,7 +478,7 @@
         StrongSelf;
         BOOL isShowOperationInfo = (hasOperation && !error);
         [self.headerView updateOperationInfo: isShowOperationInfo];
-        
+        [self.feedListController.tableView reloadData];
         if(isShowOperationInfo) {
             NSMutableDictionary *param = [NSMutableDictionary dictionary];
             param[UT_PAGE_TYPE] = @"community_group_detail";
