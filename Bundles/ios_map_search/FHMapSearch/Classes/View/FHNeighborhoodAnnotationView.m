@@ -49,7 +49,7 @@
 
 -(UIImage *)resizeableImage:(UIImage *)img
 {
-    return [img resizableImageWithCapInsets:UIEdgeInsetsMake(15, 30, 19, 30)];
+    return [img resizableImageWithCapInsets:UIEdgeInsetsMake(25, 40, 30, 40)];
 }
 
 -(void)updateWithAnnotation:(id<MAAnnotation>) annotation
@@ -60,7 +60,7 @@
     
     CGFloat maxWidth = MIN(_contentLabel.width, 171);
     CGRect frame = self.frame;
-    frame.size = CGSizeMake(maxWidth+30, 38);
+    frame.size = CGSizeMake(maxWidth+60, 67);
     self.frame = frame;
     
     [self changeSelectMode:[(FHHouseAnnotation *)annotation type]];
@@ -122,8 +122,8 @@
     [super layoutSubviews];
     self.backgroundView.frame = self.bounds;
     CGFloat arrowWidth = 7;
-    self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 30-arrowWidth/2, arrowWidth, arrowWidth);
-    self.contentLabel.frame = CGRectMake(15, 8, self.width-30, 17);
+    self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 42-arrowWidth/2, arrowWidth, arrowWidth);
+    self.contentLabel.frame = CGRectMake(30, 21, self.width-60, 17);
 }
 
 //-(void)willMoveToSuperview:(UIView *)newSuperview

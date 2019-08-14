@@ -420,6 +420,7 @@
 -(NSArray< className > *)propertyName { \
     if(!_##propertyName && _originDict){ \
         NSArray *jsons = _originDict[key]; \
+        NSLog(@"[LAUNCH] get array %@",key);\
         if([jsons isKindOfClass:[NSArray class]]){ \
             NSMutableArray *list = [NSMutableArray new]; \
             for (NSDictionary *json in jsons) { \

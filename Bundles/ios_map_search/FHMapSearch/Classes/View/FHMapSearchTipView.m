@@ -13,7 +13,7 @@
 #import <FHHouseBase/FHCommonDefines.h>
 
 #define kHorPadding 20
-#define kViewHeight 46
+#define kViewHeight 45
 
 @interface FHMapSearchTipView ()
 

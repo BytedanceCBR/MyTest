@@ -284,14 +284,14 @@
     if ([self.listController canMoveup]) {
         [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
         scrollView.contentOffset = CGPointZero;
-        //PM 要求不能一下滑上去
-        if (fabs(self.listController.view.top - [self.listController minTop]) < 0.2) {
-            scrollView.scrollEnabled = NO;
-            [self.headerView hideTopTip:YES];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                scrollView.scrollEnabled = YES;
-            });
-        }
+//        //PM 要求不能一下滑上去
+//        if (fabs(self.listController.view.top - [self.listController minTop]) < 0.2) {
+//            scrollView.scrollEnabled = NO;
+//            [self.headerView hideTopTip:YES];
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                scrollView.scrollEnabled = YES;
+//            });
+//        }
     }else if (scrollView.contentOffset.y < 0){
         [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
         scrollView.contentOffset = CGPointZero;
@@ -306,14 +306,18 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    [self checkScrollMoveEffect:scrollView];
+    if(@available(iOS 13.0 , *)){
+       
+    }else{
+        [self checkScrollMoveEffect:scrollView];
+    }
 }
 
 -(void)checkScrollMoveEffect:(UIScrollView *)scrollview
 {
-    if (self.listController.view.top > self.listController.view.height*0.5) {
+    if (self.listController.view.top > self.listController.view.height*0.6) {
         [self handleDismiss:0.3];
-    }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < 80)){
+    }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < 100)){
         //吸附都顶部
         [self.headerView hideTopTip:YES];
         [self.listController moveTop:0];
