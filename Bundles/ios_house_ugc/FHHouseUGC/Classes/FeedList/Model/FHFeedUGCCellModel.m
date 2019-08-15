@@ -137,19 +137,23 @@
             cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
-        cellModel.content = model.title;
+        cellModel.content = model.rawData.content.answer.abstractText;
         cellModel.behotTime = model.behotTime;
-        cellModel.openUrl = model.openUrl;
+        cellModel.openUrl = model.rawData.content.answer.answerDetailSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
         
-        double time = [model.publishTime doubleValue];
+        cellModel.imageList = model.rawData.content.answer.thumbImageList;
+        //处理大图
+        cellModel.largeImageList = model.rawData.content.answer.largeImageList;
+        
+        double time = [model.rawData.content.answer.createTime doubleValue];
         NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
         cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
         
-        cellModel.diggCount = model.diggCount;
-        cellModel.commentCount = model.commentCount;
-        cellModel.userDigg = model.userDigg;
+        cellModel.diggCount = model.rawData.content.answer.diggCount;
+        cellModel.commentCount = model.rawData.content.answer.commentCount;
+        cellModel.userDigg = model.rawData.content.answer.isDigg;
         
         FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
         community.name = model.community.name;
@@ -158,9 +162,9 @@
         cellModel.community = community;
         
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
-        user.name = model.userInfo.name;
-        user.avatarUrl = model.userInfo.avatarUrl;
-        user.userId = model.userInfo.userId;
+        user.name = model.rawData.content.user.uname;
+        user.avatarUrl = model.rawData.content.user.avatarUrl;
+        user.userId = model.rawData.content.user.userId;
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
