@@ -32,7 +32,7 @@ typedef void(^GotoPublicationsDetailBlock)(void);
 
 - (void)updateWhenScrolledWithContentOffset:(CGPoint)contentOffset isScrollTop:(BOOL)isScrollTop;
 
-- (void)updateOperationInfo:(BOOL)isShow;
+- (void)updateOperationInfo:(BOOL)isShow whRatio:(CGFloat)whRatio;
 
 - (void)updatePublicationsInfo:(BOOL)isShow hasDetailBtn:(BOOL)hasDetailBtn;
 @end

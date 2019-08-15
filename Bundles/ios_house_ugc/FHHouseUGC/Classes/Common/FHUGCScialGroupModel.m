@@ -37,6 +37,8 @@
 {
     NSDictionary *dict = @{
                            @"imageUrl": @"image_url",
+                           @"imageWidth": @"image_width",
+                           @"imageHeight": @"image_height",
                            @"linkUrl": @"link_url",
                            @"hasOperation": @"has_operation",
                            };
