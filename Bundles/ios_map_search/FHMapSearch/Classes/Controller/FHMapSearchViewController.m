@@ -111,6 +111,7 @@
 
 -(void)dealloc
 {
+    [self enablePan:YES];
     [self tryCallbackOpenUrl];
 }
 
