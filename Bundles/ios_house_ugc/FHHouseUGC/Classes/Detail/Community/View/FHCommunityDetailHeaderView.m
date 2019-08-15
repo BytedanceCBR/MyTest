@@ -94,7 +94,6 @@
     if(!_operationBannerImageView) {
         _operationBannerImageView = [UIImageView new];
         _operationBannerImageView.backgroundColor = [UIColor themeGray6];
-        _operationBannerImageView.contentMode = UIViewContentModeScaleAspectFit;
     }
     return _operationBannerImageView;
 }
