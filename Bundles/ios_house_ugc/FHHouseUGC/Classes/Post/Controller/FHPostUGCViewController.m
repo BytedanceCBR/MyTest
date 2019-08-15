@@ -45,6 +45,7 @@
 #import "FHUGCConfig.h"
 #import "FHUGCCommunityListViewController.h"
 #import "FHPostUGCSelectedGroupHistoryView.h"
+#import "FHEnvContext.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -300,22 +301,27 @@ static NSInteger const kMaxPostImageCount = 9;
     // selected history View
     BOOL isShowSelectedGroupHistory = NO;
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:kSelectedGroupHistoryWhenPostSuccessfully];
-    FHPostUGCSelectedGroupModel *selectedGroupHistory = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    if(selectedGroupHistory) {
-        isShowSelectedGroupHistory = YES;
+    FHPostUGCSelectedGroupHistory *selectedGroupHistory = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    FHPostUGCSelectedGroupModel *selectedGroup = nil;
+    if(selectedGroupHistory && currentCityID.length > 0) {
+        selectedGroup = [selectedGroupHistory.historyInfos objectForKey:currentCityID];
+        if(selectedGroup) {
+            isShowSelectedGroupHistory = YES;
+        }
     }
     
-    if(isShowSelectedGroupHistory) {
+    if(isShowSelectedGroupHistory && selectedGroup) {
         CGRect frame = self.selectView.bounds;
         frame.origin.y = self.selectView.bottom;
-        self.selectedGrouplHistoryView = [[FHPostUGCSelectedGroupHistoryView alloc] initWithFrame:frame delegate:self historyModel:selectedGroupHistory];
+        self.selectedGrouplHistoryView = [[FHPostUGCSelectedGroupHistoryView alloc] initWithFrame:frame delegate:self historyModel:selectedGroup];
         [self.view addSubview:self.selectedGrouplHistoryView];
         
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         param[UT_ELEMENT_TYPE] = @"last_published_neighborhood";
         param[UT_PAGE_TYPE] = @"feed_publisher";
         param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
-        param[@"group_id"] = selectedGroupHistory.socialGroupId;
+        param[@"group_id"] = selectedGroup.socialGroupId;
         TRACK_EVENT(@"element_show", param);
     }
     
@@ -845,13 +851,27 @@ static NSInteger const kMaxPostImageCount = 9;
         // 此时没有groupID
         [FHUserTracker writeEvent:@"feed_publish_click" params:tracerDict];
         
-        // 贴子发送成功后记录发布的位置，以便于用户下次发布时快速选中上一次发布的位置
+        // 外层贴子发布器
         if(!task.hasSocialGroup) {
-            FHPostUGCSelectedGroupModel *selectedGroupHistory = [FHPostUGCSelectedGroupModel new];
-            selectedGroupHistory.socialGroupId = task.social_group_id;
-            selectedGroupHistory.socialGroupName = task.social_group_name;
-            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:selectedGroupHistory];
-            [[NSUserDefaults standardUserDefaults] setObject:data forKey:kSelectedGroupHistoryWhenPostSuccessfully];
+            
+            NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
+            if(currentCityID.length > 0) {
+                
+                NSData *oldData = [[NSUserDefaults standardUserDefaults] objectForKey:kSelectedGroupHistoryWhenPostSuccessfully];
+                FHPostUGCSelectedGroupHistory *selectedGroupHistory = [NSKeyedUnarchiver unarchiveObjectWithData:oldData];
+                if(!selectedGroupHistory) {
+                    selectedGroupHistory = [FHPostUGCSelectedGroupHistory new];
+                    selectedGroupHistory.historyInfos = [NSMutableDictionary dictionary];
+                }
+                
+                FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
+                selectedGroup.socialGroupId = task.social_group_id;
+                selectedGroup.socialGroupName = task.social_group_name;
+                [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:currentCityID];
+            
+                NSData *newData = [NSKeyedArchiver archivedDataWithRootObject:selectedGroupHistory];
+                [[NSUserDefaults standardUserDefaults] setObject:newData forKey:kSelectedGroupHistoryWhenPostSuccessfully];
+            }
         }
         
     } else {

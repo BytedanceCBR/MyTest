@@ -9,7 +9,22 @@
 #import "Masonry.h"
 #import <TTThemed/UIColor+TTThemeExtension.h>
 
+@implementation FHPostUGCSelectedGroupHistory
+
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.historyInfos forKey:@"historyInfos"];
+}
+
+-(instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if(self = [super init]) {
+        self.historyInfos = [aDecoder decodeObjectForKey:@"historyInfos"];
+    }
+    return self;
+}
+@end
+
 @implementation FHPostUGCSelectedGroupModel
+
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.socialGroupId forKey:@"socialGroupId"];
     [aCoder encodeObject:self.socialGroupName forKey:@"socialGroupName"];
