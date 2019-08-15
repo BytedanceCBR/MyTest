@@ -149,6 +149,14 @@ def appPods
     'Performance'
     ]
     pod 'TTLocationManager','1.0.22'
+    pod 'BDUGLocationKit', '1.0.0-rc.1',:subspecs => [ # , '1.1.0'
+        'Core',
+        'AmapLocation'
+        
+#        'Adapter'
+    ]
+    pod 'BDUGKit'
+    
     pod 'Gaia','1.0.7-rc.1'
     pod 'TTGaiaExtension','0.2.13'
     pod 'BDAssert','2.0.0',:subspecs => [
@@ -632,6 +640,7 @@ target 'NewsLiteInHouse' do
     pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
     pod_binary 'TTSettingsManager/Debug'
     pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
+#    pod 'BDUGLocationKit/Debug' #, '1.1.0'
     #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine_inhouse'
     fhPods
     appPods

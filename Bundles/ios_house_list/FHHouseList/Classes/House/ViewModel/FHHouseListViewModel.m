@@ -734,13 +734,6 @@ extern NSString *const INSTANT_DATA_KEY;
             }
             
             if (self.isRefresh) {
-                if (houseModel.agencyInfo) {
-                    FHSearchRealHouseAgencyInfo *agencyInfo = houseModel.agencyInfo;
-                    if ([agencyInfo isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
-                        [itemArray insertObject:agencyInfo atIndex:0];
-                    }
-                    self.showRealHouseTop = YES;
-                }
                 FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = houseModel.subscribeInfo;
                 if ([subscribeMode isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
                     if (itemArray.count > 9) {
@@ -751,7 +744,15 @@ extern NSString *const INSTANT_DATA_KEY;
                     }
                     self.isShowSubscribeCell = YES;
                 }
-    
+                
+                if (houseModel.agencyInfo) {
+                    FHSearchRealHouseAgencyInfo *agencyInfo = houseModel.agencyInfo;
+                    if ([agencyInfo isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
+                        [itemArray insertObject:agencyInfo atIndex:0];
+                    }
+                    self.showRealHouseTop = YES;
+                }
+
             }
 
             if (houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue && !houseModel.hasMore && houseModel.externalSite.fakeHouseTotal.integerValue != 0 && houseModel.externalSite.fakeText) {
