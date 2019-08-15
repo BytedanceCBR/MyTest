@@ -517,6 +517,7 @@
         CGFloat lineHeight = 20;
         paragraphStyle.minimumLineHeight = lineHeight;
         paragraphStyle.maximumLineHeight = lineHeight;
+        paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
         
         [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
     }

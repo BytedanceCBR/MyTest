@@ -161,7 +161,7 @@
     self.publicationsContentLabel = [UILabel new];
     self.publicationsContentLabel.font = [UIFont themeFontRegular:12];
     self.publicationsContentLabel.textColor = [UIColor themeGray1];
-    self.publicationsContentLabel.numberOfLines = 0;
+    self.publicationsContentLabel.numberOfLines = 3;
     [self.publicationsContentLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     
     [self.publicationsContainer addSubview:self.publicationsContentLabel];
