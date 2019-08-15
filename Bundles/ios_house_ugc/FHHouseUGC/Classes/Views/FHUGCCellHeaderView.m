@@ -32,7 +32,7 @@
     [self addSubview:_titleLabel];
     
     self.moreBtn = [[UIButton alloc] init];
-    [_moreBtn setImage:ICON_FONT_IMG(10, @"\U0000e670", [UIColor themeGray3]) forState:UIControlStateNormal];//fh_ugc_arrow_right
+    [_moreBtn setImage:[UIImage imageNamed:@"fh_ugc_arrow_right"] forState:UIControlStateNormal];
     [_moreBtn setTitle:@"更多" forState:UIControlStateNormal];
     [_moreBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
     _moreBtn.titleLabel.font = [UIFont themeFontRegular:14];
@@ -51,7 +51,7 @@
     _refreshBtn.layer.masksToBounds = YES;
     _refreshBtn.layer.cornerRadius = 4;
     _refreshBtn.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
-    [_refreshBtn setImage:ICON_FONT_IMG(12, @"\U0000e6ac", [UIColor themeRed3]) forState:UIControlStateNormal]; //@"fh_ugc_refresh"
+    [_refreshBtn setImage:[UIImage imageNamed:@"fh_ugc_refresh"] forState:UIControlStateNormal];
     [_refreshBtn setTitle:@"换一批" forState:UIControlStateNormal];
     [_refreshBtn setTitleColor:[UIColor themeRed3] forState:UIControlStateNormal];
     _refreshBtn.titleLabel.font = [UIFont themeFontRegular:12];

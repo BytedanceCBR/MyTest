@@ -8,7 +8,8 @@
 #import "FHHouseListAgencyInfoCell.h"
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
-#import <Masonry.h>
+#import <Masonry/Masonry.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHHouseListAgencyInfoCell ()
 
@@ -35,7 +36,7 @@
     [self.contentView addSubview:_titleLabel];
 
     _allWebHouseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_allWebHouseBtn setImage:[UIImage imageNamed:@"house_list_real_info"] forState:UIControlStateNormal];
+    [_allWebHouseBtn setImage:ICON_FONT_IMG(12,@"\U0000e6ad",[UIColor themeGray3]) forState:UIControlStateNormal];
     [_allWebHouseBtn addTarget:self action:@selector(allWebHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_allWebHouseBtn];
     
