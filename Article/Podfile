@@ -617,17 +617,6 @@ def appPods
 
     pod_binary 'BDUGDeepLink', '1.0.1'
 end
-target 'NewsLite' do
-    fhPods
-    appPods
-end
-
-target 'f100' do
-    fhPods
-    appPods
-    #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine'
-    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
-end
 
 target 'NewsLiteInHouse' do
     pod_binary 'TTDebugAssistant', '0.2.33'
@@ -641,18 +630,12 @@ target 'NewsLiteInHouse' do
 
 end
 
-target 'NewsLiteChannel' do
-    pod_binary 'TTDebugAssistant', '0.2.33'
-    pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
-    pod_binary 'TTSettingsManager/Debug'
-    pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
-    #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine_inhouse'
+target 'f100' do
     fhPods
     appPods
+    #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine'
     script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
-    
 end
-
 
 # POD POST_INSTALL
 post_install do |installer|
@@ -718,7 +701,7 @@ post_install do |installer|
     # 一处是Xcode自带的Copy Bundle Resources，一处是CocoaPods的[CP] Copy Pods Resources
     # 这个问题在Xcode 10上也有小概率发生，现在统一临时Fix下，参考CocoaPods/CocoaPods#8122
     installer.aggregate_targets.each do |target|
-        if ['Pods-f100', 'Pods-NewsLiteInHouse','Pods-NewsLite','Pods-NewsLiteChannel'].include?(target.name)
+        if ['Pods-f100', 'Pods-NewsLiteInHouse'].include?(target.name)
             patched = false
             target.user_targets.first.build_phases.each do |phase|
                 if phase.display_name == '[CP] Copy Pods Resources'
