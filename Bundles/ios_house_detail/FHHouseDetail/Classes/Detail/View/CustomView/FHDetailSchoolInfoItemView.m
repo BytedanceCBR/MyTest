@@ -14,6 +14,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <Masonry.h>
 #import <FHCommonUI/UIView+House.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHDetailSchoolInfoItemView ()
 
@@ -85,8 +86,9 @@
     [self addSubview:schoolLabel];
 
     UIButton *foldBtn = [[UIButton alloc]init];
-    [foldBtn setImage:[UIImage imageNamed:@"detail_fold_down"] forState:UIControlStateNormal];
-    [foldBtn setImage:[UIImage imageNamed:@"detail_fold_down"] forState:UIControlStateHighlighted];
+    UIImage *img = ICON_FONT_IMG(16, @"\U0000e672", nil);//@"detail_fold_down"
+    [foldBtn setImage:img forState:UIControlStateNormal];
+    [foldBtn setImage:img forState:UIControlStateHighlighted];
     [foldBtn setHitTestEdgeInsets:UIEdgeInsetsMake(-10, -20, -20, -10)];
     [foldBtn addTarget:self action:@selector(foldBtnDidClick) forControlEvents:UIControlEventTouchUpInside];
     self.foldBtn = foldBtn;
@@ -148,13 +150,15 @@
 - (void)foldBtnDidClick
 {
     _itemModel.isFold = !_itemModel.isFold;
+    UIImage *img = nil;
     if (_itemModel.isFold) {
-        [self.foldBtn setImage:[UIImage imageNamed:@"detail_fold_down"] forState:UIControlStateNormal];
-        [self.foldBtn setImage:[UIImage imageNamed:@"detail_fold_down"] forState:UIControlStateHighlighted];
+        img = ICON_FONT_IMG(16, @"\U0000e672", nil); //@"detail_fold_down"
     }else {
-        [self.foldBtn setImage:[UIImage imageNamed:@"detail_fold_up"] forState:UIControlStateNormal];
-        [self.foldBtn setImage:[UIImage imageNamed:@"detail_fold_up"] forState:UIControlStateHighlighted];
+        img = ICON_FONT_IMG(16, @"\U0000e65f", nil); //@"detail_fold_up"
     }
+    
+    [self.foldBtn setImage:img forState:UIControlStateNormal];
+    [self.foldBtn setImage:img forState:UIControlStateHighlighted];
 
     if (self.foldBlock) {
     

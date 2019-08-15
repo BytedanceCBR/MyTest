@@ -17,8 +17,8 @@ PODS:
   - AKShareServicePlugin (0.1.0)
   - AKWDPlugin (0.1.0)
   - AKWebViewBundlePlugin (0.1.0)
-  - AMap3DMap (6.2.0.1-binary)
-  - AMapFoundation (1.5.2.1-binary)
+  - AMap3DMap (6.9.0.1-binary)
+  - AMapFoundation (1.5.7.1-binary)
   - AMapLocation (2.6.0.1-binary)
   - AMapSearch (6.9.0.1-binary)
   - Aspects (1.4.1.1-binary)
@@ -565,8 +565,8 @@ DEPENDENCIES:
   - AKShareServicePlugin (from `../AKPlugins/AKShareServicePlugin`)
   - AKWDPlugin (from `../AKPlugins/AKWDPlugin`)
   - AKWebViewBundlePlugin (from `../AKPlugins/AKWebViewBundlePlugin`)
-  - AMap3DMap (= 6.2.0.1-binary)
-  - AMapFoundation (= 1.5.2.1-binary)
+  - AMap3DMap (= 6.9.0.1-binary)
+  - AMapFoundation (= 1.5.7.1-binary)
   - AMapLocation (= 2.6.0.1-binary)
   - AMapSearch (= 6.9.0.1-binary)
   - Aspects (= 1.4.1.1-binary)
@@ -968,8 +968,8 @@ SPEC CHECKSUMS:
   AKShareServicePlugin: 7f4273d1d25b641a6d3c97537d6c57e8ceb999fc
   AKWDPlugin: 578ff2a20b6d16a523e2b1e96512e77e5c6b6fd3
   AKWebViewBundlePlugin: 684255bc41391dae352b786c0ef7b7e8cc4b794a
-  AMap3DMap: ade5ca8605a03833fb799fdd6e7b489e83963941
-  AMapFoundation: bc8d29843a0d4e0f83a175a77729d2b623c26026
+  AMap3DMap: 53ed5087b5d5459d1b21030ed0ab8c02515747aa
+  AMapFoundation: 897a0981ddd65afe7e289957ca5589276d5523d8
   AMapLocation: 4ada3e0cb6933c1ac0b64038abb816b768d6311b
   AMapSearch: 64c969de27b970351537d0c60550033c70beede7
   Aspects: 49ab2ffbcea7b491efa20fda09e60a3f629b7616
@@ -1000,7 +1000,7 @@ SPEC CHECKSUMS:
   Fabric: ecf0d69c8b5cd1c6330c8cd7ae413e6d4aa12af2
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
   FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
-  FHHouseBase: 5fbabfec581c1abd825241efa60fe5de79d5e4a8
+  FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
   FHHouseHome: e6f78062259c79d7354a352b5ccf97dd0d4f6e1e
@@ -1146,6 +1146,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: b4e7acfd6e0039799c71bd826c9555c439a75ff6
+PODFILE CHECKSUM: 23d4d9c9a921326ddb23ebf53e811f892f86b282
 
 COCOAPODS: 1.4.0

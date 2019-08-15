@@ -14,6 +14,7 @@
 #import "FHFeedOperationView.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface TTFeedDislikeOptionCell ()
 
@@ -53,7 +54,7 @@
         
         _accessor = ({
             UIImageView *v = [UIImageView new];
-            v.image = [UIImage imageNamed:@"fh_ugc_arrow_right"];
+            v.image = ICON_FONT_IMG(10, @"\U0000e670", [UIColor themeGray3]);// "fh_ugc_arrow_right"
             v;
         });
         [self addSubview:_accessor];
@@ -128,11 +129,11 @@
     
     switch (option.type) {
         case FHFeedOperationOptionTypeReport: {
-            icon = [UIImage imageNamed:@"fh_ugc_report"];
+            icon = ICON_FONT_IMG(18, @"\U0000e658", [UIColor themeGray2]);//@"fh_ugc_report"
         }
             break;
         case FHFeedOperationOptionTypeDelete: {
-            icon = [UIImage imageNamed:@"fh_ugc_delete"];
+            icon = ICON_FONT_IMG(18, @"\U0000e66f", [UIColor themeGray2]);//@"fh_ugc_delete"
         }
     }
     

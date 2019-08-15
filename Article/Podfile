@@ -548,9 +548,9 @@ def appPods
     pod_binary 'BDAccountSessionSDK','0.1.11'
     pod_binary 'YYText' , '1.0.7'
     pod_source 'AMapLocation' , '2.6.0'
-    pod_source 'AMap3DMap', '6.2.0'
-    pod_source 'AMapSearch' , '6.9.0'
-    pod_binary 'AMapFoundation' , '1.5.2'
+    pod_source 'AMap3DMap' , '6.9.0'
+    pod_source 'AMapSearch'  , '6.9.0'
+    pod_binary 'AMapFoundation' , '1.5.7'
     pod_binary 'OpenUDID', '0.1.0'
     
     #支持自动约束cell缓存高度

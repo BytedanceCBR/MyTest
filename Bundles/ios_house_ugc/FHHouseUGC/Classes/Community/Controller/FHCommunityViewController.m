@@ -24,6 +24,7 @@
 #import "ExploreLogicSetting.h"
 #import "FHPostUGCViewController.h"
 #import "FHUserTracker.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHCommunityViewController ()
 
@@ -132,7 +133,7 @@
     [self.topView addSubview:_bottomLineView];
 
     self.searchBtn = [[UIButton alloc] init];
-    [_searchBtn setImage:[UIImage imageNamed:@"fh_ugc_search"] forState:UIControlStateNormal];
+    [_searchBtn setImage: ICON_FONT_IMG(18, @"\U0000e675", [UIColor blackColor]) forState:UIControlStateNormal];//fh_ugc_search
     _searchBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [_searchBtn addTarget:self action:@selector(goToSearch) forControlEvents:UIControlEventTouchUpInside];
     [self.topView addSubview:_searchBtn];

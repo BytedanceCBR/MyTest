@@ -702,7 +702,7 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     if (_houseType == FHHouseTypeRentHouse && _mainListPage && self.mapFindHouseOpenUrl.length > 0) {
         NSURL *url = [NSURL URLWithString:self.mapFindHouseOpenUrl];
-        NSDictionary *dict = @{};
+        NSDictionary *dict = @{@"enter_from_list":@"1"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }else{
@@ -769,6 +769,8 @@ extern NSString *const INSTANT_DATA_KEY;
         if (![self.mapFindHouseOpenUrl containsString:UT_ORIGIN_FROM]) {
             [query appendString:[NSString stringWithFormat:@"&%@=%@", UT_ORIGIN_FROM ,self.tracerModel.originFrom?:UT_BE_NULL]];
         }
+        
+        [query appendFormat:@"&enter_from_list=1"];
         
         if (query.length > 0) {
             

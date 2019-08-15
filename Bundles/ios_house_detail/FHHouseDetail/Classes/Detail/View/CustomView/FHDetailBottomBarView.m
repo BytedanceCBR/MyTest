@@ -13,6 +13,8 @@
 #import "Masonry.h"
 #import <BDWebImage.h>
 #import "UIColor+Theme.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
+#import <FHHouseBase/FHCommonDefines.h>
 
 @interface FHDetailBottomBarView ()
 
@@ -435,8 +437,9 @@
 {
     if (!_licenceIcon) {
         _licenceIcon = [[UIButton alloc]init];
-        [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
-        [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateHighlighted];
+        UIImage *img = SYS_IMG(@"detail_contact");
+        [_licenceIcon setImage:img forState:UIControlStateNormal];
+        [_licenceIcon setImage:img forState:UIControlStateHighlighted];
     }
     return _licenceIcon;
 }
