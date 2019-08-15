@@ -340,6 +340,9 @@
              @"entranceSwitch": @"entrance_switch",
              @"houseTypeDefault":@"house_type_default",
              @"jump2AdRecommend":@"jump_2_ad_recommend",
+             @"ugcCitySwitch":@"ugc_city_switch",
+             @"tabConfig": @"tab_config",
+             @"ugcCategoryConfig": @"ugc_category_config",
              };
 }
 
@@ -364,6 +367,7 @@
              @"neighborhoodFilterOrder":[FHSearchFilterConfigItem class],
              @"saleHistoryFilter":[FHSearchFilterConfigItem class],
              @"courtFilterOrder":[FHSearchFilterConfigItem class],
+             @"tabConfig":[FHConfigDataTabConfigModel class],             
              };
 }
 
