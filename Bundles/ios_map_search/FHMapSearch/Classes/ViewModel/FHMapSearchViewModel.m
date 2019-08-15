@@ -40,7 +40,7 @@
 #import "FHMapSearchFilterView.h"
 #import "FHMapAreaHouseListViewController.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
-
+#import <TTUIWidget/TTNavigationController.h>
 
 #define kTipDuration 3
 
@@ -341,7 +341,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {    
     [self addStayCircelFindLog];
     
-    [self userExit:nil];
+    [self userExit:self.drawMaskView];
     
 }
 
@@ -1285,6 +1285,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         NSDictionary *info = @{@"tracer":traceInfo};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
         
+        TTNavigationController *navController = self.viewController.navigationController;
+        navController.panRecognizer.enabled = YES;
+        
         [self.viewController.navigationController popViewControllerAnimated:NO];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         return;
@@ -1913,6 +1916,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)showNeighborList:(NSString *)tip
 {
+    if (self.showMode == FHMapSearchShowModeHalfHouseList) {
+        //快速点击气泡
+        return;
+    }
+    
     if (self->onSaleHouseCount == 0) {
         //0套房源
         return;
