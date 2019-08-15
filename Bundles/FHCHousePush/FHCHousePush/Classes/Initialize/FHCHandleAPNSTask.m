@@ -182,8 +182,9 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
     [[TTMonitor shareManager] trackService:@"push_get_token" status:0 extra:nil];
     
     [TTBackgroundModeTask reportDeviceTokenByAppLogout];
-    
+#if DEBUG
     NSLog(@"push_device_token = %@", deviceTokenString);
+#endif
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error

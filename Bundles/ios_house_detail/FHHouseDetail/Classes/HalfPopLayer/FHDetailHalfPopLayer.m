@@ -83,9 +83,9 @@
         _tableView.allowsSelection = NO;
         _tableView.backgroundColor = [UIColor whiteColor];
         
-//        if (@available(iOS 11.0 , *)) {
-//            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-//        }
+        if (@available(iOS 11.0 , *)) {
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         
         _footer = [[FHDetailHalfPopFooter alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), FOOTER_HEIGHT)];
         _footer.actionBlock = ^(NSInteger positive) {
@@ -521,9 +521,16 @@
         if (@available(iOS 11.0 , *)) {
             safeInsets = [[UIApplication sharedApplication]delegate].window.safeAreaInsets;
         }
+        
+        if (@available(iOS 13.0 , *)) {
+            //iOS 13下content size的高度有问题，会多20
+            contentSize.height -= 20;
+        }
+        
         CGFloat headerHeight = [self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]] ? 30 : HEADER_HEIGHT;
         CGFloat bgTop = CGRectGetHeight(self.bounds) - headerHeight - floor(contentSize.height) - safeInsets.bottom;
         CGFloat minTop = (safeInsets.top > 0)?safeInsets.top+40:64;
+        
         if (bgTop < minTop) {
             bgTop = minTop;
             self.tableView.scrollEnabled = YES;

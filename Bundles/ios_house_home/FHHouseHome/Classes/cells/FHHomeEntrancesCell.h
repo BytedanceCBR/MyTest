@@ -10,10 +10,10 @@
 #import <FHHouseBase/FHRowsView.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
+@class FHConfigDataOpDataItemsModel;
 @interface FHHomeEntrancesCell : FHHomeBaseTableCell
 
-@property (nonatomic,copy) void (^clickBlock)(NSInteger index);
+@property (nonatomic,copy) void (^clickBlock)(NSInteger index , FHConfigDataOpDataItemsModel *model);
 
 +(CGFloat)rowHeight;
 

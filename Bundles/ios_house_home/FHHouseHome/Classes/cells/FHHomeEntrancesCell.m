@@ -128,7 +128,12 @@
 -(void)onItemAction:(FHHomeEntranceItemView *)itemView
 {
     if(self.clickBlock){
-        self.clickBlock(itemView.tag - ITEM_TAG_BASE);
+        NSInteger index = itemView.tag - ITEM_TAG_BASE;
+        FHConfigDataOpDataItemsModel *model = nil;
+        if(_items.count > index){
+            model = _items[index];
+        }
+        self.clickBlock(index , model);
     }
 }
 

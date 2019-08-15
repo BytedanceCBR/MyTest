@@ -279,26 +279,9 @@ static NSMutableArray  * _Nullable identifierArr;
         NSInteger countValue = dataModel.opData.items.count;
         
         if (countValue > 0) {
-            if (countValue > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2)
-            {
-                countValue = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
-            }
-
-            CGFloat heightPadding = 20;
-            height += ((countValue - 1)/[FHHomeCellHelper sharedInstance].kFHHomeIconRowCount + 1) * ([FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375] + heightPadding);
+            height = [FHHomeEntrancesCell cellHeightForModel:dataModel.opData];
         }
-        
-        NSInteger opData2CountValue = dataModel.opData2.items.count;
-        
-        if (opData2CountValue > 0) {
-            if (opData2CountValue > 4)
-            {
-                opData2CountValue = 4;
-            }
-    
-            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (18 + (opData2CountValue > 2 ? 0 : 4) + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
-        }
-        
+                
         if (dataModel.mainPageBannerOpData.items.count > 0) {
             // 经过一层逻辑处理
             BOOL available = [FHHomeScrollBannerCell hasValidModel:dataModel.mainPageBannerOpData];
@@ -360,51 +343,46 @@ static NSMutableArray  * _Nullable identifierArr;
     
     [cell updateWithItems:model.items];
     
-    if(!cellEntrance.clickBlock){
-        cellEntrance.clickBlock = ^(NSInteger clickIndex){
+    
+    cellEntrance.clickBlock = ^(NSInteger clickIndex , FHConfigDataOpDataItemsModel *itemModel){
+        NSMutableDictionary *dictTrace = [NSMutableDictionary new];
+        [dictTrace setValue:@"maintab" forKey:@"enter_from"];
+        [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
+        [dictTrace setValue:@"click" forKey:@"enter_type"];
+        
+        if ([itemModel.logPb isKindOfClass:[NSDictionary class]] && itemModel.logPb[@"element_from"] != nil) {
+            [dictTrace setValue:itemModel.logPb[@"element_from"] forKey:@"element_from"];
+        }
+        
+        NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
+        if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
+            [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
+            [dictTrace setValue:stringOriginFrom forKey:@"origin_from"];
+        }else
+        {
+            [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
+            [dictTrace setValue:@"be_null" forKey:@"origin_from"];
+        }
+        
+        NSDictionary *userInfoDict = @{@"tracer":dictTrace};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+        
+        if ([itemModel.openUrl isKindOfClass:[NSString class]]) {
             
-            if (model.items.count > clickIndex) {
-                FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
-                
-                NSMutableDictionary *dictTrace = [NSMutableDictionary new];
-                [dictTrace setValue:@"maintab" forKey:@"enter_from"];
-                [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
-                [dictTrace setValue:@"click" forKey:@"enter_type"];
-                
-                if ([itemModel.logPb isKindOfClass:[NSDictionary class]] && itemModel.logPb[@"element_from"] != nil) {
-                    [dictTrace setValue:itemModel.logPb[@"element_from"] forKey:@"element_from"];
-                }
-                
-                NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
-                if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
-                    [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
-                    [dictTrace setValue:stringOriginFrom forKey:@"origin_from"];
-                }else
-                {
-                    [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
-                    [dictTrace setValue:@"be_null" forKey:@"origin_from"];
-                }
-                
-                NSDictionary *userInfoDict = @{@"tracer":dictTrace};
-                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-                
-                if ([itemModel.openUrl isKindOfClass:[NSString class]]) {
-                    
-                    NSURL *url = [NSURL URLWithString:itemModel.openUrl];
-                    if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
-                        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
-                        [FHHomeConfigManager sharedInstance].isTraceClickIcon = YES;
-                        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-                    }else if ([itemModel.openUrl containsString:@"://commute_list"]){
-                        //通勤找房
-                        [[FHCommuteManager sharedInstance] tryEnterCommutePage:itemModel.openUrl logParam:dictTrace];
-                    }else{
-                        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-                    }
-                }
+            NSURL *url = [NSURL URLWithString:itemModel.openUrl];
+            if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
+                [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
+                [FHHomeConfigManager sharedInstance].isTraceClickIcon = YES;
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            }else if ([itemModel.openUrl containsString:@"://commute_list"]){
+                //通勤找房
+                [[FHCommuteManager sharedInstance] tryEnterCommutePage:itemModel.openUrl logParam:dictTrace];
+            }else{
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
-        };
-    }
+        }
+    };
+    
     
     [cellEntrance setNeedsLayout];
 

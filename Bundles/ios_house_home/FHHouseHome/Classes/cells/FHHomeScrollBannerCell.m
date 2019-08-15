@@ -37,7 +37,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 
 + (CGFloat)cellHeight {
     kFHScrollBannerHeight = 58.0;
-    kFHScrollBannerHeight = ([UIScreen mainScreen].bounds.size.width - 40) / 335.0f * kFHScrollBannerHeight;
+    kFHScrollBannerHeight = ceil(([UIScreen mainScreen].bounds.size.width - 40) / 335.0f * kFHScrollBannerHeight);
     return kFHScrollBannerHeight + kFHScrollBannerTopMargin * 2;
 }
 

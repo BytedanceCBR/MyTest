@@ -734,13 +734,8 @@ extern NSString *const INSTANT_DATA_KEY;
             }
             
             if (self.isRefresh) {
-                if (houseModel.agencyInfo) {
-                    FHSearchRealHouseAgencyInfo *agencyInfo = houseModel.agencyInfo;
-                    if ([agencyInfo isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
-                        [itemArray insertObject:agencyInfo atIndex:0];
-                    }
-                    self.showRealHouseTop = YES;
-                }
+                
+                //先插入订阅再判断其他
                 FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = houseModel.subscribeInfo;
                 if ([subscribeMode isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
                     if (itemArray.count > 9) {
@@ -751,6 +746,15 @@ extern NSString *const INSTANT_DATA_KEY;
                     }
                     self.isShowSubscribeCell = YES;
                 }
+                
+                if (houseModel.agencyInfo) {
+                    FHSearchRealHouseAgencyInfo *agencyInfo = houseModel.agencyInfo;
+                    if ([agencyInfo isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
+                        [itemArray insertObject:agencyInfo atIndex:0];
+                    }
+                    self.showRealHouseTop = YES;
+                }
+              
     
             }
 

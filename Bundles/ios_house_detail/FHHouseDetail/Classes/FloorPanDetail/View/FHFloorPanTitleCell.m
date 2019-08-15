@@ -75,7 +75,7 @@
         [_statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.equalTo(self.statusBGView);
             make.height.mas_equalTo(11);
-            make.width.mas_equalTo(20);
+            make.width.mas_equalTo(22);
         }];
         
     }
@@ -124,6 +124,20 @@
         {
             self.statusLabel.backgroundColor = [UIColor whiteColor];
             _statusBGView.backgroundColor = [UIColor whiteColor];
+        }
+        
+        if (self.statusLabel.text.length > 0) {
+            CGSize size =  [self.statusLabel sizeThatFits:CGSizeMake(30, 20)];
+            if (size.width > 30) {
+                size.width = 30;
+            }
+            [self.statusLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(size.width);
+            }];
+            
+            [self.statusBGView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(size.width+6);
+            }];
         }
     }
 }
