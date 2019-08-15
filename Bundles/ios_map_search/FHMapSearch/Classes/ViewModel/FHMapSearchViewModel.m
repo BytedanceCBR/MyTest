@@ -333,7 +333,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         self.needReload = YES;
     }else{
         [self.lastBubble overwriteFliter:query];
-        [self requestHouses:YES showTip:NO];
+        [self requestHouses:YES showTip:YES];
     }
 }
 
@@ -1416,13 +1416,20 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         types = @[@(FHMapSearchSideBarItemTypeSubway)];
     }else{
         
+        NSMutableArray *showTyeps = [NSMutableArray new];
+        if (self.configModel.houseType == FHHouseTypeSecondHandHouse) {
+            [showTyeps addObject:@(FHMapSearchSideBarItemTypeSubway)];
+        }
+                        
         if (showCircle) {
             //增加画圈显示
-            types = @[@(FHMapSearchSideBarItemTypeSubway) ,@(FHMapSearchSideBarItemTypeCircle) , @(FHMapSearchSideBarItemTypeFilter) , @(FHMapSearchSideBarItemTypeList)];
-        }else {
-            //去掉画圈显示
-            types = @[@(FHMapSearchSideBarItemTypeSubway) , @(FHMapSearchSideBarItemTypeFilter) , @(FHMapSearchSideBarItemTypeList)];
+            [showTyeps addObject:@(FHMapSearchSideBarItemTypeCircle)];
         }
+        
+        [showTyeps addObject:@(FHMapSearchSideBarItemTypeFilter)];
+        [showTyeps addObject:@(FHMapSearchSideBarItemTypeList)];
+        
+        types = showTyeps;
         
         if(types && [[self.sideBar currentTypes] isEqualToArray:types]){
             types = nil;

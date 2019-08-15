@@ -102,6 +102,9 @@
     }];
     
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsZero];
+    [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.view);
+    }];
 }
 
 
