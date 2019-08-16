@@ -1431,7 +1431,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }else{
         
         NSMutableArray *showTyeps = [NSMutableArray new];
-        if (self.configModel.houseType == FHHouseTypeSecondHandHouse) {
+        if (self.configModel.houseType == FHHouseTypeSecondHandHouse && self.subwayData) {
             [showTyeps addObject:@(FHMapSearchSideBarItemTypeSubway)];
         }
                         

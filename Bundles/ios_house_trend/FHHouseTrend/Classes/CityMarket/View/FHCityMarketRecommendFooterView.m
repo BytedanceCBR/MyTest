@@ -38,7 +38,7 @@
         make.centerY.mas_equalTo(self);
     }];
 
-    UIImage *img = ICON_FONT_IMG(8, @"\U0000e670", [UIColor themeGray6]);//@"arrowicon-detail"
+    UIImage *img = ICON_FONT_IMG(12, @"\U0000e670", [UIColor themeGray1]);//@"arrowicon-detail"
     self.arrawView = [[UIImageView alloc] initWithImage:img];
     _arrawView.contentMode = UIViewContentModeCenter;
     [self addSubview:_arrawView];

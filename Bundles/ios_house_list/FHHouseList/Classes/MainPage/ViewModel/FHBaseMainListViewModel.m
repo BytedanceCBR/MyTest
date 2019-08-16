@@ -849,8 +849,6 @@ extern NSString *const INSTANT_DATA_KEY;
             return;
         }
     }
-
-    
     
     [self handleRefreshHouseOpenUrl:openUrl];
     [self.houseFilterViewModel trigerConditionChanged];

@@ -1266,10 +1266,12 @@ extern NSString *const INSTANT_DATA_KEY;
         return;
     }
     
-    NSString *houseListDecode = [self.houseListOpenUrl URLDecodedString];
-    NSString *openUrlDecode = [openUrl URLDecodedString];
-    if ([houseListDecode isEqualToString:openUrlDecode]) {
-        return;
+    if(openUrl && self.houseListOpenUrl){
+        NSString *houseListDecode = [self.houseListOpenUrl URLDecodedString];
+        NSString *openUrlDecode = [openUrl URLDecodedString];
+        if ([houseListDecode isEqualToString:openUrlDecode]) {
+            return;
+        }
     }
     
     
