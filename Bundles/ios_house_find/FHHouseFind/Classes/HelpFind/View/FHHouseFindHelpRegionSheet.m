@@ -27,10 +27,10 @@
 {
     _regionSelected = regionSelected;
     if (regionSelected) {
-        self.selectImgView.image =ICON_FONT_IMG(16, @"\U0000e669", nil); //@"housefind_selected"
+        self.selectImgView.image = ICON_FONT_IMG(16, @"\U0000e689", [UIColor themeRed1]);  //@"housefind_selected"
         self.regionLabel.textColor = [UIColor themeRed1];
     }else {
-        self.selectImgView.image = ICON_FONT_IMG(16, @"\U0000e689", [UIColor themeRed1]);//@"housefind_normal";
+        self.selectImgView.image = ICON_FONT_IMG(16, @"\U0000e669", nil);//@"housefind_normal";
         self.regionLabel.textColor = [UIColor themeGray1];
     }
 }

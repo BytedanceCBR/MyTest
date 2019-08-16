@@ -36,7 +36,7 @@
     [self.contentView addSubview:_titleLabel];
 
     _allWebHouseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_allWebHouseBtn setImage:ICON_FONT_IMG(12,@"\U0000e6ad",[UIColor themeGray3]) forState:UIControlStateNormal];
+    [_allWebHouseBtn setImage:ICON_FONT_IMG(14,@"\U0000e6ad",[UIColor themeGray3]) forState:UIControlStateNormal];
     [_allWebHouseBtn addTarget:self action:@selector(allWebHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_allWebHouseBtn];
     

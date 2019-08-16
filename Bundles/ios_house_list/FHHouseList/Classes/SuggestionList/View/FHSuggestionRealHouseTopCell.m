@@ -179,7 +179,8 @@
     
     _allFalseHouseBtn = [FHExtendHotAreaButton buttonWithType:UIButtonTypeCustom];
     _allFalseHouseBtn.isExtend = YES;
-    img = ICON_FONT_IMG(16, @"\U0000e670", RGB(0x66, 0x66, 0x66));
+                            //\U0000
+    img = ICON_FONT_IMG(16, @"\U0000e670", RGB(0x66, 0x66, 0x66));//
     [_allFalseHouseBtn setImage:img forState:UIControlStateNormal];
     [_allFalseHouseBtn addTarget:self action:@selector(allFalseHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_allFalseHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
@@ -244,7 +245,8 @@
 
     _allFalseHouseBtn = [FHExtendHotAreaButton buttonWithType:UIButtonTypeCustom];
     _allFalseHouseBtn.isExtend = YES;
-    [_allFalseHouseBtn setImage:[UIImage imageNamed:@"house_list_real_arrow"] forState:UIControlStateNormal];
+    UIImage *img = ICON_FONT_IMG(([TTDeviceHelper isScreenWidthLarge320] ? 12 : 10), @"\U0000e670", [UIColor themeGray3]);
+    [_allFalseHouseBtn setImage:img forState:UIControlStateNormal];
     [_allFalseHouseBtn addTarget:self action:@selector(allFalseHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_allFalseHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     [backColorView addSubview:_allFalseHouseBtn];
