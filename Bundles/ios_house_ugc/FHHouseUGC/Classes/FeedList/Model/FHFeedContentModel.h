@@ -306,6 +306,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFeedContentRawDataModel : JSONModel
 
+@property (nonatomic, strong , nullable) FHFeedContentCommunityModel *community ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataContentModel *content ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseModel *commentBase ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginGroupModel *originGroup ;

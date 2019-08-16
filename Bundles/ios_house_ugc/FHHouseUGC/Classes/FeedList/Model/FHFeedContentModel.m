@@ -28,6 +28,8 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+                           @"name": @"social_group_name",
+                           @"url": @"announcement_url",
                            @"socialGroupId": @"social_group_id",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

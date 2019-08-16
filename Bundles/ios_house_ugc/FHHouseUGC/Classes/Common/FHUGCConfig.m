@@ -16,12 +16,14 @@
 #import "TTForumPostThreadStatusViewModel.h"
 #import "FHEnvContext.h"
 
+//默认轮训间隔时间5分钟
+#define defaultFocusTimerInterval 300
+
 static const NSString *kFHFollowListCacheKey = @"cache_follow_list_key";
 static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
 // UGC config
 static const NSString *kFHUGCConfigCacheKey = @"cache_ugc_config_key";
 static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
-
 
 // 小区圈子数据统一内存数据缓存
 @interface FHUGCSocialGroupData : NSObject
@@ -40,6 +42,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 @property (nonatomic, strong)   YYCache       *ugcConfigCache;
 @property (nonatomic, copy)     NSString      *followListDataKey;// 关注数据 用户相关 存储key
 @property (nonatomic, strong)   NSTimer       *focusTimer;//关注是否有新内容的轮训timer
+@property (nonatomic, assign)   NSTimeInterval focusTimerInterval;//轮训时间
 
 @end
 
@@ -59,6 +62,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     if (self) {
         [TTAccount addMulticastDelegate:self];
         _followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];
+        _focusTimerInterval = defaultFocusTimerInterval;
         // 加载本地
         [self loadFollowListData];
         [self loadLocalUgcConfigData];
@@ -226,7 +230,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 - (void)setFocusTimerState {
     //关注列表有数据，才会触发小红点逻辑
     if([FHEnvContext isUGCOpen] && self.followList.count > 0){
-        [self startTimer];
+        [self setHasNewTimerInteralAndGetNewFirstTime];
     }else{
         [self stopTimer];
     }
@@ -541,10 +545,31 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
 - (NSTimer *)focusTimer {
     if(!_focusTimer){
-        _focusTimer  =  [NSTimer timerWithTimeInterval:10 target:self selector:@selector(getHasNewForTimer) userInfo:nil repeats:YES];
+        _focusTimer  =  [NSTimer timerWithTimeInterval:self.focusTimerInterval target:self selector:@selector(getHasNewForTimer) userInfo:nil repeats:YES];
+        
         [[NSRunLoop mainRunLoop] addTimer:_focusTimer forMode:NSRunLoopCommonModes];
     }
     return _focusTimer;
+}
+
+- (void)setHasNewTimerInteralAndGetNewFirstTime {
+    //每隔一段时候调用接口
+    //    __weak typeof(self) wself = self;
+    //    [FHHouseUGCAPI refreshFeedTips:nil beHotTime:nil completion:^(bool hasNew, NSError * _Nonnull error) {
+    //        if(!error && hasNew){
+    //            self.ugcFocusHasNew = YES;
+    //            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
+    //        }
+    //    }];
+    
+//    self.ugcFocusHasNew = YES;
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
+    
+    NSTimeInterval interval = 10;
+    if(interval > 0){
+        self.focusTimerInterval = interval;
+    }
+    [self startTimer];
 }
 
 - (void)getHasNewForTimer {

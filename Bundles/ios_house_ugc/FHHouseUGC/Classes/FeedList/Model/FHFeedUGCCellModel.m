@@ -98,7 +98,7 @@
     //处理大图
     cellModel.largeImageList = model.largeImageList;
     //处理其他数据
-    if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
+    if(cellModel.cellType == FHUGCFeedListCellTypeArticle){
         cellModel.title = model.title;
         cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.openUrl;
@@ -110,23 +110,57 @@
         
         [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
         
-        if(cellModel.openUrl && !isEmptyString(cellModel.openUrl)){
-//        if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
-            //针对问答的情况
-            if(model.sourceDesc){
-                cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
-            }
-        }else{
+//        if(cellModel.openUrl && !isEmptyString(cellModel.openUrl)){
+////        if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
+//            //针对问答的情况
+//            if(model.sourceDesc){
+//                cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
+//            }
+//        }else{
             //文章
-            cellModel.desc = [self generateArticleDesc:model];
-            cellModel.openUrl = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
-        }
+        cellModel.desc = [self generateArticleDesc:model];
+        cellModel.openUrl = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
+//        }
 //        cellModel.detailScheme = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
         
         FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
         community.name = model.community.name;
         community.url = model.community.url;
         community.socialGroupId = model.community.socialGroupId;
+        cellModel.community = community;
+        
+        if(cellModel.imageList.count == 1){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleSingleImage;
+        }else if(cellModel.imageList.count > 1){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleMultiImage;
+        }else{
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
+        }
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
+        cellModel.title = model.rawData.content.question.title;
+        cellModel.behotTime = model.behotTime;
+        cellModel.openUrl = model.rawData.content.question.questionListSchema;
+        cellModel.groupId = model.rawData.content.question.qid;
+        cellModel.numberOfLines = 5;
+        
+        cellModel.imageList = model.rawData.content.question.content.thumbImageList;
+        //处理大图
+        cellModel.largeImageList = model.rawData.content.question.content.largeImageList;
+        
+        if (model.isFromDetail) {
+            cellModel.numberOfLines = 0;
+        }
+        
+        [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
+        
+        if(model.sourceDesc){
+            cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
+        }
+        
+        FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
+        community.name = model.rawData.community.name;
+        community.url = model.rawData.community.url;
+        community.socialGroupId = model.rawData.community.socialGroupId;
         cellModel.community = community;
         
         if(cellModel.imageList.count == 1){
