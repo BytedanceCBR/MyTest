@@ -37,8 +37,16 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
 
 + (void)silentFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel
 {
+    [self silentFollowHouseWithConfigModel:configModel completionBlock:nil];
+}
+
++ (void)silentFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel completionBlock:(void(^)(BOOL isSuccess))completionBlock
+{
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
+        if (completionBlock) {
+            completionBlock(NO);
+        }
         return;
     }
     NSString *followId = configModel.followId;
@@ -46,36 +54,19 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     FHFollowActionType actionType = configModel.actionType ? : configModel.houseType;
     BOOL showTip = configModel.showTip;
     BOOL hideToast = configModel.hideToast;
-
+    
     [self isFollowUpParamsValid:configModel];
     
     [FHMainApi requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (!error) {
+            BOOL isSuccess = NO;
             if (model.status.integerValue == 0) {
                 if (model.data.followStatus == 0) {
                     if (!hideToast) {
-                        
-                        NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
-                        if (toastCount < 3) {
-                            CSToastStyle *style = [[CSToastStyle alloc]initWithDefaultStyle];
-                            style.cornerRadius = 12;
-                            style.messageAlignment = NSTextAlignmentCenter;
-                            style.messageColor = [UIColor whiteColor];
-                            style.backgroundColor = [[UIColor themeGray1] colorWithAlphaComponent:0.96];
-                            style.messageFont = [UIFont themeFontRegular:10];
-                            style.verticalPadding = 5;
-                            style.horizontalPadding = 6;
-                            style.isCustomPosition = YES;
-                            style.customX = [UIScreen mainScreen].bounds.size.width - 20;
-                            style.verticalOffset = 65 + ([TTDeviceHelper isIPhoneXDevice] ? 20 : 0);
-                            toastCount += 1;
-                            UIViewController *temp = [TTUIResponderHelper topmostViewController];
-                            [temp.view makeToast:@"已加入关注列表" duration:3 position:CSToastPositionTop style:style];
-                            [[NSUserDefaults standardUserDefaults]setInteger:toastCount forKey:kFHToastCountKey];
-                            [[NSUserDefaults standardUserDefaults]synchronize];
-                        }
+                        [self showFollowToast];
                     }
+                    isSuccess = YES;
                 }
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
                 userInfo[@"followId"] = followId;
@@ -84,9 +75,39 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                 if(model.data.socialGroupFollowStatus == 0 && model.data.socialGroupId){
                     [[FHUGCConfig sharedInstance] followUGCBy:model.data.socialGroupId isFollow:YES completion:nil];
                 }
+                if (completionBlock) {
+                    completionBlock(isSuccess);
+                }
+            }
+        }else {
+            if (completionBlock) {
+                completionBlock(NO);
             }
         }
     }];
+}
+
++(void)showFollowToast
+{
+    NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
+    if (toastCount < 3) {
+        CSToastStyle *style = [[CSToastStyle alloc]initWithDefaultStyle];
+        style.cornerRadius = 12;
+        style.messageAlignment = NSTextAlignmentCenter;
+        style.messageColor = [UIColor whiteColor];
+        style.backgroundColor = [[UIColor themeGray1] colorWithAlphaComponent:0.96];
+        style.messageFont = [UIFont themeFontRegular:10];
+        style.verticalPadding = 5;
+        style.horizontalPadding = 6;
+        style.isCustomPosition = YES;
+        style.customX = [UIScreen mainScreen].bounds.size.width - 20 - 50;
+        style.verticalOffset = 65 + ([TTDeviceHelper isIPhoneXDevice] ? 20 : 0);
+        UIViewController *temp = [TTUIResponderHelper topmostViewController];
+        [temp.view makeToast:@"已加入关注列表" duration:3 position:CSToastPositionTop style:style];
+        toastCount += 1;
+        [[NSUserDefaults standardUserDefaults]setInteger:toastCount forKey:kFHToastCountKey];
+        [[NSUserDefaults standardUserDefaults]synchronize];
+    }
 }
 
 + (void)silentFollowHouseWithConfig:(NSDictionary *)config

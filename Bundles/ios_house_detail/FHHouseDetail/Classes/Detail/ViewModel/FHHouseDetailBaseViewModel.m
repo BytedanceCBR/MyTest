@@ -108,6 +108,7 @@
         }];
     }
     [self addPopLayerNotification];
+    [self.contactViewModel vc_viewDidAppear:animated];
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {
@@ -122,6 +123,7 @@
         }];
     }
     [self removePopLayerNotification];
+    [self.contactViewModel vc_viewDidDisappear:animated];
 }
 
 -(void)handleInstantData:(id)data
