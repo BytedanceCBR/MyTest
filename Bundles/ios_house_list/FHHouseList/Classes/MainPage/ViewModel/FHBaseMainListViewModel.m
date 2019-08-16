@@ -842,6 +842,15 @@ extern NSString *const INSTANT_DATA_KEY;
     if ([self.houseListOpenUrl isEqualToString:openUrl]) {
         return;
     }
+    if (self.houseListOpenUrl && openUrl) {
+        NSString *deOpenUrl = [openUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *deOrigin = [self.houseListOpenUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        if ([deOpenUrl isEqualToString:deOrigin]) {
+            return;
+        }
+    }
+
+    
     
     [self handleRefreshHouseOpenUrl:openUrl];
     [self.houseFilterViewModel trigerConditionChanged];

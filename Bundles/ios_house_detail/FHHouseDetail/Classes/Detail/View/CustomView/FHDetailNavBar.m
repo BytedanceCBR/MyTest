@@ -333,7 +333,7 @@
 - (UIImage *)collectYellowImage
 {
     if (!_collectYellowImage) {
-        _collectYellowImage = ICON_FONT_IMG(24, @"\U0000e696", [UIColor themeRed1]);// @"detail_collect_yellow"
+        _collectYellowImage = ICON_FONT_IMG(24, @"\U0000e6b2", [UIColor themeRed1]);// @"detail_collect_yellow"
     }
     return _collectYellowImage;
 }
