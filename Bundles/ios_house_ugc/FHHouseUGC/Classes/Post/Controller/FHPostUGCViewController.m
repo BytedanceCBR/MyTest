@@ -330,9 +330,8 @@ static NSInteger const kMaxPostImageCount = 9;
     if (!self.hasSocialGroup) {
         top += 44;
     }
-    if (isShowSelectedGroupHistory) {
-        top += (self.selectedGrouplHistoryView == NO) ? self.selectedGrouplHistoryView.height : 0;
-    }
+    top += self.selectedGrouplHistoryView.height;
+
     self.containerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, top, self.view.width, self.view.height - top)];
     self.containerView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
     self.containerView.alwaysBounceVertical = YES;
@@ -1250,6 +1249,7 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)keyboardWillChange:(NSNotification *)notification {
+    
     UIView * firstResponder = nil;
     if (self.inputTextView.isFirstResponder) {
         firstResponder = self.inputTextView;
@@ -1268,7 +1268,10 @@ static NSInteger const kMaxPostImageCount = 9;
     offset = self.containerView.height - endFrame.size.height - (CGRectGetMaxY(firstResponderFrame) - self.containerView.contentOffset.y) - kUGCToolbarHeight;
     if (offset < 0) {
         self.keyboardEndFrame = endFrame;
-        [self.containerView setContentOffset:CGPointMake(0, fabs(self.containerView.contentOffset.y-offset)) animated:YES];
+        
+        if(self.inputTextView.text.length > 0 && [self.inputTextView.text sizeWithFontCompatible:self.inputTextView.internalGrowingTextView.font].width > self.inputTextView.internalGrowingTextView.width) {
+            [self.containerView setContentOffset:CGPointMake(0, fabs(self.containerView.contentOffset.y-offset)) animated:YES];
+        }
         return;
     }
 }
