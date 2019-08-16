@@ -970,6 +970,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //            return;
 //        }
         
+        if (_areaHouseListController.view.superview) {
+            //用户点击了底部栏展示出了列表页
+            [self.mapView deselectAnnotation:annotationView.annotation animated:NO];
+            return;
+        }
+        
         if (self.currentSelectAnnotation.houseData) {
             _selectedAnnotations[self.currentSelectAnnotation.houseData.nid] = self.currentSelectAnnotation.houseData.nid;
         }
@@ -1293,6 +1299,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         NSMutableDictionary *traceInfo = [NSMutableDictionary new];
         [traceInfo addEntriesFromDictionary:[self.configModel toDictionary]];
         traceInfo[@"enter_from"] = @"mapfind";
+        traceInfo[UT_ENTER_TYPE] = @"click";
         NSDictionary *info = @{@"tracer":traceInfo};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
         
