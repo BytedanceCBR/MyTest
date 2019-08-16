@@ -280,7 +280,7 @@ static NSInteger const kMaxPostImageCount = 9;
     // select view
     if (!self.hasSocialGroup) {
         CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
-        self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, top, self.view.width, 44)];
+        self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, top, SCREEN_WIDTH, 44)];
         [self.view addSubview:self.selectView];
         self.selectView.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];
@@ -1286,7 +1286,7 @@ static NSInteger const kMaxPostImageCount = 9;
     // 避免视频详情页转发时，出现 statusBar 高度获取为 0 的情况
     CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
     if (!self.hasSocialGroup) {
-        self.selectView.frame = CGRectMake(0, top, self.view.width, 44);
+        self.selectView.frame = CGRectMake(0, top, SCREEN_WIDTH, 44);
         top += 44;
     }
     if(self.selectedGrouplHistoryView) {
