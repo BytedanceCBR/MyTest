@@ -302,10 +302,12 @@ static NSInteger const kMaxPostImageCount = 9;
     BOOL isShowSelectedGroupHistory = NO;
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:kSelectedGroupHistoryWhenPostSuccessfully];
     FHPostUGCSelectedGroupHistory *selectedGroupHistory = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
     NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
     FHPostUGCSelectedGroupModel *selectedGroup = nil;
-    if(selectedGroupHistory && currentCityID.length > 0) {
-        selectedGroup = [selectedGroupHistory.historyInfos objectForKey:currentCityID];
+    if(selectedGroupHistory && currentCityID.length > 0 && currentUserID.length > 0) {
+        NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
+        selectedGroup = [selectedGroupHistory.historyInfos objectForKey:saveKey];
         if(selectedGroup) {
             isShowSelectedGroupHistory = YES;
         }
@@ -850,29 +852,27 @@ static NSInteger const kMaxPostImageCount = 9;
         // 此时没有groupID
         [FHUserTracker writeEvent:@"feed_publish_click" params:tracerDict];
         
-        // 外层贴子发布器
-        if(!task.hasSocialGroup) {
+    
+        NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
+        NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
+        if(currentCityID.length > 0 && currentUserID.length > 0) {
             
-            NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
-            if(currentCityID.length > 0) {
-                
-                NSData *oldData = [[NSUserDefaults standardUserDefaults] objectForKey:kSelectedGroupHistoryWhenPostSuccessfully];
-                FHPostUGCSelectedGroupHistory *selectedGroupHistory = [NSKeyedUnarchiver unarchiveObjectWithData:oldData];
-                if(!selectedGroupHistory) {
-                    selectedGroupHistory = [FHPostUGCSelectedGroupHistory new];
-                    selectedGroupHistory.historyInfos = [NSMutableDictionary dictionary];
-                }
-                
-                FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
-                selectedGroup.socialGroupId = task.social_group_id;
-                selectedGroup.socialGroupName = task.social_group_name;
-                [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:currentCityID];
-            
-                NSData *newData = [NSKeyedArchiver archivedDataWithRootObject:selectedGroupHistory];
-                [[NSUserDefaults standardUserDefaults] setObject:newData forKey:kSelectedGroupHistoryWhenPostSuccessfully];
+            NSData *oldData = [[NSUserDefaults standardUserDefaults] objectForKey:kSelectedGroupHistoryWhenPostSuccessfully];
+            FHPostUGCSelectedGroupHistory *selectedGroupHistory = [NSKeyedUnarchiver unarchiveObjectWithData:oldData];
+            if(!selectedGroupHistory) {
+                selectedGroupHistory = [FHPostUGCSelectedGroupHistory new];
+                selectedGroupHistory.historyInfos = [NSMutableDictionary dictionary];
             }
+            
+            FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
+            selectedGroup.socialGroupId = task.social_group_id;
+            selectedGroup.socialGroupName = task.social_group_name;
+            NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
+            [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
+            
+            NSData *newData = [NSKeyedArchiver archivedDataWithRootObject:selectedGroupHistory];
+            [[NSUserDefaults standardUserDefaults] setObject:newData forKey:kSelectedGroupHistoryWhenPostSuccessfully];
         }
-        
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionCancelledNotification
                                                             object:nil
