@@ -251,46 +251,47 @@
 
 + (JSONKeyMapper*)keyMapper
 {
-    NSDictionary *dict = @{
-                           @"houseTypeList": @"house_type_list",
-                           @"opData2": @"op_data_2",
-                           @"opData2list": @"op_data_2_list",
-                           @"opData": @"op_data",
-                           @"rentOpData": @"rent_op_data",
-                           @"mainPageBannerOpData": @"main_page_banner",
-                           @"houseOpData": @"house_op_data",
-                           @"entryInfo": @"entry_info",
-                           @"currentCityId": @"current_city_id",
-                           @"mapSearch": @"map_search",
-                           @"hotCityList": @"hot_city_list",
-                           @"currentCityName": @"current_city_name",
-                           @"cityList": @"city_list",
-                           @"reviewInfo": @"review_info",
-                           @"cityStats": @"city_stats",
-                           @"userPhone": @"user_phone",
-                           @"cityAvailability" : @"city_availability",
-                           @"citySwitch" : @"city_switch",
-                           @"searchTabNeighborhoodFilter": @"search_tab_neighborhood_filter",
-                           @"searchTabCourtFilter": @"search_tab_court_filter",
-                           @"neighborhoodFilter": @"neighborhood_filter",
-                           @"searchTabRentFilter": @"search_tab_rent_filter",
-                           @"courtFilterOrder": @"court_filter_order",
-                           @"searchTabFilter": @"search_tab_filter",
-                           @"rentFilterOrder": @"rent_filter_order",
-                           @"houseFilterOrder": @"house_filter_order",
-                           @"neighborhoodFilterOrder": @"neighborhood_filter_order",
-                           @"rentFilter": @"rent_filter",
-                           @"courtFilter": @"court_filter",
-                           @"diffCode": @"diff_code",
-                           @"saleHistoryFilter": @"sale_history_filter",
-                           @"rentBanner": @"rent_banner",
-                           @"entranceSwitch": @"entrance_switch",
-                           @"houseTypeDefault":@"house_type_default",
-                           @"jump2AdRecommend":@"jump_2_ad_recommend",
-                           @"ugcCitySwitch":@"ugc_city_switch",
-                           @"tabConfig": @"tab_config",
-                           @"ugcCategoryConfig": @"ugc_category_config",
-                           };
+//    NSDictionary *dict = @{
+//                           @"houseTypeList": @"house_type_list",
+//                           @"opData2": @"op_data_2",
+//                           @"opData2list": @"op_data_2_list",
+//                           @"opData": @"op_data",
+//                           @"rentOpData": @"rent_op_data",
+//                           @"mainPageBannerOpData": @"main_page_banner",
+//                           @"houseOpData": @"house_op_data",
+//                           @"entryInfo": @"entry_info",
+//                           @"currentCityId": @"current_city_id",
+//                           @"mapSearch": @"map_search",
+//                           @"hotCityList": @"hot_city_list",
+//                           @"currentCityName": @"current_city_name",
+//                           @"cityList": @"city_list",
+//                           @"reviewInfo": @"review_info",
+//                           @"cityStats": @"city_stats",
+//                           @"userPhone": @"user_phone",
+//                           @"cityAvailability" : @"city_availability",
+//                           @"citySwitch" : @"city_switch",
+//                           @"searchTabNeighborhoodFilter": @"search_tab_neighborhood_filter",
+//                           @"searchTabCourtFilter": @"search_tab_court_filter",
+//                           @"neighborhoodFilter": @"neighborhood_filter",
+//                           @"searchTabRentFilter": @"search_tab_rent_filter",
+//                           @"courtFilterOrder": @"court_filter_order",
+//                           @"searchTabFilter": @"search_tab_filter",
+//                           @"rentFilterOrder": @"rent_filter_order",
+//                           @"houseFilterOrder": @"house_filter_order",
+//                           @"neighborhoodFilterOrder": @"neighborhood_filter_order",
+//                           @"rentFilter": @"rent_filter",
+//                           @"courtFilter": @"court_filter",
+//                           @"diffCode": @"diff_code",
+//                           @"saleHistoryFilter": @"sale_history_filter",
+//                           @"rentBanner": @"rent_banner",
+//                           @"entranceSwitch": @"entrance_switch",
+//                           @"houseTypeDefault":@"house_type_default",
+//                           @"jump2AdRecommend":@"jump_2_ad_recommend",
+//                           @"ugcCitySwitch":@"ugc_city_switch",
+//                           @"tabConfig": @"tab_config",
+//                           @"ugcCategoryConfig": @"ugc_category_config",
+//                           };
+    NSDictionary *dict = [self modelCustomPropertyMapper];
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
     }];
@@ -423,8 +424,7 @@
 #define ARRAY_PROP_GET(className , propertyName , key) \
 -(NSArray< className > *)propertyName { \
     if(!_##propertyName && _originDict){ \
-        NSArray *jsons = _originDict[key]; \
-        NSLog(@"[LAUNCH] get array %@",key);\
+        NSArray *jsons = _originDict[key]; \        
         if([jsons isKindOfClass:[NSArray class]]){ \
             NSMutableArray *list = [NSMutableArray new]; \
             for (NSDictionary *json in jsons) { \
