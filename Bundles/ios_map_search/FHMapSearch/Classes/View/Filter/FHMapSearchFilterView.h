@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , strong) FHMapSearchSelectModel *selectionModel;
 @property(nonatomic , copy) void (^confirmWithQueryBlock)(NSString *query);
+@property(nonatomic , copy) void (^resetBlock)();
 @property(nonatomic , copy , nullable) NSString *noneFilterQuery;
 
 -(void)updateWithFilters:(NSArray *)filters;
