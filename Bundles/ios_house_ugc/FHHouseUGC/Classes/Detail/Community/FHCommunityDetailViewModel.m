@@ -229,7 +229,7 @@
     self.feedListController.tableView.mj_header = self.refreshHeader;
     self.refreshHeader.ignoredScrollViewContentInsetTop = -([TTDeviceHelper isIPhoneXSeries] ? 44 + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.top : 64);
     NSString *version = [UIDevice currentDevice].systemVersion;
-    if (version.doubleValue >= 11.0) {
+    if (version.doubleValue >= 12.0) {
         self.feedListController.tableView.tableHeaderView = self.headerView;
     }
     [self.feedListController.tableView bringSubviewToFront:self.feedListController.tableView.mj_header];
@@ -575,12 +575,9 @@
     
     
     NSString *version = [UIDevice currentDevice].systemVersion;
-    if (version.doubleValue >= 11.0) {
-        // 针对 11.0 以上的iOS系统进行处理
+    if (version.doubleValue >= 12.0) {
         self.feedListController.tableView.tableHeaderView = self.headerView;
     } else {
-        // 针对 11.0 以下的iOS系统进行处理
-        // tableViewHeader 添加带约束视图的问题参考: https://www.jianshu.com/p/bf68cb8713f0
         CGFloat headerHeight = [self.headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
         if(self.refreshHeader.isRefreshing) {
             headerHeight -= self.refreshHeader.mj_h;
