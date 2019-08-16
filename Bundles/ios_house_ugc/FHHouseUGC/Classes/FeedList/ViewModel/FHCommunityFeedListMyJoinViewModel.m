@@ -22,6 +22,7 @@
 @interface FHCommunityFeedListMyJoinViewModel () <UITableViewDelegate, UITableViewDataSource>
 
 @property(nonatomic, assign) BOOL needDealFollowData;
+@property (nonatomic, copy)     NSString       *lastGroupId;
 
 @end
 
@@ -68,7 +69,7 @@
         [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
             wself.isRefreshingTip = NO;
             [wself.viewController hideImmediately];
-            [wself requestData:YES first:NO];
+            [wself requestData:YES first:YES];
         }];
     }
 }
@@ -179,8 +180,15 @@
         }
         
         if(model){
+            // 临时兼容，更新refreshTip，后面版本需要去掉 当前版本：v0.7.5
+            if (wself.dataList.count > 0) {
+                // 取第一个数据的group_id
+                FHFeedUGCCellModel *cellModel = [wself.dataList firstObject];
+                if ([cellModel isKindOfClass:[FHFeedUGCCellModel class]]) {
+                    wself.lastGroupId = cellModel.groupId;
+                }
+            }
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
-            
             if(isFirst){
                 [wself.dataList removeAllObjects];
             }
@@ -202,7 +210,34 @@
             }
             [wself.tableView reloadData];
             
-            NSString *refreshTip = feedListModel.tips.displayInfo;
+            NSString *refreshTip = feedListModel.tips.displayInfo;// 为您更新19d条热帖
+            // 临时兼容，更新refreshTip，后面版本需要去掉 当前版本：v0.7.5
+            if (result.count > 0 && isHead) {
+                if (wself.lastGroupId.length > 0) {
+                    __block NSInteger findIndex = -1;
+                    [result enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if ([obj isKindOfClass:[FHFeedUGCCellModel class]]) {
+                            if ([obj.groupId isEqualToString:wself.lastGroupId]) {
+                                findIndex = idx;
+                                *stop = YES;
+                            }
+                        }
+                    }];
+                    if (findIndex >= 0) {
+                        // 找到
+                        if (findIndex == 0) {
+                            // 没有更新
+                            refreshTip = @"";
+                        } else {
+                            refreshTip = [NSString stringWithFormat:@"为您更新%ld条热帖",findIndex];
+                        }
+                    } else {
+                        refreshTip = [NSString stringWithFormat:@"为您更新%ld条热帖",result.count];
+                    }
+                }
+            } else {
+                refreshTip = @"";
+            }
             if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
                 wself.isRefreshingTip = YES;
                 [wself.viewController showNotify:refreshTip completion:^{
