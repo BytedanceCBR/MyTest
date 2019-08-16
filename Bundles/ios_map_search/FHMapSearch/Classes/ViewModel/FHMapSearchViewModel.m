@@ -267,6 +267,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 break;
             case FHMapSearchSideBarItemTypeCircle:
             {
+                if (![TTReachability isNetworkConnected]) {
+                    [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
+                    return;
+                }
                 [wself chooseDrawLine];
             }
                 break;
@@ -297,6 +301,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         __weak typeof(self) wself = self;
         _filterView.confirmWithQueryBlock = ^(NSString * _Nonnull query) {
             [wself changeFilter:query];
+        };
+        
+        _filterView.resetBlock = ^{
+            [wself changeFilter:@""];
         };
         
         FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -654,6 +662,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             //show toast
             if (error.code != NSURLErrorCancelled) {
                 //请求取消
+                if (![TTReachability isNetworkConnected]) {
+                    SHOW_TOAST(@"网络异常");
+                }
                 strongSelf->onSaleHouseCount = 0;
                 [strongSelf.bottomBar showDrawLine:@"区域内共找到0套房源" showIndicator:NO];
                 [[FHMainManager sharedInstance] showToast:@"房源请求失败" duration:2];

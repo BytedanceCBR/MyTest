@@ -200,12 +200,14 @@
 {
     [self.selectionModel clearAllSection];
     [self.collectionView reloadData];
+    if (self.resetBlock) {
+        self.resetBlock();
+    }
 }
 
 -(void)onConfirmAction
 {
     NSString *query = [self.selectionModel selectedQuery];
-    NSLog(@"[FILTER] query is: %@",query);
     if (self.confirmWithQueryBlock) {
         self.confirmWithQueryBlock(query);
     }
