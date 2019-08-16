@@ -22,7 +22,7 @@
 @interface FHCommunityFeedListMyJoinViewModel () <UITableViewDelegate, UITableViewDataSource>
 
 @property(nonatomic, assign) BOOL needDealFollowData;
-@property (nonatomic, copy)     NSString       *lastGroupId;
+@property (nonatomic, strong)   NSMutableArray       *lastGroupIdArr;
 
 @end
 
@@ -32,6 +32,7 @@
     self = [super initWithTableView:tableView controller:viewController];
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
+        self.lastGroupIdArr = [[NSMutableArray alloc] init];
         [self configTableView];
         // 发帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
@@ -181,12 +182,15 @@
         
         if(model){
             // 临时兼容，更新refreshTip，后面版本需要去掉 当前版本：v0.7.5
+            [self.lastGroupIdArr removeAllObjects];
             if (wself.dataList.count > 0) {
-                // 取第一个数据的group_id
-                FHFeedUGCCellModel *cellModel = [wself.dataList firstObject];
-                if ([cellModel isKindOfClass:[FHFeedUGCCellModel class]]) {
-                    wself.lastGroupId = cellModel.groupId;
-                }
+                [wself.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj isKindOfClass:[FHFeedUGCCellModel class]]) {
+                        if (obj.groupId.length > 0) {
+                            [self.lastGroupIdArr addObject:obj.groupId];
+                        }
+                    }
+                }];
             }
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
             if(isFirst){
@@ -213,26 +217,21 @@
             NSString *refreshTip = feedListModel.tips.displayInfo;// 为您更新19d条热帖
             // 临时兼容，更新refreshTip，后面版本需要去掉 当前版本：v0.7.5
             if (result.count > 0 && isHead) {
-                if (wself.lastGroupId.length > 0) {
-                    __block NSInteger findIndex = -1;
+                if (wself.lastGroupIdArr.count > 0) {
+                    __block NSInteger refreshTipCount = 0;
                     [result enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                         if ([obj isKindOfClass:[FHFeedUGCCellModel class]]) {
-                            if ([obj.groupId isEqualToString:wself.lastGroupId]) {
-                                findIndex = idx;
-                                *stop = YES;
+                            if (obj.groupId.length > 0) {
+                                if (![self.lastGroupIdArr containsObject:obj.groupId]) {
+                                    refreshTipCount += 1;
+                                }
                             }
                         }
                     }];
-                    if (findIndex >= 0) {
-                        // 找到
-                        if (findIndex == 0) {
-                            // 没有更新
-                            refreshTip = @"";
-                        } else {
-                            refreshTip = [NSString stringWithFormat:@"为您更新%ld条热帖",findIndex];
-                        }
+                    if (refreshTipCount > 0) {
+                        refreshTip = [NSString stringWithFormat:@"为您更新%ld条热帖",refreshTipCount];
                     } else {
-                        refreshTip = [NSString stringWithFormat:@"为您更新%ld条热帖",result.count];
+                        refreshTip = @"";
                     }
                 }
             } else {
