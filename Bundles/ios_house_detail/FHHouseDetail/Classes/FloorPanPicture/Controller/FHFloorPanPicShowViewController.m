@@ -12,6 +12,8 @@
 #import <TTDeviceHelper.h>
 #import <UIViewController+Track.h>
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import <FHHouseBase/FHBaseCollectionView.h>
+
 
 #define FH_FLOOR_PIC_HEADER_HEIGHT 30
 
@@ -58,7 +60,7 @@
     layout.itemSize =CGSizeMake(110, 150);
     
     //2.初始化collectionView
-    _mainCollectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+    _mainCollectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
     [self.view addSubview:_mainCollectionView];
     _mainCollectionView.backgroundColor = [UIColor clearColor];
     

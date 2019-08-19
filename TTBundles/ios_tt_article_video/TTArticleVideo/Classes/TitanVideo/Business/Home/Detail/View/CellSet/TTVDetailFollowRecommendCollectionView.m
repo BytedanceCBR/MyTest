@@ -65,7 +65,9 @@
     result.scrollsToTop = NO;
     result.showsHorizontalScrollIndicator = NO;
     [result registerClass:[TTVDetailFollowRecommendCardCell class] forCellWithReuseIdentifier:TTVDetailFollowRecommendCellIdentifier];
-    
+    if(@available(iOS 11.0 , * )){
+        result.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     result.followSource = TTFollowNewSourceRecommendUserOtherCategory;
     return result;
 }

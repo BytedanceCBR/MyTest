@@ -341,7 +341,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         self.needReload = YES;
     }else{
         [self.lastBubble overwriteFliter:query];
-        [self requestHouses:YES showTip:YES];
+        if ([TTReachability isNetworkConnected]) {
+            [self requestHouses:YES showTip:YES];
+        }else{
+            SHOW_TOAST(@"网络异常");
+        }
+        
     }
 }
 

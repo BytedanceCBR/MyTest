@@ -25,6 +25,7 @@
 #import "FHPostUGCViewController.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @interface FHCommunityViewController ()
 
@@ -207,7 +208,7 @@
     layout.minimumInteritemSpacing = 0;
 
     //2.初始化collectionView
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     _collectionView.allowsSelection = NO;
     _collectionView.pagingEnabled = YES;
     _collectionView.bounces = NO;

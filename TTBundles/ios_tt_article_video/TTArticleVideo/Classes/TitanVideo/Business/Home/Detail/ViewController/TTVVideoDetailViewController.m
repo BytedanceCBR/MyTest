@@ -186,6 +186,8 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 
 @property (nonatomic, strong) TTVDetailFollowRecommendViewController *followRecommendVC;
 
+@property (nonatomic, assign) UIEdgeInsets initInsets;
+
 @end
 
 @implementation TTVVideoDetailViewController
@@ -751,13 +753,14 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     
     self.statusBarBackgrView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.ttv_statusBarHidden ? 0 : self.view.tt_safeAreaInsets.top)];
     self.statusBarBackgrView.backgroundColor = [UIColor blackColor];
+    self.initInsets = self.view.tt_safeAreaInsets;
     [self.view addSubview:self.statusBarBackgrView];
 }
 
 - (void)viewSafeAreaInsetsDidChange {
     [super viewSafeAreaInsetsDidChange];
 
-    self.statusBarBackgrView.height = (self.ttv_statusBarHidden && ![TTDeviceHelper isIPhoneXDevice]) ? 0 : self.view.tt_safeAreaInsets.top;
+    self.statusBarBackgrView.height = (self.ttv_statusBarHidden && ![TTDeviceHelper isIPhoneXDevice]) ? 0 : self.initInsets.top;
 }
 
 - (void)restoreAlbumViewIfNeed

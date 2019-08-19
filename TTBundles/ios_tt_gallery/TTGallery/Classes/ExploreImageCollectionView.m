@@ -273,6 +273,9 @@ static NSString * const kTTImageRecommendOneSearchWordCellIdentifier = @"kTTImag
         _imageRecommendCollectionView.dataSource = self;
         [_imageRecommendCollectionView registerClass:[TTImageRecommendItemCell class] forCellWithReuseIdentifier:kTTImageRecommendItemCellIdentifier];
         [_imageRecommendCollectionView registerClass:[TTPhotoSingleSearchWordCell class] forCellWithReuseIdentifier:kTTImageRecommendOneSearchWordCellIdentifier];
+        if (@available(iOS 11.0 , *)) {
+            _imageRecommendCollectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         [self.contentView addSubview:_imageRecommendCollectionView];
         
         // night mask View

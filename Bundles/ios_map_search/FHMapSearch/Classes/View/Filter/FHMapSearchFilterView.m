@@ -16,6 +16,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "UIViewAdditions.h"
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 #define PRICE_CELL_ID  @"price_cell_id"
 #define NORMAL_CELL_ID @"normal_cell_id"
@@ -67,7 +68,7 @@
         
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.scrollDirection = UICollectionViewScrollDirectionVertical;
-        _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
+        _collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
         _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.allowsMultipleSelection = YES;

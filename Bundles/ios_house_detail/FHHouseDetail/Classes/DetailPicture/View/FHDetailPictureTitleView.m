@@ -10,6 +10,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import "FHCommonDefines.h"
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @interface FHDetailPictureTitleView()<UICollectionViewDelegate,UICollectionViewDataSource>
 @property (nonatomic, strong)   UILabel       *tempLabel;
@@ -40,7 +41,7 @@
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 10;
     
-    _colletionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 20, SCREEN_WIDTH, 22) collectionViewLayout:layout];
+    _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 20, SCREEN_WIDTH, 22) collectionViewLayout:layout];
     _colletionView.backgroundColor = [UIColor clearColor];
     _colletionView.pagingEnabled = NO;
     _colletionView.showsHorizontalScrollIndicator = NO;

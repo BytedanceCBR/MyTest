@@ -13,7 +13,7 @@
 {
     self = [super initWithFrame:frame collectionViewLayout:layout];
     if (self) {
-        if (@available(iOS 13.0 , *)) {
+        if (@available(iOS 11.0 , *)) {
             self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
     }

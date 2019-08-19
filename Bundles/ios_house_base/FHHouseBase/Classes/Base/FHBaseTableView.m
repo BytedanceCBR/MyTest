@@ -13,7 +13,7 @@
 {
     self = [super initWithFrame:frame];
     if(self){
-        [self setInsetContentArea];
+        [self setupAttrs];
     }
     return self;
 }
@@ -22,26 +22,17 @@
 {
     self = [super initWithFrame:frame style:style];
     if (self) {
-        [self setInsetContentArea];
+        [self setupAttrs];
     }
     return self;
 }
 
--(void)setInsetContentArea
+-(void)setupAttrs
 {
     if (@available(iOS 11.0, *)) {
         self.insetsContentViewsToSafeArea = NO;
+        self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-}
-
--(void)setInsetsContentViewsToSafeArea:(BOOL)insetsContentViewsToSafeArea
-{
-    [super setInsetsContentViewsToSafeArea:insetsContentViewsToSafeArea];
-}
-
--(void)layoutSubviews
-{
-    [super layoutSubviews];
 }
 
 /*

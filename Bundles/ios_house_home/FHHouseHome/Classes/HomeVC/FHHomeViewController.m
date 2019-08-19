@@ -504,6 +504,9 @@ static CGFloat const kSectionHeaderHeight = 38;
         _scrollView.scrollsToTop = NO;
         _scrollView.contentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width*4, 0);
         _scrollView.backgroundColor = [UIColor whiteColor];
+        if (@available(iOS 11.0 , *)) {
+            _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
     }
     return _scrollView;
 }

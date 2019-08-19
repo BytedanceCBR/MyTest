@@ -224,7 +224,9 @@ static CGFloat const kMinimumLineSpacing = 6;
         [_collectionView registerClass:[TTHorizontalHuoShanVideoOptimizeCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([TTHorizontalHuoShanVideoOptimizeCollectionCell class])];
         [_collectionView registerClass:[TTHorizontalHuoShanLoadingCell class] forCellWithReuseIdentifier:NSStringFromClass([TTHorizontalHuoShanLoadingCell class])];
         [_collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([UICollectionViewCell class])];
-        
+        if(@available(iOS 11.0 , * )){
+            _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         [self addSubview:_collectionView];
     }
     return _collectionView;
