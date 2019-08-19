@@ -21,6 +21,9 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
 // UGC config
 static const NSString *kFHUGCConfigCacheKey = @"cache_ugc_config_key";
 static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
+// Publisher History
+static const NSString *kFHUGCPublisherHistoryCacheKey = @"key_ugc_publisher_history_cache";
+static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_history_Data";
 
 
 // 小区圈子数据统一内存数据缓存
@@ -38,6 +41,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
 @property (nonatomic, strong)   YYCache       *followListCache;
 @property (nonatomic, strong)   YYCache       *ugcConfigCache;
+@property (nonatomic, strong)   YYCache       *ugcPublisherHistoryCache;
 @property (nonatomic, copy)     NSString      *followListDataKey;// 关注数据 用户相关 存储key
 @property (nonatomic, strong)   NSTimer       *focusTimer;//关注是否有新内容的轮训timer
 
@@ -558,6 +562,35 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 //    }];
 }
 
+#pragma mark - Publisher Hisgtory
+
+- (YYCache *)ugcPublisherHistoryCache {
+    if(!_ugcPublisherHistoryCache) {
+        _ugcPublisherHistoryCache = [YYCache cacheWithName:kFHUGCPublisherHistoryCacheKey];
+    }
+    return _ugcPublisherHistoryCache;
+}
+
+- (FHPostUGCSelectedGroupHistory *)loadPublisherHistoryData {
+    NSDictionary *historyDict = [self.ugcPublisherHistoryCache objectForKey:kFHUGCPublisherHistoryDataKey];
+    if (historyDict && [historyDict isKindOfClass:[NSDictionary class]]) {
+        NSError *err = nil;
+        FHPostUGCSelectedGroupHistory * model = [[FHPostUGCSelectedGroupHistory alloc] initWithDictionary:historyDict error:&err];
+        if (model) {
+            return model;
+        }
+    }
+    return nil;
+}
+
+- (void)savePublisherHistoryDataWithModel: (FHPostUGCSelectedGroupHistory *)model {
+    if (model) {
+        NSDictionary *historyDict = [model toDictionary];
+        if (historyDict) {
+            [self.ugcPublisherHistoryCache setObject:historyDict forKey:kFHUGCPublisherHistoryDataKey];
+        }
+    }
+}
 @end
 
 
@@ -619,5 +652,4 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     }
     return nil;
 }
-
 @end

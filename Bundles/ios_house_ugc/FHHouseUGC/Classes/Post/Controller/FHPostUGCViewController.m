@@ -45,6 +45,7 @@
 #import "FHUGCConfig.h"
 #import "FHUGCCommunityListViewController.h"
 #import "FHPostUGCSelectedGroupHistoryView.h"
+#import "FHUGCConfig.h"
 #import "FHEnvContext.h"
 
 static CGFloat const kLeftPadding = 20.f;
@@ -300,12 +301,11 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // selected history View
     BOOL isShowSelectedGroupHistory = NO;
-    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:kSelectedGroupHistoryWhenPostSuccessfully];
-    FHPostUGCSelectedGroupHistory *selectedGroupHistory = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadPublisherHistoryData];
     NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
     NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
     FHPostUGCSelectedGroupModel *selectedGroup = nil;
-    if([selectedGroupHistory isKindOfClass:[FHPostUGCSelectedGroupHistory class]] && currentCityID.length > 0 && currentUserID.length > 0) {
+    if(selectedGroupHistory && currentCityID.length > 0 && currentUserID.length > 0) {
         NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
         selectedGroup = [selectedGroupHistory.historyInfos objectForKey:saveKey];
         if(selectedGroup) {
@@ -856,9 +856,7 @@ static NSInteger const kMaxPostImageCount = 9;
         NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
         NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
         if(currentCityID.length > 0 && currentUserID.length > 0) {
-            
-            NSData *oldData = [[NSUserDefaults standardUserDefaults] objectForKey:kSelectedGroupHistoryWhenPostSuccessfully];
-            FHPostUGCSelectedGroupHistory *selectedGroupHistory = [NSKeyedUnarchiver unarchiveObjectWithData:oldData];
+            FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadPublisherHistoryData];
             if(!selectedGroupHistory) {
                 selectedGroupHistory = [FHPostUGCSelectedGroupHistory new];
                 selectedGroupHistory.historyInfos = [NSMutableDictionary dictionary];
@@ -870,8 +868,7 @@ static NSInteger const kMaxPostImageCount = 9;
             NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
             [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
             
-            NSData *newData = [NSKeyedArchiver archivedDataWithRootObject:selectedGroupHistory];
-            [[NSUserDefaults standardUserDefaults] setObject:newData forKey:kSelectedGroupHistoryWhenPostSuccessfully];
+            [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
         }
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionCancelledNotification
