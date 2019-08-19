@@ -31,7 +31,7 @@ inhibit_all_warnings!
 # F100 业务线库
 def fhPods
     
-    pod 'FHCommonUI'  , :path => '../Bundles/ios_common_ui' # :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/develop' #
+    pod 'FHCommonUI'  , :path => '../../../Bundles/ios_common_ui' # :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/develop' #
     pod 'FHHouseBase' , :path => '../Bundles/ios_house_base' # :git => 'git@code.byted.org:fproject/ios_house_base.git' ,:branch => 'feature/develop' #
     #    pod 'FHHouseRent' , :path => '../Bundles/ios_house_rent' #:git => 'git@code.byted.org:fproject/ios_house_rent.git' ,:branch => 'feature/develop' #
     pod 'FHMapSearch' , :path => '../Bundles/ios_map_search' # :git => 'git@code.byted.org:fproject/ios_map_search.git' ,:branch => 'feature/develop' #
@@ -49,7 +49,7 @@ def fhPods
     pod 'FHWebView', :path => '../AKPlugins/FHWebView'
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
 #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => 'e61e37eeacd3586be530affd8aaf25f93b02216d' #:branch => 'feature/develop'
-    pod 'ios_house_im' , '0.1.6'
+    pod 'ios_house_im' , :path => '../../../Bundles/ios_house_im' #'0.1.6'
     #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
     pod 'ios_house_filter' , '1.0.1'
 
