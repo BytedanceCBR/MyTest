@@ -305,7 +305,7 @@ static NSInteger const kMaxPostImageCount = 9;
     NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
     NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
     FHPostUGCSelectedGroupModel *selectedGroup = nil;
-    if(selectedGroupHistory && currentCityID.length > 0 && currentUserID.length > 0) {
+    if([selectedGroupHistory isKindOfClass:[FHPostUGCSelectedGroupHistory class]] && currentCityID.length > 0 && currentUserID.length > 0) {
         NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
         selectedGroup = [selectedGroupHistory.historyInfos objectForKey:saveKey];
         if(selectedGroup) {
