@@ -458,23 +458,27 @@
     NSString *linkUrlString = model.linkUrl;
     NSString *imageUrlString = model.imageUrl;
  
-    self.headerView.gotoOperationBlock = ^{
-        NSURLComponents *urlComponents = [NSURLComponents new];
-        urlComponents.scheme = @"fschema";
-        urlComponents.host = @"webview";
-        urlComponents.queryItems = @[
-                                     [[NSURLQueryItem alloc] initWithName:@"url" value: linkUrlString]
-                                     ];
-        
-        NSURL *url = urlComponents.URL;
-        [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
-        
-        NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        param[UT_PAGE_TYPE] = @"community_group_detail";
-        param[UT_ENTER_FROM] = @"community_group_operation";
-        param[@"operation_id"] = self.data.logPb[@"operation_id"];
-        TRACK_EVENT(@"operation_click", param);
-    };
+    if(linkUrlString.length > 0) {
+        self.headerView.gotoOperationBlock = ^{
+            NSURLComponents *urlComponents = [NSURLComponents new];
+            urlComponents.scheme = @"fschema";
+            urlComponents.host = @"webview";
+            urlComponents.queryItems = @[
+                                         [[NSURLQueryItem alloc] initWithName:@"url" value: linkUrlString]
+                                         ];
+            
+            NSURL *url = urlComponents.URL;
+            [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+            
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            param[UT_PAGE_TYPE] = @"community_group_detail";
+            param[UT_ENTER_FROM] = @"community_group_operation";
+            param[@"operation_id"] = self.data.logPb[@"operation_id"];
+            TRACK_EVENT(@"operation_click", param);
+        };
+    } else {
+        self.headerView.gotoOperationBlock = nil;
+    }
     NSURL *imageUrl = [NSURL URLWithString: imageUrlString];
     [self.headerView.operationBannerImageView bd_setImageWithURL:imageUrl placeholder:nil options:BDImageRequestDefaultOptions completion:nil];
     CGFloat whRatio = 335.0 / 58;
@@ -525,23 +529,27 @@
     }
     
     self.headerView.publicationsContentLabel.attributedText = attributedText;
-    self.headerView.gotoPublicationsDetailBlock = ^{
-        NSURLComponents *urlComponents = [NSURLComponents new];
-        urlComponents.scheme = @"fschema";
-        urlComponents.host = @"webview";
-        urlComponents.queryItems = @[
-                                     [[NSURLQueryItem alloc] initWithName:@"url" value: data.announcementUrl]
-                                     ];
-        NSURL *url = urlComponents.URL;
-        [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
-        
-        NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        param[UT_ELEMENT_TYPE] = @"community_group_notice";
-        param[UT_PAGE_TYPE] = @"community_group_detail";
-        param[@"click_position"] = @"community_notice_more";
-        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
-        TRACK_EVENT(@"click_community_notice_more", param);
-    };
+    if(data.announcementUrl.length > 0) {
+        self.headerView.gotoPublicationsDetailBlock = ^{
+            NSURLComponents *urlComponents = [NSURLComponents new];
+            urlComponents.scheme = @"fschema";
+            urlComponents.host = @"webview";
+            urlComponents.queryItems = @[
+                                         [[NSURLQueryItem alloc] initWithName:@"url" value: data.announcementUrl]
+                                         ];
+            NSURL *url = urlComponents.URL;
+            [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+            
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            param[UT_ELEMENT_TYPE] = @"community_group_notice";
+            param[UT_PAGE_TYPE] = @"community_group_detail";
+            param[@"click_position"] = @"community_notice_more";
+            param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+            TRACK_EVENT(@"click_community_notice_more", param);
+        };
+    } else {
+        self.headerView.gotoPublicationsDetailBlock = nil;
+    }
     
     [self.headerView updatePublicationsInfo: !isEmptyString(data.announcement)
                                hasDetailBtn: !isEmptyString(data.announcementUrl)];
