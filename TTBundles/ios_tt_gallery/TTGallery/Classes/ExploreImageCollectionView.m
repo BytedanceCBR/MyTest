@@ -804,6 +804,9 @@ static CGFloat toolbarHeight = 44.5f;
         self.collectionView.delegate = self;
         self.collectionView.dataSource = self;
         self.collectionView.backgroundView = nil;
+        if(@available(iOS 11.0 , *)){
+            self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;            
+        }
         /// 对pad返回手势做单独处理
         self.collectionView.bounces = !([TTDeviceHelper isPadDevice]);
         self.collectionView.backgroundColor = [UIColor clearColor];
