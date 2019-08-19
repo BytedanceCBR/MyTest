@@ -27,6 +27,7 @@
 #import <HMDTTMonitor.h>
 #import "FHDetailMapView.h"
 #import "FHDetailStarHeaderView.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 56;
@@ -278,7 +279,7 @@ FHDetailVCViewLifeCycleProtocol>
 
 - (void)setUpLocationListTableView
 {
-    _locationList = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _locationList = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _locationList.separatorStyle = UITableViewCellSelectionStyleNone;
     _locationList.allowsSelection = NO;
     _locationList.userInteractionEnabled = YES;

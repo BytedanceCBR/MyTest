@@ -682,6 +682,9 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
         
         UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20)];
         [_wrapperScroller.contentView addSubview:paddingView];
+        if (@available(iOS 11.0 , *)) {
+            _wrapperScroller.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
     }
     return _wrapperScroller;
 }
@@ -778,6 +781,9 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     _ttvContainerScrollView.showsVerticalScrollIndicator = ![TTDeviceHelper isPadDevice];
     _ttvContainerScrollView.delegate = self;
     _ttvContainerScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    if(@available(iOS 11.0 , *)){
+        _ttvContainerScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     [self.view addSubview:_ttvContainerScrollView];
     _headerPosterVC.ttvContainerScrollView = _ttvContainerScrollView;
     _commentVC.ttvContainerScrollView = _ttvContainerScrollView;

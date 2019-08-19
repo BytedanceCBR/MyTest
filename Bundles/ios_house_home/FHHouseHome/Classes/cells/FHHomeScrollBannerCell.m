@@ -240,6 +240,9 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 
 - (void)setupUI {
     _bannerScrollView = [[FHBannerScrollView alloc] init];
+    if(@available(iOS 11.0 , *)){
+        _bannerScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     [self addSubview:_bannerScrollView];
     _bannerScrollView.scrollsToTop = NO;
     _bannerScrollView.delegate = self;

@@ -119,10 +119,10 @@ static struct timeval commentTimeval;
         self.containerView.height = minHeight + bottomSafeInset;
         self.emojiInputView.top = self.textInputView.bottom;
     }
-    if (@available(iOS 11.0, *)) {
-        self.textInputView.width = self.width - self.tt_safeAreaInsets.left - self.tt_safeAreaInsets.right;
-        self.textInputView.left = self.tt_safeAreaInsets.left;
-    }
+//    if (@available(iOS 11.0, *)) {
+//        self.textInputView.width = self.width - self.tt_safeAreaInsets.left - self.tt_safeAreaInsets.right;
+//        self.textInputView.left = self.tt_safeAreaInsets.left;
+//    }
 }
 
 - (void)willAppear {
