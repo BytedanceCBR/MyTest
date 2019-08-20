@@ -1290,7 +1290,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 #pragma mark - area house list
 -(void)showSiderHouseList
 {
-    [self addNavSwitchHouseListLog];
+    [self addSideBarHouseListLog];
     
     if ([self.configModel.enterFrom isEqualToString:@"city_market"] || [self.configModel.enterFrom isEqualToString:@"maintab"] || !self.configModel.enterFromList) {
         //从城市行情进入的 要先跳到二手房列表页 QA确认
@@ -2201,17 +2201,16 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [FHUserTracker writeEvent:@"mapfind_half_category" params:param];
 }
 
--(void)addNavSwitchHouseListLog
+-(void)addSideBarHouseListLog
 {
-    NSMutableDictionary *param = [self logBaseParams];
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_PAGE_TYPE] = @"mapfind";
+    param[UT_ENTER_FROM] = self.viewController.tracerModel.enterFrom?:UT_BE_NULL;
+    param[UT_ORIGIN_FROM] = self.viewController.tracerModel.originFrom?:UT_BE_NULL;
+    param[@"click_position"] = @"house_category";
     
-    param[@"enter_from"] = @"mapfind";
-    param[@"enter_type"] = @"click";
-    param[@"click_type"] = @"list";
-    param[@"category_name"] = self.configModel.enterCategory?:(self.configModel.houseType == FHHouseTypeSecondHandHouse ?@"old_list":@"rent_list");
-    param[@"element_from"] = self.configModel.elementFrom ?: @"be_null";
-    
-    [FHUserTracker writeEvent:@"click_switch_mapfind" params:param];
+    TRACK_EVENT(@"click_options",param);
+        
 }
 
 #pragma mark - 画圈找房 埋点

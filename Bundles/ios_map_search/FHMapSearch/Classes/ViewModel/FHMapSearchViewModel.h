@@ -51,7 +51,6 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)viewWillDisappear:(BOOL)animated;
 
 -(void)addEnterMapLog;
--(void)addNavSwitchHouseListLog;
 
 -(void)moveToUserLocation;
 
