@@ -126,6 +126,8 @@
     
     TTRichSpanText *threadContent = [[TTRichSpanText alloc] initWithText:@"" richSpanLinks:nil imageInfoModelDictionary:nil];
     
+    model.richContent = richContent;
+    
     if (!isEmptyString(model.title)) {
         [threadContent appendText:[NSString stringWithFormat:@"【%@】",model.title]];
     }

@@ -12,6 +12,7 @@
 #import "TTUGCAttributedLabel.h"
 #import "FHUGCCellHelper.h"
 #import "FHUGCCellOriginItemView.h"
+#import "TTRoute.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -64,6 +65,13 @@
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
+    NSDictionary *linkAttributes = @{
+                                     NSForegroundColorAttributeName : [UIColor themeRed1],
+                                     NSFontAttributeName : [UIFont themeFontRegular:16]
+                                     };
+    self.contentLabel.linkAttributes = linkAttributes;
+    self.contentLabel.activeLinkAttributes = linkAttributes;
+    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
@@ -144,6 +152,13 @@
         }else{
             self.contentLabel.hidden = NO;
             [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+            NSArray <TTRichSpanLink *> *richSpanLinks = [cellModel.richContent richSpanLinksOfAttributedString];
+            for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+                NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
+                if (NSMaxRange(range) <= self.contentLabel.attributedText.length) {
+                    [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                }
+            }
         }
         //origin
         if(cellModel.originItemModel){
@@ -235,6 +250,10 @@
     if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
         if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
             [self.delegate lookAllLinkClicked:self.cellModel cell:self];
+        }
+    } else {
+        if (url) {
+            [[TTRoute sharedRoute] openURLByPushViewController:url];
         }
     }
 }

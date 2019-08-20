@@ -9,6 +9,8 @@
 #import "FHFeedContentModel.h"
 #import "FHFeedUGCContentModel.h"
 #import "FHHouseUGCHeader.h"
+#import "TTRichSpanText.h"
+#import "TTRichSpanText+Emoji.h"
 
 @class FHCommunityFeedListController;
 
@@ -61,6 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *behotTime;
 //计算高度相关
 @property (nonatomic, strong , nullable) NSAttributedString *contentAStr;
+@property (nonatomic, strong)   TTRichSpanText       *richContent;
 @property (nonatomic, assign) CGFloat contentHeight;
 //是否显示查看全文
 @property (nonatomic, assign) BOOL showLookMore;

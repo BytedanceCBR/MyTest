@@ -13,6 +13,7 @@
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
 #import "FHUGCCellOriginItemView.h"
+#import "TTRoute.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -65,6 +66,13 @@
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
+    NSDictionary *linkAttributes = @{
+                                     NSForegroundColorAttributeName : [UIColor themeRed1],
+                                     NSFontAttributeName : [UIFont themeFontRegular:16]
+                                     };
+    self.contentLabel.linkAttributes = linkAttributes;
+    self.contentLabel.activeLinkAttributes = linkAttributes;
+    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
@@ -169,6 +177,14 @@
                 make.height.mas_equalTo(self.imageViewheight);
             }];
             [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+            // 文章如果也需要的话可以把代码放入 setRichContent 中统一添加
+            NSArray <TTRichSpanLink *> *richSpanLinks = [cellModel.richContent richSpanLinksOfAttributedString];
+            for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+                NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
+                if (NSMaxRange(range) <= self.contentLabel.attributedText.length) {
+                    [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                }
+            }
         }
         //图片
         [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
@@ -269,6 +285,10 @@
     if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
         if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
             [self.delegate lookAllLinkClicked:self.cellModel cell:self];
+        }
+    } else {
+        if (url) {
+            [[TTRoute sharedRoute] openURLByPushViewController:url];
         }
     }
 }
