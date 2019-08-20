@@ -1271,6 +1271,13 @@
 }
 
 - (void)dislike {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(canDislikeClick)]){
+        BOOL canDislike = [self.delegate canDislikeClick];
+        if(!canDislike){
+            return;
+        }
+    }
+    
     [self trackClickHouseDislke];
     NSArray *dislikeInfo = self.homeItemModel.dislikeInfo;
     if(dislikeInfo && [dislikeInfo isKindOfClass:[NSArray class]]){

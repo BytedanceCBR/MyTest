@@ -18,6 +18,10 @@ typedef NS_ENUM(NSInteger , FHUGCFollowButtonStyle) {
 @interface FHUGCFollowButton : UIButton
 
 @property (nonatomic, assign) BOOL followed;// 默认是 NO
+@property (nonatomic, strong, nullable) UIColor *followedTextColor;
+@property (nonatomic, strong, nullable) UIColor *unFollowedTextColor;
+@property (nonatomic, strong, nullable) UIColor *followedBackgroundColor;
+@property (nonatomic, strong, nullable) UIColor *unFollowedBackgroundColor;
 @property (nonatomic, strong) NSString *groupId;// 需要关注的小区id
 
 /* page_type/ enter_from /enter_type /rank/log_pb */

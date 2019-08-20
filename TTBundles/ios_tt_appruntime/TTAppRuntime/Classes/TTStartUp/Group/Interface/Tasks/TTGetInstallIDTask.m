@@ -56,6 +56,7 @@ DEC_TASK("TTGetInstallIDTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
     
     [[TTInstallIDManager sharedInstance] startWithAppID:[TTSandBoxHelper ssAppID]
                                                 channel:[TTSandBoxHelper getCurrentChannel]
+                                                appName:[TTSandBoxHelper appName]
                                             finishBlock:^(NSString *deviceID, NSString *installID) {
         // 更新installID
         if(!isEmptyString(installID)) {
