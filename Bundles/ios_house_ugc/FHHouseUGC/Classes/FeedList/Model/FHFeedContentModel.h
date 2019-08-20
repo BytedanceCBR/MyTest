@@ -1,6 +1,82 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 NS_ASSUME_NONNULL_BEGIN
+@interface FHFeedContentRawDataContentExtraModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *answerCount;
+@end
+
+@interface FHFeedContentRawDataOriginCommonContentUserInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *originUserId;
+@property (nonatomic, copy , nullable) NSString *mediaId;
+@property (nonatomic, copy , nullable) NSString *name;
+@property (nonatomic, copy , nullable) NSString *banStatus;
+@property (nonatomic, copy , nullable) NSString *originProfileUrl;
+@property (nonatomic, copy , nullable) NSString *userDecoration;
+@property (nonatomic, copy , nullable) NSString *verifiedContent;
+@property (nonatomic, copy , nullable) NSString *realName;
+@property (nonatomic, copy , nullable) NSString *userAuthInfo;
+@property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *userId;
+@property (nonatomic, copy , nullable) NSString *liveInfoType;
+@property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, copy , nullable) NSString *userVerified;
+@property (nonatomic, copy , nullable) NSString *roomSchema;
+@property (nonatomic, copy , nullable) NSString *desc;
+@end
+
+@interface FHFeedContentRawDataOriginCommonContentUserModel : JSONModel
+
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginCommonContentUserInfoModel *info ;
+@end
+
+@interface FHFeedContentRawDataCommentBaseActionModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *readCount;
+@property (nonatomic, copy , nullable) NSString *userBury;
+@property (nonatomic, copy , nullable) NSString *buryCount;
+@property (nonatomic, copy , nullable) NSString *forwardCount;
+@property (nonatomic, copy , nullable) NSString *diggCount;
+@property (nonatomic, copy , nullable) NSString *playCount;
+@property (nonatomic, copy , nullable) NSString *commentCount;
+@property (nonatomic, copy , nullable) NSString *userRepin;
+@property (nonatomic, copy , nullable) NSString *shareCount;
+@property (nonatomic, copy , nullable) NSString *userDigg;
+@end
+
+@interface FHFeedContentRawDataCommentBaseUserInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *originUserId;
+@property (nonatomic, copy , nullable) NSString *mediaId;
+@property (nonatomic, copy , nullable) NSString *name;
+@property (nonatomic, copy , nullable) NSString *banStatus;
+@property (nonatomic, copy , nullable) NSString *originProfileUrl;
+@property (nonatomic, copy , nullable) NSString *userDecoration;
+@property (nonatomic, copy , nullable) NSString *verifiedContent;
+@property (nonatomic, copy , nullable) NSString *realName;
+@property (nonatomic, copy , nullable) NSString *userAuthInfo;
+@property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *userId;
+@property (nonatomic, copy , nullable) NSString *liveInfoType;
+@property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, copy , nullable) NSString *userVerified;
+@property (nonatomic, copy , nullable) NSString *roomSchema;
+@property (nonatomic, copy , nullable) NSString *desc;
+@end
+
+@interface FHFeedContentRawDataCommentBaseUserBlockModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *isBlocking;
+@property (nonatomic, copy , nullable) NSString *isBlocked;
+@end
+
+@interface FHFeedContentRawDataCommentBaseUserModel : JSONModel
+
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserInfoModel *info ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserBlockModel *block ;
+@end
+
 @protocol FHFeedContentRecommendSocialGroupListModel<NSObject>
 @end
 
@@ -49,6 +125,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListUrlListModel> *urlList;
 @property (nonatomic, copy , nullable) NSString *uri;
 @property (nonatomic, copy , nullable) NSString *height;
+@end
+
+@interface FHFeedContentRawDataOriginCommonContentModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *style;
+@property (nonatomic, copy , nullable) NSString *richTitle;
+@property (nonatomic, copy , nullable) NSString *businessPayload;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, assign) BOOL hasVideo;
+@property (nonatomic, copy , nullable) NSString *titleRichSpan;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginCommonContentUserModel *user ;
+@property (nonatomic, strong , nullable) FHFeedContentImageListModel *coverImage ;
+@property (nonatomic, copy , nullable) NSString *groupIdStr;
+@property (nonatomic, copy , nullable) NSString *groupId;
+@property (nonatomic, copy , nullable) NSString *schema;
 @end
 
 @interface FHFeedContentForwardInfoModel : JSONModel 
@@ -268,6 +359,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *layoutType;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataContentRepostParamsModel *repostParams ;
 @property (nonatomic, copy , nullable) NSString *jumpType;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataContentExtraModel *extra ;
 @end
 
 @interface FHFeedContentRawDataOriginGroupModel : JSONModel
@@ -302,14 +394,26 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *composition;
 @property (nonatomic, copy , nullable) NSString *repostStatus;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *imageList;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseActionModel *action ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserModel *user ;
+@end
+
+@interface FHFeedContentRawDataOperationModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *imageList;
 @end
 
 @interface FHFeedContentRawDataModel : JSONModel
 
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOperationModel *operation ;
 @property (nonatomic, strong , nullable) FHFeedContentCommunityModel *community ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataContentModel *content ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseModel *commentBase ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginGroupModel *originGroup ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginCommonContentModel *originCommonContent ;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, copy , nullable) NSString *groupId;
 @end

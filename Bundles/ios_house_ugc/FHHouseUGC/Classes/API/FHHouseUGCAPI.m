@@ -9,6 +9,8 @@
 #import "NSStringAdditions.h"
 #import "FHUGCModel.h"
 #import "FHUGCConfig.h"
+#import "FHEnvContext.h"
+#import "JSONAdditions.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -84,9 +86,14 @@
     if (!loadMore) {
         paramDic[@"refresh_reason"] = @(0);
     }
-//    "last_refresh_sub_entrance_interval" = 4459;
-//    "session_refresh_idx" = 5;
-//    "tt_from" = pull;
+    
+    NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
+    NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if(fCityId){
+        [extraDic setObject:fCityId forKey:@"f_city_id"];
+    }
+    
+    paramDic[@"client_extra_params"] = [extraDic tt_JSONRepresentation];
 
     Class cls = NSClassFromString(@"FHFeedListModel");
 

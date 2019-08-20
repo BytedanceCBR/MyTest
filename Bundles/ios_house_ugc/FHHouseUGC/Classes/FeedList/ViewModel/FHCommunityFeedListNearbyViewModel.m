@@ -195,6 +195,15 @@
         }
 
         if(model){
+            if(isHead){
+                if(feedListModel.hasMore){
+                    [wself.dataList removeAllObjects];
+                }
+                wself.tableView.hasMore = YES;
+            }else{
+                wself.tableView.hasMore = feedListModel.hasMore;
+            }
+            
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
 
             if(isFirst){
@@ -205,7 +214,7 @@
             }else{
                 [wself.dataList addObjectsFromArray:result];
             }
-            wself.tableView.hasMore = feedListModel.hasMore;
+        
             wself.viewController.hasValidateData = wself.dataList.count > 0;
 
             if(wself.dataList.count > 0){
@@ -416,11 +425,11 @@
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
         [self jumpToPostDetail:cellModel showComment:showComment enterType:enterType];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner){
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2){
         //根据url跳转
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
         // 评论
         NSMutableDictionary *dict = [NSMutableDictionary new];
         NSMutableDictionary *traceParam = @{}.mutableCopy;

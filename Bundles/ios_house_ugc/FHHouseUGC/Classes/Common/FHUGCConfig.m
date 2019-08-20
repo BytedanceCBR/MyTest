@@ -229,11 +229,11 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
 - (void)setFocusTimerState {
     //关注列表有数据，才会触发小红点逻辑
-    if([FHEnvContext isUGCOpen] && self.followList.count > 0){
-        [self setHasNewTimerInteralAndGetNewFirstTime];
-    }else{
-        [self stopTimer];
-    }
+//    if([FHEnvContext isUGCOpen] && self.followList.count > 0){
+//        [self setHasNewTimerInteralAndGetNewFirstTime];
+//    }else{
+//        [self stopTimer];
+//    }
 }
 
 - (NSArray<FHUGCScialGroupDataModel> *)followList {
