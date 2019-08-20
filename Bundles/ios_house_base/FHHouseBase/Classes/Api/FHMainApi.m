@@ -226,13 +226,16 @@
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[self generateModel:obj class:cls error:&backError];
             if (response.statusCode == 200) {
-                if (model.status.integerValue != 0 || error != nil) {
-                    NSMutableDictionary *extraDict = @{}.mutableCopy;
-                    extraDict[@"request_url"] = response.URL.absoluteString;
-                    extraDict[@"response_headers"] = response.allHeaderFields;
-                    extraDict[@"error"] = error.domain;
-                    
-                    [self addServerFailerLog:model.status extraDict:extraDict];
+                
+                if ([model respondsToSelector:@selector(status)]) {
+                    NSString *status = [model performSelector:@selector(status)];
+                    if (status.integerValue != 0 || error != nil) {
+                        NSMutableDictionary *extraDict = @{}.mutableCopy;
+                        extraDict[@"request_url"] = response.URL.absoluteString;
+                        extraDict[@"response_headers"] = response.allHeaderFields;
+                        extraDict[@"error"] = error.domain;
+                        [self addServerFailerLog:model.status extraDict:extraDict];
+                    }
                 }
             }
             if (completion) {
@@ -269,14 +272,16 @@
             return ;
         }
         FHHomeHouseModel *model = (FHHomeHouseModel *)[self generateModel:obj class:[FHHomeHouseModel class] error:&error];
-        if (response.statusCode == 200) {
-            if (model.status.integerValue != 0 || error != nil || (model.status == 0 && model.data.items.count == 0)) {
-                NSMutableDictionary *extraDict = @{}.mutableCopy;
-                extraDict[@"request_url"] = response.URL.absoluteString;
-                extraDict[@"response_headers"] = response.allHeaderFields;
-                extraDict[@"error"] = error.domain;
-
-                [self addServerFailerLog:model.status extraDict:extraDict];
+        if (response.statusCode == 200  && [model isKindOfClass:[FHHomeHouseModel class]]) {
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                if (status.integerValue != 0 || error != nil || model.data.items.count == 0) {
+                    NSMutableDictionary *extraDict = @{}.mutableCopy;
+                    extraDict[@"request_url"] = response.URL.absoluteString;
+                    extraDict[@"response_headers"] = response.allHeaderFields;
+                    extraDict[@"error"] = error.domain;
+                    [self addServerFailerLog:model.status extraDict:extraDict];
+                }
             }
         }
         if (completion) {
