@@ -14,18 +14,36 @@
 #import "TTAccount+Multicast.h"
 #import "TTAccountManager.h"
 #import "TTForumPostThreadStatusViewModel.h"
+#import "FHEnvContext.h"
 
 static const NSString *kFHFollowListCacheKey = @"cache_follow_list_key";
 static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
 // UGC config
 static const NSString *kFHUGCConfigCacheKey = @"cache_ugc_config_key";
 static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
+// Publisher History
+static const NSString *kFHUGCPublisherHistoryCacheKey = @"key_ugc_publisher_history_cache";
+static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_history_Data";
+
+
+// 小区圈子数据统一内存数据缓存
+@interface FHUGCSocialGroupData : NSObject
+
++ (instancetype)sharedInstance;
+- (void)resetSocialGroupDataWith:(NSArray<FHUGCScialGroupDataModel> *)followList;// 重新设置缓存数据
+- (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model;// 内容更新
+- (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id;
+
+@end
+
 
 @interface FHUGCConfig ()
 
 @property (nonatomic, strong)   YYCache       *followListCache;
 @property (nonatomic, strong)   YYCache       *ugcConfigCache;
-@property (nonatomic, copy)     NSString       *followListDataKey;// 关注数据 用户相关 存储key
+@property (nonatomic, strong)   YYCache       *ugcPublisherHistoryCache;
+@property (nonatomic, copy)     NSString      *followListDataKey;// 关注数据 用户相关 存储key
+@property (nonatomic, strong)   NSTimer       *focusTimer;//关注是否有新内容的轮训timer
 
 @end
 
@@ -128,12 +146,17 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
 // App启动的时候需要加载
 - (void)loadFollowData {
+    __weak typeof(self) wself = self;
     [FHHouseUGCAPI requestFollowListByType:1 class:[FHUGCModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (model && [model isKindOfClass:[FHUGCModel class]]) {
             FHUGCModel *u_model = model;
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.followData = u_model;
-                [self updateFollowData];
+                wself.followData = u_model;
+                if ([wself.followData.data.userFollowSocialGroups isKindOfClass:[NSArray class]]) {
+                    [[FHUGCSocialGroupData sharedInstance] resetSocialGroupDataWith:self.followData.data.userFollowSocialGroups];
+                }
+                [wself updateFollowData];
+                [wself setFocusTimerState];
             });
         }
     }];
@@ -167,6 +190,8 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
             }
             self.followData.data.userFollowSocialGroups = sGroups;
             [self updateFollowData];
+            [self setFocusTimerState];
+            [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:social_group];
         }
     }
 }
@@ -186,10 +211,13 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
             }];
             if (findData) {
                 [sGroups removeObject:findData];
+                findData.hasFollow = @"0";
+                [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:findData];
             }
         }
         self.followData.data.userFollowSocialGroups = sGroups;
         [self updateFollowData];
+        [self setFocusTimerState];
     }
 }
 
@@ -199,11 +227,26 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCLoadFollowDataFinishedNotification object:nil];
 }
 
+- (void)setFocusTimerState {
+    //关注列表有数据，才会触发小红点逻辑
+    if([FHEnvContext isUGCOpen] && self.followList.count > 0){
+        [self startTimer];
+    }else{
+        [self stopTimer];
+    }
+}
+
 - (NSArray<FHUGCScialGroupDataModel> *)followList {
     return self.followData.data.userFollowSocialGroups;
 }
 
 - (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id {
+    // 先去小区圈专门内存中取（包含关注列表中的数据，优化后）
+    FHUGCScialGroupDataModel * model = [[FHUGCSocialGroupData sharedInstance] socialGroupData:social_group_id];
+    if (model) {
+        return model;
+    }
+    // 关注列表中数据
     __block FHUGCScialGroupDataModel *groupData = nil;
     if (social_group_id.length > 0 && self.followData.data.userFollowSocialGroups.count > 0) {
         [self.followData.data.userFollowSocialGroups enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -277,7 +320,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         // 替换第二个数字（热帖个数）
         NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
         // 有数据而且不是起始位置的数据
-        if (range.location > 0 && range.length > 0) {
+        if (range.location >= 0 && range.length > 0) {
             countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
             model.contentCount = replaceContentCountStr;
         } else {
@@ -301,7 +344,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         // 替换第二个数字（热帖个数）
         NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
         // 有数据而且不是起始位置的数据
-        if (range.location > 0 && range.length > 0) {
+        if (range.location >= 0 && range.length > 0) {
             countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
             model.contentCount = replaceContentCountStr;
         } else {
@@ -309,6 +352,12 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         }
         model.countText = countText;
     }
+}
+
+- (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model {
+    [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:model];
+    // 通知 附近 可能感兴趣的小区圈 帖子数变化
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCSicialGroupDataChangeKey" object:nil];
 }
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
@@ -482,4 +531,125 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     return self.configData.data.permission;
 }
 
+- (void)startTimer {
+    if(_focusTimer){
+        [self stopTimer];
+    }
+    [self.focusTimer fire];
+}
+
+- (void)stopTimer {
+    [_focusTimer invalidate];
+    _focusTimer = nil;
+}
+
+- (NSTimer *)focusTimer {
+    if(!_focusTimer){
+        _focusTimer  =  [NSTimer timerWithTimeInterval:10 target:self selector:@selector(getHasNewForTimer) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:_focusTimer forMode:NSRunLoopCommonModes];
+    }
+    return _focusTimer;
+}
+
+- (void)getHasNewForTimer {
+    //每隔一段时候调用接口
+//    __weak typeof(self) wself = self;
+//    [FHHouseUGCAPI refreshFeedTips:nil beHotTime:nil completion:^(bool hasNew, NSError * _Nonnull error) {
+//        if(!error && hasNew){
+//            self.ugcFocusHasNew = YES;
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
+//        }
+//    }];
+}
+
+#pragma mark - Publisher Hisgtory
+
+- (YYCache *)ugcPublisherHistoryCache {
+    if(!_ugcPublisherHistoryCache) {
+        _ugcPublisherHistoryCache = [YYCache cacheWithName:kFHUGCPublisherHistoryCacheKey];
+    }
+    return _ugcPublisherHistoryCache;
+}
+
+- (FHPostUGCSelectedGroupHistory *)loadPublisherHistoryData {
+    NSDictionary *historyDict = [self.ugcPublisherHistoryCache objectForKey:kFHUGCPublisherHistoryDataKey];
+    if (historyDict && [historyDict isKindOfClass:[NSDictionary class]]) {
+        NSError *err = nil;
+        FHPostUGCSelectedGroupHistory * model = [[FHPostUGCSelectedGroupHistory alloc] initWithDictionary:historyDict error:&err];
+        if (model) {
+            return model;
+        }
+    }
+    return nil;
+}
+
+- (void)savePublisherHistoryDataWithModel: (FHPostUGCSelectedGroupHistory *)model {
+    if (model) {
+        NSDictionary *historyDict = [model toDictionary];
+        if (historyDict) {
+            [self.ugcPublisherHistoryCache setObject:historyDict forKey:kFHUGCPublisherHistoryDataKey];
+        }
+    }
+}
+@end
+
+
+// FHUGCSocialGroupData
+@interface FHUGCSocialGroupData ()
+
+// 包含关注列表数据
+@property (nonatomic, strong)   NSMutableDictionary       *groupDataDic;
+
+@end
+
+@implementation FHUGCSocialGroupData
+
++ (instancetype)sharedInstance {
+    static FHUGCSocialGroupData *_sharedInstance = nil;
+    if (!_sharedInstance) {
+        _sharedInstance = [[FHUGCSocialGroupData alloc] init];
+    }
+    return _sharedInstance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _groupDataDic = [NSMutableDictionary new];
+    }
+    return self;
+}
+
+- (void)resetSocialGroupDataWith:(NSArray<FHUGCScialGroupDataModel> *)followList {
+    [_groupDataDic removeAllObjects];
+    if ([followList isKindOfClass:[NSArray class]]) {
+        [followList enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.socialGroupId.length > 0) {
+                [_groupDataDic setObject:obj forKey:obj.socialGroupId];
+            }
+        }];
+    }
+}
+
+- (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model {
+    if (model && model.socialGroupId.length > 0) {
+        FHUGCScialGroupDataModel *socialData = [self.groupDataDic objectForKey:model.socialGroupId];
+        if (socialData) {
+            socialData.countText = model.countText;
+            socialData.hasFollow = model.hasFollow;
+            socialData.followerCount = model.followerCount;
+            socialData.contentCount = model.contentCount;
+        } else {
+            [_groupDataDic setObject:model forKey:model.socialGroupId];
+        }
+    }
+}
+
+- (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id {
+    if (social_group_id.length > 0) {
+        return [self.groupDataDic objectForKey:social_group_id];
+    }
+    return nil;
+}
 @end

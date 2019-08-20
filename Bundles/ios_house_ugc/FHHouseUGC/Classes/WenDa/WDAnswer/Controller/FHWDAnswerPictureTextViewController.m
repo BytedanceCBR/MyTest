@@ -106,6 +106,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 
 @property (nonatomic, assign)   BOOL       lastCanShowMessageTip;
 @property (nonatomic, assign)   BOOL       lastInAppPushTipsHidden;
+@property (nonatomic, weak)     TTNavigationController       *navVC;
 
 @end
 
@@ -939,6 +940,17 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     if (self.firstAppear) {
         self.firstAppear = NO;
         [self.inputTextView becomeFirstResponder];
+    }
+    if ([self.navigationController isKindOfClass:[TTNavigationController class]]) {
+        [(TTNavigationController*)self.navigationController panRecognizer].enabled = NO;
+        self.navVC = self.navigationController;
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    if (self.navVC) {
+        [self.navVC panRecognizer].enabled = YES;
     }
 }
 

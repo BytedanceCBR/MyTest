@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHCommunityViewModel : NSObject
 
 @property(nonatomic, weak) UIButton *searchBtn;
+@property(nonatomic , assign) NSInteger currentTabIndex;
 
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(UIViewController *)viewController;
 
@@ -24,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showUGC:(BOOL)isShow;
 
-- (void)refreshCell;
+- (void)refreshCell:(BOOL)isHead;
 
 - (void)changeMyJoinTab;
 

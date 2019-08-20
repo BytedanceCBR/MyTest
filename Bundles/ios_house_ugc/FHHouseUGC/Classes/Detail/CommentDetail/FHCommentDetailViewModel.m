@@ -203,6 +203,10 @@
         }
         // 圈子详情数据
         FHUGCScialGroupDataModel *socialGroupModel = model.social_group;
+        if (socialGroupModel) {
+            // 更新圈子数据
+            [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:socialGroupModel];
+        }
         if (socialGroupModel && ![socialGroupModel.hasFollow boolValue]) {
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];

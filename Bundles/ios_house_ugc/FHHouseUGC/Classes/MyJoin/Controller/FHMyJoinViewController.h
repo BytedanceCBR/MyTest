@@ -15,9 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) FHMyJoinNeighbourhoodView *neighbourhoodView;
 @property(nonatomic, strong) FHCommunityFeedListController *feedListVC;
+@property(nonatomic, assign) BOOL withTips;
 
 - (void)viewWillAppear;
 - (void)viewWillDisappear;
+- (void)refreshFeedListData:(BOOL)isHead;
 
 @end
 

@@ -55,6 +55,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 小区列表（按区域，推荐，关注等获取）
 + (TTHttpTask *)requestCommunityList:(NSInteger)districtId source:(NSString *)source latitude:(CGFloat)latitude longitude:(CGFloat)longitude class:(Class)cls completion:(void (^)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 获取feed列表是否有新内容
++ (TTHttpTask *)refreshFeedTips:(NSString *)category beHotTime:(NSString *)beHotTime completion:(void(^)(bool hasNew , NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
