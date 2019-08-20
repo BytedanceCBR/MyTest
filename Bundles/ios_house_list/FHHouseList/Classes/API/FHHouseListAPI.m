@@ -103,7 +103,7 @@
         qparam[@"suggestion_params"] = sugParam;
     }
     
-    return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
+    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
     
 }
 
@@ -161,7 +161,7 @@
         qparam[@"suggestion_params"] = sugParam;
     }
     qparam[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_SEARCH;
-    return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
+    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
     
 }
 
@@ -191,7 +191,7 @@
     }
     qparam[CHANNEL_ID] = CHANNEL_ID_SEARCH_COURT;
 
-    return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
+    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
 
 }
 
@@ -220,7 +220,7 @@
         qparam[@"suggestion_params"] = sugParam;
     }
     qparam[CHANNEL_ID] = CHANNEL_ID_SEARCH_NEIGHBORHOOD;
-    return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
+    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
 
 }
 
