@@ -26,6 +26,7 @@
 @property(nonatomic, strong) FHUGCFollowButton *followButton;
 @property(nonatomic, strong) UIButton *chooseButton;//选择模式下选择button
 @property(nonatomic, strong) UIView *bottomSepView;
+@property(nonatomic, assign) FHCommunityListType currentListType;
 
 @end
 
@@ -67,11 +68,32 @@
     }
 }
 
+- (void)socialGroupDataChange:(NSNotification *)notification {
+    if (notification) {
+        FHUGCScialGroupDataModel *tempModel = self.currentData;
+        if (tempModel && [tempModel isKindOfClass:[FHUGCScialGroupDataModel class]]) {
+            NSString *socialGroupId = tempModel.socialGroupId;
+            FHUGCScialGroupDataModel *model = [[FHUGCConfig sharedInstance] socialGroupData:socialGroupId];
+            if (model && (![model.countText isEqualToString:tempModel.countText] || ![model.hasFollow isEqualToString:tempModel.hasFollow])) {
+                tempModel.contentCount = model.contentCount;
+                tempModel.countText = model.countText;
+                tempModel.hasFollow = model.hasFollow;
+                tempModel.followerCount = model.followerCount;
+                FHUGCSearchCommunityItemData* wrapData = [[FHUGCSearchCommunityItemData alloc] init];
+                wrapData.model = tempModel;
+                wrapData.listType = self.currentListType;
+                [self refreshWithData:wrapData];
+            }
+        }
+    }
+}
+
 - (void)refreshWithData:(id)data {
     if (![data isKindOfClass:[FHUGCSearchCommunityItemData class]]) {
         return;
     }
     FHUGCSearchCommunityItemData* wrapData = (FHUGCSearchCommunityItemData*)data;
+    self.currentListType = wrapData.listType;
     self.currentData = wrapData.model;
     if(wrapData.listType == FHCommunityListTypeFollow){
         self.chooseButton.hidden = YES;
@@ -128,6 +150,7 @@
     if (self) {
         [self setupUI];
          [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(socialGroupDataChange:) name:@"kFHUGCSicialGroupDataChangeKey" object:nil];
     }
     return self;
 }
@@ -136,8 +159,10 @@
     self.icon = [[UIImageView alloc] init];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
-    _icon.layer.cornerRadius = 24;
+    _icon.layer.cornerRadius = 4;
     _icon.backgroundColor = [UIColor themeGray7];
+    _icon.layer.borderWidth = 0.5;
+    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_icon];
 
     self.titleLabel = [self labelWithFont:[UIFont themeFontRegular:15] textColor:[UIColor themeGray1]];
@@ -162,10 +187,10 @@
 
 - (void)setupConstraints {
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(11);
-        make.bottom.mas_equalTo(self.contentView).offset(-11);
+        make.top.mas_equalTo(self.contentView).offset(10);
+        make.bottom.mas_equalTo(self.contentView).offset(-10);
         make.left.mas_equalTo(self.contentView).offset(20);
-        make.width.height.mas_equalTo(48);
+        make.width.height.mas_equalTo(50);
     }];
 
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {

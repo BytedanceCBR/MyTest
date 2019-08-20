@@ -252,7 +252,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     UIEdgeInsets inset = self.mainTableView.contentInset;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
-    
+        
     [self.notifyBar showMessage:message
               actionButtonTitle:@""
                       delayHide:YES
@@ -267,6 +267,8 @@ static CGFloat const kSectionHeaderHeight = 38;
                           self.mainTableView.contentInset = inset;
                           [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
                           self.homeListViewModel.isResetingOffsetZero = NO;
+                      }completion:^(BOOL finished) {
+                          self.isShowRefreshTip = NO;
                       }];
                       
     }];

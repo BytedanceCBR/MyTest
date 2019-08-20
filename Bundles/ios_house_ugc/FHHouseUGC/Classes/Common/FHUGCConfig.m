@@ -87,6 +87,8 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         if (groupId.length > 0) {
             FHUGCScialGroupDataModel *data = [self socialGroupData:groupId];
             [self updatePostSuccessScialGroupDataModel:data];
+            // 更新圈子数据
+            [self updateSocialGroupDataWith:data];
         }
     }
 }
@@ -97,6 +99,8 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     if (groupId.length > 0) {
         FHUGCScialGroupDataModel *data = [self socialGroupData:groupId];
         [self updatePostDelSuccessScialGroupDataModel:data];
+        // 更新圈子数据
+        [self updateSocialGroupDataWith:data];
     }
 }
 
@@ -358,6 +362,24 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:model];
     // 通知 附近 可能感兴趣的小区圈 帖子数变化
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCSicialGroupDataChangeKey" object:nil];
+    // 我关注的列表数据修改
+    NSString *social_group_id = model.socialGroupId;
+    __block FHUGCScialGroupDataModel *socialData = nil;
+    if (social_group_id.length > 0 && self.followData.data.userFollowSocialGroups.count > 0) {
+        [self.followData.data.userFollowSocialGroups enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.socialGroupId isEqualToString:social_group_id]) {
+                socialData = obj;
+                *stop = YES;
+            }
+        }];
+    }
+    // 找到
+    if (socialData) {
+        socialData.countText = model.countText;
+        socialData.hasFollow = model.hasFollow;
+        socialData.followerCount = model.followerCount;
+        socialData.contentCount = model.contentCount;
+    }
 }
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
