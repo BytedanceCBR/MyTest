@@ -50,9 +50,9 @@
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"category"] = category;
     paramDic[@"count"] = @(20);
-    paramDic[@"detail"] = @(1);
-    paramDic[@"image"] = @(1);
-    paramDic[@"LBS_status"] = [TTLocationManager currentLBSStatus];
+//    paramDic[@"detail"] = @(1);
+//    paramDic[@"image"] = @(1);
+//    paramDic[@"LBS_status"] = [TTLocationManager currentLBSStatus];
     paramDic[@"city"] = [TTLocationManager sharedManager].city;
     paramDic[@"loc_mode"] = @([TTLocationManager isLocationServiceEnabled]);
 
@@ -84,7 +84,7 @@
     paramDic[@"strict"] = @(0);
     paramDic[@"list_count"] = @(listCount);
     paramDic[@"concern_id"] = @"";
-    paramDic[@"cp"] = [self encreptTime:[[NSDate date] timeIntervalSince1970]];
+//    paramDic[@"cp"] = [self encreptTime:[[NSDate date] timeIntervalSince1970]];
 
     if (!loadMore) {
         paramDic[@"refresh_reason"] = @(0);

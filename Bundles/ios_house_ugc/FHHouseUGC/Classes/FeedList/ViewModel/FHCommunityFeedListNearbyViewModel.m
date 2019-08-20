@@ -290,7 +290,7 @@
         //符合引导页显示条件时
         for (NSInteger i = 0; i < self.dataList.count; i++) {
             FHFeedUGCCellModel *cellModel = self.dataList[i];
-            if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion || cellModel.cellType == FHUGCFeedListCellTypeUGC){
+            if(cellModel.cellType != FHUGCFeedListCellTypeUGCRecommend && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner2){
                 if(self.guideCellModel){
                     self.guideCellModel.isInsertGuideCell = NO;
                 }
