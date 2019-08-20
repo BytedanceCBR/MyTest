@@ -25,7 +25,7 @@
 #define topMargin 20
 #define originViewHeight 80
 
-@interface FHPostDetailCell ()
+@interface FHPostDetailCell ()<TTUGCAttributedLabelDelegate>
 
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
@@ -80,6 +80,14 @@
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = 0;
+    _contentLabel.delegate = self;
+    NSDictionary *linkAttributes = @{
+                                     NSForegroundColorAttributeName : [UIColor themeRed1],
+                                     NSFontAttributeName : [UIFont themeFontRegular:16]
+                                     };
+    self.contentLabel.linkAttributes = linkAttributes;
+    self.contentLabel.activeLinkAttributes = linkAttributes;
+    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     [self.contentView addSubview:_contentLabel];
     
     self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:self.imageCount];
@@ -255,6 +263,13 @@
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     // 内容
     [self.contentLabel setText:cellModel.contentAStr];
+    NSArray <TTRichSpanLink *> *richSpanLinks = [cellModel.richContent richSpanLinksOfAttributedString];
+    for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+        NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
+        if (NSMaxRange(range) <= self.contentLabel.attributedText.length) {
+            [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+        }
+    }
     [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(cellModel.contentHeight);
     }];
@@ -314,6 +329,12 @@
     return 44;
 }
 
+- (void)attributedLabel:(TTUGCAttributedLabel *)label
+   didSelectLinkWithURL:(NSURL *)url {
+    if (url) {
+        [[TTRoute sharedRoute] openURLByPushViewController:url];
+    }
+}
 
 @end
 

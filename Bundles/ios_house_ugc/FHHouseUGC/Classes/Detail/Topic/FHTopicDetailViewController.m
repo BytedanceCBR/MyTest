@@ -23,6 +23,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self setupUI];
+}
+
+- (void)setupUI {
+    [self setupDefaultNavBar:NO];
+    [self setupDetailNaviBar];
+    
+}
+
+- (void)setupDetailNaviBar {
+    self.customNavBarView.title.text = @"话题";
 }
 
 - (void)dealloc
@@ -30,21 +41,5 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-    [self dismissSelf];
-}
-
-- (void)dismissSelf
-{
-    if (self.navigationController.viewControllers.count>1) {
-        NSArray *viewControllers = self.navigationController.viewControllers;
-        if (viewControllers && viewControllers.count > 1) {
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-    } else {
-        [self dismissViewControllerAnimated:YES completion:NULL];
-    }
-}
 
 @end
