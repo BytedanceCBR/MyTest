@@ -34,6 +34,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId;
 @property (nonatomic, strong) NSMutableDictionary *imParams; //用于IM跟前端交互的字段
+
 @end
 
 @implementation FHHouseDetailPhoneCallViewModel
@@ -88,6 +89,31 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSURL *openUrl = [NSURL URLWithString:contactPhone.imOpenUrl];
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":dict, @"from": from}];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    
+    [self silentFollow:extra];
+}
+
+- (void)silentFollow:(NSDictionary *)extraDict
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (self.tracerDict) {
+        [params addEntriesFromDictionary:self.tracerDict];
+    }
+    if (extraDict) {
+        [params addEntriesFromDictionary:extraDict];
+    }
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+    configModel.houseType = self.houseType;
+    configModel.followId = self.houseId;
+    configModel.actionType = self.houseType;
+    configModel.hideToast = YES;
+    // 静默关注功能
+    __weak typeof(self)wself = self;
+    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel completionBlock:^(BOOL isSuccess) {
+        if (isSuccess) {
+            wself.isEnterIM = YES;
+        }
+    }];
 }
 
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
@@ -397,6 +423,21 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
     return @[];
 }
+
+// 回调方法
+- (void)vc_viewDidAppear:(BOOL)animated
+{
+    if (self.isEnterIM) {
+        [FHHouseFollowUpHelper showFollowToast];
+        self.isEnterIM = NO;
+    }
+}
+
+- (void)vc_viewDidDisappear:(BOOL)animated
+{
+    
+}
+
 
 + (NSDictionary *)fhSettings {
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]){
