@@ -60,6 +60,7 @@
     [self initConstraints];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(socialGroupDataChange:) name:@"kFHUGCSicialGroupDataChangeKey" object:nil];
 }
 
 - (void)dealloc
@@ -82,6 +83,24 @@
                     [[FHUGCConfig sharedInstance] updateScialGroupDataModel:model.socialGroup byFollowed:followed];
                     [self refreshWithData:self.currentData];
                 }
+            }
+        }
+    }
+}
+
+- (void)socialGroupDataChange:(NSNotification *)notification {
+    if (notification) {
+        FHUGCMyInterestDataRecommendSocialGroupsModel *tempModel = self.currentData;
+        if (tempModel && [tempModel isKindOfClass:[FHUGCMyInterestDataRecommendSocialGroupsModel class]]) {
+            NSString *socialGroupId = tempModel.socialGroup.socialGroupId;
+            FHUGCScialGroupDataModel *model = [[FHUGCConfig sharedInstance] socialGroupData:socialGroupId];
+            if (model && (![model.countText isEqualToString:tempModel.socialGroup.countText] || ![model.hasFollow isEqualToString:tempModel.socialGroup.hasFollow])) {
+                tempModel.socialGroup.contentCount = model.contentCount;
+                tempModel.socialGroup.countText = model.countText;
+                tempModel.socialGroup.hasFollow = model.hasFollow;
+                tempModel.socialGroup.followerCount = model.followerCount;
+                
+                [self refreshWithData:tempModel];
             }
         }
     }
