@@ -228,7 +228,10 @@
     self.isViewAppear = YES;
     self.feedListController.tableView.mj_header = self.refreshHeader;
     self.refreshHeader.ignoredScrollViewContentInsetTop = -([TTDeviceHelper isIPhoneXSeries] ? 44 + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.top : 64);
-    self.feedListController.tableView.tableHeaderView = self.headerView;
+    NSString *version = [UIDevice currentDevice].systemVersion;
+    if (version.doubleValue >= 12.0) {
+        self.feedListController.tableView.tableHeaderView = self.headerView;
+    }
     [self.feedListController.tableView bringSubviewToFront:self.feedListController.tableView.mj_header];
     if (self.feedListController.tableView) {
         [self scrollViewDidScroll:self.feedListController.tableView];
@@ -455,40 +458,43 @@
     NSString *linkUrlString = model.linkUrl;
     NSString *imageUrlString = model.imageUrl;
  
-    self.headerView.gotoOperationBlock = ^{
-        NSURLComponents *urlComponents = [NSURLComponents new];
-        urlComponents.scheme = @"fschema";
-        urlComponents.host = @"webview";
-        urlComponents.queryItems = @[
-                                     [[NSURLQueryItem alloc] initWithName:@"url" value: linkUrlString]
-                                     ];
-        
-        NSURL *url = urlComponents.URL;
-        [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
-        
-        NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        param[UT_PAGE_TYPE] = @"community_group_detail";
-        param[UT_ENTER_FROM] = @"community_group_operation";
-        param[@"operation_id"] = self.data.logPb[@"operation_id"];
-        TRACK_EVENT(@"operation_click", param);
-    };
-    NSURL *imageUrl = [NSURL URLWithString: imageUrlString];
-    WeakSelf;
-    [self.headerView.operationBannerImageView bd_setImageWithURL:imageUrl placeholder:nil options:BDImageRequestDefaultOptions completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
-        StrongSelf;
-        BOOL isShowOperationInfo = (hasOperation && !error);
-        [self.headerView updateOperationInfo: isShowOperationInfo];
-        [self.headerView setNeedsLayout];
-        [self.headerView layoutIfNeeded];
-        [self.feedListController.tableView reloadData];
-        if(isShowOperationInfo) {
+    if(linkUrlString.length > 0) {
+        self.headerView.gotoOperationBlock = ^{
+            NSURLComponents *urlComponents = [NSURLComponents new];
+            urlComponents.scheme = @"fschema";
+            urlComponents.host = @"webview";
+            urlComponents.queryItems = @[
+                                         [[NSURLQueryItem alloc] initWithName:@"url" value: linkUrlString]
+                                         ];
+            
+            NSURL *url = urlComponents.URL;
+            [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+            
             NSMutableDictionary *param = [NSMutableDictionary dictionary];
             param[UT_PAGE_TYPE] = @"community_group_detail";
-            param[UT_ELEMENT_TYPE] = @"community_group_operation";
+            param[UT_ENTER_FROM] = @"community_group_operation";
             param[@"operation_id"] = self.data.logPb[@"operation_id"];
-            TRACK_EVENT(@"operation_show", param);
-        }
-    }];
+            TRACK_EVENT(@"operation_click", param);
+        };
+    } else {
+        self.headerView.gotoOperationBlock = nil;
+    }
+    NSURL *imageUrl = [NSURL URLWithString: imageUrlString];
+    [self.headerView.operationBannerImageView bd_setImageWithURL:imageUrl placeholder:nil options:BDImageRequestDefaultOptions completion:nil];
+    CGFloat whRatio = 335.0 / 58;
+    if(model.imageHeight > 0 && model.imageWidth > 0) {
+        whRatio =  model.imageWidth / model.imageHeight;
+    }
+    [self.headerView updateOperationInfo: hasOperation whRatio:whRatio];
+
+    if(hasOperation) {
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[UT_PAGE_TYPE] = @"community_group_detail";
+        param[UT_ELEMENT_TYPE] = @"community_group_operation";
+        param[@"operation_id"] = self.data.logPb[@"operation_id"];
+        TRACK_EVENT(@"operation_show", param);
+    }
+
 }
 // 更新公告信息
 - (void)updatePublicationsWith:(FHUGCScialGroupDataModel *)data {
@@ -517,28 +523,33 @@
         CGFloat lineHeight = 20;
         paragraphStyle.minimumLineHeight = lineHeight;
         paragraphStyle.maximumLineHeight = lineHeight;
+        paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
         
         [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
     }
     
     self.headerView.publicationsContentLabel.attributedText = attributedText;
-    self.headerView.gotoPublicationsDetailBlock = ^{
-        NSURLComponents *urlComponents = [NSURLComponents new];
-        urlComponents.scheme = @"fschema";
-        urlComponents.host = @"webview";
-        urlComponents.queryItems = @[
-                                     [[NSURLQueryItem alloc] initWithName:@"url" value: data.announcementUrl]
-                                     ];
-        NSURL *url = urlComponents.URL;
-        [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
-        
-        NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        param[UT_ELEMENT_TYPE] = @"community_group_notice";
-        param[UT_PAGE_TYPE] = @"community_group_detail";
-        param[@"click_position"] = @"community_notice_more";
-        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
-        TRACK_EVENT(@"click_community_notice_more", param);
-    };
+    if(data.announcementUrl.length > 0) {
+        self.headerView.gotoPublicationsDetailBlock = ^{
+            NSURLComponents *urlComponents = [NSURLComponents new];
+            urlComponents.scheme = @"fschema";
+            urlComponents.host = @"webview";
+            urlComponents.queryItems = @[
+                                         [[NSURLQueryItem alloc] initWithName:@"url" value: data.announcementUrl]
+                                         ];
+            NSURL *url = urlComponents.URL;
+            [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+            
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            param[UT_ELEMENT_TYPE] = @"community_group_notice";
+            param[UT_PAGE_TYPE] = @"community_group_detail";
+            param[@"click_position"] = @"community_notice_more";
+            param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+            TRACK_EVENT(@"click_community_notice_more", param);
+        };
+    } else {
+        self.headerView.gotoPublicationsDetailBlock = nil;
+    }
     
     [self.headerView updatePublicationsInfo: !isEmptyString(data.announcement)
                                hasDetailBtn: !isEmptyString(data.announcementUrl)];
@@ -566,17 +577,36 @@
     [self updateJoinUI:[data.hasFollow boolValue]];
     self.titleLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
     self.subTitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
+    
+    [self.headerView setNeedsLayout];
+    [self.headerView layoutIfNeeded];
+    
+    
+    NSString *version = [UIDevice currentDevice].systemVersion;
+    if (version.doubleValue >= 12.0) {
+        self.feedListController.tableView.tableHeaderView = self.headerView;
+    } else {
+        CGFloat headerHeight = [self.headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        if(self.refreshHeader.isRefreshing) {
+            headerHeight -= self.refreshHeader.mj_h;
+        }
+        CGRect headerFrame = CGRectMake(0, 0, SCREEN_WIDTH, headerHeight);
+        self.headerView.frame = headerFrame;
+        
+        UIView *headerView = [[UIView alloc] initWithFrame:headerFrame];
+        [headerView addSubview:self.headerView];
+        [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(headerView);
+        }];
+        
+        self.feedListController.tableView.tableHeaderView = headerView;
+    }
 
     //仅仅在未关注时显示引导页
     if (![data.hasFollow boolValue] && self.shouldShowUGcGuide) {
         [self addUgcGuide];
     }
     self.shouldShowUGcGuide = NO;
-    
-    [self.headerView setNeedsLayout];
-    [self.headerView layoutIfNeeded];
-
-    self.feedListController.tableView.tableHeaderView = self.headerView;
 }
 
 - (void)updateJoinUI:(BOOL)followed {

@@ -24,6 +24,9 @@ static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
 // UGC config
 static const NSString *kFHUGCConfigCacheKey = @"cache_ugc_config_key";
 static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
+// Publisher History
+static const NSString *kFHUGCPublisherHistoryCacheKey = @"key_ugc_publisher_history_cache";
+static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_history_Data";
 
 // 小区圈子数据统一内存数据缓存
 @interface FHUGCSocialGroupData : NSObject
@@ -40,6 +43,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 
 @property (nonatomic, strong)   YYCache       *followListCache;
 @property (nonatomic, strong)   YYCache       *ugcConfigCache;
+@property (nonatomic, strong)   YYCache       *ugcPublisherHistoryCache;
 @property (nonatomic, copy)     NSString      *followListDataKey;// 关注数据 用户相关 存储key
 @property (nonatomic, strong)   NSTimer       *focusTimer;//关注是否有新内容的轮训timer
 @property (nonatomic, assign)   NSTimeInterval focusTimerInterval;//轮训时间
@@ -87,6 +91,8 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
         if (groupId.length > 0) {
             FHUGCScialGroupDataModel *data = [self socialGroupData:groupId];
             [self updatePostSuccessScialGroupDataModel:data];
+            // 更新圈子数据
+            [self updateSocialGroupDataWith:data];
         }
     }
 }
@@ -97,6 +103,8 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     if (groupId.length > 0) {
         FHUGCScialGroupDataModel *data = [self socialGroupData:groupId];
         [self updatePostDelSuccessScialGroupDataModel:data];
+        // 更新圈子数据
+        [self updateSocialGroupDataWith:data];
     }
 }
 
@@ -358,6 +366,24 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:model];
     // 通知 附近 可能感兴趣的小区圈 帖子数变化
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCSicialGroupDataChangeKey" object:nil];
+    // 我关注的列表数据修改
+    NSString *social_group_id = model.socialGroupId;
+    __block FHUGCScialGroupDataModel *socialData = nil;
+    if (social_group_id.length > 0 && self.followData.data.userFollowSocialGroups.count > 0) {
+        [self.followData.data.userFollowSocialGroups enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.socialGroupId isEqualToString:social_group_id]) {
+                socialData = obj;
+                *stop = YES;
+            }
+        }];
+    }
+    // 找到
+    if (socialData) {
+        socialData.countText = model.countText;
+        socialData.hasFollow = model.hasFollow;
+        socialData.followerCount = model.followerCount;
+        socialData.contentCount = model.contentCount;
+    }
 }
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
@@ -583,6 +609,35 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 //    }];
 }
 
+#pragma mark - Publisher Hisgtory
+
+- (YYCache *)ugcPublisherHistoryCache {
+    if(!_ugcPublisherHistoryCache) {
+        _ugcPublisherHistoryCache = [YYCache cacheWithName:kFHUGCPublisherHistoryCacheKey];
+    }
+    return _ugcPublisherHistoryCache;
+}
+
+- (FHPostUGCSelectedGroupHistory *)loadPublisherHistoryData {
+    NSDictionary *historyDict = [self.ugcPublisherHistoryCache objectForKey:kFHUGCPublisherHistoryDataKey];
+    if (historyDict && [historyDict isKindOfClass:[NSDictionary class]]) {
+        NSError *err = nil;
+        FHPostUGCSelectedGroupHistory * model = [[FHPostUGCSelectedGroupHistory alloc] initWithDictionary:historyDict error:&err];
+        if (model) {
+            return model;
+        }
+    }
+    return nil;
+}
+
+- (void)savePublisherHistoryDataWithModel: (FHPostUGCSelectedGroupHistory *)model {
+    if (model) {
+        NSDictionary *historyDict = [model toDictionary];
+        if (historyDict) {
+            [self.ugcPublisherHistoryCache setObject:historyDict forKey:kFHUGCPublisherHistoryDataKey];
+        }
+    }
+}
 @end
 
 
@@ -644,5 +699,4 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
     }
     return nil;
 }
-
 @end

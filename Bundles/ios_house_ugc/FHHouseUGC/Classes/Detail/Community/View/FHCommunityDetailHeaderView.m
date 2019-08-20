@@ -93,7 +93,7 @@
 - (UIImageView *)operationBannerImageView {
     if(!_operationBannerImageView) {
         _operationBannerImageView = [UIImageView new];
-        _operationBannerImageView.contentMode = UIViewContentModeScaleAspectFit;
+        _operationBannerImageView.backgroundColor = [UIColor themeGray6];
     }
     return _operationBannerImageView;
 }
@@ -161,7 +161,7 @@
     self.publicationsContentLabel = [UILabel new];
     self.publicationsContentLabel.font = [UIFont themeFontRegular:12];
     self.publicationsContentLabel.textColor = [UIColor themeGray1];
-    self.publicationsContentLabel.numberOfLines = 0;
+    self.publicationsContentLabel.numberOfLines = 3;
     [self.publicationsContentLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     
     [self.publicationsContainer addSubview:self.publicationsContentLabel];
@@ -256,11 +256,10 @@
     }
 }
 
-- (void)updateOperationInfo:(BOOL)isShow {
+- (void)updateOperationInfo:(BOOL)isShow whRatio:(CGFloat)whRatio {
     // 运营位banner
-    CGSize imageSize = self.operationBannerImageView.image.size;
-    CGFloat whRatio = imageSize.height / imageSize.width;
-    CGFloat height = isShow ? round((self.bounds.size.width - 40) * whRatio + 0.5) + 10 : 0;
+    CGFloat width = SCREEN_WIDTH - 40;
+    CGFloat height = isShow ? round(width / whRatio + 0.5) + 5 : 0;
     [self.operationBannerContainer mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
     }];

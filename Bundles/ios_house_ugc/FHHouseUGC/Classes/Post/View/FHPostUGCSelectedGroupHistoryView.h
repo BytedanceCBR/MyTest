@@ -6,20 +6,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHUGCConfigModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-#define kSelectedGroupHistoryWhenPostSuccessfully @"kSelectedGroupHistoryWhenPostSuccessfully"
-
-@class FHPostUGCSelectedGroupModel;
-@interface FHPostUGCSelectedGroupHistory: NSObject<NSCoding>
-@property (nonatomic, strong) NSMutableDictionary<NSString*, FHPostUGCSelectedGroupModel*> *historyInfos;
-@end
-
-@interface FHPostUGCSelectedGroupModel: NSObject<NSCoding>
-@property (nonatomic, copy) NSString *socialGroupId;
-@property (nonatomic, copy) NSString *socialGroupName;
-@end
 
 @protocol FHPostUGCSelectedGroupHistoryViewDelegate <NSObject>
 - (void)selectedHistoryGroup:(FHPostUGCSelectedGroupModel *)item;

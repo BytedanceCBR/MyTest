@@ -8,6 +8,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCSocialGroupOperationModel : JSONModel
 @property (nonatomic, copy , nullable) NSString *imageUrl;
+@property (nonatomic, assign) CGFloat imageWidth;
+@property (nonatomic, assign) CGFloat imageHeight;
 @property (nonatomic, copy , nullable) NSString *linkUrl;
 @property (nonatomic, assign) BOOL hasOperation;
 @end

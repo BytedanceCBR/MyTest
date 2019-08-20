@@ -78,6 +78,16 @@ static NSString *const kFHUGCFocusTabHasNewNotification = @"k_fh_ugc_focus_tab_h
 
 - (NSArray *)ugcDetailLeadSuggest;
 
+
+/**
+ 获取发布器选择历史信息
+ */
+- (FHPostUGCSelectedGroupHistory *)loadPublisherHistoryData;
+
+/**
+ 存储发布器选择历史信息
+ */
+- (void)savePublisherHistoryDataWithModel: (FHPostUGCSelectedGroupHistory *)model;
 @end
 
 NS_ASSUME_NONNULL_END

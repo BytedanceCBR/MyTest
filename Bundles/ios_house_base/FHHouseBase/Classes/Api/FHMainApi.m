@@ -15,6 +15,7 @@
 #import "FHJSONHTTPRequestSerializer.h"
 #import "FHEnvContext.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
+#import <Heimdallr/HMDTTMonitor.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -220,10 +221,23 @@
 {
     NSString *url = QURL(queryPath);
     
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:param method:GET needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:GET needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         __block NSError *backError = error;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[self generateModel:obj class:cls error:&backError];
+            if (response.statusCode == 200) {
+                
+                if ([model respondsToSelector:@selector(status)]) {
+                    NSString *status = [model performSelector:@selector(status)];
+                    if (status.integerValue != 0 || error != nil) {
+                        NSMutableDictionary *extraDict = @{}.mutableCopy;
+                        extraDict[@"request_url"] = response.URL.absoluteString;
+                        extraDict[@"response_headers"] = response.allHeaderFields;
+                        extraDict[@"error"] = error.domain;
+                        [self addServerFailerLog:model.status extraDict:extraDict];
+                    }
+                }
+            }
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
@@ -252,16 +266,37 @@
 +(TTHttpTask *)requestHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion
 {
     NSString *url = QURL(@"/f100/api/v2/recommend?");
-    
+ 
     return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         if (!completion) {
             return ;
         }
         FHHomeHouseModel *model = (FHHomeHouseModel *)[self generateModel:obj class:[FHHomeHouseModel class] error:&error];
+        if (response.statusCode == 200  && [model isKindOfClass:[FHHomeHouseModel class]]) {
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                if (status.integerValue != 0 || error != nil || model.data.items.count == 0) {
+                    NSMutableDictionary *extraDict = @{}.mutableCopy;
+                    extraDict[@"request_url"] = response.URL.absoluteString;
+                    extraDict[@"response_headers"] = response.allHeaderFields;
+                    extraDict[@"error"] = error.domain;
+                    [self addServerFailerLog:model.status extraDict:extraDict];
+                }
+            }
+        }
         if (completion) {
             completion(model,error);
         }
     }];
+}
+
++ (void)addServerFailerLog:(NSString *)status extraDict:(NSDictionary *)extraDict
+{
+    NSMutableDictionary *categoryDict = @{}.mutableCopy;
+    if (status) {
+        categoryDict[@"status"] = status;
+    }
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"server_api_request_failure" metric:nil category:categoryDict extra:extraDict];
 }
 
 

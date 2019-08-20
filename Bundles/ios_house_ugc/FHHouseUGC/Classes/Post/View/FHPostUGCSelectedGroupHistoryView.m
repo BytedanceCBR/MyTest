@@ -9,35 +9,6 @@
 #import "Masonry.h"
 #import <TTThemed/UIColor+TTThemeExtension.h>
 
-@implementation FHPostUGCSelectedGroupHistory
-
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.historyInfos forKey:@"historyInfos"];
-}
-
--(instancetype)initWithCoder:(NSCoder *)aDecoder {
-    if(self = [super init]) {
-        self.historyInfos = [aDecoder decodeObjectForKey:@"historyInfos"];
-    }
-    return self;
-}
-@end
-
-@implementation FHPostUGCSelectedGroupModel
-
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.socialGroupId forKey:@"socialGroupId"];
-    [aCoder encodeObject:self.socialGroupName forKey:@"socialGroupName"];
-}
-- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
-    if(self = [super init]) {
-        self.socialGroupId = [aDecoder decodeObjectForKey:@"socialGroupId"];
-        self.socialGroupName = [aDecoder decodeObjectForKey:@"socialGroupName"];
-    }
-    return self;
-}
-@end
-
 @interface FHPostUGCSelectedGroupHistoryView()
 @property (nonatomic) UILabel *titleLabel;
 @property (nonatomic) UIButton *historyButton;
