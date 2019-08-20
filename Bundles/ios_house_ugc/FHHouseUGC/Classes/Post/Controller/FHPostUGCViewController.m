@@ -854,25 +854,6 @@ static NSInteger const kMaxPostImageCount = 9;
         tracerDict[@"click_position"] = @"passport_publisher";
         // 此时没有groupID
         [FHUserTracker writeEvent:@"feed_publish_click" params:tracerDict];
-        
-    
-        NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
-        NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
-        if(currentCityID.length > 0 && currentUserID.length > 0) {
-            FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadPublisherHistoryData];
-            if(!selectedGroupHistory) {
-                selectedGroupHistory = [FHPostUGCSelectedGroupHistory new];
-                selectedGroupHistory.historyInfos = [NSMutableDictionary dictionary];
-            }
-            
-            FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
-            selectedGroup.socialGroupId = task.social_group_id;
-            selectedGroup.socialGroupName = task.social_group_name;
-            NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
-            [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
-            
-            [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
-        }
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionCancelledNotification
                                                             object:nil
