@@ -4,6 +4,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHFeedContentRawDataContentExtraModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *answerCount;
+@property (nonatomic, copy , nullable) NSString *articleSchema;
 @end
 
 @interface FHFeedContentRawDataOriginCommonContentUserInfoModel : JSONModel

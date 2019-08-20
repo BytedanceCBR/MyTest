@@ -124,6 +124,8 @@
         cellModel.desc = [self generateArticleDesc:model];
         if(model.openUrl){
             cellModel.openUrl = model.openUrl;
+        }else if(model.rawData.content.extra.articleSchema){
+            cellModel.openUrl = model.rawData.content.extra.articleSchema;
         }else{
             cellModel.openUrl = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
         }
@@ -212,7 +214,7 @@
         
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
-        cellModel.groupId = model.rawData.groupId;
+        cellModel.groupId = model.rawData.commentBase.id;
         cellModel.content = model.rawData.commentBase.content;
         cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.rawData.commentBase.detailSchema;

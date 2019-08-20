@@ -697,6 +697,7 @@
 {
     NSDictionary *dict = @{
                            @"answerCount": @"answer_count",
+                           @"articleSchema": @"article_schema",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
