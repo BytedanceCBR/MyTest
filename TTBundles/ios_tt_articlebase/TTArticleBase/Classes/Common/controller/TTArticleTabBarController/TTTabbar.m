@@ -119,7 +119,6 @@
     [super layoutSubviews];
     [self setupTabBarItems];
     _originFrame = self.frame;
-    NSLog(@"[TABBAR] layout frame is: %@",NSStringFromCGRect(self.frame));
 }
 
 -(void)setFrame:(CGRect)frame
