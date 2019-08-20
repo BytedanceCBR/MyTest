@@ -8,6 +8,7 @@
 #import "FHHomeHeaderTableViewCell.h"
 #import "FHHomeTableViewDelegate.h"
 #import "FHHomeConfigManager.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHHomeHeaderTableViewCell()
 @property (nonatomic, strong) FHHomeTableViewDelegate *tableViewDelegate;
@@ -18,7 +19,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.contentTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        self.contentTableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
         self.contentTableView.scrollsToTop = NO;
         self.tableViewDelegate = [[FHHomeTableViewDelegate alloc] init];
         [self setUpViews];

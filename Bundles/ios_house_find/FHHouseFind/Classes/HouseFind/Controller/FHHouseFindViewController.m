@@ -4,7 +4,7 @@
 //
 //  Created by 春晖 on 2019/2/12.
 //
-
+#if 0
 #import "FHHouseFindViewController.h"
 #import <FHCommonUI/HMSegmentedControl.h>
 #import "FHHouseFindFakeSearchBar.h"
@@ -13,6 +13,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import "FHHouseFindViewModel.h"
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @interface FHHouseFindViewController ()
 
@@ -45,7 +46,7 @@
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     layout.minimumLineSpacing = 0;
     
-    _contentView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+    _contentView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
     _contentView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _contentView.backgroundColor = [UIColor whiteColor];
     _contentView.showsHorizontalScrollIndicator = NO;
@@ -256,3 +257,4 @@
 */
 
 @end
+#endif

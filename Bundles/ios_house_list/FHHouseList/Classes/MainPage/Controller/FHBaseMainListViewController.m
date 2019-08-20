@@ -16,6 +16,7 @@
 #import <FHHouseBase/FHUserTracker.h>
 #import <TTUIWidget/UIViewController+Track.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
+#import <FHHouseBase/FHBaseTableView.h>
 
 #define TOP_HOR_PADDING 3
 
@@ -75,7 +76,7 @@
 -(UITableView *)tableView
 {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] init];
+        _tableView = [[FHBaseTableView alloc] init];
         if (@available(iOS 11.0 , *)) {
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
             UIEdgeInsets inset = UIEdgeInsetsZero;

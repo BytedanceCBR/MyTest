@@ -112,6 +112,10 @@ extern CGFloat fr_postCommentButtonHeight(void);
     _commentListView.dataSource = self;
     _commentListView.contentInset = UIEdgeInsetsMake(0, 0, kPostCommentViewHeight, 0);
     _commentListView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kPostCommentViewHeight, 0);
+    if(@available(iOS 11.0 , *)){
+        _commentListView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        _commentListView.insetsContentViewsToSafeArea = NO;
+    }
     [self addSubview:_commentListView];
 }
 

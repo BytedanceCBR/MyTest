@@ -30,6 +30,7 @@
 #import <Masonry.h>
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 #define NumberOfImagesPerRow 3
 #define ImagesInterval 4.f
@@ -556,7 +557,7 @@
 }
 
 - (void)setupUI {
-    _addImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fh_ugc_add_pic_normal"]];
+    _addImageView = [[UIImageView alloc] initWithImage:ICON_FONT_IMG(40, @"\U0000e69b", [UIColor themeGray4])];//fh_ugc_add_pic_normal
     [self addSubview:_addImageView];
     _addLabel = [[UILabel alloc] init];
     _addLabel.text = @"添加照片";

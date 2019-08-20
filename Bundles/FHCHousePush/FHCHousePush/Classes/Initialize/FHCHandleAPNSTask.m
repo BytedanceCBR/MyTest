@@ -162,18 +162,30 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    NSString *deviceTokenString = [[[[deviceToken description]
-                                     stringByReplacingOccurrencesOfString: @"<" withString: @""]
-                                    stringByReplacingOccurrencesOfString: @">" withString: @""]
-                                   stringByReplacingOccurrencesOfString: @" " withString: @""];
+    const unsigned *tokenBytes = [deviceToken bytes];
+    NSString *deviceTokenString =nil;
+    if(deviceToken.length >= 8){
+        //FOR iOS 13
+        deviceTokenString = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x",
+                       ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
+                       ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
+                       ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
+    }else{
+        deviceTokenString = [[[[deviceToken description]
+                               stringByReplacingOccurrencesOfString: @"<" withString: @""]
+                              stringByReplacingOccurrencesOfString: @">" withString: @""]
+                             stringByReplacingOccurrencesOfString: @" " withString: @""];
+    }
+    
     [[NSUserDefaults standardUserDefaults] setValue:deviceTokenString forKey:kTTArticleDeviceToken];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     [[TTMonitor shareManager] trackService:@"push_get_token" status:0 extra:nil];
     
     [TTBackgroundModeTask reportDeviceTokenByAppLogout];
-    
+#if DEBUG
     NSLog(@"push_device_token = %@", deviceTokenString);
+#endif
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error

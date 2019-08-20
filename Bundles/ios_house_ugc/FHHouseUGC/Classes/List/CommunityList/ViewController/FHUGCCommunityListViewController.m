@@ -11,6 +11,7 @@
 #import "FHUserTracker.h"
 #import "TTUIResponderHelper.h"
 #import "UIViewAdditions.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHUGCCommunityListViewController ()
 @property(nonatomic, strong) UIView *loadingView;
@@ -181,10 +182,7 @@
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        if (@available(iOS 11.0, *)) {
-            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        }
+        _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];  
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.sectionFooterHeight = 0;
         _tableView.estimatedRowHeight = 0;

@@ -515,6 +515,9 @@
         _collectionView.scrollEnabled = NO;
         [_collectionView registerClass:[TTDislikeOptionCell class] forCellWithReuseIdentifier:TTDislikeCellIdentifier];
         [_collectionView registerClass:[TTDislikeOptionHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:TTDislikeOptionHeaderViewIdentifier];
+        if(@available(iOS 11.0 , * )){
+            _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
     }
     return _collectionView;
 }
