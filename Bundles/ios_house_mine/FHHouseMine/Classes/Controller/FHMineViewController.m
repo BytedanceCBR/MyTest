@@ -17,6 +17,7 @@
 #import "FHUserTracker.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "TTReachability.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHMineViewController ()<UIViewControllerErrorHandler>
 
@@ -96,7 +97,7 @@
 }
 
 - (void)initView {
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.backgroundColor = [UIColor themeGray7];
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];

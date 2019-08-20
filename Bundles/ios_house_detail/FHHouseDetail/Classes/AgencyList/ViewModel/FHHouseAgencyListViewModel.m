@@ -48,6 +48,9 @@
         tableView.estimatedRowHeight = 50;
         tableView.estimatedSectionFooterHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
+        //for ios 13.0
+        UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 0.1)];
+        tableView.tableHeaderView = header;
     }
     return self;
 }

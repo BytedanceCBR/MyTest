@@ -44,6 +44,7 @@
 #import "TTAccountManager.h"
 #import "FHUserTracker.h"
 #import "TTCommentModel.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHCommentBaseDetailViewController ()<UIScrollViewDelegate>
 
@@ -135,6 +136,7 @@
     [self.view addSubview:_mainScrollView];
     CGFloat navOffset = 65;
     if (@available(iOS 11.0 , *)) {
+        _mainScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         navOffset = 44.f + self.view.tt_safeAreaInsets.top;
     } else {
         navOffset = 65;
@@ -158,11 +160,8 @@
 }
 
 - (void)configTableView {
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    if (@available(iOS 11.0 , *)) {
-        _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }
     _tableView.estimatedRowHeight = 100;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;

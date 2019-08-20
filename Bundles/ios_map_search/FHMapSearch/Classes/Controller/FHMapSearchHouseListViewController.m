@@ -20,10 +20,33 @@
 @property(nonatomic , strong) UITableView *tableView;
 @property(nonatomic , strong) FHHouseAreaHeaderView *headerView;
 @property(nonatomic , strong) FHErrorMaskView *maskView;
+@property(nonatomic , strong) UIControl *topIndicatorView;
 
 @end
 
 @implementation FHMapSearchHouseListViewController
+
+-(UIControl *)topIndicatorView {
+    
+    if(!_topIndicatorView){
+        _topIndicatorView = [[UIControl alloc] init];
+        _topIndicatorView.backgroundColor = [UIColor whiteColor];
+        
+        UIView *tipView = [[UIView alloc] initWithFrame:CGRectZero];
+        tipView.backgroundColor = [UIColor themeGray6];
+        tipView.layer.cornerRadius = 1.5;
+        tipView.layer.masksToBounds = YES;
+        
+        [_topIndicatorView addSubview:tipView];
+        
+        [tipView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.center.mas_equalTo(self);
+            make.size.mas_equalTo(CGSizeMake(24, 3));
+        }];
+    }
+    return _topIndicatorView;
+    
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -41,10 +64,19 @@
         self.tableView.estimatedSectionFooterHeight = 0;
     }
     _headerView = [[FHHouseAreaHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 87)];
+    
+    [self.view addSubview:self.topIndicatorView];
+    [self.topIndicatorView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(self.view);
+        make.height.mas_equalTo(14);
+    }];
+
+    
     [self.view addSubview:_tableView];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.bottom.right.mas_equalTo(self.view);
+        make.left.bottom.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.topIndicatorView.mas_bottom);
     }];
     
     _maskView = [[FHErrorMaskView alloc]init];

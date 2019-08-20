@@ -13,6 +13,7 @@
 #import "FHDetailOldModel.h"
 #import "UILabel+House.h"
 #import "FHAgencyNameInfoView.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 
@@ -341,16 +342,17 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     [self addSubview:_infoLabel];
     _infoLabel.textAlignment = NSTextAlignmentLeft;
     
+    UIImage *img = ICON_FONT_IMG(14, @"\U0000e670", nil); //@"detail_entrance_arrow"
     _logoImageView = [[UIImageView alloc] init];
-    _logoImageView.image = SYS_IMG(@"detail_entrance_arrow");
+    _logoImageView.image = img;
     _logoImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     _indicatorLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     _indicatorLabel.font = [UIFont themeFontMedium:12];
     _indicatorLabel.textColor = [UIColor themeRed1];
     
-    _indicator = [[UIImageView alloc]initWithImage:SYS_IMG(@"detail_entrance_arrow")];
-    
+    _indicator = [[UIImageView alloc]initWithImage:img];
+    _indicator.contentMode = UIViewContentModeCenter;
     
     [self addSubview:_logoImageView];
     [self addSubview:_indicatorLabel];

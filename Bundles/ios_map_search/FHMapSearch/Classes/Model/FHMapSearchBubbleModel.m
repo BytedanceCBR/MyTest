@@ -94,6 +94,10 @@
 
 -(void)overwriteFliter:(NSString *)filter
 {
+    if (IS_EMPTY_STRING(filter)) {
+        filter= @"";
+    }
+    
     if (self.noneFilterQuery.length > 0) {
         
         //make a new open url
@@ -108,7 +112,9 @@
         if (![filter hasPrefix:@"&"]) {
             [strUrl appendString:@"&"];
         }
-        [strUrl appendString:filter];
+        if (filter.length > 0) {
+            [strUrl appendString:filter];
+        }        
         NSURL *url = [NSURL URLWithString:strUrl];
         if (!url) {
             return;

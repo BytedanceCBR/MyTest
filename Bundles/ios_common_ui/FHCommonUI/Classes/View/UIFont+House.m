@@ -54,6 +54,16 @@
     return font;
 }
 
++(UIFont *)iconFontWithSize:(CGFloat)fontSize
+{
+    return [UIFont fontWithName:@"F100" size:20];
+}
+
++(UIFont *)iconFontBWithSize:(CGFloat)fontSize
+{
+    return [UIFont fontWithName:@"F101" size:20];
+}
+
 @end
 
 /*

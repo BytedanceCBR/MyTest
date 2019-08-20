@@ -860,6 +860,27 @@
     return YES;
 }
 
+#pragma mark - yymodel
++ (NSDictionary *)modelCustomPropertyMapper
+{
+    return @{
+             @"supportMulti": @"support_multi",
+             @"isEmpty": @"is_empty",
+             @"rankType": @"rank_type",
+             @"isNoLimit": @"is_no_limit",
+             @"centerLatitude":@"center_latitude",
+             @"centerLongitude":@"center_longitude",
+             @"resizeLevel":@"resize_level",
+             };
+}
+
++(NSDictionary *)modelContainerPropertyGenericClass
+{
+    return @{
+             @"items":[FHSearchFilterConfigOption class]
+             };
+}
+
 @end
 
 @implementation FHSearchFilterConfigItem
@@ -880,4 +901,23 @@
 {
     return YES;
 }
+
+
+#pragma mark - yymodel
++ (NSDictionary *)modelCustomPropertyMapper
+{
+    return @{
+             @"supportMulti": @"support_multi",
+             @"tabId": @"tab_id",
+             @"tabStyle": @"tab_style",
+             };
+}
+
++(NSDictionary *)modelContainerPropertyGenericClass
+{
+    return @{
+             @"options":[FHSearchFilterConfigOption class]
+             };
+}
+
 @end

@@ -16,6 +16,7 @@
 #import "FHFloorPanDetailViewModel.h"
 #import "UIViewController+Track.h"
 #import "FHFloorCoreInfoViewModel.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHFloorPanDetailViewController ()
 
@@ -180,7 +181,7 @@
 
 - (void)setUpinfoListTable
 {
-    _infoListTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _infoListTable = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _infoListTable.separatorStyle = UITableViewCellSeparatorStyleNone;
     if (@available(iOS 11.0 , *)) {
         _infoListTable.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

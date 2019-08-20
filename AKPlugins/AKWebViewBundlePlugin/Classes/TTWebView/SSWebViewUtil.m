@@ -14,6 +14,8 @@
 
 #define kSSEnableLongPressSaveImgKey @"kSSEnableLongPressSaveImgKey"
 
+static WKWebView *wkWebView;
+
 @implementation SSWebViewUtil
 
 + (NSURLRequest*)requestWithURL:(NSURL*)url httpHeaderDict:(NSDictionary *)headers
@@ -98,11 +100,34 @@ static NSString *s_oldAgent = nil;
 
 + (NSString *)userAgentString:(BOOL)appendAppInfo
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        UIWebView *webView = [[UIWebView alloc] init];
-        s_oldAgent = [webView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
-    });
+    if(!s_oldAgent){
+        NSString *uaKey = @"_UA_KEY_";
+        NSString *lastUA = [[NSUserDefaults standardUserDefaults] objectForKey:uaKey];
+        if(!lastUA){
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                UIWebView *webView = [[UIWebView alloc] init];
+                s_oldAgent = [webView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
+                if(s_oldAgent){
+                    [[NSUserDefaults standardUserDefaults] setObject:s_oldAgent forKey:uaKey];
+                }
+            });
+        }else{
+            s_oldAgent = lastUA;
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                wkWebView = [[WKWebView alloc] initWithFrame:CGRectZero];
+                [wkWebView evaluateJavaScript:@"navigator.userAgent" completionHandler:^(NSString *ua, NSError * _Nullable error) {
+                    if(ua){
+                        s_oldAgent = ua;
+                        [[NSUserDefaults standardUserDefaults] setObject:s_oldAgent forKey:uaKey];
+                    }
+                    wkWebView = nil;
+                }];
+            });
+        }
+    }
+  
 
     if (appendAppInfo) {
         NSMutableString *ua = [NSMutableString string];
