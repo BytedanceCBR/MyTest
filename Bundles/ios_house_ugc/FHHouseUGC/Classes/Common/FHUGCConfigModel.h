@@ -29,6 +29,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *districtName;
 @end
 
+@interface FHPostUGCSelectedGroupModel: JSONModel
+@property (nonatomic, copy) NSString *socialGroupId;
+@property (nonatomic, copy) NSString *socialGroupName;
+@end
+
+@interface FHPostUGCSelectedGroupHistory: JSONModel
+@property (nonatomic, strong) NSMutableDictionary<NSString*, FHPostUGCSelectedGroupModel*> *historyInfos;
+@end
+
 @interface FHUGCConfigDataModel : JSONModel
 
 @property(nonatomic, strong, nullable) NSArray <FHUGCConfigDataLeadSuggestModel> *leadSuggest;

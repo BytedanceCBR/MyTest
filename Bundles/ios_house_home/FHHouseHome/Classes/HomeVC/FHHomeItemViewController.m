@@ -776,6 +776,10 @@ extern NSString *const INSTANT_DATA_KEY;
 
 #pragma mark - FHHouseBaseItemCellDelegate
 
+- (BOOL)canDislikeClick {
+    return !self.isShowRefreshTip;
+}
+
 - (void)dislikeConfirm:(FHHomeHouseDataItemsModel *)model cell:(id)cell {
     NSInteger row = [self getCellIndex:model];
     if(row < self.houseDataItemsModel.count && row >= 0){

@@ -8,7 +8,7 @@
 #import "TTCommentWriteManager.h"
 #import <TTPlatformBaseLib/TTProfileFillManager.h>
 #import <TTNetworkManager/TTNetworkUtil.h>
-#import <TTUGCFoundation/TTUGCEmojiParser.h>
+#import <FHCommonUI/TTUGCEmojiParser.h>
 #import <TTUGCAttributedLabel.h>
 #import <TTPlatformUIModel/TTGroupModel.h>
 #import <TTUGCFoundation/TTUGCTextViewMediator.h>

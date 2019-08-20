@@ -581,6 +581,18 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [self onlineActionWithExtraDict:extraDic];
 }
 
+// 回调方法
+- (void)vc_viewDidAppear:(BOOL)animated
+{
+    [self.phoneCallViewModel vc_viewDidAppear:animated];
+}
+
+- (void)vc_viewDidDisappear:(BOOL)animated
+{
+    [self.phoneCallViewModel vc_viewDidDisappear:animated];
+}
+
+
 #pragma mark 埋点相关
 - (NSDictionary *)baseParams
 {

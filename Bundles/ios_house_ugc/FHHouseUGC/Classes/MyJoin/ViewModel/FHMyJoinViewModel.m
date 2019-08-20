@@ -63,9 +63,36 @@
         [self.viewController.neighbourhoodView.messageView addGestureRecognizer:singleTap];
         
         [self onUnreadMessageChange];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
     }
 
     return self;
+}
+
+// 发帖成功通知
+- (void)postThreadSuccess:(NSNotification *)noti {
+    if (noti) {
+        NSString *groupId = noti.userInfo[@"social_group_id"];
+        if (groupId.length > 0) {
+            __weak typeof(self) weakSelf = self;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [weakSelf requestData];
+            });
+        }
+    }
+}
+
+// 删帖成功通知
+- (void)delPostThreadSuccess:(NSNotification *)noti {
+    NSString *groupId = noti.userInfo[@"social_group_id"];
+    if (groupId.length > 0) {
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf requestData];
+        });
+    }
 }
 
 - (void)requestData {

@@ -78,6 +78,21 @@
     [self addGoDetailLog];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    // 帖子数同步逻辑
+    FHUGCScialGroupDataModel *tempModel = self.viewModel.detailHeaderModel.socialGroupModel;
+    if (tempModel) {
+        NSString *socialGroupId = tempModel.socialGroupId;
+        FHUGCScialGroupDataModel *model = [[FHUGCConfig sharedInstance] socialGroupData:socialGroupId];
+        if (model && (![model.countText isEqualToString:tempModel.countText] || ![model.hasFollow isEqualToString:tempModel.hasFollow])) {
+            self.viewModel.detailHeaderModel.socialGroupModel = model;
+            [self headerInfoChanged];
+            [self.tableView reloadData];
+        }
+    }
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self addStayPageLog];

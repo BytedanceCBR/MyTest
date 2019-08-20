@@ -20,6 +20,9 @@ extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification
 
 @interface TTArticleTabBarController : TTTabBarController
 
+@property(nonatomic, assign) BOOL hasShowDots;
+@property(nonatomic, assign) BOOL isShowDots;
+
 - (BOOL)isShowingConcernOrForumTab;
 
 - (void)didChangeCategory;

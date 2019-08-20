@@ -66,7 +66,7 @@
 
 - (FHUGCFeedGuideView *)guideView {
     if(!_guideView){
-        _guideView = [[FHUGCFeedGuideView alloc] init];
+        _guideView = [[FHUGCFeedGuideView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 42)];
         [self addSubview:_guideView];
     }
     return _guideView;

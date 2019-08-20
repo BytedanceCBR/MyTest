@@ -52,26 +52,26 @@
 
     // 布局
     [self.rightImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self).offset(-20);
-        make.centerY.mas_equalTo(self);
+        make.right.equalTo(self).offset(-20);
+        make.centerY.equalTo(self);
         make.height.width.mas_equalTo(16);
     }];
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self);
-        make.left.mas_equalTo(self).offset(20);
+        make.centerY.equalTo(self);
+        make.left.equalTo(self).offset(20);
         make.height.mas_equalTo(22);
         make.width.mas_equalTo(48);
     }];
     [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self);
-        make.left.mas_equalTo(self.nameLabel.mas_right).offset(0);
+        make.centerY.equalTo(self);
+        make.left.equalTo(self.nameLabel.mas_right).offset(0);
         make.height.mas_equalTo(22);
-        make.right.mas_equalTo(self.rightImageView.mas_left).offset(-5);
+        make.right.equalTo(self.rightImageView.mas_left).offset(-5);
     }];
     [self.sepLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.bottom.mas_equalTo(self);
+        make.bottom.equalTo(self);
         make.height.mas_equalTo(0.5);
     }];
 }
