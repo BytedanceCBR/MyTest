@@ -124,8 +124,10 @@
         cellModel.desc = [self generateArticleDesc:model];
         if(model.openUrl){
             cellModel.openUrl = model.openUrl;
-        }else if(model.rawData.content.extra.articleSchema){
-            cellModel.openUrl = model.rawData.content.extra.articleSchema;
+        }else if(model.articleSchema){
+            cellModel.openUrl = model.articleSchema;
+        }else if(model.rawData.articleSchema){
+            cellModel.openUrl = model.rawData.articleSchema;
         }else{
             cellModel.openUrl = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
         }

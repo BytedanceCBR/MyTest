@@ -415,6 +415,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginGroupModel *originGroup ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginCommonContentModel *originCommonContent ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
+@property (nonatomic, copy , nullable) NSString *articleSchema;
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, copy , nullable) NSString *groupId;
 @end
@@ -495,6 +496,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedContentCommunityModel *community ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataModel *rawData ;
+//临时处理服务器打平的逻辑
+@property (nonatomic, copy , nullable) NSString *articleSchema;
 @property (nonatomic, assign)   BOOL       isFromDetail;// 详情页
 @end
 

@@ -189,6 +189,7 @@
     @"sourceDesc": @"source_desc",
     @"recommendSocialGroupList": @"recommend_social_group_list",
     @"rawData": @"raw_data",
+    @"articleSchema": @"article_schema",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -442,6 +443,7 @@
                            @"originGroup": @"origin_group",
                            @"originCommonContent": @"origin_common_content",
                            @"recommendSocialGroupList": @"recommend_social_group_list",
+                           @"articleSchema": @"article_schema",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
