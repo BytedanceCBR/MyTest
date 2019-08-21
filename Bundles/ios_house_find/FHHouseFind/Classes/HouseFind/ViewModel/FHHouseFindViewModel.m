@@ -7,7 +7,7 @@
 
 #import "FHHouseFindViewModel.h"
 #import <FHHouseBase/FHEnvContext.h>
-#import <FHCommonUI/HMSegmentedControl.h>
+#import <FHHouseBase/HMSegmentedControl.h>
 #import <FHHouseBase/FHHouseType.h>
 #import "FHHouseFindMainCell.h"
 #import "FHHouseFindHeaderView.h"
