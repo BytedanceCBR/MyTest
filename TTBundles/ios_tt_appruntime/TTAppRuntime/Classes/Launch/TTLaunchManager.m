@@ -175,12 +175,15 @@ static NSDate *preMainDate = nil;
     
     TTStartupTask *task = [[taskClass alloc] init];
     if ([task shouldExecuteForApplication:application options:options]) {
-        if ([self isConcurrentFotType:headerInfo->type] || [task isConcurrent]) {            
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                
-//            })
-//            dispatch_async(SharedAppDelegate.barrierQueue, ^{
-                [task startAndTrackWithApplication:application options:options];
+        if ([self isConcurrentFotType:headerInfo->type] || [task isConcurrent]) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                /*
+                 * 主要执行TTFabricSDKRegister、TTFeedPreloadTask、TTUserConfigReportTask
+                 * 因为feed移动在第二栏，可以延迟执行，带首页加载完成后执行
+                 */
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    [task startAndTrackWithApplication:application options:options];
+                });
             });
         } else {
             [task setTaskNormal:NO];
