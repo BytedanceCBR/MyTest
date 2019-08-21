@@ -101,6 +101,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) NSArray *subwayLines;//地铁以一段一段的方式拼接
 @property(nonatomic , strong) FHMapSearchFilterView *filterView;
 @property(nonatomic , strong) FHMapAreaHouseListViewController *areaHouseListController; //区域内房源
+@property(nonatomic , assign) CLLocationCoordinate2D drawMinCoordinate;
+@property(nonatomic , assign) CLLocationCoordinate2D drawMaxCoordinate;
 
 @end
 
@@ -1403,7 +1405,18 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [self.viewController showNavTopViews:1 animated:YES];
         
         if(_needReload){
-            [self requestHouses:YES showTip:NO];
+            if (self.lastShowMode == FHMapSearchShowModeDrawLine) {
+                MACoordinateRegion region;
+                region.center = CLLocationCoordinate2DMake((self.drawMinCoordinate.latitude+self.drawMaxCoordinate.latitude)/2, (self.drawMinCoordinate.longitude+self.drawMaxCoordinate.longitude)/2);
+                region.span = MACoordinateSpanMake((self.drawMaxCoordinate.latitude - self.drawMinCoordinate.latitude)*1.05 , (self.drawMaxCoordinate.longitude - self.drawMinCoordinate.longitude)*1.05);
+                
+                [self.mapView setRegion:region animated:YES];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self requestHouses:YES showTip:NO];
+                });
+            }else{
+                [self requestHouses:YES showTip:NO];
+            }
         }
         
     }];
@@ -1791,6 +1804,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     [view removeFromSuperview];
     
+    self.drawMaxCoordinate = max;
+    self.drawMinCoordinate = min;
     //move mapview
     MACoordinateRegion region;
     region.center = CLLocationCoordinate2DMake((min.latitude+max.latitude)/2, (min.longitude+max.longitude)/2);
