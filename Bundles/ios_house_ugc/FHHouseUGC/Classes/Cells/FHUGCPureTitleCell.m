@@ -115,7 +115,7 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHFeedUGCCellModel class]]) {
+    if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
     self.currentData = data;
