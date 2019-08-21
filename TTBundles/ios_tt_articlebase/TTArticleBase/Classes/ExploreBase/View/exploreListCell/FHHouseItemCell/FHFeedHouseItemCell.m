@@ -279,6 +279,7 @@
         _houseTableView.estimatedSectionFooterHeight = 0;
         if (@available(iOS 11.0, *)) {
             _houseTableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+            _houseTableView.insetsContentViewsToSafeArea = NO;
         }
     }
     return _houseTableView;

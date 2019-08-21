@@ -8,6 +8,7 @@
 #import "FHHouseFindMainCell.h"
 #import <Masonry/Masonry.h>
 #import <FHCommonUI/FHErrorView.h>
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @interface FHHouseFindMainCell ()
 
@@ -23,13 +24,10 @@
     if (self) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.scrollDirection = UICollectionViewScrollDirectionVertical;
-        _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
+        _collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
         _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.allowsMultipleSelection = YES;
-        if (@available(iOS 11.0, *)) {
-            _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        }
         [self.contentView addSubview:_collectionView];
                 
         [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {

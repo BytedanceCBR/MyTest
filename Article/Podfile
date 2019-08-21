@@ -15,7 +15,7 @@ install! 'cocoapods', :warn_for_multiple_pod_sources => false
 plugin 'cocoapods-bytedance-transform'
 # 用于开启依赖解析加速的服务，传true表示使用，false表示不使用
 bytedanceAnalyzeSpeed(true)
-bd_use_app("thirdParty","public","toutiao")
+bd_use_app("thirdParty","public","toutiao","ugc")
 
 #全部使用源码
 #bd_use_source!
@@ -76,8 +76,9 @@ def appPods
     pod 'TTUserProfile', :path => '../TTBundles/ios_tt_userprofile'
     pod 'TTArticleVideo', :path => '../TTBundles/ios_tt_article_video'
     
-    pod_binary 'SecGuard', '0.8.12.9'#'0.8.10.1'
-
+    #pod_binary 'SecGuard', '0.8.10.5'#'0.8.10.1'
+    pod 'SecGuard' , '0.8.14.5'
+    
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
 
 #    #-----安全组sdk-----#
@@ -549,9 +550,9 @@ def appPods
     pod_binary 'BDAccountSessionSDK','0.1.11'
     pod_binary 'YYText' , '1.0.7'
     pod_source 'AMapLocation' , '2.6.0'
-    pod_source 'AMap3DMap', '6.2.0'
-    pod_source 'AMapSearch' , '6.1.1'
-    pod_binary 'AMapFoundation' , '1.5.2'
+    pod_source 'AMap3DMap' , '6.9.0'
+    pod_source 'AMapSearch'  , '6.9.0'
+    pod_binary 'AMapFoundation' , '1.5.7'
     pod_binary 'OpenUDID', '0.1.0'
     
     #支持自动约束cell缓存高度

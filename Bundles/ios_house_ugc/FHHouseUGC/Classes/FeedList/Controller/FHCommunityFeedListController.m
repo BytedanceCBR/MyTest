@@ -21,6 +21,7 @@
 #import "FHUserTracker.h"
 #import <UIScrollView+Refresh.h>
 #import "FHFeedOperationView.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHCommunityFeedListController ()<SSImpressionProtocol>
 
@@ -89,7 +90,7 @@
 }
 
 - (void)initTableView {
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     

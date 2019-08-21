@@ -23,6 +23,7 @@
 #import "TTReachability.h"
 #import "FHUserTracker.h"
 #import "TTDeviceHelper.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
@@ -95,18 +96,19 @@
     [self.containerView addSubview:_subTitleLabel];
     
     self.closeBtn = [[UIButton alloc] init];
-    [_closeBtn setImage:[UIImage imageNamed:@"detail_alert_closed"] forState:UIControlStateNormal];
+    UIImage *img = ICON_FONT_IMG(24, @"\U0000e673", nil);
+    [_closeBtn setImage:img forState:UIControlStateNormal];
     _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [_closeBtn addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
     [self.containerView addSubview:_closeBtn];
     
-    self.normalBtn = [self buttonWithText:@"一般" imageName:@"detail_feedback_normal" selectedImageName:@"detail_feedback_normal_selected" tag:2];
+    self.normalBtn = [self buttonWithText:@"一般" imageName:@"\U0000e66b" selectedImageName:@"\U0000e66b" tag:2]; //detail_feedback_normal
     [self.containerView addSubview:_normalBtn];
     
-    self.unLikeBtn = [self buttonWithText:@"不专业" imageName:@"detail_feedback_unlike" selectedImageName:@"detail_feedback_unlike_selected" tag:1];
+    self.unLikeBtn = [self buttonWithText:@"不专业" imageName:@"\U0000e6ae" selectedImageName:@"\U0000e6ae" tag:1]; //detail_feedback_unlike
     [self.containerView addSubview:_unLikeBtn];
     
-    self.likeBtn = [self buttonWithText:@"专业" imageName:@"detail_feedback_like" selectedImageName:@"detail_feedback_like_selected" tag:3];
+    self.likeBtn = [self buttonWithText:@"专业" imageName:@"\U0000e6af" selectedImageName:@"\U0000e6af" tag:3];//detail_feedback_like
     [self.containerView addSubview:_likeBtn];
     
     self.reportLabel = [[YYLabel alloc] init];
@@ -216,8 +218,10 @@
 - (UIButton *)buttonWithText:(NSString *)text imageName:(NSString *)imageName selectedImageName:(NSString *)selectedImageName tag:(NSInteger)tag {
     UIButton *btn = [[UIButton alloc] init];
     btn.imageView.contentMode = UIViewContentModeCenter;
-    [btn setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-    [btn setImage:[UIImage imageNamed:selectedImageName] forState:UIControlStateHighlighted];
+    UIImage *img = ICON_FONT_IMG(40, imageName, [UIColor themeGray6]);
+    [btn setImage:img forState:UIControlStateNormal];
+    img = ICON_FONT_IMG(40, selectedImageName, [UIColor themeRed]);
+    [btn setImage:img forState:UIControlStateHighlighted];
     [btn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor themeRed] forState:UIControlStateHighlighted];
     btn.titleLabel.font = [UIFont themeFontRegular:16];

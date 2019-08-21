@@ -24,6 +24,8 @@
 #import "ExploreLogicSetting.h"
 #import "FHPostUGCViewController.h"
 #import "FHUserTracker.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @interface FHCommunityViewController ()
 
@@ -152,7 +154,7 @@
     [self.topView addSubview:_bottomLineView];
 
     self.searchBtn = [[UIButton alloc] init];
-    [_searchBtn setImage:[UIImage imageNamed:@"fh_ugc_search"] forState:UIControlStateNormal];
+    [_searchBtn setImage: ICON_FONT_IMG(18, @"\U0000e675", [UIColor blackColor]) forState:UIControlStateNormal];//fh_ugc_search
     _searchBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [_searchBtn addTarget:self action:@selector(goToSearch) forControlEvents:UIControlEventTouchUpInside];
     [self.topView addSubview:_searchBtn];
@@ -192,6 +194,17 @@
 //    }
 }
 
+-(BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+-(BOOL)prefersStatusBarHidden
+{
+    return NO;
+}
+
+
 - (void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
@@ -225,7 +238,7 @@
     layout.minimumInteritemSpacing = 0;
 
     //2.初始化collectionView
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     _collectionView.allowsSelection = NO;
     _collectionView.pagingEnabled = YES;
     _collectionView.bounces = NO;

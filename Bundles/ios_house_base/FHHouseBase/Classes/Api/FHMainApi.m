@@ -14,6 +14,7 @@
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import "FHJSONHTTPRequestSerializer.h"
 #import "FHEnvContext.h"
+#import <YYModel/YYModel.h>
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import <Heimdallr/HMDTTMonitor.h>
 
@@ -95,7 +96,7 @@
         __block NSError *backError = error;
 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&backError];
+            FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&backError useYYModel:YES];
 
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -133,8 +134,21 @@
         qparam[@"suggestion_params"] = sugParam;
     }
     
-    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:qparam method:GET needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:qparam method:GET needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         FHHouseRentModel *model = (FHHouseRentModel *)[self generateModel:obj class:[FHHouseRentModel class] error:&error];
+        
+        if (response.statusCode == 200 && [model isKindOfClass:[FHHouseRentModel class]]) {
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                if (status.integerValue != 0 || error != nil) {
+                    NSMutableDictionary *extraDict = @{}.mutableCopy;
+                    extraDict[@"request_url"] = response.URL.absoluteString;
+                    extraDict[@"response_headers"] = response.allHeaderFields;
+                    extraDict[@"error"] = error.domain;
+                    [self addServerFailerLog:model.status extraDict:extraDict];
+                }
+            }
+        }
         if (completion) {
             completion(model,error);
         }
@@ -184,6 +198,11 @@
 
 +(JSONModel *)generateModel:(NSData *)jsonData class:(Class)class error:(NSError *__autoreleasing *)error
 {
+    return [self generateModel:jsonData class:class error:error useYYModel:NO];
+}
+
++(JSONModel *)generateModel:(NSData *)jsonData class:(Class)class error:(NSError *__autoreleasing *)error useYYModel:(BOOL)useYYModel
+{
     if (*error) {
         //there is error
         return nil;
@@ -195,7 +214,12 @@
     }
     
     NSError *jerror = nil;
-    JSONModel *model = [[class alloc]initWithData:jsonData error:&jerror];
+    JSONModel *model = nil;
+    if(useYYModel){
+        model = [class yy_modelWithJSON:jsonData];
+    }else{
+        model = [[class alloc]initWithData:jsonData error:&jerror];
+    }
     if (jerror) {
 #if DEBUG
         NSLog(@" %s %ld API [%@] make json failed",__FILE__,__LINE__,NSStringFromClass(class));
@@ -221,11 +245,29 @@
 {
     NSString *url = QURL(queryPath);
     
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:param method:GET needCommonParams:YES callback:^(NSError *error, id obj) {
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[self generateModel:obj class:cls error:&backError];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
+        
+    }];
+}
+
++(TTHttpTask *)queryData:(NSString *_Nullable)queryPath uploadLog:(BOOL)uploadLog params:(NSDictionary *_Nullable)param class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
+{
+    NSString *url = QURL(queryPath);
+    
     return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:GET needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         __block NSError *backError = error;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[self generateModel:obj class:cls error:&backError];
-            if (response.statusCode == 200) {
+            if (response.statusCode == 200 && uploadLog) {
                 
                 if ([model respondsToSelector:@selector(status)]) {
                     NSString *status = [model performSelector:@selector(status)];
@@ -244,7 +286,7 @@
                 });
             }
         });
-            
+        
     }];
 }
 
@@ -256,10 +298,15 @@
         if (!completion) {
             return ;
         }
-        FHHomeRollModel *model = (FHHomeRollModel *)[self generateModel:obj class:[FHHomeRollModel class] error:&error];
-        if (completion) {
-            completion(model,error);
-        }
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHHomeRollModel *model = (FHHomeRollModel *)[self generateModel:obj class:[FHHomeRollModel class] error:&backError];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
     }];
 }
 
@@ -271,22 +318,25 @@
         if (!completion) {
             return ;
         }
-        FHHomeHouseModel *model = (FHHomeHouseModel *)[self generateModel:obj class:[FHHomeHouseModel class] error:&error];
-        if (response.statusCode == 200  && [model isKindOfClass:[FHHomeHouseModel class]]) {
-            if ([model respondsToSelector:@selector(status)]) {
-                NSString *status = [model performSelector:@selector(status)];
-                if (status.integerValue != 0 || error != nil || model.data.items.count == 0) {
-                    NSMutableDictionary *extraDict = @{}.mutableCopy;
-                    extraDict[@"request_url"] = response.URL.absoluteString;
-                    extraDict[@"response_headers"] = response.allHeaderFields;
-                    extraDict[@"error"] = error.domain;
-                    [self addServerFailerLog:model.status extraDict:extraDict];
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHHomeHouseModel *model = (FHHomeHouseModel *)[self generateModel:obj class:[FHHomeHouseModel class] error:&backError];
+            if (response.statusCode == 200  && [model isKindOfClass:[FHHomeHouseModel class]]) {
+                if ([model respondsToSelector:@selector(status)]) {
+                    NSString *status = [model performSelector:@selector(status)];
+                    if (status.integerValue != 0 || error != nil || model.data.items.count == 0) {
+                        NSMutableDictionary *extraDict = @{}.mutableCopy;
+                        extraDict[@"request_url"] = response.URL.absoluteString;
+                        extraDict[@"response_headers"] = response.allHeaderFields;
+                        extraDict[@"error"] = error.domain;
+                        [self addServerFailerLog:model.status extraDict:extraDict];
+                    }
                 }
-            }
-        }
-        if (completion) {
-            completion(model,error);
-        }
+            }            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,backError);
+            });
+        });
     }];
 }
 
@@ -321,7 +371,7 @@
             id rmodel = [self  generateModel:obj class:clazz error:&backError];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(rmodel,error);
+                    completion(rmodel,backError);
                 });
             }
         });
@@ -345,6 +395,42 @@
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(rmodel,error);
+                });
+            }
+        });
+    }];
+    
+}
+
++(TTHttpTask *)postRequest:(NSString *_Nonnull)path uploadLog:(BOOL)uploadLog query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param jsonClass:(Class _Nonnull)clazz completion:(void(^_Nullable)(JSONModel *_Nullable model , NSError *_Nullable error))completion
+{
+    NSString *url = QURL(path);
+    
+    if (!IS_EMPTY_STRING(query)) {
+        url = [url stringByAppendingFormat:@"?%@",query];
+    }
+
+    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:param method:POST needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+
+            id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[self generateModel:obj class:clazz error:&backError];
+            if (response.statusCode == 200 && uploadLog) {
+                
+                if ([model respondsToSelector:@selector(status)]) {
+                    NSString *status = [model performSelector:@selector(status)];
+                    if (status.integerValue != 0 || error != nil) {
+                        NSMutableDictionary *extraDict = @{}.mutableCopy;
+                        extraDict[@"request_url"] = response.URL.absoluteString;
+                        extraDict[@"response_headers"] = response.allHeaderFields;
+                        extraDict[@"error"] = error.domain;
+                        [self addServerFailerLog:model.status extraDict:extraDict];
+                    }
+                }
+            }
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,error);
                 });
             }
         });

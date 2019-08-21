@@ -57,6 +57,9 @@
         self.webContainer = [[SSWebViewContainer alloc] initWithFrame:[self frameForListView] baseCondition:@{@"use_wk":@(YES)}];
         [_webContainer.ssWebView addDelegate:self];
         [_webContainer hiddenProgressView:YES];
+        if (@available(iOS 11.0 , *)) {
+            _webContainer.ssWebView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         _webContainer.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         _webContainer.ssWebView.opaque = NO;
         _webContainer.ssWebView.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
