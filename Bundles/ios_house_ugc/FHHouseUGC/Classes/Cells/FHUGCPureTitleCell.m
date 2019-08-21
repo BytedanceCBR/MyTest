@@ -115,52 +115,55 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
-        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        self.cellModel = cellModel;
-        //设置userInfo
-        self.userInfoView.cellModel = cellModel;
-        self.userInfoView.userName.text = cellModel.user.name;
-        self.userInfoView.descLabel.attributedText = cellModel.desc;
-        [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
-        //设置底部
-        self.bottomView.cellModel = cellModel;
-        
-        BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
-        self.bottomView.position.text = cellModel.community.name;
-        [self.bottomView showPositionView:showCommunity];
-        
-        NSInteger commentCount = [cellModel.commentCount integerValue];
-        if(commentCount == 0){
-            [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
-        }else{
-            [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
-        }
-        [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
-        //内容
-        self.contentLabel.numberOfLines = cellModel.numberOfLines;
-        if(isEmptyString(cellModel.content)){
-            self.contentLabel.hidden = YES;
-        }else{
-            self.contentLabel.hidden = NO;
-            [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
-        }
-        //origin
-        if(cellModel.originItemModel){
-            self.originView.hidden = NO;
-            [self.originView refreshWithdata:cellModel];
-            [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(originViewHeight + 20);
-            }];
-        }else{
-            self.originView.hidden = YES;
-            [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-            }];
-        }
-        
-        [self showGuideView];
+    if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
+        return;
     }
+    self.currentData = data;
+    
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    self.cellModel = cellModel;
+    //设置userInfo
+    self.userInfoView.cellModel = cellModel;
+    self.userInfoView.userName.text = cellModel.user.name;
+    self.userInfoView.descLabel.attributedText = cellModel.desc;
+    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    //设置底部
+    self.bottomView.cellModel = cellModel;
+    
+    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
+    self.bottomView.position.text = cellModel.community.name;
+    [self.bottomView showPositionView:showCommunity];
+    
+    NSInteger commentCount = [cellModel.commentCount integerValue];
+    if(commentCount == 0){
+        [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
+    }else{
+        [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
+    }
+    [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
+    //内容
+    self.contentLabel.numberOfLines = cellModel.numberOfLines;
+    if(isEmptyString(cellModel.content)){
+        self.contentLabel.hidden = YES;
+    }else{
+        self.contentLabel.hidden = NO;
+        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+    }
+    //origin
+    if(cellModel.originItemModel){
+        self.originView.hidden = NO;
+        [self.originView refreshWithdata:cellModel];
+        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(originViewHeight + 20);
+        }];
+    }else{
+        self.originView.hidden = YES;
+        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
+        }];
+    }
+    
+    [self showGuideView];
 }
 
 + (CGFloat)heightForData:(id)data {
