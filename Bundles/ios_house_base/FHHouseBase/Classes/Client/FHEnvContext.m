@@ -466,6 +466,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 - (void)acceptConfigDataModel:(FHConfigDataModel *)configModel
 {
+
     if (configModel && [configModel isKindOfClass:[FHConfigDataModel class]]) {
         //        self.generalBizConfig.configCache = configModel;
         [FHEnvContext saveCurrentUserCityId:configModel.currentCityId];

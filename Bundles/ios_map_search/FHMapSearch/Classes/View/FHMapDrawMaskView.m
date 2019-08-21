@@ -17,25 +17,25 @@
 @property(nonatomic , strong) NSMutableArray *xcoords;
 @property(nonatomic , strong) NSMutableArray *ycoords;
 @property(nonatomic , strong) UIBezierPath *bezierPath;
-@property(nonatomic , strong) UIButton *closeButton;
+//@property(nonatomic , strong) UIButton *closeButton;
 
 @end
 
 @implementation FHMapDrawMaskView
 
 
--(instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_closeButton setBackgroundImage:SYS_IMG(@"mapsearch_close") forState:UIControlStateNormal];        
-        [_closeButton addTarget:self action:@selector(onCloseAction) forControlEvents:UIControlEventTouchUpInside];
-        
-        [self addSubview:_closeButton];
-    }
-    return self;
-}
+//-(instancetype)initWithFrame:(CGRect)frame
+//{
+//    self = [super initWithFrame:frame];
+//    if (self) {
+//        _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [_closeButton setBackgroundImage:SYS_IMG(@"mapsearch_close") forState:UIControlStateNormal];
+//        [_closeButton addTarget:self action:@selector(onCloseAction) forControlEvents:UIControlEventTouchUpInside];
+//
+//        [self addSubview:_closeButton];
+//    }
+//    return self;
+//}
 
 -(NSMutableArray *)xcoords
 {
@@ -153,15 +153,15 @@
     [self.ycoords addObject:@(loc.y)];
 }
 
--(void)layoutSubviews
-{
-    [super layoutSubviews];
-    CGFloat bottomSafeInset = 0;
-    if (@available(iOS 11.0 , *)) {
-        bottomSafeInset = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
-    }
-    _closeButton.frame = CGRectMake(14, CGRectGetHeight(self.bounds) - 31 - bottomSafeInset - CLOSE_WIDTH, CLOSE_WIDTH, CLOSE_WIDTH);
-}
+//-(void)layoutSubviews
+//{
+//    [super layoutSubviews];
+//    CGFloat bottomSafeInset = 0;
+//    if (@available(iOS 11.0 , *)) {
+//        bottomSafeInset = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+//    }
+//    _closeButton.frame = CGRectMake(14, CGRectGetHeight(self.bounds) - 31 - bottomSafeInset - CLOSE_WIDTH, CLOSE_WIDTH, CLOSE_WIDTH);
+//}
 
 -(void)drawRect:(CGRect)rect
 {

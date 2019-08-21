@@ -12,6 +12,7 @@
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import <FHHouseBase/FHConfigModel.h>
 #import <FHHouseBase/FHEnvContext.h>
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @interface FHMainRentTopView ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -91,9 +92,10 @@
             f.size.height -= bannerHeight;
         }
         //CGRectMake(0, 15, frame.size.width, frame.size.height - BOTTOM_PADDING - 15)
-        _collectionView = [[UICollectionView alloc]initWithFrame:f collectionViewLayout:layout];
+        _collectionView = [[FHBaseCollectionView alloc]initWithFrame:f collectionViewLayout:layout];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
+        
         
         [_collectionView registerClass:[FHMainRentTopCell class] forCellWithReuseIdentifier:kCellId];
         

@@ -34,11 +34,13 @@ typedef  void (^_Nullable HouseListOpenUrlCallback)(NSString *openUrl);
 
 -(void)switchNavbarMode:(FHMapSearchShowMode)mode;
 
+-(UIView *)navBarView;
+
 /*
  * ratio 0 : hide
  * ratio 1 : show
  */
--(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated hideLocation:(BOOL)hideLocation;
+-(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated;
 
 -(void)insertHouseListView:(UIView *)houseListView;
 
@@ -49,6 +51,9 @@ typedef  void (^_Nullable HouseListOpenUrlCallback)(NSString *openUrl);
 -(void)switchToNormalMode;
 
 -(BOOL)isShowingMaskView;
+
+-(void)backAction;
+
 
 @end
 

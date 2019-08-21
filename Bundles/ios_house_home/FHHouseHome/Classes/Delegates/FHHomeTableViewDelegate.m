@@ -10,6 +10,7 @@
 #import "FHHomeCellHelper.h"
 #import <UITableView+FDTemplateLayoutCell.h>
 #import "FHHomeScrollBannerCell.h"
+#import "FHHomeEntrancesCell.h"
 
 @interface FHHomeTableViewDelegate()
 {
@@ -55,10 +56,16 @@
         // 单独计算行高
         return [FHHomeScrollBannerCell cellHeight];
     }
-    [tableView fd_heightForCellWithIdentifier:identifier cacheByKey:identifier configuration:^(FHHomeBaseTableCell *cell) {
-        [FHHomeCellHelper configureCell:cell withJsonModel:model];
-    }];
-    return [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
+    
+    if ([identifier isEqualToString:@"FHHomeEntrancesCell"]) {
+        return [FHHomeEntrancesCell cellHeightForModel:model];
+    }
+    
+//    [tableView fd_heightForCellWithIdentifier:identifier cacheByKey:identifier configuration:^(FHHomeBaseTableCell *cell) {
+//        [FHHomeCellHelper configureCell:cell withJsonModel:model];
+//    }];
+//    return [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
+    return CGFLOAT_MIN;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {

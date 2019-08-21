@@ -622,6 +622,9 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)cancel:(id)sender {
+    
+    [(TTNavigationController*)self.navigationController panRecognizer].enabled = YES;
+    
     [self endEditing];
     
     NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -866,9 +869,11 @@ static NSInteger const kMaxPostImageCount = 9;
         [FHUserTracker writeEvent:@"click_options" params:tracerDict];
     }
 
+    [(TTNavigationController*)self.navigationController panRecognizer].enabled = YES;
+    
     // 发帖跳关注频道
     [self dismissSelf];
-
+    
     !self.postFinishCompletionBlock ?: self.postFinishCompletionBlock(hasSent);
 }
 

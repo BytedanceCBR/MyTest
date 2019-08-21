@@ -20,6 +20,8 @@
 #import "FHUserTracker.h"
 #import "TTReachability.h"
 #import <ToastManager.h>
+#import <FHHouseBase/FHBaseTableView.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHIMSharedUserListViewController () <TTRouteInitializeProtocol, FHIMShareUserListViewModelDelegate, FHIMShareAlertViewDelegate, IMChatStateObserver>
 {
@@ -43,7 +45,7 @@
         _rowIndex = NSUIntegerMax;
         self.listViewModel = [[FHIMShareUserListViewModel alloc] init];
         _listViewModel.delegate = self;
-        self.tableView = [[UITableView alloc] init];
+        self.tableView = [[FHBaseTableView alloc] init];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.showsVerticalScrollIndicator = NO;
         self.automaticallyAdjustsScrollViewInsets = NO;
@@ -91,8 +93,9 @@
     [self setupDefaultNavBar:NO];
     //    self.customNavBarView.leftBtn.hidden = [self leftActionHidden];
     self.customNavBarView.title.text = @"选择经纪人";
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"detail_alert_closed"] forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"detail_alert_closed"] forState:UIControlStateHighlighted];
+    UIImage *img = ICON_FONT_IMG(12, @"\U0000e673", nil);
+    [self.customNavBarView.leftBtn setBackgroundImage:img forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:img forState:UIControlStateHighlighted];
 }
 
 - (void)viewDidLoad {

@@ -118,7 +118,11 @@ static const CGFloat kBackButtonWidth = 24;
             [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
         }
         if (self.statusbarHiddenNumber == nil) {
-            self.statusbarHiddenNumber = @([UIApplication sharedApplication].isStatusBarHidden);
+            if (@available(iOS 13.0 , *)) {
+                self.statusbarHiddenNumber = @(NO);
+            }else{
+                self.statusbarHiddenNumber = @([UIApplication sharedApplication].isStatusBarHidden);
+            }
             [[UIApplication sharedApplication] setStatusBarHidden:(!_showFullscreenStatusBar || self.alpha == 0)];
         }
         _backButton.top = _showFullscreenStatusBar ? 30 : 10;

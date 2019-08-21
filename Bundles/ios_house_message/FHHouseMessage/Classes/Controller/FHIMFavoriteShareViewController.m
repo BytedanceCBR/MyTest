@@ -21,6 +21,8 @@
 #import "FHErrorView.h"
 #import "IFHMyFavoriteController.h"
 #import "TTTracker.h"
+#import <FHHouseBase/FHBaseTableView.h>
+
 @interface FHIMFavoriteViewController : NSObject<IFHMyFavoriteController>
 
 @property (nonatomic, strong) FHErrorView *emptyView;
@@ -274,7 +276,7 @@
 }
 
 -(UITableView*)generateTableView {
-    UITableView* tableView = [[UITableView alloc] init];
+    UITableView* tableView = [[FHBaseTableView alloc] init];
     [_containerView addSubview:tableView];
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableView.showsVerticalScrollIndicator = NO;

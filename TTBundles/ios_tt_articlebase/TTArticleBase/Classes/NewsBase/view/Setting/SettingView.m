@@ -89,6 +89,8 @@
 
 //爱看
 #import "AKTaskSettingHelper.h"
+#import "FHUserTracker.h"
+#import "FHUserTrackerDefine.h"
 
 #import <TTBaseLib/TTSandBoxHelper.h>
 
@@ -152,6 +154,7 @@ typedef NS_ENUM(NSUInteger, TTSettingCellType) {
     SettingCellTypeAbout,                   // 关于我们
     SettingCellTypeUserProtocol,            // 用户协议
     SettingCellTypePrivacyProtocol,         // 隐私政策
+    SettingCellTypeBusinessLicense,         // 证照资质
     SettingCellTypeLogoutUnRegister         // 注销登录
 
 };
@@ -749,6 +752,11 @@ TTEditUserProfileViewControllerDelegate
         UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    } else if (cellType == SettingCellTypeBusinessLicense) {
+        cell.textLabel.text = @"证照资质";
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
+        cell.accessoryView = accessoryImage;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (cellType == SettingCellTypeLogout) {
         cell.textLabel.text = @"退出登录";
         cell.accessoryView = NULL;
@@ -819,7 +827,8 @@ TTEditUserProfileViewControllerDelegate
         case kTTSettingSectionTypeAbout:
             return @[@(SettingCellTypeAbout),
                      @(SettingCellTypeUserProtocol),
-                     @(SettingCellTypePrivacyProtocol)];
+                     @(SettingCellTypePrivacyProtocol),
+                    @(SettingCellTypeBusinessLicense)];
         case kTTSettingSectionTypeLogout:
             return @[@(SettingCellTypeLogout)];
 //        case kTTSettingSectionTypeLogoutUnRegister:
@@ -1345,6 +1354,19 @@ TTEditUserProfileViewControllerDelegate
     } else if (cellType == SettingCellTypePrivacyProtocol) {
         // 隐私政策
         NSString *urlStr = [[NSString stringWithFormat:@"%@&hide_more=1",[ArticleURLSetting userPrivateProtocolURLString]]stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        if (urlStr.length > 0) {
+            [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]]];
+        }
+    } else if (cellType == SettingCellTypeBusinessLicense) {
+        // 证件资质
+        NSString *urlStr = [[NSString stringWithFormat:@"%@&hide_more=1&report_params={\"event_type\": \"house_app2c_v2\"}",[ArticleURLSetting appBusinessLicenseURLString]]stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+
+        NSMutableDictionary *param = [NSMutableDictionary new];
+        param[UT_ENTER_FROM] = @"minetab";
+        param[UT_PAGE_TYPE] = @"setting";
+        param[@"click_position"] = @"house_license";
+        TRACK_EVENT(@"click_license", param);
+
         if (urlStr.length > 0) {
             [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]]];
         }

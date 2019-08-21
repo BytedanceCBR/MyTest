@@ -273,6 +273,9 @@ static NSString * const kTTImageRecommendOneSearchWordCellIdentifier = @"kTTImag
         _imageRecommendCollectionView.dataSource = self;
         [_imageRecommendCollectionView registerClass:[TTImageRecommendItemCell class] forCellWithReuseIdentifier:kTTImageRecommendItemCellIdentifier];
         [_imageRecommendCollectionView registerClass:[TTPhotoSingleSearchWordCell class] forCellWithReuseIdentifier:kTTImageRecommendOneSearchWordCellIdentifier];
+        if (@available(iOS 11.0 , *)) {
+            _imageRecommendCollectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         [self.contentView addSubview:_imageRecommendCollectionView];
         
         // night mask View
@@ -801,6 +804,9 @@ static CGFloat toolbarHeight = 44.5f;
         self.collectionView.delegate = self;
         self.collectionView.dataSource = self;
         self.collectionView.backgroundView = nil;
+        if(@available(iOS 11.0 , *)){
+            self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;            
+        }
         /// 对pad返回手势做单独处理
         self.collectionView.bounces = !([TTDeviceHelper isPadDevice]);
         self.collectionView.backgroundColor = [UIColor clearColor];
@@ -1092,6 +1098,13 @@ static CGFloat maxAnimationHeight = 154;//超过这个高度才做动画
 }
 
 - (void)layoutSubviews {
+    if (@available(iOS 13, *)) {
+        //拖拽手势进行中
+        if (self.natantContaintView.top == 0) {
+            return;
+        }
+    }
+
     [super layoutSubviews];
     
     self.natantView.width = self.width;

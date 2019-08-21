@@ -10,7 +10,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <Masonry.h>
 #import <FHCommonUI/UIView+House.h>
-
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @implementation FHHouseFindHelpRegionItemCell
 
@@ -27,10 +27,10 @@
 {
     _regionSelected = regionSelected;
     if (regionSelected) {
-        self.selectImgView.image = [UIImage imageNamed:@"housefind_selected"];
+        self.selectImgView.image = ICON_FONT_IMG(16, @"\U0000e689", [UIColor themeRed1]);  //@"housefind_selected"
         self.regionLabel.textColor = [UIColor themeRed1];
     }else {
-        self.selectImgView.image = [UIImage imageNamed:@"housefind_normal"];
+        self.selectImgView.image = ICON_FONT_IMG(16, @"\U0000e669", nil);//@"housefind_normal";
         self.regionLabel.textColor = [UIColor themeGray1];
     }
 }
@@ -253,7 +253,8 @@
             _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
-            self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+            _tableView.insetsContentViewsToSafeArea = NO;
         }
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.backgroundColor = [UIColor whiteColor];

@@ -17,10 +17,10 @@ PODS:
   - AKShareServicePlugin (0.1.0)
   - AKWDPlugin (0.1.0)
   - AKWebViewBundlePlugin (0.1.0)
-  - AMap3DMap (6.2.0.1-binary)
-  - AMapFoundation (1.5.2.1-binary)
+  - AMap3DMap (6.9.0.1-binary)
+  - AMapFoundation (1.5.7.1-binary)
   - AMapLocation (2.6.0.1-binary)
-  - AMapSearch (6.1.1.1-binary)
+  - AMapSearch (6.9.0.1-binary)
   - Aspects (1.4.1.1-binary)
   - AWECloudCommand (1.0.7.1-binary):
     - AWECloudCommand/Core (= 1.0.7.1-binary)
@@ -254,15 +254,17 @@ PODS:
   - SDWebImage/Core (4.4.1.1-binary)
   - SDWebImage/GIF (4.4.1.1-binary)
   - SDWebImage/WebP (4.4.1.1-binary)
-  - SecGuard (0.8.12.9.1-binary):
-    - SecGuard/Core (= 0.8.12.9.1-binary)
-    - SecGuard/Encrypt (= 0.8.12.9.1-binary)
-    - SecGuard/ForceCrash (= 0.8.12.9.1-binary)
-    - SecGuard/Verification (= 0.8.12.9.1-binary)
-  - SecGuard/Core (0.8.12.9.1-binary)
-  - SecGuard/Encrypt (0.8.12.9.1-binary)
-  - SecGuard/ForceCrash (0.8.12.9.1-binary)
-  - SecGuard/Verification (0.8.12.9.1-binary)
+  - SecGuard (0.8.14.5):
+    - SecGuard/Base (= 0.8.14.5)
+    - SecGuard/Core (= 0.8.14.5)
+    - SecGuard/Encrypt (= 0.8.14.5)
+    - SecGuard/ForceCrash (= 0.8.14.5)
+    - SecGuard/Selas (= 0.8.14.5)
+  - SecGuard/Base (0.8.14.5)
+  - SecGuard/Core (0.8.14.5)
+  - SecGuard/Encrypt (0.8.14.5)
+  - SecGuard/ForceCrash (0.8.14.5)
+  - SecGuard/Selas (0.8.14.5)
   - SocketRocket (0.5.1.1-binary)
   - SQLiteRepairKit (1.2.1.1-binary)
   - SSZipArchive (1.6.3.1-binary)
@@ -563,10 +565,10 @@ DEPENDENCIES:
   - AKShareServicePlugin (from `../AKPlugins/AKShareServicePlugin`)
   - AKWDPlugin (from `../AKPlugins/AKWDPlugin`)
   - AKWebViewBundlePlugin (from `../AKPlugins/AKWebViewBundlePlugin`)
-  - AMap3DMap (= 6.2.0.1-binary)
-  - AMapFoundation (= 1.5.2.1-binary)
+  - AMap3DMap (= 6.9.0.1-binary)
+  - AMapFoundation (= 1.5.7.1-binary)
   - AMapLocation (= 2.6.0.1-binary)
-  - AMapSearch (= 6.1.1.1-binary)
+  - AMapSearch (= 6.9.0.1-binary)
   - Aspects (= 1.4.1.1-binary)
   - AWECloudCommand (= 1.0.7.1-binary)
   - AWEVideoPlayer (= 0.3.20.1-binary)
@@ -695,7 +697,7 @@ DEPENDENCIES:
   - SDWebImage/Core (= 4.4.1.1-binary)
   - SDWebImage/GIF (= 4.4.1.1-binary)
   - SDWebImage/WebP (= 4.4.1.1-binary)
-  - SecGuard (= 0.8.12.9.1-binary)
+  - SecGuard (= 0.8.14.5)
   - SocketRocket (= 0.5.1.1-binary)
   - SQLiteRepairKit (= 1.2.1.1-binary)
   - SSZipArchive (= 1.6.3.1-binary)
@@ -964,10 +966,10 @@ SPEC CHECKSUMS:
   AKShareServicePlugin: 7f4273d1d25b641a6d3c97537d6c57e8ceb999fc
   AKWDPlugin: 578ff2a20b6d16a523e2b1e96512e77e5c6b6fd3
   AKWebViewBundlePlugin: 684255bc41391dae352b786c0ef7b7e8cc4b794a
-  AMap3DMap: ade5ca8605a03833fb799fdd6e7b489e83963941
-  AMapFoundation: bc8d29843a0d4e0f83a175a77729d2b623c26026
+  AMap3DMap: 53ed5087b5d5459d1b21030ed0ab8c02515747aa
+  AMapFoundation: 897a0981ddd65afe7e289957ca5589276d5523d8
   AMapLocation: 4ada3e0cb6933c1ac0b64038abb816b768d6311b
-  AMapSearch: 010f2224fd4b3d902e3df088856382370da84607
+  AMapSearch: 64c969de27b970351537d0c60550033c70beede7
   Aspects: 49ab2ffbcea7b491efa20fda09e60a3f629b7616
   AWECloudCommand: 60f409e41dc60fe48dca27e05028da89fe3e5f18
   AWEVideoPlayer: 79aef06155256984da6189dba3ac966c63b55098
@@ -996,7 +998,7 @@ SPEC CHECKSUMS:
   Fabric: ecf0d69c8b5cd1c6330c8cd7ae413e6d4aa12af2
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
   FHCommonUI: 987101cda0ba3805132a67295d8c058d9dac21ed
-  FHHouseBase: 5fbabfec581c1abd825241efa60fe5de79d5e4a8
+  FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
   FHHouseHome: e6f78062259c79d7354a352b5ccf97dd0d4f6e1e
@@ -1042,7 +1044,7 @@ SPEC CHECKSUMS:
   RSSwizzle: 9b7cf78908bc6b249f1403926c168f730f840e91
   RXCollections: fc5eb6c41b5a3646601e6a01c1ee444c354a9bfc
   SDWebImage: abd373dadf531cf5d1738f6a8e9487f7f4a12f14
-  SecGuard: fc8f77291dcc9cc67e928c4cef281212d7faf796
+  SecGuard: 4cb7fa89163ad3f896cf6c5600d343fd479e9905
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
   SQLiteRepairKit: 272cadce05957d8b36df6ac573dc8a596649ed28
   SSZipArchive: cc2e2411672daf4be9f5f61d4184ba66f15bcd2b

@@ -15,6 +15,7 @@
 #import "TTAccountManager.h"
 #import "UIButton+TTAdditions.h"
 #import "FHUserTracker.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHUGCCellBottomView ()
 
@@ -68,7 +69,7 @@
     
     self.commentBtn = [[UIButton alloc] init];
     _commentBtn.imageView.contentMode = UIViewContentModeCenter;
-    [_commentBtn setImage:[UIImage imageNamed:@"fh_ugc_comment"] forState:UIControlStateNormal];
+    [_commentBtn setImage:ICON_FONT_IMG(20, @"\U0000e699", nil) forState:UIControlStateNormal];// @"fh_ugc_comment"
     [_commentBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     _commentBtn.titleLabel.font = [UIFont themeFontRegular:14];
     [_commentBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
@@ -84,7 +85,7 @@
     [self.likeView addGestureRecognizer:singleTap];
     
     self.likeImageView = [[UIImageView alloc] init];
-    _likeImageView.image = [UIImage imageNamed:@"fh_ugc_like"];
+    _likeImageView.image = ICON_FONT_IMG(20, @"\U0000e69c", nil);//@"fh_ugc_like"
     [self.likeView addSubview:_likeImageView];
     
     self.likeLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
@@ -214,10 +215,10 @@
         self.likeLabel.text = diggCount;
     }
     if([userDigg boolValue]){
-        self.likeImageView.image = [UIImage imageNamed:@"fh_ugc_like_selected"];
+        self.likeImageView.image = ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeRed1]);//"fh_ugc_like_selected"
         self.likeLabel.textColor = [UIColor themeRed1];
     }else{
-        self.likeImageView.image = [UIImage imageNamed:@"fh_ugc_like"];
+        self.likeImageView.image =  ICON_FONT_IMG(20, @"\U0000e69c", nil);//@"fh_ugc_like"
         self.likeLabel.textColor = [UIColor themeGray1];
     }
 }

@@ -14,7 +14,8 @@
 #import "UIView+House.h"
 #import <FHHouseBase/FHHouseAgencyListSugDelegate.h>
 #import "FHFillFormAgencyListItemModel.h"
-#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import "TTDeviceHelper+FHHouse.h"
+#import "UIImage+FIconFont.h"
 
 @interface FHDetailNoticeAlertView () <UITextFieldDelegate, FHHouseAgencyListSugDelegate>
 
@@ -248,7 +249,7 @@
     }];
     [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(0);
-        make.centerY.mas_equalTo(self.agencyView);
+        make.centerY.mas_equalTo(self.agencyView);        
     }];
     
     [self.submitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -502,8 +503,9 @@
 {
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc]init];
-        [_closeBtn setImage:[UIImage imageNamed:@"detail_alert_closed"] forState:UIControlStateNormal];
-        [_closeBtn setImage:[UIImage imageNamed:@"detail_alert_closed"] forState:UIControlStateHighlighted];
+        UIImage *img = ICON_FONT_IMG(13, @"\U0000e673", nil);
+        [_closeBtn setImage:img forState:UIControlStateNormal];
+        [_closeBtn setImage:img forState:UIControlStateHighlighted];
     }
     return _closeBtn;
 }
@@ -573,7 +575,7 @@
 - (UIImageView *)rightArrow
 {
     if (!_rightArrow) {
-        _rightArrow = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"house_right_arrow"]];
+        _rightArrow = [[UIImageView alloc]initWithImage:ICON_FONT_IMG(10, @"\U0000e670", nil)];//house_right_arrow
     }
     return _rightArrow;
 }
