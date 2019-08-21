@@ -26,7 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, strong) FHUGCCellManager *cellManager;
 @property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
-@property(nonatomic, strong) NSMutableDictionary *cellHeightCaches;
 @property(nonatomic, copy) NSString *categoryId;
 @property(nonatomic, strong) FHUGCBaseCell *currentCell;
 @property(nonatomic, strong) FHFeedUGCCellModel *currentCellModel;
@@ -34,7 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHFeedListModel *feedListModel;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 @property(nonatomic, assign) BOOL isRefreshingTip;
-
+@property(nonatomic, assign) NSInteger refer;
+@property(nonatomic, assign) BOOL isShowing;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
 
@@ -43,6 +43,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refreshCurrentCell;
 
 - (void)viewWillAppear;
+
+- (void)viewWillDisappear;
+
+- (void)recordGroupWithCellModel:(FHFeedUGCCellModel *)cellModel status:(SSImpressionStatus)status;
 
 @end
 

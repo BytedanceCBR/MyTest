@@ -22,7 +22,7 @@
         query = [NSString stringWithFormat:@"&offset=%ld",offset];
     }    
  
-    return [FHMainApi postRequest:path query:query params:queryParam jsonClass:[FHSearchHouseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {        
+    return [FHMainApi postRequest:path uploadLog:YES query:query params:queryParam jsonClass:[FHSearchHouseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {        
         callback(error ,[(FHSearchHouseModel *)model data]);
     }];
 }

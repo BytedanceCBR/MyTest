@@ -83,14 +83,17 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
-        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        self.cellModel = cellModel;
-        //图片
-        FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
-        if(imageModel){
-            [self.bannerImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
-        }
+    if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
+        return;
+    }
+    self.currentData = data;
+    
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    self.cellModel = cellModel;
+    //图片
+    FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
+    if(imageModel){
+        [self.bannerImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
     }
 }
 
