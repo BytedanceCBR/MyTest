@@ -138,7 +138,7 @@ def appPods
     
     #-----UGC-----
 #    pod 'TTUGCFeature', :path => '../Vendor/TTUGCFeature', :inhibit_warnings => false
-    pod 'TTUGCFoundation', :path => '../Vendor/TTUGCFoundation', :inhibit_warnings => false
+    pod 'TTUGCFoundation', :path => '../Vendor/TTUGCFoundation', :inhibit_warnings =>  false
     pod 'TTKitchen','1.6.0',:subspecs => [
     'Core',
     'TTCommonConfig'

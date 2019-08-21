@@ -33,6 +33,7 @@
         self.tableView = tableView;
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.dataList = [NSMutableArray array];
     }
     return self;
@@ -75,9 +76,23 @@
     }];
 }
 
+#pragma mark - UITableViewDelegate
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return UITableViewAutomaticDimension;
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    FHTopicListResponseItemModel *item = [self.dataList objectAtIndex:indexPath.row];
+    if([self.viewController.delegate respondsToSelector:@selector(didSelectedHashtag:)]) {
+        [self.viewController.delegate didSelectedHashtag:item];
+        [self.viewController goBack];
+    }
+}
+
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.dataList count];

@@ -16,6 +16,10 @@
 //#import <BDMobileRuntime/BDMobileRuntime.h>
 //#import <TTRegistry/TTRegistryDefines.h>
 #import "TTUGCHashtagModel.h"
+#import "FHTopicListController.h"
+
+@interface TTUGCTextViewMediator() <FHTopicListControllerDelegate>
+@end
 
 @implementation TTUGCTextViewMediator
 
@@ -78,23 +82,26 @@
 - (void)toolbarDidClickHashtagButton {
     self.textView.didInputTextHashtag = NO;
 
-    [TTTrackerWrapper eventV3:@"hashtag_button_click" params:@{
-        @"source" : self.textView.source ?: @"post",
-        @"status" : self.textView.keyboardVisible ? @"keyboard" : @"no_keyboard",
-    }];
+//    [TTTrackerWrapper eventV3:@"hashtag_button_click" params:@{
+//        @"source" : self.textView.source ?: @"post",
+//        @"status" : self.textView.keyboardVisible ? @"keyboard" : @"no_keyboard",
+//    }];
 
     self.isSelectViewControllerVisible = YES;
 
-    TTUGCSearchHashtagViewController *viewController = [[TTUGCSearchHashtagViewController alloc] init];
-    viewController.hashtagSuggestOption = self.hashtagSuggestOption;
-    viewController.showCanBeCreatedHashtag = self.showCanBeCreatedHashtag;
-    viewController.delegate = self;
-    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:viewController];
-    navigationController.ttNavBarStyle = @"White";
-    navigationController.ttHideNavigationBar = NO;
-    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-
-    [self.textView.navigationController presentViewController:navigationController animated:YES completion:nil];
+//    TTUGCSearchHashtagViewController *viewController = [[TTUGCSearchHashtagViewController alloc] init];
+//    viewController.hashtagSuggestOption = self.hashtagSuggestOption;
+//    viewController.showCanBeCreatedHashtag = self.showCanBeCreatedHashtag;
+//    viewController.delegate = self;
+//    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:viewController];
+//    navigationController.ttNavBarStyle = @"White";
+//    navigationController.ttHideNavigationBar = NO;
+//    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+//    [self.textView.navigationController presentViewController:navigationController animated:YES completion:nil];
+    
+    if(self.hashTagBtnClickBlock) {
+        self.hashTagBtnClickBlock();
+    }
 }
 
 - (void)toolbarDidClickEmojiButton:(BOOL)switchToEmojiInput {
@@ -180,36 +187,82 @@
 
 #pragma mark - TTUGCSearchHashtagTableViewDelegate
 
-- (void)searchHashtagTableViewWillDismiss {
-    if (self.textView.didInputTextHashtag) {
-        NSString *text = @"#";
-        NSRange range = self.textView.selectedRange;
+//- (void)searchHashtagTableViewWillDismiss {
+//    if (self.textView.didInputTextHashtag) {
+//        NSString *text = @"#";
+//        NSRange range = self.textView.selectedRange;
+//
+//        TTRichSpanText *richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil imageInfoModelDictionary:nil];
+//
+//        [self.textView replaceRichSpanText:richSpanText inRange:range];
+//    }
+//
+//    [self.textView becomeFirstResponder];
+//}
+//
+//- (void)searchHashtagTableViewDidDismiss {
+//
+//    self.isSelectViewControllerVisible = NO;
+//
+//    // 为了让 toolbar 状态正确，保证键盘收起和弹出顺序
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [self.textView becomeFirstResponder];
+//    });
+//}
+//
+//- (void)searchHashtagTableViewDidSelectedHashtag:(TTUGCHashtagModel *)hashtagModel {
+//    NSString *schema = hashtagModel.forum.schema;
+//    NSString *forumName = hashtagModel.forum.forum_name;
+//    NSString *concernId = hashtagModel.forum.concern_id;
+//    NSString *text = forumName ? [NSString stringWithFormat:@"#%@# ", forumName] : @"";
+//    NSRange range = self.textView.selectedRange;
+//
+//    TTRichSpanText *richSpanText;
+//    if (!isEmptyString(schema)) {
+//        TTRichSpanLink *hashtagLink = [[TTRichSpanLink alloc] initWithStart:0 length:forumName.length + 2 link:schema text:nil type:TTRichSpanLinkTypeHashtag];
+//
+//        NSDictionary *colorInfo = nil;
+//        if (self.richSpanColorHexStringForDay && self.richSpanColorHexStringForNight) {
+//            colorInfo = @{
+//                         @"day": self.richSpanColorHexStringForDay,
+//                         @"night":self.richSpanColorHexStringForNight
+//                         };
+//        }
+//        if (colorInfo) {
+//            hashtagLink.userInfo = @{
+//                                     @"forum_name": forumName ?: @"",
+//                                     @"concern_id": concernId ?: @"",
+//                                     @"color_info": colorInfo,
+//                                     @"forum_id": hashtagModel.forum.forum_id ?: @""
+//                                     };
+//        } else {
+//            hashtagLink.userInfo = @{
+//                                     @"forum_name": forumName ?: @"",
+//                                     @"concern_id": concernId ?: @"",
+//                                     @"forum_id": hashtagModel.forum.forum_id ?: @""
+//                                     };
+//        }
+//
+//        richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:@[hashtagLink] imageInfoModelDictionary:nil];
+//    } else {
+//        richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil imageInfoModelDictionary:nil];
+//    }
+//
+//    [self.textView replaceRichSpanText:richSpanText inRange:range];
+//
+//    self.textView.didInputTextHashtag = NO;
+//}
 
-        TTRichSpanText *richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil imageInfoModelDictionary:nil];
+#pragma mark - FHTopicListControllerDelegate
 
-        [self.textView replaceRichSpanText:richSpanText inRange:range];
-    }
-
-    [self.textView becomeFirstResponder];
-}
-
-- (void)searchHashtagTableViewDidDismiss {
-
-    self.isSelectViewControllerVisible = NO;
-
-    // 为了让 toolbar 状态正确，保证键盘收起和弹出顺序
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.textView becomeFirstResponder];
-    });
-}
-
-- (void)searchHashtagTableViewDidSelectedHashtag:(TTUGCHashtagModel *)hashtagModel {
-    NSString *schema = hashtagModel.forum.schema;
-    NSString *forumName = hashtagModel.forum.forum_name;
-    NSString *concernId = hashtagModel.forum.concern_id;
+- (void)didSelectedHashtag:(FHTopicListResponseItemModel *)hashtagModel {
+    
+    NSString *schema = hashtagModel.subtitle;
+    NSString *forumName = hashtagModel.title;
+    NSString *concernId = hashtagModel.topicID;
     NSString *text = forumName ? [NSString stringWithFormat:@"#%@# ", forumName] : @"";
     NSRange range = self.textView.selectedRange;
-
+    
     TTRichSpanText *richSpanText;
     if (!isEmptyString(schema)) {
         TTRichSpanLink *hashtagLink = [[TTRichSpanLink alloc] initWithStart:0 length:forumName.length + 2 link:schema text:nil type:TTRichSpanLinkTypeHashtag];
@@ -217,22 +270,22 @@
         NSDictionary *colorInfo = nil;
         if (self.richSpanColorHexStringForDay && self.richSpanColorHexStringForNight) {
             colorInfo = @{
-                         @"day": self.richSpanColorHexStringForDay,
-                         @"night":self.richSpanColorHexStringForNight
-                         };
+                          @"day": self.richSpanColorHexStringForDay,
+                          @"night":self.richSpanColorHexStringForNight
+                          };
         }
         if (colorInfo) {
             hashtagLink.userInfo = @{
                                      @"forum_name": forumName ?: @"",
                                      @"concern_id": concernId ?: @"",
                                      @"color_info": colorInfo,
-                                     @"forum_id": hashtagModel.forum.forum_id ?: @""
+                                     @"forum_id": concernId ?: @""
                                      };
         } else {
             hashtagLink.userInfo = @{
                                      @"forum_name": forumName ?: @"",
                                      @"concern_id": concernId ?: @"",
-                                     @"forum_id": hashtagModel.forum.forum_id ?: @""
+                                     @"forum_id": concernId ?: @""
                                      };
         }
         
@@ -240,11 +293,9 @@
     } else {
         richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil imageInfoModelDictionary:nil];
     }
-
+    
     [self.textView replaceRichSpanText:richSpanText inRange:range];
-
+    
     self.textView.didInputTextHashtag = NO;
 }
-
-
 @end

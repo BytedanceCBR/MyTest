@@ -7,17 +7,17 @@
 
 @implementation FHTopicListResponseItemModel
 
-+ (JSONKeyMapper *)keyMapper {
-    NSDictionary *dict = @{
-            @"communityId": @"communityId",
-            @"title": @"title",
-            @"subtitle": @"subtitle",
-            @"des": @"des",
-    };
-    return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName] ?: keyName;
-    }];
-}
+//+ (JSONKeyMapper *)keyMapper {
+//    NSDictionary *dict = @{
+//            @"communityId": @"communityId",
+//            @"title": @"title",
+//            @"subtitle": @"subtitle",
+//            @"des": @"des",
+//    };
+//    return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+//        return dict[keyName] ?: keyName;
+//    }];
+//}
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName {
     return YES;

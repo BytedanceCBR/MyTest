@@ -15,6 +15,8 @@
 #import "TTUGCSearchHashtagViewController.h"
 #import "TTImagePickerController.h"
 
+typedef void (^DidClickHashtagButtonBlock)(void);
+
 @protocol TTUGCAddMultiImageProtocol
 
 - (void)presentMultiImagePickerView;
@@ -40,5 +42,7 @@
  * at 人或话题选择器面板是否正在显示
  */
 @property (nonatomic, assign) BOOL isSelectViewControllerVisible;
+
+@property (nonatomic, copy) DidClickHashtagButtonBlock hashTagBtnClickBlock;
 
 @end

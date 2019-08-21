@@ -47,6 +47,7 @@
 #import "FHPostUGCSelectedGroupHistoryView.h"
 #import "FHUGCConfig.h"
 #import "FHEnvContext.h"
+#import "NSString+UGCUtils.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -411,7 +412,7 @@ static NSInteger const kMaxPostImageCount = 9;
     kUGCToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     self.toolbar = [[TTUGCToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - kUGCToolbarHeight, self.view.width, kUGCToolbarHeight)];
     self.toolbar.emojiInputView.source = @"post";
-    
+    self.toolbar.banHashtagInput = YES;
     self.toolbar.banLongText = YES;
     __weak typeof(self) weakSelf = self;
     self.toolbar.picButtonClkBlk = ^{
@@ -451,12 +452,16 @@ static NSInteger const kMaxPostImageCount = 9;
     self.textViewMediator.textView = self.inputTextView;
     self.textViewMediator.toolbar = self.toolbar;
     self.textViewMediator.showCanBeCreatedHashtag = YES;
+    self.textViewMediator.richSpanColorHexStringForDay = [NSString hexStringWithColor:[UIColor themeRed]];
+    self.textViewMediator.richSpanColorHexStringForNight = self.textViewMediator.richSpanColorHexStringForDay;
     self.toolbar.emojiInputView.delegate = self.inputTextView;
     self.toolbar.delegate = self.textViewMediator;
     [self.toolbar tt_addDelegate:self asMainDelegate:NO];
     self.inputTextView.delegate = self.textViewMediator;
     [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
     self.inputTextView.textLenDelegate = self;
+    
+    [self checkIfShowTopicBtnOnToolBar];
 }
 
 - (void)selectCommunityViewClick:(UITapGestureRecognizer *)sender {
@@ -1403,6 +1408,7 @@ static NSInteger const kMaxPostImageCount = 9;
             self.selectedGrouplHistoryView.hidden = [self.selectedGrouplHistoryView.model.socialGroupId isEqualToString:item.socialGroupId];
         }
     }
+    [self checkIfShowTopicBtnOnToolBar];
 }
 
 #pragma mark - FHPostUGCSelectedGroupHistoryViewDelegate
@@ -1420,6 +1426,28 @@ static NSInteger const kMaxPostImageCount = 9;
         param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
         param[@"click_position"] = @"last_published_neighborhood";
         TRACK_EVENT(@"click_last_published_neighborhood", param);
+    }
+    
+    [self checkIfShowTopicBtnOnToolBar];
+    
+}
+
+- (void)checkIfShowTopicBtnOnToolBar {
+    NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.selectView.groupId;
+    self.toolbar.banHashtagInput = !(groupId.length > 0);
+    self.inputTextView.isBanHashtag = self.toolbar.banHashtagInput;
+    if(groupId.length > 0) {
+        self.textViewMediator.hashTagBtnClickBlock = ^{
+            NSString *urlString = [NSString stringWithFormat:@"sslocal://ugc_post_topic_list?topic_id=%@", groupId];
+            NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post_topic_list?topic_id=12235"];
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            param[@"delegate"] = self;
+            
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        };
+    } else {
+        self.textViewMediator.hashTagBtnClickBlock = nil;
     }
 }
 @end

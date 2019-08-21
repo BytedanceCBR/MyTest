@@ -17,6 +17,7 @@
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic, strong) FHTopicListViewModel *viewModel;
+@property(nonatomic, weak) id<FHTopicListControllerDelegate> delegate;
 @end
 
 @implementation FHTopicListController
@@ -25,6 +26,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.topicId = paramObj.allParams[@"topic_id"];
+        self.delegate = paramObj.allParams[@"delegate"];
     }
     return self;
 }

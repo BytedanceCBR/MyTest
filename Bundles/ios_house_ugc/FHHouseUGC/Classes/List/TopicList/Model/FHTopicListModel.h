@@ -10,10 +10,11 @@
 
 @interface FHTopicListResponseItemModel : JSONModel
 
-@property(nonatomic, copy, nullable) NSString *communityId;
+@property(nonatomic, copy, nullable) NSString *topicID;
+@property(nonatomic, copy, nullable) NSString *headerImageUrl;
 @property(nonatomic, copy, nullable) NSString *title;
 @property(nonatomic, copy, nullable) NSString *subtitle;
-@property(nonatomic, copy, nullable) NSString *des;
+@property(nonatomic, copy, nullable) NSString *detail;
 
 @end
 

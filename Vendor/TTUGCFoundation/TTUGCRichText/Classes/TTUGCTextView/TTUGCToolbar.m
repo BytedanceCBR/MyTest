@@ -109,34 +109,34 @@
 
 - (void)refreshButtonsUI {
     self.emojiButton.hidden = NO;
-    self.hashtagButton.hidden = YES;
     self.atButton.hidden = YES;
     self.shoppingButton.hidden = YES;
     
     self.emojiButton.left = 10;
-    
-    self.longTextButton.right = 0;
     self.picButton.left = self.emojiButton.right - 5;
-
-    CGFloat right = self.toolbarView.width - 10;
     
+    if (!self.hashtagButton.hidden) {
+        self.hashtagButton.left = self.picButton.right - 5;
+    } else {
+        self.hashtagButton.right = 0;
+    }
+    
+    CGFloat right = self.toolbarView.width - 10;
     if (!self.keyboardButton.hidden) {
         self.keyboardButton.right = right;
         right -= kTTUGCToolbarButtonSize + 5;
     } else {
         self.keyboardButton.right = 0;
     }
+    
     // 隐藏
-    self.hashtagButton.right = 0;
     self.atButton.right = 0;
     self.shoppingButton.right = 0;
+    self.longTextButton.right = 0;
+    
+
+    
     /*
-    if (!self.hashtagButton.hidden) {
-        self.hashtagButton.right = right;
-        right -= kTTUGCToolbarButtonSize + 5;
-    } else {
-        self.hashtagButton.right = 0;
-    }
 
     if (!self.atButton.hidden) {
         self.atButton.right = right;
@@ -477,7 +477,7 @@
 - (SSThemedButton *)hashtagButton {
     if (!_hashtagButton) {
         _hashtagButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-        _hashtagButton.imageName = @"toolbar_icon_hashtag";
+        _hashtagButton.imageName = @"fh_ugc_toolbar_hash_tag";
         _hashtagButton.accessibilityLabel = @"话题";
         [_hashtagButton addTarget:self action:@selector(hashtagAction:) forControlEvents:UIControlEventTouchUpInside];
     }
