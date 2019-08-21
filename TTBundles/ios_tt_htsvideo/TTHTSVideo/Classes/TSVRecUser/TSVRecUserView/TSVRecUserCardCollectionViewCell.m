@@ -73,6 +73,9 @@
             collectionView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
             collectionView.dataSource = self;
             collectionView.delegate = self;
+            if (@available(iOS 11.0 , *)) {
+                collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+            }
             [collectionView registerClass:[TSVRecUserSinglePersonCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([TSVRecUserSinglePersonCollectionViewCell class])];
             collectionView;
         });

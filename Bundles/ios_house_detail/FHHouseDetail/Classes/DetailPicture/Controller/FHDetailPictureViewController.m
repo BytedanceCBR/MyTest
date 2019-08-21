@@ -201,6 +201,10 @@
     _photoScrollView.showsVerticalScrollIndicator = NO;
     _photoScrollView.showsHorizontalScrollIndicator = YES;
     
+    if(@available(iOS 11.0 , *)){
+        _photoScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    
     [self.view addSubview:_photoScrollView];
     CGFloat topInset = 0;
     CGFloat bottomInset = 0;

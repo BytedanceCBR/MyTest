@@ -18,6 +18,8 @@
 #import "FHHouseType.h"
 #import <TTDeviceHelper.h>
 #import "IFHMyFavoriteController.h"
+#import <FHHouseBase/FHBaseTableView.h>
+
 @interface FHMyFavoriteViewController ()<UIViewControllerErrorHandler,TTRouteInitializeProtocol, IFHMyFavoriteController>
 
 @property(nonatomic, strong) FHMyFavoriteViewModel *viewModel;
@@ -95,7 +97,7 @@
 }
 
 - (void)initView {
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     
     if (@available(iOS 11.0, *)) {
         _tableView.estimatedRowHeight = 0;

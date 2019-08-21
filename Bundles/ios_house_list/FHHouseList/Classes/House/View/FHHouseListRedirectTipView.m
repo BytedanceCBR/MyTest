@@ -9,6 +9,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "Masonry.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHHouseListRedirectTipView ()
 
@@ -94,8 +95,11 @@
 {
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc]init];
-        [_closeBtn setImage:[UIImage imageNamed:@"house_list_close"] forState:UIControlStateNormal];
-        [_closeBtn setImage:[UIImage imageNamed:@"house_list_close"] forState:UIControlStateHighlighted];
+        
+        UIImage *img =  ICON_FONT_IMG(16,@"\U0000e673",RGB(0x66, 0x66, 0x66));
+        
+        [_closeBtn setImage:img forState:UIControlStateNormal];
+        [_closeBtn setImage:img forState:UIControlStateHighlighted];
     }
     return _closeBtn;
 }

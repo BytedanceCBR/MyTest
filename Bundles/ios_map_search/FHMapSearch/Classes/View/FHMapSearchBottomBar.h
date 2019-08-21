@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showDrawLine:(NSString *)content showIndicator:(BOOL)showIndicator;
 
--(void)showSubway:(NSString *)line;
+//-(void)showSubway:(NSString *)line;
 
 -(void)hideContentBgView;
 
@@ -24,11 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHMapSearchBottomBarDelegate <NSObject>
 @required
--(void)closeBottomBar;
+//-(void)closeBottomBar;
 
 -(void)showNeighborList:(NSString *)tip;
 
--(void)showSubwayInBottombar:(FHMapSearchBottomBar *)bottomBar;
+//-(void)showSubwayInBottombar:(FHMapSearchBottomBar *)bottomBar;
 
 @end
 

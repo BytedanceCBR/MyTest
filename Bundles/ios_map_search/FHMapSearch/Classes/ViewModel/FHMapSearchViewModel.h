@@ -14,6 +14,8 @@
 #import "FHConditionFilterViewModel.h"
 #import "FHMapSearchBottomBar.h"
 #import "FHMapSearchWayChooseView.h"
+#import "FHMapSearchInfoTopBar.h"
+#import "FHMapSearchSideBar.h"
 
 @class FHMapSearchViewController;
 //@protocol HouseFilterViewModelDelegate;
@@ -30,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) FHMapSearchBottomBar *bottomBar;
 @property(nonatomic , strong) FHMapSearchWayChooseView *chooseView;
 @property(nonatomic , strong) FHMapDrawMaskView *drawMaskView;
+@property(nonatomic , strong) FHMapSearchInfoTopBar *topInfoBar;
+@property(nonatomic , strong) FHMapSearchSideBar *sideBar;
 @property(nonatomic , copy)  NSString *filterConditionParams;
 @property(nonatomic , copy) void (^resetConditionBlock)(NSDictionary *condition);
 @property(nonatomic , copy) NSString *_Nullable (^conditionNoneFilterBlock)(NSDictionary *params);//获取非过滤器显示的过滤条件
@@ -47,7 +51,6 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)viewWillDisappear:(BOOL)animated;
 
 -(void)addEnterMapLog;
--(void)addNavSwitchHouseListLog;
 
 -(void)moveToUserLocation;
 
@@ -59,6 +62,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 //当前城市是否有地铁
 -(BOOL)suportSubway;
+
+//退出当前模式
+-(void)exitCurrentMode;
+
+-(void)tryUpdateSideBar;
+
+//附近或区域列表页
+-(void)hideAreaHouseList;
+
+-(void)showFilterForAreaHouseList;
 
 @end
 

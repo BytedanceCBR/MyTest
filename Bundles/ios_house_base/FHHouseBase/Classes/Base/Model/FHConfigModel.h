@@ -418,6 +418,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataTabConfigModel> *tabConfig;
 @property (nonatomic, strong , nullable) FHConfigDataUgcCategoryConfigModel *ugcCategoryConfig ;
 
+@property (nonatomic, strong , nullable) NSDictionary *originDict;
+
+-(instancetype)initShadowWithDictionary:(NSDictionary *)dict error:(NSError *__autoreleasing *)err;
+
 @end
 
 

@@ -9,6 +9,7 @@
 #import <FHHouseBase/FHCommonDefines.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import "FHMainOldTopCell.h"
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 #define kCellId @"cell_id"
 #define ITEM_HOR_MARGIN  10
@@ -38,7 +39,7 @@
         CGRect f = self.bounds;
         f.size.height -= BOTTOM_PADDING;
         //CGRectMake(0, 15, frame.size.width, frame.size.height - BOTTOM_PADDING - 15)
-        _collectionView = [[UICollectionView alloc]initWithFrame:f collectionViewLayout:layout];
+        _collectionView = [[FHBaseCollectionView alloc]initWithFrame:f collectionViewLayout:layout];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         

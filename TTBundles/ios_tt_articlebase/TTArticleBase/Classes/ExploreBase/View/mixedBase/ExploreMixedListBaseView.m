@@ -474,7 +474,8 @@ TTRefreshViewDelegate
 //        _listView.contentInset = UIEdgeInsetsMake(35, 0, 0, 0);
         
         if (@available(iOS 11.0, *)) {
-        _listView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+            _listView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+            _listView.insetsContentViewsToSafeArea = NO;
         }
         
         

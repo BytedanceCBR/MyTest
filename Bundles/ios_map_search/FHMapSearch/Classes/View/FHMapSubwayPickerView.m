@@ -36,7 +36,7 @@
     if (self) {
         
         _chooseBar = [[UIView alloc] init];
-        _chooseBar.backgroundColor = [UIColor themeGray7];
+        _chooseBar.backgroundColor = [UIColor whiteColor];
         
         _cancelButton = [self button:@"取消" color:[UIColor themeGray1] action:@selector(cancelAction)];
         _okButton = [self button:@"完成" color:[UIColor themeRed1] action:@selector(okAction)];
