@@ -7,7 +7,6 @@
 //
 
 #import "SSThemed.h"
-#import "TTAsyncCornerImageView.h"
 #import "TTPersonalHomeUserInfoResponseModel.h"
 #import "TTFollowThemeButton.h"
 #import "TTPersonalHomeFollowButton.h"
