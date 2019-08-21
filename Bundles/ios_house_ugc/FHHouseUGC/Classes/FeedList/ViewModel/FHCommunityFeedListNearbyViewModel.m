@@ -371,7 +371,7 @@
         }
         return cell;
     }
-    return nil;
+    return [[FHUGCBaseCell alloc] init];
 }
 
 #pragma mark - UITableViewDelegate

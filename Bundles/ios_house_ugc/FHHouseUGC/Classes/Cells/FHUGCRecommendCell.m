@@ -340,7 +340,6 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHFeedContentRecommendSocialGroupListModel *model = self.dataList[indexPath.row];
     FHUGCRecommendSubCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
     
     if (cell == nil) {
@@ -351,6 +350,7 @@
     cell.delegate = self;
     
     if(indexPath.row < self.dataList.count){
+        FHFeedContentRecommendSocialGroupListModel *model = self.dataList[indexPath.row];
         [cell refreshWithData:model rank:indexPath.row];
     }
     
