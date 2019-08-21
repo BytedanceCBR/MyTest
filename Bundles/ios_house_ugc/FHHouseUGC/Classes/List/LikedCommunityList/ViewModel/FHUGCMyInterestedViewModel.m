@@ -146,6 +146,7 @@
     tracerDict[@"enter_type"] = @"click";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"show_type"] = @"feed_blank_select";
+    [tracerDict setValue:@(0) forKey:@"with_tips"];
     TRACK_EVENT(@"enter_category", tracerDict);
     
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
@@ -162,6 +163,7 @@
     tracerDict[@"enter_type"] = @"click";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"show_type"] = @"feed_blank_select";
+    [tracerDict setValue:@(0) forKey:@"with_tips"];
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:(duration * 1000)];
     TRACK_EVENT(@"stay_category", tracerDict);
     

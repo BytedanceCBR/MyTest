@@ -22,6 +22,7 @@
 @property(nonatomic, copy) XPNotifyBarButtonBlock bgButtonBlock;
 @property(nonatomic, copy) XPNotifyBarButtonBlock actionButtonBlock;
 @property(nonatomic, copy) XPNotifyBarHideBlock hideBlock;
+@property(nonatomic, copy) XPNotifyBarWillHideBlock willHideBlock;
 
 @end
 
@@ -89,7 +90,25 @@
            duration:(float)duration
 bgButtonClickAction:(XPNotifyBarButtonBlock)bgButtonBlock
 actionButtonClickBlock:(XPNotifyBarButtonBlock)actionButtonBlock
+       didHideBlock:(XPNotifyBarHideBlock)hideBlock {
+    [self showMessage:message
+    actionButtonTitle:title
+            delayHide:delayHide
+             duration:duration
+  bgButtonClickAction:bgButtonBlock
+actionButtonClickBlock:actionButtonBlock
+         didHideBlock:hideBlock
+        willHideBlock:nil];
+}
+
+- (void)showMessage:(NSString *)message
+  actionButtonTitle:(NSString *)title
+          delayHide:(BOOL)delayHide
+           duration:(float)duration
+bgButtonClickAction:(XPNotifyBarButtonBlock)bgButtonBlock
+actionButtonClickBlock:(XPNotifyBarButtonBlock)actionButtonBlock
        didHideBlock:(XPNotifyBarHideBlock)hideBlock
+      willHideBlock:(XPNotifyBarWillHideBlock)willHideBlock
 {
     if (!self.hidden) {
         [self hideImmediately];
@@ -101,6 +120,7 @@ actionButtonClickBlock:(XPNotifyBarButtonBlock)actionButtonBlock
     self.bgButtonBlock = bgButtonBlock;
     self.actionButtonBlock = actionButtonBlock;
     self.hideBlock = hideBlock;
+    self.willHideBlock = willHideBlock;
     self.clipsToBounds = YES;
     self.hidden = NO;
     self.alpha = 0;
@@ -160,6 +180,9 @@ actionButtonClickBlock:(XPNotifyBarButtonBlock)actionButtonBlock
     self.userClose = NO;
     self.hidden = YES;
     __weak typeof(self) weakSelf = self;
+    if(_willHideBlock) {
+        _willHideBlock(weakSelf, YES);
+    }
     if (_hideBlock) {
         _hideBlock(weakSelf);
     }
@@ -175,6 +198,10 @@ actionButtonClickBlock:(XPNotifyBarButtonBlock)actionButtonBlock
         return;
     }
 
+    if(self.willHideBlock) {
+        WeakSelf;
+        self.willHideBlock(wself, NO);
+    }
     // 注意，0.3s与TTRefreshView收起列表的动画时间一致
     [UIView animateWithDuration:0.3f animations:^{
         self.transform = CGAffineTransformMakeTranslation(0, -barH);
@@ -182,8 +209,8 @@ actionButtonClickBlock:(XPNotifyBarButtonBlock)actionButtonBlock
         self.hidden = YES;
         self.transform = CGAffineTransformIdentity;
         __weak typeof(self) weakSelf = self;
-        if (_hideBlock) {
-            _hideBlock(weakSelf);
+        if (self.hideBlock) {
+            self.hideBlock(weakSelf);
         }
     }];
 }

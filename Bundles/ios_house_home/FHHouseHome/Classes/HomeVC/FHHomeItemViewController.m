@@ -25,6 +25,7 @@
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import "FHUserTracker.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -754,7 +755,7 @@ extern NSString *const INSTANT_DATA_KEY;
 - (UITableView *)tableView {
     
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
+        _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
         //        _tableView.decelerationRate = 0.1;
@@ -774,6 +775,10 @@ extern NSString *const INSTANT_DATA_KEY;
 }
 
 #pragma mark - FHHouseBaseItemCellDelegate
+
+- (BOOL)canDislikeClick {
+    return !self.isShowRefreshTip;
+}
 
 - (void)dislikeConfirm:(FHHomeHouseDataItemsModel *)model cell:(id)cell {
     NSInteger row = [self getCellIndex:model];

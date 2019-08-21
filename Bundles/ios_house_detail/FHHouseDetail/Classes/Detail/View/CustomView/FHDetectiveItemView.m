@@ -14,6 +14,7 @@
 #import <TTBaseLib/UIImageAdditions.h>
 #import <FHHouseBase/FHUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHDetectiveItemView ()
 
@@ -106,7 +107,10 @@
         self.icon.image = [FHUtils createImageWithColor:[UIColor themeGray7]];
     }
     BOOL ok = model.status.integerValue == 0;
-    self.tipImageView.image = [UIImage imageNamed: ok?@"detail_check_ok":@"detail_check_failed"];
+        
+    NSString *text = ok?@"\U0000e666":@"\U0000e658";//@"detail_check_ok":@"detail_check_failed"
+    UIColor *textColor = ok? [UIColor themeGreen1]:[UIColor themeRed1];
+    self.tipImageView.image =  ICON_FONT_IMG(24, text, textColor);
     
     self.stateLabel.text  = model.title;
     self.titleLabel.text = model.subTitle;

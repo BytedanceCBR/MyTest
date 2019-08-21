@@ -8,7 +8,7 @@
 #import "TTCommentDetailReplyWriteManager.h"
 #import <TTPlatformUIModel/TTGroupModel.h>
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
-#import <TTUGCFoundation/TTUGCEmojiParser.h>
+#import <FHCommonUI/TTUGCEmojiParser.h>
 #import <TTPersistence/TTPersistence.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTUIWidget/TTIndicatorView.h>

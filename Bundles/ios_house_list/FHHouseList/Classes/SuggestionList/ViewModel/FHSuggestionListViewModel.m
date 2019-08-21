@@ -831,7 +831,9 @@
         }
         
         if (!self.hasShowKeyboard) {
-            [self.listController.naviBar.searchInput becomeFirstResponder];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.listController.naviBar.searchInput becomeFirstResponder];
+            });
             self.hasShowKeyboard = YES;
         }
         [self.listController.historyTableView reloadData];

@@ -56,6 +56,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
 @property (nonatomic , strong) FHMessageManager *messageManager;
 
+//第二个tab小红点显示逻辑，非ugc情况下
+@property(nonatomic, assign) BOOL hasShowDots;
+@property(nonatomic, assign) BOOL isShowDots;
+
 
 + (instancetype)sharedInstance;
 /*
@@ -92,6 +96,23 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)showFindTabRedDots;
 
 /*
+ 隐藏tab上的红点
+ */
++ (void)hideFindTabRedDots;
+
+/*
+ 显示tab上的红点有次数限制
+ */
++ (void)showFindTabRedDotsLimitCount;
+
+/*
+ 隐藏tab上的红点有次数限制
+ */
++ (void)hideFindTabRedDotsLimitCount;
+
++ (void)showRedPointForNoUgc;
+
+/*
  修改第二个tab名称
  */
 + (void)changeFindTabTitle;
@@ -100,11 +121,6 @@ NS_ASSUME_NONNULL_BEGIN
  增加引导
  */
 + (void)addTabUGCGuid;
-
-/*
- 隐藏tab上的红点
- */
-+ (void)hideFindTabRedDots;
 
 /*
   app启动调用

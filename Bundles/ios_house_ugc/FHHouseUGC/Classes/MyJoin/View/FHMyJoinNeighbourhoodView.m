@@ -11,6 +11,7 @@
 #import <Masonry.h>
 #import "FHUGCCellHeaderView.h"
 #import "FHUserTracker.h"
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @interface FHMyJoinNeighbourhoodView ()
 
@@ -54,7 +55,7 @@
     flowLayout.minimumLineSpacing = 8;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
+    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.alwaysBounceHorizontal = YES;
     _collectionView.backgroundColor = [UIColor themeGray7];

@@ -21,8 +21,9 @@
 #import "FHUserTracker.h"
 #import <UIScrollView+Refresh.h>
 #import "FHFeedOperationView.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
-@interface FHCommunityFeedListController ()
+@interface FHCommunityFeedListController ()<SSImpressionProtocol>
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic, assign) BOOL needReloadData;
@@ -49,11 +50,13 @@
     [self initConstraints];
     [self initViewModel];
     
+    [[SSImpressionManager shareInstance] addRegist:self];
     [TTAccount addMulticastDelegate:self];
 }
 
 - (void)dealloc
 {
+    [[SSImpressionManager shareInstance] removeRegist:self];
     [TTAccount removeMulticastDelegate:self];
 }
 
@@ -72,6 +75,7 @@
 }
 
 - (void)viewWillDisappear {
+    [self.viewModel viewWillDisappear];
     [FHFeedOperationView dismissIfVisible];
 }
 
@@ -86,7 +90,7 @@
 }
 
 - (void)initTableView {
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
@@ -152,7 +156,8 @@
 
     if(self.listType == FHCommunityFeedListTypeNearby){
         viewModel = [[FHCommunityFeedListNearbyViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = @"94349537888";
+        viewModel.categoryId = @"f_ugc_neighbor";
+//        viewModel.categoryId = @"weitoutiao";
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = @"94349537893";
@@ -277,27 +282,18 @@
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
     self.tableView.contentInset = inset;
+    self.tableView.contentOffset = CGPointMake(0, -inset.top);
     self.notifyCompletionBlock = completion;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
-    
-    [self performSelector:@selector(hideIfNeeds) withObject:nil afterDelay:1];
-    
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [UIView animateWithDuration:0.3 animations:^{
-//
-//            if ([TTDeviceHelper isIPhoneXDevice]) {
-//                self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-//            }else{
-//                self.tableView.contentInset = UIEdgeInsetsZero;
-//            }
-//            self.tableView.originContentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
-//
-//        }completion:^(BOOL finished) {
-//            if (completion) {
-//                completion();
-//            }
-//        }];
-//    });
+    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
+        WeakSelf;
+        if(!isImmediately) {
+            [wself hideIfNeeds];
+        } else {
+            if(wself.notifyCompletionBlock) {
+                wself.notifyCompletionBlock();
+            }
+        }
+    }];
 }
 
 - (void)hideIfNeeds {
@@ -327,6 +323,32 @@
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
 {
     self.needReloadData = YES;
+}
+
+#pragma mark -- SSImpressionProtocol
+
+- (void)needRerecordImpressions {
+    if (self.viewModel.dataList.count == 0) {
+        return;
+    }
+
+    SSImpressionParams *params = [[SSImpressionParams alloc] init];
+    params.refer = self.viewModel.refer;
+
+    for (FHUGCBaseCell *cell in [self.tableView visibleCells]) {
+        if ([cell isKindOfClass:[FHUGCBaseCell class]]) {
+            id data = cell.currentData;
+            if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
+                FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+                if (self.viewModel.isShowing) {
+                    [self.viewModel recordGroupWithCellModel:cellModel status:SSImpressionStatusRecording];
+                }
+                else {
+                    [self.viewModel recordGroupWithCellModel:cellModel status:SSImpressionStatusSuspend];
+                }
+            }
+        }
+    }
 }
 
 

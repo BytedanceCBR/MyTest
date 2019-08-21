@@ -14,6 +14,7 @@
 #import "FHMultiMediaVideoCell.h"
 #import "FHVideoAndImageItemView.h"
 #import "FHVideoModel.h"
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 #define k_VIDEOCELLID @"video_cell_id"
 #define k_IMAGECELLID @"image_cell_id"
@@ -55,7 +56,7 @@
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;
     
-    _colletionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.bounds.size.height) collectionViewLayout:layout];
+    _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.bounds.size.height) collectionViewLayout:layout];
     _colletionView.backgroundColor = [UIColor whiteColor];
     _colletionView.pagingEnabled = YES;
     _colletionView.showsHorizontalScrollIndicator = NO;

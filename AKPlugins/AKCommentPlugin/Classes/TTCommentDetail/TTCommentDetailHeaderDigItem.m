@@ -160,6 +160,9 @@
         _avatarCollectionView.delegate = self;
         _avatarCollectionView.clipsToBounds = NO;
         _avatarCollectionView.scrollEnabled = NO;
+        if (@available(iOS 11.0 , *)) {
+            _avatarCollectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         for (NSInteger i = 0; i < 4; i++) {
             NSString * stringID = [NSString stringWithFormat:@"TTCommentDetailHeaderDigAvatarCellIdentifier%ld",i];
             [_avatarCollectionView registerClass:[_TTCommentDetailHeaderDigAvatarCell class] forCellWithReuseIdentifier:stringID];

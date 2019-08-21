@@ -9,6 +9,7 @@
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import <Masonry/Masonry.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHHouseFindHelpRegionCell()
 
@@ -92,7 +93,8 @@
 - (UIImageView *)foldArrow
 {
     if (!_foldArrow) {
-        _foldArrow = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"housefind_entrance_arrow"]];
+        UIImage *img = ICON_FONT_IMG(16, @"\U0000e672", nil); //housefind_entrance_arrow
+        _foldArrow = [[UIImageView alloc]initWithImage:img];
     }
     return _foldArrow;
 }

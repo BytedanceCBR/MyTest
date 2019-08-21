@@ -9,6 +9,7 @@
 #import "FHDetailOldModel.h"
 #import <TTRoute/TTRoute.h>
 #import <UIImageView+BDWebImage.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @implementation FHDetailListEntranceItemView
 
@@ -65,7 +66,8 @@
 - (UIImageView *)rightArrow
 {
     if (!_rightArrow) {
-        _rightArrow = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"detail_entrance_arrow"]];
+        UIImage *img = ICON_FONT_IMG(16, @"\U0000e670", nil); //@"detail_entrance_arrow"
+        _rightArrow = [[UIImageView alloc]initWithImage:img];
     }
     return _rightArrow;
 }

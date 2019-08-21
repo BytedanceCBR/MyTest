@@ -7,6 +7,7 @@
 
 #import "FHEditUserController.h"
 #import "FHEditUserViewModel.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHEditUserController ()
 
@@ -43,7 +44,7 @@
 }
 
 - (void)initView {
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];

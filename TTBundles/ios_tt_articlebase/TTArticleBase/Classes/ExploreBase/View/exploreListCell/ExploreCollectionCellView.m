@@ -474,6 +474,9 @@ static NSString * const clickShowMoreCellIdentifier = @"ExploreShowClickMoreBook
         [_collectionView registerClass:[ExploreCollectionBookCell class] forCellWithReuseIdentifier:bookCellIdentifier];
         [_collectionView registerClass:[ExploreCollectionBookClickShowMoreCell class] forCellWithReuseIdentifier:clickShowMoreCellIdentifier];
         [_collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([UICollectionViewCell class])];
+        if(@available(iOS 11.0 , * )){
+            _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         [self addSubview:_collectionView];
     }
     return _collectionView;

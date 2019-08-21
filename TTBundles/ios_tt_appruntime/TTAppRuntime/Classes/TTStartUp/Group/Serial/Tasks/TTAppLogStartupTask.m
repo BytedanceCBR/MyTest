@@ -91,7 +91,7 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
     
     [[self class] updateCustomerHeader];
 
-    [TTTracker startWithAppID:[TTSandBoxHelper ssAppID] channel:[TTSandBoxHelper getCurrentChannel]];
+    [TTTracker startWithAppID:[TTSandBoxHelper ssAppID] channel:[TTSandBoxHelper getCurrentChannel] appName:[TTSandBoxHelper appName]];
 
     if ([TTSandBoxHelper isInHouseApp]) {
         [[TTTracker sharedInstance] setIsInHouseVersion:YES];

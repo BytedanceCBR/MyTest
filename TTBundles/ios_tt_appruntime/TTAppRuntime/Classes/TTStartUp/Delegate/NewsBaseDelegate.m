@@ -189,7 +189,11 @@ static NSTimeInterval lastTime;
     [UNUserNotificationCenter currentNotificationCenter].delegate = [TTNotificationCenterDelegate sharedNotificationCenterDelegate];
 #pragma clang diagnostic pop
     
-    return [self application:application onlineBoundleWithOptions:launchOptions];
+    BOOL result = [self application:application onlineBoundleWithOptions:launchOptions];
+#if DEBUG
+    [TTLaunchManager dumpLaunchDuration];
+#endif
+    return result;
 }
     
 //正常打包，上线，走此方法

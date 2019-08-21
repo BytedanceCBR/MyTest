@@ -17,6 +17,7 @@
 #import "FHDetailPictureViewController.h"
 #import <BDWebImage/BDWebImageManager.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 #define K_CELLID @"cell_id"
 
@@ -89,7 +90,7 @@
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
         
-        _colletionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, _photoCellHeight) collectionViewLayout:layout];
+        _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, _photoCellHeight) collectionViewLayout:layout];
         _colletionView.backgroundColor = [UIColor whiteColor];
         _colletionView.pagingEnabled = YES;
         _colletionView.showsHorizontalScrollIndicator = NO;

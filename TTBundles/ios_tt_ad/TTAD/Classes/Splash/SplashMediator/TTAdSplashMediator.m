@@ -41,6 +41,7 @@
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 
 const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回最长忍耐时间 30 000ms
 
@@ -102,8 +103,8 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
         [dict setValue:[TTSandBoxHelper getCurrentChannel] forKey:TT_CHANNEL];
         [dict setValue:[TTSandBoxHelper ssAppID] forKey:TT_APP_ID];
         [dict setValue:[TTSandBoxHelper appName] forKey:TT_APP_NAME];
-        [dict setValue:[TTSandBoxHelper versionName] forKey:TT_VERSION_CODE];
-        [dict setValue:[TTExtensions buildVersion] forKey:TT_UPDATE_VERSION];
+        [dict setValue:[TTSandBoxHelper fhVersionCode] forKey:TT_VERSION_CODE];
+        [dict setValue:[TTSandBoxHelper buildVerion] forKey:TT_UPDATE_VERSION];
         [dict setValue:[TTDeviceHelper platformName] forKey:TT_DEVICE_PLATFORM];
         [dict setValue:[UIDevice currentDevice].platformString forKey:TT_DEVICE_TYPE];
         [dict setValue:[TTDeviceHelper currentLanguage] forKey:TT_LANGUAGE];
@@ -155,7 +156,7 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     if (params) {
         [params setValue:[TTSandBoxHelper ssAppID] forKey:TT_APP_ID];
         [params setValue:[TTSandBoxHelper appName] forKey:@"app_name"];
-        [params setValue:[TTExtensions buildVersion] forKey:@"app_version"];
+        [params setValue:[TTSandBoxHelper fhVersionCode] forKey:@"app_version"];
         [params setValue:[TTSandBoxHelper getCurrentChannel] forKey:@"app_channel"];
         [params setValue:[FHLocManager sharedInstance].currentReGeocode.city forKey:@"city_name"];
         [params setValue:[FHLocManager sharedInstance].currentReGeocode.province forKey:@"province_name"];

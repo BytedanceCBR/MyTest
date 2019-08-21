@@ -17,7 +17,7 @@
 #import "TTUGCAttributedLabel.h"
 #import "FHUGCCellHelper.h"
 
-#define iconWidth 48
+#define iconWidth 50
 #define maxLines 2
 
 @interface FHUGCMyInterestedCell ()
@@ -60,6 +60,7 @@
     [self initConstraints];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(socialGroupDataChange:) name:@"kFHUGCSicialGroupDataChangeKey" object:nil];
 }
 
 - (void)dealloc
@@ -82,6 +83,24 @@
                     [[FHUGCConfig sharedInstance] updateScialGroupDataModel:model.socialGroup byFollowed:followed];
                     [self refreshWithData:self.currentData];
                 }
+            }
+        }
+    }
+}
+
+- (void)socialGroupDataChange:(NSNotification *)notification {
+    if (notification) {
+        FHUGCMyInterestDataRecommendSocialGroupsModel *tempModel = self.currentData;
+        if (tempModel && [tempModel isKindOfClass:[FHUGCMyInterestDataRecommendSocialGroupsModel class]]) {
+            NSString *socialGroupId = tempModel.socialGroup.socialGroupId;
+            FHUGCScialGroupDataModel *model = [[FHUGCConfig sharedInstance] socialGroupData:socialGroupId];
+            if (model && (![model.countText isEqualToString:tempModel.socialGroup.countText] || ![model.hasFollow isEqualToString:tempModel.socialGroup.hasFollow])) {
+                tempModel.socialGroup.contentCount = model.contentCount;
+                tempModel.socialGroup.countText = model.countText;
+                tempModel.socialGroup.hasFollow = model.hasFollow;
+                tempModel.socialGroup.followerCount = model.followerCount;
+                
+                [self refreshWithData:tempModel];
             }
         }
     }
@@ -162,8 +181,10 @@
     self.icon = [[UIImageView alloc] init];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
-    _icon.layer.cornerRadius = iconWidth/2;
+    _icon.layer.cornerRadius = 4;
     _icon.backgroundColor = [UIColor themeGray7];
+    _icon.layer.borderWidth = 0.5;
+    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.containerView addSubview:_icon];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:15] textColor:[UIColor themeGray1]];

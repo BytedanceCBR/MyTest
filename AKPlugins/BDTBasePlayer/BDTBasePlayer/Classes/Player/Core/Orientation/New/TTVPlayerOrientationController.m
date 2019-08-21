@@ -227,8 +227,8 @@ extern NSString *const TTVDidExitFullscreenNotification;
         self.rotateView.frame = self.rotateFrame;
         if (!canFindSuperView || self.rotateSuperView == nil) {
             [self.rotateView removeFromSuperview];
-            if (_delegate && [_delegate respondsToSelector:@selector(forceVideoPlayerStop)]) {
-                [_delegate forceVideoPlayerStop];
+            if (self.delegate && [self.delegate respondsToSelector:@selector(forceVideoPlayerStop)]) {
+                [self.delegate forceVideoPlayerStop];
             }
         } else {
             [self.rotateSuperView addSubview:self.rotateView];

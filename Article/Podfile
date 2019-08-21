@@ -15,7 +15,7 @@ install! 'cocoapods', :warn_for_multiple_pod_sources => false
 plugin 'cocoapods-bytedance-transform'
 # 用于开启依赖解析加速的服务，传true表示使用，false表示不使用
 bytedanceAnalyzeSpeed(true)
-bd_use_app("thirdParty","public","toutiao")
+bd_use_app("thirdParty","public","toutiao","ugc")
 
 #全部使用源码
 #bd_use_source!
@@ -31,7 +31,6 @@ inhibit_all_warnings!
 # F100 业务线库
 def fhPods
     
-    pod 'FHCommonUI'  , :path => '../Bundles/ios_common_ui' # :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/develop' #
     pod 'FHHouseBase' , :path => '../Bundles/ios_house_base' # :git => 'git@code.byted.org:fproject/ios_house_base.git' ,:branch => 'feature/develop' #
     #    pod 'FHHouseRent' , :path => '../Bundles/ios_house_rent' #:git => 'git@code.byted.org:fproject/ios_house_rent.git' ,:branch => 'feature/develop' #
     pod 'FHMapSearch' , :path => '../Bundles/ios_map_search' # :git => 'git@code.byted.org:fproject/ios_map_search.git' ,:branch => 'feature/develop' #
@@ -48,11 +47,14 @@ def fhPods
     
     pod 'FHWebView', :path => '../AKPlugins/FHWebView'
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => 'e61e37eeacd3586be530affd8aaf25f93b02216d' #:branch => 'feature/develop'
-    pod 'ios_house_im' , '0.1.6'
+    
+    #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev' #
+    pod 'FHCommonUI', '0.0.2'
+    #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => 'e61e37eeacd3586be530affd8aaf25f93b02216d' #:branch => 'feature/develop'
+    pod 'ios_house_im' , '0.1.8'
     #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
     pod 'ios_house_filter' , '1.0.1'
-
+    
 end
 
 
@@ -74,8 +76,9 @@ def appPods
     pod 'TTUserProfile', :path => '../TTBundles/ios_tt_userprofile'
     pod 'TTArticleVideo', :path => '../TTBundles/ios_tt_article_video'
     
-    pod_binary 'SecGuard', '0.8.12.9'#'0.8.10.1'
-
+    #pod_binary 'SecGuard', '0.8.10.5'#'0.8.10.1'
+    pod 'SecGuard' , '0.8.14.5'
+    
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
 
 #    #-----安全组sdk-----#
@@ -226,7 +229,7 @@ def appPods
     
 
     #-----头条获取installID---
-    pod_binary 'TTInstallService', '1.0.0.6'
+    pod 'TTInstallService', '1.3.1.1-binary'
     #-----头条图片滑动浏览器----
     pod 'TTPhotoScrollVC', :path => '../AKPlugins/TTPhotoScrollVC', :inhibit_warnings => false
     #-----头条用户设置库--------
@@ -237,8 +240,8 @@ def appPods
     pod_binary 'TTRexxar', '0.8.10', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
     #----头条组件协议库-----
 
-    pod 'TTServiceProtocols', :path => '../AKPlugins/AKServiceProtocols', :inhibit_warnings => false
-    
+    pod_binary 'TTServiceProtocols','0.3.59'
+
     #-----头条图片/视频选择器-----
     pod 'TTImagePicker', :path => '../AKPlugins/AKImagePicker', :inhibit_warnings => false
 #    :subspecs => [
@@ -337,12 +340,37 @@ def appPods
     #-----头条sercive中间件-----
     pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
-#    pod 'TTMonitor', '0.7.9.42'
-    pod 'TTMonitor', :path => '../AKPlugins/TTMonitor', :inhibit_warnings => false
-    pod_binary 'Heimdallr','0.6.27-rc.0', :subspecs => [
+    pod_binary 'TTMonitor','0.7.11.0'
+#    pod 'TTMonitor', :path => '../AKPlugins/TTMonitor', :inhibit_warnings => false
+#    pod_binary 'Heimdallr','0.6.27-rc.0', :subspecs => [
+#    'Core',
+#    'Monitors',
+#    'TTMonitor',
+#    'TTNet',
+#    'HMDStart',
+#    'Mach',
+#    'Utility',
+#    'DeviceInfo',
+#    'HMDANR',
+#    'HMDOOM',
+#    'CrashDetector',
+#    'Log',
+#    'UITracker',
+#    'MemorySnapshot',
+#    'Upload',
+#    'HMDSession',
+#    'HMDConfig',
+#    'HMDStore',
+#    'ALog',
+#    'FMDB' ,
+#    'CloudCommand'
+#    #    'DiskManager'
+#    ]
+    pod_binary 'Heimdallr','0.7.6', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
+    'HMDURLProtocolTracker', #
     'TTNet',
     'HMDStart',
     'Mach',
@@ -359,21 +387,25 @@ def appPods
     'HMDConfig',
     'HMDStore',
     'ALog',
-    'FMDB' ,
-    'CloudCommand'
-#    'DiskManager'
+    'CloudCommand',
+    'Network', #
+    'HTTPRequestTracker', #
+    'HMDOOMCrash', #
+    'HMDWatchDog', #
+    'UserException' #
     ]
-    
+    pod_binary 'TTMacroManager','1.0.1'
+
     pod_binary 'AWECloudCommand' , '1.0.7'
 
     pod_binary 'BDALog' , '0.1.12'
-    pod        'BDAlogProtocol', '0.1.6'
-    
+    pod_binary 'BDAlogProtocol','0.1.7'
+
     #----- 长连接 & IM -----
 #    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'
     pod_binary 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
     pod 'TTPushManager', '0.0.13.4'
-    pod_binary 'TTReachability', '0.5.1'
+    pod_binary 'TTReachability', '0.5.2'
     pod_binary 'Protobuf', '3.0.1-ttv'
     #----- 存储库 -----
     pod_binary 'TTPersistence', '0.2.3'
@@ -394,7 +426,7 @@ def appPods
     #-----头条交互式退出手势----
     pod_binary 'TTImagePreviewAnimateManager', '1.0.13'
     #-----头条日志库-----
-    pod_binary 'TTTracker', '1.0.6-rc.2'
+    pod_binary 'TTTracker', '10.0.5'
     #-----头条推送SDK----
     pod_binary 'TTPushSDK', '0.1.1'
     #-----路由-----
@@ -518,9 +550,9 @@ def appPods
     pod_binary 'BDAccountSessionSDK','0.1.11'
     pod_binary 'YYText' , '1.0.7'
     pod_source 'AMapLocation' , '2.6.0'
-    pod_source 'AMap3DMap', '6.2.0'
-    pod_source 'AMapSearch' , '6.1.1'
-    pod_binary 'AMapFoundation' , '1.5.2'
+    pod_source 'AMap3DMap' , '6.9.0'
+    pod_source 'AMapSearch'  , '6.9.0'
+    pod_binary 'AMapFoundation' , '1.5.7'
     pod_binary 'OpenUDID', '0.1.0'
     
     #支持自动约束cell缓存高度
@@ -575,8 +607,9 @@ def appPods
     
     pod_binary 'AFNetworking' , '2.5.1'
     
-    pod_binary 'FMDB' , '2.6.2'
-    
+    pod_binary 'FMDB','2.7.5',:subspecs => [
+    'standard'
+    ]
     pod_binary 'AFgzipRequestSerializer' , '0.0.2'
     
     # ab test sdk
@@ -584,17 +617,6 @@ def appPods
     #pod 'BDABTestSDK', '1.0.0'
 
     pod_binary 'BDUGDeepLink', '1.0.1'
-end
-target 'NewsLite' do
-    fhPods
-    appPods
-end
-
-target 'f100' do
-    fhPods
-    appPods
-    #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine'
-    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
 end
 
 target 'NewsLiteInHouse' do
@@ -609,18 +631,12 @@ target 'NewsLiteInHouse' do
 
 end
 
-target 'NewsLiteChannel' do
-    pod_binary 'TTDebugAssistant', '0.2.33'
-    pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
-    pod_binary 'TTSettingsManager/Debug'
-    pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
-    #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine_inhouse'
+target 'f100' do
     fhPods
     appPods
+    #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine'
     script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
-    
 end
-
 
 # POD POST_INSTALL
 post_install do |installer|
@@ -686,7 +702,7 @@ post_install do |installer|
     # 一处是Xcode自带的Copy Bundle Resources，一处是CocoaPods的[CP] Copy Pods Resources
     # 这个问题在Xcode 10上也有小概率发生，现在统一临时Fix下，参考CocoaPods/CocoaPods#8122
     installer.aggregate_targets.each do |target|
-        if ['Pods-f100', 'Pods-NewsLiteInHouse','Pods-NewsLite','Pods-NewsLiteChannel'].include?(target.name)
+        if ['Pods-f100', 'Pods-NewsLiteInHouse'].include?(target.name)
             patched = false
             target.user_targets.first.build_phases.each do |phase|
                 if phase.display_name == '[CP] Copy Pods Resources'

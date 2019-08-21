@@ -10,6 +10,7 @@
 #import "Masonry.h"
 #import "TTDeviceHelper.h"
 #import <ReactiveObjC/ReactiveObjC.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHDetailNavBar ()
 
@@ -133,15 +134,18 @@
         [self collectAction:x];
     }];
     
+    UIImage *img;
     _messageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_messageBtn setImage:[UIImage imageNamed:@"detail_message_white"] forState:UIControlStateNormal];
-    [_messageBtn setImage:[UIImage imageNamed:@"detail_message_white"] forState:UIControlStateHighlighted];
+    img =  ICON_FONT_IMG(24, @"\U0000e691", [UIColor whiteColor]);//detail_message_white
+    [_messageBtn setImage:img forState:UIControlStateNormal];
+    [_messageBtn setImage:img forState:UIControlStateHighlighted];
     [_messageBtn addTarget:self action:@selector(messageAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_messageBtn];
 
     _shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateNormal];
-    [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateHighlighted];
+    img = ICON_FONT_IMG(24, @"\U0000e692", [UIColor whiteColor]);//detail_share_white
+    [_shareBtn setImage:img forState:UIControlStateNormal];
+    [_shareBtn setImage:img forState:UIControlStateHighlighted];
     [_shareBtn addTarget:self action:@selector(shareAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_shareBtn];
     
@@ -266,6 +270,9 @@
     self.shareBtn.hidden = !showItem;
     self.collectBtn.hidden = !showItem;
     self.messageBtn.hidden = !showItem;
+    if (!showItem) {
+        self.messageDot.hidden = !showItem;
+    }
 }
 
 - (void)backAction:(UIButton *)sender
@@ -315,63 +322,64 @@
 - (UIImage *)collectBlackImage
 {
     if (!_collectBlackImage) {
-        _collectBlackImage = [UIImage imageNamed:@"detail_collect_black"];
+        _collectBlackImage =  ICON_FONT_IMG(24, @"\U0000e696", nil); //@"detail_collect_black"
     }
     return _collectBlackImage;
 }
 - (UIImage *)collectWhiteImage
 {
     if (!_collectWhiteImage) {
-        _collectWhiteImage = [UIImage imageNamed:@"detail_collect_white"];
+        _collectWhiteImage =  ICON_FONT_IMG(24, @"\U0000e696", [UIColor whiteColor]);//@"detail_collect_white"
     }
     return _collectWhiteImage;
 }
 - (UIImage *)collectYellowImage
 {
     if (!_collectYellowImage) {
-        _collectYellowImage = [UIImage imageNamed:@"detail_collect_yellow"];
+        _collectYellowImage = ICON_FONT_IMG(24, @"\U0000e6b2", [UIColor themeRed1]);// @"detail_collect_yellow"
     }
     return _collectYellowImage;
 }
 - (UIImage *)backBlackImage
 {
     if (!_backBlackImage) {
-        _backBlackImage = [UIImage imageNamed:@"detail_back_black"];
+        _backBlackImage = ICON_FONT_IMG(24, @"\U0000e68a", nil); // detail_back_black
     }
     return _backBlackImage;
 }
 - (UIImage *)backWhiteImage
 {
     if (!_backWhiteImage) {
-        _backWhiteImage = [UIImage imageNamed:@"detail_back_white"];
+        _backWhiteImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]); //detail_back_white
     }
     return _backWhiteImage;
 }
 - (UIImage *)shareBlackImage
 {
     if (!_shareBlackImage) {
-        _shareBlackImage = [UIImage imageNamed:@"detail_share_black"];
+        _shareBlackImage = ICON_FONT_IMG(24, @"\U0000e692", nil); // detail_share_black
     }
     return _shareBlackImage;
 }
 - (UIImage *)shareWhiteImage
 {
     if (!_shareWhiteImage) {
-        _shareWhiteImage = [UIImage imageNamed:@"detail_share_white"];
+        _shareWhiteImage = ICON_FONT_IMG(24, @"\U0000e692", [UIColor whiteColor]); //detail_share_white
     }
     return _shareWhiteImage;
 }
 - (UIImage *)messageBlackImage
 {
     if (!_messageBlackImage) {
-        _messageBlackImage = [UIImage imageNamed:@"detail_message_black"];
+        //e691
+        _messageBlackImage = ICON_FONT_IMG(24, @"\U0000e691", nil); //detail_message_black
     }
     return _messageBlackImage;
 }
 - (UIImage *)messageWhiteImage
 {
     if (!_messageWhiteImage) {
-        _messageWhiteImage = [UIImage imageNamed:@"detail_message_white"];
+        _messageWhiteImage =  ICON_FONT_IMG(24, @"\U0000e691", [UIColor whiteColor]); //detail_message_white
     }
     return _messageWhiteImage;
 }

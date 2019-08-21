@@ -29,6 +29,7 @@
 @property (nonatomic, strong) SSThemedLabel *collectLabel;
 @property (nonatomic, strong) SSThemedLabel *shareLabel;
 @property (nonatomic, assign) BOOL toolbarLabelEnabled;
+@property (nonatomic, assign) UIEdgeInsets safeInsets;
 
 @end
 
@@ -130,6 +131,11 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateWriteTitle:) name:@"TTCOMMENT_UPDATE_WRITETITLE" object:nil];
         self.banEmojiInput = YES;
+        
+        _safeInsets = UIEdgeInsetsZero;
+        if (@available(iOS 11.0 , *)) {
+            _safeInsets = [UIApplication sharedApplication].delegate.window.safeAreaInsets;
+        }
     }
     return self;
 }
@@ -229,10 +235,12 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    CGFloat leftInset = self.tt_safeAreaInsets.left;
-    CGFloat rightInset = self.tt_safeAreaInsets.right;
+    
+    //没有ipad版本，左右inset 写死0 不然视频横屏时会计算错误
+    CGFloat leftInset = 0;
+    CGFloat rightInset = 0;//self.tt_safeAreaInsets.right;
     CGFloat hInset = leftInset + rightInset;//水平缩进
-    CGFloat bottomSafeInset = self.tt_safeAreaInsets.bottom;
+    CGFloat bottomSafeInset = self.safeInsets.bottom;//self.tt_safeAreaInsets.bottom;
     CGFloat writeButtonHeight = [TTDeviceHelper isPadDevice] ? 36 : [TTDeviceUIUtils tt_newPadding:32];
     CGFloat writeTopMargin = ((NSInteger)self.height - writeButtonHeight - bottomSafeInset) / 2;
     CGFloat iconTopMargin = ((NSInteger)self.height - 24 - bottomSafeInset) / 2;

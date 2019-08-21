@@ -21,6 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(UIFont *)themeFontDINAlternateBold:(CGFloat)fontSize;
 
++(UIFont *)iconFontWithSize:(CGFloat)fontSize; //icon font
+
++(UIFont *)iconFontBWithSize:(CGFloat)fontSize; // B端 icon font
+
 @end
 
 NS_ASSUME_NONNULL_END

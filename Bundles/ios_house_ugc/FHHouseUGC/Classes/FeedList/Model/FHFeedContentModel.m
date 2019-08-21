@@ -28,6 +28,8 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+                           @"name": @"social_group_name",
+                           @"url": @"announcement_url",
                            @"socialGroupId": @"social_group_id",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -187,6 +189,7 @@
     @"sourceDesc": @"source_desc",
     @"recommendSocialGroupList": @"recommend_social_group_list",
     @"rawData": @"raw_data",
+    @"articleSchema": @"article_schema",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -438,6 +441,9 @@
                            @"groupId": @"group_id",
                            @"commentBase": @"comment_base",
                            @"originGroup": @"origin_group",
+                           @"originCommonContent": @"origin_common_content",
+                           @"recommendSocialGroupList": @"recommend_social_group_list",
+                           @"articleSchema": @"article_schema",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -542,6 +548,174 @@
                            @"itemId": @"item_id",
                            @"groupId": @"group_id",
                            @"repostStatus": @"repost_status",
+                           @"imageList": @"image_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginCommonContentModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"richTitle": @"rich_title",
+                           @"businessPayload": @"business_payload",
+                           @"titleRichSpan": @"title_rich_span",
+                           @"hasVideo": @"has_video",
+                           @"coverImage": @"cover_image",
+                           @"groupIdStr": @"group_id_str",
+                           @"groupId": @"group_id",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataCommentBaseActionModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"readCount": @"read_count",
+                           @"userBury": @"user_bury",
+                           @"buryCount": @"bury_count",
+                           @"forwardCount": @"forward_count",
+                           @"diggCount": @"digg_count",
+                           @"playCount": @"play_count",
+                           @"commentCount": @"comment_count",
+                           @"userRepin": @"user_repin",
+                           @"shareCount": @"share_count",
+                           @"userDigg": @"user_digg",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginCommonContentUserModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataCommentBaseUserInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"originUserId": @"origin_user_id",
+                           @"mediaId": @"media_id",
+                           @"banStatus": @"ban_status",
+                           @"originProfileUrl": @"origin_profile_url",
+                           @"userDecoration": @"user_decoration",
+                           @"realName": @"real_name",
+                           @"verifiedContent": @"verified_content",
+                           @"avatarUrl": @"avatar_url",
+                           @"userId": @"user_id",
+                           @"liveInfoType": @"live_info_type",
+                           @"userVerified": @"user_verified",
+                           @"roomSchema": @"room_schema",
+                           @"userAuthInfo": @"user_auth_info",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginCommonContentUserInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"originUserId": @"origin_user_id",
+                           @"mediaId": @"media_id",
+                           @"banStatus": @"ban_status",
+                           @"originProfileUrl": @"origin_profile_url",
+                           @"userDecoration": @"user_decoration",
+                           @"realName": @"real_name",
+                           @"verifiedContent": @"verified_content",
+                           @"avatarUrl": @"avatar_url",
+                           @"userId": @"user_id",
+                           @"liveInfoType": @"live_info_type",
+                           @"userVerified": @"user_verified",
+                           @"roomSchema": @"room_schema",
+                           @"userAuthInfo": @"user_auth_info",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataCommentBaseUserBlockModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"isBlocking": @"is_blocking",
+                           @"isBlocked": @"is_blocked",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataCommentBaseUserModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataContentExtraModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"answerCount": @"answer_count",
+                           @"articleSchema": @"article_schema",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOperationModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"imageList": @"image_list",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
