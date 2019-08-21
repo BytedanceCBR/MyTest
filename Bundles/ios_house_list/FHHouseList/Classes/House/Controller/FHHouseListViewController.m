@@ -27,6 +27,7 @@
 #import "FHHouseListCommuteTipView.h"
 #import "FHCommuteFilterView.h"
 #import "FHCommuteManager.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
@@ -644,13 +645,13 @@
 -(UITableView *)tableView {
     if (!_tableView) {
         
-        _tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+        _tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds];
         if (@available(iOS 11.0, *)) {
             
             _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
-            self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
         if ([TTDeviceHelper isIPhoneXDevice]) {
             

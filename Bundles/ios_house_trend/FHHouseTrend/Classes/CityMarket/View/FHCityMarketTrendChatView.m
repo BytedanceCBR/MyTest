@@ -13,6 +13,7 @@
 #import "RXCollection.h"
 #import "ReactiveObjC.h"
 #import "extobjc.h"
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @implementation FHCityMarketTrendChatViewInfoItem
 
@@ -259,7 +260,7 @@
 -(void)setupCollectionView {
     UICollectionViewFlowLayout* layout = [[UICollectionViewFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    self.selectorCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    self.selectorCollectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     [_selectorCollectionView registerClass:[FHCityMarketSelectItemCollectionViewCell class] forCellWithReuseIdentifier:@"item"];
     [self addSubview:_selectorCollectionView];
     [_selectorCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {

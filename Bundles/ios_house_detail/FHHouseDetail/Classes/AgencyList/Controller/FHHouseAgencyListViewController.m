@@ -7,6 +7,7 @@
 
 #import "FHHouseAgencyListViewController.h"
 #import "FHHouseAgencyListViewModel.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHHouseAgencyListViewController ()
 
@@ -80,7 +81,7 @@
 - (void)setupTableView
 {
 //    CGFloat height = [FHFakeInputNavbar perferredHeight];
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    UITableView *tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     __weak typeof(self) weakSelf = self;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;

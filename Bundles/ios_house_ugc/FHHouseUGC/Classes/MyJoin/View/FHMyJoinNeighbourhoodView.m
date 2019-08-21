@@ -11,6 +11,7 @@
 #import <Masonry.h>
 #import "FHUGCCellHeaderView.h"
 #import "FHUserTracker.h"
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @interface FHMyJoinNeighbourhoodView ()
 
@@ -38,7 +39,7 @@
     
     self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
     _headerView.titleLabel.text = @"我关注的小区圈";
-    [_headerView.moreBtn addTarget:self action:@selector(goToMore) forControlEvents:UIControlEventTouchUpInside];
+    _headerView.moreBtn.hidden = YES;
     [self addSubview:_headerView];
     
     [self initCollectionView];
@@ -50,13 +51,13 @@
 
 - (void)initCollectionView {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-    flowLayout.itemSize = CGSizeMake(120, 128);
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 0);
     flowLayout.minimumLineSpacing = 8;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
+    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
     _collectionView.showsHorizontalScrollIndicator = NO;
+    _collectionView.alwaysBounceHorizontal = YES;
     _collectionView.backgroundColor = [UIColor themeGray7];
     
     [self addSubview:_collectionView];

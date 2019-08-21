@@ -9,6 +9,7 @@
 #import <Masonry.h>
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHPostUGCMainView ()
 
@@ -30,6 +31,7 @@
 }
 
 - (void)setupUI {
+    _followed = YES;
     _rightImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fh_ugc_arrow_feed"]];
     [self addSubview:_rightImageView];
     _nameLabel = [[UILabel alloc] init];
@@ -50,26 +52,26 @@
 
     // 布局
     [self.rightImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self).offset(-20);
-        make.centerY.mas_equalTo(self);
+        make.right.equalTo(self).offset(-20);
+        make.centerY.equalTo(self);
         make.height.width.mas_equalTo(16);
     }];
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self);
-        make.left.mas_equalTo(self).offset(20);
+        make.centerY.equalTo(self);
+        make.left.equalTo(self).offset(20);
         make.height.mas_equalTo(22);
         make.width.mas_equalTo(48);
     }];
     [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self);
-        make.left.mas_equalTo(self.nameLabel.mas_right).offset(0);
+        make.centerY.equalTo(self);
+        make.left.equalTo(self.nameLabel.mas_right).offset(0);
         make.height.mas_equalTo(22);
-        make.right.mas_equalTo(self.rightImageView.mas_left).offset(-5);
+        make.right.equalTo(self.rightImageView.mas_left).offset(-5);
     }];
     [self.sepLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.bottom.mas_equalTo(self);
+        make.bottom.equalTo(self);
         make.height.mas_equalTo(0.5);
     }];
 }
@@ -77,11 +79,19 @@
 - (void)setCommunityName:(NSString *)communityName {
     _communityName = communityName;
     if (communityName.length > 0) {
+        self.nameLabel.text = @"发布到：";
         self.valueLabel.text = communityName;
         self.valueLabel.textColor = [UIColor themeGray1];
+        [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(65);
+        }];
     } else {
+        self.nameLabel.text = @"小区：";
         self.valueLabel.text = @"选择想要发布帖子的小区圈";
         self.valueLabel.textColor = [UIColor themeGray3];
+        [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(49);
+        }];
     }
 }
 

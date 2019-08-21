@@ -159,7 +159,7 @@ TTAccountMulticastProtocol
         [self.followTaskStatusModels enumerateObjectsUsingBlock:^(TTPostThreadTaskStatusModel * _Nonnull statusModel, NSUInteger idx, BOOL * _Nonnull stop) {
             [[TTPostThreadCenter sharedInstance_tt] removeTaskForFakeThreadID:statusModel.fakeThreadId concernID:statusModel.concernID];
         }];
-        self.followTaskStatusModels = nil;
+        [self.followTaskStatusModels removeAllObjects];
         // 刷新UI 数据
         [[FHPostUGCProgressView sharedInstance] updatePostData];
     }

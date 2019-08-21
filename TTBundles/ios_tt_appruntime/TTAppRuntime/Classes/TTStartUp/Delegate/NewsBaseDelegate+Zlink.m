@@ -11,6 +11,7 @@
 #import "TTAdSplashMediator.h"
 #import "FHUtils.h"
 #import "FHEnvContext.h"
+#import "FHUserTracker.h"
 
 @implementation NewsBaseDelegate(Zlink)
 -(void)deepLinkOnSchema:(NSString *)schema type:(BDUGDeepLinkType)type {
@@ -30,5 +31,8 @@
         }
     }
 
+}
+- (void)deepLinkOnEvent:(NSString *)event params:(NSDictionary *)params {
+    TRACK_EVENT(event, params);
 }
 @end

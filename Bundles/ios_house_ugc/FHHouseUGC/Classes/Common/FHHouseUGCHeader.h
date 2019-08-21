@@ -39,11 +39,13 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
 {
-    FHUGCFeedListCellTypeArticle = 0,                        //文章
-    FHUGCFeedListCellTypeQuestion = 203,                     //问答
-    FHUGCFeedListCellTypeUGC = 32,                           //帖子
-    FHUGCFeedListCellTypeUGCRecommend = 2001,                  //小区推荐
-    FHUGCFeedListCellTypeUGCBanner = 2002,                     //运营位
+    FHUGCFeedListCellTypeArticle = 0,                      //文章
+    FHUGCFeedListCellTypeAnswer = 202,                     //问答答案
+    FHUGCFeedListCellTypeQuestion = 203,                   //问答问题
+    FHUGCFeedListCellTypeArticleComment = 41,              //文章评论
+    FHUGCFeedListCellTypeUGC = 32,                         //帖子
+    FHUGCFeedListCellTypeUGCRecommend = 2001,              //小区推荐
+    FHUGCFeedListCellTypeUGCBanner = 2002,                 //运营位
 };
 
 typedef NS_ENUM(NSInteger, FHUGCMyInterestedType)

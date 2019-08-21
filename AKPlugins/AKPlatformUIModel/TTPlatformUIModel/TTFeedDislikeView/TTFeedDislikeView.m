@@ -448,7 +448,7 @@ static TTFeedDislikeView *__visibleDislikeView;
         if (p.x + self.width/2 > self.maskView.width) {
             self.right = self.maskView.width - 15;
         } else {
-            self.right = p.x + self.width/2;
+            self.left = 15;
         }
     }
     

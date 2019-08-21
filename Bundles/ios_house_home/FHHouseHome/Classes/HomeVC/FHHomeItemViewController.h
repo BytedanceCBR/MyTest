@@ -28,6 +28,7 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic,assign) FHHouseType houseType;
 @property (nonatomic, assign) BOOL showNoDataErrorView;
 @property (nonatomic, assign) BOOL showRequestErrorView;
+@property (nonatomic, assign) BOOL showDislikeNoDataView;
 @property (nonatomic, assign) BOOL showPlaceHolder;
 @property (nonatomic, assign) BOOL isOriginShowSelf;//当前显示的是不是自己这个类型的房源
 @property (nonatomic , strong) FHTracerModel *tracerModel;
@@ -38,6 +39,7 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic, strong) NSMutableArray *traceNeedUploadCache;
 @property (nonatomic, strong) NSMutableDictionary *traceEnterCategoryCache;
 @property (nonatomic, strong) NSString *enterType; //当前enterType，用于enter_category
+@property (nonatomic, assign) BOOL isShowRefreshTip; //是否主页的tip正在刷新，开始刷新为YES，tips收回之后变成NO
 
 
 @property (nonatomic, copy) void (^requestCallBack)(FHHomePullTriggerType refreshType,FHHouseType houseType,BOOL isSuccess,JSONModel *dataModel);

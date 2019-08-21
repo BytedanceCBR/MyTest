@@ -81,6 +81,7 @@
 #import "TTLaunchManager.h"
 #import "GAIAEngine+TTBase.h"
 #import "BDUGDeepLinkManager.h"
+#import <Heimdallr/HMDTTMonitor.h>
 
 ///...
 //#import "TVLManager.h"
@@ -188,7 +189,11 @@ static NSTimeInterval lastTime;
     [UNUserNotificationCenter currentNotificationCenter].delegate = [TTNotificationCenterDelegate sharedNotificationCenterDelegate];
 #pragma clang diagnostic pop
     
-    return [self application:application onlineBoundleWithOptions:launchOptions];
+    BOOL result = [self application:application onlineBoundleWithOptions:launchOptions];
+#if DEBUG
+    [TTLaunchManager dumpLaunchDuration];
+#endif
+    return result;
 }
     
 //正常打包，上线，走此方法
@@ -660,14 +665,18 @@ static NSTimeInterval lastTime;
 
 - (UINavigationController*)appTopNavigationController {
     
-    if ([TTDeviceHelper isPadDevice]) {
-        _navigationController = (TTNavigationController*)(self.window.rootViewController);
-    } else {
+//    if ([TTDeviceHelper isPadDevice]) {
+//        _navigationController = (TTNavigationController*)(self.window.rootViewController);
+//    } else {
         TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)self.window.rootViewController;
         if ([rootTabController isKindOfClass:[TTArticleTabBarController class]]) {
             _navigationController = (TTNavigationController*)rootTabController.selectedViewController;
+            if(![_navigationController isKindOfClass:[UINavigationController class]]){                
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"route_nav_controller_wrong" attributes:@{@"class":[NSString stringWithFormat:@"%@",_navigationController]?:@"unknown"}];
+                _navigationController = nil;
+            }
         }
-    }
+//    }
     
     return _navigationController;
 }

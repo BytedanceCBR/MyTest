@@ -279,26 +279,9 @@ static NSMutableArray  * _Nullable identifierArr;
         NSInteger countValue = dataModel.opData.items.count;
         
         if (countValue > 0) {
-            if (countValue > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2)
-            {
-                countValue = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
-            }
-
-            CGFloat heightPadding = 20;
-            height += ((countValue - 1)/[FHHomeCellHelper sharedInstance].kFHHomeIconRowCount + 1) * ([FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375] + heightPadding);
+            height = [FHHomeEntrancesCell cellHeightForModel:dataModel.opData];
         }
-        
-        NSInteger opData2CountValue = dataModel.opData2.items.count;
-        
-        if (opData2CountValue > 0) {
-            if (opData2CountValue > 4)
-            {
-                opData2CountValue = 4;
-            }
-    
-            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (18 + (opData2CountValue > 2 ? 0 : 4) + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
-        }
-        
+                
         if (dataModel.mainPageBannerOpData.items.count > 0) {
             // 经过一层逻辑处理
             BOOL available = [FHHomeScrollBannerCell hasValidModel:dataModel.mainPageBannerOpData];
@@ -353,137 +336,55 @@ static NSMutableArray  * _Nullable identifierArr;
 {
     FHHomeEntrancesCell *cellEntrance = cell;
     
-    BOOL isNeedAllocNewItems = YES;
-    
-    //判断是否需要重复创建
-    if (cellEntrance.boardView.currentItems.count == model.items.count) {
-        isNeedAllocNewItems = NO;
-    }else
-    {
-        for (UIView *subView in cellEntrance.boardView.subviews) {
-            [subView removeFromSuperview];
-        }
-    }
-    
     NSInteger countItems = model.items.count;
     if (countItems > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2) {
         countItems = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
     }
     
-    NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
-    for (int index = 0; index < countItems; index++) {
-        FHSpringboardIconItemView *itemView = nil;
-        if (isNeedAllocNewItems) {
-            if (index < [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount) {
-                itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-17];
-            }else
-            {
-                itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-20];
-            }
+    [cell updateWithItems:model.items];
+    
+    
+    cellEntrance.clickBlock = ^(NSInteger clickIndex , FHConfigDataOpDataItemsModel *itemModel){
+        NSMutableDictionary *dictTrace = [NSMutableDictionary new];
+        [dictTrace setValue:@"maintab" forKey:@"enter_from"];
+        [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
+        [dictTrace setValue:@"click" forKey:@"enter_type"];
+        
+        if ([itemModel.logPb isKindOfClass:[NSDictionary class]] && itemModel.logPb[@"element_from"] != nil) {
+            [dictTrace setValue:itemModel.logPb[@"element_from"] forKey:@"element_from"];
+        }
+        
+        NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
+        if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
+            [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
+            [dictTrace setValue:stringOriginFrom forKey:@"origin_from"];
         }else
         {
-            if (index < cellEntrance.boardView.currentItems.count && [cellEntrance.boardView.currentItems[index] isKindOfClass:[FHSpringboardIconItemView class]]) {
-                itemView = (FHSpringboardIconItemView *)cellEntrance.boardView.currentItems[index];
-                if (index < [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount) {
-                    itemView.iconBottomPadding = -17;
-                }else
-                {
-                    itemView.iconBottomPadding = -20;
-                }
-            }else
-            {
-                itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-20];
-            }
+            [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
+            [dictTrace setValue:@"be_null" forKey:@"origin_from"];
         }
         
-        itemView.tag = index;
-        FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:index];
-        itemView.backgroundColor = [UIColor whiteColor];
-        if (itemModel.image.count > 0) {
-            FHConfigDataOpData2ItemsImageModel * imageModel = itemModel.image[0];
-            if (imageModel.url && [imageModel.url isKindOfClass:[NSString class]]) {
-
-                [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
-                [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    if (index < [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount) {
-                        make.top.mas_equalTo(8);
-                    }else
-                    {
-                        make.top.mas_equalTo(5);
-                    }
-                    make.width.height.mas_equalTo([FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375]);
-                }];
-            }
-        }
+        NSDictionary *userInfoDict = @{@"tracer":dictTrace};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         
-        if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
-            itemView.nameLabel.textColor = [UIColor themeGray1];
-            UIFont *font = [UIFont themeFontRegular:12];
-            itemView.nameLabel.font = font;
-            itemView.nameLabel.text = itemModel.title;
+        if ([itemModel.openUrl isKindOfClass:[NSString class]]) {
             
-            [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(itemView.iconView.mas_bottom).mas_offset(0);
-            }];
-        }
-        
-        if (isNeedAllocNewItems)
-        {
-            [itemsArray addObject:itemView];
-        }
-    }
-    
-    cellEntrance.boardView.clickedCallBack = ^(NSInteger clickIndex){
-//            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web?url=https://www.baidu.com"]];
-//        return ;
-        if (model.items.count > clickIndex) {
-            FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
-            
-            NSMutableDictionary *dictTrace = [NSMutableDictionary new];
-            [dictTrace setValue:@"maintab" forKey:@"enter_from"];
-            [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
-            [dictTrace setValue:@"click" forKey:@"enter_type"];
-            
-            if ([itemModel.logPb isKindOfClass:[NSDictionary class]] && itemModel.logPb[@"element_from"] != nil) {
-                [dictTrace setValue:itemModel.logPb[@"element_from"] forKey:@"element_from"];
-            }
-            
-            NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
-            if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
-                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
-                [dictTrace setValue:stringOriginFrom forKey:@"origin_from"];
-            }else
-            {
-                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
-                [dictTrace setValue:@"be_null" forKey:@"origin_from"];
-            }
-            
-            NSDictionary *userInfoDict = @{@"tracer":dictTrace};
-            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-            
-            if ([itemModel.openUrl isKindOfClass:[NSString class]]) {
-                
-                NSURL *url = [NSURL URLWithString:itemModel.openUrl];
-                if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
-                    [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
-                    [FHHomeConfigManager sharedInstance].isTraceClickIcon = YES;
-                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-                }else if ([itemModel.openUrl containsString:@"://commute_list"]){
-                    //通勤找房
-                    [[FHCommuteManager sharedInstance] tryEnterCommutePage:itemModel.openUrl logParam:dictTrace];
-                }else{
-                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-                }
+            NSURL *url = [NSURL URLWithString:itemModel.openUrl];
+            if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
+                [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
+                [FHHomeConfigManager sharedInstance].isTraceClickIcon = YES;
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            }else if ([itemModel.openUrl containsString:@"://commute_list"]){
+                //通勤找房
+                [[FHCommuteManager sharedInstance] tryEnterCommutePage:itemModel.openUrl logParam:dictTrace];
+            }else{
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
         }
     };
     
-    if (itemsArray.count > 0 && isNeedAllocNewItems) {
-        [cellEntrance.boardView addItemViews:itemsArray];
-    }
     
     [cellEntrance setNeedsLayout];
-//    [cellEntrance layoutIfNeeded];
 
 }
 

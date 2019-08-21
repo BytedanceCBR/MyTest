@@ -108,6 +108,7 @@
         }];
     }
     [self addPopLayerNotification];
+    [self.contactViewModel vc_viewDidAppear:animated];
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {
@@ -122,6 +123,7 @@
         }];
     }
     [self removePopLayerNotification];
+    [self.contactViewModel vc_viewDidDisappear:animated];
 }
 
 -(void)handleInstantData:(id)data
@@ -599,6 +601,11 @@
 
 -(void)poplayerFeedBack:(id)model type:(NSInteger)type completion:(void (^)(BOOL success))completion
 {
+    if (![TTReachability isNetworkConnected]) {
+        SHOW_TOAST(@"网络异常");
+        completion(NO);
+        return;
+    }
     NSString *source = nil;
     NSString *agencyId = nil;
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
@@ -608,6 +615,8 @@
         source = @"detective";
     }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         source = @"safety_tips";
+    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]){
+        source = @"skyeye_price_abnormal";
     }
     
     [FHHouseDetailAPI requstQualityFeedback:self.houseId houseType:self.houseType source:source feedBack:type agencyId:agencyId completion:^(bool succss, NSError * _Nonnull error) {
@@ -620,6 +629,7 @@
             }else{
                 SHOW_TOAST(error.domain);
             }
+            completion(NO);
         }
         
     } ];

@@ -84,6 +84,8 @@
                            @"displayTitle": @"display_title",
                            @"displayDescription": @"display_description",
                            @"displayPricePerSqm": @"display_price_per_sqm",
+                           @"pricePerSqmNum": @"price_per_sqm_num",
+                           @"pricePerSqmUnit": @"price_per_sqm_unit",
                            @"imprId": @"impr_id",
                            @"searchId": @"search_id",
                            @"groupId": @"group_id",

@@ -26,6 +26,7 @@
 #import <FHCHousePush/FHPushAuthorizeManager.h>
 #import <FHCHousePush/FHPushAuthorizeHelper.h>
 #import <FHCHousePush/FHPushMessageTipView.h>
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHMessageViewController ()
 
@@ -135,7 +136,7 @@
         }
     }];
 
-    _tableView = [[UITableView alloc] init];
+    _tableView = [[FHBaseTableView alloc] init];
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.automaticallyAdjustsScrollViewInsets = NO;

@@ -75,7 +75,7 @@
 
 + (NSString *)streamAPIVersionString
 {
-    return @"78";
+    return @"96";
 }
 
 + (NSString *)refreshTipURLString

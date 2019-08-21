@@ -27,7 +27,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.7.2</string>
+	<string>0.7.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -74,7 +74,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6.7.2.0</string>
+	<string>6.7.4.0</string>
 	<key>CHANNEL_NAME</key>
 	<string>App Store</string>
 	<key>Fabric</key>
@@ -199,6 +199,7 @@
 		<string>ChatroomIconFont.ttf</string>
 		<string>290-cai978.ttf</string>
 		<string>iconfont.ttf</string>
+		<string>iconfont_f100.ttf</string>
 	</array>
 	<key>UIApplicationShortcutItems</key>
 	<array/>
@@ -229,6 +230,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UPDATE_VERSION_CODE</key>
-	<string>67201</string>
+	<string>67501</string>
 </dict>
 </plist>

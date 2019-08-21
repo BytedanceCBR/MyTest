@@ -119,7 +119,7 @@
             if (self.panelVM) {
                 [self.panelVM fetchSearchPanelRollData];
             }
-          
+            
             if (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                 [self requestOriginData:self.isFirstChange isShowPlaceHolder:[FHEnvContext sharedInstance].isRefreshFromCitySwitch];
             }
@@ -156,6 +156,7 @@
             [self configIconRowCountAndHeight];
             
             [FHEnvContext changeFindTabTitle];
+            [FHEnvContext showRedPointForNoUgc];
             
             //更新冷启动默认选项
             if (xConfigDataModel.houseTypeDefault && (xConfigDataModel.houseTypeDefault.integerValue > 0) && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
@@ -173,7 +174,7 @@
             {
                 //收起tip
                 [self.homeViewController hideImmediately];
-//                [self.homeViewController resetMaintableView];
+                //                [self.homeViewController resetMaintableView];
                 [self updateCategoryViewSegmented:YES];
             }
             
@@ -186,8 +187,8 @@
             //非首次只刷新头部
             if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 [FHHomeCellHelper sharedInstance].isFirstLanuch = NO;
-                                
-//                [self.tableViewV reloadData];
+                
+                //                [self.tableViewV reloadData];
                 
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
                 
@@ -264,11 +265,11 @@
     }
     
     self.homeViewController.scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
-//    self.tableViewV.scrollEnabled = NO;
+    //    self.tableViewV.scrollEnabled = NO;
     
     _childVCScrollView.contentOffset = CGPointMake(0, 0);
     __weak typeof(self) weakSelf = self;
-
+    
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSMutableArray *itemVCArrayTmp = [NSMutableArray new];
     for (int i = 0; i < configDataModel.houseTypeList.count; i++) {
@@ -292,7 +293,7 @@
             };
             
             itemVC.scrollDidEnd = ^{
-
+                
             };
             
             itemVC.requestNetworkUnAvalableRetryCallBack = ^{
@@ -316,8 +317,17 @@
     if (![FHEnvContext isNetworkConnected]) {
         self.homeViewController.scrollView.scrollEnabled = NO;
     }
-//    [self.tableViewV reloadData];
-//    self.tableViewV.scrollEnabled = YES;
+    //    [self.tableViewV reloadData];
+    //    self.tableViewV.scrollEnabled = YES;
+}
+
+- (void)setIsShowRefreshTip:(BOOL)isShowRefreshTip {
+    for (FHHomeItemViewController *vc in self.itemsVCArray) {
+        if ([vc isKindOfClass:[FHHomeItemViewController class]]) {
+            FHHomeItemViewController *itemVC = (FHHomeItemViewController *)vc;
+            itemVC.isShowRefreshTip = isShowRefreshTip;
+        }
+    }
 }
 
 - (void)setUpSubtableIndex:(NSInteger)index
@@ -565,7 +575,7 @@
 
 - (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType
 {
-
+    
 }
 
 #pragma mark tableView 代理
@@ -727,6 +737,5 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
 
 @end

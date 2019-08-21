@@ -12,7 +12,6 @@
 #import "FHCommunityFeedListMyJoinViewModel.h"
 #import "FHCommunityFeedListPostDetailViewModel.h"
 #import "TTReachability.h"
-#import "ArticleListNotifyBarView.h"
 #import <UIViewAdditions.h>
 #import "TTDeviceHelper.h"
 #import <TTRoute.h>
@@ -22,12 +21,13 @@
 #import "FHUserTracker.h"
 #import <UIScrollView+Refresh.h>
 #import "FHFeedOperationView.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHCommunityFeedListController ()
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
-@property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 @property(nonatomic, assign) BOOL needReloadData;
+@property(nonatomic, copy) void(^notifyCompletionBlock)(void);
 
 @end
 
@@ -87,7 +87,7 @@
 }
 
 - (void)initTableView {
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
@@ -99,9 +99,7 @@
     
     _tableView.sectionFooterHeight = 0.0;
     
-    _tableView.estimatedRowHeight = 85;
-    _tableView.estimatedSectionHeaderHeight = 0;
-    _tableView.estimatedSectionFooterHeight = 0;
+    _tableView.estimatedRowHeight = 0;
     
     if (@available(iOS 11.0 , *)) {
         self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -156,6 +154,7 @@
     if(self.listType == FHCommunityFeedListTypeNearby){
         viewModel = [[FHCommunityFeedListNearbyViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = @"94349537888";
+//        viewModel.categoryId = @"weitoutiao";
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = @"94349537893";
@@ -280,24 +279,35 @@
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
     self.tableView.contentInset = inset;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:0.3 animations:^{
-            
-            if ([TTDeviceHelper isIPhoneXDevice]) {
-                self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-            }else{
-                self.tableView.contentInset = UIEdgeInsetsZero;
+    self.tableView.contentOffset = CGPointMake(0, -inset.top);
+    self.notifyCompletionBlock = completion;
+    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
+        WeakSelf;
+        if(!isImmediately) {
+            [wself hideIfNeeds];
+        } else {
+            if(wself.notifyCompletionBlock) {
+                wself.notifyCompletionBlock();
             }
-            self.tableView.originContentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
-            
-        }completion:^(BOOL finished) {
-            if (completion) {
-                completion();
-            }
-        }];
-    });
+        }
+    }];
+}
+
+- (void)hideIfNeeds {
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+        }else{
+            self.tableView.contentInset = UIEdgeInsetsZero;
+        }
+        self.tableView.originContentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+        
+    }completion:^(BOOL finished) {
+        if (self.notifyCompletionBlock) {
+            self.notifyCompletionBlock();
+        }
+    }];
 }
 
 - (void)hideImmediately {

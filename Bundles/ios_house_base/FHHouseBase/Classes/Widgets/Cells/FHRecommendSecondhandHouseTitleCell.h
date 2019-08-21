@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)hideSeprateLine:(BOOL)isFirstCell;
 
+- (void)showSeaprateLine;
 @end
 
 NS_ASSUME_NONNULL_END

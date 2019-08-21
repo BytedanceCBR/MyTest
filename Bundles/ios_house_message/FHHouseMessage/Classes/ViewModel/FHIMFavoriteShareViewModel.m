@@ -67,8 +67,7 @@
     [self didChangeValueForKey:@"currentPage"];
 }
 
--(void)sendSelectedItemToIM {
-    NSLog(@"sendSelectedItemToIM: %@ ", self.selectedItems);
+-(void)sendSelectedItemToIM {   
     NSArray* shareModels = [_selectedItems rx_mapWithBlock:^id(id each) {
         return [FHIMFavoriteShareViewModel convertCellModelToShareModel:each];
     }];
@@ -134,6 +133,7 @@
     result.displayTitle = model.displayTitle;
     result.displaySubTitle = model.displayDescription;
     result.displayPrice = model.displayPricePerSqm;
+    result.displayPricePerSqm = model.displayPricePerSqm;
     return result;
 }
 

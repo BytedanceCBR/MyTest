@@ -27,6 +27,7 @@
 #import <HMDTTMonitor.h>
 #import "FHDetailMapView.h"
 #import "FHDetailStarHeaderView.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 56;
@@ -35,7 +36,8 @@ static const float kSegementedPadingTop = 5;
 @interface FHDetailOldNearbyMapCell () <AMapSearchDelegate,
 MAMapViewDelegate,
 UITableViewDelegate,
-UITableViewDataSource>
+UITableViewDataSource,
+FHDetailVCViewLifeCycleProtocol>
 
 @property (nonatomic, strong)   FHDetailStarHeaderView       *headerView;
 @property (nonatomic , assign) NSInteger requestIndex;
@@ -58,6 +60,7 @@ UITableViewDataSource>
 @property (nonatomic , strong) NSMutableDictionary *poiDatasDict;
 @property (nonatomic , strong) FHDetailOldNearbyMapModel *dataModel;
 @property (nonatomic, assign)  BOOL isFirstSnapshot;// 首次截屏
+@property (nonatomic, assign)  BOOL mapMaskClicked;
 
 @end
 
@@ -69,6 +72,7 @@ UITableViewDataSource>
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         _isFirstSnapshot = YES;
+        _mapMaskClicked = NO;
         _isFirst = YES;
         self.searchCategory = @"交通";
         self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
@@ -201,7 +205,7 @@ UITableViewDataSource>
     
     __weak typeof(self) weakSelf = self;
     // 延时绘制地图
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf snapshotMap];
     });
     
@@ -234,6 +238,7 @@ UITableViewDataSource>
 
 - (void)mapMaskBtnClick:(UIButton *)sender
 {
+    self.mapMaskClicked = YES;
     //地图页调用示例
     double longitude = self.centerPoint.longitude;
     double latitude = self.centerPoint.latitude;
@@ -274,7 +279,7 @@ UITableViewDataSource>
 
 - (void)setUpLocationListTableView
 {
-    _locationList = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _locationList = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _locationList.separatorStyle = UITableViewCellSelectionStyleNone;
     _locationList.allowsSelection = NO;
     _locationList.userInteractionEnabled = YES;
@@ -456,12 +461,6 @@ UITableViewDataSource>
             dispatch_async(dispatch_get_global_queue(0, 0), ^{
                 // 处理耗时操作的代码块...
                 [self requestPoiInfo:self.centerPoint andKeyWord:self.nameArray[i]];
-                
-                //通知主线程刷新
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    //回调或者说是通知主线程刷新，
-                });
-                
             });
         }
     }else
@@ -618,38 +617,46 @@ UITableViewDataSource>
     // 截屏
     __weak typeof(self) weakSelf = self;
     CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 160);
-    [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
-        // 注意点，如果进入周边地图页面，截屏可能不正确
-        weakSelf.isFirstSnapshot = NO;
-        BOOL isVCDidDisappear = weakSelf.baseViewModel.detailController.isViewDidDisapper; // 是否 不可见
-        if (!isVCDidDisappear) {
-            weakSelf.mapImageView.image = resultImage;
-        }
-    }];
-    // 预处理
-    [self preShowMapviewSnapshot];
-}
-
-- (void)fh_willDisplayCell {
-    if (self.mapImageView.image == nil) {
-        [self snapshotMap];
+    if (self.isFirstSnapshot) {
+        self.isFirstSnapshot = NO;
+        // 截图返回可能不正确
+        [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
+            // 注意点，如果进入周边地图页面，截屏可能不正确
+            BOOL isVCDidDisappear = weakSelf.baseViewModel.detailController.isViewDidDisapper; // 是否 不可见
+            if (!isVCDidDisappear) {
+                weakSelf.mapImageView.image = resultImage;
+            }
+        }];
+        
+        // 第一次
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (weakSelf) {
+                [weakSelf realSnapShotMap];
+                // 第二次
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    if (weakSelf) {
+                        [weakSelf realSnapShotMap];
+                    }
+                });
+            }
+        });
+    } else {
+        [self realSnapShotMap];
     }
 }
 
-// mapview 的 takeSnapshotInRect 方法有可能等很久（10s）才返回
-- (void)preShowMapviewSnapshot {
-    if (self.mapImageView.image == nil && self.isFirstSnapshot) {
-        __weak typeof(self) weakSelf = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (weakSelf.mapImageView.image == nil && !weakSelf.baseViewModel.detailController.isViewDidDisapper) {
-                weakSelf.mapView.hidden = NO;
-                [weakSelf.mapView forceRefresh];
-                weakSelf.mapImageView.image = [weakSelf getImageFromView:weakSelf.mapView];
-                weakSelf.mapView.hidden = YES;
-            }
-            weakSelf.isFirstSnapshot = NO;
-        });
-    } else {
+- (void)fh_willDisplayCell {
+}
+
+//
+- (void)vc_viewDidAppear:(BOOL)animated {
+    if (!self.isFirstSnapshot) {
+        self.mapMaskClicked = NO;
+    }
+}
+
+- (void)realSnapShotMap {
+    if (!self.baseViewModel.detailController.isViewDidDisapper && !self.mapMaskClicked) {
         self.mapView.hidden = NO;
         [self.mapView forceRefresh];
         self.mapImageView.image = [self getImageFromView:self.mapView];

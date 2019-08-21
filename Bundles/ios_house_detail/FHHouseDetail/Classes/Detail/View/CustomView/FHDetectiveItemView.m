@@ -14,6 +14,7 @@
 #import <TTBaseLib/UIImageAdditions.h>
 #import <FHHouseBase/FHUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHDetectiveItemView ()
 
@@ -26,6 +27,10 @@
 @property(nonatomic , strong) UILabel *stateLabel;
 @property(nonatomic , strong) UILabel *tipLabel;
 @property(nonatomic , strong) UIView *bottomLine;
+@property(nonatomic , strong) UIControl *reasonView;
+@property(nonatomic , strong) UILabel *reasonLabel;
+@property(nonatomic , strong) UIImageView *rightArrow;
+@property(nonatomic, strong)id reasonInfoData;
 
 @end
 
@@ -63,6 +68,20 @@
         [_rightView addSubview:_tipImageView];
         [_rightView addSubview:_tipLabel];
         [self.contentView addSubview:_bottomLine];
+        
+        _reasonView = [[UIControl alloc]init];
+        _reasonView.backgroundColor = [UIColor themeRed2];
+        [_rightView addSubview:_reasonView];
+        _reasonView.layer.cornerRadius = 10;
+        _reasonView.layer.masksToBounds = YES;
+        [self.contentView addSubview:_reasonView];
+        _reasonView.hidden = YES;
+        [_reasonView addTarget:self action:@selector(reasonBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        _reasonLabel = [self labelWithFont:[UIFont themeFontRegular:12] color:[UIColor themeRed3]];
+        _rightArrow = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"detail_detective_feed"]];
+        [_reasonView addSubview:_reasonLabel];
+        [_reasonView addSubview:_rightArrow];
 
         [self initConstraints];
     }
@@ -80,13 +99,18 @@
 
 - (void)updateWithModel:(FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel *)model
 {
+    self.reasonInfoData = model.reasonInfo;
+    
     if (model.icon.length > 0) {
         [self.icon bd_setImageWithURL:[NSURL URLWithString:model.icon] placeholder:[FHUtils createImageWithColor:[UIColor themeGray7]]];
     }else {
         self.icon.image = [FHUtils createImageWithColor:[UIColor themeGray7]];
     }
     BOOL ok = model.status.integerValue == 0;
-    self.tipImageView.image = [UIImage imageNamed: ok?@"detail_check_ok":@"detail_check_failed"];
+        
+    NSString *text = ok?@"\U0000e666":@"\U0000e658";//@"detail_check_ok":@"detail_check_failed"
+    UIColor *textColor = ok? [UIColor themeGreen1]:[UIColor themeRed1];
+    self.tipImageView.image =  ICON_FONT_IMG(24, text, textColor);
     
     self.stateLabel.text  = model.title;
     self.titleLabel.text = model.subTitle;
@@ -95,6 +119,16 @@
     [self.rightView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
     }];
+    
+    self.reasonView.hidden = !model.reasonInfo;
+    self.reasonLabel.text = model.reasonInfo.buttonText;
+}
+
+- (void)reasonBtnDidClick:(UIButton *)btn
+{
+    if (self.actionBlock) {
+        self.actionBlock(self.reasonInfoData);
+    }
 }
 
 - (void)showBottomLine:(BOOL)isShow
@@ -150,6 +184,21 @@
         make.right.mas_equalTo(-15);
         make.bottom.mas_equalTo(0);
         make.height.mas_equalTo(0.5);
+    }];
+     [self.reasonView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(20);
+        make.right.mas_equalTo(8);
+        make.top.mas_equalTo(10);
+     }];
+     [self.reasonLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+         make.top.bottom.mas_equalTo(0);
+         make.left.mas_equalTo(8);
+     }];
+    [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.reasonLabel);
+        make.left.mas_equalTo(self.reasonLabel.mas_right);
+        make.right.mas_equalTo(-12);
+        make.width.height.mas_equalTo(14);
     }];
 }
 

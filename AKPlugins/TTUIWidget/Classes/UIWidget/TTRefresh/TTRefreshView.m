@@ -268,38 +268,31 @@ CGFloat const gestureMinimumTranslation = 20.0;
         return;
     }
     
-//    NSString *tmp;
-    
-    
     switch (state) {
         case PULL_REFRESH_STATE_INIT:
             
-            self.hasNotifiedOverAttachView = NO;
-            self.hasNotifiedShowAttachView = NO;
+                self.hasNotifiedOverAttachView = NO;
+                self.hasNotifiedShowAttachView = NO;
             
+                [self hideAnimationView];
+             
+                break;
+             case PULL_REFRESH_STATE_PULL:
+                [self showAnimationView];
+             
+                break;
+             case PULL_REFRESH_STATE_PULL_OVER:
             
-            [self showAnimationView];
-    
-            break;
-        case PULL_REFRESH_STATE_PULL:
+                break;
+             
+             case PULL_REFRESH_STATE_LOADING:
+                [self showAnimationView];
+                if (self.refreshAnimateView && [self.refreshAnimateView respondsToSelector:@selector(startLoading)]) {
+                    [self.refreshAnimateView performSelector:@selector(startLoading)];
+                }
             
-            break;
-        case PULL_REFRESH_STATE_PULL_OVER:
-            
-            break;
-            
-        case PULL_REFRESH_STATE_LOADING:
-            
-            if (self.refreshAnimateView && [self.refreshAnimateView respondsToSelector:@selector(startLoading)]) {
-                [self.refreshAnimateView performSelector:@selector(startLoading)];
-            }
-            
-            break;
+                break;
         case PULL_REFRESH_STATE_NO_MORE:
-            
-            
-//            _refreshAnimationView.hidden = YES;
-            
             
             break;
         default:
@@ -760,6 +753,7 @@ CGFloat const gestureMinimumTranslation = 20.0;
     if (self.refreshAnimateView) {
         self.refreshAnimateView.hidden = NO;
     }
+    self.bgView.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)hideAnimationView {
@@ -767,6 +761,7 @@ CGFloat const gestureMinimumTranslation = 20.0;
     if (self.refreshAnimateView) {
         self.refreshAnimateView.hidden = YES;
     }
+    self.bgView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)triggerRefreshAndHideAnimationView {
@@ -855,6 +850,10 @@ CGFloat const gestureMinimumTranslation = 20.0;
     }
     
     _scrollView.contentInset =  inset;
+    // 原因参考: https://www.cnblogs.com/qqcc1388/p/10458205.html
+    if (self.scrollView.contentOffset.y <= inset.top) {
+        _scrollView.contentOffset = CGPointMake(0, -inset.top);
+    }
     
     
     if (_scrollView.pullUpView && !_scrollView.pullUpView.isObservingContentInset) {

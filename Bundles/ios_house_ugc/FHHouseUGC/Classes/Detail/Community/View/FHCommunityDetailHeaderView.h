@@ -5,8 +5,11 @@
 #import <Foundation/Foundation.h>
 
 @class FHUGCFollowButton;
-@class FHCommunityDetailRefreshView;
+@class FHCommunityDetailMJRefreshHeader;
 
+
+typedef void(^GotoOperationDetailBlock)(void);
+typedef void(^GotoPublicationsDetailBlock)(void);
 
 @interface FHCommunityDetailHeaderView : UIView
 @property(nonatomic, strong) UIImageView *topBack;
@@ -16,14 +19,20 @@
 @property(nonatomic, strong) UILabel *subtitleLabel;
 @property(nonatomic, strong) FHUGCFollowButton *followButton;
 @property(nonatomic, strong) UIView *publicationsContainer;
-@property(nonatomic, strong) UILabel *publicationsLabel;
 @property(nonatomic, strong) UILabel *publicationsContentLabel;
+@property(nonatomic, copy) GotoPublicationsDetailBlock gotoPublicationsDetailBlock;
 @property(nonatomic) CGFloat headerBackHeight;
-@property(nonatomic, strong) FHCommunityDetailRefreshView *refreshView;
+// 运营位部分
+@property(nonatomic, copy) GotoOperationDetailBlock gotoOperationBlock;
+@property(nonatomic, strong) UIImageView *operationBannerImageView;
 
 - (void)startRefresh;
 
 - (void)stopRefresh;
 
 - (void)updateWhenScrolledWithContentOffset:(CGPoint)contentOffset isScrollTop:(BOOL)isScrollTop;
+
+- (void)updateOperationInfo:(BOOL)isShow whRatio:(CGFloat)whRatio;
+
+- (void)updatePublicationsInfo:(BOOL)isShow hasDetailBtn:(BOOL)hasDetailBtn;
 @end

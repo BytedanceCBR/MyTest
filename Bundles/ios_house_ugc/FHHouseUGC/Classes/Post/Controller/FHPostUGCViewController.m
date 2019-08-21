@@ -38,11 +38,15 @@
 #import "TTUGCEmojiParser.h"
 #import "TTUGCHashtagModel.h"
 #import "FHPostUGCMainView.h"
-#import "FHUGCFollowListController.h"
 #import "TTCategoryDefine.h"
 #import "ToastManager.h"
 #import "FHUserTracker.h"
 #import "FHBubbleTipManager.h"
+#import "FHUGCConfig.h"
+#import "FHUGCCommunityListViewController.h"
+#import "FHPostUGCSelectedGroupHistoryView.h"
+#import "FHUGCConfig.h"
+#import "FHEnvContext.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -61,7 +65,7 @@ static NSInteger const kTitleCharactersLimit = 20;
 
 static NSInteger const kMaxPostImageCount = 9;
 
-@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate,FRPostThreadAddLocationViewDelegate,FHUGCFollowListDelegate>
+@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate,FRPostThreadAddLocationViewDelegate,FHUGCCommunityChooseDelegate, FHPostUGCSelectedGroupHistoryViewDelegate>
 
 @property (nonatomic, strong) SSThemedButton * cancelButton;
 @property (nonatomic, strong) SSThemedButton * postButton;
@@ -100,17 +104,18 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, copy) NSString *enterConcernID; //entrance为concern时有意义
 
 @property (nonatomic, strong)   FHPostUGCMainView       *selectView;
-@property (nonatomic, copy)     NSString       *selectGroupId;// 选中的小区id 小区位置不能点击
+@property (nonatomic, copy)     NSString       *selectGroupId;// 选中的小区id 小区位置不能点击 默认是已关注
 @property (nonatomic, copy)     NSString       *selectGroupName; // 选中的小区name
 @property (nonatomic, assign)   BOOL       hasSocialGroup;// 外部传入小区
+@property (nonatomic, strong)   FHPostUGCSelectedGroupHistoryView   *selectedGrouplHistoryView; // 用户手动选择发布小区历史选择视图
 
 @property (nonatomic, assign)   BOOL       lastCanShowMessageTip;
 @property (nonatomic, assign)   BOOL       lastInAppPushTipsHidden;
+@property (nonatomic, weak)     TTNavigationController       *navVC;
 
 @end
 
 @implementation FHPostUGCViewController
-
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
@@ -144,6 +149,14 @@ static NSInteger const kMaxPostImageCount = 9;
             } else {
                 self.hasSocialGroup = YES;
             }
+            // H5传递过来的参数
+            NSString *report_params = params[@"report_params"];
+            if ([report_params isKindOfClass:[NSString class]]) {
+                NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+                if (report_params_dic) {
+                    [self.tracerDict addEntriesFromDictionary:report_params_dic];
+                }
+            }
             self.trackDict = [self.tracerDict copy];
             // 添加google地图注册
             [[TTLocationManager sharedManager] registerReverseGeocoder:[TTGoogleMapGeocoder sharedGeocoder] forKey:NSStringFromClass([TTGoogleMapGeocoder class])];
@@ -162,10 +175,10 @@ static NSInteger const kMaxPostImageCount = 9;
     [self addImagesViewSizeChanged];
     [self addObserverAndNoti];
     [self restoreData];
-//    __weak typeof(self) weakSelf = self;
-//    self.panBeginAction = ^{
-//        [weakSelf.naviBar.searchInput resignFirstResponder];
-//    };
+    __weak typeof(self) weakSelf = self;
+    self.panBeginAction = ^{
+        [weakSelf.inputTextView resignFirstResponder];
+    };
     // 顶部 消息 弹窗tips
     self.lastCanShowMessageTip = [FHBubbleTipManager shareInstance].canShowTip;
     [FHBubbleTipManager shareInstance].canShowTip = NO;
@@ -242,16 +255,6 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)createComponent {
-    //Container View
-    CGFloat top = 44.f + [UIApplication sharedApplication].statusBarFrame.size.height;
-    if (!self.hasSocialGroup) {
-        top += 44;
-    }
-    self.containerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, top, self.view.width, self.view.height - top)];
-    self.containerView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
-    self.containerView.alwaysBounceVertical = YES;
-    self.containerView.delegate = self;
-    [self.view addSubview:self.containerView];
     
     //Create input component
     [self createInputComponent];
@@ -274,11 +277,11 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.containerView addGestureRecognizer:tapGestureRecognizer];
 }
 
-- (void)createInputComponent {
+- (void) createInputComponent {
     // select view
     if (!self.hasSocialGroup) {
         CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
-        self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, top, self.view.width, 44)];
+        self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, top, SCREEN_WIDTH, 44)];
         [self.view addSubview:self.selectView];
         self.selectView.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];
@@ -291,7 +294,52 @@ static NSInteger const kMaxPostImageCount = 9;
             tracerDict[@"group_id"] = @"be_null";
         }
         [FHUserTracker writeEvent:@"element_show" params:tracerDict];
+        
+    } else {
+        self.selectView = [[FHPostUGCMainView alloc] init];
     }
+    
+    // selected history View
+    BOOL isShowSelectedGroupHistory = NO;
+    FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadPublisherHistoryData];
+    NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
+    NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    FHPostUGCSelectedGroupModel *selectedGroup = nil;
+    if(selectedGroupHistory && currentCityID.length > 0 && currentUserID.length > 0) {
+        NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
+        selectedGroup = [selectedGroupHistory.historyInfos objectForKey:saveKey];
+        if(selectedGroup) {
+            isShowSelectedGroupHistory = YES;
+        }
+    }
+    
+    if(isShowSelectedGroupHistory && selectedGroup) {
+        CGRect frame = self.selectView.bounds;
+        frame.origin.y = self.selectView.bottom;
+        self.selectedGrouplHistoryView = [[FHPostUGCSelectedGroupHistoryView alloc] initWithFrame:frame delegate:self historyModel:selectedGroup];
+        [self.view addSubview:self.selectedGrouplHistoryView];
+        
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[UT_ELEMENT_TYPE] = @"last_published_neighborhood";
+        param[UT_PAGE_TYPE] = @"feed_publisher";
+        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+        param[@"group_id"] = selectedGroup.socialGroupId;
+        TRACK_EVENT(@"element_show", param);
+    }
+    
+    //Container View
+    CGFloat top = 44.f + [UIApplication sharedApplication].statusBarFrame.size.height;
+    if (!self.hasSocialGroup) {
+        top += 44;
+    }
+    top += self.selectedGrouplHistoryView.height;
+
+    self.containerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, top, self.view.width, self.view.height - top)];
+    self.containerView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+    self.containerView.alwaysBounceVertical = YES;
+    self.containerView.delegate = self;
+    [self.view addSubview:self.containerView];
+    
     
     CGFloat y = 0;
     //Input container view
@@ -424,18 +472,19 @@ static NSInteger const kMaxPostImageCount = 9;
     self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
     [self endEditing];
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"title"] = @"选择小区";
-    dict[@"action_type"] = @(1);
-    NSHashTable *ugcDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-    [ugcDelegateTable addObject:self];
-    dict[@"ugc_delegate"] = ugcDelegateTable;
+    dict[@"action_type"] = @(FHCommunityListTypeChoose);
+    //无关注定位到推荐
+    dict[@"select_district_tab"] = [FHUGCConfig sharedInstance].followList.count > 0 ? @(FHUGCCommunityDistrictTabIdFollow) :  @(FHUGCCommunityDistrictTabIdRecommend);
+    NSHashTable *chooseDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [chooseDelegateTable addObject:self];
+    dict[@"choose_delegate"] = chooseDelegateTable;
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_type"] = @"click";
     traceParam[@"enter_from"] = @"feed_publisher";
     traceParam[@"element_from"] = @"select_like_publisher_neighborhood";
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_follow_communitys"];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
@@ -568,6 +617,9 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)cancel:(id)sender {
+    
+    [(TTNavigationController*)self.navigationController panRecognizer].enabled = YES;
+    
     [self endEditing];
     
     NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -621,6 +673,7 @@ static NSInteger const kMaxPostImageCount = 9;
     [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSString *inputText = richSpanText.text;
     
+    // 网络连接已判断
     if (![self isValidateWithInputText:inputText]) {
         return;
     }
@@ -639,10 +692,28 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)sendThreadWithLoginState:(NSInteger)loginState withTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
     if (self && [TTAccountManager isLogin]) {
         TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
-        [self postThreadWithTitleText:titleText inputText:inputText phoneText:userInfo.mobile];
+        [self followAndPostThreadWithTitleText:titleText inputText:inputText phoneText:userInfo.mobile];
     } else {
         // 应该不会走到当前位置，UGC外面限制强制登录
         [self gotoLogin];
+    }
+}
+
+// 先关注再发帖
+- (void)followAndPostThreadWithTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
+    if (self.selectView.followed) {
+        // 已关注，直接发帖
+        [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+    } else {
+        // 先关注
+        __weak typeof(self) weakSelf = self;
+        [[FHUGCConfig sharedInstance] followUGCBy:self.selectView.groupId isFollow:YES completion:^(BOOL isSuccess) {
+            if (isSuccess) {
+                [weakSelf postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+            } else {
+                [[ToastManager manager] showToast:@"发帖失败"];
+            }
+        }];
     }
 }
 
@@ -667,10 +738,6 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)postThreadWithTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
-    
-    if (!SSIsEmptyDictionary(self.sdkParamsDict)) {
-        // 鉴权
-    }
     
     TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
     [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -759,10 +826,13 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.detailPos = self.addLocationView.selectedLocation.locationName;
     postThreadModel.longitude = longitude;
     postThreadModel.latitude = latitude;
+    postThreadModel.hasSocialGroup = self.hasSocialGroup;
     if (self.hasSocialGroup) {
         postThreadModel.social_group_id = self.selectGroupId;
+        postThreadModel.social_group_name = self.selectGroupName;
     } else {
         postThreadModel.social_group_id = self.selectView.groupId;
+        postThreadModel.social_group_name = self.selectView.communityName;
     }
     
     
@@ -794,9 +864,11 @@ static NSInteger const kMaxPostImageCount = 9;
         [FHUserTracker writeEvent:@"click_options" params:tracerDict];
     }
 
+    [(TTNavigationController*)self.navigationController panRecognizer].enabled = YES;
+    
     // 发帖跳关注频道
     [self dismissSelf];
-
+    
     !self.postFinishCompletionBlock ?: self.postFinishCompletionBlock(hasSent);
 }
 
@@ -873,6 +945,7 @@ static NSInteger const kMaxPostImageCount = 9;
     if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
         self.selectView.groupId = self.selectGroupId;
         self.selectView.communityName = self.selectGroupName;
+        self.selectView.followed = YES;
         self.selectView.rightImageView.hidden = YES;
     }
 }
@@ -1159,6 +1232,7 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)keyboardWillChange:(NSNotification *)notification {
+    
     UIView * firstResponder = nil;
     if (self.inputTextView.isFirstResponder) {
         firstResponder = self.inputTextView;
@@ -1177,7 +1251,10 @@ static NSInteger const kMaxPostImageCount = 9;
     offset = self.containerView.height - endFrame.size.height - (CGRectGetMaxY(firstResponderFrame) - self.containerView.contentOffset.y) - kUGCToolbarHeight;
     if (offset < 0) {
         self.keyboardEndFrame = endFrame;
-        [self.containerView setContentOffset:CGPointMake(0, fabs(self.containerView.contentOffset.y-offset)) animated:YES];
+        
+        if(self.inputTextView.text.length > 0 && [self.inputTextView.text sizeWithFontCompatible:self.inputTextView.internalGrowingTextView.font].width > self.inputTextView.internalGrowingTextView.width) {
+            [self.containerView setContentOffset:CGPointMake(0, fabs(self.containerView.contentOffset.y-offset)) animated:YES];
+        }
         return;
     }
 }
@@ -1192,8 +1269,11 @@ static NSInteger const kMaxPostImageCount = 9;
     // 避免视频详情页转发时，出现 statusBar 高度获取为 0 的情况
     CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
     if (!self.hasSocialGroup) {
-        self.selectView.frame = CGRectMake(0, top, self.view.width, 44);
+        self.selectView.frame = CGRectMake(0, top, SCREEN_WIDTH, 44);
         top += 44;
+    }
+    if(self.selectedGrouplHistoryView) {
+        top += (self.selectedGrouplHistoryView.hidden == NO) ? self.selectedGrouplHistoryView.height : 0;
     }
     self.containerView.frame = CGRectMake(0, top, self.view.width, self.view.height - top);
 }
@@ -1201,6 +1281,17 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [UIApplication sharedApplication].statusBarHidden = NO;
+    if ([self.navigationController isKindOfClass:[TTNavigationController class]]) {
+        [(TTNavigationController*)self.navigationController panRecognizer].enabled = NO;
+        self.navVC = self.navigationController;
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    if (self.navVC) {
+        [self.navVC panRecognizer].enabled = YES;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -1282,12 +1373,28 @@ static NSInteger const kMaxPostImageCount = 9;
     kFHInAppPushTipsHidden = self.lastInAppPushTipsHidden;// 展示
 }
 
+- (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
+    NSMutableDictionary *retDic = nil;
+    if (jsonString.length > 0) {
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        retDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+        if ([retDic isKindOfClass:[NSDictionary class]] && error == nil) {
+            return retDic;
+        } else {
+            return nil;
+        }
+    }
+    return retDic;
+}
+
 #pragma mark - FHUGCFollowListDelegate
 - (void)selectedItem:(FHUGCScialGroupDataModel *)item {
     // 选择 小区圈子
     if (item) {
         self.selectView.groupId = item.socialGroupId;
         self.selectView.communityName = item.socialGroupName;
+        self.selectView.followed = [item.hasFollow boolValue];
         [self refreshPostButtonUI];
         
         NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
@@ -1296,7 +1403,28 @@ static NSInteger const kMaxPostImageCount = 9;
             tracerDict[@"group_id"] = item.socialGroupId;
         }
         [FHUserTracker writeEvent:@"element_show" params:tracerDict];
+        // 如何选中的圈子和上一次一样就隐藏选择历史模块
+        if(self.selectedGrouplHistoryView) {
+            self.selectedGrouplHistoryView.hidden = [self.selectedGrouplHistoryView.model.socialGroupId isEqualToString:item.socialGroupId];
+        }
     }
 }
 
+#pragma mark - FHPostUGCSelectedGroupHistoryViewDelegate
+-(void)selectedHistoryGroup:(FHPostUGCSelectedGroupModel *)item {
+    // 选择 小区圈子
+    self.selectedGrouplHistoryView.hidden = YES;
+    if (item) {
+        self.selectView.groupId = item.socialGroupId;
+        self.selectView.communityName = item.socialGroupName;
+        self.selectView.followed = NO;
+        [self refreshPostButtonUI];
+        
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[UT_PAGE_TYPE] = @"feed_publisher";
+        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+        param[@"click_position"] = @"last_published_neighborhood";
+        TRACK_EVENT(@"click_last_published_neighborhood", param);
+    }
+}
 @end

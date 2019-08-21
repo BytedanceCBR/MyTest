@@ -24,6 +24,8 @@
 #import <FHHomeSearchPanelViewModel.h>
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import "FHUserTracker.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -43,6 +45,7 @@ extern NSString *const INSTANT_DATA_KEY;
 @property (nonatomic, assign) BOOL isOriginRequest;
 @property (nonatomic, assign) BOOL isDisAppeared;
 @property (nonatomic, weak) FHHomeListViewModel *listModel;
+@property (nonatomic, assign) NSInteger lastOffset;
 @end
 
 @implementation FHHomeItemViewController
@@ -58,7 +61,6 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.houseDataItemsModel = [NSMutableArray new];
     self.isRetryedPullDownRefresh = NO;
     self.hasMore = YES;
@@ -74,7 +76,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     [FHHomeCellHelper registerCells:self.tableView];
     
-    _itemCount = 30;
+    _itemCount = 20;
     
     WeakSelf;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
@@ -208,6 +210,7 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     self.showNoDataErrorView = NO;
     self.showRequestErrorView = NO;
+    self.showDislikeNoDataView = NO;
     self.showPlaceHolder = YES;
     [self.tableView reloadData];
 }
@@ -220,6 +223,7 @@ extern NSString *const INSTANT_DATA_KEY;
     [self.tableView.mj_footer endRefreshingWithNoMoreData];
     self.showNoDataErrorView = isNoData;
     self.showRequestErrorView = !isNoData;
+    self.showDislikeNoDataView = NO;
     self.showPlaceHolder = NO;
     [self.tableView reloadData];
 }
@@ -229,6 +233,7 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     self.showNoDataErrorView = NO;
     self.showRequestErrorView = NO;
+    self.showDislikeNoDataView = NO;
     self.showPlaceHolder = NO;
     [self.tableView reloadData];
 }
@@ -270,8 +275,8 @@ extern NSString *const INSTANT_DATA_KEY;
     
     NSMutableDictionary *requestDictonary = [NSMutableDictionary new];
     [requestDictonary setValue:[FHEnvContext getCurrentSelectCityIdFromLocal] forKey:@"city_id"];
-    NSInteger offsetValue = self.houseDataItemsModel.count;
-    
+    NSInteger offsetValue = self.lastOffset;
+
     if (isFirst || pullType == FHHomePullTriggerTypePullDown) {
         [requestDictonary setValue:@(0) forKey:@"offset"];
     }else
@@ -284,7 +289,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [requestDictonary setValue:@(offsetValue) forKey:@"offset"];
     }
     [requestDictonary setValue:@(self.houseType) forKey:@"house_type"];
-    [requestDictonary setValue:@(20) forKey:@"count"];
+    [requestDictonary setValue:@(self.itemCount) forKey:@"count"];
     
     if (self.houseType == FHHouseTypeNewHouse) {
         requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_COURT;
@@ -336,10 +341,12 @@ extern NSString *const INSTANT_DATA_KEY;
         if (pullType == FHHomePullTriggerTypePullDown) {
             self.originSearchId = model.data.searchId;
             self.houseDataItemsModel = [NSMutableArray arrayWithArray:model.data.items];
+            self.lastOffset = model.data.items.count;
         }else
         {
             if (model.data.items && self.houseDataItemsModel && model.data.items.count != 0) {
-                self.houseDataItemsModel = [self.houseDataItemsModel arrayByAddingObjectsFromArray:model.data.items];
+                [self.houseDataItemsModel addObjectsFromArray:model.data.items];
+                self.lastOffset += model.data.items.count;
             }
         }
         self.currentSearchId = model.data.searchId;
@@ -490,7 +497,7 @@ extern NSString *const INSTANT_DATA_KEY;
         return 0;
     }
     
-    if (self.showNoDataErrorView || self.showRequestErrorView) {
+    if (self.showNoDataErrorView || self.showRequestErrorView || self.showDislikeNoDataView) {
         return 1;
     }
     
@@ -515,7 +522,7 @@ extern NSString *const INSTANT_DATA_KEY;
         return 0;
     }else
     {
-        if (self.showNoDataErrorView || self.showRequestErrorView) {
+        if (self.showNoDataErrorView || self.showRequestErrorView || self.showDislikeNoDataView) {
             return [self getHeightShowNoData];
         }
         
@@ -593,6 +600,31 @@ extern NSString *const INSTANT_DATA_KEY;
             return cellError;
         }
         
+        if (self.showDislikeNoDataView) {
+            UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+            for (UIView *subView in cellError.contentView.subviews) {
+                [subView removeFromSuperview];
+            }
+            cellError.selectionStyle = UITableViewCellSelectionStyleNone;
+            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [self getHeightShowNoData])];
+            //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
+            [cellError.contentView addSubview:noDataErrorView];
+            
+            [noDataErrorView showEmptyWithTip:@"点击为您推荐更多房源" errorImageName:@"group-9"
+                                    showRetry:YES];
+            __weak typeof(self) weakSelf = self;
+            [noDataErrorView.retryButton setTitle:@"推荐更多" forState:UIControlStateNormal];
+            noDataErrorView.retryBlock = ^{
+                [weakSelf trackClickHouseRecommend];
+                if (weakSelf.panelVM) {
+                    [weakSelf.panelVM fetchSearchPanelRollData];
+                }
+                [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+            };
+            
+            return cellError;
+        }
+        
         if (self.showPlaceHolder) {
             FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
             return cell;
@@ -645,6 +677,11 @@ extern NSString *const INSTANT_DATA_KEY;
             tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
             tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
             [tracerDict removeObjectForKey:@"element_from"];
+            
+            NSMutableDictionary *dic = [tracerDict mutableCopy];
+            dic[@"enter_from"] = @"maintab";
+            dic[@"element_from"] = @"maintab_list";
+            cellModel.tracerDict = [dic copy];
             
             if (tracerDict && !self.isOriginShowSelf) {
                 [self.traceNeedUploadCache addObject:tracerDict];
@@ -718,11 +755,17 @@ extern NSString *const INSTANT_DATA_KEY;
 - (UITableView *)tableView {
     
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
+        _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
         //        _tableView.decelerationRate = 0.1;
         _tableView.showsVerticalScrollIndicator = NO;
+        _tableView.estimatedRowHeight = 0;
+        if (@available(iOS 11.0 , *)) {
+            self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }else{
+            self.automaticallyAdjustsScrollViewInsets = NO;
+        }
     }
     return _tableView;
 }
@@ -733,23 +776,50 @@ extern NSString *const INSTANT_DATA_KEY;
 
 #pragma mark - FHHouseBaseItemCellDelegate
 
-- (void)dislikeConfirm:(NSString *)houseId {
-    NSInteger row = [self getCellIndex:houseId];
+- (BOOL)canDislikeClick {
+    return !self.isShowRefreshTip;
+}
+
+- (void)dislikeConfirm:(FHHomeHouseDataItemsModel *)model cell:(id)cell {
+    NSInteger row = [self getCellIndex:model];
     if(row < self.houseDataItemsModel.count && row >= 0){
         [self.houseDataItemsModel removeObjectAtIndex:row];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:1];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        if(self.houseDataItemsModel.count == 0){
+            self.showDislikeNoDataView = YES;
+            self.tableView.hasMore = NO;
+            self.tableView.mj_footer.hidden = YES;
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            [self.tableView reloadData];
+        }else{
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:1];
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            //当数据少于一页的时候，拉下一页数据填充
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if(self.houseDataItemsModel.count < self.itemCount && self.tableView.hasMore){
+                        [self requestDataForRefresh:FHHomePullTriggerTypePullUp andIsFirst:NO];
+                    }
+                });
+            });
+        }
     }
 }
 
-- (NSInteger)getCellIndex:(NSString *)houseId {
-    for (NSInteger i = 0; i < self.houseDataItemsModel.count; i++) {
-        FHHomeHouseDataItemsModel *model = self.houseDataItemsModel[i];
-        if([model.idx isEqualToString:houseId]){
-            return i;
-        }
+- (NSInteger)getCellIndex:(FHHomeHouseDataItemsModel *)model {
+    NSInteger index = [self.houseDataItemsModel indexOfObject:model];
+    if(index >= 0 && index < self.houseDataItemsModel.count){
+        return index;
     }
     return -1;
+}
+
+- (void)trackClickHouseRecommend {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"page_type"] = [self pageTypeString];
+    tracerDict[@"enter_from"] = @"maintab";
+    tracerDict[@"element_from"] = @"maintab_list";
+    tracerDict[@"click_position"] = @"house_recommend_more";
+    TRACK_EVENT(@"click_house_recommend", tracerDict);
 }
 
 @end

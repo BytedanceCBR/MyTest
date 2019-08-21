@@ -16,6 +16,7 @@
 
 typedef void (^XPNotifyBarButtonBlock)(UIButton * button);
 typedef void (^XPNotifyBarHideBlock)(ArticleListNotifyBarView * barView);
+typedef void (^XPNotifyBarWillHideBlock)(ArticleListNotifyBarView * barView, BOOL isImmediately);
 
 @interface ArticleListNotifyBarView : SSViewBase <ErrorToastProtocal>
 
@@ -26,6 +27,15 @@ actionButtonTitle:(NSString *)title
 bgButtonClickAction:(XPNotifyBarButtonBlock)bgButtonBlock
 actionButtonClickBlock:(XPNotifyBarButtonBlock)actionButtonBlock
        didHideBlock:(XPNotifyBarHideBlock)hideBlock;
+
+- (void)showMessage:(NSString *)message
+actionButtonTitle:(NSString *)title
+          delayHide:(BOOL)delayHide
+           duration:(float)duration
+bgButtonClickAction:(XPNotifyBarButtonBlock)bgButtonBlock
+actionButtonClickBlock:(XPNotifyBarButtonBlock)actionButtonBlock
+       didHideBlock:(XPNotifyBarHideBlock)hideBlock
+      willHideBlock:(XPNotifyBarWillHideBlock)willHideBlock;
 
 
 - (void)hideImmediately;

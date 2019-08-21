@@ -24,7 +24,7 @@
 #import <TTReporter/TTReportManager.h>
 #import "TTCommentDetailHeaderGroupItem.h"
 #import "TTCommentDetailHeaderDigItem.h"
-#import <TTUGCFoundation/TTUGCEmojiParser.h>
+#import <FHCommonUI/TTUGCEmojiParser.h>
 #import <TTUGCFoundation/TTUGCAttributedLabel.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
@@ -248,15 +248,17 @@
 
     self.contentLabel.text = attributedString;
     self.richSpanText = richSpanText;
-
-    NSArray <TTRichSpanLink *> *richSpanLinks = [richSpanText richSpanLinksOfAttributedString];
-    for (TTRichSpanLink *richSpanLink in richSpanLinks) {
-        NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
-        if (NSMaxRange(range) <= self.contentLabel.attributedText.length) {
-            if (richSpanLink.type == TTRichSpanLinkTypeQuotedCommentUser) {
-                [self.contentLabel addLinkToURL:[NSURL URLWithString:kTTCommentContentLabelQuotedCommentUserURLString] withRange:range];
-            } else {
-                [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+    
+    if(!self.fromUGC){
+        NSArray <TTRichSpanLink *> *richSpanLinks = [richSpanText richSpanLinksOfAttributedString];
+        for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+            NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
+            if (NSMaxRange(range) <= self.contentLabel.attributedText.length) {
+                if (richSpanLink.type == TTRichSpanLinkTypeQuotedCommentUser) {
+                    [self.contentLabel addLinkToURL:[NSURL URLWithString:kTTCommentContentLabelQuotedCommentUserURLString] withRange:range];
+                } else {
+                    [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                }
             }
         }
     }

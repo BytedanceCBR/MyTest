@@ -22,6 +22,8 @@
                            @"bottomText": @"bottom_text",
                            @"baseInfo": @"base_info",
                            @"coreInfo": @"core_info",
+                           @"pricingNum": @"pricing_num",
+                           @"pricingUnit": @"pricing_unit",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -22,6 +22,10 @@
 #define MAIN_SCREEN_WIDTH   [UIScreen mainScreen].bounds.size.width
 #define MAIN_SCREENH_HEIGHT [UIScreen mainScreen].bounds.size.height
 
+#define kUGCTitleMyJoinList @"my_join_list"
+#define kUGCTitleNearbyList @"nearby_list"
+#define kSecondTab @"tab_community"
+
 static NSString *const kFHUserSelectCityNotification = @"k_fh_user_select_city";
 
 static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
@@ -51,6 +55,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
 @property (nonatomic , strong) FHMessageManager *messageManager;
+
+//第二个tab小红点显示逻辑，非ugc情况下
+@property(nonatomic, assign) BOOL hasShowDots;
+@property(nonatomic, assign) BOOL isShowDots;
 
 
 + (instancetype)sharedInstance;
@@ -88,6 +96,23 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)showFindTabRedDots;
 
 /*
+ 隐藏tab上的红点
+ */
++ (void)hideFindTabRedDots;
+
+/*
+ 显示tab上的红点有次数限制
+ */
++ (void)showFindTabRedDotsLimitCount;
+
+/*
+ 隐藏tab上的红点有次数限制
+ */
++ (void)hideFindTabRedDotsLimitCount;
+
++ (void)showRedPointForNoUgc;
+
+/*
  修改第二个tab名称
  */
 + (void)changeFindTabTitle;
@@ -96,11 +121,6 @@ NS_ASSUME_NONNULL_BEGIN
  增加引导
  */
 + (void)addTabUGCGuid;
-
-/*
- 隐藏tab上的红点
- */
-+ (void)hideFindTabRedDots;
 
 /*
   app启动调用
@@ -156,6 +176,15 @@ NS_ASSUME_NONNULL_BEGIN
  判断是否开通ugc模块
  */
 + (BOOL)isUGCOpen;
+/*
+ ugc tab 显示的文案
+ */
++ (NSDictionary *)ugcTabName;
+/*
+ tabbar第二个tab显示的文案
+ */
++ (NSString *)secondTabName;
+
 
 //返回origin_search id
 

@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , copy) void (^headerActionBlock)(BOOL isClose);
 
+- (void)hideReportBtn;
+
 @end
 
 NS_ASSUME_NONNULL_END

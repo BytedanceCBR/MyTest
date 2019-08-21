@@ -10,6 +10,7 @@
 #import "FHDetailNavBar.h"
 #import "FHHouseDetailContactViewModel.h"
 #import "FHDetailBottomBarView.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHFloorTimeLineViewController () <TTRouteInitializeProtocol>
 
@@ -45,7 +46,7 @@
 
 - (void)setUpTimeLineListTable
 {
-    _timeLineListTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _timeLineListTable = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _timeLineListTable.separatorStyle = UITableViewCellSeparatorStyleNone;
     if (@available(iOS 11.0 , *)) {
         _timeLineListTable.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

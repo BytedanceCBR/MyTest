@@ -8,12 +8,14 @@
 #import "FHBaseViewController.h"
 #import "FHHouseUGCHeader.h"
 #import <CoreLocation/CoreLocation.h>
+#import "ArticleListNotifyBarView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCommunityFeedListController : FHBaseViewController
 
 @property(nonatomic, assign) FHCommunityFeedListType listType;
+@property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 //发布按钮
 @property(nonatomic, strong) UIButton *publishBtn;
 @property(nonatomic, copy) void(^publishBlock)(void);
@@ -42,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)viewWillDisappear;
 
 - (void)scrollToTopAndRefresh;
+
+- (void)scrollToTopAndRefreshAllData;
 
 - (void)hideImmediately;
 

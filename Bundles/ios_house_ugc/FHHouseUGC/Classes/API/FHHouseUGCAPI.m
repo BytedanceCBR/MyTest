@@ -39,7 +39,6 @@
 }
 
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-//    NSString *queryPath = @"/f100/api/v2/msg/system_list";
 
     NSString *queryPath = [ArticleURLSetting encrpytionStreamUrlString];
 
@@ -195,7 +194,7 @@
 }
 
 + (TTHttpTask *)requestForumFeedListWithForumId:(NSString *)forumId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-    NSString *queryPath = @"/f100/ugc/forum_feeds";
+    NSString *queryPath = @"/f100/ugc/feed/v1/forum_feeds";
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"forum_id"] = forumId;
@@ -216,7 +215,7 @@
 }
 
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)categoryId offset:(NSInteger)offset loadMore:(BOOL)loadMore completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
-    NSString *queryPath = @"/f100/ugc/recommend_feeds";
+    NSString *queryPath = @"/f100/ugc/feed/v1/recommend_feeds";
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"channel_id"] = categoryId;
@@ -276,4 +275,80 @@
     }];
 }
 
++ (TTHttpTask *)requestCommentDetailDataWithCommentId:(NSString *)comment_id socialGroupId:(NSString *)socialGroupId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/material/v0/comment_detail";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (comment_id.length > 0) {
+        paramDic[@"comment_id"] = comment_id;
+    }
+    if (socialGroupId.length > 0) {
+        paramDic[@"social_group_id"] = socialGroupId;
+    }
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestReplyListWithCommentId:(NSString *)comment_id offset:(NSInteger)offset class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/2/comment/v1/reply_list/";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"id"] = comment_id ?: @"";
+    paramDic[@"count"] = @(20);
+    paramDic[@"offset"] = @(offset);
+    paramDic[@"is_repost"] = @(0);// 不知道干嘛的
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestCommunityList:(NSInteger)districtId source:(NSString *)source latitude:(CGFloat)latitude longitude:(CGFloat)longitude class:(Class)cls completion:(void (^)(id <FHBaseModelProtocol> model, NSError *error))completion;{
+    NSString *queryPath = @"/f100/ugc/social_group_district";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+
+    paramDic[@"district_id"] = @(districtId);
+    if(latitude != 0){
+        paramDic[@"latitude"] = @(latitude);
+    }
+
+    if(longitude != 0){
+        paramDic[@"longitude"] = @(longitude);
+    }
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
+
++ (TTHttpTask *)refreshFeedTips:(NSString *)category beHotTime:(NSString *)beHotTime completion:(void(^)(bool hasNew , NSError *error))completion {
+    NSString *queryPath = @"/ugc/v:version/refresh_tips";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(category){
+        paramDic[@"category"] = category;
+    }
+    if(beHotTime){
+        paramDic[@"be_hot_time"] = beHotTime;
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        BOOL hasNew = NO;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                }else{
+                    hasNew = [json[@"data"][@"has_new_content"] boolValue];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        if (completion) {
+            completion(hasNew,error);
+        }
+    }];
+}
 @end

@@ -19,6 +19,7 @@
 #import "UIFont+House.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "UIViewController+Track.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHMessageListViewController ()<TTRouteInitializeProtocol,UIViewControllerErrorHandler>
 
@@ -140,7 +141,7 @@
 }
 
 - (void)initView {
-    _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    _tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     

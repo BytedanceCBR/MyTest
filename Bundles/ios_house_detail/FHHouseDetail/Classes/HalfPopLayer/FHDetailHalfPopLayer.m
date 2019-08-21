@@ -24,6 +24,7 @@
 
 #import "FHDetailOldModel.h"
 #import "FHDetailRentModel.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 #define HEADER_HEIGHT 50
 #define FOOTER_HEIGHT 60
@@ -32,6 +33,7 @@
 #define INFO_CELL   @"info_cell"
 #define CHECK_INFO_CELL @"check_info_cell"
 #define DEAL_CELL @"deal_cell"
+#define REASON_INFO_CELL @"reason_info_cell"
 
 @interface FHDetailHalfPopLayer ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -67,22 +69,23 @@
         _menu = [[FHDetailHalfPopTopBar alloc] initWithFrame:CGRectZero];
         _menu.headerActionBlock = ^(BOOL isClose) {
             if (isClose) {
+                [self addPopClickLog:@"cancel"];
                 [wself dismiss:YES];
             }else{
                 [wself report];
             }
         };
         _containerView = [[UIView alloc]initWithFrame:self.bounds];
-        _tableView = [[UITableView alloc]initWithFrame:self.bounds style:UITableViewStyleGrouped];
+        _tableView = [[FHBaseTableView alloc]initWithFrame:self.bounds style:UITableViewStyleGrouped];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.allowsSelection = NO;
         _tableView.backgroundColor = [UIColor whiteColor];
         
-//        if (@available(iOS 11.0 , *)) {
-//            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-//        }
+        if (@available(iOS 11.0 , *)) {
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         
         _footer = [[FHDetailHalfPopFooter alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), FOOTER_HEIGHT)];
         _footer.actionBlock = ^(NSInteger positive) {
@@ -102,7 +105,8 @@
         [_tableView registerClass:[FHDetailHalfPopCheckCell class] forCellReuseIdentifier:INFO_CELL];
         [_tableView registerClass:[FHDetailHalfPopInfoCell class] forCellReuseIdentifier:CHECK_INFO_CELL];
         [_tableView registerClass:[FHDetailHalfPopDealCell class] forCellReuseIdentifier:DEAL_CELL];
-        
+        [_tableView registerClass:[FHDetailHalfPopInfoCell class] forCellReuseIdentifier:REASON_INFO_CELL];
+
         [self initConstraints];
         
         self.backgroundColor = [UIColor clearColor];//[[UIColor blackColor] colorWithAlphaComponent:0.6];
@@ -166,6 +170,7 @@
     if (CGRectContainsPoint(_bgView.frame, location)) {
         return;
     }
+    [self addPopClickLog:@"cancel"];
     [self dismiss:YES];
 }
 
@@ -173,13 +178,15 @@
 {
     if (self.feedBack) {
         __weak typeof(self) wself = self;
+        self.footer.actionButton.enabled = NO;
+        self.footer.negativeButton.enabled = NO;
         self.feedBack(type, self.data, ^(BOOL success) {            
             [wself updateFooterFeedback:success];
         });
         [wself addClickAgreeLogType:type];
+        NSString *clickPosition = (type == 1)?@"yes":@"no";
+        [self addPopClickLog:clickPosition];
     }
-    self.footer.actionButton.enabled = NO;
-    self.footer.negativeButton.enabled = NO;
 }
 
 -(void)updateFooterFeedback:(BOOL)success
@@ -231,6 +238,30 @@
     self.tableView.tableHeaderView = header;
     
     [self.tableView reloadData];
+}
+
+- (void)showDetectiveReasonInfoData:(FHDetailDataBaseExtraDetectiveReasonInfo *)data trackInfo:(NSDictionary *)trackInfo
+{
+    self.data = data;
+    self.trackInfo = trackInfo;
+    self.enterDate = [NSDate date];
+    [_menu hideReportBtn];
+    [_menu mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(30);
+    }];
+    FHDetailHalfPopLogoHeader *header = [[FHDetailHalfPopLogoHeader alloc]initWithHalfPopType:FHDetailHalfPopTypeLeft];
+    header.frame = CGRectMake(0, 0, [[UIScreen mainScreen]bounds].size.width, 50);
+    [header updateWithTitle:data.title tip:data.subTitle];
+    
+    [_footer showTip:data.feedbackContent type:FHDetailHalfPopFooterTypeChoose positiveTitle:@"是" negativeTitle:@"否"];
+    
+    self.tableView.tableHeaderView = header;
+    
+    [self.tableView reloadData];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self addPopShowLog];
+    });
 }
 
 -(void)showDealData:(FHRentDetailDataBaseExtraModel *)data trackInfo:(NSDictionary *)trackInfo
@@ -294,6 +325,7 @@
         case UIGestureRecognizerStateCancelled:
         {
             if (self.dragOffset + self.bgTop > self.height/2 && self.dragOffset > self.bgView.height/3) {
+                [self addPopClickLog:@"cancel"];
                 [self dismiss:YES];
             }else{
                 self.bgView.top = self.bgTop;
@@ -327,6 +359,7 @@
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     if (self.dragOffset + self.bgTop > self.height/2 && self.dragOffset > self.bgView.height/3) {
+        [self addPopClickLog:@"cancel"];
         [self dismiss:YES];
     }else{
         [UIView animateWithDuration:0.3 animations:^{
@@ -350,6 +383,9 @@
     }else if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
         FHDetailDataBaseExtraDetectiveModel *detectiveModel = (FHDetailDataBaseExtraDetectiveModel *)self.data;
         return detectiveModel.detectiveInfo.detectiveList.count;
+    }else if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]){
+        FHDetailDataBaseExtraDetectiveReasonInfo *reasonInfo = (FHDetailDataBaseExtraDetectiveReasonInfo *)self.data;
+        return reasonInfo.reasonList.count;
     }else if ([self.data isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         FHRentDetailDataBaseExtraModel *extraModel = (FHRentDetailDataBaseExtraModel *)self.data;
         return extraModel.securityInformation.dialogContent.content.count;
@@ -387,6 +423,15 @@
         
         cell = cicell;
         
+    }else if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]){
+        
+        FHDetailDataBaseExtraDetectiveReasonInfo *reasonInfo = (FHDetailDataBaseExtraDetectiveReasonInfo *)self.data;
+        FHDetailDataBaseExtraDetectiveReasonListItem * infoModel = reasonInfo.reasonList[indexPath.row];
+        FHDetailHalfPopInfoCell *cicell = (FHDetailHalfPopInfoCell *)[tableView dequeueReusableCellWithIdentifier:REASON_INFO_CELL];
+        [cicell updateWithReasonInfoItem:infoModel];
+        
+        cell = cicell;
+        
     }else if ([self.data isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         FHRentDetailDataBaseExtraModel *extraModel = (FHRentDetailDataBaseExtraModel *)self.data;
         FHRentDetailDataBaseExtraSecurityInformationDialogContentContentModel *dialogModel = extraModel.securityInformation.dialogContent.content[indexPath.row];
@@ -395,11 +440,7 @@
         [dcell updateWithModel:dialogModel];
         cell = dcell;
     }
-    
-    
-    
     return cell;
-    
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -416,6 +457,8 @@
 {
     if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]) {
         return 30;
+    }else if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
+        return 20;
     }else if ([self.data isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         
         NSString *comment = [(FHRentDetailDataBaseExtraModel *)self.data securityInformation].dialogContent.comment;
@@ -434,7 +477,7 @@
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]) {
+    if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]] || [self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
         UIView *v = [[UIView alloc]init];
         v.backgroundColor = [UIColor whiteColor];
         return v;
@@ -479,8 +522,15 @@
             safeInsets = [[UIApplication sharedApplication]delegate].window.safeAreaInsets;
         }
         
-        CGFloat bgTop = CGRectGetHeight(self.bounds) - HEADER_HEIGHT - floor(contentSize.height) - safeInsets.bottom;
+        if (@available(iOS 13.0 , *)) {
+            //iOS 13下content size的高度有问题，会多20
+            contentSize.height -= 20;
+        }
+        
+        CGFloat headerHeight = [self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]] ? 30 : HEADER_HEIGHT;
+        CGFloat bgTop = CGRectGetHeight(self.bounds) - headerHeight - floor(contentSize.height) - safeInsets.bottom;
         CGFloat minTop = (safeInsets.top > 0)?safeInsets.top+40:64;
+        
         if (bgTop < minTop) {
             bgTop = minTop;
             self.tableView.scrollEnabled = YES;
@@ -522,12 +572,40 @@
 
 -(void)addStayLog
 {
+    if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
+        return;
+    }
     NSMutableDictionary *param = [NSMutableDictionary new];
     [param addEntriesFromDictionary:self.trackInfo];
     
     param[@"stay_time"] = [NSString stringWithFormat:@"%.0f",[[NSDate date] timeIntervalSinceDate:self.enterDate]*1000];
     
     TRACK_EVENT(@"stay_category", param);
+}
+
+- (void)addPopShowLog
+{
+    if (![self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
+        return;
+    }
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    [param addEntriesFromDictionary:self.trackInfo];
+    param[@"element_from"] = @"low_price_cause";
+
+    TRACK_EVENT(@"happinesseye_cause_popup_show", param);
+}
+
+- (void)addPopClickLog:(NSString *)clickPosition
+{
+    if (![self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
+        return;
+    }
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    [param addEntriesFromDictionary:self.trackInfo];
+    param[@"element_from"] = @"low_price_cause";
+    param[@"click_position"] = clickPosition;
+    
+    TRACK_EVENT(@"happinesseye_cause_popup_click", param);
 }
 
 @end

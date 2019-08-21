@@ -139,6 +139,9 @@ static CGFloat kProfileFillBubbleHeight = 66.f;
         _webView.scrollView.scrollEnabled = NO;
         _webView.scrollView.delegate = self;
         //        [self addSubview:_webView];
+        if (@available(iOS 11.0 , *)) {
+            _webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         [_webView addSubview:self.placeHolderView];
         
         self.gifManager = [[TTDetailWebviewGIFManager alloc] initWithWebview:_webView isInWindow:NO];
@@ -152,6 +155,9 @@ static CGFloat kProfileFillBubbleHeight = 66.f;
             scrollView.delegate = self;
             scrollView.backgroundColorThemeKey = kColorBackground4;
             scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            if (@available(iOS 11.0 , *)) {
+                scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+            }
             scrollView;
         });
         [_containerScrollView addSubview:_webView];

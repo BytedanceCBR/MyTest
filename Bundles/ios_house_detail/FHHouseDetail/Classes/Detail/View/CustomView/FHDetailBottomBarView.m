@@ -13,6 +13,8 @@
 #import "Masonry.h"
 #import <BDWebImage.h>
 #import "UIColor+Theme.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
+#import <FHHouseBase/FHCommonDefines.h>
 
 @interface FHDetailBottomBarView ()
 
@@ -25,6 +27,7 @@
 @property(nonatomic , strong) UIButton *licenceIcon;
 @property(nonatomic , strong) UIButton *imChatBtn;
 @property(nonatomic , assign) CGFloat imBtnWidth;
+@property(nonatomic , assign) BOOL instantHasShow;
 
 @end
 
@@ -241,10 +244,7 @@
     }
     
     CGFloat leftWidth = contactPhone.showRealtorinfo == 1 ? realtorContentWidth : 0;
-    [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(leftWidth);
-    }];
-
+  
     if (showIM) {
         CGFloat leftMargin = 10;
         if (contactPhone.showRealtorinfo == 1) {
@@ -253,17 +253,8 @@
             } else {
                 _imBtnWidth = ([UIScreen mainScreen].bounds.size.width - leftWidth - leftMargin - 30) / 2;
             }
-            [self.imChatBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(_imBtnWidth);
-                make.right.mas_equalTo(self.leftView.mas_right).offset(10 + _imBtnWidth);
-            }];
         } else {
             _imBtnWidth = ([UIScreen mainScreen].bounds.size.width - 50) / 2;
-            [self.imChatBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(self).offset(20);
-                make.width.mas_equalTo(_imBtnWidth);
-                make.right.mas_equalTo(self.leftView.mas_right).offset(10 + _imBtnWidth);
-            }];
         }
         
     } else {
@@ -277,6 +268,51 @@
             }];
         }
     }
+    
+    void (^updateBlock)() = ^{
+        [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(leftWidth);
+        }];
+        if (showIM) {
+            if (contactPhone.showRealtorinfo == 1) {
+                [self.imChatBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(_imBtnWidth);
+                    make.right.mas_equalTo(self.leftView.mas_right).offset(10 + _imBtnWidth);
+                }];
+            } else {
+                [self.imChatBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(self).offset(20);
+                    make.width.mas_equalTo(_imBtnWidth);
+                    make.right.mas_equalTo(self.leftView.mas_right).offset(10 + _imBtnWidth);
+                }];
+            }
+            
+        } else {
+            CGFloat offset = 20;
+            if (contactPhone.showRealtorinfo == 1) {
+                offset = 10;
+            }
+            [self.contactBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self.leftView.mas_right).offset(offset);
+            }];
+        }
+    };
+    
+    if(!contactPhone.isInstantData && _instantHasShow && !self.leftView.hidden){
+        //动画展示
+        updateBlock();
+        [UIView animateWithDuration:0.3 animations:^{
+            [self layoutIfNeeded];
+        } completion:^(BOOL finished) {
+        }];
+    }else{
+        updateBlock();
+    }
+
+    if(contactPhone.isInstantData){
+        _instantHasShow = YES;
+    }
+    
 }
 
 - (void)refreshIdentifyView:(UIImageView *)identifyView withUrl:(NSString *)imageUrl
@@ -401,8 +437,9 @@
 {
     if (!_licenceIcon) {
         _licenceIcon = [[UIButton alloc]init];
-        [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
-        [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateHighlighted];
+        UIImage *img = SYS_IMG(@"detail_contact");
+        [_licenceIcon setImage:img forState:UIControlStateNormal];
+        [_licenceIcon setImage:img forState:UIControlStateHighlighted];
     }
     return _licenceIcon;
 }

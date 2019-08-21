@@ -16,6 +16,8 @@
 #import "FHFloorPanPicShowViewController.h"
 #import "FHDetailPictureViewController.h"
 #import <BDWebImage/BDWebImageManager.h>
+#import <FHHouseBase/FHUserTrackerDefine.h>
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 #define K_CELLID @"cell_id"
 
@@ -37,7 +39,8 @@
 @property(nonatomic, assign) NSTimeInterval enterTimestamp;
 @property(nonatomic, assign)   CGFloat       photoCellHeight;
 @property(nonatomic, assign) BOOL instantShift;//秒开数据首次设置偏移
-
+@property(nonatomic, strong) UIView *bottomBannerView;
+@property(nonatomic, strong) UIView *bottomGradientView;
 @end
 
 @implementation FHDetailPhotoHeaderCell
@@ -59,7 +62,7 @@
 
 + (CGFloat)cellHeight {
     CGFloat photoCellHeight = 300.0; // 默认300
-    photoCellHeight = [UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight;
+    photoCellHeight = round([UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight + 0.5);
     return photoCellHeight;
 }
 
@@ -87,7 +90,7 @@
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
         
-        _colletionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, _photoCellHeight) collectionViewLayout:layout];
+        _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, _photoCellHeight) collectionViewLayout:layout];
         _colletionView.backgroundColor = [UIColor whiteColor];
         _colletionView.pagingEnabled = YES;
         _colletionView.showsHorizontalScrollIndicator = NO;
@@ -98,6 +101,11 @@
         _colletionView.dataSource = self;
         
         [self.contentView addSubview:_colletionView];
+        
+        // 底部渐变蒙层
+        [self.contentView addSubview:self.bottomGradientView];
+        // 底部banner按钮
+        [self addSubview:self.bottomBannerView];
         
         _infoLabel = [[UILabel alloc] init];
         _infoLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
@@ -129,9 +137,59 @@
             make.height.mas_equalTo(self.photoCellHeight);
         }];
         
+        [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.equalTo(self.contentView);
+            make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
+        }];
         
     }
     return self;
+}
+- (UIView *)bottomBannerView {
+    if(!_bottomBannerView) {
+        
+        CGFloat aspect = 375.0 / 65;
+        CGFloat height = self.bounds.size.width / aspect;
+        CGRect frame = CGRectMake(0, [self photoCellHeight] - height, SCREEN_WIDTH, height);
+        
+        UIImageView *bannerImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_header_bottom_banner"]];
+        CGFloat bannerAspect = 336.0 / 30;
+        CGFloat bannerWidth = frame.size.width - 40;
+        CGFloat bannerHeight = bannerWidth / bannerAspect;
+        CGFloat originX = (frame.size.width - bannerWidth) / 2.0;
+        CGFloat originY = (frame.size.height - 6 - bannerHeight);
+        bannerImageView.frame = CGRectMake(originX, originY, bannerWidth, bannerHeight);
+        
+        _bottomBannerView = [[UIView alloc] initWithFrame:frame];
+        [_bottomBannerView addSubview:bannerImageView];
+        
+        // 初始时隐藏，数据更新时跟据flag决定是否显示
+        _bottomBannerView.hidden = YES;
+    }
+    return _bottomBannerView;
+}
+-(UIView *)bottomGradientView {
+    if(!_bottomGradientView){
+        
+        CGFloat aspect = 375.0 / 65;
+        CGFloat width = SCREEN_WIDTH;
+        CGFloat height = round(width / aspect + 0.5);
+        CGRect frame = CGRectMake(0, 0, width, height);
+        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+        gradientLayer.frame = frame;
+        gradientLayer.colors = @[
+                                 (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor,
+                                 (__bridge id)[UIColor colorWithWhite:1 alpha:1].CGColor
+                                 ];
+        gradientLayer.startPoint = CGPointMake(0.5, 0);
+        gradientLayer.endPoint = CGPointMake(0.5, 1);
+    
+        _bottomGradientView = [[UIView alloc] initWithFrame:frame];
+        [_bottomGradientView.layer addSublayer:gradientLayer];
+        
+        _bottomGradientView.hidden = YES;
+    }
+    return _bottomGradientView;
 }
 
 -(UIImage *)placeHolder
@@ -147,6 +205,27 @@
 {
     self.images = images;
     [self.colletionView reloadData];
+
+    // 二手房头图头显示底部渐变层
+    self.bottomGradientView.hidden = !(self.baseViewModel.houseType == FHHouseTypeSecondHandHouse);
+    BOOL isShowBottomBannerView = NO;
+    if([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
+        FHDetailOldModel *detailOldModel = self.baseViewModel.detailData;
+        isShowBottomBannerView = detailOldModel.data.baseExtra.detective.detectiveInfo.showSkyEyeLogo;
+    }
+    self.bottomBannerView.hidden = !isShowBottomBannerView;
+    if(isShowBottomBannerView) {
+        NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
+        NSMutableDictionary *param = [NSMutableDictionary new];
+        param[UT_ELEMENT_TYPE] = @"happiness_eye_tip";
+        param[UT_PAGE_TYPE] = tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+        param[UT_ELEMENT_FROM] = tracerDict[UT_ELEMENT_FROM]?:UT_BE_NULL;
+        param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+        param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
+        param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;
+        TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
+    }
+    
     if (images.count > 0) {
         self.infoLabel.text = [NSString stringWithFormat:@"%d/%ld",1,images.count];
         self.infoLabel.hidden = NO;
@@ -159,6 +238,12 @@
                 [weakSelf.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
             });
         }
+        
+        [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            CGFloat yOffset = self.bottomBannerView.hidden ? 0 : - 6 - 30 - 7;
+            make.bottom.equalTo(self).offset(-10 + yOffset);
+        }];
+        
     }else{
         self.infoLabel.hidden = YES;
         self.colletionView.hidden = YES;

@@ -14,6 +14,9 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
+#import "Masonry.h"
 
 
 @interface TTCommentDetailToolbarView ()
@@ -70,12 +73,18 @@
         _shareButton.hidden = YES;
         [_shareButton addTarget:self action:@selector(shareButtonOnClicked:) forControlEvents:UIControlEventTouchUpInside];
 
+        self.digCountLabel = [[SSThemedLabel alloc] init];
+        self.digCountLabel.textColor = [UIColor themeGray1];
+        self.digCountLabel.font = [UIFont systemFontOfSize:12];
+        self.digCountLabel.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:self.digCountLabel];
+        
         TTAlphaThemedButton *digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _diggButton = digButton;
-        _diggButton.imageName = @"digup_tabbar";
-        _diggButton.selectedImageName = @"digup_tabbar_press";
-        _diggButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
         _diggButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
+        _diggButton.imageName = @"fh_ugc_toolbar_like_normal";
+        _diggButton.selectedImageName = @"fh_ugc_toolbar_like_selected";
+        _diggButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
         _diggButton.selectedTintColorThemeKey = @"red1";
         [self addSubview:digButton];
 
@@ -88,6 +97,8 @@
         self.backgroundColorThemeKey = kColorBackground4;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateWriteTitle:) name:@"TTCOMMENT_UPDATE_WRITETITLE" object:nil];
+        
+        [self setupConstraints];
     }
 
     return self;
@@ -119,13 +130,32 @@
     writeFrame = CGRectMake(15 + leftInset, writeTopMargin, CGRectGetMinX(digFrame) - 30 - hInset, writeButtonHeight);
     emojiFrame = CGRectMake(CGRectGetMaxX(writeFrame) - 22 - 6 , CGRectGetMinY(writeFrame) + (writeButtonHeight - 22) / 2, 22, 22);
 
-    _writeButton.frame = writeFrame;
-    _emojiButton.frame = emojiFrame;
-    _diggButton.frame = digFrame;
+//    _writeButton.frame = writeFrame;
+//    _emojiButton.frame = emojiFrame;
+//    _diggButton.frame = digFrame;
 
     BOOL _isIPad = [TTDeviceHelper isPadDevice];
     _writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 16, 0, _emojiButton.width + 4);
 
+}
+
+- (void)setupConstraints {
+    [_writeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self).offset(20);
+        make.height.mas_equalTo(32);
+        make.top.mas_equalTo(8);
+        make.right.mas_equalTo(self.diggButton.mas_left).offset(-15);
+    }];
+    [self.diggButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.writeButton);
+        make.width.height.mas_equalTo(24);
+    }];
+    [_digCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(20);
+        make.right.mas_equalTo(-20);
+        make.height.mas_equalTo(13);
+        make.left.mas_equalTo(self.diggButton.mas_right).offset(3);
+    }];
 }
 
 - (void)safeAreaInsetsDidChange {

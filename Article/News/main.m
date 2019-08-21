@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
+#ifdef  DEBUG
+#import "TTLaunchManager.h"
+#endif
 
 #ifndef DEBUG
 
@@ -43,7 +46,8 @@ int main(int argc, char *argv[])
         
 #ifdef  DEBUG
         @try {
-#endif
+            [TTLaunchManager setPreMainDate:[NSDate date]];
+#endif            
 //            return UIApplicationMain(argc, argv, NSStringFromClass([SSTestApplication class]), NSStringFromClass([AppDelegate class]));
             return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
             

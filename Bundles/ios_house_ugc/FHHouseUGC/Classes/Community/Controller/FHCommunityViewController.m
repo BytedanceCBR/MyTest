@@ -24,6 +24,8 @@
 #import "ExploreLogicSetting.h"
 #import "FHPostUGCViewController.h"
 #import "FHUserTracker.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @interface FHCommunityViewController ()
 
@@ -53,6 +55,7 @@
     [self initViewModel];
 
     [self onUnreadMessageChange];
+    [self onFocusHaveNewContents];
 
     //切换开关
     WeakSelf;
@@ -63,11 +66,13 @@
             self.isUgcOpen = xConfigDataModel.ugcCitySwitch;
             [self initViewModel];
         }
+        self.segmentControl.sectionTitles = [self getSegmentTitles];
     }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
     //tabbar双击的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeMyJoinTab) name:kFHUGCForumPostThreadFinish object:nil];
@@ -119,6 +124,24 @@
     }
 }
 
+- (void)onFocusHaveNewContents {
+    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
+    BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
+    if(self.viewModel.currentTabIndex != 0 && hasSocialGroups && hasNew){
+        _segmentControl.sectionRedPoints = @[@1];
+        self.hasFocusTips = YES;
+    }
+}
+
+- (void)hideRedPoint {
+    if(self.viewModel.currentTabIndex == 0 && self.hasFocusTips){
+        self.hasFocusTips = NO;
+        [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+        self.segmentControl.sectionRedPoints = @[@0];
+        [self.viewModel refreshCell:YES];
+    }
+}
+
 - (void)initView {
     self.view.backgroundColor = [UIColor whiteColor];
 
@@ -131,7 +154,7 @@
     [self.topView addSubview:_bottomLineView];
 
     self.searchBtn = [[UIButton alloc] init];
-    [_searchBtn setImage:[UIImage imageNamed:@"fh_ugc_search"] forState:UIControlStateNormal];
+    [_searchBtn setImage: ICON_FONT_IMG(18, @"\U0000e675", [UIColor blackColor]) forState:UIControlStateNormal];//fh_ugc_search
     _searchBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [_searchBtn addTarget:self action:@selector(goToSearch) forControlEvents:UIControlEventTouchUpInside];
     [self.topView addSubview:_searchBtn];
@@ -139,7 +162,6 @@
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
 
-//    [self setupCollectionView];
     [self setupSetmentedControl];
 }
 
@@ -155,11 +177,33 @@
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     [self addUgcGuide];
 
-    if (!self.hasShowDots) {
+    if(self.isUgcOpen){
+        //去掉邻里tab的红点
         [FHEnvContext hideFindTabRedDots];
-        self.hasShowDots = YES;
+        //去掉关注红点的同时刷新tab
+        if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].ugcFocusHasNew){
+            self.hasFocusTips = NO;
+            [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+            [self.viewModel refreshCell:YES];
+        }
+    }else{
+        if (!self.hasShowDots) {
+            [FHEnvContext hideFindTabRedDotsLimitCount];
+            self.hasShowDots = YES;
+        }
     }
 }
+
+-(BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+-(BOOL)prefersStatusBarHidden
+{
+    return NO;
+}
+
 
 - (void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
@@ -194,7 +238,7 @@
     layout.minimumInteritemSpacing = 0;
 
     //2.初始化collectionView
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     _collectionView.allowsSelection = NO;
     _collectionView.pagingEnabled = YES;
     _collectionView.bounces = NO;
@@ -208,7 +252,7 @@
 }
 
 - (void)setupSetmentedControl {
-    _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:@[@"关注", @"附近", @"发现"]];
+    _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
 
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
             NSForegroundColorAttributeName: [UIColor themeGray3]};
@@ -234,8 +278,41 @@
     };
     
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
-        [weakSelf.viewModel refreshCell];
+        [weakSelf.viewModel refreshCell:NO];
     };
+}
+
+- (NSArray *)getSegmentTitles {
+    NSMutableArray *titles = [NSMutableArray array];
+    
+    NSDictionary *ugcTitles = [FHEnvContext ugcTabName];
+    if(ugcTitles[kUGCTitleMyJoinList]){
+        NSString *name = ugcTitles[kUGCTitleMyJoinList];
+        if(name.length > 2){
+            name = [name substringToIndex:2];
+        }
+        [titles addObject:name];
+    }else{
+        [titles addObject:@"关注"];
+    }
+    
+    if(ugcTitles[kUGCTitleNearbyList]){
+        NSString *name = ugcTitles[kUGCTitleNearbyList];
+        if(name.length > 2){
+            name = [name substringToIndex:2];
+        }
+        [titles addObject:name];
+    }else{
+        [titles addObject:@"附近"];
+    }
+        
+    [titles addObject:@"发现"];
+    
+    if(titles.count == 3){
+        return titles;
+    }
+    
+    return @[@"关注", @"附近", @"发现"];
 }
 
 - (void)initConstraints {
@@ -311,7 +388,7 @@
 }
 
 - (void)refreshData {
-    [self.viewModel refreshCell];
+    [self.viewModel refreshCell:NO];
 }
 
 - (void)changeMyJoinTab {
@@ -324,10 +401,15 @@
 - (void)goToSearch {
     [self hideGuideView];
     [self addGoToSearchLog];
-
     NSString *routeUrl = @"sslocal://ugc_search_list";
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
+    NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
+    searchTracerDict[@"element_type"] = @"community_search";
+    searchTracerDict[@"enter_from"] = @"neighborhood_tab";
+    paramDic[@"tracer"] = searchTracerDict;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:paramDic];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 - (void)addGoToSearchLog {

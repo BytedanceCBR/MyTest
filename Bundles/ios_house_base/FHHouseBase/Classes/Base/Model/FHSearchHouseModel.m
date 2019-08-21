@@ -32,6 +32,7 @@
 
 + (JSONKeyMapper *)keyMapper {
     NSDictionary *dict = @{
+                           @"fakeText":@"fake_text",
                            @"fakeHouse": @"fake_house",
                            @"enableFakeHouse": @"enable_fake_house",
                            @"fakeHouseTotal": @"fake_house_total",
@@ -41,6 +42,25 @@
                            @"trueHouseTotal": @"true_house_total",
                            @"trueTitle": @"true_title",
                            @"fakeTitle": @"fake_title",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
+@implementation FHSearchRealHouseAgencyInfo
+
++ (JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+                           @"agencyTotal": @"agency_total",
+                           @"houseTotal": @"house_total",
+                           @"openUrl": @"open_url",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -124,6 +144,7 @@
                            @"recommendSearchModel": @"recommend_search",
                            @"subscribeInfo": @"subscribe_info",
                            @"externalSite": @"external_site",
+                           @"agencyInfo": @"agency_info",
                            @"topTip":@"top_tip",
                            @"bottomTip":@"bottom_tip",
                            };
@@ -293,6 +314,22 @@
 
 @end
 
+@implementation FHSearchHouseDataItemsSkyEyeTagModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"backgroundColor": @"background_color",
+                           @"textColor": @"text_color",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 @implementation  FHSearchHouseDataItemsModel
 
@@ -328,6 +365,7 @@
                            @"bottomText": @"bottom_text",
                            @"fakeReason": @"fake_reason",
                            @"externalInfo": @"external_info",
+                           @"skyEyeTag": @"sky_eye_tag",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -32,6 +32,7 @@
 #import "FHFeedContentModel.h"
 #import "FHUGCScialGroupModel.h"
 #import "FHUGCConfig.h"
+#import "FHUGCCellHelper.h"
 
 @interface FHPostDetailViewModel ()
 
@@ -71,11 +72,12 @@
     return NSStringFromClass(cls);
 }
 
--(instancetype)initWithController:(FHCommentDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType {
+-(instancetype)initWithController:(FHCommentBaseDetailViewController *)viewController tableView:(UITableView *)tableView postType:(FHUGCPostType)postType {
     self = [super initWithController:viewController tableView:tableView postType:postType];
     self.threadID = 0;
     self.forumID = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followListDataChanged:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     return self;
 }
 
@@ -86,6 +88,7 @@
         self.threadID = threadID;
         self.forumID = forumID;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followListDataChanged:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     }
     return self;
 }
@@ -98,6 +101,25 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+// 关注列表改变
+- (void)followListDataChanged:(NSNotification *)notification {
+    if (notification) {
+        NSString *currentGroupId = self.social_group_id;
+        if (currentGroupId.length > 0 && self.detailHeaderModel) {
+            FHUGCScialGroupDataModel *groupData = [[FHUGCConfig sharedInstance] socialGroupData:currentGroupId];
+            if (groupData) {
+                FHUGCScialGroupDataModel *currentGroupData = self.detailHeaderModel.socialGroupModel;
+                if (![currentGroupData.hasFollow isEqualToString:groupData.hasFollow]) {
+                    currentGroupData.hasFollow = groupData.hasFollow;
+                    currentGroupData.countText = groupData.countText;
+                    [self.detailController headerInfoChanged];
+                    [self reloadData];
+                }
+            }
+        }
+    }
 }
 
 // 关注状态改变
@@ -148,15 +170,16 @@
     if (model && [model isKindOfClass:[FHFeedUGCContentModel class]]) {
         [self.items removeAllObjects];
         // 网络请求返回
+        model.isFromDetail = YES;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
         if (cellModel.community.socialGroupId.length <= 0) {
             cellModel.community = self.detailData.community;
         }
-        // 兼容 服务端返回的数据不一致的问题
-        if (self.detailController.comment_count > 0) {
-            // 直接用评论接口返回的个数
-            cellModel.commentCount = [NSString stringWithFormat:@"%lld",self.detailController.comment_count];
-        }
+        // 兼容 服务端返回的数据不一致的问题，目前直接使用服务端返回的数据
+//        if (self.detailController.comment_count > 0) {
+//            // 直接用评论接口返回的个数
+//            cellModel.commentCount = [NSString stringWithFormat:@"%lld",self.detailController.comment_count];
+//        }
         cellModel.tracerDic = [self.detailController.tracerDict copy];
         if (socialGroupModel && ![socialGroupModel.hasFollow boolValue]) {
             // 未关注
@@ -183,6 +206,10 @@
             } else {
                 cellModel.showCommunity = NO;
             }
+        }
+        if (socialGroupModel) {
+            // 更新圈子数据
+            [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:socialGroupModel];
         }
         //
         [self.items addObject:cellModel];
@@ -220,6 +247,9 @@
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         [param setValue:@(self.threadID) forKey:@"thread_id"];
         [param setValue:self.category forKey:@"category"];
+        if (self.lastPageSocialGroupId.length > 0) {
+            [param setValue:self.lastPageSocialGroupId forKey:@"social_group_id"];
+        }
         uint64_t startTime = [NSObject currentUnixTime];
         WeakSelf;
         NSString *host = [FHURLSettings baseURL];

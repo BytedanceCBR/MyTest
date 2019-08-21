@@ -12,6 +12,8 @@
 #import "TTDeviceHelper.h"
 #import "FHCityMarketBottomBarView.h"
 #import "FHUserTracker.h"
+#import <FHHouseBase/FHBaseTableView.h>
+
 @interface FHCityMarketHotCityListViewController ()
 @property (nonatomic, strong) FHCityMarketDetailResponseDataHotListModel* model;
 @property (nonatomic, strong) FHDetailListViewModel* listViewModel;
@@ -38,7 +40,7 @@
     // Do any additional setup after loading the view.
     [self initNavBar];
     [self setupBottomBar];
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _listViewModel = [[FHDetailListViewModel alloc] init];
     _listViewModel.tableView = _tableView;
     _tableView.delegate = _listViewModel;

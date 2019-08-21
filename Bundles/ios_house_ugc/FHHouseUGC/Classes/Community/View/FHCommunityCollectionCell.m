@@ -44,6 +44,7 @@
             [vc viewWillAppear];
         }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
             FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
+            vc.withTips = self.withTips;
             [vc viewWillAppear];
         }
     }
@@ -71,6 +72,7 @@
         self.vc = vc;
     }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
         FHMyJoinViewController *vc = [[FHMyJoinViewController alloc] init];
+        vc.withTips = self.withTips;
         self.vc = vc;
     }else if(self.type == FHCommunityCollectionCellTypeDiscovery){
         ArticleTabBarStyleNewsListViewController *ariticleListVC = [[ArticleTabBarStyleNewsListViewController alloc] init];
@@ -94,13 +96,17 @@
     return _vc;
 }
 
-- (void)refreshData {
+- (void)refreshData:(BOOL)isHead {
     if([self.vc isKindOfClass:[FHNearbyViewController class]]){
         FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
-        [vc.feedVC scrollToTopAndRefresh];
+        if(isHead){
+            [vc.feedVC scrollToTopAndRefreshAllData];
+        }else{
+            [vc.feedVC scrollToTopAndRefresh];
+        }
     }else if([self.vc isKindOfClass:[FHMyJoinViewController class]]){
         FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
-        [vc.feedListVC scrollToTopAndRefresh];
+        [vc refreshFeedListData:isHead];
     }
 }
 

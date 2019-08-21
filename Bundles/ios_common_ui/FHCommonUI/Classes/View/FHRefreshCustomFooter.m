@@ -40,7 +40,7 @@
     self.label = label;
     
     UIImageView *loadingIndicator = [[UIImageView alloc] init];
-    loadingIndicator.image = [UIImage imageNamed: @"refresh_loading_icon"];
+//    loadingIndicator.image = [UIImage imageNamed: @"refresh_loading_icon"];
     [self addSubview:loadingIndicator];
     self.loadingIndicator = loadingIndicator;
 }
@@ -62,6 +62,9 @@
 - (void)placeSubviews
 {
     [super placeSubviews];
+    if(!self.loadingIndicator.image){
+        self.loadingIndicator.image = [UIImage imageNamed: @"refresh_loading_icon"];
+    }
     
     [self.loadingIndicator sizeToFit];
     [self.label sizeToFit];

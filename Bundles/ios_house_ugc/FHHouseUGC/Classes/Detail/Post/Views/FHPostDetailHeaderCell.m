@@ -37,6 +37,9 @@
     // Configure the view for the selected state
 }
 
++ (CGFloat)heightForData:(id)data {
+    return 78;
+}
 
 - (void)refreshWithData:(id)data {
     if (![data isKindOfClass:[FHPostDetailHeaderModel class]]) {
@@ -70,14 +73,16 @@
     self.icon = [[UIImageView alloc] init];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
-    _icon.layer.cornerRadius = 24;
+    _icon.layer.cornerRadius = 4;
     _icon.backgroundColor = [UIColor themeGray7];
+    _icon.layer.borderWidth = 0.5;
+    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_icon];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:15] textColor:[UIColor themeGray1]];
     [self.contentView addSubview:_titleLabel];
     
-    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor themeGray3]];
+    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self.contentView addSubview:_descLabel];
     
     self.joinBtn = [[FHUGCFollowButton alloc] init];
@@ -98,7 +103,8 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         NSDictionary *log_pb = data.logPb;
         dict[@"community_id"] = data.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"feed_detail",
+        NSString *enter_from = headerModel.tracerDict[@"page_type"] ?: @"be_null";
+        dict[@"tracer"] = @{@"enter_from":enter_from,
                             @"enter_type":@"click",
                             @"log_pb":log_pb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -113,7 +119,7 @@
         make.top.mas_equalTo(self.contentView).offset(15);
         make.bottom.mas_equalTo(self.contentView).offset(-15);
         make.left.mas_equalTo(self.contentView).offset(20);
-        make.width.height.mas_equalTo(48);
+        make.width.height.mas_equalTo(50);
     }];
     
     [self.joinBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -134,7 +140,7 @@
         make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(1);
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(self.titleLabel);
-        make.height.mas_equalTo(14);
+        make.height.mas_equalTo(17);
     }];
 }
 

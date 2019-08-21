@@ -24,7 +24,7 @@
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:param];
     [params addEntriesFromDictionary:[self basicParam]];
-    [TTTracker eventV3:event params:params];;
+    [TTTracker eventV3:event params:params];
 }
 
 +(void)writeEvent:(NSString *)event withModel:(FHTracerModel *_Nullable)model
