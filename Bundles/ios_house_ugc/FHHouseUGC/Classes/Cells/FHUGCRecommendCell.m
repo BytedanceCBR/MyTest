@@ -104,7 +104,7 @@
     
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    [_tableView registerClass:[FHUGCRecommendSubCell class] forCellReuseIdentifier:cellId];
+    [_tableView registerClass:[FHUGCRecommendSubCell class] forCellReuseIdentifier:cellId];uk
 }
 
 - (void)initConstraints {
