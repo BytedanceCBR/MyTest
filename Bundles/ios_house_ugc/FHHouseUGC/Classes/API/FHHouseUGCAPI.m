@@ -42,10 +42,10 @@
 
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
 
-//    NSString *queryPath = [ArticleURLSetting encrpytionStreamUrlString];
+    NSString *queryPath = [ArticleURLSetting encrpytionStreamUrlString];
     
     //test
-    NSString *queryPath = @"http://10.224.5.205:8765/api/news/feed/v96/";
+//    NSString *queryPath = @"http://10.224.5.205:8765/api/news/feed/v96/";
 
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"category"] = category;
