@@ -23,8 +23,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        UIImage *image = [UIImage imageNamed:kFHErrorMaskNoNetWorkImageName];
-        self.errorImageView = [[UIImageView alloc] initWithImage:image];
+//        UIImage *image = [UIImage imageNamed:kFHErrorMaskNoNetWorkImageName];
+        self.errorImageView = [[UIImageView alloc] initWithImage:nil];
         _tipLabel = [[UILabel alloc] init];
         _tipLabel.font = [UIFont themeFontRegular:14];
         _tipLabel.textColor = [UIColor themeGray3];
@@ -156,6 +156,14 @@
 
 - (void)hideEmptyView {
     self.hidden = YES;
+}
+
+-(void)willMoveToWindow:(UIWindow *)newWindow
+{
+    [super willMoveToWindow:newWindow];
+    if(newWindow && !self.errorImageView.image){
+        self.errorImageView.image = [UIImage imageNamed:kFHErrorMaskNoNetWorkImageName];
+    }
 }
 
 @end

@@ -12,6 +12,7 @@
 #import <TTReachability/TTReachability.h>
 #import "ArticleListNotifyBarView.h"
 #import <UIViewAdditions.h>
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHOldPriceComparisonListController ()
 
@@ -86,7 +87,7 @@
 }
 
 - (void)configTableView {
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

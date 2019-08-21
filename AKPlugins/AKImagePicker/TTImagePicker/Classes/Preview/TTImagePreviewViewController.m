@@ -549,6 +549,9 @@ typedef NS_ENUM(NSInteger, TTImagePreviewMoveDirection) {
     _collectionView.contentOffset = CGPointMake(0, 0);
     _collectionView.contentSize = CGSizeMake(self.allModels.count * (self.view.width + gap), 0);
     _collectionView.alwaysBounceHorizontal = YES;
+    if(@available(iOS 11.0 , *)){
+        _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     [self.view addSubview:_collectionView];
     [_collectionView registerClass:[TTImagePreviewPhotoCell class] forCellWithReuseIdentifier:@"TTImagePreviewPhotoCell"];
     [_collectionView registerClass:[TTImagePreviewVideoCell class] forCellWithReuseIdentifier:@"TTImagePreviewVideoCell"];

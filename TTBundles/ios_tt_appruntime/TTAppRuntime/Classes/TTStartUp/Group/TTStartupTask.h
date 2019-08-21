@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *const TTStartupProtectPrefix;
+
 @interface TTStartupTask : NSObject
 
 - (BOOL)shouldExecuteForApplication:(UIApplication *)application options:(NSDictionary *)launchOptions;//包裹本业务执行的代码，满足条件并且本业务没发生异常就返回YES

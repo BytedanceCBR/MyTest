@@ -14,6 +14,7 @@
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "UILabel+House.h"
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @interface FHDetailMultitemCollectionView ()<UICollectionViewDataSource, UICollectionViewDelegate>
 
@@ -42,7 +43,7 @@
 
 - (void)setupUIWithFlowLayout:(UICollectionViewFlowLayout *)flowLayout viewHeight:(CGFloat)collectionViewHeight {
     if (flowLayout) {
-        _collectionContainer = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
+        _collectionContainer = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
         _collectionContainer.showsHorizontalScrollIndicator = NO;
         _collectionContainer.backgroundColor = UIColor.whiteColor;
         

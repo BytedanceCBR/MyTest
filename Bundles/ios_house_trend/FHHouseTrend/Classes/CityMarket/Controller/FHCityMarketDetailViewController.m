@@ -27,6 +27,8 @@
 #import "TTTracker.h"
 #import "TTTrackerWrapper.h"
 #import "FHUserTracker.h"
+#import <FHHouseBase/FHBaseTableView.h>
+
 @interface FHCityOpenUrlJumpAction : NSObject
 @property (nonatomic, strong) NSURL* openUrl;
 @property (nonatomic, strong) TTRouteUserInfo* userInfo;
@@ -86,7 +88,7 @@
 
     [self initNavBar];
     [self setupBottomBar];
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    self.tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     [_tableView setHidden:YES];
     _listViewModel = [[FHDetailListViewModel alloc] init];
     _listViewModel.tableView = _tableView;

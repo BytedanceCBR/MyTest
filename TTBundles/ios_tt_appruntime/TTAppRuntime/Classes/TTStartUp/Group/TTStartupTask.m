@@ -17,20 +17,20 @@ NSString *const AbnormalTaskIdentifier = @"abnormal_task_identifier";
 
 @implementation TTStartupTask
 
-- (instancetype)init {
-    if (self = [super init]) {
-        if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
-            NSString *key = [TTStartupProtectPrefix stringByAppendingString:[self taskIdentifier]];
-            if (![[NSUserDefaults standardUserDefaults] objectForKey:key]) {
-                [[NSUserDefaults standardUserDefaults] setValue:@(YES) forKey:key];
-            }
-        }
-        else {
-            [[NSUserDefaults standardUserDefaults] registerDefaults:@{[TTStartupProtectPrefix stringByAppendingString:[self taskIdentifier]]:@(YES)}];
-        }
-    }
-    return self;
-}
+//- (instancetype)init {
+//    if (self = [super init]) {
+//        if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
+//            NSString *key = [TTStartupProtectPrefix stringByAppendingString:[self taskIdentifier]];
+//            if (![[NSUserDefaults standardUserDefaults] objectForKey:key]) {
+//                [[NSUserDefaults standardUserDefaults] setValue:@(YES) forKey:key];
+//            }
+//        }
+//        else {
+//            [[NSUserDefaults standardUserDefaults] registerDefaults:@{[TTStartupProtectPrefix stringByAppendingString:[self taskIdentifier]]:@(YES)}];
+//        }
+//    }
+//    return self;
+//}
 
 - (BOOL)shouldExecuteForApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     return YES;

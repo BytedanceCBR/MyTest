@@ -21,6 +21,7 @@
 #import "FHSugSubscribeListViewModel.h"
 #import "FHFakeInputNavbar.h"
 #import "FHEnvContext.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHSugSubscribeListViewController ()
 
@@ -103,7 +104,7 @@
 }
 
 - (void)configTableView {
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
