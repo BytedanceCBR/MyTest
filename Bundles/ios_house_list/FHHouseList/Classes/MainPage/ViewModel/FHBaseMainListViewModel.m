@@ -466,15 +466,8 @@ extern NSString *const INSTANT_DATA_KEY;
             }
             
             if (isRefresh) {
-                // 顶部
-                if (houseModel.agencyInfo) {
-                    FHSearchRealHouseAgencyInfo *agencyInfo = houseModel.agencyInfo;
-                    if ([agencyInfo isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
-                        [items insertObject:agencyInfo atIndex:0];
-                    }
-                    self.showRealHouseTop = YES;
-                }
                 
+                //先插入订阅再判断其他
                 FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = houseModel.subscribeInfo;
                 if ([subscribeMode isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
                     if (items.count > 9) {
@@ -487,6 +480,15 @@ extern NSString *const INSTANT_DATA_KEY;
                     self.isShowSubscribeCell = YES;
                 }
                 
+                // 顶部
+                if (houseModel.agencyInfo) {
+                    FHSearchRealHouseAgencyInfo *agencyInfo = houseModel.agencyInfo;
+                    if ([agencyInfo isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
+                        [items insertObject:agencyInfo atIndex:0];
+                    }
+                    self.showRealHouseTop = YES;
+                }
+                                
                 self.showFakeHouseTop = NO;
             }
             
@@ -700,7 +702,7 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     if (_houseType == FHHouseTypeRentHouse && _mainListPage && self.mapFindHouseOpenUrl.length > 0) {
         NSURL *url = [NSURL URLWithString:self.mapFindHouseOpenUrl];
-        NSDictionary *dict = @{};
+        NSDictionary *dict = @{@"enter_from_list":@"1"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }else{
@@ -767,6 +769,8 @@ extern NSString *const INSTANT_DATA_KEY;
         if (![self.mapFindHouseOpenUrl containsString:UT_ORIGIN_FROM]) {
             [query appendString:[NSString stringWithFormat:@"&%@=%@", UT_ORIGIN_FROM ,self.tracerModel.originFrom?:UT_BE_NULL]];
         }
+        
+        [query appendFormat:@"&enter_from_list=1"];
         
         if (query.length > 0) {
             
@@ -837,6 +841,13 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if ([self.houseListOpenUrl isEqualToString:openUrl]) {
         return;
+    }
+    if (self.houseListOpenUrl && openUrl) {
+        NSString *deOpenUrl = [openUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *deOrigin = [self.houseListOpenUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        if ([deOpenUrl isEqualToString:deOrigin]) {
+            return;
+        }
     }
     
     [self handleRefreshHouseOpenUrl:openUrl];

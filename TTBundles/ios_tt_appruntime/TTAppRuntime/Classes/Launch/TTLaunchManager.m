@@ -11,6 +11,12 @@
 #import <mach-o/getsect.h>
 #import "TTStartupTask.h"
 #import "NewsBaseDelegate.h"
+#import <sys/sysctl.h>
+#import <mach/mach.h>
+#import "SSCommonLogic.h"
+
+
+static NSDate *preMainDate = nil;
 
 @interface TTLaunchManager ()
 {
@@ -30,6 +36,11 @@
         manager = [[TTLaunchManager alloc]init];
     });
     return manager;
+}
+
++(void)setPreMainDate:(NSDate *)date
+{
+    preMainDate = date;
 }
 
 -(instancetype)init
@@ -123,7 +134,12 @@
 
 -(void)launchWithApplication:(UIApplication *)application andOptions:(NSDictionary *)options
 {
+    NSDate *s = [NSDate date];
+    
     task_header_info taskInfo;
+    
+    NSMutableArray *taskList = [NSMutableArray new];
+    
     for (NSInteger type = 0 ; type <= FHTaskTypeAfterLaunch ; type++) {
 #ifndef DEBUG
         if (type == FHTaskTypeDebug) {
@@ -135,26 +151,39 @@
         if (tasks.count > 0) {
             for (NSValue *taskValue in tasks) {
                 [taskValue getValue:&taskInfo];
-                [self startTask:&taskInfo withApplication:application andOptions:options];
+                TTStartupTask *task = [self startTask:&taskInfo withApplication:application andOptions:options];
+                if(task){
+                    [taskList addObject:task];
+                }
             }
         }
     }
     
+    [self updateTaskRecords:taskList];
+    
+    NSLog(@"[LAUNCH] tasks takes %f S ",[[NSDate date]timeIntervalSinceDate:s]);
+    
 }
 
--(void)startTask:(task_header_info *)headerInfo withApplication:(UIApplication *)application andOptions:(NSDictionary *)options
+-(TTStartupTask *)startTask:(task_header_info *)headerInfo withApplication:(UIApplication *)application andOptions:(NSDictionary *)options
 {
     NSString *taskName = [NSString stringWithCString:headerInfo->name encoding:NSUTF8StringEncoding];
     Class taskClass = NSClassFromString(taskName);
     if (![taskClass isSubclassOfClass:[TTStartupTask class]]) {
-        return;
+        return nil;
     }
     
     TTStartupTask *task = [[taskClass alloc] init];
     if ([task shouldExecuteForApplication:application options:options]) {
         if ([self isConcurrentFotType:headerInfo->type] || [task isConcurrent]) {
-            dispatch_async(SharedAppDelegate.barrierQueue, ^{
-                [task startAndTrackWithApplication:application options:options];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                /*
+                 * 主要执行TTFabricSDKRegister、TTFeedPreloadTask、TTUserConfigReportTask
+                 * 因为feed移动在第二栏，可以延迟执行，带首页加载完成后执行
+                 */
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    [task startAndTrackWithApplication:application options:options];
+                });
             });
         } else {
             [task setTaskNormal:NO];
@@ -164,6 +193,7 @@
         [SharedAppDelegate trackCurrentIntervalInMainThreadWithTag:[task taskIdentifier]];
     }
     [SharedAppDelegate addResidentTaskIfNeeded:task];
+    return task;
 }
 
 -(BOOL)isConcurrentFotType:(FHTaskType )type
@@ -178,6 +208,57 @@
 //            break;
 //    }
     return NO;
+}
+
+-(void)updateTaskRecords:(NSArray *)tasks
+{
+    if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
+        for(TTStartupTask *task in tasks){
+            NSString *key = [TTStartupProtectPrefix stringByAppendingString:[task taskIdentifier]];
+            if (![[NSUserDefaults standardUserDefaults] objectForKey:key]) {
+                [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:key];
+            }
+        }
+    }
+    else {
+        
+        NSMutableDictionary *defaultDict = [NSMutableDictionary new];
+        for(TTStartupTask *task in tasks){
+            defaultDict[[TTStartupProtectPrefix stringByAppendingString:[task taskIdentifier]]] = @(YES);
+        }
+        
+        [[NSUserDefaults standardUserDefaults] registerDefaults:defaultDict];
+    }
+}
+
+
++ (BOOL)processInfoForPID:(int)pid procInfo:(struct kinfo_proc*)procInfo
+{
+    int cmd[4] = {CTL_KERN, KERN_PROC, KERN_PROC_PID, pid};
+    size_t size = sizeof(*procInfo);
+    return sysctl(cmd, sizeof(cmd)/sizeof(*cmd), procInfo, &size, NULL, 0) == 0;
+}
+
++ (NSTimeInterval)processStartTime
+{
+    struct kinfo_proc kProcInfo;
+    if ([self processInfoForPID:[[NSProcessInfo processInfo] processIdentifier] procInfo:&kProcInfo]) {
+        return kProcInfo.kp_proc.p_un.__p_starttime.tv_sec * 1000.0 + kProcInfo.kp_proc.p_un.__p_starttime.tv_usec / 1000.0;
+    } else {
+        NSAssert(NO, @"无法取得进程的信息");
+        return 0;
+    }
+}
+
++(void)dumpLaunchDuration
+{
+    NSDate *now = [NSDate date];
+    NSTimeInterval laucnhTS = [self processStartTime];
+    NSTimeInterval nowTS = [now timeIntervalSince1970]*1000;
+    NSLog(@"[LAUNCH] whole launch takes: %f ms",(nowTS - laucnhTS));
+    if(preMainDate){
+        NSLog(@"[LAUNCH] after main launch takes: %f ms",nowTS - [preMainDate timeIntervalSince1970]*1000);
+    }
 }
 
 @end

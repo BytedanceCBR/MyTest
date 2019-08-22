@@ -3,7 +3,7 @@
 //
 
 #import "FHUGCCommunityDistrictTabView.h"
-
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @interface FHUGCCommunityCategoryView () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property(nonatomic, strong) UICollectionView *categoryView;
@@ -92,16 +92,13 @@
     if (!_categoryView) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.scrollDirection = UICollectionViewScrollDirectionVertical;
-        _categoryView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+        _categoryView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
         _categoryView.backgroundColor = [UIColor clearColor];
         _categoryView.alwaysBounceVertical = YES;
         [_categoryView setShowsVerticalScrollIndicator:NO];
         _categoryView.dataSource = self;
         _categoryView.delegate = self;
         [_categoryView registerClass:[FHUGCCommunityDistrictTabCell class] forCellWithReuseIdentifier:@"FHUGCCommunityCategoryCell"];
-        if (@available(iOS 11.0, *)) {
-            _categoryView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        }
         [self addSubview:_categoryView];
     }
     return _categoryView;

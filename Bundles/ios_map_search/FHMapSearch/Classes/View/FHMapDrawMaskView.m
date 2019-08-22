@@ -8,6 +8,7 @@
 #import "FHMapDrawMaskView.h"
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHHouseBase/FHCommonDefines.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 #define MIN_POINTS 20
 #define CLOSE_WIDTH 58
@@ -29,9 +30,11 @@
     self = [super initWithFrame:frame];
     if (self) {
         _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_closeButton setBackgroundImage:SYS_IMG(@"mapsearch_close") forState:UIControlStateNormal];        
+        _closeButton.frame = CGRectMake(18, 27, 24, 24);
+        UIImage * img = ICON_FONT_IMG(18, @"\U0000e673",[UIColor themeGray1]);
+        [_closeButton setImage:img forState:UIControlStateNormal];
         [_closeButton addTarget:self action:@selector(onCloseAction) forControlEvents:UIControlEventTouchUpInside];
-        
+
         [self addSubview:_closeButton];
     }
     return self;
@@ -153,15 +156,15 @@
     [self.ycoords addObject:@(loc.y)];
 }
 
--(void)layoutSubviews
-{
-    [super layoutSubviews];
-    CGFloat bottomSafeInset = 0;
-    if (@available(iOS 11.0 , *)) {
-        bottomSafeInset = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
-    }
-    _closeButton.frame = CGRectMake(14, CGRectGetHeight(self.bounds) - 31 - bottomSafeInset - CLOSE_WIDTH, CLOSE_WIDTH, CLOSE_WIDTH);
-}
+//-(void)layoutSubviews
+//{
+//    [super layoutSubviews];
+//    CGFloat bottomSafeInset = 0;
+//    if (@available(iOS 11.0 , *)) {
+//        bottomSafeInset = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+//    }
+//    _closeButton.frame = CGRectMake(14, CGRectGetHeight(self.bounds) - 31 - bottomSafeInset - CLOSE_WIDTH, CLOSE_WIDTH, CLOSE_WIDTH);
+//}
 
 -(void)drawRect:(CGRect)rect
 {

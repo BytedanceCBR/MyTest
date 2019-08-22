@@ -201,6 +201,10 @@
     _imageContentScrollView.maximumZoomScale = MaxZoomScale;
     //_imageContentScrollView.alwaysBounceHorizontal = YES;
     
+    if(@available(iOS 11.0 , * )){
+        _imageContentScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    
     [self addSubview:_imageContentScrollView];
     
     // image loading progress view

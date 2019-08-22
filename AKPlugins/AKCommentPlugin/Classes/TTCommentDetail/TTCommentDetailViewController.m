@@ -232,6 +232,13 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     self.toolbarView.banEmojiInput = YES;
 
     self.toolbarView.diggButton.selected = self.pageState.detailModel.userDigg;
+    NSString *digCountLabelText = @"赞";
+    if (self.pageState.detailModel.diggCount > 0) {
+        digCountLabelText = [NSString stringWithFormat:@"%ld",self.pageState.detailModel.diggCount];
+    } else {
+        digCountLabelText = @"赞";
+    }
+    self.toolbarView.digCountLabel.text = digCountLabelText;
 
     NSString *title;
     if (self.hasNestedInModalContainer) {

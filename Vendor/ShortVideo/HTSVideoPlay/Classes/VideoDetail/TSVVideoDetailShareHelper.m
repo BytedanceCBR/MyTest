@@ -14,7 +14,7 @@
 //#import <AFNetworking/AFNetworking.h>
 #import "HTSVideoPlayToast.h"
 #import <AssetsLibrary/AssetsLibrary.h>
-#import <TTServiceProtocols/TTRepostServiceProtocol.h>
+#import <TTNewsAccountBusiness/TTRepostServiceProtocol.h>
 #import <TTServiceCenter.h>
 
 

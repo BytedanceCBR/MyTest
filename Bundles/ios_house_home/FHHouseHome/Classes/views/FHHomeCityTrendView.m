@@ -17,6 +17,7 @@
 #import <TTRoute/TTRoute.h>
 #import <TTUIResponderHelper.h>
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHHomeCityTrendView()
 
@@ -102,7 +103,7 @@
 
     self.leftView.titleLabel.text = [NSString stringWithFormat:@"%@%@",model.cityName,model.cityTitleDesc];
     self.leftView.subtitleLabel.text = [NSString stringWithFormat:@"%@",model.cityDetailDesc];
-    self.leftView.icon.image = [UIImage imageNamed:@"home_setting_arrow"];
+    self.leftView.icon.image = ICON_FONT_IMG(10, @"\U0000e670", [UIColor themeGray5]);//"home_setting_arrow"
     self.leftView.leftPadding = 20 * [TTDeviceHelper scaleToScreen375];
     self.leftView.rightPadding = 10 * [TTDeviceHelper scaleToScreen375];
     
@@ -130,7 +131,7 @@
     self.centerView.titleLabel.attributedText = attr;
     
     if (model.monthUp.doubleValue > 0.0001f) {
-        self.centerView.icon.image = [UIImage imageNamed:@"home_red_arrow"];
+        self.centerView.icon.image = ICON_FONT_IMG(14, @"\U0000e67f", [UIColor themeRed1]);//home_red_arrow
         self.centerView.icon.hidden = NO;
         self.centerView.subtitleLabel.hidden = NO;
         NSString *monthUpStr = [NSString stringWithFormat:@"%.2f",ABS(model.monthUp.floatValue * 100)];
@@ -144,7 +145,8 @@
         }
 
     }else if (model.monthUp.doubleValue < -0.0001f) {
-        self.centerView.icon.image = [UIImage imageNamed:@"home_green_arrow"];
+        
+        self.centerView.icon.image = ICON_FONT_IMG(14, @"\U0000e677", [UIColor themeGreen1]);//home_green_arrow
         self.centerView.icon.hidden = NO;
         self.centerView.subtitleLabel.hidden = NO;
         NSString *monthUpStr = [NSString stringWithFormat:@"%.2f",ABS(model.monthUp.floatValue * 100)];
@@ -285,7 +287,7 @@
 -(UIImageView *)rightArrow {
     
     if (!_rightArrow) {
-        _rightArrow = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"home_arrowicon_feed"]];
+        _rightArrow = [[UIImageView alloc]initWithImage:ICON_FONT_IMG(14, @"\U0000e670", [UIColor themeGray3])];//home_arrowicon_feed
     }
     return _rightArrow;
 }

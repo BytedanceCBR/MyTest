@@ -16,7 +16,7 @@
 #import "TTWatchdogMonitorRecorder.h"
 #import "TTMonitorConfiguration.h"
 #import <Heimdallr/HMDInjectedInfo.h>
-#import <Heimdallr/HMDConstants.h>
+#import <Heimdallr/Heimdallr.h>
 #import <TTTracker/TTTrackerSessionHandler.h>
 #import <TTTracker/TTTrackerProxy.h>
 #import <TTSettingsManager/TTSettingsManager.h>
@@ -37,6 +37,7 @@
 #import "TTLaunchDefine.h"
 
 DEC_TASK("TTMonitorStartupTask",FHTaskTypeService,TASK_PRIORITY_HIGH);
+extern NSString *const kHMDModuleNetworkTracker;//网络监控
 
 static BOOL TTDebugrealInitialized = NO;
 NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNotification";

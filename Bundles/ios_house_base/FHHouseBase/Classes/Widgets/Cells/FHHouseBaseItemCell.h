@@ -17,7 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHHouseBaseItemCellDelegate <NSObject>
 
 @optional
-- (void)dislikeConfirm:(FHHomeHouseDataItemsModel *)model cell:(FHHouseBaseItemCell *)cell ;
+//dislike确认
+- (void)dislikeConfirm:(FHHomeHouseDataItemsModel *)model cell:(FHHouseBaseItemCell *)cell;
+//dislike按钮点击前
+- (BOOL)canDislikeClick;
 
 @end
 

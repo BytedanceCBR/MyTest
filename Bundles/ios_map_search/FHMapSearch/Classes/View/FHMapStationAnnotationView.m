@@ -51,13 +51,14 @@
         self.annotation = annotation;
         self.enabled = NO;
         self.userInteractionEnabled = NO;
+        self.clipsToBounds = NO;
     }
     return self;
 }
 
 -(UIImage *)resizeableImage:(UIImage *)img
 {
-    return [img resizableImageWithCapInsets:UIEdgeInsetsMake(15, 30, 19, 30)];
+    return [img resizableImageWithCapInsets:UIEdgeInsetsMake(25, 40, 30, 40)];
 }
 
 -(void)setAnnotation:(id<MAAnnotation>)annotation
@@ -68,7 +69,7 @@
     
     CGFloat maxWidth = MIN(_contentLabel.width, 171);
     CGRect frame = self.frame;
-    frame.size = CGSizeMake(maxWidth+48, 38);
+    frame.size = CGSizeMake(maxWidth+72, 67);
     self.frame = frame;
     
 //    [self changeSelectMode:[(FHHouseAnnotation *)annotation type]];
@@ -98,9 +99,9 @@
     [super layoutSubviews];
     self.backgroundView.frame = self.bounds;
     CGFloat arrowWidth = 7;
-    self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 30-arrowWidth/2, arrowWidth, arrowWidth);
-    self.contentLabel.frame = CGRectMake(30, 8, self.width-48, 17);
-    self.stationView.frame = CGRectMake(17, 11, 10, 11);
+    self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 42-arrowWidth/2, arrowWidth, arrowWidth);
+    self.contentLabel.frame = CGRectMake(36, 21, self.width-60, 17);
+    self.stationView.frame = CGRectMake(26, 24, 10, 11);
     
 }
 

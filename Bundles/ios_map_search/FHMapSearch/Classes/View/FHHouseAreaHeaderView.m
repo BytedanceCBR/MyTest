@@ -15,7 +15,7 @@
 
 @interface FHHouseAreaHeaderView ()
 
-@property(nonatomic , strong) UIView *topTipView;
+//@property(nonatomic , strong) UIView *topTipView;
 @property(nonatomic , strong) UILabel *nameLabel;
 @property(nonatomic , strong) UILabel *locationLabel;
 @property(nonatomic , strong) UILabel *priceLabel;
@@ -38,10 +38,10 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _topTipView = [[UIView alloc] init];
-        _topTipView.backgroundColor = [UIColor themeGray6];
-        _topTipView.layer.cornerRadius = 1.5;
-        _topTipView.layer.masksToBounds = YES;
+//        _topTipView = [[UIView alloc] init];
+//        _topTipView.backgroundColor = [UIColor themeGray6];
+//        _topTipView.layer.cornerRadius = 1.5;
+//        _topTipView.layer.masksToBounds = YES;
         
         _nameLabel = [self labelColor:[UIColor themeGray1] font:[UIFont themeFontMedium:20]];
         _locationLabel = [self labelColor:[UIColor themeGray3] font:[UIFont themeFontRegular:12]];
@@ -55,7 +55,7 @@
         _bottomLine = [[UIView alloc] init];
         _bottomLine.backgroundColor = [UIColor themeGray6];
         
-        [self addSubview:_topTipView];
+//        [self addSubview:_topTipView];
         [self addSubview:_nameLabel];
         [self addSubview:_locationLabel];
         [self addSubview:_priceLabel];
@@ -70,26 +70,26 @@
 
 -(void)initConstraints
 {
-    [_topTipView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(3);
-        make.centerX.mas_equalTo(self);
-        make.size.mas_equalTo(CGSizeMake(24, 3));
-    }];
+//    [_topTipView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(3);
+//        make.centerX.mas_equalTo(self);
+//        make.size.mas_equalTo(CGSizeMake(24, 3));
+//    }];
     
     [_indicatorImgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self);
+        make.centerY.mas_equalTo(self).offset(-7);
         make.size.mas_equalTo(CGSizeMake(16, 16));
         make.right.mas_equalTo(self).offset(-21);
     }];
     
     [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self);
+        make.centerY.mas_equalTo(self).offset(-7);
         make.right.mas_equalTo(_indicatorImgView.mas_left).offset(-10);
     }];
     
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
-        make.top.mas_equalTo(20);
+        make.top.mas_equalTo(14);
         make.right.mas_lessThanOrEqualTo(_priceLabel.mas_left).offset(-10);
     }];
     [_locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -120,7 +120,7 @@
 
 -(void)hideTopTip:(BOOL)hide
 {
-    self.topTipView.hidden = hide;
+//    self.topTipView.hidden = hide;
 }
 
 /*

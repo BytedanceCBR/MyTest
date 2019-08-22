@@ -186,6 +186,8 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 
 @property (nonatomic, strong) TTVDetailFollowRecommendViewController *followRecommendVC;
 
+@property (nonatomic, assign) UIEdgeInsets initInsets;
+
 @end
 
 @implementation TTVVideoDetailViewController
@@ -680,6 +682,9 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
         
         UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20)];
         [_wrapperScroller.contentView addSubview:paddingView];
+        if (@available(iOS 11.0 , *)) {
+            _wrapperScroller.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
     }
     return _wrapperScroller;
 }
@@ -751,13 +756,14 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     
     self.statusBarBackgrView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.ttv_statusBarHidden ? 0 : self.view.tt_safeAreaInsets.top)];
     self.statusBarBackgrView.backgroundColor = [UIColor blackColor];
+    self.initInsets = self.view.tt_safeAreaInsets;
     [self.view addSubview:self.statusBarBackgrView];
 }
 
 - (void)viewSafeAreaInsetsDidChange {
     [super viewSafeAreaInsetsDidChange];
 
-    self.statusBarBackgrView.height = (self.ttv_statusBarHidden && ![TTDeviceHelper isIPhoneXDevice]) ? 0 : self.view.tt_safeAreaInsets.top;
+    self.statusBarBackgrView.height = (self.ttv_statusBarHidden && ![TTDeviceHelper isIPhoneXDevice]) ? 0 : self.initInsets.top;
 }
 
 - (void)restoreAlbumViewIfNeed
@@ -775,6 +781,9 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     _ttvContainerScrollView.showsVerticalScrollIndicator = ![TTDeviceHelper isPadDevice];
     _ttvContainerScrollView.delegate = self;
     _ttvContainerScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    if(@available(iOS 11.0 , *)){
+        _ttvContainerScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     [self.view addSubview:_ttvContainerScrollView];
     _headerPosterVC.ttvContainerScrollView = _ttvContainerScrollView;
     _commentVC.ttvContainerScrollView = _ttvContainerScrollView;

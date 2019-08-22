@@ -10,6 +10,7 @@
 #import "UIFont+House.h"
 #import <Masonry.h>
 #import "TTDeviceHelper.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHUGCCellHeaderView ()
 

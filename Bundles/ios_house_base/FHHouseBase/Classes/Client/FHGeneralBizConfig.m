@@ -10,6 +10,7 @@
 #import "FHUtils.h"
 #import "FHEnvContext.h"
 #import "FHLazyLoadModel.h"
+#import <YYModel/YYModel.h>
 #import "FHUGCConfigModel.h"
 
 
@@ -165,66 +166,7 @@ static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
 }
 
 -(FHConfigDataModel*)lazyInitConfig:(NSDictionary*)config {
-    NSMutableDictionary* theConfig = [config mutableCopy];
-    NSDictionary* cityList = theConfig[@"city_list"];
-    theConfig[@"city_list"] = nil;
-    
-    NSMutableDictionary* cache = [[NSMutableDictionary alloc] init];
-    NSString* configKey = @"filter";
-    cache[configKey] = theConfig[configKey];
-    theConfig[configKey] = nil;
-    
-    configKey = @"filter_order";
-    cache[@"filterOrder"] = theConfig[configKey];
-    theConfig[configKey] = nil;
-    
-    configKey = @"court_filter";
-    cache[@"courtFilter"] = theConfig[configKey];
-    theConfig[configKey] = nil;
-    
-    
-    configKey = @"rent_filter";
-    cache[@"rentFilter"] = theConfig[configKey];
-    theConfig[configKey] = nil;
-    
-    configKey = @"rent_filter_order";
-    cache[@"rentFilterOrder"] = theConfig[configKey];
-    theConfig[configKey] = nil;
-    
-    configKey = @"neighborhood_filter";
-    cache[@"neighborhoodFilter"] = theConfig[configKey];
-    theConfig[configKey] = nil;
-    
-    configKey = @"neighborhood_filter_order";
-    cache[@"neighborhoodFilterOrder"] = theConfig[configKey];
-    theConfig[configKey] = nil;
-    
-    configKey = @"search_tab_neighborhood_filter";
-    cache[@"searchTabNeighborhoodFilter"] = theConfig[configKey];
-    theConfig[configKey] = nil;
-    
-    configKey = @"search_tab_court_filter";
-    cache[@"searchTabCourtFilter"] = theConfig[configKey];
-    theConfig[configKey] = nil;
-    
-    configKey = @"search_tab_rent_filter";
-    cache[@"searchTabRentFilter"] = theConfig[configKey];
-    theConfig[configKey] = nil;
-    
-    configKey = @"search_tab_filter";
-    cache[@"searchTabFilter"] = theConfig[configKey];
-    theConfig[configKey] = nil;
-    
-    configKey = @"sale_history_filter";
-    cache[@"saleHistoryFilter"] = theConfig[configKey];
-    theConfig[configKey] = nil;
-    FHConfigDataModel *configModel = [[FHConfigDataModel alloc] initWithDictionary:theConfig error:nil];
-    
-    [cache enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        id model = [self modelWithClass:@"FHSearchFilterConfigItem" withData:obj];
-        [configModel setValue:model forKey:key];
-    }];
-    configModel.cityList = [self modelWithClass:@"FHConfigDataCityListModel" withData:cityList];
+    FHConfigDataModel *configModel = [[FHConfigDataModel alloc] initShadowWithDictionary:config error:nil];
     return configModel;
 }
 

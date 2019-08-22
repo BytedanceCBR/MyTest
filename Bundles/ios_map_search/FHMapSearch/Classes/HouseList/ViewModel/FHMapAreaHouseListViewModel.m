@@ -44,8 +44,9 @@
 @property(nonatomic , strong) NSMutableDictionary * houseShowTracerDic; // 埋点key记录
 @property(nonatomic , strong) TTHttpTask *requestTask;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
-@property(nonatomic , copy)   NSString *filterCondition;
+//@property(nonatomic , copy)   NSString *filterCondition;
 @property(nonatomic , assign) BOOL hasEnterCategory;
+@property(nonatomic , copy)   NSString *currentFilter;
 
 /*
  * 多边形，经纬度用","分割，不同点之间用";"分割。
@@ -81,7 +82,7 @@
         
         NSString *filter = userInfo[@"filter"];
         if (!IS_EMPTY_STRING(filter)) {
-            self.filterCondition = filter;
+            self.currentFilter = filter;
         }
         
     }
@@ -164,22 +165,13 @@
     }
 }
 
-- (void)showNotify:(NSString *)message 
+-(void)refreshWithFilter:(NSString *)filter
 {
-    UIEdgeInsets inset = self.tableView.contentInset;
-    inset.top = self.notifyBarView.height;
-    self.tableView.contentInset = inset;
-    
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:0.3 animations:^{
-            UIEdgeInsets finset = self.tableView.contentInset;
-            finset.top = 0;
-            self.tableView.contentInset = finset;
-        }];
-    });
-    
+    if([_currentFilter isEqualToString:filter]){
+        return;
+    }
+    self.currentFilter = filter;
+    [self requestData:YES];
 }
 
 #pragma mark - Request
@@ -198,8 +190,8 @@
     NSMutableDictionary *param = [NSMutableDictionary new];
     NSMutableString *query = [[NSMutableString alloc] init];//
     
-    if (self.filterCondition) {
-        [query appendString:self.filterCondition];
+    if (self.currentFilter) {
+        [query appendString:self.currentFilter];
     }
         
     if (query.length > 0 && ![query hasSuffix:@"&"]) {
@@ -306,9 +298,9 @@
             self.searchId = searchId;
         }
         if (isHead) {
-            if (openUrl) {
-                [self overwriteFilter:openUrl];
-            }
+//            if (openUrl) {
+//                [self overwriteFilter:openUrl];
+//            }
         
             [self.houseList removeAllObjects];
             [self.houseShowTracerDic removeAllObjects];
@@ -329,10 +321,6 @@
             [self updateTableViewWithMoreData:hasMore];
             
             if (isHead) {
-                if (refreshTip.length > 0){
-                    [self showNotify:refreshTip];                    
-//                    self.listController.title = refreshTip;
-                }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
                 });
@@ -378,12 +366,9 @@
 
 -(void)overwriteFilter:(NSString *)openUrl
 {
-    NSURL *url = [NSURL URLWithString:openUrl];
-    TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
-    if (paramObj) {
-        [self.houseFilterBridge resetFilter:self.houseFilterViewModel withQueryParams:paramObj.queryParams updateFilterOnly:YES];
+    if([self.delegate respondsToSelector:@selector(overwriteWithOpenUrl:andViewModel:)]){
+        [self.delegate overwriteWithOpenUrl:openUrl andViewModel:self];
     }
-    
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
@@ -462,6 +447,67 @@
     [self jump2DetailPage:indexPath];
 }
 
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (!scrollView.scrollEnabled) {
+        //不是用户主动滑动
+        scrollView.contentOffset = CGPointZero;
+        return;
+    }
+    
+    CGFloat minTop =  [self.delegate areaListMinTop];
+    if (self.listController.view.top - scrollView.contentOffset.y > minTop) {
+        [UIView animateWithDuration:0.1 animations:^{
+            self.listController.view.top -= scrollView.contentOffset.y;
+        }];
+        scrollView.contentOffset = CGPointZero;
+    }
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [self checkScrollMoveEffect:scrollView];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self checkScrollMoveEffect:scrollView];
+}
+
+-(void)checkScrollMoveEffect:(UIScrollView *)scrollview
+{
+    CGFloat minTop = [self.delegate areaListMinTop];
+    if (self.listController.view.top < minTop + 50) {
+        //back to top
+        [UIView  animateWithDuration:0.3 animations:^{
+            self.listController.view.top = minTop;
+        }];
+    }else{
+        //dismiss
+        [self handleDismiss:0.3];
+    }
+
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    if (scrollView.contentOffset.y < 1 && (self.listController.view.top > [self.delegate areaListMinTop]) && velocity.y < -2.5) {
+        //quickly swipe done
+        [self handleDismiss:0.1];
+    }
+    if (scrollView.contentOffset.y > 50 && velocity.y < -2) {
+        *targetContentOffset =  CGPointMake(0, 0.5);
+    }
+}
+
+-(void)handleDismiss:(CGFloat)duration
+{
+//    [UIView ];
+    [self.delegate areaListDismissed:self];
+}
+
+
 -(FHSingleImageInfoCellModel *)houseItemByModel:(id)obj {
     
     FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc] init];
@@ -472,26 +518,6 @@
         cellModel.rentModel = obj;
     }
     return cellModel;
-}
-
-
-
-
-#pragma mark - filter delegate
--(void)onConditionChanged:(NSString *)condition
-{
-    self.filterCondition = condition;
-    [self requestData:YES];
-}
-
--(void)onConditionPanelWillDisplay
-{
-    
-}
-
--(void)onConditionPanelWillDisappear
-{
-    
 }
 
 #pragma mark tracer

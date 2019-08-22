@@ -107,6 +107,8 @@ typedef NS_ENUM(NSUInteger, TTPostThreadTaskErrorPosition) {
 @property (nonatomic, copy) NSString *sdkParams;
 
 @property (nonatomic, copy)     NSString       *social_group_id;
+@property (nonatomic, copy)     NSString       *social_group_name;
+@property (nonatomic, assign)   BOOL       hasSocialGroup;  // 是否是外部传入小区
 
 // 在初始化时确定Task的类型，默认为发普通帖子
 - (instancetype)initWithTaskType:(TTPostTaskType)taskType;

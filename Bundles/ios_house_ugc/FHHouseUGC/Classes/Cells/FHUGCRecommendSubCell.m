@@ -15,7 +15,7 @@
 #import "FHUGCConfig.h"
 #import "TTBaseMacro.h"
 
-#define iconWidth 48
+#define iconWidth 50
 
 @interface FHUGCRecommendSubCell ()
 
@@ -24,6 +24,7 @@
 @property(nonatomic, strong) UILabel *sourceLabel;
 @property(nonatomic, strong) UIImageView *icon;
 @property(nonatomic, strong) FHUGCFollowButton *joinBtn;
+@property (nonatomic, assign)   NSInteger       currentRank;
 
 @property(nonatomic, strong) FHFeedContentRecommendSocialGroupListModel *model;
 
@@ -55,6 +56,7 @@
 
 - (void)initNotification {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(socialGroupDataChange:) name:@"kFHUGCSicialGroupDataChangeKey" object:nil];
 }
 
 - (void)dealloc {
@@ -63,6 +65,7 @@
 
 - (void)refreshWithData:(id)data rank:(NSInteger)rank {
     if([data isKindOfClass:[FHFeedContentRecommendSocialGroupListModel class]]){
+        self.currentRank = rank;
         FHFeedContentRecommendSocialGroupListModel *model = (FHFeedContentRecommendSocialGroupListModel *)data;
         _model = model;
         _titleLabel.text = model.socialGroupName;
@@ -94,8 +97,10 @@
     self.icon = [[UIImageView alloc] init];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
-    _icon.layer.cornerRadius = iconWidth/2;
+    _icon.layer.cornerRadius = 4;
     _icon.backgroundColor = [UIColor themeGray7];
+    _icon.layer.borderWidth = 0.5;
+    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_icon];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:15] textColor:[UIColor themeGray1]];
@@ -113,13 +118,13 @@
 
 - (void)initConstraints {
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(11);
+        make.top.mas_equalTo(self.contentView).offset(10);
         make.left.mas_equalTo(self.contentView).offset(20);
         make.width.height.mas_equalTo(iconWidth);
     }];
     
     [self.joinBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.contentView);
+        make.centerY.mas_equalTo(self.icon);
         make.right.mas_equalTo(self.contentView).offset(-20);
         make.width.mas_equalTo(58);
         make.height.mas_equalTo(24);
@@ -165,6 +170,30 @@
     if([groupId isEqualToString:self.model.socialGroupId] && followed){
         if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
             [self.delegate joinIn:self.model cell:self];
+        }
+    }
+}
+
+- (void)socialGroupDataChange:(NSNotification *)notification {
+    if (notification) {
+        FHFeedContentRecommendSocialGroupListModel *tempModel = self.model;
+        if (tempModel && [tempModel isKindOfClass:[FHFeedContentRecommendSocialGroupListModel class]]) {
+            NSString *socialGroupId = tempModel.socialGroupId;
+            FHUGCScialGroupDataModel *model = [[FHUGCConfig sharedInstance] socialGroupData:socialGroupId];
+            if (model && (![model.countText isEqualToString:tempModel.countText] || ![model.hasFollow isEqualToString:tempModel.hasFollow])) {
+                tempModel.contentCount = model.contentCount;
+                tempModel.countText = model.countText;
+                tempModel.hasFollow = model.hasFollow;
+                tempModel.followerCount = model.followerCount;
+                [self refreshWithData:tempModel rank:self.currentRank];
+                
+                BOOL followed = [model.hasFollow boolValue];
+                if([socialGroupId isEqualToString:self.model.socialGroupId] && followed){
+                    if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
+                        [self.delegate joinIn:self.model cell:self];
+                    }
+                }
+            }
         }
     }
 }

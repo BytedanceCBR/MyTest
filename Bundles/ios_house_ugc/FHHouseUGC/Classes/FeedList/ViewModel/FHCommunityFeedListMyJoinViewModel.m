@@ -22,6 +22,7 @@
 @interface FHCommunityFeedListMyJoinViewModel () <UITableViewDelegate, UITableViewDataSource>
 
 @property(nonatomic, assign) BOOL needDealFollowData;
+@property (nonatomic, strong)   NSMutableArray       *lastGroupIdArr;
 
 @end
 
@@ -31,6 +32,7 @@
     self = [super initWithTableView:tableView controller:viewController];
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
+        self.lastGroupIdArr = [[NSMutableArray alloc] init];
         [self configTableView];
         // 发帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
@@ -68,7 +70,7 @@
         [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
             wself.isRefreshingTip = NO;
             [wself.viewController hideImmediately];
-            [wself requestData:YES first:NO];
+            [wself requestData:YES first:YES];
         }];
     }
 }
@@ -103,6 +105,7 @@
                                         [self.dataList insertObject:cellModel atIndex:0];
                                     }
                                     [self.tableView reloadData];
+                                    self.needRefreshCell = NO;
                                 }
                             });
                         }
@@ -178,16 +181,23 @@
         }
         
         if(model){
+            // 临时兼容，更新refreshTip，后面版本需要去掉 当前版本：v0.7.5
+            [self.lastGroupIdArr removeAllObjects];
+            if (wself.dataList.count > 0) {
+                [wself.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj isKindOfClass:[FHFeedUGCCellModel class]]) {
+                        if (obj.groupId.length > 0) {
+                            [self.lastGroupIdArr addObject:obj.groupId];
+                        }
+                    }
+                }];
+            }
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
-            
             if(isFirst){
                 [wself.dataList removeAllObjects];
             }
             
             if(isHead){
-                if(result.count > 0){
-                    [wself.cellHeightCaches removeAllObjects];
-                }
                 [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
             }else{
                 [wself.dataList addObjectsFromArray:result];
@@ -204,7 +214,29 @@
             }
             [wself.tableView reloadData];
             
-            NSString *refreshTip = feedListModel.tips.displayInfo;
+            NSString *refreshTip = feedListModel.tips.displayInfo;// 为您更新19d条热帖
+            // 临时兼容，更新refreshTip，后面版本需要去掉 当前版本：v0.7.5
+            if (result.count > 0 && isHead) {
+                if (wself.lastGroupIdArr.count > 0) {
+                    __block NSInteger refreshTipCount = 0;
+                    [result enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if ([obj isKindOfClass:[FHFeedUGCCellModel class]]) {
+                            if (obj.groupId.length > 0) {
+                                if (![self.lastGroupIdArr containsObject:obj.groupId]) {
+                                    refreshTipCount += 1;
+                                }
+                            }
+                        }
+                    }];
+                    if (refreshTipCount > 0) {
+                        refreshTip = [NSString stringWithFormat:@"为您更新%ld条热帖",refreshTipCount];
+                    } else {
+                        refreshTip = @"";
+                    }
+                }
+            } else {
+                refreshTip = @"";
+            }
             if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
                 wself.isRefreshingTip = YES;
                 [wself.viewController showNotify:refreshTip completion:^{
@@ -287,9 +319,20 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     if(indexPath.row < self.dataList.count){
         [self traceClientShowAtIndexPath:indexPath];
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        /*impression统计相关*/
+        SSImpressionStatus impressionStatus = self.isShowing ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
+        [self recordGroupWithCellModel:cellModel status:impressionStatus];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    // impression统计
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        [self recordGroupWithCellModel:cellModel status:SSImpressionStatusEnd];
     }
 }
 
@@ -313,7 +356,7 @@
         }
         return cell;
     }
-    return nil;
+    return [[FHUGCBaseCell alloc] init];
 }
 
 #pragma mark - UITableViewDelegate

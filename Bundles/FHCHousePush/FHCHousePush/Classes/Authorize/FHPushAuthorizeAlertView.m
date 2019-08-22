@@ -10,6 +10,7 @@
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIView+House.h>
 #import <Masonry.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHPushAuthorizeAlertView ()
 
@@ -244,8 +245,9 @@
 {
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc]init];
-        [_closeBtn setImage:[UIImage imageNamed:@"detail_alert_closed"] forState:UIControlStateNormal];
-        [_closeBtn setImage:[UIImage imageNamed:@"detail_alert_closed"] forState:UIControlStateHighlighted];
+        UIImage *img = ICON_FONT_IMG(12, @"\U0000e673", nil);
+        [_closeBtn setImage:img forState:UIControlStateNormal];
+        [_closeBtn setImage:img forState:UIControlStateHighlighted];
     }
     return _closeBtn;
 }

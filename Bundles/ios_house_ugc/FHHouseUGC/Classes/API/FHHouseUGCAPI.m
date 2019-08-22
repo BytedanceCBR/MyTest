@@ -9,6 +9,8 @@
 #import "NSStringAdditions.h"
 #import "FHUGCModel.h"
 #import "FHUGCConfig.h"
+#import "FHEnvContext.h"
+#import "JSONAdditions.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -39,16 +41,18 @@
 }
 
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-//    NSString *queryPath = @"/f100/api/v2/msg/system_list";
 
     NSString *queryPath = [ArticleURLSetting encrpytionStreamUrlString];
+    
+    //test
+//    NSString *queryPath = @"http://10.224.5.205:8765/api/news/feed/v96/";
 
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"category"] = category;
     paramDic[@"count"] = @(20);
-    paramDic[@"detail"] = @(1);
-    paramDic[@"image"] = @(1);
-    paramDic[@"LBS_status"] = [TTLocationManager currentLBSStatus];
+//    paramDic[@"detail"] = @(1);
+//    paramDic[@"image"] = @(1);
+//    paramDic[@"LBS_status"] = [TTLocationManager currentLBSStatus];
     paramDic[@"city"] = [TTLocationManager sharedManager].city;
     paramDic[@"loc_mode"] = @([TTLocationManager isLocationServiceEnabled]);
 
@@ -80,14 +84,19 @@
     paramDic[@"strict"] = @(0);
     paramDic[@"list_count"] = @(listCount);
     paramDic[@"concern_id"] = @"";
-    paramDic[@"cp"] = [self encreptTime:[[NSDate date] timeIntervalSince1970]];
+//    paramDic[@"cp"] = [self encreptTime:[[NSDate date] timeIntervalSince1970]];
 
     if (!loadMore) {
         paramDic[@"refresh_reason"] = @(0);
     }
-//    "last_refresh_sub_entrance_interval" = 4459;
-//    "session_refresh_idx" = 5;
-//    "tt_from" = pull;
+    
+    NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
+    NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if(fCityId){
+        [extraDic setObject:fCityId forKey:@"f_city_id"];
+    }
+    
+    paramDic[@"client_extra_params"] = [extraDic tt_JSONRepresentation];
 
     Class cls = NSClassFromString(@"FHFeedListModel");
 
@@ -315,4 +324,41 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
+
++ (TTHttpTask *)refreshFeedTips:(NSString *)category beHotTime:(NSString *)beHotTime completion:(void(^)(bool hasNew , NSError *error))completion {
+    NSString *queryPath = @"/ugc/v:version/refresh_tips";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(category){
+        paramDic[@"category"] = category;
+    }
+    if(beHotTime){
+        paramDic[@"be_hot_time"] = beHotTime;
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        BOOL hasNew = NO;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                }else{
+                    hasNew = [json[@"data"][@"has_new_content"] boolValue];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        if (completion) {
+            completion(hasNew,error);
+        }
+    }];
+}
 @end

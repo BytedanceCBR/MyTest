@@ -156,6 +156,7 @@
             [self configIconRowCountAndHeight];
             
             [FHEnvContext changeFindTabTitle];
+            [FHEnvContext showRedPointForNoUgc];
             
             //更新冷启动默认选项
             if (xConfigDataModel.houseTypeDefault && (xConfigDataModel.houseTypeDefault.integerValue > 0) && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
@@ -318,6 +319,15 @@
     }
     //    [self.tableViewV reloadData];
     //    self.tableViewV.scrollEnabled = YES;
+}
+
+- (void)setIsShowRefreshTip:(BOOL)isShowRefreshTip {
+    for (FHHomeItemViewController *vc in self.itemsVCArray) {
+        if ([vc isKindOfClass:[FHHomeItemViewController class]]) {
+            FHHomeItemViewController *itemVC = (FHHomeItemViewController *)vc;
+            itemVC.isShowRefreshTip = isShowRefreshTip;
+        }
+    }
 }
 
 - (void)setUpSubtableIndex:(NSInteger)index
