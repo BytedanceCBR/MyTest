@@ -8,6 +8,7 @@
 #import "FHHouseFindHistoryCell.h"
 #import "FHHouseFindHistoryItemCell.h"
 #import "FHHFHistoryModel.h"
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @interface FHHouseFindHistoryCell ()<UICollectionViewDataSource,UICollectionViewDelegate>
 
@@ -28,7 +29,7 @@
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         layout.minimumInteritemSpacing = 13;
         
-        _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
+        _collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
         _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.showsHorizontalScrollIndicator = NO;
         

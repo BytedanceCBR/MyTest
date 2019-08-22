@@ -851,7 +851,9 @@ CGFloat const gestureMinimumTranslation = 20.0;
     
     _scrollView.contentInset =  inset;
     // 原因参考: https://www.cnblogs.com/qqcc1388/p/10458205.html
-    _scrollView.contentOffset = CGPointMake(0, -inset.top);
+    if (self.scrollView.contentOffset.y <= inset.top) {
+        _scrollView.contentOffset = CGPointMake(0, -inset.top);
+    }
     
     
     if (_scrollView.pullUpView && !_scrollView.pullUpView.isObservingContentInset) {

@@ -9,6 +9,7 @@
 #import "FHHouseFindResultViewModel.h"
 #import <FHErrorView.h>
 #import <UIViewController+Track.h>
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHHouseFindResultViewController () <TTRouteInitializeProtocol>
 
@@ -79,7 +80,7 @@
     
     self.automaticallyAdjustsScrollViewInsets = NO;
 
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    self.tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     self.tableView.showsVerticalScrollIndicator = NO;
     if (@available(iOS 7.0, *)) {
         self.tableView.estimatedSectionFooterHeight = 0;

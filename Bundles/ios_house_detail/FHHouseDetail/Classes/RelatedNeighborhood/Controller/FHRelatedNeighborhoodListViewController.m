@@ -10,6 +10,7 @@
 #import <TTUIWidget/UIViewController+Track.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTReachability/TTReachability.h>
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHRelatedNeighborhoodListViewController ()
 
@@ -65,7 +66,7 @@
 }
 
 - (void)configTableView {
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

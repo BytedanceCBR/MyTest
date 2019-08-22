@@ -61,6 +61,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;
 @property (nonatomic, strong , nullable) FHDetailRelatedHouseResponseDataModel *relatedHouseData;
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
+@property (nonatomic, weak , nullable) FHDetailAgentListModel *agentListModel;
 
 @end
 
@@ -375,6 +376,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         agentListModel.houseId = self.houseId;
         agentListModel.houseType = self.houseType;
         [self.items addObject:agentListModel];
+        self.agentListModel = agentListModel;
     }
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
@@ -487,6 +489,18 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     [self reloadData];
+}
+
+- (void)vc_viewDidDisappear:(BOOL)animated
+{
+    [super vc_viewDidDisappear:animated];
+    [self.agentListModel.phoneCallViewModel vc_viewDidDisappear:animated];
+}
+
+- (void)vc_viewDidAppear:(BOOL)animated
+{
+    [super vc_viewDidAppear:animated];
+    [self.agentListModel.phoneCallViewModel vc_viewDidAppear:animated];
 }
 
 // 周边数据请求，当网络请求都返回后刷新数据

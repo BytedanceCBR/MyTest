@@ -10,7 +10,8 @@
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIView+House.h>
 #import <TTBaseLib/UIViewAdditions.h>
-#import <Masonry.h>
+#import <Masonry/Masonry.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHPushMessageTipView ()
 
@@ -54,10 +55,11 @@
 
     [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
+        make.width.mas_equalTo(16);
         make.height.top.mas_equalTo(self);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.closeBtn.mas_right);
+        make.left.mas_equalTo(self.closeBtn.mas_right).offset(5);
         make.height.top.mas_equalTo(self);
     }];
     [self.submitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -98,8 +100,9 @@
 {
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc]init];
-        [_closeBtn setImage:[UIImage imageNamed:@"push_message_close"] forState:UIControlStateNormal];
-        [_closeBtn setImage:[UIImage imageNamed:@"push_message_close"] forState:UIControlStateHighlighted];
+        UIImage *img = ICON_FONT_IMG(16,@"\U0000e673",[UIColor themeGray2]);
+        [_closeBtn setImage:img forState:UIControlStateNormal];
+        [_closeBtn setImage:img forState:UIControlStateHighlighted];
     }
     return _closeBtn;
 }

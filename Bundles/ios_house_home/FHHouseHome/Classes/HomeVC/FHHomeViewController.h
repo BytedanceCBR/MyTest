@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) TTReloadType reloadFromType;
 @property (nonatomic, assign) BOOL isMainTabVC;
 @property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, assign) BOOL isShowRefreshTip;
 
 - (void)pullAndRefresh;
 

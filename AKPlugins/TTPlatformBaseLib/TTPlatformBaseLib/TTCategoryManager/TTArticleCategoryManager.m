@@ -222,11 +222,16 @@ BOOL __hasInsertedDefaultData = NO;
 
 - (void)startGetCategory:(BOOL)userChanged
 {
-    [self dispatchData:[self localCategoriesContainDeleteCategory:NO]];
+    NSDate *n = [NSDate date];
+    NSArray * categories = [self localCategoriesContainDeleteCategory:NO];
+    NSLog(@"[LAUNCH] local categories delegate category takes: %f s",[[NSDate date]timeIntervalSinceDate:n]);
+    
+    [self dispatchData:categories];
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:5];
     
     TTCategory *newsLocalCategory = [TTArticleCategoryManager newsLocalCategory];
+    NSLog(@"[LAUNCH] newsLocalCategory takes: %f s",[[NSDate date]timeIntervalSinceDate:n]);
     //用户选择过城市，发送给服务端
     if (newsLocalCategory && [TTArticleCategoryManager isUserSelectedLocalCity]) {
         [params setValue:newsLocalCategory.name forKey:@"user_city"];
@@ -276,6 +281,8 @@ BOOL __hasInsertedDefaultData = NO;
     
     //是否用户主动修改
     [params setValue:@(userChanged) forKey:@"user_modify"];
+    
+    NSLog(@"[LAUNCH] before search takes: %f s",[[NSDate date]timeIntervalSinceDate:n]);
     
     [[TTNetworkManager shareInstance] requestForJSONWithURL:[self subscribedCategoryURLString] params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         

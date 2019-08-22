@@ -40,6 +40,7 @@
 #import "FHFeedUGCContentModel.h"
 #import "FHMainApi.h"
 #import "FHFeedUGCCellModel.h"
+#import "FHEnvContext.h"
 
 NSString * const TTPostTaskBeginNotification = kTTForumPostingThreadNotification;
 NSString * const TTPostTaskResumeNotification = kTTForumResumeThreadNotification;
@@ -190,6 +191,25 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         if (task.social_group_id.length > 0) {
             NSDictionary *dic = @{@"social_group_id":task.social_group_id};
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostSuccessNotification object:nil userInfo:dic];
+            
+            // 存储发布历史
+            NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
+            NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
+            if(currentCityID.length > 0 && currentUserID.length > 0) {
+                FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadPublisherHistoryData];
+                if(!selectedGroupHistory) {
+                    selectedGroupHistory = [FHPostUGCSelectedGroupHistory new];
+                    selectedGroupHistory.historyInfos = [NSMutableDictionary dictionary];
+                }
+                
+                FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
+                selectedGroup.socialGroupId = task.social_group_id;
+                selectedGroup.socialGroupName = task.social_group_name;
+                NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
+                [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
+                
+                [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
+            }
         }
         
         [[ToastManager manager] showToast:@"发帖成功"];
@@ -323,6 +343,8 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         task.userID = [[TTAccount sharedAccount] userIdString];//[[BDContextGet() findServiceByName:TTAccountProviderServiceName] userID];
         task.concernID = postThreadModel.concernID;
         task.social_group_id = postThreadModel.social_group_id;
+        task.social_group_name = postThreadModel.social_group_name;
+        task.hasSocialGroup = postThreadModel.hasSocialGroup;
         task.categoryID = postThreadModel.categoryID;
         [task addTaskImages:postThreadModel.taskImages thumbImages:postThreadModel.thumbImages];
         task.source = 2;//来源于话题

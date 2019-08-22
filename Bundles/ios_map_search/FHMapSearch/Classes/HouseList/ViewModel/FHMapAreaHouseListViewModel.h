@@ -7,18 +7,17 @@
 
 #import <Foundation/Foundation.h>
 #import <FHHouseBase/FHHouseType.h>
-#import <FHHouseBase/FHHouseFilterDelegate.h>
+//#import <FHHouseBase/FHHouseFilterDelegate.h>
 
 NS_ASSUME_NONNULL_BEGIN
 @class FHMapAreaHouseListViewController;
 @protocol FHHouseFilterBridge;
 @class ArticleListNotifyBarView;
-@interface FHMapAreaHouseListViewModel : NSObject<FHHouseFilterDelegate>
+@protocol FHMapAreaHouseListViewModelDelegate;
+@interface FHMapAreaHouseListViewModel : NSObject
 
 @property(nonatomic , assign)FHHouseType houseType;
-@property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
-@property(nonatomic , strong) id houseFilterViewModel;
-@property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
+@property(nonatomic , weak) id<FHMapAreaHouseListViewModelDelegate> delegate;
 
 -(instancetype)initWithWithController:(FHMapAreaHouseListViewController *)viewController tableView:(UITableView *)table userInfo:(NSDictionary *)userInfo;
 
@@ -26,11 +25,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)viewWillDisappear:(BOOL)animated;
 
--(void)updateFilter;
+//更新筛选 并请求
+-(void)refreshWithFilter:(NSString *)filter;
 
 -(void)loadData;
 
 -(void)addStayCategoryLog;
+
+@end
+
+@protocol FHMapAreaHouseListViewModelDelegate <NSObject>
+
+-(void)overwriteWithOpenUrl:(NSString *)openUrl andViewModel:(FHMapAreaHouseListViewModel *)viewModel;
+
+-(CGFloat)areaListMinTop;
+
+-(void)areaListDismissed:(FHMapAreaHouseListViewModel *)viewModel;
 
 @end
 

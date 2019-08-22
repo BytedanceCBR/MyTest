@@ -17,6 +17,7 @@
 #import "FHUserTracker.h"
 #import "UIViewController+Track.h"
 #import "FHFeedOperationView.h"
+#import "FHUGCConfig.h"
 
 @interface FHPostDetailViewController ()
 
@@ -108,6 +109,17 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     self.isViewAppearing = YES;
+    // 帖子数同步逻辑
+    FHUGCScialGroupDataModel *tempModel = self.weakViewModel.detailHeaderModel.socialGroupModel;
+    if (tempModel) {
+        NSString *socialGroupId = tempModel.socialGroupId;
+        FHUGCScialGroupDataModel *model = [[FHUGCConfig sharedInstance] socialGroupData:socialGroupId];
+        if (model && (![model.countText isEqualToString:tempModel.countText] || ![model.hasFollow isEqualToString:tempModel.hasFollow])) {
+            self.weakViewModel.detailHeaderModel.socialGroupModel = model;
+            [self headerInfoChanged];
+            [self.weakViewModel.tableView reloadData];
+        }
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

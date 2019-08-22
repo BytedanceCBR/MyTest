@@ -25,7 +25,9 @@
 @property(nonatomic, strong) UILabel * categoryLabel2;
 @property(nonatomic, strong) UIView * categoryBgView;
 @property(nonatomic, assign) NSUInteger searchTitleIndex;
-@property (nonatomic, strong)   NSTimer       *timer;
+@property(nonatomic, strong)   NSTimer       *timer;
+@property(nonatomic, strong) UIImageView * cityImageButtonLeftIcon;
+@property(nonatomic, strong) UIImageView * areaImageButtonLeftIcon;
 
 @end
 
@@ -41,6 +43,18 @@
     }
     
     return self;
+}
+
+-(void)willMoveToWindow:(UIWindow *)newWindow
+{
+    [super willMoveToWindow:newWindow];
+    if(!_cityImageButtonLeftIcon.image){
+        _cityImageButtonLeftIcon.image = [UIImage imageNamed:@"combined-shape-1"];
+    }
+    
+    if(!_areaImageButtonLeftIcon.image){
+        _areaImageButtonLeftIcon.image = [UIImage imageNamed:@"search-name"];
+    }
 }
 
 - (void)updateCountryLabelLayout:(NSString *)labelText
@@ -74,7 +88,8 @@
     
     UIImageView *imageButtonLeftIcon = [UIImageView new];
     [citySwichButton addSubview:imageButtonLeftIcon];
-    [imageButtonLeftIcon setImage:[UIImage imageNamed:@"combined-shape-1"]];
+    self.cityImageButtonLeftIcon = imageButtonLeftIcon;
+//    [imageButtonLeftIcon setImage:[UIImage imageNamed:@"combined-shape-1"]];
     [imageButtonLeftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(citySwichButton).offset(14);
         make.height.mas_equalTo(18);
@@ -123,7 +138,8 @@
     
     UIImageView *imageButtonLeftIcon = [UIImageView new];
     [searchButton addSubview:imageButtonLeftIcon];
-    [imageButtonLeftIcon setImage:[UIImage imageNamed:@"search-name"]];
+    self.areaImageButtonLeftIcon = imageButtonLeftIcon;
+//    [imageButtonLeftIcon setImage:[UIImage imageNamed:@"search-name"]];
     [imageButtonLeftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(searchButton).offset(14);
         make.height.mas_equalTo(16);

@@ -10,6 +10,7 @@
 #import "UIColor+Theme.h"
 #import "FHUserTracker.h"
 #import <Masonry.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHUGCFeedGuideView ()
 
@@ -34,7 +35,7 @@
     self.backgroundColor = [UIColor whiteColor];
     
     self.arror = [[UIImageView alloc] init];
-    _arror.image = [UIImage imageNamed:@"fh_ugc_feed_guide_arror_up"];
+    _arror.image = ICON_FONT_IMG(12, @"\U0000e67f", [UIColor whiteColor]);//@"fh_ugc_feed_guide_arror_up"
     [self addSubview:_arror];
     
     self.contentView = [[UIView alloc] init];
@@ -48,7 +49,7 @@
     
     self.closeBtn = [[UIButton alloc] init];
     [self.closeBtn addTarget:self action:@selector(onCloseGuideClick) forControlEvents:UIControlEventTouchUpInside];
-    [_closeBtn setImage:[UIImage imageNamed:@"fh_ugc_feed_guide_close"] forState:UIControlStateNormal];
+    [_closeBtn setImage:ICON_FONT_IMG(12, @"\U0000e673", [UIColor themeGray3]) forState:UIControlStateNormal];//fh_ugc_feed_guide_close
     [self.contentView addSubview:_closeBtn];
 }
 

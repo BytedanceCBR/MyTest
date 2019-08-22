@@ -17,10 +17,6 @@
 
 @implementation WDCommonURLSetting
 
-+ (void)load
-{
-    
-}
 
 + (NSString *)baseURL
 {

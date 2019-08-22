@@ -12,6 +12,7 @@
 #import <FHCommonUI/FHFakeInputNavbar.h>
 #import <TTReachability/TTReachability.h>
 #import <TTUIWidget/TTNavigationController.h>
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHCommutePOISearchViewController ()
 
@@ -48,7 +49,7 @@
     
     _inputBar = [[FHCommutePOIInputBar alloc] initWithFrame:CGRectZero];
     _inputBar.placeHolder = @"设置你的公司或其它目的地";
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.sectionHeaderHeight = 0;

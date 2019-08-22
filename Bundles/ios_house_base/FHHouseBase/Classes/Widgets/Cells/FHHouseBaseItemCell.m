@@ -24,6 +24,7 @@
 #import "ToastManager.h"
 #import "TTReachability.h"
 #import "FHUserTracker.h"
+#import "UIImage+FIconFont.h"
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -250,7 +251,8 @@
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc] init];
         _closeBtn.hidden = YES;
-        [_closeBtn setImage:[UIImage imageNamed:@"small_icon_close"] forState:UIControlStateNormal];
+        UIImage *img = ICON_FONT_IMG(8, @"\U0000e673", [UIColor themeGray3]);
+        [_closeBtn setImage:img forState:UIControlStateNormal];
         [_closeBtn addTarget:self action:@selector(dislike) forControlEvents:UIControlEventTouchUpInside];
         _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -20, -10, -20);
     }
@@ -1271,6 +1273,13 @@
 }
 
 - (void)dislike {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(canDislikeClick)]){
+        BOOL canDislike = [self.delegate canDislikeClick];
+        if(!canDislike){
+            return;
+        }
+    }
+    
     [self trackClickHouseDislke];
     NSArray *dislikeInfo = self.homeItemModel.dislikeInfo;
     if(dislikeInfo && [dislikeInfo isKindOfClass:[NSArray class]]){

@@ -75,7 +75,7 @@
 
 + (NSString *)streamAPIVersionString
 {
-    return @"78";
+    return @"96";
 }
 
 + (NSString *)refreshTipURLString
@@ -355,6 +355,12 @@
 + (NSString*)userPrivateProtocolURLString {
     return [NSString stringWithFormat:@"%@/f100/download/private_policy.html&title=隐私政策",[FHURLSettings baseURL]];
 }
+
+
++ (NSString*)appBusinessLicenseURLString {
+    return [NSString stringWithFormat:@"%@/f101/client/preview/license&title=证件资质",[FHURLSettings baseURL]];
+}
+
 
 + (NSString*)protectedProtocolURLString {
     return [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明",[FHURLSettings baseURL]];

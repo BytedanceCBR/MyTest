@@ -13,6 +13,7 @@
 #import "FHEnvContext.h"
 #import "UIViewController+Track.h"
 #import "FHUserTracker.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHUGCMyInterestedController ()<TTRouteInitializeProtocol,UIViewControllerErrorHandler>
 
@@ -72,7 +73,7 @@
 }
 
 - (void)initView {
-    _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    _tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
@@ -89,11 +90,7 @@
     
     _tableView.estimatedSectionHeaderHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
-    
-    if (@available(iOS 11.0 , *)) {
-        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }
-    
+        
     [self.view addSubview:_tableView];
     
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];

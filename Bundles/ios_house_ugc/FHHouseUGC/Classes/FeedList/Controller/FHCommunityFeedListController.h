@@ -9,6 +9,8 @@
 #import "FHHouseUGCHeader.h"
 #import <CoreLocation/CoreLocation.h>
 #import "ArticleListNotifyBarView.h"
+#import "SSImpressionManager.h"
+#import "ArticleImpressionHelper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -44,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)viewWillDisappear;
 
 - (void)scrollToTopAndRefresh;
+
+- (void)scrollToTopAndRefreshAllData;
 
 - (void)hideImmediately;
 

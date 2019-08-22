@@ -62,6 +62,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)destroyRNPreLoadCache;
 
 - (void)updateLoadFinish;
+
+// 回调方法
+- (void)vc_viewDidAppear:(BOOL)animated;
+
+- (void)vc_viewDidDisappear:(BOOL)animated;
+
 @end
 
 NS_ASSUME_NONNULL_END
