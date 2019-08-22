@@ -33,12 +33,10 @@
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
-        
         // 删帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 举报成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
-        
         // 发帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
     }
@@ -81,6 +79,7 @@
                                         [self.dataList insertObject:cellModel atIndex:0];
                                     }
                                     [self.tableView reloadData];
+                                    self.needRefreshCell = NO;
                                 }
                             });
                         }
@@ -174,9 +173,6 @@
             }
             
             if(isHead){
-                if(result.count > 0){
-                    [wself.cellHeightCaches removeAllObjects];
-                }
                 [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
             }else{
                 [wself.dataList addObjectsFromArray:result];
@@ -266,9 +262,20 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     if(indexPath.row < self.dataList.count){
         [self traceClientShowAtIndexPath:indexPath];
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        /*impression统计相关*/
+        SSImpressionStatus impressionStatus = self.isShowing ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
+        [self recordGroupWithCellModel:cellModel status:impressionStatus];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    // impression统计
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        [self recordGroupWithCellModel:cellModel status:SSImpressionStatusEnd];
     }
 }
 
@@ -292,7 +299,7 @@
         }
         return cell;
     }
-    return nil;
+    return [[FHUGCBaseCell alloc] init];
 }
 
 #pragma mark - UITableViewDelegate

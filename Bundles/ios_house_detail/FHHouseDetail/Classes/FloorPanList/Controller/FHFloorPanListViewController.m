@@ -9,6 +9,7 @@
 #import <HMSegmentedControl.h>
 #import <FHEnvContext.h>
 #import "FHFloorPanListViewModel.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHFloorPanListViewController ()
 @property (nonatomic , strong) HMSegmentedControl *segmentedControl;
@@ -137,7 +138,7 @@
 
 - (void)setUpFloorListTable
 {
-    _floorListTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _floorListTable = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _floorListTable.separatorStyle = UITableViewCellSeparatorStyleNone;
     if (@available(iOS 11.0 , *)) {
         _floorListTable.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

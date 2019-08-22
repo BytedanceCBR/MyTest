@@ -12,7 +12,7 @@
 #import <UIImageView+BDWebImage.h>
 #import "FHUGCModel.h"
 
-#define iconWidth 42
+#define iconWidth 50
 
 @interface FHMyJoinNeighbourhoodCell ()
 
@@ -52,8 +52,10 @@
     self.icon = [[UIImageView alloc] init];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
-    _icon.layer.cornerRadius = iconWidth/2;
+    _icon.layer.cornerRadius = 4;
     _icon.backgroundColor = [UIColor themeGray7];
+    _icon.layer.borderWidth = 0.5;
+    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_icon];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
@@ -68,13 +70,13 @@
 
 - (void)initConstains {
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(18);
+        make.top.mas_equalTo(self.contentView).offset(15);
         make.centerX.mas_equalTo(self.contentView);
         make.width.height.mas_equalTo(iconWidth);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.icon.mas_bottom).offset(5);
         make.left.mas_equalTo(self.contentView).offset(10);
         make.right.mas_equalTo(self.contentView).offset(-10);
     }];

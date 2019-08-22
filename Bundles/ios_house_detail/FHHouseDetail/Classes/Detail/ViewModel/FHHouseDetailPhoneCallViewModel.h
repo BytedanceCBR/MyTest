@@ -22,6 +22,7 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 @property(nonatomic , strong) NSDictionary *tracerDict; // 详情页基础埋点数据
 @property (nonatomic, weak) UIViewController *belongsVC;
 @property (nonatomic, assign) BOOL rnIsUnAvalable;
+@property (nonatomic, assign)   BOOL isEnterIM;
 
 - (instancetype)initWithHouseType:(FHHouseType)houseType houseId:(NSString *)houseId;
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone;
@@ -54,6 +55,13 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 + (NSArray *)fhRNPreLoadChannels;
 //可用的渠道
 + (NSArray *)fhRNEnableChannels;
+
+// 回调方法
+- (void)vc_viewDidAppear:(BOOL)animated;
+
+- (void)vc_viewDidDisappear:(BOOL)animated;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

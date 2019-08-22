@@ -11,6 +11,7 @@
 #import <FHHouseBase/FHCommonDefines.h>
 #import <Masonry/Masonry.h>
 #import <FHHouseBase/FHEnvContext.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHCommutePOIHeaderView ()
 
@@ -52,8 +53,9 @@
         _bottomLine = [[UIView alloc] init];
         _bottomLine.backgroundColor = [UIColor themeGray6];
 
+        img = ICON_FONT_IMG(18, @"\U0000e6ac", [UIColor themeGray3]);//refresh_gray
         _refreshButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_refreshButton setImage:SYS_IMG(@"refresh_gray") forState:UIControlStateNormal];
+        [_refreshButton setImage:img forState:UIControlStateNormal];
         [_refreshButton addTarget:self action:@selector(refreshAction) forControlEvents:UIControlEventTouchUpInside];
         
         _loadingView = [[UIActivityIndicatorView alloc] init];

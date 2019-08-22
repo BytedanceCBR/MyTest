@@ -19,7 +19,7 @@
 #import "FHRefreshCustomFooter.h"
 #import "UIViewController+Track.h"
 #import <WDApiModel.h>
-
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHMessageListController ()<TTUIViewControllerTrackProtocol>
 
@@ -52,7 +52,7 @@
     [self setupDefaultNavBar:YES];
     self.automaticallyAdjustsScrollViewInsets = NO;
 
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.tableView.backgroundView = nil;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;

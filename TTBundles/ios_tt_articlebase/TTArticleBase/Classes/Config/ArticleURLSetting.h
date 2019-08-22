@@ -110,6 +110,7 @@
 + (NSString*)userProtocolURLString;
 + (NSString*)functionExtensionURLString;
 + (NSString*)userPrivateProtocolURLString;
++ (NSString*)appBusinessLicenseURLString;
 + (NSString*)protectedProtocolURLString;
 
 #pragma mark -- 删除

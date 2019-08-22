@@ -31,28 +31,27 @@
 #import "FHMapSearchWayChooseView.h"
 #import <TTUIWidget/TTNavigationController.h>
 #import "FHMapSearchBottomBar.h"
+#import "FHMapSimpleNavbar.h"
+#import "FHMapSearchInfoTopBar.h"
+#import "FHMapSearchSideBar.h"
 #import <TTReachability/TTReachability.h>
 
 #define kTapDistrictZoomLevel  16
 #define kFilterBarHeight 44
+#define TOP_INFO_BAR_HEIGHT 45
+#define TOP_INFO_BAR_HOR_MARGIN 10
 
 @interface FHMapSearchViewController ()<TTRouteInitializeProtocol>
 
-@property(nonatomic , strong) FHMapNavigationBar *navBar;
+@property(nonatomic , strong) FHMapSimpleNavbar *simpleNavBar;
+@property(nonatomic , strong) FHMapSearchInfoTopBar *topInfoBar;
+@property(nonatomic , strong) FHMapSearchSideBar *sideBar;
 @property(nonatomic , strong) FHMapSearchConfigModel *configModel;
 @property(nonatomic , strong) FHMapSearchViewModel *viewModel;
-@property(nonatomic , strong) UIView *filterPanel;
-@property(nonatomic , strong) UIControl *filterBgControl;
-@property(nonatomic , strong) id houseFilterViewModel;
-@property(nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
 @property(nonatomic , strong) FHMapSearchTipView *tipView;
-@property(nonatomic , strong) UIBarButtonItem *showHouseListBarItem;
-@property(nonatomic , strong) UIBarButtonItem *showMapBarItem;
-@property(nonatomic , strong) UILabel *navTitleLabel;
 @property(nonatomic , strong) UIButton *locationButton;
 
 @property(nonatomic , strong) FHMapDrawMaskView *drawMaskView;
-@property(nonatomic , strong) FHMapSearchWayChooseView *chooseView;
 @property(nonatomic , strong) FHMapSearchBottomBar *bottomBar;
 
 @end
@@ -112,6 +111,7 @@
 
 -(void)dealloc
 {
+    [self enablePan:YES];
     [self tryCallbackOpenUrl];
 }
 
@@ -126,14 +126,7 @@
     
     if(locationEnabled && [[FHMainManager sharedInstance] locationSameAsChooseCity]){
         //定位城市和选择城市是同一城市时 进入小区视野
-//        _configModel.resizeLevel = 16;
         self.locationButton.hidden = NO;
-
-//        CLLocationCoordinate2D location = [[FHMainManager sharedInstance] currentLocation];
-//        if (location.latitude > 0 && location.longitude > 0) {
-//            _configModel.centerLatitude = [@(location.latitude) description];
-//            _configModel.centerLongitude = [@(location.longitude) description];
-//        }
     }
 }
 
@@ -145,36 +138,66 @@
     return _tipView;
 }
 
--(UIBarButtonItem *)showHouseListBarItem
-{
-    if (!_showHouseListBarItem) {
-        UIImage *img = [UIImage imageNamed:@"mapsearch_nav_list"];
-        _showHouseListBarItem= [[UIBarButtonItem alloc]initWithImage:img style:UIBarButtonItemStylePlain target:self action:@selector(showHouseList)];
-    }
-    return _showHouseListBarItem;
-}
+//-(UIBarButtonItem *)showHouseListBarItem
+//{
+//    if (!_showHouseListBarItem) {
+//        UIImage *img = [UIImage imageNamed:@"mapsearch_nav_list"];
+//        _showHouseListBarItem= [[UIBarButtonItem alloc]initWithImage:img style:UIBarButtonItemStylePlain target:self action:@selector(showHouseList)];
+//    }
+//    return _showHouseListBarItem;
+//}
 
--(UIBarButtonItem *)showMapBarItem
-{
-    if (!_showMapBarItem) {
-        UIImage *img =[UIImage imageNamed:@"navbar_showmap"];
-        _showMapBarItem = [[UIBarButtonItem alloc]initWithImage:img style:UIBarButtonItemStylePlain target:self action:@selector(showMap)];
-    }
-    return _showMapBarItem;
-}
+//-(UIBarButtonItem *)showMapBarItem
+//{
+//    if (!_showMapBarItem) {
+//        UIImage *img =[UIImage imageNamed:@"navbar_showmap"];
+//        _showMapBarItem = [[UIBarButtonItem alloc]initWithImage:img style:UIBarButtonItemStylePlain target:self action:@selector(showMap)];
+//    }
+//    return _showMapBarItem;
+//}
 
 -(UIButton *)locationButton
 {
     if (!_locationButton) {
         _locationButton = [UIButton buttonWithType:UIButtonTypeCustom];
         UIImage *img = [UIImage imageNamed:@"mapsearch_location"];
-        [_locationButton setImage:img forState:UIControlStateNormal];
-        [_locationButton setImage:img forState:UIControlStateHighlighted];
+        [_locationButton setBackgroundImage:img forState:UIControlStateNormal];
+        [_locationButton setBackgroundImage:img forState:UIControlStateHighlighted];
         _locationButton.backgroundColor = [UIColor clearColor];
         [_locationButton addTarget:self action:@selector(locationAction) forControlEvents:UIControlEventTouchUpInside];
         _locationButton.hidden = YES;
     }
     return _locationButton;
+}
+
+-(FHMapSearchSideBar *)sideBar
+{
+    if (!_sideBar) {
+        _sideBar = [[FHMapSearchSideBar alloc]initWithFrame:CGRectMake(0, 0, 36, 246)];
+    }
+    return _sideBar;
+}
+
+-(FHMapSearchInfoTopBar *)topInfoBar
+{
+    if (!_topInfoBar) {
+        _topInfoBar = [[FHMapSearchInfoTopBar alloc]initWithFrame:CGRectMake(0, 0, self.view.width-20, TOP_INFO_BAR_HEIGHT)];
+        __weak typeof(self) wself = self;
+        _topInfoBar.backBlock = ^{
+            [wself.viewModel hideAreaHouseList];
+        };
+        
+        _topInfoBar.filterBlock = ^{
+            [wself.viewModel showFilterForAreaHouseList];
+        };
+        _topInfoBar.hidden = YES;
+    }
+    return _topInfoBar;
+}
+
+-(UIView *)navBarView
+{
+    return self.simpleNavBar;
 }
 
 -(void)backAction
@@ -184,9 +207,7 @@
         [self tryCallbackOpenUrl];
     }else{
         [self.viewModel dismissHouseListView];
-        [self.houseFilterBridge closeConditionFilterPanel];
-    }
-    
+    }    
 }
 
 -(void)locationAction
@@ -194,71 +215,25 @@
     [self.viewModel moveToUserLocation];
 }
 
--(void)showHouseList
-{
-    [self.houseFilterBridge closeConditionFilterPanel];
-    [self.viewModel addNavSwitchHouseListLog];
-    
-    if ([self.configModel.enterFrom isEqualToString:@"city_market"]) {
-        //从城市行情进入的 要先跳到二手房列表页 QA确认
-        NSString *strUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld",self.configModel.houseType];
-        NSString *houseListOpenUrl = [self.viewModel backHouseListOpenUrl];
-        NSURL *openUrl = [NSURL URLWithString:houseListOpenUrl];
-        if( [openUrl query].length > 0) {
-            strUrl = [strUrl stringByAppendingFormat:@"&%@",[openUrl query]];
-        }
-        NSURL *url = [NSURL URLWithString:strUrl];
-        NSMutableDictionary *traceInfo = [NSMutableDictionary new];
-        [traceInfo addEntriesFromDictionary:[self.configModel toDictionary]];
-        traceInfo[@"enter_from"] = @"mapfind";
-        NSDictionary *info = @{@"tracer":traceInfo};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-        
-        [self.navigationController popViewControllerAnimated:NO];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-        return;
-    }
-    
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
--(void)showMap
-{
-    [self.houseFilterBridge closeConditionFilterPanel];
-    [self switchNavbarMode:FHMapSearchShowModeMap];
-    [self.viewModel showMap];
-}
-
 -(void)initNavbar
 {
-    CGRect frame = CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 44);
+    CGRect frame = CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 100);
     if (@available(iOS 11.0 , *)) {
         UIEdgeInsets insets = [[UIApplication sharedApplication]delegate].window.safeAreaInsets;
         if (insets.top > 1) {
             frame.size.height += insets.top;
-        }else{
-            frame.size.height +=  [[UIApplication sharedApplication] statusBarFrame].size.height;
         }
-    }else{
-        frame.size.height +=  [[UIApplication sharedApplication] statusBarFrame].size.height;
     }
-    self.navBar = [[FHMapNavigationBar alloc] initWithFrame:frame];
-    
     __weak typeof(self) wself = self;
-    _navBar.backActionBlock = ^{
-        [wself backAction];
+    self.simpleNavBar = [[FHMapSimpleNavbar alloc]initWithFrame:frame];
+    _simpleNavBar.backActionBlock = ^(FHMapSimpleNavbarType type) {
+        if (type == FHMapSimpleNavbarTypeClose) {
+            [wself.viewModel exitCurrentMode];
+        }else{
+            [wself backAction];
+        }
     };
-    
-    _navBar.listActionBlock = ^{
-        [wself showHouseList];
-    };
-    
-    _navBar.mapActionBlock = ^{
-        [wself showMap];
-    };
-    
-    [self.view addSubview:self.navBar];
-    
+    [self.view addSubview:_simpleNavBar];
 }
 
 - (void)viewDidLoad {
@@ -269,85 +244,39 @@
     self.ttNeedIgnoreZoomAnimation = YES;
     self.viewModel = [[FHMapSearchViewModel alloc]initWithConfigModel:_configModel viewController:self];
     
-    id<FHHouseFilterBridge> bridge = [[FHHouseBridgeManager sharedInstance] filterBridge];
-    self.houseFilterBridge = bridge;
-    
-    self.houseFilterViewModel = [bridge filterViewModelWithType:_configModel.houseType showAllCondition:NO showSort:NO];
-    self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
-    self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
-    self.houseFilterViewModel = bridge;
-    [bridge showBottomLine:NO];
-    
-    UIView *bottomLine = [[UIView alloc] init];
-    bottomLine.backgroundColor = [UIColor themeGray6];
-    [self.filterPanel addSubview:bottomLine];
-    [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.and.bottom.mas_equalTo(0);
-        make.height.mas_equalTo(0.5);
-    }];
-    
-    __weak typeof(self) wself = self;
-    _viewModel.resetConditionBlock = ^(NSDictionary *condition){
-        [wself.houseFilterBridge resetFilter:wself.houseFilterViewModel withQueryParams:condition updateFilterOnly:YES];
-    };
-    
-    _viewModel.conditionNoneFilterBlock = ^NSString * _Nullable(NSDictionary * _Nonnull params) {
-        return [wself.houseFilterBridge getNoneFilterQueryParams:params];
-    };
-    
-    _viewModel.getFilterConditionBlock = ^NSString * _Nullable{
-        return [wself.houseFilterBridge getConditions];
-    };
-    
-    if (self.configModel.mapOpenUrl.length > 0) {
-        
-        NSURL *url = [NSURL URLWithString:self.configModel.mapOpenUrl];
-        TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
-        [bridge resetFilter:self.houseFilterViewModel withQueryParams:paramObj.allParams updateFilterOnly:NO];
-        
-    }else if (self.configModel.conditionParams) {
-        [bridge resetFilter:self.houseFilterViewModel withQueryParams:_configModel.conditionParams updateFilterOnly:NO];
-    }
-    
-    [bridge setViewModel:self.houseFilterViewModel withDelegate:_viewModel];
-    
     BOOL showDraw = (self.configModel.houseType == FHHouseTypeSecondHandHouse);
-    
+
     if (showDraw) {
-        _chooseView = [[FHMapSearchWayChooseView alloc]initWithFrame:CGRectZero];
-        if (![self.viewModel suportSubway]) {
-            //无地铁只显示画圈找房
-            _chooseView.type = FHMapSearchWayChooseViewTypeDraw;
-        }
-        _chooseView.delegate = _viewModel;
-        _viewModel.chooseView = _chooseView;
-        
         _bottomBar = [[FHMapSearchBottomBar alloc] init];
         _bottomBar.delegate = _viewModel;
         _bottomBar.hidden = YES;
-       
         _viewModel.bottomBar = _bottomBar;
     }
-        
+    
     MAMapView *mapView = self.viewModel.mapView;
     [self.view addSubview:mapView];
     if (showDraw) {
-        [self.view addSubview:_chooseView];
         [self.view addSubview:_bottomBar];
     }
-    [self.view addSubview:self.locationButton];
-    [self.view addSubview:self.filterBgControl];
-    [self.view addSubview:self.filterPanel];
-    self.filterBgControl.hidden = YES;
+    if (!self.locationButton.hidden) {
+        [self.view addSubview:self.locationButton];
+    }
+    [self.view addSubview:self.sideBar];
+    [self.view addSubview:self.topInfoBar];
     
     [self initConstraints];
     
+    _viewModel.sideBar = self.sideBar;
+    _viewModel.topInfoBar = self.topInfoBar;
     _viewModel.tipView = self.tipView;
     
     self.title = _viewModel.navTitle;
-    [self.navBar setTitle:self.title];
-    [self.view bringSubviewToFront:self.navBar];
+    [self.simpleNavBar setTitle:self.title];
+    [self.view bringSubviewToFront:self.simpleNavBar];
     
+    [_viewModel tryUpdateSideBar];
+    [self switchNavbarMode:FHMapSearchShowModeMap];
+
     if (![TTReachability isNetworkConnected]) {
         [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
         return;
@@ -368,9 +297,9 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
-    if (self.viewModel.showMode == FHMapSearchShowModeDrawLine || self.viewModel.showMode == FHMapSearchShowModeSubway) {
+//    if (self.viewModel.showMode == FHMapSearchShowModeDrawLine || self.viewModel.showMode == FHMapSearchShowModeSubway) {
         [self enablePan:NO];
-    }
+//    }
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
@@ -402,10 +331,12 @@
 {
     CGFloat navHeight = 44;
     CGFloat bottomSafeInset = 0;
+    CGFloat topSafeInset = 0;
     if (@available(iOS 11.0 , *)) {
         CGFloat top  = [UIApplication sharedApplication].delegate.window.safeAreaInsets.top;
         if (top > 0) {
             navHeight += top;
+            topSafeInset = top;
         }else{
             navHeight += [self statusBarHeight];
         }
@@ -415,46 +346,37 @@
         navHeight += [self statusBarHeight];
     }
     
-    [self.navBar mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.simpleNavBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(navHeight);
+        make.height.mas_equalTo(self.simpleNavBar.height);
     }];
     
     [self.viewModel.mapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.and.left.bottom.right.mas_equalTo(self.view);
     }];
     
-    [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.bottom.right.mas_equalTo(self.view);
-        make.top.equalTo(self.filterPanel.mas_bottom);
-    }];
+    if (self.locationButton.superview) {
+        [self.locationButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-7);
+            make.bottom.mas_equalTo(self.view).offset(-(26+bottomSafeInset));
+            make.size.mas_equalTo(CGSizeMake(44, 44));
+        }];
+    }
 
-    [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(navHeight);
-        make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(kFilterBarHeight);
+    [self.sideBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-11);
+        make.bottom.mas_equalTo(self.view).offset(-(96+bottomSafeInset));
+        make.width.mas_equalTo(36);
     }];
     
-    [self.locationButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(14);
-        make.top.mas_equalTo(self.navBar.mas_bottom).offset(kFilterBarHeight+20);
-        make.size.mas_equalTo(CGSizeMake(58, 58));
+    [self.topInfoBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(TOP_INFO_BAR_HOR_MARGIN);
+        make.right.mas_equalTo(-TOP_INFO_BAR_HOR_MARGIN);
+        make.top.mas_equalTo((topSafeInset>0?topSafeInset:20)+10);
+        make.height.mas_equalTo(TOP_INFO_BAR_HEIGHT);
     }];
     
     CGFloat bottomMargin = -(31+bottomSafeInset);
-    
-    [self.chooseView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.view).offset(bottomMargin);
-        if (![self.viewModel suportSubway]) {
-            make.centerX.mas_equalTo(self.view);
-            make.width.mas_equalTo(168);
-        }else{
-            make.left.mas_equalTo(9);
-            make.right.mas_equalTo(-9);
-        }
-        make.height.mas_equalTo(58);
-
-    }];
     
     [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
@@ -465,49 +387,38 @@
 
 -(CGFloat)contentViewHeight
 {
-    return self.view.height - self.filterPanel.bottom;
+    UIEdgeInsets safeEdges = UIEdgeInsetsZero;
+    if (@available(iOS 11.0 , *)) {
+        safeEdges =  [[UIApplication sharedApplication]delegate].window.safeAreaInsets;
+    }
+    return self.view.height - (10+ (safeEdges.top > 0 ? safeEdges.top: 20)) ;
 }
 
 -(CGFloat)topBarBottom
 {
-    return self.filterPanel.bottom;
+    return  [self.simpleNavBar titleBottom];
 }
 
 -(void)switchNavbarMode:(FHMapSearchShowMode)mode
 {
-    FHMapNavigationBarRightMode smode = FHMapNavigationBarRightModeMap;
-    if (mode == FHMapSearchShowModeMap) {
-        smode = FHMapNavigationBarRightModeList;
-    }
-    
-    [self.navBar showRightMode:smode];
-    
-    self.title = self.viewModel.navTitle;
-    [self.navBar setTitle:self.title];
+    self.title =  self.viewModel.navTitle ;
+    [self.simpleNavBar setTitle:self.title];
+    self.simpleNavBar.type = (FHMapSearchShowModeMap == mode ? FHMapSimpleNavbarTypeBack : FHMapSimpleNavbarTypeClose);
 }
 
--(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated hideLocation:(BOOL)hideLocation
+-(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated
 {
     if(ratio < 0 || ratio > 1){
         return;
     }
     CGFloat alpha = ratio;
     if (!animated) {
-        self.filterPanel.alpha =  alpha;
-        self.navBar.alpha =  alpha;
-        if (!hideLocation && !self.locationButton.hidden) {
-            self.locationButton.alpha = alpha;
-        }
-    
+        self.simpleNavBar.alpha =  alpha;
         return;
     }
-    
+
     [UIView animateWithDuration:0.3 animations:^{
-        self.filterPanel.alpha =  alpha;
-        self.navBar.alpha =  alpha;
-        if (!hideLocation && !self.locationButton.hidden) {
-            self.locationButton.alpha = alpha;
-        }
+        self.simpleNavBar.alpha =  alpha;
     }completion:^(BOOL finished) {
     }];
 }
@@ -528,9 +439,9 @@
 {
     self.viewModel.showMode = FHMapSearchShowModeMap;
     self.bottomBar.hidden = YES;
-    self.chooseView.hidden = NO;
+    self.sideBar.hidden = NO;
     [self switchNavbarMode:FHMapSearchShowModeMap];
-    [self showNavTopViews:1 animated:NO hideLocation:NO];
+    [self showNavTopViews:1 animated:NO];
     [self enablePan:YES];
 }
 
@@ -548,25 +459,29 @@
 
 -(void)enterMapDrawMode
 {
-    [self switchNavbarMode:FHMapSearchShowModeMap];
-    [self showNavTopViews:0 animated:NO hideLocation:YES];
-    [self.houseFilterBridge closeConditionFilterPanel];
-    self.chooseView.hidden = YES;
+    [self switchNavbarMode:FHMapSearchShowModeDrawLine];
     self.bottomBar.hidden = YES;
+    self.sideBar.hidden = YES;
     self.locationButton.alpha = 0;
     
     [self.view addSubview:self.drawMaskView];
     TTNavigationController *navController = (TTNavigationController *)self.navigationController;
     navController.panRecognizer.enabled = NO;
+    self.simpleNavBar.alpha = 0;
+//    [self.view bringSubviewToFront:self.simpleNavBar];
 }
 
 -(void)enterSubwayMode
 {
-    [self.houseFilterBridge closeConditionFilterPanel];
-    self.chooseView.hidden = YES;
     self.bottomBar.hidden = YES;
-    
+    self.sideBar.hidden = NO;
     self.locationButton.alpha = 0;
+    
+    [self.sideBar showWithTypes:@[@(FHMapSearchSideBarItemTypeSubway)]];
+    [self.sideBar mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(self.sideBar.height);
+    }];
+    [self switchNavbarMode:FHMapSearchShowModeSubway];
 }
 
 -(BOOL)isShowingMaskView

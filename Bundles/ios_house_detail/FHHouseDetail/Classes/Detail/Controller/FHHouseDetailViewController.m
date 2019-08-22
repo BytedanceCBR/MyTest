@@ -23,6 +23,7 @@
 #import "FHDetailFeedbackView.h"
 #import "FHEnvContext.h"
 #import "TTInstallIDManager.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -485,7 +486,7 @@
 }
 
 - (void)configTableView {
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];

@@ -23,6 +23,7 @@
 @property(nonatomic, assign) BOOL showFeed;
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
 @property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
+@property(nonatomic, assign) BOOL noNeedRefreshData;
 
 @end
 
@@ -83,11 +84,24 @@
     TTArticleTabBarController *vc = (TTArticleTabBarController *)notification.object;
     if ([[vc currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
         self.noNeedAddEnterCategorylog = YES;
+        self.noNeedRefreshData = YES;
     }else{
         self.noNeedAddEnterCategorylog = NO;
+        self.noNeedRefreshData = NO;
     }
 }
 
+- (void)refreshFeedListData:(BOOL)isHead {
+    if(!self.noNeedRefreshData){
+        if(isHead){
+            [self.feedListVC scrollToTopAndRefreshAllData];
+        }else{
+            [self.feedListVC scrollToTopAndRefresh];
+        }
+    }else{
+        self.noNeedRefreshData = NO;
+    }
+}
 
 - (void)initFeedListVC {
     if(self.type == FHUGCMyJoinTypeFeed){
@@ -183,8 +197,10 @@
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"category_name"] = [self categoryName];
     tracerDict[@"show_type"] = @"feed_full";
+    [tracerDict setValue:(self.withTips ? @(1):@(0)) forKey:@"with_tips"];
     TRACK_EVENT(@"enter_category", tracerDict);
     
+    self.withTips = NO;
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
 }
 
@@ -197,6 +213,7 @@
     tracerDict[@"category_name"] = [self categoryName];
     tracerDict[@"show_type"] = @"feed_full";
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:(duration * 1000)];
+    [tracerDict setValue:@(0) forKey:@"with_tips"];
     TRACK_EVENT(@"stay_category", tracerDict);
     
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];

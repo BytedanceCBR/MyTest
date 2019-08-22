@@ -54,3 +54,15 @@
     return YES;
 }
 @end
+
+
+@implementation FHPostUGCSelectedGroupHistory
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+@end
+@implementation FHPostUGCSelectedGroupModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+@end

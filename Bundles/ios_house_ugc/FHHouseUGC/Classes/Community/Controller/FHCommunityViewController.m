@@ -24,6 +24,8 @@
 #import "ExploreLogicSetting.h"
 #import "FHPostUGCViewController.h"
 #import "FHUserTracker.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
+#import <FHHouseBase/FHBaseCollectionView.h>
 
 @interface FHCommunityViewController ()
 
@@ -53,6 +55,7 @@
     [self initViewModel];
 
     [self onUnreadMessageChange];
+    [self onFocusHaveNewContents];
 
     //切换开关
     WeakSelf;
@@ -69,6 +72,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
     //tabbar双击的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeMyJoinTab) name:kFHUGCForumPostThreadFinish object:nil];
@@ -120,6 +124,24 @@
     }
 }
 
+- (void)onFocusHaveNewContents {
+    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
+    BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
+    if(self.viewModel.currentTabIndex != 0 && hasSocialGroups && hasNew){
+        _segmentControl.sectionRedPoints = @[@1];
+        self.hasFocusTips = YES;
+    }
+}
+
+- (void)hideRedPoint {
+    if(self.viewModel.currentTabIndex == 0 && self.hasFocusTips){
+        self.hasFocusTips = NO;
+        [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+        self.segmentControl.sectionRedPoints = @[@0];
+        [self.viewModel refreshCell:YES];
+    }
+}
+
 - (void)initView {
     self.view.backgroundColor = [UIColor whiteColor];
 
@@ -132,7 +154,7 @@
     [self.topView addSubview:_bottomLineView];
 
     self.searchBtn = [[UIButton alloc] init];
-    [_searchBtn setImage:[UIImage imageNamed:@"fh_ugc_search"] forState:UIControlStateNormal];
+    [_searchBtn setImage: ICON_FONT_IMG(18, @"\U0000e675", [UIColor blackColor]) forState:UIControlStateNormal];//fh_ugc_search
     _searchBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [_searchBtn addTarget:self action:@selector(goToSearch) forControlEvents:UIControlEventTouchUpInside];
     [self.topView addSubview:_searchBtn];
@@ -140,7 +162,6 @@
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
 
-//    [self setupCollectionView];
     [self setupSetmentedControl];
 }
 
@@ -156,11 +177,33 @@
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     [self addUgcGuide];
 
-    if (!self.hasShowDots) {
-        [FHEnvContext hideFindTabRedDots];
-        self.hasShowDots = YES;
-    }
+//    if(self.isUgcOpen){
+//        //去掉邻里tab的红点
+//        [FHEnvContext hideFindTabRedDots];
+//        //去掉关注红点的同时刷新tab
+//        if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].ugcFocusHasNew){
+//            self.hasFocusTips = NO;
+//            [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+//            [self.viewModel refreshCell:YES];
+//        }
+//    }else{
+        if (!self.hasShowDots) {
+            [FHEnvContext hideFindTabRedDotsLimitCount];
+            self.hasShowDots = YES;
+        }
+//    }
 }
+
+-(BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+-(BOOL)prefersStatusBarHidden
+{
+    return NO;
+}
+
 
 - (void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
@@ -195,7 +238,7 @@
     layout.minimumInteritemSpacing = 0;
 
     //2.初始化collectionView
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     _collectionView.allowsSelection = NO;
     _collectionView.pagingEnabled = YES;
     _collectionView.bounces = NO;
@@ -235,7 +278,7 @@
     };
     
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
-        [weakSelf.viewModel refreshCell];
+        [weakSelf.viewModel refreshCell:NO];
     };
 }
 
@@ -345,7 +388,7 @@
 }
 
 - (void)refreshData {
-    [self.viewModel refreshCell];
+    [self.viewModel refreshCell:NO];
 }
 
 - (void)changeMyJoinTab {

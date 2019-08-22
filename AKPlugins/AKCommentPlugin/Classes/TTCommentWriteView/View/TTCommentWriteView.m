@@ -8,10 +8,10 @@
 #import "TTCommentWriteView.h"
 #import <TTUGCFoundation/TTUGCTextView.h>
 #import <TTUGCFoundation/TTUGCTextViewMediator.h>
-#import <TTUGCFoundation/TTUGCEmojiInputView.h>
+#import <FHCommonUI/TTUGCEmojiInputView.h>
 #import <TTPlatformBaseLib/TTProfileFillManager.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
-#import <TTUGCFoundation/TTUGCEmojiParser.h>
+#import <FHCommonUI/TTUGCEmojiParser.h>
 #import <TTBaseLib/NSObject+MultiDelegates.h>
 #import <TTUIWidget/TTNavigationController.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
@@ -119,10 +119,10 @@ static struct timeval commentTimeval;
         self.containerView.height = minHeight + bottomSafeInset;
         self.emojiInputView.top = self.textInputView.bottom;
     }
-    if (@available(iOS 11.0, *)) {
-        self.textInputView.width = self.width - self.tt_safeAreaInsets.left - self.tt_safeAreaInsets.right;
-        self.textInputView.left = self.tt_safeAreaInsets.left;
-    }
+//    if (@available(iOS 11.0, *)) {
+//        self.textInputView.width = self.width - self.tt_safeAreaInsets.left - self.tt_safeAreaInsets.right;
+//        self.textInputView.left = self.tt_safeAreaInsets.left;
+//    }
 }
 
 - (void)willAppear {
