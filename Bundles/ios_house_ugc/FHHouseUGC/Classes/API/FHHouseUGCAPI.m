@@ -49,7 +49,7 @@
 
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"category"] = category;
-    paramDic[@"count"] = @(20);
+    paramDic[@"count"] = @(10);
 //    paramDic[@"detail"] = @(1);
 //    paramDic[@"image"] = @(1);
 //    paramDic[@"LBS_status"] = [TTLocationManager currentLBSStatus];

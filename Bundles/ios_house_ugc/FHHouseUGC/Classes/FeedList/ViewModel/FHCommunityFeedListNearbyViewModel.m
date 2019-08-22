@@ -218,7 +218,7 @@
             wself.viewController.hasValidateData = wself.dataList.count > 0;
 
             if(wself.dataList.count > 0){
-                [wself updateTableViewWithMoreData:feedListModel.hasMore];
+                [wself updateTableViewWithMoreData:wself.tableView.hasMore];
                 [wself.viewController.emptyView hideEmptyView];
                 [wself insertGuideCell];
             }else{
