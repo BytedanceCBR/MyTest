@@ -143,7 +143,7 @@
             tempView.delegate = self.viewModel;
             tempView.dataSource = self.viewModel;
             tempView.scrollEnabled = YES;
-//            tempView.bounces = NO;
+            [self.viewModel.hashTable addObject:tempView];
             [_subScrollView addSubview:tempView];
         }
     } else {

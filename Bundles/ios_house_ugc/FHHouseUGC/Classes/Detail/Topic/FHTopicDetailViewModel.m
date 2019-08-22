@@ -17,7 +17,7 @@
 @property(nonatomic , weak) FHTopicDetailViewController *detailController;
 @property(nonatomic , weak) TTHttpTask *httpTask;
 @property (nonatomic, assign)   BOOL       canScroll;
-@property (nonatomic, weak)     UIScrollView       *weakScroolView;
+//@property (nonatomic, weak)     UIScrollView       *weakScroolView;
 
 @end
 
@@ -29,6 +29,7 @@
         self.detailController = viewController;
         self.ugcCellManager = [[FHUGCCellManager alloc] init];
         self.canScroll = NO;
+        self.hashTable = [NSHashTable weakObjectsHashTable];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoTop" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
     }
@@ -116,9 +117,11 @@
 #pragma mark - UIScrollViewDelegate
 //
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    self.weakScroolView = scrollView;
     if (!self.canScroll) {
-        [scrollView setContentOffset:CGPointZero];
+//        [scrollView setContentOffset:CGPointZero];
+        [[self.hashTable allObjects] enumerateObjectsUsingBlock:^(UIScrollView*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [obj setContentOffset:CGPointZero];
+        }];
     }
     CGFloat offsetY = scrollView.contentOffset.y;
     if (offsetY<=0) {
@@ -135,7 +138,10 @@
             self.canScroll = YES;
         }
     }else if([notificationName isEqualToString:@"kFHUGCLeaveTop"]){
-        self.weakScroolView.contentOffset = CGPointZero;
+//        self.weakScroolView.contentOffset = CGPointZero;
+        [[self.hashTable allObjects] enumerateObjectsUsingBlock:^(UIScrollView*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [obj setContentOffset:CGPointZero];
+        }];
         self.canScroll = NO;
     }
 }

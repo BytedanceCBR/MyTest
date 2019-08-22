@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHTopicDetailViewModel : FHUGCBaseViewModel
 
 @property (nonatomic, strong)   FHUGCCellManager       *ugcCellManager;
+@property (nonatomic, strong) NSHashTable<id>      *hashTable;
 
 -(instancetype)initWithController:(FHTopicDetailViewController *)viewController;
 
