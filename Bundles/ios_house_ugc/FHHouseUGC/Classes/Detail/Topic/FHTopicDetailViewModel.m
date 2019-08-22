@@ -16,6 +16,8 @@
 
 @property(nonatomic , weak) FHTopicDetailViewController *detailController;
 @property(nonatomic , weak) TTHttpTask *httpTask;
+@property (nonatomic, assign)   BOOL       canScroll;
+@property (nonatomic, weak)     UIScrollView       *weakScroolView;
 
 @end
 
@@ -26,8 +28,16 @@
     if (self) {
         self.detailController = viewController;
         self.ugcCellManager = [[FHUGCCellManager alloc] init];
+        self.canScroll = NO;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoTop" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)startLoadData {
@@ -106,14 +116,30 @@
 #pragma mark - UIScrollViewDelegate
 //
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    CGFloat offsetY = scrollView.contentOffset.y;
-//    NSLog(@"-------:%lf",offsetY);
-//    if (offsetY <= 0) {
-//
-//        scrollView.contentOffset = CGPointZero;
-//    }
-    [self.detailController scrollViewDidScroll:scrollView];
+    self.weakScroolView = scrollView;
+    if (!self.canScroll) {
+        [scrollView setContentOffset:CGPointZero];
+    }
+    CGFloat offsetY = scrollView.contentOffset.y;
+    if (offsetY<=0) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCLeaveTop" object:nil userInfo:@{@"canScroll":@"1"}];
+    }
 }
+
+-(void)acceptMsg:(NSNotification *)notification{
+    NSString *notificationName = notification.name;
+    if ([notificationName isEqualToString:@"kFHUGCGoTop"]) {
+        NSDictionary *userInfo = notification.userInfo;
+        NSString *canScroll = userInfo[@"canScroll"];
+        if ([canScroll isEqualToString:@"1"]) {
+            self.canScroll = YES;
+        }
+    }else if([notificationName isEqualToString:@"kFHUGCLeaveTop"]){
+        self.weakScroolView.contentOffset = CGPointZero;
+        self.canScroll = NO;
+    }
+}
+
 
 
 @end

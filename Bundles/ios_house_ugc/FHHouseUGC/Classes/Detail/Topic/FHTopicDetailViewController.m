@@ -34,6 +34,10 @@
 @property (nonatomic, strong)   UIScrollView       *subScrollView;
 @property (nonatomic, strong)   FHTopicDetailViewModel       *viewModel;
 
+@property (nonatomic, assign) BOOL isTopIsCanNotMoveTabView;
+@property (nonatomic, assign) BOOL isTopIsCanNotMoveTabViewPre;
+@property (nonatomic, assign) BOOL canScroll;
+
 @end
 
 @implementation FHTopicDetailViewController
@@ -42,20 +46,28 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoBottom" object:nil];
 }
 
 - (void)setupUI {
+    self.canScroll = NO;
+    self.isTopIsCanNotMoveTabView = NO;
+    self.isTopIsCanNotMoveTabViewPre = NO;
     [self setupDefaultNavBar:NO];
     [self setupDetailNaviBar];
     [self setNavBarTransparent:YES];
     // _mainScrollView
-    _mainScrollView = [[UIScrollView alloc] init];
+    _mainScrollView = [[FHTopicDetailScrollView alloc] init];
     [self.view addSubview:_mainScrollView];
     if (@available(iOS 11.0 , *)) {
          _mainScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     _mainScrollView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     _mainScrollView.delegate = self;
+    _mainScrollView.showsVerticalScrollIndicator = NO;
+    _mainScrollView.showsHorizontalScrollIndicator = NO;
     
     // _headerImageView
     _headerImageView = [[UIImageView alloc] init];
@@ -120,9 +132,9 @@
         NSInteger tabCount = tabIndexStrs.count;
         _subScrollView.contentSize = CGSizeMake(SCREEN_WIDTH * tabCount, self.maxSubScrollViewHeight);
         _subScrollView.pagingEnabled = YES;
-//        _subScrollView.bounces = NO;
-//        _subScrollView.showsVerticalScrollIndicator = NO;
-//        _subScrollView.showsHorizontalScrollIndicator = NO;
+        _subScrollView.bounces = NO;
+        _subScrollView.showsVerticalScrollIndicator = NO;
+        _subScrollView.showsHorizontalScrollIndicator = NO;
         for (NSInteger i = 0; i < tabCount; i++) {
             UITableView *tempView = [self createTableView];
             tempView.frame = CGRectMake(SCREEN_WIDTH * i, 0, SCREEN_WIDTH, self.maxSubScrollViewHeight);
@@ -131,6 +143,7 @@
             tempView.delegate = self.viewModel;
             tempView.dataSource = self.viewModel;
             tempView.scrollEnabled = YES;
+//            tempView.bounces = NO;
             [_subScrollView addSubview:tempView];
         }
     } else {
@@ -185,7 +198,7 @@
 
 - (void)dealloc
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)startLoadData {
@@ -207,16 +220,45 @@
     }
 }
 
+- (void)acceptMsg:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    NSString *canScroll = userInfo[@"canScroll"];
+    if ([canScroll isEqualToString:@"1"]) {
+        _canScroll = YES;
+    }
+}
+
 #pragma mark - UIScrollViewDelegate
 // mainScrollView
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView == _mainScrollView) {
-//        CGFloat offsetY = scrollView.contentOffset.y;
-//        if (offsetY > self.criticalPointHeight) {
-//            scrollView.contentOffset = CGPointMake(0, self.criticalPointHeight);
-//
-//        }
-//        NSLog(@"------:%lf",offsetY);
+        CGFloat tabOffsetY;
+        CGFloat offsetY = scrollView.contentOffset.y;
+        
+        _isTopIsCanNotMoveTabViewPre = _isTopIsCanNotMoveTabView;
+        
+        tabOffsetY = self.criticalPointHeight;
+        
+        if (offsetY >= tabOffsetY) {
+            scrollView.contentOffset = CGPointMake(0, tabOffsetY);
+            _isTopIsCanNotMoveTabView = YES;// 底部列表不能移动
+        } else {
+            _isTopIsCanNotMoveTabView = NO;// 底部列表能移动
+        }
+        
+        if (_isTopIsCanNotMoveTabView != _isTopIsCanNotMoveTabViewPre) {
+            if (!_isTopIsCanNotMoveTabViewPre && _isTopIsCanNotMoveTabView) {
+                // 滑动到顶端
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCGoTop" object:nil userInfo:@{@"canScroll":@"1"}];
+                _canScroll = NO;
+            }
+            if(_isTopIsCanNotMoveTabViewPre && !_isTopIsCanNotMoveTabView){
+                // 离开顶端
+                if (!_canScroll) {
+                    scrollView.contentOffset = CGPointMake(0, tabOffsetY);
+                }
+            }
+        }
     } if (scrollView == _subScrollView) {
         // 列表父scrollview
     } else {
@@ -229,5 +271,15 @@
 //        }
     }
 }
+
+@end
+
+// FHTopicDetailScrollView
+@implementation FHTopicDetailScrollView
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
 
 @end
