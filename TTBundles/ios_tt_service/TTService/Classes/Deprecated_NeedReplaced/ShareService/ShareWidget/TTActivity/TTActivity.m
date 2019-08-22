@@ -20,7 +20,7 @@
 //#import "TTWeitoutiaoRepostIconDownloadManager.h"
 #import "TTAdPromotionManager.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTBaseLib/TTBaseMacro.h>

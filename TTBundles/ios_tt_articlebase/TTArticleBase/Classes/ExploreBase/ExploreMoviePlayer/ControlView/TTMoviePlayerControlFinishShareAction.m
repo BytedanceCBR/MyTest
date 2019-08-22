@@ -14,7 +14,7 @@
 #import "TTActivityShareSequenceManager.h"
 #import "TTMessageCenter.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTDeviceHelper.h>

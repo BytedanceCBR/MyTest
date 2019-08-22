@@ -17,7 +17,7 @@
 #import "SSImpressionModel.h"
 #import <TTVerifyKit/TTVerifyIconHelper.h>
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 

@@ -82,6 +82,7 @@
 #import "SSCommonLogic.h"
 #import "ExploreLogicSetting.h"
 
+
 #define SSFetchSettingsManagerFetchedDateKey @"SSFetchSettingsManagerFetchedDateKey"
 #define kFetchTimeInterval (3 * 60 * 60)
 
@@ -1068,8 +1069,10 @@
         [SSCommonLogic setVideoOwnPlayerEnabled:[dSettings tt_boolValueForKey:@"video_own_player"]];
     }
 
-    [TTKitchen parseSettings:dSettings];
-    
+    //    [TTKitchen parseSettings:dSettings];
+    // check了下settings里面的参数，目前项目中没有需要更新到TTKitchen的参数，但是还是先保守的保留此逻辑。
+    [TTKitchen updateWithDictionary:dSettings];
+
     //头条认证展现配置
     if ([dSettings valueForKey:@"user_verify_info_conf"]) {
         [SSCommonLogic setUserVerifyConfigs:[dSettings tt_dictionaryValueForKey:@"user_verify_info_conf"]];
