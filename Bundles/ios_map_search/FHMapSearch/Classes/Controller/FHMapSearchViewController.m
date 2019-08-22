@@ -467,7 +467,8 @@
     [self.view addSubview:self.drawMaskView];
     TTNavigationController *navController = (TTNavigationController *)self.navigationController;
     navController.panRecognizer.enabled = NO;
-    [self.view bringSubviewToFront:self.simpleNavBar];
+    self.simpleNavBar.alpha = 0;
+//    [self.view bringSubviewToFront:self.simpleNavBar];
 }
 
 -(void)enterSubwayMode
