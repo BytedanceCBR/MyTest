@@ -152,12 +152,15 @@ def appPods
     'Performance'
     ]
     pod 'TTLocationManager','1.0.22'
-    pod 'BDUGLocationKit', '1.0.0-rc.1',:subspecs => [ # , '1.1.0'
+    pod 'BDUGLocationKit', '1.0.0-rc.5',:subspecs => [ # , '1.1.0'
         'Core',
+        'DataCollection',
+        'ByteDancePlacemark',
         'AmapLocation'
         
 #        'Adapter'
     ]
+    pod 'BDUGSettingsInterface'
     pod 'BDUGKit'
     
     pod 'Gaia','1.0.7-rc.1'
