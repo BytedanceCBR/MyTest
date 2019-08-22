@@ -15,6 +15,9 @@
 #import "FHCommonDefines.h"
 #import "FHTopicHeaderInfo.h"
 #import "FHTopicSectionHeaderView.h"
+#import "FHBaseTableView.h"
+#import "FHTopicDetailViewModel.h"
+#import "TTReachability.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate>
 
@@ -26,6 +29,7 @@
 @property (nonatomic, assign)   CGFloat       maxSubScrollViewHeight;
 @property (nonatomic, assign)   CGFloat       topHeightOffset;
 @property (nonatomic, strong)   UIScrollView       *subScrollView;
+@property (nonatomic, strong)   FHTopicDetailViewModel       *viewModel;
 
 @end
 
@@ -89,19 +93,65 @@
     _subScrollView.backgroundColor = [UIColor whiteColor];
     [self.mainScrollView addSubview:self.subScrollView];
     self.mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, self.maxSubScrollViewHeight + self.topHeightOffset);
-    
-    // 添加子的tableView
-    _subScrollView.contentSize = CGSizeMake(SCREEN_WIDTH * 2, self.maxSubScrollViewHeight);
-    _subScrollView.pagingEnabled = YES;
-    UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.maxSubScrollViewHeight)];
-    leftView.backgroundColor = [UIColor redColor];
-    [_subScrollView addSubview:leftView];
-    UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH, 0, SCREEN_WIDTH, self.maxSubScrollViewHeight)];
-    rightView.backgroundColor = [UIColor blueColor];
-    [_subScrollView addSubview:rightView];
-    
     // 空态页
     [self addDefaultEmptyViewFullScreen];
+    
+    // viewModel
+    _viewModel = [[FHTopicDetailViewModel alloc] initWithController:self];
+    
+    // 初始化tableViews，后续可能网络返回结果
+    NSArray *indexStrs = @[@"最热",@"最新"];
+    [self setupSubTableViews:indexStrs];
+    
+    // 加载数据
+    [self startLoadData];
+}
+
+- (void)setupSubTableViews:(NSArray *)tabIndexStrs {
+    if ([tabIndexStrs isKindOfClass:[NSArray class]] && tabIndexStrs.count > 0) {
+        [self.emptyView hideEmptyView];
+        self.mainScrollView.hidden = NO;
+        [self setNavBarTransparent:YES];
+        NSInteger tabCount = tabIndexStrs.count;
+        _subScrollView.contentSize = CGSizeMake(SCREEN_WIDTH * tabCount, self.maxSubScrollViewHeight);
+        _subScrollView.pagingEnabled = YES;
+        for (NSInteger i = 0; i < tabCount; i++) {
+            UITableView *tempView = [self createTableView];
+            tempView.frame = CGRectMake(SCREEN_WIDTH * i, 0, SCREEN_WIDTH, self.maxSubScrollViewHeight);
+            tempView.tag = i;
+            tempView.delegate = self.viewModel;
+            tempView.dataSource = self.viewModel;
+            [_subScrollView addSubview:tempView];
+        }
+    } else {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+        self.mainScrollView.hidden = YES;
+        [self setNavBarTransparent:NO];
+    }
+}
+
+- (UITableView *)createTableView {
+    UITableView *_tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView.backgroundColor = [UIColor themeGray7];
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+    
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+    _tableView.tableFooterView = footerView;
+    
+    _tableView.sectionFooterHeight = 0.0;
+    
+    _tableView.estimatedRowHeight = 0;
+    
+    if (@available(iOS 11.0 , *)) {
+        _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+    }
+    return _tableView;
 }
 
 // 导航栏透明
@@ -126,6 +176,25 @@
 - (void)dealloc
 {
 
+}
+
+- (void)startLoadData {
+    if ([TTReachability isNetworkConnected]) {
+        [self startLoading];
+        self.isLoadingData = YES;
+        [self.viewModel startLoadData];
+    } else {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        self.mainScrollView.hidden = YES;
+        [self setNavBarTransparent:NO];
+    }
+}
+
+// 重新加载
+- (void)retryLoadData {
+    if (!self.isLoadingData) {
+        [self startLoadData];
+    }
 }
 
 #pragma mark - UIScrollViewDelegate
