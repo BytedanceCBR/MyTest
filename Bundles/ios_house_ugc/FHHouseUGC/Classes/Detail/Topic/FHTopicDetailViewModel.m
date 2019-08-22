@@ -25,6 +25,7 @@
 {   self = [super init];
     if (self) {
         self.detailController = viewController;
+        self.ugcCellManager = [[FHUGCCellManager alloc] init];
     }
     return self;
 }
@@ -58,7 +59,10 @@
 //            return cell;
 //        }
 //    }
-    return [[FHUGCBaseCell alloc] init];
+    FHUGCBaseCell * cell = [[FHUGCBaseCell alloc] init];
+    cell.textLabel.text = [NSString stringWithFormat:@"%ld",indexPath.row];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld",indexPath.row];
+    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -75,7 +79,11 @@
 //        return [cellHeight floatValue];
 //    }
 //    return UITableViewAutomaticDimension;
-    return 100;
+    return 50;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 50;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -94,6 +102,17 @@
 //    if (cell.didClickCellBlk) {
 //        cell.didClickCellBlk();
 //    }
+}
+#pragma mark - UIScrollViewDelegate
+//
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    CGFloat offsetY = scrollView.contentOffset.y;
+//    NSLog(@"-------:%lf",offsetY);
+//    if (offsetY <= 0) {
+//
+//        scrollView.contentOffset = CGPointZero;
+//    }
+    [self.detailController scrollViewDidScroll:scrollView];
 }
 
 

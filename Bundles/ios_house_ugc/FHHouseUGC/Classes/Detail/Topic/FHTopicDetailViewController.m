@@ -18,6 +18,8 @@
 #import "FHBaseTableView.h"
 #import "FHTopicDetailViewModel.h"
 #import "TTReachability.h"
+#import "FHUGCCellManager.h"
+#import "FHUGCCellHelper.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate>
 
@@ -27,6 +29,7 @@
 @property (nonatomic, strong)   FHTopicSectionHeaderView       *sectionHeaderView;
 @property (nonatomic, assign)   CGFloat       minSubScrollViewHeight;
 @property (nonatomic, assign)   CGFloat       maxSubScrollViewHeight;
+@property (nonatomic, assign)   CGFloat       criticalPointHeight;// 临界点长度
 @property (nonatomic, assign)   CGFloat       topHeightOffset;
 @property (nonatomic, strong)   UIScrollView       *subScrollView;
 @property (nonatomic, strong)   FHTopicDetailViewModel       *viewModel;
@@ -82,6 +85,7 @@
     }
     self.minSubScrollViewHeight = SCREEN_HEIGHT - self.topHeightOffset;// 暂时不用，数据较少时也可在下面展示空页面
     self.maxSubScrollViewHeight = SCREEN_HEIGHT - navOffset - 50;
+    self.criticalPointHeight = self.maxSubScrollViewHeight - self.minSubScrollViewHeight;
     
     // subScrollView
     _subScrollView = [[UIScrollView alloc] init];
@@ -90,6 +94,7 @@
     }
     _subScrollView.frame = CGRectMake(0, self.topHeightOffset, SCREEN_WIDTH, self.maxSubScrollViewHeight);
     _subScrollView.delegate = self;
+    
     _subScrollView.backgroundColor = [UIColor whiteColor];
     [self.mainScrollView addSubview:self.subScrollView];
     self.mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, self.maxSubScrollViewHeight + self.topHeightOffset);
@@ -115,12 +120,17 @@
         NSInteger tabCount = tabIndexStrs.count;
         _subScrollView.contentSize = CGSizeMake(SCREEN_WIDTH * tabCount, self.maxSubScrollViewHeight);
         _subScrollView.pagingEnabled = YES;
+//        _subScrollView.bounces = NO;
+//        _subScrollView.showsVerticalScrollIndicator = NO;
+//        _subScrollView.showsHorizontalScrollIndicator = NO;
         for (NSInteger i = 0; i < tabCount; i++) {
             UITableView *tempView = [self createTableView];
             tempView.frame = CGRectMake(SCREEN_WIDTH * i, 0, SCREEN_WIDTH, self.maxSubScrollViewHeight);
             tempView.tag = i;
+            [self.viewModel.ugcCellManager registerAllCell:tempView];
             tempView.delegate = self.viewModel;
             tempView.dataSource = self.viewModel;
+            tempView.scrollEnabled = YES;
             [_subScrollView addSubview:tempView];
         }
     } else {
@@ -201,7 +211,22 @@
 // mainScrollView
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView == _mainScrollView) {
-        
+//        CGFloat offsetY = scrollView.contentOffset.y;
+//        if (offsetY > self.criticalPointHeight) {
+//            scrollView.contentOffset = CGPointMake(0, self.criticalPointHeight);
+//
+//        }
+//        NSLog(@"------:%lf",offsetY);
+    } if (scrollView == _subScrollView) {
+        // 列表父scrollview
+    } else {
+        // sub
+//        CGFloat mainOffsetY = self.mainScrollView.contentOffset.y;
+//        CGFloat offsetY = scrollView.contentOffset.y;
+//        if (mainOffsetY < self.criticalPointHeight || offsetY <= 0) {
+//            self.mainScrollView.contentOffset = CGPointMake(0, mainOffsetY + offsetY);
+//            scrollView.contentOffset = CGPointZero;
+//        }
     }
 }
 
