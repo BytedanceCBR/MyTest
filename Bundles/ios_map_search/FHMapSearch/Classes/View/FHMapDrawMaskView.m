@@ -29,8 +29,13 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        SAFE_AREA
+        CGFloat top = 27;
+        if (safeInsets.top > 0) {
+            top = safeInsets.top + 7;
+        }
         _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _closeButton.frame = CGRectMake(18, 27, 24, 24);
+        _closeButton.frame = CGRectMake(18, top, 24, 24);
         UIImage * img = ICON_FONT_IMG(18, @"\U0000e673",[UIColor themeGray1]);
         [_closeButton setImage:img forState:UIControlStateNormal];
         [_closeButton addTarget:self action:@selector(onCloseAction) forControlEvents:UIControlEventTouchUpInside];
