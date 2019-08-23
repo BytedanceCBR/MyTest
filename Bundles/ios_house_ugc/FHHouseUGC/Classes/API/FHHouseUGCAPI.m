@@ -9,6 +9,8 @@
 #import "NSStringAdditions.h"
 #import "FHUGCModel.h"
 #import "FHUGCConfig.h"
+#import "FHEnvContext.h"
+#import "JSONAdditions.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -41,13 +43,16 @@
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
 
     NSString *queryPath = [ArticleURLSetting encrpytionStreamUrlString];
+    
+    //test
+//    NSString *queryPath = @"http://10.224.5.205:8765/api/news/feed/v96/";
 
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"category"] = category;
     paramDic[@"count"] = @(20);
-    paramDic[@"detail"] = @(1);
-    paramDic[@"image"] = @(1);
-    paramDic[@"LBS_status"] = [TTLocationManager currentLBSStatus];
+//    paramDic[@"detail"] = @(1);
+//    paramDic[@"image"] = @(1);
+//    paramDic[@"LBS_status"] = [TTLocationManager currentLBSStatus];
     paramDic[@"city"] = [TTLocationManager sharedManager].city;
     paramDic[@"loc_mode"] = @([TTLocationManager isLocationServiceEnabled]);
 
@@ -79,14 +84,19 @@
     paramDic[@"strict"] = @(0);
     paramDic[@"list_count"] = @(listCount);
     paramDic[@"concern_id"] = @"";
-    paramDic[@"cp"] = [self encreptTime:[[NSDate date] timeIntervalSince1970]];
+//    paramDic[@"cp"] = [self encreptTime:[[NSDate date] timeIntervalSince1970]];
 
     if (!loadMore) {
         paramDic[@"refresh_reason"] = @(0);
     }
-//    "last_refresh_sub_entrance_interval" = 4459;
-//    "session_refresh_idx" = 5;
-//    "tt_from" = pull;
+    
+    NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
+    NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if(fCityId){
+        [extraDic setObject:fCityId forKey:@"f_city_id"];
+    }
+    
+    paramDic[@"client_extra_params"] = [extraDic tt_JSONRepresentation];
 
     Class cls = NSClassFromString(@"FHFeedListModel");
 

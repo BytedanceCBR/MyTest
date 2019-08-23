@@ -167,6 +167,8 @@
                                                        limitedToNumberOfLines:&numberOfLines];
             model.contentHeight = size.height;
         }
+    }else{
+        model.contentHeight = 0;
     }
 }
 
@@ -214,6 +216,8 @@
                                       limitedToNumberOfLines:&numberOfLines];
             model.contentHeight = size.height;
         }
+    }else{
+        model.contentHeight = 0;
     }
 }
 

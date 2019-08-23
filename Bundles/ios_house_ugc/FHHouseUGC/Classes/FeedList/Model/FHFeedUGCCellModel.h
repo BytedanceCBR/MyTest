@@ -47,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 //文章相关
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSAttributedString *desc;
+@property (nonatomic, copy , nullable) NSString *aggrType;
 //问答跳转链接，优先使用这个值跳转
 @property (nonatomic, copy , nullable) NSString *openUrl;
 //列表页小图

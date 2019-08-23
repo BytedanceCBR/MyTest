@@ -207,9 +207,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     //消息通知优化重要的人消息未读提示
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMessageNotificationTips:) name:kTTMessageNotificationTipsChangeNotification object:nil];
     //ugc小红点控制逻辑
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFocusTabHasNewNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kTTMessageNotificationTipsChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFollowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFocusTabHasNewNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kTTMessageNotificationTipsChangeNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFollowNotification object:nil];
 }
 
 - (void)initTabbarBadge
