@@ -20,11 +20,12 @@
 #import "TTReachability.h"
 #import "FHUGCCellManager.h"
 #import "FHUGCCellHelper.h"
+#import "FHTopicTopBackView.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate>
 
 @property (nonatomic, strong)   UIScrollView       *mainScrollView;
-@property (nonatomic, strong)   UIImageView        *headerImageView;
+@property (nonatomic, strong)   FHTopicTopBackView        *topHeaderView;
 @property (nonatomic, strong)   FHTopicHeaderInfo       *headerInfoView;
 @property (nonatomic, strong)   FHTopicSectionHeaderView       *sectionHeaderView;
 @property (nonatomic, assign)   CGFloat       minSubScrollViewHeight;
@@ -69,12 +70,11 @@
     _mainScrollView.showsVerticalScrollIndicator = NO;
     _mainScrollView.showsHorizontalScrollIndicator = NO;
     
-    // _headerImageView
-    _headerImageView = [[UIImageView alloc] init];
-    NSString *imageName = [NSString stringWithFormat:@"fh_ugc_community_detail_header_back0"];
-    _headerImageView.image = [UIImage imageNamed:imageName];
-    _headerImageView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
-    [self.mainScrollView addSubview:_headerImageView];
+    // _topHeaderView
+    _topHeaderView = [[FHTopicTopBackView alloc] init];
+    _topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
+    _topHeaderView.headerBackHeight = 144;
+    [self.mainScrollView addSubview:_topHeaderView];
     
     // _headerInfoView
     _headerInfoView = [[FHTopicHeaderInfo alloc] init];
@@ -258,6 +258,15 @@
                     scrollView.contentOffset = CGPointMake(0, tabOffsetY);
                 }
             }
+        }
+        
+        // topHeaderView
+        offsetY = scrollView.contentOffset.y;
+        if (offsetY < 0) {
+            CGFloat height = 144 - offsetY;
+            self.topHeaderView.frame = CGRectMake(0, offsetY, SCREEN_WIDTH, height);
+        } else {
+            self.topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
         }
     } if (scrollView == _subScrollView) {
         // 列表父scrollview
