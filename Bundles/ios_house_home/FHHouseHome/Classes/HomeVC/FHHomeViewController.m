@@ -268,7 +268,9 @@ static CGFloat const kSectionHeaderHeight = 38;
                           [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
                           self.homeListViewModel.isResetingOffsetZero = NO;
                       }completion:^(BOOL finished) {
-                          self.isShowRefreshTip = NO;
+                          if(!isImmediately){
+                              self.isShowRefreshTip = NO;
+                          }
                       }];
                       
     }];
