@@ -51,6 +51,7 @@
 #import "FHHouseListAgencyInfoCell.h"
 #import <FHHouseBase/FHUtils.h>
 #import "FHHouseListNoHouseCell.h"
+#import "FHHouseOpenURLUtil.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -1268,18 +1269,9 @@ extern NSString *const INSTANT_DATA_KEY;
 #pragma mark - map url delegate
 -(void)handleHouseListCallback:(NSString *)openUrl {
     
-    if ([self.houseListOpenUrl isEqualToString:openUrl] ) {
+    if ([FHHouseOpenURLUtil isSameURL:self.houseListOpenUrl and:openUrl]) {
         return;
     }
-    
-    if(openUrl && self.houseListOpenUrl){
-        NSString *houseListDecode = [self.houseListOpenUrl URLDecodedString];
-        NSString *openUrlDecode = [openUrl URLDecodedString];
-        if ([houseListDecode isEqualToString:openUrlDecode]) {
-            return;
-        }
-    }
-    
     
     if (self.houseListOpenUrlUpdateBlock) {
         
