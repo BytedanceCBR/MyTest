@@ -1426,7 +1426,7 @@ static NSInteger const kMaxPostImageCount = 9;
         self.selectView.followed = NO;
         [self refreshPostButtonUI];
         
-        NSMutableDictionary *param = [NSMutableDictionary dictionary];;
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
         param[UT_PAGE_TYPE] = @"feed_publisher";
         param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
         param[@"click_position"] = @"last_published_neighborhood";
