@@ -360,6 +360,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     
     self.isShowing = YES;
+    self.isShowRefreshTip = NO;
     
     if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
         [self.homeListViewModel checkCityStatus];
@@ -381,6 +382,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewWillDisappear:animated];
     self.isShowing = NO;
+    self.isShowRefreshTip = NO;
     
     if(_isMainTabVC && self.mainTableView.contentOffset.y <= [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType])
     {
