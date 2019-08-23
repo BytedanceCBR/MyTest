@@ -108,7 +108,7 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
         //        NSString* currentCityName = [[EnvContext shared].client currentCityName];
         //        NSString* provinceName = [[EnvContext shared].client currentProvince];
         NSString* currentCityName = [FHLocManager sharedInstance].currentReGeocode.city;
-        NSString* provinceName = [FHLocManager sharedInstance].currentReGeocode.province;
+        NSString* provinceName = [FHLocManager sharedInstance].currentReGeocode.administrativeArea;
         customHeader[@"city_name"] = currentCityName;
         customHeader[@"province_name"] = provinceName;
         customHeader[@"house_city"] =  [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
