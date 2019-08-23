@@ -435,8 +435,7 @@ def appPods
     pod_binary 'TTPushSDK', '0.1.1'
     
     #-----路由-----
-    pod 'TTRoute','1.1.0'
-#    pod 'TTRoute', git:'git@code.byted.org:TTIOS/tt_pods_route.git', :branch => 'array_type_query'
+    pod 'TTRoute','1.1.3-rc.0-f100' # git:'git@code.byted.org:TTIOS/tt_pods_route.git', :branch => 'f100'
 
 
     #-----头条impression库-----

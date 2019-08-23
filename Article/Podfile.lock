@@ -452,7 +452,7 @@ PODS:
   - TTRexxar/PackageApp (0.8.10.1-binary)
   - TTRexxar/Plugins (0.8.10.1-binary)
   - TTRexxar/WebView (0.8.10.1-binary)
-  - TTRoute (1.1.0)
+  - TTRoute (1.1.3-rc.0-f100)
   - TTSearch (0.1.0)
   - TTService (0.1.0)
   - TTServiceKit (0.4.1.1-binary)
@@ -806,7 +806,7 @@ DEPENDENCIES:
   - TTRexxar/PackageApp (= 0.8.10.1-binary)
   - TTRexxar/Plugins (= 0.8.10.1-binary)
   - TTRexxar/WebView (= 0.8.10.1-binary)
-  - TTRoute (= 1.1.0)
+  - TTRoute (= 1.1.3-rc.0-f100)
   - TTSearch (from `../TTBundles/ios_tt_search`)
   - TTService (from `../TTBundles/ios_tt_service`)
   - TTServiceKit (= 0.4.1.1-binary)
@@ -1114,7 +1114,7 @@ SPEC CHECKSUMS:
   TTRegistry: da0948df15bacc1b90bb9ff8eb621b812ea9eebb
   TTReporter: 55c6785c79fb8b35a44105d760ac3493cc2ed365
   TTRexxar: 40c20cd090918e9816f74b0decced7094f000647
-  TTRoute: 056ed74d4ee3edbf5127a4d58202cacbce3f5be6
+  TTRoute: 0ff31956f12f290c0f50bcdbdfe3f2646e4e4f98
   TTSearch: 812276e1b1c7f1d1fce932fe766e9a75359d18d3
   TTService: 61600ce842ad99be7776dbbf3e614301ef706f7b
   TTServiceKit: 94210c3f54f65e5ba8ddde3e498837fa04649d57
@@ -1151,6 +1151,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: adc86b06a5aaf51a0338de54437f3ac12aa5431c
+PODFILE CHECKSUM: 019b5d02069d8137662dcb6a78ea1e015b874e99
 
 COCOAPODS: 1.4.0
