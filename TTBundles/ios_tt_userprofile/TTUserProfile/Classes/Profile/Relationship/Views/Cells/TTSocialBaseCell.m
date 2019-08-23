@@ -529,9 +529,9 @@
         UIImage *defaultImage = [UIImage imageWithColor:[UIColor tt_themedColorForKey:kColorBackground2] size:CGSizeMake([self.class imageSize], [self.class imageSize])];
         _avatarView.defaultHeadImg = defaultImage;
         [_avatarView setLocalAvatarImage:[defaultImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)]];
-        [_avatarView setupVerifyViewForLength:[self.class imageNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
-            return [self.class verifyIconSize:standardSize];
-        }];
+//        [_avatarView setupVerifyViewForLength:[self.class imageNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//            return [self.class verifyIconSize:standardSize];
+//        }];
     }
     return _avatarView;
 }

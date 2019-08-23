@@ -154,7 +154,7 @@
         } else {
             self.avatarView.frame = CGRectMake(CGRectGetMinX(_moreButton.frame) - 24 - 24, CGRectGetMinY(_moreButton.frame), 24, 24);
         }
-        [self.avatarView setupVerifyViewForLength:24 adaptationSizeBlock:nil];
+//        [self.avatarView setupVerifyViewForLength:24 adaptationSizeBlock:nil];
         CGRect bounds = self.avatarView.bounds;
         self.avatarView.decoratorView.frame = CGRectMake(kDecoratorOriginFactor * bounds.size.width, kDecoratorOriginFactor * bounds.size.height, kDecoratorSizeFactor * bounds.size.width, kDecoratorSizeFactor * bounds.size.height);
         self.fansLabel.hidden = YES;
@@ -168,7 +168,7 @@
         self.followButton.right = self.moreButton.left - 17;
         self.fansLabel.hidden = NO;
         self.avatarView.size = CGSizeMake(AvatarViewHeightWithShowFans, AvatarViewHeightWithShowFans);
-        [self.avatarView setupVerifyViewForLength:AvatarViewHeightWithShowFans adaptationSizeBlock:nil];
+//        [self.avatarView setupVerifyViewForLength:AvatarViewHeightWithShowFans adaptationSizeBlock:nil];
         CGRect bounds = self.avatarView.bounds;
         self.avatarView.decoratorView.frame = CGRectMake(kDecoratorOriginFactor * bounds.size.width, kDecoratorOriginFactor * bounds.size.height, kDecoratorSizeFactor * bounds.size.width, kDecoratorSizeFactor * bounds.size.height);
         self.avatarView.centerY = self.backButton.centerY;
@@ -375,7 +375,7 @@
         logoView.hidden = YES;
         logoView.userInteractionEnabled = NO;
         logoView.enableBlackMaskView = YES;
-        [logoView setupVerifyViewForLength:24.f adaptationSizeBlock:nil];
+//        [logoView setupVerifyViewForLength:24.f adaptationSizeBlock:nil];
         [self addSubview:logoView];
         self.logoView = logoView;
    
@@ -402,7 +402,7 @@
         self.titleLabel.font = [UIFont systemFontOfSize:TextFontSizeWithoutShowFans];
         [self.titleLabel sizeToFit];
         self.logoView.size = CGSizeMake(AvatarViewHeightWithoutShowFans, AvatarViewHeightWithoutShowFans);
-        [self.logoView setupVerifyViewForLength:AvatarViewHeightWithoutShowFans adaptationSizeBlock:nil];
+//        [self.logoView setupVerifyViewForLength:AvatarViewHeightWithoutShowFans adaptationSizeBlock:nil];
         [self.logoView refreshDecoratorView];
         self.fansLabel.hidden = YES;
     }
@@ -432,7 +432,7 @@
         self.titleLabel.font = [UIFont boldSystemFontOfSize:TextFontSizeWithShowFans];
         [self.titleLabel sizeToFit];
         self.logoView.size = CGSizeMake(AvatarViewHeightWithShowFans, AvatarViewHeightWithShowFans);
-        [self.logoView setupVerifyViewForLength:AvatarViewHeightWithShowFans adaptationSizeBlock:nil];
+//        [self.logoView setupVerifyViewForLength:AvatarViewHeightWithShowFans adaptationSizeBlock:nil];
         [self.logoView refreshDecoratorView];
         if (self.logoView.imageView.layer.borderWidth){
             self.logoView.imageView.layer.borderWidth = 0;

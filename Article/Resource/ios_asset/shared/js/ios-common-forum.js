@@ -264,7 +264,7 @@ link: n.h5_settings.is_liteapp ? "javascript:;" : a.schema + "&group_id=" + t.an
 intro: a.user_intro,
 avatar: a.user_profile_image_url,
 isAuthorSelf: !1,
-verifiedContent: a.is_verify ? "PLACE_HOLDER" : "",
+verifiedContent: a.is_verify ? "" : "",
 medals: a.medals
 };
 var i = {
