@@ -346,9 +346,16 @@
                             NSString *lowPrice = [prices firstObject];
                             NSString *highPrice = [prices lastObject];
                             
+                            NSInteger lowValue = [lowPrice integerValue];
+                            NSInteger highValue = [highPrice integerValue];
+                            if (self.filterPriceItem.rate.integerValue > 0) {
+                                lowValue /= self.filterPriceItem.rate.integerValue;
+                                highValue /= self.filterPriceItem.rate.integerValue;
+                            }
+                            
                             FHMapSearchSelectItemModel *selectItem = [self selectItemForSection:index];
-                            selectItem.lowerPrice = lowPrice;
-                            selectItem.higherPrice = highPrice;
+                            selectItem.lowerPrice = [NSString stringWithFormat:@"%ld",lowValue];
+                            selectItem.higherPrice = [NSString stringWithFormat:@"%ld",highValue];
                             
                         }
                     }
