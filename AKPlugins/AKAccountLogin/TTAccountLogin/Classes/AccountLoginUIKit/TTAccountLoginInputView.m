@@ -127,7 +127,7 @@
         _field.textColorThemeKey = kColorText1;
         _field.textAlignment = NSTextAlignmentLeft;
         _field.placeholderColorThemeKey = @"grey3";
-        _field.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt _newFontSize:16.f]];
+        _field.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]];
     }
     return _field;
 }
