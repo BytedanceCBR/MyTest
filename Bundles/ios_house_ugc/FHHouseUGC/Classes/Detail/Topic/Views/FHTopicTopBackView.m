@@ -14,8 +14,6 @@
 
 @interface FHTopicTopBackView()
 
-@property (nonatomic, strong)   UIImageView        *headerImageView;
-
 @end
 
 @implementation FHTopicTopBackView
@@ -39,6 +37,14 @@
     [_headerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self);
     }];
+    // 头图渐变 不用的话 记得删除资源
+//    UIImageView *imageTemp = [[UIImageView alloc] init];
+//    imageTemp.image = [UIImage imageNamed:@"fh_ugc_header_gradient"];
+//    imageTemp.backgroundColor = [UIColor clearColor];
+//    [_headerImageView addSubview:imageTemp];
+//    [imageTemp mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.edges.mas_equalTo(self.headerImageView);
+//    }];
 }
 
 

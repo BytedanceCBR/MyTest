@@ -26,6 +26,7 @@
 
 @property (nonatomic, strong)   UIScrollView       *mainScrollView;
 @property (nonatomic, strong)   FHTopicTopBackView        *topHeaderView;
+@property (nonatomic, weak)     CAGradientLayer       *topHeaderGradientLayer;
 @property (nonatomic, strong)   FHTopicHeaderInfo       *headerInfoView;
 @property (nonatomic, strong)   FHTopicSectionHeaderView       *sectionHeaderView;
 @property (nonatomic, assign)   CGFloat       minSubScrollViewHeight;
@@ -73,8 +74,17 @@
     // _topHeaderView
     _topHeaderView = [[FHTopicTopBackView alloc] init];
     _topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
-    _topHeaderView.headerBackHeight = 144;
     [self.mainScrollView addSubview:_topHeaderView];
+//    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+//    gradientLayer.frame = _topHeaderView.frame;
+//    gradientLayer.colors = @[
+//                             (__bridge id)[UIColor colorWithWhite:1 alpha:0.4].CGColor,
+//                             (__bridge id)[UIColor colorWithWhite:1 alpha:0.2].CGColor
+//                             ];
+//    gradientLayer.startPoint = CGPointMake(0.5, 0);
+//    gradientLayer.endPoint = CGPointMake(0.5, 1);
+//    [self.topHeaderView.headerImageView.layer addSublayer:gradientLayer];
+//    self.topHeaderGradientLayer = gradientLayer;
     
     // _headerInfoView
     _headerInfoView = [[FHTopicHeaderInfo alloc] init];
@@ -265,8 +275,10 @@
         if (offsetY < 0) {
             CGFloat height = 144 - offsetY;
             self.topHeaderView.frame = CGRectMake(0, offsetY, SCREEN_WIDTH, height);
+            self.topHeaderGradientLayer.frame = CGRectMake(0, 0, SCREEN_WIDTH, height);
         } else {
             self.topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
+            self.topHeaderGradientLayer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
         }
     } if (scrollView == _subScrollView) {
         // 列表父scrollview
