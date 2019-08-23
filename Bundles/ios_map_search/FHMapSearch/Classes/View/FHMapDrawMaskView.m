@@ -8,6 +8,7 @@
 #import "FHMapDrawMaskView.h"
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHHouseBase/FHCommonDefines.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 #define MIN_POINTS 20
 #define CLOSE_WIDTH 58
@@ -17,25 +18,27 @@
 @property(nonatomic , strong) NSMutableArray *xcoords;
 @property(nonatomic , strong) NSMutableArray *ycoords;
 @property(nonatomic , strong) UIBezierPath *bezierPath;
-//@property(nonatomic , strong) UIButton *closeButton;
+@property(nonatomic , strong) UIButton *closeButton;
 
 @end
 
 @implementation FHMapDrawMaskView
 
 
-//-(instancetype)initWithFrame:(CGRect)frame
-//{
-//    self = [super initWithFrame:frame];
-//    if (self) {
-//        _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//        [_closeButton setBackgroundImage:SYS_IMG(@"mapsearch_close") forState:UIControlStateNormal];
-//        [_closeButton addTarget:self action:@selector(onCloseAction) forControlEvents:UIControlEventTouchUpInside];
-//
-//        [self addSubview:_closeButton];
-//    }
-//    return self;
-//}
+-(instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _closeButton.frame = CGRectMake(18, 27, 24, 24);
+        UIImage * img = ICON_FONT_IMG(18, @"\U0000e673",[UIColor themeGray1]);
+        [_closeButton setImage:img forState:UIControlStateNormal];
+        [_closeButton addTarget:self action:@selector(onCloseAction) forControlEvents:UIControlEventTouchUpInside];
+
+        [self addSubview:_closeButton];
+    }
+    return self;
+}
 
 -(NSMutableArray *)xcoords
 {
