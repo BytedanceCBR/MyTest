@@ -1442,11 +1442,13 @@ static NSInteger const kMaxPostImageCount = 9;
     self.toolbar.banHashtagInput = !(groupId.length > 0);
     self.inputTextView.isBanHashtag = self.toolbar.banHashtagInput;
     if(groupId.length > 0) {
+        WeakSelf;
         self.textViewMediator.hashTagBtnClickBlock = ^{
+            StrongSelf;
             NSString *urlString = [NSString stringWithFormat:@"sslocal://ugc_post_topic_list?topic_id=%@", groupId];
-            NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post_topic_list?topic_id=12235"];
+            NSURL *url = [NSURL URLWithString:urlString];
             NSMutableDictionary *param = [NSMutableDictionary dictionary];
-            param[@"delegate"] = self;
+            param[@"delegate"] = self.textViewMediator;
             
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];

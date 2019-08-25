@@ -49,6 +49,11 @@
     WeakSelf;
     [FHHouseUGCAPI requestTopicList:@"1234" class:FHTopicListResponseModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
+        // TODO: Mock 数据 Delete
+        NSString *mockJson = @"{\"status\":\"0\",\"message\":\"success\",\"data\":{\"items\":[{\"title\":\"100万上车\",\"detail\":\"994万讨论\",\"subtitle\":\"我们小区-正华花园坐落在正定县的中另加加国中加电\",\"topicID\":\"1\",\"headerImageUrl\":\"https:\/\/www.baidu.com\/img\/baidu_resultlogo@2.png\"},{\"title\":\"武汉房市\",\"detail\":\"95.5万人讨论\",\"subtitle\":\"我们小区-正华花园坐落在正定县的北\",\"topicID\":\"2\",\"headerImageUrl\":\"https:\/\/www.baidu.com\/img\/baidu_resultlogo@2.png\"},{\"title\":\"南京楼市变化\",\"detail\":\"95.5万人讨论\",\"subtitle\":\"我们小区-正华花园坐落在正定县的北邯\",\"topicID\":\"3\",\"headerImageUrl\":\"https:\/\/www.baidu.com\/img\/baidu_resultlogo@2.png\"}]}}";
+        model = [[FHTopicListResponseModel alloc] initWithString:mockJson error:nil];
+        error = nil;
+        //---
         if (model && (error == nil)) {
             if (isRefresh) {
                 [wself.dataList removeAllObjects];
@@ -58,6 +63,7 @@
             }
 
             FHTopicListResponseModel *responseModel = model;
+
             [wself.dataList addObjectsFromArray:responseModel.data.items];
             wself.tableView.hidden = NO;
             [wself.tableView reloadData];
