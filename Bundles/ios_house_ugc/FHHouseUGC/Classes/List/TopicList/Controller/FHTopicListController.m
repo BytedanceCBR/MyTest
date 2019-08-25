@@ -67,10 +67,11 @@
     }];
     self.tableView.mj_footer = self.refreshFooter;
 
-    [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
-        StrongSelf;
-        [self loadData:YES];
-    }];
+// 去掉下掉刷新只保留上拉加载更多
+//    [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
+//        StrongSelf;
+//        [self loadData:YES];
+//    }];
 
     [self addDefaultEmptyViewFullScreen];
 }
