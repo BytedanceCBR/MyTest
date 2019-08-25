@@ -78,6 +78,7 @@
 #import "TTRNKitMacro.h"
 #import "FHRNDebugViewController.h"
 #import "BDSSOAuthManager.h"
+#import "ToastManager.h"
 
 //#import "TTXiguaLiveManager.h"
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
@@ -671,6 +672,7 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 - (void)_ssoDebugClick {
 #if !DEBUG && !TARGET_IPHONE_SIMULATOR
     [[BDSSOAuthManager sharedInstance] resetAuthInfo];
+    [[ToastManager manager] showToast:@"SSO缓存已清除，请重进App"];
 #endif
 }
 
