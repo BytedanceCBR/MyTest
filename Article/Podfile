@@ -688,7 +688,7 @@ post_install do |installer|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
             end
         end
-        if target.name == "TTDebug"
+        if target.name == "TTDebug" || target.name == "TTAppRuntime"
             target.build_configurations.each do |config|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
             end
