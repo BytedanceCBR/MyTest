@@ -295,7 +295,8 @@
             [self.delegate textViewDidInputTextHashtag:self];
 
             self.didInputTextHashtag = YES;
-            return NO;
+            [self becomeFirstResponder];
+            return YES;
         }
 
         self.didInputTextHashtag = NO;
