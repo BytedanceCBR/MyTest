@@ -306,23 +306,20 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 + (void)showRedPointForNoUgc
 {
-//    if(![self isUGCOpen]){
-//        if([FHEnvContext sharedInstance].hasShowDots){
-//            //显示过
-//            if([FHEnvContext sharedInstance].isShowDots){
-//                [self showFindTabRedDots];
-//            }else{
-//                [self hideFindTabRedDots];
-//            }
-//        }else{
+    if(![self isUGCOpen]){
+        if([FHEnvContext sharedInstance].hasShowDots){
+            //显示过
+            if([FHEnvContext sharedInstance].isShowDots){
+                [self showFindTabRedDots];
+            }else{
+                [self hideFindTabRedDots];
+            }
+        }else{
             //没显示过
-    if(![FHEnvContext sharedInstance].hasShowDots){
-        [self showFindTabRedDotsLimitCount];
-        [FHEnvContext sharedInstance].hasShowDots = YES;
+            [self showFindTabRedDotsLimitCount];
+            [FHEnvContext sharedInstance].hasShowDots = YES;
+        }
     }
-//        }
-    
-//    }
 }
 
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key
