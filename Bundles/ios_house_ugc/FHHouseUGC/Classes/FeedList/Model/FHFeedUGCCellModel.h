@@ -113,6 +113,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (FHFeedUGCCellModel *)modelFromFake;
 
++ (FHFeedUGCCellModel *)modelFromFake2;
+
 @end
 
 NS_ASSUME_NONNULL_END

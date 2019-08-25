@@ -16,6 +16,7 @@
 #import "FHUGCRecommendCell.h"
 #import "FHUGCBannerCell.h"
 #import "FHUGCHotTopicCell.h"
+#import "FHUGCVoteCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -44,6 +45,7 @@
                                 @"FHUGCRecommendCell",
                                 @"FHUGCBannerCell",
                                 @"FHUGCHotTopicCell",
+                                @"FHUGCVoteCell",
                                 
                                 //可扩展
                                  ];
@@ -85,6 +87,9 @@
             
         case FHUGCFeedListCellSubTypeUGCHotTopic:
             return [FHUGCHotTopicCell class];
+            
+        case FHUGCFeedListCellSubTypeUGCVote:
+            return [FHUGCVoteCell class];
 
         default:
             break;

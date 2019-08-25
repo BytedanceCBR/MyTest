@@ -420,8 +420,17 @@
 
 + (FHFeedUGCCellModel *)modelFromFake {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.groupId = @"100005";
     cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotTopic;
     cellModel.hotTopicList = @[@"1",@"2",@"3",@"4",@"5"];
+    
+    return cellModel;
+}
+
++ (FHFeedUGCCellModel *)modelFromFake2 {
+    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.groupId = @"100006";
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVote;
     
     return cellModel;
 }
