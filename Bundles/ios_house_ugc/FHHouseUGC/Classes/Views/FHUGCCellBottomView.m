@@ -16,6 +16,7 @@
 #import "UIButton+TTAdditions.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <TTBusinessManager+StringUtils.h>
 
 @interface FHUGCCellBottomView ()
 
@@ -212,7 +213,7 @@
     if(count == 0){
         self.likeLabel.text = @"赞";
     }else{
-        self.likeLabel.text = diggCount;
+        self.likeLabel.text = [TTBusinessManager formatCommentCount: count];
     }
     if([userDigg boolValue]){
         self.likeImageView.image = ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeRed1]);//"fh_ugc_like_selected"
