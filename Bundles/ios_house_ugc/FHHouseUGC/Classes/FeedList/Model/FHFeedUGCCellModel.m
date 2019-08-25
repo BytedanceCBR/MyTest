@@ -415,4 +415,12 @@
     return desc;
 }
 
++ (FHFeedUGCCellModel *)modelFromFake {
+    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotTopic;
+    cellModel.hotTopicList = @[@"1",@"2",@"3",@"4",@"5"];
+    
+    return cellModel;
+}
+
 @end

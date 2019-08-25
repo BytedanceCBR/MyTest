@@ -92,6 +92,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL showCommunity;
 //原始文章或者问答
 @property (nonatomic, strong , nullable) FHFeedUGCOriginItemModel *originItemModel;
+//热门话题
+@property (nonatomic, strong , nullable) NSArray *hotTopicList;
 
 //埋点相关
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
@@ -104,6 +106,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (FHFeedUGCCellModel *)modelFromFeedUGCContent:(FHFeedUGCContentModel *)model;
 
 + (FHFeedUGCCellModel *)modelFromFeedContent:(FHFeedContentModel *)model;
+
++ (FHFeedUGCCellModel *)modelFromFake;
 
 @end
 

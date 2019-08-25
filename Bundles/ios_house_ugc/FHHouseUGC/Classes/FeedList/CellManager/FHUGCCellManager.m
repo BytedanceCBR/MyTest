@@ -15,6 +15,7 @@
 #import "FHArticleMultiImageCell.h"
 #import "FHUGCRecommendCell.h"
 #import "FHUGCBannerCell.h"
+#import "FHUGCHotTopicCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -42,7 +43,8 @@
                                 @"FHArticleMultiImageCell",
                                 @"FHUGCRecommendCell",
                                 @"FHUGCBannerCell",
- 
+                                @"FHUGCHotTopicCell",
+                                
                                 //可扩展
                                  ];
 }
@@ -80,6 +82,9 @@
 
         case FHUGCFeedListCellSubTypeUGCBanner:
             return [FHUGCBannerCell class];
+            
+        case FHUGCFeedListCellSubTypeUGCHotTopic:
+            return [FHUGCHotTopicCell class];
 
         default:
             break;

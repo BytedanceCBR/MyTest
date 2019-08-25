@@ -258,6 +258,10 @@
 
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+    
+    //fake
+    [resultArray addObject:[FHFeedUGCCellModel modelFromFake]];
+    
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         cellModel.categoryId = self.categoryId;
