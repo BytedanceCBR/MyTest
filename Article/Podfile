@@ -621,6 +621,7 @@ def appPods
 end
 
 target 'NewsLiteInHouse' do
+    pod 'BDSSOAuthSDK'
     pod_binary 'TTDebugAssistant', '0.2.33'
     pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
     pod_binary 'TTSettingsManager/Debug'

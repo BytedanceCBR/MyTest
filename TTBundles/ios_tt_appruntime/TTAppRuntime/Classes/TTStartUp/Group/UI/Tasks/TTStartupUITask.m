@@ -57,15 +57,27 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 + (void)setPhoneLaunchViewController
 {
+// 采用条件宏，只在内测版，非 DEBUG，非模拟器条件下，要求通过 SSO 认证
+#if INHOUSE && !DEBUG && !TARGET_IPHONE_SIMULATOR
+    // 内测版要求通过 SSO 认证 @shengxuanwei
+    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithContentsOfFile:bundlePath];
+    BOOL ssoEnabled = [dict tt_boolValueForKey:@"SSO_ENABLED"];
+    if (ssoEnabled) { // Info.plist 开关，用于自动化测试绕过 SSO 认证
+        [[BDSSOAuthManager sharedInstance] requestSSOAuthWithCompletionHandler:^{
+            [self setRootViewControllerWithStoryboardName:@"RootTab"];
+        }];
+    } else {
+        [self setRootViewControllerWithStoryboardName:@"RootTab"];
+    }
+#else
     [self setRootViewControllerWithStoryboardName:@"RootTab"];
+#endif
 }
 
 + (void)setRootViewControllerWithStoryboardName:(NSString *)name {
-
-
-    //TTTabBarController还是先用storyBoard加载，否则tabBar上出飘新提示的时第三个Tab上面容易出现小灰条的问题
+    // TTTabBarController还是先用storyBoard加载，否则tabBar上出飘新提示的时第三个Tab上面容易出现小灰条的问题
     if([SSCommonLogic isNewLaunchOptimizeEnabled]) {
-        
         SharedAppDelegate.window.rootViewController = [[TTArticleTabBarController alloc] init];
     } else {
         SharedAppDelegate.window.rootViewController = [[UIStoryboard storyboardWithName:name bundle:nil] instantiateInitialViewController];
