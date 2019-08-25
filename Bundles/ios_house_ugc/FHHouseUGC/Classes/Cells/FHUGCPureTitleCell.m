@@ -13,6 +13,7 @@
 #import "FHUGCCellHelper.h"
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
+#import <TTBusinessManager+StringUtils.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -146,7 +147,7 @@
     if(commentCount == 0){
         [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
     }else{
-        [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
+        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
     }
     [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
     //内容
