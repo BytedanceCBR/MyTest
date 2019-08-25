@@ -62,9 +62,7 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 // 采用条件宏，只在内测版，非 DEBUG，非模拟器条件下，要求通过 SSO 认证
 #if INHOUSE && !DEBUG && !TARGET_IPHONE_SIMULATOR
     // 内测版要求通过 SSO 认证 @shengxuanwei
-    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithContentsOfFile:bundlePath];
-    BOOL ssoEnabled = [dict tt_boolValueForKey:@"SSO_ENABLED"];
+    BOOL ssoEnabled = [[[NSBundle mainBundle] infoDictionary] tt_boolValueForKey:@"SSO_ENABLED"];
     if (ssoEnabled) { // Info.plist 开关，用于自动化测试绕过 SSO 认证
         [[BDSSOAuthManager sharedInstance] requestSSOAuthWithCompletionHandler:^{
             [self setRootViewControllerWithStoryboardName:@"RootTab"];
