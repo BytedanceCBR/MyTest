@@ -27,6 +27,8 @@
 #import "SSCommonLogic.h"
 
 #import "TTLaunchDefine.h"
+#import "BDSSOAuthManager.h"
+#import "NSDictionary+TTAdditions.h"
 
 DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
