@@ -260,7 +260,14 @@
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     
     //fake
-    [resultArray addObject:[FHFeedUGCCellModel modelFromFake]];
+    if(isHead){
+        //热点话题 fake
+        [resultArray addObject:[FHFeedUGCCellModel modelFromFake]];
+        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake].groupId];
+        //投票pk fake
+//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake2]];
+//        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake2].groupId];
+    }
     
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];

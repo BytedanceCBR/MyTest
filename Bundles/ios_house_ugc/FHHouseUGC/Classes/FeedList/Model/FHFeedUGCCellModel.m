@@ -310,7 +310,10 @@
     cellModel.groupId = model.threadId;
     cellModel.logPb = model.logPb;
     cellModel.showLookMore = YES;
+    cellModel.needLinkSpan = YES;
     cellModel.numberOfLines = 3;
+    //目前仅支持话题类型
+    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
     
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     community.name = model.community.name;
@@ -417,8 +420,17 @@
 
 + (FHFeedUGCCellModel *)modelFromFake {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.groupId = @"100005";
     cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotTopic;
     cellModel.hotTopicList = @[@"1",@"2",@"3",@"4",@"5"];
+    
+    return cellModel;
+}
+
++ (FHFeedUGCCellModel *)modelFromFake2 {
+    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.groupId = @"100006";
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVote;
     
     return cellModel;
 }
