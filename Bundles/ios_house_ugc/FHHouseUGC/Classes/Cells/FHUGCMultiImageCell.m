@@ -182,13 +182,6 @@
             make.height.mas_equalTo(self.imageViewheight);
         }];
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
-        NSArray <TTRichSpanLink *> *richSpanLinks = [cellModel.richContent richSpanLinksOfAttributedString];
-        for (TTRichSpanLink *richSpanLink in richSpanLinks) {
-            NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
-            if (NSMaxRange(range) <= self.contentLabel.attributedText.length) {
-                [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
-            }
-        }
     }
     //图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];

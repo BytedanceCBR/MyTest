@@ -181,14 +181,6 @@
             make.height.mas_equalTo(self.imageViewheight);
         }];
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
-        // 文章如果也需要的话可以把代码放入 setRichContent 中统一添加
-        NSArray <TTRichSpanLink *> *richSpanLinks = [cellModel.richContent richSpanLinksOfAttributedString];
-        for (TTRichSpanLink *richSpanLink in richSpanLinks) {
-            NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
-            if (NSMaxRange(range) <= self.contentLabel.attributedText.length) {
-                [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
-            }
-        }
     }
     //图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];

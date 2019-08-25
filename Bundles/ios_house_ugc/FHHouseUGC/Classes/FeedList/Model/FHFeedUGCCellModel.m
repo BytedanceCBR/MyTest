@@ -310,7 +310,10 @@
     cellModel.groupId = model.threadId;
     cellModel.logPb = model.logPb;
     cellModel.showLookMore = YES;
+    cellModel.needLinkSpan = YES;
     cellModel.numberOfLines = 3;
+    //目前仅支持话题类型
+    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
     
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     community.name = model.community.name;

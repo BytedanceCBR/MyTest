@@ -64,10 +64,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *behotTime;
 //计算高度相关
 @property (nonatomic, strong , nullable) NSAttributedString *contentAStr;
-@property (nonatomic, strong)   TTRichSpanText       *richContent;
 @property (nonatomic, assign) CGFloat contentHeight;
 //是否显示查看全文
 @property (nonatomic, assign) BOOL showLookMore;
+//是否需要link解析，默认不解析
+@property (nonatomic, assign) BOOL needLinkSpan;
+@property (nonatomic, strong) TTRichSpanText *richContent;
+//支持的link解析类型
+@property (nonatomic, strong) NSArray *supportedLinkType;
 //文字的显示行数,默认是0
 @property (nonatomic, assign) NSInteger numberOfLines;
 //跳转详情页的scheme

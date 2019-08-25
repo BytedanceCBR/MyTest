@@ -229,6 +229,23 @@
                                                              contentColor:[UIColor themeGray1]
                                                                     color:[UIColor themeRed3]];
     }
+    
+    if(model.needLinkSpan && model.richContent){
+        NSArray <TTRichSpanLink *> *richSpanLinks = [model.richContent richSpanLinksOfAttributedString];
+        for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+            NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
+            if (NSMaxRange(range) <= label.attributedText.length) {
+                if(model.supportedLinkType){
+                    if(model.supportedLinkType.count > 0 && [model.supportedLinkType containsObject:@(richSpanLink.type)]){
+                        [label addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                    }
+                }else{
+                    //不设置默认全部支持
+                    [label addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                }
+            }
+        }
+    }
 }
 
 + (CGSize)sizeThatFitsAttributedString:(NSAttributedString *)attrStr
