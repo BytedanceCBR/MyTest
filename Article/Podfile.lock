@@ -78,7 +78,7 @@ PODS:
   - EAccountApiSDK (1.1.1.1-binary)
   - Fabric (1.9.0.1-binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.2)
+  - FHCommonUI (0.0.3)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -603,7 +603,7 @@ DEPENDENCIES:
   - EAccountApiSDK (= 1.1.1.1-binary)
   - Fabric (= 1.9.0.1-binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.2)
+  - FHCommonUI (= 0.0.3)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -997,7 +997,7 @@ SPEC CHECKSUMS:
   EAccountApiSDK: 29385b846225d7ef532237b4a71aa10647914f35
   Fabric: ecf0d69c8b5cd1c6330c8cd7ae413e6d4aa12af2
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: 987101cda0ba3805132a67295d8c058d9dac21ed
+  FHCommonUI: b0120ae743420b9524eeefcb375f19a516c8e2a8
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1144,6 +1144,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 1d459f4eb135690befa3feb3b0d0f56b38c00cb1
+PODFILE CHECKSUM: ef6f19b4c3c9557cb00545c74b92fd4d6e35872c
 
 COCOAPODS: 1.4.0

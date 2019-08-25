@@ -55,6 +55,7 @@
 #import <FHCommonUI/ToastManager.h>
 #import <FHHouseBase/FHUtils.h>
 #import "FHHouseListNoHouseCell.h"
+#import "FHHouseOpenURLUtil.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -839,7 +840,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 -(void)handleHouseListCallback:(NSString *)openUrl {
     
-    if ([self.houseListOpenUrl isEqualToString:openUrl]) {
+    if ([FHHouseOpenURLUtil isSameURL:self.houseListOpenUrl and:openUrl]) {
         return;
     }
     if (self.houseListOpenUrl && openUrl) {
