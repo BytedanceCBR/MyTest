@@ -21,6 +21,7 @@
 #import "FHUGCCellManager.h"
 #import "FHUGCCellHelper.h"
 #import "FHTopicTopBackView.h"
+#import "FHUGCTopicRefreshHeader.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate>
 
@@ -29,6 +30,7 @@
 @property (nonatomic, weak)     CAGradientLayer       *topHeaderGradientLayer;
 @property (nonatomic, strong)   FHTopicHeaderInfo       *headerInfoView;
 @property (nonatomic, strong)   FHTopicSectionHeaderView       *sectionHeaderView;
+@property (nonatomic, strong)   FHUGCTopicRefreshHeader       *refreshHeader;
 @property (nonatomic, assign)   CGFloat       minSubScrollViewHeight;
 @property (nonatomic, assign)   CGFloat       maxSubScrollViewHeight;
 @property (nonatomic, assign)   CGFloat       criticalPointHeight;// 临界点长度
@@ -75,6 +77,16 @@
     _topHeaderView = [[FHTopicTopBackView alloc] init];
     _topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
     [self.mainScrollView addSubview:_topHeaderView];
+    
+    // refreshHeader
+    self.refreshHeader = [[FHUGCTopicRefreshHeader alloc] init];
+    [self.topHeaderView addSubview:self.refreshHeader];
+    [self.refreshHeader mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.topHeaderView);
+        make.height.mas_equalTo(14);
+        make.bottom.mas_equalTo(self.topHeaderView).offset(-40);
+    }];
+    
 //    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
 //    gradientLayer.frame = _topHeaderView.frame;
 //    gradientLayer.colors = @[
