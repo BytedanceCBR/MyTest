@@ -101,7 +101,7 @@
     [self.refreshHeader mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.topHeaderView);
         make.height.mas_equalTo(14);
-        make.bottom.mas_equalTo(self.topHeaderView.mas_bottom).offset(-40);
+        make.bottom.mas_equalTo(self.topHeaderView.mas_bottom).offset(-85);
     }];
     self.refreshHeader.alpha = 0;
     __weak typeof(self) weakSelf = self;
@@ -237,11 +237,11 @@
 
 - (void)setupDetailNaviBar {
     self.customNavBarView.title.text = @"";
-    self.titleLabel = [UILabel createLabel:@"#话题测试#" textColor:@"" fontSize:14];
+    self.titleLabel = [UILabel createLabel:@"#电视剧小欢喜#" textColor:@"" fontSize:14];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.textColor = [UIColor themeGray1];
     
-    self.subTitleLabel = [UILabel createLabel:@"67关注-89热帖" textColor:@"" fontSize:10];
+    self.subTitleLabel = [UILabel createLabel:@"1.6亿阅读 1.2万讨论" textColor:@"" fontSize:10];
     self.subTitleLabel.textAlignment = NSTextAlignmentCenter;
     self.subTitleLabel.textColor = [UIColor themeGray3];
     
