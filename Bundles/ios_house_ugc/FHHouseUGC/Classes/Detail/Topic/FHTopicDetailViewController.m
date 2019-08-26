@@ -92,6 +92,9 @@
     _topHeaderView = [[FHTopicTopBackView alloc] init];
     _topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
     [self.mainScrollView addSubview:_topHeaderView];
+    [self.topHeaderView.avatar mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.mainScrollView).offset(20);
+    }];
     
     // refreshHeader
     self.refreshHeader = [[FHUGCTopicRefreshHeader alloc] init];
@@ -369,7 +372,7 @@
         offsetY = scrollView.contentOffset.y;
         if (offsetY < 0) {
             CGFloat height = 144 - offsetY;
-            self.topHeaderView.frame = CGRectMake(0, offsetY, SCREEN_WIDTH, height);
+            self.topHeaderView.frame = CGRectMake(offsetY / 2, offsetY, SCREEN_WIDTH - offsetY, height);
         } else {
             self.topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
         }

@@ -15,7 +15,6 @@
 
 @interface FHTopicTopBackView()
 
-@property(nonatomic, strong) UIImageView *avatar;
 @property(nonatomic, strong) UILabel *nameLabel;
 @property(nonatomic, strong) UILabel *subtitleLabel;
 
