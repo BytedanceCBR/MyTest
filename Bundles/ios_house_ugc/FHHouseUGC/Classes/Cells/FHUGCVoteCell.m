@@ -6,6 +6,17 @@
 //
 
 #import "FHUGCVoteCell.h"
+#import "FHUGCProgressView.h"
+
+#define bottomSepViewHeight 5
+
+@interface FHUGCVoteCell()
+
+@property(nonatomic, strong) UIView *bottomSepView;
+@property(nonatomic, strong) FHUGCProgressView *progressView;
+@property(nonatomic, strong) UIButton *testBtn;
+
+@end
 
 @implementation FHUGCVoteCell
 
@@ -15,7 +26,7 @@
     [self initUIs];
 }
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
@@ -31,7 +42,16 @@
 }
 
 - (void)initViews {
-    self.contentView.backgroundColor = [UIColor greenColor];
+    self.contentView.backgroundColor = [UIColor whiteColor];
+    
+    self.progressView = [[FHUGCProgressView alloc] initWithFrame:CGRectMake(20, 50, [UIScreen mainScreen].bounds.size.width - 40, 30)];
+    [self.contentView addSubview:_progressView];
+    
+    self.testBtn = [[UIButton alloc] init];
+    _testBtn.backgroundColor = [UIColor purpleColor];
+    [_testBtn setTitle:@"test" forState:UIControlStateNormal];
+    [_testBtn addTarget:self action:@selector(test) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:_testBtn];
 //    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
 //    [self.contentView addSubview:_userInfoView];
 //
@@ -63,6 +83,10 @@
 //
 //    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
 //    [self.bottomView.positionView addGestureRecognizer:tap];
+    
+    self.bottomSepView = [[UIView alloc] init];
+    _bottomSepView.backgroundColor = [UIColor themeGray7];
+    [self.contentView addSubview:_bottomSepView];
 }
 
 - (void)initConstraints {
@@ -97,6 +121,17 @@
 //        make.left.mas_equalTo(self.contentView).offset(leftMargin);
 //        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
 //    }];
+    [self.testBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.bottomSepView.mas_top).offset(-20);
+        make.width.mas_equalTo(50);
+        make.height.mas_equalTo(20);
+    }];
+    
+    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.left.right.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(bottomSepViewHeight);
+    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -195,6 +230,13 @@
 //        return height;
 //    }
     return 200;
+}
+
+- (void)test {
+    self.progressView.progress = 0.3;
+    self.progressView.isRightGradient = YES;
+    self.progressView.rightStartColor = [UIColor blueColor];
+    self.progressView.rightEndColor = [UIColor themeBlue1];
 }
 
 @end
