@@ -267,7 +267,14 @@
     for (TTRichSpanLink *richSpanLink in richSpanLinks) {
         NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
         if (NSMaxRange(range) <= self.contentLabel.attributedText.length) {
-            [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+            if(cellModel.supportedLinkType){
+                if(cellModel.supportedLinkType.count > 0 && [cellModel.supportedLinkType containsObject:@(richSpanLink.type)]){
+                    [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                }
+            }else{
+                //不设置默认全部支持
+                [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+            }
         }
     }
     [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {

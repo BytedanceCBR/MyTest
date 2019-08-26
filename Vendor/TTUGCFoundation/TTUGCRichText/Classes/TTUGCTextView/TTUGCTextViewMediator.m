@@ -294,6 +294,11 @@
         richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil imageInfoModelDictionary:nil];
     }
     
+    if(self.textView.didInputTextHashtag) {
+        range.location = range.location - 1;
+        range.length = range.length + 1;
+    }
+    
     [self.textView replaceRichSpanText:richSpanText inRange:range];
     
     self.textView.didInputTextHashtag = NO;

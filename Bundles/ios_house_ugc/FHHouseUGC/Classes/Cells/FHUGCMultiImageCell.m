@@ -15,6 +15,7 @@
 #import "TTBaseMacro.h"
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
+#import <TTBusinessManager+StringUtils.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -160,7 +161,7 @@
     if(commentCount == 0){
         [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
     }else{
-        [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
+        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
     }
     [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
     //内容
@@ -182,13 +183,6 @@
             make.height.mas_equalTo(self.imageViewheight);
         }];
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
-        NSArray <TTRichSpanLink *> *richSpanLinks = [cellModel.richContent richSpanLinksOfAttributedString];
-        for (TTRichSpanLink *richSpanLink in richSpanLinks) {
-            NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
-            if (NSMaxRange(range) <= self.contentLabel.attributedText.length) {
-                [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
-            }
-        }
     }
     //图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];

@@ -237,11 +237,17 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 
 - (void)setFocusTimerState {
     //关注列表有数据，才会触发小红点逻辑
-//    if([FHEnvContext isUGCOpen] && self.followList.count > 0){
-//        [self setHasNewTimerInteralAndGetNewFirstTime];
-//    }else{
-//        [self stopTimer];
-//    }
+    if([FHEnvContext isUGCOpen]){
+        if(self.followList.count > 0){
+            [self setHasNewTimerInteralAndGetNewFirstTime];
+        }else{
+            [self stopTimer];
+            self.ugcFocusHasNew = NO;
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
+        }
+    }else{
+        [self stopTimer];
+    }
 }
 
 - (NSArray<FHUGCScialGroupDataModel> *)followList {
@@ -580,22 +586,24 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 
 - (void)setHasNewTimerInteralAndGetNewFirstTime {
     //每隔一段时候调用接口
-    //    __weak typeof(self) wself = self;
-    //    [FHHouseUGCAPI refreshFeedTips:nil beHotTime:nil completion:^(bool hasNew, NSError * _Nonnull error) {
-    //        if(!error && hasNew){
-    //            self.ugcFocusHasNew = YES;
-    //            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
-    //        }
-    //    }];
+//    __weak typeof(self) wself = self;
+//    [FHHouseUGCAPI refreshFeedTips:nil beHotTime:nil completion:^(bool hasNew, NSError * _Nonnull error) {
+//        if(!error && hasNew){
+//            self.ugcFocusHasNew = YES;
+//        }else{
+//            self.ugcFocusHasNew = NO;
+//        }
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
+//    }];
     
-//    self.ugcFocusHasNew = YES;
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
+    self.ugcFocusHasNew = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
     
-    NSTimeInterval interval = 10;
-    if(interval > 0){
-        self.focusTimerInterval = interval;
-    }
-    [self startTimer];
+//    NSTimeInterval interval = 10;
+//    if(interval > 0){
+//        self.focusTimerInterval = interval;
+//    }
+//    [self startTimer];
 }
 
 - (void)getHasNewForTimer {
