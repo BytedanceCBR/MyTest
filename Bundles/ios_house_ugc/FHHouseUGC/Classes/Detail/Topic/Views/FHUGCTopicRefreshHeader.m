@@ -67,6 +67,11 @@
         if (self.refreshingBlk) {
             self.refreshingBlk();
         }
+    } else if (self.state == MJRefreshStateRefreshing) {// 正在刷新
+        if (-offsetY < self.mj_h + 3) {
+            self.scrollView.contentInset = UIEdgeInsetsMake(self.mj_h + 1, 0, 0, 0);
+        }
+        self.pullingPercent = pullingPercent;
     } else if (pullingPercent < 1) {
         self.pullingPercent = pullingPercent;
     }

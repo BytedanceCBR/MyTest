@@ -250,7 +250,12 @@
 
 // 下拉刷新
 - (void)beginRefresh {
-    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        UIEdgeInsets inset = UIEdgeInsetsMake(0, 0, 0, 0);
+        self.mainScrollView.contentInset =  inset;
+        
+    });
 }
 
 - (void)acceptMsg:(NSNotification *)notification {
@@ -295,6 +300,7 @@
         
         // topHeaderView
         offsetY = scrollView.contentOffset.y;
+        NSLog(@"---------:%lf",offsetY);
         if (offsetY < 0) {
             CGFloat height = 144 - offsetY;
             self.topHeaderView.frame = CGRectMake(0, offsetY, SCREEN_WIDTH, height);
