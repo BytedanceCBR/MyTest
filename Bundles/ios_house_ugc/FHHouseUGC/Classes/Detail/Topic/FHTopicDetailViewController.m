@@ -23,6 +23,7 @@
 #import "FHTopicTopBackView.h"
 #import "FHUGCTopicRefreshHeader.h"
 #import "FHRefreshCustomFooter.h"
+#import "UILabel+House.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate>
 
@@ -37,6 +38,10 @@
 @property (nonatomic, assign)   CGFloat       topHeightOffset;
 @property (nonatomic, strong)   UIScrollView       *subScrollView;
 @property (nonatomic, strong)   FHTopicDetailViewModel       *viewModel;
+@property (nonatomic, assign)   BOOL       isViewAppear;
+@property (nonatomic, strong)   UILabel *titleLabel;
+@property (nonatomic, strong)   UILabel *subTitleLabel;
+@property (nonatomic, strong)   UIView *titleContainer;
 
 @property (nonatomic, assign) BOOL isTopIsCanNotMoveTabView;
 @property (nonatomic, assign) BOOL isTopIsCanNotMoveTabViewPre;
@@ -50,8 +55,19 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
-    
+    self.isViewAppear = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    self.isViewAppear = YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.isViewAppear = NO;
 }
 
 - (void)setupUI {
@@ -220,7 +236,36 @@
 }
 
 - (void)setupDetailNaviBar {
-    self.customNavBarView.title.text = @"话题";
+    self.customNavBarView.title.text = @"";
+    self.titleLabel = [UILabel createLabel:@"#话题测试#" textColor:@"" fontSize:14];
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.titleLabel.textColor = [UIColor themeGray1];
+    
+    self.subTitleLabel = [UILabel createLabel:@"67关注-89热帖" textColor:@"" fontSize:10];
+    self.subTitleLabel.textAlignment = NSTextAlignmentCenter;
+    self.subTitleLabel.textColor = [UIColor themeGray3];
+    
+    self.titleContainer = [[UIView alloc] init];
+    [self.titleContainer addSubview:self.titleLabel];
+    [self.titleContainer addSubview:self.subTitleLabel];
+    [self.customNavBarView addSubview:self.titleContainer];
+    [self.titleContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.customNavBarView.leftBtn.mas_centerY);
+        make.left.mas_equalTo(self.customNavBarView.leftBtn.mas_right).offset(10.0f);
+        make.right.mas_equalTo(self.customNavBarView.mas_right).offset(-50);
+        make.height.mas_equalTo(34);
+    }];
+    
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.titleContainer);
+        make.height.mas_equalTo(20);
+    }];
+    
+    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self.titleContainer);
+        make.height.mas_equalTo(14);
+    }];
+    self.titleContainer.hidden = YES;
 }
 
 - (void)dealloc
@@ -337,11 +382,45 @@
             self.refreshHeader.alpha = 0;
         }
         
+        // alpha
+        [self refreshContentOffset:scrollView.contentOffset];
     } if (scrollView == _subScrollView) {
         // 列表父scrollview
     } else {
         // nothing
     }
+}
+
+- (void)refreshContentOffset:(CGPoint)contentOffset {
+    CGFloat offsetY = contentOffset.y;
+    CGFloat alpha = offsetY / (80.0f);
+    alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
+    [self updateNavBarWithAlpha:alpha];
+}
+
+- (void)updateNavBarWithAlpha:(CGFloat)alpha {
+    if (!self.isViewAppear) {
+        return;
+    }
+    alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
+    if (alpha <= 0.1f) {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+        self.titleContainer.hidden = YES;
+    } else if (alpha > 0.1f && alpha < 0.9f) {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+        self.customNavBarView.title.textColor = [UIColor themeGray1];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        self.titleContainer.hidden = YES;
+    } else {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        self.titleContainer.hidden = NO;
+    }
+    [self.customNavBarView refreshAlpha:alpha];
 }
 
 @end
