@@ -81,11 +81,17 @@
     // refreshHeader
     self.refreshHeader = [[FHUGCTopicRefreshHeader alloc] init];
     [self.topHeaderView addSubview:self.refreshHeader];
+    self.refreshHeader.scrollView = self.mainScrollView;
     [self.refreshHeader mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.topHeaderView);
         make.height.mas_equalTo(14);
-        make.bottom.mas_equalTo(self.topHeaderView).offset(-40);
+        make.bottom.mas_equalTo(self.topHeaderView.mas_bottom).offset(-40);
     }];
+    self.refreshHeader.alpha = 0;
+    __weak typeof(self) weakSelf = self;
+    self.refreshHeader.refreshingBlk = ^{
+        [weakSelf beginRefresh];
+    };
     
 //    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
 //    gradientLayer.frame = _topHeaderView.frame;
@@ -242,6 +248,11 @@
     }
 }
 
+// 下拉刷新
+- (void)beginRefresh {
+    
+}
+
 - (void)acceptMsg:(NSNotification *)notification {
     NSDictionary *userInfo = notification.userInfo;
     NSString *canScroll = userInfo[@"canScroll"];
@@ -292,6 +303,15 @@
             self.topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
             self.topHeaderGradientLayer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
         }
+        // refreshHeader
+        [self.refreshHeader scrollViewDidScroll:self.mainScrollView];
+        if(offsetY < 0) {
+            CGFloat alpha = self.refreshHeader.mj_h <= 0 ? 0.0f : fminf(1.0f,fabsf(-offsetY / self.refreshHeader.mj_h));
+            self.refreshHeader.alpha = alpha;
+        }else{
+            self.refreshHeader.alpha = 0;
+        }
+        
     } if (scrollView == _subScrollView) {
         // 列表父scrollview
     } else {

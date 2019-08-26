@@ -22,6 +22,7 @@
 @property (strong, nonatomic) NSMutableDictionary *stateTitles;
 @property(nonatomic,assign) CGFloat lable2LoadingMargin;
 @property(nonatomic,assign) CGFloat loadingSize;
+@property (nonatomic, assign)   CGFloat       pullingPercent;
 
 @end
 
@@ -36,13 +37,68 @@
     return self;
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    // 当前的contentOffset
+    CGFloat offsetY = scrollView.contentOffset.y;
+    // 头部控件刚好出现的offsetY
+    CGFloat happenOffsetY = 0;
+    
+    // 如果是向上滚动到看不见头部控件，直接返回
+    // >= -> >
+    if (offsetY > happenOffsetY) return;
+    
+    // 普通 和 即将刷新 的临界点
+    CGFloat normal2pullingOffsetY = happenOffsetY - self.mj_h;
+    CGFloat pullingPercent = (happenOffsetY - offsetY) / self.mj_h;
+    
+    if (self.scrollView.isDragging) { // 如果正在拖拽
+        self.pullingPercent = pullingPercent;
+        if (self.state == MJRefreshStateIdle && offsetY < normal2pullingOffsetY) {
+            // 转为即将刷新状态
+            self.state = MJRefreshStatePulling;
+        } else if (self.state == MJRefreshStatePulling && offsetY >= normal2pullingOffsetY) {
+            // 转为普通状态
+            self.state = MJRefreshStateIdle;
+        }
+    } else if (self.state == MJRefreshStatePulling) {// 即将刷新 && 手松开
+        // 开始刷新
+        [self beginRefreshing];
+        // 刷新回调
+        if (self.refreshingBlk) {
+            self.refreshingBlk();
+        }
+    } else if (pullingPercent < 1) {
+        self.pullingPercent = pullingPercent;
+    }
+}
+
+#pragma mark 进入刷新状态
+- (void)beginRefreshing
+{
+    [UIView animateWithDuration:MJRefreshFastAnimationDuration animations:^{
+        self.alpha = 1.0;
+    }];
+    self.pullingPercent = 1.0;
+    // 只要正在刷新，就完全显示
+    if (self.window) {
+        self.state = MJRefreshStateRefreshing;
+    } else {
+        // 预防正在刷新中时，调用本方法使得header inset回置失败
+        if (self.state != MJRefreshStateRefreshing) {
+            self.state = MJRefreshStateWillRefresh;
+            // 刷新(预防从另一个控制器回到这个控制器的情况，回来要重新刷新一下)
+            [self setNeedsDisplay];
+        }
+    }
+}
+
 - (void)setupUI {
     self.backgroundColor = [UIColor clearColor];
     self.stateTitles = [[NSMutableDictionary alloc] init];
     self.loadingSize = 14;
     self.lable2LoadingMargin = 5;
     
-    _state = MJRefreshStateNoMoreData;
+    _state = MJRefreshStateIdle;
     [self setTitle:@"下拉刷新" forState:MJRefreshStateIdle];
     [self setTitle:@"松手刷新" forState:MJRefreshStatePulling];
     [self setTitle:@"正在刷新" forState:MJRefreshStateRefreshing];
@@ -56,6 +112,7 @@
 - (void)setState:(MJRefreshState)state {
     MJRefreshState oldState = self.state;
     if (state == oldState) return;
+    _state = state;
     self.textLabel.text = self.stateTitles[@(state)];
     
     switch (state) {
