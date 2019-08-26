@@ -82,6 +82,7 @@
     self.refreshHeader = [[FHUGCTopicRefreshHeader alloc] init];
     [self.topHeaderView addSubview:self.refreshHeader];
     self.refreshHeader.scrollView = self.mainScrollView;
+    self.refreshHeader.beginEdgeInsets = self.mainScrollView.contentInset;
     [self.refreshHeader mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.topHeaderView);
         make.height.mas_equalTo(14);
@@ -250,11 +251,9 @@
 
 // 下拉刷新
 - (void)beginRefresh {
+    NSLog(@"--------下拉刷新");
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        UIEdgeInsets inset = UIEdgeInsetsMake(0, 0, 0, 0);
-        self.mainScrollView.contentInset =  inset;
-        
+        [self.refreshHeader endRefreshing];
     });
 }
 
@@ -300,7 +299,6 @@
         
         // topHeaderView
         offsetY = scrollView.contentOffset.y;
-        NSLog(@"---------:%lf",offsetY);
         if (offsetY < 0) {
             CGFloat height = 144 - offsetY;
             self.topHeaderView.frame = CGRectMake(0, offsetY, SCREEN_WIDTH, height);

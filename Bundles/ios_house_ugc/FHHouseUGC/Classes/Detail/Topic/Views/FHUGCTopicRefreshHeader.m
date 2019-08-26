@@ -97,6 +97,20 @@
     }
 }
 
+- (void)endRefreshing {
+    [UIView animateWithDuration:MJRefreshFastAnimationDuration animations:^{
+        self.alpha = 0.0;
+        self.state = MJRefreshStateIdle;
+    }];
+    [self.scrollView setContentOffset:CGPointZero animated:YES];
+//    [UIView animateWithDuration:MJRefreshFastAnimationDuration animations:^{
+//        // nothing
+//    } completion:^(BOOL finished) {
+//        //UIEdgeInsets inset = UIEdgeInsetsMake(0, 0, 0, 0);
+//        //self.scrollView.contentInset = self.beginEdgeInsets;
+//    }];
+}
+
 - (void)setupUI {
     self.backgroundColor = [UIColor clearColor];
     self.stateTitles = [[NSMutableDictionary alloc] init];
