@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *type;
 @property (nonatomic, copy , nullable) FHFeedContentImageListModel *imageModel;
+@property (nonatomic, copy , nullable) NSAttributedString *contentAStr;
 
 @end
 
@@ -96,6 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL showCommunity;
 //原始文章或者问答
 @property (nonatomic, strong , nullable) FHFeedUGCOriginItemModel *originItemModel;
+@property (nonatomic, assign) CGFloat originItemHeight;
 //热门话题
 @property (nonatomic, strong , nullable) NSArray *hotTopicList;
 
