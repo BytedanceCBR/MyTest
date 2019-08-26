@@ -22,6 +22,7 @@
 #import "FHUGCCellHelper.h"
 #import "FHTopicTopBackView.h"
 #import "FHUGCTopicRefreshHeader.h"
+#import "FHRefreshCustomFooter.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate>
 
@@ -131,6 +132,7 @@
     
     // viewModel
     _viewModel = [[FHTopicDetailViewModel alloc] initWithController:self];
+    _viewModel.currentSelectIndex = 0;
     
     // 初始化tableViews，后续可能网络返回结果
     NSArray *indexStrs = @[@"最新"];
@@ -171,7 +173,7 @@
 
 - (UITableView *)createTableView {
     UITableView *_tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    _tableView.backgroundColor = [UIColor themeGray7];
+    _tableView.backgroundColor = [UIColor whiteColor];//[UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
@@ -187,9 +189,18 @@
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     
-    if ([TTDeviceHelper isIPhoneXDevice]) {
+    if ([TTDeviceHelper isIPhoneXSeries]) {
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
+    // 上拉加载更多
+    __weak typeof(self) weakSelf = self;
+    FHRefreshCustomFooter *refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+        //  wself.isRefresh = NO;
+        [weakSelf loadMore];
+    }];
+    _tableView.mj_footer = refreshFooter;
+    
+//    refreshFooter.hidden = YES;
     return _tableView;
 }
 
@@ -244,6 +255,19 @@
     });
 }
 
+// 上拉加载
+- (void)loadMore {
+    NSLog(@"--------上拉加载");
+    UITableView *tb = self.viewModel.currentTableView;
+    if (tb) {
+        FHRefreshCustomFooter *refreshFooter = tb.mj_footer;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
+            [tb.mj_footer endRefreshingWithNoMoreData];
+        });
+    }
+}
+
 - (void)acceptMsg:(NSNotification *)notification {
     NSDictionary *userInfo = notification.userInfo;
     NSString *canScroll = userInfo[@"canScroll"];
@@ -253,6 +277,18 @@
 }
 
 #pragma mark - UIScrollViewDelegate
+
+// 滑动切换tab
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if (scrollView == _mainScrollView) {
+        
+    } else if (scrollView == _subScrollView) {
+        CGFloat offsetX = scrollView.contentOffset.x;
+        CGFloat tempIndex = offsetX / SCREEN_WIDTH;
+        self.viewModel.currentSelectIndex = (NSInteger)tempIndex;
+    }
+}
+
 // mainScrollView
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView == _mainScrollView) {
@@ -304,13 +340,7 @@
     } if (scrollView == _subScrollView) {
         // 列表父scrollview
     } else {
-        // sub
-//        CGFloat mainOffsetY = self.mainScrollView.contentOffset.y;
-//        CGFloat offsetY = scrollView.contentOffset.y;
-//        if (mainOffsetY < self.criticalPointHeight || offsetY <= 0) {
-//            self.mainScrollView.contentOffset = CGPointMake(0, mainOffsetY + offsetY);
-//            scrollView.contentOffset = CGPointZero;
-//        }
+        // nothing
     }
 }
 
