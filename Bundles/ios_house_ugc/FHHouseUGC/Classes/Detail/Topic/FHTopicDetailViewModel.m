@@ -146,6 +146,14 @@
     }
 }
 
-
+- (UITableView *)currentTableView {
+    UITableView *ret = nil;
+    NSInteger index = self.currentSelectIndex;
+    NSArray *arr = [self.hashTable allObjects];
+    if (index >= 0 && index < arr.count) {
+        return arr[index];
+    }
+    return ret;
+}
 
 @end

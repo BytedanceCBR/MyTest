@@ -189,8 +189,11 @@
     if(cellModel.originItemModel){
         self.originView.hidden = NO;
         [self.originView refreshWithdata:cellModel];
+        [self.originView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(cellModel.originItemHeight);
+        }];
         [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(originViewHeight + 20);
+            make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(cellModel.originItemHeight + 20);
         }];
     }else{
         self.originView.hidden = YES;
@@ -215,7 +218,7 @@
         height += imageViewheight;
         
         if(cellModel.originItemModel){
-            height += (originViewHeight + 10);
+            height += (cellModel.originItemHeight + 10);
         }
         
         if(cellModel.isInsertGuideCell){

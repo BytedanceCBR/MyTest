@@ -22,6 +22,8 @@
 #import "FHUGCCellHelper.h"
 #import "FHTopicTopBackView.h"
 #import "FHUGCTopicRefreshHeader.h"
+#import "FHRefreshCustomFooter.h"
+#import "UILabel+House.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate>
 
@@ -36,6 +38,10 @@
 @property (nonatomic, assign)   CGFloat       topHeightOffset;
 @property (nonatomic, strong)   UIScrollView       *subScrollView;
 @property (nonatomic, strong)   FHTopicDetailViewModel       *viewModel;
+@property (nonatomic, assign)   BOOL       isViewAppear;
+@property (nonatomic, strong)   UILabel *titleLabel;
+@property (nonatomic, strong)   UILabel *subTitleLabel;
+@property (nonatomic, strong)   UIView *titleContainer;
 
 @property (nonatomic, assign) BOOL isTopIsCanNotMoveTabView;
 @property (nonatomic, assign) BOOL isTopIsCanNotMoveTabViewPre;
@@ -49,8 +55,19 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
-    
+    self.isViewAppear = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    self.isViewAppear = YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.isViewAppear = NO;
 }
 
 - (void)setupUI {
@@ -75,6 +92,9 @@
     _topHeaderView = [[FHTopicTopBackView alloc] init];
     _topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
     [self.mainScrollView addSubview:_topHeaderView];
+    [self.topHeaderView.avatar mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.mainScrollView).offset(20);
+    }];
     
     // refreshHeader
     self.refreshHeader = [[FHUGCTopicRefreshHeader alloc] init];
@@ -84,7 +104,7 @@
     [self.refreshHeader mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.topHeaderView);
         make.height.mas_equalTo(14);
-        make.bottom.mas_equalTo(self.topHeaderView.mas_bottom).offset(-40);
+        make.bottom.mas_equalTo(self.topHeaderView.mas_bottom).offset(-85);
     }];
     self.refreshHeader.alpha = 0;
     __weak typeof(self) weakSelf = self;
@@ -131,6 +151,7 @@
     
     // viewModel
     _viewModel = [[FHTopicDetailViewModel alloc] initWithController:self];
+    _viewModel.currentSelectIndex = 0;
     
     // 初始化tableViews，后续可能网络返回结果
     NSArray *indexStrs = @[@"最新"];
@@ -171,7 +192,7 @@
 
 - (UITableView *)createTableView {
     UITableView *_tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    _tableView.backgroundColor = [UIColor themeGray7];
+    _tableView.backgroundColor = [UIColor whiteColor];//[UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
@@ -187,9 +208,18 @@
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     
-    if ([TTDeviceHelper isIPhoneXDevice]) {
+    if ([TTDeviceHelper isIPhoneXSeries]) {
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
+    // 上拉加载更多
+    __weak typeof(self) weakSelf = self;
+    FHRefreshCustomFooter *refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+        //  wself.isRefresh = NO;
+        [weakSelf loadMore];
+    }];
+    _tableView.mj_footer = refreshFooter;
+    
+//    refreshFooter.hidden = YES;
     return _tableView;
 }
 
@@ -209,7 +239,36 @@
 }
 
 - (void)setupDetailNaviBar {
-    self.customNavBarView.title.text = @"话题";
+    self.customNavBarView.title.text = @"";
+    self.titleLabel = [UILabel createLabel:@"#电视剧小欢喜#" textColor:@"" fontSize:14];
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.titleLabel.textColor = [UIColor themeGray1];
+    
+    self.subTitleLabel = [UILabel createLabel:@"1.6亿阅读 1.2万讨论" textColor:@"" fontSize:10];
+    self.subTitleLabel.textAlignment = NSTextAlignmentCenter;
+    self.subTitleLabel.textColor = [UIColor themeGray3];
+    
+    self.titleContainer = [[UIView alloc] init];
+    [self.titleContainer addSubview:self.titleLabel];
+    [self.titleContainer addSubview:self.subTitleLabel];
+    [self.customNavBarView addSubview:self.titleContainer];
+    [self.titleContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.customNavBarView.leftBtn.mas_centerY);
+        make.left.mas_equalTo(self.customNavBarView.leftBtn.mas_right).offset(10.0f);
+        make.right.mas_equalTo(self.customNavBarView.mas_right).offset(-50);
+        make.height.mas_equalTo(34);
+    }];
+    
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.titleContainer);
+        make.height.mas_equalTo(20);
+    }];
+    
+    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self.titleContainer);
+        make.height.mas_equalTo(14);
+    }];
+    self.titleContainer.hidden = YES;
 }
 
 - (void)dealloc
@@ -244,6 +303,19 @@
     });
 }
 
+// 上拉加载
+- (void)loadMore {
+    NSLog(@"--------上拉加载");
+    UITableView *tb = self.viewModel.currentTableView;
+    if (tb) {
+        FHRefreshCustomFooter *refreshFooter = tb.mj_footer;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
+            [tb.mj_footer endRefreshingWithNoMoreData];
+        });
+    }
+}
+
 - (void)acceptMsg:(NSNotification *)notification {
     NSDictionary *userInfo = notification.userInfo;
     NSString *canScroll = userInfo[@"canScroll"];
@@ -253,6 +325,18 @@
 }
 
 #pragma mark - UIScrollViewDelegate
+
+// 滑动切换tab
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if (scrollView == _mainScrollView) {
+        
+    } else if (scrollView == _subScrollView) {
+        CGFloat offsetX = scrollView.contentOffset.x;
+        CGFloat tempIndex = offsetX / SCREEN_WIDTH;
+        self.viewModel.currentSelectIndex = (NSInteger)tempIndex;
+    }
+}
+
 // mainScrollView
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView == _mainScrollView) {
@@ -288,7 +372,7 @@
         offsetY = scrollView.contentOffset.y;
         if (offsetY < 0) {
             CGFloat height = 144 - offsetY;
-            self.topHeaderView.frame = CGRectMake(0, offsetY, SCREEN_WIDTH, height);
+            self.topHeaderView.frame = CGRectMake(offsetY / 2, offsetY, SCREEN_WIDTH - offsetY, height);
         } else {
             self.topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
         }
@@ -301,17 +385,45 @@
             self.refreshHeader.alpha = 0;
         }
         
+        // alpha
+        [self refreshContentOffset:scrollView.contentOffset];
     } if (scrollView == _subScrollView) {
         // 列表父scrollview
     } else {
-        // sub
-//        CGFloat mainOffsetY = self.mainScrollView.contentOffset.y;
-//        CGFloat offsetY = scrollView.contentOffset.y;
-//        if (mainOffsetY < self.criticalPointHeight || offsetY <= 0) {
-//            self.mainScrollView.contentOffset = CGPointMake(0, mainOffsetY + offsetY);
-//            scrollView.contentOffset = CGPointZero;
-//        }
+        // nothing
     }
+}
+
+- (void)refreshContentOffset:(CGPoint)contentOffset {
+    CGFloat offsetY = contentOffset.y;
+    CGFloat alpha = offsetY / (80.0f);
+    alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
+    [self updateNavBarWithAlpha:alpha];
+}
+
+- (void)updateNavBarWithAlpha:(CGFloat)alpha {
+    if (!self.isViewAppear) {
+        return;
+    }
+    alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
+    if (alpha <= 0.1f) {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+        self.titleContainer.hidden = YES;
+    } else if (alpha > 0.1f && alpha < 0.9f) {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+        self.customNavBarView.title.textColor = [UIColor themeGray1];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        self.titleContainer.hidden = YES;
+    } else {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        self.titleContainer.hidden = NO;
+    }
+    [self.customNavBarView refreshAlpha:alpha];
 }
 
 @end
