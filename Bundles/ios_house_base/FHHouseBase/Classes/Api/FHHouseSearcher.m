@@ -22,6 +22,10 @@
         query = [NSString stringWithFormat:@"&offset=%ld",offset];
     }    
  
+    if (![query containsString:@"search_id"] && queryParam[@"search_id"]) {
+        query = [query stringByAppendingFormat:@"&search_id=%@",queryParam[@"search_id"]];
+    }
+    
     return [FHMainApi postRequest:path uploadLog:YES query:query params:queryParam jsonClass:[FHSearchHouseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {        
         callback(error ,[(FHSearchHouseModel *)model data]);
     }];

@@ -9,6 +9,7 @@
 #import <Masonry/Masonry.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHDetailPictureNavView ()
 @property (nonatomic, strong)   UIImage       *backWhiteImage;
@@ -32,7 +33,7 @@
     [_backBtn setImage:self.backWhiteImage forState:UIControlStateNormal];
     [_backBtn setImage:self.backWhiteImage forState:UIControlStateHighlighted];
     [_backBtn addTarget:self action:@selector(backAction:) forControlEvents:UIControlEventTouchUpInside];
-    _backBtn.frame = CGRectMake(18, 10, 24, 24);
+    _backBtn.frame = CGRectMake(20, 10, 24, 24);
     [self addSubview:_backBtn];
     
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 10, self.frame.size.width - 100, 24)];
@@ -68,7 +69,7 @@
 - (UIImage *)backWhiteImage
 {
     if (!_backWhiteImage) {
-        _backWhiteImage = [UIImage imageNamed:@"detail_back_white"];
+        _backWhiteImage = ICON_FONT_IMG(24,@"\U0000e68a",[UIColor whiteColor]);//@"detail_back_white";
     }
     return _backWhiteImage;
 }
