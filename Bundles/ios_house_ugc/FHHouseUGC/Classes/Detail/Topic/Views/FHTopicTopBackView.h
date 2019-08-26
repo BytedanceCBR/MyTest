@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHTopicTopBackView : UIView
 
 @property (nonatomic, strong)   UIImageView        *headerImageView;
+@property (nonatomic, strong) UIImageView *avatar;
 
 @end
 

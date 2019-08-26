@@ -76,7 +76,7 @@ PODS:
   - CocoaLumberjack/Extensions (3.4.2.1-binary)
   - Crashlytics (3.12.0.1-binary)
   - EAccountApiSDK (1.1.1.1-binary)
-  - Fabric (1.9.0.1-binary)
+  - Fabric (1.10.2.1-binary)
   - FHCHousePush (0.1.0)
   - FHCommonUI (0.0.3)
   - FHHouseBase (0.1.0)
@@ -601,7 +601,7 @@ DEPENDENCIES:
   - CocoaLumberjack (= 3.4.2.1-binary)
   - Crashlytics (= 3.12.0.1-binary)
   - EAccountApiSDK (= 1.1.1.1-binary)
-  - Fabric (= 1.9.0.1-binary)
+  - Fabric (= 1.10.2.1-binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
   - FHCommonUI (= 0.0.3)
   - FHHouseBase (from `../Bundles/ios_house_base`)
@@ -995,7 +995,7 @@ SPEC CHECKSUMS:
   CocoaLumberjack: c0d821ecf553b7ee2a8da704cb4543027f3d0c5e
   Crashlytics: bf08c2834d9231328142ef5588ee1ae5b78229a9
   EAccountApiSDK: 29385b846225d7ef532237b4a71aa10647914f35
-  Fabric: ecf0d69c8b5cd1c6330c8cd7ae413e6d4aa12af2
+  Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
   FHCommonUI: b0120ae743420b9524eeefcb375f19a516c8e2a8
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
@@ -1144,6 +1144,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: ef6f19b4c3c9557cb00545c74b92fd4d6e35872c
+PODFILE CHECKSUM: 75c81874513d703703104f2641a4ed0d206b042f
 
 COCOAPODS: 1.4.0

@@ -95,6 +95,9 @@
     if([self.viewController.delegate respondsToSelector:@selector(didSelectedHashtag:)]) {
         [self.viewController.delegate didSelectedHashtag:item];
         [self.viewController goBack];
+    } else {
+        NSURL *url = [NSURL URLWithString:@"sslocal://concern"];
+        [[TTRoute sharedRoute] openURLByPushViewController:url];
     }
 }
 

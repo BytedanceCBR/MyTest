@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)   FHUGCCellManager       *ugcCellManager;
 @property (nonatomic, strong) NSHashTable<id>      *hashTable;
+@property (nonatomic, assign)   NSInteger       currentSelectIndex;
+@property (nonatomic, strong)     UITableView       *currentTableView;
 
 -(instancetype)initWithController:(FHTopicDetailViewController *)viewController;
 
