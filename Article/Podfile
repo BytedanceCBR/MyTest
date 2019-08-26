@@ -518,7 +518,7 @@ def appPods
     pod_binary 'TTTAttributedLabel', '1.13.3'
     pod_binary 'UMengAnalytics', '4.1.4'
     pod_binary 'JSONModel','1.7.0-private'
-    pod_binary 'Fabric','1.9.0'
+    pod_binary 'Fabric','1.10.2'
     pod_binary 'MJExtension', '3.0.12'
     pod_binary 'MJRefresh' , '3.1.15.7'
     pod_binary 'Crashlytics','3.12.0'
