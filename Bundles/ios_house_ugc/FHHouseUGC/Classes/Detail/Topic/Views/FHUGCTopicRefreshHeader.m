@@ -23,6 +23,7 @@
 @property(nonatomic,assign) CGFloat lable2LoadingMargin;
 @property(nonatomic,assign) CGFloat loadingSize;
 @property (nonatomic, assign)   CGFloat       pullingPercent;
+@property (nonatomic, assign)   BOOL       isEndRefreshing;
 
 @end
 
@@ -38,6 +39,9 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.isEndRefreshing) {
+        return;
+    }
     // 当前的contentOffset
     CGFloat offsetY = scrollView.contentOffset.y;
     // 头部控件刚好出现的offsetY
@@ -98,21 +102,23 @@
 }
 
 - (void)endRefreshing {
-    [UIView animateWithDuration:MJRefreshFastAnimationDuration animations:^{
-        self.alpha = 0.0;
-        self.state = MJRefreshStateIdle;
-    }];
+    self.isEndRefreshing = YES;
     [self.scrollView setContentOffset:CGPointZero animated:YES];
-//    [UIView animateWithDuration:MJRefreshFastAnimationDuration animations:^{
-//        // nothing
-//    } completion:^(BOOL finished) {
-//        //UIEdgeInsets inset = UIEdgeInsetsMake(0, 0, 0, 0);
-//        //self.scrollView.contentInset = self.beginEdgeInsets;
-//    }];
+    [UIView animateWithDuration:0.4 animations:^{
+        // nothing
+        self.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        //UIEdgeInsets inset = UIEdgeInsetsMake(0, 0, 0, 0);
+        //self.scrollView.contentInset = self.beginEdgeInsets;
+        self.state = MJRefreshStateIdle;
+        self.pullingPercent = 0;
+        self.isEndRefreshing = NO;
+    }];
 }
 
 - (void)setupUI {
     self.backgroundColor = [UIColor clearColor];
+    self.isEndRefreshing = NO;
     self.stateTitles = [[NSMutableDictionary alloc] init];
     self.loadingSize = 14;
     self.lable2LoadingMargin = 5;
