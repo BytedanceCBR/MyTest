@@ -21,7 +21,7 @@
 #import <TTNewsAccountBusiness/TTAccountBusiness.h>
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import <TTUGCAttributedLabel.h>
 #import <TTShare/TTShareManager.h>
 #import <TTShare/TTWechatTimelineContentItem.h>

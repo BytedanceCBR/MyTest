@@ -32,7 +32,7 @@
 #import "TTQQShare.h"
 //#import "TTDingTalkShare.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import "AKUILayout.h"
 #import "TTVDiggAction.h"
 #import "UIColor+Theme.h"

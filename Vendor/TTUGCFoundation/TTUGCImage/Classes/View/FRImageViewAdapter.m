@@ -10,7 +10,7 @@
 #import <FLAnimatedImage/FLAnimatedImage.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTKitchen/TTKitchen.h>
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 
 @interface FRImageViewAdapter(){
     dispatch_queue_t _decodeTaskQueue;

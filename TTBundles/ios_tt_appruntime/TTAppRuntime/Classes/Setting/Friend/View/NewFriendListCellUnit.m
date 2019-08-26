@@ -74,7 +74,7 @@
         _avatarView.avatarImgPadding = 0;
 //        [_avatarView.avatarButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
         _avatarView.avatarButton.userInteractionEnabled = NO;
-        [_avatarView setupVerifyViewForLength:kAvatarViewWidth adaptationSizeBlock:nil];
+//        [_avatarView setupVerifyViewForLength:kAvatarViewWidth adaptationSizeBlock:nil];
         [self addSubview:_avatarView];
         
         self.titleLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];
