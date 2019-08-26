@@ -27,7 +27,6 @@
 
 @property (nonatomic, strong)   UIScrollView       *mainScrollView;
 @property (nonatomic, strong)   FHTopicTopBackView        *topHeaderView;
-@property (nonatomic, weak)     CAGradientLayer       *topHeaderGradientLayer;
 @property (nonatomic, strong)   FHTopicHeaderInfo       *headerInfoView;
 @property (nonatomic, strong)   FHTopicSectionHeaderView       *sectionHeaderView;
 @property (nonatomic, strong)   FHUGCTopicRefreshHeader       *refreshHeader;
@@ -52,7 +51,6 @@
     [self setupUI];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoBottom" object:nil];
 }
 
 - (void)setupUI {
@@ -93,17 +91,6 @@
     self.refreshHeader.refreshingBlk = ^{
         [weakSelf beginRefresh];
     };
-    
-//    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-//    gradientLayer.frame = _topHeaderView.frame;
-//    gradientLayer.colors = @[
-//                             (__bridge id)[UIColor colorWithWhite:1 alpha:0.4].CGColor,
-//                             (__bridge id)[UIColor colorWithWhite:1 alpha:0.2].CGColor
-//                             ];
-//    gradientLayer.startPoint = CGPointMake(0.5, 0);
-//    gradientLayer.endPoint = CGPointMake(0.5, 1);
-//    [self.topHeaderView.headerImageView.layer addSublayer:gradientLayer];
-//    self.topHeaderGradientLayer = gradientLayer;
     
     // _headerInfoView
     _headerInfoView = [[FHTopicHeaderInfo alloc] init];
@@ -146,7 +133,7 @@
     _viewModel = [[FHTopicDetailViewModel alloc] initWithController:self];
     
     // 初始化tableViews，后续可能网络返回结果
-    NSArray *indexStrs = @[@"最热",@"最新"];
+    NSArray *indexStrs = @[@"最新"];
     [self setupSubTableViews:indexStrs];
     
     // 加载数据
@@ -302,10 +289,8 @@
         if (offsetY < 0) {
             CGFloat height = 144 - offsetY;
             self.topHeaderView.frame = CGRectMake(0, offsetY, SCREEN_WIDTH, height);
-            self.topHeaderGradientLayer.frame = CGRectMake(0, 0, SCREEN_WIDTH, height);
         } else {
             self.topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
-            self.topHeaderGradientLayer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
         }
         // refreshHeader
         [self.refreshHeader scrollViewDidScroll:self.mainScrollView];
