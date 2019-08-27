@@ -17,7 +17,7 @@
 //#import "TTShareToRepostManager.h"
 #import "TTActivityShareSequenceManager.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import "TTWebImageManager.h"
 #import "TTShareConstants.h"
 

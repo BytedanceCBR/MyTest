@@ -160,11 +160,11 @@
         _avatarView.avatarImgPadding = [TTDeviceHelper ssOnePixel];
         _avatarView.rectangleAvatarImgRadius = 0.f;
         _avatarView.userInteractionEnabled = NO;
-        [_avatarView setupVerifyViewForLength:36.f adaptationSizeBlock:^CGSize(CGSize standardSize) {
-            return [TTVerifyIconHelper tt_size:standardSize];
-        } adaptationOffsetBlock:^UIOffset(UIOffset standardOffset) {
-            return UIOffsetMake(standardOffset.horizontal - [TTDeviceHelper ssOnePixel], standardOffset.vertical - [TTDeviceHelper ssOnePixel]);
-        }];
+//        [_avatarView setupVerifyViewForLength:36.f adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//            return [TTVerifyIconHelper tt_size:standardSize];
+//        } adaptationOffsetBlock:^UIOffset(UIOffset standardOffset) {
+//            return UIOffsetMake(standardOffset.horizontal - [TTDeviceHelper ssOnePixel], standardOffset.vertical - [TTDeviceHelper ssOnePixel]);
+//        }];
     }
     return _avatarView;
 }

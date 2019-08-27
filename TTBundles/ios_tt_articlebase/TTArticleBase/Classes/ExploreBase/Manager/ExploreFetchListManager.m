@@ -36,12 +36,13 @@
 
 #import "TSVRecUserCardOriginalData.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 //#import "TTFollowCategoryFetchExtraManager.h"
 #import <TTMonitor/TTMonitor.h>
 #import "ExploreLogicSetting.h"
 #import "SSCommonLogic.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import "TTKitchenManager+TTFeedModule.h"
 
 @interface ExploreFetchListManager()<SSDataOperationDelegate>
 

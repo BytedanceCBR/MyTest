@@ -36,7 +36,7 @@
         self.avatarView = ({
             TTAsyncCornerImageView *avatarView = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(0, 0 , 66, 66) allowCorner:YES];
             avatarView.cornerRadius = avatarView.width / 2;
-            [avatarView setupVerifyViewForLength:66 adaptationSizeBlock:nil];
+//            [avatarView setupVerifyViewForLength:66 adaptationSizeBlock:nil];
             avatarView.userInteractionEnabled = NO;
             avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
             avatarView.placeholderName = @"default_sdk_login";

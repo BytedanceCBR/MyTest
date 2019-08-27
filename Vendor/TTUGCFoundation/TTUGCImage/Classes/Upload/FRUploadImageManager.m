@@ -15,7 +15,7 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/NSObject+TTAdditions.h>
 #import "TTUGCRequestManager.h"
-
+#import "TTUGCImageKitchen.h"
 /**
  *  同时允许上传的数量
  */
