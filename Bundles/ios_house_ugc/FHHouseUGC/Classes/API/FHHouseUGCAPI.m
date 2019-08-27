@@ -40,7 +40,7 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
-+ (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
++ (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
 
     NSString *queryPath = [ArticleURLSetting encrpytionStreamUrlString];
     
@@ -90,13 +90,9 @@
         paramDic[@"refresh_reason"] = @(0);
     }
     
-    NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
-    NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    if(fCityId){
-        [extraDic setObject:fCityId forKey:@"f_city_id"];
+    if(extraDic){
+        paramDic[@"client_extra_params"] = [extraDic tt_JSONRepresentation];
     }
-    
-    paramDic[@"client_extra_params"] = [extraDic tt_JSONRepresentation];
 
     Class cls = NSClassFromString(@"FHFeedListModel");
 
@@ -325,8 +321,8 @@
 }
 
 
-+ (TTHttpTask *)refreshFeedTips:(NSString *)category beHotTime:(NSString *)beHotTime completion:(void(^)(bool hasNew , NSError *error))completion {
-    NSString *queryPath = @"/ugc/v:version/refresh_tips";
++ (TTHttpTask *)refreshFeedTips:(NSString *)category beHotTime:(double)beHotTime completion:(void(^)(bool hasNew ,NSTimeInterval interval, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/v1/refresh_tips";
     NSString *url = QURL(queryPath);
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -334,13 +330,14 @@
         paramDic[@"category"] = category;
     }
     if(beHotTime){
-        paramDic[@"be_hot_time"] = beHotTime;
+        paramDic[@"be_hot_time"] = @(beHotTime);
     }
     
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
         
         BOOL success = NO;
         BOOL hasNew = NO;
+        NSTimeInterval interval = 0;
         if (!error) {
             @try{
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
@@ -350,6 +347,7 @@
                     error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
                 }else{
                     hasNew = [json[@"data"][@"has_new_content"] boolValue];
+                    interval = [json[@"data"][@"refresh_duration"] doubleValue];
                 }
             }
             @catch(NSException *e){
@@ -357,7 +355,7 @@
             }
         }
         if (completion) {
-            completion(hasNew,error);
+            completion(hasNew,interval,error);
         }
     }];
 }

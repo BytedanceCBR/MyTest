@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCommunityFeedListPostDetailViewModel : FHCommunityFeedListBaseViewModel
 
+@property(nonatomic, copy) NSString *socialGroupId;
+
 @end
 
 NS_ASSUME_NONNULL_END

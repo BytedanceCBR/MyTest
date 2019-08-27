@@ -157,13 +157,14 @@
     if(self.listType == FHCommunityFeedListTypeNearby){
         viewModel = [[FHCommunityFeedListNearbyViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = @"f_ugc_neighbor";
-//        viewModel.categoryId = @"weitoutiao";
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = @"94349537893";
+        viewModel.categoryId = @"f_ugc_follow";
     }else if(self.listType == FHCommunityFeedListTypePostDetail) {
-        viewModel = [[FHCommunityFeedListPostDetailViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = self.forumId;
+        FHCommunityFeedListPostDetailViewModel *postDetailViewModel = [[FHCommunityFeedListPostDetailViewModel alloc] initWithTableView:_tableView controller:self];
+        postDetailViewModel.socialGroupId = self.forumId;
+        postDetailViewModel.categoryId = @"f_project_social";
+        viewModel = postDetailViewModel;
     }
     
     self.viewModel = viewModel;
