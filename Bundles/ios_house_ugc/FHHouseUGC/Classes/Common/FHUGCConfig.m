@@ -15,6 +15,7 @@
 #import "TTAccountManager.h"
 #import "TTForumPostThreadStatusViewModel.h"
 #import "FHEnvContext.h"
+#import <TTBusinessManager+StringUtils.h>
 
 //默认轮训间隔时间5分钟
 #define defaultFocusTimerInterval 300
@@ -284,7 +285,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                 NSString *followCountStr = model.followerCount;
                 NSInteger followCount = [model.followerCount integerValue];
                 followCount += 1;
-                NSString *replaceFollowCountStr = [NSString stringWithFormat:@"%ld",followCount];
+                NSString *replaceFollowCountStr = [TTBusinessManager formatCommentCount:followCount];
                 NSString *countText = model.countText;
                 // 替换第一个 关注数字
                 NSRange range = [countText rangeOfString:followCountStr];
@@ -307,7 +308,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                 if (followCount < 0) {
                     followCount = 0;
                 }
-                NSString *replaceFollowCountStr = [NSString stringWithFormat:@"%ld",followCount];
+                NSString *replaceFollowCountStr = [TTBusinessManager formatCommentCount:followCount];
                 NSString *countText = model.countText;
                 // 替换第一个 关注数字
                 NSRange range = [countText rangeOfString:followCountStr];
@@ -329,7 +330,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         NSString *contentCountStr = model.contentCount;
         NSInteger contentCount = [model.contentCount integerValue];
         contentCount += 1;
-        NSString *replaceContentCountStr = [NSString stringWithFormat:@"%ld",contentCount];
+        NSString *replaceContentCountStr = [TTBusinessManager formatCommentCount:contentCount];
         NSString *countText = model.countText;
         // 替换第二个数字（热帖个数）
         NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
@@ -353,7 +354,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         if (contentCount < 0) {
             contentCount = 0;
         }
-        NSString *replaceContentCountStr = [NSString stringWithFormat:@"%ld",contentCount];
+        NSString *replaceContentCountStr = [TTBusinessManager formatCommentCount:contentCount];
         NSString *countText = model.countText;
         // 替换第二个数字（热帖个数）
         NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];

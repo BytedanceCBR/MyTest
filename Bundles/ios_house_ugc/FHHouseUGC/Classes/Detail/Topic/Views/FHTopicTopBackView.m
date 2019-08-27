@@ -35,8 +35,7 @@
     self.backgroundColor = [UIColor whiteColor];
     // _headerImageView
     _headerImageView = [[UIImageView alloc] init];
-    NSString *imageName = [NSString stringWithFormat:@"fh_ugc_community_detail_header_back0"];
-    _headerImageView.image = [UIImage imageNamed:imageName];
+    _headerImageView.contentMode = UIViewContentModeScaleAspectFill;
     [self addSubview:_headerImageView];
     [_headerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self);
@@ -85,14 +84,15 @@
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(5);
         make.height.mas_equalTo(17);
     }];
-    
-    // 测试数据
-    [self.headerImageView bd_setImageWithURL:[NSURL URLWithString:@"http://p99.pstatp.com/origin/web-union/560e0d2d-89cc-43e9-bc33-d43e30cb4999"]];
-    [self.avatar bd_setImageWithURL:[NSURL URLWithString:@"http://p99.pstatp.com/origin/web-union/3481c849-dcf1-447a-87cb-865ccdbc8662"]];
-    self.nameLabel.text = @"#电视剧小欢喜#";
-    self.subtitleLabel.text = @"1.6亿阅读 1.2万讨论";
 }
 
-
+- (void)updateWithInfo:(FHTopicHeaderModel *)headerModel {
+    if (headerModel && headerModel.forum) {
+        [self.headerImageView bd_setImageWithURL:[NSURL URLWithString:headerModel.forum.bannerUrl]];
+        [self.avatar bd_setImageWithURL:[NSURL URLWithString:headerModel.forum.avatarUrl] placeholder:[UIImage imageNamed:@"default_image"]];
+        self.nameLabel.text = headerModel.forum.forumName;
+        self.subtitleLabel.text = headerModel.forum.subDesc;
+    }
+}
 
 @end

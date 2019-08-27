@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHTopicHeaderModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -13,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)   UIImageView        *headerImageView;
 @property (nonatomic, strong) UIImageView *avatar;
+
+- (void)updateWithInfo:(FHTopicHeaderModel *)headerModel;
 
 @end
 

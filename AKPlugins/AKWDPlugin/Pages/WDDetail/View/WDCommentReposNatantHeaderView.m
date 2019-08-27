@@ -12,6 +12,7 @@
 #import "SSThemed.h"
 #import <KVOController.h>
 #import <ReactiveObjC/ReactiveObjC.h>
+#import <TTBusinessManager+StringUtils.h>
 
 static const CGFloat kLeftRightMargin = 15.0f;
 static const CGFloat kFontSize = 14.0f;
@@ -65,7 +66,7 @@ static const CGFloat kTabHeight = 50.0f;
 
 - (void)updateDigUsersLabel {
     
-    NSString *digText = [NSString stringWithFormat:@"%@ 赞", self.detailModel.answerEntity.diggCount ?: @"0"];
+    NSString *digText = [NSString stringWithFormat:@"%@ 赞", [TTBusinessManager formatCommentCount: self.detailModel.answerEntity.diggCount.longLongValue] ?: @"0"];
     NSMutableDictionary *attributedTextInfo = [NSMutableDictionary dictionary];
     [attributedTextInfo setValue:digText forKey:kSSThemedLabelText];
     [attributedTextInfo setValue:kColorText1 forKey:NSStringFromRange(NSMakeRange(0, digText.length - 1))];
@@ -75,7 +76,7 @@ static const CGFloat kTabHeight = 50.0f;
 }
 
 - (void)updateAllCommentsLabel {
-    self.allCommentsLabel.text = [NSString stringWithFormat:@"评论 %@",self.detailModel.answerEntity.commentCount ?: @"0"];
+    self.allCommentsLabel.text = [NSString stringWithFormat:@"评论 %@",[TTBusinessManager formatCommentCount: self.detailModel.answerEntity.commentCount.longLongValue] ?: @"0"];
     [self refreshUI];
 }
 

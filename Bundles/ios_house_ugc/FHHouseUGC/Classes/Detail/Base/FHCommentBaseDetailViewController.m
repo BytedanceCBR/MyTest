@@ -588,6 +588,15 @@
     [self click_delete_comment:model.commentID];
 }
 
+- (void)tt_commentDeleteSuccessWithCount:(NSInteger)commentCount {
+    self.comment_count -= commentCount;
+    if (self.comment_count < 0) {
+        self.comment_count = 0;
+    }
+    [self commentCountChanged];
+}
+
+
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController tappedWithUserID:(NSString *)userID {
     if ([userID longLongValue] == 0) {
         return;

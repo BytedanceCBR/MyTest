@@ -9,6 +9,7 @@
 #import "FHTopicDetailViewController.h"
 #import "FHUGCBaseViewModel.h"
 #import "FHUGCCellManager.h"
+#import "FHTopicHeaderModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSHashTable<id>      *hashTable;
 @property (nonatomic, assign)   NSInteger       currentSelectIndex;
 @property (nonatomic, strong)     UITableView       *currentTableView;
+@property (nonatomic, strong)   FHTopicHeaderModel       *headerModel;
 
 -(instancetype)initWithController:(FHTopicDetailViewController *)viewController;
 
