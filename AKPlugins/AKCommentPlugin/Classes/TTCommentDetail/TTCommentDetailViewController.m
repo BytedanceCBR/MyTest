@@ -243,7 +243,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 
     NSString *title;
     if (self.hasNestedInModalContainer) {
-        title = self.pageState.detailModel.commentCount? [NSString stringWithFormat:@"%ld条回复", self.pageState.detailModel.commentCount]: @"暂无回复";
+        title = self.pageState.detailModel.commentCount? [NSString stringWithFormat:@"%@条回复", [TTBusinessManager formatCommentCount:self.pageState.detailModel.commentCount]]: @"暂无回复";
     } else {
         title = @"详情";
     }

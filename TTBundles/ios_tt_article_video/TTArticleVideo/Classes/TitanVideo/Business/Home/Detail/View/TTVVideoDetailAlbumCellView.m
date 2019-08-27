@@ -228,7 +228,7 @@ inline CGFloat cellInfoLabelFontSize() {
         NSString *tailString = @"次播放";
         countLabelText = [countLabelText stringByAppendingString:tailString];
     } else {
-        countLabelText = [NSString stringWithFormat:@"%d评论", self.viewModel.article.commentCount];
+        countLabelText = [NSString stringWithFormat:@"%@评论",[TTBusinessManager formatCommentCount: self.viewModel.article.commentCount]];
     }
 
     self.commentCountLabel.text = countLabelText;

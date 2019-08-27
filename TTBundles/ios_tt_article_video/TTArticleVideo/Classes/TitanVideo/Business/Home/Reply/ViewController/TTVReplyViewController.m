@@ -39,6 +39,7 @@
 #import <ExploreMomentDefine_Enums.h>
 #import "ExploreMomentDefine.h"
 #import <ReactiveObjC/ReactiveObjC.h>
+#import <TTBusinessManager+StringUtils.h>
 
 static const CGFloat kBarHeight = 49;
 #define kDeleteCommentActionSheetTag 10
@@ -125,7 +126,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     [self.view addSubview:_topBar];
     BOOL showWriteComment = NO;
 
-    _topBar.titleLabel.text = [NSString stringWithFormat:@"%ld条回复", [self.commentModel.replyCount integerValue]];
+    _topBar.titleLabel.text = [NSString stringWithFormat:@"%@条回复",[TTBusinessManager formatCommentCount: [self.commentModel.replyCount integerValue]]];
     [_topBar.titleLabel sizeToFit];
 
     _detailView = [[TTVReplyView alloc] initWithFrame:CGRectMake(0, _topBar.bottom, self.view.width, self.view.height - _topBar.height) viewModel:_viewModel showWriteComment:showWriteComment cellDelegate:self];
@@ -153,11 +154,11 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     void (^updateMomentCountBlock)(NSInteger, NSInteger) = ^void(NSInteger count, NSInteger increment) {
         StrongSelf;
         if (count) {
-            self.topBar.titleLabel.text = [NSString stringWithFormat:@"%ld条回复", count];
+            self.topBar.titleLabel.text = [NSString stringWithFormat:@"%@条回复", [TTBusinessManager formatCommentCount:count]];
             [self.topBar.titleLabel sizeToFit];
         } else if (increment) {
             count = [self.topBar.titleLabel.text integerValue] + increment;
-            self.topBar.titleLabel.text = [NSString stringWithFormat:@"%ld条回复", count];
+            self.topBar.titleLabel.text = [NSString stringWithFormat:@"%@条回复", [TTBusinessManager formatCommentCount:count]];
             [self.topBar.titleLabel sizeToFit];
         }
     };
