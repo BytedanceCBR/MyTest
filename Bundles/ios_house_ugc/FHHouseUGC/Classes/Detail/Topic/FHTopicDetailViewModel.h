@@ -10,6 +10,7 @@
 #import "FHUGCBaseViewModel.h"
 #import "FHUGCCellManager.h"
 #import "FHTopicHeaderModel.h"
+#import "SSImpressionManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,6 +25,12 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithController:(FHTopicDetailViewController *)viewController;
 
 - (void)startLoadData;
+
+- (void)viewWillAppear;
+
+- (void)viewWillDisappear;
+
+- (void)needRerecordImpressions;
 
 @end
 

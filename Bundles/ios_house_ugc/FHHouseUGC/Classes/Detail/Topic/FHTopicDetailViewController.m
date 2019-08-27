@@ -24,6 +24,12 @@
 #import "FHUGCTopicRefreshHeader.h"
 #import "FHRefreshCustomFooter.h"
 #import "UILabel+House.h"
+#import "FHEnvContext.h"
+#import "FHUserTracker.h"
+#import <UIScrollView+Refresh.h>
+#import "FHFeedOperationView.h"
+#import <FHHouseBase/FHBaseTableView.h>
+#import "SSImpressionManager.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate>
 
@@ -58,6 +64,7 @@
     [self setupUI];
     self.isViewAppear = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
+    [[SSImpressionManager shareInstance] addRegist:self];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -67,9 +74,15 @@
     [self refreshContentOffset:self.mainScrollView.contentOffset];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.viewModel viewWillAppear];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.isViewAppear = NO;
+    [self.viewModel viewWillDisappear];
 }
 
 - (void)setupUI {
@@ -494,6 +507,14 @@
     }
     [self.customNavBarView refreshAlpha:alpha];
 }
+
+
+#pragma mark -- SSImpressionProtocol
+
+- (void)needRerecordImpressions {
+    [self.viewModel needRerecordImpressions];
+}
+
 
 @end
 
