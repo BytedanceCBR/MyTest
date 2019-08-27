@@ -17,6 +17,7 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import <YYLabel.h>
 #import <YYText/NSAttributedString+YYText.h>
+#import "TTAccountMobileCaptchaAlertView.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -443,6 +444,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)sendVerifyCode {
+    [self sendVerifyCodeWithCaptcha:nil];
+}
+
+- (void)sendVerifyCodeWithCaptcha:(NSString *)captcha {
     [self.view endEditing:YES];
     
     __weak typeof(self) weakSelf = self;
@@ -466,16 +471,36 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [[ToastManager manager] showToast:@"正在获取验证码"];
     [self traceVerifyCode];
     
-    [FHMineAPI requestSendVerifyCode:phoneNumber completion:^(NSNumber * _Nonnull retryTime, UIImage * _Nonnull captchaImage, NSError * _Nonnull error) {
+    [FHMineAPI requestSendVerifyCode:phoneNumber captcha:captcha completion:^(NSNumber * _Nonnull retryTime, UIImage * _Nonnull captchaImage, NSError * _Nonnull error) {
         if(!error){
             [weakSelf blockRequestSendMessage:[retryTime integerValue]];
             [[ToastManager manager] showToast:@"短信验证码发送成功"];
             weakSelf.isVerifyCodeRetry = YES;
+        }else if (captchaImage){
+            weakSelf.isRequestingSMS = NO;
+            [weakSelf showCaptcha:captchaImage error:error];
         }else{
             NSString *errorMessage = [FHMineAPI errorMessageByErrorCode:error];
             [[ToastManager manager] showToast:errorMessage];
             weakSelf.isRequestingSMS = NO;
         }
+    }];
+}
+
+-(void)showCaptcha:(UIImage *)captchaImage error:(NSError *)error
+{
+    TTAccountMobileCaptchaAlertView *alertView = [[TTAccountMobileCaptchaAlertView alloc] initWithCaptchaImage:captchaImage];
+    alertView.error = error;
+    [alertView showWithDismissBlock:^(TTAccountMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
+        if (alertView.captchaValue.length > 0) {
+            [self sendVerifyCodeWithCaptcha:alertView.captchaValue];
+        }
+#if DEBUG
+        else {
+            NSLog(@"%@-%@ > Error", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+        }
+#endif
+        
     }];
 }
 
