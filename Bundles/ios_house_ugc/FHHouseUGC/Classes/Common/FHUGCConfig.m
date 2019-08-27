@@ -587,35 +587,31 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 
 - (void)setHasNewTimerInteralAndGetNewFirstTime {
     //每隔一段时候调用接口
-//    __weak typeof(self) wself = self;
-//    [FHHouseUGCAPI refreshFeedTips:nil beHotTime:nil completion:^(bool hasNew, NSError * _Nonnull error) {
-//        if(!error && hasNew){
-//            self.ugcFocusHasNew = YES;
-//        }else{
-//            self.ugcFocusHasNew = NO;
-//        }
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
-//    }];
-    
-    self.ugcFocusHasNew = NO;
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
-    
-//    NSTimeInterval interval = 10;
-//    if(interval > 0){
-//        self.focusTimerInterval = interval;
-//    }
-//    [self startTimer];
+    __weak typeof(self) wself = self;
+    [FHHouseUGCAPI refreshFeedTips:@"f_ugc_follow" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSError * _Nonnull error) {
+        if(!error && hasNew){
+            self.ugcFocusHasNew = YES;
+        }else{
+            self.ugcFocusHasNew = NO;
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
+        
+        if(interval > 0){
+            self.focusTimerInterval = interval;
+        }
+        [self startTimer];
+    }];
 }
 
 - (void)getHasNewForTimer {
     //每隔一段时候调用接口
-//    __weak typeof(self) wself = self;
-//    [FHHouseUGCAPI refreshFeedTips:nil beHotTime:nil completion:^(bool hasNew, NSError * _Nonnull error) {
-//        if(!error && hasNew){
-//            self.ugcFocusHasNew = YES;
-//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
-//        }
-//    }];
+    __weak typeof(self) wself = self;
+    [FHHouseUGCAPI refreshFeedTips:@"f_ugc_follow" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSError * _Nonnull error) {
+        if(!error && hasNew){
+            self.ugcFocusHasNew = YES;
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
+        }
+    }];
 }
 
 #pragma mark - Publisher Hisgtory

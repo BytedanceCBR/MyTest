@@ -39,6 +39,7 @@ static NSString *const kFHUGCFocusTabHasNewNotification = @"k_fh_ugc_focus_tab_h
 @property (nonatomic, assign) BOOL isAlreadyShowFeedGuide;
 // 是否关注列表有新内容
 @property (nonatomic, assign) BOOL ugcFocusHasNew;
+@property (nonatomic, assign) double behotTime;
 
 // 关注列表
 - (NSArray<FHUGCScialGroupDataModel> *)followList;
