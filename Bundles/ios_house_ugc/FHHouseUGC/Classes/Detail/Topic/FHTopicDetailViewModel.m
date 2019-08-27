@@ -19,6 +19,7 @@
 #import "FHUGCBaseCell.h"
 #import "TTGroupModel.h"
 #import "ArticleImpressionHelper.h"
+#import "FHUGCConfig.h"
 
 @interface FHTopicDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -40,7 +41,7 @@
 
 @property(nonatomic, assign) NSInteger refer;
 @property(nonatomic, assign) BOOL isShowing;
-@property(nonatomic, copy) NSString *categoryId;
+@property(nonatomic, copy) NSString *categoryName;
 
 @end
 
@@ -57,13 +58,17 @@
         self.needRefreshCell = NO;
         self.refer = 1;
         self.isShowing = NO;
-        self.categoryId = @"f_ugc_topic";//  add by zyk
+        self.categoryName = @"forum_topic_thread";// 频道名称 服务端返回
         self.count = 20;// 每次20条
         self.feedOffset = 0;
         self.dataList = [[NSMutableArray alloc] init];
         self.hashTable = [NSHashTable weakObjectsHashTable];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoTop" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
+        // 删帖成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
+        // 举报成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
     }
     return self;
 }
@@ -305,6 +310,14 @@
     }
 }
 
+- (void)postDeleteSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        [self deleteCell:cellModel];
+    }
+}
+
 #pragma mark - FHUGCBaseCellDelegate
 
 - (void)deleteCell:(FHFeedUGCCellModel *)cellModel {
@@ -522,7 +535,7 @@
     NSString *itemID = cellModel.groupId.length > 0 ? cellModel.groupId : @"";
     /*impression统计相关*/
     SSImpressionParams *params = [[SSImpressionParams alloc] init];
-    params.categoryID = self.categoryId;
+    params.categoryID = self.categoryName;
     params.refer = self.refer;
     TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:uniqueID itemID:itemID impressionID:nil aggrType:[cellModel.aggrType integerValue]];
     [ArticleImpressionHelper recordGroupWithUniqueID:uniqueID adID:nil groupModel:groupModel status:status params:params];

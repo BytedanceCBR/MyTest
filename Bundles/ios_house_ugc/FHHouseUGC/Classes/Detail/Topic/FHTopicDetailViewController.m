@@ -53,6 +53,7 @@
 @property (nonatomic, assign) BOOL isTopIsCanNotMoveTabView;
 @property (nonatomic, assign) BOOL isTopIsCanNotMoveTabViewPre;
 @property (nonatomic, assign) BOOL canScroll;
+@property (nonatomic, assign)   CGFloat       defaultTopHeight;
 
 @end
 
@@ -87,6 +88,17 @@
 
 - (void)setupUI {
     self.navOffset = 64;
+    CGFloat navOffset = 64;
+    if (@available(iOS 11.0 , *)) {
+        navOffset = 44.f + self.view.tt_safeAreaInsets.top;
+    } else {
+        navOffset = 64;
+    }
+    self.navOffset = navOffset;
+    self.defaultTopHeight = 144;
+    if ([TTDeviceHelper isIPhoneXSeries]) {
+        self.defaultTopHeight = self.navOffset + 80;
+    }
     self.canScroll = NO;
     self.isTopIsCanNotMoveTabView = NO;
     self.isTopIsCanNotMoveTabViewPre = NO;
@@ -106,7 +118,7 @@
     
     // _topHeaderView
     _topHeaderView = [[FHTopicTopBackView alloc] init];
-    _topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
+    _topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.defaultTopHeight);
     [self.mainScrollView addSubview:_topHeaderView];
     [self.topHeaderView.avatar mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.mainScrollView).offset(20);
@@ -130,19 +142,12 @@
     
     // _headerInfoView
     _headerInfoView = [[FHTopicHeaderInfo alloc] init];
-    _headerInfoView.frame = CGRectMake(0, 144, SCREEN_WIDTH, 40);
+    _headerInfoView.frame = CGRectMake(0, self.defaultTopHeight, SCREEN_WIDTH, 40);
     [self.mainScrollView addSubview:_headerInfoView];
     self.mainScrollView.backgroundColor = [UIColor themeGray7];
     self.topHeightOffset = CGRectGetMaxY(self.headerInfoView.frame) + 5;
     
     // 计算subScrollView的高度
-    CGFloat navOffset = 64;
-    if (@available(iOS 11.0 , *)) {
-        navOffset = 44.f + self.view.tt_safeAreaInsets.top;
-    } else {
-        navOffset = 64;
-    }
-    self.navOffset = navOffset;
     self.minSubScrollViewHeight = SCREEN_HEIGHT - self.topHeightOffset;// 暂时不用，数据较少时也可在下面展示空页面
     self.maxSubScrollViewHeight = SCREEN_HEIGHT - navOffset;
     self.criticalPointHeight = self.maxSubScrollViewHeight - self.minSubScrollViewHeight;
@@ -298,7 +303,7 @@
         [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
         
         CGSize attSize = [attributedText boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 40, 100) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
-        self.headerInfoView.frame = CGRectMake(0, 144, SCREEN_WIDTH, attSize.height + 20);
+        self.headerInfoView.frame = CGRectMake(0, self.defaultTopHeight, SCREEN_WIDTH, attSize.height + 20);
         // ... 逻辑
         paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
         [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
@@ -453,10 +458,10 @@
         // topHeaderView
         offsetY = scrollView.contentOffset.y;
         if (offsetY < 0) {
-            CGFloat height = 144 - offsetY;
+            CGFloat height = self.defaultTopHeight - offsetY;
             self.topHeaderView.frame = CGRectMake(offsetY / 2, offsetY, SCREEN_WIDTH - offsetY, height);
         } else {
-            self.topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
+            self.topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.defaultTopHeight);
         }
         // refreshHeader
         [self.refreshHeader scrollViewDidScroll:self.mainScrollView];
