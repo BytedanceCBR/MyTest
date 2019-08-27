@@ -63,6 +63,7 @@
 {
     [super viewDidAppear:animated];
     self.isViewAppear = YES;
+    [self refreshContentOffset:self.mainScrollView.contentOffset];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

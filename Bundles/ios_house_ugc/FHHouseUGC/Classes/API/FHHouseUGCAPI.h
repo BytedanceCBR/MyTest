@@ -59,6 +59,12 @@ NS_ASSUME_NONNULL_BEGIN
 // 获取feed列表是否有新内容
 + (TTHttpTask *)refreshFeedTips:(NSString *)category beHotTime:(NSString *)beHotTime completion:(void(^)(bool hasNew , NSError *error))completion;
 
+// 获取话题头部
++ (TTHttpTask *)requestTopicHeader:(NSString *)forum_id completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
+
+// 获取话题列表
++ (TTHttpTask *)requestTopicList:(NSString *)forum_id completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

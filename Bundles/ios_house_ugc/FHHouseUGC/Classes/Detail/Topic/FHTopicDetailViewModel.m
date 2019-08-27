@@ -15,9 +15,10 @@
 @interface FHTopicDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
 @property(nonatomic , weak) FHTopicDetailViewController *detailController;
-@property(nonatomic , weak) TTHttpTask *httpTask;
+@property(nonatomic , weak) TTHttpTask *httpTopHeaderTask;
+@property(nonatomic , weak) TTHttpTask *httpTopListTask;
 @property (nonatomic, assign)   BOOL       canScroll;
-//@property (nonatomic, weak)     UIScrollView       *weakScroolView;
+@property (nonatomic, assign)   NSInteger       loadDataSuccessCount;
 
 @end
 
@@ -42,8 +43,49 @@
 }
 
 - (void)startLoadData {
-    [self.detailController endLoading];
-    self.detailController.isLoadingData = NO;
+    self.loadDataSuccessCount = 0;// 网络返回计数
+    [self loadHeaderData];
+//    [self loadFeedListData];
+}
+
+// 请求顶部的header
+- (void)loadHeaderData {
+    if (self.httpTopHeaderTask) {
+        [self.httpTopHeaderTask cancel];
+    }
+    __weak typeof(self) wSelf = self;
+    self.httpTopHeaderTask = [FHHouseUGCAPI requestTopicHeader:@"" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        wSelf.loadDataSuccessCount += 2;
+        if (error) {
+            wSelf.headerModel = nil;
+        } else {
+            if ([model isKindOfClass:[FHTopicHeaderModel class]]) {
+                wSelf.headerModel = model;
+            }
+        }
+        [wSelf processLoadingState];
+    }];
+}
+
+// 请求FeedList
+- (void)loadFeedListData {
+    if (self.httpTopListTask) {
+        [self.httpTopListTask cancel];
+    }
+    __weak typeof(self) wSelf = self;
+    self.httpTopListTask = [FHHouseUGCAPI requestTopicList:@"" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        wSelf.loadDataSuccessCount += 1;
+        [wSelf processLoadingState];
+    }];
+}
+
+- (void)processLoadingState {
+    if (self.loadDataSuccessCount >= 2) {
+        [self.detailController endLoading];
+        self.detailController.isLoadingData = NO;
+        // 刷新数据
+        // 。。。
+    }
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource

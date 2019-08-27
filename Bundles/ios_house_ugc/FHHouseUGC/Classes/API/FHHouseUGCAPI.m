@@ -11,6 +11,7 @@
 #import "FHUGCConfig.h"
 #import "FHEnvContext.h"
 #import "JSONAdditions.h"
+#import "FHTopicHeaderModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -361,4 +362,77 @@
         }
     }];
 }
+
++ (TTHttpTask *)requestTopicHeader:(NSString *)forum_id completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/ugc/v:version/refresh_tips";
+    NSString *url = QURL(queryPath); // 1640650037191725
+    url  = @"https://is-hl.snssdk.com/forum/home/v1/info/?";
+    forum_id = @"1640650037191725";// is_preview = 0
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(forum_id){
+        paramDic[@"forum_id"] = forum_id;
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        FHTopicHeaderModel *headerModel = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"err_no"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"err_tips"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                }else{
+                    headerModel = [[FHTopicHeaderModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e) {
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        if (completion) {
+            completion(headerModel,error);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestTopicList:(NSString *)forum_id completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/ugc/v:version/refresh_tips";
+    NSString *url = QURL(queryPath);
+    
+    url = @"https://is-hl.snssdk.com/api/feed/forum_all/v1/?";
+    forum_id = @"1640650037191725";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(forum_id){
+        paramDic[@"query_id"] = forum_id;
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        BOOL hasNew = NO;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                }else{
+                    hasNew = [json[@"data"][@"has_new_content"] boolValue];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        if (completion) {
+            completion(nil,error);
+        }
+    }];
+}
+
 @end
