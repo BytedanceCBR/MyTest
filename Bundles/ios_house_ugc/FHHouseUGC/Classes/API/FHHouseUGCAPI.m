@@ -12,6 +12,8 @@
 #import "FHEnvContext.h"
 #import "JSONAdditions.h"
 #import "FHTopicHeaderModel.h"
+#import "FHURLSettings.h"
+#import "FHTopicFeedListModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -365,9 +367,9 @@
 
 + (TTHttpTask *)requestTopicHeader:(NSString *)forum_id completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/ugc/v:version/refresh_tips";
-    NSString *url = QURL(queryPath); // 1640650037191725
+    NSString *url = QURL(queryPath); // 1640650037191725 1642474912698382
     url  = @"https://is-hl.snssdk.com/forum/home/v1/info/?";
-    forum_id = @"1640650037191725";// is_preview = 0
+    forum_id = @"1642474912698382";// is_preview = 0
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if(forum_id){
@@ -404,25 +406,30 @@
     NSString *url = QURL(queryPath);
     
     url = @"https://is-hl.snssdk.com/api/feed/forum_all/v1/?";
-    forum_id = @"1640650037191725";
+    forum_id = @"1642474912698382";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if(forum_id){
         paramDic[@"query_id"] = forum_id;
     }
+    paramDic[@"tab_id"] = @"1642474912698398";
+    paramDic[@"count"] = @(20);
+    paramDic[@"offset"] = @(0);
+    paramDic[@"category"] = @"forum_topic_thread";
+    paramDic[@"stream_api_version"] = [FHURLSettings streamAPIVersionString];
     
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
         
-        BOOL success = NO;
-        BOOL hasNew = NO;
+        FHTopicFeedListModel *listModel = nil;
         if (!error) {
             @try{
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
-                success = ([json[@"status"] integerValue] == 0);
-                if (!success) {
-                    NSString *msg = json[@"message"];
-                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                if (error) {
+                    if ([json isKindOfClass:[NSDictionary class]]) {
+                        NSString *msg = json[@"message"];
+                        error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                    }
                 }else{
-                    hasNew = [json[@"data"][@"has_new_content"] boolValue];
+                    listModel = [[FHTopicFeedListModel alloc] initWithDictionary:json error:&error];
                 }
             }
             @catch(NSException *e){
@@ -430,7 +437,7 @@
             }
         }
         if (completion) {
-            completion(nil,error);
+            completion(listModel, error);
         }
     }];
 }

@@ -45,7 +45,7 @@
 - (void)startLoadData {
     self.loadDataSuccessCount = 0;// 网络返回计数
     [self loadHeaderData];
-//    [self loadFeedListData];
+    [self loadFeedListData];
 }
 
 // 请求顶部的header
