@@ -53,7 +53,6 @@ typedef enum : NSUInteger {
 + (void)callWithConfigModel:(FHHouseContactConfigModel *)configModel completion:(FHHousePhoneCallCompletionBlock)completionBlock
 
 {
-    NSString *phone = configModel.phone;
     NSString *houseId = configModel.houseId;
     FHHouseType houseType = configModel.houseType;
     NSString *realtorId = configModel.realtorId;
@@ -62,13 +61,7 @@ typedef enum : NSUInteger {
     NSString *fromStr = configModel.from.length > 0 ? configModel.from : [self fromStrByHouseType:houseType];
 
     if (![TTReachability isNetworkConnected]) {
-        if (phone.length < 1) {
-            [[ToastManager manager] showToast:@"获取电话失败"];
-            return;
-        }
-        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
-        [self callPhone:urlStr];
-        [self addClickCallLog:configModel isVirtual:0];
+        [[ToastManager manager] showToast:@"网络异常，请稍后重试！"];
         [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed extraDict:nil errorCode:0 message:nil];
         NSError *error = [[NSError alloc]initWithDomain:NSURLErrorDomain code:-1 userInfo:nil];
         if (completionBlock) {
@@ -94,26 +87,27 @@ typedef enum : NSUInteger {
         userInfo[@"show_loading"] = @(0);
         [[NSNotificationCenter defaultCenter]postNotificationName:@"kFHDetailLoadingNotification" object:nil userInfo:userInfo];
         
-        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
-        NSInteger isVirtual = model.data.isVirtual;
         if (!error && model.data.virtualNumber.length > 0) {
-            urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
+            NSInteger isVirtual = model.data.isVirtual;
+            NSString *urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
             if (model.data.isVirtual) {
                 [self addDetailCallExceptionLog:FHPhoneCallTypeSuccessVirtual extraDict:nil errorCode:0 message:nil];
             }else {
                 [self addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal extraDict:nil errorCode:0 message:nil];
             }
-        }else {
-
-            NSMutableDictionary *extraDict = @{}.mutableCopy;
-            extraDict[@"realtor_id"] = realtorId;
-            extraDict[@"house_id"] = houseId;
-            [self addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal extraDict:extraDict errorCode:error.code message:model.message ? : error.localizedDescription];
+            [self addClickCallLog:configModel isVirtual:isVirtual];
+            [self callPhone:urlStr];
+            if (completionBlock) {
+                completionBlock(YES,nil);
+            }
+            return;
         }
-        [self addClickCallLog:configModel isVirtual:isVirtual];
-        [self callPhone:urlStr];
+        NSMutableDictionary *extraDict = @{}.mutableCopy;
+        extraDict[@"realtor_id"] = realtorId;
+        extraDict[@"house_id"] = houseId;
+        [self addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal extraDict:extraDict errorCode:error.code message:model.message ? : error.localizedDescription];
         if (completionBlock) {
-            completionBlock(YES,nil);
+            completionBlock(NO,nil);
         }
     }];
 }
