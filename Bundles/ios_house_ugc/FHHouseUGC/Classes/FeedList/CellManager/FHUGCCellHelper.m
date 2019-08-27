@@ -263,4 +263,53 @@
                                        limitedToNumberOfLines:*numberOfLines];
 }
 
+//问答回答和文章优质评论
++ (void)setOriginContentAttributeString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
+    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
+    
+    if([self typeAttr:model]){
+        [desc appendAttributedString:[self typeAttr:model]];
+    }
+    if([self contentAttr:model]){
+        [desc appendAttributedString:[self contentAttr:model]];
+    }
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.minimumLineHeight = 21;
+    paragraphStyle.maximumLineHeight = 21;
+    paragraphStyle.lineSpacing = 2;
+    
+    [desc addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, desc.length)];
+    
+    model.originItemModel.contentAStr = desc;
+    
+    CGSize size = [self sizeThatFitsAttributedString:desc
+                                     withConstraints:CGSizeMake(width, FLT_MAX)
+                                    maxNumberOfLines:numberOfLines
+                              limitedToNumberOfLines:&numberOfLines];
+    model.originItemHeight = size.height + 36;
+}
+
++ (NSAttributedString *)typeAttr:(FHFeedUGCCellModel *)model {
+    NSString *type = model.originItemModel.type;
+    if (type.length < 1) {
+        return nil;
+    }
+    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:type];
+    [attri addAttribute:NSForegroundColorAttributeName value:[UIColor themeGray1] range:NSMakeRange(0, type.length)];
+    [attri addAttribute:NSFontAttributeName value:[UIFont themeFontMedium:16] range:NSMakeRange(0, type.length)];
+    return attri;
+}
+
++ (NSAttributedString *)contentAttr:(FHFeedUGCCellModel *)model {
+    NSString *content = model.originItemModel.content;
+    if (content.length < 1) {
+        return nil;
+    }
+    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:content];
+    [attri addAttribute:NSForegroundColorAttributeName value:[UIColor themeGray2] range:NSMakeRange(0, content.length)];
+    [attri addAttribute:NSFontAttributeName value:[UIFont themeFontRegular:16] range:NSMakeRange(0, content.length)];
+    return attri;
+}
+
 @end

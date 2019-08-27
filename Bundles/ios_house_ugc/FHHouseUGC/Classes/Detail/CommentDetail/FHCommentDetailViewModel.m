@@ -30,6 +30,7 @@
 #import "FHUGCDetailGrayLineCell.h"
 #import "FHPostDetailCell.h"
 #import "FHUGCCellHelper.h"
+#import <TTBusinessManager+StringUtils.h>
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,TTCommentDetailCellDelegate>
 
@@ -365,7 +366,7 @@
     // 全部评论
     NSString *commentStr = @"全部评论";
     if (self.comment_count > 0) {
-        commentStr = [NSString stringWithFormat:@"全部评论(%ld)",self.comment_count];
+        commentStr = [NSString stringWithFormat:@"全部评论(%@)",[TTBusinessManager formatCommentCount:self.comment_count]];
     } else {
         commentStr = [NSString stringWithFormat:@"全部评论(0)"];
     }
