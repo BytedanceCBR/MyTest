@@ -25,7 +25,7 @@
 #import <Aspects/Aspects.h>
 #import "TTVSettingsConfiguration.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 //#ifndef TTModule

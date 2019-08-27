@@ -681,7 +681,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         else{
             [self.sourceImageView tt_setImageText:cellLayOut.sourceNameFirstWord fontSize:cellLayOut.sourceNameFirstWordFontSize textColorThemeKey:kColorText8 backgroundColorThemeKey:nil backgroundColors:[[self.orderedData article] sourceIconBackgroundColors]];
         }
-        [self.sourceImageView setupVerifyViewForLength:self.sourceImageView.width adaptationSizeBlock:nil];
+//        [self.sourceImageView setupVerifyViewForLength:self.sourceImageView.width adaptationSizeBlock:nil];
     }
 }
 

@@ -33,7 +33,7 @@
 #import "TTUIResponderHelper.h"
 #import <TTNewsAccountBusiness/TTAccountManager.h>
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import "SSCommentInputHeader.h"
 #import "TTCommentViewControllerProtocol.h"
 #import "AKHelper.h"

@@ -30,7 +30,7 @@
 #import "FriendDataManager.h"
 #import "NSString+URLEncoding.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 
 @interface ArticleMomentProfileViewController ()
 
