@@ -12,6 +12,9 @@
 #import "FHUGCReplyCell.h"
 #import "FHHouseUGCAPI.h"
 #import "FHTopicFeedListModel.h"
+#import "FHUGCTopicRefreshHeader.h"
+#import "FHRefreshCustomFooter.h"
+#import "FHFeedUGCCellModel.h"
 
 @interface FHTopicDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -24,6 +27,7 @@
 @property (nonatomic, assign)   BOOL       hasFeedListData;// 第一次加载数据成功
 @property (nonatomic, assign)   NSInteger       count;
 @property (nonatomic, assign)   NSInteger       feedOffset;
+@property (nonatomic, assign)   BOOL       hasMore;
 
 @end
 
@@ -36,6 +40,7 @@
         self.ugcCellManager = [[FHUGCCellManager alloc] init];
         self.canScroll = NO;
         self.hasFeedListData = NO;
+        self.hasMore = NO;
         self.count = 20;// 每次20条
         self.feedOffset = 0;
         self.items = [[NSMutableArray alloc] init];
@@ -52,7 +57,7 @@
 }
 
 - (void)startLoadData {
-    self.loadDataSuccessCount = 0;// 网络返回计数
+    self.loadDataSuccessCount = 0;// 网络接口返回计数
     [self loadHeaderData];
     [self loadFeedListData];
 }
@@ -81,6 +86,7 @@
     if (self.httpTopListTask) {
         [self.httpTopListTask cancel];
     }
+    self.detailController.isLoadingData = YES;
     self.feedOffset = 0;
     __weak typeof(self) wSelf = self;
     self.httpTopListTask = [FHHouseUGCAPI requestTopicList:@"" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
@@ -98,18 +104,26 @@
                 if (wSelf.feedOffset == 0) {
                     // 说明是第一次请求
                     [wSelf.items removeAllObjects];
-                    [wSelf.items addObjectsFromArray:feedList.data];
                 } else {
                     // 上拉加载loadmore
                 }
-                // 添加数据
+                // 数据转模型 添加数据
+                [feedList.data enumerateObjectsUsingBlock:^(FHTopicFeedListDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj isKindOfClass:[FHTopicFeedListDataModel class]]) {
+                        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:obj.content];
+                        [wSelf.items addObject:cellModel];
+                    }
+                }];
+        
+                wSelf.hasMore = feedList.hasMore;
+                wSelf.feedOffset = [feedList.offset integerValue];
             }
         }
         [wSelf processLoadingState];
     }];
 }
 
-// 
+// 刷新数据和状态
 - (void)processLoadingState {
     if (self.loadDataSuccessCount >= 2) {
         [self.detailController endLoading];
@@ -118,6 +132,17 @@
         if (self.headerModel && self.hasFeedListData && self.items.count > 0) {
             // 数据ok
             [self.detailController hiddenEmptyView];
+            [self.detailController refreshHeaderData];
+            [self.currentTableView reloadData];
+            // hasMore
+            FHRefreshCustomFooter *refreshFooter = (FHRefreshCustomFooter *)self.currentTableView.mj_footer;
+            self.currentTableView.mj_footer.hidden = NO;
+            if (self.hasMore == NO) {
+                [refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
+                [refreshFooter endRefreshingWithNoMoreData];
+            }else {
+                [refreshFooter endRefreshing];
+            }
         } else {
             [self.detailController showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         }
@@ -132,26 +157,31 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 30;
+    return self.items.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    NSInteger row = indexPath.row;
-//    if (row >= 0 && row < self.items.count) {
-//        id data = self.items[row];
-//        NSString *identifier = [self cellIdentifierForEntity:data];
-//        if (identifier.length > 0) {
-//            FHUGCBaseCell *cell = (FHUGCBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-//            cell.baseViewModel = self;
-//            [cell refreshWithData:data];
-//            return cell;
-//        }
-//    }
-    FHUGCBaseCell * cell = [[FHUGCBaseCell alloc] init];
-    cell.textLabel.text = [NSString stringWithFormat:@"%ld",indexPath.row];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld",indexPath.row];
-    return cell;
+    if(indexPath.row < self.items.count){
+        FHFeedUGCCellModel *cellModel = self.items[indexPath.row];
+        NSString *cellIdentifier = NSStringFromClass([self.ugcCellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
+        FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        
+        if (cell == nil) {
+            Class cellClass = NSClassFromString(cellIdentifier);
+            cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+        
+        cell.delegate = self;
+//        cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
+        
+        if(indexPath.row < self.items.count){
+            [cell refreshWithData:cellModel];
+        }
+        return cell;
+    }
+    return [[FHUGCBaseCell alloc] init];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -161,18 +191,15 @@
 //    self.cellHeightCaches[tempKey] = cellHeight;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
-//    NSNumber *cellHeight = self.cellHeightCaches[tempKey];
-//    if (cellHeight) {
-//        return [cellHeight floatValue];
-//    }
-//    return UITableViewAutomaticDimension;
-    return 50;
-}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 50;
+    if(indexPath.row < self.items.count){
+        FHFeedUGCCellModel *cellModel = self.items[indexPath.row];
+        Class cellClass = [self.ugcCellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
+        if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
+            return [cellClass heightForData:cellModel];
+        }
+    }
+    return 100;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -196,7 +223,6 @@
 //
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (!self.canScroll) {
-//        [scrollView setContentOffset:CGPointZero];
         [[self.hashTable allObjects] enumerateObjectsUsingBlock:^(UIScrollView*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [obj setContentOffset:CGPointZero];
         }];
@@ -216,7 +242,6 @@
             self.canScroll = YES;
         }
     }else if([notificationName isEqualToString:@"kFHUGCLeaveTop"]){
-//        self.weakScroolView.contentOffset = CGPointZero;
         [[self.hashTable allObjects] enumerateObjectsUsingBlock:^(UIScrollView*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [obj setContentOffset:CGPointZero];
         }];

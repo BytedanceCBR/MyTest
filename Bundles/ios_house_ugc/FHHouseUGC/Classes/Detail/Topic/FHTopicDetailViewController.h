@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showEmptyWithType:(FHEmptyMaskViewType)maskViewType;
 - (void)hiddenEmptyView;
+- (void)refreshHeaderData;
 
 @end
 
