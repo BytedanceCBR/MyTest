@@ -11,6 +11,7 @@
 #import "FHUGCConfig.h"
 #import "FHEnvContext.h"
 #import "JSONAdditions.h"
+#import "FHTopicHeaderModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -366,37 +367,34 @@
     NSString *queryPath = @"/ugc/v:version/refresh_tips";
     NSString *url = QURL(queryPath); // 1640650037191725
     url  = @"https://is-hl.snssdk.com/forum/home/v1/info/?";
-    forum_id = @"1640650037191725";// is_preview = 0b
+    forum_id = @"1640650037191725";// is_preview = 0
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if(forum_id){
         paramDic[@"forum_id"] = forum_id;
     }
-//    if(beHotTime){
-//        paramDic[@"be_hot_time"] = beHotTime;
-//    }
     
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
         
         BOOL success = NO;
-        BOOL hasNew = NO;
+        FHTopicHeaderModel *headerModel = nil;
         if (!error) {
             @try{
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
-                success = ([json[@"status"] integerValue] == 0);
+                success = ([json[@"err_no"] integerValue] == 0);
                 if (!success) {
-                    NSString *msg = json[@"message"];
+                    NSString *msg = json[@"err_tips"];
                     error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
                 }else{
-                    hasNew = [json[@"data"][@"has_new_content"] boolValue];
+                    headerModel = [[FHTopicHeaderModel alloc] initWithDictionary:json error:&error];
                 }
             }
-            @catch(NSException *e){
+            @catch(NSException *e) {
                 error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
             }
         }
         if (completion) {
-            completion(nil,error);
+            completion(headerModel,error);
         }
     }];
 }

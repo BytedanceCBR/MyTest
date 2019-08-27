@@ -45,7 +45,7 @@
 - (void)startLoadData {
     self.loadDataSuccessCount = 0;// 网络返回计数
     [self loadHeaderData];
-    [self loadFeedListData];
+//    [self loadFeedListData];
 }
 
 // 请求顶部的header
@@ -55,7 +55,14 @@
     }
     __weak typeof(self) wSelf = self;
     self.httpTopHeaderTask = [FHHouseUGCAPI requestTopicHeader:@"" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        wSelf.loadDataSuccessCount += 1;
+        wSelf.loadDataSuccessCount += 2;
+        if (error) {
+            wSelf.headerModel = nil;
+        } else {
+            if ([model isKindOfClass:[FHTopicHeaderModel class]]) {
+                wSelf.headerModel = model;
+            }
+        }
         [wSelf processLoadingState];
     }];
 }
