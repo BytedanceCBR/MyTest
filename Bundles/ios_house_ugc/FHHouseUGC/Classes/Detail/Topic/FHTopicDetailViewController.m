@@ -241,11 +241,11 @@
 
 - (void)setupDetailNaviBar {
     self.customNavBarView.title.text = @"";
-    self.titleLabel = [UILabel createLabel:@"#电视剧小欢喜#" textColor:@"" fontSize:14];
+    self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.textColor = [UIColor themeGray1];
     
-    self.subTitleLabel = [UILabel createLabel:@"1.6亿阅读 1.2万讨论" textColor:@"" fontSize:10];
+    self.subTitleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:10];
     self.subTitleLabel.textAlignment = NSTextAlignmentCenter;
     self.subTitleLabel.textColor = [UIColor themeGray3];
     
@@ -283,10 +283,24 @@
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
-        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-        self.mainScrollView.hidden = YES;
-        [self setNavBarTransparent:NO];
+        [self showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
+}
+
+- (void)showEmptyWithType:(FHEmptyMaskViewType)maskViewType {
+    [self.emptyView showEmptyWithType:maskViewType];
+    self.mainScrollView.hidden = YES;
+    [self setNavBarTransparent:NO];
+    self.customNavBarView.title.text = @"话题";
+    [self updateNavBarWithAlpha:1.0];
+}
+
+- (void)hiddenEmptyView {
+    [self.emptyView hideEmptyView];
+    self.mainScrollView.hidden = NO;
+    [self setNavBarTransparent:YES];
+    self.customNavBarView.title.text = @"";
+    [self refreshContentOffset:CGPointZero];
 }
 
 // 重新加载

@@ -11,6 +11,7 @@
 #import "FHUGCBaseCell.h"
 #import "FHUGCReplyCell.h"
 #import "FHHouseUGCAPI.h"
+#import "FHTopicFeedListModel.h"
 
 @interface FHTopicDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -19,6 +20,10 @@
 @property(nonatomic , weak) TTHttpTask *httpTopListTask;
 @property (nonatomic, assign)   BOOL       canScroll;
 @property (nonatomic, assign)   NSInteger       loadDataSuccessCount;
+@property (nonatomic, strong)   NSMutableArray       *items;// FeedList数据，目前只有一个tab
+@property (nonatomic, assign)   BOOL       hasFeedListData;// 第一次加载数据成功
+@property (nonatomic, assign)   NSInteger       count;
+@property (nonatomic, assign)   NSInteger       feedOffset;
 
 @end
 
@@ -30,6 +35,10 @@
         self.detailController = viewController;
         self.ugcCellManager = [[FHUGCCellManager alloc] init];
         self.canScroll = NO;
+        self.hasFeedListData = NO;
+        self.count = 20;// 每次20条
+        self.feedOffset = 0;
+        self.items = [[NSMutableArray alloc] init];
         self.hashTable = [NSHashTable weakObjectsHashTable];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoTop" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
@@ -55,7 +64,7 @@
     }
     __weak typeof(self) wSelf = self;
     self.httpTopHeaderTask = [FHHouseUGCAPI requestTopicHeader:@"" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        wSelf.loadDataSuccessCount += 2;
+        wSelf.loadDataSuccessCount += 1;
         if (error) {
             wSelf.headerModel = nil;
         } else {
@@ -72,19 +81,46 @@
     if (self.httpTopListTask) {
         [self.httpTopListTask cancel];
     }
+    self.feedOffset = 0;
     __weak typeof(self) wSelf = self;
     self.httpTopListTask = [FHHouseUGCAPI requestTopicList:@"" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wSelf.loadDataSuccessCount += 1;
+        if (error) {
+            if (wSelf.feedOffset == 0) {
+                // 说明是第一次请求
+            } else {
+                // 上拉加载loadmore
+            }
+        } else {
+            if ([model isKindOfClass:[FHTopicFeedListModel class]]) {
+                wSelf.hasFeedListData = YES;
+                FHTopicFeedListModel *feedList = (FHTopicFeedListModel *)model;
+                if (wSelf.feedOffset == 0) {
+                    // 说明是第一次请求
+                    [wSelf.items removeAllObjects];
+                    [wSelf.items addObjectsFromArray:feedList.data];
+                } else {
+                    // 上拉加载loadmore
+                }
+                // 添加数据
+            }
+        }
         [wSelf processLoadingState];
     }];
 }
 
+// 
 - (void)processLoadingState {
     if (self.loadDataSuccessCount >= 2) {
         [self.detailController endLoading];
         self.detailController.isLoadingData = NO;
         // 刷新数据
-        // 。。。
+        if (self.headerModel && self.hasFeedListData && self.items.count > 0) {
+            // 数据ok
+            [self.detailController hiddenEmptyView];
+        } else {
+            [self.detailController showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        }
     }
 }
 
