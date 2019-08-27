@@ -38,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController didSelectWithInfo:(nullable NSDictionary *)info;
 - (void)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController deleteCommentWithCommentModel:(nonnull id<TTCommentModelProtocol>)model;
 
+- (void)tt_commentDeleteSuccessWithCount:(NSInteger)commentCount;
+
 // 评论列表UI行为
 - (void)tt_commentViewControllerScrollViewDidScrollToTop;
 
