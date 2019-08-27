@@ -12,9 +12,20 @@
 
 @interface FHUGCVoteCell()
 
+@property(nonatomic, strong) UIView *bgView;
 @property(nonatomic, strong) UIView *bottomSepView;
-@property(nonatomic, strong) FHUGCProgressView *progressView;
-@property(nonatomic, strong) UIButton *testBtn;
+
+@property(nonatomic, strong) UIImageView *titleImageView;
+@property(nonatomic, strong) UIButton *moreBtn;
+@property(nonatomic, strong) UILabel *personLabel;
+@property(nonatomic, strong) UILabel *contentLabel;
+
+
+
+@property(nonatomic, strong) UIView *voteView;
+@property(nonatomic, strong) UIButton *leftBtn;
+@property(nonatomic, strong) UIButton *rightBtn;
+@property(nonatomic, strong) UIImageView *icon;
 
 @end
 
@@ -44,45 +55,62 @@
 - (void)initViews {
     self.contentView.backgroundColor = [UIColor whiteColor];
     
-    self.progressView = [[FHUGCProgressView alloc] initWithFrame:CGRectMake(20, 50, [UIScreen mainScreen].bounds.size.width - 40, 30)];
-    [self.contentView addSubview:_progressView];
+    self.bgView = [[UIView alloc] init];
+    _bgView.backgroundColor = [[UIColor purpleColor] colorWithAlphaComponent:0.1];
+    [self.contentView addSubview:_bgView];
     
-    self.testBtn = [[UIButton alloc] init];
-    _testBtn.backgroundColor = [UIColor purpleColor];
-    [_testBtn setTitle:@"test" forState:UIControlStateNormal];
-    [_testBtn addTarget:self action:@selector(test) forControlEvents:UIControlEventTouchUpInside];
-    [self.contentView addSubview:_testBtn];
-//    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
-//    [self.contentView addSubview:_userInfoView];
-//
-//    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
-//    _contentLabel.numberOfLines = maxLines;
-//    NSDictionary *linkAttributes = @{
-//                                     NSForegroundColorAttributeName : [UIColor themeRed1],
-//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-//                                     };
-//    self.contentLabel.linkAttributes = linkAttributes;
-//    self.contentLabel.activeLinkAttributes = linkAttributes;
-//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
-//    _contentLabel.delegate = self;
-//    [self.contentView addSubview:_contentLabel];
-//
-//    self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:1];
-//    _multiImageView.fixedSingleImage = YES;
-//    [self.contentView addSubview:_multiImageView];
-//    self.imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:1 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
-//
-//    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
-//    _originView.hidden = YES;
-//    [self.contentView addSubview:_originView];
-//
-//    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
-//    [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
-//    [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
-//    [self.contentView addSubview:_bottomView];
-//
-//    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
-//    [self.bottomView.positionView addGestureRecognizer:tap];
+    self.titleImageView = [[UIImageView alloc] init];
+    _titleImageView.image = [UIImage imageNamed:@"fh_ugc_vote_title"];
+    [self.bgView addSubview:_titleImageView];
+    
+    self.moreBtn = [[UIButton alloc] init];
+    _moreBtn.enabled = NO;
+    _moreBtn.backgroundColor = [UIColor colorWithHexString:@"ced8e3"];
+    _moreBtn.layer.masksToBounds = YES;
+    _moreBtn.layer.cornerRadius = 8.5;
+    [_moreBtn setImage:[UIImage imageNamed:@"fh_ugc_vote_right_arror"] forState:UIControlStateNormal];
+    [_moreBtn setTitle:@"更多" forState:UIControlStateNormal];
+    [_moreBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _moreBtn.titleLabel.font = [UIFont themeFontRegular:10];
+    //文字的size
+    CGSize textSize = [_moreBtn.titleLabel.text sizeWithFont:_moreBtn.titleLabel.font];
+    CGSize imageSize = _moreBtn.currentImage.size;
+    _moreBtn.imageEdgeInsets = UIEdgeInsetsMake(0, textSize.width + 2 - imageSize.width, 0, - textSize.width - 2 + imageSize.width);
+    _moreBtn.titleEdgeInsets = UIEdgeInsetsMake(0, - imageSize.width - 6, 0, imageSize.width + 6);
+    //设置按钮内容靠右
+    _moreBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    [self addSubview:_moreBtn];
+    
+    self.personLabel = [[UILabel alloc] init];
+    _personLabel.attributedText = [self generatePersonCount:@"37842人参与"];
+    _personLabel.textColor = [UIColor themeGray3];
+    _personLabel.font = [UIFont themeFontRegular:10];
+    [self.bgView addSubview:_personLabel];
+    
+    self.contentLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
+    _contentLabel.text = @"你会为了买房，生活中降低生活品质吗？";
+    _contentLabel.textAlignment = NSTextAlignmentCenter;
+    _contentLabel.numberOfLines = 2;
+    [self.bgView addSubview:_contentLabel];
+    
+    self.voteView = [[UIView alloc] init];
+    [self.bgView addSubview:_voteView];
+
+    self.leftBtn = [[UIButton alloc] init];
+    _leftBtn.backgroundColor = [UIColor purpleColor];
+    [_leftBtn setTitle:@"会" forState:UIControlStateNormal];
+    [_leftBtn addTarget:self action:@selector(test) forControlEvents:UIControlEventTouchUpInside];
+    [self.voteView addSubview:_leftBtn];
+    
+    self.rightBtn = [[UIButton alloc] init];
+    _rightBtn.backgroundColor = [UIColor purpleColor];
+    [_rightBtn setTitle:@"不会" forState:UIControlStateNormal];
+    [_rightBtn addTarget:self action:@selector(test) forControlEvents:UIControlEventTouchUpInside];
+    [self.voteView addSubview:_rightBtn];
+    
+    self.icon = [[UIImageView alloc] init];
+    _icon.image = [UIImage imageNamed:@"fh_ugc_vote_vs"];
+    [self.voteView addSubview:_icon];
     
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
@@ -90,44 +118,66 @@
 }
 
 - (void)initConstraints {
-//    [self.userInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.contentView).offset(20);
-//        make.left.right.mas_equalTo(self.contentView);
-//        make.height.mas_equalTo(40);
-//    }];
-//
-//    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-//        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-//        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-//    }];
-//
-//    [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-//        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-//        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-//        make.height.mas_equalTo(self.imageViewheight);
-//    }];
-//
-//    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
-//        make.height.mas_equalTo(49);
-//        make.left.right.mas_equalTo(self.contentView);
-//    }];
-//
-//    [self.originView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
-//        make.height.mas_equalTo(originViewHeight);
-//        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-//        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-//    }];
-    [self.testBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.bottomSepView.mas_top).offset(-20);
-        make.width.mas_equalTo(50);
-        make.height.mas_equalTo(20);
+    [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentView).offset(19);
+        make.left.mas_equalTo(self.contentView).offset(20);
+        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.bottom.mas_equalTo(self.bottomSepView.mas_top).offset(-19);
     }];
     
+    [self.titleImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.bgView).offset(16);
+        make.left.mas_equalTo(self.bgView).offset(20);
+        make.width.mas_equalTo(56);
+        make.height.mas_equalTo(14);
+    }];
+    
+    [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.bgView).offset(13);
+        make.right.mas_equalTo(self.bgView).offset(-20);
+        make.width.mas_equalTo(38);
+        make.height.mas_equalTo(17);
+    }];
+    
+    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.titleImageView.mas_bottom).offset(10);
+        make.left.mas_equalTo(self.bgView).offset(20);
+        make.right.mas_equalTo(self.bgView).offset(-20);
+        make.height.mas_equalTo(22);
+    }];
+    
+    [self.personLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(9);
+        make.centerX.mas_equalTo(self.bgView);
+        make.height.mas_equalTo(12);
+    }];
+
+    [self.voteView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.personLabel.mas_bottom);
+        make.left.right.bottom.mas_equalTo(self.bgView);
+    }];
+    
+    [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.voteView).offset(17);
+        make.width.mas_equalTo(28);
+        make.height.mas_equalTo(24);
+        make.centerX.mas_equalTo(self.voteView);
+    }];
+    
+    [self.leftBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.icon.mas_left).offset(-10);
+        make.centerY.mas_equalTo(self.icon);
+        make.width.mas_equalTo(80);
+        make.height.mas_equalTo(50);
+    }];
+    
+    [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.icon.mas_right).offset(10);
+        make.centerY.mas_equalTo(self.icon);
+        make.width.mas_equalTo(80);
+        make.height.mas_equalTo(50);
+    }];
+
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(bottomSepViewHeight);
@@ -229,14 +279,32 @@
 //
 //        return height;
 //    }
-    return 200;
+    return 191;
 }
 
 - (void)test {
-    self.progressView.progress = 0.3;
-    self.progressView.isRightGradient = YES;
-    self.progressView.rightStartColor = [UIColor blueColor];
-    self.progressView.rightEndColor = [UIColor themeBlue1];
+//    self.progressView.progress = 0.3;
+//    self.progressView.offset = 5;
+//    self.progressView.isRightGradient = YES;
+//    self.progressView.leftColor = [UIColor redColor];
+//    self.progressView.rightStartColor = [UIColor blueColor];
+//    self.progressView.rightEndColor = [UIColor themeBlue1];
+}
+
+- (NSAttributedString *)generatePersonCount:(NSString *)text {
+    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
+    
+    NSString *str = [NSString stringWithFormat:@" %@",text];
+    NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+    attachment.bounds = CGRectMake(0, -1.7, 12, 12);
+    attachment.image = [UIImage imageNamed:@"fh_ugc_vote_person"];
+    NSAttributedString *attachmentAStr = [NSAttributedString attributedStringWithAttachment:attachment];
+    [desc appendAttributedString:attachmentAStr];
+    
+    NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:str];
+    [desc appendAttributedString:distanceAStr];
+    
+    return desc;
 }
 
 @end
