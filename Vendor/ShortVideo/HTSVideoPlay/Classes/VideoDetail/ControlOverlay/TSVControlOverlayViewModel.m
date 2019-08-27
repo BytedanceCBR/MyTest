@@ -42,7 +42,7 @@
 #import "TSVRecommendCardViewModel.h"
 #import "TTTracker.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 
 NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 

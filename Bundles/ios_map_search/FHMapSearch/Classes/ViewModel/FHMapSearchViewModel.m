@@ -1803,6 +1803,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     self->drawLinePointCount = count;
     
     [view removeFromSuperview];
+    [self.viewController showNavTopViews:1 animated:NO];
     
     self.drawMaxCoordinate = max;
     self.drawMinCoordinate = min;

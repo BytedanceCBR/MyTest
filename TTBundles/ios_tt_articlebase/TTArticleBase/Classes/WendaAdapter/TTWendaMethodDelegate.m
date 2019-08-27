@@ -12,7 +12,7 @@
 #import "UIViewController+BDTAccountModalPresentor.h"
 #import "TTCommentDetailViewController.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 
 #import <TTUIWidget/TTModalContainerController.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>

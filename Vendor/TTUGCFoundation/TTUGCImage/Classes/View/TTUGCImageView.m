@@ -33,6 +33,7 @@
 #import <TTUGCImageRecordManager.h>
 #import "TTUGCImageKitchen.h"
 #import "TTUGCImageHelper.h"
+#import <TTKitchenExtension/TTKitchenExtension.h>
 
 NSString * const kUGCImageViewGifRequestOverNotification = @"kUGCImageViewGifRequestOverNotification";
 NSString * const kUGCImageViewGifDecodeOverNotification = @"kUGCImageViewGifDecodeOverNotification";

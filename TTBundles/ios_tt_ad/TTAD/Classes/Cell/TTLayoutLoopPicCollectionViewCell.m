@@ -9,7 +9,6 @@
 #import "TTLayoutLoopPicCollectionViewCell.h"
 #import "ExploreCellBase.h"
 #import "TTImageView.h"
-#import "TTAsyncCornerImageView.h"
 #import "TTArticleCellConst.h"
 #import "TTImageView+TrafficSave.h"
 #import <TTBaseLib/TTDeviceHelper.h>

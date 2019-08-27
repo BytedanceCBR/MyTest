@@ -214,7 +214,7 @@
         _avatarView.avatarImgPadding = 0;
         _avatarView.avatarButton.userInteractionEnabled = NO;
         _avatarView.avatarStyle = SSAvatarViewStyleRound;
-        [_avatarView setupVerifyViewForLength:50.f adaptationSizeBlock:nil];
+//        [_avatarView setupVerifyViewForLength:50.f adaptationSizeBlock:nil];
 
         UIView *coverView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 44.f, 44.f)];
         coverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];

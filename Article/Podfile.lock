@@ -37,6 +37,7 @@ PODS:
   - BDALog (0.1.12.1-binary)
   - BDAlogProtocol (0.1.7)
   - BDAssert/Core (2.0.0)
+  - BDMobileRuntime (0.3.38)
   - BDTArticle (0.2.3)
   - BDTBasePlayer (0.3.47)
   - BDTExploreOrderedData (0.1.7)
@@ -78,7 +79,7 @@ PODS:
   - EAccountApiSDK (1.1.1.1-binary)
   - Fabric (1.9.0.1-binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.2)
+  - FHCommonUI (0.0.3)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -155,7 +156,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.8)
+  - ios_house_im (0.1.6)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -303,7 +304,7 @@ PODS:
   - TTArticleBase (0.1.0)
   - TTArticleVideo (0.1.0)
   - TTAudio (0.1.6.1-binary)
-  - TTAvatar (0.1.0)
+  - TTAvatar (0.5.22)
   - TTBaseLib/TTBaseTool (2.0.0.1-binary)
   - TTBaseLib/TTBusinessManager (2.0.0.1-binary)
   - TTBaseLib/TTCategory (2.0.0.1-binary)
@@ -347,7 +348,7 @@ PODS:
   - TTFileUploadClient (1.7.6.8.1-binary)
   - TTFlowStatisticsManager (0.0.10.1-binary)
   - TTFriendRelation (0.2.10)
-  - TTGaiaExtension (0.2.13)
+  - TTGaiaExtension (0.4.2)
   - TTGallery (0.1.0)
   - TTHTSVideo (0.1.0)
   - TTImage (0.8.4.1-binary):
@@ -383,8 +384,9 @@ PODS:
   - TTIMSDK/IMKit_Core (0.7.7)
   - TTIMSDK/IMKit_WebSocket (0.7.7)
   - TTInstallService (1.3.1.1-binary)
-  - TTKitchen/Core (1.6.0)
-  - TTKitchen/TTCommonConfig (1.6.0)
+  - TTKitchen/Core (3.0.1)
+  - TTKitchen/SettingsSyncer (3.0.1)
+  - TTKitchenExtension (1.0.14)
   - TTLCSService (0.1.1.1-binary)
   - TTLocationManager (1.0.22)
   - TTMacroManager (1.0.1)
@@ -444,12 +446,13 @@ PODS:
   - TTPushManager (0.0.13.4)
   - TTPushSDK (0.1.1.1-binary)
   - TTReachability (0.5.2.1-binary)
+  - TTRegistry (7.4.0.3)
   - TTReporter (0.2.1.1-binary)
   - TTRexxar/Core (0.8.10.1-binary)
   - TTRexxar/PackageApp (0.8.10.1-binary)
   - TTRexxar/Plugins (0.8.10.1-binary)
   - TTRexxar/WebView (0.8.10.1-binary)
-  - TTRoute (0.2.25.1)
+  - TTRoute (1.1.3-rc.0-f100)
   - TTSearch (0.1.0)
   - TTService (0.1.0)
   - TTServiceKit (0.4.1.1-binary)
@@ -521,7 +524,7 @@ PODS:
   - TTUserProfile (0.1.0)
   - TTUserSettings (0.3.4.1-binary)
   - TTVContainerScrollView (0.1.2.1-binary)
-  - TTVerifyKit (0.3.0.1-binary)
+  - TTVerifyKit (0.3.11.1-bugfix)
   - TTVersionHelper (1.0.0.1-binary)
   - TTVideo (1.1.1.1-binary)
   - TTVideoEngine (1.9.3.24.1-binary)
@@ -577,6 +580,7 @@ DEPENDENCIES:
   - BDALog (= 0.1.12.1-binary)
   - BDAlogProtocol (= 0.1.7)
   - BDAssert/Core (= 2.0.0)
+  - BDMobileRuntime (= 0.3.38)
   - BDTArticle (from `../AKPlugins/BDTArticle`)
   - BDTBasePlayer (from `../AKPlugins/BDTBasePlayer`)
   - BDTExploreOrderedData (from `../AKPlugins/BDTExploreOrderedData`)
@@ -603,7 +607,7 @@ DEPENDENCIES:
   - EAccountApiSDK (= 1.1.1.1-binary)
   - Fabric (= 1.9.0.1-binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.2)
+  - FHCommonUI (= 0.0.3)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -654,7 +658,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.8)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `9106c57f2bedcb8b652636e459fb8a0fc045c213`)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -722,7 +726,7 @@ DEPENDENCIES:
   - TTArticleBase (from `../TTBundles/ios_tt_articlebase`)
   - TTArticleVideo (from `../TTBundles/ios_tt_article_video`)
   - TTAudio (= 0.1.6.1-binary)
-  - TTAvatar (from `../AKPlugins/TTAvatar`)
+  - TTAvatar (= 0.5.22)
   - TTBaseLib/TTBaseTool (= 2.0.0.1-binary)
   - TTBaseLib/TTBusinessManager (= 2.0.0.1-binary)
   - TTBaseLib/TTCategory (= 2.0.0.1-binary)
@@ -748,7 +752,7 @@ DEPENDENCIES:
   - TTFileUploadClient (= 1.7.6.8.1-binary)
   - TTFlowStatisticsManager (= 0.0.10.1-binary)
   - TTFriendRelation (from `../AKPlugins/TTFriendRelation`)
-  - TTGaiaExtension (= 0.2.13)
+  - TTGaiaExtension (= 0.4.2)
   - TTGallery (from `../TTBundles/ios_tt_gallery`)
   - TTHTSVideo (from `../TTBundles/ios_tt_htsvideo`)
   - TTImage (= 0.8.4.1-binary)
@@ -776,8 +780,9 @@ DEPENDENCIES:
   - TTIMSDK/IMKit_Core (= 0.7.7)
   - TTIMSDK/IMKit_WebSocket (= 0.7.7)
   - TTInstallService (= 1.3.1.1-binary)
-  - TTKitchen/Core (= 1.6.0)
-  - TTKitchen/TTCommonConfig (= 1.6.0)
+  - TTKitchen/Core (= 3.0.1)
+  - TTKitchen/SettingsSyncer (= 3.0.1)
+  - TTKitchenExtension (= 1.0.14)
   - TTLCSService (= 0.1.1.1-binary)
   - TTLocationManager (= 1.0.22)
   - TTMacroManager (= 1.0.1)
@@ -795,12 +800,13 @@ DEPENDENCIES:
   - TTPushManager (= 0.0.13.4)
   - TTPushSDK (= 0.1.1.1-binary)
   - TTReachability (= 0.5.2.1-binary)
+  - TTRegistry (= 7.4.0.3)
   - TTReporter (= 0.2.1.1-binary)
   - TTRexxar/Core (= 0.8.10.1-binary)
   - TTRexxar/PackageApp (= 0.8.10.1-binary)
   - TTRexxar/Plugins (= 0.8.10.1-binary)
   - TTRexxar/WebView (= 0.8.10.1-binary)
-  - TTRoute (from `git@code.byted.org:TTIOS/tt_pods_route.git`, branch `array_type_query`)
+  - TTRoute (= 1.1.3-rc.0-f100)
   - TTSearch (from `../TTBundles/ios_tt_search`)
   - TTService (from `../TTBundles/ios_tt_service`)
   - TTServiceKit (= 0.4.1.1-binary)
@@ -820,7 +826,7 @@ DEPENDENCIES:
   - TTUserProfile (from `../TTBundles/ios_tt_userprofile`)
   - TTUserSettings (= 0.3.4.1-binary)
   - TTVContainerScrollView (= 0.1.2.1-binary)
-  - TTVerifyKit (= 0.3.0.1-binary)
+  - TTVerifyKit (= 0.3.11.1-bugfix)
   - TTVersionHelper (= 1.0.0.1-binary)
   - TTVideo (= 1.1.1.1-binary)
   - TTVideoEngine (= 1.9.3.24.1-binary)
@@ -887,6 +893,9 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/FHWebView
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
+  ios_house_im:
+    :commit: 9106c57f2bedcb8b652636e459fb8a0fc045c213
+    :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAD:
@@ -903,8 +912,6 @@ EXTERNAL SOURCES:
     :path: ../TTBundles/ios_tt_articlebase
   TTArticleVideo:
     :path: ../TTBundles/ios_tt_article_video
-  TTAvatar:
-    :path: ../AKPlugins/TTAvatar
   TTDebug:
     :path: ../TTBundles/ios_tt_debug
   TTDiggButton:
@@ -927,9 +934,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/AKPlatformUIModel
   TTPostBase:
     :path: ../AKPlugins/TTPostBase
-  TTRoute:
-    :branch: array_type_query
-    :git: git@code.byted.org:TTIOS/tt_pods_route.git
   TTSearch:
     :path: ../TTBundles/ios_tt_search
   TTService:
@@ -955,9 +959,9 @@ EXTERNAL SOURCES:
     :path: ../ReactCommon/yoga
 
 CHECKOUT OPTIONS:
-  TTRoute:
-    :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa
-    :git: git@code.byted.org:TTIOS/tt_pods_route.git
+  ios_house_im:
+    :commit: 9106c57f2bedcb8b652636e459fb8a0fc045c213
+    :git: git@code.byted.org:fproject/ios_house_im.git
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
@@ -978,6 +982,7 @@ SPEC CHECKSUMS:
   BDALog: 2c34fe6b9e0f7107abb36d41ca3baf1ee33113bb
   BDAlogProtocol: 187e7105123599bef3b935ec41b40f49112b5fd8
   BDAssert: 7b1b4dd1138bd7ab31cabd3d75b340a49f6902d7
+  BDMobileRuntime: 83175e738acd91083ea560cf0fd4e34612987b80
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: eed47dd8f845dde6c955f2d527b255a823d40665
   BDTExploreOrderedData: 96bb150a05e560a5e927a7ee53bda56690571a61
@@ -997,7 +1002,7 @@ SPEC CHECKSUMS:
   EAccountApiSDK: 29385b846225d7ef532237b4a71aa10647914f35
   Fabric: ecf0d69c8b5cd1c6330c8cd7ae413e6d4aa12af2
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: 987101cda0ba3805132a67295d8c058d9dac21ed
+  FHCommonUI: b0120ae743420b9524eeefcb375f19a516c8e2a8
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1023,7 +1028,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: f69aef21b26c5f8ae6a8320530e3451a63f0e46d
+  ios_house_im: 0bef3fe105a0a9ec8435ad67820ed84d6eb4deb1
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1064,7 +1069,7 @@ SPEC CHECKSUMS:
   TTArticleBase: b77815513c03f2a0339a9acf18ff1516789a0bc6
   TTArticleVideo: 6f1853b56a61152991807c7c07d5474b4667aa80
   TTAudio: e9a692e3b6387c2c5efa5a74b44d7f73712fdc1e
-  TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
+  TTAvatar: 519c351b14df985b10dd9878760f9af4fe828997
   TTBaseLib: e7b79508c1e559bd44fa073f0a7e3e1d7c237f0e
   TTBatchItemAction: 6e6ed79565823fe6f3ee77d66d6e3ec5fec4d52f
   TTDebug: b8ba18669b70deaf52dbd0775578e2163cf07c45
@@ -1078,7 +1083,7 @@ SPEC CHECKSUMS:
   TTFileUploadClient: 974455ed11ab6fe13cf29b5ad3032d1816ac5751
   TTFlowStatisticsManager: 6589b320762fe753556fa2058d0e3e0c42f16ae0
   TTFriendRelation: 376685f5cb6e25bd3960b0a245eb59761c3b576d
-  TTGaiaExtension: 5c3eeb1faa1a6d570adc7505a94787b9dd3ed088
+  TTGaiaExtension: 3a3907bcc88a7a7c919eb2db98a9d7369c8dc4b9
   TTGallery: 694e0873aa6423012bd0a4f8ffd85747e0a60193
   TTHTSVideo: 84859e259f16d792cd01ab4cecc052dec9af21bc
   TTImage: 8c4ddc40fd78a992571042abdbd7a80642e0bfdc
@@ -1087,7 +1092,8 @@ SPEC CHECKSUMS:
   TTImpression: d2d80c26abef863c5be6dc8b6fe10ebef3331b84
   TTIMSDK: bc920322f0cb1a542bc0f6c7cfdef1f8576dbc3c
   TTInstallService: 278ab1b8adf5f1a632507406386a2a80df58d84f
-  TTKitchen: b7fcce48014799914152c0b90e6c513ee0e9b1a4
+  TTKitchen: 4a9860af825fc06ca6747379c6036d7c26b9ffe0
+  TTKitchenExtension: 8e66b1d9df811a5c483ce1d838c50d6e6042019b
   TTLCSService: d9fc936bba13993ecc454b486a15a403a9fdbdc4
   TTLocationManager: 4e294fc0d5a8e0d263af7a96d48fb37fe4489665
   TTMacroManager: 915aadf3841523767f16a230fd97fe546aa800eb
@@ -1105,9 +1111,10 @@ SPEC CHECKSUMS:
   TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
   TTPushSDK: 3302f3e57c39cf8e14233769b28cb07d5f403966
   TTReachability: bc8685b98fd9fcd949811a8a31236b5d5a3ec931
+  TTRegistry: da0948df15bacc1b90bb9ff8eb621b812ea9eebb
   TTReporter: 55c6785c79fb8b35a44105d760ac3493cc2ed365
   TTRexxar: 40c20cd090918e9816f74b0decced7094f000647
-  TTRoute: 20e9092cabb90f759cc2e7c6f5ab3acb075d9d86
+  TTRoute: 0ff31956f12f290c0f50bcdbdfe3f2646e4e4f98
   TTSearch: 812276e1b1c7f1d1fce932fe766e9a75359d18d3
   TTService: 61600ce842ad99be7776dbbf3e614301ef706f7b
   TTServiceKit: 94210c3f54f65e5ba8ddde3e498837fa04649d57
@@ -1123,7 +1130,7 @@ SPEC CHECKSUMS:
   TTUserProfile: e9f6d23e86b3c1232b15a79a239e5d3a27e5b2f3
   TTUserSettings: ae3d4a3efeb987e7a2fe528545cfdb87a7798c72
   TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932
-  TTVerifyKit: 6043790bd8baa07857e93e07abb4ccbf3cb87c82
+  TTVerifyKit: 335e27fac67e94399762a848103f52a0e3691070
   TTVersionHelper: a6f1edf1b2c2e8f593be79cf0cf2e128bc4e440f
   TTVideo: f4a5d888a2bbd06c82e906e449c1f419d63f1e5b
   TTVideoEngine: 96de9bfd7a80a311a51a9042a973e4eab4135ee1
@@ -1144,6 +1151,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 900ae665d04b4e6736264dd01ba3adaa27e01576
+PODFILE CHECKSUM: 5a5d3598988418cc3f98884ce92268f9ef6e090b
 
 COCOAPODS: 1.4.0

@@ -28,7 +28,7 @@
         _avatarView.cornerRadius = _avatarView.width / 2.f;
         _avatarView.borderWidth = 0;
         _avatarView.userInteractionEnabled = NO;
-        [_avatarView setupVerifyViewForLength:24.f adaptationSizeBlock:nil];
+//        [_avatarView setupVerifyViewForLength:24.f adaptationSizeBlock:nil];
         [self.contentView addSubview:self.avatarView];
     }
     return self;
