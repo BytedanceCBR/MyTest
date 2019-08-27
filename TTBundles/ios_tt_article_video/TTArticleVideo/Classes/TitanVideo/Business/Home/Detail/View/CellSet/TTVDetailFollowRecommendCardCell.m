@@ -47,7 +47,7 @@ NSString * const TTVDetailFollowRecommendCellIdentifier = @"TTVDetailPGCRecommen
         
         _avatarView = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(0, [TTDeviceUIUtils tt_newPadding:10] , [TTDeviceUIUtils tt_newPadding:66], [TTDeviceUIUtils tt_newPadding:66]) allowCorner:YES];
         _avatarView.cornerRadius = _avatarView.width / 2;
-        [_avatarView setupVerifyViewForLength:[TTDeviceUIUtils tt_newPadding:66] adaptationSizeBlock:nil];
+//        [_avatarView setupVerifyViewForLength:[TTDeviceUIUtils tt_newPadding:66] adaptationSizeBlock:nil];
         _avatarView.userInteractionEnabled = NO;
         _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
         

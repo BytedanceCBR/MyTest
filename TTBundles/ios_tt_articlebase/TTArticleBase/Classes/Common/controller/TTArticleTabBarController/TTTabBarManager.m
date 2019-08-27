@@ -26,7 +26,7 @@
 #import "TTNetworkManager.h"
 #import "Singleton.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import "TTTabBarProvider.h"
 #import "TTArticleTabBarController.h"
 #import "UITabBarController+TabbarConfig.h"
@@ -493,7 +493,7 @@ SINGLETON_GCD(TTTabBarManager);
         
         if ([obj isEqualToString:kTTTabWeitoutiaoTabKey]) {
             //微头条的底tab标题由微头条文案下发逻辑控制
-            title = [TTKitchen getString:kTTKUGCFeedNamesTab];
+            title = @"微头条";
         }
         [mutableTabTitles setValue:title forKey:obj];
     }];

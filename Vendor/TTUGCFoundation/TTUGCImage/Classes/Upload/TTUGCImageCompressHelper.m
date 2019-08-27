@@ -14,7 +14,7 @@
 //import tgmath.h as suggested by http://stackoverflow.com/questions/5352457/cgfloat-based-math-functions/5352779#5352779
 #import <tgmath.h>
 #import <MobileCoreServices/MobileCoreServices.h>
-
+#import <TTKitchenExtension/TTKitchenExtension.h>
 
 NSString * const AnimatedGIFImageErrorDomain = @"com.toutiao.gif.image.error";
 
