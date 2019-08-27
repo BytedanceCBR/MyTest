@@ -36,6 +36,7 @@
 @property (nonatomic, assign)   CGFloat       maxSubScrollViewHeight;
 @property (nonatomic, assign)   CGFloat       criticalPointHeight;// 临界点长度
 @property (nonatomic, assign)   CGFloat       topHeightOffset;
+@property (nonatomic, assign)   CGFloat       navOffset;
 @property (nonatomic, strong)   UIScrollView       *subScrollView;
 @property (nonatomic, strong)   FHTopicDetailViewModel       *viewModel;
 @property (nonatomic, assign)   BOOL       isViewAppear;
@@ -72,6 +73,7 @@
 }
 
 - (void)setupUI {
+    self.navOffset = 64;
     self.canScroll = NO;
     self.isTopIsCanNotMoveTabView = NO;
     self.isTopIsCanNotMoveTabViewPre = NO;
@@ -115,15 +117,10 @@
     
     // _headerInfoView
     _headerInfoView = [[FHTopicHeaderInfo alloc] init];
-    _headerInfoView.frame = CGRectMake(0, 144, SCREEN_WIDTH, 50);
+    _headerInfoView.frame = CGRectMake(0, 144, SCREEN_WIDTH, 40);
     [self.mainScrollView addSubview:_headerInfoView];
-    
-    // sectionHeaderView
-    _sectionHeaderView = [[FHTopicSectionHeaderView alloc] init];
-    _sectionHeaderView.frame = CGRectMake(0, 194, SCREEN_WIDTH, 50);
-    [self.mainScrollView addSubview:_sectionHeaderView];
-    // 244
-    self.topHeightOffset = CGRectGetMaxY(self.sectionHeaderView.frame);
+    self.mainScrollView.backgroundColor = [UIColor themeGray7];
+    self.topHeightOffset = CGRectGetMaxY(self.headerInfoView.frame) + 5;
     
     // 计算subScrollView的高度
     CGFloat navOffset = 64;
@@ -132,8 +129,9 @@
     } else {
         navOffset = 64;
     }
+    self.navOffset = navOffset;
     self.minSubScrollViewHeight = SCREEN_HEIGHT - self.topHeightOffset;// 暂时不用，数据较少时也可在下面展示空页面
-    self.maxSubScrollViewHeight = SCREEN_HEIGHT - navOffset - 50;
+    self.maxSubScrollViewHeight = SCREEN_HEIGHT - navOffset;
     self.criticalPointHeight = self.maxSubScrollViewHeight - self.minSubScrollViewHeight;
     
     // subScrollView
@@ -195,7 +193,7 @@
 
 - (UITableView *)createTableView {
     UITableView *_tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    _tableView.backgroundColor = [UIColor whiteColor];//[UIColor themeGray7];
+    _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
@@ -246,7 +244,53 @@
         self.titleLabel.text = headerModel.forum.forumName;
         self.subTitleLabel.text = headerModel.forum.subDesc;
         [self.topHeaderView updateWithInfo:headerModel];
+        [self updateTopicNotice:headerModel.forum.desc];// 话题简介
+        // 更新顶部布局
+        self.topHeightOffset = CGRectGetMaxY(self.headerInfoView.frame) + 5;
+        self.minSubScrollViewHeight = SCREEN_HEIGHT - self.topHeightOffset;
+        self.criticalPointHeight = self.maxSubScrollViewHeight - self.minSubScrollViewHeight;
+        self.subScrollView.frame = CGRectMake(0, self.topHeightOffset, SCREEN_WIDTH, self.maxSubScrollViewHeight);
+        self.mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, self.maxSubScrollViewHeight + self.topHeightOffset);
     }
+}
+
+- (void)updateTopicNotice:(NSString *)announcement {
+    NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
+    if (isEmptyString(announcement)) {
+        announcement = @"-";
+    }
+    if(!isEmptyString(announcement)) {
+        UIFont *titleFont = [UIFont themeFontSemibold:12];
+        NSDictionary *announcementTitleAttributes = @{
+                                                      NSFontAttributeName: titleFont,
+                                                      NSForegroundColorAttributeName: [UIColor themeGray1]
+                                                      };
+        NSAttributedString *announcementTitle = [[NSAttributedString alloc] initWithString:@"[话题简介] " attributes: announcementTitleAttributes];
+        
+        UIFont *contentFont = [UIFont themeFontRegular:12];
+        NSDictionary *announcemenContentAttributes = @{
+                                                       NSFontAttributeName: contentFont,
+                                                       NSForegroundColorAttributeName: [UIColor themeGray1]
+                                                       };
+        NSAttributedString *announcementContent = [[NSAttributedString alloc] initWithString:announcement attributes:announcemenContentAttributes];
+        
+        [attributedText appendAttributedString:announcementTitle];
+        [attributedText appendAttributedString:announcementContent];
+        
+        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+        CGFloat lineHeight = 20;
+        paragraphStyle.minimumLineHeight = lineHeight;
+        paragraphStyle.maximumLineHeight = lineHeight;
+        
+        [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
+        
+        CGSize attSize = [attributedText boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 40, 100) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
+        self.headerInfoView.frame = CGRectMake(0, 144, SCREEN_WIDTH, attSize.height + 20);
+        // ... 逻辑
+        paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+        [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
+    }
+    self.headerInfoView.infoLabel.attributedText = attributedText;
 }
 
 - (void)setupDetailNaviBar {
@@ -421,7 +465,7 @@
 
 - (void)refreshContentOffset:(CGPoint)contentOffset {
     CGFloat offsetY = contentOffset.y;
-    CGFloat alpha = offsetY / (80.0f);
+    CGFloat alpha = offsetY / (self.navOffset);
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     [self updateNavBarWithAlpha:alpha];
 }
