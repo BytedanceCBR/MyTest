@@ -28,8 +28,7 @@
 #import <TTServiceKit/TTModuleBridge.h>
 #import <TTNetworkManager/TTNetworkUtil.h>
 #import "FHUserTracker.h"
-#import "FHPostDetailViewController.h"
-
+ 
 
 static NSString *kTTUniversalCommentCellLiteIdentifier = @"TTUniversalCommentCellLiteIdentifier";
 
