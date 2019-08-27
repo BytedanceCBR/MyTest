@@ -1083,7 +1083,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh\n";
+			shellScript = "${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh";
 			showEnvVarsInLog = 0;
 		};
 		2C5E9C239EF4294C7F0D2A65 /* [CP] Check Pods Manifest.lock */ = {
