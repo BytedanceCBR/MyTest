@@ -154,6 +154,8 @@
     _viewModel = [[FHTopicDetailViewModel alloc] initWithController:self];
     _viewModel.currentSelectIndex = 0;
     
+    // self.mainScrollView.hidden = YES;
+    
     // 初始化tableViews，后续可能网络返回结果
     NSArray *indexStrs = @[@"最新"];
     [self setupSubTableViews:indexStrs];
@@ -215,12 +217,11 @@
     // 上拉加载更多
     __weak typeof(self) weakSelf = self;
     FHRefreshCustomFooter *refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-        //  wself.isRefresh = NO;
         [weakSelf loadMore];
     }];
     _tableView.mj_footer = refreshFooter;
     
-//    refreshFooter.hidden = YES;
+    refreshFooter.hidden = YES;
     return _tableView;
 }
 
@@ -236,6 +237,15 @@
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
         [self.customNavBarView setNaviBarTransparent:YES];
+    }
+}
+
+- (void)refreshHeaderData {
+    FHTopicHeaderModel       *headerModel = self.viewModel.headerModel;
+    if (headerModel && headerModel.forum) {
+        self.titleLabel.text = headerModel.forum.forumName;
+        self.subTitleLabel.text = headerModel.forum.subDesc;
+        [self.topHeaderView updateWithInfo:headerModel];
     }
 }
 
