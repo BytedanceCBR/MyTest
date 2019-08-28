@@ -27,7 +27,7 @@
         _headerImageView.layer.masksToBounds = YES;
         _headerImageView.layer.borderWidth = 0.5;
         _headerImageView.layer.borderColor = [UIColor themeGray6].CGColor;
-        _headerImageView.contentMode = UIViewContentModeScaleAspectFit;
+        _headerImageView.contentMode = UIViewContentModeScaleAspectFill;
     }
     return _headerImageView;
 }
@@ -163,16 +163,16 @@
 
 - (void)refreshWithData:(id)data {
     
-    if (![data isKindOfClass:FHTopicListResponseItemModel.class]) {
+    if (![data isKindOfClass:FHTopicListResponseDataSuggestModel.class]) {
         return;
     }
     
-    FHTopicListResponseItemModel* itemData = (FHTopicListResponseModel *)data;
-    self.headerImageTagViewLabel.text = @"1";
-    self.titleLabel.text = itemData.title?[NSString stringWithFormat:@"#%@#", itemData.title]:@"";
-    self.subtitleLabel.text = itemData.subtitle?:@"";
-    self.detailLabel.text = itemData.detail?:@"";
-    [self.headerImageView bd_setImageWithURL:[NSURL URLWithString:itemData.headerImageUrl] placeholder:nil];
+    FHTopicListResponseDataSuggestModel* itemData = (FHTopicListResponseDataSuggestModel *)data;
+    self.headerImageTagViewLabel.text = itemData.forum.talkCount?:@"";
+    self.titleLabel.text = itemData.forum.forumName.length > 0 ? [NSString stringWithFormat:@"#%@#", itemData.forum.forumName]:@"";
+    self.subtitleLabel.text = itemData.forum.desc ?:@"";
+    self.detailLabel.text = itemData.forum.talkCountStr ?:@"";
+    [self.headerImageView bd_setImageWithURL:[NSURL URLWithString:itemData.forum.avatarUrl] placeholder:nil];
 }
 
 @end

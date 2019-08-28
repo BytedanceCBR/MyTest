@@ -255,11 +255,11 @@
 
 #pragma mark - FHTopicListControllerDelegate
 
-- (void)didSelectedHashtag:(FHTopicListResponseItemModel *)hashtagModel {
+- (void)didSelectedHashtag:(FHTopicListResponseDataSuggestModel *)hashtagModel {
     
-    NSString *schema = hashtagModel.subtitle;
-    NSString *forumName = hashtagModel.title;
-    NSString *concernId = hashtagModel.topicID;
+    NSString *schema = hashtagModel.forum.schema;
+    NSString *forumName = hashtagModel.forum.forumName;
+    NSString *concernId = hashtagModel.forum.concernId;
     NSString *text = forumName ? [NSString stringWithFormat:@"#%@# ", forumName] : @"";
     NSRange range = self.textView.selectedRange;
     
