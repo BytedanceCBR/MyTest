@@ -61,7 +61,7 @@ typedef enum : NSUInteger {
     NSString *fromStr = configModel.from.length > 0 ? configModel.from : [self fromStrByHouseType:houseType];
 
     if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常，请稍后重试！"];
+        [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
         [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed extraDict:nil errorCode:0 message:nil];
         NSError *error = [[NSError alloc]initWithDomain:NSURLErrorDomain code:-1 userInfo:nil];
         if (completionBlock) {
@@ -102,10 +102,11 @@ typedef enum : NSUInteger {
             }
             return;
         }
+        [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
         NSMutableDictionary *extraDict = @{}.mutableCopy;
         extraDict[@"realtor_id"] = realtorId;
         extraDict[@"house_id"] = houseId;
-        [self addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal extraDict:extraDict errorCode:error.code message:model.message ? : error.localizedDescription];
+        [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed extraDict:extraDict errorCode:error.code message:model.message ? : error.localizedDescription];
         if (completionBlock) {
             completionBlock(NO,nil);
         }
