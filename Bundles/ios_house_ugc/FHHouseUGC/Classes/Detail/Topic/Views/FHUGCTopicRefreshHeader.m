@@ -24,6 +24,7 @@
 @property(nonatomic,assign) CGFloat loadingSize;
 @property (nonatomic, assign)   CGFloat       pullingPercent;
 @property (nonatomic, assign)   BOOL       isEndRefreshing;
+@property (nonatomic, assign)   BOOL       isRefreshing;
 
 @end
 
@@ -39,6 +40,10 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    if (scrollView.contentOffset.y <= 0) {
+//        scrollView.contentInset = UIEdgeInsetsZero;
+//    }
+   
     if (self.isEndRefreshing) {
         return;
     }
@@ -68,8 +73,11 @@
         // 开始刷新
         [self beginRefreshing];
         // 刷新回调
-        if (self.refreshingBlk) {
-            self.refreshingBlk();
+        if (!self.isRefreshing) {
+            if (self.refreshingBlk) {
+                self.refreshingBlk();
+            }
+            self.isRefreshing = YES;
         }
     } else if (self.state == MJRefreshStateRefreshing) {// 正在刷新
         if (-offsetY < self.mj_h + 3) {
@@ -109,16 +117,18 @@
         self.alpha = 0.0;
     } completion:^(BOOL finished) {
         //UIEdgeInsets inset = UIEdgeInsetsMake(0, 0, 0, 0);
-        //self.scrollView.contentInset = self.beginEdgeInsets;
+        self.scrollView.contentInset = self.beginEdgeInsets;
         self.state = MJRefreshStateIdle;
         self.pullingPercent = 0;
         self.isEndRefreshing = NO;
+        self.isRefreshing = NO;
     }];
 }
 
 - (void)setupUI {
     self.backgroundColor = [UIColor clearColor];
     self.isEndRefreshing = NO;
+    self.isRefreshing = NO;
     self.stateTitles = [[NSMutableDictionary alloc] init];
     self.loadingSize = 14;
     self.lable2LoadingMargin = 5;

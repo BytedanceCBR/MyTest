@@ -80,6 +80,7 @@
 
 - (void)startLoadData {
     self.loadDataSuccessCount = 0;// 网络接口返回计数
+    self.feedOffset = 0;
     [self loadHeaderData];
     [self loadFeedListData];
 }
@@ -121,7 +122,6 @@
         [self.httpTopListTask cancel];
     }
     self.detailController.isLoadingData = YES;
-    self.feedOffset = 0;
     __weak typeof(self) wSelf = self;
     self.httpTopListTask = [FHHouseUGCAPI requestTopicList:@"" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wSelf.loadDataSuccessCount += 1;
