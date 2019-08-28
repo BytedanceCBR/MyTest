@@ -10,6 +10,7 @@
 #import "FHBaseCollectionView.h"
 #import "FHUGCHotTopicSubCell.h"
 #import <TTRoute.h>
+#import "FHUserTracker.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -129,19 +130,34 @@
 }
 
 - (void)moreData {
-//    [self trackClickMore];
-//
+    // 点击埋点
+    [self trackClickMore];
+
     NSMutableDictionary *dict = @{}.mutableCopy;
-//    dict[@"action_type"] = @(FHCommunityListTypeFollow);
-//    dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdRecommend);
-//    NSMutableDictionary *traceParam = @{}.mutableCopy;
-//    traceParam[@"enter_type"] = @"click";
-//    traceParam[@"enter_from"] = @"nearby_list";
-//    traceParam[@"element_from"] = @"like_neighborhood";
-//    dict[@"tracer"] = traceParam;
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[UT_ENTER_TYPE] = @"click";
+    traceParam[UT_ELEMENT_FROM] = @"hot_topic";
+    traceParam[UT_ENTER_FROM] = @"nearby_list";
+    dict[@"tracer"] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_topic_list"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+}
+
+- (void)trackClickMore {
+
+//    if([self.currentData isKindOfClass:[FHFeedUGCCellModel class]]) {
+//
+//        FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)self.currentData;
+//
+//        NSMutableDictionary *tracerDict = model.tracerDic;
+//        NSMutableDictionary *param = [NSMutableDictionary new];
+//        param[UT_CATEGORY_NAME] = @"topic_list";
+//        param[UT_ENTER_TYPE] = @"click";
+//        param[UT_ELEMENT_FROM] = @"hot_topic";
+//        param[UT_ENTER_FROM] = tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+//        TRACK_EVENT(UT_ENTER_CATEOGRY, param);
+//    }
 }
 
 #pragma mark - collection

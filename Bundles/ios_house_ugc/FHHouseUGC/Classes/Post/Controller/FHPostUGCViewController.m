@@ -461,7 +461,36 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
     self.inputTextView.textLenDelegate = self;
     
-    [self checkIfShowTopicBtnOnToolBar];
+    [self configTopicBtnOnToolBar];
+}
+
+- (void)configTopicBtnOnToolBar {
+    
+    BOOL isShowHashTagBtn = YES;
+    self.toolbar.banHashtagInput = !isShowHashTagBtn;
+    self.inputTextView.isBanHashtag = self.toolbar.banHashtagInput;
+    if(isShowHashTagBtn) {
+        WeakSelf;
+        self.textViewMediator.hashTagBtnClickBlock = ^{
+            StrongSelf;
+            
+            NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_topic_list"];
+            NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.selectView.groupId;
+            NSURLQueryItem *groudIPItem = [NSURLQueryItem queryItemWithName:@"groupId" value:groupId];
+            
+            NSURL *url = components.URL;
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            param[@"delegate"] = self.textViewMediator;
+            
+            NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
+            param[TRACER_KEY] = tracer;
+            
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        };
+    } else {
+        self.textViewMediator.hashTagBtnClickBlock = nil;
+    }
 }
 
 - (void)selectCommunityViewClick:(UITapGestureRecognizer *)sender {
@@ -1413,7 +1442,6 @@ static NSInteger const kMaxPostImageCount = 9;
             self.selectedGrouplHistoryView.hidden = [self.selectedGrouplHistoryView.model.socialGroupId isEqualToString:item.socialGroupId];
         }
     }
-    [self checkIfShowTopicBtnOnToolBar];
 }
 
 #pragma mark - FHPostUGCSelectedGroupHistoryViewDelegate
@@ -1431,30 +1459,6 @@ static NSInteger const kMaxPostImageCount = 9;
         param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
         param[@"click_position"] = @"last_published_neighborhood";
         TRACK_EVENT(@"click_last_published_neighborhood", param);
-    }
-    
-    [self checkIfShowTopicBtnOnToolBar];
-    
-}
-
-- (void)checkIfShowTopicBtnOnToolBar {
-    NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.selectView.groupId;
-    self.toolbar.banHashtagInput = !(groupId.length > 0);
-    self.inputTextView.isBanHashtag = self.toolbar.banHashtagInput;
-    if(groupId.length > 0) {
-        WeakSelf;
-        self.textViewMediator.hashTagBtnClickBlock = ^{
-            StrongSelf;
-            NSString *urlString = [NSString stringWithFormat:@"sslocal://ugc_post_topic_list?topic_id=%@", groupId];
-            NSURL *url = [NSURL URLWithString:urlString];
-            NSMutableDictionary *param = [NSMutableDictionary dictionary];
-            param[@"delegate"] = self.textViewMediator;
-            
-            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-        };
-    } else {
-        self.textViewMediator.hashTagBtnClickBlock = nil;
     }
 }
 @end

@@ -11,8 +11,10 @@
 #import "TTBaseMacro.h"
 #import "UIScrollView+Refresh.h"
 #import "UIViewAdditions.h"
+#import <TTUIWidget/UIViewController+Track.h>
+#import <FHUserTracker.h>
 
-@interface FHTopicListController ()
+@interface FHTopicListController () <TTUIViewControllerTrackProtocol>
 @property(nonatomic, copy) NSString *topicId;
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
@@ -33,10 +35,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.ttTrackStayEnable = YES;
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    [self.viewModel addEnterCategoryLog];
 }
 
 - (void)initView {
@@ -60,18 +64,23 @@
     _tableView.estimatedSectionHeaderHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
 
-    WeakSelf;
-    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-        StrongSelf;
-        [wself loadData:NO];
-    }];
-    self.tableView.mj_footer = self.refreshFooter;
-
-// 去掉下掉刷新只保留上拉加载更多
+    // 本期接回一次性返回，不涉及上下拉操作和相关埋点
+//    // 下拉刷新
+//    WeakSelf;
 //    [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
 //        StrongSelf;
 //        [self loadData:YES];
+//        [wself.viewModel addCategoryRefreshLog:YES];
 //    }];
+//
+//    // 上拉加载更多
+//    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+//        StrongSelf;
+//        [wself loadData:NO];
+//        [wself.viewModel addCategoryRefreshLog:NO];
+//    }];
+    
+    self.tableView.mj_footer = self.refreshFooter;
 
     [self addDefaultEmptyViewFullScreen];
 }
@@ -100,4 +109,17 @@
     [self.viewModel requestData:isRefresh];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
 @end

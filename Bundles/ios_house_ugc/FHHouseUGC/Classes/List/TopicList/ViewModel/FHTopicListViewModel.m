@@ -14,6 +14,7 @@
 #import "FHRefreshCustomFooter.h"
 #import "ToastManager.h"
 #import "UIScrollView+Refresh.h"
+#import "FHUserTracker.h"
 
 @interface FHTopicListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -124,4 +125,40 @@
     return cell;
 }
 
+#pragma mark category log
+
+-(void)addEnterCategoryLog {
+    TRACK_EVENT(UT_ENTER_CATEOGRY, [self categoryLogDict]);
+}
+
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    
+    NSTimeInterval duration = stayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    TRACK_EVENT(UT_STAY_CATEOGRY, tracerDict);
+}
+
+- (NSDictionary *)categoryLogDict
+{
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[UT_CATEGORY_NAME] = [self categoryName];
+    tracerDict[UT_ENTER_TYPE] = self.viewController.tracerModel.enterType?:UT_BE_NULL;
+    tracerDict[UT_ELEMENT_FROM] = self.viewController.tracerModel.elementFrom?:UT_BE_NULL;
+    tracerDict[UT_ENTER_FROM] = self.viewController.tracerModel.enterFrom?:UT_BE_NULL;
+    return tracerDict;
+}
+
+- (void)addCategoryRefreshLog: (BOOL)isLoadMore {
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    tracerDict[UT_REFRESH_TYPE] = isLoadMore ? @"pre_load_more" : @"pull";
+    TRACK_EVENT(UT_CATEGORY_REFRESH, tracerDict);
+}
+
+- (NSString *)categoryName {
+    return @"topic_list";
+}
 @end
