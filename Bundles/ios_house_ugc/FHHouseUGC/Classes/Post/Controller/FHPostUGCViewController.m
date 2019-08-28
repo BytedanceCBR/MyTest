@@ -49,6 +49,7 @@
 #import "FHEnvContext.h"
 #import "NSString+UGCUtils.h"
 #import "FHTopicHeaderModel.h"
+#import "FHTopicListModel.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -114,6 +115,8 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, assign)   BOOL       lastCanShowMessageTip;
 @property (nonatomic, assign)   BOOL       lastInAppPushTipsHidden;
 @property (nonatomic, weak)     TTNavigationController       *navVC;
+@property (nonatomic, strong)   FHTopicHeaderModel  *topicHeaderModel; // 话题详情页进发布器传入的话题数据
+@property (nonatomic, assign)   BOOL isAddedTopicHeaderModel;
 
 @end
 
@@ -151,8 +154,10 @@ static NSInteger const kMaxPostImageCount = 9;
             } else {
                 self.hasSocialGroup = YES;
             }
-            // 话题
-            FHTopicHeaderModel  *headerModel = [params tt_objectForKey:@"topic_model"];
+            
+            // 话题详情页传入的话题数据
+            self.topicHeaderModel = [params tt_objectForKey:@"topic_model"];
+            
             // H5传递过来的参数
             NSString *report_params = params[@"report_params"];
             if ([report_params isKindOfClass:[NSString class]]) {
@@ -464,7 +469,7 @@ static NSInteger const kMaxPostImageCount = 9;
     self.inputTextView.delegate = self.textViewMediator;
     [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
     self.inputTextView.textLenDelegate = self;
-    
+    // 配置话题按钮
     [self configTopicBtnOnToolBar];
 }
 
@@ -1316,8 +1321,25 @@ static NSInteger const kMaxPostImageCount = 9;
     self.containerView.frame = CGRectMake(0, top, self.view.width, self.view.height - top);
 }
 
+-(void)addHashTagToTextView {
+    
+    // 从话题详情页带入的话题内容
+    if(!self.isAddedTopicHeaderModel) {
+        FHTopicListResponseDataSuggestModel *topicListItemModel = [[FHTopicListResponseDataSuggestModel alloc] init];
+        NSError *error;
+        topicListItemModel.forum = [[FHTopicListResponseDataSuggestForumModel alloc] initWithDictionary:self.topicHeaderModel.forum.toDictionary error:&error];
+        if(!error) {
+            [self.textViewMediator addHashtag:topicListItemModel];
+        }
+        self.isAddedTopicHeaderModel = YES;
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [self addHashTagToTextView];
+    
     [UIApplication sharedApplication].statusBarHidden = NO;
     if ([self.navigationController isKindOfClass:[TTNavigationController class]]) {
         [(TTNavigationController*)self.navigationController panRecognizer].enabled = NO;
