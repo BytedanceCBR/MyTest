@@ -312,4 +312,25 @@
     return attri;
 }
 
++ (void)setVoteContentString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
+    if(!isEmptyString(model.vote.content)){
+        UILabel *label = [[UILabel alloc] init];
+        label.numberOfLines = numberOfLines;
+        label.font = [UIFont themeFontMedium:16];
+        //设置字间距0.4
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:model.vote.content attributes:@{NSKernAttributeName:@(0.4)}];
+//        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+//        [paragraphStyle setLineSpacing:0.4];
+//        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [model.vote.content length])];
+        label.attributedText = attributedString;
+        
+        CGSize size = [label sizeThatFits:CGSizeMake(width, MAXFLOAT)];
+        model.vote.contentAStr = attributedString;
+        model.vote.contentHeight = size.height;
+    }else{
+        model.vote.contentHeight = 0;
+        model.vote.contentAStr = nil;
+    }
+}
+
 @end

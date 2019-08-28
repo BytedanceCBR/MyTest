@@ -199,8 +199,8 @@
         [resultArray addObject:[FHFeedUGCCellModel modelFromFake]];
         [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake].groupId];
         //投票pk fake
-//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake2]];
-//        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake2].groupId];
+        [resultArray addObject:[FHFeedUGCCellModel modelFromFake2]];
+        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake2].groupId];
     }
     
     for (FHFeedListDataModel *itemModel in feedList) {

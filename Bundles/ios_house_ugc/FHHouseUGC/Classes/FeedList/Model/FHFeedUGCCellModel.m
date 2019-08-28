@@ -22,6 +22,9 @@
 //@implementation FHFeedUGCCellImageListModel
 //
 //@end
+@implementation FHFeedUGCVoteModel
+
+@end
 
 @implementation FHFeedUGCCellUserModel
 
@@ -442,6 +445,15 @@
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.groupId = @"100006";
     cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVote;
+    
+    FHFeedUGCVoteModel *vote = [[FHFeedUGCVoteModel alloc] init];
+    vote.content = @"你会为了买房，在生活中降低生活品质并且开始极端省钱吗？";
+    vote.leftDesc = @"我想再看看";
+    vote.rightDesc = @"不会";
+    vote.personDesc = @"378324人参与";
+    cellModel.vote = vote;
+    
+    [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
     
     return cellModel;
 }
