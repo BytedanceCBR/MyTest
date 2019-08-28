@@ -49,6 +49,8 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 @property (nonatomic, strong)   NSTimer       *focusTimer;//关注是否有新内容的轮训timer
 @property (nonatomic, assign)   NSTimeInterval focusTimerInterval;//轮训时间
 
+@property (nonatomic, assign)   NSInteger retryTimes;//重试次数
+
 @end
 
 @implementation FHUGCConfig
@@ -148,7 +150,12 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 // 关注数据存储-end
 
 - (void)loadConfigData {
-    [self loadFollowData];
+    if([FHEnvContext isUGCOpen]){
+        self.retryTimes = 0;
+        [self loadFollowData];
+    }else{
+        [self setFocusTimerState];
+    }
     [self loadUGCConfigData];
     [[TTForumPostThreadStatusViewModel sharedInstance_tt] checkCityPostData];
 }
@@ -157,16 +164,35 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 - (void)loadFollowData {
     __weak typeof(self) wself = self;
     [FHHouseUGCAPI requestFollowListByType:1 class:[FHUGCModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        if(error){
+            wself.retryTimes++;
+            if(wself.retryTimes < 5){
+                [wself performSelector:@selector(loadFollowData) withObject:nil afterDelay:30];
+            }else{
+                [wself setFocusTimerState];
+            }
+            return;
+        }
+        
         if (model && [model isKindOfClass:[FHUGCModel class]]) {
             FHUGCModel *u_model = model;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                wself.followData = u_model;
-                if ([wself.followData.data.userFollowSocialGroups isKindOfClass:[NSArray class]]) {
-                    [[FHUGCSocialGroupData sharedInstance] resetSocialGroupDataWith:self.followData.data.userFollowSocialGroups];
+            if([model.status integerValue] == 0){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    wself.followData = u_model;
+                    if ([wself.followData.data.userFollowSocialGroups isKindOfClass:[NSArray class]]) {
+                        [[FHUGCSocialGroupData sharedInstance] resetSocialGroupDataWith:self.followData.data.userFollowSocialGroups];
+                    }
+                    [wself updateFollowData];
+                    [wself setFocusTimerState];
+                });
+            }else{
+                wself.retryTimes++;
+                if(wself.retryTimes < 5){
+                    [wself performSelector:@selector(loadFollowData) withObject:nil afterDelay:30];
+                }else{
+                    [wself setFocusTimerState];
                 }
-                [wself updateFollowData];
-                [wself setFocusTimerState];
-            });
+            }
         }
     }];
 }

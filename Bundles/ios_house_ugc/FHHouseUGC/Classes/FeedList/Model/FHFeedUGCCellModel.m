@@ -448,7 +448,7 @@
     
     FHFeedUGCVoteModel *vote = [[FHFeedUGCVoteModel alloc] init];
     vote.content = @"你会为了买房，在生活中降低生活品质并且开始极端省钱吗？";
-    vote.leftDesc = @"我想再看看";
+    vote.leftDesc = @"会";
     vote.rightDesc = @"不会";
     vote.personDesc = @"378324人参与";
     cellModel.vote = vote;
