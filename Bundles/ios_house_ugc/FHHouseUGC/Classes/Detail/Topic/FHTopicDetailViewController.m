@@ -30,8 +30,10 @@
 #import "FHFeedOperationView.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "SSImpressionManager.h"
+#import "FHUserTracker.h"
+#import "UIViewController+Track.h"
 
-@interface FHTopicDetailViewController ()<UIScrollViewDelegate>
+@interface FHTopicDetailViewController ()<UIScrollViewDelegate,TTUIViewControllerTrackProtocol>
 
 @property (nonatomic, strong)   UIScrollView       *mainScrollView;
 @property (nonatomic, strong)   FHTopicTopBackView        *topHeaderView;
@@ -58,6 +60,28 @@
 @end
 
 @implementation FHTopicDetailViewController
+
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+        // 话题
+        NSDictionary *params = paramObj.allParams;
+//        {
+//            "category_name" = "f_ugc_neighbor";
+//            cid = 1642835761730590;
+//            "concern_id" = 1642835761730590;
+//            "enter_from" = "click_f_ugc_neighbor";
+//            "group_id" = 1643028817253388;
+//            "style_type" = "concern_topic";
+//            "tab_sname" = thread;
+//        }
+        int64_t cid = [[paramObj.allParams objectForKey:@"cid"] longLongValue];
+        // 埋点
+        self.tracerDict[@"page_type"] = @"topic_detail";
+        self.ttTrackStayEnable = YES;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -178,6 +202,9 @@
     
     // 加载数据
     [self startLoadData];
+    
+    // goDetail
+    [self addGoDetailLog];
 }
 
 - (void)setupSubTableViews:(NSArray *)tabIndexStrs {
@@ -520,6 +547,34 @@
     [self.viewModel needRerecordImpressions];
 }
 
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayPageLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+#pragma mark - Tracer
+
+-(void)addGoDetailLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
+}
+
+-(void)addStayPageLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
+    [self tt_resetStayTime];
+}
 
 @end
 

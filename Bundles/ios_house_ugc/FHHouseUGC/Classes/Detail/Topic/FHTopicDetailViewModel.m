@@ -376,6 +376,25 @@
     
 }
 
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    // 埋点
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[@"enter_from"] = @"topic_detail";
+    traceParam[@"enter_type"] = @"click";
+    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+    traceParam[@"log_pb"] = cellModel.logPb;
+    dict[TRACER_KEY] = traceParam;
+    
+    if (url) {
+        if ([url.absoluteString containsString:@"concern"]) {
+            // 话题
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+    }
+}
+
 // go detail
 - (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
