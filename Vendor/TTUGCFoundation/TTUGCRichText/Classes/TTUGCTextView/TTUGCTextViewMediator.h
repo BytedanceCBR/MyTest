@@ -22,7 +22,7 @@ typedef void (^DidClickHashtagButtonBlock)(void);
 - (void)presentMultiImagePickerView;
 
 @end
-
+@class FHTopicListResponseDataSuggestModel;
 @interface TTUGCTextViewMediator : NSObject <TTUGCTextViewDelegate, TTUGCToolbarDelegate, TTUGCSearchUserTableViewDelegate, TTUGCSearchHashtagTableViewDelegate>
 
 @property (nonatomic, strong) SSThemedView <TTUGCToolbarProtocol> *toolbar;
@@ -45,4 +45,6 @@ typedef void (^DidClickHashtagButtonBlock)(void);
 
 @property (nonatomic, copy) DidClickHashtagButtonBlock hashTagBtnClickBlock;
 
+
+- (void)addHashtag:(FHTopicListResponseDataSuggestModel *)hashtagModel;
 @end

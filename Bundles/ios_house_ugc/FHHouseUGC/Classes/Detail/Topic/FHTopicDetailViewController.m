@@ -91,10 +91,13 @@
 {
     [super viewDidAppear:animated];
     self.isViewAppear = YES;
-    __weak typeof(self) weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [weakSelf refreshContentOffset:weakSelf.mainScrollView.contentOffset];
-    });
+    if (!self.mainScrollView.hidden) {
+        [self refreshContentOffset:self.mainScrollView.contentOffset];
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf refreshContentOffset:weakSelf.mainScrollView.contentOffset];
+        });
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -214,6 +217,7 @@
     [self setupSubTableViews:indexStrs];
     
     // 加载数据
+    self.isViewAppear = YES;
     [self startLoadData];
     
     // goDetail
@@ -299,6 +303,7 @@
 - (void)refreshHeaderData {
     FHTopicHeaderModel       *headerModel = self.viewModel.headerModel;
     if (headerModel && headerModel.forum) {
+        [self hiddenEmptyView];
         self.titleLabel.text = headerModel.forum.forumName;
         self.subTitleLabel.text = headerModel.forum.subDesc;
         [self.topHeaderView updateWithInfo:headerModel];
@@ -465,14 +470,17 @@
     [self setNavBarTransparent:NO];
     self.customNavBarView.title.text = @"话题";
     [self updateNavBarWithAlpha:1.0];
+    // 头部数据置nil
+    self.titleLabel.text = @"";
+    self.subTitleLabel.text = @"";
 }
 
 - (void)hiddenEmptyView {
     [self.emptyView hideEmptyView];
     self.mainScrollView.hidden = NO;
-    [self setNavBarTransparent:YES];
     self.customNavBarView.title.text = @"";
-    [self refreshContentOffset:CGPointZero];
+    // 更新当前导航栏状态
+    [self refreshContentOffset:self.mainScrollView.contentOffset];
 }
 
 // 重新加载
@@ -489,7 +497,7 @@
 
 - (void)endRefreshHeader {
     __weak typeof(self) wSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [wSelf.refreshHeader endRefreshing];
     });
 }
@@ -594,20 +602,17 @@
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = YES;
-        self.topHeaderView.alpha = 1;
     } else if (alpha > 0.1f && alpha < 0.9f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         self.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = YES;
-        self.topHeaderView.alpha = 1;
     } else {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = NO;
-        self.topHeaderView.alpha = 0;
     }
     [self.customNavBarView refreshAlpha:alpha];
 }
