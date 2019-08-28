@@ -51,7 +51,7 @@
     
     /* 左边头像 */
     self.avatar = [UIImageView new];
-    self.avatar.backgroundColor = [UIColor themeGray7];
+    self.avatar.backgroundColor = [UIColor themeGray3];
     self.avatar.clipsToBounds = YES;
     self.avatar.layer.cornerRadius = 4;
     [self addSubview:self.avatar];

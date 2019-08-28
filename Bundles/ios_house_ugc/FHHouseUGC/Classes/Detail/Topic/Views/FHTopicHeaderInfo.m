@@ -24,14 +24,16 @@
 - (void)setupUI {
     self.backgroundColor = [UIColor whiteColor];
     _infoLabel = [[UILabel alloc] init];
-    _infoLabel.text = @"话题简介：--------";
+    _infoLabel.text = @"";
+    _infoLabel.numberOfLines = 0;
     _infoLabel.textColor = [UIColor themeGray1];
-    _infoLabel.font = [UIFont themeFontMedium:16];
+    _infoLabel.font = [UIFont themeFontRegular:12];
     [self addSubview:_infoLabel];
     [_infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.mas_equalTo(20);
+        make.top.mas_equalTo(10);
+        make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.height.mas_equalTo(23);
+        make.bottom.mas_equalTo(-10);
     }];
 }
 
