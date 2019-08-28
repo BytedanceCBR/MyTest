@@ -41,6 +41,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHFeedUGCVoteModel : NSObject
+
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *personDesc;
+@property (nonatomic, copy , nullable) NSString *leftDesc;
+@property (nonatomic, copy , nullable) NSString *rightDesc;
+@property (nonatomic, copy , nullable) NSString *contentAStr;
+@property (nonatomic, assign) CGFloat contentHeight;
+
+@end
+
 @interface FHFeedUGCCellModel : NSObject
 
 @property (nonatomic, assign) FHUGCFeedListCellType cellType;
@@ -92,7 +104,7 @@ NS_ASSUME_NONNULL_BEGIN
 //是否需要插入了引导页
 @property (nonatomic, assign) BOOL isInsertGuideCell;
 //圈子相关
-@property (nonatomic, strong , nullable) FHFeedUGCCellCommunityModel *community ;
+@property (nonatomic, strong , nullable) FHFeedUGCCellCommunityModel *community;
 //是否显示圈子名称，默认为YES
 @property (nonatomic, assign) BOOL showCommunity;
 //原始文章或者问答
@@ -100,7 +112,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat originItemHeight;
 //热门话题
 @property (nonatomic, strong , nullable) NSArray *hotTopicList;
-
+//投票
+@property (nonatomic, strong , nullable) FHFeedUGCVoteModel *vote;
 //埋点相关
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy) NSString *elementFrom;

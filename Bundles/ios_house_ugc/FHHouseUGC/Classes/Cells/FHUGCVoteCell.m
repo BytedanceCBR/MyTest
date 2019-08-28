@@ -12,15 +12,14 @@
 
 @interface FHUGCVoteCell()
 
-@property(nonatomic, strong) UIView *bgView;
+@property(nonatomic, strong) UIImageView *bgView;
+@property(nonatomic, strong) UIView *bgShadowView;
 @property(nonatomic, strong) UIView *bottomSepView;
 
 @property(nonatomic, strong) UIImageView *titleImageView;
 @property(nonatomic, strong) UIButton *moreBtn;
 @property(nonatomic, strong) UILabel *personLabel;
 @property(nonatomic, strong) UILabel *contentLabel;
-
-
 
 @property(nonatomic, strong) UIView *voteView;
 @property(nonatomic, strong) UIButton *leftBtn;
@@ -55,8 +54,19 @@
 - (void)initViews {
     self.contentView.backgroundColor = [UIColor whiteColor];
     
-    self.bgView = [[UIView alloc] init];
-    _bgView.backgroundColor = [[UIColor purpleColor] colorWithAlphaComponent:0.1];
+    self.bgShadowView = [[UIView alloc] init];
+    _bgShadowView.backgroundColor = [UIColor whiteColor];
+    _bgShadowView.layer.shadowColor = [UIColor colorWithHexString:@"bab8b8"].CGColor;//阴影颜色
+    _bgShadowView.layer.shadowOffset = CGSizeMake(0, 7);//阴影偏移，默认(0, -3),这个跟shadowRadius配合使用
+    _bgShadowView.layer.shadowOpacity = 0.3;//阴影透明度，默认0
+    _bgShadowView.layer.shadowRadius = 7;//阴影半径，默认3
+    [self.contentView addSubview:_bgShadowView];
+    
+    self.bgView = [[UIImageView alloc] init];
+    _bgView.image = [UIImage imageNamed:@"fh_ugc_vote_bg"];
+    _bgView.contentMode = UIViewContentModeScaleAspectFill;
+    _bgView.layer.masksToBounds = YES;
+    _bgView.layer.cornerRadius = 4;
     [self.contentView addSubview:_bgView];
     
     self.titleImageView = [[UIImageView alloc] init];
@@ -82,14 +92,11 @@
     [self addSubview:_moreBtn];
     
     self.personLabel = [[UILabel alloc] init];
-    _personLabel.attributedText = [self generatePersonCount:@"37842人参与"];
     _personLabel.textColor = [UIColor themeGray3];
-    _personLabel.font = [UIFont themeFontRegular:10];
+    _personLabel.font = [UIFont themeFontMedium:10];
     [self.bgView addSubview:_personLabel];
     
     self.contentLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
-    _contentLabel.text = @"你会为了买房，生活中降低生活品质吗？";
-    _contentLabel.textAlignment = NSTextAlignmentCenter;
     _contentLabel.numberOfLines = 2;
     [self.bgView addSubview:_contentLabel];
     
@@ -97,14 +104,16 @@
     [self.bgView addSubview:_voteView];
 
     self.leftBtn = [[UIButton alloc] init];
-    _leftBtn.backgroundColor = [UIColor purpleColor];
-    [_leftBtn setTitle:@"会" forState:UIControlStateNormal];
+    [_leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_left"] forState:UIControlStateNormal];
+    [_leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_left"] forState:UIControlStateHighlighted];
+    _leftBtn.titleLabel.font = [UIFont themeFontMedium:14];
     [_leftBtn addTarget:self action:@selector(test) forControlEvents:UIControlEventTouchUpInside];
     [self.voteView addSubview:_leftBtn];
     
     self.rightBtn = [[UIButton alloc] init];
-    _rightBtn.backgroundColor = [UIColor purpleColor];
-    [_rightBtn setTitle:@"不会" forState:UIControlStateNormal];
+    [_rightBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_right"] forState:UIControlStateNormal];
+    [_rightBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_right"] forState:UIControlStateHighlighted];
+    _rightBtn.titleLabel.font = [UIFont themeFontMedium:16];
     [_rightBtn addTarget:self action:@selector(test) forControlEvents:UIControlEventTouchUpInside];
     [self.voteView addSubview:_rightBtn];
     
@@ -119,21 +128,28 @@
 
 - (void)initConstraints {
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(19);
+        make.top.mas_equalTo(self.contentView).offset(20);
         make.left.mas_equalTo(self.contentView).offset(20);
         make.right.mas_equalTo(self.contentView).offset(-20);
-        make.bottom.mas_equalTo(self.bottomSepView.mas_top).offset(-19);
+        make.bottom.mas_equalTo(self.bottomSepView.mas_top).offset(-20);
+    }];
+    
+    [self.bgShadowView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.bgView).offset(10);
+        make.left.mas_equalTo(self.bgView).offset(10);
+        make.right.mas_equalTo(self.bgView).offset(-10);
+        make.bottom.mas_equalTo(self.bgView);
     }];
     
     [self.titleImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.bgView).offset(16);
+        make.top.mas_equalTo(self.bgView).offset(20);
         make.left.mas_equalTo(self.bgView).offset(20);
         make.width.mas_equalTo(56);
         make.height.mas_equalTo(14);
     }];
     
     [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.bgView).offset(13);
+        make.centerY.mas_equalTo(self.titleImageView);
         make.right.mas_equalTo(self.bgView).offset(-20);
         make.width.mas_equalTo(38);
         make.height.mas_equalTo(17);
@@ -141,8 +157,8 @@
     
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.titleImageView.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.bgView).offset(20);
-        make.right.mas_equalTo(self.bgView).offset(-20);
+        make.left.mas_equalTo(self.titleImageView.mas_left).offset(-1);
+        make.right.mas_equalTo(self.moreBtn.mas_right).offset(1);
         make.height.mas_equalTo(22);
     }];
     
@@ -167,15 +183,15 @@
     [self.leftBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.icon.mas_left).offset(-10);
         make.centerY.mas_equalTo(self.icon);
-        make.width.mas_equalTo(80);
-        make.height.mas_equalTo(50);
+        make.width.mas_equalTo(100);
+        make.height.mas_equalTo(35);
     }];
     
     [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.icon.mas_right).offset(10);
         make.centerY.mas_equalTo(self.icon);
-        make.width.mas_equalTo(80);
-        make.height.mas_equalTo(50);
+        make.width.mas_equalTo(100);
+        make.height.mas_equalTo(35);
     }];
 
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -197,89 +213,34 @@
     }
     self.currentData = data;
     
-//    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-//    self.cellModel = cellModel;
-//    //设置userInfo
-//    self.userInfoView.cellModel = cellModel;
-//    self.userInfoView.userName.text = cellModel.user.name;
-//    self.userInfoView.descLabel.attributedText = cellModel.desc;
-//    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
-//    //设置底部
-//    self.bottomView.cellModel = cellModel;
-//
-//    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
-//    self.bottomView.position.text = cellModel.community.name;
-//    [self.bottomView showPositionView:showCommunity];
-//
-//    NSInteger commentCount = [cellModel.commentCount integerValue];
-//    if(commentCount == 0){
-//        [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
-//    }else{
-//        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
-//    }
-//    [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
-//    //内容
-//    self.contentLabel.numberOfLines = cellModel.numberOfLines;
-//    if(isEmptyString(cellModel.content)){
-//        self.contentLabel.hidden = YES;
-//        [self.multiImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-//            make.left.mas_equalTo(self.contentView).offset(leftMargin);
-//            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-//            make.height.mas_equalTo(self.imageViewheight);
-//        }];
-//    }else{
-//        self.contentLabel.hidden = NO;
-//        [self.multiImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-//            make.left.mas_equalTo(self.contentView).offset(leftMargin);
-//            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-//            make.height.mas_equalTo(self.imageViewheight);
-//        }];
-//        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
-//    }
-//    //图片
-//    [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
-//    //origin
-//    if(cellModel.originItemModel){
-//        self.originView.hidden = NO;
-//        [self.originView refreshWithdata:cellModel];
-//        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(originViewHeight + 20);
-//        }];
-//    }else{
-//        self.originView.hidden = YES;
-//        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
-//        }];
-//    }
-//
-//    [self showGuideView];
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    //内容
+    self.contentLabel.attributedText = cellModel.vote.contentAStr;
+    self.contentLabel.textAlignment = NSTextAlignmentCenter;
+    [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(cellModel.vote.contentHeight);
+    }];
+    //讨论人数
+    self.personLabel.attributedText = [self generatePersonCount:cellModel.vote.personDesc];
+    //选项
+    [self.leftBtn setTitle:cellModel.vote.leftDesc forState:UIControlStateNormal];
+    [self.rightBtn setTitle:cellModel.vote.rightDesc forState:UIControlStateNormal];
+    if(cellModel.vote.leftDesc.length > 4 || cellModel.vote.rightDesc.length > 4){
+        _leftBtn.titleLabel.font = [UIFont themeFontMedium:14];
+        _rightBtn.titleLabel.font = [UIFont themeFontMedium:14];
+    }else{
+        _leftBtn.titleLabel.font = [UIFont themeFontMedium:16];
+        _rightBtn.titleLabel.font = [UIFont themeFontMedium:16];
+    }
 }
 
 + (CGFloat)heightForData:(id)data {
-//    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
-//        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-//        CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 30;
-//
-//        if(isEmptyString(cellModel.content)){
-//            height -= 10;
-//        }
-//
-//        CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:1 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
-//        height += imageViewheight;
-//
-//        if(cellModel.originItemModel){
-//            height += (originViewHeight + 10);
-//        }
-//
-//        if(cellModel.isInsertGuideCell){
-//            height += guideViewHeight;
-//        }
-//
-//        return height;
-//    }
-    return 191;
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        CGFloat height = 176 + cellModel.vote.contentHeight;
+        return height;
+    }
+    return 198;
 }
 
 - (void)test {
@@ -294,15 +255,17 @@
 - (NSAttributedString *)generatePersonCount:(NSString *)text {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     
-    NSString *str = [NSString stringWithFormat:@" %@",text];
-    NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
-    attachment.bounds = CGRectMake(0, -1.7, 12, 12);
-    attachment.image = [UIImage imageNamed:@"fh_ugc_vote_person"];
-    NSAttributedString *attachmentAStr = [NSAttributedString attributedStringWithAttachment:attachment];
-    [desc appendAttributedString:attachmentAStr];
-    
-    NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:str];
-    [desc appendAttributedString:distanceAStr];
+    if(!isEmptyString(text)){
+        NSString *str = [NSString stringWithFormat:@" %@",text];
+        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+        attachment.bounds = CGRectMake(0, -1.7, 12, 12);
+        attachment.image = [UIImage imageNamed:@"fh_ugc_vote_person"];
+        NSAttributedString *attachmentAStr = [NSAttributedString attributedStringWithAttachment:attachment];
+        [desc appendAttributedString:attachmentAStr];
+        
+        NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:str];
+        [desc appendAttributedString:distanceAStr];
+    }
     
     return desc;
 }
