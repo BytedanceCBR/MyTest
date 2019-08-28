@@ -38,7 +38,7 @@
 //#import "TTVSettingsConfiguration.h"
 #import "SSCommonLogic.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
@@ -299,7 +299,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         enableShare = YES;
     }
     if (!isEmptyString(host)) { // 如果host在白名单，也可以分享
-        NSArray *array = [TTKitchen getArray:kTTKUGCWhiteListOfShareHost];
+        NSArray *array = [TTKitchen getArray:kTTWhiteListOfShareHost];
         for (NSString *whiteListHost in array) {
             if ([host containsString:whiteListHost]) {
                 enableShare = YES;
@@ -446,43 +446,43 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     //    }
 }
 
-- (void)p_forwardToWeitoutiao{
-    
-    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-    
-    NSString *coverURL = self.repostCoverUrl;
-    NSString *title = self.repostTitle;
-    NSString *schema = self.repostSchema;
-    NSInteger repostType = self.repostType;
-    
-    if (self.isRepostWeitoutiaoFromWeb == NO
-        && [TTKitchen getBOOL:kTTKUGCRepostLinkEnable]) {
-        
-        NSURL *curURL = _ssWebContainer.ssWebView.currentURL;
-        if ([curURL.host containsString:@"mp.weixin.qq.com"]) {
-            title = [self.ssWebContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"msg_title" completionHandler:nil];
-            coverURL = [self.ssWebContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"msg_cdn_url" completionHandler:nil];
-        }
-        
-        if (isEmptyString(coverURL)) {
-            coverURL = self.shareImageUrl;
-        }
-        if (isEmptyString(title)) {
-            title = self.shareTitle;
-        }
-        
-        schema = [self currentURLStr];
-        repostType = 215;
-    }
-    
-    [parameters setValue:coverURL forKey:@"cover_url"];
-    [parameters setValue:title forKey:@"title"];
-    [parameters setValue:@(repostType) forKey:@"repost_type"];
-    [parameters setValue:@(0) forKey:@"is_video"];
-    [parameters setValue:schema forKey:@"schema"];
-    
-    [[TTRoute sharedRoute] openURLByPresentViewController:[NSURL URLWithString:@"sslocal://repost_page"] userInfo:TTRouteUserInfoWithDict(parameters)];
-}
+//- (void)p_forwardToWeitoutiao{
+//
+//    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+//
+//    NSString *coverURL = self.repostCoverUrl;
+//    NSString *title = self.repostTitle;
+//    NSString *schema = self.repostSchema;
+//    NSInteger repostType = self.repostType;
+//
+//    if (self.isRepostWeitoutiaoFromWeb == NO
+//        && [TTKitchen getBOOL:kTTKUGCRepostLinkEnable]) {
+//
+//        NSURL *curURL = _ssWebContainer.ssWebView.currentURL;
+//        if ([curURL.host containsString:@"mp.weixin.qq.com"]) {
+//            title = [self.ssWebContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"msg_title" completionHandler:nil];
+//            coverURL = [self.ssWebContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"msg_cdn_url" completionHandler:nil];
+//        }
+//
+//        if (isEmptyString(coverURL)) {
+//            coverURL = self.shareImageUrl;
+//        }
+//        if (isEmptyString(title)) {
+//            title = self.shareTitle;
+//        }
+//
+//        schema = [self currentURLStr];
+//        repostType = 215;
+//    }
+//
+//    [parameters setValue:coverURL forKey:@"cover_url"];
+//    [parameters setValue:title forKey:@"title"];
+//    [parameters setValue:@(repostType) forKey:@"repost_type"];
+//    [parameters setValue:@(0) forKey:@"is_video"];
+//    [parameters setValue:schema forKey:@"schema"];
+//
+//    [[TTRoute sharedRoute] openURLByPresentViewController:[NSURL URLWithString:@"sslocal://repost_page"] userInfo:TTRouteUserInfoWithDict(parameters)];
+//}
 
 - (void)themeChanged:(NSNotification *)notification {
     [super themeChanged:notification];

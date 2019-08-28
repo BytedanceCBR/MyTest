@@ -267,7 +267,7 @@ static CGFloat const rewardLabelLeftInset = 9;
             avatar.avatarStyle = SSAvatarViewStyleRound;
             avatar.size = CGSizeMake(avatarWidth, avatarWidth);
             avatar.userInteractionEnabled = NO;
-            [avatar setupVerifyViewForLength:avatarWidth adaptationSizeBlock:nil];
+//            [avatar setupVerifyViewForLength:avatarWidth adaptationSizeBlock:nil];
             
             UIImage *placeholderImage = [UIImage imageWithSize:CGSizeMake(avatarWidth, avatarWidth) backgroundColor:[UIColor tt_themedColorForKey:kColorBackground2]];
             avatar.defaultHeadImg = placeholderImage;

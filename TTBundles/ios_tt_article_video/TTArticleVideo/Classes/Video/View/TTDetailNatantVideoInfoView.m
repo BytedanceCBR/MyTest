@@ -43,7 +43,7 @@
 #import "TTMessageCenter.h"
 #import "NSDictionary+TTGeneratedContent.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>

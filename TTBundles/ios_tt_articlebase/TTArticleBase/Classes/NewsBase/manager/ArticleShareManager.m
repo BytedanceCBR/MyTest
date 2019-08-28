@@ -26,7 +26,7 @@
 #import "TTShareMethodUtil.h"
 #import "TTWebImageManager.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import "Article+TTADComputedProperties.h"
 #import <BDWebImage/SDWebImageAdapter.h>
 #import <TTBaseLib/UIImageAdditions.h>

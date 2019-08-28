@@ -805,7 +805,6 @@
 				B373CF072174587A008F9905 /* ShellScript */,
 				B373CF082174587A008F9905 /* Run Script - Fix Copy Pods Resources Script  */,
 				B373CF092174587A008F9905 /* Embed Watch Content */,
-				B373CF0C2174587A008F9905 /* ShellScript */,
 				3D396439219ACED0002E9010 /* ShellScript */,
 				EB681D6F5DCCA31C1AAD1BAB /* [CP] Embed Pods Frameworks */,
 				FCC852F64C0273F226C6A461 /* [CP] Copy Pods Resources */,
@@ -835,7 +834,6 @@
 				FEFA5A55205FB1A8001F50D8 /* ShellScript */,
 				FEFA5A56205FB1A8001F50D8 /* Run Script - Fix Copy Pods Resources Script  */,
 				FEFA5A57205FB1A8001F50D8 /* Embed Watch Content */,
-				B3BDFA9721460B9700C948FC /* ShellScript */,
 				3D39643A219ACF07002E9010 /* ShellScript */,
 				7266FA1375A4D78558EF4060 /* [CP] Embed Pods Frameworks */,
 				8A48766275BDF55FC225ABAF /* [CP] Copy Pods Resources */,
@@ -1288,6 +1286,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVPlayerPod/TTVPlayerResource.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTVerifyKit/TTVerifyKitResource.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
@@ -1403,6 +1402,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUIWidgetResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Profile.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVPlayerResource.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVerifyKitResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
@@ -1492,32 +1492,6 @@
 			shellPath = /bin/sh;
 			shellScript = "#change Pods-NewsInHouse-resources.sh source code\nsed -i '' 's/OTHER_XCASSETS=\\$(find \\\"\\$PWD\\\" -iname \\\"\\*.xcassets\\\" -type d)/OTHER_XCASSETS=\\$(ruby get_all_xcassets.rb \\${SRCROOT} \\${TARGETNAME})/g' \"${SRCROOT}/Pods/Target Support Files/Pods-f100/Pods-f100-resources.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		B373CF0C2174587A008F9905 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
-		B3BDFA9721460B9700C948FC /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n\n#/bin/sh ${PODS_ROOT}/Heimdallr/Heimdallr/dSYMUpload.sh\n";
 		};
 		EB681D6F5DCCA31C1AAD1BAB /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1651,6 +1625,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVPlayerPod/TTVPlayerResource.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTVerifyKit/TTVerifyKitResource.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
@@ -1765,6 +1740,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUIWidgetResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Profile.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVPlayerResource.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVerifyKitResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",

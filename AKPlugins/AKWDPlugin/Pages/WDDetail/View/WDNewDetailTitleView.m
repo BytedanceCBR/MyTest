@@ -66,7 +66,7 @@
         logoView.userInteractionEnabled = YES;
         logoView.enableBlackMaskView = YES;
         logoView.imageView.hidden = YES;
-        [logoView setupVerifyViewForLength:AvatarViewHeightWithoutShowFans adaptationSizeBlock:nil];
+//        [logoView setupVerifyViewForLength:AvatarViewHeightWithoutShowFans adaptationSizeBlock:nil];
         [self addSubview:logoView];
         self.logoView = logoView;
         
@@ -98,7 +98,7 @@
     self.titleLabel.font = [UIFont boldSystemFontOfSize:WDFontSize(14.0f)];
     [self.titleLabel sizeToFit];
     self.logoView.size = CGSizeMake(AvatarViewHeightWithShowFans, AvatarViewHeightWithShowFans);
-    [self.logoView setupVerifyViewForLength:AvatarViewHeightWithShowFans adaptationSizeBlock:nil];
+//    [self.logoView setupVerifyViewForLength:AvatarViewHeightWithShowFans adaptationSizeBlock:nil];
     [self.logoView refreshDecoratorView];
     if (self.logoView.imageView.layer.borderWidth){
         self.logoView.imageView.layer.borderWidth = 0;

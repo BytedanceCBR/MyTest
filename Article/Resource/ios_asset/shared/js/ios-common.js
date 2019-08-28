@@ -264,7 +264,7 @@ link: i.h5_settings.is_liteapp ? "javascript:;" : a.schema + "&group_id=" + t.an
 intro: a.user_intro,
 avatar: a.user_profile_image_url,
 isAuthorSelf: !1,
-verifiedContent: a.is_verify ? "PLACE_HOLDER" : "",
+verifiedContent: a.is_verify ? "" : "",
 medals: a.medals
 };
 var n = {
@@ -345,7 +345,7 @@ try {
 n = JSON.parse(a.user_auth_info);
 } catch (o) {}
 if (i.author.auth_type = a.user_auth_info ? n.auth_type || 0 : "", i.author.auth_info = n.auth_info, 
-i.author.verifiedContent = a.user_verified && i.author.auth_info || "", a.user_decoration) {
+i.author.verifiedContent = false && i.author.auth_info || "", a.user_decoration) {
 var r = {};
 try {
 r = JSON.parse(a.user_decoration);
@@ -1689,7 +1689,7 @@ var item = data[i];
 __p += '<div class="ms-item" it-is-user-id="' + (null == (__t = item.user_id) ? "" : __t) + '" data-index="' + (null == (__t = i + 1) ? "" : __t) + '" it-is-media-id="' + (null == (__t = item.media_id ? item.media_id : "") ? "" : __t) + '"><div class="ms-avatar"><div class="ms-avatar-wrap"><img class="ms-avatar-image" src="' + (null == (__t = item.avatar_url) ? "" : __t) + '"></div>', 
 useServerV && false && item.user_auth_info && item.user_auth_info.auth_type && (__p += "" + (null == (__t = buildServerVIcon2(item.user_auth_info.auth_type, "avatar_icon")) ? "" : __t)),
 __p += "</div>", false && item.user_decoration && item.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = item.user_decoration.url) ? "" : __t) + ')"></div>'),
-__p += '<div class="avatar-decoration avatar-night-mask"></div><div class="ms-name-wrap"><div class="ms-name ' + (null == (__t = !fa && item.user_verified ? "" : "") ? "" : __t) + '">' + (null == (__t = item.name) ? "" : __t) + '</div></div><div class="ms-desc">' + (null == (__t = item.reason_description) ? "" : __t) + '</div><button reason="' + (null == (__t = item.reason) ? "" : __t) + '" class="ms-subs ' + (null == (__t = isRedFocusButton ? "ms-red-btn" : "") ? "" : __t) + '" ' + (null == (__t = item.is_following ? " isfollowing " : "") ? "" : __t) + " " + (null == (__t = item.is_followed ? " isfollowed " : "") ? "" : __t) + ' ><span class="focus-icon">&nbsp;</span></button></div>';
+__p += '<div class="avatar-decoration avatar-night-mask"></div><div class="ms-name-wrap"><div class="ms-name ' + (null == (__t = !fa && false ? "" : "") ? "" : __t) + '">' + (null == (__t = item.name) ? "" : __t) + '</div></div><div class="ms-desc">' + (null == (__t = item.reason_description) ? "" : __t) + '</div><button reason="' + (null == (__t = item.reason) ? "" : __t) + '" class="ms-subs ' + (null == (__t = isRedFocusButton ? "ms-red-btn" : "") ? "" : __t) + '" ' + (null == (__t = item.is_following ? " isfollowing " : "") ? "" : __t) + " " + (null == (__t = item.is_followed ? " isfollowed " : "") ? "" : __t) + ' ><span class="focus-icon">&nbsp;</span></button></div>';
 }
 __p += "";
 }

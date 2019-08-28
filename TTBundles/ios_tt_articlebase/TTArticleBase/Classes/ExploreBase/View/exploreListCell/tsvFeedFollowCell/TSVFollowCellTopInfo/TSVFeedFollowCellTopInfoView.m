@@ -206,9 +206,9 @@
         _avatarImageView.cornerRadius = kAvatarSize / 2.f;
         _avatarImageView.placeholderName = @"default_avatar";
 //        [_avatarImageView addTouchTarget:self action:@selector(tapAvatar:)];
-        [_avatarImageView setupVerifyViewForLength:kAvatarSize adaptationSizeBlock:^CGSize(CGSize standardSize) {
-            return [TTVerifyIconHelper tt_newSize:standardSize];
-        }];
+//        [_avatarImageView setupVerifyViewForLength:kAvatarSize adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//            return [TTVerifyIconHelper tt_newSize:standardSize];
+//        }];
         [self.containerView addSubview:_avatarImageView];
     }
     return _avatarImageView;

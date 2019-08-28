@@ -14,6 +14,14 @@
 TTRegisterKitchenFunction() {
     TTKitchenRegisterBlock(^{
         TTKConfigArray(kTTKUGCImageCacheOptimizeHosts, @"TTUGCImage缓存优化host", @[@"pstatp.com", @"bytecdn.cn"]);
+        TTKConfigBOOL(kTTKUGCImageRequestRepeatEnable, @"UGC图片请求保护",YES);
+        TTKConfigFloat(kTTKUGCImageUploadTimeout, @"发布器图片上传超时时间", 60);
+        TTKConfigFloat(kTTKUGCImageUploadRetryCount, @"发布器图片上传自动重试次数", 1);
+        TTKConfigBOOL(kTTKUGCBrowserQRCode, @"长按识别二维码",YES);
+        TTKConfigFreezedBOOL(kTTKUGCPicUsingImageWithoutDataEnabled, @"查看大图ugc图片没有data的时候重走查询逻辑", YES);
+        TTKConfigFloat(kTTKUGCPicRecordCostTimeSample, @"ugc图片耗时统计比例", 0.3);
+        TTKConfigBOOL(kTTKUGCPicRecordThumbEnabled, @"ugc图片缩略图统计开关", YES);
+        TTKConfigBOOL(kTTKUGCPicRecordGifEnabled, @"ugc图片gif统计开关", YES);
     });
 }
 
