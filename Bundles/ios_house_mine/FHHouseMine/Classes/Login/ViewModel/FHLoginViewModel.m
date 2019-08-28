@@ -272,6 +272,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)textFieldDidChange:(NSNotification *)notification {
     UITextField *textField = (UITextField *)notification.object;
+    if (textField != self.view.phoneInput && textField != self.view.varifyCodeInput) {
+        return;
+    }
     NSString *text = textField.text;
     NSInteger limit = 0;
     if(textField == self.view.phoneInput){

@@ -50,6 +50,8 @@ static const NSInteger kWrongCaptchaErrorCode = 1021;
         button.autoresizingMask = self.backgroundView.autoresizingMask;
         [self addSubview:button];
         
+        UIColor *borderLineColor = [UIColor themeGray6];
+        
         self.contentView = [[UIView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width - 270) / 2, 64, 271, 158)];
         self.contentView.backgroundColor = [UIColor whiteColor];
         self.contentView.layer.cornerRadius = 7.5;
@@ -68,7 +70,7 @@ static const NSInteger kWrongCaptchaErrorCode = 1021;
         [self.contentView addSubview:self.titleLabel];
         
         self.captchaImageView = [[UIImageView alloc] initWithFrame:CGRectMake(30, 35, 210, 33)];
-        self.captchaImageView.layer.borderColor = [UIColor colorWithHexString:@"#afafbc"].CGColor;
+        self.captchaImageView.layer.borderColor = borderLineColor.CGColor;
         self.captchaImageView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         self.captchaImageView.image = captchaImage;
         self.captchaImageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -76,19 +78,19 @@ static const NSInteger kWrongCaptchaErrorCode = 1021;
         [self.contentView addSubview:self.captchaImageView];
         
         self.captchaField = [[UITextField alloc] initWithFrame:CGRectMake(30, 74, 121, 33)];
-        self.captchaField.layer.borderColor = [UIColor colorWithHexString:@"#afafbc"].CGColor;
+        self.captchaField.layer.borderColor = borderLineColor.CGColor;
         self.captchaField.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         self.captchaField.layer.masksToBounds = YES;
         [self.contentView addSubview:self.captchaField];
         
-        UIColor *buttonTintColor = [UIColor colorWithHexString:@"#cc3131"];
+//        UIColor *buttonTintColor = [UIColor colorWithHexString:@"#cc3131"];
         self.resendButton = [[UIButton alloc] initWithFrame:CGRectMake(156, 74, 84, 33)];
         self.resendButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         self.resendButton.layer.cornerRadius = 3;
-        self.resendButton.layer.borderColor = buttonTintColor.CGColor;
+        self.resendButton.layer.borderColor = [UIColor themeGray5].CGColor;
         self.resendButton.layer.masksToBounds = YES;
         [self.resendButton setTitle:NSLocalizedString(@"换一张", nil) forState:UIControlStateNormal];
-        [self.resendButton setTitleColor:buttonTintColor forState:UIControlStateNormal];
+        [self.resendButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         [self.resendButton addTarget:self action:@selector(resendCaptchaActionFired:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:self.resendButton];
         
@@ -98,7 +100,7 @@ static const NSInteger kWrongCaptchaErrorCode = 1021;
         [self.contentView addSubview:self.indicatorView];
         
         UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(0, 115, 271, [TTDeviceHelper ssOnePixel])];
-        separatorView.backgroundColor = [UIColor colorWithHexString:@"#afafbc"];
+        separatorView.backgroundColor = borderLineColor;//[UIColor colorWithHexString:@"#afafbc"];
         [self.contentView addSubview:separatorView];
         
         UIColor *optionColor = [UIColor colorWithHexString:@"#247deb"];
@@ -106,18 +108,18 @@ static const NSInteger kWrongCaptchaErrorCode = 1021;
         
         self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 116, 130, 42)];
         [self.cancelButton setTitle:NSLocalizedString(@"取消", nil) forState:UIControlStateNormal];
-        [self.cancelButton setTitleColor:optionColor forState:UIControlStateNormal];
+        [self.cancelButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         self.cancelButton.titleLabel.font = operationFont;
         [self.cancelButton addTarget:self action:@selector(cancelActionFired:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:self.cancelButton];
         
         UIView *horSeparatorView = [[UIView alloc] initWithFrame:CGRectMake(130, 116, [TTDeviceHelper ssOnePixel], 42)];
-        horSeparatorView.backgroundColor = [UIColor colorWithHexString:@"#afafbc"];
+        horSeparatorView.backgroundColor = borderLineColor;//[UIColor colorWithHexString:@"#afafbc"];
         [self.contentView addSubview:horSeparatorView];
         
         self.submitButton = [[UIButton alloc] initWithFrame:CGRectMake(131, 116, 130, 42)];
         [self.submitButton setTitle:NSLocalizedString(@"确定", nil) forState:UIControlStateNormal];
-        [self.submitButton setTitleColor:optionColor forState:UIControlStateNormal];
+        [self.submitButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
         self.submitButton.titleLabel.font = operationFont;
         [self.submitButton addTarget:self action:@selector(submitActionFired:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:self.submitButton];
