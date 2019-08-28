@@ -303,4 +303,8 @@
     
     self.textView.didInputTextHashtag = NO;
 }
+
+- (void)addHashtag:(FHTopicListResponseDataSuggestModel *)hashtagModel {
+    [self didSelectedHashtag:hashtagModel];
+}
 @end

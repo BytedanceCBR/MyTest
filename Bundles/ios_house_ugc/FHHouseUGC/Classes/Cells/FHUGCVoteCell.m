@@ -7,6 +7,7 @@
 
 #import "FHUGCVoteCell.h"
 #import "FHUGCProgressView.h"
+#import <TTRoute.h>
 
 #define bottomSepViewHeight 5
 
@@ -104,17 +105,19 @@
     [self.bgView addSubview:_voteView];
 
     self.leftBtn = [[UIButton alloc] init];
+    _leftBtn.tag = 20;
     [_leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_left"] forState:UIControlStateNormal];
     [_leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_left"] forState:UIControlStateHighlighted];
     _leftBtn.titleLabel.font = [UIFont themeFontMedium:14];
-    [_leftBtn addTarget:self action:@selector(test) forControlEvents:UIControlEventTouchUpInside];
+    [_leftBtn addTarget:self action:@selector(goToDetail:) forControlEvents:UIControlEventTouchUpInside];
     [self.voteView addSubview:_leftBtn];
     
     self.rightBtn = [[UIButton alloc] init];
+    _rightBtn.tag = 40;
     [_rightBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_right"] forState:UIControlStateNormal];
     [_rightBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_right"] forState:UIControlStateHighlighted];
     _rightBtn.titleLabel.font = [UIFont themeFontMedium:16];
-    [_rightBtn addTarget:self action:@selector(test) forControlEvents:UIControlEventTouchUpInside];
+    [_rightBtn addTarget:self action:@selector(goToDetail:) forControlEvents:UIControlEventTouchUpInside];
     [self.voteView addSubview:_rightBtn];
     
     self.icon = [[UIImageView alloc] init];
@@ -243,13 +246,13 @@
     return 198;
 }
 
-- (void)test {
-//    self.progressView.progress = 0.3;
-//    self.progressView.offset = 5;
-//    self.progressView.isRightGradient = YES;
-//    self.progressView.leftColor = [UIColor redColor];
-//    self.progressView.rightStartColor = [UIColor blueColor];
-//    self.progressView.rightEndColor = [UIColor themeBlue1];
+- (void)goToDetail:(id)sender {
+    UIButton *btn = (UIButton *)sender;
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
+    if(cellModel.vote.openUrl){
+        NSURL *url = [NSURL URLWithString:cellModel.vote.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    }
 }
 
 - (NSAttributedString *)generatePersonCount:(NSString *)text {
