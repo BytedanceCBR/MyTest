@@ -91,7 +91,10 @@
 {
     [super viewDidAppear:animated];
     self.isViewAppear = YES;
-    [self refreshContentOffset:self.mainScrollView.contentOffset];
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf refreshContentOffset:weakSelf.mainScrollView.contentOffset];
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -432,6 +435,9 @@
     traceParam[@"enter_from"] = page_type;
     dict[TRACER_KEY] = traceParam;
     dict[VCTITLE_KEY] = @"发帖";
+    if (self.viewModel.headerModel) {
+        dict[@"topic_model"] = self.viewModel.headerModel;
+    }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
     NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];

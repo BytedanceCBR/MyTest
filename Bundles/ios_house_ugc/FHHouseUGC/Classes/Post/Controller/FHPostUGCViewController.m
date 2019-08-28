@@ -48,6 +48,7 @@
 #import "FHUGCConfig.h"
 #import "FHEnvContext.h"
 #import "NSString+UGCUtils.h"
+#import "FHTopicHeaderModel.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -150,6 +151,8 @@ static NSInteger const kMaxPostImageCount = 9;
             } else {
                 self.hasSocialGroup = YES;
             }
+            // 话题
+            FHTopicHeaderModel  *headerModel = [params tt_objectForKey:@"topic_model"];
             // H5传递过来的参数
             NSString *report_params = params[@"report_params"];
             if ([report_params isKindOfClass:[NSString class]]) {
@@ -161,6 +164,7 @@ static NSInteger const kMaxPostImageCount = 9;
             self.trackDict = [self.tracerDict copy];
             // 添加google地图注册
             [[TTLocationManager sharedManager] registerReverseGeocoder:[TTGoogleMapGeocoder sharedGeocoder] forKey:NSStringFromClass([TTGoogleMapGeocoder class])];
+            self.originStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
         }
     }
     
@@ -1330,7 +1334,6 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    self.originStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     if (self.firstAppear) {
         self.firstAppear = NO;
