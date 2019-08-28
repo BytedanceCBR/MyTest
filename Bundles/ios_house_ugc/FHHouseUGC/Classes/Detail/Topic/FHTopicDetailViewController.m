@@ -56,6 +56,7 @@
 @property (nonatomic, assign) BOOL isTopIsCanNotMoveTabViewPre;
 @property (nonatomic, assign) BOOL canScroll;
 @property (nonatomic, assign)   CGFloat       defaultTopHeight;
+@property (nonatomic, assign)   int64_t cid;// 话题id
 
 @end
 
@@ -66,16 +67,8 @@
     if (self) {
         // 话题
         NSDictionary *params = paramObj.allParams;
-//        {
-//            "category_name" = "f_ugc_neighbor";
-//            cid = 1642835761730590;
-//            "concern_id" = 1642835761730590;
-//            "enter_from" = "click_f_ugc_neighbor";
-//            "group_id" = 1643028817253388;
-//            "style_type" = "concern_topic";
-//            "tab_sname" = thread;
-//        }
-        int64_t cid = [[paramObj.allParams objectForKey:@"cid"] longLongValue];
+        int64_t cid = [[params objectForKey:@"cid"] longLongValue];
+        self.cid = cid;
         // 埋点
         self.tracerDict[@"page_type"] = @"topic_detail";
         self.ttTrackStayEnable = YES;
@@ -193,6 +186,7 @@
     // viewModel
     _viewModel = [[FHTopicDetailViewModel alloc] initWithController:self];
     _viewModel.currentSelectIndex = 0;
+    _viewModel.cid = self.cid;
     
     // self.mainScrollView.hidden = YES;
     
@@ -411,23 +405,16 @@
 
 // 下拉刷新
 - (void)beginRefresh {
-    NSLog(@"--------下拉刷新");
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.refreshHeader endRefreshing];
-    });
+    [self.viewModel refreshLoadData];
+}
+
+- (void)endRefreshHeader {
+    [self.refreshHeader endRefreshing];
 }
 
 // 上拉加载
 - (void)loadMore {
-    NSLog(@"--------上拉加载");
-    UITableView *tb = self.viewModel.currentTableView;
-    if (tb) {
-        FHRefreshCustomFooter *refreshFooter = tb.mj_footer;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
-            [tb.mj_footer endRefreshingWithNoMoreData];
-        });
-    }
+    [self.viewModel loadMoreData];
 }
 
 - (void)acceptMsg:(NSNotification *)notification {

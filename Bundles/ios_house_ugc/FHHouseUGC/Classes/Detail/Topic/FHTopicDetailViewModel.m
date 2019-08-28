@@ -84,6 +84,17 @@
     [self loadFeedListData];
 }
 
+// 下拉刷新
+- (void)refreshLoadData {
+    self.feedOffset = 0;
+    [self loadFeedListData];
+}
+
+// 上拉刷新
+- (void)loadMoreData {
+    [self loadFeedListData];
+}
+
 // 请求顶部的header
 - (void)loadHeaderData {
     if (self.httpTopHeaderTask) {
@@ -114,6 +125,7 @@
     __weak typeof(self) wSelf = self;
     self.httpTopListTask = [FHHouseUGCAPI requestTopicList:@"" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wSelf.loadDataSuccessCount += 1;
+        [wSelf.detailController endRefreshHeader];
         if (error) {
             if (wSelf.feedOffset == 0) {
                 // 说明是第一次请求
@@ -126,7 +138,10 @@
                 FHTopicFeedListModel *feedList = (FHTopicFeedListModel *)model;
                 if (wSelf.feedOffset == 0) {
                     // 说明是第一次请求
-                    [wSelf.dataList removeAllObjects];
+                    if (feedList.data.count > 0) {
+                        // 有返回（下拉）
+                        [wSelf.dataList removeAllObjects];
+                    }
                 } else {
                     // 上拉加载loadmore
                 }
