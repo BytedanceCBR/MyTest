@@ -32,6 +32,7 @@
 #import "SSImpressionManager.h"
 #import "FHUserTracker.h"
 #import "UIViewController+Track.h"
+#import "TTAccountManager.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate,TTUIViewControllerTrackProtocol>
 
@@ -57,6 +58,7 @@
 @property (nonatomic, assign) BOOL canScroll;
 @property (nonatomic, assign)   CGFloat       defaultTopHeight;
 @property (nonatomic, assign)   int64_t cid;// 话题id
+@property (nonatomic, strong)   UIButton       *publishBtn;
 
 @end
 
@@ -89,7 +91,10 @@
 {
     [super viewDidAppear:animated];
     self.isViewAppear = YES;
-    [self refreshContentOffset:self.mainScrollView.contentOffset];
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf refreshContentOffset:weakSelf.mainScrollView.contentOffset];
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -180,6 +185,20 @@
     _subScrollView.backgroundColor = [UIColor whiteColor];
     [self.mainScrollView addSubview:self.subScrollView];
     self.mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, self.maxSubScrollViewHeight + self.topHeightOffset);
+    
+    // 发布按钮
+    [self setupPublishBtn];
+    CGFloat publishBtnBottomHeight = 10;
+    if ([TTDeviceHelper isIPhoneXSeries]) {
+        publishBtnBottomHeight = 44;
+    }else{
+        publishBtnBottomHeight = 10;
+    }
+    [self.publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.view).offset(-publishBtnBottomHeight);
+        make.right.mas_equalTo(self.view).offset(-12);
+        make.width.height.mas_equalTo(64);
+    }];
     // 空态页
     [self addDefaultEmptyViewFullScreen];
     
@@ -365,6 +384,66 @@
     self.titleContainer.hidden = YES;
 }
 
+- (void)setupPublishBtn {
+    self.publishBtn = [[UIButton alloc] init];
+    [_publishBtn setImage:[UIImage imageNamed:@"fh_ugc_publish"] forState:UIControlStateNormal];
+    [_publishBtn addTarget:self action:@selector(gotoPostThreadVC) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_publishBtn];
+}
+
+// 发布按钮点击
+- (void)gotoPostThreadVC {
+    if ([TTAccountManager isLogin]) {
+        [self gotoPostVC];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *page_type = @"topic_detail";
+    [params setObject:page_type forKey:@"enter_from"];
+    [params setObject:@"click_publisher" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [wSelf gotoPostVC];
+                });
+            }
+        }
+    }];
+}
+
+- (void)gotoPostVC {
+    // 跳转到发布器
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"element_type"] = @"feed_publisher";
+    NSString *page_type = @"topic_detail";
+    tracerDict[@"page_type"] = page_type;
+    [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
+    
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    traceParam[@"page_type"] = @"feed_publisher";
+    traceParam[@"enter_from"] = page_type;
+    dict[TRACER_KEY] = traceParam;
+    dict[VCTITLE_KEY] = @"发帖";
+    if (self.viewModel.headerModel) {
+        dict[@"topic_model"] = self.viewModel.headerModel;
+    }
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];
+    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
+}
+
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -409,7 +488,10 @@
 }
 
 - (void)endRefreshHeader {
-    [self.refreshHeader endRefreshing];
+    __weak typeof(self) wSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [wSelf.refreshHeader endRefreshing];
+    });
 }
 
 // 上拉加载
@@ -512,17 +594,20 @@
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = YES;
+        self.topHeaderView.alpha = 1;
     } else if (alpha > 0.1f && alpha < 0.9f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         self.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = YES;
+        self.topHeaderView.alpha = 1;
     } else {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = NO;
+        self.topHeaderView.alpha = 0;
     }
     [self.customNavBarView refreshAlpha:alpha];
 }
