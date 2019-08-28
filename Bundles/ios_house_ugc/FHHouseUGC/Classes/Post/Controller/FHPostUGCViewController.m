@@ -164,7 +164,6 @@ static NSInteger const kMaxPostImageCount = 9;
             self.trackDict = [self.tracerDict copy];
             // 添加google地图注册
             [[TTLocationManager sharedManager] registerReverseGeocoder:[TTGoogleMapGeocoder sharedGeocoder] forKey:NSStringFromClass([TTGoogleMapGeocoder class])];
-            self.originStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
         }
     }
     
@@ -1334,6 +1333,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    self.originStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     if (self.firstAppear) {
         self.firstAppear = NO;
