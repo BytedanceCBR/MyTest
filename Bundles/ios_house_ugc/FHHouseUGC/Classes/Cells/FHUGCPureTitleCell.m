@@ -253,7 +253,9 @@
         }
     } else {
         if (url) {
-            [[TTRoute sharedRoute] openURLByPushViewController:url];
+            if(self.delegate && [self.delegate respondsToSelector:@selector(gotoLinkUrl:url:)]){
+                [self.delegate gotoLinkUrl:self.cellModel url:url];
+            }
         }
     }
 }

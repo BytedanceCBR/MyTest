@@ -24,8 +24,16 @@
 #import "FHUGCTopicRefreshHeader.h"
 #import "FHRefreshCustomFooter.h"
 #import "UILabel+House.h"
+#import "FHEnvContext.h"
+#import "FHUserTracker.h"
+#import <UIScrollView+Refresh.h>
+#import "FHFeedOperationView.h"
+#import <FHHouseBase/FHBaseTableView.h>
+#import "SSImpressionManager.h"
+#import "FHUserTracker.h"
+#import "UIViewController+Track.h"
 
-@interface FHTopicDetailViewController ()<UIScrollViewDelegate>
+@interface FHTopicDetailViewController ()<UIScrollViewDelegate,TTUIViewControllerTrackProtocol>
 
 @property (nonatomic, strong)   UIScrollView       *mainScrollView;
 @property (nonatomic, strong)   FHTopicTopBackView        *topHeaderView;
@@ -36,6 +44,7 @@
 @property (nonatomic, assign)   CGFloat       maxSubScrollViewHeight;
 @property (nonatomic, assign)   CGFloat       criticalPointHeight;// 临界点长度
 @property (nonatomic, assign)   CGFloat       topHeightOffset;
+@property (nonatomic, assign)   CGFloat       navOffset;
 @property (nonatomic, strong)   UIScrollView       *subScrollView;
 @property (nonatomic, strong)   FHTopicDetailViewModel       *viewModel;
 @property (nonatomic, assign)   BOOL       isViewAppear;
@@ -46,10 +55,26 @@
 @property (nonatomic, assign) BOOL isTopIsCanNotMoveTabView;
 @property (nonatomic, assign) BOOL isTopIsCanNotMoveTabViewPre;
 @property (nonatomic, assign) BOOL canScroll;
+@property (nonatomic, assign)   CGFloat       defaultTopHeight;
+@property (nonatomic, assign)   int64_t cid;// 话题id
 
 @end
 
 @implementation FHTopicDetailViewController
+
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+        // 话题
+        NSDictionary *params = paramObj.allParams;
+        int64_t cid = [[params objectForKey:@"cid"] longLongValue];
+        self.cid = cid;
+        // 埋点
+        self.tracerDict[@"page_type"] = @"topic_detail";
+        self.ttTrackStayEnable = YES;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -57,6 +82,7 @@
     [self setupUI];
     self.isViewAppear = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
+    [[SSImpressionManager shareInstance] addRegist:self];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -66,12 +92,30 @@
     [self refreshContentOffset:self.mainScrollView.contentOffset];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.viewModel viewWillAppear];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.isViewAppear = NO;
+    [self.viewModel viewWillDisappear];
 }
 
 - (void)setupUI {
+    self.navOffset = 64;
+    CGFloat navOffset = 64;
+    if (@available(iOS 11.0 , *)) {
+        navOffset = 44.f + self.view.tt_safeAreaInsets.top;
+    } else {
+        navOffset = 64;
+    }
+    self.navOffset = navOffset;
+    self.defaultTopHeight = 144;
+    if ([TTDeviceHelper isIPhoneXSeries]) {
+        self.defaultTopHeight = self.navOffset + 80;
+    }
     self.canScroll = NO;
     self.isTopIsCanNotMoveTabView = NO;
     self.isTopIsCanNotMoveTabViewPre = NO;
@@ -91,7 +135,7 @@
     
     // _topHeaderView
     _topHeaderView = [[FHTopicTopBackView alloc] init];
-    _topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
+    _topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.defaultTopHeight);
     [self.mainScrollView addSubview:_topHeaderView];
     [self.topHeaderView.avatar mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.mainScrollView).offset(20);
@@ -115,25 +159,14 @@
     
     // _headerInfoView
     _headerInfoView = [[FHTopicHeaderInfo alloc] init];
-    _headerInfoView.frame = CGRectMake(0, 144, SCREEN_WIDTH, 50);
+    _headerInfoView.frame = CGRectMake(0, self.defaultTopHeight, SCREEN_WIDTH, 40);
     [self.mainScrollView addSubview:_headerInfoView];
-    
-    // sectionHeaderView
-    _sectionHeaderView = [[FHTopicSectionHeaderView alloc] init];
-    _sectionHeaderView.frame = CGRectMake(0, 194, SCREEN_WIDTH, 50);
-    [self.mainScrollView addSubview:_sectionHeaderView];
-    // 244
-    self.topHeightOffset = CGRectGetMaxY(self.sectionHeaderView.frame);
+    self.mainScrollView.backgroundColor = [UIColor themeGray7];
+    self.topHeightOffset = CGRectGetMaxY(self.headerInfoView.frame) + 5;
     
     // 计算subScrollView的高度
-    CGFloat navOffset = 64;
-    if (@available(iOS 11.0 , *)) {
-        navOffset = 44.f + self.view.tt_safeAreaInsets.top;
-    } else {
-        navOffset = 64;
-    }
     self.minSubScrollViewHeight = SCREEN_HEIGHT - self.topHeightOffset;// 暂时不用，数据较少时也可在下面展示空页面
-    self.maxSubScrollViewHeight = SCREEN_HEIGHT - navOffset - 50;
+    self.maxSubScrollViewHeight = SCREEN_HEIGHT - navOffset;
     self.criticalPointHeight = self.maxSubScrollViewHeight - self.minSubScrollViewHeight;
     
     // subScrollView
@@ -153,6 +186,7 @@
     // viewModel
     _viewModel = [[FHTopicDetailViewModel alloc] initWithController:self];
     _viewModel.currentSelectIndex = 0;
+    _viewModel.cid = self.cid;
     
     // self.mainScrollView.hidden = YES;
     
@@ -162,6 +196,9 @@
     
     // 加载数据
     [self startLoadData];
+    
+    // goDetail
+    [self addGoDetailLog];
 }
 
 - (void)setupSubTableViews:(NSArray *)tabIndexStrs {
@@ -195,7 +232,7 @@
 
 - (UITableView *)createTableView {
     UITableView *_tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    _tableView.backgroundColor = [UIColor whiteColor];//[UIColor themeGray7];
+    _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
@@ -246,7 +283,53 @@
         self.titleLabel.text = headerModel.forum.forumName;
         self.subTitleLabel.text = headerModel.forum.subDesc;
         [self.topHeaderView updateWithInfo:headerModel];
+        [self updateTopicNotice:headerModel.forum.desc];// 话题简介
+        // 更新顶部布局
+        self.topHeightOffset = CGRectGetMaxY(self.headerInfoView.frame) + 5;
+        self.minSubScrollViewHeight = SCREEN_HEIGHT - self.topHeightOffset;
+        self.criticalPointHeight = self.maxSubScrollViewHeight - self.minSubScrollViewHeight;
+        self.subScrollView.frame = CGRectMake(0, self.topHeightOffset, SCREEN_WIDTH, self.maxSubScrollViewHeight);
+        self.mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, self.maxSubScrollViewHeight + self.topHeightOffset);
     }
+}
+
+- (void)updateTopicNotice:(NSString *)announcement {
+    NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
+    if (isEmptyString(announcement)) {
+        announcement = @"-";
+    }
+    if(!isEmptyString(announcement)) {
+        UIFont *titleFont = [UIFont themeFontSemibold:12];
+        NSDictionary *announcementTitleAttributes = @{
+                                                      NSFontAttributeName: titleFont,
+                                                      NSForegroundColorAttributeName: [UIColor themeGray1]
+                                                      };
+        NSAttributedString *announcementTitle = [[NSAttributedString alloc] initWithString:@"[话题简介] " attributes: announcementTitleAttributes];
+        
+        UIFont *contentFont = [UIFont themeFontRegular:12];
+        NSDictionary *announcemenContentAttributes = @{
+                                                       NSFontAttributeName: contentFont,
+                                                       NSForegroundColorAttributeName: [UIColor themeGray1]
+                                                       };
+        NSAttributedString *announcementContent = [[NSAttributedString alloc] initWithString:announcement attributes:announcemenContentAttributes];
+        
+        [attributedText appendAttributedString:announcementTitle];
+        [attributedText appendAttributedString:announcementContent];
+        
+        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+        CGFloat lineHeight = 20;
+        paragraphStyle.minimumLineHeight = lineHeight;
+        paragraphStyle.maximumLineHeight = lineHeight;
+        
+        [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
+        
+        CGSize attSize = [attributedText boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 40, 100) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
+        self.headerInfoView.frame = CGRectMake(0, self.defaultTopHeight, SCREEN_WIDTH, attSize.height + 20);
+        // ... 逻辑
+        paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+        [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
+    }
+    self.headerInfoView.infoLabel.attributedText = attributedText;
 }
 
 - (void)setupDetailNaviBar {
@@ -322,23 +405,16 @@
 
 // 下拉刷新
 - (void)beginRefresh {
-    NSLog(@"--------下拉刷新");
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.refreshHeader endRefreshing];
-    });
+    [self.viewModel refreshLoadData];
+}
+
+- (void)endRefreshHeader {
+    [self.refreshHeader endRefreshing];
 }
 
 // 上拉加载
 - (void)loadMore {
-    NSLog(@"--------上拉加载");
-    UITableView *tb = self.viewModel.currentTableView;
-    if (tb) {
-        FHRefreshCustomFooter *refreshFooter = tb.mj_footer;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
-            [tb.mj_footer endRefreshingWithNoMoreData];
-        });
-    }
+    [self.viewModel loadMoreData];
 }
 
 - (void)acceptMsg:(NSNotification *)notification {
@@ -396,10 +472,10 @@
         // topHeaderView
         offsetY = scrollView.contentOffset.y;
         if (offsetY < 0) {
-            CGFloat height = 144 - offsetY;
+            CGFloat height = self.defaultTopHeight - offsetY;
             self.topHeaderView.frame = CGRectMake(offsetY / 2, offsetY, SCREEN_WIDTH - offsetY, height);
         } else {
-            self.topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 144);
+            self.topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.defaultTopHeight);
         }
         // refreshHeader
         [self.refreshHeader scrollViewDidScroll:self.mainScrollView];
@@ -421,7 +497,7 @@
 
 - (void)refreshContentOffset:(CGPoint)contentOffset {
     CGFloat offsetY = contentOffset.y;
-    CGFloat alpha = offsetY / (80.0f);
+    CGFloat alpha = offsetY / (self.navOffset);
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     [self updateNavBarWithAlpha:alpha];
 }
@@ -449,6 +525,42 @@
         self.titleContainer.hidden = NO;
     }
     [self.customNavBarView refreshAlpha:alpha];
+}
+
+
+#pragma mark -- SSImpressionProtocol
+
+- (void)needRerecordImpressions {
+    [self.viewModel needRerecordImpressions];
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayPageLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+#pragma mark - Tracer
+
+-(void)addGoDetailLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
+}
+
+-(void)addStayPageLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
+    [self tt_resetStayTime];
 }
 
 @end

@@ -31,7 +31,7 @@
 - (void)setupUI {
     self.backgroundColor = [UIColor whiteColor];
     _infoLabel = [[UILabel alloc] init];
-    _infoLabel.text = @"最新   最热：--------";
+    _infoLabel.text = @"最新 最热 - 暂时不用";
     _infoLabel.textColor = [UIColor themeGray1];
     _infoLabel.font = [UIFont themeFontMedium:16];
     [self addSubview:_infoLabel];

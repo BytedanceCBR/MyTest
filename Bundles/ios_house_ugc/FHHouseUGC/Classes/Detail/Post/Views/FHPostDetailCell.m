@@ -339,7 +339,17 @@
 - (void)attributedLabel:(TTUGCAttributedLabel *)label
    didSelectLinkWithURL:(NSURL *)url {
     if (url) {
-        [[TTRoute sharedRoute] openURLByPushViewController:url];
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
+        if (cellModel) {
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            NSDictionary *log_pb = cellModel.tracerDic[@"log_pb"];
+            NSString *enter_from = cellModel.tracerDic[@"page_type"] ?: @"be_null";
+            dict[@"tracer"] = @{@"enter_from":enter_from,
+                                @"enter_type":@"click",
+                                @"log_pb":log_pb ?: @"be_null"};
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
     }
 }
 

@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)closeFeedGuide:(FHFeedUGCCellModel *)cellModel;
 
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url;
+
 @end
 
 @interface FHUGCBaseCell : UITableViewCell
