@@ -178,7 +178,7 @@
                 }];
         
                 wSelf.hasMore = feedList.hasMore;
-                wSelf.feedOffset = [feedList.offset integerValue];
+                wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
             }
         }
         [wSelf processLoadingState];
@@ -400,7 +400,7 @@
                                             } else {
                                                 [self.dataList insertObject:cellModel atIndex:0];
                                             }
-                                            self.feedOffset += 1;
+                                            //self.feedOffset += 1;
                                             [tableView reloadData];
                                             self.needRefreshCell = NO;
                                             break;
@@ -424,10 +424,10 @@
         UITableView *tableView = self.currentTableView;
         [tableView beginUpdates];
         [self.dataList removeObjectAtIndex:row];
-        self.feedOffset -= 1;
-        if (self.feedOffset <= 0) {
-            self.feedOffset = 0;
-        }
+//        self.feedOffset -= 1;
+//        if (self.feedOffset <= 0) {
+//            self.feedOffset = 0;
+//        }
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         [tableView layoutIfNeeded];
