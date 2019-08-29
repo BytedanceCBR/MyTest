@@ -624,7 +624,8 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = @"my_join_feed_from";
+    traceParam[@"enter_from"] = @"my_join_feed";
+    traceParam[@"element_from"] = @"feed_topic";
     traceParam[@"enter_type"] = @"click";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;

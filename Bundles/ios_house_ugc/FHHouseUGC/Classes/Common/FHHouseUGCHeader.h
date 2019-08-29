@@ -50,8 +50,8 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
     FHUGCFeedListCellTypeUGCRecommend = 1101,              //小区推荐
     FHUGCFeedListCellTypeUGCBanner = 2002,                 //运营位
     FHUGCFeedListCellTypeUGCBanner2 = 1102,                //运营位
-    FHUGCFeedListCellTypeUGCHotTopic = 1103,               //热门话题
-    FHUGCFeedListCellTypeUGCVote = 1104,                   //投票pk
+    FHUGCFeedListCellTypeUGCHotTopic = 1104,               //热门话题
+    FHUGCFeedListCellTypeUGCVote = 1103,                   //投票pk
 };
 
 typedef NS_ENUM(NSInteger, FHUGCMyInterestedType)
