@@ -525,6 +525,7 @@
 }
 
 - (void)goToVoteDetail:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value {
+    [self trackVoteClickOptions:cellModel value:value];
     if([TTAccountManager isLogin]){
         if(cellModel.vote.openUrl){
             NSString *urlStr = cellModel.vote.openUrl;
@@ -640,6 +641,19 @@
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
     dict[@"click_position"] = @"feed_comment";
     TRACK_EVENT(@"click_comment", dict);
+}
+
+- (void)trackVoteClickOptions:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value {
+    NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
+    dict[@"log_pb"] = cellModel.logPb;
+    if(value == 20){
+        dict[@"click_position"] = @"1";
+    }else if(value == 40){
+        dict[@"click_position"] = @"2";
+    }else{
+        dict[@"click_position"] = @"vote_content";
+    }
+    TRACK_EVENT(@"click_options", dict);
 }
 
 @end
