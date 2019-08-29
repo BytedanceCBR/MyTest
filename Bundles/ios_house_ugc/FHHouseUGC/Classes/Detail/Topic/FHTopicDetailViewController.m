@@ -307,6 +307,10 @@
     FHTopicHeaderModel       *headerModel = self.viewModel.headerModel;
     if (headerModel && headerModel.forum) {
         [self hiddenEmptyView];
+        if (![headerModel.forum.forumName hasPrefix:@"#"]) {
+            NSString *forumName = [NSString stringWithFormat:@"#%@#",headerModel.forum.forumName];
+            headerModel.forum.forumName = forumName;
+        }
         self.titleLabel.text = headerModel.forum.forumName;
         self.subTitleLabel.text = headerModel.forum.subDesc;
         [self.topHeaderView updateWithInfo:headerModel];
