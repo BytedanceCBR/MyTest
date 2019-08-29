@@ -559,6 +559,7 @@
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
+    traceParam[@"topic_id"] = @(self.cid);
     dict[TRACER_KEY] = traceParam;
     
     dict[@"data"] = cellModel;
@@ -607,25 +608,18 @@
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [self trackDict:cellModel rank:rank];
     TRACK_EVENT(@"feed_client_show", dict);
-    
-    if(cellModel.isInsertGuideCell){
-        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
-        guideDict[@"element_type"] = @"feed_community_guide_notice";
-        guideDict[@"page_type"] = @"nearby_list";
-        guideDict[@"enter_from"] = @"neighborhood_tab";
-        TRACK_EVENT(@"element_show", guideDict);
-    }
-    
-    if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
-        [self trackElementShow:rank];
-    }
+
+    // 小区推荐
+//    if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
+//        [self trackElementShow:rank];
+//    }
 }
 
 - (void)trackElementShow:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"element_type"] = @"like_neighborhood";
-    dict[@"page_type"] = @"nearby_list";
-    dict[@"enter_from"] = @"neighborhood_tab";
+    dict[@"page_type"] = [self pageType];
+    dict[@"enter_from"] = [self pageType];
     dict[@"rank"] = @(rank);
     
     TRACK_EVENT(@"element_show", dict);
@@ -633,7 +627,7 @@
 
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"enter_from"] = @"nearby_list";
+    dict[@"enter_from"] = [self pageType];
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
