@@ -88,7 +88,21 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+    if(indexPath.row < 0 || indexPath.row >= self.dataList.count) {
+        return;
+    }
+    
     FHTopicListResponseDataListModel *item = [self.dataList objectAtIndex:indexPath.row];
+    
+    // 点击话题内容
+    NSMutableDictionary *param = self.viewController.tracerDict.mutableCopy;
+    param[UT_CATEGORY_NAME] = [self categoryName];
+    param[@"rank"] = @(indexPath.row);
+    param[@"topic_id"] = item.forumId;
+    param[@"click_position"] = @"topic_select";
+    TRACK_EVENT(@"click_select_topic", param);
+    // ---
+    
     if([self.viewController.delegate respondsToSelector:@selector(didSelectedHashtag:)]) {
         [self.viewController.delegate didSelectedHashtag:item];
         [self.viewController goBack];
