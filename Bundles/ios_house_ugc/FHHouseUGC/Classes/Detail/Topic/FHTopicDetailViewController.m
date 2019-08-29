@@ -216,7 +216,7 @@
     // viewModel
     _viewModel = [[FHTopicDetailViewModel alloc] initWithController:self];
     _viewModel.currentSelectIndex = 0;
-    self.cid = 1643171844947979;//1642474912698382;
+    self.cid = 1642474912698382;//1643171844947979;//1642474912698382;
     _viewModel.cid = self.cid;
     
     // self.mainScrollView.hidden = YES;
@@ -316,11 +316,11 @@
         [self hiddenEmptyView];
         self.topHeaderView.hidden = NO;
         self.headerInfoView.hidden = NO;
+        NSString *forumName = headerModel.forum.forumName;
         if (![headerModel.forum.forumName hasPrefix:@"#"]) {
-            NSString *forumName = [NSString stringWithFormat:@"#%@#",headerModel.forum.forumName];
-            headerModel.forum.forumName = forumName;
+            forumName = [NSString stringWithFormat:@"#%@#",headerModel.forum.forumName];
         }
-        self.titleLabel.text = headerModel.forum.forumName;
+        self.titleLabel.text = forumName;
         self.subTitleLabel.text = headerModel.forum.subDesc;
         [self.topHeaderView updateWithInfo:headerModel];
         [self updateTopicNotice:headerModel.forum.desc];// 话题简介

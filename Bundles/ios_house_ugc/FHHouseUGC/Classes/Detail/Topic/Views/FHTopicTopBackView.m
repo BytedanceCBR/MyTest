@@ -90,7 +90,11 @@
     if (headerModel && headerModel.forum) {
         [self.headerImageView bd_setImageWithURL:[NSURL URLWithString:headerModel.forum.bannerUrl]];
         [self.avatar bd_setImageWithURL:[NSURL URLWithString:headerModel.forum.avatarUrl] placeholder:[UIImage imageNamed:@"default_image"]];
-        self.nameLabel.text = headerModel.forum.forumName;
+        NSString *forumName = headerModel.forum.forumName;
+        if (![headerModel.forum.forumName hasPrefix:@"#"]) {
+            forumName = [NSString stringWithFormat:@"#%@#",headerModel.forum.forumName];
+        }
+        self.nameLabel.text = forumName;
         self.subtitleLabel.text = headerModel.forum.subDesc;
     }
 }
