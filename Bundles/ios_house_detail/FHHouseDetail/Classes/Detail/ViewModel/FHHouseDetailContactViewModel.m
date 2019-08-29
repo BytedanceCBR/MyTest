@@ -344,28 +344,30 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
         [self addLeadShowLog:contactPhone];
     }
-    @try {
-        // 可能会出现崩溃的代码
-        if ([FHHouseDetailPhoneCallViewModel fhRNEnableChannels].count > 0 && [FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels].count > 0 && [[FHHouseDetailPhoneCallViewModel fhRNEnableChannels] containsObject:@"f_realtor_detail"] && [[FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels] containsObject:@"f_realtor_detail"] && contactPhone.showRealtorinfo && [FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"]) {
-            //保证主线程执行
-            [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES andIsOpen:NO];
-        }
-    }
     
-    @catch (NSException *exception) {
-        // 捕获到的异常exception
-        if (exception) {
-            NSString* descriptionExc = [exception description];
-            NSMutableDictionary *excepDict = [NSMutableDictionary dictionary];
-            [excepDict setValue:descriptionExc forKey:@"exception"];
-            
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:1 extra:excepDict];
-            self.phoneCallViewModel.rnIsUnAvalable = YES;
-        }
-    }
-    @finally {
-        // 结果处理
-    }
+    //根DA确认 进入经纪人主页数据太少，因此去掉经纪人主页RN预加载，以提高房源详情性能
+//    @try {
+//        // 可能会出现崩溃的代码
+//        if ([FHHouseDetailPhoneCallViewModel fhRNEnableChannels].count > 0 && [FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels].count > 0 && [[FHHouseDetailPhoneCallViewModel fhRNEnableChannels] containsObject:@"f_realtor_detail"] && [[FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels] containsObject:@"f_realtor_detail"] && contactPhone.showRealtorinfo && [FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"]) {
+//            //保证主线程执行
+//            [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES andIsOpen:NO];
+//        }
+//    }
+//
+//    @catch (NSException *exception) {
+//        // 捕获到的异常exception
+//        if (exception) {
+//            NSString* descriptionExc = [exception description];
+//            NSMutableDictionary *excepDict = [NSMutableDictionary dictionary];
+//            [excepDict setValue:descriptionExc forKey:@"exception"];
+//
+//            [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:1 extra:excepDict];
+//            self.phoneCallViewModel.rnIsUnAvalable = YES;
+//        }
+//    }
+//    @finally {
+//        // 结果处理
+//    }
 
 }
 
