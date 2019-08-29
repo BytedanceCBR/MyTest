@@ -73,6 +73,9 @@
         self.cid = cid;
         // 埋点
         self.tracerDict[@"page_type"] = @"topic_detail";
+        if (cid > 0) {
+            self.tracerDict[@"topic_id"] = @(cid);
+        }
         self.ttTrackStayEnable = YES;
     }
     return self;

@@ -505,6 +505,7 @@
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_from"] = @"hot_discuss_feed";
+    traceParam[@"element_from"] = @"feed_topic";
     traceParam[@"enter_type"] = @"click";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
