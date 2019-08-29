@@ -186,23 +186,26 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
-    
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
-    
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    // 埋点
-    NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = @"nearby_list";
-    traceParam[@"element_from"] = @"hot_topic";
-    traceParam[@"enter_type"] = @"click";
-    traceParam[@"rank"] = @(indexPath.row);
-    traceParam[@"log_pb"] = cellModel.logPb;
-    dict[@"tracer"] = traceParam;
-
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    //跳转到话题详情页
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://concern"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    if(indexPath.row < self.dataList.count){
+        FHFeedContentRawDataHotTopicListModel *model = self.dataList[indexPath.row];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        // 埋点
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = @"nearby_list";
+        traceParam[@"element_from"] = @"hot_topic";
+        traceParam[@"enter_type"] = @"click";
+        traceParam[@"rank"] = @(indexPath.row);
+        traceParam[@"log_pb"] = @"be_null";
+        dict[@"tracer"] = traceParam;
+        
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        //跳转到话题详情页
+        if(model.schema.length > 0){
+            NSURL *openUrl = [NSURL URLWithString:model.schema];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+        }
+    }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -210,35 +213,38 @@
 }
 
 - (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
-//    if (indexPath.row >= self.dataList.count) {
-//        return;
-//    }
-//    
-//    FHUGCScialGroupDataModel *cellModel = self.dataList[indexPath.row];
-//    
-//    if (!self.clientShowDict) {
-//        self.clientShowDict = [NSMutableDictionary new];
-//    }
-//    
-//    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
-//    NSString *groupId = cellModel.socialGroupId;
-//    if(groupId){
-//        if (self.clientShowDict[groupId] || ![groupId isEqualToString:@"-1"]) {
-//            return;
-//        }
-//        
-//        self.clientShowDict[groupId] = @(indexPath.row);
-//        [self trackClientShow:cellModel rank:indexPath.row];
-//    }
+    if (indexPath.row >= self.dataList.count) {
+        return;
+    }
+
+    FHFeedContentRawDataHotTopicListModel *model = self.dataList[indexPath.row];
+
+    if (!self.clientShowDict) {
+        self.clientShowDict = [NSMutableDictionary new];
+    }
+    
+    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+    NSString *forumId = model.forumId;
+    if(forumId){
+        if (self.clientShowDict[forumId] || ![forumId isEqualToString:@"-1"]) {
+            return;
+        }
+
+        self.clientShowDict[forumId] = @(indexPath.row);
+        [self trackClientShow:model rank:indexPath.row];
+    }
 }
 
-//- (void)trackClientShow:(FHUGCScialGroupDataModel *)cellModel rank:(NSInteger)rank {
-//    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
-//
-//    tracerDict[@"element_type"] = @"all_community";
-//    tracerDict[@"page_type"] = @"my_join_list";
-//    tracerDict[@"enter_from"] = @"neighborhood_tab";
-//    TRACK_EVENT(@"element_show", tracerDict);
-//}
+- (void)trackClientShow:(FHFeedContentRawDataHotTopicListModel *)model rank:(NSInteger)rank {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+
+    tracerDict[@"element_from"] = @"hot_topic";
+    tracerDict[@"page_type"] = @"nearby_list";
+    tracerDict[@"enter_from"] = @"neighborhood_tab";
+    tracerDict[@"rank"] = @(rank);
+    tracerDict[@"topic_id"] = model.forumId;
+    
+    TRACK_EVENT(@"topic_show", tracerDict);
+}
 
 @end
