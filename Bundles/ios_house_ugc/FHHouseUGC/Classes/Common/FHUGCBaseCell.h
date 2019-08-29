@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url;
 
+- (void)goToVoteDetail:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value;
+
 @end
 
 @interface FHUGCBaseCell : UITableViewCell

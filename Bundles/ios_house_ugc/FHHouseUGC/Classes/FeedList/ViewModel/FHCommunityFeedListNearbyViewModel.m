@@ -19,6 +19,8 @@
 #import "FHUGCConfig.h"
 #import "ToastManager.h"
 #import <FHEnvContext.h>
+#import <TTAccountManager.h>
+#import <TTURLUtils.h>
 
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
@@ -194,14 +196,14 @@
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     
     //fake
-//    if(isHead){
-//        //热点话题 fake
-//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake]];
-//        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake].groupId];
-//        //投票pk fake
-//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake2]];
-//        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake2].groupId];
-//    }
+    if(isHead){
+        //热点话题 fake
+        [resultArray addObject:[FHFeedUGCCellModel modelFromFake]];
+        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake].groupId];
+        //投票pk fake
+        [resultArray addObject:[FHFeedUGCCellModel modelFromFake2]];
+        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake2].groupId];
+    }
     
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
@@ -404,6 +406,8 @@
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
+        [self goToVoteDetail:cellModel value:0];
     }
 }
 
@@ -519,6 +523,50 @@
     }
 }
 
+- (void)goToVoteDetail:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value {
+    if([TTAccountManager isLogin]){
+        if(cellModel.vote.openUrl){
+            NSString *urlStr = cellModel.vote.openUrl;
+            if(value > 0){
+                NSString *append = [TTURLUtils queryItemAddingPercentEscapes:[NSString stringWithFormat:@"&vote=%d",value]];
+                urlStr = [urlStr stringByAppendingString:append];
+            }
+            
+            
+            NSURL *url = [NSURL URLWithString:urlStr];
+//            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+        }
+    }else{
+        [self gotoLogin:cellModel value:value];
+    }
+}
+
+- (void)gotoLogin:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value  {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:[self pageType] forKey:@"enter_from"];
+    [params setObject:@"" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    if(cellModel.vote.openUrl){
+                        NSString *urlStr = cellModel.vote.openUrl;
+                        NSURL *url = [NSURL URLWithString:urlStr];
+                        //            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                    }
+                });
+            }
+        }
+    }];
+}
+
 #pragma mark - 埋点
 
 - (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
@@ -557,13 +605,15 @@
     }
     
     if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
-        [self trackElementShow:rank];
+        [self trackElementShow:rank elementType:@"like_neighborhood"];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCHotTopic){
+        [self trackElementShow:rank elementType:@"hot_topic"];
     }
 }
 
-- (void)trackElementShow:(NSInteger)rank {
+- (void)trackElementShow:(NSInteger)rank elementType:(NSString *)elementType {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"element_type"] = @"like_neighborhood";
+    dict[@"element_type"] = elementType ? elementType : @"be_null";
     dict[@"page_type"] = @"nearby_list";
     dict[@"enter_from"] = @"neighborhood_tab";
     dict[@"rank"] = @(rank);

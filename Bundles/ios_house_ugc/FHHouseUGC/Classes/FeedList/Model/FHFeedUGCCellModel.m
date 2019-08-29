@@ -444,6 +444,7 @@
 + (FHFeedUGCCellModel *)modelFromFake2 {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.groupId = @"100006";
+    cellModel.cellType = FHUGCFeedListCellTypeUGCVote;
     cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVote;
     
     FHFeedUGCVoteModel *vote = [[FHFeedUGCVoteModel alloc] init];
@@ -451,6 +452,7 @@
     vote.leftDesc = @"会";
     vote.rightDesc = @"不会";
     vote.personDesc = @"378324人参与";
+    vote.openUrl = @"sslocal://webview?url=https%3a%2f%2fm.haoduofangs.com%2fmagic%2fruntime%2f%3fid%3d7197";
     cellModel.vote = vote;
     
     [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];

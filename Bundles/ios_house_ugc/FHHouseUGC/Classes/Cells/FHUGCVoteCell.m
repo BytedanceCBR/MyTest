@@ -7,7 +7,7 @@
 
 #import "FHUGCVoteCell.h"
 #import "FHUGCProgressView.h"
-#import <TTRoute.h>
+//#import <TTRoute.h>
 
 #define bottomSepViewHeight 5
 
@@ -64,6 +64,7 @@
     [self.contentView addSubview:_bgShadowView];
     
     self.bgView = [[UIImageView alloc] init];
+    _bgView.userInteractionEnabled = YES;
     _bgView.image = [UIImage imageNamed:@"fh_ugc_vote_bg"];
     _bgView.contentMode = UIViewContentModeScaleAspectFill;
     _bgView.layer.masksToBounds = YES;
@@ -83,6 +84,7 @@
     [_moreBtn setTitle:@"更多" forState:UIControlStateNormal];
     [_moreBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _moreBtn.titleLabel.font = [UIFont themeFontRegular:10];
+    [_moreBtn addTarget:self action:@selector(test) forControlEvents:UIControlEventTouchUpInside];
     //文字的size
     CGSize textSize = [_moreBtn.titleLabel.text sizeWithFont:_moreBtn.titleLabel.font];
     CGSize imageSize = _moreBtn.currentImage.size;
@@ -90,7 +92,7 @@
     _moreBtn.titleEdgeInsets = UIEdgeInsetsMake(0, - imageSize.width - 6, 0, imageSize.width + 6);
     //设置按钮内容靠右
     _moreBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-    [self addSubview:_moreBtn];
+    [self.bgView addSubview:_moreBtn];
     
     self.personLabel = [[UILabel alloc] init];
     _personLabel.textColor = [UIColor themeGray3];
@@ -101,14 +103,14 @@
     _contentLabel.numberOfLines = 2;
     [self.bgView addSubview:_contentLabel];
     
-    self.voteView = [[UIView alloc] init];
+    self.voteView = [[UIView alloc] init]; 
     [self.bgView addSubview:_voteView];
 
     self.leftBtn = [[UIButton alloc] init];
     _leftBtn.tag = 20;
     [_leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_left"] forState:UIControlStateNormal];
     [_leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_left"] forState:UIControlStateHighlighted];
-    _leftBtn.titleLabel.font = [UIFont themeFontMedium:14];
+    _leftBtn.titleLabel.font = [UIFont themeFontMedium:16];
     [_leftBtn addTarget:self action:@selector(goToDetail:) forControlEvents:UIControlEventTouchUpInside];
     [self.voteView addSubview:_leftBtn];
     
@@ -249,9 +251,12 @@
 - (void)goToDetail:(id)sender {
     UIButton *btn = (UIButton *)sender;
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
-    if(cellModel.vote.openUrl){
-        NSURL *url = [NSURL URLWithString:cellModel.vote.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+//    if(cellModel.vote.openUrl){
+//        NSURL *url = [NSURL URLWithString:cellModel.vote.openUrl];
+//        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+//    }
+    if(self.delegate && [self.delegate respondsToSelector:@selector(goToVoteDetail:value:)]){
+        [self.delegate goToVoteDetail:cellModel value:btn.tag];
     }
 }
 
