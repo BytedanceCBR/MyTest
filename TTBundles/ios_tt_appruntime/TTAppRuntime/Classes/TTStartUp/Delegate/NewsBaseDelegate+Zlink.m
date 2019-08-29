@@ -25,12 +25,8 @@
             // no select city
             [[NSUserDefaults standardUserDefaults] setValue:schemaString forKey:@"kFHDeepLinkFirstLaunchKey"];
         } else {
-            dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSURL *url = [NSURL URLWithString:schemaString];
-                    [[TTRoute sharedRoute] openURLByPushViewController:url];
-                });
-            });
+            NSURL *url = [NSURL URLWithString:schemaString];
+            [[TTRoute sharedRoute] openURLByPushViewController:url];
         }
     }
 

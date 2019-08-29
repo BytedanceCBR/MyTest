@@ -622,7 +622,7 @@ def appPods
     pod_binary  'BDABTestSDK', '1.0.2-rc.3'
     #pod 'BDABTestSDK', '1.0.0'
 
-    pod 'BDUGDeepLink', '1.0.1'
+    pod 'BDUGDeepLink', '1.1.1'
 end
 
 target 'NewsLiteInHouse' do

@@ -95,9 +95,28 @@
     } else {
         if(item.schema.length > 0) {
             NSURL *url = [NSURL URLWithString:item.schema];
-            [[TTRoute sharedRoute] openURLByPushViewController:url];
+    
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            // 埋点
+            NSMutableDictionary *traceParam = @{}.mutableCopy;
+            traceParam[UT_ENTER_FROM] = @"topic_list";
+            traceParam[UT_ELEMENT_FROM] = UT_BE_NULL;
+            traceParam[UT_ENTER_TYPE] = @"click";
+            traceParam[UT_LOG_PB] = UT_BE_NULL;
+            traceParam[@"rank"] = @(indexPath.row);
+            dict[TRACER_KEY] = traceParam;
+            
+            if (url) {
+                if ([url.absoluteString containsString:@"concern"]) {
+                    // 话题
+                    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+                }
+            }
+    
         }
     }
+
 }
 
 #pragma mark - UITableViewDataSource
