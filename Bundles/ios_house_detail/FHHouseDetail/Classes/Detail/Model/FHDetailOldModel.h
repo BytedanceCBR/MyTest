@@ -331,7 +331,8 @@ typedef enum : NSInteger {
 @protocol FHDetailHouseReviewCommentModel
 @end
 @interface FHDetailHouseReviewCommentModel: JSONModel
-@property (nonatomic, strong , nullable) FHDetailContactModel *realtorInfo ;
+@property (nonatomic, copy , nullable) NSString *commentId;
+@property (nonatomic, strong , nullable) FHDetailContactModel *realtorInfo;
 @property (nonatomic, copy , nullable) NSString *commentText;
 @property (nonatomic, copy , nullable) NSString *contentData;
 @property (nonatomic, assign) BOOL isExpended;//标识是否全文展开，非服务端字段

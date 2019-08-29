@@ -27,7 +27,7 @@
 @implementation FHDetailHouseReviewCommentCell
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @""; // 周边小区
+    return @"realtor_evaluation"; // 带看房评
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -39,12 +39,20 @@
 }
 
 - (void)setupUI {
+    _tracerDicCache = [NSMutableDictionary new];
+    _headerView = [[FHDetailHeaderView alloc] init];
+    _headerView.label.text = @"经纪人带看房评";
+    [self.contentView addSubview:_headerView];
+    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.right.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(46);
+    }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.headerView).offset(10);
         make.left.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(0);
         make.bottom.mas_equalTo(self.contentView);
@@ -133,12 +141,17 @@
     if (animated) {
         [model.tableView endUpdates];
     }
+    [self tracerRealtorEvaluationShowToIndex:showCount];
 }
 
 - (void)foldButtonClick:(UIButton *)button {
     FHDetailHouseReviewCommentCellModel *modelData = (FHDetailHouseReviewCommentCellModel *) self.currentData;
     modelData.isExpand = !modelData.isExpand;
     self.foldButton.isFold = !modelData.isExpand;
+    if(modelData.isExpand){
+        [self addClickLoadMoreLog];
+    }
+    [self addClickLoadMoreLog];
     [self updateItems:YES];
 }
 
@@ -164,6 +177,7 @@
     }];
     [self setNeedsUpdateConstraints];
     [modelData.tableView endUpdates];
+    [self addClickReadMoreLog:item.curData.commentId];
 }
 
 - (void)onCallClick:(FHDetailHouseReviewCommentItemView *)item {
@@ -174,7 +188,7 @@
     NSMutableDictionary *extraDict = @{}.mutableCopy;
     extraDict[@"realtor_id"] = contact.realtorId;
     extraDict[@"realtor_rank"] = @(index);
-    extraDict[@"realtor_position"] = @"detail_related";
+    extraDict[@"realtor_position"] = @"realtor_evaluation";
     if (self.baseViewModel.detailTracerDic) {
         [extraDict addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
     }
@@ -186,8 +200,7 @@
     contactConfig.realtorId = contact.realtorId;
     contactConfig.searchId = cellModel.searchId;
     contactConfig.imprId = cellModel.imprId;
-    //TODO 修改from
-    contactConfig.from = @"app_oldhouse_mulrealtor";
+    contactConfig.from = @"app_oldhouse_evaluate";
     [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError *_Nonnull error) {
         if (success && [cellModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]) {
             FHHouseDetailViewController *vc = (FHHouseDetailViewController *) cellModel.belongsVC;
@@ -211,9 +224,8 @@
     FHDetailContactModel *contact = item.curData.realtorInfo;
 
     NSMutableDictionary *imExtra = @{}.mutableCopy;
-    imExtra[@"realtor_position"] = @"detail_related";
-    //TODO 修改from
-    imExtra[@"from"] = @"app_oldhouse_mulrealtor";
+    imExtra[@"realtor_position"] = @"realtor_evaluation";
+    imExtra[@"from"] = @"app_oldhouse_evaluate";
     [cellModel.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
 }
 
@@ -230,4 +242,42 @@
     [cellModel.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO];
 }
 
+-(void)addClickLoadMoreLog{
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"page_type"]= tracerDic[@"page_type"];
+    params[@"element_from"]= @"realtor_evaluation";
+    [FHUserTracker writeEvent:@"click_loadmore" params:params];
+}
+
+-(void)addClickReadMoreLog:(NSString*)commentId{
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"page_type"]= tracerDic[@"page_type"];
+    params[@"element_from"]= @"realtor_evaluation_fulltext";
+    params[@"item_id"]= commentId;
+    [FHUserTracker writeEvent:@"click_loadmore" params:params];
+}
+
+- (void)tracerRealtorEvaluationShowToIndex:(NSInteger)index {
+    for (int i = 0; i< index; i++) {
+        NSString *cacheKey = [NSString stringWithFormat:@"%d",i];
+        if (self.tracerDicCache[cacheKey]) {
+            continue;
+        }
+        self.tracerDicCache[cacheKey] = @(YES);
+        FHDetailHouseReviewCommentCellModel *model = (FHDetailHouseReviewCommentCellModel *)self.currentData;
+        if (i < model.houseReviewComment.count) {
+            FHDetailHouseReviewCommentModel *reviewCommentModel = model.houseReviewComment[i];
+            NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+            tracerDic[@"element_type"] = @"realtor_evaluation";
+            tracerDic[@"realtor_id"] = reviewCommentModel.realtorInfo.realtorId ?: @"be_null";
+            tracerDic[@"realtor_rank"] = @(i);
+            tracerDic[@"realtor_position"] = @"realtor_evaluation";
+            tracerDic[@"item_id"] = reviewCommentModel.commentId;
+            [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id"]];
+            [FHUserTracker writeEvent:@"realtor_evaluation_show" params:tracerDic];
+        }
+    }
+}
 @end

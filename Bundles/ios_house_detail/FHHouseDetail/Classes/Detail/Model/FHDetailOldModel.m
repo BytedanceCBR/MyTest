@@ -364,6 +364,7 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+            @"commentId": @"comment_id",
             @"realtorInfo": @"realtor_info",
             @"commentText": @"comment_text",
             @"contentData": @"content_data",
