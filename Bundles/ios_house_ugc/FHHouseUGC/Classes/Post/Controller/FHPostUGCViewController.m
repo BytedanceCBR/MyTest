@@ -479,9 +479,9 @@ static NSInteger const kMaxPostImageCount = 9;
     self.inputTextView.isBanHashtag = self.toolbar.banHashtagInput;
     if(isShowHashTagBtn) {
         WeakSelf;
-        self.textViewMediator.hashTagBtnClickBlock = ^{
+        self.textViewMediator.hashTagBtnClickBlock = ^(BOOL didInputTextHashtag) {
             StrongSelf;
-            
+
             NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_topic_list"];
             NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.selectView.groupId;
             NSURLQueryItem *groudIPItem = [NSURLQueryItem queryItemWithName:@"groupId" value:groupId];
@@ -491,10 +491,21 @@ static NSInteger const kMaxPostImageCount = 9;
             param[@"delegate"] = self.textViewMediator;
             
             NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
+            
+            tracer[UT_ELEMENT_FROM] = didInputTextHashtag ? @"write_label" : @"publisher_topic";
+            tracer[UT_ENTER_FROM] = @"feed_publisher";
+            tracer[UT_ENTER_TYPE] = @"click";
             param[TRACER_KEY] = tracer;
             
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+            
+            if(!didInputTextHashtag) {
+                // 发布器内点击“话题”按钮
+                NSMutableDictionary *param = self.tracerDict.mutableCopy;
+                param[@"click_position"] = @"publisher_topic";
+                TRACK_EVENT(@"click_options", param);
+            }
         };
     } else {
         self.textViewMediator.hashTagBtnClickBlock = nil;

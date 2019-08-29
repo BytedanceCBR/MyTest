@@ -65,6 +65,7 @@
         _headerImageTagViewLabel.font = [UIFont themeFontMedium:10];
         _headerImageTagViewLabel.textColor = [UIColor themeWhite];
         _headerImageTagViewLabel.textAlignment = NSTextAlignmentCenter;
+        _headerImageTagViewLabel.numberOfLines = 1;
     }
     return _headerImageTagViewLabel;
 }
@@ -94,6 +95,7 @@
         _detailLabel = [UILabel new];
         _detailLabel.font = [UIFont themeFontRegular:13];
         _detailLabel.textColor = [UIColor themeGray3];
+        _detailLabel.numberOfLines = 1;
     }
     return _detailLabel;
 }

@@ -53,9 +53,9 @@
 @property (nonatomic, strong)   UILabel *subTitleLabel;
 @property (nonatomic, strong)   UIView *titleContainer;
 
-@property (nonatomic, assign) BOOL isTopIsCanNotMoveTabView;
-@property (nonatomic, assign) BOOL isTopIsCanNotMoveTabViewPre;
-@property (nonatomic, assign) BOOL canScroll;
+@property (nonatomic, assign)   BOOL isTopIsCanNotMoveTabView;
+@property (nonatomic, assign)   BOOL isTopIsCanNotMoveTabViewPre;
+@property (nonatomic, assign)   BOOL canScroll;
 @property (nonatomic, assign)   CGFloat       defaultTopHeight;
 @property (nonatomic, assign)   int64_t cid;// 话题id
 @property (nonatomic, strong)   UIButton       *publishBtn;
@@ -73,6 +73,9 @@
         self.cid = cid;
         // 埋点
         self.tracerDict[@"page_type"] = @"topic_detail";
+        if (cid > 0) {
+            self.tracerDict[@"topic_id"] = @(cid);
+        }
         self.ttTrackStayEnable = YES;
     }
     return self;
@@ -95,7 +98,9 @@
         [self refreshContentOffset:self.mainScrollView.contentOffset];
         __weak typeof(self) weakSelf = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [weakSelf refreshContentOffset:weakSelf.mainScrollView.contentOffset];
+            if (!weakSelf.mainScrollView.hidden) {
+                [weakSelf refreshContentOffset:weakSelf.mainScrollView.contentOffset];
+            }
         });
     }
 }
@@ -107,6 +112,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [self addStayPageLog];
     self.isViewAppear = NO;
     [self.viewModel viewWillDisappear];
 }
@@ -148,6 +154,7 @@
     [self.topHeaderView.avatar mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.mainScrollView).offset(20);
     }];
+    _topHeaderView.hidden = YES;
     
     // refreshHeader
     self.refreshHeader = [[FHUGCTopicRefreshHeader alloc] init];
@@ -171,6 +178,7 @@
     [self.mainScrollView addSubview:_headerInfoView];
     self.mainScrollView.backgroundColor = [UIColor themeGray7];
     self.topHeightOffset = CGRectGetMaxY(self.headerInfoView.frame) + 5;
+    _headerInfoView.hidden = YES;
     
     // 计算subScrollView的高度
     self.minSubScrollViewHeight = SCREEN_HEIGHT - self.topHeightOffset;// 暂时不用，数据较少时也可在下面展示空页面
@@ -209,7 +217,7 @@
     // viewModel
     _viewModel = [[FHTopicDetailViewModel alloc] initWithController:self];
     _viewModel.currentSelectIndex = 0;
-    self.cid = 1642474912698382;
+    // self.cid = 1642474912698382;//1643171844947979;//1642474912698382;
     _viewModel.cid = self.cid;
     
     // self.mainScrollView.hidden = YES;
@@ -307,11 +315,13 @@
     FHTopicHeaderModel       *headerModel = self.viewModel.headerModel;
     if (headerModel && headerModel.forum) {
         [self hiddenEmptyView];
+        self.topHeaderView.hidden = NO;
+        self.headerInfoView.hidden = NO;
+        NSString *forumName = headerModel.forum.forumName;
         if (![headerModel.forum.forumName hasPrefix:@"#"]) {
-            NSString *forumName = [NSString stringWithFormat:@"#%@#",headerModel.forum.forumName];
-            headerModel.forum.forumName = forumName;
+            forumName = [NSString stringWithFormat:@"#%@#",headerModel.forum.forumName];
         }
-        self.titleLabel.text = headerModel.forum.forumName;
+        self.titleLabel.text = forumName;
         self.subTitleLabel.text = headerModel.forum.subDesc;
         [self.topHeaderView updateWithInfo:headerModel];
         [self updateTopicNotice:headerModel.forum.desc];// 话题简介

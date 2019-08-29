@@ -61,7 +61,7 @@
         self.refer = 1;
         self.isShowing = NO;
         self.categoryName = @"forum_topic_thread";// 频道名称 服务端返回
-        self.tab_id = @"1643017137463326";
+        self.tab_id = @"1643017137463326";// 服务端返回
         self.count = 20;// 每次20条
         self.feedOffset = 0;
         self.dataList = [[NSMutableArray alloc] init];
@@ -87,7 +87,6 @@
     self.loadDataSuccessCount = 0;// 网络接口返回计数
     self.feedOffset = 0;
     [self loadHeaderData];
-    [self loadFeedListData];
 }
 
 // 下拉刷新
@@ -112,10 +111,28 @@
         wSelf.loadDataSuccessCount += 1;
         if (error) {
             wSelf.headerModel = nil;
+            // 强制endLoading
+            wSelf.loadDataSuccessCount += 1;
         } else {
             if ([model isKindOfClass:[FHTopicHeaderModel class]]) {
                 wSelf.headerModel = model;
                 [wSelf.detailController refreshHeaderData];
+                if ([wSelf.headerModel.tabs isKindOfClass:[NSArray class]] && wSelf.headerModel.tabs.count > 0) {
+                    FHTopicHeaderTabsModel *first = [wSelf.headerModel.tabs firstObject];
+                    if ([first isKindOfClass:[FHTopicHeaderTabsModel class]]) {
+                        if (first.tabId.length > 0) {
+                            wSelf.tab_id = first.tabId;
+                        }
+                        if (first.categoryName.length > 0) {
+                            wSelf.categoryName = first.categoryName;
+                        }
+                    }
+                }
+                // 加载列表数据
+                [wSelf loadFeedListData];
+            } else {
+                // 强制endLoading
+                wSelf.loadDataSuccessCount += 1;
             }
         }
         [wSelf processLoadingState];
@@ -161,7 +178,7 @@
                 }];
         
                 wSelf.hasMore = feedList.hasMore;
-                wSelf.feedOffset = [feedList.offset integerValue];
+                wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
             }
         }
         [wSelf processLoadingState];
@@ -189,7 +206,12 @@
                 [refreshFooter endRefreshing];
             }
         } else {
-            [self.detailController showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            if (self.headerModel) {
+                [self.detailController refreshHeaderData];
+                self.currentTableView.mj_footer.hidden = YES;
+            } else {
+                [self.detailController showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }
         }
     }
 }
@@ -378,7 +400,7 @@
                                             } else {
                                                 [self.dataList insertObject:cellModel atIndex:0];
                                             }
-                                            self.feedOffset += 1;
+                                            //self.feedOffset += 1;
                                             [tableView reloadData];
                                             self.needRefreshCell = NO;
                                             break;
@@ -402,10 +424,10 @@
         UITableView *tableView = self.currentTableView;
         [tableView beginUpdates];
         [self.dataList removeObjectAtIndex:row];
-        self.feedOffset -= 1;
-        if (self.feedOffset <= 0) {
-            self.feedOffset = 0;
-        }
+//        self.feedOffset -= 1;
+//        if (self.feedOffset <= 0) {
+//            self.feedOffset = 0;
+//        }
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         [tableView layoutIfNeeded];

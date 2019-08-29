@@ -15,7 +15,7 @@
 #import "TTUGCSearchHashtagViewController.h"
 #import "TTImagePickerController.h"
 
-typedef void (^DidClickHashtagButtonBlock)(void);
+typedef void (^DidClickHashtagButtonBlock)(BOOL didInputTextHashtag);
 
 @protocol TTUGCAddMultiImageProtocol
 

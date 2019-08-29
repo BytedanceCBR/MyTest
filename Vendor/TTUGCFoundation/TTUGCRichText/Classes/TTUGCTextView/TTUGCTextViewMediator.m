@@ -80,28 +80,13 @@
 }
 
 - (void)toolbarDidClickHashtagButton {
-    self.textView.didInputTextHashtag = NO;
-
-//    [TTTrackerWrapper eventV3:@"hashtag_button_click" params:@{
-//        @"source" : self.textView.source ?: @"post",
-//        @"status" : self.textView.keyboardVisible ? @"keyboard" : @"no_keyboard",
-//    }];
-
-    self.isSelectViewControllerVisible = YES;
-
-//    TTUGCSearchHashtagViewController *viewController = [[TTUGCSearchHashtagViewController alloc] init];
-//    viewController.hashtagSuggestOption = self.hashtagSuggestOption;
-//    viewController.showCanBeCreatedHashtag = self.showCanBeCreatedHashtag;
-//    viewController.delegate = self;
-//    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:viewController];
-//    navigationController.ttNavBarStyle = @"White";
-//    navigationController.ttHideNavigationBar = NO;
-//    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-//    [self.textView.navigationController presentViewController:navigationController animated:YES completion:nil];
     
     if(self.hashTagBtnClickBlock) {
-        self.hashTagBtnClickBlock();
+        self.hashTagBtnClickBlock(self.textView.didInputTextHashtag);
     }
+    
+    self.textView.didInputTextHashtag = NO;
+    self.isSelectViewControllerVisible = YES;
 }
 
 - (void)toolbarDidClickEmojiButton:(BOOL)switchToEmojiInput {

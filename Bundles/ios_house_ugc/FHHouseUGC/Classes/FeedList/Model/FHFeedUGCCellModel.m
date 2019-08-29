@@ -96,6 +96,9 @@
     cellModel.groupId = model.groupId;
     cellModel.logPb = model.logPb;
     cellModel.aggrType = model.aggrType;
+    cellModel.needLinkSpan = YES;
+    //目前仅支持话题类型
+    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
     //处理圈子信息
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     if(model.community){
