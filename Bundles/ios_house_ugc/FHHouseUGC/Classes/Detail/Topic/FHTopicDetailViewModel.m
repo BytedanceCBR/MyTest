@@ -43,6 +43,7 @@
 @property(nonatomic, assign) NSInteger refer;
 @property(nonatomic, assign) BOOL isShowing;
 @property(nonatomic, copy) NSString *categoryName;
+@property (nonatomic, copy)     NSString       *tab_id;
 
 @end
 
@@ -60,6 +61,7 @@
         self.refer = 1;
         self.isShowing = NO;
         self.categoryName = @"forum_topic_thread";// 频道名称 服务端返回
+        self.tab_id = @"1643017137463326";
         self.count = 20;// 每次20条
         self.feedOffset = 0;
         self.dataList = [[NSMutableArray alloc] init];
@@ -105,7 +107,8 @@
         [self.httpTopHeaderTask cancel];
     }
     __weak typeof(self) wSelf = self;
-    self.httpTopHeaderTask = [FHHouseUGCAPI requestTopicHeader:@"" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    NSString *cidStr = [NSString stringWithFormat:@"%lld",self.cid];// 话题id
+    self.httpTopHeaderTask = [FHHouseUGCAPI requestTopicHeader:cidStr completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wSelf.loadDataSuccessCount += 1;
         if (error) {
             wSelf.headerModel = nil;
@@ -126,7 +129,8 @@
     }
     self.detailController.isLoadingData = YES;
     __weak typeof(self) wSelf = self;
-    self.httpTopListTask = [FHHouseUGCAPI requestTopicList:@"" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    NSString *cidStr = [NSString stringWithFormat:@"%lld",self.cid];// 话题id
+    self.httpTopListTask = [FHHouseUGCAPI requestTopicList:cidStr tab_id:self.tab_id categoryName:self.categoryName offset:self.feedOffset count:self.count completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wSelf.loadDataSuccessCount += 1;
         [wSelf.detailController endRefreshHeader];
         if (error) {

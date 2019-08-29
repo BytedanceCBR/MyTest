@@ -367,11 +367,11 @@
     NSString *queryPath = @"/ugc/v:version/refresh_tips";
     NSString *url = QURL(queryPath); // 1640650037191725 1642474912698382
     url  = @"https://is-hl.snssdk.com/forum/home/v1/info/?";
-    forum_id = @"1642474912698382";// is_preview = 0
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if(forum_id){
         paramDic[@"forum_id"] = forum_id;
+        paramDic[@"is_preview"] = @(0);
     }
     
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
@@ -399,20 +399,23 @@
     }];
 }
 
-+ (TTHttpTask *)requestTopicList:(NSString *)forum_id completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
++ (TTHttpTask *)requestTopicList:(NSString *)query_id tab_id:(NSString *)tab_id categoryName:(NSString *)category offset:(NSInteger)offset count:(NSInteger)count completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/ugc/v:version/refresh_tips";
     NSString *url = QURL(queryPath);
     
     url = @"https://is-hl.snssdk.com/api/feed/forum_all/v1/?";
-    forum_id = @"1642474912698382";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
-    if(forum_id){
-        paramDic[@"query_id"] = forum_id;
+    if (query_id) {
+        paramDic[@"query_id"] = query_id;
     }
-    paramDic[@"tab_id"] = @"1642474912698398";
-    paramDic[@"count"] = @(20);
-    paramDic[@"offset"] = @(0);
-    paramDic[@"category"] = @"forum_topic_thread";
+    if (category.length > 0) {
+       paramDic[@"category"] = category;
+    }
+    if (tab_id.length > 0) {
+        paramDic[@"tab_id"] = tab_id;
+    }
+    paramDic[@"count"] = @(count);
+    paramDic[@"offset"] = @(offset);
     paramDic[@"stream_api_version"] = [FHURLSettings streamAPIVersionString];
     
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {

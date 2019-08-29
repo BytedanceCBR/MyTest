@@ -62,8 +62,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 获取话题头部
 + (TTHttpTask *)requestTopicHeader:(NSString *)forum_id completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
 
-// 获取话题列表
-+ (TTHttpTask *)requestTopicList:(NSString *)forum_id completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
+// 获取话题Feed列表
++ (TTHttpTask *)requestTopicList:(NSString *)query_id tab_id:(NSString *)tab_id categoryName:(NSString *)category offset:(NSInteger)offset count:(NSInteger)count completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
 
 @end
 
