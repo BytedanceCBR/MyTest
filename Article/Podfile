@@ -51,9 +51,9 @@ def fhPods
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev' #
     pod 'FHCommonUI', '0.0.3'
 #    pod 'FHCommonUI', :path => '../../../Bundles/ios_common_ui'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9106c57f2bedcb8b652636e459fb8a0fc045c213'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9106c57f2bedcb8b652636e459fb8a0fc045c213'
 #    pod 'ios_house_im' , '0.1.7'
-#    pod 'ios_house_im' , :path => '../../ios_house_im/ios_house_im/'
+    pod 'ios_house_im' , :path => '../../../Bundles/ios_house_im/'
 
     #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
     pod 'ios_house_filter' , '1.0.1'
@@ -565,7 +565,7 @@ def appPods
     pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
 
 
-    pod 'TTIMSDK', '0.7.7', :subspecs => [
+    pod 'TTIMSDK', '0.8.5', :subspecs => [
         'IMKit',
         'IMKit_WebSocket',
         'Feature_ApplicationStatus',
