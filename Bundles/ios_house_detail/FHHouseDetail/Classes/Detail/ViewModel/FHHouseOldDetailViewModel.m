@@ -384,9 +384,21 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     if(model.data.houseReviewComment.count > 0){
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
+
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+
         FHDetailHouseReviewCommentCellModel * houseReviewCommentModel = [[FHDetailHouseReviewCommentCellModel alloc] init];
         houseReviewCommentModel.tableView = self.tableView;
+        houseReviewCommentModel.belongsVC = self.detailController;
         houseReviewCommentModel.houseReviewComment = model.data.houseReviewComment;
+        houseReviewCommentModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        [houseReviewCommentModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
+        houseReviewCommentModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
+        houseReviewCommentModel.searchId = searchId;
+        houseReviewCommentModel.imprId = imprId;
+        houseReviewCommentModel.houseId = self.houseId;
+        houseReviewCommentModel.houseType = self.houseType;
         [self.items addObject:houseReviewCommentModel];
     }
 

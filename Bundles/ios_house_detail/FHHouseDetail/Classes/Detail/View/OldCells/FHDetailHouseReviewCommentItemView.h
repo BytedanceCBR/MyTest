@@ -11,6 +11,14 @@
 
 @protocol FHDetailHouseReviewCommentItemViewDelegate
 - (void)onReadMoreClick:(FHDetailHouseReviewCommentItemView *)item;
+
+- (void)onCallClick:(FHDetailHouseReviewCommentItemView *)item;
+
+- (void)onImClick:(FHDetailHouseReviewCommentItemView *)item;
+
+- (void)onLicenseClick:(FHDetailHouseReviewCommentItemView *)item;
+
+- (void)onRealtorInfoClick:(FHDetailHouseReviewCommentItemView *)item;
 @end
 
 @interface FHDetailHouseReviewCommentItemView : UIView
@@ -18,7 +26,7 @@
 @property(nonatomic, weak) id <FHDetailHouseReviewCommentItemViewDelegate> delegate;
 @property(nonatomic, strong) TTUGCAttributedLabel *commentView;
 
-+(CGFloat)heightForData:(FHDetailHouseReviewCommentModel *)data;
++ (CGFloat)heightForData:(FHDetailHouseReviewCommentModel *)data;
 
 - (void)refreshWithData:(NSObject *)data;
 @end

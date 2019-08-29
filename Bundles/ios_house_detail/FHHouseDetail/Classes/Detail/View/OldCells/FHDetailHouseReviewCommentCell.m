@@ -3,12 +3,16 @@
 //
 
 #import "FHDetailHouseReviewCommentCell.h"
-#import "FHDetailOldModel.h"
 #import "FHDetailHouseReviewCommentItemView.h"
 #import "TTBaseMacro.h"
 #import "TTUGCAttributedLabel.h"
 #import "FHDetailFoldViewButton.h"
 #import "FHDetailHeaderView.h"
+#import "FHHouseContactConfigModel.h"
+#import "FHHousePhoneCallUtils.h"
+#import "FHHouseFollowUpConfigModel.h"
+#import "FHHouseFollowUpHelper.h"
+#import "FHHouseDetailPhoneCallViewModel.h"
 
 @implementation FHDetailHouseReviewCommentCellModel : FHDetailBaseModel
 @end
@@ -34,6 +38,19 @@
     return self;
 }
 
+- (void)setupUI {
+    _containerView = [[UIView alloc] init];
+    _containerView.clipsToBounds = YES;
+    _containerView.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:_containerView];
+    [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentView);
+        make.left.right.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(0);
+        make.bottom.mas_equalTo(self.contentView);
+    }];
+}
+
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailHouseReviewCommentCellModel class]]) {
         return;
@@ -54,15 +71,7 @@
         StrongSelf;
         FHDetailHouseReviewCommentItemView *itemView = [[FHDetailHouseReviewCommentItemView alloc] init];
         itemView.delegate = wself;
-//        // 添加事件
-//        itemView.tag = idx;
-//        itemView.licenceIcon.tag = idx;
-//        itemView.callBtn.tag = idx;
-//        itemView.imBtn.tag = idx;
-//        [itemView addTarget:self action:@selector(cellClick:) forControlEvents:UIControlEventTouchUpInside];
-//        [itemView.licenceIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
-//        [itemView.callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
-//        [itemView.imBtn addTarget:self action:@selector(imclick:) forControlEvents:UIControlEventTouchUpInside];
+        itemView.tag = idx;
         CGFloat itemHeight = [FHDetailHouseReviewCommentItemView heightForData:obj];
         [wself.containerView addSubview:itemView];
         [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -73,21 +82,6 @@
         [itemView refreshWithData:obj];
         height += (itemHeight + 10);
         beforeView = itemView;
-//        itemView.name.text = obj.realtorInfo.realtorName ?: @"";
-//        itemView.agency.text = obj.agencyName;
-//        if (obj.avatarUrl.length > 0) {
-//            [itemView.avator bd_setImageWithURL:[NSURL URLWithString:obj.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
-//        }
-//        FHDetailContactImageTagModel *tag = obj.imageTag;
-//        [self refreshIdentifyView:itemView.identifyView withUrl:tag.imageUrl];
-//        if (tag.imageUrl.length > 0) {
-//            [itemView.identifyView bd_setImageWithURL:[NSURL URLWithString:tag.imageUrl]];
-//            itemView.identifyView.hidden = NO;
-//        } else {
-//            itemView.identifyView.hidden = YES;
-//        }
-//        itemView.licenceIcon.hidden = ![self shouldShowContact:obj];
-//        itemsCount += 1;
     }];
 
 
@@ -121,7 +115,7 @@
 
 - (void)updateItems:(BOOL)animated {
     FHDetailHouseReviewCommentCellModel *model = (FHDetailHouseReviewCommentCellModel *) self.currentData;
-    NSInteger showCount = model.isExpand ? model.houseReviewComment.count: MIN(model.houseReviewComment.count, 2);
+    NSInteger showCount = model.isExpand ? model.houseReviewComment.count : MIN(model.houseReviewComment.count, 2);
     __block CGFloat height = 0.0f;
     [model.houseReviewComment enumerateObjectsUsingBlock:^(FHDetailHouseReviewCommentModel *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
         height += [FHDetailHouseReviewCommentItemView heightForData:obj] + 10;
@@ -150,7 +144,7 @@
 
 - (void)onReadMoreClick:(FHDetailHouseReviewCommentItemView *)item {
     FHDetailHouseReviewCommentCellModel *modelData = (FHDetailHouseReviewCommentCellModel *) self.currentData;
-    NSInteger showCount = modelData.isExpand ? modelData.houseReviewComment.count: MIN(modelData.houseReviewComment.count, 2);
+    NSInteger showCount = modelData.isExpand ? modelData.houseReviewComment.count : MIN(modelData.houseReviewComment.count, 2);
     __block CGFloat height = 0.0f;
     [modelData.houseReviewComment enumerateObjectsUsingBlock:^(FHDetailHouseReviewCommentModel *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
         height += [FHDetailHouseReviewCommentItemView heightForData:obj] + 10;
@@ -172,36 +166,68 @@
     [modelData.tableView endUpdates];
 }
 
+- (void)onCallClick:(FHDetailHouseReviewCommentItemView *)item {
+    NSInteger index = item.tag;
+    FHDetailHouseReviewCommentCellModel *cellModel = (FHDetailHouseReviewCommentCellModel *) self.currentData;
 
-- (void)setupUI {
-    _containerView = [[UIView alloc] init];
-    _containerView.clipsToBounds = YES;
-    _containerView.backgroundColor = [UIColor whiteColor];
-    [self.contentView addSubview:_containerView];
-    [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.contentView);
+    FHDetailContactModel *contact = item.curData.realtorInfo;
+    NSMutableDictionary *extraDict = @{}.mutableCopy;
+    extraDict[@"realtor_id"] = contact.realtorId;
+    extraDict[@"realtor_rank"] = @(index);
+    extraDict[@"realtor_position"] = @"detail_related";
+    if (self.baseViewModel.detailTracerDic) {
+        [extraDict addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
+    }
+
+    FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc] initWithDictionary:extraDict error:nil];
+    contactConfig.houseType = self.baseViewModel.houseType;
+    contactConfig.houseId = self.baseViewModel.houseId;
+    contactConfig.phone = contact.phone;
+    contactConfig.realtorId = contact.realtorId;
+    contactConfig.searchId = cellModel.searchId;
+    contactConfig.imprId = cellModel.imprId;
+    //TODO 修改from
+    contactConfig.from = @"app_oldhouse_mulrealtor";
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError *_Nonnull error) {
+        if (success && [cellModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]) {
+            FHHouseDetailViewController *vc = (FHHouseDetailViewController *) cellModel.belongsVC;
+            vc.isPhoneCallShow = YES;
+            vc.phoneCallRealtorId = contactConfig.realtorId;
+        }
     }];
+
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc] initWithDictionary:extraDict error:nil];
+    configModel.houseType = self.baseViewModel.houseType;
+    configModel.followId = self.baseViewModel.houseId;
+    configModel.actionType = self.baseViewModel.houseType;
+
+    // 静默关注功能
+    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath; {
-//    return self.curData.houseReviewComment.count * 42;
-//}
-//
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section; {
-//    return self.curData.houseReviewComment.count;
-//}
-//
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath; {
-//    if (indexPath.row >= self.curData.houseReviewComment.count) return [UITableViewCell new];
-//    FHDetailHouseReviewCommentItemView *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHDetailHouseReviewCommentItemView class]) forIndexPath:indexPath];
-//    if (!cell) {
-//        cell = [[FHDetailHouseReviewCommentItemView alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([FHDetailHouseReviewCommentItemView class])];
-//    }
-//    FHDetailHouseReviewCommentModel *commentItemModel = self.curData.houseReviewComment[indexPath.row];
-//    [cell refreshWithData:commentItemModel];
-//    return cell;
-//}
+- (void)onImClick:(FHDetailHouseReviewCommentItemView *)item {
+    NSInteger index = item.tag;
+    FHDetailHouseReviewCommentCellModel *cellModel = (FHDetailHouseReviewCommentCellModel *) self.currentData;
+    FHDetailContactModel *contact = item.curData.realtorInfo;
+
+    NSMutableDictionary *imExtra = @{}.mutableCopy;
+    imExtra[@"realtor_position"] = @"detail_related";
+    //TODO 修改from
+    imExtra[@"from"] = @"app_oldhouse_mulrealtor";
+    [cellModel.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
+}
+
+- (void)onLicenseClick:(FHDetailHouseReviewCommentItemView *)item {
+    FHDetailHouseReviewCommentCellModel *cellModel = (FHDetailHouseReviewCommentCellModel *) self.currentData;
+    FHDetailContactModel *contact = item.curData.realtorInfo;
+    [cellModel.phoneCallViewModel licenseActionWithPhone:contact];
+}
+
+- (void)onRealtorInfoClick:(FHDetailHouseReviewCommentItemView *)item {
+    FHDetailHouseReviewCommentCellModel *cellModel = (FHDetailHouseReviewCommentCellModel *) self.currentData;
+    FHDetailContactModel *contact = item.curData.realtorInfo;
+    cellModel.phoneCallViewModel.belongsVC = cellModel.belongsVC;
+    [cellModel.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO];
+}
+
 @end
