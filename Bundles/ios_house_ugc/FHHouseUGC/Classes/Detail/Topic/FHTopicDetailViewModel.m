@@ -44,6 +44,7 @@
 @property(nonatomic, assign) BOOL isShowing;
 @property(nonatomic, copy) NSString *categoryName;
 @property (nonatomic, copy)     NSString       *tab_id;
+@property (nonatomic, copy)     NSString       *appExtraParams;
 
 @end
 
@@ -147,7 +148,7 @@
     self.detailController.isLoadingData = YES;
     __weak typeof(self) wSelf = self;
     NSString *cidStr = [NSString stringWithFormat:@"%lld",self.cid];// 话题id
-    self.httpTopListTask = [FHHouseUGCAPI requestTopicList:cidStr tab_id:self.tab_id categoryName:self.categoryName offset:self.feedOffset count:self.count completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.httpTopListTask = [FHHouseUGCAPI requestTopicList:cidStr tab_id:self.tab_id categoryName:self.categoryName offset:self.feedOffset count:self.count appExtraParams:self.appExtraParams completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wSelf.loadDataSuccessCount += 1;
         [wSelf.detailController endRefreshHeader];
         if (error) {
@@ -179,6 +180,7 @@
         
                 wSelf.hasMore = feedList.hasMore;
                 wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
+                wSelf.appExtraParams = feedList.apiBaseInfo.appExtraParams;
             }
         }
         [wSelf processLoadingState];
