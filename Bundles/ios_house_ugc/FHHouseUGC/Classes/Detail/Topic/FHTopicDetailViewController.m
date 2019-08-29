@@ -316,11 +316,11 @@
         [self hiddenEmptyView];
         self.topHeaderView.hidden = NO;
         self.headerInfoView.hidden = NO;
+        NSString *forumName = headerModel.forum.forumName;
         if (![headerModel.forum.forumName hasPrefix:@"#"]) {
-            NSString *forumName = [NSString stringWithFormat:@"#%@#",headerModel.forum.forumName];
-            headerModel.forum.forumName = forumName;
+            forumName = [NSString stringWithFormat:@"#%@#",headerModel.forum.forumName];
         }
-        self.titleLabel.text = headerModel.forum.forumName;
+        self.titleLabel.text = forumName;
         self.subTitleLabel.text = headerModel.forum.subDesc;
         [self.topHeaderView updateWithInfo:headerModel];
         [self updateTopicNotice:headerModel.forum.desc];// 话题简介
