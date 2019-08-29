@@ -26,6 +26,7 @@
 @property(nonatomic ,strong) UIView *bottomSepView;
 @property(nonatomic ,strong) NSMutableArray *sourceList;
 @property(nonatomic ,strong) NSArray *dataList;
+@property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 
 @end
 
@@ -119,6 +120,7 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
+    [self.clientShowDict removeAllObjects];
     self.currentData = data;
     
     FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
@@ -145,19 +147,15 @@
 }
 
 - (void)trackClickMore {
-
-//    if([self.currentData isKindOfClass:[FHFeedUGCCellModel class]]) {
-//
-//        FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)self.currentData;
-//
-//        NSMutableDictionary *tracerDict = model.tracerDic;
-//        NSMutableDictionary *param = [NSMutableDictionary new];
-//        param[UT_CATEGORY_NAME] = @"topic_list";
-//        param[UT_ENTER_TYPE] = @"click";
-//        param[UT_ELEMENT_FROM] = @"hot_topic";
-//        param[UT_ENTER_FROM] = tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
-//        TRACK_EVENT(UT_ENTER_CATEOGRY, param);
-//    }
+    if([self.currentData isKindOfClass:[FHFeedUGCCellModel class]]) {
+        FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)self.currentData;
+        NSMutableDictionary *param = [NSMutableDictionary new];
+        param[@"element_type"] = @"hot_topic";
+        param[@"page_type"] = @"nearby_list";
+        param[@"enter_from"] = @"neighborhood_tab";
+        param[@"rank"] = model.tracerDic[@"rank"];
+        TRACK_EVENT(@"click_more", param);
+    }
 }
 
 #pragma mark - collection
@@ -172,7 +170,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row < self.dataList.count){
-//        [self traceClientShowAtIndexPath:indexPath];
+        [self traceClientShowAtIndexPath:indexPath];
     }
 }
 
@@ -189,13 +187,18 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
     
-//    FHUGCScialGroupDataModel *model = self.dataList[indexPath.row];
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
+    
     NSMutableDictionary *dict = @{}.mutableCopy;
-//    dict[@"community_id"] = model.socialGroupId;
-//    dict[@"tracer"] = @{@"enter_from":@"my_joined_neighborhood",
-//                        @"enter_type":@"click",
-//                        @"rank":@(indexPath.row),
-//                        @"log_pb":model.logPb ?: @"be_null"};
+    // 埋点
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[@"enter_from"] = @"nearby_list";
+    traceParam[@"element_from"] = @"hot_topic";
+    traceParam[@"enter_type"] = @"click";
+    traceParam[@"rank"] = @(indexPath.row);
+    traceParam[@"log_pb"] = cellModel.logPb;
+    dict[@"tracer"] = traceParam;
+
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     //跳转到话题详情页
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://concern"];
@@ -205,5 +208,37 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return CGSizeMake(90, 90);
 }
+
+- (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
+//    if (indexPath.row >= self.dataList.count) {
+//        return;
+//    }
+//    
+//    FHUGCScialGroupDataModel *cellModel = self.dataList[indexPath.row];
+//    
+//    if (!self.clientShowDict) {
+//        self.clientShowDict = [NSMutableDictionary new];
+//    }
+//    
+//    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+//    NSString *groupId = cellModel.socialGroupId;
+//    if(groupId){
+//        if (self.clientShowDict[groupId] || ![groupId isEqualToString:@"-1"]) {
+//            return;
+//        }
+//        
+//        self.clientShowDict[groupId] = @(indexPath.row);
+//        [self trackClientShow:cellModel rank:indexPath.row];
+//    }
+}
+
+//- (void)trackClientShow:(FHUGCScialGroupDataModel *)cellModel rank:(NSInteger)rank {
+//    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+//
+//    tracerDict[@"element_type"] = @"all_community";
+//    tracerDict[@"page_type"] = @"my_join_list";
+//    tracerDict[@"enter_from"] = @"neighborhood_tab";
+//    TRACK_EVENT(@"element_show", tracerDict);
+//}
 
 @end

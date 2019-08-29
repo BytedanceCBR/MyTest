@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHTopicListControllerDelegate <NSObject>
-- (void)didSelectedHashtag:(FHTopicListResponseDataSuggestModel *)hashtagModel;
+- (void)didSelectedHashtag:(FHTopicListResponseDataListModel *)hashtagModel;
 @end
 
 @interface FHTopicListController : FHBaseViewController

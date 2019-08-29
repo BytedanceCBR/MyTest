@@ -1324,9 +1324,8 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 从话题详情页带入的话题内容
     if(!self.isAddedTopicHeaderModel) {
-        FHTopicListResponseDataSuggestModel *topicListItemModel = [[FHTopicListResponseDataSuggestModel alloc] init];
-        NSError *error;
-        topicListItemModel.forum = [[FHTopicListResponseDataSuggestForumModel alloc] initWithDictionary:self.topicHeaderModel.forum.toDictionary error:&error];
+        NSError *error = nil;
+        FHTopicListResponseDataListModel *topicListItemModel = [[FHTopicListResponseDataListModel alloc] initWithDictionary:self.topicHeaderModel.forum.toDictionary error:&error];
         if(!error) {
             [self.textViewMediator addHashtag:topicListItemModel];
         }
