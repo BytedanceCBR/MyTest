@@ -48,7 +48,7 @@
     }
 
     WeakSelf;
-    [FHHouseUGCAPI requestTopicList:@"1234" class:FHTopicListResponseModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+    [FHHouseUGCAPI requestAllForumWithClass:FHTopicListResponseModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
 
         if (model) {
@@ -61,7 +61,7 @@
 
             FHTopicListResponseModel *responseModel = model;
 
-            [wself.dataList addObjectsFromArray:responseModel.data.suggest];
+            [wself.dataList addObjectsFromArray:responseModel.data.list];
             wself.tableView.hidden = NO;
             [wself.tableView reloadData];
         } else {
@@ -88,13 +88,13 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    FHTopicListResponseDataSuggestModel *item = [self.dataList objectAtIndex:indexPath.row];
+    FHTopicListResponseDataListModel *item = [self.dataList objectAtIndex:indexPath.row];
     if([self.viewController.delegate respondsToSelector:@selector(didSelectedHashtag:)]) {
         [self.viewController.delegate didSelectedHashtag:item];
         [self.viewController goBack];
     } else {
-        if(item.forum.schema.length > 0) {
-            NSURL *url = [NSURL URLWithString:item.forum.schema];
+        if(item.schema.length > 0) {
+            NSURL *url = [NSURL URLWithString:item.schema];
             [[TTRoute sharedRoute] openURLByPushViewController:url];
         }
     }
@@ -118,6 +118,7 @@
 
     if (indexPath.row < self.dataList.count) {
         [cell refreshWithData:self.dataList[indexPath.row]];
+        [cell configHeaderImageTagViewBackgroundWithIndex:indexPath.row];
     }
 
     return cell;
