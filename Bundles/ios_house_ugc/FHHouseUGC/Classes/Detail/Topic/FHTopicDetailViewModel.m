@@ -115,7 +115,7 @@
         } else {
             if ([model isKindOfClass:[FHTopicHeaderModel class]]) {
                 wSelf.headerModel = model;
-//                [wSelf.detailController refreshHeaderData];
+                [wSelf.detailController refreshHeaderData];
             }
         }
         [wSelf processLoadingState];
@@ -189,7 +189,12 @@
                 [refreshFooter endRefreshing];
             }
         } else {
-            [self.detailController showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            if (self.headerModel) {
+                [self.detailController refreshHeaderData];
+                self.currentTableView.mj_footer.hidden = YES;
+            } else {
+                [self.detailController showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }
         }
     }
 }

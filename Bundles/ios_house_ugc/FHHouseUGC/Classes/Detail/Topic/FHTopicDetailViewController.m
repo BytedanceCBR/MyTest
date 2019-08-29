@@ -216,7 +216,7 @@
     // viewModel
     _viewModel = [[FHTopicDetailViewModel alloc] initWithController:self];
     _viewModel.currentSelectIndex = 0;
-    self.cid = 1643171844947979;//1642474912698382;
+    self.cid = 1642474912698382;//1643171844947979;//1642474912698382;
     _viewModel.cid = self.cid;
     
     // self.mainScrollView.hidden = YES;
