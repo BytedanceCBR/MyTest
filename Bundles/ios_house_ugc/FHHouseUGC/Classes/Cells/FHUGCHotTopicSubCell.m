@@ -34,14 +34,12 @@
 }
 
 - (void)refreshWithData:(id)data {
-//    if([data isKindOfClass:[FHUGCScialGroupDataModel class]]){
-//        FHUGCScialGroupDataModel *model = (FHUGCScialGroupDataModel *)data;
-//        NSString *text = model.socialGroupName;
-        _titleLabel.text = @"#一二三四五六七八九十一二";
-        _descLabel.text = @"2028讨论";
-        
-        [self.bgView bd_setImageWithURL:[NSURL URLWithString:@"https://p3.pstatp.com/list/f100-image/RCQfZ8jDh7rgKyLihA1a"] placeholder:nil];
-//    }
+    if([data isKindOfClass:[FHFeedContentRawDataHotTopicListModel class]]){
+        FHFeedContentRawDataHotTopicListModel *model = (FHUGCScialGroupDataModel *)data;
+        _titleLabel.text = model.forumName;
+        _descLabel.text = model.talkCountStr;
+        [self.bgView bd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholder:nil];
+    }
 }
 
 - (void)initView {

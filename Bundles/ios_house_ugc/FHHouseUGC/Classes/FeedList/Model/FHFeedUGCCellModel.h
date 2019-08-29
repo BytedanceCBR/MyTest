@@ -111,7 +111,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedUGCOriginItemModel *originItemModel;
 @property (nonatomic, assign) CGFloat originItemHeight;
 //热门话题
-@property (nonatomic, strong , nullable) NSArray *hotTopicList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotTopicListModel> *hotTopicList;
 //投票
 @property (nonatomic, strong , nullable) FHFeedUGCVoteModel *vote;
 //埋点相关

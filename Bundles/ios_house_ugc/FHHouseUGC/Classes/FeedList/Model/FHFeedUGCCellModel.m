@@ -66,7 +66,7 @@
         Class cls = nil;
         if(type == FHUGCFeedListCellTypeUGC){
             cls = [FHFeedUGCContentModel class];
-        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeAnswer || type == FHUGCFeedListCellTypeArticleComment || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend || type == FHUGCFeedListCellTypeUGCBanner2 || type == FHUGCFeedListCellTypeArticleComment2){
+        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeAnswer || type == FHUGCFeedListCellTypeArticleComment || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend || type == FHUGCFeedListCellTypeUGCBanner2 || type == FHUGCFeedListCellTypeArticleComment2 || type == FHUGCFeedListCellTypeUGCHotTopic){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -307,6 +307,11 @@
             cellModel.recommendSocialGroupList = model.rawData.recommendSocialGroupList;
         }
         cellModel.elementFrom = @"like_neighborhood";
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCHotTopic){
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotTopic;
+        cellModel.groupId = model.rawData.groupId;
+        cellModel.hotTopicList = model.rawData.hotTopicList;
+        cellModel.elementFrom = @"hot_topic";
     }
     
     return cellModel;
@@ -455,7 +460,7 @@
     vote.leftDesc = @"会";
     vote.rightDesc = @"不会";
     vote.personDesc = @"378324人参与";
-    vote.openUrl = @"sslocal://webview?url=https%3a%2f%2fm.haoduofangs.com%2fmagic%2fruntime%2f%3fid%3d7197";
+    vote.openUrl = @"sslocal://webview?url=https%3a%2f%2fi.haoduofangs.com%2fmagic%2fruntime%2f%3fid%3d7197";
     cellModel.vote = vote;
     
     [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];

@@ -1,6 +1,21 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 NS_ASSUME_NONNULL_BEGIN
+@protocol FHFeedContentRawDataHotTopicListModel<NSObject>
+@end
+
+@interface FHFeedContentRawDataHotTopicListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *forumName;
+@property (nonatomic, copy , nullable) NSString *concernId;
+@property (nonatomic, copy , nullable) NSString *forumId;
+@property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *talkCountStr;
+@property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, copy , nullable) NSString *talkCount;
+@property (nonatomic, copy , nullable) NSString *desc;
+@end
+
 @interface FHFeedContentRawDataContentExtraModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *answerCount;
@@ -415,6 +430,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginGroupModel *originGroup ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginCommonContentModel *originCommonContent ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotTopicListModel> *hotTopicList;
 @property (nonatomic, copy , nullable) NSString *articleSchema;
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, copy , nullable) NSString *groupId;
