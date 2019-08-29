@@ -112,6 +112,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [self addStayPageLog];
     self.isViewAppear = NO;
     [self.viewModel viewWillDisappear];
 }
