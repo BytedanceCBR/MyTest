@@ -187,6 +187,16 @@
     }
 }
 
+- (void)startLoadData:(BOOL)isFirst {
+    if ([TTReachability isNetworkConnected]) {
+        [_viewModel requestData:YES first:isFirst];
+    } else {
+        if(!self.hasValidateData){
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        }
+    }
+}
+
 - (void)scrollToTopAndRefreshAllData {
     [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO]; 
     [self startLoadData];

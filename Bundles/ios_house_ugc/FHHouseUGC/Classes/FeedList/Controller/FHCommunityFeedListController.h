@@ -40,6 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)showNotify:(NSString *)message completion:(void(^)())completion;
 //下拉刷新数据
 - (void)startLoadData;
+//下拉刷新数据,不清之前的数据
+- (void)startLoadData:(BOOL)isFirst;
 
 - (void)viewWillAppear;
 
