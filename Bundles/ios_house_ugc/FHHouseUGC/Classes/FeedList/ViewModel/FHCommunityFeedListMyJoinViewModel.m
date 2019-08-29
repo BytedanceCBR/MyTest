@@ -71,7 +71,7 @@
         [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
             wself.isRefreshingTip = NO;
             [wself.viewController hideImmediately];
-            [wself requestData:YES first:YES];
+            [wself requestData:YES first:NO];
         }];
     }
 }
