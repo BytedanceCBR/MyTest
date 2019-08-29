@@ -360,6 +360,23 @@
 
 @end
 
+@implementation FHDetailHouseReviewCommentModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+            @"realtorInfo": @"realtor_info",
+            @"commentText": @"comment_text",
+            @"contentData": @"content_data",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 @implementation FHDetailOldDataModel
 + (JSONKeyMapper*)keyMapper
@@ -394,6 +411,7 @@
                            @"chooseAgencyList": @"choose_agency_list",
                            @"baseExtra": @"base_extra",
                            @"ugcSocialGroup":@"ugc_social_group",
+                           @"houseReviewComment":@"house_review_comment",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

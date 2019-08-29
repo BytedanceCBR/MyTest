@@ -48,6 +48,7 @@
 #import "FHDetailCommunityEntryCell.h"
 #import "FHDetailBlankLineCell.h"
 #import "FHDetailDetectiveCell.h"
+#import "FHDetailHouseReviewCommentCell.h"
 #import <FHHouseBase/FHSearchHouseModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
 
@@ -97,6 +98,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailCommunityEntryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
     [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
     [self.tableView registerClass:[FHDetailDetectiveCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDetectiveModel class])];
+    [self.tableView registerClass:[FHDetailHouseReviewCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseReviewCommentCellModel class])];
 }
 
 // cell identifier
@@ -378,6 +380,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:agentListModel];
         self.agentListModel = agentListModel;
     }
+
+    if(model.data.houseReviewComment.count > 0){
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailHouseReviewCommentCellModel * houseReviewCommentModel = [[FHDetailHouseReviewCommentCellModel alloc] init];
+        houseReviewCommentModel.tableView = self.tableView;
+        houseReviewCommentModel.houseReviewComment = model.data.houseReviewComment;
+        [self.items addObject:houseReviewCommentModel];
+    }
+
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
