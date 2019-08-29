@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)requestSendVerifyCode:(NSString *)phoneNumber captcha:(NSString *_Nullable)captcha completion:(void(^_Nullable)(NSNumber *retryTime, UIImage *captchaImage, NSError *error))completion ;
 
 //登录
-+ (void)requestQuickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode completion:(void(^_Nullable)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completion;
++ (void)requestQuickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha completion:(void(^_Nullable)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completion;
 
 + (NSString *)errorMessageByErrorCode:(NSError *)error;
 

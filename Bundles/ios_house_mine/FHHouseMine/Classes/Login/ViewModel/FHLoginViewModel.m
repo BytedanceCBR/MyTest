@@ -229,7 +229,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [[ToastManager manager] showToast:@"正在登录中"];
     [self traceLogin];
     [TTAccount oneKeyLoginWithCompleted:^(NSError * _Nullable error) {
-        [wself handleLoginResult:nil error:error isOneKeyLogin:YES];
+        [wself handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:YES];
     }];
 }
 
@@ -364,10 +364,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [[ToastManager manager] showToast:@"请阅读并同意幸福里用户协议"];
         return;
     }
-    [self quickLogin:self.view.phoneInput.text smsCode:self.view.varifyCodeInput.text];
+    [self quickLogin:self.view.phoneInput.text smsCode:self.view.varifyCodeInput.text captcha:nil];
 }
 
-- (void)quickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode {
+- (void)quickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha{
      __weak typeof(self) weakSelf = self;
     
     if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]){
@@ -388,12 +388,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [[ToastManager manager] showToast:@"正在登录中"];
     [self traceLogin];
     
-    [FHMineAPI requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
-        [weakSelf handleLoginResult:phoneNumber error:error isOneKeyLogin:NO];
+    [FHMineAPI requestQuickLogin:phoneNumber smsCode:smsCode captcha:captcha completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
+        [weakSelf handleLoginResult:captchaImage phoneNum:phoneNumber smsCode:smsCode error : error isOneKeyLogin:NO];
     }];
 }
 
-- (void)handleLoginResult:(NSString *)phoneNumber error:(NSError *)error isOneKeyLogin:(BOOL)isOneKeyLogin
+- (void)handleLoginResult:(UIImage *)captchaImage phoneNum:(NSString *)phoneNumber smsCode:(NSString *)smsCode error:(NSError *)error isOneKeyLogin:(BOOL)isOneKeyLogin
 {
     if(!error){
         [[ToastManager manager] showToast:@"登录成功"];
@@ -406,6 +406,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [self popViewController];
         }
         [self loginSuccessedWithPhoneNum:phoneNumber];
+    }else if(captchaImage){        
+        [self loginShowCaptcha:captchaImage error:error phoneNumber:phoneNumber smsCode:smsCode];
     }else{
         NSString *errorMessage = @"啊哦，服务器开小差了";
         if (!isOneKeyLogin) {
@@ -419,6 +421,24 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (self.loginDelegate.completeAlert) {
         self.loginDelegate.completeAlert(TTAccountAlertCompletionEventTypeDone, phoneNumber);
     }
+}
+
+-(void)loginShowCaptcha:(UIImage *)captchaImage error:(NSError *)error phoneNumber:(NSString *)phoneNumber smsCode:(NSString *)smsCode
+{
+    TTAccountMobileCaptchaAlertView *alertView = [[TTAccountMobileCaptchaAlertView alloc] initWithCaptchaImage:captchaImage];
+    alertView.error = error;
+    __weak typeof(self) wself = self;
+    [alertView showWithDismissBlock:^(TTAccountMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
+        if (alertView.captchaValue.length > 0) {
+            [wself quickLogin:phoneNumber smsCode:smsCode  captcha:alertView.captchaValue];
+        }
+#if DEBUG
+        else {
+            NSLog(@"%@-%@ > Error", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+        }
+#endif
+        
+    }];
 }
 
 - (void)traceLogin {
@@ -494,9 +514,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     TTAccountMobileCaptchaAlertView *alertView = [[TTAccountMobileCaptchaAlertView alloc] initWithCaptchaImage:captchaImage];
     alertView.error = error;
+    __weak typeof(self) wself = self;
     [alertView showWithDismissBlock:^(TTAccountMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
         if (alertView.captchaValue.length > 0) {
-            [self sendVerifyCodeWithCaptcha:alertView.captchaValue];
+            [wself sendVerifyCodeWithCaptcha:alertView.captchaValue];
         }
 #if DEBUG
         else {

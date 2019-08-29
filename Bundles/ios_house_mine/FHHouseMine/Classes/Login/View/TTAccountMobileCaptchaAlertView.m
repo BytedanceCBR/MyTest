@@ -159,7 +159,7 @@ static const NSInteger kWrongCaptchaErrorCode = 1021;
     self.visible = YES;
     
     CGRect frame = self.contentView.frame;
-    frame.origin.y = ([UIScreen mainScreen].bounds.size.height - self.contentOffset - 240) / 2;
+    frame.origin.y = ([UIScreen mainScreen].bounds.size.height - self.contentOffset - 240) / 2 - 25;
     self.contentView.frame = frame;
     
     [self.captchaField becomeFirstResponder];
@@ -194,6 +194,7 @@ static const NSInteger kWrongCaptchaErrorCode = 1021;
 
 - (void)keyboardWillShow:(NSNotification *)notification {
     NSDictionary *userInfo = notification.userInfo;
+    NSLog(@"[CAPTCHA] keyboard info is: %@",userInfo);
     /// keyboard相对于屏幕的坐标
     CGRect keyboardScreenFrame = [[userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     UIViewAnimationCurve animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
@@ -219,13 +220,15 @@ static const NSInteger kWrongCaptchaErrorCode = 1021;
     
     CGFloat duration = [[userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     CGRect frame = self.contentView.frame;
-    CGFloat offset = (CGRectGetMinY(keyboardScreenFrame) - self.contentOffset - CGRectGetHeight(frame)) / 2;
-    frame.origin.y = self.contentOffset + offset;
-    [UIView animateWithDuration:duration
-                          delay:0.0
-                        options:options
-                     animations:^{ self.contentView.frame = frame; }
-                     completion:^(BOOL finished) { self.contentView.frame = frame; }];
+    if (CGRectGetMaxY(frame) + 50 > CGRectGetMinY(keyboardScreenFrame)) {
+        CGFloat offset = (CGRectGetMinY(keyboardScreenFrame) - self.contentOffset - CGRectGetHeight(frame)) / 2;
+        frame.origin.y = self.contentOffset + offset;
+        [UIView animateWithDuration:duration
+                              delay:0.0
+                            options:options
+                         animations:^{ self.contentView.frame = frame; }
+                         completion:^(BOOL finished) { self.contentView.frame = frame; }];
+    }
 }
 
 #pragma mark - UIControlEvent
