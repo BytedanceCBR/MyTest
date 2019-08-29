@@ -115,7 +115,7 @@
         } else {
             if ([model isKindOfClass:[FHTopicHeaderModel class]]) {
                 wSelf.headerModel = model;
-                [wSelf.detailController refreshHeaderData];
+//                [wSelf.detailController refreshHeaderData];
             }
         }
         [wSelf processLoadingState];
