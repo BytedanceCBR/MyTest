@@ -12,6 +12,7 @@
 @property(nonatomic, strong) UIImageView *headerImageView;
 @property(nonatomic, strong) UIView *headerImageTagView;
 @property(nonatomic, strong) UILabel *headerImageTagViewLabel;
+@property(nonatomic, strong) UIImageView *headerImageTagViewBackground;
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *subtitleLabel;
 @property(nonatomic, strong) UILabel *detailLabel;
@@ -36,12 +37,11 @@
     if(!_headerImageTagView) {
         _headerImageTagView = [UIView new];
         
-        UIImageView *bgImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fh_ugc_topic_list_header_tag"]];
-        [_headerImageTagView addSubview:bgImageView];
+        [_headerImageTagView addSubview:self.headerImageTagViewBackground];
         
         [_headerImageTagView addSubview:self.headerImageTagViewLabel];
         
-        [bgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.headerImageTagViewBackground mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(_headerImageTagView);
         }];
         
@@ -50,6 +50,13 @@
         }];
     }
     return _headerImageTagView;
+}
+
+-(UIImageView *)headerImageTagViewBackground {
+    if(!_headerImageTagViewBackground) {
+        _headerImageTagViewBackground = [[UIImageView alloc] init];
+    }
+    return _headerImageTagViewBackground;
 }
 
 -(UILabel *)headerImageTagViewLabel {
@@ -163,16 +170,21 @@
 
 - (void)refreshWithData:(id)data {
     
-    if (![data isKindOfClass:FHTopicListResponseDataSuggestModel.class]) {
+    if (![data isKindOfClass:FHTopicListResponseDataListModel.class]) {
         return;
     }
     
-    FHTopicListResponseDataSuggestModel* itemData = (FHTopicListResponseDataSuggestModel *)data;
-    self.headerImageTagViewLabel.text = itemData.forum.talkCount?:@"";
-    self.titleLabel.text = itemData.forum.forumName.length > 0 ? [NSString stringWithFormat:@"#%@#", itemData.forum.forumName]:@"";
-    self.subtitleLabel.text = itemData.forum.desc ?:@"";
-    self.detailLabel.text = itemData.forum.talkCountStr ?:@"";
-    [self.headerImageView bd_setImageWithURL:[NSURL URLWithString:itemData.forum.avatarUrl] placeholder:nil];
+    FHTopicListResponseDataListModel* itemData = (FHTopicListResponseDataListModel *)data;
+    self.headerImageTagViewLabel.text = itemData.rank?:@"";
+    self.headerImageTagViewLabel.hidden = !(self.headerImageTagViewLabel.text.length > 0);
+    [self.headerImageView bd_setImageWithURL:[NSURL URLWithString:itemData.avatarUrl] placeholder:nil];
+    self.titleLabel.text = itemData.forumName.length > 0 ? [NSString stringWithFormat:@"#%@#", itemData.forumName]:@"";
+    self.subtitleLabel.text = itemData.desc ?:@"";
+    self.detailLabel.text = itemData.talkCountStr ?:@"";
 }
 
+- (void)configHeaderImageTagViewBackgroundWithIndex: (NSInteger)rowIndex {
+    NSString *imageName = rowIndex < 3 ? @"fh_ugc_topic_list_header_tag_red" : @"fh_ugc_topic_list_header_tag_orange";
+    self.headerImageTagViewBackground.image =  [UIImage imageNamed: imageName];
+}
 @end

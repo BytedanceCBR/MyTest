@@ -622,10 +622,11 @@ def appPods
     pod_binary  'BDABTestSDK', '1.0.2-rc.3'
     #pod 'BDABTestSDK', '1.0.0'
 
-    pod 'BDUGDeepLink', '1.0.1'
+    pod 'BDUGDeepLink', '1.1.1'
 end
 
 target 'NewsLiteInHouse' do
+    pod 'BDSSOAuthSDK'
     pod_binary 'TTDebugAssistant', '0.2.33'
     pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
     pod_binary 'TTSettingsManager/Debug'
@@ -692,7 +693,7 @@ post_install do |installer|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
             end
         end
-        if target.name == "TTDebug"
+        if target.name == "TTDebug" || target.name == "TTAppRuntime"
             target.build_configurations.each do |config|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
             end

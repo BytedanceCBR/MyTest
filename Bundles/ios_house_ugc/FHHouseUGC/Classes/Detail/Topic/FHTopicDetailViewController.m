@@ -140,7 +140,7 @@
     _mainScrollView.delegate = self;
     _mainScrollView.showsVerticalScrollIndicator = NO;
     _mainScrollView.showsHorizontalScrollIndicator = NO;
-    
+    _mainScrollView.scrollsToTop = YES;
     // _topHeaderView
     _topHeaderView = [[FHTopicTopBackView alloc] init];
     _topHeaderView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.defaultTopHeight);
@@ -184,6 +184,7 @@
     }
     _subScrollView.frame = CGRectMake(0, self.topHeightOffset, SCREEN_WIDTH, self.maxSubScrollViewHeight);
     _subScrollView.delegate = self;
+    _subScrollView.scrollsToTop = NO;
     
     _subScrollView.backgroundColor = [UIColor whiteColor];
     [self.mainScrollView addSubview:self.subScrollView];
@@ -208,6 +209,7 @@
     // viewModel
     _viewModel = [[FHTopicDetailViewModel alloc] initWithController:self];
     _viewModel.currentSelectIndex = 0;
+    self.cid = 1642474912698382;
     _viewModel.cid = self.cid;
     
     // self.mainScrollView.hidden = YES;
@@ -243,6 +245,7 @@
             tempView.delegate = self.viewModel;
             tempView.dataSource = self.viewModel;
             tempView.scrollEnabled = YES;
+            tempView.scrollsToTop = NO;
             [self.viewModel.hashTable addObject:tempView];
             [_subScrollView addSubview:tempView];
         }
@@ -304,6 +307,10 @@
     FHTopicHeaderModel       *headerModel = self.viewModel.headerModel;
     if (headerModel && headerModel.forum) {
         [self hiddenEmptyView];
+        if (![headerModel.forum.forumName hasPrefix:@"#"]) {
+            NSString *forumName = [NSString stringWithFormat:@"#%@#",headerModel.forum.forumName];
+            headerModel.forum.forumName = forumName;
+        }
         self.titleLabel.text = headerModel.forum.forumName;
         self.subTitleLabel.text = headerModel.forum.subDesc;
         [self.topHeaderView updateWithInfo:headerModel];
@@ -502,6 +509,23 @@
     });
 }
 
+- (void)mainScrollToTop {
+    __weak typeof(self) wSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [wSelf.mainScrollView setContentOffset:CGPointZero animated:YES];
+        [wSelf.viewModel.currentTableView setContentOffset:CGPointZero animated:NO];
+    });
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [wSelf.viewModel.currentTableView setContentOffset:CGPointZero animated:YES];
+//    });
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [wSelf.mainScrollView setContentOffset:CGPointZero animated:NO];
+//    });
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [wSelf.mainScrollView setContentOffset:CGPointZero animated:NO];
+//    });
+}
+
 // 上拉加载
 - (void)loadMore {
     [self.viewModel loadMoreData];
@@ -583,6 +607,12 @@
     } else {
         // nothing
     }
+}
+
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
+{
+    [self mainScrollToTop];
+    return NO;
 }
 
 - (void)refreshContentOffset:(CGPoint)contentOffset {

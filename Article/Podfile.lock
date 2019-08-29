@@ -38,13 +38,14 @@ PODS:
   - BDAlogProtocol (0.1.7)
   - BDAssert/Core (2.0.0)
   - BDMobileRuntime (0.3.38)
+  - BDSSOAuthSDK (1.0.7)
   - BDTArticle (0.2.3)
   - BDTBasePlayer (0.3.47)
   - BDTExploreOrderedData (0.1.7)
   - BDTFactoryConfigurator (0.1.0.1-binary)
   - BDTSharedHeaders (0.1.0)
   - BDUGContainer (1.1.2)
-  - BDUGDeepLink (1.0.1)
+  - BDUGDeepLink (1.1.1)
   - BDUGMonitorInterface (1.0.0):
     - BDUGMonitorInterface/Core (= 1.0.0)
   - BDUGMonitorInterface/Core (1.0.0)
@@ -581,13 +582,14 @@ DEPENDENCIES:
   - BDAlogProtocol (= 0.1.7)
   - BDAssert/Core (= 2.0.0)
   - BDMobileRuntime (= 0.3.38)
+  - BDSSOAuthSDK
   - BDTArticle (from `../AKPlugins/BDTArticle`)
   - BDTBasePlayer (from `../AKPlugins/BDTBasePlayer`)
   - BDTExploreOrderedData (from `../AKPlugins/BDTExploreOrderedData`)
   - BDTFactoryConfigurator (= 0.1.0.1-binary)
   - BDTSharedHeaders (from `../Vendor/BDTSharedHeaders`)
   - BDUGContainer (= 1.1.2)
-  - BDUGDeepLink (= 1.0.1)
+  - BDUGDeepLink (= 1.1.1)
   - BDUGMonitorInterface (= 1.0.0)
   - BDUGTrackerInterface (= 1.1.1)
   - BDUGUnionSDK (= 0.1.2.1-binary)
@@ -983,13 +985,14 @@ SPEC CHECKSUMS:
   BDAlogProtocol: 187e7105123599bef3b935ec41b40f49112b5fd8
   BDAssert: 7b1b4dd1138bd7ab31cabd3d75b340a49f6902d7
   BDMobileRuntime: 83175e738acd91083ea560cf0fd4e34612987b80
+  BDSSOAuthSDK: 8c36b423392730a0f40fc16c4335bf1c7f5df357
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: eed47dd8f845dde6c955f2d527b255a823d40665
   BDTExploreOrderedData: 96bb150a05e560a5e927a7ee53bda56690571a61
   BDTFactoryConfigurator: c14af7870fcd1fa9c52142d0c01635775543e42d
   BDTSharedHeaders: 7ce2d05979120782a343993b31287684065e06a8
   BDUGContainer: 28193629e67c7c9244f5d5836bfed611bf631321
-  BDUGDeepLink: 8ae936b9bad1581d94c0cea917fe3b545f992449
+  BDUGDeepLink: 44dfefe43051d60cb1fd918ebdca3abcc090d365
   BDUGMonitorInterface: e64b2d5bcb2a3283af8f83daeaa0599a160351f1
   BDUGTrackerInterface: c41760f7de16c6f4b84395e71e85875a4cd87611
   BDUGUnionSDK: 837abef87c8d0f8cce87fb945dc18f2317d3d838
@@ -1151,6 +1154,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 7fe74db5310b05e198589f00548ecc4e9c3fe245
+PODFILE CHECKSUM: 1a1adbada28ea3ff107dfc5b34c56f8f582543fa
 
 COCOAPODS: 1.4.0

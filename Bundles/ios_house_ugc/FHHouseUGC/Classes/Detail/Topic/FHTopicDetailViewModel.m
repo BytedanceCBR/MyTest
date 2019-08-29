@@ -20,6 +20,7 @@
 #import "TTGroupModel.h"
 #import "ArticleImpressionHelper.h"
 #import "FHUGCConfig.h"
+#import "TTUGCDefine.h"
 
 @interface FHTopicDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -42,6 +43,7 @@
 @property(nonatomic, assign) NSInteger refer;
 @property(nonatomic, assign) BOOL isShowing;
 @property(nonatomic, copy) NSString *categoryName;
+@property (nonatomic, copy)     NSString       *tab_id;
 
 @end
 
@@ -59,6 +61,7 @@
         self.refer = 1;
         self.isShowing = NO;
         self.categoryName = @"forum_topic_thread";// 频道名称 服务端返回
+        self.tab_id = @"1643017137463326";
         self.count = 20;// 每次20条
         self.feedOffset = 0;
         self.dataList = [[NSMutableArray alloc] init];
@@ -69,6 +72,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 举报成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
+        // 发帖成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
     }
     return self;
 }
@@ -102,7 +107,8 @@
         [self.httpTopHeaderTask cancel];
     }
     __weak typeof(self) wSelf = self;
-    self.httpTopHeaderTask = [FHHouseUGCAPI requestTopicHeader:@"" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    NSString *cidStr = [NSString stringWithFormat:@"%lld",self.cid];// 话题id
+    self.httpTopHeaderTask = [FHHouseUGCAPI requestTopicHeader:cidStr completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wSelf.loadDataSuccessCount += 1;
         if (error) {
             wSelf.headerModel = nil;
@@ -123,7 +129,8 @@
     }
     self.detailController.isLoadingData = YES;
     __weak typeof(self) wSelf = self;
-    self.httpTopListTask = [FHHouseUGCAPI requestTopicList:@"" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    NSString *cidStr = [NSString stringWithFormat:@"%lld",self.cid];// 话题id
+    self.httpTopListTask = [FHHouseUGCAPI requestTopicList:cidStr tab_id:self.tab_id categoryName:self.categoryName offset:self.feedOffset count:self.count completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wSelf.loadDataSuccessCount += 1;
         [wSelf.detailController endRefreshHeader];
         if (error) {
@@ -333,6 +340,60 @@
     }
 }
 
+// 发帖成功，插入数据
+- (void)postThreadSuccess:(NSNotification *)noti {
+    UITableView *tableView = self.currentTableView;
+    NSString *cidStr = [NSString stringWithFormat:@"%lld",self.cid];
+    if (cidStr.length <= 0) {
+        return;
+    }
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        NSString *social_group_id = userInfo[@"social_group_id"];
+        NSDictionary *result_model = userInfo[@"result_model"];
+        if (result_model && [result_model isKindOfClass:[NSDictionary class]]) {
+            NSDictionary * thread_cell_dic = result_model[@"data"];
+            if (thread_cell_dic && [thread_cell_dic isKindOfClass:[NSDictionary class]]) {
+                NSString * thread_cell_data = thread_cell_dic[@"thread_cell"];
+                if (thread_cell_data && [thread_cell_data isKindOfClass:[NSString class]]) {
+                    // 得到cell 数据
+                    NSError *jsonParseError;
+                    NSData *jsonData = [thread_cell_data dataUsingEncoding:NSUTF8StringEncoding];
+                    if (jsonData) {
+                        Class cls = [FHFeedUGCContentModel class];
+                        FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
+                        if (model && jsonParseError == nil) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+                                cellModel.showCommunity = YES;
+                                NSArray <TTRichSpanLink *> *richSpanLinks = [cellModel.richContent richSpanLinksOfAttributedString];
+                                for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+                                    if (richSpanLink.type == TTRichSpanLinkTypeHashtag) {
+                                        // 话题
+                                        if ([richSpanLink.link containsString:cidStr]) {
+                                            // 是当前的话题
+                                            [tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+                                            if (self.dataList.count == 0) {
+                                                [self.dataList addObject:cellModel];
+                                            } else {
+                                                [self.dataList insertObject:cellModel atIndex:0];
+                                            }
+                                            self.feedOffset += 1;
+                                            [tableView reloadData];
+                                            self.needRefreshCell = NO;
+                                            break;
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 #pragma mark - FHUGCBaseCellDelegate
 
 - (void)deleteCell:(FHFeedUGCCellModel *)cellModel {
@@ -341,6 +402,10 @@
         UITableView *tableView = self.currentTableView;
         [tableView beginUpdates];
         [self.dataList removeObjectAtIndex:row];
+        self.feedOffset -= 1;
+        if (self.feedOffset <= 0) {
+            self.feedOffset = 0;
+        }
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         [tableView layoutIfNeeded];

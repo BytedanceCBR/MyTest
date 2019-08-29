@@ -48,7 +48,7 @@
     }
 
     WeakSelf;
-    [FHHouseUGCAPI requestTopicList:@"1234" class:FHTopicListResponseModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+    [FHHouseUGCAPI requestAllForumWithClass:FHTopicListResponseModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
 
         if (model) {
@@ -61,7 +61,7 @@
 
             FHTopicListResponseModel *responseModel = model;
 
-            [wself.dataList addObjectsFromArray:responseModel.data.suggest];
+            [wself.dataList addObjectsFromArray:responseModel.data.list];
             wself.tableView.hidden = NO;
             [wself.tableView reloadData];
         } else {
@@ -88,16 +88,35 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    FHTopicListResponseDataSuggestModel *item = [self.dataList objectAtIndex:indexPath.row];
+    FHTopicListResponseDataListModel *item = [self.dataList objectAtIndex:indexPath.row];
     if([self.viewController.delegate respondsToSelector:@selector(didSelectedHashtag:)]) {
         [self.viewController.delegate didSelectedHashtag:item];
         [self.viewController goBack];
     } else {
-        if(item.forum.schema.length > 0) {
-            NSURL *url = [NSURL URLWithString:item.forum.schema];
-            [[TTRoute sharedRoute] openURLByPushViewController:url];
+        if(item.schema.length > 0) {
+            NSURL *url = [NSURL URLWithString:item.schema];
+    
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            // 埋点
+            NSMutableDictionary *traceParam = @{}.mutableCopy;
+            traceParam[UT_ENTER_FROM] = @"topic_list";
+            traceParam[UT_ELEMENT_FROM] = UT_BE_NULL;
+            traceParam[UT_ENTER_TYPE] = @"click";
+            traceParam[UT_LOG_PB] = UT_BE_NULL;
+            traceParam[@"rank"] = @(indexPath.row);
+            dict[TRACER_KEY] = traceParam;
+            
+            if (url) {
+                if ([url.absoluteString containsString:@"concern"]) {
+                    // 话题
+                    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+                }
+            }
+    
         }
     }
+
 }
 
 #pragma mark - UITableViewDataSource
@@ -118,6 +137,7 @@
 
     if (indexPath.row < self.dataList.count) {
         [cell refreshWithData:self.dataList[indexPath.row]];
+        [cell configHeaderImageTagViewBackgroundWithIndex:indexPath.row];
     }
 
     return cell;
