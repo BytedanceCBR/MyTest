@@ -645,7 +645,7 @@
 
 - (void)trackVoteClickOptions:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
-    dict[@"log_pb"] = cellModel.logPb ? cellModel.logPb : @"be_null";
+    dict[@"log_pb"] = cellModel.logPb;
     if(value == 20){
         dict[@"click_position"] = @"1";
     }else if(value == 40){
