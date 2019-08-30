@@ -38,7 +38,7 @@
 }
 
 - (void)textViewDidInputTextHashtag:(TTUGCTextView *)textView {
-    [self toolbarDidClickHashtagButton];
+    [self didInputTextHashTag];
 }
 
 #pragma mark - TTUGCToolbarDelegate
@@ -79,14 +79,25 @@
     }
 }
 
-- (void)toolbarDidClickHashtagButton {
+
+-(void)didInputTextHashTag {
+    
+    self.textView.didInputTextHashtag = YES;
+    self.isSelectViewControllerVisible = YES;
     
     if(self.hashTagBtnClickBlock) {
         self.hashTagBtnClickBlock(self.textView.didInputTextHashtag);
     }
+}
+
+- (void)toolbarDidClickHashtagButton {
     
     self.textView.didInputTextHashtag = NO;
     self.isSelectViewControllerVisible = YES;
+    
+    if(self.hashTagBtnClickBlock) {
+        self.hashTagBtnClickBlock(self.textView.didInputTextHashtag);
+    }
 }
 
 - (void)toolbarDidClickEmojiButton:(BOOL)switchToEmojiInput {

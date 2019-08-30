@@ -292,9 +292,8 @@
 
 
         if (self.delegate && [self.delegate respondsToSelector:@selector(textViewDidInputTextHashtag:)]) {
-            self.didInputTextHashtag = YES;
-            [self becomeFirstResponder];
             [self.delegate textViewDidInputTextHashtag:self];
+            [self becomeFirstResponder];
             return YES;
         }
 
