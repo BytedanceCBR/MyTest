@@ -88,6 +88,13 @@
     self.isViewAppear = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
     [[SSImpressionManager shareInstance] addRegist:self];
+    __weak typeof(self) weakSelf = self;
+    self.panBeginAction = ^{
+        weakSelf.mainScrollView.scrollEnabled = NO;
+    };
+    self.panRestoreAction = ^{
+        weakSelf.mainScrollView.scrollEnabled = YES;
+    };
 }
 
 - (void)viewDidAppear:(BOOL)animated
