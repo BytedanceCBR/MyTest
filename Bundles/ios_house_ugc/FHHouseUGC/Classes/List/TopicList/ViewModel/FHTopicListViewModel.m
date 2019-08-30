@@ -41,11 +41,6 @@
     return self;
 }
 
-- (FHTopicListResponseModel *)mockData {
-    NSString *jsonContent = @"{\"data\":{\"list\":[{\"forum_id\":1643173365778440,\"forum_name\":\"幸福里er\",\"avatar_url\":\"http://p99.pstatp.com/origin/dae90013969ce8c8e4f0\",\"desc\":\"测试描述是否可以正常展示\",\"talk_count\":5,\"schema\":\"sslocal://concern?cid=1643173365778440\\u0026tab_sname=thread\\u0026enter_from=topic_list\\u0026rank=1\",\"talk_count_str\":\"5讨论\",\"rank\":\"1\"},{\"forum_id\":1643171844947979,\"forum_name\":\"幸福里人er\",\"avatar_url\":\"http://p99.pstatp.com/origin/dae90013969ce8c8e4f0\",\"desc\":\"测试描述是否可以正常展示\",\"talk_count\":4,\"schema\":\"sslocal://concern?cid=1643171844947979\\u0026tab_sname=thread\\u0026enter_from=topic_list\\u0026rank=2\",\"talk_count_str\":\"4讨论\",\"rank\":\"2\"},{\"forum_id\":1643199709734915,\"forum_name\":\"aways one day\",\"avatar_url\":\"http://p99.pstatp.com/origin/dae90013969ce8c8e4f0\",\"desc\":\"测试描述是否可以正常展示\",\"talk_count\":1,\"schema\":\"sslocal://concern?cid=1643199709734915\\u0026tab_sname=thread\\u0026enter_from=topic_list\\u0026rank=3\",\"talk_count_str\":\"1讨论\",\"rank\":\"3\"}, {\"forum_id\":1643199709734915,\"forum_name\":\"aways one day\",\"avatar_url\":\"http://p99.pstatp.com/origin/dae90013969ce8c8e4f0\",\"desc\":\"测试描述是否可以正常展示\",\"talk_count\":1,\"schema\":\"sslocal://concern?cid=1643199709734915\\u0026tab_sname=thread\\u0026enter_from=topic_list\\u0026rank=3\",\"talk_count_str\":\"1讨论\",\"rank\":\"3\"},{\"forum_id\":1643199709734915,\"forum_name\":\"aways one day\",\"avatar_url\":\"http://p99.pstatp.com/origin/dae90013969ce8c8e4f0\",\"desc\":\"测试描述是否可以正常展示\",\"talk_count\":1,\"schema\":\"sslocal://concern?cid=1643199709734915\\u0026tab_sname=thread\\u0026enter_from=topic_list\\u0026rank=3\",\"talk_count_str\":\"1讨论\",\"rank\":\"3\"},{\"forum_id\":1643199709734915,\"forum_name\":\"aways one day\",\"avatar_url\":\"http://p99.pstatp.com/origin/dae90013969ce8c8e4f0\",\"desc\":\"测试描述是否可以正常展示\",\"talk_count\":1,\"schema\":\"sslocal://concern?cid=1643199709734915\\u0026tab_sname=thread\\u0026enter_from=topic_list\\u0026rank=3\",\"talk_count_str\":\"1讨论\",\"rank\":\"3\"}]},\"message\":\"success\",\"status\":0}";
-    return [[FHTopicListResponseModel alloc] initWithString:jsonContent error:nil];
-}
-
 - (void)requestData:(BOOL)isRefresh {
     if (![TTReachability isNetworkConnected]) {
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -56,10 +51,6 @@
     WeakSelf;
     [FHHouseUGCAPI requestAllForumWithClass:FHTopicListResponseModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
-
-        // TODO: Mock Data
-        model = [self mockData];
-        // --- To Be Delete
         
         if (model) {
             if (isRefresh) {
