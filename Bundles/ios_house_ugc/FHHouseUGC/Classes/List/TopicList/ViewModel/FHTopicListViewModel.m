@@ -22,6 +22,7 @@
 @property(nonatomic, weak) FHTopicListController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *dataList;
+@property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 
 @end
 
@@ -142,6 +143,11 @@
 
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self traceClientShowAtIndexPath:indexPath];
+}
+
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -202,4 +208,41 @@
 - (NSString *)categoryName {
     return @"topic_list";
 }
+
+- (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
+    
+    if (indexPath.row >= self.dataList.count) {
+        return;
+    }
+    
+    FHTopicListResponseDataListModel *model = self.dataList[indexPath.row];
+    
+    if (!self.clientShowDict) {
+        self.clientShowDict = [NSMutableDictionary new];
+    }
+    
+    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+    NSString *forumId = model.forumId;
+    if(forumId){
+        if (self.clientShowDict[forumId]) {
+            return;
+        }
+        
+        self.clientShowDict[forumId] = @(indexPath.row);
+        [self trackClientShow:model rank:indexPath.row];
+    }
+}
+
+- (void)trackClientShow:(FHFeedContentRawDataHotTopicListModel *)model rank:(NSInteger)rank {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    
+    tracerDict[UT_PAGE_TYPE] = @"topic_list";
+    tracerDict[UT_ENTER_FROM] = self.viewController.tracerModel.enterFrom;
+    tracerDict[UT_ELEMENT_FROM] = self.viewController.tracerModel.elementFrom?:UT_BE_NULL;
+    tracerDict[@"rank"] = @(rank);
+    tracerDict[@"topic_id"] = model.forumId;
+    
+    TRACK_EVENT(@"topic_show", tracerDict);
+}
+
 @end
