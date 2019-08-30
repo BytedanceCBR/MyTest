@@ -71,6 +71,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"realtor_id"] = contactPhone.realtorId;
     dict[@"realtor_rank"] = rank ?: @"0";
     dict[@"conversation_id"] = @"be_null";
+    dict[@"realtor_logpb"] = contactPhone.realtorLogPb;
     if (extra) {
         [dict addEntriesFromDictionary:extra];
     }
@@ -250,6 +251,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"realtor_position"] = @"be_null";
     dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
     dict[@"from"] = @"app_realtor_mainpage";
+    dict[@"realtor_logpb"] = contactPhone.realtorLogPb;
 
     IMConversation* conv = [[[IMManager shareInstance] chatService] conversationWithUserId:contactPhone.realtorId];
     if ([conv.identifier isEqualToString:@"-1"]) {

@@ -71,6 +71,7 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+                           @"realtorLogPb": @"realtor_logpb",
                            @"businessLicense": @"business_license",
                            @"realtorName": @"realtor_name",
                            @"homePage": @"home_page",

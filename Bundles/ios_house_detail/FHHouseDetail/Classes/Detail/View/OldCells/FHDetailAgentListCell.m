@@ -171,6 +171,7 @@
         extraDict[@"realtor_id"] = contact.realtorId;
         extraDict[@"realtor_rank"] = @(index);
         extraDict[@"realtor_position"] = @"detail_related";
+        extraDict[@"realtor_logpb"] = contact.realtorLogPb;
         if (self.baseViewModel.detailTracerDic) {
             [extraDict addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
         }
@@ -316,6 +317,7 @@
             tracerDic[@"realtor_id"] = contact.realtorId ?: @"be_null";
             tracerDic[@"realtor_rank"] = @(i);
             tracerDic[@"realtor_position"] = @"detail_related";
+            tracerDic[@"realtor_logpb"] = contact.realtorLogPb;
             if (contact.phone.length < 1) {
                 [tracerDic setValue:@"0" forKey:@"phone_show"];
             } else {
