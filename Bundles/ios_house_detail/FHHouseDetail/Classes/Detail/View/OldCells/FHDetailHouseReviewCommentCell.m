@@ -52,7 +52,7 @@
     _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView).offset(10);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(10);
         make.left.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(0);
         make.bottom.mas_equalTo(self.contentView);
