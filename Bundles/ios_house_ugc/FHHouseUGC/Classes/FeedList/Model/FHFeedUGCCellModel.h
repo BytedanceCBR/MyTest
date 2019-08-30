@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *personDesc;
 @property (nonatomic, copy , nullable) NSString *leftDesc;
 @property (nonatomic, copy , nullable) NSString *rightDesc;
+@property (nonatomic, copy , nullable) NSString *leftValue;
+@property (nonatomic, copy , nullable) NSString *rightValue;
 @property (nonatomic, copy , nullable) NSString *contentAStr;
 @property (nonatomic, assign) CGFloat contentHeight;
 

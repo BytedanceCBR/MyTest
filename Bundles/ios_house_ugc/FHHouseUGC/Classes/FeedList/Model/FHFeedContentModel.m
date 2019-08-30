@@ -749,3 +749,25 @@
 }
 @end
 
+@implementation FHFeedContentRawDataVoteModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"needUserLogin": @"need_user_login",
+                           @"rightName": @"right_name",
+                           @"leftValue": @"left_value",
+                           @"leftName": @"left_name",
+                           @"voteId": @"vote_id",
+                           @"rightValue": @"right_value",
+                           @"personDesc": @"person_desc",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+

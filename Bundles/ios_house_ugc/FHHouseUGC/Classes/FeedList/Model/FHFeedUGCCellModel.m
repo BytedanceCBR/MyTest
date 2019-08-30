@@ -66,7 +66,7 @@
         Class cls = nil;
         if(type == FHUGCFeedListCellTypeUGC){
             cls = [FHFeedUGCContentModel class];
-        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeAnswer || type == FHUGCFeedListCellTypeArticleComment || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend || type == FHUGCFeedListCellTypeUGCBanner2 || type == FHUGCFeedListCellTypeArticleComment2 || type == FHUGCFeedListCellTypeUGCHotTopic){
+        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeAnswer || type == FHUGCFeedListCellTypeArticleComment || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend || type == FHUGCFeedListCellTypeUGCBanner2 || type == FHUGCFeedListCellTypeArticleComment2 || type == FHUGCFeedListCellTypeUGCHotTopic || type == FHUGCFeedListCellTypeUGCVote){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -312,6 +312,21 @@
         cellModel.groupId = model.rawData.groupId;
         cellModel.hotTopicList = model.rawData.hotTopicList;
         cellModel.elementFrom = @"hot_topic";
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVote;
+        cellModel.groupId = model.rawData.vote.voteId;
+        
+        FHFeedUGCVoteModel *vote = [[FHFeedUGCVoteModel alloc] init];
+        vote.content = model.rawData.vote.title;
+        vote.leftDesc = model.rawData.vote.leftName;
+        vote.leftValue = model.rawData.vote.leftValue;
+        vote.rightDesc = model.rawData.vote.rightName;
+        vote.rightValue = model.rawData.vote.rightValue;
+        vote.personDesc = model.rawData.vote.personDesc;
+        vote.openUrl = model.rawData.vote.schema;
+        cellModel.vote = vote;
+        
+        [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
     }
     
     return cellModel;
