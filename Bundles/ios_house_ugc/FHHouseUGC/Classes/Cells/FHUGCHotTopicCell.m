@@ -226,7 +226,7 @@
     NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
     NSString *forumId = model.forumId;
     if(forumId){
-        if (self.clientShowDict[forumId] || ![forumId isEqualToString:@"-1"]) {
+        if (self.clientShowDict[forumId]) {
             return;
         }
 

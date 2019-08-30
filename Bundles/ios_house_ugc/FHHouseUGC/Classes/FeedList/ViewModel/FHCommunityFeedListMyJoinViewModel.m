@@ -323,6 +323,7 @@
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
             
             if(isFirst){
+                [self.clientShowDict removeAllObjects];
                 [wself.dataList removeAllObjects];
             }
             if(isHead){
