@@ -481,7 +481,9 @@ static NSInteger const kMaxPostImageCount = 9;
         WeakSelf;
         self.textViewMediator.hashTagBtnClickBlock = ^(BOOL didInputTextHashtag) {
             StrongSelf;
-
+            
+            [self endEditing];
+            
             NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_topic_list"];
             NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.selectView.groupId;
             NSURLQueryItem *groudIPItem = [NSURLQueryItem queryItemWithName:@"groupId" value:groupId];
