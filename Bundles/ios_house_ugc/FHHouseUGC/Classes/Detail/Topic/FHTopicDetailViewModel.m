@@ -167,7 +167,9 @@
                 [feedList.data enumerateObjectsUsingBlock:^(FHTopicFeedListDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     if ([obj isKindOfClass:[FHTopicFeedListDataModel class]]) {
                         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:obj.content];
-                        [tempArray addObject:cellModel];
+                        if (cellModel) {
+                            [tempArray addObject:cellModel];
+                        }
                     }
                 }];
                 
