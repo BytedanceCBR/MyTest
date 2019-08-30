@@ -211,11 +211,10 @@
             // 更新圈子数据
             [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:socialGroupModel];
         }
-        //
-        [self.items addObject:cellModel];
-        
         // 更新点赞以及评论数
         if (cellModel) {
+            [self.items addObject:cellModel];
+            
             self.detailController.comment_count = [cellModel.commentCount longLongValue];
             self.detailController.user_digg = [cellModel.userDigg integerValue];
             self.detailController.digg_count = [cellModel.diggCount longLongValue];
