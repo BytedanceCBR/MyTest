@@ -432,7 +432,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }else {
             fillFormConfig.btnTitle = @"立即预约";
         }
-        fillFormConfig.fromStr = fromStr;
+        fillFormConfig.from = fromStr;
         fillFormConfig.realtorId = self.contactPhone.realtorId;
         fillFormConfig.phone = self.contactPhone.phone;
         [fillFormConfig setTraceParams:params];
@@ -467,7 +467,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     fillFormConfig.houseType = self.houseType;
     fillFormConfig.houseId = self.houseId;
     fillFormConfig.topViewController = self.belongsVC;
-    fillFormConfig.fromStr = self.fromStr;
+    fillFormConfig.from = self.fromStr;
     fillFormConfig.realtorId = self.contactPhone.realtorId;
     fillFormConfig.customHouseId = self.customHouseId;
     if (self.houseType == FHHouseTypeNeighborhood) {
@@ -527,7 +527,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [fillFormConfig setTraceParams:params];
     fillFormConfig.searchId = self.searchId;
     fillFormConfig.imprId = self.imprId;
-    fillFormConfig.fromStr = fromStr;
+    fillFormConfig.from = fromStr;
     fillFormConfig.chooseAgencyList = self.chooseAgencyList;
     [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
 }
