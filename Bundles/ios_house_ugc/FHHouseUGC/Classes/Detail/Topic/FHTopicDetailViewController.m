@@ -334,6 +334,13 @@
         [self updateTopicNotice:headerModel.forum.desc];// 话题简介
         // 更新顶部布局
         self.topHeightOffset = CGRectGetMaxY(self.headerInfoView.frame) + 5;
+        if (headerModel.forum.desc.length > 0) {
+            self.headerInfoView.hidden = NO;
+            self.topHeightOffset = CGRectGetMaxY(self.headerInfoView.frame) + 5;
+        } else {
+            self.headerInfoView.hidden = YES;
+            self.topHeightOffset = CGRectGetMaxY(self.topHeaderView.frame);
+        }
         self.minSubScrollViewHeight = SCREEN_HEIGHT - self.topHeightOffset;
         self.criticalPointHeight = self.maxSubScrollViewHeight - self.minSubScrollViewHeight;
         self.subScrollView.frame = CGRectMake(0, self.topHeightOffset, SCREEN_WIDTH, self.maxSubScrollViewHeight);
@@ -634,7 +641,7 @@
 
 - (void)refreshContentOffset:(CGPoint)contentOffset {
     CGFloat offsetY = contentOffset.y;
-    CGFloat alpha = offsetY / (self.navOffset);
+    CGFloat alpha = offsetY / 64.0;
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     [self updateNavBarWithAlpha:alpha];
 }
