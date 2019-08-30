@@ -404,7 +404,7 @@
     }];
 }
 
-+ (TTHttpTask *)requestTopicList:(NSString *)query_id tab_id:(NSString *)tab_id categoryName:(NSString *)category offset:(NSInteger)offset count:(NSInteger)count completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
++ (TTHttpTask *)requestTopicList:(NSString *)query_id tab_id:(NSString *)tab_id categoryName:(NSString *)category offset:(NSInteger)offset count:(NSInteger)count appExtraParams:(NSString *)appExtraParams completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/ugc/v:version/refresh_tips";
     NSString *url = QURL(queryPath);
     
@@ -418,6 +418,9 @@
     }
     if (tab_id.length > 0) {
         paramDic[@"tab_id"] = tab_id;
+    }
+    if (appExtraParams.length > 0) {
+        paramDic[@"app_extra_params"] = appExtraParams;
     }
     paramDic[@"count"] = @(count);
     paramDic[@"offset"] = @(offset);
