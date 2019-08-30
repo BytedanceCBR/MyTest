@@ -685,7 +685,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)textViewDidChangeSelection:(UITextView *)textView {
-	if ([delegate respondsToSelector:@selector(growingTextViewDidChangeSelection:)]) {
+	if (!self.isInputEmojiToChangeRange && [delegate respondsToSelector:@selector(growingTextViewDidChangeSelection:)]) {
 		[delegate growingTextViewDidChangeSelection:self];
 	}
 }
