@@ -352,6 +352,10 @@
                     });
                 }];
                 [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+            } else {
+                UIEdgeInsets contentInset = wself.tableView.originContentInset;
+                contentInset.top = 0;
+                wself.tableView.originContentInset = contentInset;
             }
         }
     }];
