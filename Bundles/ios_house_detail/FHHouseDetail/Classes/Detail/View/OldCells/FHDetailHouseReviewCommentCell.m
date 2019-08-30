@@ -52,7 +52,7 @@
     _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.headerView.mas_bottom);
         make.left.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(0);
         make.bottom.mas_equalTo(self.contentView);
@@ -83,12 +83,12 @@
         CGFloat itemHeight = [FHDetailHouseReviewCommentItemView heightForData:obj];
         [wself.containerView addSubview:itemView];
         [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(beforeView != nil ? beforeView.mas_bottom : self.containerView.mas_top).offset(10);
+            make.top.mas_equalTo(beforeView != nil ? beforeView.mas_bottom : self.containerView.mas_top).offset(20);
             make.left.right.mas_equalTo(self.containerView);
             make.height.mas_equalTo(itemHeight);
         }];
         [itemView refreshWithData:obj];
-        height += (itemHeight + 10);
+        height += (itemHeight + 20);
         beforeView = itemView;
     }];
 
@@ -126,11 +126,16 @@
     NSInteger showCount = model.isExpand ? model.houseReviewComment.count : MIN(model.houseReviewComment.count, 2);
     __block CGFloat height = 0.0f;
     [model.houseReviewComment enumerateObjectsUsingBlock:^(FHDetailHouseReviewCommentModel *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-        height += [FHDetailHouseReviewCommentItemView heightForData:obj] + 10;
+        height += [FHDetailHouseReviewCommentItemView heightForData:obj] + 20;
         if (idx == showCount - 1) {
             *stop = YES;
         }
     }];
+
+    [self.containerView.subviews enumerateObjectsUsingBlock:^(__kindof UIView *obj, NSUInteger idx, BOOL *stop) {
+        obj.hidden = idx >= showCount;
+    }];
+
     if (animated) {
         [model.tableView beginUpdates];
     }
@@ -160,7 +165,7 @@
     NSInteger showCount = modelData.isExpand ? modelData.houseReviewComment.count : MIN(modelData.houseReviewComment.count, 2);
     __block CGFloat height = 0.0f;
     [modelData.houseReviewComment enumerateObjectsUsingBlock:^(FHDetailHouseReviewCommentModel *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-        height += [FHDetailHouseReviewCommentItemView heightForData:obj] + 10;
+        height += [FHDetailHouseReviewCommentItemView heightForData:obj] + 20;
         if (idx == showCount - 1) {
             *stop = YES;
         }

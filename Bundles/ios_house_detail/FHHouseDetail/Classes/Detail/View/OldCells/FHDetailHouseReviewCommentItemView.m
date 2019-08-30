@@ -18,9 +18,11 @@
 
 @interface FHDetailHouseReviewCommentItemView () <TTUGCAttributedLabelDelegate>
 @property(nonatomic, strong) UIControl *realtorInfoContainerView;
+@property(nonatomic, strong) UIView *realtorLabelContainer;
 @property(nonatomic, strong) UIImageView *avatarView;
 @property(nonatomic, strong) UIImageView *identifyView;
 @property(nonatomic, strong) UIButton *licenceIcon;
+@property(nonatomic, strong) UIView *verticalDivider;
 @property(nonatomic, strong) UIButton *callBtn;
 @property(nonatomic, strong) UIButton *imBtn;
 @property(nonatomic, strong) UILabel *nameView;
@@ -59,9 +61,32 @@
     _identifyView = [[UIImageView alloc] init];
     [self.realtorInfoContainerView addSubview:_identifyView];
 
+    _realtorLabelContainer = [[UIImageView alloc] init];
+    [self.realtorInfoContainerView addSubview:_realtorLabelContainer];
+
     _licenceIcon = [[FHExtendHotAreaButton alloc] init];
     [_licenceIcon setImage:[UIImage imageNamed:@"contact"] forState:UIControlStateNormal];
-    [self.realtorInfoContainerView addSubview:_licenceIcon];
+    [self.realtorLabelContainer addSubview:_licenceIcon];
+
+    self.nameView = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _nameView.textColor = [UIColor themeGray1];
+    _nameView.font = [UIFont themeFontMedium:14];
+    _nameView.textAlignment = NSTextAlignmentLeft;
+    [self.realtorLabelContainer addSubview:_nameView];
+
+    _verticalDivider = [[UIView alloc] init];
+    _verticalDivider.backgroundColor = [UIColor themeGray6];
+    [self.realtorLabelContainer addSubview:_verticalDivider];
+
+    self.agencyView = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _agencyView.textColor = [UIColor themeGray3];
+    _agencyView.textAlignment = NSTextAlignmentLeft;
+    [self.realtorLabelContainer addSubview:_agencyView];
+
+    _houseReviewView = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    _houseReviewView.textColor = [UIColor themeGray3];
+    _houseReviewView.textAlignment = NSTextAlignmentLeft;
+    [self.realtorLabelContainer addSubview:_houseReviewView];
 
     _callBtn = [[FHExtendHotAreaButton alloc] init];
     [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal"] forState:UIControlStateNormal];
@@ -74,22 +99,6 @@
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateSelected];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateHighlighted];
     [self.realtorInfoContainerView addSubview:_imBtn];
-
-    self.nameView = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _nameView.textColor = [UIColor themeGray1];
-    _nameView.font = [UIFont themeFontMedium:14];
-    _nameView.textAlignment = NSTextAlignmentLeft;
-    [self.realtorInfoContainerView addSubview:_nameView];
-
-    self.agencyView = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _agencyView.textColor = [UIColor themeGray3];
-    _agencyView.textAlignment = NSTextAlignmentLeft;
-    [self.realtorInfoContainerView addSubview:_agencyView];
-
-    _houseReviewView = [UILabel createLabel:@"" textColor:@"" fontSize:12];
-    _houseReviewView.textColor = [UIColor themeGray3];
-    _houseReviewView.textAlignment = NSTextAlignmentLeft;
-    [self.realtorInfoContainerView addSubview:_houseReviewView];
 
     _commentView = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _commentView.delegate = self;
@@ -115,20 +124,34 @@
         make.bottom.mas_equalTo(self.avatarView).mas_offset(2);
         make.centerX.mas_equalTo(self.avatarView);
         make.height.mas_equalTo(14);
-        make.width.mas_equalTo(38);
+        make.width.mas_equalTo(42);
+    }];
+
+    [self.realtorLabelContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.avatarView.mas_right).offset(10);
+        make.right.mas_equalTo(self.imBtn.mas_left).offset(-10);
+        make.centerY.mas_equalTo(self.avatarView);
+        make.height.mas_equalTo(37);
     }];
 
     [self.nameView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.avatarView.mas_right).offset(10);
-        make.top.mas_equalTo(self.avatarView).offset(3);
+        make.left.mas_equalTo(self.realtorLabelContainer);
+        make.top.mas_equalTo(self.realtorLabelContainer);
         make.width.mas_equalTo(42);
         make.height.mas_equalTo(20);
+    }];
+
+    [self.verticalDivider mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.nameView.mas_right).offset(6);
+        make.width.mas_equalTo(1);
+        make.height.mas_equalTo(14);
+        make.centerY.mas_equalTo(self.nameView);
     }];
 
     [self.agencyView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.nameView);
         make.height.mas_equalTo(20);
-        make.left.mas_equalTo(self.nameView.mas_right).offset(13);
+        make.left.mas_equalTo(self.verticalDivider.mas_right).offset(6);
         make.right.mas_lessThanOrEqualTo(self.licenceIcon.mas_left).offset(5);
     }];
 
@@ -136,14 +159,14 @@
         make.left.mas_equalTo(self.agencyView.mas_right).offset(5);
         make.width.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self.nameView);
-        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+        make.right.mas_lessThanOrEqualTo(self.realtorLabelContainer);
     }];
 
     [self.houseReviewView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.nameView.mas_bottom);
-        make.left.mas_equalTo(self.nameView);
-        make.height.mas_equalTo(27);
-        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+        make.left.mas_equalTo(self.realtorLabelContainer);
+        make.height.mas_equalTo(17);
+        make.right.mas_equalTo(self.realtorLabelContainer);
     }];
 
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -191,16 +214,44 @@
         make.height.mas_equalTo(self.curData.commentHeight);
     }];
 
-    [self setComment:modelData isExpand:modelData.isExpended];
+    [self setComment:modelData];
     self.houseReviewView.text = modelData.contentData ?: @"";
     [self.nameView mas_updateConstraints:^(MASConstraintMaker *make) {
-        NSUInteger nameCount = MIN(self.nameView.text.length, 5);
-        make.width.mas_equalTo(nameCount * 14 + 1);
+        NSUInteger nameLen = MIN(self.nameView.text.length, 4);
+        make.width.mas_equalTo(nameLen * 14 + 1);
+    }];
+    [self.agencyView mas_updateConstraints:^(MASConstraintMaker *make) {
+        NSUInteger agencyLen = MIN(self.agencyView.text.length, 6);
+        make.width.mas_equalTo(agencyLen * 14 + 1);
+    }];
+    [self.realtorLabelContainer mas_updateConstraints:^(MASConstraintMaker *make) {
+        NSInteger height = isEmptyString(self.houseReviewView.text) ? 20 : 37;
+        make.height.mas_equalTo(height);
     }];
 }
 
 + (void)calculateHeight:(FHDetailHouseReviewCommentModel *)modelData isExpand:(BOOL)isExpand {
     NSUInteger numberOfLines = isExpand ? 0 : 3;
+    if (isExpand) {
+        NSAttributedString *attributedText1 = [self stringToAttributeString:modelData.commentText
+                                                                       font:[UIFont themeFontRegular:14]
+                                                              numberOfLines:numberOfLines];
+        NSAttributedString *attributedText2 = [self stringToAttributeString:[NSString stringWithFormat:@"%@收起", modelData.commentText]
+                                                                       font:[UIFont themeFontRegular:14]
+                                                              numberOfLines:numberOfLines];
+
+        CGSize size1 = [TTTAttributedLabel sizeThatFitsAttributedString:attributedText1
+                                                        withConstraints:CGSizeMake(SCREEN_WIDTH - 40, FLT_MAX)
+                                                 limitedToNumberOfLines:numberOfLines];
+
+        CGSize size2 = [TTTAttributedLabel sizeThatFitsAttributedString:attributedText2
+                                                        withConstraints:CGSizeMake(SCREEN_WIDTH - 40, FLT_MAX)
+                                                 limitedToNumberOfLines:numberOfLines];
+        modelData.commentHeight = MAX(size1.height, size2.height);
+        modelData.addFoldDirect = size1.height == size2.height;
+        modelData.isExpended = isExpand;
+        return;
+    }
     NSAttributedString *attributedText = [self stringToAttributeString:modelData.commentText
                                                                   font:[UIFont themeFontRegular:14]
                                                          numberOfLines:numberOfLines];
@@ -211,28 +262,48 @@
     modelData.isExpended = isExpand;
 }
 
-- (void)setComment:(FHDetailHouseReviewCommentModel *)modelData isExpand:(BOOL)isExpand {
-    NSUInteger numberOfLines = isExpand ? 0 : 3;
-    NSAttributedString *attributedText = [FHDetailHouseReviewCommentItemView stringToAttributeString:modelData.commentText
+- (void)setComment:(FHDetailHouseReviewCommentModel *)modelData {
+    if (!modelData.isExpended) {
+        NSAttributedString *attributedText = [FHDetailHouseReviewCommentItemView stringToAttributeString:modelData.commentText
+                                                                                                    font:[UIFont themeFontRegular:14]
+                                                                                           numberOfLines:3];
+        NSAttributedString *truncationToken = [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:14]
+                                                                 contentColor:[UIColor themeGray1]
+                                                                        color:[UIColor themeRed3]];
+        self.commentView.attributedTruncationToken = truncationToken;
+
+        self.commentView.numberOfLines = 3;
+        [self.commentView setText:attributedText];
+        return;
+    }
+    NSString *content = modelData.addFoldDirect ? [NSString stringWithFormat:@"%@ 收起", modelData.commentText] : [NSString stringWithFormat:@"%@\n收起", modelData.commentText];
+    NSAttributedString *attributedText = [FHDetailHouseReviewCommentItemView stringToAttributeString:content
                                                                                                 font:[UIFont themeFontRegular:14]
-                                                                                       numberOfLines:numberOfLines];
-    self.commentView.numberOfLines = numberOfLines;
-    [self.commentView setText:attributedText];
-    NSAttributedString *truncationToken = isExpand ? nil : [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:14]
-                                                                              contentColor:[UIColor themeGray1]
-                                                                                     color:[UIColor themeRed3]];
-    self.commentView.attributedTruncationToken = truncationToken;
+                                                                                       numberOfLines:0];
+
+    NSMutableAttributedString *mutableAttributedString = [attributedText mutableCopy];
+    NSUInteger length = @"收起".length;
+    [mutableAttributedString addAttribute:NSLinkAttributeName  // 修复点击问题的bug 强制加一个无用action
+                                    value:[NSURL URLWithString:defaultTruncationLinkURLString]
+                                    range:NSMakeRange(content.length - length, length)];
+    [mutableAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor themeRed3] range:NSMakeRange(content.length - length, length)];
+    [mutableAttributedString addAttribute:NSFontAttributeName value:[UIFont themeFontRegular:14] range:NSMakeRange(content.length - length, length)];
+
+    self.commentView.linkAttributes = @{NSForegroundColorAttributeName:[UIColor themeRed3],NSFontAttributeName:[UIFont themeFontRegular:14]};
+    self.commentView.attributedTruncationToken = nil;
+    self.commentView.numberOfLines = 0;
+    [self.commentView setText:[mutableAttributedString copy]];
 }
 
 #pragma mark - TTUGCAttributedLabelDelegate
 
 - (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if (label == self.commentView && [url.absoluteString isEqualToString:defaultTruncationLinkURLString]) {
-        [FHDetailHouseReviewCommentItemView calculateHeight:self.curData isExpand:YES];
+        [FHDetailHouseReviewCommentItemView calculateHeight:self.curData isExpand:!self.curData.isExpended];
         if (self.delegate) {
             [self.delegate onReadMoreClick:self];
         }
-        [self setComment:self.curData isExpand:YES];
+        [self setComment:self.curData];
     }
 }
 
