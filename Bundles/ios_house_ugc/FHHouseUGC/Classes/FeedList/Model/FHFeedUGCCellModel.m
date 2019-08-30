@@ -312,6 +312,9 @@
         cellModel.groupId = model.rawData.groupId;
         cellModel.hotTopicList = model.rawData.hotTopicList;
         cellModel.elementFrom = @"hot_topic";
+        if(cellModel.hotTopicList.count <= 0){
+            return nil;
+        }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVote;
         cellModel.groupId = model.rawData.vote.voteId;
