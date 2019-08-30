@@ -171,8 +171,10 @@
         }
     }];
     [modelData.tableView beginUpdates];
-    [item mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo([FHDetailHouseReviewCommentItemView heightForData:item.curData]);
+    [UIView animateWithDuration:0.3 animations:^{
+        [item mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo([FHDetailHouseReviewCommentItemView heightForData:item.curData]);
+        }];
     }];
     [item.commentView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo([item.curData commentHeight]);

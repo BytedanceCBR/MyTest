@@ -372,7 +372,9 @@
     [self addSubview:self.identifyView];
 
     _licenceIcon = [[FHExtendHotAreaButton alloc] init];
-    [_licenceIcon setImage:[UIImage imageNamed:@"contact"] forState:UIControlStateNormal];
+    [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
+    [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateSelected];
+    [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateHighlighted];
     [self addSubview:_licenceIcon];
     
     _callBtn = [[FHExtendHotAreaButton alloc] init];
@@ -429,12 +431,12 @@
         make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
     }];
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(40);
+        make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(-20);
         make.centerY.mas_equalTo(self.avator);
     }];
     [self.imBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(40);
+        make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
         make.centerY.mas_equalTo(self.avator);
     }];

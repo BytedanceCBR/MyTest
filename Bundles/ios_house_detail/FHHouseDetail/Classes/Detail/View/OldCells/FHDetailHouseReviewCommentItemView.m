@@ -18,7 +18,7 @@
 
 @interface FHDetailHouseReviewCommentItemView () <TTUGCAttributedLabelDelegate>
 @property(nonatomic, strong) UIControl *realtorInfoContainerView;
-@property(nonatomic, strong) UIView *realtorLabelContainer;
+@property(nonatomic, strong) UIControl *realtorLabelContainer;
 @property(nonatomic, strong) UIImageView *avatarView;
 @property(nonatomic, strong) UIImageView *identifyView;
 @property(nonatomic, strong) UIButton *licenceIcon;
@@ -37,7 +37,7 @@
     if (data.commentHeight <= 0) {
         [FHDetailHouseReviewCommentItemView calculateHeight:data isExpand:data.isExpended];
     }
-    return 42 + 13 + data.commentHeight;
+    return 42 + 10 + data.commentHeight;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -61,11 +61,13 @@
     _identifyView = [[UIImageView alloc] init];
     [self.realtorInfoContainerView addSubview:_identifyView];
 
-    _realtorLabelContainer = [[UIImageView alloc] init];
+    _realtorLabelContainer = [[UIControl alloc] init];
     [self.realtorInfoContainerView addSubview:_realtorLabelContainer];
 
     _licenceIcon = [[FHExtendHotAreaButton alloc] init];
-    [_licenceIcon setImage:[UIImage imageNamed:@"contact"] forState:UIControlStateNormal];
+    [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
+    [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateSelected];
+    [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateHighlighted];
     [self.realtorLabelContainer addSubview:_licenceIcon];
 
     self.nameView = [UILabel createLabel:@"" textColor:@"" fontSize:14];
@@ -108,6 +110,7 @@
     [_callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
     [_imBtn addTarget:self action:@selector(imClick:) forControlEvents:UIControlEventTouchUpInside];
     [_realtorInfoContainerView addTarget:self action:@selector(realtorInfoClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_realtorLabelContainer addTarget:self action:@selector(realtorInfoClick:) forControlEvents:UIControlEventTouchUpInside];
 
     [self.realtorInfoContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self);
@@ -124,7 +127,7 @@
         make.bottom.mas_equalTo(self.avatarView).mas_offset(2);
         make.centerX.mas_equalTo(self.avatarView);
         make.height.mas_equalTo(14);
-        make.width.mas_equalTo(42);
+        make.width.mas_equalTo(0);
     }];
 
     [self.realtorLabelContainer mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -185,8 +188,32 @@
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
         make.height.mas_equalTo(0);
-        make.top.mas_equalTo(self.realtorInfoContainerView.mas_bottom).offset(13);
+        make.top.mas_equalTo(self.realtorInfoContainerView.mas_bottom).offset(10);
     }];
+}
+
+- (void)refreshIdentifyView:(UIImageView *)identifyView withUrl:(NSString *)imageUrl
+{
+    if (!identifyView) {
+        return;
+    }
+    if (imageUrl.length > 0) {
+        [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:imageUrl] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+            if (!error && image) {
+                identifyView.image = image;
+                CGFloat ratio = 0;
+                if (image.size.height > 0) {
+                    ratio = image.size.width / image.size.height;
+                }
+                [identifyView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(14 * ratio);
+                }];
+            }
+        }];
+        identifyView.hidden = NO;
+    }else {
+        identifyView.hidden = YES;
+    }
 }
 
 - (void)refreshWithData:(NSObject *)data {
@@ -204,18 +231,14 @@
     self.nameView.text = modelData.realtorInfo.realtorName ?: @"";
     self.agencyView.text = modelData.realtorInfo.agencyName ?: @"";
     self.licenceIcon.hidden = isEmptyString(modelData.realtorInfo.businessLicense) && isEmptyString(modelData.realtorInfo.certificate);
-    if (modelData.realtorInfo.imageTag.imageUrl.length > 0) {
-        self.identifyView.hidden = NO;
-        [self.identifyView bd_setImageWithURL:[NSURL URLWithString:modelData.realtorInfo.imageTag.imageUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
-    } else {
-        self.identifyView.hidden = YES;
-    }
+    [self refreshIdentifyView:self.identifyView withUrl:modelData.realtorInfo.imageTag.imageUrl];
+
     [self.commentView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(self.curData.commentHeight);
     }];
 
     [self setComment:modelData];
-    self.houseReviewView.text = modelData.contentData ?: @"";
+    self.houseReviewView.text = modelData.commentText ?: @"";
     [self.nameView mas_updateConstraints:^(MASConstraintMaker *make) {
         NSUInteger nameLen = MIN(self.nameView.text.length, 4);
         make.width.mas_equalTo(nameLen * 14 + 1);
@@ -233,10 +256,10 @@
 + (void)calculateHeight:(FHDetailHouseReviewCommentModel *)modelData isExpand:(BOOL)isExpand {
     NSUInteger numberOfLines = isExpand ? 0 : 3;
     if (isExpand) {
-        NSAttributedString *attributedText1 = [self stringToAttributeString:modelData.commentText
+        NSAttributedString *attributedText1 = [self stringToAttributeString:modelData.commentData
                                                                        font:[UIFont themeFontRegular:14]
                                                               numberOfLines:numberOfLines];
-        NSAttributedString *attributedText2 = [self stringToAttributeString:[NSString stringWithFormat:@"%@收起", modelData.commentText]
+        NSAttributedString *attributedText2 = [self stringToAttributeString:[NSString stringWithFormat:@"%@收起", modelData.commentData]
                                                                        font:[UIFont themeFontRegular:14]
                                                               numberOfLines:numberOfLines];
 
@@ -252,7 +275,7 @@
         modelData.isExpended = isExpand;
         return;
     }
-    NSAttributedString *attributedText = [self stringToAttributeString:modelData.commentText
+    NSAttributedString *attributedText = [self stringToAttributeString:modelData.commentData
                                                                   font:[UIFont themeFontRegular:14]
                                                          numberOfLines:numberOfLines];
     CGSize size = [TTTAttributedLabel sizeThatFitsAttributedString:attributedText
@@ -264,7 +287,7 @@
 
 - (void)setComment:(FHDetailHouseReviewCommentModel *)modelData {
     if (!modelData.isExpended) {
-        NSAttributedString *attributedText = [FHDetailHouseReviewCommentItemView stringToAttributeString:modelData.commentText
+        NSAttributedString *attributedText = [FHDetailHouseReviewCommentItemView stringToAttributeString:modelData.commentData
                                                                                                     font:[UIFont themeFontRegular:14]
                                                                                            numberOfLines:3];
         NSAttributedString *truncationToken = [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:14]
@@ -276,7 +299,7 @@
         [self.commentView setText:attributedText];
         return;
     }
-    NSString *content = modelData.addFoldDirect ? [NSString stringWithFormat:@"%@ 收起", modelData.commentText] : [NSString stringWithFormat:@"%@\n收起", modelData.commentText];
+    NSString *content = modelData.addFoldDirect ? [NSString stringWithFormat:@"%@ 收起", modelData.commentData] : [NSString stringWithFormat:@"%@\n收起", modelData.commentData];
     NSAttributedString *attributedText = [FHDetailHouseReviewCommentItemView stringToAttributeString:content
                                                                                                 font:[UIFont themeFontRegular:14]
                                                                                        numberOfLines:0];

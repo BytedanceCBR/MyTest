@@ -334,7 +334,7 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *commentId;
 @property (nonatomic, strong , nullable) FHDetailContactModel *realtorInfo;
 @property (nonatomic, copy , nullable) NSString *commentText;
-@property (nonatomic, copy , nullable) NSString *contentData;
+@property (nonatomic, copy , nullable) NSString *commentData;
 @property (nonatomic, assign) BOOL isExpended;//标识是否全文展开，非服务端字段
 @property (nonatomic, assign) CGFloat commentHeight;//标识评论高度，非服务端字段
 @property (nonatomic, assign) BOOL addFoldDirect;//标识评论高度，非服务端字段
