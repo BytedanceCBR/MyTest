@@ -550,6 +550,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     contactConfig.searchId = self.searchId;
     contactConfig.imprId = self.imprId;
     contactConfig.showLoading = YES;
+    contactConfig.realtorLogPb = self.contactPhone.realtorLogPb;
     if (extraDict[@"from"]) {
         contactConfig.from = extraDict[@"from"];
     }
@@ -642,6 +643,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"realtor_id"] = contactPhone.realtorId ?: @"be_null";
     tracerDic[@"realtor_rank"] = @(0);
     tracerDic[@"realtor_position"] = @"detail_button";
+    tracerDic[@"realtor_logpb"] = contactPhone.realtorLogPb;
     if (_contactPhone.phone.length < 1) {
         [tracerDic setValue:@"0" forKey:@"phone_show"];
     } else {
