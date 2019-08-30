@@ -161,22 +161,54 @@
             if ([model isKindOfClass:[FHTopicFeedListModel class]]) {
                 wSelf.hasFeedListData = YES;
                 FHTopicFeedListModel *feedList = (FHTopicFeedListModel *)model;
-                if (wSelf.feedOffset == 0) {
-                    // 说明是第一次请求
-                    if (feedList.data.count > 0) {
-                        // 有返回（下拉）
-                        [wSelf.dataList removeAllObjects];
-                    }
-                } else {
-                    // 上拉加载loadmore
-                }
+                
                 // 数据转模型 添加数据
+                NSMutableArray *tempArray = [NSMutableArray new];
                 [feedList.data enumerateObjectsUsingBlock:^(FHTopicFeedListDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     if ([obj isKindOfClass:[FHTopicFeedListDataModel class]]) {
                         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:obj.content];
-                        [wSelf.dataList addObject:cellModel];
+                        [tempArray addObject:cellModel];
                     }
                 }];
+                
+                if (wSelf.feedOffset == 0) {
+                    // 说明是第一次请求--之前的数据保留（去重）
+                    if (tempArray.count > 0) {
+                        // 有返回（下拉）
+                        [tempArray enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                            if (obj.groupId.length > 0) {
+                                [self removeDuplicaionModel:obj.groupId];
+                            }
+                        }];
+                    }
+                    // 再插入顶部
+                    if (self.dataList.count > 0) {
+                        [tempArray addObjectsFromArray:self.dataList];
+                    }
+                    [self.dataList removeAllObjects];
+                    if (tempArray.count > 0) {
+                        [self.dataList addObjectsFromArray:tempArray];
+                    }
+                } else {
+                    // 上拉加载loadmore
+                    if (tempArray.count > 0) {
+                        [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                            if (obj.groupId.length > 0) {
+                                // 新数据去重
+                                for (FHFeedUGCCellModel *itemModel in tempArray) {
+                                    if([obj.groupId isEqualToString:itemModel.groupId]){
+                                        [tempArray removeObject:itemModel];
+                                        break;
+                                    }
+                                }
+                            }
+                        }];
+                        // 插入底部
+                        if (tempArray.count > 0) {
+                            [self.dataList addObjectsFromArray:tempArray];
+                        }
+                    }
+                }
         
                 wSelf.hasMore = feedList.hasMore;
                 wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
@@ -185,6 +217,15 @@
         }
         [wSelf processLoadingState];
     }];
+}
+
+- (void)removeDuplicaionModel:(NSString *)groupId {
+    for (FHFeedUGCCellModel *itemModel in self.dataList) {
+        if([groupId isEqualToString:itemModel.groupId]){
+            [self.dataList removeObject:itemModel];
+            break;
+        }
+    }
 }
 
 // 刷新数据和状态
@@ -395,6 +436,8 @@
                                     if (richSpanLink.type == TTRichSpanLinkTypeHashtag) {
                                         // 话题
                                         if ([richSpanLink.link containsString:cidStr]) {
+                                            // 去重
+                                            [self removeDuplicaionModel:cellModel.groupId];
                                             // 是当前的话题
                                             [tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
                                             if (self.dataList.count == 0) {
