@@ -52,6 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *rightValue;
 @property (nonatomic, copy , nullable) NSString *contentAStr;
 @property (nonatomic, assign) CGFloat contentHeight;
+@property (nonatomic, assign) BOOL needUserLogin;
 
 @end
 

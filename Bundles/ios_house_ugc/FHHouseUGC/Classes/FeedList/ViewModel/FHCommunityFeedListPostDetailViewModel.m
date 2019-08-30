@@ -22,6 +22,8 @@
 #import "FHFeedListModel.h"
 #import "ToastManager.h"
 #import <FHEnvContext.h>
+#import <TTAccountManager.h>
+#import <TTURLUtils.h>
 
 @interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -587,6 +589,48 @@
     }
 }
 
+- (void)goToVoteDetail:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value {
+    [self trackVoteClickOptions:cellModel value:value];
+    if([TTAccountManager isLogin] || !cellModel.vote.needUserLogin){
+        if(cellModel.vote.openUrl){
+            NSString *urlStr = cellModel.vote.openUrl;
+            if(value > 0){
+                NSString *append = [TTURLUtils queryItemAddingPercentEscapes:[NSString stringWithFormat:@"&vote=%d",value]];
+                urlStr = [urlStr stringByAppendingString:append];
+            }
+            
+            NSURL *url = [NSURL URLWithString:urlStr];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+        }
+    }else{
+        [self gotoLogin:cellModel value:value];
+    }
+}
+
+- (void)gotoLogin:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value  {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:[self pageType] forKey:@"enter_from"];
+    [params setObject:@"" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    if(cellModel.vote.openUrl){
+                        NSString *urlStr = cellModel.vote.openUrl;
+                        NSURL *url = [NSURL URLWithString:urlStr];
+                        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                    }
+                });
+            }
+        }
+    }];
+}
+
 #pragma mark - 埋点
 
 - (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
@@ -636,6 +680,19 @@
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
     dict[@"click_position"] = @"feed_comment";
     TRACK_EVENT(@"click_comment", dict);
+}
+
+- (void)trackVoteClickOptions:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value {
+    NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
+    dict[@"log_pb"] = cellModel.logPb;
+    if(value == [cellModel.vote.leftValue integerValue]){
+        dict[@"click_position"] = @"1";
+    }else if(value == [cellModel.vote.rightValue integerValue]){
+        dict[@"click_position"] = @"2";
+    }else{
+        dict[@"click_position"] = @"vote_content";
+    }
+    TRACK_EVENT(@"click_options", dict);
 }
 
 @end

@@ -324,6 +324,7 @@
         vote.rightValue = model.rawData.vote.rightValue;
         vote.personDesc = model.rawData.vote.personDesc;
         vote.openUrl = model.rawData.vote.schema;
+        vote.needUserLogin = model.rawData.vote.needUserLogin;
         cellModel.vote = vote;
         
         [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];

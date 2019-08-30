@@ -107,7 +107,6 @@
     [self.bgView addSubview:_voteView];
 
     self.leftBtn = [[UIButton alloc] init];
-    _leftBtn.tag = 20;
     [_leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_left"] forState:UIControlStateNormal];
     [_leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_left"] forState:UIControlStateHighlighted];
     _leftBtn.titleLabel.font = [UIFont themeFontMedium:16];
@@ -115,7 +114,6 @@
     [self.voteView addSubview:_leftBtn];
     
     self.rightBtn = [[UIButton alloc] init];
-    _rightBtn.tag = 40;
     [_rightBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_right"] forState:UIControlStateNormal];
     [_rightBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_vote_right"] forState:UIControlStateHighlighted];
     _rightBtn.titleLabel.font = [UIFont themeFontMedium:16];
@@ -230,6 +228,9 @@
     //选项
     [self.leftBtn setTitle:cellModel.vote.leftDesc forState:UIControlStateNormal];
     [self.rightBtn setTitle:cellModel.vote.rightDesc forState:UIControlStateNormal];
+    self.leftBtn.tag = [cellModel.vote.leftValue integerValue];
+    self.rightBtn.tag = [cellModel.vote.rightValue integerValue];
+    
     if(cellModel.vote.leftDesc.length > 4 || cellModel.vote.rightDesc.length > 4){
         _leftBtn.titleLabel.font = [UIFont themeFontMedium:14];
         _rightBtn.titleLabel.font = [UIFont themeFontMedium:14];
@@ -251,10 +252,6 @@
 - (void)goToDetail:(id)sender {
     UIButton *btn = (UIButton *)sender;
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
-//    if(cellModel.vote.openUrl){
-//        NSURL *url = [NSURL URLWithString:cellModel.vote.openUrl];
-//        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-//    }
     if(self.delegate && [self.delegate respondsToSelector:@selector(goToVoteDetail:value:)]){
         [self.delegate goToVoteDetail:cellModel value:btn.tag];
     }

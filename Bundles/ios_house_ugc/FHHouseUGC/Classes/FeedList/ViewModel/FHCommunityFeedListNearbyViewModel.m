@@ -526,7 +526,7 @@
 
 - (void)goToVoteDetail:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value {
     [self trackVoteClickOptions:cellModel value:value];
-    if([TTAccountManager isLogin]){
+    if([TTAccountManager isLogin] || !cellModel.vote.needUserLogin){
         if(cellModel.vote.openUrl){
             NSString *urlStr = cellModel.vote.openUrl;
             if(value > 0){
@@ -534,9 +534,7 @@
                 urlStr = [urlStr stringByAppendingString:append];
             }
             
-            
             NSURL *url = [NSURL URLWithString:urlStr];
-//            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
         }
     }else{
@@ -560,7 +558,6 @@
                     if(cellModel.vote.openUrl){
                         NSString *urlStr = cellModel.vote.openUrl;
                         NSURL *url = [NSURL URLWithString:urlStr];
-                        //            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
                         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
                     }
                 });
@@ -646,9 +643,9 @@
 - (void)trackVoteClickOptions:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
     dict[@"log_pb"] = cellModel.logPb;
-    if(value == 20){
+    if(value == [cellModel.vote.leftValue integerValue]){
         dict[@"click_position"] = @"1";
-    }else if(value == 40){
+    }else if(value == [cellModel.vote.rightValue integerValue]){
         dict[@"click_position"] = @"2";
     }else{
         dict[@"click_position"] = @"vote_content";
