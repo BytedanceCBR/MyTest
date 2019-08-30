@@ -482,6 +482,7 @@ static NSInteger const kMaxPostImageCount = 9;
         self.textViewMediator.hashTagBtnClickBlock = ^(BOOL didInputTextHashtag) {
             StrongSelf;
             
+            self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
             [self endEditing];
             
             NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_topic_list"];
