@@ -4,10 +4,9 @@
 
 #import <Foundation/Foundation.h>
 #import "FHDetailBaseModel.h"
-
+#import "TTUGCAttributedLabel.h"
 @class FHDetailHouseReviewCommentItemView;
 @class FHDetailHouseReviewCommentModel;
-@class TTUGCAttributedLabel;
 
 @protocol FHDetailHouseReviewCommentItemViewDelegate
 - (void)onReadMoreClick:(FHDetailHouseReviewCommentItemView *)item;
@@ -29,5 +28,7 @@
 + (CGFloat)heightForData:(FHDetailHouseReviewCommentModel *)data;
 
 - (void)refreshWithData:(NSObject *)data;
+
+- (void)setComment:(FHDetailHouseReviewCommentModel *)modelData;
 @end
 

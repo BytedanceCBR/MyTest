@@ -13,6 +13,8 @@
 #import "FHHouseFollowUpConfigModel.h"
 #import "FHHouseFollowUpHelper.h"
 #import "FHHouseDetailPhoneCallViewModel.h"
+#import "UITextView+TTAdditions.h"
+#import "UIViewAdditions.h"
 
 @implementation FHDetailHouseReviewCommentCellModel : FHDetailBaseModel
 @end
@@ -132,10 +134,6 @@
         }
     }];
 
-    [self.containerView.subviews enumerateObjectsUsingBlock:^(__kindof UIView *obj, NSUInteger idx, BOOL *stop) {
-        obj.hidden = idx >= showCount;
-    }];
-
     if (animated) {
         [model.tableView beginUpdates];
     }
@@ -171,19 +169,35 @@
         }
     }];
     [modelData.tableView beginUpdates];
-    [UIView animateWithDuration:0.3 animations:^{
-        [item mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo([FHDetailHouseReviewCommentItemView heightForData:item.curData]);
-        }];
+    [item mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo([FHDetailHouseReviewCommentItemView heightForData:item.curData]);
     }];
-    [item.commentView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo([item.curData commentHeight]);
-    }];
+
     [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
     }];
-    [self setNeedsUpdateConstraints];
+    
+    if(item.curData.isExpended){
+        [item setComment:item.curData];
+    }
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        CGRect frame = item.commentView.frame;
+        frame.size.height= [item.curData commentHeight];
+        item.commentView.frame = frame;
+        [item.commentView layoutIfNeeded];
+        [item layoutIfNeeded];
+        [self layoutIfNeeded];
+    }completion:^(BOOL finished) {
+        if(!item.curData.isExpended){
+            [item setComment:item.curData];
+        }
+        [item.commentView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo([item.curData commentHeight]);
+        }];
+    }];
     [modelData.tableView endUpdates];
+    
     [self addClickReadMoreLog:item.curData];
 }
 

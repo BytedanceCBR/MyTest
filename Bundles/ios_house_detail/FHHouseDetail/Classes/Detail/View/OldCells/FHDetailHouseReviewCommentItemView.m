@@ -15,6 +15,8 @@
 #import "FHUGCCellHelper.h"
 #import "PNColor.h"
 #import "TTUGCAttributedLabel.h"
+#import "TTAccountLoginPCHHeader.h"
+#import "UIViewAdditions.h"
 
 @interface FHDetailHouseReviewCommentItemView () <TTUGCAttributedLabelDelegate>
 @property(nonatomic, strong) UIControl *realtorInfoContainerView;
@@ -49,6 +51,7 @@
 }
 
 - (void)setupUI {
+    self.clipsToBounds = YES;
     _realtorInfoContainerView = [[UIControl alloc] init];
     [self addSubview:_realtorInfoContainerView];
 
@@ -101,17 +104,18 @@
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateSelected];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateHighlighted];
     [self.realtorInfoContainerView addSubview:_imBtn];
-
+    
     _commentView = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _commentView.delegate = self;
+    _commentView.verticalAlignment = TTTAttributedLabelVerticalAlignmentTop;
     [self addSubview:_commentView];
-
+    
     [_licenceIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
     [_callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
     [_imBtn addTarget:self action:@selector(imClick:) forControlEvents:UIControlEventTouchUpInside];
     [_realtorInfoContainerView addTarget:self action:@selector(realtorInfoClick:) forControlEvents:UIControlEventTouchUpInside];
     [_realtorLabelContainer addTarget:self action:@selector(realtorInfoClick:) forControlEvents:UIControlEventTouchUpInside];
-
+    
     [self.realtorInfoContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self);
         make.height.mas_equalTo(42);
@@ -188,7 +192,7 @@
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
         make.height.mas_equalTo(0);
-        make.top.mas_equalTo(self.realtorInfoContainerView.mas_bottom).offset(10);
+        make.top.mas_equalTo(52);
     }];
 }
 
@@ -233,10 +237,12 @@
     self.licenceIcon.hidden = isEmptyString(modelData.realtorInfo.businessLicense) && isEmptyString(modelData.realtorInfo.certificate);
     [self refreshIdentifyView:self.identifyView withUrl:modelData.realtorInfo.imageTag.imageUrl];
 
-    [self.commentView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(self.curData.commentHeight);
-    }];
+    self.commentView.height = self.curData.commentHeight;
 
+    [self.commentView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(modelData.commentHeight);
+    }];
+    
     [self setComment:modelData];
     self.houseReviewView.text = modelData.commentText ?: @"";
     [self.nameView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -313,6 +319,7 @@
     [mutableAttributedString addAttribute:NSFontAttributeName value:[UIFont themeFontRegular:14] range:NSMakeRange(content.length - length, length)];
 
     self.commentView.linkAttributes = @{NSForegroundColorAttributeName:[UIColor themeRed3],NSFontAttributeName:[UIFont themeFontRegular:14]};
+    self.commentView.activeLinkAttributes = @{NSForegroundColorAttributeName:[UIColor themeRed3],NSFontAttributeName:[UIFont themeFontRegular:14]};
     self.commentView.attributedTruncationToken = nil;
     self.commentView.numberOfLines = 0;
     [self.commentView setText:[mutableAttributedString copy]];
@@ -326,7 +333,6 @@
         if (self.delegate) {
             [self.delegate onReadMoreClick:self];
         }
-        [self setComment:self.curData];
     }
 }
 
