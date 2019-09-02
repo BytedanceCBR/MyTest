@@ -16,9 +16,14 @@
 #import "TTForumPostThreadStatusViewModel.h"
 #import "FHEnvContext.h"
 #import <TTBusinessManager+StringUtils.h>
+#import <FHUtils.h>
 
 //默认轮训间隔时间5分钟
 #define defaultFocusTimerInterval 300
+//默认的显示间隔
+#define defaultFocusInterval 28800
+
+#define lastRedPointShowKey @"lastRedPointShowKey"
 
 static const NSString *kFHFollowListCacheKey = @"cache_follow_list_key";
 static const NSString *kFHFollowListDataKey = @"key_follow_list_data";
@@ -48,6 +53,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 @property (nonatomic, copy)     NSString      *followListDataKey;// 关注数据 用户相关 存储key
 @property (nonatomic, strong)   NSTimer       *focusTimer;//关注是否有新内容的轮训timer
 @property (nonatomic, assign)   NSTimeInterval focusTimerInterval;//轮训时间
+@property (nonatomic, assign)   NSTimeInterval focusInterval;//间隔时间
 
 @property (nonatomic, assign)   NSInteger retryTimes;//重试次数
 
@@ -70,6 +76,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         [TTAccount addMulticastDelegate:self];
         _followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];
         _focusTimerInterval = defaultFocusTimerInterval;
+        _focusInterval = defaultFocusInterval;
         // 加载本地
         [self loadFollowListData];
         [self loadLocalUgcConfigData];
@@ -495,6 +502,9 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 // 帐号切换
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
 {
+    //切换账号时记录的时间清零，重新显示小红点
+    [FHUtils setContent:@(0) forKey:lastRedPointShowKey];
+    
     if ([TTAccountManager isLogin]) {
         self.followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];
     } else {
@@ -614,16 +624,24 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 - (void)setHasNewTimerInteralAndGetNewFirstTime {
     //每隔一段时候调用接口
     __weak typeof(self) wself = self;
-    [FHHouseUGCAPI refreshFeedTips:@"f_ugc_follow" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSError * _Nonnull error) {
+    [FHHouseUGCAPI refreshFeedTips:@"f_ugc_follow" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSTimeInterval cacheDuration, NSError * _Nonnull error) {
         if(!error && hasNew){
             self.ugcFocusHasNew = YES;
         }else{
             self.ugcFocusHasNew = NO;
         }
+        
+        if(self.ugcFocusHasNew){
+            self.ugcFocusHasNew = [self isCanShowRedPoint];
+        }
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
         
         if(interval > 0){
             self.focusTimerInterval = interval;
+        }
+        if(cacheDuration > 0){
+            self.focusInterval = cacheDuration;
         }
         [self startTimer];
     }];
@@ -632,12 +650,31 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 - (void)getHasNewForTimer {
     //每隔一段时候调用接口
     __weak typeof(self) wself = self;
-    [FHHouseUGCAPI refreshFeedTips:@"f_ugc_follow" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSError * _Nonnull error) {
-        if(!error && hasNew){
+    [FHHouseUGCAPI refreshFeedTips:@"f_ugc_follow" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSTimeInterval cacheDuration, NSError * _Nonnull error) {
+        if(!error && hasNew && [self isCanShowRedPoint]){
             self.ugcFocusHasNew = YES;
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
         }
     }];
+}
+
+- (BOOL)isCanShowRedPoint {
+    //显示时候记录时间
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+    NSNumber *last = [FHUtils contentForKey:lastRedPointShowKey];
+    NSTimeInterval lastTime = last.doubleValue;
+    
+    if(lastTime > 0 && (currentTime - lastTime) <= self.focusInterval){
+        return NO;
+    }
+    
+    return YES;
+}
+
+- (void)recordHideRedPointTime {
+    //显示时候记录时间
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+    [FHUtils setContent:@(currentTime) forKey:lastRedPointShowKey];
 }
 
 #pragma mark - Publisher Hisgtory

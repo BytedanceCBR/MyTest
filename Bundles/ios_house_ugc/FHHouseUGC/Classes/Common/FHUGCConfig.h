@@ -79,6 +79,8 @@ static NSString *const kFHUGCFocusTabHasNewNotification = @"k_fh_ugc_focus_tab_h
 
 - (NSArray *)ugcDetailLeadSuggest;
 
+- (void)recordHideRedPointTime;
+
 
 /**
  获取发布器选择历史信息

@@ -137,6 +137,7 @@
     if(self.viewModel.currentTabIndex == 0 && self.hasFocusTips){
         self.hasFocusTips = NO;
         [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+        [[FHUGCConfig sharedInstance] recordHideRedPointTime];
         self.segmentControl.sectionRedPoints = @[@0];
         [self.viewModel refreshCell:YES];
     }

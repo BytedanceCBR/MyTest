@@ -467,7 +467,7 @@
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     NSMutableDictionary *dict = @{}.mutableCopy;
-    traceParam[@"page_type"] = @"topic_publisher";
+    traceParam[@"page_type"] = @"feed_publisher";
     traceParam[@"enter_from"] = page_type;
     dict[TRACER_KEY] = traceParam;
     dict[VCTITLE_KEY] = @"发帖";
