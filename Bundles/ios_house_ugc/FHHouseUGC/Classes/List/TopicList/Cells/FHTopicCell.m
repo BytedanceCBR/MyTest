@@ -147,6 +147,7 @@
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.headerImageView.mas_right).offset(10);
+        make.height.mas_equalTo(self.titleLabel.font.pointSize + 2);
         make.top.equalTo(self.headerImageView).offset(6);
         make.right.equalTo(self.contentView).offset(-20);
     }];
@@ -154,11 +155,12 @@
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.titleLabel);
         make.top.equalTo(self.titleLabel.mas_bottom).offset(2);
+        make.bottom.equalTo(self.detailLabel.mas_top).offset(-2);
     }];
     
     [self.detailLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.titleLabel);
-        make.top.equalTo(self.subtitleLabel.mas_bottom).offset(2);
+        make.height.mas_equalTo(self.detailLabel.font.pointSize + 2);
         make.bottom.equalTo(self.headerImageView).offset(-5);
     }];
     
