@@ -362,7 +362,8 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
          [self configDiggButton];
      }];
     
-    self.isShowShareView = self.cellEntity.article.userDigg;
+    //用户已经点赞 并且 setting中开启 展示分享view时才生效
+    self.isShowShareView = self.cellEntity.article.userDigg && ttvs_isVideoFeedshowDirectShare();
     [self configureShareView];
     self.avatarLabel.hidden = self.isShowShareView ? YES : NO;
     self.avatarLabelButton.userInteractionEnabled = NO;
