@@ -144,7 +144,10 @@
     if (animated) {
         [model.tableView endUpdates];
     }
-    [self tracerRealtorEvaluationShowToIndex:showCount];
+}
+
+- (void)fh_willDisplayCell;{
+    [self addRealtorShowLog];
 }
 
 - (void)foldButtonClick:(UIButton *)button {
@@ -156,6 +159,7 @@
     }
     [self addClickLoadMoreLog];
     [self updateItems:YES];
+    [self addRealtorShowLog];
 }
 
 - (void)onReadMoreClick:(FHDetailHouseReviewCommentItemView *)item {
@@ -196,7 +200,9 @@
     }];
     
     [modelData.tableView endUpdates];
-    [self addClickReadMoreLog:item.curData];
+    if(item.curData.isExpended){
+        [self addClickReadMoreLog:item.curData];
+    }
 }
 
 - (void)onCallClick:(FHDetailHouseReviewCommentItemView *)item {
@@ -260,6 +266,12 @@
     FHDetailContactModel *contact = item.curData.realtorInfo;
     cellModel.phoneCallViewModel.belongsVC = cellModel.belongsVC;
     [cellModel.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO];
+}
+
+-(void)addRealtorShowLog{
+    FHDetailHouseReviewCommentCellModel *model = (FHDetailHouseReviewCommentCellModel *) self.currentData;
+    NSInteger showCount = model.isExpand ? model.houseReviewComment.count : MIN(model.houseReviewComment.count, 2);
+    [self tracerRealtorEvaluationShowToIndex:showCount];
 }
 
 -(void)addClickLoadMoreLog{

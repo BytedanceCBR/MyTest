@@ -220,6 +220,7 @@
     model.isFold = !model.isFold;
     self.foldButton.isFold = model.isFold;
     [self updateItems:YES];
+    [self addRealtorShowLog];
 }
 
 - (BOOL)shouldShowContact:(FHDetailContactModel* )contact {
@@ -298,8 +299,17 @@
         }];
         realtorShowCount = 0;
     }
-    // realtor_show埋点
-    [self tracerRealtorShowToIndex:realtorShowCount];
+//    [self tracerRealtorShowToIndex:realtorShowCount];
+}
+
+- (void)fh_willDisplayCell;{
+    [self addRealtorShowLog];
+}
+
+-(void)addRealtorShowLog{
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *) self.currentData;
+    NSInteger showCount = model.isFold ? MIN(model.recommendedRealtors.count, 3): model.recommendedRealtors.count;
+    [self tracerRealtorShowToIndex:showCount];
 }
 
 - (void)tracerRealtorShowToIndex:(NSInteger)index {
