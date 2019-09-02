@@ -19,7 +19,7 @@
 
 @property(nonatomic, strong) UIImageView *titleImageView;
 @property(nonatomic, strong) UIButton *moreBtn;
-@property(nonatomic, strong) UILabel *personLabel;
+//@property(nonatomic, strong) UILabel *personLabel;
 @property(nonatomic, strong) UILabel *contentLabel;
 
 @property(nonatomic, strong) UIView *voteView;
@@ -94,10 +94,10 @@
     _moreBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
     [self.bgView addSubview:_moreBtn];
     
-    self.personLabel = [[UILabel alloc] init];
-    _personLabel.textColor = [UIColor themeGray3];
-    _personLabel.font = [UIFont themeFontMedium:10];
-    [self.bgView addSubview:_personLabel];
+//    self.personLabel = [[UILabel alloc] init];
+//    _personLabel.textColor = [UIColor themeGray3];
+//    _personLabel.font = [UIFont themeFontMedium:10];
+//    [self.bgView addSubview:_personLabel];
     
     self.contentLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     _contentLabel.numberOfLines = 2;
@@ -165,14 +165,14 @@
         make.height.mas_equalTo(22);
     }];
     
-    [self.personLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(9);
-        make.centerX.mas_equalTo(self.bgView);
-        make.height.mas_equalTo(12);
-    }];
+//    [self.personLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(9);
+//        make.centerX.mas_equalTo(self.bgView);
+//        make.height.mas_equalTo(12);
+//    }];
 
     [self.voteView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.personLabel.mas_bottom);
+        make.top.mas_equalTo(self.contentLabel.mas_bottom);
         make.left.right.bottom.mas_equalTo(self.bgView);
     }];
     
@@ -224,7 +224,7 @@
         make.height.mas_equalTo(cellModel.vote.contentHeight);
     }];
     //讨论人数
-    self.personLabel.attributedText = [self generatePersonCount:cellModel.vote.personDesc];
+//    self.personLabel.attributedText = [self generatePersonCount:cellModel.vote.personDesc];
     //选项
     [self.leftBtn setTitle:cellModel.vote.leftDesc forState:UIControlStateNormal];
     [self.rightBtn setTitle:cellModel.vote.rightDesc forState:UIControlStateNormal];
@@ -243,10 +243,10 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = 176 + cellModel.vote.contentHeight;
+        CGFloat height = 155 + cellModel.vote.contentHeight;
         return height;
     }
-    return 198;
+    return 177;
 }
 
 - (void)goToDetail:(id)sender {
