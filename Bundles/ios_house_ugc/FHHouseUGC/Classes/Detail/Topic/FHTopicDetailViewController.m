@@ -460,14 +460,14 @@
 - (void)gotoPostVC {
     // 跳转到发布器
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"element_type"] = @"feed_publisher";
+    tracerDict[@"element_type"] = @"topic_publisher";
     NSString *page_type = @"topic_detail";
     tracerDict[@"page_type"] = page_type;
     [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     NSMutableDictionary *dict = @{}.mutableCopy;
-    traceParam[@"page_type"] = @"feed_publisher";
+    traceParam[@"page_type"] = @"topic_publisher";
     traceParam[@"enter_from"] = page_type;
     dict[TRACER_KEY] = traceParam;
     dict[VCTITLE_KEY] = @"发帖";

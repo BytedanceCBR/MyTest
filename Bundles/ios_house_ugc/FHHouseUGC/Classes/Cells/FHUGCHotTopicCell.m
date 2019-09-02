@@ -196,7 +196,7 @@
         traceParam[@"element_from"] = @"hot_topic";
         traceParam[@"enter_type"] = @"click";
         traceParam[@"rank"] = @(indexPath.row);
-        traceParam[@"log_pb"] = @"be_null";
+        traceParam[@"log_pb"] = model.logPb;
         dict[@"tracer"] = traceParam;
         
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];

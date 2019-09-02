@@ -738,6 +738,7 @@
                            @"avatarUrl": @"avatar_url",
                            @"talkCountStr": @"talk_count_str",
                            @"talkCount": @"talk_count",
+                           @"logPb": @"log_pb",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
