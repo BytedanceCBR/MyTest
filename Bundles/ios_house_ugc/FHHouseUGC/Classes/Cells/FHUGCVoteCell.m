@@ -177,7 +177,7 @@
     }];
     
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.voteView).offset(17);
+        make.centerY.mas_equalTo(self.leftBtn);
         make.width.mas_equalTo(28);
         make.height.mas_equalTo(24);
         make.centerX.mas_equalTo(self.voteView);
@@ -185,14 +185,14 @@
     
     [self.leftBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.icon.mas_left).offset(-10);
-        make.centerY.mas_equalTo(self.icon);
+        make.top.mas_equalTo(self.voteView).offset(15);
         make.width.mas_equalTo(100);
         make.height.mas_equalTo(35);
     }];
     
     [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.icon.mas_right).offset(10);
-        make.centerY.mas_equalTo(self.icon);
+        make.centerY.mas_equalTo(self.leftBtn);
         make.width.mas_equalTo(100);
         make.height.mas_equalTo(35);
     }];
@@ -243,10 +243,10 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = 155 + cellModel.vote.contentHeight;
+        CGFloat height = 158 + cellModel.vote.contentHeight;
         return height;
     }
-    return 177;
+    return 180;
 }
 
 - (void)goToDetail:(id)sender {
