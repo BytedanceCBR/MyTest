@@ -159,7 +159,7 @@
     [self.detailLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.titleLabel);
         make.top.equalTo(self.subtitleLabel.mas_bottom).offset(2);
-        make.bottom.lessThanOrEqualTo(self.headerImageView).offset(-5);
+        make.bottom.equalTo(self.headerImageView).offset(-5);
     }];
     
     [self.bottomSepLine mas_makeConstraints:^(MASConstraintMaker *make) {
