@@ -169,9 +169,6 @@
         }
     }];
     [modelData.tableView beginUpdates];
-    [item mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo([FHDetailHouseReviewCommentItemView heightForData:item.curData]);
-    }];
 
     [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
@@ -180,24 +177,25 @@
     if(item.curData.isExpended){
         [item setComment:item.curData];
     }
+
+    if(item.curData.isExpended){
+        item.commentView.height = [item.curData commentHeight];
+    }
+
+    [item mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo([FHDetailHouseReviewCommentItemView heightForData:item.curData]);
+    }];
     
     [UIView animateWithDuration:0.3 animations:^{
-        CGRect frame = item.commentView.frame;
-        frame.size.height= [item.curData commentHeight];
-        item.commentView.frame = frame;
-        [item.commentView layoutIfNeeded];
-        [item layoutIfNeeded];
         [self layoutIfNeeded];
     }completion:^(BOOL finished) {
         if(!item.curData.isExpended){
+            item.commentView.height = [item.curData commentHeight];
             [item setComment:item.curData];
         }
-        [item.commentView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo([item.curData commentHeight]);
-        }];
     }];
-    [modelData.tableView beginUpdates];
     
+    [modelData.tableView endUpdates];
     [self addClickReadMoreLog:item.curData];
 }
 

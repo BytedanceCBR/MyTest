@@ -104,18 +104,19 @@
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateSelected];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateHighlighted];
     [self.realtorInfoContainerView addSubview:_imBtn];
-    
+
     _commentView = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _commentView.delegate = self;
     _commentView.verticalAlignment = TTTAttributedLabelVerticalAlignmentTop;
+    _commentView.frame = CGRectMake(20, 52, SCREEN_WIDTH - 40, 0);
     [self addSubview:_commentView];
-    
+
     [_licenceIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
     [_callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
     [_imBtn addTarget:self action:@selector(imClick:) forControlEvents:UIControlEventTouchUpInside];
     [_realtorInfoContainerView addTarget:self action:@selector(realtorInfoClick:) forControlEvents:UIControlEventTouchUpInside];
     [_realtorLabelContainer addTarget:self action:@selector(realtorInfoClick:) forControlEvents:UIControlEventTouchUpInside];
-    
+
     [self.realtorInfoContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self);
         make.height.mas_equalTo(42);
@@ -187,17 +188,9 @@
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
         make.centerY.mas_equalTo(self.avatarView);
     }];
-
-    [self.commentView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
-        make.height.mas_equalTo(0);
-        make.top.mas_equalTo(52);
-    }];
 }
 
-- (void)refreshIdentifyView:(UIImageView *)identifyView withUrl:(NSString *)imageUrl
-{
+- (void)refreshIdentifyView:(UIImageView *)identifyView withUrl:(NSString *)imageUrl {
     if (!identifyView) {
         return;
     }
@@ -215,7 +208,7 @@
             }
         }];
         identifyView.hidden = NO;
-    }else {
+    } else {
         identifyView.hidden = YES;
     }
 }
@@ -239,10 +232,8 @@
 
     self.commentView.height = self.curData.commentHeight;
 
-    [self.commentView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(modelData.commentHeight);
-    }];
-    
+    _commentView.height = modelData.commentHeight;
+
     [self setComment:modelData];
     self.houseReviewView.text = modelData.commentText ?: @"";
     [self.nameView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -318,8 +309,8 @@
     [mutableAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor themeRed3] range:NSMakeRange(content.length - length, length)];
     [mutableAttributedString addAttribute:NSFontAttributeName value:[UIFont themeFontRegular:14] range:NSMakeRange(content.length - length, length)];
 
-    self.commentView.linkAttributes = @{NSForegroundColorAttributeName:[UIColor themeRed3],NSFontAttributeName:[UIFont themeFontRegular:14]};
-    self.commentView.activeLinkAttributes = @{NSForegroundColorAttributeName:[UIColor themeRed3],NSFontAttributeName:[UIFont themeFontRegular:14]};
+    self.commentView.linkAttributes = @{NSForegroundColorAttributeName: [UIColor themeRed3], NSFontAttributeName: [UIFont themeFontRegular:14]};
+    self.commentView.activeLinkAttributes = @{NSForegroundColorAttributeName: [UIColor themeRed3], NSFontAttributeName: [UIFont themeFontRegular:14]};
     self.commentView.attributedTruncationToken = nil;
     self.commentView.numberOfLines = 0;
     [self.commentView setText:[mutableAttributedString copy]];
