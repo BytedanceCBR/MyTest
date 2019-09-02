@@ -38,7 +38,7 @@ typedef void(^FHHousePhoneCallCompletionBlock)(BOOL success,NSError *error);
 @property (nonatomic , copy) NSString *cardType;
 @property (nonatomic , copy) NSString *rank; 
 @property (nonatomic , strong) NSDictionary *logPb;
-@property (nonatomic , strong) NSDictionary *realtorLogPb;
+@property (nonatomic , strong) NSDictionary *realtorLogpb;
 
 // 选填
 @property (nonatomic , strong) NSNumber *realtorRank;

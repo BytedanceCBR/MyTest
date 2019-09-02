@@ -95,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailContactImageTagModel *imageTag;
 
 @property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
-@property (nonatomic, copy , nullable) NSDictionary *realtorLogPb;
+@property (nonatomic, copy , nullable) NSDictionary *realtorLogpb;
 - (nonnull id)copyWithZone:(nullable NSZone *)zone;
 
 - (void)encodeWithCoder:(nonnull NSCoder *)aCoder;

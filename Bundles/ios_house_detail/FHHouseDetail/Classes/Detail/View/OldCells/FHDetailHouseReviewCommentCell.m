@@ -210,7 +210,7 @@
     extraDict[@"realtor_id"] = contact.realtorId;
     extraDict[@"realtor_rank"] = @(index);
     extraDict[@"realtor_position"] = @"realtor_evaluation";
-    extraDict[@"realtor_logpb"] = contact.realtorLogPb;
+    extraDict[@"realtor_logpb"] = contact.realtorLogpb;
     if (self.baseViewModel.detailTracerDic) {
         [extraDict addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
     }
@@ -278,7 +278,7 @@
     params[@"page_type"]= tracerDic[@"page_type"];
     params[@"element_from"]= @"realtor_evaluation_fulltext";
     params[@"item_id"]= data.commentId;
-    tracerDic[@"realtor_logpb"] = data.realtorInfo.realtorLogPb;
+    tracerDic[@"realtor_logpb"] = data.realtorInfo.realtorLogpb;
     [FHUserTracker writeEvent:@"click_loadmore" params:params];
 }
 
@@ -298,7 +298,7 @@
             tracerDic[@"realtor_rank"] = @(i);
             tracerDic[@"realtor_position"] = @"realtor_evaluation";
             tracerDic[@"item_id"] = reviewCommentModel.commentId;
-            tracerDic[@"realtor_logpb"] = reviewCommentModel.realtorInfo.realtorLogPb;
+            tracerDic[@"realtor_logpb"] = reviewCommentModel.realtorInfo.realtorLogpb;
             [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id"]];
             [FHUserTracker writeEvent:@"realtor_evaluation_show" params:tracerDic];
         }
