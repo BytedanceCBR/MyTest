@@ -125,6 +125,7 @@
     
     FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
     self.dataList = model.hotTopicList;
+    [self.collectionView reloadData];
 }
 
 + (CGFloat)heightForData:(id)data {
