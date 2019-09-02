@@ -329,7 +329,7 @@
 }
 
 
-+ (TTHttpTask *)refreshFeedTips:(NSString *)category beHotTime:(double)beHotTime completion:(void(^)(bool hasNew ,NSTimeInterval interval, NSError *error))completion {
++ (TTHttpTask *)refreshFeedTips:(NSString *)category beHotTime:(double)beHotTime completion:(void(^)(bool hasNew ,NSTimeInterval interval,NSTimeInterval cacheDuration, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/v1/refresh_tips";
     NSString *url = QURL(queryPath);
     
@@ -346,6 +346,7 @@
         BOOL success = NO;
         BOOL hasNew = NO;
         NSTimeInterval interval = 0;
+        NSTimeInterval cacheDuration = 0;
         if (!error) {
             @try{
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
@@ -356,6 +357,7 @@
                 }else{
                     hasNew = [json[@"data"][@"has_new_content"] boolValue];
                     interval = [json[@"data"][@"refresh_duration"] doubleValue];
+                    cacheDuration = [json[@"data"][@"client_cache_duration"] doubleValue];
                 }
             }
             @catch(NSException *e){
@@ -363,7 +365,7 @@
             }
         }
         if (completion) {
-            completion(hasNew,interval,error);
+            completion(hasNew,interval,cacheDuration,error);
         }
     }];
 }
