@@ -118,6 +118,7 @@
         [self addSubview:_userAvatar];
 
         _userName = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+        _userName.font = [UIFont fontWithName:@"PingFangSC-Medium" size:16] ? : [UIFont systemFontOfSize:16];
         _userName.textColor = [UIColor themeGray1];
         _userName.textAlignment = NSTextAlignmentLeft;
         [self addSubview:_userName];
