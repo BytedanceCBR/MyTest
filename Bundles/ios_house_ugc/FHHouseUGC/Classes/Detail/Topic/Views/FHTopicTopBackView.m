@@ -35,6 +35,7 @@
     self.backgroundColor = [UIColor whiteColor];
     // _headerImageView
     _headerImageView = [[UIImageView alloc] init];
+    _headerImageView.clipsToBounds = YES;
     _headerImageView.contentMode = UIViewContentModeScaleAspectFill;
     [self addSubview:_headerImageView];
     [_headerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -44,6 +45,7 @@
     UIImageView *imageTemp = [[UIImageView alloc] init];
     imageTemp.image = [UIImage imageNamed:@"fh_ugc_header_gradient"];
     imageTemp.backgroundColor = [UIColor clearColor];
+    imageTemp.clipsToBounds = YES;
     [_headerImageView addSubview:imageTemp];
     [imageTemp mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.headerImageView);

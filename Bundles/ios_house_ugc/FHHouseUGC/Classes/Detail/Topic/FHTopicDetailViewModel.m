@@ -45,6 +45,7 @@
 @property(nonatomic, copy) NSString *categoryName;
 @property (nonatomic, copy)     NSString       *tab_id;
 @property (nonatomic, copy)     NSString       *appExtraParams;
+@property (nonatomic, weak)     FHErrorView       *tableEmptyView;// 暂时记一个就好了
 
 @end
 
@@ -240,6 +241,10 @@
             // 数据ok
             [self.detailController hiddenEmptyView];
             [self.detailController refreshHeaderData];
+            // 移除空页面
+            if (self.tableEmptyView) {
+                [self.tableEmptyView removeFromSuperview];
+            }
             [self.currentTableView reloadData];
             // hasMore
             FHRefreshCustomFooter *refreshFooter = (FHRefreshCustomFooter *)self.currentTableView.mj_footer;
@@ -254,6 +259,14 @@
             if (self.headerModel) {
                 [self.detailController refreshHeaderData];
                 self.currentTableView.mj_footer.hidden = YES;
+                if (self.dataList.count <= 0) {
+                    // 添加空态页
+                    FHErrorView *emptyView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 500)];
+                    emptyView.backgroundColor = [UIColor themeGray7];
+                    [self.currentTableView addSubview:emptyView];
+                    [emptyView showEmptyWithTip:@"这里还没有内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+                    self.tableEmptyView = emptyView;
+                }
             } else {
                 [self.detailController showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             }
@@ -443,12 +456,14 @@
                                             // 是当前的话题
                                             [tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
                                             if (self.dataList.count == 0) {
+                                                self.hasMore = NO;
                                                 [self.dataList addObject:cellModel];
                                             } else {
                                                 [self.dataList insertObject:cellModel atIndex:0];
                                             }
                                             //self.feedOffset += 1;
-                                            [tableView reloadData];
+                                            //[tableView reloadData];
+                                            [self processLoadingState];
                                             self.needRefreshCell = NO;
                                             break;
                                         }
@@ -479,6 +494,10 @@
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         [tableView layoutIfNeeded];
         [tableView endUpdates];
+        if (self.dataList.count <= 0) {
+            self.hasMore = NO;
+            [self processLoadingState];
+        }
     }
 }
 
