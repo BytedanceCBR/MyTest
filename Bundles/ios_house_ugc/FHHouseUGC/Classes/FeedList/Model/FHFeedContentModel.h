@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *schema;
 @property (nonatomic, copy , nullable) NSString *talkCount;
 @property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSDictionary *logPb;
+
 @end
 
 @interface FHFeedContentRawDataContentExtraModel : JSONModel
