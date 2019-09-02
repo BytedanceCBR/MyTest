@@ -196,7 +196,7 @@
             make.height.mas_equalTo([item.curData commentHeight]);
         }];
     }];
-    [modelData.tableView endUpdates];
+    [modelData.tableView beginUpdates];
     
     [self addClickReadMoreLog:item.curData];
 }
