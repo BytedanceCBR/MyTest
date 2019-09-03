@@ -243,7 +243,7 @@
     tracerDict[@"page_type"] = @"nearby_list";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"rank"] = @(rank);
-    tracerDict[@"topic_id"] = model.forumId;
+    tracerDict[@"concern_id"] = model.forumId;
     tracerDict[@"log_pb"] = model.logPb;
     
     TRACK_EVENT(@"topic_show", tracerDict);

@@ -15,7 +15,6 @@
 #import <FHUserTracker.h>
 
 @interface FHTopicListController () <TTUIViewControllerTrackProtocol>
-@property(nonatomic, copy) NSString *topicId;
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic, strong) FHTopicListViewModel *viewModel;
@@ -27,7 +26,6 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        self.topicId = paramObj.allParams[@"topic_id"];
         self.delegate = paramObj.allParams[@"delegate"];
     }
     return self;

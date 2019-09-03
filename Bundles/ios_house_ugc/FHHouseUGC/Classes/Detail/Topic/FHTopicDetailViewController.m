@@ -108,7 +108,7 @@
         // 取url中的埋点数据结束
         self.enter_from = self.tracerDict[@"enter_from"];
         if (cid > 0) {
-            self.tracerDict[@"topic_id"] = @(cid);
+            self.tracerDict[@"concern_id"] = @(cid);
         }
         self.ttTrackStayEnable = YES;
     }

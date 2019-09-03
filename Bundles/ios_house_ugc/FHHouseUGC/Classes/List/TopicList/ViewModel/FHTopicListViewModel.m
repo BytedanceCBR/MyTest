@@ -100,7 +100,7 @@
     param[UT_CATEGORY_NAME] = [self categoryName];
     param[UT_LOG_PB] = item.logPb?:UT_BE_NULL;
     param[@"rank"] = @(indexPath.row);
-    param[@"topic_id"] = item.forumId;
+    param[@"concern_id"] = item.forumId;
     param[@"click_position"] = @"topic_select";
     TRACK_EVENT(@"click_select_topic", param);
     // ---
@@ -233,7 +233,7 @@
     tracerDict[UT_ELEMENT_FROM] = self.viewController.tracerModel.elementFrom?:UT_BE_NULL;
     tracerDict[UT_LOG_PB] = model.logPb?:UT_BE_NULL;
     tracerDict[@"rank"] = @(rank);
-    tracerDict[@"topic_id"] = model.forumId;
+    tracerDict[@"concern_id"] = model.forumId;
     
     TRACK_EVENT(@"topic_show", tracerDict);
 }
