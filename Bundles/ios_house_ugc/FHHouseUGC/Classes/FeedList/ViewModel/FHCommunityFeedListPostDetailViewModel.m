@@ -505,6 +505,8 @@
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
+        [self goToVoteDetail:cellModel value:0];
     }
 }
 
