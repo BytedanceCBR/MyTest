@@ -231,7 +231,7 @@
     tracerDict[UT_PAGE_TYPE] = @"topic_list";
     tracerDict[UT_ENTER_FROM] = self.viewController.tracerModel.enterFrom;
     tracerDict[UT_ELEMENT_FROM] = self.viewController.tracerModel.elementFrom?:UT_BE_NULL;
-    tracerDict[UT_LOG_PB] = model.logPb?:UT_LOG_PB;
+    tracerDict[UT_LOG_PB] = model.logPb?:UT_BE_NULL;
     tracerDict[@"rank"] = @(rank);
     tracerDict[@"topic_id"] = model.forumId;
     
