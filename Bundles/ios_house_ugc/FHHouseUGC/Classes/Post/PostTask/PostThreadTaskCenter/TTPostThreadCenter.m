@@ -245,6 +245,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         NSMutableDictionary *tracerDict = task.extraTrack.mutableCopy;
         tracerDict[@"publish_type"] = @"publish_success";
         tracerDict[@"group_id"] = group_id_str;
+        tracerDict[@"topic_id"] = task.mentionConcern;
         [FHUserTracker writeEvent:@"feed_publish_success" params:tracerDict];
 
         //对于转发帖单独发一堆通知,并且对应的opt_id/fw_id的帖子转发数加1
