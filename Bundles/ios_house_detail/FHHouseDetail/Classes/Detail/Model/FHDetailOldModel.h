@@ -42,6 +42,20 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+//用户房源评论
+@protocol FHUserHouseCommentModel<NSObject>
+@end
+
+@interface FHUserHouseCommentModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *userName;
+@property (nonatomic, copy , nullable) NSString *userAvatar;
+@property (nonatomic, copy , nullable) NSString *userContent;
+@property (nonatomic, copy , nullable) NSString *evaluationData;
+
+@end
+
+
 @interface FHDetailOldDataNeighborhoodInfoModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *status;
@@ -356,6 +370,7 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
+@property (nonatomic, strong , nullable) NSArray<FHUserHouseCommentModel> *userHouseComments;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
 @property (nonatomic, strong , nullable) FHDisclaimerModel *disclaimer ;

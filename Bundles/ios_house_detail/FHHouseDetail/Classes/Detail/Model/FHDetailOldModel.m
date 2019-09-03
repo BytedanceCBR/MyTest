@@ -394,6 +394,7 @@
                            @"chooseAgencyList": @"choose_agency_list",
                            @"baseExtra": @"base_extra",
                            @"ugcSocialGroup":@"ugc_social_group",
+                           @"userHouseComments": @"user_evaluations",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -549,6 +550,26 @@
     return YES;
 }
 @end
+
+@implementation FHUserHouseCommentModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+            @"userName": @"user_name",
+            @"userAvatar": @"user_avatar",
+            @"userContent": @"user_content",
+            @"evaluationData": @"evaluation_data",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 
 // MARK 自定义类型
 
