@@ -133,12 +133,12 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
-+ (void)requestSendVerifyCode:(NSString *)phoneNumber completion:(void(^_Nullable)(NSNumber *retryTime, UIImage *captchaImage, NSError *error))completion {
-    [TTAccountManager startSendCodeWithPhoneNumber:phoneNumber captcha:nil type:TTASMSCodeScenarioQuickLogin unbindExist:NO completion:completion];
++ (void)requestSendVerifyCode:(NSString *)phoneNumber captcha:(NSString *_Nullable)captcha completion:(void(^_Nullable)(NSNumber *retryTime, UIImage *captchaImage, NSError *error))completion {
+    [TTAccountManager startSendCodeWithPhoneNumber:phoneNumber captcha:captcha type:TTASMSCodeScenarioQuickLogin unbindExist:NO completion:completion];
 }
 
-+ (void)requestQuickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode completion:(void(^_Nullable)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completion {
-    [TTAccountManager startQuickLoginWithPhoneNumber:phoneNumber code:smsCode captcha:nil completion:completion];
++ (void)requestQuickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha completion:(void(^_Nullable)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completion {
+    [TTAccountManager startQuickLoginWithPhoneNumber:phoneNumber code:smsCode captcha:captcha completion:completion];
 }
 
 + (NSString *)errorMessageByErrorCode:(NSError *)error {

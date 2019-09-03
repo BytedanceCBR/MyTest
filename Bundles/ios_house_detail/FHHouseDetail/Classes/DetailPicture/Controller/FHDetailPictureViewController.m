@@ -27,11 +27,12 @@
 #import "HTSDeviceManager.h"
 #import "FHDetailVideoInfoView.h"
 #import "NSDictionary+TTAdditions.h"
-
+#import "FHLoadingButton.h"
 #define kFHDPTopBarHeight 44.f
 #define kFHDPBottomBarHeight 54.f
 
 #define kFHDPMoveDirectionStartOffset 20.f
+NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 @interface FHDetailPictureViewController ()<UIScrollViewDelegate, TTShowImageViewDelegate,TTPreviewPanBackDelegate,UIGestureRecognizerDelegate, FHVideoViewDelegate>
 {
@@ -70,7 +71,7 @@
 
 @property(nonatomic, strong)UIView * bottomBar;
 @property (nonatomic, strong)   UIButton       *onlineBtn;
-@property (nonatomic, strong)   UIButton       *contactBtn;
+@property (nonatomic, strong)   FHLoadingButton       *contactBtn;
 
 @property(nonatomic, strong)UIPanGestureRecognizer * panGestureRecognizer;
 @property(nonatomic, strong)UILongPressGestureRecognizer *longPressGestureRecognizer;
@@ -121,6 +122,7 @@
         _lastStatusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
         [self setCurrentStatusStyle];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshFollowStatus:) name:@"follow_up_did_changed" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshCallBtnLoadingState:) name:kFHDetailLoadingNotification object:nil];
     }
     return self;
 }
@@ -139,7 +141,20 @@
         
     }
 }
-
+- (void)refreshCallBtnLoadingState:(NSNotification *)noti
+{
+    NSDictionary *userInfo = noti.userInfo;
+    NSString *houseId = [userInfo tt_stringValueForKey:@"house_id"];
+    NSInteger loading = [userInfo tt_integerValueForKey:@"show_loading"];
+    if (![houseId isEqualToString:self.houseId]) {
+        return;
+    }
+    if (loading) {
+        [self.contactBtn startLoading];
+    }else {
+        [self.contactBtn stopLoading];
+    }
+}
 - (void)refreshFollowStatus:(NSNotification *)noti
 {
     NSDictionary *userInfo = noti.userInfo;
@@ -467,9 +482,9 @@
     return _onlineBtn;
 }
 
-- (UIButton *)contactBtn {
+- (FHLoadingButton *)contactBtn {
     if (!_contactBtn) {
-        _contactBtn = [[UIButton alloc] init];
+         _contactBtn = [[FHLoadingButton alloc]init];
         _contactBtn.layer.cornerRadius = 4;
         _contactBtn.titleLabel.font = [UIFont themeFontRegular:16];
         _contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#151515"];
