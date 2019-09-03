@@ -59,6 +59,7 @@
 @property (nonatomic, assign)   CGFloat       defaultTopHeight;
 @property (nonatomic, assign)   int64_t cid;// 话题id
 @property (nonatomic, strong)   UIButton       *publishBtn;
+@property (nonatomic, copy)     NSString       *enter_from;// 从哪进入的当前页面
 
 @end
 
@@ -73,6 +74,7 @@
         self.cid = cid;
         // 埋点
         self.tracerDict[@"page_type"] = @"topic_detail";
+        self.enter_from = self.tracerDict[@"enter_from"];
         if (cid > 0) {
             self.tracerDict[@"topic_id"] = @(cid);
         }
@@ -226,6 +228,7 @@
     _viewModel.currentSelectIndex = 0;
     // self.cid = 1642474912698382;//1643171844947979;//1642474912698382;
     _viewModel.cid = self.cid;
+    _viewModel.enter_from = self.enter_from;
     
     // self.mainScrollView.hidden = YES;
     

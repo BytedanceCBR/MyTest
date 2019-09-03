@@ -685,7 +685,7 @@
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"element_type"] = @"like_neighborhood";
     dict[@"page_type"] = [self pageType];
-    dict[@"enter_from"] = [self pageType];
+    dict[@"enter_from"] = self.enter_from.length > 0 ? self.enter_from : [self pageType];// 这个埋点是上个页面从哪来
     dict[@"rank"] = @(rank);
     
     TRACK_EVENT(@"element_show", dict);
@@ -693,7 +693,7 @@
 
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"enter_from"] = [self pageType];
+    dict[@"enter_from"] = self.enter_from.length > 0 ? self.enter_from : [self pageType];// 这个埋点是上个页面从哪来
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
