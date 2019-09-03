@@ -371,9 +371,8 @@
 }
 
 + (TTHttpTask *)requestTopicHeader:(NSString *)forum_id completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
-    NSString *queryPath = @"/ugc/v:version/refresh_tips";
+    NSString *queryPath = @"/forum/home/v1/info/?";
     NSString *url = QURL(queryPath); // 1640650037191725 1642474912698382
-    url  = @"https://is-hl.snssdk.com/forum/home/v1/info/?";
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if(forum_id){
@@ -407,10 +406,9 @@
 }
 
 + (TTHttpTask *)requestTopicList:(NSString *)query_id tab_id:(NSString *)tab_id categoryName:(NSString *)category offset:(NSInteger)offset count:(NSInteger)count appExtraParams:(NSString *)appExtraParams completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
-    NSString *queryPath = @"/ugc/v:version/refresh_tips";
+    NSString *queryPath = @"/api/feed/forum_all/v1/?";
     NSString *url = QURL(queryPath);
     
-    url = @"https://is-hl.snssdk.com/api/feed/forum_all/v1/?";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (query_id) {
         paramDic[@"query_id"] = query_id;

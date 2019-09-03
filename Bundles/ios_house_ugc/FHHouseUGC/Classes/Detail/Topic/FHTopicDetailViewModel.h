@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)     UITableView       *currentTableView;
 @property (nonatomic, strong)   FHTopicHeaderModel       *headerModel;
 @property (nonatomic, assign)   int64_t cid;// 话题id
+@property (nonatomic, copy)     NSString       *enter_from;// 从哪进入的当前页面
 
 -(instancetype)initWithController:(FHTopicDetailViewController *)viewController;
 
