@@ -183,7 +183,8 @@
         contactConfig.realtorId = contact.realtorId;
         contactConfig.searchId = model.searchId;
         contactConfig.imprId = model.imprId;
-        contactConfig.from = @"app_oldhouse_mulrealtor";
+        contactConfig.realtorType = contact.realtorType;
+        contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
         [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
             if(success && [model.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
                 FHHouseDetailViewController *vc = (FHHouseDetailViewController *)model.belongsVC;
@@ -210,7 +211,7 @@
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         NSMutableDictionary *imExtra = @{}.mutableCopy;
         imExtra[@"realtor_position"] = @"detail_related";
-		imExtra[@"from"] = @"app_oldhouse_mulrealtor";
+		imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
         [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
     }
 }

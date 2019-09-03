@@ -58,7 +58,7 @@ typedef enum : NSUInteger {
     NSString *realtorId = configModel.realtorId;
     NSString *searchId = configModel.searchId;
     NSString *imprId = configModel.imprId;
-    NSString *fromStr = configModel.from.length > 0 ? configModel.from : [self fromStrByHouseType:houseType];
+    NSString *fromStr = configModel.from.length > 0 ? configModel.from : [self fromStrByContact:configModel];
 
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
@@ -113,14 +113,14 @@ typedef enum : NSUInteger {
     }];
 }
 
-+ (NSString *)fromStrByHouseType:(FHHouseType)houseType
++ (NSString *)fromStrByContact:(FHHouseContactConfigModel *)configModel
 {
-    switch (houseType) {
+    switch (configModel.houseType) {
         case FHHouseTypeNewHouse:
             return @"app_court";
             break;
         case FHHouseTypeSecondHandHouse:
-            return @"app_oldhouse";
+            return configModel.realtorType == FHRealtorTypeNormal ? @"app_oldhouse" :@"app_oldhouse_expert";
             break;
         case FHHouseTypeNeighborhood:
             return @"app_neighbourhood";

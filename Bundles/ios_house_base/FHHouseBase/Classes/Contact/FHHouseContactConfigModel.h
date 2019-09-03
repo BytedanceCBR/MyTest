@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "JSONModel.h"
 #import <FHHouseBase/FHHouseType.h>
-
+#import "FHDetailBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -39,6 +39,7 @@ typedef void(^FHHousePhoneCallCompletionBlock)(BOOL success,NSError *error);
 @property (nonatomic , copy) NSString *rank; 
 @property (nonatomic , strong) NSDictionary *logPb;
 @property (nonatomic , strong) NSDictionary *realtorLogpb;
+@property (nonatomic , assign) FHRealtorType realtorType;
 
 // 选填
 @property (nonatomic , strong) NSNumber *realtorRank;
