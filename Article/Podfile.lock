@@ -38,6 +38,7 @@ PODS:
   - BDAlogProtocol (0.1.7)
   - BDAssert/Core (2.0.0)
   - BDMobileRuntime (0.3.38)
+  - BDSSOAuthSDK (1.0.8)
   - BDTArticle (0.2.3)
   - BDTBasePlayer (0.3.47)
   - BDTExploreOrderedData (0.1.7)
@@ -581,6 +582,7 @@ DEPENDENCIES:
   - BDAlogProtocol (= 0.1.7)
   - BDAssert/Core (= 2.0.0)
   - BDMobileRuntime (= 0.3.38)
+  - BDSSOAuthSDK
   - BDTArticle (from `../AKPlugins/BDTArticle`)
   - BDTBasePlayer (from `../AKPlugins/BDTBasePlayer`)
   - BDTExploreOrderedData (from `../AKPlugins/BDTExploreOrderedData`)
@@ -983,6 +985,7 @@ SPEC CHECKSUMS:
   BDAlogProtocol: 187e7105123599bef3b935ec41b40f49112b5fd8
   BDAssert: 7b1b4dd1138bd7ab31cabd3d75b340a49f6902d7
   BDMobileRuntime: 83175e738acd91083ea560cf0fd4e34612987b80
+  BDSSOAuthSDK: 58a6720a0f1cebdba65e1309d986ec2f17305521
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: eed47dd8f845dde6c955f2d527b255a823d40665
   BDTExploreOrderedData: 96bb150a05e560a5e927a7ee53bda56690571a61
@@ -1151,6 +1154,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 5a5d3598988418cc3f98884ce92268f9ef6e090b
+PODFILE CHECKSUM: 0618472c4b0d867379a37c9f14daf3c98890bf09
 
 COCOAPODS: 1.4.0

@@ -43,7 +43,6 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
 + (void)silentFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel completionBlock:(void(^)(BOOL isSuccess))completionBlock
 {
     if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
         if (completionBlock) {
             completionBlock(NO);
         }

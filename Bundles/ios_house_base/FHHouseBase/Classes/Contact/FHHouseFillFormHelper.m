@@ -208,7 +208,7 @@ extern NSString *const kFHToastCountKey;
 + (void)fillFormRequest:(FHHouseFillFormConfigModel *)configModel phone:(NSString *)phone alertView:(FHDetailNoticeAlertView *)alertView
 {
     NSString *customHouseId = configModel.customHouseId;
-    NSString *fromStr = configModel.fromStr;
+    NSString *fromStr = configModel.from;
     
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
@@ -401,6 +401,9 @@ extern NSString *const kFHToastCountKey;
     _position = params[@"position"];
     _realtorPosition = params[@"realtor_position"];
     _itemId = params[@"item_id"];
+    if (params[@"from"]) {
+        _from = params[@"from"];
+    }
 }
 
 - (void)setLogPbWithNSString:(NSString *)logpb

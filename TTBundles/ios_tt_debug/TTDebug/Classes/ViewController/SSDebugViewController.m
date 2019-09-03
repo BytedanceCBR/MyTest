@@ -77,6 +77,8 @@
 #import "TTRNKit.h"
 #import "TTRNKitMacro.h"
 #import "FHRNDebugViewController.h"
+#import "BDSSOAuthManager.h"
+#import "ToastManager.h"
 
 //#import "TTXiguaLiveManager.h"
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
@@ -136,6 +138,10 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         STTableViewCellItem *rnBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"RN_Debug" target:self action:@selector(_openRNBridge)];
         rnBridgeDebugItem.switchStyle = NO;
         [itemArray addObject:rnBridgeDebugItem];
+        
+        STTableViewCellItem *ssoDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"SSO重新验证测试" target:self action:@selector(_ssoDebugClick)];
+        ssoDebugItem.switchStyle = NO;
+        [itemArray addObject:ssoDebugItem];
 
         STTableViewCellItem *shortVideoDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"小视频调试选项点这里" target:self action:@selector(_openShortVideoDebug)];
         shortVideoDebugItem.switchStyle = NO;
@@ -661,6 +667,13 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 - (void)_ugcDebugTest:(UISwitch *)uiswitch {
     [[NSUserDefaults standardUserDefaults] setBool:uiswitch.isOn forKey:@"kUGCDebugConfigKey"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)_ssoDebugClick {
+#if !DEBUG && !TARGET_IPHONE_SIMULATOR
+    [[BDSSOAuthManager sharedInstance] resetAuthInfo];
+    [[ToastManager manager] showToast:@"SSO缓存已清除，请重进App"];
+#endif
 }
 
 - (void)_openHtmlBridge
