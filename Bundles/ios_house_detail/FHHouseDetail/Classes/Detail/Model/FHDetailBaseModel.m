@@ -86,7 +86,8 @@
                            @"callButtonText" : @"call_button_text",
                            @"realtorDetailUrl" : @"main_page_info",
                            @"imageTag": @"image_tag",
-                           @"reportButtonText":@"report_button_text"
+                           @"reportButtonText":@"report_button_text",
+                           @"realtorType":@"realtor_type"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -96,7 +97,6 @@
 {
     return YES;
 }
-
 
 @end
 

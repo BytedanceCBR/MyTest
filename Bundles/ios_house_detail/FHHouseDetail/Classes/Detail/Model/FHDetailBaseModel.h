@@ -64,6 +64,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+typedef NS_ENUM(NSUInteger, FHRealtorType){
+    FHRealtorTypeNormal = 0,
+    FHRealtorTypeExpert = 1
+};
 @protocol FHDetailContactModel<NSObject>
 @end
 
@@ -85,6 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger showRealtorinfo;
 @property (nonatomic, copy , nullable) NSString *callButtonText;
 @property (nonatomic, copy , nullable) NSString *reportButtonText;
+@property (nonatomic, assign) FHRealtorType realtorType;
 
 @property (nonatomic, assign) BOOL unregistered; //是否是注册经济人
 @property (nonatomic, assign) BOOL isFormReport; //是否包含填表单
@@ -109,7 +115,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)toDictionary;
 
 - (NSDictionary *)toDictionaryWithKeys:(NSArray *)propertyNames;
-
 @end
 
 
