@@ -98,6 +98,7 @@
     // 点击话题内容
     NSMutableDictionary *param = self.viewController.tracerDict.mutableCopy;
     param[UT_CATEGORY_NAME] = [self categoryName];
+    param[UT_LOG_PB] = item.logPb?:UT_BE_NULL;
     param[@"rank"] = @(indexPath.row);
     param[@"topic_id"] = item.forumId;
     param[@"click_position"] = @"topic_select";
@@ -224,12 +225,13 @@
     }
 }
 
-- (void)trackClientShow:(FHFeedContentRawDataHotTopicListModel *)model rank:(NSInteger)rank {
+- (void)trackClientShow:(FHTopicListResponseDataListModel *)model rank:(NSInteger)rank {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     
     tracerDict[UT_PAGE_TYPE] = @"topic_list";
     tracerDict[UT_ENTER_FROM] = self.viewController.tracerModel.enterFrom;
     tracerDict[UT_ELEMENT_FROM] = self.viewController.tracerModel.elementFrom?:UT_BE_NULL;
+    tracerDict[UT_LOG_PB] = model.logPb?:UT_LOG_PB;
     tracerDict[@"rank"] = @(rank);
     tracerDict[@"topic_id"] = model.forumId;
     

@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *talkCount;
 @property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy , nullable) NSString *rank;
+@property (nonatomic, copy , nullable) NSDictionary *logPb;
 @end
 
 @interface FHTopicListResponseDataModel : JSONModel
