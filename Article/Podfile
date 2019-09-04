@@ -49,9 +49,12 @@ def fhPods
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
     
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev' #
-    pod 'FHCommonUI', '0.0.2'
-    #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => 'e61e37eeacd3586be530affd8aaf25f93b02216d' #:branch => 'feature/develop'
-    pod 'ios_house_im' , '0.1.8'
+    pod 'FHCommonUI', '0.0.3'
+#    pod 'FHCommonUI', :path => '../../../Bundles/ios_common_ui'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9106c57f2bedcb8b652636e459fb8a0fc045c213'
+    pod 'ios_house_im' , '0.1.9'
+#    pod 'ios_house_im' , :path => '../../ios_house_im/ios_house_im/'
+
     #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
     pod 'ios_house_filter' , '1.0.1'
     
@@ -87,7 +90,7 @@ def appPods
     pod_binary 'IESGeckoKit', '0.4.0'
     pod_binary 'IESWebKit', '0.2.0-rc.3'
 #    pod 'IESWebKit/Falcon', :git => 'git@code.byted.org:ugc/IESWebKit.git', :branch => 'master'
-    pod_binary 'React', '0.55.9-alpha.22', :subspecs => [ #可根据需要选择相应子库以减少包大小
+    pod_binary 'React', '0.55.13-rc.0', :subspecs => [ #可根据需要选择相应子库以减少包大小
     'Core',
     'CxxBridge',
     'RCTActionSheet',
@@ -140,11 +143,13 @@ def appPods
     #-----UGC-----
 #    pod 'TTUGCFeature', :path => '../Vendor/TTUGCFeature', :inhibit_warnings => false
     pod 'TTUGCFoundation', :path => '../Vendor/TTUGCFoundation', :inhibit_warnings => false
-    pod 'TTKitchen','1.6.0',:subspecs => [
+
+    pod 'TTKitchen','3.0.1',:subspecs => [
     'Core',
-    'TTCommonConfig'
+    'SettingsSyncer'
     ]
-    
+    pod 'TTKitchenExtension','1.0.14'
+
     #-----UGC Other-----
     pod 'TTPostBase', :path => '../AKPlugins/TTPostBase', :inhibit_warnings => false
     pod 'TTSettingsManager','0.4.16',:subspecs => [
@@ -153,15 +158,11 @@ def appPods
     ]
     pod 'TTLocationManager','1.0.22'
     pod 'Gaia','1.0.7-rc.1'
-    pod 'TTGaiaExtension','0.2.13'
+    pod 'TTGaiaExtension','0.4.2'
     pod 'BDAssert','2.0.0',:subspecs => [
     'Core'
     ]
 
-#    pod 'TTKitchen', '1.3.9', :subspecs => [
-#    'Core',
-#    'TTCommonConfig',
-#    ]
     #--------------------------------------------------业务上的可通用服务库-----------------------------------------------#
     #--------------------------------------------------业务上的可通用服务库-----------------------------------------------#
     pod 'BDTArticle', :path => '../AKPlugins/BDTArticle' #'0.2.3'
@@ -250,10 +251,13 @@ def appPods
 #    ]
 
     #-----头条头像-----
-#    pod 'TTAvatar', '0.4.13'
-    pod 'TTAvatar', :path => '../AKPlugins/TTAvatar', :inhibit_warnings => false
+    pod 'TTAvatar','0.5.22'
+#    pod 'TTAvatar', :path => '../AKPlugins/TTAvatar', :inhibit_warnings => false
     #-----头条加v认证工具-----
-    pod_binary 'TTVerifyKit',  '0.3.0'
+    pod 'TTVerifyKit','0.3.11.1-bugfix'
+    pod 'BDMobileRuntime', '0.3.38'
+    pod 'TTRegistry','7.4.0.3'
+
     #-----举报-----
     pod_binary 'TTReporter', '0.2.1'
     #-----头条号---
@@ -429,9 +433,11 @@ def appPods
     pod_binary 'TTTracker', '10.0.5'
     #-----头条推送SDK----
     pod_binary 'TTPushSDK', '0.1.1'
+    
     #-----路由-----
-#    pod 'TTRoute', '0.2.25'
-    pod 'TTRoute', git:'git@code.byted.org:TTIOS/tt_pods_route.git', :branch => 'array_type_query'
+    pod 'TTRoute','1.1.3-rc.0-f100' # git:'git@code.byted.org:TTIOS/tt_pods_route.git', :branch => 'f100'
+
+
     #-----头条impression库-----
     pod_binary 'TTImpression', '0.0.26'
     #-----平台化基础库-----
@@ -620,6 +626,7 @@ def appPods
 end
 
 target 'NewsLiteInHouse' do
+    pod 'BDSSOAuthSDK'
     pod_binary 'TTDebugAssistant', '0.2.33'
     pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
     pod_binary 'TTSettingsManager/Debug'
@@ -686,7 +693,7 @@ post_install do |installer|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
             end
         end
-        if target.name == "TTDebug"
+        if target.name == "TTDebug" || target.name == "TTAppRuntime"
             target.build_configurations.each do |config|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
             end

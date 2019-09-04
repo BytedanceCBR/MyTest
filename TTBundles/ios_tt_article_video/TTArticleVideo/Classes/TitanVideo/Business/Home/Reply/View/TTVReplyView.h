@@ -11,7 +11,6 @@
 #import "SSThemed.h"
 #import "TTUserInfoView.h"
 #import "ArticleAvatarView.h"
-#import "ExploreAvatarView.h"
 #import "TTGroupModel.h"
 #import "TTUserInfoView.h"
 #import "TTCommentDetailReplyCommentModel.h"

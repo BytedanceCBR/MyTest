@@ -89,9 +89,9 @@ extern BOOL ttvs_isVideoCellShowShareEnabled(void);
         _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
         _avatarView.cornerRadius = [self.class avatarHeight] / 2;
         _avatarView.placeholderName = @"big_defaulthead_head";
-        [_avatarView setupVerifyViewForLength:[self.class avatarNormalHeight] adaptationSizeBlock:^CGSize(CGSize standardSize) {
-            return [TTVerifyIconHelper tt_newSize:standardSize];
-        }];
+//        [_avatarView setupVerifyViewForLength:[self.class avatarNormalHeight] adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//            return [TTVerifyIconHelper tt_newSize:standardSize];
+//        }];
         [self addSubview:_avatarView];
     }
     return _avatarView;

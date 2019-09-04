@@ -8,7 +8,7 @@
 #import "TTUGCImageRecordManager.h"
 #import <pthread/pthread.h>
 #import <TTMonitor.h>
-#import <TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import <TTKitchen.h>
 #import <FRImageInfoModel.h>
 #import <BDWebImageManager.h>
@@ -19,6 +19,7 @@
 #import <TTBaseLib/NetworkUtilities.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <NSTimer+Additions.h>
+#import "TTUGCImageKitchen.h"
 
 @implementation TTUGCImageRecordModel
 

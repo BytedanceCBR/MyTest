@@ -29,7 +29,7 @@
 #import "TTBusinessManager.h"
 #import "TTDeviceUIUtils.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import "SSUserModel.h"
 #import "SSCommentInputHeader.h"
 #import "TTCommentWriteView.h"

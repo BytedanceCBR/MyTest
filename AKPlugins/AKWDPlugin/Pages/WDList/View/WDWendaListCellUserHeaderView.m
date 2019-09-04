@@ -216,7 +216,7 @@
         
         // add by zjing 去掉问答折叠里面头像点击
 //        [_cellAvatarView addTouchTarget:self action:@selector(avatarButtonClick:)];
-        [_cellAvatarView setupVerifyViewForLength:36 adaptationSizeBlock:nil];
+//        [_cellAvatarView setupVerifyViewForLength:36 adaptationSizeBlock:nil];
         
         UIView *coverView = [[UIView alloc] initWithFrame:_cellAvatarView.bounds];
         coverView.backgroundColor = [UIColor blackColor];

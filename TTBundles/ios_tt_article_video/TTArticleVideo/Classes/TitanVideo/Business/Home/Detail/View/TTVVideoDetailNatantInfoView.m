@@ -24,7 +24,7 @@
 #import "TTMessageCenter.h"
 #import <TTSettingsManager/TTSettingsManager.h>
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import "TTVVideoDetailNatantInfoShareView.h"
 #import <TTThemed/TTThemeManager.h>
 #import <Masonry/Masonry.h>

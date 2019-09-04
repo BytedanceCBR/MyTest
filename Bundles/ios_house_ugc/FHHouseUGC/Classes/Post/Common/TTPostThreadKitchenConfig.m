@@ -34,6 +34,7 @@ TTRegisterKitchenFunction() {
         TTKConfigBOOL(kTTKUGCSyncToRocketFirstChecked, @"同步到R首次状态", YES);//默认勾选
         TTKConfigFloat(kTTKUGCSyncToRocketCheckStatus, @"同步到R勾选状态", -1);//初始为无状态
         TTKConfigArray(kTTPostThreadSyncToRocketSupportPublishEnterFrom, @"微头条发布器同步到R支持的来源", @[@(1),@(2),@(3)]);
+        TTKConfigBOOL(kTTKCommonUgcPostBindingPhoneNumberKey, @"发帖／转发是否需要绑定手机号",NO);
 
     });
 }

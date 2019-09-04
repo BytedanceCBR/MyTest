@@ -95,7 +95,7 @@
 #import "TTArticleDetailMemoryMonitor.h"
 #import <TTNetworkUtil.h>
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 
 #import "TTWebImageManager.h"
 #import "TTImageView.h"

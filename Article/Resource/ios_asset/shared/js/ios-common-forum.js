@@ -264,7 +264,7 @@ link: n.h5_settings.is_liteapp ? "javascript:;" : a.schema + "&group_id=" + t.an
 intro: a.user_intro,
 avatar: a.user_profile_image_url,
 isAuthorSelf: !1,
-verifiedContent: a.is_verify ? "PLACE_HOLDER" : "",
+verifiedContent: a.is_verify ? "" : "",
 medals: a.medals
 };
 var i = {
@@ -359,7 +359,7 @@ try {
 i = JSON.parse(a.user_auth_info);
 } catch (o) {}
 n.author.auth_type = a.user_auth_info ? i.auth_type || 0 : "", n.author.auth_info = i.auth_info, 
-n.author.verifiedContent = a.user_verified && n.author.auth_info || "", "is_subscribed" in t && (n.author.followState = t.is_subscribed ? "following" : ""), 
+n.author.verifiedContent = false && n.author.auth_info || "", "is_subscribed" in t && (n.author.followState = t.is_subscribed ? "following" : ""), 
 t.is_original && n.tags.push("原创"), t.category_name && (n.category_name = t.category_name), 
 t.log_pb && (n.log_pb = t.log_pb);
 },
@@ -1590,9 +1590,9 @@ __p += "";
 for (var i = 0; i < data.length; i++) {
 var item = data[i];
 __p += '<div class="ms-item" it-is-user-id="' + (null == (__t = item.user_id) ? "" : __t) + '" data-index="' + (null == (__t = i + 1) ? "" : __t) + '" it-is-media-id="' + (null == (__t = item.media_id ? item.media_id : "") ? "" : __t) + '"><div class="ms-avatar"><div class="ms-avatar-wrap"><img class="ms-avatar-image" src="' + (null == (__t = item.avatar_url) ? "" : __t) + '"></div>', 
-false && item.user_verified && item.user_auth_info && item.user_auth_info.auth_type && (__p += "" + (null == (__t = buildServerVIcon2(item.user_auth_info.auth_type, "avatar_icon")) ? "" : __t)),
+false && false && item.user_auth_info && item.user_auth_info.auth_type && (__p += "" + (null == (__t = buildServerVIcon2(item.user_auth_info.auth_type, "avatar_icon")) ? "" : __t)),
 __p += "</div>", Page.showUserDecoration && false && item.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = item.user_decoration.url) ? "" : __t) + ')"></div>'),
-__p += '<div class="avatar-decoration avatar-night-mask"></div><div class="ms-name-wrap"><div class="ms-name ' + (null == (__t = !false && item.user_verified ? " verified" : "") ? "" : __t) + '">' + (null == (__t = item.name) ? "" : __t) + '</div></div><div class="ms-desc">' + (null == (__t = item.reason_description) ? "" : __t) + '</div><button reason="' + (null == (__t = item.reason) ? "" : __t) + '" class="ms-subs ' + (null == (__t = isRedFocusButton ? "ms-red-btn" : "") ? "" : __t) + '" ' + (null == (__t = item.is_following ? " isfollowing " : "") ? "" : __t) + " " + (null == (__t = item.is_followed ? " isfollowed " : "") ? "" : __t) + ' ><span class="focus-icon">&nbsp;</span></button></div>';
+__p += '<div class="avatar-decoration avatar-night-mask"></div><div class="ms-name-wrap"><div class="ms-name ' + (null == (__t = !false && false ? " verified" : "") ? "" : __t) + '">' + (null == (__t = item.name) ? "" : __t) + '</div></div><div class="ms-desc">' + (null == (__t = item.reason_description) ? "" : __t) + '</div><button reason="' + (null == (__t = item.reason) ? "" : __t) + '" class="ms-subs ' + (null == (__t = isRedFocusButton ? "ms-red-btn" : "") ? "" : __t) + '" ' + (null == (__t = item.is_following ? " isfollowing " : "") ? "" : __t) + " " + (null == (__t = item.is_followed ? " isfollowed " : "") ? "" : __t) + ' ><span class="focus-icon">&nbsp;</span></button></div>';
 }
 __p += "";
 }
