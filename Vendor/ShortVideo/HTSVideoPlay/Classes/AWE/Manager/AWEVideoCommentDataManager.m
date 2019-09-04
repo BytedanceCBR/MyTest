@@ -144,9 +144,12 @@ static NSString * const AWEIllegalParameterDomain = @"AWEIllegalParameterDomain"
         
         NSError *mappingError = nil;
         NSDictionary *dataDic = [jsonObj objectForKey:@"data"];
-        AWECommentModel *model = [MTLJSONAdapter modelOfClass:[AWECommentModel class]
+        AWECommentModel *model = nil;
+        if([dataDic isKindOfClass:[NSDictionary class]]){
+            model = [MTLJSONAdapter modelOfClass:[AWECommentModel class]
                                            fromJSONDictionary:dataDic
                                                         error:&mappingError];
+        }
         if(model){
             [strongSelf.commentArray insertObject:model atIndex:0];
             strongSelf.totalCount = strongSelf.totalCount + 1;
