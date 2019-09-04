@@ -263,6 +263,10 @@
     
     NSInteger listCount = self.dataList.count;
     
+    if(isFirst){
+        listCount = 0;
+    }
+    
     double behotTime = 0;
     if(!isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList lastObject];

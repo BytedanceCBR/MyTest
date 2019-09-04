@@ -227,6 +227,10 @@
     
     NSInteger listCount = self.dataList.count;
     
+    if(isFirst){
+        listCount = 0;
+    }
+    
     double behotTime = 0;
     NSString *lastGroupId = nil;
     
