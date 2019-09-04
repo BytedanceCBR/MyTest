@@ -64,6 +64,7 @@
 
             [wself.dataList addObjectsFromArray:responseModel.data.list];
             wself.tableView.hidden = NO;
+            [wself.viewController.emptyView hideEmptyView];
             [wself.tableView reloadData];
         } else {
             if (isRefresh) {
