@@ -247,7 +247,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         tracerDict[@"group_id"] = group_id_str;
         if (task.mentionConcern.length > 0) {
             // 话题id
-            tracerDict[@"topic_id"] = task.mentionConcern;
+            tracerDict[@"concern_id"] = task.mentionConcern;
         }
         [FHUserTracker writeEvent:@"feed_publish_success" params:tracerDict];
 

@@ -625,7 +625,7 @@
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
-    traceParam[@"topic_id"] = @(self.cid);
+    // traceParam[@"concern_id"] = @(self.cid);
     dict[TRACER_KEY] = traceParam;
     
     dict[@"data"] = cellModel;
