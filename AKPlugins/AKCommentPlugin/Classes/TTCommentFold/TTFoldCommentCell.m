@@ -89,9 +89,9 @@ NSString *const kTTFoldCommentCellIdentifier = @"kTTFoldCommentCellIdentifier";
         _avatarView.coverColor = [[UIColor whiteColor] colorWithAlphaComponent:0.05];
         _avatarView.borderColor = [UIColor clearColor];
         _avatarView.borderWidth = 0.f;
-        [_avatarView setupVerifyViewForLength:36.f adaptationSizeBlock:^CGSize(CGSize standardSize) {
-            return [TTVerifyIconHelper tt_newSize:standardSize];
-        }];
+//        [_avatarView setupVerifyViewForLength:36.f adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//            return [TTVerifyIconHelper tt_newSize:standardSize];
+//        }];
         // add by zjing 去掉头像点击
 //        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }

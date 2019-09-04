@@ -157,9 +157,9 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    [self.accessoryAvatarView setupVerifyViewForLength:24 adaptationSizeBlock:^CGSize(CGSize standardSize) {
-        return [TTVerifyIconHelper tt_size:standardSize];
-    }];
+//    [self.accessoryAvatarView setupVerifyViewForLength:24 adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//        return [TTVerifyIconHelper tt_size:standardSize];
+//    }];
 }
 
 - (void)setHintStyle:(TTSettingHintStyle)hintStyle number:(long long)number

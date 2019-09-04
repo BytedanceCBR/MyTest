@@ -217,9 +217,9 @@
     [self.likeButton setTitle:[self showStringFromNumber:diggCount] forState:UIControlStateSelected];
     
     [self.thumbView tt_setImageWithURLString:(model.userProfileImageUrl?:@"")];
-    [self.thumbView setupVerifyViewForLength:36 adaptationSizeBlock:^CGSize(CGSize standardSize) {
-        return [TTVerifyIconHelper tt_newSize:standardSize];
-    }];
+//    [self.thumbView setupVerifyViewForLength:36 adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//        return [TTVerifyIconHelper tt_newSize:standardSize];
+//    }];
     [self.thumbView showOrHideVerifyViewWithVerifyInfo:self.commentModel.userAuthInfo decoratorInfo:self.commentModel.userDecoration sureQueryWithID:NO userID:nil disableNightCover:NO];
     [self setNeedsLayout];
 }

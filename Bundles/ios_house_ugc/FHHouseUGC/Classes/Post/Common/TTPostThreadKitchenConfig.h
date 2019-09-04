@@ -34,6 +34,8 @@ static NSString * const kTTKUGCSyncToRocketCheckStatus = @"tt_ugc_base_config.sy
 static NSString * const kTTKUGCSyncToRocketFirstChecked = @"tt_ugc_base_config.sync_to_rocket_first_checked";//首次看到同步到R时候的状态
 static NSString * const kTTPostThreadSyncToRocketSupportPublishEnterFrom = @"tt_ugc_base_config.sync_to_rocket_support_publish_enter_from";
 
+static NSString * const kTTKCommonUgcPostBindingPhoneNumberKey = @"tt_ugc_post_need_check_bind"; //发帖／转发是否需要绑定手机号
+
 
 @interface TTKitchenManager (PostThreadConfig)
 

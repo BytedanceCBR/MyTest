@@ -217,9 +217,9 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
         _pgcAvatar.cornerRadius = avatarSize / 2;
         _pgcAvatar.borderColor = [UIColor clearColor];
         _pgcAvatar.placeholderName = @"big_defaulthead_head";
-        [_pgcAvatar setupVerifyViewForLength:kPGCAvatarSize adaptationSizeBlock:^CGSize(CGSize standardSize) {
-            return [TTVerifyIconHelper tt_newSize:standardSize];
-        }];
+//        [_pgcAvatar setupVerifyViewForLength:kPGCAvatarSize adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//            return [TTVerifyIconHelper tt_newSize:standardSize];
+//        }];
         
         
         UIView *view = [[UIView alloc] initWithFrame:_pgcAvatar.bounds];

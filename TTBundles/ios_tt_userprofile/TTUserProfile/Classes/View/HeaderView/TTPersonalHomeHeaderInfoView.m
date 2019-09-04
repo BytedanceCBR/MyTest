@@ -13,7 +13,7 @@
 #import "TTRoute.h"
 #import "SSCommonLogic.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "TTPersonalHomeMultiplePlatformFollowersInfoView.h"

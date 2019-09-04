@@ -44,9 +44,9 @@ NSString *const TTRecommendCollectionViewCellIdentifier = @"TTRecommendCollectio
     if (self) {
         _avatarView = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(0, [TTDeviceUIUtils tt_newPadding:15] , [TTDeviceUIUtils tt_newPadding:50], [TTDeviceUIUtils tt_newPadding:50]) allowCorner:YES];
         _avatarView.cornerRadius = _avatarView.width / 2;
-        [_avatarView setupVerifyViewForLength:50 adaptationSizeBlock:^CGSize(CGSize standardSize) {
-            return [TTVerifyIconHelper tt_newSize:standardSize];
-        }];
+//        [_avatarView setupVerifyViewForLength:50 adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//            return [TTVerifyIconHelper tt_newSize:standardSize];
+//        }];
         _avatarView.userInteractionEnabled = NO;
         _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
         

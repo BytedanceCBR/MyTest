@@ -18,6 +18,7 @@
 #import "TTImagePickerManager.h"
 #import <TTKitchen/TTKitchen.h>
 #import "NSData+ImageContentType.h"
+#import <TTKitchenExtension/TTKitchenExtension.h>
 
 @interface TTUGCImageCompressTask()
 

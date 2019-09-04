@@ -10,7 +10,6 @@
 #import "SSThemed.h"
 #import "TTImageView.h"
 #import "ExploreArticleCellViewConsts.h"
-#import "ExploreAvatarView.h"
 #import "ExploreOrderedData+TTBusiness.h"
 #import "Card+CoreDataClass.h"
 #import "TTThreadRateView.h"

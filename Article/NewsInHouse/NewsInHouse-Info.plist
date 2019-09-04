@@ -188,6 +188,8 @@
 	<string>1370</string>
 	<key>SSMID</key>
 	<string>141</string>
+	<key>SSO_ENABLED</key>
+	<true/>
 	<key>SSSupportNewVersionForceUpgrade</key>
 	<true/>
 	<key>UIAppFonts</key>

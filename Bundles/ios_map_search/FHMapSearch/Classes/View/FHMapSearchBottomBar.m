@@ -153,7 +153,7 @@
 
 -(void)showDrawLine:(NSString *)content showIndicator:(BOOL)showIndicator
 {
-//    content = @"区域内共找到2000000012345套房源";
+//    content = @"区域内共找到20000000123452000000012345套房源";
     _drawLineLabel.text = content;
 //    _subwayBgView.hidden = YES;
     
@@ -164,11 +164,9 @@
     }
 
     self.drawLineIndicator.hidden = !showIndicator;
-    CGFloat width = MIN(_drawLineLabel.width, (SCREEN_WIDTH - 98 - padding));
+    CGFloat width = MIN(_drawLineLabel.width, (SCREEN_WIDTH - padding));
     CGFloat left = (SCREEN_WIDTH - width - padding)/2;
-    if (left < 88) {
-        left = 88;
-    }
+
     [_drawLineLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(width);
     }];

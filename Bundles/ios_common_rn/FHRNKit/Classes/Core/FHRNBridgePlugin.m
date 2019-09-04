@@ -169,21 +169,11 @@
         callParams[@"log_pb"] = [FHUtils dictionaryWithJsonString:callParams[@"log_pb"]];
     }
     callParams[@"from"] = @"app_realtor_mainpage";
-    if (!TTNetworkConnected() && !callParams[@"phone"]) {
+    [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error) {
         if (callback) {
             callback(TTBridgeMsgSuccess, nil,nil);
         }
-    }else
-    {
-        [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error) {
-            if (!success) {
-                [[ToastManager manager] showToast:@"获取电话失败"];
-            }
-            if (callback) {
-                callback(TTBridgeMsgSuccess, nil,nil);
-            }
-        }];
-    }
+    }];
     
     if (callParams[@"follow_id"]) {
         callParams[@"hide_toast"] = @(YES);
