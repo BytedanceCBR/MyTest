@@ -101,7 +101,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorType){
 @property (nonatomic, strong , nullable) FHDetailContactImageTagModel *imageTag;
 
 @property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
-@property (nonatomic, copy , nullable) NSDictionary *realtorLogpb;
+@property (nonatomic, strong , nullable) NSDictionary *realtorLogpb;
 - (nonnull id)copyWithZone:(nullable NSZone *)zone;
 
 - (void)encodeWithCoder:(nonnull NSCoder *)aCoder;
