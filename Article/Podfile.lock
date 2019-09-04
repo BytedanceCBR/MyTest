@@ -157,7 +157,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.6)
+  - ios_house_im (0.1.9)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -660,7 +660,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `9106c57f2bedcb8b652636e459fb8a0fc045c213`)
+  - ios_house_im (= 0.1.9)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -895,9 +895,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/FHWebView
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
-  ios_house_im:
-    :commit: 9106c57f2bedcb8b652636e459fb8a0fc045c213
-    :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAD:
@@ -959,11 +956,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/TTVPlayer
   yoga:
     :path: ../ReactCommon/yoga
-
-CHECKOUT OPTIONS:
-  ios_house_im:
-    :commit: 9106c57f2bedcb8b652636e459fb8a0fc045c213
-    :git: git@code.byted.org:fproject/ios_house_im.git
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
@@ -1031,7 +1023,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 0bef3fe105a0a9ec8435ad67820ed84d6eb4deb1
+  ios_house_im: 314f15ca4b52a6664661b2066d67e3e1917e900e
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1154,6 +1146,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 0618472c4b0d867379a37c9f14daf3c98890bf09
+PODFILE CHECKSUM: c35d6be396a72ab8df7df27a5801731d1a363a90
 
 COCOAPODS: 1.4.0
