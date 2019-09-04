@@ -82,7 +82,7 @@
     _contentLabel.numberOfLines = 0;
     _contentLabel.delegate = self;
     NSDictionary *linkAttributes = @{
-                                     NSForegroundColorAttributeName : [UIColor themeRed1],
+                                     NSForegroundColorAttributeName : [UIColor themeRed3],
                                      NSFontAttributeName : [UIFont themeFontRegular:16]
                                      };
     self.contentLabel.linkAttributes = linkAttributes;

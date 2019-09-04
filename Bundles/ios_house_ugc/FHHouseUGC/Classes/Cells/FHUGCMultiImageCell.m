@@ -70,7 +70,7 @@
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
     NSDictionary *linkAttributes = @{
-                                     NSForegroundColorAttributeName : [UIColor themeRed1],
+                                     NSForegroundColorAttributeName : [UIColor themeRed3],
                                      NSFontAttributeName : [UIFont themeFontRegular:16]
                                      };
     self.contentLabel.linkAttributes = linkAttributes;
