@@ -178,11 +178,11 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 
-- (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre
+- (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre extra:(NSDictionary*)extra
 {
     //如果没有资源，走H5
     if (![FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"] || self.rnIsUnAvalable) {
-        [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES];
+        [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
         return;
     }
     
@@ -193,31 +193,31 @@ extern NSString *const kFHPhoneNumberCacheKey;
                 [self.belongsVC.navigationController pushViewController:routeAgentObj.instance animated:YES];
             }else
             {
-                TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO];
+                TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO extra:extra];
                 if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
                     [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
                 }else
                 {
-                    [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES];
+                    [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
                 }
             }
         }else
         {
-            TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO];
+            TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO extra:extra];
             if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
                     [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
             }else
             {
-                [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES];
+                [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
             }
         }
     }else
     {
-        [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES];
+        [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
     }
 }
 
-- (TTRouteObject *)creatJump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre andIsOpen:(BOOL)isOpen
+- (TTRouteObject *)creatJump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre andIsOpen:(BOOL)isOpen extra:(NSDictionary*)extra
 {
     if (contactPhone.realtorId.length < 1) {
         return nil;
@@ -232,8 +232,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://realtor_detail?realtor_id=%@",contactPhone.realtorId]];
 
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
-    dict[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
+    dict[@"enter_from"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    dict[@"element_from"] = extra[@"element_from"] ? : @"old_detail_button";
     dict[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
     dict[@"log_pb"] = self.tracerDict[@"log_pb"];
     dict[@"search_id"] = self.tracerDict[@"search_id"] ? : @"be_null";

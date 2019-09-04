@@ -224,7 +224,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 //todo 增加埋点的东西
 - (void)jump2RealtorDetail
 {
-    [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone isPreLoad:YES];
+    [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone isPreLoad:YES extra:nil];
 }
 
 - (void)licenseAction
@@ -350,7 +350,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         // 可能会出现崩溃的代码
         if ([FHHouseDetailPhoneCallViewModel fhRNEnableChannels].count > 0 && [FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels].count > 0 && [[FHHouseDetailPhoneCallViewModel fhRNEnableChannels] containsObject:@"f_realtor_detail"] && [[FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels] containsObject:@"f_realtor_detail"] && contactPhone.showRealtorinfo && [FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"]) {
             //保证主线程执行
-            [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES andIsOpen:NO];
+            [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES andIsOpen:NO extra:nil];
         }
     }
 

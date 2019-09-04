@@ -265,7 +265,9 @@
     FHDetailHouseReviewCommentCellModel *cellModel = (FHDetailHouseReviewCommentCellModel *) self.currentData;
     FHDetailContactModel *contact = item.curData.realtorInfo;
     cellModel.phoneCallViewModel.belongsVC = cellModel.belongsVC;
-    [cellModel.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"element_from"] = @"realtor_evaluation";
+    [cellModel.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO extra:dict];
 }
 
 -(void)addRealtorShowLog{
