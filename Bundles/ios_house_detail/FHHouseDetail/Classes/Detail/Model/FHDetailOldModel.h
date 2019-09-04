@@ -342,6 +342,17 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraOfficialModel *official ;
 @end
 
+@protocol FHDetailHouseReviewCommentModel
+@end
+@interface FHDetailHouseReviewCommentModel: JSONModel
+@property (nonatomic, copy , nullable) NSString *commentId;
+@property (nonatomic, strong , nullable) FHDetailContactModel *realtorInfo;
+@property (nonatomic, copy , nullable) NSString *commentText;
+@property (nonatomic, copy , nullable) NSString *commentData;
+@property (nonatomic, assign) BOOL isExpended;//标识是否全文展开，非服务端字段
+@property (nonatomic, assign) CGFloat commentHeight;//标识评论高度，非服务端字段
+@property (nonatomic, assign) BOOL addFoldDirect;//标识评论高度，非服务端字段
+@end
 
 @interface FHDetailOldDataModel : JSONModel
 
@@ -384,6 +395,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraModel *baseExtra;
 @property (nonatomic, strong , nullable) FHDetailCommunityEntryModel *ugcSocialGroup;
+@property (nonatomic, strong , nullable) NSArray<FHDetailHouseReviewCommentModel> *houseReviewComment;
 
 @end
 

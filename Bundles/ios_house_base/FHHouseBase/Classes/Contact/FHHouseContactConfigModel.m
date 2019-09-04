@@ -33,6 +33,7 @@
     _imprId = params[@"impr_id"];
     _realtorPosition = params[@"realtor_position"];
     _itemId = params[@"item_id"];
+    _realtorLogpb = params[@"realtor_logpb"];
 }
 
 - (void)setLogPbWithNSString:(NSString *)logpb
