@@ -345,8 +345,12 @@
         cellModel.commentCount = model.rawData.action.commentCount;
         cellModel.userDigg = model.rawData.action.userDigg;
         
-        cellModel.title = model.rawData.title;
+        cellModel.content = model.rawData.title;
         cellModel.contentRichSpan = model.rawData.titleRichSpan;
+        
+        double time = [model.rawData.createTime doubleValue];
+        NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+        cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
         
         cellModel.imageList = model.rawData.firstFrameImageList;
         
