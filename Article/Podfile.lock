@@ -21,7 +21,7 @@ PODS:
   - AMapFoundation (1.5.7.1-binary)
   - AMapLocation (2.6.0.1-binary)
   - AMapSearch (6.9.0.1-binary)
-  - Aspects (1.4.1)
+  - Aspects (1.4.1.1-binary)
   - AWECloudCommand (1.0.7.1-binary):
     - AWECloudCommand/Core (= 1.0.7.1-binary)
     - AWECloudCommand/NetDiagnose (= 1.0.7.1-binary)
@@ -573,7 +573,7 @@ DEPENDENCIES:
   - AMapFoundation (= 1.5.7.1-binary)
   - AMapLocation (= 2.6.0.1-binary)
   - AMapSearch (= 6.9.0.1-binary)
-  - Aspects (= 1.4.1)
+  - Aspects (= 1.4.1.1-binary)
   - AWECloudCommand (= 1.0.7.1-binary)
   - AWEVideoPlayer (= 0.3.20.1-binary)
   - BDABTestSDK (= 1.0.2-rc.3.1.binary)
@@ -968,7 +968,7 @@ SPEC CHECKSUMS:
   AMapFoundation: 897a0981ddd65afe7e289957ca5589276d5523d8
   AMapLocation: 4ada3e0cb6933c1ac0b64038abb816b768d6311b
   AMapSearch: 64c969de27b970351537d0c60550033c70beede7
-  Aspects: cbfcf8eeef30f3a7126367c453fdb7c446877e6c
+  Aspects: 49ab2ffbcea7b491efa20fda09e60a3f629b7616
   AWECloudCommand: 60f409e41dc60fe48dca27e05028da89fe3e5f18
   AWEVideoPlayer: 79aef06155256984da6189dba3ac966c63b55098
   BDABTestSDK: 8d0452c001637b0922644d4a9aee347a29d34bd0

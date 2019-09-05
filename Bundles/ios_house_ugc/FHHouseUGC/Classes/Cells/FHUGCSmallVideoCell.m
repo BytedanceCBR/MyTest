@@ -29,12 +29,13 @@
 @interface FHUGCSmallVideoCell ()<TTUGCAttributedLabelDelegate>
 
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
-@property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
+@property(nonatomic ,strong) UIImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,strong) FHUGCCellOriginItemView *originView;
 @property(nonatomic ,assign) CGFloat imageViewheight;
+@property(nonatomic ,assign) CGFloat imageViewWidth;
 
 @end
 
@@ -77,10 +78,11 @@
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:1];
-    _multiImageView.fixedSingleImage = YES;
+    self.multiImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
     [self.contentView addSubview:_multiImageView];
-    self.imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:1 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
+//    _multiImageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.imageViewheight = 200;
+    self.imageViewWidth = 150;
     
     self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
     _originView.hidden = YES;
@@ -165,12 +167,29 @@
     [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
+    //图片
+    if (cellModel.imageList.count > 0) {
+        FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
+        CGFloat wid = [imageModel.width floatValue];
+        CGFloat hei = [imageModel.height floatValue];
+        if (wid < hei) {
+            self.imageViewheight = 200;
+            self.imageViewWidth = 150;
+        } else {
+            self.imageViewheight = 152;
+            self.imageViewWidth = 270;
+        }
+        
+        if (imageModel && imageModel.url.length > 0) {
+            [self.multiImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+        }
+    }
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
         [self.multiImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
             make.left.mas_equalTo(self.contentView).offset(leftMargin);
-            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+            make.width.mas_equalTo(self.imageViewWidth);
             make.height.mas_equalTo(self.imageViewheight);
         }];
     }else{
@@ -178,13 +197,11 @@
         [self.multiImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
             make.left.mas_equalTo(self.contentView).offset(leftMargin);
-            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+            make.width.mas_equalTo(self.imageViewWidth);
             make.height.mas_equalTo(self.imageViewheight);
         }];
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
     }
-    //图片
-    [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     //origin
     if(cellModel.originItemModel){
         self.originView.hidden = NO;
@@ -214,7 +231,18 @@
             height -= 10;
         }
         
-        CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:1 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
+        CGFloat imageViewheight = 200;
+        if (cellModel.imageList.count > 0) {
+            FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
+            CGFloat wid = [imageModel.width floatValue];
+            CGFloat hei = [imageModel.height floatValue];
+            if (wid < hei) {
+                imageViewheight = 200;
+            } else {
+                imageViewheight = 152;
+            }
+        }
+        
         height += imageViewheight;
         
         if(cellModel.originItemModel){
