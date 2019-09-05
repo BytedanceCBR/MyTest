@@ -335,7 +335,13 @@
         cellModel.openUrl = model.rawData.detailSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
-        
+        NSString *dur = model.rawData.video.duration;
+        if (dur.length > 0) {
+            double durTime = [dur doubleValue];
+            cellModel.duration = (NSInteger)durTime;
+        } else {
+            cellModel.duration = 0;
+        }
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
         user.name = model.rawData.user.info.name;
         user.avatarUrl = model.rawData.user.info.avatarUrl;
