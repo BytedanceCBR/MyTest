@@ -22,6 +22,9 @@
 //@implementation FHFeedUGCCellImageListModel
 //
 //@end
+@implementation FHFeedUGCVoteModel
+
+@end
 
 @implementation FHFeedUGCCellUserModel
 
@@ -63,7 +66,7 @@
         Class cls = nil;
         if(type == FHUGCFeedListCellTypeUGC){
             cls = [FHFeedUGCContentModel class];
-        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeAnswer || type == FHUGCFeedListCellTypeArticleComment || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend || type == FHUGCFeedListCellTypeUGCBanner2 || type == FHUGCFeedListCellTypeArticleComment2){
+        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeAnswer || type == FHUGCFeedListCellTypeArticleComment || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend || type == FHUGCFeedListCellTypeUGCBanner2 || type == FHUGCFeedListCellTypeArticleComment2 || type == FHUGCFeedListCellTypeUGCHotTopic || type == FHUGCFeedListCellTypeUGCVote){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -93,6 +96,9 @@
     cellModel.groupId = model.groupId;
     cellModel.logPb = model.logPb;
     cellModel.aggrType = model.aggrType;
+    cellModel.needLinkSpan = YES;
+    //目前仅支持话题类型
+    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
     //处理圈子信息
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     if(model.community){
@@ -201,6 +207,12 @@
         originItemModel.content = model.rawData.content.question.title;
         originItemModel.openUrl = model.rawData.content.question.questionListSchema;
         cellModel.originItemModel = originItemModel;
+        
+        if(cellModel.originItemModel.imageModel){
+            cellModel.originItemHeight = 80;
+        }else{
+            [FHUGCCellHelper setOriginContentAttributeString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
+        }
     
         if(cellModel.imageList.count == 1){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
@@ -253,6 +265,11 @@
         }
         cellModel.originItemModel = originItemModel;
         
+        [FHUGCCellHelper setOriginContentAttributeString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
+        if(cellModel.originItemModel.imageModel){
+            cellModel.originItemHeight = 80;
+        }
+        
         if(cellModel.imageList.count == 1){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
         }else if(cellModel.imageList.count > 1){
@@ -264,8 +281,8 @@
         if (model.isFromDetail) {
             cellModel.numberOfLines = 0;
         }
-        
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+        
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2){
         cellModel.groupId = model.rawData.groupId;
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBanner;
@@ -290,6 +307,30 @@
             cellModel.recommendSocialGroupList = model.rawData.recommendSocialGroupList;
         }
         cellModel.elementFrom = @"like_neighborhood";
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCHotTopic){
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotTopic;
+        cellModel.groupId = model.rawData.groupId;
+        cellModel.hotTopicList = model.rawData.hotTopicList;
+        cellModel.elementFrom = @"hot_topic";
+        if(cellModel.hotTopicList.count <= 0){
+            return nil;
+        }
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVote;
+        cellModel.groupId = model.rawData.vote.voteId;
+        
+        FHFeedUGCVoteModel *vote = [[FHFeedUGCVoteModel alloc] init];
+        vote.content = model.rawData.vote.title;
+        vote.leftDesc = model.rawData.vote.leftName;
+        vote.leftValue = model.rawData.vote.leftValue;
+        vote.rightDesc = model.rawData.vote.rightName;
+        vote.rightValue = model.rawData.vote.rightValue;
+        vote.personDesc = model.rawData.vote.personDesc;
+        vote.openUrl = model.rawData.vote.schema;
+        vote.needUserLogin = model.rawData.vote.needUserLogin;
+        cellModel.vote = vote;
+        
+        [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
     }
     
     return cellModel;
@@ -310,7 +351,10 @@
     cellModel.groupId = model.threadId;
     cellModel.logPb = model.logPb;
     cellModel.showLookMore = YES;
+    cellModel.needLinkSpan = YES;
     cellModel.numberOfLines = 3;
+    //目前仅支持话题类型
+    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
     
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     community.name = model.community.name;
@@ -413,6 +457,34 @@
     }
     
     return desc;
+}
+
++ (FHFeedUGCCellModel *)modelFromFake {
+    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.groupId = @"100005";
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotTopic;
+    cellModel.hotTopicList = @[@"1",@"2",@"3",@"4",@"5"];
+    
+    return cellModel;
+}
+
++ (FHFeedUGCCellModel *)modelFromFake2 {
+    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.groupId = @"100006";
+    cellModel.cellType = FHUGCFeedListCellTypeUGCVote;
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVote;
+    
+    FHFeedUGCVoteModel *vote = [[FHFeedUGCVoteModel alloc] init];
+    vote.content = @"你会为了买房，在生活中降低生活品质并且开始极端省钱吗？";
+    vote.leftDesc = @"会";
+    vote.rightDesc = @"不会";
+    vote.personDesc = @"378324人参与";
+    vote.openUrl = @"sslocal://webview?url=https%3a%2f%2fi.haoduofangs.com%2fmagic%2fruntime%2f%3fid%3d7197";
+    cellModel.vote = vote;
+    
+    [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
+    
+    return cellModel;
 }
 
 @end

@@ -30,6 +30,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <Masonry/Masonry.h>
 #import "SSCommonLogic.h"
+#import <TTBusinessManager+StringUtils.h>
 
 #define newkTitleFontSize [TTVideoFontSizeManager settedRelatedTitleFontSize]
 
@@ -306,7 +307,7 @@
         }
         countLabelText = [countLabelText stringByAppendingString:tailString];
     } else {
-        countLabelText = [NSString stringWithFormat:@"%d评论", self.viewModel.article.commentCount];
+        countLabelText = [NSString stringWithFormat:@"%@评论",[TTBusinessManager formatCommentCount: self.viewModel.article.commentCount]];
     }
     
     self.commentCountLabel.text = countLabelText;
@@ -959,7 +960,7 @@
         }
         countLabelText = [countLabelText stringByAppendingString:tailString];
     } else {
-        countLabelText = [NSString stringWithFormat:@"%d评论", self.viewModel.article.commentCount];
+        countLabelText = [NSString stringWithFormat:@"%@评论",[TTBusinessManager formatCommentCount: self.viewModel.article.commentCount]];
     }
     
     self.commentCountLabel.text = countLabelText;
@@ -1338,7 +1339,7 @@
             countLabelText = @"";//[TTBusinessManager formatCommentCount:self.viewModel.article.commentCount];
         }
     } else {
-        countLabelText = [NSString stringWithFormat:@"%d评论", self.viewModel.article.commentCount];
+        countLabelText = [NSString stringWithFormat:@"%@评论", [TTBusinessManager formatCommentCount: self.viewModel.article.commentCount]];
     }
     
     self.commentCountLabel.text = countLabelText;

@@ -280,7 +280,7 @@
         [wself onNetworError:showEmptyIfFailed showToast:showToast];
     }];
     if (refreshFeed) {
-        [self.feedListController startLoadData];
+        [self.feedListController startLoadData:NO];
     }
 }
 

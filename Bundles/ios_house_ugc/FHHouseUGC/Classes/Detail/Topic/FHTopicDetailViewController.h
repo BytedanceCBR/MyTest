@@ -13,6 +13,16 @@ NS_ASSUME_NONNULL_BEGIN
 // 话题详情页
 @interface FHTopicDetailViewController : FHBaseViewController
 
+- (void)showEmptyWithType:(FHEmptyMaskViewType)maskViewType;
+- (void)hiddenEmptyView;
+- (void)refreshHeaderData;
+- (void)endRefreshHeader;
+- (void)mainScrollToTop;
+
+@end
+
+@interface FHTopicDetailScrollView : UIScrollView
+
 @end
 
 NS_ASSUME_NONNULL_END

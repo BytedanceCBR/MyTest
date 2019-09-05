@@ -18,6 +18,7 @@
 #import "UIViewController+Track.h"
 #import "FHFeedOperationView.h"
 #import "FHUGCConfig.h"
+#import <TTBusinessManager+StringUtils.h>
 
 @interface FHPostDetailViewController ()
 
@@ -185,7 +186,7 @@
     // 全部评论
     NSString *commentStr = @"全部评论";
     if (self.comment_count > 0) {
-        commentStr = [NSString stringWithFormat:@"全部评论(%ld)",self.comment_count];
+        commentStr = [NSString stringWithFormat:@"全部评论(%@)",[TTBusinessManager formatCommentCount:self.comment_count]];
     } else {
         commentStr = [NSString stringWithFormat:@"全部评论(0)"];
     }

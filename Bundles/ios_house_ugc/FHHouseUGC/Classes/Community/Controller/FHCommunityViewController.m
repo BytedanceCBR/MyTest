@@ -137,6 +137,7 @@
     if(self.viewModel.currentTabIndex == 0 && self.hasFocusTips){
         self.hasFocusTips = NO;
         [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+        [[FHUGCConfig sharedInstance] recordHideRedPointTime];
         self.segmentControl.sectionRedPoints = @[@0];
         [self.viewModel refreshCell:YES];
     }
@@ -177,21 +178,21 @@
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     [self addUgcGuide];
 
-//    if(self.isUgcOpen){
-//        //去掉邻里tab的红点
-//        [FHEnvContext hideFindTabRedDots];
-//        //去掉关注红点的同时刷新tab
-//        if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].ugcFocusHasNew){
-//            self.hasFocusTips = NO;
-//            [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
-//            [self.viewModel refreshCell:YES];
-//        }
-//    }else{
+    if(self.isUgcOpen){
+        //去掉邻里tab的红点
+        [FHEnvContext hideFindTabRedDots];
+        //去掉关注红点的同时刷新tab
+        if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].ugcFocusHasNew){
+            self.hasFocusTips = NO;
+            [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+            [self.viewModel refreshCell:YES];
+        }
+    }else{
         if (!self.hasShowDots) {
             [FHEnvContext hideFindTabRedDotsLimitCount];
             self.hasShowDots = YES;
         }
-//    }
+    }
 }
 
 -(BOOL)shouldAutorotate

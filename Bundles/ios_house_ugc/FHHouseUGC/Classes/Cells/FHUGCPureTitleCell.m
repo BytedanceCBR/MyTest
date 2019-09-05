@@ -12,6 +12,8 @@
 #import "TTUGCAttributedLabel.h"
 #import "FHUGCCellHelper.h"
 #import "FHUGCCellOriginItemView.h"
+#import "TTRoute.h"
+#import <TTBusinessManager+StringUtils.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -64,6 +66,13 @@
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
+    NSDictionary *linkAttributes = @{
+                                     NSForegroundColorAttributeName : [UIColor themeRed3],
+                                     NSFontAttributeName : [UIFont themeFontRegular:16]
+                                     };
+    self.contentLabel.linkAttributes = linkAttributes;
+    self.contentLabel.activeLinkAttributes = linkAttributes;
+    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
@@ -138,7 +147,7 @@
     if(commentCount == 0){
         [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
     }else{
-        [self.bottomView.commentBtn setTitle:cellModel.commentCount forState:UIControlStateNormal];
+        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
     }
     [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
     //内容
@@ -153,8 +162,11 @@
     if(cellModel.originItemModel){
         self.originView.hidden = NO;
         [self.originView refreshWithdata:cellModel];
+        [self.originView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(cellModel.originItemHeight);
+        }];
         [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(originViewHeight + 20);
+            make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(cellModel.originItemHeight + 20);
         }];
     }else{
         self.originView.hidden = YES;
@@ -172,7 +184,7 @@
         CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 20;
         
         if(cellModel.originItemModel){
-            height += (originViewHeight + 10);
+            height += (cellModel.originItemHeight + 10);
         }
         
         if(cellModel.isInsertGuideCell){
@@ -238,6 +250,12 @@
     if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
         if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
             [self.delegate lookAllLinkClicked:self.cellModel cell:self];
+        }
+    } else {
+        if (url) {
+            if(self.delegate && [self.delegate respondsToSelector:@selector(gotoLinkUrl:url:)]){
+                [self.delegate gotoLinkUrl:self.cellModel url:url];
+            }
         }
     }
 }

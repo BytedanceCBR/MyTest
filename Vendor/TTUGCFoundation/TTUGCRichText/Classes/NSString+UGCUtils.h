@@ -28,4 +28,12 @@
 - (NSRange)rangeOfComposedCharacterSequenceAtCodePoint:(NSUInteger)codePoint;
 
 - (NSDictionary *)attributedInfoWithFontSize:(CGFloat)fontSize colorName:(NSString *)colorName;
+
+
+/**
+ 把UIColor转换在十六制格式字符串
+ @param color UIColor实例
+ @return 十六进制表示的颜色
+ */
++ (NSString *)hexStringWithColor:(UIColor *)color;
 @end

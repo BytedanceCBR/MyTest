@@ -444,6 +444,7 @@
                            @"originCommonContent": @"origin_common_content",
                            @"recommendSocialGroupList": @"recommend_social_group_list",
                            @"articleSchema": @"article_schema",
+                           @"hotTopicList": @"hot_topic_list"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -716,6 +717,50 @@
 {
     NSDictionary *dict = @{
                            @"imageList": @"image_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataHotTopicListModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"forumName": @"forum_name",
+                           @"concernId": @"concern_id",
+                           @"forumId": @"forum_id",
+                           @"avatarUrl": @"avatar_url",
+                           @"talkCountStr": @"talk_count_str",
+                           @"talkCount": @"talk_count",
+                           @"logPb": @"log_pb",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataVoteModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"needUserLogin": @"need_user_login",
+                           @"rightName": @"right_name",
+                           @"leftValue": @"left_value",
+                           @"leftName": @"left_name",
+                           @"voteId": @"vote_id",
+                           @"rightValue": @"right_value",
+                           @"personDesc": @"person_desc",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
