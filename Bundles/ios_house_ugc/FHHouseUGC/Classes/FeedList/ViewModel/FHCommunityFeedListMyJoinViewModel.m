@@ -21,6 +21,7 @@
 #import <FHEnvContext.h>
 #import <TTAccountManager.h>
 #import <TTURLUtils.h>
+#import <HMDTTMonitor.h>
 
 @interface FHCommunityFeedListMyJoinViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -346,6 +347,15 @@
                 [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
                 wself.viewController.showenRetryButton = YES;
                 wself.refreshFooter.hidden = YES;
+                // 关注列表为空时上报监控数据
+                if (isHead) {
+                    // 下拉
+                    if (![[[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"] isEqualToString:@"local_test"]) {
+                        // 线上App Store
+                        NSString *categoryName = wself.categoryId ?: @"f_ugc_follow";
+                        [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_feed_empty" metric:nil category:@{@"status":@(1)} extra:@{@"category":categoryName}];
+                    }
+                }
             }
             [wself.tableView reloadData];
             
