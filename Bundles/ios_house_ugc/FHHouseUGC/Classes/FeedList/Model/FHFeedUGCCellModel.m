@@ -98,6 +98,7 @@
     cellModel.logPb = model.logPb;
     cellModel.aggrType = model.aggrType;
     cellModel.needLinkSpan = YES;
+    cellModel.behotTime = model.behotTime;
     //目前仅支持话题类型
     cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
     //处理圈子信息
