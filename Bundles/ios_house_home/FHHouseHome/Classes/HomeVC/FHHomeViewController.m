@@ -81,7 +81,10 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.adColdHadJump = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    [self registerNotifications];        
+    [self registerNotifications];
+    
+    [self resetMaintableView];
+    self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
 }
 
 - (void)scrollMainTableToTop
@@ -93,7 +96,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 -(void)dealyIniViews
 {
-    [self resetMaintableView];
     
     //如果是inhouse的，弹升级弹窗
     if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
@@ -396,9 +398,9 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewDidAppear:animated];
     
-    if(_isMainTabVC && !self.homeListViewModel){
-        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
-    }
+//    if(_isMainTabVC && !self.homeListViewModel){
+//        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
+//    }
     
     
     //开屏广告启动不会展示，保留逻辑代码
