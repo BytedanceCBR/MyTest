@@ -44,7 +44,7 @@
 #import <TTTracker/TTTrackerProxy.h>
 #import "TTServiceCenter.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 
 //爱看
 #import "AKHelper.h"

@@ -8,4 +8,5 @@
 
 
 @interface FHTopicCell : FHUGCBaseCell
+- (void)configHeaderImageTagViewBackgroundWithIndex: (NSInteger)rowIndex;
 @end

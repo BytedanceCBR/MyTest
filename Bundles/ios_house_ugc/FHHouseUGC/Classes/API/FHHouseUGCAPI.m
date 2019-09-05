@@ -11,6 +11,9 @@
 #import "FHUGCConfig.h"
 #import "FHEnvContext.h"
 #import "JSONAdditions.h"
+#import "FHTopicHeaderModel.h"
+#import "FHURLSettings.h"
+#import "FHTopicFeedListModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -33,6 +36,11 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
++ (TTHttpTask *)requestAllForumWithClass:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/all_forum";
+    return [FHMainApi queryData:queryPath params:nil class:cls completion:completion];
+}
+
 + (TTHttpTask *)requestCommunityDetail:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/social_group_basic_info";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -40,7 +48,7 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
-+ (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
++ (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
 
     NSString *queryPath = [ArticleURLSetting encrpytionStreamUrlString];
     
@@ -90,13 +98,9 @@
         paramDic[@"refresh_reason"] = @(0);
     }
     
-    NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
-    NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    if(fCityId){
-        [extraDic setObject:fCityId forKey:@"f_city_id"];
+    if(extraDic){
+        paramDic[@"client_extra_params"] = [extraDic tt_JSONRepresentation];
     }
-    
-    paramDic[@"client_extra_params"] = [extraDic tt_JSONRepresentation];
 
     Class cls = NSClassFromString(@"FHFeedListModel");
 
@@ -325,8 +329,8 @@
 }
 
 
-+ (TTHttpTask *)refreshFeedTips:(NSString *)category beHotTime:(NSString *)beHotTime completion:(void(^)(bool hasNew , NSError *error))completion {
-    NSString *queryPath = @"/ugc/v:version/refresh_tips";
++ (TTHttpTask *)refreshFeedTips:(NSString *)category beHotTime:(double)beHotTime completion:(void(^)(bool hasNew ,NSTimeInterval interval,NSTimeInterval cacheDuration, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/v1/refresh_tips";
     NSString *url = QURL(queryPath);
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -334,13 +338,15 @@
         paramDic[@"category"] = category;
     }
     if(beHotTime){
-        paramDic[@"be_hot_time"] = beHotTime;
+        paramDic[@"be_hot_time"] = @(beHotTime);
     }
     
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
         
         BOOL success = NO;
         BOOL hasNew = NO;
+        NSTimeInterval interval = 0;
+        NSTimeInterval cacheDuration = 0;
         if (!error) {
             @try{
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
@@ -350,6 +356,8 @@
                     error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
                 }else{
                     hasNew = [json[@"data"][@"has_new_content"] boolValue];
+                    interval = [json[@"data"][@"refresh_duration"] doubleValue];
+                    cacheDuration = [json[@"data"][@"client_cache_duration"] doubleValue];
                 }
             }
             @catch(NSException *e){
@@ -357,8 +365,90 @@
             }
         }
         if (completion) {
-            completion(hasNew,error);
+            completion(hasNew,interval,cacheDuration,error);
         }
     }];
 }
+
++ (TTHttpTask *)requestTopicHeader:(NSString *)forum_id completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/forum/home/v1/info/?";
+    NSString *url = QURL(queryPath); // 1640650037191725 1642474912698382
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(forum_id){
+        paramDic[@"forum_id"] = forum_id;
+        paramDic[@"is_preview"] = @(0);
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        FHTopicHeaderModel *headerModel = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"err_no"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"err_tips"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                }else{
+                    headerModel = [[FHTopicHeaderModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e) {
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        if (completion) {
+            completion(headerModel,error);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestTopicList:(NSString *)query_id tab_id:(NSString *)tab_id categoryName:(NSString *)category offset:(NSInteger)offset count:(NSInteger)count appExtraParams:(NSString *)appExtraParams completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/api/feed/forum_all/v1/?";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (query_id) {
+        paramDic[@"query_id"] = query_id;
+    }
+    if (category.length > 0) {
+       paramDic[@"category"] = category;
+    }
+    if (tab_id.length > 0) {
+        paramDic[@"tab_id"] = tab_id;
+    }
+    if (appExtraParams.length > 0) {
+        paramDic[@"app_extra_params"] = appExtraParams;
+    }
+    paramDic[@"count"] = @(count);
+    paramDic[@"offset"] = @(offset);
+    paramDic[@"stream_api_version"] = [FHURLSettings streamAPIVersionString];
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        FHTopicFeedListModel *listModel = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                if (error) {
+                    if ([json isKindOfClass:[NSDictionary class]]) {
+                        NSString *msg = json[@"message"];
+                        error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                    }
+                }else{
+                    listModel = [[FHTopicFeedListModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        if (completion) {
+            completion(listModel, error);
+        }
+    }];
+}
+
 @end

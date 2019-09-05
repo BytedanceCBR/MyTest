@@ -147,7 +147,9 @@
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         model.phoneCallViewModel.belongsVC = model.belongsVC;
-        [model.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO];
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"element_from"] = @"old_detail_related";
+        [model.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO extra:dict];
     }
 }
 
@@ -171,6 +173,7 @@
         extraDict[@"realtor_id"] = contact.realtorId;
         extraDict[@"realtor_rank"] = @(index);
         extraDict[@"realtor_position"] = @"detail_related";
+        extraDict[@"realtor_logpb"] = contact.realtorLogpb;
         if (self.baseViewModel.detailTracerDic) {
             [extraDict addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
         }
@@ -182,7 +185,8 @@
         contactConfig.realtorId = contact.realtorId;
         contactConfig.searchId = model.searchId;
         contactConfig.imprId = model.imprId;
-        contactConfig.from = @"app_oldhouse_mulrealtor";
+        contactConfig.realtorType = contact.realtorType;
+        contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
         [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
             if(success && [model.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
                 FHHouseDetailViewController *vc = (FHHouseDetailViewController *)model.belongsVC;
@@ -209,7 +213,7 @@
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         NSMutableDictionary *imExtra = @{}.mutableCopy;
         imExtra[@"realtor_position"] = @"detail_related";
-		imExtra[@"from"] = @"app_oldhouse_mulrealtor";
+		imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
         [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
     }
 }
@@ -219,6 +223,7 @@
     model.isFold = !model.isFold;
     self.foldButton.isFold = model.isFold;
     [self updateItems:YES];
+    [self addRealtorShowLog];
 }
 
 - (BOOL)shouldShowContact:(FHDetailContactModel* )contact {
@@ -297,8 +302,17 @@
         }];
         realtorShowCount = 0;
     }
-    // realtor_show埋点
-    [self tracerRealtorShowToIndex:realtorShowCount];
+//    [self tracerRealtorShowToIndex:realtorShowCount];
+}
+
+- (void)fh_willDisplayCell;{
+    [self addRealtorShowLog];
+}
+
+-(void)addRealtorShowLog{
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *) self.currentData;
+    NSInteger showCount = model.isFold ? MIN(model.recommendedRealtors.count, 3): model.recommendedRealtors.count;
+    [self tracerRealtorShowToIndex:showCount];
 }
 
 - (void)tracerRealtorShowToIndex:(NSInteger)index {
@@ -316,6 +330,7 @@
             tracerDic[@"realtor_id"] = contact.realtorId ?: @"be_null";
             tracerDic[@"realtor_rank"] = @(i);
             tracerDic[@"realtor_position"] = @"detail_related";
+            tracerDic[@"realtor_logpb"] = contact.realtorLogpb;
             if (contact.phone.length < 1) {
                 [tracerDic setValue:@"0" forKey:@"phone_show"];
             } else {
@@ -370,7 +385,9 @@
     [self addSubview:self.identifyView];
 
     _licenceIcon = [[FHExtendHotAreaButton alloc] init];
-    [_licenceIcon setImage:[UIImage imageNamed:@"contact"] forState:UIControlStateNormal];
+    [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
+    [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateSelected];
+    [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateHighlighted];
     [self addSubview:_licenceIcon];
     
     _callBtn = [[FHExtendHotAreaButton alloc] init];
@@ -427,12 +444,12 @@
         make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
     }];
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(40);
+        make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(-20);
         make.centerY.mas_equalTo(self.avator);
     }];
     [self.imBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(40);
+        make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
         make.centerY.mas_equalTo(self.avator);
     }];

@@ -1,37 +1,36 @@
-//
-// Created by zhulijun on 2019-06-04.
-//
-
-#import <Foundation/Foundation.h>
-#import "FHBaseModelProtocol.h"
-#import "JSONModel.h"
-
-@protocol FHTopicListResponseItemModel;
-
-@interface FHTopicListResponseItemModel : JSONModel
-
-@property(nonatomic, copy, nullable) NSString *communityId;
-@property(nonatomic, copy, nullable) NSString *title;
-@property(nonatomic, copy, nullable) NSString *subtitle;
-@property(nonatomic, copy, nullable) NSString *des;
-
+//GENERATED CODE , DON'T EDIT
+#import <JSONModel.h>
+#import <FHBaseModelProtocol.h>
+NS_ASSUME_NONNULL_BEGIN
+@protocol FHTopicListResponseDataListModel<NSObject>
 @end
 
+@interface FHTopicListResponseDataListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *forumName;
+@property (nonatomic, copy , nullable) NSString *forumId;
+@property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *talkCountStr;
+@property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, copy , nullable) NSString *talkCount;
+@property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSString *rank;
+@property (nonatomic, copy , nullable) NSDictionary *logPb;
+@end
 
 @interface FHTopicListResponseDataModel : JSONModel
 
-@property(nonatomic, strong, nullable) NSArray<FHTopicListResponseItemModel> *items;
+@property (nonatomic, strong , nullable) NSArray<FHTopicListResponseDataListModel> *list;
+@end
 
+@interface FHTopicListResponseModel : JSONModel<FHBaseModelProtocol>
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHTopicListResponseDataModel *data ;
 @end
 
 
-@interface FHTopicListResponseModel : JSONModel <FHBaseModelProtocol>
-
-@property(nonatomic, copy, nullable) NSString *status;
-@property(nonatomic, copy, nullable) NSString *message;
-@property(nonatomic, strong, nullable) FHTopicListResponseDataModel *data;
-
-@end
-
-
+NS_ASSUME_NONNULL_END
+//END OF HEADER
 

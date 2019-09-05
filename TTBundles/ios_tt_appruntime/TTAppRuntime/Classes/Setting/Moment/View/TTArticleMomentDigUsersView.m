@@ -101,9 +101,9 @@
         
         _avatarView.userInteractionEnabled = NO;
         _avatarView.avatarButton.enabled = NO;
-        [_avatarView setupVerifyViewForLength:kCellAvatarViewNormalLength adaptationSizeBlock:^CGSize(CGSize standardSize) {
-            return [TTArticleMomentDigUsersViewCellUIHelper fitSizeForVerifyLogo:standardSize];
-        }];
+//        [_avatarView setupVerifyViewForLength:kCellAvatarViewNormalLength adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//            return [TTArticleMomentDigUsersViewCellUIHelper fitSizeForVerifyLogo:standardSize];
+//        }];
         [self.contentView addSubview:_avatarView];
         
         self.descLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];

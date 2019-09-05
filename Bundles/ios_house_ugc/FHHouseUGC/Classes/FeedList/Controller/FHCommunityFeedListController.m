@@ -157,13 +157,14 @@
     if(self.listType == FHCommunityFeedListTypeNearby){
         viewModel = [[FHCommunityFeedListNearbyViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = @"f_ugc_neighbor";
-//        viewModel.categoryId = @"weitoutiao";
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = @"94349537893";
+        viewModel.categoryId = @"f_ugc_follow";
     }else if(self.listType == FHCommunityFeedListTypePostDetail) {
-        viewModel = [[FHCommunityFeedListPostDetailViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = self.forumId;
+        FHCommunityFeedListPostDetailViewModel *postDetailViewModel = [[FHCommunityFeedListPostDetailViewModel alloc] initWithTableView:_tableView controller:self];
+        postDetailViewModel.socialGroupId = self.forumId;
+        postDetailViewModel.categoryId = @"f_project_social";
+        viewModel = postDetailViewModel;
     }
     
     self.viewModel = viewModel;
@@ -179,6 +180,16 @@
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
         [_viewModel requestData:YES first:YES];
+    } else {
+        if(!self.hasValidateData){
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        }
+    }
+}
+
+- (void)startLoadData:(BOOL)isFirst {
+    if ([TTReachability isNetworkConnected]) {
+        [_viewModel requestData:YES first:isFirst];
     } else {
         if(!self.hasValidateData){
             [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];

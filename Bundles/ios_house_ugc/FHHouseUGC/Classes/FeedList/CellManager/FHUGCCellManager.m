@@ -15,6 +15,8 @@
 #import "FHArticleMultiImageCell.h"
 #import "FHUGCRecommendCell.h"
 #import "FHUGCBannerCell.h"
+#import "FHUGCHotTopicCell.h"
+#import "FHUGCVoteCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -42,7 +44,9 @@
                                 @"FHArticleMultiImageCell",
                                 @"FHUGCRecommendCell",
                                 @"FHUGCBannerCell",
- 
+                                @"FHUGCHotTopicCell",
+                                @"FHUGCVoteCell",
+                                
                                 //可扩展
                                  ];
 }
@@ -80,6 +84,12 @@
 
         case FHUGCFeedListCellSubTypeUGCBanner:
             return [FHUGCBannerCell class];
+            
+        case FHUGCFeedListCellSubTypeUGCHotTopic:
+            return [FHUGCHotTopicCell class];
+            
+        case FHUGCFeedListCellSubTypeUGCVote:
+            return [FHUGCVoteCell class];
 
         default:
             break;

@@ -293,9 +293,8 @@
 
         if (self.delegate && [self.delegate respondsToSelector:@selector(textViewDidInputTextHashtag:)]) {
             [self.delegate textViewDidInputTextHashtag:self];
-
-            self.didInputTextHashtag = YES;
-            return NO;
+            [self becomeFirstResponder];
+            return YES;
         }
 
         self.didInputTextHashtag = NO;
@@ -492,8 +491,9 @@
             [textView.textStorage deleteCharactersInRange:selectedRange];
         }
         [textView.textStorage insertAttributedString:attributedString atIndex:textView.selectedRange.location];
-
+        self.internalGrowingTextView.isInputEmojiToChangeRange = YES;
         textView.selectedRange = NSMakeRange(textView.selectedRange.location + 1, 0);
+        self.internalGrowingTextView.isInputEmojiToChangeRange = NO;
     }
 
     [self growingTextViewDidChange:self.internalGrowingTextView];  // 手动触发 textView 回调方法

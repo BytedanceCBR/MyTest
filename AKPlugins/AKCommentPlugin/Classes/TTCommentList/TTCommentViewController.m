@@ -28,7 +28,7 @@
 #import <TTServiceKit/TTModuleBridge.h>
 #import <TTNetworkManager/TTNetworkUtil.h>
 #import "FHUserTracker.h"
-
+ 
 
 static NSString *kTTUniversalCommentCellLiteIdentifier = @"TTUniversalCommentCellLiteIdentifier";
 
@@ -523,7 +523,12 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
                 }
             }];
         } else {
-            [[TTCommentDataManager sharedManager] deleteCommentWithCommentID:commentID finishBlock:nil];
+            NSInteger replyCount = self.needDeleteCommentModel.replyCount ? self.needDeleteCommentModel.replyCount.integerValue + 1: 0;
+            [[TTCommentDataManager sharedManager] deleteCommentWithCommentID:commentID finishBlock:^(NSError *error) {
+                if(!error && [self.delegate respondsToSelector:@selector(tt_commentDeleteSuccessWithCount:)]) {
+                    [self.delegate tt_commentDeleteSuccessWithCount:replyCount];
+                }
+            }];
         }
 
         if (_needDeleteCommentModel) {

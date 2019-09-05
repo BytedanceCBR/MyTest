@@ -59,9 +59,9 @@
 {
     [super layoutSubviews];
     [UIView performWithoutAnimation:^{
-        [self setupVerifyViewForLength:self.bounds.size.width adaptationSizeBlock:^CGSize(CGSize standardSize) {
-            return [TTVerifyIconHelper tt_newSize:standardSize];
-        }];
+//        [self setupVerifyViewForLength:self.bounds.size.width adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//            return [TTVerifyIconHelper tt_newSize:standardSize];
+//        }];
         [self refreshDecoratorView];
     }];
 

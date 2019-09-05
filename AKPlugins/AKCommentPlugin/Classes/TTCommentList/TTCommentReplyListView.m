@@ -12,6 +12,7 @@
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import "NetworkUtilities.h"
+#import <TTBusinessManager+StringUtils.h>
 
 
 #define kTopPadding [TTDeviceUIUtils tt_newPadding:12.f]
@@ -146,7 +147,7 @@
         model = _replyArr[indexPath.row];
     }
     else {
-        NSString *moreReplyText = [NSString stringWithFormat:@"查看全部%lld条回复", [_toComment.replyCount longLongValue]];
+        NSString *moreReplyText = [NSString stringWithFormat:@"查看全部%@条回复", [TTBusinessManager formatCommentCount: [_toComment.replyCount longLongValue]]];
         TTCommentReplyModel *moreReplyModel = [TTCommentReplyModel replyModelWithDict:@{@"user_name":moreReplyText} forCommentID:_toComment.commentID.stringValue];
         moreReplyModel.notReplyMsg = YES;
         model = moreReplyModel;

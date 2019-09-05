@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCCellHelper : NSObject
 
++ (NSAttributedString *)truncationFont:(UIFont *)font contentColor:(UIColor *)contentColor color:(UIColor *)color;
+
 + (NSAttributedString *)truncationFont:(UIFont *)font contentColor:(UIColor *)contentColor color:(UIColor *)color linkUrl:(NSString *)linkUrl;
 
 + (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model numberOfLines:(NSInteger)numberOfLines;
@@ -30,6 +32,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)setArticleRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width;
 
 + (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model;
+
++ (void)setOriginContentAttributeString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
+
++ (void)setVoteContentString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
 
 + (CGSize)sizeThatFitsAttributedString:(NSAttributedString *)attrStr
                        withConstraints:(CGSize)size
