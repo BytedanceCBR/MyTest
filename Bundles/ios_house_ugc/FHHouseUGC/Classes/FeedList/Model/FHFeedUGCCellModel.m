@@ -97,6 +97,7 @@
     cellModel.logPb = model.logPb;
     cellModel.aggrType = model.aggrType;
     cellModel.needLinkSpan = YES;
+    cellModel.behotTime = model.behotTime;
     //目前仅支持话题类型
     cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
     //处理圈子信息
@@ -118,7 +119,6 @@
     //处理其他数据
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle){
         cellModel.title = model.title;
-        cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.openUrl;
         cellModel.numberOfLines = 5;
         
@@ -148,7 +148,6 @@
     }else if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         cellModel.groupId = model.rawData.groupId;
         cellModel.title = model.rawData.content.question.title;
-        cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.rawData.content.question.questionListSchema;
         cellModel.groupId = model.rawData.content.question.qid;
         cellModel.numberOfLines = 5;
@@ -179,7 +178,6 @@
     }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
         cellModel.groupId = model.rawData.groupId;
         cellModel.content = model.rawData.content.answer.abstractText;
-        cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.rawData.content.answer.answerDetailSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
@@ -230,7 +228,6 @@
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
         cellModel.groupId = model.rawData.commentBase.id;
         cellModel.content = model.rawData.commentBase.content;
-        cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.rawData.commentBase.detailSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
