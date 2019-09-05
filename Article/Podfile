@@ -51,8 +51,8 @@ def fhPods
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev' #
     pod 'FHCommonUI', '0.0.3'
 #    pod 'FHCommonUI', :path => '../../../Bundles/ios_common_ui'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9106c57f2bedcb8b652636e459fb8a0fc045c213'
-#    pod 'ios_house_im' , '0.1.7'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9106c57f2bedcb8b652636e459fb8a0fc045c213'
+    pod 'ios_house_im' , '0.1.9'
 #    pod 'ios_house_im' , :path => '../../ios_house_im/ios_house_im/'
 
     #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
@@ -90,7 +90,7 @@ def appPods
     pod_binary 'IESGeckoKit', '0.4.0'
     pod_binary 'IESWebKit', '0.2.0-rc.3'
 #    pod 'IESWebKit/Falcon', :git => 'git@code.byted.org:ugc/IESWebKit.git', :branch => 'master'
-    pod_binary 'React', '0.55.9-alpha.22', :subspecs => [ #可根据需要选择相应子库以减少包大小
+    pod_binary 'React', '0.55.13-rc.0', :subspecs => [ #可根据需要选择相应子库以减少包大小
     'Core',
     'CxxBridge',
     'RCTActionSheet',

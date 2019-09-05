@@ -224,7 +224,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 //todo 增加埋点的东西
 - (void)jump2RealtorDetail
 {
-    [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone isPreLoad:YES];
+    [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone isPreLoad:YES extra:nil];
 }
 
 - (void)licenseAction
@@ -344,21 +344,23 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
         [self addLeadShowLog:contactPhone];
     }
+    
+    //根DA确认 进入经纪人主页数据太少，因此去掉经纪人主页RN预加载，以提高房源详情性能
     @try {
         // 可能会出现崩溃的代码
         if ([FHHouseDetailPhoneCallViewModel fhRNEnableChannels].count > 0 && [FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels].count > 0 && [[FHHouseDetailPhoneCallViewModel fhRNEnableChannels] containsObject:@"f_realtor_detail"] && [[FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels] containsObject:@"f_realtor_detail"] && contactPhone.showRealtorinfo && [FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"]) {
             //保证主线程执行
-            [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES andIsOpen:NO];
+            [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES andIsOpen:NO extra:nil];
         }
     }
-    
+
     @catch (NSException *exception) {
         // 捕获到的异常exception
         if (exception) {
             NSString* descriptionExc = [exception description];
             NSMutableDictionary *excepDict = [NSMutableDictionary dictionary];
             [excepDict setValue:descriptionExc forKey:@"exception"];
-            
+
             [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:1 extra:excepDict];
             self.phoneCallViewModel.rnIsUnAvalable = YES;
         }
@@ -449,7 +451,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     // 目前需要添加：realtor_position element_from item_id
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"realtor_position"] = realtor_pos;
-    imExtra[@"from"] = params[@"from"] ?: @"app_oldhouse";
+    imExtra[@"from"] = params[@"from"] ?: (self.contactPhone.realtorType == FHRealtorTypeNormal ? @"app_oldhouse" : @"app_oldhouse_expert");
     if (extraDict && [extraDict isKindOfClass:[NSDictionary class]]) {
         if (extraDict[@"element_from"]) {
             imExtra[@"element_from"] = extraDict[@"element_from"];
@@ -550,9 +552,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     contactConfig.searchId = self.searchId;
     contactConfig.imprId = self.imprId;
     contactConfig.showLoading = YES;
+    contactConfig.realtorLogpb = self.contactPhone.realtorLogpb;
+    contactConfig.realtorType = self.contactPhone.realtorType;
     if (extraDict[@"from"]) {
         contactConfig.from = extraDict[@"from"];
     }
+    
     [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
         if(success && [wself.phoneCallViewModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
             FHHouseDetailViewController *vc = (FHHouseDetailViewController *)wself.phoneCallViewModel.belongsVC;
@@ -642,6 +647,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"realtor_id"] = contactPhone.realtorId ?: @"be_null";
     tracerDic[@"realtor_rank"] = @(0);
     tracerDic[@"realtor_position"] = @"detail_button";
+    tracerDic[@"realtor_logpb"] = contactPhone.realtorLogpb;
     if (_contactPhone.phone.length < 1) {
         [tracerDic setValue:@"0" forKey:@"phone_show"];
     } else {
