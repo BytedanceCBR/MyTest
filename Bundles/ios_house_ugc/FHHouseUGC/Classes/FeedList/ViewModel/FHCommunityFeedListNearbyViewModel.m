@@ -202,6 +202,12 @@
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     
+    //fake
+    if(isHead){
+//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake]];
+//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake2]];
+    }
+    
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         cellModel.categoryId = self.categoryId;
@@ -373,7 +379,7 @@
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
         [self jumpToPostDetail:cellModel showComment:showComment enterType:enterType];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2){
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2|| cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
         //根据url跳转
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
@@ -441,17 +447,12 @@
 - (void)deleteCell:(FHFeedUGCCellModel *)cellModel {
     NSInteger row = [self getCellIndex:cellModel];
     if(row < self.dataList.count && row >= 0){
-//        NSLog(@"bef__tableview____offset:%f,height:%f",self.tableView.contentOffset.y,self.tableView.contentSize.height);
-//        CGPoint beforeOffset = self.tableView.contentOffset;
-//        CGSize beforeContentSize = self.tableView.contentSize;
         [self.tableView beginUpdates];
         [self.dataList removeObjectAtIndex:row];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView layoutIfNeeded];
         [self.tableView endUpdates];
-//        NSLog(@"aft__tableview____offset:%f,height:%f",self.tableView.contentOffset.y,self.tableView.contentSize.height);
-//        [self.tableView reloadData];
     }
 }
 

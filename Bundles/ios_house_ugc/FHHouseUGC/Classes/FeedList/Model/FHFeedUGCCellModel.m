@@ -66,7 +66,7 @@
         Class cls = nil;
         if(type == FHUGCFeedListCellTypeUGC){
             cls = [FHFeedUGCContentModel class];
-        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeAnswer || type == FHUGCFeedListCellTypeArticleComment || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend || type == FHUGCFeedListCellTypeUGCBanner2 || type == FHUGCFeedListCellTypeArticleComment2 || type == FHUGCFeedListCellTypeUGCHotTopic || type == FHUGCFeedListCellTypeUGCVote){
+        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeAnswer || type == FHUGCFeedListCellTypeArticleComment || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend || type == FHUGCFeedListCellTypeUGCBanner2 || type == FHUGCFeedListCellTypeArticleComment2 || type == FHUGCFeedListCellTypeUGCHotTopic || type == FHUGCFeedListCellTypeUGCVote || type == FHUGCFeedListCellTypeUGCSmallVideo){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -93,6 +93,7 @@
 + (FHFeedUGCCellModel *)modelFromFeedContent:(FHFeedContentModel *)model {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.cellType = [model.cellType integerValue];
+    cellModel.behotTime = model.behotTime;
     cellModel.groupId = model.groupId;
     cellModel.logPb = model.logPb;
     cellModel.aggrType = model.aggrType;
@@ -118,7 +119,6 @@
     //处理其他数据
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle){
         cellModel.title = model.title;
-        cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.openUrl;
         cellModel.numberOfLines = 5;
         
@@ -148,7 +148,6 @@
     }else if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         cellModel.groupId = model.rawData.groupId;
         cellModel.title = model.rawData.content.question.title;
-        cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.rawData.content.question.questionListSchema;
         cellModel.groupId = model.rawData.content.question.qid;
         cellModel.numberOfLines = 5;
@@ -179,7 +178,6 @@
     }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
         cellModel.groupId = model.rawData.groupId;
         cellModel.content = model.rawData.content.answer.abstractText;
-        cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.rawData.content.answer.answerDetailSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
@@ -230,7 +228,6 @@
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
         cellModel.groupId = model.rawData.commentBase.id;
         cellModel.content = model.rawData.commentBase.content;
-        cellModel.behotTime = model.behotTime;
         cellModel.openUrl = model.rawData.commentBase.detailSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
@@ -331,6 +328,29 @@
         cellModel.vote = vote;
         
         [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;
+        cellModel.groupId = model.rawData.groupId;
+        cellModel.openUrl = model.rawData.detailSchema;
+        cellModel.showLookMore = YES;
+        cellModel.numberOfLines = 3;
+        
+        FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
+        user.name = model.rawData.user.info.name;
+        user.avatarUrl = model.rawData.user.info.avatarUrl;
+        user.userId = model.rawData.user.info.userId;
+        cellModel.user = user;
+        
+        cellModel.diggCount = model.rawData.action.diggCount;
+        cellModel.commentCount = model.rawData.action.commentCount;
+        cellModel.userDigg = model.rawData.action.userDigg;
+        
+        cellModel.title = model.rawData.title;
+        cellModel.contentRichSpan = model.rawData.titleRichSpan;
+        
+        cellModel.imageList = model.rawData.firstFrameImageList;
+        
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
     }
     
     return cellModel;
@@ -461,28 +481,18 @@
 
 + (FHFeedUGCCellModel *)modelFromFake {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
-    cellModel.groupId = @"100005";
-    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotTopic;
-    cellModel.hotTopicList = @[@"1",@"2",@"3",@"4",@"5"];
+    cellModel.groupId = @"1000051";
+    cellModel.cellType = FHUGCFeedListCellTypeUGCVideo;
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVideo;
     
     return cellModel;
 }
 
 + (FHFeedUGCCellModel *)modelFromFake2 {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
-    cellModel.groupId = @"100006";
-    cellModel.cellType = FHUGCFeedListCellTypeUGCVote;
-    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVote;
-    
-    FHFeedUGCVoteModel *vote = [[FHFeedUGCVoteModel alloc] init];
-    vote.content = @"你会为了买房，在生活中降低生活品质并且开始极端省钱吗？";
-    vote.leftDesc = @"会";
-    vote.rightDesc = @"不会";
-    vote.personDesc = @"378324人参与";
-    vote.openUrl = @"sslocal://webview?url=https%3a%2f%2fi.haoduofangs.com%2fmagic%2fruntime%2f%3fid%3d7197";
-    cellModel.vote = vote;
-    
-    [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
+    cellModel.groupId = @"1000061";
+    cellModel.cellType = FHUGCFeedListCellTypeUGCSmallVideo;
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;
     
     return cellModel;
 }

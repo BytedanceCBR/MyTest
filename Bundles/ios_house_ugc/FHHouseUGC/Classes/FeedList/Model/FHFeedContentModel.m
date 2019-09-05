@@ -444,7 +444,13 @@
                            @"originCommonContent": @"origin_common_content",
                            @"recommendSocialGroupList": @"recommend_social_group_list",
                            @"articleSchema": @"article_schema",
-                           @"hotTopicList": @"hot_topic_list"
+                           @"hotTopicList": @"hot_topic_list",
+                           
+                           @"firstFrameImageList": @"first_frame_image_list",
+                           @"detailSchema": @"detail_schema",
+                           @"titleRichSpan": @"title_rich_span",
+                           @"createTime": @"create_time",
+                           @"videoContent": @"video_content",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -761,6 +767,73 @@
                            @"voteId": @"vote_id",
                            @"rightValue": @"right_value",
                            @"personDesc": @"person_desc",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataVideoOriginCoverModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"urlList": @"url_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataVideoPlayAddrModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"urlList": @"url_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataVideoDownloadAddrModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"urlList": @"url_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataVideoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"playAddr": @"play_addr",
+                           @"videoId": @"video_id",
+                           @"originCover": @"origin_cover",
+                           @"downloadAddr": @"download_addr",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
