@@ -573,6 +573,17 @@ NS_ASSUME_NONNULL_BEGIN
 //临时处理服务器打平的逻辑
 @property (nonatomic, copy , nullable) NSString *articleSchema;
 @property (nonatomic, assign)   BOOL       isFromDetail;// 详情页
+
+//@property (nonatomic, copy , nullable) NSString *videoId;
+//@property (nonatomic, strong , nullable) FHFeedContentVideoDetailInfoModel *videoDetailInfo ;
+//@property (nonatomic, copy , nullable) NSString *playAuthToken;
+//@property (nonatomic, copy , nullable) NSString *groupFlags;
+//@property (nonatomic, copy , nullable) NSString *debugInfo;
+//@property (nonatomic, copy , nullable) NSString *banImmersive;
+//@property (nonatomic, copy , nullable) NSString *videoDuration;
+//@property (nonatomic, copy , nullable) NSString *videoProportionArticle;
+//@property (nonatomic, copy , nullable) NSString *playBizToken;
+//@property (nonatomic, copy , nullable) NSString *danmakuCount;
 @end
 
 
