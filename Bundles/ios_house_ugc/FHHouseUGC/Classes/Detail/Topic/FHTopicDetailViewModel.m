@@ -21,6 +21,9 @@
 #import "ArticleImpressionHelper.h"
 #import "FHUGCConfig.h"
 #import "TTUGCDefine.h"
+#import "TSVShortVideoDetailExitManager.h"
+#import "HTSVideoPageParamHeader.h"
+#import "FHUGCSmallVideoCell.h"
 
 @interface FHTopicDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -614,6 +617,23 @@
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    } if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
+        //小视频
+        WeakSelf;
+        TSVShortVideoDetailExitManager *exitManager = [[TSVShortVideoDetailExitManager alloc] initWithUpdateBlock:^CGRect{
+            StrongSelf;
+            CGRect imageFrame = [self selectedSmallVideoFrame];
+            imageFrame.origin = CGPointZero;
+            return imageFrame;
+        } updateTargetViewBlock:^UIView *{
+            StrongSelf;
+            return [self currentSelectSmallVideoView];
+        }];
+        NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:2];
+        [info setValue:exitManager forKey:HTSVideoDetailExitManager];
+        
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
     }
 }
 
@@ -644,6 +664,24 @@
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     self.needRefreshCell = YES;
+}
+
+- (UIView *)currentSelectSmallVideoView {
+    if (self.currentCell && [self.currentCell isKindOfClass:[FHUGCSmallVideoCell class]]) {
+        FHUGCSmallVideoCell *smallVideoCell = self.currentCell;
+        return smallVideoCell.videoImageView;
+    }
+    return nil;
+}
+
+- (CGRect)selectedSmallVideoFrame
+{
+    UIView *view = [self currentSelectSmallVideoView];
+    if (view) {
+        CGRect frame = [view convertRect:view.bounds toView:nil];
+        return frame;
+    }
+    return CGRectZero;
 }
 
 #pragma mark - 埋点

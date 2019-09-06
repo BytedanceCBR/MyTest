@@ -15,6 +15,8 @@
 #import "FHFeedListModel.h"
 #import "FHUGCConfig.h"
 #import "FHUserTracker.h"
+#import "TSVShortVideoDetailExitManager.h"
+#import "HTSVideoPageParamHeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

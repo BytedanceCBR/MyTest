@@ -513,6 +513,23 @@
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
         [self goToVoteDetail:cellModel value:0];
+    } if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
+        //小视频
+        WeakSelf;
+        TSVShortVideoDetailExitManager *exitManager = [[TSVShortVideoDetailExitManager alloc] initWithUpdateBlock:^CGRect{
+            StrongSelf;
+            CGRect imageFrame = [self selectedSmallVideoFrame];
+            imageFrame.origin = CGPointZero;
+            return imageFrame;
+        } updateTargetViewBlock:^UIView *{
+            StrongSelf;
+            return [self currentSelectSmallVideoView];
+        }];
+        NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:2];
+        [info setValue:exitManager forKey:HTSVideoDetailExitManager];
+        
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
     }
 }
 
