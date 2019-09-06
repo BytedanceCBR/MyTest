@@ -249,21 +249,14 @@ static const CGFloat kFloatingViewOriginY = 230;
         /// allParams 里是以上两个字典的并集，extra会覆盖 query
         _pageParams = paramObj.allParams.copy;
 
-        if ([TTDeviceHelper OSVersionNumber] < 8.) {
-            [[TTMonitor shareManager] trackService:@"shortvideo_detail_unsupported_os"
-                                        attributes:@{
-                                                     @"enter_from": [params[AWEVideoEnterFrom] copy] ?: @"",
-                                                     @"category_name": [params[AWEVideoCategoryName] copy] ?: @"",
-                                                     @"url": [paramObj.sourceURL absoluteString],
-                                                     }];
-            return nil;
-        }
-
         _groupID = [params[AWEVideoGroupId] copy] ?: @"";
         _originalGroupID = [params[AWEVideoGroupId] copy] ?: @"";
         _ruleID = [params[AWEVideoRuleId] copy];
         _groupSource = [params[VideoGroupSource] copy] ?: @"";
         _showComment = [params[AWEVideoShowComment] copy];
+        if (!_showComment) {
+            _showComment = [extraParams[AWEVideoShowComment] copy];
+        }
         _categoryName = [params tt_stringValueForKey:AWEVideoCategoryName];
         _commonTrackingParameter = @{
                                      @"enter_from": [params[AWEVideoEnterFrom] copy] ?: @"",
