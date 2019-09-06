@@ -29,7 +29,6 @@
 @interface FHUGCSmallVideoCell ()<TTUGCAttributedLabelDelegate>
 
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
-@property(nonatomic ,strong) UIImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
@@ -78,9 +77,9 @@
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.multiImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-    [self.contentView addSubview:_multiImageView];
-//    _multiImageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.videoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    [self.contentView addSubview:_videoImageView];
+    //_videoImageView.contentMode = UIViewContentModeScaleAspectFit;
     self.imageViewheight = 200;
     self.imageViewWidth = 150;
     
@@ -110,7 +109,7 @@
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
     }];
     
-    [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.videoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
@@ -118,13 +117,13 @@
     }];
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.videoImageView.mas_bottom).offset(10);
         make.height.mas_equalTo(49);
         make.left.right.mas_equalTo(self.contentView);
     }];
     
     [self.originView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.videoImageView.mas_bottom).offset(10);
         make.height.mas_equalTo(originViewHeight);
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
@@ -181,12 +180,12 @@
         }
         
         if (imageModel && imageModel.url.length > 0) {
-            [self.multiImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+            [self.videoImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
         }
     }
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
-        [self.multiImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.videoImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
             make.left.mas_equalTo(self.contentView).offset(leftMargin);
             make.width.mas_equalTo(self.imageViewWidth);
@@ -194,7 +193,7 @@
         }];
     }else{
         self.contentLabel.hidden = NO;
-        [self.multiImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.videoImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
             make.left.mas_equalTo(self.contentView).offset(leftMargin);
             make.width.mas_equalTo(self.imageViewWidth);
@@ -210,12 +209,12 @@
             make.height.mas_equalTo(cellModel.originItemHeight);
         }];
         [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(cellModel.originItemHeight + 20);
+            make.top.mas_equalTo(self.videoImageView.mas_bottom).offset(cellModel.originItemHeight + 20);
         }];
     }else{
         self.originView.hidden = YES;
         [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
+            make.top.mas_equalTo(self.videoImageView.mas_bottom).offset(10);
         }];
     }
     

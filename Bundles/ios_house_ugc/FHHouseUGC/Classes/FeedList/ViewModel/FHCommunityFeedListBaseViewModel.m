@@ -6,6 +6,7 @@
 //
 
 #import "FHCommunityFeedListBaseViewModel.h"
+#import "FHUGCSmallVideoCell.h"
 
 @implementation FHCommunityFeedListBaseViewModel
 
@@ -56,6 +57,24 @@
     params.refer = self.refer;
     TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:uniqueID itemID:itemID impressionID:nil aggrType:[cellModel.aggrType integerValue]];
     [ArticleImpressionHelper recordGroupWithUniqueID:uniqueID adID:nil groupModel:groupModel status:status params:params];
+}
+
+- (UIView *)currentSelectSmallVideoView {
+    if (self.currentCell && [self.currentCell isKindOfClass:[FHUGCSmallVideoCell class]]) {
+        FHUGCSmallVideoCell *smallVideoCell = self.currentCell;
+        return smallVideoCell.videoImageView;
+    }
+    return nil;
+}
+
+- (CGRect)selectedSmallVideoFrame
+{
+    UIView *view = [self currentSelectSmallVideoView];
+    if (view) {
+        CGRect frame = [view convertRect:view.bounds toView:nil];
+        return frame;
+    }
+    return CGRectZero;
 }
 
 @end

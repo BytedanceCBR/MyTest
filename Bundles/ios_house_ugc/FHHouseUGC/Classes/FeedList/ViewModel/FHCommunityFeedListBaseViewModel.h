@@ -42,6 +42,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshCurrentCell;
 
+// 小视频
+- (UIView *)currentSelectSmallVideoView;
+
+- (CGRect)selectedSmallVideoFrame;
+
 - (void)viewWillAppear;
 
 - (void)viewWillDisappear;
