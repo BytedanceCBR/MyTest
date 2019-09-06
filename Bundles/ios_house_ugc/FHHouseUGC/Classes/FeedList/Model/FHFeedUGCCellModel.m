@@ -119,7 +119,8 @@
         cellModel.openUrl = model.openUrl;
         
         if(model.hasVideo){
-            //s视频
+            //视频
+            cellModel.hasVideo = model.hasVideo;
             cellModel.numberOfLines = 3;
             
             if (model.isFromDetail) {
