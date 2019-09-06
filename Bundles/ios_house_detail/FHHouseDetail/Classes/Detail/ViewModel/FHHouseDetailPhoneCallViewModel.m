@@ -237,14 +237,14 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"log_pb"] = self.tracerDict[@"log_pb"];
     dict[@"search_id"] = self.tracerDict[@"search_id"] ? : @"be_null";
     dict[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
-    dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
+    dict[@"group_id"] = self.houseId ? : @"be_null";
     dict[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
     dict[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
     if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
         NSDictionary *logPbDict = self.tracerDict[@"log_pb"];
         dict[@"impr_id"] = logPbDict[@"impr_id"] ? : @"be_null";
         dict[@"search_id"] = logPbDict[@"search_id"] ? : @"be_null";
-        dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
+//        dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
     }
     dict[@"realtor_rank"] = @"be_null";
     dict[@"realtor_position"] = @"be_null";
