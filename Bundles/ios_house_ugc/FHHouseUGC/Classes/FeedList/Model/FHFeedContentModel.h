@@ -494,6 +494,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHFeedContentVideoDetailInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *groupFlags;
+@property (nonatomic, copy , nullable) NSString *videoId;
+@property (nonatomic, copy , nullable) NSString *videoType;
+@property (nonatomic, copy , nullable) NSString *videoWatchingCount;
+@property (nonatomic, copy , nullable) NSString *videoPreloadingFlag;
+@property (nonatomic, copy , nullable) NSString *directPlay;
+@property (nonatomic, strong , nullable) FHFeedContentImageListModel *detailVideoLargeImage ;
+@property (nonatomic, copy , nullable) NSString *showPgcSubscribe;
+@property (nonatomic, copy , nullable) NSString *videoWatchCount;
+@end
+
 @interface FHFeedContentModel : JSONModel 
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
@@ -573,17 +586,17 @@ NS_ASSUME_NONNULL_BEGIN
 //临时处理服务器打平的逻辑
 @property (nonatomic, copy , nullable) NSString *articleSchema;
 @property (nonatomic, assign)   BOOL       isFromDetail;// 详情页
-
-//@property (nonatomic, copy , nullable) NSString *videoId;
-//@property (nonatomic, strong , nullable) FHFeedContentVideoDetailInfoModel *videoDetailInfo ;
-//@property (nonatomic, copy , nullable) NSString *playAuthToken;
-//@property (nonatomic, copy , nullable) NSString *groupFlags;
-//@property (nonatomic, copy , nullable) NSString *debugInfo;
-//@property (nonatomic, copy , nullable) NSString *banImmersive;
-//@property (nonatomic, copy , nullable) NSString *videoDuration;
-//@property (nonatomic, copy , nullable) NSString *videoProportionArticle;
-//@property (nonatomic, copy , nullable) NSString *playBizToken;
-//@property (nonatomic, copy , nullable) NSString *danmakuCount;
+//视频相关
+@property (nonatomic, copy , nullable) NSString *videoId;
+@property (nonatomic, strong , nullable) FHFeedContentVideoDetailInfoModel *videoDetailInfo ;
+@property (nonatomic, copy , nullable) NSString *playAuthToken;
+@property (nonatomic, copy , nullable) NSString *groupFlags;
+@property (nonatomic, copy , nullable) NSString *debugInfo;
+@property (nonatomic, copy , nullable) NSString *banImmersive;
+@property (nonatomic, copy , nullable) NSString *videoDuration;
+@property (nonatomic, copy , nullable) NSString *videoProportionArticle;
+@property (nonatomic, copy , nullable) NSString *playBizToken;
+@property (nonatomic, copy , nullable) NSString *danmakuCount;
 @end
 
 

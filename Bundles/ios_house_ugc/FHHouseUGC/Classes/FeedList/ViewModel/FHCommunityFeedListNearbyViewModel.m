@@ -363,21 +363,26 @@
 
 - (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
-        BOOL canOpenURL = NO;
-        if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
-            NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
-            if ([[UIApplication sharedApplication] canOpenURL:url]) {
-                canOpenURL = YES;
-                [[UIApplication sharedApplication] openURL:url];
-            }
-            else if([[TTRoute sharedRoute] canOpenURL:url]){
-                canOpenURL = YES;
-                //优先跳转openurl
-                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-            }
+        if(cellModel.hasVideo){
+            //跳转视频详情页
+            [self jumpToVideoDetail:cellModel showComment:NO enterType:enterType];
         }else{
-            NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
-            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+            BOOL canOpenURL = NO;
+            if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
+                NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
+                if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                    canOpenURL = YES;
+                    [[UIApplication sharedApplication] openURL:url];
+                }
+                else if([[TTRoute sharedRoute] canOpenURL:url]){
+                    canOpenURL = YES;
+                    //优先跳转openurl
+                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                }
+            }else{
+                NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
+                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+            }
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
         [self jumpToPostDetail:cellModel showComment:showComment enterType:enterType];
@@ -459,6 +464,29 @@
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     self.needRefreshCell = YES;
+}
+
+- (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    // 埋点
+//    NSMutableDictionary *traceParam = @{}.mutableCopy;
+//    traceParam[@"enter_from"] = @"hot_discuss_feed";
+//    traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+//    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+//    traceParam[@"log_pb"] = cellModel.logPb;
+//    dict[TRACER_KEY] = traceParam;
+    
+//    dict[@"data"] = cellModel;
+//    dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
+//    dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
+    
+//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+//    FHFeedUGCContentModel *contentModel = cellModel.originData;
+    if (cellModel.openUrl) {
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        self.needRefreshCell = YES;
+    }
 }
 
 #pragma mark - FHUGCBaseCellDelegate
