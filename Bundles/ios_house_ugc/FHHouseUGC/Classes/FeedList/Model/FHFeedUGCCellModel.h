@@ -117,6 +117,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotTopicListModel> *hotTopicList;
 //投票
 @property (nonatomic, strong , nullable) FHFeedUGCVoteModel *vote;
+//视频时长 s
+@property (nonatomic, assign)   NSInteger       duration;
 //埋点相关
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy) NSString *elementFrom;

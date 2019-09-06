@@ -15,6 +15,8 @@
 #import "FHFeedListModel.h"
 #import "FHUGCConfig.h"
 #import "FHUserTracker.h"
+#import "TSVShortVideoDetailExitManager.h"
+#import "HTSVideoPageParamHeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -41,6 +43,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst;
 
 - (void)refreshCurrentCell;
+
+// 小视频
+- (UIView *)currentSelectSmallVideoView;
+
+- (CGRect)selectedSmallVideoFrame;
 
 - (void)viewWillAppear;
 
