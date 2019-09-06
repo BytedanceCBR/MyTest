@@ -35,6 +35,9 @@
 @property(nonatomic ,strong) FHUGCCellOriginItemView *originView;
 @property(nonatomic ,assign) CGFloat imageViewheight;
 @property(nonatomic ,assign) CGFloat imageViewWidth;
+@property (nonatomic, strong)   UIImageView       *playIcon;
+@property (nonatomic, strong)   UIView       *timeBgView;
+@property (nonatomic, strong)   UILabel       *timeLabel;
 
 @end
 
@@ -83,6 +86,20 @@
     self.imageViewheight = 200;
     self.imageViewWidth = 150;
     
+    self.playIcon = [[UIImageView alloc] init];
+    self.playIcon.image = [UIImage imageNamed:@"fh_ugc_icon_videoplay"];
+    [self.videoImageView addSubview:self.playIcon];
+    
+    self.timeBgView = [[UIView alloc] init];
+    self.timeBgView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    self.timeBgView.layer.cornerRadius = 10.0;
+    self.timeBgView.clipsToBounds = YES;
+    [self.videoImageView addSubview:self.timeBgView];
+    
+    self.timeLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor themeWhite]];
+    self.timeLabel.textAlignment = NSTextAlignmentCenter;
+    [self.timeBgView addSubview:self.timeLabel];
+    
     self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
     _originView.hidden = YES;
     [self.contentView addSubview:_originView];
@@ -114,6 +131,25 @@
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
         make.height.mas_equalTo(self.imageViewheight);
+    }];
+    
+    [self.playIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.videoImageView);
+        make.width.height.mas_equalTo(44);
+    }];
+    
+    [self.timeBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.videoImageView.mas_right).offset(-4);
+        make.bottom.mas_equalTo(self.videoImageView.mas_bottom).offset(-4);
+        make.height.mas_equalTo(20);
+        make.width.mas_greaterThanOrEqualTo(44);
+    }];
+    
+    [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.timeBgView);
+        make.height.mas_equalTo(14);
+        make.left.mas_equalTo(6);
+        make.right.mas_equalTo(-6);
     }];
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -183,6 +219,29 @@
             [self.videoImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
         }
     }
+    // 时间
+    NSString *timeStr = @"00:00";
+    if (cellModel.duration > 0) {
+        NSInteger minute = cellModel.duration / 60;
+        NSInteger second = cellModel.duration % 60;
+        NSString *mStr = @"00";
+        if (minute < 10) {
+            mStr = [NSString stringWithFormat:@"%02ld",minute];
+        } else {
+            mStr = [NSString stringWithFormat:@"%ld",minute];
+        }
+        NSString *sStr = @"00";
+        if (second < 10) {
+            sStr = [NSString stringWithFormat:@"%02ld",second];
+        } else {
+            sStr = [NSString stringWithFormat:@"%ld",second];
+        }
+        timeStr = [NSString stringWithFormat:@"%@:%@",mStr,sStr];
+    }
+    self.timeLabel.text = timeStr;
+    // [self.timeLabel sizeToFit];
+    [self.timeLabel layoutIfNeeded];
+    
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
         [self.videoImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
