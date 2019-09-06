@@ -190,6 +190,16 @@
     @"recommendSocialGroupList": @"recommend_social_group_list",
     @"rawData": @"raw_data",
     @"articleSchema": @"article_schema",
+    @"videoId": @"video_id",
+    @"videoDetailInfo": @"video_detail_info",
+    @"playAuthToken": @"play_auth_token",
+    @"groupFlags": @"group_flags",
+    @"debugInfo": @"debug_info",
+    @"banImmersive": @"ban_immersive",
+    @"videoDuration": @"video_duration",
+    @"videoProportionArticle": @"video_proportion_article",
+    @"playBizToken": @"play_biz_token",
+    @"danmakuCount": @"danmaku_count",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -834,6 +844,30 @@
                            @"videoId": @"video_id",
                            @"originCover": @"origin_cover",
                            @"downloadAddr": @"download_addr",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentVideoDetailInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"groupFlags": @"group_flags",
+                           @"videoId": @"video_id",
+                           @"videoType": @"video_type",
+                           @"videoWatchingCount": @"video_watching_count",
+                           @"videoPreloadingFlag": @"video_preloading_flag",
+                           @"directPlay": @"direct_play",
+                           @"detailVideoLargeImage": @"detail_video_large_image",
+                           @"showPgcSubscribe": @"show_pgc_subscribe",
+                           @"videoWatchCount": @"video_watch_count",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
