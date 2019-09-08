@@ -69,6 +69,22 @@ typedef NS_ENUM(NSUInteger, FHRealtorType){
     FHRealtorTypeNormal = 0,
     FHRealtorTypeExpert = 1
 };
+
+typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
+    FHRealtorCellShowStyle0,
+    FHRealtorCellShowStyle1,
+    FHRealtorCellShowStyle2,
+};
+
+@protocol FHRealtorTag<NSObject>
+@end
+
+@interface FHRealtorTag: JSONModel
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *fontColor;
+@end
+
 @protocol FHDetailContactModel<NSObject>
 @end
 
@@ -91,6 +107,9 @@ typedef NS_ENUM(NSUInteger, FHRealtorType){
 @property (nonatomic, copy , nullable) NSString *callButtonText;
 @property (nonatomic, copy , nullable) NSString *reportButtonText;
 @property (nonatomic, assign) FHRealtorType realtorType;
+@property (nonatomic, assign) FHRealtorCellShowStyle realtorCellShow;
+@property (nonatomic, copy , nullable) NSString *realtorEvaluate;
+@property (nonatomic, strong , nullable) NSArray<FHRealtorTag> *realtorTags;
 
 @property (nonatomic, assign) BOOL unregistered; //是否是注册经济人
 @property (nonatomic, assign) BOOL isFormReport; //是否包含填表单
