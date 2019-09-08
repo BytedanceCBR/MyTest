@@ -86,11 +86,12 @@
     UIColor *color = nil;
     if (followStatus == 1) {
         color = [UIColor themeRed1]; //@"detail_collect_yellow"
+        img = ICON_FONT_IMG(24, @"\U0000e6b2", color);
     } else  {
         color = [UIColor whiteColor]; //@"detail_collect_white"
+        img = ICON_FONT_IMG(24, @"\U0000e696", color);
         
     }
-    img = ICON_FONT_IMG(24, @"\U0000e696", color);    
     [_collectBtn setImage:img forState:UIControlStateNormal];
     [_collectBtn setImage:img forState:UIControlStateHighlighted];
 }
