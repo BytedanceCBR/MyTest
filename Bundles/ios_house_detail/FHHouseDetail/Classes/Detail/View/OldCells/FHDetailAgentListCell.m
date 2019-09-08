@@ -19,6 +19,7 @@
 #import "UILabel+House.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHHousePhoneCallUtils.h>
+#import <BTDMacros.h>
 
 @interface FHDetailAgentListCell ()
 
@@ -458,6 +459,7 @@
 @interface FHDetailAgentItemView()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) FHDetailContactModel *model;
 @property (nonatomic, strong) UICollectionView *tagsView;
+@property (nonatomic, copy) void (^removeKVOBlock)();
 @end
 
 @implementation FHDetailAgentItemView
@@ -564,10 +566,17 @@
     }];
     
     [self.licenceIcon addObserver:self forKeyPath:@"hidden" options:NSKeyValueObservingOptionNew context:nil];
+    @weakify(self);
+    self.removeKVOBlock = ^{
+        @strongify(self);
+        [self.licenceIcon removeObserver:self forKeyPath:@"hidden"];
+    };
 }
 - (void)dealloc
 {
-    [self.licenceIcon removeObserver:self forKeyPath:@"hidden"];
+    if(self.removeKVOBlock) {
+        self.removeKVOBlock();
+    }
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
