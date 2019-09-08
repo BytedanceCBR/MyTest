@@ -459,6 +459,7 @@
 @interface FHDetailAgentItemView()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) FHDetailContactModel *model;
 @property (nonatomic, strong) UICollectionView *tagsView;
+@property (nonatomic, strong) UIView *vSepLine;
 @property (nonatomic, copy) void (^removeKVOBlock)();
 @end
 
@@ -484,6 +485,14 @@
         [_tagsView registerClass:[FHDetailAgentItemTagsViewCell class] forCellWithReuseIdentifier:[FHDetailAgentItemTagsViewCell reuseIdentifier]];
     }
     return _tagsView;
+}
+
+- (UIView *)vSepLine {
+    if(!_vSepLine) {
+        _vSepLine = [UIView new];
+        _vSepLine.backgroundColor = [UIColor themeGray6];
+    }
+    return _vSepLine;
 }
 
 -(instancetype)initWithModel:(FHDetailContactModel *)model {
@@ -541,18 +550,27 @@
 
 -(void)modifiedLayout {
     
+    [self addSubview: self.vSepLine];
+    
+    [self.vSepLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(1);
+        make.height.mas_equalTo(14);
+        make.centerY.equalTo(self.name);
+        make.left.equalTo(self.name.mas_right).offset(6);
+    }];
+    
     [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avator.mas_right).offset(14);
         make.top.mas_equalTo(self.avator).offset(4);
         make.height.mas_equalTo(20);
-        make.right.equalTo(self.agency.mas_left).offset(-13);
     }];
-    
+
     [self.name setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
-    
+
     [self.agency mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.name);
         make.height.mas_equalTo(20);
+        make.left.equalTo(self.vSepLine.mas_right).offset(6);
         make.right.equalTo(self.licenceIcon.mas_left).offset(-5);
     }];
     
