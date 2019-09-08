@@ -13,6 +13,7 @@
 #import "YYLabel.h"
 #import "NSAttributedString+YYText.h"
 #import "ToastManager.h"
+#import "FHNavBarView.h"
 #import <TTBaseLib/UIViewAdditions.h>
 
 @interface FHLoginView()
@@ -110,7 +111,7 @@
     self.otherLoginBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -5, -5, -5);
     self.otherLoginBtn.hidden = YES;
     
-    self.acceptCheckBox = [[UIButton alloc] init];
+    self.acceptCheckBox = [[FHHotAreaButton alloc] init];
     [_acceptCheckBox setImage:[UIImage imageNamed:@"checkbox-checked"] forState:UIControlStateSelected];
     [_acceptCheckBox setImage:[UIImage imageNamed:@"ic-filter-normal"] forState:UIControlStateNormal];
     [_acceptCheckBox addTarget:self action:@selector(acceptCheckBoxChange) forControlEvents:UIControlEventTouchUpInside];

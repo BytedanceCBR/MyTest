@@ -7,6 +7,9 @@
 
 #import <UIKit/UIKit.h>
 
+@class FHHotAreaButton;
+@class FHHotAreaButton;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHLoginViewDelegate <NSObject>
@@ -34,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHLoginView : UIView
 
-@property(nonatomic, strong) UIButton *acceptCheckBox;
+@property(nonatomic, strong) FHHotAreaButton *acceptCheckBox;
 @property(nonatomic, strong) UIScrollView *scrollView;
 @property(nonatomic, strong) UITextField *phoneInput;
 @property(nonatomic, strong) UITextField *varifyCodeInput;
