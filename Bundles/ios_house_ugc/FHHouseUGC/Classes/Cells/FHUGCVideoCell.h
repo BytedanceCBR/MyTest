@@ -6,10 +6,17 @@
 //
 
 #import "FHUGCBaseCell.h"
+#import "FHUGCVideoItem.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCVideoCell : FHUGCBaseCell
+
+@property(nonatomic ,strong) FHUGCVideoItem *videoItem;
+
+- (void)willDisplay;
+
+- (void)endDisplay;
 
 @end
 

@@ -18,6 +18,7 @@
 #import "TSVShortVideoDetailExitManager.h"
 #import "HTSVideoPageParamHeader.h"
 #import "AWEVideoConstants.h"
+#import "FHUGCVideoItem.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -38,6 +39,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL isRefreshingTip;
 @property(nonatomic, assign) NSInteger refer;
 @property(nonatomic, assign) BOOL isShowing;
+//视频相关
+@property(nonatomic, strong) NSMutableArray *movieViews;
+@property(nonatomic, strong) UIView *movieView;
+@property(nonatomic, strong) FHFeedUGCCellModel *movieViewCellData;
+
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
 

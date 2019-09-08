@@ -7,6 +7,9 @@
 
 #import "FHCommunityFeedListBaseViewModel.h"
 #import "FHUGCSmallVideoCell.h"
+#import <FHUGCVideoCell.h>
+#import <TTVFeedPlayMovie.h>
+
 
 @implementation FHCommunityFeedListBaseViewModel
 
@@ -35,6 +38,7 @@
 - (void)viewWillDisappear {
     self.isShowing = NO;
     [[SSImpressionManager shareInstance] leaveGroupViewForCategoryID:self.categoryId concernID:nil refer:self.refer];
+    [self endDisplay];
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -75,6 +79,18 @@
         return frame;
     }
     return CGRectZero;
+}
+
+- (void)endDisplay {
+    NSArray *cells = self.tableView.visibleCells;
+    for (id cell in cells) {
+        if([cell isKindOfClass:[FHUGCVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]) {
+            FHUGCVideoCell<TTVFeedPlayMovie> *cellBase = (FHUGCVideoCell<TTVFeedPlayMovie> *)cell;
+            if([cellBase cell_isPlayingMovie]){
+                [cellBase endDisplay];
+            }
+        }
+    }
 }
 
 @end

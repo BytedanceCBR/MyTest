@@ -16,6 +16,10 @@
 #import "TTRoute.h"
 #import <TTBusinessManager+StringUtils.h>
 #import "FHUGCVideoView.h"
+#import <TTVFeedPlayMovie.h>
+#import <TTVCellPlayMovieProtocol.h>
+#import <TTVPlayVideo.h>
+#import <FHUGCCellPlayMovie.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -26,7 +30,7 @@
 #define guideViewHeight 17
 #define topMargin 20
 
-@interface FHUGCVideoCell ()<TTUGCAttributedLabelDelegate>
+@interface FHUGCVideoCell ()<TTUGCAttributedLabelDelegate,TTVFeedPlayMovie>
 
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
@@ -87,6 +91,11 @@
     
     UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
     [self.bottomView.positionView addGestureRecognizer:tap];
+    
+    __weak typeof(self) wself = self;
+    self.videoView.ttv_shareButtonOnMovieFinishViewDidPressBlock = ^{
+        [wself shareActionClicked];
+    };
 }
 
 - (void)initConstraints {
@@ -171,8 +180,8 @@
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
     }
     //处理视频
-    TTVFeedListItem *item = [FHUGCCellHelper configureVideoItem:cellModel];
-    self.videoView.cellEntity = item;
+    self.videoItem = [FHUGCCellHelper configureVideoItem:cellModel];
+    self.videoView.cellEntity = self.videoItem;
     
     [self showGuideView];
 }
@@ -246,6 +255,14 @@
     }
 }
 
+- (void)willDisplay {
+
+}
+
+- (void)endDisplay {
+    [[self playMovie] didEndDisplaying];
+}
+
 #pragma mark - TTUGCAttributedLabelDelegate
 
 - (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
@@ -260,6 +277,81 @@
             }
         }
     }
+}
+
+#pragma mark - TTVFeedPlayMovie
+
+- (UIView *)movie {
+    if (self.videoView == nil) {
+        return nil;
+    }
+    return [[self playMovie] currentMovieView];
+}
+
+- (NSObject<TTVCellPlayMovieProtocol> *)playMovie {
+    if (self.videoView == nil) {
+        return nil;
+    }
+    return self.videoView.playMovie;
+}
+
+- (UIView *)cell_movieView {
+    if (self.videoView == nil) {
+        return nil;
+    }
+    return [self movie];
+}
+
+- (BOOL)cell_hasMovieView {
+    if (self.videoView == nil) {
+        return NO;
+    }
+    return [self movie] != nil;
+}
+
+- (BOOL)cell_isPlayingMovie
+{
+    if (self.videoView == nil) {
+        return NO;
+    }
+    if ([self movie] && [self playMovie]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)cell_attachMovieView:(UIView *)movieView {
+    if (self.videoView == nil) {
+        return;
+    }
+    if ([movieView isKindOfClass:[TTVPlayVideo class]]) {
+        UIView *logo = self.videoView.logo;
+        movieView.frame = logo.bounds;
+        [logo addSubview:movieView];
+        if (self.videoView.playMovie == nil && [self.videoItem isKindOfClass:[TTVFeedListItem class]]) {
+            [self.videoView playButtonClicked];
+            FHFeedContentModel *model = (FHFeedContentModel *)self.videoItem.originData;
+            [[self playMovie] setVideoTitle:model.title];
+            [self playMovie].logo = logo;
+        }
+        [self.videoView.playMovie attachMovieView:(TTVPlayVideo *)movieView];
+        // attatch的时候，禁用动画
+        self.videoView.ttv_movieViewWillMoveToSuperViewBlock(movieView.superview, NO);
+    }
+}
+
+- (id)cell_detachMovieView {
+    if (self.videoView == nil) {
+        return nil;
+    }
+    return [self.videoView.playMovie detachMovieView];
+}
+
+- (void)shareActionClicked {
+//    [self _shareAction];
+//    [self.moreActionMananger shareButtonClickedWithModel:[TTVFeedCellMoreActionModel modelWithArticle:self.cellEntity.originData] activityAction:^(NSString *type) {
+//
+//    }];
 }
 
 @end

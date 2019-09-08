@@ -10,6 +10,7 @@
 #import "UIFont+House.h"
 #import <TTBusinessManager+StringUtils.h>
 #import "FHUGCVideoItem.h"
+#import <TTVFeedCellAction.h>
 
 @implementation FHUGCCellHelper
 
@@ -335,14 +336,14 @@
     }
 }
 
-+ (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel
++ (FHUGCVideoItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel
 {
     FHUGCVideoItem *item = [[FHUGCVideoItem alloc] init];
 //    item.originData = obj;
     item.categoryId = cellModel.categoryId;
     item.refer = 1;
 //    item.cellSeparatorStyle = ttv_feedListCellSeparatorStyleByTotalAndRow(array.count, i);
-//    item.cellAction = [[[self cellActionClassWithItem:obj] alloc] init];
+    item.cellAction = [[TTVFeedCellVideoAction alloc] init];
     item.isFirstCached = NO;
     item.followedWhenInit = NO;
 

@@ -12,7 +12,7 @@
 #import "TTUGCEmojiParser.h"
 #import "FHFeedUGCContentModel.h"
 #import "FHFeedUGCCellModel.h"
-#import <TTVFeedListItem.h>
+#import <FHUGCVideoItem.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
                 limitedToNumberOfLines:(NSUInteger *)numberOfLines;
 
 //cellModel转视频模型
-+ (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel;
++ (FHUGCVideoItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel;
 
 @end
 
