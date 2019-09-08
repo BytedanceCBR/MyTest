@@ -91,7 +91,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self updateLoadingState:NO];
     self.fromOneKeyLogin = isOneKeyLogin;
     [self.view showOneKeyLoginView:isOneKeyLogin];
-    [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin] showAcceptBox:!isOneKeyLogin];
+    [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin] showAcceptBox:YES];
     [self.view updateOneKeyLoginWithPhone:phoneNum service:isOneKeyLogin ? [self serviceNameStr] : nil];
     if (isOneKeyLogin) {
         [self.view enableConfirmBtn:phoneNum.length > 0];
@@ -353,9 +353,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)acceptCheckBoxChange:(BOOL)selected {
     self.view.acceptCheckBox.selected = !selected;
-    if(!self.view.acceptCheckBox.selected){
-        [[ToastManager manager] showToast:@"请阅读并同意幸福里用户协议"];
-    }
 }
 
 - (void)confirm {

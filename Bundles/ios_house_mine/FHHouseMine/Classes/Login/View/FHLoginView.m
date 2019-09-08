@@ -12,6 +12,7 @@
 #import "TTDeviceHelper.h"
 #import "YYLabel.h"
 #import "NSAttributedString+YYText.h"
+#import "ToastManager.h"
 #import <TTBaseLib/UIViewAdditions.h>
 
 @interface FHLoginView()
@@ -249,7 +250,6 @@
 
 - (void)setAgreementContent:(NSAttributedString *)attrText showAcceptBox:(BOOL)showAcceptBox
 {
-    self.acceptCheckBox.selected = YES;
     self.agreementLabel.attributedText = attrText;
     CGFloat boxWidth = showAcceptBox ? 15 : 0;
     CGFloat boxOffset = showAcceptBox ? 3 : 0;
@@ -298,6 +298,9 @@
 }
 
 - (void)confirm {
+    if(!self.acceptCheckBox.isSelected){
+        [[ToastManager manager] showToast:@"请阅读并同意幸福里用户协议"];
+    }
     if (self.isOneKeyLogin) {
         if (self.delegate && [self.delegate respondsToSelector:@selector(oneKeyLoginAction)]) {
             [self.delegate oneKeyLoginAction];
