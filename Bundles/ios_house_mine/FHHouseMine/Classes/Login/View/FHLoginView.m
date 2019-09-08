@@ -298,9 +298,6 @@
 }
 
 - (void)confirm {
-    if(!self.acceptCheckBox.isSelected){
-        [[ToastManager manager] showToast:@"请阅读并同意幸福里用户协议"];
-    }
     if (self.isOneKeyLogin) {
         if (self.delegate && [self.delegate respondsToSelector:@selector(oneKeyLoginAction)]) {
             [self.delegate oneKeyLoginAction];

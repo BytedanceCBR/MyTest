@@ -130,7 +130,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self showOneKeyLoginView:NO phoneNum:nil];
         return;
     }
-    
+
     BOOL isSwitchOff = [self getOneKeyLoginSwitchOff];
     if (isSwitchOff) {
         [self showOneKeyLoginView:NO phoneNum:nil];
@@ -305,6 +305,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 #pragma mark 一键登录
 - (void)oneKeyLoginAction
 {
+    if(!self.view.acceptCheckBox.selected){
+        [[ToastManager manager] showToast:@"请阅读并同意《隐私政策》和相关协议"];
+        return;
+    }
     [self requestOneKeyLogin];
 }
 
@@ -358,7 +362,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)confirm {
     [self.view endEditing:YES];
     if(!self.view.acceptCheckBox.selected){
-        [[ToastManager manager] showToast:@"请阅读并同意幸福里用户协议"];
+        [[ToastManager manager] showToast:@"请阅读并同意《用户协议》和《隐私协议》"];
         return;
     }
     [self quickLogin:self.view.phoneInput.text smsCode:self.view.varifyCodeInput.text captcha:nil];
