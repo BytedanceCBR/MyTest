@@ -221,9 +221,9 @@
     }
     // 时间
     NSString *timeStr = @"00:00";
-    if (cellModel.duration > 0) {
-        NSInteger minute = cellModel.duration / 60;
-        NSInteger second = cellModel.duration % 60;
+    if (cellModel.videoDuration > 0) {
+        NSInteger minute = cellModel.videoDuration / 60;
+        NSInteger second = cellModel.videoDuration % 60;
         NSString *mStr = @"00";
         if (minute < 10) {
             mStr = [NSString stringWithFormat:@"%02ld",minute];
