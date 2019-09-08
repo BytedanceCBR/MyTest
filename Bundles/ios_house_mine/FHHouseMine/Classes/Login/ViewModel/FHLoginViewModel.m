@@ -136,7 +136,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self showOneKeyLoginView:NO phoneNum:nil];
         return;
     }
-    
+
     // 注意获取完手机号之后长期不登录的异常结果
     [TTAccount getOneKeyLoginPhoneNumberCompleted:^(NSString * _Nullable phoneNumber, NSString * _Nullable serviceName, NSError * _Nullable error) {
         BOOL showOneKeyLogin = !error && phoneNumber.length > 0;

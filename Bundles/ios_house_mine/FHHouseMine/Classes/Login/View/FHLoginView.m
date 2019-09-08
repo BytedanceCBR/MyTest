@@ -253,7 +253,7 @@
     self.agreementLabel.attributedText = attrText;
     CGFloat boxWidth = showAcceptBox ? 15 : 0;
     CGFloat boxOffset = showAcceptBox ? 3 : 0;
-    CGFloat topOffset = showAcceptBox ? 60 : 0;
+    CGFloat topOffset = !self.isOneKeyLogin ? 60 : 0;
     CGFloat width = UIScreen.mainScreen.bounds.size.width - 45 - 3 - 30;
     CGSize size = [self.agreementLabel sizeThatFits:CGSizeMake(width, 1000)];
     self.acceptCheckBox.hidden = !showAcceptBox;
