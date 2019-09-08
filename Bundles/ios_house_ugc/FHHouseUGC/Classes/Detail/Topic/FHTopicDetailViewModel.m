@@ -24,6 +24,7 @@
 #import "TSVShortVideoDetailExitManager.h"
 #import "HTSVideoPageParamHeader.h"
 #import "FHUGCSmallVideoCell.h"
+#import "AWEVideoConstants.h"
 
 @interface FHTopicDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -631,6 +632,9 @@
         }];
         NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:2];
         [info setValue:exitManager forKey:HTSVideoDetailExitManager];
+        if (showComment) {
+            [info setValue:@(1) forKey:AWEVideoShowComment];
+        }
         
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
