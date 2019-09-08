@@ -156,7 +156,8 @@
 
     if(self.listType == FHCommunityFeedListTypeNearby){
         viewModel = [[FHCommunityFeedListNearbyViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = @"f_ugc_neighbor";
+//        viewModel.categoryId = @"f_ugc_neighbor";
+        viewModel.categoryId = @"f_shipin";
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = @"f_ugc_follow";

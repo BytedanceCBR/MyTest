@@ -99,6 +99,7 @@
     cellModel.aggrType = model.aggrType;
     cellModel.needLinkSpan = YES;
     cellModel.behotTime = model.behotTime;
+    cellModel.originData = model;
     //目前仅支持话题类型
     cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
     //处理圈子信息
@@ -115,12 +116,10 @@
     cellModel.community = community;
     //处理其他数据
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle){
-        cellModel.title = model.title;
-        cellModel.openUrl = model.openUrl;
-        
         if(model.hasVideo){
             //视频
             cellModel.hasVideo = model.hasVideo;
+            cellModel.content = model.title;
             cellModel.numberOfLines = 3;
             
             if (model.isFromDetail) {
@@ -133,7 +132,7 @@
             user.userId = model.userInfo.userId;
             cellModel.user = user;
             
-            [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
             
             double time = [model.publishTime doubleValue];
             NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
@@ -153,12 +152,24 @@
                 cellModel.openUrl = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&item_id=%@",model.groupId,model.itemId];
             }
             
-            cellModel.imageList = @[model.middleImage];
+            cellModel.videoDetailInfo = model.videoDetailInfo;
+
+            NSString *dur = model.videoDuration;
+            if (dur.length > 0) {
+                double durTime = [dur doubleValue];
+                cellModel.videoDuration = (NSInteger)durTime;
+            } else {
+                cellModel.videoDuration = 0;
+            }
+            
+            cellModel.imageList = model.largeImageList;
             cellModel.largeImageList = nil;
             
             cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVideo;
         }else{
             //文章
+            cellModel.title = model.title;
+            cellModel.openUrl = model.openUrl;
             cellModel.numberOfLines = 5;
             
             if (model.isFromDetail) {
@@ -382,9 +393,9 @@
         NSString *dur = model.rawData.video.duration;
         if (dur.length > 0) {
             double durTime = [dur doubleValue];
-            cellModel.duration = (NSInteger)durTime;
+            cellModel.videoDuration = (NSInteger)durTime;
         } else {
-            cellModel.duration = 0;
+            cellModel.videoDuration = 0;
         }
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
         user.name = model.rawData.user.info.name;
