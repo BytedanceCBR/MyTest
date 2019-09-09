@@ -10,6 +10,8 @@
 #import <FHHouseBase/FHBusinessManager.h>
 #import "TTBaseMacro.h"
 #import "FHUGCCellHelper.h"
+#import <TTVideoApiModel.h>
+#import "TTVFeedItem+Extension.h"
 
 @implementation FHFeedUGCCellCommunityModel
 
@@ -63,6 +65,7 @@
     
     if(!err){
         FHUGCFeedListCellType type = [dic[@"cell_type"] integerValue];
+        BOOL hasVideo = [dic[@"has_video"] boolValue];
         Class cls = nil;
         if(type == FHUGCFeedListCellTypeUGC){
             cls = [FHFeedUGCContentModel class];
@@ -83,6 +86,17 @@
             }else if([model isKindOfClass:[FHFeedUGCContentModel class]]){
                 FHFeedUGCContentModel *fModel = (FHFeedUGCContentModel *)model;
                 cellModel = [self modelFromFeedUGCContent:fModel];
+            }
+        }
+        
+        //视频类型，需要先转成 TTFeedItemContentStructModel
+        if(type == FHUGCFeedListCellTypeArticle && hasVideo){
+            cls = [TTFeedItemContentStructModel class];
+            id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:cls error:&backError];
+            if(!backError && [model isKindOfClass:[TTFeedItemContentStructModel class]]){
+                TTFeedItemContentStructModel *fModel = (TTFeedItemContentStructModel *)model;
+                TTVFeedItem *item = [TTVFeedItem FeedItemWithContentStruct:fModel];
+                cellModel.videoFeedItem = item;
             }
         }
     }
@@ -117,6 +131,8 @@
     //处理其他数据
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle){
         if(model.hasVideo){
+//            TTFeedItemContentStructModel
+            
             //视频
             cellModel.hasVideo = model.hasVideo;
             cellModel.content = model.title;

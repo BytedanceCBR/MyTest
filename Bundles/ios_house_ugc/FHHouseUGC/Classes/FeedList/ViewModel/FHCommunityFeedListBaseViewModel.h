@@ -18,7 +18,7 @@
 #import "TSVShortVideoDetailExitManager.h"
 #import "HTSVideoPageParamHeader.h"
 #import "AWEVideoConstants.h"
-#import "FHUGCVideoItem.h"
+#import <TTVFeedListItem.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

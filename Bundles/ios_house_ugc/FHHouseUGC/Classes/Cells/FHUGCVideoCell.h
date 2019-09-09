@@ -6,13 +6,13 @@
 //
 
 #import "FHUGCBaseCell.h"
-#import "FHUGCVideoItem.h"
+#import <TTVFeedListItem.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCVideoCell : FHUGCBaseCell
 
-@property(nonatomic ,strong) FHUGCVideoItem *videoItem;
+@property(nonatomic ,strong) TTVFeedListItem *videoItem;
 
 - (void)willDisplay;
 

@@ -9,7 +9,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import <TTBusinessManager+StringUtils.h>
-#import "FHUGCVideoItem.h"
+#import "TTVFeedListItem.h"
 #import <TTVFeedCellAction.h>
 
 @implementation FHUGCCellHelper
@@ -336,10 +336,10 @@
     }
 }
 
-+ (FHUGCVideoItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel
++ (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel
 {
-    FHUGCVideoItem *item = [[FHUGCVideoItem alloc] init];
-//    item.originData = obj;
+    TTVFeedListItem *item = [[TTVFeedListItem alloc] init];
+    item.originData = cellModel.videoFeedItem;
     item.categoryId = cellModel.categoryId;
     item.refer = 1;
 //    item.cellSeparatorStyle = ttv_feedListCellSeparatorStyleByTotalAndRow(array.count, i);
@@ -366,9 +366,9 @@
     }
     item.durationTimeString = durationText;
     
-    if(cellModel.originData && [cellModel.originData isKindOfClass:[FHFeedContentModel class]]){
-        item.ugcFeedContent = (FHFeedContentModel *)cellModel.originData;
-    }
+//    if(cellModel.originData && [cellModel.originData isKindOfClass:[FHFeedContentModel class]]){
+//        item.ugcFeedContent = (FHFeedContentModel *)cellModel.originData;
+//    }
     
     if([cellModel.imageList firstObject]){
         NSMutableDictionary *dict = [[[cellModel.imageList firstObject] toDictionary] mutableCopy];

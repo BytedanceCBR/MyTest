@@ -18,7 +18,7 @@
 #import <KVOController/KVOController.h>
 #import "TTVFeedItem+Extension.h"
 #import "TTVVideoArticle+Extension.h"
-#import "FHUGCCellPlayMovie.h"
+#import <TTVCellPlayMovie.h>
 #import "TTMovieStore.h"
 #import "TTImageView+TrafficSave.h"
 #import "TTUserSettingsManager+FontSettings.h"
@@ -47,7 +47,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 //下面的分割线
 @property (nonatomic, strong) UIImageView *topMaskView;
 @property (nonatomic, strong) TTImageView *logo;
-@property (nonatomic ,strong) FHUGCCellPlayMovie *playMovie;
+@property (nonatomic ,strong) TTVCellPlayMovie *playMovie;
 @end
 
 #define kVideoTitleX 15
@@ -135,7 +135,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         _playButton.imageName = imageName;
         [_playButton addTarget:self action:@selector(playButtonClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.logo addSubview:_playButton];
-        self.playMovie = [[FHUGCCellPlayMovie alloc] init];
+        self.playMovie = [[TTVCellPlayMovie alloc] init];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fontSizeChanged) name:kSettingFontSizeChangedNotification object:nil];
         
@@ -146,7 +146,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 - (void)configurePlayMovie
 {
     if (!self.playMovie) {
-        self.playMovie = [[FHUGCCellPlayMovie alloc] init];
+        self.playMovie = [[TTVCellPlayMovie alloc] init];
     }
     self.playMovie.delegate = self;
     self.playMovie.doubleTap666Delegate = self;
@@ -167,7 +167,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
     }
 }
 
-- (void)setPlayMovie:(FHUGCCellPlayMovie *)playMovie
+- (void)setPlayMovie:(TTVCellPlayMovie *)playMovie
 {
     if (_playMovie != playMovie) {
         _playMovie = playMovie;

@@ -11,6 +11,7 @@
 #import "FHHouseUGCHeader.h"
 #import "TTRichSpanText.h"
 #import "TTRichSpanText+Emoji.h"
+#import <TTVFeedItem+Extension.h>
 
 @class FHCommunityFeedListController;
 
@@ -119,8 +120,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedUGCVoteModel *vote;
 //视频和小视频相关
 @property (nonatomic, assign) BOOL hasVideo;
+@property (nonatomic, strong , nullable) TTVFeedItem *videoFeedItem;
 @property (nonatomic, assign) NSInteger videoDuration;
 @property (nonatomic, strong , nullable) FHFeedContentVideoDetailInfoModel *videoDetailInfo ;
+
 //埋点相关
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy) NSString *elementFrom;

@@ -7,11 +7,11 @@
 
 #import <UIKit/UIKit.h>
 #import "TTImageView.h"
-#import "FHUGCVideoItem.h"
+#import <TTVFeedListItem.h>
 #import "TTAlphaThemedButton.h"
 #import "TTVFeedContainerBaseView.h"
 #import "TTVFullscreenProtocol.h"
-@class FHUGCCellPlayMovie;
+@class TTVCellPlayMovie;
 @protocol TTVCellPlayMovieProtocol;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) TTImageView *logo;
 @property (nonatomic, strong, readonly) SSThemedLabel *videoRightBottomLabel; //默认显示时间
 @property (nonatomic, strong, readonly) TTAlphaThemedButton *playButton;
-@property (nonatomic ,strong, readonly) FHUGCCellPlayMovie *playMovie;
+@property (nonatomic ,strong, readonly) TTVCellPlayMovie *playMovie;
 @property (nonatomic, copy) void (^ttv_shareButtonOnMovieFinishViewDidPressBlock)();
 @property (nonatomic, copy) void (^ttv_movieViewWillMoveToSuperViewBlock)(UIView * newView, BOOL animated);
 @property (nonatomic, copy) void (^ttv_shareButtonOnMovieTopViewDidPressBlock)();

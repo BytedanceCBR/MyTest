@@ -19,7 +19,8 @@
 #import <TTVFeedPlayMovie.h>
 #import <TTVCellPlayMovieProtocol.h>
 #import <TTVPlayVideo.h>
-#import <FHUGCCellPlayMovie.h>
+#import <TTVCellPlayMovie.h>
+#import <TTVFeedCellMoreActionManager.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -38,6 +39,7 @@
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,assign) CGFloat videoViewheight;
 @property(nonatomic ,strong) FHUGCVideoView *videoView;
+@property(nonatomic ,strong) TTVFeedCellMoreActionManager *moreActionMananger;
 
 @end
 
@@ -348,10 +350,26 @@
 }
 
 - (void)shareActionClicked {
-//    [self _shareAction];
-//    [self.moreActionMananger shareButtonClickedWithModel:[TTVFeedCellMoreActionModel modelWithArticle:self.cellEntity.originData] activityAction:^(NSString *type) {
-//
-//    }];
+    [self _shareAction];
+}
+
+- (void)_shareAction {
+    self.moreActionMananger = [[TTVFeedCellMoreActionManager alloc] init];
+    self.moreActionMananger.categoryId = self.videoItem.categoryId;
+    self.moreActionMananger.responder = self;
+    self.moreActionMananger.cellEntity = self.videoItem.originData;
+    self.moreActionMananger.playVideo = self.videoItem.playVideo;
+    __weak typeof(self) wself = self;
+    self.moreActionMananger.didClickActivityItemAndQueryProcess = ^BOOL(NSString *type) {
+        return NO;
+    };
+    self.moreActionMananger.shareToRepostBlock = ^(TTActivityType type) {
+
+    };
+    [self.moreActionMananger shareButtonClickedWithModel:[TTVFeedCellMoreActionModel modelWithArticle:self.videoItem.originData] activityAction:^(NSString *type) {
+        
+    }];
+
 }
 
 @end
