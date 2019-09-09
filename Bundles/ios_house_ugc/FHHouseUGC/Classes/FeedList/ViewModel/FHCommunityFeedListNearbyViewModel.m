@@ -424,7 +424,7 @@
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         if(cellModel.hasVideo){
             //跳转视频详情页
-            [self jumpToVideoDetail:cellModel showComment:NO enterType:enterType];
+            [self jumpToVideoDetail:cellModel showComment:showComment enterType:enterType];
         }else{
             BOOL canOpenURL = NO;
             if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
@@ -530,6 +530,22 @@
 
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
     NSMutableDictionary *dict = @{}.mutableCopy;
+    
+    if(self.currentCell && [self.currentCell isKindOfClass:[FHUGCVideoCell class]]){
+        FHUGCVideoCell *cell = (FHUGCVideoCell *)self.currentCell;
+        
+        TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
+        context.refer = self.refer;
+        context.categoryId = self.categoryId;
+        context.feedListViewController = self;
+        context.clickComment = showComment;
+        
+        [cell didSelectCell:context];
+    }else if (cellModel.openUrl) {
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }
+    self.needRefreshCell = YES;
     // 埋点
 //    NSMutableDictionary *traceParam = @{}.mutableCopy;
 //    traceParam[@"enter_from"] = @"hot_discuss_feed";
@@ -544,11 +560,6 @@
     
 //    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
 //    FHFeedUGCContentModel *contentModel = cellModel.originData;
-    if (cellModel.openUrl) {
-        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-        self.needRefreshCell = YES;
-    }
 }
 
 #pragma mark - FHUGCBaseCellDelegate

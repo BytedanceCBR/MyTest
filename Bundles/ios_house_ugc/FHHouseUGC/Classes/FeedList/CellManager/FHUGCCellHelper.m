@@ -341,6 +341,7 @@
     TTVFeedListItem *item = [[TTVFeedListItem alloc] init];
     item.originData = cellModel.videoFeedItem;
     item.categoryId = cellModel.categoryId;
+    item.hideTitleAndWatchCount = YES;
     item.refer = 1;
 //    item.cellSeparatorStyle = ttv_feedListCellSeparatorStyleByTotalAndRow(array.count, i);
     item.cellAction = [[TTVFeedCellVideoAction alloc] init];

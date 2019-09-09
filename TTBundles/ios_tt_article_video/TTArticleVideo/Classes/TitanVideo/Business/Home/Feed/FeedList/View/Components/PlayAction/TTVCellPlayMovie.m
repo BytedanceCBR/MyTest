@@ -243,8 +243,10 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     [self addUrlTrackerOnPlayer:playVideo];
     [self settingMovieView:self.movieView];
     [self.movieView.player play];
-    [playVideo.player setVideoTitle:feedItem.title];
-    [playVideo.player setVideoWatchCount:article.videoDetailInfo.videoWatchCount playText:@"次播放"];
+    if(!self.cellEntity.hideTitleAndWatchCount){
+        [playVideo.player setVideoTitle:feedItem.title];
+        [playVideo.player setVideoWatchCount:article.videoDetailInfo.videoWatchCount playText:@"次播放"];
+    }
     self.logo.userInteractionEnabled = ![feedItem couldAutoPlay];
     [self.logo addSubview:self.movieView];
     if (![TTDeviceHelper isPadDevice]) {

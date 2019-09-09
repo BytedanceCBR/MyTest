@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class TTVFeedCellSelectContext;
+
 @interface FHUGCVideoCell : FHUGCBaseCell
 
 @property(nonatomic ,strong) TTVFeedListItem *videoItem;
@@ -17,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)willDisplay;
 
 - (void)endDisplay;
+
+- (void)didSelectCell:(TTVFeedCellSelectContext *)context;
 
 @end
 

@@ -130,7 +130,7 @@
     cellModel.community = community;
     //处理其他数据
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle){
-        if(model.hasVideo){
+        if(model.hasVideo && ([model.videoStyle integerValue] == 2 || [model.videoStyle integerValue] == 8)){
 //            TTFeedItemContentStructModel
             
             //视频

@@ -21,6 +21,13 @@
 #import <TTVPlayVideo.h>
 #import <TTVCellPlayMovie.h>
 #import <TTVFeedCellMoreActionManager.h>
+#import <TTVVideoArticle+Extension.h>
+#import <TTUIResponderHelper.h>
+#import <TTStringHelper.h>
+#import <TTVFeedCellSelectContext.h>
+#import <TTVFeedItem+TTVArticleProtocolSupport.h>
+#import <JSONAdditions.h>
+#import <TTVideoShareMovie.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -265,6 +272,170 @@
     [[self playMovie] didEndDisplaying];
 }
 
+- (void)didSelectCell:(TTVFeedCellSelectContext *)context {
+    [self.videoView.playMovie removeCommodityView];
+    
+    TTVVideoArticle *article = self.videoItem.article;
+    if ((article.groupFlags & kVideoArticleGroupFlagsOpenUseWebViewInList) > 0 && !isEmptyString(article.articleURL)) {
+        [self openWebviewWithItem:self.videoItem context:context];
+    }else{
+        [self openVideoDetailWithItem:self.videoItem context:context];
+    }
+}
+
+- (void)openWebviewWithItem:(TTVFeedListItem *)item context:(TTVFeedCellSelectContext *)context {
+    UIViewController *topController = [TTUIResponderHelper correctTopViewControllerFor:self];
+    TTVVideoArticle *article = item.article;
+    NSString *adid = isEmptyString(article.adId) ? nil : [NSString stringWithFormat:@"%@", article.adId];
+    NSString *logExtra = article.logExtra;
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:2];
+    [parameters setValue:adid forKey:SSViewControllerBaseConditionADIDKey];
+    [parameters setValue:logExtra forKey:@"log_extra"];
+    ssOpenWebView([TTStringHelper URLWithURLString:article.articleURL], nil, topController.navigationController, !!(adid), parameters);
+}
+
+- (void)openVideoDetailWithItem:(TTVFeedListItem *)item context:(TTVFeedCellSelectContext *)context {
+    NSString *categoryID = item.categoryId;
+    TTVVideoArticle *article = item.article;
+    NSString *adid = isEmptyString(article.adId) ? nil : [NSString stringWithFormat:@"%@", article.adId];
+    NSString *logExtra = article.logExtra;
+    NSString *group_id = article.groupId > 0 ? @(article.groupId).stringValue : nil;
+    NSString *item_id = article.itemId > 0 ? @(article.itemId).stringValue : nil;
+    int64_t aggrType = article.aggrType;
+    NSString *openUrl = nil;
+    if (isEmptyString(openUrl)) {
+        openUrl = article.openURL;
+    }
+//    NewsGoDetailFromSource fromSource = [[self class] goDetailFromSouce:categoryID];
+    NSMutableDictionary *statParams = [NSMutableDictionary dictionary];
+    [statParams setValue:categoryID forKey:@"kNewsDetailViewConditionCategoryIDKey"];
+//    [statParams setValue:@(fromSource) forKey:kNewsGoDetailFromSourceKey];
+    
+    if (context.clickComment) {
+        [statParams setValue:@(YES) forKey:@"showcomment"];
+    }
+    
+    [statParams setValue:group_id forKey:@"groupid"];
+    [statParams setValue:group_id forKey:@"group_id"];
+    [statParams setValue:item_id forKey:@"item_id"];
+    [statParams setValue:@(aggrType) forKey:@"aggr_type"];
+    [statParams setValue:item.originData.logPbDic forKey:@"log_pb"];
+    [statParams setValue:[article.rawAdDataString tt_JSONValue] forKey:@"raw_ad_data"];
+    [statParams setValue:logExtra forKey:@"log_extra"];
+//    [statParams setValue:adid forKey:@"ad_id"];
+    
+    // articleTypeWhenPreloaded不应该为YES。如果出问题了，就用settings来控制
+//    BOOL articleTypeWhenPreloaded = [[[TTSettingsManager sharedManager] settingForKey:@"video_feedArticleTypeWhenPreloaded" defaultValue:@NO freeze:NO] boolValue];
+//    if (articleTypeWhenPreloaded) {
+//        if (item.originData.savedConvertedArticle && item.originData.savedConvertedArticle.detailInfoUpdated) {
+//            [statParams setValue:item.originData.savedConvertedArticle forKey:@"video_feed"];
+//        } else {
+//            [statParams setValue:item.originData forKey:@"video_feed"];
+//        }
+//    } else {
+    [statParams setValue:item.originData forKey:@"video_feed"];
+//    }
+    [statParams setValue:context.feedListViewController forKey:@"video_feedListViewController"];
+    
+    //打开详情页：优先判断openURL是否可以用外部schema打开，否则判断内部schema
+    BOOL canOpenURL = [self openSchemaWithOpenUrl:openUrl article:article adid:adid logExtra:logExtra statParams:statParams];
+    if (canOpenURL) {
+        return;
+    }
+    if(!canOpenURL) {
+        NSString *detailURL = nil;
+        if (group_id) {
+            detailURL = [NSString stringWithFormat:@"sslocal://detail?groupid=%@", group_id];
+        }
+//        if (!isEmptyString(adid)) {
+//            detailURL = [detailURL stringByAppendingFormat:@"&ad_id=%@", adid];
+//            NSMutableDictionary *applinkParams = [NSMutableDictionary dictionary];
+//            [applinkParams setValue:logExtra forKey:@"log_extra"];
+//            //针对不能通过sdk和openurl打开的情况
+//            wrapperTrackEventWithCustomKeys(@"embeded_ad", @"open_url_h5", adid, nil, applinkParams);
+//        }
+        
+        // 如果是视频cell且正在播放，则detach视频并传入详情页
+            
+        NSNumber *videoType = @(article.videoDetailInfo.videoType);
+        [statParams setValue:videoType forKey:@"video_type"];
+        
+        if ([self canContinuePlayMovieOnView:self withArticle:article]) {
+            
+            TTVideoShareMovie *shareMovie = [[TTVideoShareMovie alloc] init];
+            shareMovie.movieView = [self cell_movieView];
+
+            TTVPlayVideo *movieView = (TTVPlayVideo *)shareMovie.movieView;
+            
+            [statParams setValue:shareMovie forKey:@"movie_shareMovie"];
+//            if ([cell conformsToProtocol:@protocol(TTVAutoPlayingCell)]) {
+//                if ([item.originData couldContinueAutoPlay]) {
+//                    shareMovie.isAutoPlaying = YES;
+//                    [[TTVAutoPlayManager sharedManager] cacheAutoPlayingCell:(id<TTVAutoPlayingCell>)cell movie:movieView fromView:cell.tableView];
+//                    TTVAutoPlayModel *model = [cell ttv_autoPlayModel];
+//                    TTVPlayVideo *movieView = nil;
+//                    if ([shareMovie.movieView isKindOfClass:[TTVPlayVideo class]]) {
+//                        movieView = (TTVPlayVideo *)shareMovie.movieView;
+//                    }
+//                    if (!movieView && [shareMovie.playerControl.movieView isKindOfClass:[TTVPlayVideo class]]) {
+//                        movieView = (TTVPlayVideo *)shareMovie.playerControl.movieView;
+//                    }
+//                    [[TTVAutoPlayManager sharedManager] trackForClickFeedAutoPlay:model movieView:movieView];
+//                }
+//            }
+            [self cell_detachMovieView];
+        }
+        
+        if (detailURL) {
+            [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:detailURL] userInfo:TTRouteUserInfoWithDict(statParams)];
+        }
+    }
+}
+
+- (BOOL)openSchemaWithOpenUrl:(NSString *)openUrl article:(TTVVideoArticle *)article adid:(NSString *)adid logExtra:(NSString *)logExtra statParams:(NSMutableDictionary *)statParams
+{
+    //打开详情页：优先判断openURL是否可以用外部schema打开，否则判断内部schema
+    BOOL canOpenURL = NO;
+    
+    NSMutableDictionary *applinkParams = [NSMutableDictionary dictionary];
+    [applinkParams setValue:logExtra forKey:@"log_extra"];
+    
+//    if (!isEmptyString(adid) && !article.hasVideo) {
+//        if ([TTAppLinkManager dealWithWebURL:article.articleURL openURL:openUrl sourceTag:@"embeded_ad" value:adid extraDic:applinkParams]) {
+//            //针对广告并且能够通过sdk打开的情况
+//            canOpenURL = YES;
+//        }
+//    }
+    
+    if (!canOpenURL && !isEmptyString(openUrl)) {
+        NSURL *url = [TTStringHelper URLWithURLString:openUrl];
+        
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            canOpenURL = YES;
+            [[UIApplication sharedApplication] openURL:url];
+        }
+        else if ([[TTRoute sharedRoute] canOpenURL:url]) {
+            
+            canOpenURL = YES;
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(statParams)];
+            //针对广告不能通过sdk打开，但是传的有内部schema的情况
+//            if(isEmptyString(adid)){
+//                wrapperTrackEventWithCustomKeys(@"embeded_ad", @"open_url_h5", adid, nil, applinkParams);
+//            }
+        }
+    }
+    return canOpenURL;
+}
+
+- (BOOL)canContinuePlayMovieOnView:(id <TTVFeedPlayMovie> )view withArticle:(TTVVideoArticle *)article
+{
+    if ([article isVideoSubject] && [view respondsToSelector:@selector(cell_movieView)] && [view cell_hasMovieView]) {
+        return ([view cell_isPaused] || [view cell_isPlayingFinished] || [view cell_isPlaying]);
+    }
+    return NO;
+}
+
 #pragma mark - TTUGCAttributedLabelDelegate
 
 - (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
@@ -320,6 +491,21 @@
         return YES;
     }
     return NO;
+}
+
+- (BOOL)cell_isPlaying
+{
+    return [[self playMovie] isPlaying];
+}
+
+- (BOOL)cell_isPaused
+{
+    return [[self playMovie] isPaused];
+}
+
+- (BOOL)cell_isPlayingFinished
+{
+    return [[self playMovie] isPlayingFinished];
 }
 
 - (void)cell_attachMovieView:(UIView *)movieView {
