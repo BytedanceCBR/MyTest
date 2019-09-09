@@ -272,8 +272,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSInteger limit = 0;
     if (textField == self.view.phoneInput) {
         limit = 11;
-        //设置登录和获取验证码是否可点击
-        [self checkToEnableBtn];
     } else if (textField == self.view.varifyCodeInput) {
         limit = 6;
     }
@@ -281,6 +279,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (text.length > limit) {
         textField.text = [text substringToIndex:limit];
     }
+    //设置登录和获取验证码是否可点击
+    [self checkToEnableBtn];
 }
 
 - (void)checkToEnableBtn {
