@@ -332,9 +332,10 @@
 #pragma mark - TTAccountMulticaastProtocol
 
 // 帐号切换
-- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
-{
-    self.needReloadData = YES;
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
+    if(self.listType != FHCommunityFeedListTypePostDetail) {
+        self.needReloadData = YES;
+    }
 }
 
 #pragma mark -- SSImpressionProtocol
