@@ -507,6 +507,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *videoWatchCount;
 @end
 
+typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
+    FHFeedContentStickStyleUnknown,
+    FHFeedContentStickStyleDefault,
+};
+
 @interface FHFeedContentModel : JSONModel 
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
@@ -597,6 +602,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *videoProportionArticle;
 @property (nonatomic, copy , nullable) NSString *playBizToken;
 @property (nonatomic, copy , nullable) NSString *danmakuCount;
+@property (nonatomic, assign)   BOOL       isStick;      // 是否置顶
+@property (nonatomic, assign)   FHFeedContentStickStyle  stickStyle; // 置顶类型：精华或其它
 @end
 
 

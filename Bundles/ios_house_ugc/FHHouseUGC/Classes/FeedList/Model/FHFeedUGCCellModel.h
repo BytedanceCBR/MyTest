@@ -56,6 +56,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHFeedUGCCellContentDecorationModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *url;
+@end
+
 @interface FHFeedUGCCellModel : NSObject
 
 @property (nonatomic, assign) FHUGCFeedListCellType cellType;
@@ -125,6 +129,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *elementFrom;
 @property (nonatomic, copy) NSString *enterFrom;
 @property (nonatomic, strong) NSDictionary *tracerDic;
+// 是否置顶
+@property (nonatomic, assign) BOOL isStick;
+// 置顶类型：精华或其它
+@property (nonatomic, assign) FHFeedContentStickStyle stickStyle;
+// 内容装饰
+@property (nonatomic, strong) FHFeedUGCCellContentDecorationModel *contentDecoration;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

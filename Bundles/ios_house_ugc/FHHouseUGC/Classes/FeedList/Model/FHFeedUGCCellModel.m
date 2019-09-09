@@ -34,6 +34,13 @@
 
 @end
 
+@implementation FHFeedUGCCellContentDecorationModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHFeedUGCCellModel
 
 - (instancetype)init {
@@ -66,7 +73,17 @@
         Class cls = nil;
         if(type == FHUGCFeedListCellTypeUGC){
             cls = [FHFeedUGCContentModel class];
-        }else if(type == FHUGCFeedListCellTypeArticle || type == FHUGCFeedListCellTypeQuestion || type == FHUGCFeedListCellTypeAnswer || type == FHUGCFeedListCellTypeArticleComment || type == FHUGCFeedListCellTypeUGCBanner || type == FHUGCFeedListCellTypeUGCRecommend || type == FHUGCFeedListCellTypeUGCBanner2 || type == FHUGCFeedListCellTypeArticleComment2 || type == FHUGCFeedListCellTypeUGCHotTopic || type == FHUGCFeedListCellTypeUGCVote || type == FHUGCFeedListCellTypeUGCSmallVideo){
+        }else if(type == FHUGCFeedListCellTypeArticle ||
+                 type == FHUGCFeedListCellTypeQuestion ||
+                 type == FHUGCFeedListCellTypeAnswer ||
+                 type == FHUGCFeedListCellTypeArticleComment ||
+                 type == FHUGCFeedListCellTypeUGCBanner ||
+                 type == FHUGCFeedListCellTypeUGCRecommend ||
+                 type == FHUGCFeedListCellTypeUGCBanner2 ||
+                 type == FHUGCFeedListCellTypeArticleComment2 ||
+                 type == FHUGCFeedListCellTypeUGCHotTopic ||
+                 type == FHUGCFeedListCellTypeUGCVote ||
+                 type == FHUGCFeedListCellTypeUGCSmallVideo){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -90,6 +107,28 @@
     return cellModel;
 }
 
++ (FHFeedUGCCellContentDecorationModel *)contentDecorationFromString:(NSString *)contentDecoration {
+    
+    NSData *jsonData = [contentDecoration dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err;
+    NSDictionary *dic = nil;
+    @try {
+        dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                              options:NSJSONReadingMutableContainers
+                                                error:&err];
+    } @catch (NSException *exception) {} @finally {}
+    
+    if(!err){
+        __block NSError *backError = nil;
+        Class cls = [FHFeedUGCCellContentDecorationModel class];
+        FHFeedUGCCellContentDecorationModel *model = [FHMainApi generateModel:jsonData class:cls error:&backError];
+        if(!backError){
+            return model;
+        }
+    }
+    return nil;
+}
+
 + (FHFeedUGCCellModel *)modelFromFeedContent:(FHFeedContentModel *)model {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.cellType = [model.cellType integerValue];
@@ -99,6 +138,9 @@
     cellModel.aggrType = model.aggrType;
     cellModel.needLinkSpan = YES;
     cellModel.behotTime = model.behotTime;
+    cellModel.isStick = model.isStick;
+    cellModel.stickStyle = model.stickStyle;
+    cellModel.contentDecoration = [self contentDecorationFromString:model.contentDecoration];
     //目前仅支持话题类型
     cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
     //处理圈子信息
@@ -418,6 +460,9 @@
     cellModel.cellType = [model.cellType integerValue];
     cellModel.title = model.title;
     cellModel.behotTime = model.behotTime;
+    cellModel.isStick = model.isStick;
+    cellModel.stickStyle = model.stickStyle;
+    cellModel.contentDecoration = [self contentDecorationFromString:model.contentDecoration];
     cellModel.content = model.content;
     cellModel.contentRichSpan = model.contentRichSpan;
     cellModel.diggCount = model.diggCount;

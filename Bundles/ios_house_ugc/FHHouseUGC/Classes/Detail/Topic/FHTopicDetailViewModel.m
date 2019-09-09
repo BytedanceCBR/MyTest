@@ -190,6 +190,11 @@
                     }
                     // 再插入顶部
                     if (self.dataList.count > 0) {
+                        // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
+                        [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                            cellModel.isStick = NO;
+                        }];
+                        // 头部插入新数据
                         [tempArray addObjectsFromArray:self.dataList];
                     }
                     [self.dataList removeAllObjects];
@@ -457,18 +462,24 @@
                                         if ([richSpanLink.link containsString:cidStr]) {
                                             // 去重
                                             [self removeDuplicaionModel:cellModel.groupId];
-                                            // 是当前的话题
-                                            [tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
                                             if (self.dataList.count == 0) {
                                                 self.hasMore = NO;
-                                                [self.dataList addObject:cellModel];
-                                            } else {
-                                                [self.dataList insertObject:cellModel atIndex:0];
                                             }
-                                            //self.feedOffset += 1;
-                                            //[tableView reloadData];
+                                            //找到第一个非置顶贴的下标
+                                            __block NSUInteger index = 0;
+                                            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                                                if(!cellModel.isStick) {
+                                                    index = idx;
+                                                    *stop = YES;
+                                                }
+                                            }];
+                                            // 插入在置顶贴的下方
+                                            [self.dataList insertObject:cellModel atIndex:index];
                                             [self processLoadingState];
                                             self.needRefreshCell = NO;
+                                            // JOKER: 发贴成功插入贴子后，滚动使露出
+                                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                                            [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
                                             break;
                                         }
                                     }
