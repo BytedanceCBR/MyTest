@@ -93,7 +93,8 @@
             }else {
                 itemView.identifyView.hidden = YES;
             }
-            itemView.licenceIcon.hidden = ![self shouldShowContact:obj];
+            BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
+            [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
             if(obj.realtorEvaluate.length > 0) {
                 itemView.realtorEvaluate.text = obj.realtorEvaluate;
             }
@@ -460,7 +461,6 @@
 @property (nonatomic, strong) FHDetailContactModel *model;
 @property (nonatomic, strong) UICollectionView *tagsView;
 @property (nonatomic, strong) UIView *vSepLine;
-@property (nonatomic, copy) void (^removeKVOBlock)();
 @end
 
 @implementation FHDetailAgentItemView
@@ -582,33 +582,29 @@
         make.centerY.mas_equalTo(self.name);
         make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
     }];
-    
-    [self.licenceIcon addObserver:self forKeyPath:@"hidden" options:NSKeyValueObservingOptionNew context:nil];
-    @weakify(self);
-    self.removeKVOBlock = ^{
-        @strongify(self);
-        [self.licenceIcon removeObserver:self forKeyPath:@"hidden"];
-    };
-}
-- (void)dealloc
-{
-    if(self.removeKVOBlock) {
-        self.removeKVOBlock();
-    }
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    if(object == self.licenceIcon) {
-        if(keyPath == @"hidden") {
-            BOOL licenceIconIsHidden = [change[NSKeyValueChangeNewKey] boolValue];
+-(void)configForLicenceIconWithHidden:(BOOL)isHidden {
+    
+    self.licenceIcon.hidden = isHidden;
+    
+    switch (self.model.realtorCellShow) {
+        case FHRealtorCellShowStyle1:
+        case FHRealtorCellShowStyle2:
+        {
             [self.agency mas_updateConstraints:^(MASConstraintMaker *make) {
-                if(licenceIconIsHidden){
+                if(self.licenceIcon.hidden){
                     make.right.equalTo(self.imBtn.mas_left).offset(-10);
                 } else {
                     make.right.equalTo(self.licenceIcon.mas_left).offset(-5);
                 }
             }];
         }
+            break;
+        case FHRealtorCellShowStyle0:
+        default:
+            NSLog(@"Do nothing!");
+            break;
     }
 }
 

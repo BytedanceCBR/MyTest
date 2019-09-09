@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithModel:(FHDetailContactModel *)model;
 
+-(void)configForLicenceIconWithHidden:(BOOL)isHidden;
+
 @end
 
 // FHDetailAgentListModel
