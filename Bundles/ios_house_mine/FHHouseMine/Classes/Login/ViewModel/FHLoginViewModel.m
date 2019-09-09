@@ -100,28 +100,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self addEnterCategoryLog];
 }
 
-- (BOOL)getOneKeyLoginSwitchOff
-{
-    BOOL disableTelecom = NO;
-    BOOL disableUnicom = NO;
-    BOOL disableMobile = NO;
-    NSDictionary *fhSettings = [FHLoginViewModel fhSettings];
-    NSDictionary *loginSettings = [fhSettings tt_dictionaryValueForKey:@"login_settings"];
-    if (loginSettings) {
-        disableTelecom = [loginSettings tt_boolValueForKey:@"disable_telecom"];
-        disableUnicom = [loginSettings tt_boolValueForKey:@"disable_unicom"];
-        disableMobile = [loginSettings tt_boolValueForKey:@"disable_mobile"];
-    }
-    NSString *service = [TTAccount sharedAccount].service;
-    if ([service isEqualToString:TTAccountMobile]) {
-        return disableMobile;
-    }else if ([service isEqualToString:TTAccountUnion]) {
-        return disableUnicom;
-    }else if ([service isEqualToString:TTAccountTelecom]) {
-        return disableTelecom;
-    }
-}
-
 - (void)getOneKeyLoginPhoneNum
 {
     __weak typeof(self)wself = self;
@@ -130,13 +108,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self showOneKeyLoginView:NO phoneNum:nil];
         return;
     }
-    
-    BOOL isSwitchOff = [self getOneKeyLoginSwitchOff];
-    if (isSwitchOff) {
-        [self showOneKeyLoginView:NO phoneNum:nil];
-        return;
-    }
-    
+
     // 注意获取完手机号之后长期不登录的异常结果
     [TTAccount getOneKeyLoginPhoneNumberCompleted:^(NSString * _Nullable phoneNumber, NSString * _Nullable serviceName, NSError * _Nullable error) {
         BOOL showOneKeyLogin = !error && phoneNumber.length > 0;
