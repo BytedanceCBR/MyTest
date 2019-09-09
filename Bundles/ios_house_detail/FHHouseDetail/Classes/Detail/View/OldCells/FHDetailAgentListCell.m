@@ -187,11 +187,12 @@
         contactConfig.imprId = model.imprId;
         contactConfig.realtorType = contact.realtorType;
         contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
-        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
+        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
             if(success && [model.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
                 FHHouseDetailViewController *vc = (FHHouseDetailViewController *)model.belongsVC;
                 vc.isPhoneCallShow = YES;
                 vc.phoneCallRealtorId = contactConfig.realtorId;
+                vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
             }
         }];
 

@@ -263,7 +263,7 @@
     [self hide];
     [self traceRealtorEvaluatePopupClick:[NSString stringWithFormat:@"%i",tag]];
     
-    [FHHouseDetailAPI requestPhoneFeedback:self.viewModel.houseId houseType:self.viewModel.houseType realtorId:self.realtorId imprId:self.imprId searchId:self.searchId score:tag completion:^(bool succss, NSError * _Nonnull error) {
+    [FHHouseDetailAPI requestPhoneFeedback:self.viewModel.houseId houseType:self.viewModel.houseType realtorId:self.realtorId imprId:self.imprId searchId:self.searchId score:tag requestId:self.requestId completion:^(bool succss, NSError * _Nonnull error) {
         if(succss){
             [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
         }else{
@@ -305,7 +305,14 @@
                                    };
         NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
         NSString *urlStr = [NSString stringWithFormat:@"%@%@",host,reportUrl];
-        NSDictionary *info = @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"};
+        NSMutableDictionary *info = [NSMutableDictionary dictionaryWithDictionary: @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"}];
+        if(!isEmptyString(self.requestId)) {
+            info[@"request_id"] = self.requestId;
+            
+        }
+        if(!isEmptyString(self.realtorId)) {
+            info[@"realtor_id"] = self.realtorId;
+        }
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
     }
@@ -321,6 +328,7 @@
 - (void)traceRealtorEvaluatePopupShow {
     NSMutableDictionary *tracerDic = [self.viewModel.detailTracerDic mutableCopy];
     tracerDic[@"realtor_id"] = self.realtorId ? self.realtorId : @"be_null";
+    tracerDic[@"request_id"] = self.requestId?:UT_BE_NULL;
     TRACK_EVENT(@"realtor_evaluate_popup_show", tracerDic);
 }
 
@@ -328,12 +336,15 @@
     NSMutableDictionary *tracerDic = [self.viewModel.detailTracerDic mutableCopy];
     tracerDic[@"realtor_id"] = self.realtorId ? self.realtorId : @"be_null";
     tracerDic[@"click_position"] = position ? position : @"be_null";
+    tracerDic[@"request_id"] = self.requestId?:UT_BE_NULL;
     TRACK_EVENT(@"realtor_evaluate_popup_click", tracerDic);
 }
 
 - (void)traceClickFeedback {
     NSMutableDictionary *tracerDic = [self.viewModel.detailTracerDic mutableCopy];
     tracerDic[@"enter_from"] = @"realtor_evaluate_popup";
+    tracerDic[@"realtor_id"] = self.realtorId ?:UT_BE_NULL;
+    tracerDic[@"request_id"] = self.requestId?:UT_BE_NULL;
     TRACK_EVENT(@"click_feedback", tracerDic);
 }
 

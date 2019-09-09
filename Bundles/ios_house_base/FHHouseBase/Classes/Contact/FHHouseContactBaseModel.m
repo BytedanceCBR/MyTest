@@ -23,6 +23,7 @@
                            @"realtorId": @"realtor_id",
                            @"virtualNumber": @"virtual_number",
                            @"isVirtual": @"is_virtual",
+                           @"requestId": @"request_id",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
