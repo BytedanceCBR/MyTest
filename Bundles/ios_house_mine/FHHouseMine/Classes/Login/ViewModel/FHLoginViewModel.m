@@ -449,6 +449,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (self.fromOneKeyLogin) {
         tracerDict[@"click_position"] = @"quick_login";
     }
+    if (self.fromOtherLogin) {
+        tracerDict[@"enter_from"] = @"quick_login";
+        tracerDict[@"enter_type"] = @"other_login";
+    }
     tracerDict[@"login_agreement"] = self.view.acceptCheckBox.isSelected ? @"1" : @"0";
     TRACK_EVENT(@"click_login", tracerDict);
 }
