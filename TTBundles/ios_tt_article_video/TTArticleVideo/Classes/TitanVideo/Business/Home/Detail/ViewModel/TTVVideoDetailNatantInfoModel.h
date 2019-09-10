@@ -30,6 +30,7 @@
 @property (nonatomic, copy) NSString *enterFrom;
 @property (nonatomic, copy) NSDictionary *logPb;
 @property (nonatomic, copy) NSString *authorId;
+@property (nonatomic, strong) NSDictionary *extraDic;
 
 
 /**

@@ -31,6 +31,7 @@
 @property (nonatomic, copy) NSString *enterFrom;
 @property (nonatomic, copy) NSDictionary *logPb;
 @property (nonatomic, copy) NSString *authorId;
+@property (nonatomic, strong) NSDictionary *extraDic;
 
 /**
  *  视频详情页给出可自定义跳转的入口 : 1.button_text  2.is_download_app 3.apple_id 4.url 如果需要delegate的话还得加。
