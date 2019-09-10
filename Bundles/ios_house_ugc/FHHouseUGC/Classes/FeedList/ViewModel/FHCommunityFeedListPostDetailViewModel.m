@@ -21,6 +21,9 @@
 #import "FHFeedUGCContentModel.h"
 #import "FHFeedListModel.h"
 #import "ToastManager.h"
+#import <FHEnvContext.h>
+#import <TTAccountManager.h>
+#import <TTURLUtils.h>
 
 @interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -111,12 +114,110 @@
     }
 }
 
+//- (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
+//    if(self.viewController.isLoadingData){
+//        return;
+//    }
+//
+//    self.viewController.isLoadingData = YES;
+//
+//    if(isFirst){
+//        [self.viewController startLoading];
+//    }
+//
+//    __weak typeof(self) wself = self;
+//
+//    NSInteger listCount = self.dataList.count;
+//    NSInteger offset = 0;
+//
+//    if(listCount > 0 && !isFirst){
+//        if(self.feedListModel){
+//            offset = [self.feedListModel.lastOffset integerValue];
+//        }
+//    }
+//
+//    self.requestTask = [FHHouseUGCAPI requestForumFeedListWithForumId:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+//        wself.viewController.isLoadingData = NO;
+//        if(isFirst){
+//            [wself.viewController endLoading];
+//        }
+//
+//        [wself.tableView finishPullDownWithSuccess:YES];
+//
+//        FHFeedListModel *feedListModel = (FHFeedListModel *)model;
+//        wself.feedListModel = feedListModel;
+//
+//        if (!wself) {
+//            return;
+//        }
+//
+//        if (error) {
+//            //TODO: show handle error
+//            if(isFirst){
+//                if(error.code != -999){
+//                    [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+//                    wself.viewController.showenRetryButton = YES;
+//                }
+//            }else{
+//                [[ToastManager manager] showToast:@"网络异常"];
+//                [wself updateTableViewWithMoreData:YES];
+//            }
+//            return;
+//        }
+//
+//        if(model){
+//            if (isHead && feedListModel.hasMore) {
+//                [wself.dataList removeAllObjects];
+//            }
+//            NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
+//
+//            if(isFirst){
+//                [wself.dataList removeAllObjects];
+//            }
+//
+//            if(isHead){
+//                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
+//            }else{
+//                [wself.dataList addObjectsFromArray:result];
+//            }
+//
+//            wself.tableView.hasMore = feedListModel.hasMore;
+//            wself.viewController.hasValidateData = wself.dataList.count > 0;
+//
+//            if(wself.dataList.count > 0){
+//                [wself updateTableViewWithMoreData:feedListModel.hasMore];
+//                [wself.viewController.emptyView hideEmptyView];
+//            }else{
+//                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+//                wself.viewController.showenRetryButton = YES;
+//            }
+//            [wself.tableView reloadData];
+//
+//            NSString *refreshTip = feedListModel.tips.displayInfo;
+//            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
+//                wself.isRefreshingTip = YES;
+//                [wself.viewController showNotify:refreshTip completion:^{
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        wself.isRefreshingTip = NO;
+//                    });
+//                }];
+//                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+//            }
+//        }
+//    }];
+//}
+
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     if(self.viewController.isLoadingData){
         return;
     }
     
     self.viewController.isLoadingData = YES;
+    
+    if(self.isRefreshingTip){
+        [self.tableView finishPullDownWithSuccess:YES];
+        return;
+    }
     
     if(isFirst){
         [self.viewController startLoading];
@@ -125,15 +226,38 @@
     __weak typeof(self) wself = self;
     
     NSInteger listCount = self.dataList.count;
-    NSInteger offset = 0;
     
-    if(listCount > 0 && !isFirst){
-        if(self.feedListModel){
-            offset = [self.feedListModel.lastOffset integerValue];
-        }
+    if(isFirst){
+        listCount = 0;
     }
     
-    self.requestTask = [FHHouseUGCAPI requestForumFeedListWithForumId:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    double behotTime = 0;
+    NSString *lastGroupId = nil;
+    
+    if(!isHead && listCount > 0){
+        FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
+        behotTime = [cellModel.behotTime doubleValue];
+        lastGroupId = cellModel.groupId;
+    }
+    if(isHead && listCount > 0){
+        FHFeedUGCCellModel *cellModel = [self.dataList firstObject];
+        behotTime = [cellModel.behotTime doubleValue];
+        lastGroupId = cellModel.groupId;
+    }
+    
+    NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
+    NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if(fCityId){
+        [extraDic setObject:fCityId forKey:@"f_city_id"];
+    }
+    if(self.socialGroupId){
+        [extraDic setObject:self.socialGroupId forKey:@"social_group_id"];
+    }
+    if(lastGroupId){
+        [extraDic setObject:lastGroupId forKey:@"last_group_id"];
+    }
+    
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
         if(isFirst){
             [wself.viewController endLoading];
@@ -154,6 +278,7 @@
                 if(error.code != -999){
                     [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
                     wself.viewController.showenRetryButton = YES;
+                    wself.refreshFooter.hidden = YES;
                 }
             }else{
                 [[ToastManager manager] showToast:@"网络异常"];
@@ -163,30 +288,36 @@
         }
         
         if(model){
-            if (isHead && feedListModel.hasMore) {
-                [wself.dataList removeAllObjects];
+            if(isHead){
+                if(feedListModel.hasMore){
+                    [wself.dataList removeAllObjects];
+                }
+                wself.tableView.hasMore = YES;
+            }else{
+                wself.tableView.hasMore = feedListModel.hasMore;
             }
+            
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
             
             if(isFirst){
+                [self.clientShowDict removeAllObjects];
                 [wself.dataList removeAllObjects];
             }
-            
             if(isHead){
                 [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
             }else{
                 [wself.dataList addObjectsFromArray:result];
             }
             
-            wself.tableView.hasMore = feedListModel.hasMore;
             wself.viewController.hasValidateData = wself.dataList.count > 0;
             
             if(wself.dataList.count > 0){
-                [wself updateTableViewWithMoreData:feedListModel.hasMore];
+                [wself updateTableViewWithMoreData:wself.tableView.hasMore];
                 [wself.viewController.emptyView hideEmptyView];
             }else{
                 [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
                 wself.viewController.showenRetryButton = YES;
+                wself.refreshFooter.hidden = YES;
             }
             [wself.tableView reloadData];
             
@@ -203,6 +334,7 @@
         }
     }];
 }
+
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.tableView.mj_footer.hidden = NO;
@@ -379,6 +511,8 @@
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
+        [self goToVoteDetail:cellModel value:0];
     }
 }
 
@@ -444,6 +578,73 @@
     [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    // 埋点
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[@"enter_from"] = @"community_group_detail";
+    traceParam[@"element_from"] = @"feed_topic";
+    traceParam[@"enter_type"] = @"click";
+    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+    traceParam[@"log_pb"] = cellModel.logPb;
+    dict[TRACER_KEY] = traceParam;
+    
+    if (url) {
+        if ([url.absoluteString containsString:@"concern"]) {
+            // 话题
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+    }
+}
+
+- (void)goToVoteDetail:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value {
+    [self trackVoteClickOptions:cellModel value:value];
+    if([TTAccountManager isLogin] || !cellModel.vote.needUserLogin){
+        if(cellModel.vote.openUrl){
+            NSString *urlStr = cellModel.vote.openUrl;
+            if(value > 0){
+                NSString *append = [TTURLUtils queryItemAddingPercentEscapes:[NSString stringWithFormat:@"&vote=%d",value]];
+                urlStr = [urlStr stringByAppendingString:append];
+            }
+            
+            NSURL *url = [NSURL URLWithString:urlStr];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+        }
+    }else{
+        [self gotoLogin:cellModel value:value];
+    }
+}
+
+- (void)gotoLogin:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value  {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:[self pageType] forKey:@"enter_from"];
+    [params setObject:@"" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    if(cellModel.vote.openUrl){
+                        NSString *urlStr = cellModel.vote.openUrl;
+                        if(value > 0){
+                            NSString *append = [TTURLUtils queryItemAddingPercentEscapes:[NSString stringWithFormat:@"&vote=%d",value]];
+                            urlStr = [urlStr stringByAppendingString:append];
+                        }
+                        
+                        NSURL *url = [NSURL URLWithString:urlStr];
+                        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                    }
+                });
+            }
+        }
+    }];
+}
+
 #pragma mark - 埋点
 
 - (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
@@ -493,6 +694,19 @@
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
     dict[@"click_position"] = @"feed_comment";
     TRACK_EVENT(@"click_comment", dict);
+}
+
+- (void)trackVoteClickOptions:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value {
+    NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
+    dict[@"log_pb"] = cellModel.logPb;
+    if(value == [cellModel.vote.leftValue integerValue]){
+        dict[@"click_position"] = @"1";
+    }else if(value == [cellModel.vote.rightValue integerValue]){
+        dict[@"click_position"] = @"2";
+    }else{
+        dict[@"click_position"] = @"vote_content";
+    }
+    TRACK_EVENT(@"click_options", dict);
 }
 
 @end

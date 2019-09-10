@@ -81,7 +81,10 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.adColdHadJump = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    [self registerNotifications];        
+    [self registerNotifications];
+    
+    [self resetMaintableView];
+    self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
 }
 
 - (void)scrollMainTableToTop
@@ -93,7 +96,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 -(void)dealyIniViews
 {
-    [self resetMaintableView];
     
     //如果是inhouse的，弹升级弹窗
     if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
@@ -268,7 +270,9 @@ static CGFloat const kSectionHeaderHeight = 38;
                           [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
                           self.homeListViewModel.isResetingOffsetZero = NO;
                       }completion:^(BOOL finished) {
-                          self.isShowRefreshTip = NO;
+                          if(!isImmediately){
+                              self.isShowRefreshTip = NO;
+                          }
                       }];
                       
     }];
@@ -277,6 +281,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)hideImmediately
 {
     [self.notifyBar hideImmediately];
+    self.isShowRefreshTip = NO;
 }
 
 - (void)retryLoadData
@@ -358,6 +363,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     
     self.isShowing = YES;
+    self.isShowRefreshTip = NO;
     
     if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
         [self.homeListViewModel checkCityStatus];
@@ -379,6 +385,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewWillDisappear:animated];
     self.isShowing = NO;
+    self.isShowRefreshTip = NO;
     
     if(_isMainTabVC && self.mainTableView.contentOffset.y <= [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType])
     {
@@ -392,9 +399,9 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewDidAppear:animated];
     
-    if(_isMainTabVC && !self.homeListViewModel){
-        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
-    }
+//    if(_isMainTabVC && !self.homeListViewModel){
+//        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
+//    }
     
     
     //开屏广告启动不会展示，保留逻辑代码

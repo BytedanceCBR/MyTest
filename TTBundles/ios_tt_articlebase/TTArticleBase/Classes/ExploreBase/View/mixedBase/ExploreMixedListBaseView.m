@@ -155,7 +155,7 @@
 //#import "RecommendRedpacketData.h"
 //#import "FRThreadSmartDetailManager.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import "TTVOwnPlayerPreloaderWrapper.h"
 #import "TTVSettingsConfiguration.h"
 //#import "TTFollowCategoryFetchExtraManager.h"

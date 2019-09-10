@@ -108,6 +108,7 @@
 @property (assign) UIEdgeInsets contentInset;
 @property (nonatomic) BOOL isScrollable;
 @property(nonatomic) BOOL enablesReturnKeyAutomatically;
+@property(nonatomic) BOOL isInputEmojiToChangeRange;
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 70000
 - (id)initWithFrame:(CGRect)frame textContainer:(NSTextContainer *)textContainer;

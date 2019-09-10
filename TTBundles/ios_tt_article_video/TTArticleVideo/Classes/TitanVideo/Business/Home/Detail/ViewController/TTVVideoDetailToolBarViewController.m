@@ -68,7 +68,7 @@
 //#import "TTThreadDeleteContentItem.h"
 #import "ExploreOrderedData.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import "BDPlayerObjManager.h"
 #import "TTDirectForwardWeitoutiaoContentItem.h"
 #import <TTDirectForwardWeitoutiaoActivity.h>

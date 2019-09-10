@@ -9,7 +9,7 @@
 #import "TTFollowingDetailCell.h"
 #import "TTProfileThemeConstants.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import <TTBaseLib/UIViewAdditions.h>
 
 @implementation TTFollowingDetailCell
@@ -44,8 +44,9 @@
 
 + (TTFollowButtonStatusType)friendRelationTypeOfModel:(TTFriendModel *)aModel {
     TTFollowButtonStatusType type = FriendListCellUnitRelationButtonHide;
-    if ([aModel isAccountUserOfVisitor]
-        && ![TTKitchen getBOOL:kTTKShowFollowButtonInMyFollowList]) {//可以内部打开，用于自己批量取消关注方便
+    if ([aModel isAccountUserOfVisitor]) {//可以内部打开，用于自己批量取消关注方便
+//    if ([aModel isAccountUserOfVisitor]
+//        && ![TTKitchen getBOOL:kTTKShowFollowButtonInMyFollowList]) {//可以内部打开，用于自己批量取消关注方便
         // 自己访问自己的关注时，不显示关注按钮
         type = FriendListCellUnitRelationButtonHide;
     } else if ([aModel isAccountUser]) {

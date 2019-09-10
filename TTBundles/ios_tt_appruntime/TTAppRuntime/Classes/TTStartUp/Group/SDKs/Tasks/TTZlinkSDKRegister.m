@@ -42,11 +42,6 @@ DEC_TASK("TTZlinkSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
         
         BDUGDeepLinkInfo *info = [BDUGDeepLinkInfo new];
         info.schemas = schemas;
-        info.package = [TTSandBoxHelper bundleIdentifier];
-        info.appVersion = [TTSandBoxHelper versionName];
-        info.did = [[TTInstallIDManager sharedInstance] deviceID];
-        info.appId = [[TTInstallIDManager sharedInstance] appID];
-        info.ip = [[[TTNetworkHelper getIPAddresses] allValues] firstObject];
         [manager registerDeepLinkWithInfo:info];
     }
     return YES;

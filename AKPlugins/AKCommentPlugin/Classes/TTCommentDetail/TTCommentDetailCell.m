@@ -353,9 +353,9 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
         _avatarView.placeholderName = @"big_defaulthead_head";
         _avatarView.borderWidth = 0;
         _avatarView.borderColor = [UIColor clearColor];
-        [_avatarView setupVerifyViewForLength:[TTCommentDetailCellHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
-            return [TTCommentDetailCellHelper verifyLogoSize:standardSize];
-        }];
+//        [_avatarView setupVerifyViewForLength:[TTCommentDetailCellHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//            return [TTCommentDetailCellHelper verifyLogoSize:standardSize];
+//        }];
         // add by zjing 去掉头像点击
 //        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }

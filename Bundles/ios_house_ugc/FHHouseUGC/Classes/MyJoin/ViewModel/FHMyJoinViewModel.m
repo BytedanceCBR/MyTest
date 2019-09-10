@@ -335,7 +335,7 @@
     NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
     NSString *groupId = cellModel.socialGroupId;
     if(groupId){
-        if (self.clientShowDict[groupId] || ![groupId isEqualToString:@"-1"]) {
+        if (self.clientShowDict[groupId] || [groupId isEqualToString:@"-1"]) {
             return;
         }
         

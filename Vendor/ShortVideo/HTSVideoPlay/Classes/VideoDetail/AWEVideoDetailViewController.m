@@ -108,6 +108,7 @@
 #import <TTAudioSessionManager.h>
 
 #import "ExploreOrderedData.h"
+#import <TTBusinessManager+StringUtils.h>
 
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
@@ -890,7 +891,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)reloadCommentHeaderWithCount:(NSNumber *)commentCount
 {
-    self.commentHeaderLabel.text = commentCount ? [NSString stringWithFormat:@"%@条回复", commentCount] : @"暂无回复";
+    self.commentHeaderLabel.text = commentCount ? [NSString stringWithFormat:@"%@条回复", [TTBusinessManager formatCommentCount:commentCount.longLongValue]] : @"暂无回复";
 }
 
 - (void)updateModel

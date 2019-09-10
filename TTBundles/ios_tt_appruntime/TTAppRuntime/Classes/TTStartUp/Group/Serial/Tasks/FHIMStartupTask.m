@@ -135,7 +135,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
             NSURL *url = [NSURL URLWithString:phoneUrl];
             [[UIApplication sharedApplication] openURL:url];
         } else {
-            [[ToastManager manager] showToast:@"获取电话失败，请重试"];
+            [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
             [monitorParams setValue:error forKey:@"server_error"];
             [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_SERVER_ERROR extra:monitorParams];
             finishBlock(@"click_call", imprId,true);

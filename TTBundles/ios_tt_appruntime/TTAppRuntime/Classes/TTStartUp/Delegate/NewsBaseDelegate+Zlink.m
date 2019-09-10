@@ -24,7 +24,6 @@
         if (!hasSelectedCity) {
             // no select city
             [[NSUserDefaults standardUserDefaults] setValue:schemaString forKey:@"kFHDeepLinkFirstLaunchKey"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
         } else {
             NSURL *url = [NSURL URLWithString:schemaString];
             [[TTRoute sharedRoute] openURLByPushViewController:url];
