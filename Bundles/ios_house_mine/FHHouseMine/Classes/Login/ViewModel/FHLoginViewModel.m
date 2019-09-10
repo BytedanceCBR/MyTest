@@ -378,7 +378,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
     [self traceLogin];
     if (!self.view.acceptCheckBox.selected) {
-        [[ToastManager manager] showToast:@"请阅读并同意《用户协议》和《隐私协议》"];
+        [[ToastManager manager] showToast:@"请阅读并同意《用户协议》和《隐私政策》"];
         return;
     }
 
