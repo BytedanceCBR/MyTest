@@ -81,6 +81,7 @@
 #import <TTMonitor/TTMonitor.h>
 #import "SSCommonLogic.h"
 #import "ExploreLogicSetting.h"
+#import <BDUGAccountOnekeyLogin/BDUGOnekeySettingManager.h>
 
 
 #define SSFetchSettingsManagerFetchedDateKey @"SSFetchSettingsManagerFetchedDateKey"
@@ -239,6 +240,7 @@
     [super dealAppSettingResult:dSettings];
     
     [[TTSettingsManager sharedManager] saveSettings:dSettings];
+    [[BDUGOnekeySettingManager sharedInstance]saveSettings:dSettings];
     
     // 固化settings配置的实验数据
     [self saveServerSettingsForClientABs];

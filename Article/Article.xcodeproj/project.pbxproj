@@ -1280,8 +1280,6 @@
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareQQ/TTShareQQ.xcassets",
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
-				"${PODS_ROOT}/TTThirdPartySDKs/TTThirdPartySDKs/QQSDK/TencentOpenApi_IOS_Bundle.bundle",
-				"${PODS_ROOT}/TTThirdPartySDKs/TTThirdPartySDKs/WeiboSDK/Resource/WeiboSDK.bundle",
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
@@ -1290,6 +1288,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVerifyKit/TTVerifyKitResource.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
 				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
@@ -1397,8 +1396,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareQQ.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareWeChat.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTThemed.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TencentOpenApi_IOS_Bundle.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WeiboSDK.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UGCImage.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUGCRichText.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUIWidgetResources.bundle",
@@ -1407,6 +1404,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVerifyKitResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TencentQQSDK.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/images.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_house_im.bundle",
@@ -1621,8 +1619,6 @@
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareQQ/TTShareQQ.xcassets",
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
-				"${PODS_ROOT}/TTThirdPartySDKs/TTThirdPartySDKs/QQSDK/TencentOpenApi_IOS_Bundle.bundle",
-				"${PODS_ROOT}/TTThirdPartySDKs/TTThirdPartySDKs/WeiboSDK/Resource/WeiboSDK.bundle",
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
@@ -1631,6 +1627,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVerifyKit/TTVerifyKitResource.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
 				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
@@ -1737,8 +1734,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareQQ.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareWeChat.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTThemed.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TencentOpenApi_IOS_Bundle.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WeiboSDK.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UGCImage.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUGCRichText.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUIWidgetResources.bundle",
@@ -1747,6 +1742,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVerifyKitResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TencentQQSDK.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/images.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_house_im.bundle",
@@ -2018,8 +2014,8 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = serviceNofExtension/serviceNofExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: dachui Wang (5P84245CTM)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: dachui Wang (5P84245CTM)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Gong Rui (3VB7F2P4T4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gong Rui (3VB7F2P4T4)";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = X46375UBYG;
@@ -2113,8 +2109,8 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = com.f100.client.FHNotificationServiceExtension/com.f100.client.FHNotificationServiceExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: dachui Wang (JJ26XQCNZ6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: dachui Wang (JJ26XQCNZ6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (C329TW3SDK)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (C329TW3SDK)";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = J3249442BT;
@@ -2192,8 +2188,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = News/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (C329TW3SDK)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (C329TW3SDK)";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
@@ -2273,7 +2269,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = News/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: dachui Wang (J3249442BT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: dachui Wang (J3249442BT)";
 				CODE_SIGN_STYLE = Manual;
 				DEPLOYMENT_POSTPROCESSING = YES;
@@ -2359,8 +2355,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = News/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Gong Rui (3VB7F2P4T4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gong Rui (3VB7F2P4T4)";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
