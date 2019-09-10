@@ -166,6 +166,9 @@
         switch (cellModel.cellType) {
                 case FHUGCFeedListCellTypeArticle:
                     self.diggType = FHDetailDiggTypeITEM;
+                    if (cellModel.hasVideo) {
+                        self.diggType = FHDetailDiggTypeVIDEO;
+                    }
                 break;
                 case FHUGCFeedListCellTypeAnswer:
                     self.diggType = FHDetailDiggTypeANSWER;
@@ -178,6 +181,9 @@
                 break;
                 case FHUGCFeedListCellTypeUGC:
                     self.diggType = FHDetailDiggTypeTHREAD;
+                break;
+                case FHUGCFeedListCellTypeUGCSmallVideo:
+                    self.diggType = FHDetailDiggTypeSMALLVIDEO;
                 break;
             default:
                 self.diggType = FHDetailDiggTypeTHREAD;

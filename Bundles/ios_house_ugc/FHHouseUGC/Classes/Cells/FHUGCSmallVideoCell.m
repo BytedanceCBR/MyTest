@@ -207,7 +207,7 @@
         FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
         CGFloat wid = [imageModel.width floatValue];
         CGFloat hei = [imageModel.height floatValue];
-        if (wid < hei) {
+        if (wid <= hei) {
             self.imageViewheight = 200;
             self.imageViewWidth = 150;
         } else {
@@ -294,7 +294,7 @@
             FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
             CGFloat wid = [imageModel.width floatValue];
             CGFloat hei = [imageModel.height floatValue];
-            if (wid < hei) {
+            if (wid <= hei) {
                 imageViewheight = 200;
             } else {
                 imageViewheight = 152;
