@@ -91,8 +91,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.view showOneKeyLoginView:isOneKeyLogin];
     [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin] showAcceptBox:YES];
     [self.view updateOneKeyLoginWithPhone:phoneNum service:isOneKeyLogin ? [self serviceNameStr] : nil];
+    [self checkToEnableConfirmBtn];
     if (isOneKeyLogin) {
-        [self.view enableConfirmBtn:phoneNum.length > 0];
         [self.view enableSendVerifyCodeBtn:NO];
     }
     [self addEnterCategoryLog];
@@ -281,10 +281,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         textField.text = [text substringToIndex:limit];
     }
     //设置登录和获取验证码是否可点击
-    [self checkToEnableBtn];
+    [self checkToEnableConfirmBtn];
 }
 
-- (void)checkToEnableBtn {
+- (void)checkToEnableConfirmBtn {
     BOOL hasPhoneInput = self.view.phoneInput.text.length > 0;
     BOOL hasVerifyCodeInput = self.view.varifyCodeInput.text.length > 0;
     BOOL confirmEnable = hasPhoneInput && (self.view.isOneKeyLogin || hasVerifyCodeInput) && self.view.acceptCheckBox.isSelected;
