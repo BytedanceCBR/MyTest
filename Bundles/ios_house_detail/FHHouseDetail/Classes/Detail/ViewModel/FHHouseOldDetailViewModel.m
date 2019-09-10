@@ -369,6 +369,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         NSString *imprId = self.listLogPB[@"impr_id"];
         agentListModel.tableView = self.tableView;
         agentListModel.belongsVC = self.detailController;
+        agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
