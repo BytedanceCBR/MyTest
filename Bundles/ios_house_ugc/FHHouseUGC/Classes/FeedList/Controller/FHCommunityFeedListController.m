@@ -156,7 +156,8 @@
 
     if(self.listType == FHCommunityFeedListTypeNearby){
         viewModel = [[FHCommunityFeedListNearbyViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = @"f_ugc_neighbor";
+//        viewModel.categoryId = @"f_ugc_neighbor";
+        viewModel.categoryId = @"f_shipin";
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = @"f_ugc_follow";
@@ -331,9 +332,10 @@
 #pragma mark - TTAccountMulticaastProtocol
 
 // 帐号切换
-- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
-{
-    self.needReloadData = YES;
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
+    if(self.listType != FHCommunityFeedListTypePostDetail) {
+        self.needReloadData = YES;
+    }
 }
 
 #pragma mark -- SSImpressionProtocol

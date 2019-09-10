@@ -36,6 +36,20 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.ttTrackStayEnable = YES;
+        // 取链接中的埋点数据
+        NSDictionary *params = paramObj.allParams;
+        NSString *enter_from = params[@"enter_from"];
+        if (enter_from.length > 0) {
+            self.tracerDict[@"enter_from"] = enter_from;
+        }
+        NSString *enter_type = params[@"enter_type"];
+        if (enter_type.length > 0) {
+            self.tracerDict[@"enter_type"] = enter_type;
+        }
+        NSString *element_from = params[@"element_from"];
+        if (element_from.length > 0) {
+            self.tracerDict[@"element_from"] = element_from;
+        }
     }
     return self;
 }

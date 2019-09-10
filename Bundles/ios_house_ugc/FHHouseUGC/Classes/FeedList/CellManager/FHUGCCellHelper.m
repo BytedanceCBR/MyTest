@@ -8,6 +8,9 @@
 #import "FHUGCCellHelper.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import <TTBusinessManager+StringUtils.h>
+#import "TTVFeedListItem.h"
+#import <TTVFeedCellAction.h>
 
 @implementation FHUGCCellHelper
 
@@ -331,6 +334,50 @@
         model.vote.contentHeight = 0;
         model.vote.contentAStr = nil;
     }
+}
+
++ (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel
+{
+    TTVFeedListItem *item = [[TTVFeedListItem alloc] init];
+    item.originData = cellModel.videoFeedItem;
+    item.categoryId = cellModel.categoryId;
+    item.hideTitleAndWatchCount = YES;
+    item.refer = 1;
+//    item.cellSeparatorStyle = ttv_feedListCellSeparatorStyleByTotalAndRow(array.count, i);
+    item.cellAction = [[TTVFeedCellVideoAction alloc] init];
+    item.isFirstCached = NO;
+    item.followedWhenInit = NO;
+
+//    if (response.isFromLocal) {
+//        item.comefrom = TTVFromOptionFile;
+//    } else if (parameter.reloadType == TTReloadTypePreLoadMore) {
+//        item.comefrom = TTVFromOptionPullUp;
+//    } else if (parameter.reloadType == TTReloadTypePull) {
+//        item.comefrom = TTVFromOptionPullDown;
+//    }
+//    TTVVideoArticle *article = [item article];
+    NSInteger playTimes = [cellModel.videoDetailInfo.videoWatchCount integerValue];
+    item.playTimes = [[TTBusinessManager formatPlayCount:playTimes] stringByAppendingString:@"次播放"];
+    NSString *durationText = nil;
+    int64_t duration = cellModel.videoDuration;
+    if (duration > 0) {
+        int minute = (int)duration / 60;
+        int second = (int)duration % 60;
+        durationText = [NSString stringWithFormat:@"%02i:%02i", minute, second];
+    }
+    item.durationTimeString = durationText;
+    
+//    if(cellModel.originData && [cellModel.originData isKindOfClass:[FHFeedContentModel class]]){
+//        item.ugcFeedContent = (FHFeedContentModel *)cellModel.originData;
+//    }
+    
+    if([cellModel.imageList firstObject]){
+        NSMutableDictionary *dict = [[[cellModel.imageList firstObject] toDictionary] mutableCopy];
+        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithDictionary:dict];
+        item.imageModel = model;
+    }
+    
+    return item;
 }
 
 @end

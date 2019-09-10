@@ -23,6 +23,11 @@
 #import <TTURLUtils.h>
 #import "TSVShortVideoDetailExitManager.h"
 #import "HTSVideoPageParamHeader.h"
+#import "FHUGCVideoCell.h"
+#import <TTVFeedPlayMovie.h>
+#import <TTVPlayVideo.h>
+#import <TTVFeedCellWillDisplayContext.h>
+#import <TTVFeedCellAction.h>
 
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
@@ -301,6 +306,23 @@
         /*impression统计相关*/
         SSImpressionStatus impressionStatus = self.isShowing ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
         [self recordGroupWithCellModel:cellModel status:impressionStatus];
+        
+        if (![cell isKindOfClass:[FHUGCVideoCell class]]) {
+            return;
+        }
+        //视频
+        if(cellModel.hasVideo){
+            FHUGCVideoCell *cellBase = (FHUGCVideoCell *)cell;
+//            TTVFeedListItem *item = cellBase.videoItem;
+            
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
+            [self willFinishLoadTable];
+            
+            [cellBase willDisplay];
+            
+//            [self attachVideoIfNeededForCell:cell data:item];
+
+        }
     }
 }
 
@@ -309,6 +331,43 @@
     if(indexPath.row < self.dataList.count){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         [self recordGroupWithCellModel:cellModel status:SSImpressionStatusEnd];
+        
+        if(cellModel.hasVideo){
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
+            [self willFinishLoadTable];
+            
+            if([cell isKindOfClass:[FHUGCVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]) {
+                FHUGCVideoCell<TTVFeedPlayMovie> *cellBase = (FHUGCVideoCell<TTVFeedPlayMovie> *)cell;
+                BOOL hasMovie = NO;
+                NSArray *indexPaths = [tableView indexPathsForVisibleRows];
+                for (NSIndexPath *path in indexPaths) {
+                    if (path.row < self.dataList.count) {
+                        
+                        BOOL hasMovieView = NO;
+                        if ([cellBase respondsToSelector:@selector(cell_hasMovieView)]) {
+                            hasMovieView = [cellBase cell_hasMovieView];
+                        }
+
+                        if ([cellBase respondsToSelector:@selector(cell_movieView)]) {
+                            UIView *view = [cellBase cell_movieView];
+                            if (view && ![self.movieViews containsObject:view]) {
+                                [self.movieViews addObject:view];
+                            }
+                        }
+                        if (cellModel == self.movieViewCellData) {
+                            hasMovie = YES;
+                            break;
+                        }
+                    }
+                }
+                    
+                if (self.isShowing) {
+                    if (!hasMovie) {
+                        [cellBase endDisplay];
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -370,7 +429,7 @@
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         if(cellModel.hasVideo){
             //跳转视频详情页
-            [self jumpToVideoDetail:cellModel showComment:NO enterType:enterType];
+            [self jumpToVideoDetail:cellModel showComment:showComment enterType:enterType];
         }else{
             BOOL canOpenURL = NO;
             if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
@@ -476,25 +535,22 @@
 
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
     NSMutableDictionary *dict = @{}.mutableCopy;
-    // 埋点
-//    NSMutableDictionary *traceParam = @{}.mutableCopy;
-//    traceParam[@"enter_from"] = @"hot_discuss_feed";
-//    traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
-//    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
-//    traceParam[@"log_pb"] = cellModel.logPb;
-//    dict[TRACER_KEY] = traceParam;
     
-//    dict[@"data"] = cellModel;
-//    dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
-//    dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
-    
-//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//    FHFeedUGCContentModel *contentModel = cellModel.originData;
-    if (cellModel.openUrl) {
+    if(self.currentCell && [self.currentCell isKindOfClass:[FHUGCVideoCell class]]){
+        FHUGCVideoCell *cell = (FHUGCVideoCell *)self.currentCell;
+        
+        TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
+        context.refer = self.refer;
+        context.categoryId = self.categoryId;
+        context.feedListViewController = self;
+        context.clickComment = showComment;
+        
+        [cell didSelectCell:context];
+    }else if (cellModel.openUrl) {
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-        self.needRefreshCell = YES;
     }
+    self.needRefreshCell = NO;
 }
 
 #pragma mark - FHUGCBaseCellDelegate
@@ -623,6 +679,55 @@
         }
     }];
 }
+
+#pragma mark - 视频相关
+
+- (void)willFinishLoadTable {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishLoadTable) object:nil];
+    [self performSelector:@selector(didFinishLoadTable) withObject:nil afterDelay:0.1];
+}
+
+- (void)didFinishLoadTable {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        return;
+    }
+    NSArray *cells = [self.tableView visibleCells];
+    NSMutableArray *visibleCells = [NSMutableArray arrayWithCapacity:cells.count];
+    for (id cell in cells) {
+        if([cell isKindOfClass:[FHUGCVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
+            FHUGCVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCVideoCell<TTVFeedPlayMovie> *)cell;
+            UIView *view = [vCell cell_movieView];
+            if (view) {
+                [visibleCells addObject:view];
+            }
+        }
+    }
+    
+    for (UIView *view in self.movieViews) {
+        if ([view isKindOfClass:[TTVPlayVideo class]]) {
+            TTVPlayVideo *movieView = (TTVPlayVideo *)view;
+            if (!movieView.player.context.isFullScreen &&
+                !movieView.player.context.isRotating && ![visibleCells containsObject:movieView]) {
+                if (movieView.player.context.playbackState != TTVVideoPlaybackStateBreak || movieView.player.context.playbackState != TTVVideoPlaybackStateFinished) {
+                    [movieView stop];
+                }
+                [movieView removeFromSuperview];
+            }
+        }
+    }
+
+    self.movieViewCellData = nil;
+    self.movieView = nil;
+    [self.movieViews removeAllObjects];
+}
+
+//- (void)attachVideoIfNeededForCell:(UITableViewCell *)cell data:(id)obj
+//{
+//    if (obj == self.movieViewCellData && self.movieView && [cell respondsToSelector:@selector(cell_attachMovieView:)]) {
+//        id<TTVFeedPlayMovie> videoCell = (id<TTVFeedPlayMovie>)cell;
+//        [videoCell cell_attachMovieView:self.movieView];
+//    }
+//}
 
 #pragma mark - 埋点
 
