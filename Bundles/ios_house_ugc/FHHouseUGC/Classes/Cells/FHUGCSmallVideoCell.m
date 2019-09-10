@@ -80,9 +80,15 @@
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.videoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    self.videoImageView = [[TTImageView alloc] initWithFrame:CGRectZero];
+    _videoImageView.backgroundColor = [UIColor themeGray7];
+    _videoImageView.layer.masksToBounds = YES;
+    _videoImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
+    _videoImageView.layer.borderWidth = 0.5;
+    _videoImageView.layer.cornerRadius = 4;
+    _videoImageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
+    _videoImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.contentView addSubview:_videoImageView];
-    //_videoImageView.contentMode = UIViewContentModeScaleAspectFit;
     self.imageViewheight = 200;
     self.imageViewWidth = 150;
     
@@ -216,7 +222,11 @@
         }
         
         if (imageModel && imageModel.url.length > 0) {
-            [self.videoImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+            TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
+            __weak typeof(self) wSelf = self;
+            [self.videoImageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
+                [wSelf.videoImageView setImage:nil];
+            }];
         }
     }
     // 时间

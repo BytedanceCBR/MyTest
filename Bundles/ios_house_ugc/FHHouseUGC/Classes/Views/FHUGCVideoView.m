@@ -20,7 +20,6 @@
 #import "TTVVideoArticle+Extension.h"
 #import <TTVCellPlayMovie.h>
 #import "TTMovieStore.h"
-#import "TTImageView+TrafficSave.h"
 #import "TTUserSettingsManager+FontSettings.h"
 #import "ExploreCellHelper.h"
 #import "TTVFeedItem+TTVArticleProtocolSupport.h"
