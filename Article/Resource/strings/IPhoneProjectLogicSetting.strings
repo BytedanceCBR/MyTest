@@ -30,7 +30,7 @@
 "editingInfo"           = "FHEditingInfoController";
 
 // SSAppPageController
-"home"                  = "SSAppPageManagerNotificationHome";
+"home"                  = "FHHomeSchemaObject";
 "profile"               = "ArticleMomentProfileViewController";
 "invite_friend"         = "ArticleInviteFriendViewController";
 "address_list"          = "TTAddressListFriendViewController";
