@@ -288,6 +288,25 @@
         if([item isKindOfClass:[FHDetailHouseOutlineInfoModel class]]){
             FHDetailHouseOutlineInfoModel *infoModel = (FHDetailHouseOutlineInfoModel *)item;
             reportUrl = infoModel.houseOverreview.reportUrl;
+            
+            // 传入h5页的埋点参数
+            NSMutableDictionary *reportParams = @{}.mutableCopy;
+            reportParams[UT_EVENT_TYPE] = @"house_app2c_v2";
+            reportParams[UT_PAGE_TYPE] = @"feedback_detail";
+            reportParams[UT_ENTER_FROM] = @"realtor_evaluate_popup";
+            reportParams[UT_ELEMENT_FROM] = self.viewModel.detailTracerDic[UT_ELEMENT_FROM]?:UT_BE_NULL;
+            reportParams[UT_LOG_PB] = self.viewModel.detailTracerDic[UT_LOG_PB]?:UT_BE_NULL;
+            reportParams[@"rank"] = self.viewModel.detailTracerDic[@"rank"]?:UT_BE_NULL;
+            reportParams[UT_ORIGIN_FROM] = self.viewModel.detailTracerDic[UT_ORIGIN_FROM]?:UT_BE_NULL;
+            reportParams[UT_ORIGIN_SEARCH_ID] = self.viewModel.detailTracerDic[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
+            reportParams[@"realtor_id"] = self.realtorId?:UT_BE_NULL;
+            reportParams[@"request_id"] = self.requestId?:UT_BE_NULL;
+            
+            NSString *queryParam = [[reportParams JSONRepresentation] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            if(reportUrl.length > 0) {
+                reportUrl = [reportUrl stringByAppendingFormat:@"&report_params=%@", queryParam];
+            }
+            
             break;
         }
     }
@@ -306,13 +325,7 @@
         NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
         NSString *urlStr = [NSString stringWithFormat:@"%@%@",host,reportUrl];
         NSMutableDictionary *info = [NSMutableDictionary dictionaryWithDictionary: @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"}];
-        if(!isEmptyString(self.requestId)) {
-            info[@"request_id"] = self.requestId;
-            
-        }
-        if(!isEmptyString(self.realtorId)) {
-            info[@"realtor_id"] = self.realtorId;
-        }
+        
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
     }
