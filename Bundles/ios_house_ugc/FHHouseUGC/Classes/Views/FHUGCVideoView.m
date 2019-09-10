@@ -138,8 +138,6 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         [self.logo addSubview:_playButton];
         self.playMovie = [[TTVCellPlayMovie alloc] init];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fontSizeChanged) name:kSettingFontSizeChangedNotification object:nil];
-        
     }
     return self;
 }
