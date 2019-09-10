@@ -272,6 +272,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSInteger limit = 0;
     if (textField == self.view.phoneInput) {
         limit = 11;
+        [self.view enableSendVerifyCodeBtn:self.view.phoneInput.text.length > 0];
     } else if (textField == self.view.varifyCodeInput) {
         limit = 6;
     }
@@ -284,7 +285,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)checkToEnableBtn {
-    [self.view enableSendVerifyCodeBtn:self.view.phoneInput.text.length > 0];
     BOOL hasPhoneInput = self.view.phoneInput.text.length > 0;
     BOOL hasVerifyCodeInput = self.view.varifyCodeInput.text.length > 0;
     BOOL confirmEnable = hasPhoneInput && (self.view.isOneKeyLogin || hasVerifyCodeInput) && self.view.acceptCheckBox.isSelected;
