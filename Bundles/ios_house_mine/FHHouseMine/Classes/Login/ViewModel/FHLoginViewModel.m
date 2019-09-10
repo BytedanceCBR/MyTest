@@ -92,6 +92,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin] showAcceptBox:YES];
     [self.view updateOneKeyLoginWithPhone:phoneNum service:isOneKeyLogin ? [self serviceNameStr] : nil];
     [self checkToEnableConfirmBtn];
+    [self.view.acceptCheckBox setSelected:NO];
     if (isOneKeyLogin) {
         [self.view enableSendVerifyCodeBtn:NO];
     }
@@ -346,7 +347,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)acceptCheckBoxChange:(BOOL)selected {
     self.view.acceptCheckBox.selected = !selected;
-    [self checkToEnableBtn];
+    [self checkToEnableConfirmBtn];
 }
 
 - (void)confirm {
