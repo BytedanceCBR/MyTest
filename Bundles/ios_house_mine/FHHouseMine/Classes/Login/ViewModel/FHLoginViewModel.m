@@ -221,7 +221,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)requestOneKeyLogin {
     __weak typeof(self) wself = self;
     [[ToastManager manager] showToast:@"正在登录中"];
-    [self traceLogin];
     [TTAccount oneKeyLoginWithCompleted:^(NSError *_Nullable error) {
         [wself handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:YES];
     }];
@@ -297,6 +296,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 #pragma mark 一键登录
 
 - (void)oneKeyLoginAction {
+    [self traceLogin];
     if (!self.view.acceptCheckBox.selected) {
         [[ToastManager manager] showToast:@"请阅读并同意《隐私政策》和相关协议"];
         return;
@@ -348,6 +348,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)acceptCheckBoxChange:(BOOL)selected {
     self.view.acceptCheckBox.selected = !selected;
     [self checkToEnableConfirmBtn];
+    if (self.view.acceptCheckBox.selected) {
+        [self traceAnnounceAgreement];
+    }
 }
 
 - (void)confirm {
@@ -373,13 +376,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
 
+    [self traceLogin];
     if (!self.view.acceptCheckBox.selected) {
         [[ToastManager manager] showToast:@"请阅读并同意《用户协议》和《隐私协议》"];
         return;
     }
 
     [[ToastManager manager] showToast:@"正在登录中"];
-    [self traceLogin];
 
     [FHMineAPI requestQuickLogin:phoneNumber smsCode:smsCode captcha:captcha completion:^(UIImage *_Nonnull captchaImage, NSNumber *_Nonnull newUser, NSError *_Nonnull error) {
         [weakSelf handleLoginResult:captchaImage phoneNum:phoneNumber smsCode:smsCode error:error isOneKeyLogin:NO];
@@ -432,11 +435,21 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }];
 }
 
+- (void)traceAnnounceAgreement {
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict].mutableCopy;
+    if (self.fromOneKeyLogin) {
+        tracerDict[@"login_type"] = @"quick_login";
+    }
+    tracerDict[@"click_position"] = @"login_agreement";
+    TRACK_EVENT(@"click_login_agreement", tracerDict);
+}
+
 - (void)traceLogin {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     if (self.fromOneKeyLogin) {
         tracerDict[@"click_position"] = @"quick_login";
     }
+    tracerDict[@"login_agreement"] = self.view.acceptCheckBox.isSelected ? @"1" : @"0";
     TRACK_EVENT(@"click_login", tracerDict);
 }
 
