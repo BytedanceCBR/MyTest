@@ -601,6 +601,7 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
     tracker.logPb = self.playerModel.logPb;
     tracker.enterFrom = self.playerModel.enterFrom;
     tracker.categoryName = self.playerModel.categoryName;
+    tracker.extraDic = self.playerModel.extraDic;
 //    tracker.authorId = self.playerModel.authorId;
     tracker.playerStateStore = self.playerStateStore;
     [tracker configureData];

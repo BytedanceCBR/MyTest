@@ -140,6 +140,10 @@
     [traceParams setValue:dictVideo[@"duration"] forKey:@"duration"];
     [traceParams setValue:dictVideo[@"percent"] forKey:@"percent"];
     
+    if(self.extraDic.count > 0){
+        [traceParams addEntriesFromDictionary:self.extraDic];
+    }
+    
     [TTTracker eventV3:@"video_over" params:traceParams];
 }
 
@@ -158,6 +162,10 @@
         [dict setValue:self.categoryName forKey:@"category_name"];
         [dict setValue:self.playerStateStore.state.playerModel.fromGid forKey:@"from_gid"];
         [dict setValue:[self.playerStateStore.state ttv_position] forKey:@"position"];
+        
+        if(self.extraDic.count > 0){
+            [dict addEntriesFromDictionary:self.extraDic];
+        }
 
         if (![TTTrackerWrapper isOnlyV3SendingEnable]){
 //            [[EnvContext shared].tracer writeEvent:@"video_play" params:dict];

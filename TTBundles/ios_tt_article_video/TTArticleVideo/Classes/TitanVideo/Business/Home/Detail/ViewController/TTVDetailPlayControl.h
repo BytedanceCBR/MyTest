@@ -47,6 +47,8 @@
 @property (nonatomic, assign) NSInteger enableTrackSDK;
 @property (nonatomic, strong) id<TTVArticleProtocol> videoInfo;
 @property (nonatomic, strong ,readonly) TTVCommodityView *commodityView;
+//外部传入的埋点字段 by xsm
+@property (nonatomic, strong) NSDictionary *extraDic;
 
 - (void)viewDidLoad;
 - (void)invalideMovieView;

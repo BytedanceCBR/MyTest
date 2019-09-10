@@ -342,20 +342,15 @@
     [statParams setValue:item.originData.logPbDic forKey:@"log_pb"];
     [statParams setValue:[article.rawAdDataString tt_JSONValue] forKey:@"raw_ad_data"];
     [statParams setValue:logExtra forKey:@"log_extra"];
-//    [statParams setValue:adid forKey:@"ad_id"];
-    
-    // articleTypeWhenPreloaded不应该为YES。如果出问题了，就用settings来控制
-//    BOOL articleTypeWhenPreloaded = [[[TTSettingsManager sharedManager] settingForKey:@"video_feedArticleTypeWhenPreloaded" defaultValue:@NO freeze:NO] boolValue];
-//    if (articleTypeWhenPreloaded) {
-//        if (item.originData.savedConvertedArticle && item.originData.savedConvertedArticle.detailInfoUpdated) {
-//            [statParams setValue:item.originData.savedConvertedArticle forKey:@"video_feed"];
-//        } else {
-//            [statParams setValue:item.originData forKey:@"video_feed"];
-//        }
-//    } else {
     [statParams setValue:item.originData forKey:@"video_feed"];
-//    }
     [statParams setValue:context.feedListViewController forKey:@"video_feedListViewController"];
+    
+    NSMutableDictionary *tracerDic = [self.cellModel.tracerDic mutableCopy];
+    tracerDic[@"page_type"] = @"video_detail";
+    NSString *reportParams = [tracerDic tt_JSONRepresentation];
+    if(reportParams){
+        [statParams setValue:reportParams forKey:@"report_params"];
+    }
     
     //打开详情页：优先判断openURL是否可以用外部schema打开，否则判断内部schema
     BOOL canOpenURL = [self openSchemaWithOpenUrl:openUrl article:article adid:adid logExtra:logExtra statParams:statParams];
@@ -367,14 +362,6 @@
         if (group_id) {
             detailURL = [NSString stringWithFormat:@"sslocal://detail?groupid=%@", group_id];
         }
-//        if (!isEmptyString(adid)) {
-//            detailURL = [detailURL stringByAppendingFormat:@"&ad_id=%@", adid];
-//            NSMutableDictionary *applinkParams = [NSMutableDictionary dictionary];
-//            [applinkParams setValue:logExtra forKey:@"log_extra"];
-//            //针对不能通过sdk和openurl打开的情况
-//            wrapperTrackEventWithCustomKeys(@"embeded_ad", @"open_url_h5", adid, nil, applinkParams);
-//        }
-        
         // 如果是视频cell且正在播放，则detach视频并传入详情页
             
         NSNumber *videoType = @(article.videoDetailInfo.videoType);

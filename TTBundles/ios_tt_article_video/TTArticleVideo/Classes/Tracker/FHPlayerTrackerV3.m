@@ -87,8 +87,12 @@
     NSString *from_gid = [log_pb tt_stringValueForKey:@"from_gid"];
     [dict setValue: from_gid forKey:@"from_gid"];
     
+    if(self.extraDic.count > 0){
+        [dict addEntriesFromDictionary:self.extraDic];
+    }
+    
 //    [[EnvContext shared].tracer writeEvent:@"enter_fullscreen" params:dict];
-    [FHEnvContext recordEvent:dic andEventKey:@"enter_fullscreen"];
+    [FHEnvContext recordEvent:dict andEventKey:@"enter_fullscreen"];
 }
 
 - (void)existFullScreenTrack:(TTVPlayerExitFullScreeenType)type

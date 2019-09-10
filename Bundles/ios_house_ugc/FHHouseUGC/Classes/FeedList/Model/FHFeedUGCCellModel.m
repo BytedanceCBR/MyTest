@@ -563,6 +563,16 @@
     return desc;
 }
 
+- (void)setCategoryId:(NSString *)categoryId {
+    _categoryId = categoryId;
+    _videoItem.categoryId = categoryId;
+}
+
+- (void)setTracerDic:(NSDictionary *)tracerDic {
+    _tracerDic = tracerDic;
+    _videoItem.extraDic = [tracerDic copy];
+}
+
 + (FHFeedUGCCellModel *)modelFromFake {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.groupId = @"1000051";

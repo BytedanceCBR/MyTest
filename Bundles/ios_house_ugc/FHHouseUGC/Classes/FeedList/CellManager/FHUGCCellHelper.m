@@ -343,7 +343,7 @@
     item.categoryId = cellModel.categoryId;
     item.hideTitleAndWatchCount = YES;
     item.refer = 1;
-//    item.cellSeparatorStyle = ttv_feedListCellSeparatorStyleByTotalAndRow(array.count, i);
+
     item.cellAction = [[TTVFeedCellVideoAction alloc] init];
     item.isFirstCached = NO;
     item.followedWhenInit = NO;
