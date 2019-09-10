@@ -414,6 +414,7 @@
                            @"ugcSocialGroup":@"ugc_social_group",
                            @"houseReviewComment":@"house_review_comments",
                            @"userHouseComments": @"user_evaluations",
+                           @"recommendedRealtorsTitle": @"recommended_realtors_title",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
