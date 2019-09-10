@@ -66,6 +66,7 @@
     if(!err){
         FHUGCFeedListCellType type = [dic[@"cell_type"] integerValue];
         BOOL hasVideo = [dic[@"has_video"] boolValue];
+        NSInteger videoStyle = [dic[@"video_style"] integerValue];
         Class cls = nil;
         if(type == FHUGCFeedListCellTypeUGC){
             cls = [FHFeedUGCContentModel class];
@@ -90,13 +91,14 @@
         }
         
         //视频类型，需要先转成 TTFeedItemContentStructModel
-        if(type == FHUGCFeedListCellTypeArticle && hasVideo){
+        if(type == FHUGCFeedListCellTypeArticle && hasVideo && videoStyle > 0){
             cls = [TTFeedItemContentStructModel class];
             id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:cls error:&backError];
             if(!backError && [model isKindOfClass:[TTFeedItemContentStructModel class]]){
                 TTFeedItemContentStructModel *fModel = (TTFeedItemContentStructModel *)model;
                 TTVFeedItem *item = [TTVFeedItem FeedItemWithContentStruct:fModel];
                 cellModel.videoFeedItem = item;
+                cellModel.videoItem = [FHUGCCellHelper configureVideoItem:cellModel];
             }
         }
     }
@@ -130,9 +132,7 @@
     cellModel.community = community;
     //处理其他数据
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle){
-        if(model.hasVideo && ([model.videoStyle integerValue] == 2 || [model.videoStyle integerValue] == 8)){
-//            TTFeedItemContentStructModel
-            
+        if(model.hasVideo && [model.videoStyle integerValue] > 0){
             //视频
             cellModel.hasVideo = model.hasVideo;
             cellModel.content = model.title;

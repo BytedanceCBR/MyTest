@@ -308,7 +308,7 @@
         //视频
         if(cellModel.hasVideo){
             FHUGCVideoCell *cellBase = (FHUGCVideoCell *)cell;
-            TTVFeedListItem *item = cellBase.videoItem;
+//            TTVFeedListItem *item = cellBase.videoItem;
             
             [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
             [self willFinishLoadTable];
@@ -545,21 +545,7 @@
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
     }
-    self.needRefreshCell = YES;
-    // 埋点
-//    NSMutableDictionary *traceParam = @{}.mutableCopy;
-//    traceParam[@"enter_from"] = @"hot_discuss_feed";
-//    traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
-//    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
-//    traceParam[@"log_pb"] = cellModel.logPb;
-//    dict[TRACER_KEY] = traceParam;
-    
-//    dict[@"data"] = cellModel;
-//    dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
-//    dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
-    
-//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//    FHFeedUGCContentModel *contentModel = cellModel.originData;
+    self.needRefreshCell = NO;
 }
 
 #pragma mark - FHUGCBaseCellDelegate

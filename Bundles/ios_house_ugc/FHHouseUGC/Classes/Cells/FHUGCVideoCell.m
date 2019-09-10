@@ -28,6 +28,9 @@
 #import <TTVFeedItem+TTVArticleProtocolSupport.h>
 #import <JSONAdditions.h>
 #import <TTVideoShareMovie.h>
+#import <ReactiveObjC/ReactiveObjC.h>
+#import <TTVFeedUserOpDataSyncMessage.h>
+#import <SSCommonLogic.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -38,7 +41,7 @@
 #define guideViewHeight 17
 #define topMargin 20
 
-@interface FHUGCVideoCell ()<TTUGCAttributedLabelDelegate,TTVFeedPlayMovie>
+@interface FHUGCVideoCell ()<TTUGCAttributedLabelDelegate,TTVFeedPlayMovie,TTVFeedUserOpDataSyncMessage>
 
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
@@ -68,7 +71,12 @@
     return self;
 }
 
+- (void)dealloc {
+    UNREGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
+}
+
 - (void)initUIs {
+    REGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
     [self initViews];
     [self initConstraints];
 }
@@ -91,6 +99,8 @@
     
     self.videoViewheight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * 188.0/335.0;
     self.videoView = [[FHUGCVideoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, self.videoViewheight)];
+    _videoView.layer.masksToBounds = YES;
+    _videoView.layer.cornerRadius = 4;
     [self.contentView addSubview:_videoView];
 
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
@@ -160,14 +170,6 @@
     BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
     self.bottomView.position.text = cellModel.community.name;
     [self.bottomView showPositionView:showCommunity];
-    
-    NSInteger commentCount = [cellModel.commentCount integerValue];
-    if(commentCount == 0){
-        [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
-    }else{
-        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
-    }
-    [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.content)){
@@ -189,8 +191,11 @@
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
     }
     //处理视频
-    self.videoItem = [FHUGCCellHelper configureVideoItem:cellModel];
+    self.videoItem = cellModel.videoItem;
     self.videoView.cellEntity = self.videoItem;
+    
+    [self updateCommentButton];
+    [self updateDiggButton];
     
     [self showGuideView];
 }
@@ -262,6 +267,20 @@
     if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
         [self.delegate goToCommunityDetail:self.cellModel];
     }
+}
+
+- (void)updateCommentButton {
+    NSInteger  commentCount = self.videoItem.article.commentCount;
+    if(commentCount == 0){
+        [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
+    }else{
+        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
+    }
+}
+
+- (void)updateDiggButton {
+    NSString *diggCount = [NSString stringWithFormat:@"%d",self.videoItem.article.diggCount];
+    [self.bottomView updateLikeState:diggCount userDigg:(self.videoItem.article.userDigg ? @"1" : @"0")];
 }
 
 - (void)willDisplay {
@@ -556,6 +575,35 @@
         
     }];
 
+}
+
+#pragma mark - TTVFeedUserOpDataSyncMessage
+
+- (void)ttv_message_feedDiggChanged:(BOOL)userDigg uniqueIDStr:(NSString *)uniqueIDStr {
+    id<TTVArticleProtocol> article = nil;
+    [self feedCollectChanged:userDigg uniqueIDStr:uniqueIDStr forKey:@keypath(article, userDigg)];
+}
+
+- (void)ttv_message_feedDiggCountChanged:(int)diggCount uniqueIDStr:(NSString *)uniqueIDStr {
+    id<TTVArticleProtocol> article = nil;
+    [self feedCollectChanged:diggCount uniqueIDStr:uniqueIDStr forKey:@keypath(article, diggCount)];
+}
+
+- (void)ttv_message_feedCommentCountChanged:(int)commentCount uniqueIDStr:(NSString *)uniqueIDStr {
+    id<TTVArticleProtocol> article = nil;
+    [self feedCollectChanged:commentCount uniqueIDStr:uniqueIDStr forKey:@keypath(article, commentCount)];
+}
+
+- (void)feedCollectChanged:(int)status uniqueIDStr:(NSString *)uniqueIDStr forKey:(NSString *)key {
+    if ([self.videoItem.originData.uniqueIDStr isEqualToString:uniqueIDStr]) {
+        [self.videoItem.originData setValue:@(status) forKey:key];
+        
+        if([key isEqualToString:@"diggCount"] || [key isEqualToString:@"userDigg"]){
+            [self updateDiggButton];
+        }if([key isEqualToString:@"commentCount"]){
+            [self updateCommentButton];
+        }
+    }
 }
 
 @end

@@ -33,6 +33,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTArticleBase/SSCommonLogic.h>
+#import <UIFont+House.h>
 
 extern CGFloat ttvs_listVideoMaxHeight(void);
 extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
@@ -86,14 +87,14 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _logo = [[TTImageView alloc] initWithFrame:CGRectZero];
         _logo.imageContentMode = TTImageViewContentModeScaleAspectFill;
-        _logo.dayModeCoverHexString = @"00000033";
+//        _logo.dayModeCoverHexString = @"00000033";
         _logo.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_logo];
         
-        UIImage *topMaskImage = [[UIImage imageNamed:@"thr_shadow_video"] resizableImageWithCapInsets:UIEdgeInsetsZero];
-        _topMaskView = [[UIImageView alloc] initWithImage:topMaskImage];
-        _topMaskView.frame = CGRectMake(0, 0, self.width, kTopMaskH);
-        [self.logo addSubview:_topMaskView];
+//        UIImage *topMaskImage = [[UIImage imageNamed:@"thr_shadow_video"] resizableImageWithCapInsets:UIEdgeInsetsZero];
+//        _topMaskView = [[UIImageView alloc] initWithImage:topMaskImage];
+//        _topMaskView.frame = CGRectMake(0, 0, self.width, kTopMaskH);
+//        [self.logo addSubview:_topMaskView];
         
         _videoTitleLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];
         _videoTitleLabel.backgroundColor = [UIColor clearColor];
@@ -116,13 +117,13 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         
         _videoRightBottomLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(0, 0, kCellPicLabelWidth, kCellPicLabelHeight)];
         _videoRightBottomLabel.backgroundColor = [UIColor clearColor];
-        _videoRightBottomLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:10]];
-        _videoRightBottomLabel.textColorThemeKey = kColorText12;
+        _videoRightBottomLabel.font = [UIFont themeFontRegular:10];
+        _videoRightBottomLabel.textColor = [UIColor whiteColor];
         _videoRightBottomLabel.textAlignment = NSTextAlignmentCenter;
         
         _videoRightBottomLabelImageView = [[UIImageView alloc] init];
         CGSize imageSize = CGSizeMake(_videoRightBottomLabel.size.width, _videoRightBottomLabel.size.height);
-        UIImage *videoRightBottomLabelImage = [UIImage imageWithSize:imageSize cornerRadius:MIN(imageSize.width, imageSize.height) / 2 backgroundColor:[UIColor colorWithHexString:@"00000080"]];
+        UIImage *videoRightBottomLabelImage = [UIImage imageWithSize:imageSize cornerRadius:MIN(imageSize.width, imageSize.height) / 2 backgroundColor:[UIColor colorWithHexString:@"00000050"]];
         videoRightBottomLabelImage = [videoRightBottomLabelImage stretchableImageWithLeftCapWidth:videoRightBottomLabelImage.size.width / 2.0 topCapHeight:videoRightBottomLabelImage.size.height / 2.0];
         _videoRightBottomLabelImageView.image = videoRightBottomLabelImage;
         [_videoRightBottomLabelImageView sizeToFit];
@@ -131,7 +132,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         [self.logo addSubview:_videoRightBottomLabel];
         
         _playButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-        NSString *imageName = [TTDeviceHelper isPadDevice] ? @"FullPlay" : @"Play";
+        NSString *imageName = @"fh_ugc_icon_videoplay";
         _playButton.imageName = imageName;
         [_playButton addTarget:self action:@selector(playButtonClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.logo addSubview:_playButton];
