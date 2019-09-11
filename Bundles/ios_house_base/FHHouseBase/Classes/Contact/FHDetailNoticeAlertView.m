@@ -259,9 +259,9 @@
         make.right.mas_equalTo(-20);
     }];
     [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(14);
-        make.top.mas_equalTo(self.submitBtn.mas_bottom).mas_offset(13);
-        make.bottom.mas_equalTo(self.contentView).mas_offset(-13);
+        make.height.mas_equalTo(17);
+        make.top.mas_equalTo(self.submitBtn.mas_bottom).mas_offset(11);
+        make.bottom.mas_equalTo(self.contentView).mas_offset(-12);
         make.centerX.mas_equalTo(self.contentView);
     }];
     [self.closeBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
@@ -612,9 +612,11 @@
 {
     if (!_tipLabel) {
         _tipLabel = [[UILabel alloc]init];
-        _tipLabel.font = [UIFont themeFontRegular:10];
+        _tipLabel.font = [UIFont themeFontRegular:12];
         _tipLabel.textColor = [UIColor themeGray4];
-        _tipLabel.text = @"提交即视为同意《个人信息保护声明》";
+        NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@"提交即视为同意《个人信息保护声明》"];
+        [attrStr addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(8, @"个人信息保护声明".length)];
+        _tipLabel.attributedText = attrStr;
     }
     return _tipLabel;
 }

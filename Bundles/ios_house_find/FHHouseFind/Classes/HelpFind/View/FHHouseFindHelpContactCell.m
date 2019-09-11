@@ -6,6 +6,8 @@
 //
 
 #import "FHHouseFindHelpContactCell.h"
+#import "TTRoute.h"
+#import "FHURLSettings.h"
 
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
@@ -19,6 +21,7 @@
 @property(nonatomic, strong) UIView *singleLine;
 @property(nonatomic, strong) UIView *singleLine2;
 @property(nonatomic, strong) UILabel *tipLabel;
+@property(nonatomic, strong) UILabel *announceLabel;
 
 @end
 
@@ -41,6 +44,7 @@
     [self.contentView addSubview:self.singleLine];
     [self.contentView addSubview:self.singleLine2];
     [self.contentView addSubview:self.tipLabel];
+    [self.contentView addSubview:self.announceLabel];
     [self.sendVerifyCodeBtn addTarget:self action:@selector(sendVerifyCode) forControlEvents:UIControlEventTouchUpInside];
     self.sendVerifyCodeBtn.enabled = NO;
     [self.phoneInput mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -81,6 +85,12 @@
         make.left.right.mas_equalTo(self.phoneInput);
         make.top.mas_equalTo(self.singleLine2.mas_bottom).mas_offset(20);
 //        make.bottom.mas_equalTo(-20);
+    }];
+
+    [self.announceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.tipLabel);
+        make.top.mas_equalTo(self.tipLabel.mas_bottom);
+        make.height.mas_equalTo(14);
     }];
 }
 
@@ -125,6 +135,13 @@
 - (void)enableSendVerifyCodeBtn:(BOOL)enabled
 {
     self.sendVerifyCodeBtn.enabled = enabled;
+}
+
+-(void)legalAnnouncementClick{
+    NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
+    NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
+    [[TTRoute sharedRoute]openURLByPushViewController:url];
 }
 
 - (UITextField *)phoneInput
@@ -196,6 +213,23 @@
         _tipLabel.font = [UIFont themeFontRegular:10];
     }
     return _tipLabel;
+}
+
+- (UILabel *)announceLabel {
+    if (!_announceLabel) {
+        _announceLabel = [[UILabel alloc] init];
+        NSMutableAttributedString* attrText = [[NSMutableAttributedString alloc] initWithString:@"点击提交即视为同意《个人信息保护声明》"];
+        [attrText addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(10, @"个人信息保护声明".length)];
+        _announceLabel.attributedText= attrText;
+        _announceLabel.numberOfLines = 0;
+        _announceLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        _announceLabel.textColor = [UIColor themeGray3];
+        _announceLabel.font = [UIFont themeFontRegular:10];
+        UITapGestureRecognizer *tipTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(legalAnnouncementClick)];
+        _announceLabel.userInteractionEnabled = YES;
+        [_announceLabel addGestureRecognizer:tipTap];
+    }
+    return _announceLabel;
 }
 
 @end
