@@ -308,15 +308,10 @@
         //视频
         if(cellModel.hasVideo){
             FHUGCVideoCell *cellBase = (FHUGCVideoCell *)cell;
-//            TTVFeedListItem *item = cellBase.videoItem;
-            
             [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
             [self willFinishLoadTable];
             
             [cellBase willDisplay];
-            
-//            [self attachVideoIfNeededForCell:cell data:item];
-
         }
     }
 }
@@ -722,14 +717,6 @@
     self.movieView = nil;
     [self.movieViews removeAllObjects];
 }
-
-//- (void)attachVideoIfNeededForCell:(UITableViewCell *)cell data:(id)obj
-//{
-//    if (obj == self.movieViewCellData && self.movieView && [cell respondsToSelector:@selector(cell_attachMovieView:)]) {
-//        id<TTVFeedPlayMovie> videoCell = (id<TTVFeedPlayMovie>)cell;
-//        [videoCell cell_attachMovieView:self.movieView];
-//    }
-//}
 
 #pragma mark - 埋点
 
