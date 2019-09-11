@@ -1497,6 +1497,7 @@ static const CGFloat kFloatingViewOriginY = 230;
             self.model.commentCount = [self.commentManager totalCommentCount];
             NSMutableDictionary *userInfo = @{}.mutableCopy;
             userInfo[@"group_id"] = self.model.groupID;
+            userInfo[@"comment_conut"] = @(self.model.commentCount);
             [[NSNotificationCenter defaultCenter] postNotificationName:kPostMessageFinishedNotification
                                                                 object:nil
                                                               userInfo:userInfo];

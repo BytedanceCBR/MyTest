@@ -44,6 +44,8 @@
 
 - (void)initNotification {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
+    // 评论数变化通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentCountChange:) name:@"kPostMessageFinishedNotification" object:nil];
 }
 
 - (void)dealloc {
@@ -318,6 +320,26 @@
                 self.cellModel.videoFeedItem.article.userDigg = user_digg;
             }
             [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
+        }
+    }
+}
+
+// 评论数变化
+- (void)commentCountChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    
+    if(userInfo){
+        NSInteger comment_conut = [userInfo[@"comment_conut"] integerValue];
+        NSString *groupId = userInfo[@"group_id"];
+        if (groupId.length > 0 && [groupId isEqualToString:self.cellModel.groupId]) {
+            NSInteger commentCount = comment_conut;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if(commentCount == 0){
+                    [self.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
+                }else{
+                    [self.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
+                }
+            });
         }
     }
 }
