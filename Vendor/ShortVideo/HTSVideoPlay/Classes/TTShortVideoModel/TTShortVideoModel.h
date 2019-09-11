@@ -83,6 +83,9 @@
 @property (nonatomic, strong) TSVChallengeInfo<Optional> *challengeInfo;
 @property (nonatomic, strong) TSVCheckChallenge<Optional> *checkChallenge;
 
+//外面传的埋点信息 by xsm
+@property (nonatomic, strong) NSDictionary<Optional> *extraDic;
+
 - (void)save;
 - (BOOL)isAuthorMyself;
 - (void)removeVideoPlayAddressFromUserDefault;
