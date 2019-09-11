@@ -22,25 +22,26 @@
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
 
-@interface FHLoginViewModel () <FHLoginViewDelegate>
+@interface FHLoginViewModel()<FHLoginViewDelegate>
 
-@property(nonatomic, weak) FHLoginViewController *viewController;
-@property(nonatomic, strong) FHLoginView *view;
-@property(nonatomic, assign) BOOL isRequestingSMS;
-@property(nonatomic, strong) NSTimer *timer;
-@property(nonatomic, assign) NSInteger verifyCodeRetryTime;
+@property(nonatomic , weak) FHLoginViewController *viewController;
+@property(nonatomic , strong) FHLoginView *view;
+@property(nonatomic , assign) BOOL isRequestingSMS;
+@property(nonatomic , strong) NSTimer *timer;
+@property(nonatomic , assign) NSInteger verifyCodeRetryTime;
 //是否重新是重新发送验证码
-@property(nonatomic, assign) BOOL isVerifyCodeRetry;
-@property(nonatomic, copy) NSString *oneKeyPhone;
+@property(nonatomic , assign) BOOL isVerifyCodeRetry;
+@property(nonatomic , copy) NSString *oneKeyPhone;
 
 @end
 
 @implementation FHLoginViewModel
 
-- (instancetype)initWithView:(FHLoginView *)view controller:(FHLoginViewController *)viewController; {
+- (instancetype)initWithView:(FHLoginView *)view controller:(FHLoginViewController *)viewController;
+{
     self = [super init];
     if (self) {
-
+        
         view.delegate = self;
         _needPopVC = YES;
         _view = view;
@@ -66,8 +67,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 #pragma mark - 一键登录
-
-- (void)startLoadData {
+- (void)startLoadData
+{
     if (![TTReachability isNetworkConnected]) {
         [self showOneKeyLoginView:NO phoneNum:nil];
         return;
@@ -99,43 +100,17 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self addEnterCategoryLog];
 }
 
-- (BOOL)getOneKeyLoginSwitchOff {
-    BOOL disableTelecom = NO;
-    BOOL disableUnicom = NO;
-    BOOL disableMobile = NO;
-    NSDictionary *fhSettings = [FHLoginViewModel fhSettings];
-    NSDictionary *loginSettings = [fhSettings tt_dictionaryValueForKey:@"login_settings"];
-    if (loginSettings) {
-        disableTelecom = [loginSettings tt_boolValueForKey:@"disable_telecom"];
-        disableUnicom = [loginSettings tt_boolValueForKey:@"disable_unicom"];
-        disableMobile = [loginSettings tt_boolValueForKey:@"disable_mobile"];
-    }
-    NSString *service = [TTAccount sharedAccount].service;
-    if ([service isEqualToString:TTAccountMobile]) {
-        return disableMobile;
-    } else if ([service isEqualToString:TTAccountUnion]) {
-        return disableUnicom;
-    } else if ([service isEqualToString:TTAccountTelecom]) {
-        return disableTelecom;
-    }
-}
-
-- (void)getOneKeyLoginPhoneNum {
-    __weak typeof(self) wself = self;
+- (void)getOneKeyLoginPhoneNum
+{
+    __weak typeof(self)wself = self;
     NSString *serviceName = [TTAccount sharedAccount].service;
     if (serviceName.length < 1) {
         [self showOneKeyLoginView:NO phoneNum:nil];
         return;
     }
-
-    BOOL isSwitchOff = [self getOneKeyLoginSwitchOff];
-    if (isSwitchOff) {
-        [self showOneKeyLoginView:NO phoneNum:nil];
-        return;
-    }
-
+    
     // 注意获取完手机号之后长期不登录的异常结果
-    [TTAccount getOneKeyLoginPhoneNumberCompleted:^(NSString *_Nullable phoneNumber, NSString *_Nullable serviceName, NSError *_Nullable error) {
+    [TTAccount getOneKeyLoginPhoneNumberCompleted:^(NSString * _Nullable phoneNumber, NSString * _Nullable serviceName, NSError * _Nullable error) {
         BOOL showOneKeyLogin = !error && phoneNumber.length > 0;
         [wself showOneKeyLoginView:showOneKeyLogin phoneNum:phoneNumber];
     }];
@@ -149,9 +124,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSRange privacyRange;
     NSString *urlStr = nil;
     NSDictionary *commonTextStyle = @{
-            NSFontAttributeName: [UIFont themeFontRegular:13],
-            NSForegroundColorAttributeName: [UIColor themeGray3],
-    };
+                                      NSFontAttributeName: [UIFont themeFontRegular:13],
+                                      NSForegroundColorAttributeName: [UIColor themeGray3],
+                                      };
     if (isOneKeyLogin) {
         if ([[TTAccount sharedAccount].service isEqualToString:TTAccountMobile]) {
             attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国移动认证服务条款》以及《幸福里用户协议》和《隐私政策》"];
@@ -177,7 +152,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [attrText yy_setTextUnderline:decoration range:serviceRange];
         [attrText yy_setTextUnderline:decoration range:userProtocolRange];
         [attrText yy_setTextUnderline:decoration range:privacyRange];
-
+        
         [attrText yy_setTextHighlightRange:serviceRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
             [wself goToServiceProtocol:urlStr];
         }];
@@ -232,52 +207,52 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (_isHideKeyBoard) {
         return;
     }
-
+    
     NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
     NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
-
+    
     [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions) [curve integerValue] animations:^{
-
+        
         [UIView setAnimationBeginsFromCurrentState:YES];
         self.view.scrollView.contentOffset = CGPointMake(0, 120);
         self.viewController.customNavBarView.title.hidden = NO;
-
-    }                completion:^(BOOL finished) {
-
+        
+    }completion:^(BOOL finished) {
+        
     }];
 }
 
 - (void)keyboardWillHideNotifiction:(NSNotification *)notification {
     NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
     NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
-
-    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions) [curve integerValue] animations:^{
+    
+    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
         [UIView setAnimationBeginsFromCurrentState:YES];
         self.view.scrollView.contentOffset = CGPointMake(0, 0);
         self.viewController.customNavBarView.title.hidden = YES;
-
-    }                completion:^(BOOL finished) {
-
+        
+    } completion:^(BOOL finished) {
+        
     }];
 }
 
 #pragma mark -- textFieldDidChange
 
 - (void)textFieldDidChange:(NSNotification *)notification {
-    UITextField *textField = (UITextField *) notification.object;
+    UITextField *textField = (UITextField *)notification.object;
     if (textField != self.view.phoneInput && textField != self.view.varifyCodeInput) {
         return;
     }
     NSString *text = textField.text;
     NSInteger limit = 0;
-    if (textField == self.view.phoneInput) {
+    if(textField == self.view.phoneInput){
         limit = 11;
         [self.view enableSendVerifyCodeBtn:self.view.phoneInput.text.length > 0];
     } else if (textField == self.view.varifyCodeInput) {
         limit = 6;
     }
-
-    if (text.length > limit) {
+    
+    if(text.length > limit){
         textField.text = [text substringToIndex:limit];
     }
     //设置登录和获取验证码是否可点击
@@ -305,21 +280,21 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 #pragma mark 其他方式登录
-
-- (void)otherLoginAction {
+- (void)otherLoginAction
+{
     self.fromOtherLogin = YES;
     [self showOneKeyLoginView:NO phoneNum:nil];
 }
 
 - (void)goToServiceProtocol:(NSString *)urlStr {
     self.noDismissVC = YES;
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://webview?url=%@", urlStr]];
+    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://webview?url=%@",urlStr]];
     NSString *title = @"";
     if ([[TTAccount sharedAccount].service isEqualToString:TTAccountMobile]) {
         title = @"中国移动认证服务条款";
-    } else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountTelecom]) {
+    }else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountTelecom]) {
         title = @"中国电信认证服务协议";
-    } else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountUnion]) {
+    }else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountUnion]) {
         title = @"中国联通服务与隐私协议";
     }
     NSMutableDictionary *info = @{}.mutableCopy;
@@ -327,29 +302,30 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     info[@"title"] = title;
     NSString *jsCodeStr = [NSString stringWithFormat:@"var importStyle=function importStyle(b){var a=document.createElement(\"style\"),c=document;c.getElementsByTagName(\"head\")[0].appendChild(a);if(a.styleSheet){a.styleSheet.cssText=b}else{a.appendChild(c.createTextNode(b))}};importStyle('.ag-faq-lists { box-sizing: border-box;} .ag-faq-lists .faq-lists-li .icons-next { right:15px !important}')"];
     info[@"extra_js"] = jsCodeStr;
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
-- (void)goToUserProtocol {
+- (void)goToUserProtocol
+{
     self.noDismissVC = YES;
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1", [FHMineAPI host]];
-    NSURL *url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1",[FHMineAPI host]];
+    NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
-- (void)goToSecretProtocol {
+- (void)goToSecretProtocol
+{
     self.noDismissVC = YES;
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/private_policy.html&title=隐私政策&hide_more=1", [FHMineAPI host]];
-    NSURL *url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/private_policy.html&title=隐私政策&hide_more=1",[FHMineAPI host]];
+    NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
 - (void)acceptCheckBoxChange:(BOOL)selected {
     self.view.acceptCheckBox.selected = !selected;
-    [self checkToEnableConfirmBtn];
-    if (self.view.acceptCheckBox.selected) {
-        [self traceAnnounceAgreement];
+    if(!self.view.acceptCheckBox.selected){
+        [[ToastManager manager] showToast:@"请阅读并同意幸福里用户协议"];
     }
 }
 
@@ -360,30 +336,30 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)quickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha {
     __weak typeof(self) weakSelf = self;
-
+    
     if (![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]) {
         [[ToastManager manager] showToast:@"手机号错误"];
         return;
     }
-
+    
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络错误"];
         return;
     }
-
-    if (smsCode.length == 0) {
+    
+    if(smsCode.length == 0){
         [[ToastManager manager] showToast:@"验证码为空"];
         return;
     }
-
+    
     [self traceLogin];
     if (!self.view.acceptCheckBox.selected) {
         [[ToastManager manager] showToast:@"请阅读并同意《用户协议》和《隐私政策》"];
         return;
     }
-
+    
     [[ToastManager manager] showToast:@"正在登录中"];
-
+    
     [FHMineAPI requestQuickLogin:phoneNumber smsCode:smsCode captcha:captcha completion:^(UIImage *_Nonnull captchaImage, NSNumber *_Nonnull newUser, NSError *_Nonnull error) {
         [weakSelf handleLoginResult:captchaImage phoneNum:phoneNumber smsCode:smsCode error:error isOneKeyLogin:NO];
     }];
@@ -431,7 +407,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             NSLog(@"%@-%@ > Error", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
         }
 #endif
-
+        
     }];
 }
 
@@ -483,28 +459,28 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)sendVerifyCodeWithCaptcha:(NSString *)captcha {
     [self.view endEditing:YES];
-
+    
     __weak typeof(self) weakSelf = self;
     NSString *phoneNumber = self.view.phoneInput.text;
-
+    
     if (![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]) {
         [[ToastManager manager] showToast:@"手机号错误"];
         return;
     }
-
+    
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络错误"];
         return;
     }
-
+    
     if (self.isRequestingSMS) {
         return;
     }
-
+    
     self.isRequestingSMS = YES;
     [[ToastManager manager] showToast:@"正在获取验证码"];
     [self traceVerifyCode];
-
+    
     [FHMineAPI requestSendVerifyCode:phoneNumber captcha:captcha completion:^(NSNumber *_Nonnull retryTime, UIImage *_Nonnull captchaImage, NSError *_Nonnull error) {
         if (!error) {
             [weakSelf blockRequestSendMessage:[retryTime integerValue]];
@@ -534,7 +510,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             NSLog(@"%@-%@ > Error", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
         }
 #endif
-
+        
     }];
 }
 
@@ -559,7 +535,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (self.verifyCodeRetryTime < 0) {
         self.verifyCodeRetryTime = 0;
     }
-
+    
     if (self.verifyCodeRetryTime == 0) {
         [self stopTimer];
         [self.view setButtonContent:@"重新发送" font:[UIFont themeFontRegular:14] color:[UIColor themeGray1] state:UIControlStateNormal btn:self.view.sendVerifyCodeBtn];
