@@ -313,6 +313,10 @@
             }
             
             self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
+            if (self.cellModel.hasVideo) {
+                self.cellModel.videoFeedItem.article.diggCount = diggCount;
+                self.cellModel.videoFeedItem.article.userDigg = user_digg;
+            }
             [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
         }
     }
