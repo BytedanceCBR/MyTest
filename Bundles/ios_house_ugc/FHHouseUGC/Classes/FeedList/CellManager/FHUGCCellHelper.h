@@ -46,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 //cellModel转视频模型
 + (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel;
 
++ (TTImageInfosModel *)convertTTImageInfosModel:(FHFeedContentImageListModel *)imageModel;
+
 @end
 
 NS_ASSUME_NONNULL_END

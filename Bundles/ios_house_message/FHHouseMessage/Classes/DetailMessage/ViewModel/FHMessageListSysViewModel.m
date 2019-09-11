@@ -173,6 +173,11 @@
         url = [NSURL URLWithString:newModelUrl];
     }
     
+    if (url && ([[url absoluteString] containsString:@"home"] || [[url absoluteString] containsString:@"main"])) {
+        [[TTRoute sharedRoute] openURL:url userInfo:nil objHandler:nil];
+        return;
+    }
+    
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 

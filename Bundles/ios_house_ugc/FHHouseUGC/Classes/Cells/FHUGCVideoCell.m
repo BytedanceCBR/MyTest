@@ -101,6 +101,8 @@
     self.videoView = [[FHUGCVideoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, self.videoViewheight)];
     _videoView.layer.masksToBounds = YES;
     _videoView.layer.cornerRadius = 4;
+    _videoView.layer.borderColor = [[UIColor themeGray6] CGColor];
+    _videoView.layer.borderWidth = 0.5;
     [self.contentView addSubview:_videoView];
 
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
