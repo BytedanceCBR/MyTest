@@ -440,6 +440,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (self.fromOneKeyLogin) {
         tracerDict[@"login_type"] = @"quick_login";
     }
+    if (self.fromOtherLogin) {
+        tracerDict[@"enter_from"] = @"quick_login";
+        tracerDict[@"enter_type"] = @"other_login";
+    }
     tracerDict[@"click_position"] = @"login_agreement";
     TRACK_EVENT(@"click_login_agreement", tracerDict);
 }
