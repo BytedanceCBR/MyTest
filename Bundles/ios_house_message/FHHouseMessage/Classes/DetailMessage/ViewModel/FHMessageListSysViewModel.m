@@ -172,8 +172,8 @@
         NSString *newModelUrl = [model.openUrl stringByReplacingOccurrencesOfString:@"fschema:" withString:@"snssdk1370:"];
         url = [NSURL URLWithString:newModelUrl];
     }
-    
-    if (url && [[url absoluteString] containsString:@"home"]) {
+
+    if (url && ([@"home" isEqualToString:[url host]] || [@"main" isEqualToString:[url host]])) {
         [[TTRoute sharedRoute] openURL:url userInfo:nil objHandler:nil];
         return;
     }
