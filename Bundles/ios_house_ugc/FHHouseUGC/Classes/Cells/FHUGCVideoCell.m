@@ -349,6 +349,9 @@
     
     NSMutableDictionary *tracerDic = [self.cellModel.tracerDic mutableCopy];
     tracerDic[@"page_type"] = @"video_detail";
+    if(context.enterType){
+        tracerDic[@"enter_type"] = context.enterType;
+    }
     NSString *reportParams = [tracerDic tt_JSONRepresentation];
     if(reportParams){
         [statParams setValue:reportParams forKey:@"report_params"];
