@@ -504,9 +504,9 @@
         _avatarView.contentMode = UIViewContentModeScaleAspectFill;
         _avatarView.borderColor = [UIColor clearColor];
 //        _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
-        [_avatarView setupVerifyViewForLength:[TTUniversalCommentCellLiteHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
-            return [TTUniversalCommentCellLiteHelper verifyLogoSize:standardSize];
-        }];
+//        [_avatarView setupVerifyViewForLength:[TTUniversalCommentCellLiteHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//            return [TTUniversalCommentCellLiteHelper verifyLogoSize:standardSize];
+//        }];
         // add by zjing 去掉头像点击
 //        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }

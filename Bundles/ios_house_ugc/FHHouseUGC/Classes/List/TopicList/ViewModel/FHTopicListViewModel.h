@@ -13,4 +13,10 @@
 - (instancetype)initWithController:(FHTopicListController *)viewController tableView:(UITableView *)tableView;
 
 - (void)requestData:(BOOL)isLoadMore;
+
+- (void)addEnterCategoryLog;
+
+- (void)addStayCategoryLog:(NSTimeInterval)stayTime;
+
+- (void)addCategoryRefreshLog: (BOOL)isLoadMore;
 @end

@@ -35,7 +35,7 @@
 #import <BDALog/BDAgileLog.h>
 #import "TTUGCImageHelper.h"
 #import <BDImage.h>
-// #import <TTScanQrCode/TTScanQrCodeManager.h>
+#import "TTUGCImageKitchen.h"
 
 static const CGFloat kMinZoomScale = 1.f;
 static const CGFloat kMaxZoomScale = 2.5f;

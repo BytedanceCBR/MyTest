@@ -1,6 +1,36 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 NS_ASSUME_NONNULL_BEGIN
+@interface FHFeedContentRawDataVoteModel : JSONModel
+
+@property (nonatomic, assign) BOOL needUserLogin;
+@property (nonatomic, copy , nullable) NSString *voteId;
+@property (nonatomic, copy , nullable) NSString *rightName;
+@property (nonatomic, copy , nullable) NSString *leftValue;
+@property (nonatomic, copy , nullable) NSString *leftName;
+@property (nonatomic, copy , nullable) NSString *rightValue;
+@property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *personDesc;
+@end
+
+@protocol FHFeedContentRawDataHotTopicListModel<NSObject>
+@end
+
+@interface FHFeedContentRawDataHotTopicListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *forumName;
+@property (nonatomic, copy , nullable) NSString *concernId;
+@property (nonatomic, copy , nullable) NSString *forumId;
+@property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *talkCountStr;
+@property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, copy , nullable) NSString *talkCount;
+@property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSDictionary *logPb;
+
+@end
+
 @interface FHFeedContentRawDataContentExtraModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *answerCount;
@@ -415,6 +445,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginGroupModel *originGroup ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginCommonContentModel *originCommonContent ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotTopicListModel> *hotTopicList;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataVoteModel *vote ;
 @property (nonatomic, copy , nullable) NSString *articleSchema;
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, copy , nullable) NSString *groupId;

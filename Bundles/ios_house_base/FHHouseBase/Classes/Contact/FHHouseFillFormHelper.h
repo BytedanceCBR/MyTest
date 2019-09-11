@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *subtitle;// 非必填
 @property (nonatomic, copy) NSString *btnTitle;// 非必填
 @property (nonatomic, copy) NSString *leftBtnTitle;// 非必填
-@property (nonatomic, copy) NSString *fromStr;// 非必填
+@property (nonatomic, copy) NSString *from;// 非必填
 @property (nonatomic, copy) NSString *customHouseId;// 非必填
 @property (nonatomic, copy) NSString *realtorId; // 在线联系时必填
 @property (nonatomic, copy) NSString *phone;

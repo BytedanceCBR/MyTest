@@ -48,6 +48,8 @@
 #import "FHDetailCommunityEntryCell.h"
 #import "FHDetailBlankLineCell.h"
 #import "FHDetailDetectiveCell.h"
+#import "FHDetailHouseReviewCommentCell.h"
+#import "FHDetailUserHouseCommentCell.h"
 #import <FHHouseBase/FHSearchHouseModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
 
@@ -77,6 +79,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListModel class])];
     [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryModel class])];
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
+    [self.tableView registerClass:[FHDetailUserHouseCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailUserHouseCommentModel class])];
     [self.tableView registerClass:[FHDetailHouseOutlineInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseOutlineInfoModel class])];
     [self.tableView registerClass:[FHDetailSuggestTipCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSuggestTipModel class])];
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodModel class])];
@@ -97,6 +100,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailCommunityEntryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
     [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
     [self.tableView registerClass:[FHDetailDetectiveCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDetectiveModel class])];
+    [self.tableView registerClass:[FHDetailHouseReviewCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseReviewCommentCellModel class])];
 }
 
 // cell identifier
@@ -378,6 +382,38 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:agentListModel];
         self.agentListModel = agentListModel;
     }
+
+    if(model.data.houseReviewComment.count > 0){
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+
+        FHDetailHouseReviewCommentCellModel * houseReviewCommentModel = [[FHDetailHouseReviewCommentCellModel alloc] init];
+        houseReviewCommentModel.tableView = self.tableView;
+        houseReviewCommentModel.belongsVC = self.detailController;
+        houseReviewCommentModel.houseReviewComment = model.data.houseReviewComment;
+        houseReviewCommentModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        [houseReviewCommentModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
+        houseReviewCommentModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
+        houseReviewCommentModel.searchId = searchId;
+        houseReviewCommentModel.imprId = imprId;
+        houseReviewCommentModel.houseId = self.houseId;
+        houseReviewCommentModel.houseType = self.houseType;
+        [self.items addObject:houseReviewCommentModel];
+    }
+
+
+    //用户房源评价
+    if (model.data.userHouseComments.count > 0) {
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailUserHouseCommentModel *userHouseCommentModel = [[FHDetailUserHouseCommentModel alloc] init];
+        userHouseCommentModel.userComments = model.data.userHouseComments;
+        [self.items addObject:userHouseCommentModel];
+    }
+
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线

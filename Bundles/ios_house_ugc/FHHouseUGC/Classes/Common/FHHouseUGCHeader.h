@@ -35,6 +35,8 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
     FHUGCFeedListCellSubTypeUGCRecommend,                          //小区推荐
     FHUGCFeedListCellSubTypeUGCBanner,                             //运营位
     FHUGCFeedListCellSubTypeUGCGuide,                              //初次进入引导页
+    FHUGCFeedListCellSubTypeUGCHotTopic,                           //热门话题
+    FHUGCFeedListCellSubTypeUGCVote,                               //投票pk
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
@@ -48,6 +50,8 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
     FHUGCFeedListCellTypeUGCRecommend = 1101,              //小区推荐
     FHUGCFeedListCellTypeUGCBanner = 2002,                 //运营位
     FHUGCFeedListCellTypeUGCBanner2 = 1102,                //运营位
+    FHUGCFeedListCellTypeUGCHotTopic = 1104,               //热门话题
+    FHUGCFeedListCellTypeUGCVote = 1103,                   //投票pk
 };
 
 typedef NS_ENUM(NSInteger, FHUGCMyInterestedType)

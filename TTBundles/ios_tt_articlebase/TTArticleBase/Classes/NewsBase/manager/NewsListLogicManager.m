@@ -12,9 +12,10 @@
 #import "TTCategoryDefine.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import <TTKitchen/TTKitchen.h> 
-#import <TTKitchen/TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTBaseMacro.h>
+#import "TTKitchenManager+TTFeedModule.h"
 
 #define kListLogicReturnBackgroundTimeKey @"kListLogicReturnBackgroundTimeKey"
 

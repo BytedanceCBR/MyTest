@@ -1457,7 +1457,8 @@ extern NSString *const INSTANT_DATA_KEY;
         }else{
             if (self.tableView.contentOffset.y >= -[self.topView filterTop]) {
                 if (self.tableView.contentOffset.y <= ([self.topView filterTop] - topViewHeight)) {
-                    self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+//                    self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y+(topViewHeight - [self.topView filterTop]));
                 }
             }
         }

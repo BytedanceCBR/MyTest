@@ -126,6 +126,8 @@
     
     TTRichSpanText *threadContent = [[TTRichSpanText alloc] initWithText:@"" richSpanLinks:nil imageInfoModelDictionary:nil];
     
+    model.richContent = richContent;
+    
     if (!isEmptyString(model.title)) {
         [threadContent appendText:[NSString stringWithFormat:@"【%@】",model.title]];
     }
@@ -227,6 +229,23 @@
                                                              contentColor:[UIColor themeGray1]
                                                                     color:[UIColor themeRed3]];
     }
+    
+    if(model.needLinkSpan && model.richContent){
+        NSArray <TTRichSpanLink *> *richSpanLinks = [model.richContent richSpanLinksOfAttributedString];
+        for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+            NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
+            if (NSMaxRange(range) <= label.attributedText.length) {
+                if(model.supportedLinkType){
+                    if(model.supportedLinkType.count > 0 && [model.supportedLinkType containsObject:@(richSpanLink.type)]){
+                        [label addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                    }
+                }else{
+                    //不设置默认全部支持
+                    [label addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                }
+            }
+        }
+    }
 }
 
 + (CGSize)sizeThatFitsAttributedString:(NSAttributedString *)attrStr
@@ -242,6 +261,76 @@
     return [TTUGCAttributedLabel sizeThatFitsAttributedString:attrStr
                                               withConstraints:CGSizeMake(size.width, FLT_MAX)
                                        limitedToNumberOfLines:*numberOfLines];
+}
+
+//问答回答和文章优质评论
++ (void)setOriginContentAttributeString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
+    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
+    
+    if([self typeAttr:model]){
+        [desc appendAttributedString:[self typeAttr:model]];
+    }
+    if([self contentAttr:model]){
+        [desc appendAttributedString:[self contentAttr:model]];
+    }
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.minimumLineHeight = 21;
+    paragraphStyle.maximumLineHeight = 21;
+    paragraphStyle.lineSpacing = 2;
+    
+    [desc addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, desc.length)];
+    
+    model.originItemModel.contentAStr = desc;
+    
+    CGSize size = [self sizeThatFitsAttributedString:desc
+                                     withConstraints:CGSizeMake(width, FLT_MAX)
+                                    maxNumberOfLines:numberOfLines
+                              limitedToNumberOfLines:&numberOfLines];
+    model.originItemHeight = size.height + 36;
+}
+
++ (NSAttributedString *)typeAttr:(FHFeedUGCCellModel *)model {
+    NSString *type = model.originItemModel.type;
+    if (type.length < 1) {
+        return nil;
+    }
+    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:type];
+    [attri addAttribute:NSForegroundColorAttributeName value:[UIColor themeGray1] range:NSMakeRange(0, type.length)];
+    [attri addAttribute:NSFontAttributeName value:[UIFont themeFontMedium:16] range:NSMakeRange(0, type.length)];
+    return attri;
+}
+
++ (NSAttributedString *)contentAttr:(FHFeedUGCCellModel *)model {
+    NSString *content = model.originItemModel.content;
+    if (content.length < 1) {
+        return nil;
+    }
+    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:content];
+    [attri addAttribute:NSForegroundColorAttributeName value:[UIColor themeGray2] range:NSMakeRange(0, content.length)];
+    [attri addAttribute:NSFontAttributeName value:[UIFont themeFontRegular:16] range:NSMakeRange(0, content.length)];
+    return attri;
+}
+
++ (void)setVoteContentString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
+    if(!isEmptyString(model.vote.content)){
+        UILabel *label = [[UILabel alloc] init];
+        label.numberOfLines = numberOfLines;
+        label.font = [UIFont themeFontMedium:16];
+        //设置字间距0.4
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:model.vote.content attributes:@{NSKernAttributeName:@(0.4)}];
+//        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+//        [paragraphStyle setLineSpacing:0.4];
+//        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [model.vote.content length])];
+        label.attributedText = attributedString;
+        
+        CGSize size = [label sizeThatFits:CGSizeMake(width, MAXFLOAT)];
+        model.vote.contentAStr = attributedString;
+        model.vote.contentHeight = size.height;
+    }else{
+        model.vote.contentHeight = 0;
+        model.vote.contentAStr = nil;
+    }
 }
 
 @end

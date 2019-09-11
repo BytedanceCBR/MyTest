@@ -15,12 +15,14 @@
 #import "TTUGCSearchHashtagViewController.h"
 #import "TTImagePickerController.h"
 
+typedef void (^DidClickHashtagButtonBlock)(BOOL didInputTextHashtag);
+
 @protocol TTUGCAddMultiImageProtocol
 
 - (void)presentMultiImagePickerView;
 
 @end
-
+@class FHTopicListResponseDataListModel;
 @interface TTUGCTextViewMediator : NSObject <TTUGCTextViewDelegate, TTUGCToolbarDelegate, TTUGCSearchUserTableViewDelegate, TTUGCSearchHashtagTableViewDelegate>
 
 @property (nonatomic, strong) SSThemedView <TTUGCToolbarProtocol> *toolbar;
@@ -41,4 +43,8 @@
  */
 @property (nonatomic, assign) BOOL isSelectViewControllerVisible;
 
+@property (nonatomic, copy) DidClickHashtagButtonBlock hashTagBtnClickBlock;
+
+
+- (void)addHashtag:(FHTopicListResponseDataListModel *)hashtagModel;
 @end

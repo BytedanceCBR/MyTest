@@ -124,9 +124,9 @@
         self.accessoryAvatarView.size = CGSizeMake(kAccessoryAvatarViewSize, kAccessoryAvatarViewSize);
         self.accessoryAvatarView.right = self.accessoryLb.left - kAccessoryAvatarRightPadding;
         self.accessoryAvatarView.centerY = self.height / 2.f;
-        [self.accessoryAvatarView setupVerifyViewForLength:24 adaptationSizeBlock:^CGSize(CGSize standardSize) {
-            return [TTVerifyIconHelper tt_size:standardSize];
-        }];
+//        [self.accessoryAvatarView setupVerifyViewForLength:24 adaptationSizeBlock:^CGSize(CGSize standardSize) {
+//            return [TTVerifyIconHelper tt_size:standardSize];
+//        }];
     }
 }
 

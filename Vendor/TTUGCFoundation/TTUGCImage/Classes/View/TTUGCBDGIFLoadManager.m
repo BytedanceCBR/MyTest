@@ -15,7 +15,7 @@
 #import "TTUGCImageView.h"
 #import "TTUGCImageMonitor.h"
 #import <TTKitchen.h>
-#import <TTCommonKitchenConfig.h>
+#import <TTKitchenExtension/TTKitchenExtension.h>
 #import <BDWebImage/BDWebImageManager.h>
 #import "TTUGCImageHelper.h"
 
