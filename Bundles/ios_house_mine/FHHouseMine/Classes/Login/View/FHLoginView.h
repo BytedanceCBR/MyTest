@@ -32,13 +32,19 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+@interface FHLoginAcceptButton : UIButton
+@property (nonatomic, assign)UIEdgeInsets hotAreaInsets;
+@property (nonatomic, assign)UIEdgeInsets hotAreaInsets2;
+@end
+
 @interface FHLoginView : UIView
 
-@property(nonatomic, strong) UIButton *acceptCheckBox;
+@property(nonatomic, strong) FHLoginAcceptButton *acceptCheckBox;
 @property(nonatomic, strong) UIScrollView *scrollView;
 @property(nonatomic, strong) UITextField *phoneInput;
 @property(nonatomic, strong) UITextField *varifyCodeInput;
 @property(nonatomic, strong) UIButton *sendVerifyCodeBtn;
+@property(nonatomic, assign, readonly) BOOL isOneKeyLogin;
 
 @property(nonatomic , weak) id<FHLoginViewDelegate> delegate;
 
