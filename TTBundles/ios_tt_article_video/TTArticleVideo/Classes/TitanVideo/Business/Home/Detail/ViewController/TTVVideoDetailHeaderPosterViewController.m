@@ -798,6 +798,7 @@ extern CGFloat ttvs_detailVideoMaxHeight(void);
         self.playControl.detailStateStore = self.detailStateStore;
         self.playControl.videoInfo = self.videoInfo;
     }
+    self.playControl.extraDic = self.detailModel.reportParams;
     [self.playControl viewWillAppear];
 }
 

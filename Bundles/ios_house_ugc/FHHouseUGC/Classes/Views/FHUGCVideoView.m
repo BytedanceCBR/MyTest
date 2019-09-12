@@ -20,7 +20,6 @@
 #import "TTVVideoArticle+Extension.h"
 #import <TTVCellPlayMovie.h>
 #import "TTMovieStore.h"
-#import "TTImageView+TrafficSave.h"
 #import "TTUserSettingsManager+FontSettings.h"
 #import "ExploreCellHelper.h"
 #import "TTVFeedItem+TTVArticleProtocolSupport.h"
@@ -361,8 +360,8 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
     float left = isPad ? kCellLeftPadding : 0;
     float picWidth = [self getLogoWidth];
     if (!self.cellEntity.imageHeight) {
-        float imageHeight = [[self class] heightForImageWidth:self.logo.model.width height:self.logo.model.height constraintWidth:picWidth proportion:[self article].videoProportion];
-        self.cellEntity.imageHeight = imageHeight;
+//        float imageHeight = [[self class] heightForImageWidth:self.logo.model.width height:self.logo.model.height constraintWidth:picWidth proportion:[self article].videoProportion];
+        self.cellEntity.imageHeight = self.height;
     }
     self.logo.frame = CGRectMake(left, 0, picWidth, self.cellEntity.imageHeight);
 }

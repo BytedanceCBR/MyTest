@@ -55,6 +55,9 @@
 @property(nonatomic, copy)NSString *categoryName;
 @property(nonatomic, copy)NSString *authorId;
 
+//外面带的埋点信息
+@property(nonatomic, strong) NSDictionary *extraDic;
+
 /**
  feed下发的视频地址,过期时间
  */
