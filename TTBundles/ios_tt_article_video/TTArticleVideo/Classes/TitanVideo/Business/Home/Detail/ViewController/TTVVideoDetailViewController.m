@@ -1101,7 +1101,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     }else{
         infoModel.logPb = self.detailModel.gdExtJsonDict[@"log_pb"];
     }
-
+    infoModel.extraDic = self.detailModel.reportParams;
     infoModel.enterFrom = [self enterFromString];
     TTVVideoDetailNatantInfoViewController  *natantInfoVC = [[TTVVideoDetailNatantInfoViewController alloc] initWithWidth:containerWidth andinfoModel: infoModel];
     natantInfoVC.detailStateStore = self.detailStateStore;
@@ -2045,6 +2045,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     replyManager.enterFrom = self.detailModel.clickLabel;
     replyManager.categoryID = self.detailModel.categoryID;
     replyManager.logPb = self.detailModel.logPb;
+    replyManager.extraDic = self.detailModel.reportParams;
 
     self.replyWriteView = [[TTCommentWriteView alloc] initWithCommentManager:replyManager];
     self.replyWriteView.banEmojiInput = commentDetailModel.banEmojiInput;
@@ -2066,6 +2067,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     vc.categoryID = self.detailModel.categoryID;
     vc.enterFromStr = self.detailModel.clickLabel;
     vc.logPb = self.detailModel.logPb;
+    vc.extraDic = self.detailModel.reportParams;
     if (self.detailModel.adID && self.detailModel.adID.longLongValue > 0) {
         vc.isAdVideo = YES;
     }

@@ -43,6 +43,7 @@
 #import "TTTracker.h"
 #import <TTKitchen/TTKitchen.h> 
 #import <TTKitchenExtension/TTKitchenExtension.h>
+#import "FHCommonApi.h"
 
 NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
@@ -506,10 +507,11 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     self.model.diggCount++;
     self.model.userDigg = YES;
     [self.model save];
-
-    [AWEVideoDetailManager diggVideoItemWithID:self.model.groupID
+    /*[AWEVideoDetailManager diggVideoItemWithID:self.model.groupID
                                    groupSource:self.model.groupSource
-                                    completion:nil];
+                                    completion:nil];*/
+    [FHCommonApi requestCommonDigg:[NSString stringWithFormat:@"%@", self.model.groupID] groupType:FHDetailDiggTypeSMALLVIDEO action:1 completion:nil];
+
     [[NSNotificationCenter defaultCenter] postNotificationName:@"TSVShortVideoDiggCountSyncNotification"
                                                         object:nil
                                                       userInfo:@{@"group_id" : self.model.groupID ?:@"",

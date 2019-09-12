@@ -228,7 +228,7 @@
             //文章
             cellModel.title = model.title;
             cellModel.openUrl = model.openUrl;
-            cellModel.numberOfLines = 5;
+            cellModel.numberOfLines = 3;
             
             if (model.isFromDetail) {
                 cellModel.numberOfLines = 0;
@@ -264,7 +264,7 @@
         cellModel.title = model.rawData.content.question.title;
         cellModel.openUrl = model.rawData.content.question.questionListSchema;
         cellModel.groupId = model.rawData.content.question.qid;
-        cellModel.numberOfLines = 5;
+        cellModel.numberOfLines = 3;
         
         cellModel.imageList = model.rawData.content.question.content.thumbImageList;
         //处理大图
@@ -608,10 +608,19 @@
     return desc;
 }
 
+- (void)setCategoryId:(NSString *)categoryId {
+    _categoryId = categoryId;
+    _videoItem.categoryId = categoryId;
+}
+
+- (void)setTracerDic:(NSDictionary *)tracerDic {
+    _tracerDic = tracerDic;
+    _videoItem.extraDic = [tracerDic copy];
+}
+
 + (FHFeedUGCCellModel *)modelFromFake {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.groupId = @"1000051";
-    cellModel.cellType = FHUGCFeedListCellTypeUGCVideo;
     cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVideo;
     
     return cellModel;

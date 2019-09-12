@@ -151,6 +151,8 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, strong) NSNumber *showComment;//0不弹，1弹起评论浮层，2弹输入框
 @property (nonatomic, copy) NSDictionary *commonTrackingParameter;
 @property (nonatomic, copy) NSDictionary *initialLogPb;
+//外面传的埋点信息 by xsm
+@property (nonatomic, strong) NSDictionary *extraDic;
 // 状态
 @property (nonatomic, assign) BOOL firstLoadFinished;
 @property (nonatomic, assign) BOOL isFirstTimeShowCommentListOrKeyboard;
@@ -340,6 +342,11 @@ static const CGFloat kFloatingViewOriginY = 230;
         if (extraParams[HTSVideoDetailOrderedData]) {
             self.orderedData = extraParams[HTSVideoDetailOrderedData];
         }
+        
+        if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
+            self.extraDic = paramObj.allParams[@"extraDic"];
+        }
+        
     }
     return self;
 }
@@ -436,6 +443,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         AWEVideoContainerViewController *controller = [[AWEVideoContainerViewController alloc] init];
         controller.dataFetchManager = self.dataFetchManager;
         controller.commonTrackingParameter = self.commonTrackingParameter;
+        controller.extraDic = self.extraDic;
         controller.needCellularAlert = (self.pageParams[AWEVideoPageParamNonWiFiAlert] && [self.pageParams[AWEVideoPageParamNonWiFiAlert] isKindOfClass:[NSNumber class]]) ? [self.pageParams[AWEVideoPageParamNonWiFiAlert] boolValue] : YES;
         @weakify(self)
         controller.wantToClosePage = ^{
@@ -1478,7 +1486,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         @strongify(self);
         if (!error) {
             if (model.replyToComment == nil) {
-                [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
+                [AWEVideoDetailTracker trackEvent:@"rt_post_comment"
                                             model:self.model
                                   commonParameter:self.commonTrackingParameter
                                    extraParameter:[self writeCommentExtraPositionDict]];
@@ -1489,6 +1497,7 @@ static const CGFloat kFloatingViewOriginY = 230;
             self.model.commentCount = [self.commentManager totalCommentCount];
             NSMutableDictionary *userInfo = @{}.mutableCopy;
             userInfo[@"group_id"] = self.model.groupID;
+            userInfo[@"comment_conut"] = @(self.model.commentCount);
             [[NSNotificationCenter defaultCenter] postNotificationName:kPostMessageFinishedNotification
                                                                 object:nil
                                                               userInfo:userInfo];

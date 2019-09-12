@@ -9,9 +9,9 @@
 #import "TTQQShare.h"
 #import "TTShareImageUtil.h"
 #import <TencentOpenAPI/QQApiInterface.h>
-#import <TencentOpenAPI/QQApiInterface.h>
+#import <TencentOpenAPI/QQApiInterfaceObject.h>
 #import <TencentOpenAPI/TencentOAuth.h>
-#import <TencentOpenAPI/TencentMessageObject.h>
+#import <TencentOpenAPI/sdkdef.h>
 
 NSString * const TTQQShareErrorDomain = @"TTQQShareErrorDomain";
 
@@ -264,7 +264,7 @@ customCallbackUserInfo:(NSDictionary *)customCallbackUserInfo {
         return;
     }
     
-    QQApiImageArrayForQZoneObject *imgObj = [QQApiImageArrayForQZoneObject objectWithimageDataArray:@[imageData] title:title];
+    QQApiImageArrayForQZoneObject *imgObj = [QQApiImageArrayForQZoneObject objectWithimageDataArray:@[imageData] title:title extMap:nil];
     SendMessageToQQReq* req = [SendMessageToQQReq reqWithContent:imgObj];
     QQApiSendResultCode sent = [QQApiInterface SendReqToQZone:req];
     [self handleSendResult:sent];

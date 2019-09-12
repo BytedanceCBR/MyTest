@@ -6,12 +6,13 @@
 //
 
 #import "FHUGCBaseCell.h"
+#import "TTImageView+TrafficSave.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCSmallVideoCell : FHUGCBaseCell
 
-@property(nonatomic ,strong) UIImageView *videoImageView;
+@property(nonatomic ,strong) TTImageView *videoImageView;
 
 @end
 

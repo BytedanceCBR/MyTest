@@ -25,6 +25,8 @@
 @property (nonatomic, strong) NSDictionary *logPb;
 @property (nonatomic, copy) NSString *ansid;
 @property (nonatomic, copy) NSString *qid;
+//外面传入埋点信息 by xsm
+@property (nonatomic, strong) NSDictionary *extraDic;
 
 - (instancetype)initWithCommentDetailModel:(id<TTCommentDetailModelProtocol>)commentDetailModel
                          replyCommentModel:(id<TTCommentDetailReplyCommentModelProtocol> )replyCommentModel

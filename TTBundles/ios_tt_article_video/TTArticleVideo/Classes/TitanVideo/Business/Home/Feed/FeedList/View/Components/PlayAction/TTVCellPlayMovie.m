@@ -171,6 +171,8 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     model.enterFrom = [self enterFrom];
     model.categoryName = self.cellEntity.categoryId;
     model.authorId = article.userId;
+    model.extraDic = self.cellEntity.extraDic;
+    
     if (feedItem.isVideoSourceUGCVideo) {
         model.defaultResolutionType = TTVPlayerResolutionTypeHD;
     }

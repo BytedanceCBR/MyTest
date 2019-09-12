@@ -65,6 +65,9 @@ extern TTVFeedListCellSeparatorStyle ttv_feedListCellSeparatorStyleByTotalAndRow
 @property (nonatomic, assign) CGPoint recommednViewContentOffset;
 @property (nonatomic, strong) TTADTrackEventLinkModel *adEventLinkModel;
 @property (nonatomic, assign) BOOL hideTitleAndWatchCount; //是否隐藏标题和播放数，默认是不隐藏
+//外面带的埋点信息
+@property(nonatomic, strong) NSDictionary *extraDic;
+
 - (BOOL)isPlayInDetailView;
 - (BOOL)supportVideoProportion;
 - (TTVVideoArticle *)article;

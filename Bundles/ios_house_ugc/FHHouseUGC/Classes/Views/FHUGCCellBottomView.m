@@ -44,6 +44,8 @@
 
 - (void)initNotification {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
+    // 评论数变化通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentCountChange:) name:@"kPostMessageFinishedNotification" object:nil];
 }
 
 - (void)dealloc {
@@ -166,6 +168,9 @@
         switch (cellModel.cellType) {
                 case FHUGCFeedListCellTypeArticle:
                     self.diggType = FHDetailDiggTypeITEM;
+                    if (cellModel.hasVideo) {
+                        self.diggType = FHDetailDiggTypeVIDEO;
+                    }
                 break;
                 case FHUGCFeedListCellTypeAnswer:
                     self.diggType = FHDetailDiggTypeANSWER;
@@ -178,6 +183,9 @@
                 break;
                 case FHUGCFeedListCellTypeUGC:
                     self.diggType = FHDetailDiggTypeTHREAD;
+                break;
+                case FHUGCFeedListCellTypeUGCSmallVideo:
+                    self.diggType = FHDetailDiggTypeSMALLVIDEO;
                 break;
             default:
                 self.diggType = FHDetailDiggTypeTHREAD;
@@ -307,7 +315,31 @@
             }
             
             self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
+            if (self.cellModel.hasVideo) {
+                self.cellModel.videoFeedItem.article.diggCount = diggCount;
+                self.cellModel.videoFeedItem.article.userDigg = user_digg;
+            }
             [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
+        }
+    }
+}
+
+// 评论数变化
+- (void)commentCountChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    
+    if(userInfo){
+        NSInteger comment_conut = [userInfo[@"comment_conut"] integerValue];
+        NSString *groupId = userInfo[@"group_id"];
+        if (groupId.length > 0 && [groupId isEqualToString:self.cellModel.groupId]) {
+            NSInteger commentCount = comment_conut;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if(commentCount == 0){
+                    [self.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
+                }else{
+                    [self.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
+                }
+            });
         }
     }
 }

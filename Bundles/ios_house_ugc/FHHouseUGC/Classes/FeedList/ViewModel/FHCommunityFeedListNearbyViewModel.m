@@ -313,15 +313,10 @@
         //视频
         if(cellModel.hasVideo){
             FHUGCVideoCell *cellBase = (FHUGCVideoCell *)cell;
-//            TTVFeedListItem *item = cellBase.videoItem;
-            
             [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
             [self willFinishLoadTable];
             
             [cellBase willDisplay];
-            
-//            [self attachVideoIfNeededForCell:cell data:item];
-
         }
     }
 }
@@ -499,6 +494,12 @@
         if (showComment) {
             [info setValue:@(1) forKey:AWEVideoShowComment];
         }
+        if(cellModel.tracerDic){
+            NSMutableDictionary *tracerDic = [cellModel.tracerDic mutableCopy];
+            tracerDic[@"page_type"] = @"small_video_detail";
+            tracerDic[@"enter_type"] = enterType;
+            [info setValue:tracerDic forKey:@"extraDic"];
+        }
         
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
@@ -544,6 +545,7 @@
         context.categoryId = self.categoryId;
         context.feedListViewController = self;
         context.clickComment = showComment;
+        context.enterType = enterType;
         
         [cell didSelectCell:context];
     }else if (cellModel.openUrl) {
@@ -720,14 +722,6 @@
     self.movieView = nil;
     [self.movieViews removeAllObjects];
 }
-
-//- (void)attachVideoIfNeededForCell:(UITableViewCell *)cell data:(id)obj
-//{
-//    if (obj == self.movieViewCellData && self.movieView && [cell respondsToSelector:@selector(cell_attachMovieView:)]) {
-//        id<TTVFeedPlayMovie> videoCell = (id<TTVFeedPlayMovie>)cell;
-//        [videoCell cell_attachMovieView:self.movieView];
-//    }
-//}
 
 #pragma mark - 埋点
 

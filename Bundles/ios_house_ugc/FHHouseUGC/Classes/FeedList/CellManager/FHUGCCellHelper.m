@@ -336,26 +336,17 @@
     }
 }
 
-+ (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel
-{
++ (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel {
     TTVFeedListItem *item = [[TTVFeedListItem alloc] init];
     item.originData = cellModel.videoFeedItem;
     item.categoryId = cellModel.categoryId;
     item.hideTitleAndWatchCount = YES;
     item.refer = 1;
-//    item.cellSeparatorStyle = ttv_feedListCellSeparatorStyleByTotalAndRow(array.count, i);
+
     item.cellAction = [[TTVFeedCellVideoAction alloc] init];
     item.isFirstCached = NO;
     item.followedWhenInit = NO;
 
-//    if (response.isFromLocal) {
-//        item.comefrom = TTVFromOptionFile;
-//    } else if (parameter.reloadType == TTReloadTypePreLoadMore) {
-//        item.comefrom = TTVFromOptionPullUp;
-//    } else if (parameter.reloadType == TTReloadTypePull) {
-//        item.comefrom = TTVFromOptionPullDown;
-//    }
-//    TTVVideoArticle *article = [item article];
     NSInteger playTimes = [cellModel.videoDetailInfo.videoWatchCount integerValue];
     item.playTimes = [[TTBusinessManager formatPlayCount:playTimes] stringByAppendingString:@"次播放"];
     NSString *durationText = nil;
@@ -367,17 +358,21 @@
     }
     item.durationTimeString = durationText;
     
-//    if(cellModel.originData && [cellModel.originData isKindOfClass:[FHFeedContentModel class]]){
-//        item.ugcFeedContent = (FHFeedContentModel *)cellModel.originData;
-//    }
-    
     if([cellModel.imageList firstObject]){
-        NSMutableDictionary *dict = [[[cellModel.imageList firstObject] toDictionary] mutableCopy];
-        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithDictionary:dict];
-        item.imageModel = model;
+        item.imageModel = [self convertTTImageInfosModel:[cellModel.imageList firstObject]];;
     }
     
     return item;
 }
+
++ (TTImageInfosModel *)convertTTImageInfosModel:(FHFeedContentImageListModel *)imageModel {
+    if(imageModel){
+        NSDictionary *dict = [imageModel toDictionary];
+        return [[TTImageInfosModel alloc] initWithDictionary:dict];
+    }
+    
+    return nil;
+}
+
 
 @end
