@@ -200,6 +200,8 @@
     @"videoProportionArticle": @"video_proportion_article",
     @"playBizToken": @"play_biz_token",
     @"danmakuCount": @"danmaku_count",
+    @"isStick": @"is_stick",
+    @"stickStyle": @"stick_style",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

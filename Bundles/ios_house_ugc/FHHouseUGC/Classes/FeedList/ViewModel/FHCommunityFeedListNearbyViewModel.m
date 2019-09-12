@@ -164,6 +164,11 @@
                 [wself.dataList removeAllObjects];
             }
             if(isHead){
+                // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
+                [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                    cellModel.isStick = NO;
+                }];
+                // 头部插入新数据
                 [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
             }else{
                 [wself.dataList addObjectsFromArray:result];
