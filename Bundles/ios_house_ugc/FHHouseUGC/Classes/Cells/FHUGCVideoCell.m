@@ -31,6 +31,7 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTVFeedUserOpDataSyncMessage.h>
 #import <SSCommonLogic.h>
+#import <TTVFeedItem+TTVConvertToArticle.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -589,7 +590,17 @@
 - (void)feedCollectChanged:(int)status uniqueIDStr:(NSString *)uniqueIDStr forKey:(NSString *)key {
     if ([self.videoItem.originData.uniqueIDStr isEqualToString:uniqueIDStr]) {
         [self.videoItem.originData setValue:@(status) forKey:key];
-        
+        TTVFeedListItem *itemA = self.videoItem;
+        [itemA.originData.savedConvertedArticle setValue:@(status) forKey:key];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            int64_t fixedgroupID = [[SSCommonLogic fixStringTypeGroupID:itemA.originData.groupModel.groupID] longLongValue];
+            NSString *primaryID = [Article primaryIDByUniqueID:fixedgroupID itemID:itemA.originData.groupModel.itemID adID:itemA.originData.adIDStr];
+            Article *cachedArticle = [Article objectForPrimaryKey:primaryID];
+            if (cachedArticle) {
+                [cachedArticle setValue:@(status) forKey:key];
+                [cachedArticle save];
+            }
+        });
         if([key isEqualToString:@"diggCount"] || [key isEqualToString:@"userDigg"]){
             [self updateDiggButton];
         }if([key isEqualToString:@"commentCount"]){

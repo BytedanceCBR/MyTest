@@ -17,6 +17,10 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <TTBusinessManager+StringUtils.h>
+#import "TTMessageCenter.h"
+#import "TTVideoArticleService+Action.h"
+#import "TTVideoArticleServiceMessage.h"
+#import "TTVFeedUserOpDataSyncMessage.h"
 
 @interface FHUGCCellBottomView ()
 
@@ -316,8 +320,12 @@
             
             self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
             if (self.cellModel.hasVideo) {
+                // 视频点赞
                 self.cellModel.videoFeedItem.article.diggCount = diggCount;
                 self.cellModel.videoFeedItem.article.userDigg = user_digg;
+                NSString *unique_id = self.cellModel.groupId;
+                SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:(user_digg == 1) uniqueIDStr:unique_id);
+                SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:diggCount uniqueIDStr:unique_id);
             }
             [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
         }
