@@ -298,6 +298,11 @@
         [FHUGCConfig sharedInstance].behotTime = behotTime;
     }
     
+    //下拉刷新关闭视频播放
+    if(isHead){
+        [self endDisplay];
+    }
+    
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
     NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
     if(fCityId){
@@ -658,6 +663,13 @@
         [info setValue:exitManager forKey:HTSVideoDetailExitManager];
         if (showComment) {
             [info setValue:@(1) forKey:AWEVideoShowComment];
+        }
+        
+        if(cellModel.tracerDic){
+            NSMutableDictionary *tracerDic = [cellModel.tracerDic mutableCopy];
+            tracerDic[@"page_type"] = @"small_video_detail";
+            tracerDic[@"enter_type"] = enterType;
+            [info setValue:tracerDic forKey:@"extraDic"];
         }
         
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];

@@ -62,6 +62,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)recordGroupWithCellModel:(FHFeedUGCCellModel *)cellModel status:(SSImpressionStatus)status;
 
+- (void)endDisplay;
+
 @end
 
 NS_ASSUME_NONNULL_END
