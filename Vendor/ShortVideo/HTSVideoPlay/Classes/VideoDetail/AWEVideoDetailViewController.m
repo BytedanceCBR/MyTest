@@ -1453,6 +1453,15 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)handleSendComment:(NSString *)comment fromInputBar:(AWECommentInputBar *)inputBar
 {
+    NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
+    [extra setValue:[inputBar.targetCommentModel.id stringValue] ?: @"" forKey:@"comment_id"];
+    [extra setValue:@"reply_button" forKey:@"position"];
+    
+    [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
+                                model:self.model
+                      commonParameter:self.commonTrackingParameter
+                       extraParameter:extra];
+    
     [AWEVideoDetailTracker trackEvent:@"comment_write_confirm"
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
@@ -1656,12 +1665,12 @@ static const CGFloat kFloatingViewOriginY = 230;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     AWECommentModel *commentModel = [self.commentManager commentForIndexPath:indexPath];
-    NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
-    [extra setValue:[commentModel.id stringValue] ?: @"" forKey:@"comment_id"];
-    [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:extra];
+//    NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
+//    [extra setValue:[commentModel.id stringValue] ?: @"" forKey:@"comment_id"];
+//    [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
+//                                model:self.model
+//                      commonParameter:self.commonTrackingParameter
+//                       extraParameter:extra];
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ([self alertIfNotValid]) {

@@ -333,6 +333,11 @@ typedef NS_ENUM(NSInteger, TTVVideoDetailNatantInfoShareViewShareAction)
         self.shareButton.height = kNatantInfoShareButtonHeight;
         self.shareButton.centerY = self.digButton.centerY;
         self.shareButton.left = self.digButton.right + kNatantInfoShareViewGap;
+        if(self.hideDiggBtn){
+            self.shareButton.left = kNatantInfoShareViewHorizontalPadding;
+        }else{
+            self.shareButton.left = self.digButton.right + kNatantInfoShareViewGap;
+        }
         self.videoExtendLinkButton.width = width;
         self.videoExtendLinkButton.height = kNatantInfoShareButtonHeight;
         self.videoExtendLinkButton.centerY = self.digButton.centerY;

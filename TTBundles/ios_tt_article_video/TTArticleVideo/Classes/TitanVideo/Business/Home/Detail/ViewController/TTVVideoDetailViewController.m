@@ -1843,6 +1843,11 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     [params setValue:[self categoryName] forKey:@"category_name"];
     [params setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]] forKey:@"enter_from"];
     [params setValue:position forKey:@"position"];
+    
+    if(self.detailModel.reportParams.count > 0){
+        [params addEntriesFromDictionary:self.detailModel.reportParams];
+    }
+    
     if (isDigg) {
         [TTTrackerWrapper eventV3:@"rt_like" params:params];
     }else{
