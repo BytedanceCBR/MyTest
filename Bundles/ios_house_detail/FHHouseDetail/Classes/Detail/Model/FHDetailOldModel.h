@@ -380,6 +380,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
+@property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, strong , nullable) NSArray<FHUserHouseCommentModel> *userHouseComments;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;

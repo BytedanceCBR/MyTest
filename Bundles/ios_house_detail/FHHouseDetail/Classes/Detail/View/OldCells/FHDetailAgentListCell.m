@@ -19,6 +19,7 @@
 #import "UILabel+House.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHHousePhoneCallUtils.h>
+#import <BTDMacros.h>
 
 @interface FHDetailAgentListCell ()
 
@@ -52,11 +53,17 @@
         [v removeFromSuperview];
     }
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)data;
+    
+    // 设置下发标题
+    if(model.recommendedRealtorsTitle.length > 0) {
+        self.headerView.label.text = model.recommendedRealtorsTitle;
+    }
+    
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         CGFloat vHeight = 66.0;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] init];
+            FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj];
             // 添加事件
             itemView.tag = idx;
             itemView.licenceIcon.tag = idx;
@@ -86,7 +93,11 @@
             }else {
                 itemView.identifyView.hidden = YES;
             }
-            itemView.licenceIcon.hidden = ![self shouldShowContact:obj];
+            BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
+            [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
+            if(obj.realtorEvaluate.length > 0) {
+                itemView.realtorEvaluate.text = obj.realtorEvaluate;
+            }
             itemsCount += 1;
         }];
 
@@ -187,11 +198,12 @@
         contactConfig.imprId = model.imprId;
         contactConfig.realtorType = contact.realtorType;
         contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
-        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
+        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
             if(success && [model.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
                 FHHouseDetailViewController *vc = (FHHouseDetailViewController *)model.belongsVC;
                 vc.isPhoneCallShow = YES;
                 vc.phoneCallRealtorId = contactConfig.realtorId;
+                vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
             }
         }];
 
@@ -363,16 +375,238 @@
 
 
 // FHDetailAgentItemView
+@interface FHDetailAgentItemTagsViewCell: UICollectionViewCell
+
+@property (nonatomic, strong) UILabel *tagLabel;
+
++ (NSString *)reuseIdentifier;
+@end
+
+@implementation FHDetailAgentItemTagsViewCell
+
++ (NSString *)reuseIdentifier {
+    return NSStringFromClass([self class]);
+}
+
+-(UILabel *)tagLabel {
+    if(!_tagLabel) {
+        _tagLabel = [UILabel new];
+        _tagLabel.font = [UIFont themeFontRegular:10];
+        _tagLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _tagLabel;
+}
+
+-(instancetype)initWithFrame:(CGRect)frame {
+    if(self = [super initWithFrame:frame]) {
+        [self.contentView addSubview:self.tagLabel];
+        [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.contentView);
+        }];
+        
+        self.layer.cornerRadius = 2;
+        self.layer.masksToBounds = YES;
+    }
+    return self;
+}
+@end
+
+@interface FHDetailAgentItemTagsFlowLayout : UICollectionViewFlowLayout
+
+@property (nonatomic, assign) CGFloat maximumInteritemSpacing;
+
+@end
+
+@implementation FHDetailAgentItemTagsFlowLayout
+- (NSArray<UICollectionViewLayoutAttributes *> *)layoutAttributesForElementsInRect:(CGRect)rect
+{
+    //使用系统帮我们计算好的结果。
+    NSArray *attributes = [super layoutAttributesForElementsInRect:rect];
+    
+    //第0个cell没有上一个cell，所以从1开始
+    for(int i = 1; i < [attributes count]; ++i) {
+        //这里 UICollectionViewLayoutAttributes 的排列总是按照 indexPath的顺序来的。
+        UICollectionViewLayoutAttributes *curAttr = attributes[i];
+        UICollectionViewLayoutAttributes *preAttr = attributes[i-1];
+        
+        NSInteger origin = CGRectGetMaxX(preAttr.frame);
+        //根据  maximumInteritemSpacing 计算出的新的 x 位置
+        CGFloat targetX = origin + self.maximumInteritemSpacing;
+        // 只有系统计算的间距大于  maximumInteritemSpacing 时才进行调整
+        if (CGRectGetMinX(curAttr.frame) > targetX) {
+            // 换行时不用调整
+            if (targetX + CGRectGetWidth(curAttr.frame) <= self.collectionViewContentSize.width) {
+                CGRect frame = curAttr.frame;
+                frame.origin.x = targetX;
+                curAttr.frame = frame;
+            } else {
+                CGRect frame = curAttr.frame;
+                frame.size.width = 0;
+                curAttr.frame = frame;
+            }
+        }
+    }
+    return attributes;
+}
+-(instancetype)init {
+    if(self = [super init]) {
+        self.maximumInteritemSpacing = 4.f;
+        self.minimumInteritemSpacing = 4.0f;
+        self.scrollDirection = UICollectionViewScrollDirectionVertical;
+    }
+    return self;
+}
+@end
+
+@interface FHDetailAgentItemView()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@property (nonatomic, strong) FHDetailContactModel *model;
+@property (nonatomic, strong) UICollectionView *tagsView;
+@property (nonatomic, strong) UIView *vSepLine;
+@end
 
 @implementation FHDetailAgentItemView
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self setupUI];
+-(UILabel *)realtorEvaluate {
+    if(!_realtorEvaluate) {
+        _realtorEvaluate = [UILabel new];
+        _realtorEvaluate.textColor = [UIColor themeGray3];
+        _realtorEvaluate.font = [UIFont themeFontRegular:12];
+    }
+    return _realtorEvaluate;
+}
+
+- (UICollectionView *)tagsView {
+    if(!_tagsView) {
+        _tagsView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:[[FHDetailAgentItemTagsFlowLayout alloc] init]];
+        _tagsView.scrollEnabled = NO;
+        _tagsView.backgroundColor = [UIColor whiteColor];
+        _tagsView.delegate = self;
+        _tagsView.dataSource = self;
+
+        [_tagsView registerClass:[FHDetailAgentItemTagsViewCell class] forCellWithReuseIdentifier:[FHDetailAgentItemTagsViewCell reuseIdentifier]];
+    }
+    return _tagsView;
+}
+
+- (UIView *)vSepLine {
+    if(!_vSepLine) {
+        _vSepLine = [UIView new];
+        _vSepLine.backgroundColor = [UIColor themeGray6];
+    }
+    return _vSepLine;
+}
+
+-(instancetype)initWithModel:(FHDetailContactModel *)model {
+    
+    if(self = [super init]){
+        self.model = model;
+        switch (self.model.realtorCellShow) {
+            case FHRealtorCellShowStyle1: // 经纪人名字和公司名字左右排列的样式: 标签
+                [self layoutForStyle1];
+                break;
+            case FHRealtorCellShowStyle2: // 经纪人名字和公司名字左右排列的样式: 话术
+                [self layoutForStyle2];
+                break;
+            case FHRealtorCellShowStyle0: // 经纪人名字和公司名字上下排列的样式
+            default:
+                [self layoutForStyle0];
+                break;
+        }
     }
     return self;
+}
+
+- (void)layoutForStyle0 {
+    [self setupUI];
+}
+
+- (void)layoutForStyle1 {
+    [self setupUI];
+    [self modifiedLayout];
+    
+    [self addSubview:self.tagsView];
+    
+    [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(15);
+        make.left.equalTo(self.name);
+        make.right.equalTo(self.imBtn.mas_left).offset(-10);
+        make.top.equalTo(self.name.mas_bottom).offset(4);
+    }];
+
+}
+
+- (void)layoutForStyle2 {
+    [self setupUI];
+    [self modifiedLayout];
+    
+    [self addSubview:self.realtorEvaluate];
+    
+    [self.realtorEvaluate mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(17);
+        make.left.equalTo(self.name);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+        make.top.equalTo(self.name.mas_bottom).offset(4);
+    }];
+}
+
+-(void)modifiedLayout {
+    
+    [self addSubview: self.vSepLine];
+    
+    [self.vSepLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(1);
+        make.height.mas_equalTo(14);
+        make.centerY.equalTo(self.name);
+        make.left.equalTo(self.name.mas_right).offset(6);
+    }];
+    
+    [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.avator.mas_right).offset(14);
+        make.top.mas_equalTo(self.avator).offset(4);
+        make.height.mas_equalTo(20);
+    }];
+
+    [self.name setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
+
+    [self.agency mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.name);
+        make.height.mas_equalTo(20);
+        make.left.equalTo(self.vSepLine.mas_right).offset(6);
+        make.right.equalTo(self.licenceIcon.mas_left).offset(-5);
+    }];
+    
+    [self.agency setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+    
+    [self.licenceIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.agency.mas_right).offset(5);
+        make.width.height.mas_equalTo(20);
+        make.centerY.mas_equalTo(self.name);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+    }];
+}
+
+-(void)configForLicenceIconWithHidden:(BOOL)isHidden {
+    
+    self.licenceIcon.hidden = isHidden;
+    
+    switch (self.model.realtorCellShow) {
+        case FHRealtorCellShowStyle1:
+        case FHRealtorCellShowStyle2:
+        {
+            [self.agency mas_updateConstraints:^(MASConstraintMaker *make) {
+                if(self.licenceIcon.hidden){
+                    make.right.equalTo(self.imBtn.mas_left).offset(-10);
+                } else {
+                    make.right.equalTo(self.licenceIcon.mas_left).offset(-5);
+                }
+            }];
+        }
+            break;
+        case FHRealtorCellShowStyle0:
+        default:
+            NSLog(@"Do nothing!");
+            break;
+    }
 }
 
 - (void)setupUI {
@@ -464,6 +698,47 @@
     return _identifyView;
 }
 
+#pragma mark - UICollectionViewDelegateFlowLayout
+
+-(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    FHRealtorTag *tagInfo = [self.model.realtorTags objectAtIndex:indexPath.row];
+    UIColor *fontColor = [UIColor colorWithHexStr:tagInfo.fontColor];
+    UIColor *backgroundColor = [UIColor colorWithHexStr:tagInfo.backgroundColor];
+    if(fontColor && backgroundColor) {
+        CGSize itemSize = [tagInfo.text sizeWithAttributes:@{
+                                                  NSForegroundColorAttributeName: fontColor,
+                                                  NSBackgroundColorAttributeName: backgroundColor,
+                                                  NSFontAttributeName: [UIFont themeFontRegular:10]
+                                                  }];
+        
+        itemSize.width += 6;
+        return itemSize;
+    }
+    return CGSizeZero;
+}
+
+#pragma mark - UICollectionViewDataSource
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.model.realtorTags.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    FHDetailAgentItemTagsViewCell *tagCell = [collectionView dequeueReusableCellWithReuseIdentifier:[FHDetailAgentItemTagsViewCell reuseIdentifier] forIndexPath:indexPath];
+    
+    FHRealtorTag *tagInfo = [self.model.realtorTags objectAtIndex:indexPath.row];
+    
+    tagCell.tagLabel.text = tagInfo.text;
+    tagCell.backgroundColor = [UIColor colorWithHexStr:tagInfo.backgroundColor];
+    tagCell.tagLabel.textColor = [UIColor colorWithHexStr:tagInfo.fontColor];
+    return tagCell;
+}
+
 @end
 
 // FHDetailAgentListModel
@@ -480,4 +755,3 @@
 }
 
 @end
-    

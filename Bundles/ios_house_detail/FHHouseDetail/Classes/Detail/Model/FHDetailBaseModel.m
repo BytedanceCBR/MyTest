@@ -67,6 +67,22 @@
 
 @end
 
+@implementation FHRealtorTag
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
++(JSONKeyMapper *)keyMapper {
+    return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        NSDictionary *dict = @{
+                               @"backgroundColor": @"background_color",
+                               @"fontColor": @"font_color",
+                               };
+        return dict[keyName]?:keyName;
+    }];
+}
+@end
+
 @implementation FHDetailContactModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -87,7 +103,10 @@
                            @"realtorDetailUrl" : @"main_page_info",
                            @"imageTag": @"image_tag",
                            @"reportButtonText":@"report_button_text",
-                           @"realtorType":@"realtor_type"
+                           @"realtorType":@"realtor_type",
+                           @"realtorCellShow":@"realtor_cell_show",
+                           @"realtorTags":@"realtor_tags",
+                           @"realtorEvaluate":@"realtor_evaluate",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
