@@ -568,6 +568,7 @@
                            @"groupId": @"group_id",
                            @"repostStatus": @"repost_status",
                            @"imageList": @"image_list",
+                           @"repostParams": @"repost_params",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

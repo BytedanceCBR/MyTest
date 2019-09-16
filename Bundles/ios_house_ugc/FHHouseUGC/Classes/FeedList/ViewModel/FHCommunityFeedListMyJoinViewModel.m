@@ -673,6 +673,7 @@
             NSMutableDictionary *tracerDic = [cellModel.tracerDic mutableCopy];
             tracerDic[@"page_type"] = @"small_video_detail";
             tracerDic[@"enter_type"] = enterType;
+            tracerDic[@"enter_from"] = [self pageType];
             [info setValue:tracerDic forKey:@"extraDic"];
         }
         
@@ -721,6 +722,7 @@
         context.feedListViewController = self;
         context.clickComment = showComment;
         context.enterType = enterType;
+        context.enterFrom = [self pageType];
         
         [cell didSelectCell:context];
     }else if (cellModel.openUrl) {

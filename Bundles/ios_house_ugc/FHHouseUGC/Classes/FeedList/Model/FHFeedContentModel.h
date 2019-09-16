@@ -459,6 +459,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *imageList;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseActionModel *action ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserModel *user ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataContentRepostParamsModel *repostParams ;
 @end
 
 @interface FHFeedContentRawDataOperationModel : JSONModel
