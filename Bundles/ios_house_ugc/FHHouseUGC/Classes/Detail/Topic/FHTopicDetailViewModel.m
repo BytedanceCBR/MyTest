@@ -478,11 +478,17 @@
                                             [self processLoadingState];
                                             self.needRefreshCell = NO;
                                             // JOKER: 发贴成功插入贴子后，滚动使露出
-                                            [tableView reloadData];
-                                            [tableView layoutIfNeeded];
-                                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                                            CGRect rect = [tableView rectForRowAtIndexPath:indexPath];
-                                            [tableView setContentOffset:rect.origin animated:YES];
+                                            if(index == 0) {
+                                                [tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+                                            } else {
+                                                [tableView reloadData];
+                                                [tableView layoutIfNeeded];
+                                                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                                                CGRect rect = [tableView rectForRowAtIndexPath:indexPath];
+                                                self.canScroll = YES;
+                                                [tableView setContentOffset:rect.origin animated:NO];
+                                                [[NSNotificationCenter defaultCenter] postNotificationName:@"kScrollToSubScrollView" object:nil];
+                                            }
                                             break;
                                         }
                                     }

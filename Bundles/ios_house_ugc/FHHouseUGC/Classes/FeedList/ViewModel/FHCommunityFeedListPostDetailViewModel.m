@@ -95,10 +95,14 @@
                                     [self.tableView reloadData];
                                     [self.tableView layoutIfNeeded]; self.needRefreshCell = NO;
                                     // JOKER: 发贴成功插入贴子后，滚动使露出
-                                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                                    CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
-                                    rect.origin.y -= [TTDeviceHelper isIPhoneXDevice] ? 88 : 64; // 白色导航条的高度
-                                    [self.tableView setContentOffset:rect.origin animated:YES];
+                                    if(index == 0) {
+                                        [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+                                    } else {
+                                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                                        CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+                                        rect.origin.y -= [TTDeviceHelper isIPhoneXDevice] ? 88 : 64; // 白色导航条的高度
+                                        [self.tableView setContentOffset:rect.origin animated:YES];
+                                    }
                                 }
                             });
                         }
