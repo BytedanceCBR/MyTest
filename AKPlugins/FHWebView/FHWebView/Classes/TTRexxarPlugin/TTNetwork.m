@@ -83,6 +83,22 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
     }
 }
 
+- (void)appCommonParamsWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    NSDictionary *commonParams = [FHWebViewConfig getRequestCommonParams];
+    
+    if (!commonParams) {
+        if (callback) {
+            callback(TTRJSBMsgFailed, @{@"msg": @"通用参数为空..请联系客户端相关人士"});
+        }
+        return;
+    }
+    
+    if (callback) {
+        callback(TTRJSBMsgSuccess, @{@"data": commonParams});
+    }
+}
+
 - (void)fetchWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
 {
     NSString *url = [param tt_stringValueForKey:@"url"];
