@@ -227,11 +227,12 @@
     contactConfig.searchId = cellModel.searchId;
     contactConfig.imprId = cellModel.imprId;
     contactConfig.from = @"app_oldhouse_evaluate";
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError *_Nonnull error) {
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
         if (success && [cellModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]) {
             FHHouseDetailViewController *vc = (FHHouseDetailViewController *) cellModel.belongsVC;
             vc.isPhoneCallShow = YES;
             vc.phoneCallRealtorId = contactConfig.realtorId;
+            vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
         }
     }];
 

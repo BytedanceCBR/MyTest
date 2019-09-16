@@ -665,7 +665,7 @@
     }];
 }
 
-+ (TTHttpTask *)requestPhoneFeedback:(NSString *)houseId houseType:(FHHouseType)houseType realtorId:(NSString *)realtorId imprId:(NSString *)imprId searchId:(NSString *)searchId score:(NSInteger)score completion:(void (^)(bool, NSError * _Nonnull))completion {
++ (TTHttpTask *)requestPhoneFeedback:(NSString *)houseId houseType:(FHHouseType)houseType realtorId:(NSString *)realtorId imprId:(NSString *)imprId searchId:(NSString *)searchId score:(NSInteger)score requestId:(NSString*) requestId completion:(void (^)(bool, NSError * _Nonnull))completion {
     NSString *path = @"/f100/api/phone/feedback";
     NSMutableDictionary *param = [NSMutableDictionary new];
     
@@ -683,6 +683,10 @@
     }
     if(!isEmptyString(realtorId)){
         param[@"realtor_id"] = @(realtorId.longLongValue);;
+    }
+    
+    if(!isEmptyString(requestId)) {
+        param[@"request_id"] = requestId;
     }
     
     return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {

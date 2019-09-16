@@ -65,7 +65,7 @@ typedef enum : NSUInteger {
         [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed extraDict:nil errorCode:0 message:nil];
         NSError *error = [[NSError alloc]initWithDomain:NSURLErrorDomain code:-1 userInfo:nil];
         if (completionBlock) {
-            completionBlock(NO,error);
+            completionBlock(NO,error,nil);
         }
         return;
     }
@@ -98,7 +98,7 @@ typedef enum : NSUInteger {
             [self addClickCallLog:configModel isVirtual:isVirtual];
             [self callPhone:urlStr];
             if (completionBlock) {
-                completionBlock(YES,nil);
+                completionBlock(YES,nil,model.data);
             }
             return;
         }
@@ -108,7 +108,7 @@ typedef enum : NSUInteger {
         extraDict[@"house_id"] = houseId;
         [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed extraDict:extraDict errorCode:error.code message:model.message ? : error.localizedDescription];
         if (completionBlock) {
-            completionBlock(NO,nil);
+            completionBlock(NO,nil,nil);
         }
     }];
 }

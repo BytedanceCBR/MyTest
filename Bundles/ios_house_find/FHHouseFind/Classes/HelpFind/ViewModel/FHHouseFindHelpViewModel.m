@@ -814,7 +814,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         if([TTAccount sharedAccount].isLogin){
             return CGSizeMake(collectionView.frame.size.width, 90);
         }
-        return CGSizeMake(collectionView.frame.size.width, 150);
+        return CGSizeMake(collectionView.frame.size.width, 174);
     }
     return CGSizeMake(collectionView.frame.size.width, 60);
 }

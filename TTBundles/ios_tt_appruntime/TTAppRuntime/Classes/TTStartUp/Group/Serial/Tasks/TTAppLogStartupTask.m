@@ -22,7 +22,6 @@
 #import "DebugUmengIndicator.h"
 #import <TTTracker/TTTrackerCleaner.h>
 #import "SSWebViewUtil.h"
-//#import "Bubble-Swift.h"
 #import "FHLocManager.h"
 #import "FHEnvContext.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
@@ -42,7 +41,7 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
     [super startWithApplication:application options:launchOptions];
     [[self class] startupTracker];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [[self class] startupTracker];
+//        [[self class] startupTracker];
         [[SSImpressionManager shareInstance] setTodayExtensionBlock:^(void){
             //保存today extenstion的impression
             NSMutableDictionary * todayExtenstionImpressions = [ExploreExtenstionDataHelper fetchTodayExtenstionDict];
