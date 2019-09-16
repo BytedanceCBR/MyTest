@@ -88,7 +88,6 @@
 
 // 发帖成功，插入数据
 - (void)postThreadSuccess:(NSNotification *)noti {
-    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO]; 
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         NSString *social_group_id = userInfo[@"social_group_id"];
@@ -122,10 +121,13 @@
                                     // 插入在置顶贴的下方
                                     [self.dataList insertObject:cellModel atIndex:index];
                                     [self.tableView reloadData];
+                                    [self.tableView layoutIfNeeded];
                                     self.needRefreshCell = NO;
                                     // JOKER: 发贴成功插入贴子后，滚动使露出
                                     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                                    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+                                    CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+                                    [self.tableView setContentOffset:rect.origin
+                                                            animated:YES];
                                 }
                             });
                         }
