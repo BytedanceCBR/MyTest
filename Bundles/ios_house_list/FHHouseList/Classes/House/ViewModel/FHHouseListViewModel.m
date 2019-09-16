@@ -741,7 +741,6 @@ extern NSString *const INSTANT_DATA_KEY;
             }
             
             if (self.isRefresh) {
-                
                 //先插入订阅再判断其他
                 FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = houseModel.subscribeInfo;
                 if ([subscribeMode isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
@@ -761,8 +760,6 @@ extern NSString *const INSTANT_DATA_KEY;
                     }
                     self.showRealHouseTop = YES;
                 }
-              
-    
             }
 
             if (houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue && !houseModel.hasMore && houseModel.externalSite.fakeHouseTotal.integerValue != 0 && houseModel.externalSite.fakeText) {
