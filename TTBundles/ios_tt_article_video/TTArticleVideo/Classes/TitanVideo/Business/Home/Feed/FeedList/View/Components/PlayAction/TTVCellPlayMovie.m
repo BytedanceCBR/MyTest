@@ -374,7 +374,16 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     if (state == TTVVideoPlaybackStateFinished) {
         [self moviePlayFinishedAction];
     }
-    
+}
+
+- (void)playerOrientationState:(BOOL)isFullScreen {
+    if(self.cellEntity.hideTitleAndWatchCount){
+        if(isFullScreen){
+            [self.movieView.player setVideoTitle:self.cellEntity.originData.title];
+        }else{
+            [self.movieView.player setVideoTitle:nil];
+        }
+    }
 }
 
 - (void)actionChangeCallbackWithAction:(TTVPlayerStateAction *)action
