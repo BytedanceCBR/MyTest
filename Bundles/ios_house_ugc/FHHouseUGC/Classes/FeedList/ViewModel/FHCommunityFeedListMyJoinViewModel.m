@@ -296,6 +296,11 @@
         [FHUGCConfig sharedInstance].behotTime = behotTime;
     }
     
+    //下拉刷新关闭视频播放
+    if(isHead){
+        [self endDisplay];
+    }
+    
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
     NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
     if(fCityId){
