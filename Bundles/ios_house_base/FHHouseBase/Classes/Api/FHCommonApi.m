@@ -37,6 +37,11 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCDiggStateChangeNotification" object:nil userInfo:userInfo];
     }
     
+    if(group_type == FHDetailDiggTypeVIDEO){
+        [self requestVideoDiggWith:group_id groupType:group_type action:action completion:completion];
+        return nil;
+    }
+    
     paramDic[@"group_type"] = @(group_type);
     paramDic[@"action"] = @(action);
     NSString *query = [NSString stringWithFormat:@"group_id=%@&group_type=%ld&action=%ld",group_id,group_type,action];

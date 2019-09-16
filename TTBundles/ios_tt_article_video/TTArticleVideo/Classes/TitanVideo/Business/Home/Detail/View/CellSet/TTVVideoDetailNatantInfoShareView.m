@@ -56,7 +56,7 @@ typedef NS_ENUM(NSInteger, TTVVideoDetailNatantInfoShareViewShareAction)
 @property (nonatomic, strong) TTDiggButton        *digButton;
 @property (nonatomic, strong) TTAlphaThemedButton *videoExtendLinkButton;
 @property (nonatomic, strong) TTAlphaThemedButton *shareButton;
-
+@property (nonatomic, assign) BOOL hideDiggBtn;
 
 @end
 
@@ -71,6 +71,7 @@ typedef NS_ENUM(NSInteger, TTVVideoDetailNatantInfoShareViewShareAction)
     self = [super initWithFrame:CGRectMake(0, 0, width, 0)];
     if (self) {
         REGISTER_MESSAGE(TTActivityShareSequenceChangedMessage, self);
+        self.hideDiggBtn = YES;
         self.viewModel = infoModel;
         [self initializeViews];
         [self themeChanged:nil];
@@ -143,6 +144,8 @@ typedef NS_ENUM(NSInteger, TTVVideoDetailNatantInfoShareViewShareAction)
             }
             
         }];
+        
+        self.digButton.hidden = self.hideDiggBtn;
 
     }
     return _digButton;
@@ -339,7 +342,11 @@ typedef NS_ENUM(NSInteger, TTVVideoDetailNatantInfoShareViewShareAction)
         self.secondShareButton.width = width;
         self.firstShareButton.height = kNatantInfoShareButtonHeight;
         self.secondShareButton.height = kNatantInfoShareButtonHeight;
-        self.firstShareButton.left = self.digButton.right + kNatantInfoShareViewGap;
+        if(self.hideDiggBtn){
+            self.firstShareButton.left = kNatantInfoShareViewHorizontalPadding;
+        }else{
+            self.firstShareButton.left = self.digButton.right + kNatantInfoShareViewGap;
+        }
         self.secondShareButton.left = self.firstShareButton.right + kNatantInfoShareDiggViewGap;
         self.firstShareButton.centerY = self.digButton.centerY;
         self.secondShareButton.centerY = self.digButton.centerY;
@@ -348,6 +355,9 @@ typedef NS_ENUM(NSInteger, TTVVideoDetailNatantInfoShareViewShareAction)
 
 - (void)updateDiggButton
 {
+    if(self.hideDiggBtn){
+        return;
+    }
     self.digButton.selected = self.viewModel.infoModel.userDiged.boolValue;
     [self.digButton setDiggCount:self.viewModel.infoModel.digCount.integerValue];
     if (self.viewModel.infoModel.userDiged.boolValue) {

@@ -234,6 +234,10 @@
         self.likeImageView.image =  ICON_FONT_IMG(20, @"\U0000e69c", nil);//@"fh_ugc_like"
         self.likeLabel.textColor = [UIColor themeGray1];
     }
+    //补充逻辑，如果用户状态为已点赞，但是点赞数为零，这时候默认点赞数设为1
+    if([userDigg boolValue] && count == 0){
+        self.likeLabel.text = @"1";
+    }
 }
 
 // 点赞

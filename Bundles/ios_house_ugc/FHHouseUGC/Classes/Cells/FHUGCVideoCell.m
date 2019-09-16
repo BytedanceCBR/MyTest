@@ -73,11 +73,11 @@
 }
 
 - (void)dealloc {
-    UNREGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
+//    UNREGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
 }
 
 - (void)initUIs {
-    REGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
+//    REGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
     [self initViews];
     [self initConstraints];
 }

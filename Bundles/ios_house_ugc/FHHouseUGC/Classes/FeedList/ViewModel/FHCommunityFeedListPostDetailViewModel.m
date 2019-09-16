@@ -604,6 +604,13 @@
             [info setValue:@(1) forKey:AWEVideoShowComment];
         }
         
+        if(cellModel.tracerDic){
+            NSMutableDictionary *tracerDic = [cellModel.tracerDic mutableCopy];
+            tracerDic[@"page_type"] = @"small_video_detail";
+            tracerDic[@"enter_type"] = enterType;
+            [info setValue:tracerDic forKey:@"extraDic"];
+        }
+        
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
     }
