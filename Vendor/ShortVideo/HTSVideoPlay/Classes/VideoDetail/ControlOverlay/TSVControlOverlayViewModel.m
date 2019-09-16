@@ -118,38 +118,38 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
 - (void (^)(TTRichSpanText * _Nonnull, TTUGCAttributedLabelLink * _Nonnull))titleLinkClickBlock
 {
-    @weakify(self);
+//    @weakify(self);
     return ^(TTRichSpanText *richSpanText, TTUGCAttributedLabelLink *curLink) {
-        @strongify(self);
-        // 如果是白名单外链，则需要加个埋点
-        NSArray <TTRichSpanLink *> *links = richSpanText.richSpans.links;
-        if (links.count > 0) {
-            for (TTRichSpanLink *link in links) {
-                if ([link.link isEqualToString:[curLink.linkURL absoluteString]] && link.type == TTRichSpanLinkTypeLink) {
-                    NSMutableDictionary *extraDict = [NSMutableDictionary dictionary];
-                    [extraDict setValue:self.model.categoryName forKey:@"category_name"];
-                    [extraDict setValue:self.model.groupID forKey:@"group_id"];
-                    [extraDict setValue:self.model.logPb forKey:@"log_pb"];
-                    [AWEVideoPlayTrackerBridge trackEvent:@"external_link_click" params:extraDict];
-                    break;
-                }
-            }
-        }
-
-        if ([[TTRoute sharedRoute] canOpenURL:curLink.linkURL]) {
-            [TSVDetailRouteHelper openURLByPushViewController:curLink.linkURL userInfo:TTRouteUserInfoWithDict([[self enterConcernParamsWithURLStr:curLink.linkURL.absoluteString] copy])];
-        } else {
-            NSMutableDictionary *conditions = [NSMutableDictionary dictionary];
-            [conditions setValue:@(NO) forKey:@"supportRotate"];
-            SSWebViewController *controller = [[SSWebViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(conditions)];
-            [controller setTitleText:@" "];
-            [controller requestWithURL:curLink.linkURL];
-            UIViewController *topMostVC = [TSVUIResponderHelper topmostViewController];
-            if ([topMostVC.navigationController isKindOfClass:[TTNavigationController class]]) {
-                TTNavigationController *nav = (TTNavigationController *)topMostVC.navigationController;
-                [nav pushViewControllerByTransitioningAnimation:controller animated:YES];
-            }
-        }
+//        @strongify(self);
+//        // 如果是白名单外链，则需要加个埋点
+//        NSArray <TTRichSpanLink *> *links = richSpanText.richSpans.links;
+//        if (links.count > 0) {
+//            for (TTRichSpanLink *link in links) {
+//                if ([link.link isEqualToString:[curLink.linkURL absoluteString]] && link.type == TTRichSpanLinkTypeLink) {
+//                    NSMutableDictionary *extraDict = [NSMutableDictionary dictionary];
+//                    [extraDict setValue:self.model.categoryName forKey:@"category_name"];
+//                    [extraDict setValue:self.model.groupID forKey:@"group_id"];
+//                    [extraDict setValue:self.model.logPb forKey:@"log_pb"];
+//                    [AWEVideoPlayTrackerBridge trackEvent:@"external_link_click" params:extraDict];
+//                    break;
+//                }
+//            }
+//        }
+//
+//        if ([[TTRoute sharedRoute] canOpenURL:curLink.linkURL]) {
+//            [TSVDetailRouteHelper openURLByPushViewController:curLink.linkURL userInfo:TTRouteUserInfoWithDict([[self enterConcernParamsWithURLStr:curLink.linkURL.absoluteString] copy])];
+//        } else {
+//            NSMutableDictionary *conditions = [NSMutableDictionary dictionary];
+//            [conditions setValue:@(NO) forKey:@"supportRotate"];
+//            SSWebViewController *controller = [[SSWebViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(conditions)];
+//            [controller setTitleText:@" "];
+//            [controller requestWithURL:curLink.linkURL];
+//            UIViewController *topMostVC = [TSVUIResponderHelper topmostViewController];
+//            if ([topMostVC.navigationController isKindOfClass:[TTNavigationController class]]) {
+//                TTNavigationController *nav = (TTNavigationController *)topMostVC.navigationController;
+//                [nav pushViewControllerByTransitioningAnimation:controller animated:YES];
+//            }
+//        }
     };
 }
 
