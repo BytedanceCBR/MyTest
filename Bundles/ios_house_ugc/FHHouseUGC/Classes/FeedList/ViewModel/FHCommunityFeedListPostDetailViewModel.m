@@ -93,10 +93,12 @@
                                     // 插入在置顶贴的下方
                                     [self.dataList insertObject:cellModel atIndex:index];
                                     [self.tableView reloadData];
-                                    self.needRefreshCell = NO;
+                                    [self.tableView layoutIfNeeded]; self.needRefreshCell = NO;
                                     // JOKER: 发贴成功插入贴子后，滚动使露出
                                     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                                    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+                                    CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+                                    rect.origin.y -= [TTDeviceHelper isIPhoneXDevice] ? 88 : 64; // 白色导航条的高度
+                                    [self.tableView setContentOffset:rect.origin animated:YES];
                                 }
                             });
                         }

@@ -478,8 +478,11 @@
                                             [self processLoadingState];
                                             self.needRefreshCell = NO;
                                             // JOKER: 发贴成功插入贴子后，滚动使露出
+                                            [tableView reloadData];
+                                            [tableView layoutIfNeeded];
                                             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                                            [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+                                            CGRect rect = [tableView rectForRowAtIndexPath:indexPath];
+                                            [tableView setContentOffset:rect.origin animated:YES];
                                             break;
                                         }
                                     }
