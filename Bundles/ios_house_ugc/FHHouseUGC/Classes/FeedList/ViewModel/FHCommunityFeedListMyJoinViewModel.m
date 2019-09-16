@@ -124,10 +124,14 @@
                                     [self.tableView layoutIfNeeded];
                                     self.needRefreshCell = NO;
                                     // JOKER: 发贴成功插入贴子后，滚动使露出
-                                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                                    CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
-                                    [self.tableView setContentOffset:rect.origin
-                                                            animated:YES];
+                                    if(index == 0) {
+                                        [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+                                    } else {
+                                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                                        CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+                                        [self.tableView setContentOffset:rect.origin
+                                                                animated:YES];
+                                    }
                                 }
                             });
                         }
