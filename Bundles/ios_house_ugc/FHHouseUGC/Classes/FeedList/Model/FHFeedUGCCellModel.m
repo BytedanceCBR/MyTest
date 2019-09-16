@@ -364,7 +364,11 @@
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
-        originItemModel.type = @"[文章]";
+        if([model.rawData.commentBase.repostParams.repostType integerValue] == 223){
+            originItemModel.type = @"[视频]";
+        }else{
+            originItemModel.type = @"[文章]";
+        }
         if(model.rawData.originGroup){
             originItemModel.content = model.rawData.originGroup.title;
             originItemModel.openUrl = model.rawData.originGroup.schema;
@@ -468,7 +472,7 @@
         cellModel.content = model.rawData.title;
         cellModel.contentRichSpan = model.rawData.titleRichSpan;
         
-        double time = [model.publishTime doubleValue];
+        double time = [model.rawData.createTime doubleValue];
         NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
         cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
         

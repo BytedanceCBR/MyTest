@@ -353,6 +353,9 @@
     if(context.enterType){
         tracerDic[@"enter_type"] = context.enterType;
     }
+    if(context.enterFrom){
+        tracerDic[@"enter_from"] = context.enterFrom;
+    }
     NSString *reportParams = [tracerDic tt_JSONRepresentation];
     if(reportParams){
         [statParams setValue:reportParams forKey:@"report_params"];
