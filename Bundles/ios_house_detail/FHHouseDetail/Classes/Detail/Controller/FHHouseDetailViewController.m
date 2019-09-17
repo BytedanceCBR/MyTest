@@ -557,12 +557,17 @@
         self.isPhoneCallShow = NO;
         [self addFeedBackView];
         self.phoneCallRealtorId = nil;
+        self.phoneCallRequestId = nil;
     }
 }
 
 - (BOOL)isShowFeedbackView {
     //满足这两个条件，在回来时候显示反馈弹窗
-    if(self.isPhoneCallPickUp && self.isPhoneCallShow && self.phoneCallRealtorId && (self.viewModel.houseType == FHHouseTypeSecondHandHouse)){
+    if(self.isPhoneCallPickUp &&
+       self.isPhoneCallShow &&
+       self.phoneCallRealtorId &&
+       self.phoneCallRequestId &&
+       (self.viewModel.houseType == FHHouseTypeSecondHandHouse)){
         NSString *houseId = self.viewModel.houseId;
         NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
         NSString *cacheKey = @"";
@@ -610,6 +615,7 @@
 
 - (void)addFeedBackView {
     self.feedbackView.realtorId = self.phoneCallRealtorId;
+    self.feedbackView.requestId = self.phoneCallRequestId;
     [self.feedbackView show:self.view];
 }
 

@@ -22,10 +22,24 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super init];
     if (self) {
+        
+        //sslocal://home?tab=community
         if([paramObj.allParams.allKeys containsObject:@"tab"])
-        {            
+        {
             [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarSecond];
         }
+        
+        if([paramObj.allParams.allKeys containsObject:@"select_tab"])
+        {
+            NSDictionary* params = paramObj.allParams;
+            if (params != nil) {
+                NSString* target = params[@"select_tab"];
+                if (target != nil && target.length > 0) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
+                }
+            }
+        }
+        
     }
     return self;
 }
