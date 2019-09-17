@@ -599,6 +599,10 @@
         [self goToVoteDetail:cellModel value:0];
     } if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
         //小视频
+        if (![TTReachability isNetworkConnected]) {
+            [[ToastManager manager] showToast:@"网络异常"];
+            return;
+        }
         WeakSelf;
         TSVShortVideoDetailExitManager *exitManager = [[TSVShortVideoDetailExitManager alloc] initWithUpdateBlock:^CGRect{
             StrongSelf;

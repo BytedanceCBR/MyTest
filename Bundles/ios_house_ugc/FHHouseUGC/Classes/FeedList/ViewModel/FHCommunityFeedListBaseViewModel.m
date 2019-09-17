@@ -10,7 +10,6 @@
 #import <FHUGCVideoCell.h>
 #import <TTVFeedPlayMovie.h>
 
-
 @implementation FHCommunityFeedListBaseViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController {

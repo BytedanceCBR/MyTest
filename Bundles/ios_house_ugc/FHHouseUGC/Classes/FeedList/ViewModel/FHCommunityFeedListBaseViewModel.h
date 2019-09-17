@@ -19,6 +19,7 @@
 #import "HTSVideoPageParamHeader.h"
 #import "AWEVideoConstants.h"
 #import <TTVFeedListItem.h>
+#import <TTReachability.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
