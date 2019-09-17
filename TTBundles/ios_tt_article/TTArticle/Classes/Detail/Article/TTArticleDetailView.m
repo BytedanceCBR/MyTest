@@ -55,7 +55,7 @@
 #import <TTThemed/UIImage+TTThemeExtension.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-
+#import <FHCommonUI/ToastManager.h>
 
 static NSInteger const kRedirectStatusCode = 302;
 static NSInteger const kErrorStatusCode = 400;
@@ -378,6 +378,7 @@ static NSInteger const kErrorStatusCode = 400;
     if ([self p_checkArticleReliable]) {
         [self tt_startLoadWebViewContent];
     }
+    // 导流页
     [self p_showLoadingView];
 }
 
@@ -469,7 +470,7 @@ static NSInteger const kErrorStatusCode = 400;
     
     [_detailViewModel tt_setArticleHasRead];
 }
-
+// 加载转码页
 - (void)p_startLoadNativeTypeArticle {
     
     if (_detailWebView.webView == self.class.sharedWebView) {
@@ -506,7 +507,7 @@ static NSInteger const kErrorStatusCode = 400;
         self.detailWebView.webView.scalesPageToFit = NO;
     }];
 }
-
+// 加载导流页
 - (void)p_startLoadWebTypeArticle
 {
     _webViewHasExecuteScriptJS = NO;
@@ -571,7 +572,7 @@ static NSInteger const kErrorStatusCode = 400;
         }];
     });
 }
-
+//
 - (void)p_didStartLoadNativeContentForWebTimeoff
 {
     //added 5.9.9 开始转码前再判断一次开关，可能已被info重新设为关
@@ -1052,6 +1053,9 @@ static NSInteger const kErrorStatusCode = 400;
     if (!isEmptyString(intervalString)) {
         //        LOGD(@"[%@]intervalString is %@", serviceName, intervalString);
         [[TTMonitor shareManager] trackService:serviceName value:intervalString extra:[self.tracker detailTrackerCommonParams]];
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"文章详情" message:[NSString stringWithFormat:@"%@: %@", serviceName, intervalString] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles: nil];
+        [alertView show];
     }
 }
 

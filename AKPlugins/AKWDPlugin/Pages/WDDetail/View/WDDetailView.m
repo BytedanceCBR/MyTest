@@ -35,6 +35,7 @@
 #import <TTInteractExitHelper.h>
 #import "WDDefines.h"
 #import <TTBaseLib/TTURLUtils.h>
+#import <FHCommonUI/ToastManager.h>
 
 typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
     SSWebViewStayStatCancel,
@@ -796,6 +797,10 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
     NSString *intervalString = [_monitor intervalFromWebRequestStartTime];
     if (!isEmptyString(intervalString)) {
         [[TTMonitor shareManager] trackService:serviceName value:intervalString extra:[WDMonitorManager extraDicWithAnswerId:self.detailModel.answerEntity.ansid error:nil]];
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"问答详情" message:[NSString stringWithFormat:@"%@: %@", serviceName, intervalString] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles: nil];
+        [alertView show];
+        
     }
 }
 
