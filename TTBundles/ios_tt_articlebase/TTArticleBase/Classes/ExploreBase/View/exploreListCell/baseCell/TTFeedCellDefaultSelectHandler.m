@@ -475,6 +475,10 @@
                  // add by zjing 家居走这里
                 [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:detailURL] userInfo:TTRouteUserInfoWithDict(statParams)];
                 
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"文章点击进详情时间戳" message:[NSString stringWithFormat:@"%@",@([NSDate date].timeIntervalSince1970) ] delegate:nil cancelButtonTitle:@"cancel" otherButtonTitles: nil];
+                
+                [alert show];
+                
                 // 文章、图集等 启动关联时长统计
                 [[TTRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
             }

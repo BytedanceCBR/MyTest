@@ -1053,9 +1053,8 @@ static NSInteger const kErrorStatusCode = 400;
     if (!isEmptyString(intervalString)) {
         //        LOGD(@"[%@]intervalString is %@", serviceName, intervalString);
         [[TTMonitor shareManager] trackService:serviceName value:intervalString extra:[self.tracker detailTrackerCommonParams]];
-        
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"文章详情" message:[NSString stringWithFormat:@"%@: %@", serviceName, intervalString] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles: nil];
-        [alertView show];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"文章详情完成时间戳" message:[NSString stringWithFormat:@"%@: %@",serviceName, @([NSDate date].timeIntervalSince1970)] delegate:nil cancelButtonTitle:@"cancel" otherButtonTitles:nil];
+        [alert show];
     }
 }
 

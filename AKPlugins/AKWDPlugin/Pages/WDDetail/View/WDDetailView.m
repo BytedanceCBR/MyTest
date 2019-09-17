@@ -797,10 +797,8 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
     NSString *intervalString = [_monitor intervalFromWebRequestStartTime];
     if (!isEmptyString(intervalString)) {
         [[TTMonitor shareManager] trackService:serviceName value:intervalString extra:[WDMonitorManager extraDicWithAnswerId:self.detailModel.answerEntity.ansid error:nil]];
-        
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"问答详情" message:[NSString stringWithFormat:@"%@: %@", serviceName, intervalString] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles: nil];
-        [alertView show];
-        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"问答详情完成时间戳" message:[NSString stringWithFormat:@"%@: %@",serviceName, @([NSDate date].timeIntervalSince1970)] delegate:nil cancelButtonTitle:@"cancel" otherButtonTitles:nil];
+        [alert show];
     }
 }
 
