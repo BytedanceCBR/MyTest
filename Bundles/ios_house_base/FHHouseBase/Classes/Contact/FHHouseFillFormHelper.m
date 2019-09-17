@@ -188,11 +188,12 @@ extern NSString *const kFHToastCountKey;
     contactConfig.realtorId = configModel.realtorId;
     contactConfig.searchId = configModel.searchId;
     contactConfig.imprId = configModel.imprId;
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
         if(success && [configModel.topViewController isKindOfClass:[FHHouseDetailViewController class]]){
             FHHouseDetailViewController *vc = (FHHouseDetailViewController *)configModel.topViewController;
             vc.isPhoneCallShow = YES;
             vc.phoneCallRealtorId = contactConfig.realtorId;
+            vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
         }
     }];
 }

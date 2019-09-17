@@ -558,11 +558,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         contactConfig.from = extraDict[@"from"];
     }
     
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
         if(success && [wself.phoneCallViewModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
             FHHouseDetailViewController *vc = (FHHouseDetailViewController *)wself.phoneCallViewModel.belongsVC;
             vc.isPhoneCallShow = YES;
             vc.phoneCallRealtorId = contactConfig.realtorId;
+            vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
         }
     }];
     
