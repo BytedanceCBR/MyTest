@@ -266,23 +266,25 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion
 {
-    NSMutableArray *geocoders = [[NSMutableArray alloc] init];
-//    [BDUGAmapGeocoder sharedGeocoder].apiKey = kAmapKey;
-    [geocoders addObject:[BDUGAmapGeocoder sharedGeocoder]];
-    [geocoders addObject:[BDUGSystemGeocoder sharedGeocoder]];
-    
     BDUGLocationAuthorizationStatus status =  [BDUGLocationManager  currentLocationAuthorizationStatus];
     if (status >= BDUGLocationAuthorizationStatusNotDetermined) {
         //没有定位权限
         [[BDUGLocationManager sharedManager] requestWhenInUseAuthorizationWithCompletion:^(BOOL isGranted) {
-            if (isGranted) {
-                [self requestCurrentLocation:showAlert completion:completion];
-            }else if(completion){
-                completion(nil);
-            }
+            [self p_requestCurrentLocation:showAlert completion:completion];
         }];
         return;
     }
+    
+    [self p_requestCurrentLocation:showAlert completion:completion];
+    
+}
+
+- (void)p_requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion
+{
+    NSMutableArray *geocoders = [[NSMutableArray alloc] init];
+    //    [BDUGAmapGeocoder sharedGeocoder].apiKey = kAmapKey;
+    [geocoders addObject:[BDUGAmapGeocoder sharedGeocoder]];
+    [geocoders addObject:[BDUGSystemGeocoder sharedGeocoder]];
     
     __weak typeof(self) wSelf = self;
     [[BDUGLocationManager sharedManager]requestLocationWithDesiredAccuracy:BDUGLocationAccuracyHundredMeters geocoders:geocoders timeout:4 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
