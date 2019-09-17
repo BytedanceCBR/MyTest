@@ -13,7 +13,7 @@
 #import "WDAnswerEntity.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "WDAnswerService.h"
-#import <TTBubbleView.h>
+#import <TTUIWidget/TTBubbleView.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTDeviceHelper.h>

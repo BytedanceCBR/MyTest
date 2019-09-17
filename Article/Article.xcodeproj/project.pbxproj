@@ -808,6 +808,7 @@
 				3D396439219ACED0002E9010 /* ShellScript */,
 				EB681D6F5DCCA31C1AAD1BAB /* [CP] Embed Pods Frameworks */,
 				FCC852F64C0273F226C6A461 /* [CP] Copy Pods Resources */,
+				619579E9232F6A1700FB766E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -837,6 +838,7 @@
 				3D39643A219ACF07002E9010 /* ShellScript */,
 				7266FA1375A4D78558EF4060 /* [CP] Embed Pods Frameworks */,
 				8A48766275BDF55FC225ABAF /* [CP] Copy Pods Resources */,
+				619579E8232F683E00FB766E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1134,6 +1136,40 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n#/bin/sh ${PODS_ROOT}/Heimdallr/Heimdallr/dSYMUpload.sh\necho \"========= upload =========\"\n/bin/sh ${SRCROOT}/dSYMUpload.sh\necho \"========= upload done =======\"\n";
 		};
+		619579E8232F683E00FB766E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nsh \"${SRCROOT}/link_map_shells/analyse_and_map.sh\" \"${SRCROOT}\" \"${SRCROOT}/Article.xcworkspace/\" \"${SRCROOT}/link_map_shells\"\n";
+		};
+		619579E9232F6A1700FB766E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nsh \"${SRCROOT}/link_map_shells/analyse_and_map.sh\" \"${SRCROOT}\" \"${SRCROOT}/Article.xcworkspace/\" \"${LD_MAP_FILE_PATH}\"\n";
+		};
 		7266FA1375A4D78558EF4060 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1283,6 +1319,8 @@
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTBackButtonView.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTDialogViewResource.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVPlayerPod/TTVPlayerResource.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVerifyKit/TTVerifyKitResource.bundle",
@@ -1399,6 +1437,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UGCImage.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUGCRichText.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUIWidgetResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBackButtonView.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTDialogViewResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Profile.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVPlayerResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVerifyKitResource.bundle",
@@ -1622,6 +1662,8 @@
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTBackButtonView.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTDialogViewResource.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVPlayerPod/TTVPlayerResource.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVerifyKit/TTVerifyKitResource.bundle",
@@ -1737,6 +1779,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UGCImage.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUGCRichText.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUIWidgetResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBackButtonView.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTDialogViewResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Profile.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVPlayerResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVerifyKitResource.bundle",

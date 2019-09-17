@@ -12,7 +12,7 @@
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHFakeInputNavbar.h"
 #import <UIViewAdditions.h>
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "FHTracerModel.h"
 #import "FHErrorMaskView.h"
 #import "FHHouseListViewModel.h"

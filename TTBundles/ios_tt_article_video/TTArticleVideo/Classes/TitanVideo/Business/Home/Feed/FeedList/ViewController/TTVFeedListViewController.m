@@ -26,7 +26,7 @@
 #import "TTVideoDislikeMessage.h"
 #import "TTAccountManager.h"
 #import "NewsListLogicManager.h"
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "NetworkUtilities.h"
 #import "NewsDetailConstant.h"
 #import "TTVideoCategoryManager.h"

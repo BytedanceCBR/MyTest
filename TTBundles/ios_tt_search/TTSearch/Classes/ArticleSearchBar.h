@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TTSeachBarView.h"
+#import <TTUIWidget/TTSearchBarView.h>
 
-@interface ArticleSearchBar : TTSeachBarView
+@interface ArticleSearchBar : TTSearchBarView
 
 @property (nonatomic, assign) BOOL useWhiteCancelButton;
 

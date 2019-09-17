@@ -69,6 +69,8 @@ PODS:
   - Bolts/AppLinks (1.9.0.1-binary)
   - Bolts/Tasks (1.9.0.1-binary)
   - boringssl (0.0.7)
+  - ByteDanceKit/Foundation (1.0.0-rc.3.1.binary)
+  - ByteDanceKit/UIKit (1.0.0-rc.3.1.binary)
   - CHTCollectionViewWaterfallLayout (0.9.5.1-binary):
     - CHTCollectionViewWaterfallLayout/ObjC (= 0.9.5.1-binary)
   - CHTCollectionViewWaterfallLayout/ObjC (0.9.5.1-binary)
@@ -518,9 +520,71 @@ PODS:
   - TTUGCFoundation/TTUGCApiModel (0.1.3)
   - TTUGCFoundation/TTUGCImage (0.1.3)
   - TTUGCFoundation/TTUGCRichText (0.1.3)
-  - TTUIWidget (0.1.0):
-    - TTUIWidget/TTIndicatorView (= 0.1.0)
-  - TTUIWidget/TTIndicatorView (0.1.0)
+  - TTUIWidget (0.10.28):
+    - TTUIWidget/ALAssets (= 0.10.28)
+    - TTUIWidget/ArticleListNotifyBarView (= 0.10.28)
+    - TTUIWidget/Others (= 0.10.28)
+    - TTUIWidget/PopoverView (= 0.10.28)
+    - TTUIWidget/SaveImageAlertView (= 0.10.28)
+    - TTUIWidget/SSAlertViewBase (= 0.10.28)
+    - TTUIWidget/SSMotionRender (= 0.10.28)
+    - TTUIWidget/SSViewControllerBase (= 0.10.28)
+    - TTUIWidget/STLinkLabel (= 0.10.28)
+    - TTUIWidget/TTAlphaThemedButton (= 0.10.28)
+    - TTUIWidget/TTAsyncLabel (= 0.10.28)
+    - TTUIWidget/TTBackButtonView (= 0.10.28)
+    - TTUIWidget/TTBadgeNumberView (= 0.10.28)
+    - TTUIWidget/TTBubbleView (= 0.10.28)
+    - TTUIWidget/TTColorAsFollowButton (= 0.10.28)
+    - TTUIWidget/TTDialogView (= 0.10.28)
+    - TTUIWidget/TTHeaderScrollView (= 0.10.28)
+    - TTUIWidget/TTIconLabel (= 0.10.28)
+    - TTUIWidget/TTIndicatorView (= 0.10.28)
+    - TTUIWidget/TTKeyboardListener (= 0.10.28)
+    - TTUIWidget/TTLabel (= 0.10.28)
+    - TTUIWidget/TTNavigationController (= 0.10.28)
+    - TTUIWidget/TTNavigationControllerTTBD (= 0.10.28)
+    - TTUIWidget/TTPageController (= 0.10.28)
+    - TTUIWidget/TTSearchBarView (= 0.10.28)
+    - TTUIWidget/TTSegmentedControl (= 0.10.28)
+    - TTUIWidget/TTTagView (= 0.10.28)
+    - TTUIWidget/TTThemedAlertController (= 0.10.28)
+    - TTUIWidget/TTThemedAlertControllerProtocol (= 0.10.28)
+    - TTUIWidget/UIView+CustomTimingFunction (= 0.10.28)
+    - TTUIWidget/UIViewController+TabBarSnapShot (= 0.10.28)
+    - TTUIWidget/VVeboImage (= 0.10.28)
+  - TTUIWidget/ALAssets (0.10.28)
+  - TTUIWidget/ArticleListNotifyBarView (0.10.28)
+  - TTUIWidget/Others (0.10.28)
+  - TTUIWidget/PopoverView (0.10.28)
+  - TTUIWidget/SaveImageAlertView (0.10.28)
+  - TTUIWidget/SSAlertViewBase (0.10.28)
+  - TTUIWidget/SSMotionRender (0.10.28)
+  - TTUIWidget/SSViewControllerBase (0.10.28)
+  - TTUIWidget/STLinkLabel (0.10.28)
+  - TTUIWidget/TTAlphaThemedButton (0.10.28)
+  - TTUIWidget/TTAsyncLabel (0.10.28)
+  - TTUIWidget/TTBackButtonView (0.10.28)
+  - TTUIWidget/TTBadgeNumberView (0.10.28)
+  - TTUIWidget/TTBubbleView (0.10.28)
+  - TTUIWidget/TTColorAsFollowButton (0.10.28)
+  - TTUIWidget/TTDialogView (0.10.28)
+  - TTUIWidget/TTHeaderScrollView (0.10.28)
+  - TTUIWidget/TTIconLabel (0.10.28)
+  - TTUIWidget/TTIndicatorView (0.10.28)
+  - TTUIWidget/TTKeyboardListener (0.10.28)
+  - TTUIWidget/TTLabel (0.10.28)
+  - TTUIWidget/TTNavigationController (0.10.28)
+  - TTUIWidget/TTNavigationControllerTTBD (0.10.28)
+  - TTUIWidget/TTPageController (0.10.28)
+  - TTUIWidget/TTSearchBarView (0.10.28)
+  - TTUIWidget/TTSegmentedControl (0.10.28)
+  - TTUIWidget/TTTagView (0.10.28)
+  - TTUIWidget/TTThemedAlertController (0.10.28)
+  - TTUIWidget/TTThemedAlertControllerProtocol (0.10.28)
+  - TTUIWidget/UIView+CustomTimingFunction (0.10.28)
+  - TTUIWidget/UIViewController+TabBarSnapShot (0.10.28)
+  - TTUIWidget/VVeboImage (0.10.28)
   - TTUserProfile (0.1.0)
   - TTUserSettings (0.3.4.1-binary)
   - TTVContainerScrollView (0.1.2.1-binary)
@@ -604,6 +668,8 @@ DEPENDENCIES:
   - BDWebImage/SDAdapter (= 0.2.2.1-binary)
   - Bolts (= 1.9.0.1-binary)
   - boringssl (= 0.0.7)
+  - ByteDanceKit/Foundation (= 1.0.0-rc.3.1.binary)
+  - ByteDanceKit/UIKit (= 1.0.0-rc.3.1.binary)
   - CHTCollectionViewWaterfallLayout (= 0.9.5.1-binary)
   - CocoaLumberjack (= 3.4.2.1-binary)
   - Crashlytics (= 3.12.0.1-binary)
@@ -823,7 +889,7 @@ DEPENDENCIES:
   - TTThemed (= 0.1.36.1-binary)
   - TTTracker (= 10.0.5.1-binary)
   - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
-  - TTUIWidget (from `../AKPlugins/TTUIWidget`)
+  - TTUIWidget (from `../../testPod/tt_pods_ui`)
   - TTUserProfile (from `../TTBundles/ios_tt_userprofile`)
   - TTUserSettings (= 0.3.4.1-binary)
   - TTVContainerScrollView (= 0.1.2.1-binary)
@@ -949,7 +1015,7 @@ EXTERNAL SOURCES:
   TTUGCFoundation:
     :path: ../Vendor/TTUGCFoundation
   TTUIWidget:
-    :path: ../AKPlugins/TTUIWidget
+    :path: ../../testPod/tt_pods_ui
   TTUserProfile:
     :path: ../TTBundles/ios_tt_userprofile
   TTVPlayerPod:
@@ -992,6 +1058,7 @@ SPEC CHECKSUMS:
   BDWebImage: cb9435b175d994f7156ffdc736477d794db576dd
   Bolts: 1432a62b82e8d832c6fceaa3cce9ddbc18d91893
   boringssl: 8ea6d11d670e5e18687bc53a5d6f02741bdd5967
+  ByteDanceKit: ecd679ebcd80d2937ae10566db6dec1248d7840f
   CHTCollectionViewWaterfallLayout: 8a33ea9e60a246d71a3b04d4350c70de4caf1d24
   CocoaLumberjack: c0d821ecf553b7ee2a8da704cb4543027f3d0c5e
   Crashlytics: bf08c2834d9231328142ef5588ee1ae5b78229a9
@@ -1122,7 +1189,7 @@ SPEC CHECKSUMS:
   TTThemed: 921e544fa8ca8c34b3a091af38b8612609c18480
   TTTracker: 53b746772e7240481e57bee23ae866924fdc0193
   TTUGCFoundation: f67fd0f474fef086cd3e986a4ad2c8bb79220d94
-  TTUIWidget: d6b9ff5d35146e048c206d45a8362c2e490b7025
+  TTUIWidget: d89c644326aafc74736cd3e76d9df07a560f5612
   TTUserProfile: e9f6d23e86b3c1232b15a79a239e5d3a27e5b2f3
   TTUserSettings: ae3d4a3efeb987e7a2fe528545cfdb87a7798c72
   TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932
@@ -1148,6 +1215,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 300bb05d01f2a2f16a9b04a99902f08fe1860560
+PODFILE CHECKSUM: e92da8e2c200603166a666d1f3117373a5f382de
 
 COCOAPODS: 1.4.0

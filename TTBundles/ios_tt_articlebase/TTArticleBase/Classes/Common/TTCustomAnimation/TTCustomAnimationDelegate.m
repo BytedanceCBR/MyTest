@@ -10,7 +10,7 @@
 #import "ExploreSearchView.h"
 #import "ExploreSearchViewController.h"
 #import "TTExploreMainViewController.h"
-#import "TTSeachBarView.h"
+#import <TTUIWidget/TTSearchBarView.h>
 #import "UIView+CustomTimingFunction.h"
 #import "UIViewController+TabBarSnapShot.h"
 #import "AWEVideoDetailViewController.h"

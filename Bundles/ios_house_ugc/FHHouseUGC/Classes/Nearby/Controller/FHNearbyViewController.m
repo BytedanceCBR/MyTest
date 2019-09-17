@@ -73,7 +73,10 @@
 - (void)viewWillDisappear {
     [self.feedVC viewWillDisappear];
     [self addStayCategoryLog];
-    [self.alertVC dismissSelfFromParentViewControllerDidCancel];
+    // add by zjing 不对外暴露了，先暂时这么搞
+    if ([self.alertVC respondsToSelector:@selector(dismissSelfFromParentViewControllerDidCancel)]) {
+        [self.alertVC performSelector:@selector(dismissSelfFromParentViewControllerDidCancel)];
+    }
     self.needRefresh = YES;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
 }

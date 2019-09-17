@@ -15,7 +15,7 @@
 #import "FHMapAreaHouseListViewModel.h"
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import <TTBaseLib/TTDeviceHelper.h>
-#import <TTPlatformUIModel/ArticleListNotifyBarView.h>
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import <TTBaseLib/UIViewAdditions.h>
 
 @interface FHMapAreaHouseListViewController ()

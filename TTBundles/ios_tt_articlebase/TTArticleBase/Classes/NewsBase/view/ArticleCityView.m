@@ -16,7 +16,7 @@
 #import "TTLocationManager.h"
 #import "TTThemedAlertController.h"
 #import "MBProgressHUD.h"
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "TTLocationManager.h"
 #import "TTIndicatorView.h"
 #import "TTDeviceHelper.h"

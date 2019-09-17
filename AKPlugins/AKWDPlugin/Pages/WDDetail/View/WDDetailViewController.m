@@ -62,7 +62,7 @@
 #import <TTBaseLib/UITextView+TTAdditions.h>
 #import <TTFriendRelation/TTFollowThemeButton.h>
 #import <TTFriendRelation/TTFollowManager.h>
-#import <TTPlatformUIModel/TTBubbleView.h>
+#import <TTUIWidget/TTBubbleView.h>
 #import <TTImpression/TTRelevantDurationTracker.h>
 #import <TTVideoService/TTFFantasyTracker.h>
 

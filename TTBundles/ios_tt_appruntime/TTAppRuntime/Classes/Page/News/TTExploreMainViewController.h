@@ -11,7 +11,7 @@
 //#import "TTPagingScrollViewController.h"
 
 @class TTTopBar;
-@class TTSeachBarView;
+@class TTSearchBarView;
 
 @interface TTExploreMainViewController : UIViewController
 
@@ -32,7 +32,7 @@
 //首页改造新增
 @property (nonatomic, assign) BOOL isShowTopSearchPanel;
 
-+ (TTSeachBarView *)searchBar;
++ (TTSearchBarView *)searchBar;
 
 + (BOOL)isNewFeed;
 

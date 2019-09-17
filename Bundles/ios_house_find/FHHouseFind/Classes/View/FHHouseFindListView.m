@@ -6,7 +6,7 @@
 //
 
 #import "FHHouseFindListView.h"
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "FHErrorView.h"
 #import "FHConditionFilterViewModel.h"
 #import "FHHouseFilterBridge.h"

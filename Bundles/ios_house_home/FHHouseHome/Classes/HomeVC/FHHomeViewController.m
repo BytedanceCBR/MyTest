@@ -7,7 +7,7 @@
 
 #import "FHHomeViewController.h"
 #import "FHHomeListViewModel.h"
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "FHEnvContext.h"
 #import "FHHomeCellHelper.h"
 #import "FHHomeConfigManager.h"
