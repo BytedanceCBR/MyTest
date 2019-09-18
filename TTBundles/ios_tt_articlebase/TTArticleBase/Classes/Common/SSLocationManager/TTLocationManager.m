@@ -35,6 +35,9 @@
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import <BDUGLocationKit/BDUGLocationManager.h>
+#import <BDUGLocationKit/BDUGAmapGeocoder.h>
+#import <BDUGLocationKit/BDUGSystemGeocoder.h>
 
 @implementation TTLocationManagerAmapInfo
 
@@ -77,9 +80,22 @@
 
 //有位置服务的请求，通过TTAuthorizeLocationObj判断是否可以
 - (void)regeocodeWithCompletionHandler:(void (^)(NSArray *))completionHandler{
-    [[TTAuthorizeManager sharedManager].locationObj filterAuthorizeStrategyWithCompletionHandler:completionHandler authCompleteBlock:^(TTAuthorizeLocationArrayParamBlock arrayParamBlock) {
-       [[TTLocationManager sharedManager] regeocodeWithCompletionHandlerAfterAuthorization:arrayParamBlock];
-    } sysAuthFlag:0];//显示系统弹窗前显示自有弹窗的逻辑下掉，0代表直接显示系统弹窗，1代表先自有弹窗，再系统弹窗
+    
+    [[BDUGLocationManager sharedManager] requestWhenInUseAuthorizationWithCompletion:^(BOOL isGranted) {
+        if (isGranted) {
+            NSMutableArray *geocoders = [[NSMutableArray alloc] init];
+            [BDUGAmapGeocoder sharedGeocoder].apiKey = @"";
+            [geocoders addObject:[BDUGAmapGeocoder sharedGeocoder]];
+            [geocoders addObject:[BDUGSystemGeocoder sharedGeocoder]];
+            [[BDUGLocationManager sharedManager] requestLocationWithDesiredAccuracy:BDUGLocationAccuracyKilometer geocoders:geocoders timeout:5 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
+                
+            }];
+        }
+    }];
+    
+//    [[TTAuthorizeManager sharedManager].locationObj filterAuthorizeStrategyWithCompletionHandler:completionHandler authCompleteBlock:^(TTAuthorizeLocationArrayParamBlock arrayParamBlock) {
+//       [[TTLocationManager sharedManager] regeocodeWithCompletionHandlerAfterAuthorization:arrayParamBlock];
+//    } sysAuthFlag:0];//显示系统弹窗前显示自有弹窗的逻辑下掉，0代表直接显示系统弹窗，1代表先自有弹窗，再系统弹窗
 }
 
 //授权完成后调用

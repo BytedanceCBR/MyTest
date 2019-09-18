@@ -169,7 +169,7 @@
         callParams[@"log_pb"] = [FHUtils dictionaryWithJsonString:callParams[@"log_pb"]];
     }
     callParams[@"from"] = @"app_realtor_mainpage";
-    [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error) {
+    [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
         if (callback) {
             callback(TTBridgeMsgSuccess, nil,nil);
         }

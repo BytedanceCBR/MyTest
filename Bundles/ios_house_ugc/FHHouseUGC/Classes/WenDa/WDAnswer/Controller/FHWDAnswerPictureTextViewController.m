@@ -49,6 +49,7 @@
 #import "FHWenDaToolbar.h"
 #import "FHUserTracker.h"
 #import "FHBubbleTipManager.h"
+#import "HMDTTMonitor.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -547,6 +548,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
             NSString *ansid = wself.ansid;
             if (qid.length > 0 && ansid.length > 0) {
                 //回答发送成功
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"f_ugc_post_answer_result" metric:nil category:@{@"status":@(0)} extra:nil];
                 [wself sendAnswerSuccessTracer:ansid];
                 [wself.sendingIndicatorView updateIndicatorWithText:[wself postAnswerSuccessText] shouldRemoveWaitingView:YES];
                 [wself.sendingIndicatorView updateIndicatorWithImage:[UIImage themedImageNamed:@"doneicon_popup_textpage"]];
@@ -561,6 +563,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
                 
                 [wself dismissSelf];
             }else {
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"f_ugc_post_answer_result" metric:nil category:@{@"status":@(1)} extra:nil];
                 NSNumber *errorCode = [error.userInfo objectForKey:kWDErrorCodeKey];
                 //回答发送失败
                 NSString *errorTips = [error.userInfo objectForKey:kWDErrorTipsKey];

@@ -9,10 +9,11 @@
 #import "JSONModel.h"
 #import <FHHouseBase/FHHouseType.h>
 #import "FHDetailBaseModel.h"
+#import "FHHouseContactBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^FHHousePhoneCallCompletionBlock)(BOOL success,NSError *error);
+typedef void(^FHHousePhoneCallCompletionBlock)(BOOL success,NSError *error, FHDetailVirtualNumModel* virtualPhoneNumberModel);
 
 @interface FHHouseContactConfigModel : JSONModel
 

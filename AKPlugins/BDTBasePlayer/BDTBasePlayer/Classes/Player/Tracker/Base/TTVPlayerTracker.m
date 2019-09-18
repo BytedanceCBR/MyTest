@@ -32,6 +32,7 @@
 @synthesize enterFrom = _enterFrom;
 @synthesize categoryName = _categoryName;
 @synthesize authorId = _authorId;
+@synthesize extraDic = _extraDic;
 
 - (void)dealloc
 {

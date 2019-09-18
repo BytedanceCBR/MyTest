@@ -81,6 +81,7 @@
     tracker.enterFrom = self.enterFrom;
     tracker.categoryName = self.categoryName;
     tracker.authorId = self.authorId;
+    tracker.extraDic = self.extraDic;
 }
 
 - (void)addExtra:(NSDictionary *)extra forEvent:(NSString *)event

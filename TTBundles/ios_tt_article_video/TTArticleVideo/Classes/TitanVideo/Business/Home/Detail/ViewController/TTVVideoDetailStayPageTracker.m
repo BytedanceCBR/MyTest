@@ -196,6 +196,11 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     [dict setValue:self.detailModel.logPb forKey:@"log_pb"];
     [dict setValue:[self categoryName] forKey:@"category_name"];
     [dict setValue:[self enterFrom] forKey:@"enter_from"];
+    
+    if(self.detailModel.reportParams.count > 0){
+        [dict addEntriesFromDictionary:self.detailModel.reportParams];
+    }
+    
     if (self.viewIsAppear) {
         [TTTrackerWrapper eventV3:@"stay_page" params:dict isDoubleSending:YES];
     }
@@ -241,6 +246,10 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     [dict setValue:self.detailModel.logPb forKey:@"log_pb"];
     [dict setValue:[self categoryName] forKey:@"category_name"];
     [dict setValue:[self enterFrom] forKey:@"enter_from"];
+    
+    if(self.detailModel.reportParams.count > 0){
+        [dict addEntriesFromDictionary:self.detailModel.reportParams];
+    }
 
     if (self.viewIsAppear) {
         [TTTracker eventV3:@"stay_page" params:dict];
@@ -347,6 +356,10 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     [dic setValue:self.enterFrom forKey:@"enter_from"];
     [dic setValue:self.categoryName forKey:@"category_name"];
     [dic setValue:self.detailModel.relateReadFromGID forKey:@"from_gid"];
+    
+    if(self.detailModel.reportParams.count > 0){
+        [dic addEntriesFromDictionary:self.detailModel.reportParams];
+    }
     
     if (![TTTrackerWrapper isOnlyV3SendingEnable]){
         if (self.detailModel.fromSource == NewsGoDetailFromSourceVideoFloat)

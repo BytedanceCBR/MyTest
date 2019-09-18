@@ -42,17 +42,17 @@
         switch (index) {
             case 0:
                 itemView.titleLabel.text = model.comfortInfo.buildingAge ? : @"楼龄 -年";
-                itemView.subtitleLabel.text = @"建议在 0-5年";
+                itemView.subtitleLabel.text = @"建议在0-5年";
                 itemView.icon.image = ICON_FONT_IMG(20, @"\U0000e676", nil);//@"detail_comfort_1"
                 break;
             case 1:
                 itemView.titleLabel.text = model.comfortInfo.houseCount ? : @"规模 -户";
-                itemView.subtitleLabel.text = @"建议在 3000-5000户";
+                itemView.subtitleLabel.text = @"建议在3000-5000户";
                 itemView.icon.image = ICON_FONT_IMG(20, @"\U0000e662", nil);//@"detail_comfort_2"
                 break;
             case 2:
                 itemView.titleLabel.text = model.comfortInfo.plotRatio ? : @"容积率 -";
-                itemView.subtitleLabel.text = @"越低越好,最高不超过5";
+                itemView.subtitleLabel.text = @"越低越好，最高不超过5";
                 itemView.icon.image = ICON_FONT_IMG(20, @"\U0000e663", nil);//@"detail_comfort_3"
                 break;
             case 3:

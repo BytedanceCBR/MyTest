@@ -118,7 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 拨打电话后用户反馈
  * @score: 1不专业，2一般，3专业
  */
-+(TTHttpTask *)requestPhoneFeedback:(NSString *)houseId houseType:(FHHouseType)houseType realtorId:(NSString *)realtorId imprId:(NSString *)imprId searchId:(NSString *)searchId score:(NSInteger)score completion:(void (^)(bool succss , NSError *error))completion;
++(TTHttpTask *)requestPhoneFeedback:(NSString *)houseId houseType:(FHHouseType)houseType realtorId:(NSString *)realtorId imprId:(NSString *)imprId searchId:(NSString *)searchId score:(NSInteger)score requestId:(NSString*) requestId completion:(void (^)(bool succss , NSError *error))completion;
 
 @end
 
