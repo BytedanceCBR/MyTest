@@ -1,44 +1,37 @@
-//
-// Created by zhulijun on 2019-06-04.
-//
-
+//GENERATED CODE , DON'T EDIT
 #import "FHTopicListModel.h"
+@implementation FHTopicListResponseModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
-
-@implementation FHTopicListResponseItemModel
-
-+ (JSONKeyMapper *)keyMapper {
+@implementation FHTopicListResponseDataListModel
++ (JSONKeyMapper*)keyMapper
+{
     NSDictionary *dict = @{
-            @"communityId": @"communityId",
-            @"title": @"title",
-            @"subtitle": @"subtitle",
-            @"des": @"des",
-    };
-    return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName] ?: keyName;
+                           @"forumName": @"forum_name",
+                           @"avatarUrl": @"avatar_url",
+                           @"talkCountStr": @"talk_count_str",
+                           @"forumId": @"forum_id",
+                           @"talkCount": @"talk_count",
+                           @"logPb": @"log_pb"
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
     }];
 }
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName {
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
     return YES;
 }
-
 @end
-
 
 @implementation FHTopicListResponseDataModel
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName {
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
     return YES;
 }
-
 @end
 
-
-@implementation FHTopicListResponseModel
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName {
-    return YES;
-}
-
-@end

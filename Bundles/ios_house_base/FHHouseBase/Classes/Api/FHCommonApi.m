@@ -6,6 +6,16 @@
 //
 
 #import "FHCommonApi.h"
+#import "TTServiceCenter.h"
+#import "TTVideoDiggBuryParameter.h"
+#import "TTVideoArticleService.h"
+#import "TTVFeedUserOpDataSyncMessage.h"
+#import "TTVideoService.h"
+#import "TTVideoRecommendModel.h"
+#import "TTMessageCenter.h"
+#import "TTVideoArticleService+Action.h"
+#import "TTVideoArticleServiceMessage.h"
+#import "TTVFeedUserOpDataSyncMessage.h"
 
 @implementation FHCommonApi
 
@@ -26,6 +36,12 @@
         userInfo[@"action"] = @(action);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCDiggStateChangeNotification" object:nil userInfo:userInfo];
     }
+    
+    if(group_type == FHDetailDiggTypeVIDEO){
+        [self requestVideoDiggWith:group_id groupType:group_type action:action completion:completion];
+        return nil;
+    }
+    
     paramDic[@"group_type"] = @(group_type);
     paramDic[@"action"] = @(action);
     NSString *query = [NSString stringWithFormat:@"group_id=%@&group_type=%ld&action=%ld",group_id,group_type,action];
@@ -44,6 +60,34 @@
             completion(model,error);
         }
     }];
+}
+
+// 视频点赞走之前的接口---Track的方案，服务端支持视频点赞接口有问题，走之前的接口
++ (void)requestVideoDiggWith:(NSString *)group_id groupType:(FHDetailDiggType)group_type action:(NSInteger)action completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion  {
+    TTVideoArticleService *service = [[TTServiceCenter sharedInstance] getService:[TTVideoArticleService class]];
+    
+    TTVideoDiggBuryParameter *parameter = [[TTVideoDiggBuryParameter alloc] init];
+    parameter.aggr_type = 0; // 0
+    parameter.item_id = group_id;
+    parameter.group_id = group_id;// id
+    parameter.ad_id = nil; // nil
+    NSString *unique_id = group_id;
+    
+    if (action) {
+        // 点赞
+         [service digg:parameter completion:^(TT2DataItemActionResponseModel *response, NSError *error) {
+             if (completion) {
+                 completion(response,error);
+             }
+        }];
+    } else {
+        // 取消点赞
+        [service cancelDigg:parameter completion:^(TT2DataItemActionResponseModel *response, NSError *error) {
+            if (completion) {
+                completion(response,error);
+            }
+        }];
+    }
 }
 
 @end

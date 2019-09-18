@@ -47,6 +47,9 @@
 #import "FHPostUGCSelectedGroupHistoryView.h"
 #import "FHUGCConfig.h"
 #import "FHEnvContext.h"
+#import "NSString+UGCUtils.h"
+#import "FHTopicHeaderModel.h"
+#import "FHTopicListModel.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -112,6 +115,8 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, assign)   BOOL       lastCanShowMessageTip;
 @property (nonatomic, assign)   BOOL       lastInAppPushTipsHidden;
 @property (nonatomic, weak)     TTNavigationController       *navVC;
+@property (nonatomic, strong)   FHTopicHeaderModel  *topicHeaderModel; // 话题详情页进发布器传入的话题数据
+@property (nonatomic, assign)   BOOL isAddedTopicHeaderModel;
 
 @end
 
@@ -149,6 +154,42 @@ static NSInteger const kMaxPostImageCount = 9;
             } else {
                 self.hasSocialGroup = YES;
             }
+            
+            // 话题详情页传入的话题数据
+            self.topicHeaderModel = [params tt_objectForKey:@"topic_model"];
+            
+            // 取链接中的埋点数据
+            NSString *enter_from = params[@"enter_from"];
+            if (enter_from.length > 0) {
+                self.tracerDict[@"enter_from"] = enter_from;
+            }
+            NSString *enter_type = params[@"enter_type"];
+            if (enter_type.length > 0) {
+                self.tracerDict[@"enter_type"] = enter_type;
+            }
+            NSString *element_from = params[@"element_from"];
+            if (element_from.length > 0) {
+                self.tracerDict[@"element_from"] = element_from;
+            }
+            NSString *log_pb_str = params[@"log_pb"];
+            if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
+                NSData *jsonData = [log_pb_str dataUsingEncoding:NSUTF8StringEncoding];
+                NSError *err = nil;
+                NSDictionary *dic = nil;
+                @try {
+                    dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                          options:NSJSONReadingMutableContainers
+                                                            error:&err];
+                } @catch (NSException *exception) {
+                    
+                } @finally {
+                    
+                }
+                if (!err && [dic isKindOfClass:[NSDictionary class]] && dic.count > 0) {
+                    self.tracerDict[@"log_pb"] = dic;
+                }
+            }
+            
             // H5传递过来的参数
             NSString *report_params = params[@"report_params"];
             if ([report_params isKindOfClass:[NSString class]]) {
@@ -411,7 +452,7 @@ static NSInteger const kMaxPostImageCount = 9;
     kUGCToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     self.toolbar = [[TTUGCToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - kUGCToolbarHeight, self.view.width, kUGCToolbarHeight)];
     self.toolbar.emojiInputView.source = @"post";
-    
+    self.toolbar.banHashtagInput = YES;
     self.toolbar.banLongText = YES;
     __weak typeof(self) weakSelf = self;
     self.toolbar.picButtonClkBlk = ^{
@@ -451,12 +492,59 @@ static NSInteger const kMaxPostImageCount = 9;
     self.textViewMediator.textView = self.inputTextView;
     self.textViewMediator.toolbar = self.toolbar;
     self.textViewMediator.showCanBeCreatedHashtag = YES;
+    self.textViewMediator.richSpanColorHexStringForDay = [NSString hexStringWithColor:[UIColor themeRed3]];
+    self.textViewMediator.richSpanColorHexStringForNight = self.textViewMediator.richSpanColorHexStringForDay;
     self.toolbar.emojiInputView.delegate = self.inputTextView;
     self.toolbar.delegate = self.textViewMediator;
     [self.toolbar tt_addDelegate:self asMainDelegate:NO];
     self.inputTextView.delegate = self.textViewMediator;
     [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
     self.inputTextView.textLenDelegate = self;
+    // 配置话题按钮
+    [self configTopicBtnOnToolBar];
+}
+
+- (void)configTopicBtnOnToolBar {
+    
+    BOOL isShowHashTagBtn = YES;
+    self.toolbar.banHashtagInput = !isShowHashTagBtn;
+    self.inputTextView.isBanHashtag = self.toolbar.banHashtagInput;
+    if(isShowHashTagBtn) {
+        WeakSelf;
+        self.textViewMediator.hashTagBtnClickBlock = ^(BOOL didInputTextHashtag) {
+            StrongSelf;
+            
+            self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
+            [self endEditing];
+            
+            NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_topic_list"];
+            NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.selectView.groupId;
+            NSURLQueryItem *groudIPItem = [NSURLQueryItem queryItemWithName:@"groupId" value:groupId];
+            
+            NSURL *url = components.URL;
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            param[@"delegate"] = self.textViewMediator;
+            
+            NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
+            
+            tracer[UT_ELEMENT_FROM] = didInputTextHashtag ? @"write_label" : @"publisher_topic";
+            tracer[UT_ENTER_FROM] = @"feed_publisher";
+            tracer[UT_ENTER_TYPE] = @"click";
+            param[TRACER_KEY] = tracer;
+            
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+            
+            if(!didInputTextHashtag) {
+                // 发布器内点击“话题”按钮
+                NSMutableDictionary *param = self.tracerDict.mutableCopy;
+                param[@"click_position"] = @"publisher_topic";
+                TRACK_EVENT(@"click_options", param);
+            }
+        };
+    } else {
+        self.textViewMediator.hashTagBtnClickBlock = nil;
+    }
 }
 
 - (void)selectCommunityViewClick:(UITapGestureRecognizer *)sender {
@@ -1278,8 +1366,24 @@ static NSInteger const kMaxPostImageCount = 9;
     self.containerView.frame = CGRectMake(0, top, self.view.width, self.view.height - top);
 }
 
+-(void)addHashTagToTextView {
+    
+    // 从话题详情页带入的话题内容
+    if(!self.isAddedTopicHeaderModel) {
+        NSError *error = nil;
+        FHTopicListResponseDataListModel *topicListItemModel = [[FHTopicListResponseDataListModel alloc] initWithDictionary:self.topicHeaderModel.forum.toDictionary error:&error];
+        if(!error) {
+            [self.textViewMediator addHashtag:topicListItemModel];
+        }
+        self.isAddedTopicHeaderModel = YES;
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [self addHashTagToTextView];
+    
     [UIApplication sharedApplication].statusBarHidden = NO;
     if ([self.navigationController isKindOfClass:[TTNavigationController class]]) {
         [(TTNavigationController*)self.navigationController panRecognizer].enabled = NO;

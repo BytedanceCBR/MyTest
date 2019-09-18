@@ -10,7 +10,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <Masonry/Masonry.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
-
+#import <TTDeviceHelper.h>
 @interface FHHouseListAgencyInfoCell ()
 
 
@@ -31,7 +31,7 @@
 {
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     _titleLabel = [[UILabel alloc]init];
-    _titleLabel.font = [UIFont themeFontMedium:14];
+    _titleLabel.font = [UIFont themeFontMedium:[TTDeviceHelper isScreenWidthLarge320] ? 14 : 12];
     _titleLabel.textColor = [UIColor themeGray1];
     [self.contentView addSubview:_titleLabel];
 

@@ -15,6 +15,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTThemed/UIImage+TTThemeExtension.h>
+#import <TTBusinessManager+StringUtils.h>
 
 #define kTopPadding [TTDeviceUIUtils tt_newPadding:12.f]
 
@@ -153,7 +154,7 @@ extern UIColor *tt_ttuisettingHelper_detailViewCommentReplyBackgroundColor(void)
         model = _replyArr[indexPath.row];
     }
     else {
-        NSString *moreReplyText = [NSString stringWithFormat:@"查看全部%@条回复", _toComment.replyCount];
+        NSString *moreReplyText = [NSString stringWithFormat:@"查看全部%@条回复", [TTBusinessManager formatCommentCount: _toComment.replyCount.longLongValue]];
         TTVCommentListReplyModel *moreReplyModel = [TTVCommentListReplyModel new];
         moreReplyModel.replyUserName = moreReplyText;
         moreReplyModel.commentID = _toComment.commentIDNum.stringValue;

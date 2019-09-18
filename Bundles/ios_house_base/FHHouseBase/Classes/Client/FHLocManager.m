@@ -24,6 +24,10 @@
 #import <TTInstallIDManager.h>
 #import <TTArticleCategoryManager.h>
 #import "FHHouseUGCAPI.h"
+#import <BDUGLocationKit/BDUGAmapGeocoder.h>
+#import <BDUGLocationKit/BDUGLocationManager.h>
+#import <BDUGLocationKit/BDUGSystemGeocoder.h>
+
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -69,6 +73,9 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)loadCurrentLocationData {
     self.currentReGeocode = [self.locationCache objectForKey:@"fh_currentReGeocode"];
+    if (![self.currentReGeocode isKindOfClass:[BDUGAmapPlacemark class]]) {
+        self.currentReGeocode = nil;
+    }
     self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
     self.isLocationSuccess = [(NSNumber *)[self.locationCache objectForKey:@"fh_isLocationSuccess"] boolValue];
     self.retryConfigCount = 3;
@@ -250,21 +257,39 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     {
         apiKeyString = @"69c1887b8d0d2d252395c58e3da184dc";
     }
+    [BDUGAmapGeocoder sharedGeocoder].apiKey = apiKeyString;
     
-    [AMapServices sharedServices].apiKey = apiKeyString;
+//    [AMapServices sharedServices].apiKey = apiKeyString;
     [AMapServices sharedServices].enableHTTPS = YES;
     [AMapServices sharedServices].crashReportEnabled = false;
 }
 
 - (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion
 {
-    [self.locManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
+    BDUGLocationAuthorizationStatus status =  [BDUGLocationManager  currentLocationAuthorizationStatus];
+    if (status >= BDUGLocationAuthorizationStatusNotDetermined) {
+        //没有定位权限
+        [[BDUGLocationManager sharedManager] requestWhenInUseAuthorizationWithCompletion:^(BOOL isGranted) {
+            [self p_requestCurrentLocation:showAlert completion:completion];
+        }];
+        return;
+    }
     
-    [self.locManager setLocationTimeout:2];
+    [self p_requestCurrentLocation:showAlert completion:completion];
     
-    [self.locManager setReGeocodeTimeout:2];
+}
+
+- (void)p_requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion
+{
+    NSMutableArray *geocoders = [[NSMutableArray alloc] init];
+    //    [BDUGAmapGeocoder sharedGeocoder].apiKey = kAmapKey;
+    [geocoders addObject:[BDUGAmapGeocoder sharedGeocoder]];
+    [geocoders addObject:[BDUGSystemGeocoder sharedGeocoder]];
+    
     __weak typeof(self) wSelf = self;
-    [self.locManager requestLocationWithReGeocode:YES completionBlock:^(CLLocation *location, AMapLocationReGeocode *regeocode, NSError *error) {
+    [[BDUGLocationManager sharedManager]requestLocationWithDesiredAccuracy:BDUGLocationAccuracyHundredMeters geocoders:geocoders timeout:4 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
+                
+        BDUGAmapPlacemark *location = (BDUGAmapPlacemark*) locationInfo.placemarkMap[BDUGPlacemarkAmapKey];
         
         if (showAlert)
         {
@@ -310,31 +335,31 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             NSLog(@"逆地理错误:%@",error.localizedDescription);
         }else
         {
-            if (regeocode) {
+            if (location) {
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" status:0 extra:paramsExtra];
             }
         }
         
         NSMutableDictionary * amapInfo = [NSMutableDictionary new];
         
-        amapInfo[@"sub_locality"] = regeocode.district;
-        amapInfo[@"locality"] = regeocode.city;
-        if (location.coordinate.latitude) {
-            amapInfo[@"latitude"] = @(location.coordinate.latitude);
+        amapInfo[@"sub_locality"] = location.district;
+        amapInfo[@"locality"] = location.city;
+        if (locationInfo.coordinate.latitude) {
+            amapInfo[@"latitude"] = @(locationInfo.coordinate.latitude);
         }
         
-        if (location.coordinate.longitude) {
-            amapInfo[@"longitude"] = @(location.coordinate.longitude);
+        if (locationInfo.coordinate.longitude) {
+            amapInfo[@"longitude"] = @(locationInfo.coordinate.longitude);
         }
         
         [[[FHHouseBridgeManager sharedInstance] envContextBridge] setUpLocationInfo:amapInfo];
         
-        if (regeocode) {
-            wSelf.currentReGeocode = regeocode;
+        if (location) {
+            wSelf.currentReGeocode = location;
         }
         
-        if (location) {
-            wSelf.currentLocaton = location;
+        if (locationInfo) {
+            wSelf.currentLocaton = [[CLLocation alloc] initWithLatitude:locationInfo.coordinate.latitude longitude:locationInfo.coordinate.longitude];
         }
         
         // 存储当前定位信息
@@ -342,14 +367,14 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         
         if (completion) {
             // 城市选择重新定位需回调
-            completion(regeocode);
+            completion(location);
             [[FHEnvContext sharedInstance] updateRequestCommonParams];
         } else {
             NSInteger cityId = 0;
             if ([[FHEnvContext getCurrentSelectCityIdFromLocal] respondsToSelector:@selector(integerValue)]) {
                 cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
             }
-            [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
+            [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:locationInfo.coordinate gaodeCityId:location.cityCode gaodeCityName:location.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
                 if (!model || error) {
                     wSelf.retryConfigCount -= 1;
                     if (wSelf.retryConfigCount >= 0)
@@ -449,20 +474,6 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     
     // 告诉城市列表config加载ok
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHAllConfigLoadSuccessNotice object:nil];
-}
-
-
-- (void)setLocManager:(AMapLocationManager *)locManager
-{
-    _locMgr = locManager;
-}
-
-- (AMapLocationManager *)locManager
-{
-    if (!_locMgr) {
-        _locMgr = [[AMapLocationManager alloc] init];
-    }
-    return _locMgr;
 }
 
 - (void)fetchCategoryRefreshTip{

@@ -14,7 +14,7 @@ typedef void(^TTVVideoDetailNatantInfoShareViewShareActionBlock)(NSString* share
 @interface TTVVideoDetailNatantInfoShareView : SSThemedView
 
 @property (nonatomic, copy) TTVVideoDetailNatantInfoShareViewShareActionBlock shareActionBlock;
-@property (nonatomic, strong)TTVVideoDetailNatantInfoViewModel *viewModel;
+@property (nonatomic, strong) TTVVideoDetailNatantInfoViewModel *viewModel;
 
 - (instancetype)initWithWidth:(CGFloat)width  andinfoModel:(TTVVideoDetailNatantInfoViewModel *)infoModel;
 - (void)updateDiggButton;

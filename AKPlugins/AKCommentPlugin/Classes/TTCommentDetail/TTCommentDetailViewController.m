@@ -37,6 +37,7 @@
 #import "TTCommentModel.h"
 #import "TTAccountManager.h"
 #import "SSMyUserModel.h"
+#import <TTBusinessManager+StringUtils.h>
 
 
 #define kDeleteCommentNotificationKey   @"kDeleteCommentNotificationKey"
@@ -234,7 +235,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     self.toolbarView.diggButton.selected = self.pageState.detailModel.userDigg;
     NSString *digCountLabelText = @"赞";
     if (self.pageState.detailModel.diggCount > 0) {
-        digCountLabelText = [NSString stringWithFormat:@"%ld",self.pageState.detailModel.diggCount];
+        digCountLabelText = [TTBusinessManager formatCommentCount:self.pageState.detailModel.diggCount];
     } else {
         digCountLabelText = @"赞";
     }
@@ -242,7 +243,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 
     NSString *title;
     if (self.hasNestedInModalContainer) {
-        title = self.pageState.detailModel.commentCount? [NSString stringWithFormat:@"%ld条回复", self.pageState.detailModel.commentCount]: @"暂无回复";
+        title = self.pageState.detailModel.commentCount? [NSString stringWithFormat:@"%@条回复", [TTBusinessManager formatCommentCount:self.pageState.detailModel.commentCount]]: @"暂无回复";
     } else {
         title = @"详情";
     }

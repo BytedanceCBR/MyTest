@@ -184,7 +184,9 @@
     _aboutLabel = [[UILabel alloc]init];
     _aboutLabel.font = [UIFont themeFontRegular:10];
     _aboutLabel.textColor = [UIColor themeGray4];
-    _aboutLabel.text = @"提交即视为同意《个人信息保护声明》";
+    NSMutableAttributedString* attrText = [[NSMutableAttributedString alloc] initWithString:@"提交即视为同意《个人信息保护声明》"];
+    [attrText addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(8, @"个人信息保护声明".length)];
+    _aboutLabel.attributedText= attrText;
     [_aboutLabel sizeToFit];
     _aboutLabel.textAlignment = NSTextAlignmentCenter;
     UITapGestureRecognizer *tipTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tipBtnDidClick)];

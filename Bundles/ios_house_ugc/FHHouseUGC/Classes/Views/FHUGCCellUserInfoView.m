@@ -182,6 +182,12 @@
                                       @"cellModel":wself.cellModel,
                                       };
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
+            } else {
+                // 没有圈子需信息
+                NSDictionary *dic = @{
+                                      @"cellModel":wself.cellModel,
+                                      };
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
             }
         }else{
             [[ToastManager manager] showToast:@"删除失败"];

@@ -28,6 +28,7 @@
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic, assign) BOOL needReloadData;
 @property(nonatomic, copy) void(^notifyCompletionBlock)(void);
+@property(nonatomic, assign) NSInteger currentCityId;
 
 @end
 
@@ -157,13 +158,16 @@
     if(self.listType == FHCommunityFeedListTypeNearby){
         viewModel = [[FHCommunityFeedListNearbyViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = @"f_ugc_neighbor";
-//        viewModel.categoryId = @"weitoutiao";
+//        viewModel.categoryId = @"f_shipin";
+//        viewModel.categoryId = @"f_hotsoon_video";
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = @"94349537893";
+        viewModel.categoryId = @"f_ugc_follow";
     }else if(self.listType == FHCommunityFeedListTypePostDetail) {
-        viewModel = [[FHCommunityFeedListPostDetailViewModel alloc] initWithTableView:_tableView controller:self];
-        viewModel.categoryId = self.forumId;
+        FHCommunityFeedListPostDetailViewModel *postDetailViewModel = [[FHCommunityFeedListPostDetailViewModel alloc] initWithTableView:_tableView controller:self];
+        postDetailViewModel.socialGroupId = self.forumId;
+        postDetailViewModel.categoryId = @"f_project_social";
+        viewModel = postDetailViewModel;
     }
     
     self.viewModel = viewModel;
@@ -172,13 +176,27 @@
     WeakSelf;
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
         StrongSelf;
-        self.needReloadData = YES;
+        NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+        if(self.currentCityId != cityId){
+            self.needReloadData = YES;
+            self.currentCityId = cityId;
+        }
     }];
 }
 
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
         [_viewModel requestData:YES first:YES];
+    } else {
+        if(!self.hasValidateData){
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        }
+    }
+}
+
+- (void)startLoadData:(BOOL)isFirst {
+    if ([TTReachability isNetworkConnected]) {
+        [_viewModel requestData:YES first:isFirst];
     } else {
         if(!self.hasValidateData){
             [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -320,9 +338,10 @@
 #pragma mark - TTAccountMulticaastProtocol
 
 // 帐号切换
-- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
-{
-    self.needReloadData = YES;
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
+    if(self.listType != FHCommunityFeedListTypePostDetail) {
+        self.needReloadData = YES;
+    }
 }
 
 #pragma mark -- SSImpressionProtocol

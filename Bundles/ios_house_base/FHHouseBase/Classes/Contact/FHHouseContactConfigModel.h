@@ -8,11 +8,12 @@
 #import <Foundation/Foundation.h>
 #import "JSONModel.h"
 #import <FHHouseBase/FHHouseType.h>
-
+#import "FHDetailBaseModel.h"
+#import "FHHouseContactBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^FHHousePhoneCallCompletionBlock)(BOOL success,NSError *error);
+typedef void(^FHHousePhoneCallCompletionBlock)(BOOL success,NSError *error, FHDetailVirtualNumModel* virtualPhoneNumberModel);
 
 @interface FHHouseContactConfigModel : JSONModel
 
@@ -38,6 +39,8 @@ typedef void(^FHHousePhoneCallCompletionBlock)(BOOL success,NSError *error);
 @property (nonatomic , copy) NSString *cardType;
 @property (nonatomic , copy) NSString *rank; 
 @property (nonatomic , strong) NSDictionary *logPb;
+@property (nonatomic , strong) NSDictionary *realtorLogpb;
+@property (nonatomic , assign) FHRealtorType realtorType;
 
 // 选填
 @property (nonatomic , strong) NSNumber *realtorRank;

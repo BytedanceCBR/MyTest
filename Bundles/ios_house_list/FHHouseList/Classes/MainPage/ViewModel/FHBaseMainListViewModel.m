@@ -1179,7 +1179,7 @@ extern NSString *const INSTANT_DATA_KEY;
                         NSString *houseCount = [NSString stringWithFormat:@"%@套",agencyInfoModel.houseTotal ? : @""];
                         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc]initWithString:@"已为您找到全网" attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1]}];
                         [attr appendAttributedString:[[NSAttributedString alloc] initWithString:agencyCount attributes:@{NSForegroundColorAttributeName:[UIColor themeRed3]}]];
-                        [attr appendAttributedString:[[NSAttributedString alloc] initWithString:@"中介的" attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1]}]];
+                        [attr appendAttributedString:[[NSAttributedString alloc] initWithString:@"经纪公司的" attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1]}]];
                         [attr appendAttributedString:[[NSAttributedString alloc] initWithString:houseCount attributes:@{NSForegroundColorAttributeName:[UIColor themeRed3]}]];
                         [attr appendAttributedString:[[NSAttributedString alloc] initWithString:@"房源" attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1]}]];
                         agencyInfoCell.titleLabel.attributedText = attr;
@@ -1457,7 +1457,8 @@ extern NSString *const INSTANT_DATA_KEY;
         }else{
             if (self.tableView.contentOffset.y >= -[self.topView filterTop]) {
                 if (self.tableView.contentOffset.y <= ([self.topView filterTop] - topViewHeight)) {
-                    self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+//                    self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y+(topViewHeight - [self.topView filterTop]));
                 }
             }
         }

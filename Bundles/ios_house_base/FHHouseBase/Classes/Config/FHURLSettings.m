@@ -584,7 +584,7 @@ extern NSString * logBaseURL(void);
 
 + (NSString *)streamAPIVersionString
 {
-    return @"96";
+    return @"97";
 }
 
 + (NSString*)SNSBaseURL

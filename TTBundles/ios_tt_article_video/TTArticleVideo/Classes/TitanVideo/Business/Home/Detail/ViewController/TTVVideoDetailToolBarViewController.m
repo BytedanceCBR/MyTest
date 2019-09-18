@@ -645,6 +645,10 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     [paramsDict setValue:self.videoInfo.groupModel.itemID forKey:@"item_id"];
     [paramsDict setValue:[self categoryName] forKey:@"category_name"];
     [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
+    
+    if(self.detailModel.reportParams.count > 0){
+        [paramsDict addEntriesFromDictionary:self.detailModel.reportParams];
+    }
 
     [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
 

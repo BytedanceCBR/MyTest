@@ -15,6 +15,7 @@
 #import "TTMessageCenter.h"
 #import "TTVFeedUserOpDataSyncMessage.h"
 #import "TTVBuryAction.h"
+#import "FHCommonApi.h"
 
 @implementation TTVDiggActionEntity
 
@@ -56,7 +57,8 @@
         parameter.ad_id = self.entity.adId;
         NSString *unique_id = self.entity.groupId ? self.entity.groupId : self.entity.adId;
         @weakify(self);
-        [service cancelDigg:parameter completion:^(TT2DataItemActionResponseModel *response, NSError *error) {
+        FHDetailDiggType diggType = FHDetailDiggTypeVIDEO;
+        [FHCommonApi requestCommonDigg:unique_id groupType:diggType action:0 completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
             @strongify(self);
             if (error) {
                 return;
@@ -84,7 +86,8 @@
         parameter.ad_id = self.entity.adId;
         NSString *unique_id = self.entity.groupId ? self.entity.groupId : self.entity.adId;
         @weakify(self);
-        [service digg:parameter completion:^(TT2DataItemActionResponseModel *response, NSError *error) {
+        FHDetailDiggType diggType = FHDetailDiggTypeVIDEO;
+        [FHCommonApi requestCommonDigg:unique_id groupType:diggType action:1 completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
             @strongify(self);
             if (error) {
                 return;
@@ -93,12 +96,9 @@
             self.buryAction.entity.userDigg = @(YES);
             int diggCount = [self.entity.diggCount intValue] + 1;
             self.entity.diggCount = @(diggCount);
-           SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:YES uniqueIDStr:unique_id);
-           SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:diggCount uniqueIDStr:unique_id);
+            SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:YES uniqueIDStr:unique_id);
+            SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:diggCount uniqueIDStr:unique_id);
         }];
-        //        [_itemActionManager sendActionForOriginalData:self.entity adID:nil actionType:DetailActionTypeDig finishBlock:^(id userInfo, NSError *error) {
-        //        }];
-//        wrapperTrackEvent(@"xiangping", @"video_list_digg");
     }
 }
 

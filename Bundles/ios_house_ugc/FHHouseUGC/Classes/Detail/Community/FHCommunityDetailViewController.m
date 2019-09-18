@@ -20,6 +20,38 @@
     if (self) {
         self.ttTrackStayEnable = YES;
         self.communityId = paramObj.allParams[@"community_id"];
+        // 取链接中的埋点数据
+        NSDictionary *params = paramObj.allParams;
+        NSString *enter_from = params[@"enter_from"];
+        if (enter_from.length > 0) {
+            self.tracerDict[@"enter_from"] = enter_from;
+        }
+        NSString *enter_type = params[@"enter_type"];
+        if (enter_type.length > 0) {
+            self.tracerDict[@"enter_type"] = enter_type;
+        }
+        NSString *element_from = params[@"element_from"];
+        if (element_from.length > 0) {
+            self.tracerDict[@"element_from"] = element_from;
+        }
+        NSString *log_pb_str = params[@"log_pb"];
+        if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
+            NSData *jsonData = [log_pb_str dataUsingEncoding:NSUTF8StringEncoding];
+            NSError *err = nil;
+            NSDictionary *dic = nil;
+            @try {
+                dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                      options:NSJSONReadingMutableContainers
+                                                        error:&err];
+            } @catch (NSException *exception) {
+                
+            } @finally {
+                
+            }
+            if (!err && [dic isKindOfClass:[NSDictionary class]] && dic.count > 0) {
+                self.tracerDict[@"log_pb"] = dic;
+            }
+        }
     }
     return self;
 }

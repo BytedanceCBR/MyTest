@@ -64,6 +64,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+typedef NS_ENUM(NSUInteger, FHRealtorType){
+    FHRealtorTypeNormal = 0,
+    FHRealtorTypeExpert = 1
+};
+
+typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
+    FHRealtorCellShowStyle0,
+    FHRealtorCellShowStyle1,
+    FHRealtorCellShowStyle2,
+};
+
+@protocol FHRealtorTag<NSObject>
+@end
+
+@interface FHRealtorTag: JSONModel
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *fontColor;
+@end
+
 @protocol FHDetailContactModel<NSObject>
 @end
 
@@ -85,6 +106,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger showRealtorinfo;
 @property (nonatomic, copy , nullable) NSString *callButtonText;
 @property (nonatomic, copy , nullable) NSString *reportButtonText;
+@property (nonatomic, assign) FHRealtorType realtorType;
+@property (nonatomic, assign) FHRealtorCellShowStyle realtorCellShow;
+@property (nonatomic, copy , nullable) NSString *realtorEvaluate;
+@property (nonatomic, strong , nullable) NSArray<FHRealtorTag> *realtorTags;
 
 @property (nonatomic, assign) BOOL unregistered; //是否是注册经济人
 @property (nonatomic, assign) BOOL isFormReport; //是否包含填表单
@@ -95,7 +120,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailContactImageTagModel *imageTag;
 
 @property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
-
+@property (nonatomic, strong , nullable) NSDictionary *realtorLogpb;
 - (nonnull id)copyWithZone:(nullable NSZone *)zone;
 
 - (void)encodeWithCoder:(nonnull NSCoder *)aCoder;
@@ -109,7 +134,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)toDictionary;
 
 - (NSDictionary *)toDictionaryWithKeys:(NSArray *)propertyNames;
-
 @end
 
 

@@ -16,6 +16,11 @@
 #import "UIButton+TTAdditions.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <TTBusinessManager+StringUtils.h>
+#import "TTMessageCenter.h"
+#import "TTVideoArticleService+Action.h"
+#import "TTVideoArticleServiceMessage.h"
+#import "TTVFeedUserOpDataSyncMessage.h"
 
 @interface FHUGCCellBottomView ()
 
@@ -43,6 +48,8 @@
 
 - (void)initNotification {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
+    // 评论数变化通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentCountChange:) name:@"kPostMessageFinishedNotification" object:nil];
 }
 
 - (void)dealloc {
@@ -165,6 +172,9 @@
         switch (cellModel.cellType) {
                 case FHUGCFeedListCellTypeArticle:
                     self.diggType = FHDetailDiggTypeITEM;
+                    if (cellModel.hasVideo) {
+                        self.diggType = FHDetailDiggTypeVIDEO;
+                    }
                 break;
                 case FHUGCFeedListCellTypeAnswer:
                     self.diggType = FHDetailDiggTypeANSWER;
@@ -177,6 +187,9 @@
                 break;
                 case FHUGCFeedListCellTypeUGC:
                     self.diggType = FHDetailDiggTypeTHREAD;
+                break;
+                case FHUGCFeedListCellTypeUGCSmallVideo:
+                    self.diggType = FHDetailDiggTypeSMALLVIDEO;
                 break;
             default:
                 self.diggType = FHDetailDiggTypeTHREAD;
@@ -212,7 +225,7 @@
     if(count == 0){
         self.likeLabel.text = @"赞";
     }else{
-        self.likeLabel.text = diggCount;
+        self.likeLabel.text = [TTBusinessManager formatCommentCount: count];
     }
     if([userDigg boolValue]){
         self.likeImageView.image = ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeRed1]);//"fh_ugc_like_selected"
@@ -220,6 +233,10 @@
     }else{
         self.likeImageView.image =  ICON_FONT_IMG(20, @"\U0000e69c", nil);//@"fh_ugc_like"
         self.likeLabel.textColor = [UIColor themeGray1];
+    }
+    //补充逻辑，如果用户状态为已点赞，但是点赞数为零，这时候默认点赞数设为1
+    if([userDigg boolValue] && count == 0){
+        self.likeLabel.text = @"1";
     }
 }
 
@@ -306,7 +323,35 @@
             }
             
             self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
+            if (self.cellModel.hasVideo) {
+                // 视频点赞
+                self.cellModel.videoFeedItem.article.diggCount = diggCount;
+                self.cellModel.videoFeedItem.article.userDigg = user_digg;
+                NSString *unique_id = self.cellModel.groupId;
+                SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:(user_digg == 1) uniqueIDStr:unique_id);
+                SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:diggCount uniqueIDStr:unique_id);
+            }
             [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
+        }
+    }
+}
+
+// 评论数变化
+- (void)commentCountChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    
+    if(userInfo){
+        NSInteger comment_conut = [userInfo[@"comment_conut"] integerValue];
+        NSString *groupId = userInfo[@"group_id"];
+        if (groupId.length > 0 && [groupId isEqualToString:self.cellModel.groupId]) {
+            NSInteger commentCount = comment_conut;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if(commentCount == 0){
+                    [self.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
+                }else{
+                    [self.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
+                }
+            });
         }
     }
 }

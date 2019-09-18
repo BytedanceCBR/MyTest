@@ -30,7 +30,8 @@
 "editingInfo"           = "FHEditingInfoController";
 
 // SSAppPageController
-"home"                  = "SSAppPageManagerNotificationHome";
+"home"                  = "FHHomeSchemaObject";
+"main"                  = "FHHomeSchemaObject";
 "profile"               = "ArticleMomentProfileViewController";
 "invite_friend"         = "ArticleInviteFriendViewController";
 "address_list"          = "TTAddressListFriendViewController";
@@ -177,6 +178,7 @@
 "ugc_search_list" = "FHUGCSearchListController";
 "ugc_community_list" = "FHUGCCommunityListViewController";
 "ugc_comment_detail" = "FHCommentDetailViewController";
+"concern" = "FHTopicDetailViewController";// 话题详情页
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";

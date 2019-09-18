@@ -313,14 +313,15 @@
 }
 
 - (void)setupCallCenter {
-    __weak typeof(self) wself = self;
+    @weakify(self);
     self.callCenter = [[CTCallCenter alloc] init];
     _callCenter.callEventHandler = ^(CTCall* call){
+        @strongify(self);
         if ([call.callState isEqualToString:CTCallStateDisconnected]){
             //未接通
         }else if ([call.callState isEqualToString:CTCallStateConnected]){
             //通话中
-            wself.isPhoneCallPickUp = YES;
+            self.isPhoneCallPickUp = YES;
         }else if([call.callState isEqualToString:CTCallStateIncoming]){
             //来电话
         }else if ([call.callState isEqualToString:CTCallStateDialing]){
@@ -556,12 +557,17 @@
         self.isPhoneCallShow = NO;
         [self addFeedBackView];
         self.phoneCallRealtorId = nil;
+        self.phoneCallRequestId = nil;
     }
 }
 
 - (BOOL)isShowFeedbackView {
     //满足这两个条件，在回来时候显示反馈弹窗
-    if(self.isPhoneCallPickUp && self.isPhoneCallShow && self.phoneCallRealtorId && (self.viewModel.houseType == FHHouseTypeSecondHandHouse)){
+    if(self.isPhoneCallPickUp &&
+       self.isPhoneCallShow &&
+       self.phoneCallRealtorId &&
+       self.phoneCallRequestId &&
+       (self.viewModel.houseType == FHHouseTypeSecondHandHouse)){
         NSString *houseId = self.viewModel.houseId;
         NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
         NSString *cacheKey = @"";
@@ -609,6 +615,7 @@
 
 - (void)addFeedBackView {
     self.feedbackView.realtorId = self.phoneCallRealtorId;
+    self.feedbackView.requestId = self.phoneCallRequestId;
     [self.feedbackView show:self.view];
 }
 

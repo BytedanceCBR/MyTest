@@ -9,6 +9,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import <Masonry.h>
+#import <SDWebImage/UIImageView+WebCache.h>
 #import "FHFeedContentModel.h"
 #import "FHFeedUGCContentModel.h"
 #import "FHFeedUGCCellModel.h"
@@ -32,9 +33,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)closeFeedGuide:(FHFeedUGCCellModel *)cellModel;
 
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url;
+
+- (void)goToVoteDetail:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value;
+
 @end
 
 @interface FHUGCBaseCell : UITableViewCell
+// Cell装饰
+@property(nonatomic ,strong) UIImageView *decorationImageView;
 
 // 当前cell的模型数据
 @property (nonatomic, weak , nullable) id currentData;

@@ -162,6 +162,8 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
     } successBlock:^(TTPostThreadTask *task, NSDictionary *resultModelDict) {
         task.isPosting = NO;
         task.retryCount += 1;
+        // 成功埋点 status = 0 成功 status = 1 失败 status = 2 取消
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"topic_post" metric:nil category:@{@"status":@(0)} extra:nil];
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
         [userInfo setValue:task.concernID forKey:kTTForumPostThreadConcernID];
         [userInfo setValue:task.categoryID forKey:@"category_id"];
@@ -245,6 +247,10 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         NSMutableDictionary *tracerDict = task.extraTrack.mutableCopy;
         tracerDict[@"publish_type"] = @"publish_success";
         tracerDict[@"group_id"] = group_id_str;
+        if (task.mentionConcern.length > 0) {
+            // 话题id
+            tracerDict[@"concern_id"] = task.mentionConcern;
+        }
         [FHUserTracker writeEvent:@"feed_publish_success" params:tracerDict];
 
         //对于转发帖单独发一堆通知,并且对应的opt_id/fw_id的帖子转发数加1
@@ -276,7 +282,8 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
             }
         }
     } cancelledBlock:^(TTPostThreadTask *task, TTPostThreadOperationCancelHint cancelHint) {
-        
+        // 成功埋点 status = 0 成功 status = 1 失败 status = 2 取消
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"topic_post" metric:nil category:@{@"status":@(2)} extra:nil];
         task.isPosting = YES;
         task.retryCount += 1;
         taskFailureTrackerBlock(task);
@@ -309,6 +316,8 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
             [fakeInfo setValue:task.postID forKey:@"threadId"];
             [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:fakeInfo];
         }
+        // 成功埋点 status = 0 成功 status = 1 失败 status = 2 取消
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"topic_post" metric:nil category:@{@"status":@(1)} extra:nil];
         // 发帖失败埋点
         NSMutableDictionary *tracerDict = task.extraTrack.mutableCopy;
         tracerDict[@"publish_type"] = @"publish_failed";

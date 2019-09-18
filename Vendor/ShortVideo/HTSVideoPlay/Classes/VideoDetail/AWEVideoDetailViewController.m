@@ -108,6 +108,7 @@
 #import <TTAudioSessionManager.h>
 
 #import "ExploreOrderedData.h"
+#import <TTBusinessManager+StringUtils.h>
 
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
@@ -150,6 +151,8 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, strong) NSNumber *showComment;//0不弹，1弹起评论浮层，2弹输入框
 @property (nonatomic, copy) NSDictionary *commonTrackingParameter;
 @property (nonatomic, copy) NSDictionary *initialLogPb;
+//外面传的埋点信息 by xsm
+@property (nonatomic, strong) NSDictionary *extraDic;
 // 状态
 @property (nonatomic, assign) BOOL firstLoadFinished;
 @property (nonatomic, assign) BOOL isFirstTimeShowCommentListOrKeyboard;
@@ -248,21 +251,14 @@ static const CGFloat kFloatingViewOriginY = 230;
         /// allParams 里是以上两个字典的并集，extra会覆盖 query
         _pageParams = paramObj.allParams.copy;
 
-        if ([TTDeviceHelper OSVersionNumber] < 8.) {
-            [[TTMonitor shareManager] trackService:@"shortvideo_detail_unsupported_os"
-                                        attributes:@{
-                                                     @"enter_from": [params[AWEVideoEnterFrom] copy] ?: @"",
-                                                     @"category_name": [params[AWEVideoCategoryName] copy] ?: @"",
-                                                     @"url": [paramObj.sourceURL absoluteString],
-                                                     }];
-            return nil;
-        }
-
         _groupID = [params[AWEVideoGroupId] copy] ?: @"";
         _originalGroupID = [params[AWEVideoGroupId] copy] ?: @"";
         _ruleID = [params[AWEVideoRuleId] copy];
         _groupSource = [params[VideoGroupSource] copy] ?: @"";
         _showComment = [params[AWEVideoShowComment] copy];
+        if (!_showComment) {
+            _showComment = [extraParams[AWEVideoShowComment] copy];
+        }
         _categoryName = [params tt_stringValueForKey:AWEVideoCategoryName];
         _commonTrackingParameter = @{
                                      @"enter_from": [params[AWEVideoEnterFrom] copy] ?: @"",
@@ -346,6 +342,11 @@ static const CGFloat kFloatingViewOriginY = 230;
         if (extraParams[HTSVideoDetailOrderedData]) {
             self.orderedData = extraParams[HTSVideoDetailOrderedData];
         }
+        
+        if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
+            self.extraDic = paramObj.allParams[@"extraDic"];
+        }
+        
     }
     return self;
 }
@@ -442,6 +443,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         AWEVideoContainerViewController *controller = [[AWEVideoContainerViewController alloc] init];
         controller.dataFetchManager = self.dataFetchManager;
         controller.commonTrackingParameter = self.commonTrackingParameter;
+        controller.extraDic = self.extraDic;
         controller.needCellularAlert = (self.pageParams[AWEVideoPageParamNonWiFiAlert] && [self.pageParams[AWEVideoPageParamNonWiFiAlert] isKindOfClass:[NSNumber class]]) ? [self.pageParams[AWEVideoPageParamNonWiFiAlert] boolValue] : YES;
         @weakify(self)
         controller.wantToClosePage = ^{
@@ -890,7 +892,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)reloadCommentHeaderWithCount:(NSNumber *)commentCount
 {
-    self.commentHeaderLabel.text = commentCount ? [NSString stringWithFormat:@"%@条回复", commentCount] : @"暂无回复";
+    self.commentHeaderLabel.text = commentCount ? [NSString stringWithFormat:@"%@条回复", [TTBusinessManager formatCommentCount:commentCount.longLongValue]] : @"暂无回复";
 }
 
 - (void)updateModel
@@ -1451,6 +1453,15 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)handleSendComment:(NSString *)comment fromInputBar:(AWECommentInputBar *)inputBar
 {
+    NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
+    [extra setValue:[inputBar.targetCommentModel.id stringValue] ?: @"" forKey:@"comment_id"];
+    [extra setValue:@"reply_button" forKey:@"position"];
+    
+    [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
+                                model:self.model
+                      commonParameter:self.commonTrackingParameter
+                       extraParameter:extra];
+    
     [AWEVideoDetailTracker trackEvent:@"comment_write_confirm"
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
@@ -1484,7 +1495,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         @strongify(self);
         if (!error) {
             if (model.replyToComment == nil) {
-                [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
+                [AWEVideoDetailTracker trackEvent:@"rt_post_comment"
                                             model:self.model
                                   commonParameter:self.commonTrackingParameter
                                    extraParameter:[self writeCommentExtraPositionDict]];
@@ -1495,6 +1506,7 @@ static const CGFloat kFloatingViewOriginY = 230;
             self.model.commentCount = [self.commentManager totalCommentCount];
             NSMutableDictionary *userInfo = @{}.mutableCopy;
             userInfo[@"group_id"] = self.model.groupID;
+            userInfo[@"comment_conut"] = @(self.model.commentCount);
             [[NSNotificationCenter defaultCenter] postNotificationName:kPostMessageFinishedNotification
                                                                 object:nil
                                                               userInfo:userInfo];
@@ -1653,12 +1665,12 @@ static const CGFloat kFloatingViewOriginY = 230;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     AWECommentModel *commentModel = [self.commentManager commentForIndexPath:indexPath];
-    NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
-    [extra setValue:[commentModel.id stringValue] ?: @"" forKey:@"comment_id"];
-    [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:extra];
+//    NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
+//    [extra setValue:[commentModel.id stringValue] ?: @"" forKey:@"comment_id"];
+//    [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
+//                                model:self.model
+//                      commonParameter:self.commonTrackingParameter
+//                       extraParameter:extra];
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ([self alertIfNotValid]) {

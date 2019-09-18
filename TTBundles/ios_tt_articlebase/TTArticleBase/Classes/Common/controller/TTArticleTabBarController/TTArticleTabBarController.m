@@ -207,9 +207,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     //消息通知优化重要的人消息未读提示
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMessageNotificationTips:) name:kTTMessageNotificationTipsChangeNotification object:nil];
     //ugc小红点控制逻辑
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFocusTabHasNewNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kTTMessageNotificationTipsChangeNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFocusTabHasNewNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kTTMessageNotificationTipsChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFollowNotification object:nil];
 }
 
 - (void)initTabbarBadge
@@ -1900,8 +1900,18 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 #pragma mark -
 - (void)changeTabbarIndex:(NSNotification *)notification {
-    NSString *tag = [notification.userInfo tt_stringValueForKey:@"tag"];
     
+    //在跳转之前先把现在的导航控制器pop到根视图,需要在通知中传入needToRoot的值，这是为了不影响其他地方的跳转逻辑
+    BOOL needToRoot = [notification.userInfo tt_boolValueForKey:@"needToRoot"];
+    if(needToRoot){
+        id vc = self.selectedViewController;
+        if([vc isKindOfClass:[UINavigationController class]]){
+            UINavigationController *naviVC = (UINavigationController *)vc;
+            [naviVC popToRootViewControllerAnimated:NO];
+        }
+    }
+    
+    NSString *tag = [notification.userInfo tt_stringValueForKey:@"tag"];
     [self updateSelectedViewControllerForTag:tag];
 }
 

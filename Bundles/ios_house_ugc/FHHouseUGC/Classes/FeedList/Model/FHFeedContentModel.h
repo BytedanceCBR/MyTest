@@ -1,6 +1,67 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 NS_ASSUME_NONNULL_BEGIN
+@interface FHFeedContentRawDataVideoPlayAddrModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray *urlList;
+@property (nonatomic, copy , nullable) NSString *uri;
+@end
+
+@interface FHFeedContentRawDataVideoDownloadAddrModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray *urlList;
+@property (nonatomic, copy , nullable) NSString *uri;
+@end
+
+@interface FHFeedContentRawDataVideoOriginCoverModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray *urlList;
+@property (nonatomic, copy , nullable) NSString *uri;
+@end
+
+@interface FHFeedContentRawDataVideoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *ratio;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataVideoPlayAddrModel *playAddr ;
+@property (nonatomic, copy , nullable) NSString *videoId;
+@property (nonatomic, copy , nullable) NSString *height;
+@property (nonatomic, copy , nullable) NSString *width;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataVideoDownloadAddrModel *downloadAddr ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataVideoOriginCoverModel *originCover ;
+@property (nonatomic, copy , nullable) NSString *duration;
+@property (nonatomic, copy , nullable) NSString *size;
+@end
+
+@interface FHFeedContentRawDataVoteModel : JSONModel
+
+@property (nonatomic, assign) BOOL needUserLogin;
+@property (nonatomic, copy , nullable) NSString *voteId;
+@property (nonatomic, copy , nullable) NSString *rightName;
+@property (nonatomic, copy , nullable) NSString *leftValue;
+@property (nonatomic, copy , nullable) NSString *leftName;
+@property (nonatomic, copy , nullable) NSString *rightValue;
+@property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *personDesc;
+@end
+
+@protocol FHFeedContentRawDataHotTopicListModel<NSObject>
+@end
+
+@interface FHFeedContentRawDataHotTopicListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *forumName;
+@property (nonatomic, copy , nullable) NSString *concernId;
+@property (nonatomic, copy , nullable) NSString *forumId;
+@property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *talkCountStr;
+@property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, copy , nullable) NSString *talkCount;
+@property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSDictionary *logPb;
+
+@end
+
 @interface FHFeedContentRawDataContentExtraModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *answerCount;
@@ -398,6 +459,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *imageList;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseActionModel *action ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserModel *user ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataContentRepostParamsModel *repostParams ;
 @end
 
 @interface FHFeedContentRawDataOperationModel : JSONModel
@@ -415,10 +477,41 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginGroupModel *originGroup ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginCommonContentModel *originCommonContent ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotTopicListModel> *hotTopicList;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataVoteModel *vote ;
 @property (nonatomic, copy , nullable) NSString *articleSchema;
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, copy , nullable) NSString *groupId;
+//视频相关
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *detailSchema;
+@property (nonatomic, copy , nullable) NSString *titleRichSpan;
+@property (nonatomic, copy , nullable) NSString *createTime;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataVideoModel *video ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserModel *user ;
+@property (nonatomic, copy , nullable) NSString *videoContent;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseActionModel *action ;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *firstFrameImageList;
+
 @end
+
+@interface FHFeedContentVideoDetailInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *groupFlags;
+@property (nonatomic, copy , nullable) NSString *videoId;
+@property (nonatomic, copy , nullable) NSString *videoType;
+@property (nonatomic, copy , nullable) NSString *videoWatchingCount;
+@property (nonatomic, copy , nullable) NSString *videoPreloadingFlag;
+@property (nonatomic, copy , nullable) NSString *directPlay;
+@property (nonatomic, strong , nullable) FHFeedContentImageListModel *detailVideoLargeImage ;
+@property (nonatomic, copy , nullable) NSString *showPgcSubscribe;
+@property (nonatomic, copy , nullable) NSString *videoWatchCount;
+@end
+
+typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
+    FHFeedContentStickStyleUnknown,
+    FHFeedContentStickStyleDefault,
+};
 
 @interface FHFeedContentModel : JSONModel 
 
@@ -499,6 +592,19 @@ NS_ASSUME_NONNULL_BEGIN
 //临时处理服务器打平的逻辑
 @property (nonatomic, copy , nullable) NSString *articleSchema;
 @property (nonatomic, assign)   BOOL       isFromDetail;// 详情页
+//视频相关
+@property (nonatomic, copy , nullable) NSString *videoId;
+@property (nonatomic, strong , nullable) FHFeedContentVideoDetailInfoModel *videoDetailInfo ;
+@property (nonatomic, copy , nullable) NSString *playAuthToken;
+@property (nonatomic, copy , nullable) NSString *groupFlags;
+@property (nonatomic, copy , nullable) NSString *debugInfo;
+@property (nonatomic, copy , nullable) NSString *banImmersive;
+@property (nonatomic, copy , nullable) NSString *videoDuration;
+@property (nonatomic, copy , nullable) NSString *videoProportionArticle;
+@property (nonatomic, copy , nullable) NSString *playBizToken;
+@property (nonatomic, copy , nullable) NSString *danmakuCount;
+@property (nonatomic, assign)   BOOL       isStick;      // 是否置顶
+@property (nonatomic, assign)   FHFeedContentStickStyle  stickStyle; // 置顶类型：精华或其它
 @end
 
 

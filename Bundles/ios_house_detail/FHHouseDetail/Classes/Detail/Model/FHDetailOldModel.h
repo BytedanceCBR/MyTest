@@ -42,6 +42,20 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+//用户房源评论
+@protocol FHUserHouseCommentModel<NSObject>
+@end
+
+@interface FHUserHouseCommentModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *userName;
+@property (nonatomic, copy , nullable) NSString *userAvatar;
+@property (nonatomic, copy , nullable) NSString *userContent;
+@property (nonatomic, copy , nullable) NSString *evaluationData;
+
+@end
+
+
 @interface FHDetailOldDataNeighborhoodInfoModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *status;
@@ -328,6 +342,17 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraOfficialModel *official ;
 @end
 
+@protocol FHDetailHouseReviewCommentModel
+@end
+@interface FHDetailHouseReviewCommentModel: JSONModel
+@property (nonatomic, copy , nullable) NSString *commentId;
+@property (nonatomic, strong , nullable) FHDetailContactModel *realtorInfo;
+@property (nonatomic, copy , nullable) NSString *commentText;
+@property (nonatomic, copy , nullable) NSString *commentData;
+@property (nonatomic, assign) BOOL isExpended;//标识是否全文展开，非服务端字段
+@property (nonatomic, assign) CGFloat commentHeight;//标识评论高度，非服务端字段
+@property (nonatomic, assign) BOOL addFoldDirect;//标识评论高度，非服务端字段
+@end
 
 @interface FHDetailOldDataModel : JSONModel
 
@@ -355,7 +380,9 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
+@property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
+@property (nonatomic, strong , nullable) NSArray<FHUserHouseCommentModel> *userHouseComments;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
 @property (nonatomic, strong , nullable) FHDisclaimerModel *disclaimer ;
@@ -369,6 +396,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraModel *baseExtra;
 @property (nonatomic, strong , nullable) FHDetailCommunityEntryModel *ugcSocialGroup;
+@property (nonatomic, strong , nullable) NSArray<FHDetailHouseReviewCommentModel> *houseReviewComment;
 
 @end
 
