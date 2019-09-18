@@ -11,13 +11,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailHouseSubscribeCell : FHDetailBaseCell
 
-@property (nonatomic,copy) void (^subscribeBlock)(NSString *phoneNum);
-
+@property(nonatomic, copy) void (^subscribeBlock)(NSString *phoneNum);
+@property(nonatomic, copy) void (^legalAnnouncementClickBlock)(void);
 @end
 
 @interface FHDetailHouseSubscribeModel : FHDetailBaseModel
 
-@property (nonatomic, weak , nullable) UITableViewCell *cell;
+@property(nonatomic, weak, nullable) UITableViewCell *cell;
 @property(nonatomic, weak) UITableView *tableView;
 
 @end

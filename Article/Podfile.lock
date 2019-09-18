@@ -47,9 +47,21 @@ PODS:
   - BDUGAccountOnekeyLogin (1.1.3)
   - BDUGContainer (1.1.2)
   - BDUGDeepLink (1.1.1)
+  - BDUGKit (1.3.3):
+    - BDUGKit/Category (= 1.3.3)
+    - BDUGKit/Macro (= 1.3.3)
+    - BDUGKit/Network (= 1.3.3)
+  - BDUGKit/Category (1.3.3)
+  - BDUGKit/Macro (1.3.3)
+  - BDUGKit/Network (1.3.3)
+  - BDUGLocationKit/AmapLocation (1.0.0-rc.5)
+  - BDUGLocationKit/ByteDancePlacemark (1.0.0-rc.5)
+  - BDUGLocationKit/Core (1.0.0-rc.5)
+  - BDUGLocationKit/DataCollection (1.0.0-rc.5)
   - BDUGMonitorInterface (1.0.0):
     - BDUGMonitorInterface/Core (= 1.0.0)
   - BDUGMonitorInterface/Core (1.0.0)
+  - BDUGSettingsInterface (1.1.0)
   - BDUGTrackerInterface (1.1.1)
   - BDUGUnionSDK (0.1.2.1-binary)
   - BDWebImage/Core (0.2.2.1-binary)
@@ -591,7 +603,13 @@ DEPENDENCIES:
   - BDUGAccountOnekeyLogin (= 1.1.3)
   - BDUGContainer (= 1.1.2)
   - BDUGDeepLink (= 1.1.1)
+  - BDUGKit (= 1.3.3)
+  - BDUGLocationKit/AmapLocation (= 1.0.0-rc.5)
+  - BDUGLocationKit/ByteDancePlacemark (= 1.0.0-rc.5)
+  - BDUGLocationKit/Core (= 1.0.0-rc.5)
+  - BDUGLocationKit/DataCollection (= 1.0.0-rc.5)
   - BDUGMonitorInterface (= 1.0.0)
+  - BDUGSettingsInterface (= 1.1.0)
   - BDUGTrackerInterface (= 1.1.1)
   - BDUGUnionSDK (= 0.1.2.1-binary)
   - BDWebImage/Core (= 0.2.2.1-binary)
@@ -986,7 +1004,10 @@ SPEC CHECKSUMS:
   BDUGAccountOnekeyLogin: 6b9b71170a10e55b79b3d67f87cb19864479f372
   BDUGContainer: 28193629e67c7c9244f5d5836bfed611bf631321
   BDUGDeepLink: 44dfefe43051d60cb1fd918ebdca3abcc090d365
+  BDUGKit: 215f3f098840a16e1c491447d56e49093f08075d
+  BDUGLocationKit: bbae7302555c5c7d23e285312487323cd67c20ed
   BDUGMonitorInterface: e64b2d5bcb2a3283af8f83daeaa0599a160351f1
+  BDUGSettingsInterface: 5cb90d9373928d36e371c72449061cabe491359f
   BDUGTrackerInterface: c41760f7de16c6f4b84395e71e85875a4cd87611
   BDUGUnionSDK: 837abef87c8d0f8cce87fb945dc18f2317d3d838
   BDWebImage: cb9435b175d994f7156ffdc736477d794db576dd
@@ -1149,5 +1170,6 @@ SPEC CHECKSUMS:
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
 PODFILE CHECKSUM: 7c205f5af6c3b06ae0a244183c947bb4e471cb5e
+PODFILE CHECKSUM: 08738413020739d7fb98eadb79e0771623422edb
 
 COCOAPODS: 1.4.0
