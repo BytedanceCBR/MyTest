@@ -156,9 +156,6 @@
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         if ([cell conformsToProtocol:@protocol(WDListCellBaseProtocol)]) {
             [(UITableViewCell <WDListCellBaseProtocol>*)cell cellDidSelected];
-            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"点击问答列表时间戳" message:[NSString stringWithFormat:@"%@", @([NSDate date].timeIntervalSince1970)] delegate:nil cancelButtonTitle:@"cancel" otherButtonTitles:nil];
-            [alert show];
         }
     }
 }

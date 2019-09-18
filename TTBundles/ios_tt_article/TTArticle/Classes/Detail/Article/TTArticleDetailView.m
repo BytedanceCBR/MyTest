@@ -56,6 +56,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <FHCommonUI/ToastManager.h>
+#import <Heimdallr/HMDTTMonitor.h>
 
 static NSInteger const kRedirectStatusCode = 302;
 static NSInteger const kErrorStatusCode = 400;
@@ -452,10 +453,12 @@ static NSInteger const kErrorStatusCode = 400;
     //初始化web请求monitor
     [self.monitor initializeWebRequestTimeMonitor];
     
+    //加载转码页
     if ([_detailViewModel tt_articleDetailLoadedContentType] == TTArticleDetailLoadedContentTypeNative) {
         [self p_startLoadNativeTypeArticle];
         [self p_showLoadingView];
     }
+    // 加载导流页
     else {
         [self p_startLoadWebTypeArticle];
         [self p_showLoadingView];
@@ -1053,8 +1056,7 @@ static NSInteger const kErrorStatusCode = 400;
     if (!isEmptyString(intervalString)) {
         //        LOGD(@"[%@]intervalString is %@", serviceName, intervalString);
         [[TTMonitor shareManager] trackService:serviceName value:intervalString extra:[self.tracker detailTrackerCommonParams]];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"文章详情完成时间戳" message:[NSString stringWithFormat:@"%@: %@",serviceName, @([NSDate date].timeIntervalSince1970)] delegate:nil cancelButtonTitle:@"cancel" otherButtonTitles:nil];
-        [alert show];
+        [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"value": intervalString} extra:[self.tracker detailTrackerCommonParams]];
     }
 }
 

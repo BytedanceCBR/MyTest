@@ -36,6 +36,7 @@
 #import "WDDefines.h"
 #import <TTBaseLib/TTURLUtils.h>
 #import <FHCommonUI/ToastManager.h>
+#import <Heimdallr/HMDTTMonitor.h>
 
 typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
     SSWebViewStayStatCancel,
@@ -797,8 +798,8 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
     NSString *intervalString = [_monitor intervalFromWebRequestStartTime];
     if (!isEmptyString(intervalString)) {
         [[TTMonitor shareManager] trackService:serviceName value:intervalString extra:[WDMonitorManager extraDicWithAnswerId:self.detailModel.answerEntity.ansid error:nil]];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"问答详情完成时间戳" message:[NSString stringWithFormat:@"%@: %@",serviceName, @([NSDate date].timeIntervalSince1970)] delegate:nil cancelButtonTitle:@"cancel" otherButtonTitles:nil];
-        [alert show];
+        [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"value": intervalString} extra:[WDMonitorManager extraDicWithAnswerId:self.detailModel.answerEntity.ansid error:nil]];
+        
     }
 }
 

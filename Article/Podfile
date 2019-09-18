@@ -381,7 +381,7 @@ def appPods
 #    'CloudCommand'
 #    #    'DiskManager'
 #    ]
-    pod_binary 'Heimdallr','0.7.6', :subspecs => [
+    pod 'Heimdallr','0.7.6', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
