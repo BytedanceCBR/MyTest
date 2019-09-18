@@ -453,8 +453,12 @@ static bool isTTCommentPublishing = NO;
     if (self.enterFrom.length > 0) {
         [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName] enterFrom:[self enterFrom]]  forKey:@"enter_from"];
     }
-    [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
     
+    if(self.extraDic.count > 0){
+        [paramsDict addEntriesFromDictionary:self.extraDic];
+    }
+    
+    [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
     
     NSMutableDictionary *userInfoDic = [[NSMutableDictionary alloc] init];
     if ([self.commentDetailModel respondsToSelector:@selector(groupModel)]) {

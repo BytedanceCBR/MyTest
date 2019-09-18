@@ -11,6 +11,8 @@
 #import "FHHouseUGCHeader.h"
 #import "TTRichSpanText.h"
 #import "TTRichSpanText+Emoji.h"
+#import <TTVFeedItem+Extension.h>
+#import <TTVFeedListItem.h>
 
 @class FHCommunityFeedListController;
 
@@ -54,6 +56,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat contentHeight;
 @property (nonatomic, assign) BOOL needUserLogin;
 
+@end
+
+@interface FHFeedUGCCellContentDecorationModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *url;
 @end
 
 @interface FHFeedUGCCellModel : NSObject
@@ -117,11 +123,23 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotTopicListModel> *hotTopicList;
 //投票
 @property (nonatomic, strong , nullable) FHFeedUGCVoteModel *vote;
+//视频和小视频相关
+@property (nonatomic, assign) BOOL hasVideo;
+@property (nonatomic, strong , nullable) TTVFeedItem *videoFeedItem;
+@property (nonatomic, strong , nullable) TTVFeedListItem *videoItem;
+@property (nonatomic, assign) NSInteger videoDuration;
+@property (nonatomic, strong , nullable) FHFeedContentVideoDetailInfoModel *videoDetailInfo ;
 //埋点相关
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy) NSString *elementFrom;
 @property (nonatomic, copy) NSString *enterFrom;
 @property (nonatomic, strong) NSDictionary *tracerDic;
+// 是否置顶
+@property (nonatomic, assign) BOOL isStick;
+// 置顶类型：精华或其它
+@property (nonatomic, assign) FHFeedContentStickStyle stickStyle;
+// 内容装饰
+@property (nonatomic, strong) FHFeedUGCCellContentDecorationModel *contentDecoration;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

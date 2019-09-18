@@ -35,7 +35,11 @@
             if (params != nil) {
                 NSString* target = params[@"select_tab"];
                 if (target != nil && target.length > 0) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
+                    NSDictionary *userInfo = @{
+                                               @"tag":target,
+                                               @"needToRoot":@1
+                                               };
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:userInfo];
                 }
             }
         }

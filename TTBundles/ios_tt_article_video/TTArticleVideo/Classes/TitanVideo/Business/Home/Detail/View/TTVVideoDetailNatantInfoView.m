@@ -978,6 +978,12 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
     [pramas setValue:self.viewModel.infoModel.authorId forKey:@"author_id"];
     [pramas setValue:@"video" forKey:@"article_type"];
     [pramas setValue:@"house_app2c_v2" forKey:@"event_type"];
+    
+    if([eventName isEqualToString:@"rt_unlike"] || [eventName isEqualToString:@"rt_like"]){
+        if(self.viewModel.infoModel.extraDic.count > 0){
+            [pramas addEntriesFromDictionary:self.viewModel.infoModel.extraDic];
+        }
+    }
 
     [TTTrackerWrapper eventV3:eventName params:pramas isDoubleSending:isDouble];
     

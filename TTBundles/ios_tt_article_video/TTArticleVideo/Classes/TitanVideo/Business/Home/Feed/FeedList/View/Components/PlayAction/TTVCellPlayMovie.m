@@ -171,6 +171,8 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     model.enterFrom = [self enterFrom];
     model.categoryName = self.cellEntity.categoryId;
     model.authorId = article.userId;
+    model.extraDic = self.cellEntity.extraDic;
+    
     if (feedItem.isVideoSourceUGCVideo) {
         model.defaultResolutionType = TTVPlayerResolutionTypeHD;
     }
@@ -243,8 +245,10 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     [self addUrlTrackerOnPlayer:playVideo];
     [self settingMovieView:self.movieView];
     [self.movieView.player play];
-    [playVideo.player setVideoTitle:feedItem.title];
-    [playVideo.player setVideoWatchCount:article.videoDetailInfo.videoWatchCount playText:@"次播放"];
+    if(!self.cellEntity.hideTitleAndWatchCount){
+        [playVideo.player setVideoTitle:feedItem.title];
+        [playVideo.player setVideoWatchCount:article.videoDetailInfo.videoWatchCount playText:@"次播放"];
+    }
     self.logo.userInteractionEnabled = ![feedItem couldAutoPlay];
     [self.logo addSubview:self.movieView];
     if (![TTDeviceHelper isPadDevice]) {
@@ -370,7 +374,16 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     if (state == TTVVideoPlaybackStateFinished) {
         [self moviePlayFinishedAction];
     }
-    
+}
+
+- (void)playerOrientationState:(BOOL)isFullScreen {
+    if(self.cellEntity.hideTitleAndWatchCount){
+        if(isFullScreen){
+            [self.movieView.player setVideoTitle:self.cellEntity.originData.title];
+        }else{
+            [self.movieView.player setVideoTitle:nil];
+        }
+    }
 }
 
 - (void)actionChangeCallbackWithAction:(TTVPlayerStateAction *)action

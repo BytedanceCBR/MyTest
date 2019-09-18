@@ -494,6 +494,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     replyManager.enterFrom = self.enterFromStr;
     replyManager.categoryID = self.categoryID;
     replyManager.logPb = self.logPb;
+    replyManager.extraDic = self.extraDic;
 
     self.replyWriteView = [[TTCommentWriteView alloc] initWithCommentManager:replyManager];
 

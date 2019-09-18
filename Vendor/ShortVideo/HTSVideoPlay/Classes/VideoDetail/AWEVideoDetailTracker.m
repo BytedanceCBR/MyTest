@@ -24,7 +24,7 @@
 + (void)trackEvent:(NSString *)event
              model:(TTShortVideoModel *)model
    commonParameter:(NSDictionary *)commonParameter
-    extraParameter:(NSDictionary *)extraParameter;
+    extraParameter:(NSDictionary *)extraParameter
 {
 #if !DEBUG
     @try {
@@ -67,7 +67,15 @@
 //        parameterDictionary[@"is_follow"] = @(model.author.isFollowing);
 //        parameterDictionary[@"is_friend"] = @(model.author.isFriend);
         parameterDictionary[@"event_type"] = @"house_app2c_v2";
+        
+        if(model.extraDic.count > 0){
+            [parameterDictionary addEntriesFromDictionary:model.extraDic];
+        }
         if ([event isEqualToString:@"go_detail_draw"] || [event isEqualToString:@"video_play_draw"] || [event isEqualToString:@"go_detail"] || [event isEqualToString:@"video_play"]) {
+            
+            if ([event isEqualToString:@"video_play_draw"] || [event isEqualToString:@"video_play"]) {
+                parameterDictionary[@"position"] = @"detail";
+            }
             
 //            parameterDictionary[@"event_type"] = @"house_app2c_v2";
             [AWEVideoPlayTrackerBridge trackEvent:event params:parameterDictionary];
@@ -76,6 +84,8 @@
         if ([event isEqualToString:@"video_over_draw"] || [event isEqualToString:@"video_over"]) {
             
 //            parameterDictionary[@"event_type"] = @"house_app2c_v2";
+            parameterDictionary[@"position"] = @"detail";
+            
             NSInteger duration = [extraParameter tt_intValueForKey:@"duration"];
             if (duration > 0) {
                 parameterDictionary[@"duration"] = [extraParameter valueForKey:@"duration"] ? : @"be_null";
