@@ -55,7 +55,7 @@
 #import <TTThemed/UIImage+TTThemeExtension.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-
+#import <Heimdallr/HMDTTMonitor.h>
 
 static NSInteger const kRedirectStatusCode = 302;
 static NSInteger const kErrorStatusCode = 400;
@@ -378,6 +378,7 @@ static NSInteger const kErrorStatusCode = 400;
     if ([self p_checkArticleReliable]) {
         [self tt_startLoadWebViewContent];
     }
+    // 导流页
     [self p_showLoadingView];
 }
 
@@ -451,10 +452,12 @@ static NSInteger const kErrorStatusCode = 400;
     //初始化web请求monitor
     [self.monitor initializeWebRequestTimeMonitor];
     
+    //加载转码页
     if ([_detailViewModel tt_articleDetailLoadedContentType] == TTArticleDetailLoadedContentTypeNative) {
         [self p_startLoadNativeTypeArticle];
         [self p_showLoadingView];
     }
+    // 加载导流页
     else {
         [self p_startLoadWebTypeArticle];
         [self p_showLoadingView];
@@ -469,7 +472,7 @@ static NSInteger const kErrorStatusCode = 400;
     
     [_detailViewModel tt_setArticleHasRead];
 }
-
+// 加载转码页
 - (void)p_startLoadNativeTypeArticle {
     
     if (_detailWebView.webView == self.class.sharedWebView) {
@@ -506,7 +509,7 @@ static NSInteger const kErrorStatusCode = 400;
         self.detailWebView.webView.scalesPageToFit = NO;
     }];
 }
-
+// 加载导流页
 - (void)p_startLoadWebTypeArticle
 {
     _webViewHasExecuteScriptJS = NO;
@@ -571,7 +574,7 @@ static NSInteger const kErrorStatusCode = 400;
         }];
     });
 }
-
+//
 - (void)p_didStartLoadNativeContentForWebTimeoff
 {
     //added 5.9.9 开始转码前再判断一次开关，可能已被info重新设为关
@@ -1055,6 +1058,16 @@ static NSInteger const kErrorStatusCode = 400;
     }
 }
 
+- (void)f_sendDetailTimeIntervalMonitorForService:(NSString *)serviceName
+{
+    NSString *intervalString = [_monitor intervalFromWebRequestStartTime];
+    if (!isEmptyString(intervalString)) {
+        NSMutableDictionary *metric = @{}.mutableCopy;
+         metric[@"value"] = intervalString;
+        [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:metric category:nil extra:[self.tracker detailTrackerCommonParams]];
+    }
+}
+
 - (void)p_setWebViewAudioSessionCategoryIfNeed
 {
     NSError *error = nil;
@@ -1344,6 +1357,8 @@ static NSInteger const kErrorStatusCode = 400;
         !_webTypeContentDidFinishLoadMonitorSent) {
         _webTypeContentDidFinishLoadMonitorSent = YES;
         [self p_sendDetailTimeIntervalMonitorForService:@"web_finish_load"];
+        // f单独添加监控
+        [self f_sendDetailTimeIntervalMonitorForService:@"f_article_web_finish_load"];
     }
     
     //广告监控统计 注入js
@@ -1471,8 +1486,13 @@ static NSInteger const kErrorStatusCode = 400;
         }
         _webTypeContentDidFinishLoadMonitorSent = YES;
         [self p_sendDetailTimeIntervalMonitorForService:@"web_finish_load"];
+        // f单独添加监控 - 导流页加载
+        [self f_sendDetailTimeIntervalMonitorForService:@"f_article_web_finish_load"];
     } else {
         [self p_sendDetailTimeIntervalMonitorForService:[SSCommonLogic detailSharedWebViewEnabled]? @"native_dom_ready_new": @"native_dom_ready"];
+        
+        // f单独添加监控 - 转码页加载
+        [self f_sendDetailTimeIntervalMonitorForService:@"f_article_native_dom_ready"];
     }
     
     if ([self.delegate respondsToSelector:@selector(tt_articleDetailViewDidDomReady)]) {

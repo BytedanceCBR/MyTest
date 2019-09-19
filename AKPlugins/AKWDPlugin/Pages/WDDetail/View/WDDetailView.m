@@ -35,6 +35,7 @@
 #import <TTInteractExitHelper.h>
 #import "WDDefines.h"
 #import <TTBaseLib/TTURLUtils.h>
+#import <Heimdallr/HMDTTMonitor.h>
 
 typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
     SSWebViewStayStatCancel,
@@ -799,6 +800,16 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
     }
 }
 
+- (void)f_sendDetailTimeIntervalMonitorForService:(NSString *)serviceName
+{
+    NSString *intervalString = [_monitor intervalFromWebRequestStartTime];
+    if (!isEmptyString(intervalString)) {
+        NSMutableDictionary *metric = @{}.mutableCopy;
+        metric[@"value"] = intervalString;
+        [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:metric category: nil extra:[WDMonitorManager extraDicWithAnswerId:self.detailModel.answerEntity.ansid error:nil]];
+    }
+}
+
 - (void)p_skipReadPartIfNeed
 {
     if (![WDCommonLogic answerReadPositionEnable]) {
@@ -1070,6 +1081,9 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
     
     //监控DomReady时间
     [self p_sendDetailTimeIntervalMonitorForService:WDDetailDomReadyTimeService];
+    
+    // f单独添加监控
+    [self f_sendDetailTimeIntervalMonitorForService:@"f_wenda_detail_domready_time"];
 }
 
 - (void)processRequestUpdateArticleImageMode:(NSNumber *)mode
