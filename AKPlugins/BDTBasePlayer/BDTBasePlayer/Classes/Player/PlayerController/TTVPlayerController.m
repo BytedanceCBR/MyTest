@@ -29,6 +29,7 @@
 #import "EXTKeyPathCoding.h"
 #import "TTVChangeResolutionView.h"
 #import "TTVChangeResolutionAlertView.h"
+#import "FHHMDTManager.h"
 
 static __weak TTVPlayerController *currentPlayerController = nil;
 
@@ -218,6 +219,7 @@ static __weak TTVPlayerController *currentPlayerController = nil;
 
 - (void)playVideo
 {
+    [FHHMDTManager sharedInstance].videoCreateTime = [[NSDate date] timeIntervalSince1970];
     [_eventController playVideoFromPayload:@{TTVPlayAction : TTVPlayActionDefault}];
 }
 
