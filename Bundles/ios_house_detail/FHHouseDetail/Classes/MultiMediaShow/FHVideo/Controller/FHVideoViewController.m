@@ -15,6 +15,7 @@
 #import "FHUserTracker.h"
 #import <TTVFullScreenPart.h>
 #import <BDWebImage/BDWebImageManager.h>
+#import "FHHMDTManager.h"
 
 @interface FHVideoViewController ()<FHVideoViewDelegate,TTVPlayerDelegate,TTVPlayerCustomViewDelegate>
 
@@ -155,6 +156,8 @@
 }
 
 - (void)play {
+    [FHHMDTManager sharedInstance].videoCreateTime = [[NSDate date] timeIntervalSince1970];
+    
     [self readyToPlay];
 
     if(!self.isShowingNetFlow && self.playbackState != TTVPlaybackState_Playing){
@@ -300,7 +303,7 @@
 
 /// 播放器展示第一帧
 - (void)playerReadyToDisplay:(TTVPlayer *)player {
-    
+    [[FHHMDTManager sharedInstance] videoFirstFrameReport:VIDEO_FHVideoViewController];
 }
 
 - (void)playerViewDidLayoutSubviews:(TTVPlayer *)player state:(TTVPlayerState *)state {

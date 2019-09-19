@@ -56,7 +56,6 @@
 		6CF2FEAC662567C6E36B55F6 /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 70FA0E6B1FECAC5D4D4F1932 /* libPods-f100.a */; };
 		7623E3B12275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
 		7623E3B22275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
-		B362E6F821539E0C00BD4DF1 /* TTUIWidgetResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */; };
 		B373CE892174587A008F9905 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		B373CE8A2174587A008F9905 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
 		B373CE8E2174587A008F9905 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */; };
@@ -88,7 +87,6 @@
 		B373CECB2174587A008F9905 /* AuthorizeHintResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4175CE3C1D16850900F2CFC2 /* AuthorizeHintResource.xcassets */; };
 		B373CECC2174587A008F9905 /* default_profile_background_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BD907021DB877E40072138C /* default_profile_background_image.jpg */; };
 		B373CECF2174587A008F9905 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E32142652800653188 /* Assets.xcassets */; };
-		B373CED02174587A008F9905 /* TTUIWidgetResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */; };
 		B373CED12174587A008F9905 /* VideoResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */; };
 		B373CEDC2174587A008F9905 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D013795E1DFE8BEF0020C6BD /* libresolv.tbd */; };
 		B373CEDD2174587A008F9905 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B119472C1CF7FF4700561B49 /* libbz2.tbd */; };
@@ -1000,7 +998,6 @@
 				3D2F399E2270545700AE567D /* News-Info.plist in Resources */,
 				B373CECC2174587A008F9905 /* default_profile_background_image.jpg in Resources */,
 				B373CECF2174587A008F9905 /* Assets.xcassets in Resources */,
-				B373CED02174587A008F9905 /* TTUIWidgetResources.bundle in Resources */,
 				3DB49F8B2265E34900A0780E /* ProjectDayModeThemeUISetting.strings in Resources */,
 				3DB49F872265E34900A0780E /* IPhoneProjectLogicSetting.strings in Resources */,
 				B373CED12174587A008F9905 /* VideoResource.xcassets in Resources */,
@@ -1057,7 +1054,6 @@
 				FEFA5A21205FB1A8001F50D8 /* AuthorizeHintResource.xcassets in Resources */,
 				FEFA5A22205FB1A8001F50D8 /* default_profile_background_image.jpg in Resources */,
 				B388CB272142652A00653188 /* Assets.xcassets in Resources */,
-				B362E6F821539E0C00BD4DF1 /* TTUIWidgetResources.bundle in Resources */,
 				3DB49F8A2265E34900A0780E /* ProjectDayModeThemeUISetting.strings in Resources */,
 				3DB49F862265E34900A0780E /* IPhoneProjectLogicSetting.strings in Resources */,
 				FEFA5A24205FB1A8001F50D8 /* VideoResource.xcassets in Resources */,
@@ -1281,6 +1277,7 @@
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
+				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCRichText/Assets/Emoji.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",
@@ -1620,6 +1617,7 @@
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
+				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCRichText/Assets/Emoji.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",

@@ -47,6 +47,8 @@
 #import "TSVMonitorManager.h"
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "TTReachability.h"
+#import "FHHMDTManager.h"
+
 static NSString * const VideoPlayTimeKey =  @"video_play_time";
 static NSString * const VideoStallTimeKey =  @"video_stall_time";
 static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
@@ -126,6 +128,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     //避免复用时首帧时长统计不对
     [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self]];
     [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame-Display", self]];
+    [FHHMDTManager sharedInstance].shortVideoCreateTime = 0;
     [self.timingTracker endTimingForKey:VideoPrepareTimeTechKey];
     
     BOOL widthChanged = self.model.video.width != model.video.width;
@@ -296,6 +299,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
         [self resetVideoPlayAddress];
     }
     
+    [FHHMDTManager sharedInstance].shortVideoCreateTime = [[NSDate date] timeIntervalSince1970];
     [self.playerController play];
     self.isPlaying = YES;
 }
@@ -314,6 +318,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     // 结束播放时清理首帧时长
     [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self]];
     [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame-Display", self]];
+    [FHHMDTManager sharedInstance].shortVideoCreateTime = 0;
 }
 
 - (void)_didStartDisplayFrames
@@ -323,7 +328,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     
     // 统计首帧时间，readyForDisplay变为yes时记结束 比short_video_prepare_time晚
     [TTMonitor endTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame-Display", self] serviceName:@"short_video_prepare_time_display"];
-   
+    [[FHHMDTManager sharedInstance] shortVideoFirstFrameReport:SHORT_VIDEO_AWEVideoPlayView];
     [[TSVMonitorManager sharedManager] trackVideoPlayStatus:TSVMonitorVideoPlaySucceed model:self.model error:nil];
 }
 
@@ -357,6 +362,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
         
         [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self]];
         [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame-Display", self]];
+        [FHHMDTManager sharedInstance].shortVideoCreateTime = 0;
         
         // 统计播放失败率（失败）
         [[TSVMonitorManager sharedManager] trackVideoPlayStatus:TSVMonitorVideoPlayFailed model:self.model error:error];
@@ -625,6 +631,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             //从暂停状态返回时，清理首帧时长
             [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self]];
             [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame-Display", self]];
+            [FHHMDTManager sharedInstance].shortVideoCreateTime = 0;
         }
             break;
         default:
