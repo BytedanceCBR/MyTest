@@ -36,6 +36,7 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #import "TTSettingsManager.h"
+#import "FHHMDTManager.h"
 
 static NSString *const kvideo_controller_error_domain = @"kvideo_player_controller_error_domain";
 static NSString *platformString;
@@ -431,6 +432,8 @@ static NSString *platformString;
 
 - (void)videoEngineReadyToPlay:(TTVideoEngine *)videoEngine
 {
+    [[FHHMDTManager sharedInstance] videoFirstFrameReport:VIDEO_TTVPlayerController];
+    
     self.playerStateStore.state.currentPlaybackTime = self.videoEngine.currentPlaybackTime;
     [self.watchTimer startWatch];
     self.playerStateStore.state.showVideoFirstFrame = YES;
