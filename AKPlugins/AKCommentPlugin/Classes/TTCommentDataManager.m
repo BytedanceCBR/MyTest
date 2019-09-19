@@ -20,6 +20,7 @@
 #import <TTUGCFoundation/FRActionDataService.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import "FHCommonApi.h"
+#import "HMDTTMonitor.h"
 
 extern NSString * const TTCommentSuccessForPushGuideNotification;
 
@@ -400,6 +401,18 @@ static TTCommentDataManager *sharedManager;
 
     FR2DataV4PostMessageResponseModel *response = [[FR2DataV4PostMessageResponseModel alloc] initWithDictionary:result error:nil];
     [mDict setValue:response.data forKey:@"comment"];
+    NSMutableDictionary* metric = nil;
+    NSMutableDictionary* category = @{}.mutableCopy;
+    if (error) {
+        metric = @{}.mutableCopy;
+        if (commentID.length > 0) {
+            metric[@"comment_id"] = commentID;
+        }
+        category[@"status"] = @(1);
+    } else {
+        category[@"status"] = @(0);
+    }
+    [[HMDTTMonitor defaultManager] hmdTrackService:@"f_ugc_comment_result" metric:metric category:category extra:nil];
 
     [[NSNotificationCenter defaultCenter] postNotificationName:kPostMessageFinishedNotification
                                                         object:self
@@ -431,15 +444,30 @@ static TTCommentDataManager *sharedManager;
     [postParams setValue:@"0" forKey:@"forward"];
 
     [[TTNetworkManager shareInstance] requestForJSONWithURL:[TTCommentDataManager postCommentReplyURLString] params:postParams method:@"POST" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        NSMutableDictionary* metric = nil;
+        NSMutableDictionary* category = @{}.mutableCopy;
         if (!error) {
+            category[@"status"] = @(0);
             if (finishBlock) {
                 finishBlock(jsonObj, error);
             }
         } else {
+            category[@"status"] = @(1);
+            metric = @{}.mutableCopy;
+            if (commentID.length > 0) {
+                metric[@"comment_id"] = commentID;
+            }
+            if (replyUserID.length > 0) {
+                metric[@"reply_user_id"] = replyUserID;
+            }
+            if (replyCommentID.length > 0) {
+                metric[@"reply_comment_id"] = replyCommentID;
+            }
             if (finishBlock) {
                 finishBlock(jsonObj, error);
             }
         }
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"f_ugc_reply_result" metric:metric category:category extra:nil];
     }];
 }
 
