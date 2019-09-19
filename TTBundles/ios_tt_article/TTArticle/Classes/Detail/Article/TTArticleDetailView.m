@@ -55,7 +55,6 @@
 #import <TTThemed/UIImage+TTThemeExtension.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <FHCommonUI/ToastManager.h>
 #import <Heimdallr/HMDTTMonitor.h>
 
 static NSInteger const kRedirectStatusCode = 302;
@@ -1055,9 +1054,17 @@ static NSInteger const kErrorStatusCode = 400;
     NSString *intervalString = [_monitor intervalFromWebRequestStartTime];
     if (!isEmptyString(intervalString)) {
         //        LOGD(@"[%@]intervalString is %@", serviceName, intervalString);
+        [[TTMonitor shareManager] trackService:serviceName value:intervalString extra:[self.tracker detailTrackerCommonParams]];
+    }
+}
+
+- (void)f_sendDetailTimeIntervalMonitorForService:(NSString *)serviceName
+{
+    NSString *intervalString = [_monitor intervalFromWebRequestStartTime];
+    if (!isEmptyString(intervalString)) {
         NSMutableDictionary *metric = @{}.mutableCopy;
          metric[@"value"] = intervalString;
-        [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:metric category:kNotInterestTipUserLogined extra:[self.tracker detailTrackerCommonParams]];
+        [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:metric category:nil extra:[self.tracker detailTrackerCommonParams]];
     }
 }
 
@@ -1350,6 +1357,8 @@ static NSInteger const kErrorStatusCode = 400;
         !_webTypeContentDidFinishLoadMonitorSent) {
         _webTypeContentDidFinishLoadMonitorSent = YES;
         [self p_sendDetailTimeIntervalMonitorForService:@"web_finish_load"];
+        // f单独添加监控
+        [self f_sendDetailTimeIntervalMonitorForService:@"f_article_web_finish_load"];
     }
     
     //广告监控统计 注入js
@@ -1477,8 +1486,13 @@ static NSInteger const kErrorStatusCode = 400;
         }
         _webTypeContentDidFinishLoadMonitorSent = YES;
         [self p_sendDetailTimeIntervalMonitorForService:@"web_finish_load"];
+        // f单独添加监控 - 导流页加载
+        [self f_sendDetailTimeIntervalMonitorForService:@"f_article_web_finish_load"];
     } else {
         [self p_sendDetailTimeIntervalMonitorForService:[SSCommonLogic detailSharedWebViewEnabled]? @"native_dom_ready_new": @"native_dom_ready"];
+        
+        // f单独添加监控 - 转码页加载
+        [self f_sendDetailTimeIntervalMonitorForService:@"f_article_native_dom_ready"];
     }
     
     if ([self.delegate respondsToSelector:@selector(tt_articleDetailViewDidDomReady)]) {
