@@ -805,8 +805,8 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
     NSString *intervalString = [_monitor intervalFromWebRequestStartTime];
     if (!isEmptyString(intervalString)) {
         NSMutableDictionary *metric = @{}.mutableCopy;
-        metric[@"value"] = intervalString;
-        [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:metric category: nil extra:[WDMonitorManager extraDicWithAnswerId:self.detailModel.answerEntity.ansid error:nil]];
+        metric[@"duration"] = intervalString;
+        [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:metric category:@{@"status":@(0)} extra:[WDMonitorManager extraDicWithAnswerId:self.detailModel.answerEntity.ansid error:nil]];
     }
 }
 

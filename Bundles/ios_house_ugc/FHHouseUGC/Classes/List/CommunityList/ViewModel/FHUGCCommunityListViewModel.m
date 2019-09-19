@@ -226,7 +226,12 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
     FHCommunityCategoryListStateModel *stateModel = self.dataDic[@(self.curCategory.categoryId)];
     if (stateModel.communityList.count <= 0) {
         self.viewController.errorView.hidden = NO;
-        [self.viewController.errorView showEmptyWithTip:@"你还没有关注任何小区" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        NSString *tips = @"你还没有关注任何小区圈";
+        if (self.curCategory.categoryId == FHUGCCommunityDistrictTabIdRecommend) {
+            // 推荐
+            tips = @"更多小区圈正在开通，敬请期待";
+        }
+        [self.viewController.errorView showEmptyWithTip:tips errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
         return;
     }
     

@@ -1063,8 +1063,8 @@ static NSInteger const kErrorStatusCode = 400;
     NSString *intervalString = [_monitor intervalFromWebRequestStartTime];
     if (!isEmptyString(intervalString)) {
         NSMutableDictionary *metric = @{}.mutableCopy;
-         metric[@"value"] = intervalString;
-        [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:metric category:nil extra:[self.tracker detailTrackerCommonParams]];
+         metric[@"duration"] = intervalString;
+        [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:metric category:@{@"status":@(0)} extra:[self.tracker detailTrackerCommonParams]];
     }
 }
 
