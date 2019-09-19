@@ -112,32 +112,32 @@ PODS:
   - FMDB/standard (2.7.5.1-binary)
   - Gaia (1.0.7-rc.1)
   - Godzippa (1.1.0.1-binary)
-  - Heimdallr/ALog (0.7.6)
-  - Heimdallr/CloudCommand (0.7.6)
-  - Heimdallr/Core (0.7.6)
-  - Heimdallr/CrashDetector (0.7.6)
-  - Heimdallr/DeviceInfo (0.7.6)
-  - Heimdallr/HMDANR (0.7.6)
-  - Heimdallr/HMDConfig (0.7.6)
-  - Heimdallr/HMDOOM (0.7.6)
-  - Heimdallr/HMDOOMCrash (0.7.6)
-  - Heimdallr/HMDSession (0.7.6)
-  - Heimdallr/HMDStart (0.7.6)
-  - Heimdallr/HMDStore (0.7.6)
-  - Heimdallr/HMDURLProtocolTracker (0.7.6)
-  - Heimdallr/HMDWatchDog (0.7.6)
-  - Heimdallr/HTTPRequestTracker (0.7.6)
-  - Heimdallr/Log (0.7.6)
-  - Heimdallr/Mach (0.7.6)
-  - Heimdallr/MemorySnapshot (0.7.6)
-  - Heimdallr/Monitors (0.7.6)
-  - Heimdallr/Network (0.7.6)
-  - Heimdallr/TTMonitor (0.7.6)
-  - Heimdallr/TTNet (0.7.6)
-  - Heimdallr/UITracker (0.7.6)
-  - Heimdallr/Upload (0.7.6)
-  - Heimdallr/UserException (0.7.6)
-  - Heimdallr/Utility (0.7.6)
+  - Heimdallr/ALog (0.7.6.1-binary)
+  - Heimdallr/CloudCommand (0.7.6.1-binary)
+  - Heimdallr/Core (0.7.6.1-binary)
+  - Heimdallr/CrashDetector (0.7.6.1-binary)
+  - Heimdallr/DeviceInfo (0.7.6.1-binary)
+  - Heimdallr/HMDANR (0.7.6.1-binary)
+  - Heimdallr/HMDConfig (0.7.6.1-binary)
+  - Heimdallr/HMDOOM (0.7.6.1-binary)
+  - Heimdallr/HMDOOMCrash (0.7.6.1-binary)
+  - Heimdallr/HMDSession (0.7.6.1-binary)
+  - Heimdallr/HMDStart (0.7.6.1-binary)
+  - Heimdallr/HMDStore (0.7.6.1-binary)
+  - Heimdallr/HMDURLProtocolTracker (0.7.6.1-binary)
+  - Heimdallr/HMDWatchDog (0.7.6.1-binary)
+  - Heimdallr/HTTPRequestTracker (0.7.6.1-binary)
+  - Heimdallr/Log (0.7.6.1-binary)
+  - Heimdallr/Mach (0.7.6.1-binary)
+  - Heimdallr/MemorySnapshot (0.7.6.1-binary)
+  - Heimdallr/Monitors (0.7.6.1-binary)
+  - Heimdallr/Network (0.7.6.1-binary)
+  - Heimdallr/TTMonitor (0.7.6.1-binary)
+  - Heimdallr/TTNet (0.7.6.1-binary)
+  - Heimdallr/UITracker (0.7.6.1-binary)
+  - Heimdallr/Upload (0.7.6.1-binary)
+  - Heimdallr/UserException (0.7.6.1-binary)
+  - Heimdallr/Utility (0.7.6.1-binary)
   - HTSVideoPlay (0.3.9):
     - HTSVideoPlay/Yoga (= 0.3.9)
     - HTSVideoPlay/YogaKit (= 0.3.9)
@@ -405,11 +405,11 @@ PODS:
   - TTLCSService (0.1.1.1-binary)
   - TTLocationManager (1.0.22)
   - TTMacroManager (1.0.1)
-  - TTMonitor (0.7.11.0):
-    - TTMonitor/BackTrace (= 0.7.11.0)
-    - TTMonitor/Monitor (= 0.7.11.0)
-  - TTMonitor/BackTrace (0.7.11.0)
-  - TTMonitor/Monitor (0.7.11.0)
+  - TTMonitor (0.7.11.0.1-binary):
+    - TTMonitor/BackTrace (= 0.7.11.0.1-binary)
+    - TTMonitor/Monitor (= 0.7.11.0.1-binary)
+  - TTMonitor/BackTrace (0.7.11.0.1-binary)
+  - TTMonitor/Monitor (0.7.11.0.1-binary)
   - TTNetBusiness (0.0.10.1-binary)
   - TTNetworkManager (2.2.8.55-rc.1.1.binary)
   - TTNewsAccountBusiness (0.2.4):
@@ -647,32 +647,32 @@ DEPENDENCIES:
   - FMDB/standard (= 2.7.5.1-binary)
   - Gaia (= 1.0.7-rc.1)
   - Godzippa (= 1.1.0.1-binary)
-  - Heimdallr/ALog (= 0.7.6)
-  - Heimdallr/CloudCommand (= 0.7.6)
-  - Heimdallr/Core (= 0.7.6)
-  - Heimdallr/CrashDetector (= 0.7.6)
-  - Heimdallr/DeviceInfo (= 0.7.6)
-  - Heimdallr/HMDANR (= 0.7.6)
-  - Heimdallr/HMDConfig (= 0.7.6)
-  - Heimdallr/HMDOOM (= 0.7.6)
-  - Heimdallr/HMDOOMCrash (= 0.7.6)
-  - Heimdallr/HMDSession (= 0.7.6)
-  - Heimdallr/HMDStart (= 0.7.6)
-  - Heimdallr/HMDStore (= 0.7.6)
-  - Heimdallr/HMDURLProtocolTracker (= 0.7.6)
-  - Heimdallr/HMDWatchDog (= 0.7.6)
-  - Heimdallr/HTTPRequestTracker (= 0.7.6)
-  - Heimdallr/Log (= 0.7.6)
-  - Heimdallr/Mach (= 0.7.6)
-  - Heimdallr/MemorySnapshot (= 0.7.6)
-  - Heimdallr/Monitors (= 0.7.6)
-  - Heimdallr/Network (= 0.7.6)
-  - Heimdallr/TTMonitor (= 0.7.6)
-  - Heimdallr/TTNet (= 0.7.6)
-  - Heimdallr/UITracker (= 0.7.6)
-  - Heimdallr/Upload (= 0.7.6)
-  - Heimdallr/UserException (= 0.7.6)
-  - Heimdallr/Utility (= 0.7.6)
+  - Heimdallr/ALog (= 0.7.6.1-binary)
+  - Heimdallr/CloudCommand (= 0.7.6.1-binary)
+  - Heimdallr/Core (= 0.7.6.1-binary)
+  - Heimdallr/CrashDetector (= 0.7.6.1-binary)
+  - Heimdallr/DeviceInfo (= 0.7.6.1-binary)
+  - Heimdallr/HMDANR (= 0.7.6.1-binary)
+  - Heimdallr/HMDConfig (= 0.7.6.1-binary)
+  - Heimdallr/HMDOOM (= 0.7.6.1-binary)
+  - Heimdallr/HMDOOMCrash (= 0.7.6.1-binary)
+  - Heimdallr/HMDSession (= 0.7.6.1-binary)
+  - Heimdallr/HMDStart (= 0.7.6.1-binary)
+  - Heimdallr/HMDStore (= 0.7.6.1-binary)
+  - Heimdallr/HMDURLProtocolTracker (= 0.7.6.1-binary)
+  - Heimdallr/HMDWatchDog (= 0.7.6.1-binary)
+  - Heimdallr/HTTPRequestTracker (= 0.7.6.1-binary)
+  - Heimdallr/Log (= 0.7.6.1-binary)
+  - Heimdallr/Mach (= 0.7.6.1-binary)
+  - Heimdallr/MemorySnapshot (= 0.7.6.1-binary)
+  - Heimdallr/Monitors (= 0.7.6.1-binary)
+  - Heimdallr/Network (= 0.7.6.1-binary)
+  - Heimdallr/TTMonitor (= 0.7.6.1-binary)
+  - Heimdallr/TTNet (= 0.7.6.1-binary)
+  - Heimdallr/UITracker (= 0.7.6.1-binary)
+  - Heimdallr/Upload (= 0.7.6.1-binary)
+  - Heimdallr/UserException (= 0.7.6.1-binary)
+  - Heimdallr/Utility (= 0.7.6.1-binary)
   - HTSVideoPlay (from `../Vendor/ShortVideo`)
   - IESGeckoKit (= 0.4.0.1-binary)
   - IESVideoPlayer (= 0.1.16)
@@ -808,7 +808,7 @@ DEPENDENCIES:
   - TTLCSService (= 0.1.1.1-binary)
   - TTLocationManager (= 1.0.22)
   - TTMacroManager (= 1.0.1)
-  - TTMonitor (= 0.7.11.0)
+  - TTMonitor (= 0.7.11.0.1-binary)
   - TTNetBusiness (= 0.0.10.1-binary)
   - TTNetworkManager (= 2.2.8.55-rc.1.1.binary)
   - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
@@ -1038,7 +1038,7 @@ SPEC CHECKSUMS:
   FMDB: ea2aa07bb88b08b5e9675a49c4fe77df17b5f791
   Gaia: 8d07f88e57c49364734d1fb5ea331f37c225c619
   Godzippa: 8f1a58014e75d07ad73e1bb9148a9c01ba17c1bf
-  Heimdallr: 870d6babe7d2f51988383707e2b0be473a93ba27
+  Heimdallr: fbbf0b9b4c9e501e808f09599c46e12adad854f3
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
   IESGeckoKit: e6cca571ecaf0b5a9af925cd34eda889aa9311de
   IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
@@ -1115,7 +1115,7 @@ SPEC CHECKSUMS:
   TTLCSService: d9fc936bba13993ecc454b486a15a403a9fdbdc4
   TTLocationManager: 4e294fc0d5a8e0d263af7a96d48fb37fe4489665
   TTMacroManager: 915aadf3841523767f16a230fd97fe546aa800eb
-  TTMonitor: e13bbd46ff10da6a6bf91e198f6ef7049e4ee1ad
+  TTMonitor: e56002040d636af0f7489db64e68e75aadae3843
   TTNetBusiness: e436bc6d648bf01946cc01756c86adfd0d718e5c
   TTNetworkManager: 6afdda81f4f04c85b9d38c22d1d542d24b5d9141
   TTNewsAccountBusiness: 50125377b67c11155b3677cf0e6d3d02ed718a03
@@ -1169,6 +1169,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 3d39cc1bef034b1c70ac071beb548b07b91f3ed0
+PODFILE CHECKSUM: 5c764b23f88b2fc03ec24afe0bae182a902cf156
 
 COCOAPODS: 1.4.0
