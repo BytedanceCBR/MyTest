@@ -37,8 +37,6 @@
             categoryDic[@"category_name"] = category;
         }
         
-        NSLog(@"fff___video_%f",duration);
-        
         [[HMDTTMonitor defaultManager] hmdTrackService:@"f_video_detail_first_render_time"
                                                 metric:metric
                                               category:categoryDic
@@ -60,8 +58,6 @@
         if(category){
             categoryDic[@"category_name"] = category;
         }
-        
-        NSLog(@"fff___short_video_%f",duration);
         
         [[HMDTTMonitor defaultManager] hmdTrackService:@"f_short_video_detail_first_render_time"
                                                 metric:metric
