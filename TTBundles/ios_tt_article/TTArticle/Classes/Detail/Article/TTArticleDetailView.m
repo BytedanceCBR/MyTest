@@ -1055,8 +1055,9 @@ static NSInteger const kErrorStatusCode = 400;
     NSString *intervalString = [_monitor intervalFromWebRequestStartTime];
     if (!isEmptyString(intervalString)) {
         //        LOGD(@"[%@]intervalString is %@", serviceName, intervalString);
-        [[TTMonitor shareManager] trackService:serviceName value:intervalString extra:[self.tracker detailTrackerCommonParams]];
-        [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"value": intervalString} extra:[self.tracker detailTrackerCommonParams]];
+        NSMutableDictionary *metric = @{}.mutableCopy;
+         metric[@"value"] = intervalString;
+        [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:metric category:kNotInterestTipUserLogined extra:[self.tracker detailTrackerCommonParams]];
     }
 }
 
