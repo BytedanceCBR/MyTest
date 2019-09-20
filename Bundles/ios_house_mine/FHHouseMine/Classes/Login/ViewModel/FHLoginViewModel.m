@@ -247,7 +247,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSInteger limit = 0;
     if(textField == self.view.phoneInput){
         limit = 11;
-        [self.view enableSendVerifyCodeBtn:self.view.phoneInput.text.length > 0];
+        if(!self.isRequestingSMS){
+            [self.view enableSendVerifyCodeBtn:self.view.phoneInput.text.length > 0];
+        }
     } else if (textField == self.view.varifyCodeInput) {
         limit = 6;
     }
