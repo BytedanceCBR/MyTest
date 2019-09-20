@@ -28,6 +28,10 @@
 // 点击cell上的评论
 @property(nonatomic) BOOL clickComment;
 
+@property(nonatomic, copy) NSString *enterType;
+
+@property(nonatomic, copy) NSString *enterFrom;
+
 @property (nonatomic, weak) TTVFeedListViewController *feedListViewController;
 
 @end

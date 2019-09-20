@@ -64,7 +64,7 @@ NSString *const kTTMessageNotificationLastTipSaveKey = @"kTTMessageNotificationL
     
     _tipsModel = model;
     if (self.tipsModel && [self.tipsModel.unread intValue] > 0) {
-        [self tryShowNotifyBubble:self.tipsModel];
+//        [self tryShowNotifyBubble:self.tipsModel];
         [self saveLastMsgId];
     }
 

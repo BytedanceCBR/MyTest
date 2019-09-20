@@ -262,6 +262,8 @@
     @"ugcRecommend": @"ugc_recommend",
     @"distanceInfo": @"distance_info",
     @"ugcStatus": @"status",
+    @"isStick": @"is_stick",
+    @"stickStyle": @"stick_style",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

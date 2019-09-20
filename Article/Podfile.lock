@@ -44,11 +44,24 @@ PODS:
   - BDTExploreOrderedData (0.1.7)
   - BDTFactoryConfigurator (0.1.0.1-binary)
   - BDTSharedHeaders (0.1.0)
+  - BDUGAccountOnekeyLogin (1.1.3)
   - BDUGContainer (1.1.2)
   - BDUGDeepLink (1.1.1)
+  - BDUGKit (1.3.3):
+    - BDUGKit/Category (= 1.3.3)
+    - BDUGKit/Macro (= 1.3.3)
+    - BDUGKit/Network (= 1.3.3)
+  - BDUGKit/Category (1.3.3)
+  - BDUGKit/Macro (1.3.3)
+  - BDUGKit/Network (1.3.3)
+  - BDUGLocationKit/AmapLocation (1.0.0-rc.5)
+  - BDUGLocationKit/ByteDancePlacemark (1.0.0-rc.5)
+  - BDUGLocationKit/Core (1.0.0-rc.5)
+  - BDUGLocationKit/DataCollection (1.0.0-rc.5)
   - BDUGMonitorInterface (1.0.0):
     - BDUGMonitorInterface/Core (= 1.0.0)
   - BDUGMonitorInterface/Core (1.0.0)
+  - BDUGSettingsInterface (1.1.0)
   - BDUGTrackerInterface (1.1.1)
   - BDUGUnionSDK (0.1.2.1-binary)
   - BDWebImage/Core (0.2.2.1-binary)
@@ -157,7 +170,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.9)
+  - ios_house_im (0.1.10-rc.0)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -270,6 +283,7 @@ PODS:
   - SocketRocket (0.5.1.1-binary)
   - SQLiteRepairKit (1.2.1.1-binary)
   - SSZipArchive (1.6.3.1-binary)
+  - TencentQQSDK (1.0.0.1-binary)
   - ToutiaoFrontierWebSocket (0.2.5.1-binary):
     - ToutiaoFrontierWebSocket/Main (= 0.2.5.1-binary)
     - ToutiaoFrontierWebSocket/PB (= 0.2.5.1-binary)
@@ -280,15 +294,15 @@ PODS:
   - TTAccountLogin (0.1.0):
     - TTAccountLogin/AccountLoginUIKit (= 0.1.0)
   - TTAccountLogin/AccountLoginUIKit (0.1.0)
-  - TTAccountSDK/Account (4.5.3)
-  - TTAccountSDK/Logger (4.5.3)
-  - TTAccountSDK/OneKeyLogin (4.5.3)
-  - TTAccountSDK/ThirdPartyAccountFoundation (4.5.3):
-    - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (= 4.5.3)
-    - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (= 4.5.3)
-  - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (4.5.3)
-  - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (4.5.3)
-  - TTAccountSDK/WeChatAccount (4.5.3)
+  - TTAccountSDK/Account (4.9.1)
+  - TTAccountSDK/Logger (4.9.1)
+  - TTAccountSDK/OneKeyLogin (4.9.1)
+  - TTAccountSDK/ThirdPartyAccountFoundation (4.9.1):
+    - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (= 4.9.1)
+    - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (= 4.9.1)
+  - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (4.9.1)
+  - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (4.9.1)
+  - TTAccountSDK/WeChatAccount (4.9.1)
   - TTAD (0.1.0)
   - TTAddressBookService (0.1.4.1-binary):
     - TTAddressBookService/AddressBook (= 0.1.4.1-binary)
@@ -364,26 +378,26 @@ PODS:
   - TTImagePicker/Model (1.1.6)
   - TTImagePreviewAnimateManager (1.0.13.1-binary)
   - TTImpression (0.0.26.1-binary)
-  - TTIMSDK/Bridges (0.7.7)
-  - TTIMSDK/Feature_ApplicationStatus (0.7.7)
-  - TTIMSDK/Feature_Core (0.7.7)
-  - TTIMSDK/Feature_Core_Config (0.7.7)
-  - TTIMSDK/Feature_Core_ConversationInfo (0.7.7)
-  - TTIMSDK/Feature_Core_CurrentUser (0.7.7)
-  - TTIMSDK/Feature_Core_ErrorHandler (0.7.7)
-  - TTIMSDK/Feature_Core_Logger (0.7.7)
-  - TTIMSDK/Feature_Core_Notifier (0.7.7)
-  - TTIMSDK/Feature_Core_Puller (0.7.7)
-  - TTIMSDK/Feature_Core_Sender (0.7.7)
-  - TTIMSDK/Feature_Core_Store (0.7.7)
-  - TTIMSDK/Feature_Essential (0.7.7)
-  - TTIMSDK/Feature_Essential_PB (0.7.7)
-  - TTIMSDK/Feature_WebSocket (0.7.7)
-  - TTIMSDK/Foundation (0.7.7)
-  - TTIMSDK/Foundation_Plugin_TTNetwork (0.7.7)
-  - TTIMSDK/IMKit (0.7.7)
-  - TTIMSDK/IMKit_Core (0.7.7)
-  - TTIMSDK/IMKit_WebSocket (0.7.7)
+  - TTIMSDK/Bridges (0.8.8-alpha.1)
+  - TTIMSDK/Feature_ApplicationStatus (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Config (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_ConversationInfo (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_CurrentUser (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_ErrorHandler (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Logger (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Notifier (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Puller (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Sender (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Store (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Essential (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Essential_PB (0.8.8-alpha.1)
+  - TTIMSDK/Feature_WebSocket (0.8.8-alpha.1)
+  - TTIMSDK/Foundation (0.8.8-alpha.1)
+  - TTIMSDK/Foundation_Plugin_TTNetwork (0.8.8-alpha.1)
+  - TTIMSDK/IMKit (0.8.8-alpha.1)
+  - TTIMSDK/IMKit_Core (0.8.8-alpha.1)
+  - TTIMSDK/IMKit_WebSocket (0.8.8-alpha.1)
   - TTInstallService (1.3.1.1-binary)
   - TTKitchen/Core (3.0.1)
   - TTKitchen/SettingsSyncer (3.0.1)
@@ -504,9 +518,6 @@ PODS:
   - TTShare/TTShareService (0.3.3)
   - TTTAttributedLabel (1.13.3.1-binary)
   - TTThemed (0.1.36.1-binary)
-  - TTThirdPartySDKs/QQSDK (0.0.4)
-  - TTThirdPartySDKs/WeChatSDK (0.0.4)
-  - TTThirdPartySDKs/WeiboSDK (0.0.4)
   - TTTracker (10.0.5.1-binary)
   - TTUGCFoundation (0.1.3):
     - TTUGCFoundation/RequestMonitor (= 0.1.3)
@@ -548,11 +559,12 @@ PODS:
   - TTVTableViewProtocolInterceptor/Core (0.1.2.1-binary)
   - TTVTableViewProtocolInterceptor/UIViewControllerCategory (0.1.2.1-binary)
   - TTVTLIndexPathTools (0.4.4.1-binary)
-  - TYRZApiSDK (1.2.1)
+  - TYRZApiSDK (1.2.2-rc.0)
   - UITableView+FDTemplateLayoutCell (1.6.1-binary)
   - UMengAnalytics (4.1.4.1-binary)
   - WCDB (1.0.7.5.1-binary)
   - WCDBOptimizedSQLCipher (1.2.1.1-binary)
+  - WechatSDK (0.1.5)
   - yoga (0.0.1.React)
   - YYCache (1.0.4.1-binary)
   - YYImage (1.0.3.1-binary):
@@ -588,9 +600,16 @@ DEPENDENCIES:
   - BDTExploreOrderedData (from `../AKPlugins/BDTExploreOrderedData`)
   - BDTFactoryConfigurator (= 0.1.0.1-binary)
   - BDTSharedHeaders (from `../Vendor/BDTSharedHeaders`)
+  - BDUGAccountOnekeyLogin (= 1.1.3)
   - BDUGContainer (= 1.1.2)
   - BDUGDeepLink (= 1.1.1)
+  - BDUGKit (= 1.3.3)
+  - BDUGLocationKit/AmapLocation (= 1.0.0-rc.5)
+  - BDUGLocationKit/ByteDancePlacemark (= 1.0.0-rc.5)
+  - BDUGLocationKit/Core (= 1.0.0-rc.5)
+  - BDUGLocationKit/DataCollection (= 1.0.0-rc.5)
   - BDUGMonitorInterface (= 1.0.0)
+  - BDUGSettingsInterface (= 1.1.0)
   - BDUGTrackerInterface (= 1.1.1)
   - BDUGUnionSDK (= 0.1.2.1-binary)
   - BDWebImage/Core (= 0.2.2.1-binary)
@@ -660,7 +679,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.9)
+  - ios_house_im (= 0.1.10-rc.0)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -707,15 +726,16 @@ DEPENDENCIES:
   - SocketRocket (= 0.5.1.1-binary)
   - SQLiteRepairKit (= 1.2.1.1-binary)
   - SSZipArchive (= 1.6.3.1-binary)
+  - TencentQQSDK (= 1.0.0.1-binary)
   - ToutiaoFrontierWebSocket (= 0.2.5.1-binary)
   - TSVToolkit (= 0.1.2.1-binary)
   - TTABManager (= 0.0.7.1-binary)
   - TTAccountLogin (from `../AKPlugins/AKAccountLogin`)
-  - TTAccountSDK/Account (= 4.5.3)
-  - TTAccountSDK/Logger (= 4.5.3)
-  - TTAccountSDK/OneKeyLogin (= 4.5.3)
-  - TTAccountSDK/ThirdPartyAccountFoundation (= 4.5.3)
-  - TTAccountSDK/WeChatAccount (= 4.5.3)
+  - TTAccountSDK/Account (= 4.9.1)
+  - TTAccountSDK/Logger (= 4.9.1)
+  - TTAccountSDK/OneKeyLogin (= 4.9.1)
+  - TTAccountSDK/ThirdPartyAccountFoundation (= 4.9.1)
+  - TTAccountSDK/WeChatAccount (= 4.9.1)
   - TTAD (from `../TTBundles/ios_tt_ad`)
   - TTAddressBookService (= 0.1.4.1-binary)
   - TTAdModule (from `../AKPlugins/TTAdModule`)
@@ -761,26 +781,26 @@ DEPENDENCIES:
   - TTImagePicker (from `../AKPlugins/AKImagePicker`)
   - TTImagePreviewAnimateManager (= 1.0.13.1-binary)
   - TTImpression (= 0.0.26.1-binary)
-  - TTIMSDK/Bridges (= 0.7.7)
-  - TTIMSDK/Feature_ApplicationStatus (= 0.7.7)
-  - TTIMSDK/Feature_Core (= 0.7.7)
-  - TTIMSDK/Feature_Core_Config (= 0.7.7)
-  - TTIMSDK/Feature_Core_ConversationInfo (= 0.7.7)
-  - TTIMSDK/Feature_Core_CurrentUser (= 0.7.7)
-  - TTIMSDK/Feature_Core_ErrorHandler (= 0.7.7)
-  - TTIMSDK/Feature_Core_Logger (= 0.7.7)
-  - TTIMSDK/Feature_Core_Notifier (= 0.7.7)
-  - TTIMSDK/Feature_Core_Puller (= 0.7.7)
-  - TTIMSDK/Feature_Core_Sender (= 0.7.7)
-  - TTIMSDK/Feature_Core_Store (= 0.7.7)
-  - TTIMSDK/Feature_Essential (= 0.7.7)
-  - TTIMSDK/Feature_Essential_PB (= 0.7.7)
-  - TTIMSDK/Feature_WebSocket (= 0.7.7)
-  - TTIMSDK/Foundation (= 0.7.7)
-  - TTIMSDK/Foundation_Plugin_TTNetwork (= 0.7.7)
-  - TTIMSDK/IMKit (= 0.7.7)
-  - TTIMSDK/IMKit_Core (= 0.7.7)
-  - TTIMSDK/IMKit_WebSocket (= 0.7.7)
+  - TTIMSDK/Bridges (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_ApplicationStatus (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Config (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_ConversationInfo (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_CurrentUser (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_ErrorHandler (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Logger (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Notifier (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Puller (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Sender (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Store (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Essential (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Essential_PB (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_WebSocket (= 0.8.8-alpha.1)
+  - TTIMSDK/Foundation (= 0.8.8-alpha.1)
+  - TTIMSDK/Foundation_Plugin_TTNetwork (= 0.8.8-alpha.1)
+  - TTIMSDK/IMKit (= 0.8.8-alpha.1)
+  - TTIMSDK/IMKit_Core (= 0.8.8-alpha.1)
+  - TTIMSDK/IMKit_WebSocket (= 0.8.8-alpha.1)
   - TTInstallService (= 1.3.1.1-binary)
   - TTKitchen/Core (= 3.0.1)
   - TTKitchen/SettingsSyncer (= 3.0.1)
@@ -819,9 +839,6 @@ DEPENDENCIES:
   - TTShare (from `../AKPlugins/TTShare`)
   - TTTAttributedLabel (= 1.13.3.1-binary)
   - TTThemed (= 0.1.36.1-binary)
-  - TTThirdPartySDKs/QQSDK (= 0.0.4)
-  - TTThirdPartySDKs/WeChatSDK (= 0.0.4)
-  - TTThirdPartySDKs/WeiboSDK (= 0.0.4)
   - TTTracker (= 10.0.5.1-binary)
   - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
   - TTUIWidget (from `../AKPlugins/TTUIWidget`)
@@ -838,11 +855,12 @@ DEPENDENCIES:
   - TTVTableViewItem (= 0.1.0.1-binary)
   - TTVTableViewProtocolInterceptor (= 0.1.2.1-binary)
   - TTVTLIndexPathTools (= 0.4.4.1-binary)
-  - TYRZApiSDK (= 1.2.1)
+  - TYRZApiSDK (= 1.2.2-rc.0)
   - UITableView+FDTemplateLayoutCell (= 1.6.1-binary)
   - UMengAnalytics (= 4.1.4.1-binary)
   - WCDB (= 1.0.7.5.1-binary)
   - WCDBOptimizedSQLCipher (= 1.2.1.1-binary)
+  - WechatSDK (= 0.1.5)
   - yoga (from `../ReactCommon/yoga`)
   - YYCache (= 1.0.4.1-binary)
   - YYImage (= 1.0.3.1-binary)
@@ -983,9 +1001,13 @@ SPEC CHECKSUMS:
   BDTExploreOrderedData: 96bb150a05e560a5e927a7ee53bda56690571a61
   BDTFactoryConfigurator: c14af7870fcd1fa9c52142d0c01635775543e42d
   BDTSharedHeaders: 7ce2d05979120782a343993b31287684065e06a8
+  BDUGAccountOnekeyLogin: 6b9b71170a10e55b79b3d67f87cb19864479f372
   BDUGContainer: 28193629e67c7c9244f5d5836bfed611bf631321
   BDUGDeepLink: 44dfefe43051d60cb1fd918ebdca3abcc090d365
+  BDUGKit: 215f3f098840a16e1c491447d56e49093f08075d
+  BDUGLocationKit: bbae7302555c5c7d23e285312487323cd67c20ed
   BDUGMonitorInterface: e64b2d5bcb2a3283af8f83daeaa0599a160351f1
+  BDUGSettingsInterface: 5cb90d9373928d36e371c72449061cabe491359f
   BDUGTrackerInterface: c41760f7de16c6f4b84395e71e85875a4cd87611
   BDUGUnionSDK: 837abef87c8d0f8cce87fb945dc18f2317d3d838
   BDWebImage: cb9435b175d994f7156ffdc736477d794db576dd
@@ -1011,11 +1033,11 @@ SPEC CHECKSUMS:
   FHPushAuthorizationManager: e92e4fa7b03b0acbb4d369c1133349b0c27d557f
   FHRNKit: b8966b198eb601696630a3fd4bc72aac277258be
   FHWebView: 1c354474ccc25e8a56b77e34b7b3a52bb4c6e414
-  FLAnimatedImage: c103d911f434514c39961a5eed4c0e29c6cdae48
+  FLAnimatedImage: 9a9940c395674adf0db03f3be3908da46dd34009
   FLEX: a9a617d07fa5909d1eb9e3c5791f6965ba5f9ccf
-  FMDB: 1b67d801da397eeec6cb5f1453f37ce301235e39
+  FMDB: ea2aa07bb88b08b5e9675a49c4fe77df17b5f791
   Gaia: 8d07f88e57c49364734d1fb5ea331f37c225c619
-  Godzippa: d9e858886267fa9026eb4eb1e2e4ce5e0df2d680
+  Godzippa: 8f1a58014e75d07ad73e1bb9148a9c01ba17c1bf
   Heimdallr: fbbf0b9b4c9e501e808f09599c46e12adad854f3
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
   IESGeckoKit: e6cca571ecaf0b5a9af925cd34eda889aa9311de
@@ -1023,7 +1045,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 314f15ca4b52a6664661b2066d67e3e1917e900e
+  ios_house_im: 6d68817069dbc5ffee67ac8231ef62d3efc56977
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1048,11 +1070,12 @@ SPEC CHECKSUMS:
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
   SQLiteRepairKit: 272cadce05957d8b36df6ac573dc8a596649ed28
   SSZipArchive: cc2e2411672daf4be9f5f61d4184ba66f15bcd2b
+  TencentQQSDK: 64750e415a7c2c41578ec10c88364c9602c3d12b
   ToutiaoFrontierWebSocket: 96f0257673f42edfffdf379681341854b1195937
   TSVToolkit: deb654f65a887a0c314aa70183681f25a8b0d75d
   TTABManager: b22ef5bd7f829192b72ec71d6e5f761e66428b5d
   TTAccountLogin: d064f182eccc55ebef79216feff43dd2b8c9decf
-  TTAccountSDK: b7e328ef125dd87c395baf1c3c24f6f23784a126
+  TTAccountSDK: 148767351443ab639b14cd1749d4194779243d17
   TTAD: 313a03c77994b6f073932f9bc19912a1ff3224af
   TTAddressBookService: dd811a1a2e57ea21a21a5006761eb1e7e1cef2ad
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
@@ -1085,7 +1108,7 @@ SPEC CHECKSUMS:
   TTImagePicker: 728917a7f6b46e1029ec5fcd755ce7a62f311166
   TTImagePreviewAnimateManager: 89284791379992856207b5b92662037d07cb08eb
   TTImpression: d2d80c26abef863c5be6dc8b6fe10ebef3331b84
-  TTIMSDK: bc920322f0cb1a542bc0f6c7cfdef1f8576dbc3c
+  TTIMSDK: 18b9e0181db32b3a22338d6c76efb5dcf687c7f2
   TTInstallService: 278ab1b8adf5f1a632507406386a2a80df58d84f
   TTKitchen: 4a9860af825fc06ca6747379c6036d7c26b9ffe0
   TTKitchenExtension: 8e66b1d9df811a5c483ce1d838c50d6e6042019b
@@ -1118,7 +1141,6 @@ SPEC CHECKSUMS:
   TTShare: e5faa4ed799189e7dec34372f61794c6a011c2a6
   TTTAttributedLabel: dc7f8eada1e3d7fa25244fb05f50615d692d8d3e
   TTThemed: 921e544fa8ca8c34b3a091af38b8612609c18480
-  TTThirdPartySDKs: 0c0f991cd09a2839cbc372659f68c21bc0d05d07
   TTTracker: 53b746772e7240481e57bee23ae866924fdc0193
   TTUGCFoundation: f67fd0f474fef086cd3e986a4ad2c8bb79220d94
   TTUIWidget: d6b9ff5d35146e048c206d45a8362c2e490b7025
@@ -1134,18 +1156,19 @@ SPEC CHECKSUMS:
   TTVTableViewItem: edf61da588fddd2f8dcc6e1ed0796b764241fcfd
   TTVTableViewProtocolInterceptor: b40445eb84a3de5ded2f9869c4f6c946df4898e7
   TTVTLIndexPathTools: 2f6c23b4990f3aee6e7ceb867f632d4d02ea5384
-  TYRZApiSDK: 98ce3036c6dc594aa94c8b786323a34519b2fdc9
+  TYRZApiSDK: 5eff842d71b025e6277f13651569ab63094dc23f
   UITableView+FDTemplateLayoutCell: a2662e078962600e17f9e090cc09b5f49f3e4762
   UMengAnalytics: 03d571efddd70d2a64a58f35c23dcf9732344b5b
   WCDB: f443005ee9bc01706ff0f67bb1ad890e875d6f8c
   WCDBOptimizedSQLCipher: cea840096ebeefae3116ffd2262ebc489e089b1c
+  WechatSDK: 794142d66d296c3ea5c4b1ada4580c12d7669dc1
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
   YYCache: 1bdae9b04229f8308be4af1d2ddfc6c6ac8ce9dc
   YYImage: 523305b179309a584fcaef25f6ad78143f365c96
-  YYModel: 1550bbf27e71d98465ed087de879e31d852e7742
-  YYText: d15f70a8b9abac84a5e87099655c377982445a9a
+  YYModel: 78c8cea42776bcb022692772b57b19e3f26b5275
+  YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 1ffb918e5e91147d24331a227c5c239e4b900974
+PODFILE CHECKSUM: 6027cbfe62b1024d5c51e95b602cb87ffd03d7a2
 
 COCOAPODS: 1.4.0

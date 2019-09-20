@@ -31,8 +31,13 @@
 #import <FHCHousePush/FHPushAuthorizeManager.h>
 #import <FHHouseBase/FHTraceEventUtils.h>
 #import <FHUtils.h>
+#import <FHErrorView.h>
+#import <Masonry.h>
+#import <UIView+House.h>
 
 @interface TTDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol>
+
+@property (nonatomic, strong) FHErrorView *emptyView;
 
 @end
 
@@ -97,6 +102,7 @@
     if (tmpError) {
         [[TTMonitor shareManager] trackService:@"detailViewController_construct_error" attributes:tmpError.userInfo];
     }
+    [self addDefaultEmptyViewFullScreen];
     [self firstLoadContent];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(statusbarFrameDidChangeNotification)
@@ -104,7 +110,46 @@
                                                object:nil];
 }
 
+- (void)addDefaultEmptyViewFullScreen
+{
+    _emptyView = [[FHErrorView alloc] init];
+    _emptyView.hidden = YES;
+    [self.view addSubview:_emptyView];
+    [_emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+    __weak typeof(self) wself = self;
+    _emptyView.retryBlock = ^{
+        [wself retryLoadData];
+    };
+}
+
+- (void)_setupEmptyView {
+    _emptyView = [[FHErrorView alloc] init];
+    _emptyView.hidden = YES;
+    [self.view addSubview:_emptyView];
+    [_emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
+        if (@available(iOS 11.0 , *)) {
+            make.left.right.bottom.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top);
+        } else {
+            make.left.right.bottom.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.view).offset(65);
+        }
+    }];
+    __weak typeof(self) wself = self;
+    _emptyView.retryBlock = ^{
+        [wself retryLoadData];
+    };
+}
+
+- (void)retryLoadData {
+    // 重新加载数据
+    [self firstLoadContent];
+}
+
 -(void)firstLoadContent{
+    
     BOOL isArticleReliable = self.viewModel.detailModel.isArticleReliable;
     if (!self.detailViewController) {
         [self tt_startUpdate];
@@ -116,6 +161,18 @@
             return;
         }
         if (!weakSelf.detailViewController) {
+        //第一次进入时，如果没有detailViewController，无网络时显示错误页，这是为了防止除文章外类型cell，在无网络第一次进入会被当成文章类型，恢复网络刷新以后变成了文章的详情页。 by xsm
+            if(type == ExploreDetailManagerFetchResultTypeNoNetworkConnect){
+                [weakSelf tt_endUpdataData];
+                [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+                return;
+            }
+            
+            if (self.emptyView) {
+                [self.emptyView removeFromSuperview];
+                self.emptyView = nil;
+            }
+            
             NSError *error = nil;
             [weakSelf constructDetailViewController:&error isFromNet:YES];
             if (!weakSelf.detailViewController && error) {

@@ -22,6 +22,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @property(nonatomic, strong) UIImageView *subscribeIcon;
 @property(nonatomic, assign) CGFloat offsetY;
 @property(nonatomic, strong) NSString *phoneNum;
+@property(nonatomic, strong) UILabel *legalAnnouncement;
 
 @end
 
@@ -75,7 +76,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     _bgView.layer.cornerRadius = 4;
     _bgView.layer.masksToBounds = YES;
     [self.contentView addSubview:_bgView];
-    
+
     _subscribeIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_subscribe_bg"]];
     _subscribeIcon.contentMode = UIViewContentModeScaleAspectFill;
     [self.bgView addSubview:_subscribeIcon];
@@ -111,14 +112,33 @@ extern NSString *const kFHPhoneNumberCacheKey;
     _textField.delegate = self;
     [self.bgView addSubview:_textField];
 
+    _legalAnnouncement = [[UILabel alloc] initWithFrame:CGRectZero];
+    _legalAnnouncement.textColor = [UIColor themeGray3];
+    _legalAnnouncement.textAlignment = NSTextAlignmentLeft;
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@"点击订阅即视为同意《个人信息保护声明》"];
+    [attrStr addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(10, @"个人信息保护声明".length)];
+    _legalAnnouncement.attributedText = [attrStr copy];
+    _legalAnnouncement.font = [UIFont themeFontRegular:12];
+    UITapGestureRecognizer *tipTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(legalAnnouncementClick)];
+    _legalAnnouncement.userInteractionEnabled = YES;
+    [_legalAnnouncement addGestureRecognizer:tipTap];
+    [self.bgView addSubview:_legalAnnouncement];
+
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(0);
-        make.bottom.mas_equalTo(-20);
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.height.mas_equalTo(94);
+        make.bottom.mas_equalTo(-20);
+        make.height.mas_equalTo(121);
     }];
-    
+
+    [self.legalAnnouncement mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.textField.mas_bottom).offset(10);
+        make.left.mas_equalTo(self.textField);
+        make.right.mas_equalTo(self.bgView);
+        make.height.mas_equalTo(17);
+    }];
+
     [self.subscribeIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.right.left.mas_equalTo(self.bgView);
     }];
@@ -243,6 +263,12 @@ extern NSString *const kFHPhoneNumberCacheKey;
         } completion:^(BOOL finished) {
             
         }];
+    }
+}
+
+-(void)legalAnnouncementClick{
+    if(self.legalAnnouncementClickBlock){
+        self.legalAnnouncementClickBlock();
     }
 }
 

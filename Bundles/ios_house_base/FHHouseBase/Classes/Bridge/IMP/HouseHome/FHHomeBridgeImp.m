@@ -93,6 +93,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:({
             NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
             [userInfo setValue:secondTabItemIdentifier forKey:@"tag"];
+            [userInfo setValue:@1 forKey:@"needToRoot"];
             [userInfo copy];
         })];
     }

@@ -50,9 +50,9 @@ def fhPods
     
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev' #
     pod 'FHCommonUI', '0.0.3'
-#    pod 'FHCommonUI', :path => '../../../Bundles/ios_common_ui'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9106c57f2bedcb8b652636e459fb8a0fc045c213'
-    pod 'ios_house_im' , '0.1.9'
+
+    #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9106c57f2bedcb8b652636e459fb8a0fc045c213'
+    pod 'ios_house_im' , '0.1.10-rc.0'
 #    pod 'ios_house_im' , :path => '../../ios_house_im/ios_house_im/'
 
     #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
@@ -157,6 +157,17 @@ def appPods
     'Performance'
     ]
     pod 'TTLocationManager','1.0.22'
+    pod 'BDUGLocationKit', '1.0.0-rc.5',:subspecs => [ # , '1.1.0'
+        'Core',
+        'DataCollection',
+        'ByteDancePlacemark',
+        'AmapLocation'
+        
+#        'Adapter'
+    ]
+    pod 'BDUGSettingsInterface' , '1.1.0'
+    pod 'BDUGKit' , '1.3.3'
+    
     pod 'Gaia','1.0.7-rc.1'
     pod 'TTGaiaExtension','0.4.2'
     pod 'BDAssert','2.0.0',:subspecs => [
@@ -182,9 +193,9 @@ def appPods
 #        'WeiboSDK'
 #    ]
 
-    pod 'TTThirdPartySDKs/QQSDK', '0.0.4'
-    pod 'TTThirdPartySDKs/WeChatSDK', '0.0.4'
-    pod 'TTThirdPartySDKs/WeiboSDK', '0.0.4'
+    pod_binary 'TencentQQSDK', '1.0.0'
+    pod_binary 'WechatSDK','0.1.5'
+#    pod 'TTThirdPartySDKs/WeiboSDK', '0.0.4'
     #-----免流量统计-----
     pod_binary 'TTFlowStatisticsManager', '0.0.10'
     #----- 新分享库 -----
@@ -478,7 +489,7 @@ def appPods
 #    ]
 
     #-----TTAccountSDK-----
-    pod 'TTAccountSDK', '4.5.3', :inhibit_warnings => false, :subspecs => [
+    pod 'TTAccountSDK', '4.9.1', :inhibit_warnings => false, :subspecs => [
         'Account',
         'Logger',
         'WeChatAccount',
@@ -495,7 +506,9 @@ def appPods
     pod 'BDUGContainer', '1.1.2'
     pod 'BDUGTrackerInterface', '1.1.1'
     pod 'BDUGMonitorInterface', '1.0.0'
-    pod 'TYRZApiSDK' , '1.2.1'
+    pod 'BDUGAccountOnekeyLogin', '1.1.3'
+
+    pod 'TYRZApiSDK' , '1.2.2-rc.0'
     pod_binary 'EAccountApiSDK', '1.1.1'
     pod_binary 'BDUGUnionSDK', '0.1.2'
 
@@ -565,7 +578,7 @@ def appPods
     pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
 
 
-    pod 'TTIMSDK', '0.7.7', :subspecs => [
+    pod 'TTIMSDK', '0.8.8-alpha.1', :subspecs => [
         'IMKit',
         'IMKit_WebSocket',
         'Feature_ApplicationStatus',
@@ -631,6 +644,7 @@ target 'NewsLiteInHouse' do
     pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
     pod_binary 'TTSettingsManager/Debug'
     pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
+#    pod 'BDUGLocationKit/Debug' #, '1.1.0'
     #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine_inhouse'
     fhPods
     appPods

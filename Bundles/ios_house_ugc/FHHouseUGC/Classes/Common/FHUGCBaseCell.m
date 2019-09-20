@@ -9,6 +9,36 @@
 
 @implementation FHUGCBaseCell
 
+// Cell装饰
+- (UIImageView *)decorationImageView {
+    if(!_decorationImageView) {
+        _decorationImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+        _decorationImageView.contentMode = UIViewContentModeScaleAspectFill;
+        _decorationImageView.hidden = YES;
+        [self addSubview:_decorationImageView];
+    }
+    return _decorationImageView;
+}
+
+-(void)setCurrentData:(id)currentData {
+    
+    _currentData = currentData;
+    
+    // 设置Cell装饰，例如：置顶、精华
+    if (![currentData isKindOfClass:[FHFeedUGCCellModel class]]) {
+        return;
+    }
+    
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)currentData;
+    NSString *decorationImageUrlStr = cellModel.contentDecoration.url;
+    BOOL isShowDecoration = cellModel.isStick && (decorationImageUrlStr.length > 0);
+    self.decorationImageView.hidden = !(isShowDecoration);
+    if(decorationImageUrlStr.length > 0) {
+        [self.decorationImageView sd_setImageWithURL:[NSURL URLWithString:decorationImageUrlStr]];
+    }
+}
+
+
 + (Class)cellViewClass
 {
     return [self class];
