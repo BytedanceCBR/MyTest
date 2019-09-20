@@ -298,16 +298,7 @@
         }
     };
     
-    if(!contactPhone.isInstantData && _instantHasShow && !self.leftView.hidden){
-        //动画展示
-        updateBlock();
-        [UIView animateWithDuration:0.3 animations:^{
-            [self layoutIfNeeded];
-        } completion:^(BOOL finished) {
-        }];
-    }else{
-        updateBlock();
-    }
+    updateBlock();
 
     if(contactPhone.isInstantData){
         _instantHasShow = YES;

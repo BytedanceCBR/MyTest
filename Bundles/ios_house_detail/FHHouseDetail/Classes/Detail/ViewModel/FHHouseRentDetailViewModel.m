@@ -436,7 +436,13 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     NSString *price = model.data.pricing ?: @"";
     [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:@""];
     
-    [self reloadData];
+    if (model.isInstantData) {
+        [self.tableView reloadData];
+    }else{
+        [self reloadData];
+    }
+    
+    [self.detailController updateLayout:model.isInstantData];
  
 }
 
