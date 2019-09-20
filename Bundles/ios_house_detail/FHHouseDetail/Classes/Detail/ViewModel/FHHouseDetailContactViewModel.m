@@ -309,20 +309,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)setContactPhone:(FHDetailContactModel *)contactPhone
 {
     _contactPhone = contactPhone;
-    
-    if (contactPhone.isInstantData) {
-     
-        [self.bottomBar mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
-        }];
-        self.bottomBar.hidden = YES;
-        return;
-    }
-    self.bottomBar.hidden = NO;
-    [self.bottomBar mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(64);
-    }];
-    
+        
     NSString *contactTitle = @"电话咨询";
     NSString *chatTitle = @"在线联系";
     

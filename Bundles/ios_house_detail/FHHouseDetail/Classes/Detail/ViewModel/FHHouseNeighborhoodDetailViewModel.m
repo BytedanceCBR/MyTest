@@ -303,7 +303,14 @@
         infoModel.neighborhoodId = self.houseId;
         [self.items addObject:infoModel];
     }
-    [self reloadData];
+    
+    if (model.isInstantData) {
+        [self.tableView reloadData];
+    }else{
+        [self reloadData];
+    }
+    
+    [self.detailController updateLayout:model.isInstantData];
 }
 
 // 周边数据请求，当网络请求都返回后刷新数据
