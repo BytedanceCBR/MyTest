@@ -19,6 +19,7 @@
 #import "TTUIResponderHelper.h"
 #import "FHUserTracker.h"
 #import "TTAccountManager.h"
+#import <FHUGCConfig.h>
 
 @implementation FHUGCCellUserInfoView
 
@@ -113,6 +114,14 @@
         viewModel.userID = self.cellModel.user.userId;
         viewModel.categoryID = self.cellModel.categoryId;
     }
+    
+    FHUGCScialGroupDataModel * model = [[FHUGCConfig sharedInstance] socialGroupData:self.cellModel.community.socialGroupId];
+    if(model){
+        viewModel.permission = model.permission;
+    }
+    
+//    viewModel.isGood = YES;
+//    viewModel.isTop = YES;
 
     [dislikeView refreshWithModel:viewModel];
     CGPoint point = _moreBtn.center;
