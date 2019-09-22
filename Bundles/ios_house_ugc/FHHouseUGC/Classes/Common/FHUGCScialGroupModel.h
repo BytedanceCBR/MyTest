@@ -1,5 +1,6 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
+#import <FHUGCConfigModel.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHUGCScialGroupDataModel <NSObject>
@@ -27,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
 @property (nonatomic, copy , nullable) NSString *hasFollow;
 @property (nonatomic, strong, nullable) FHUGCSocialGroupOperationModel *operation;
+@property(nonatomic, strong, nullable) NSArray <FHUGCConfigDataPermissionModel> *permission;
 @property (nonatomic, copy , nullable) NSDictionary *logPb;
 
 @end
