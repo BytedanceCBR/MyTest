@@ -755,6 +755,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
             socialData.hasFollow = model.hasFollow;
             socialData.followerCount = model.followerCount;
             socialData.contentCount = model.contentCount;
+            socialData.permission = model.permission;
         } else {
             [_groupDataDic setObject:model forKey:model.socialGroupId];
         }

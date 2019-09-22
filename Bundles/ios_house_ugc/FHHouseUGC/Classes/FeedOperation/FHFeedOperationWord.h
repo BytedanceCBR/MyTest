@@ -8,9 +8,14 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSUInteger, FHFeedOperationWordType) {
-    FHFeedOperationWordTypeOthers = 0, //
-    FHFeedOperationWordTypeReport = 1, //举报
-    FHFeedOperationWordTypeDelete = 2, //删除
+    FHFeedOperationWordTypeOther = 0,      //
+    FHFeedOperationWordTypeReport = 1,      //举报
+    FHFeedOperationWordTypeDelete = 2,      //删除
+    FHFeedOperationWordTypeTop = 3,         //置顶
+    FHFeedOperationWordTypeCancelTop = 4,   //取消置顶
+    FHFeedOperationWordTypeGood = 5,        //加精
+    FHFeedOperationWordTypeCancelGood = 6,  //取消加精
+    FHFeedOperationWordTypeSelfLook = 7,    //自见
 };
 
 @interface FHFeedOperationWord : NSObject
@@ -20,6 +25,8 @@ typedef NS_ENUM(NSUInteger, FHFeedOperationWordType) {
 @property(nonatomic,copy)NSString *subTitle;
 @property(nonatomic,strong)NSArray *items;
 @property(nonatomic,assign)BOOL isSelected;
+//是否隐藏，默认是显示
+@property(nonatomic,assign)BOOL isHidden;
 @property (nonatomic, readonly) FHFeedOperationWordType type;
 
 - (instancetype)initWithDict:(NSDictionary *)dict;
