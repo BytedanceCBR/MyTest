@@ -20,6 +20,7 @@ typedef void(^GotoPublicationsDetailBlock)(void);
 @property(nonatomic, strong) FHUGCFollowButton *followButton;
 @property(nonatomic, strong) UIView *publicationsContainer;
 @property(nonatomic, strong) UILabel *publicationsContentLabel;
+@property(nonatomic, strong) UILabel *publicationsDetailViewTitleLabel;
 @property(nonatomic, copy) GotoPublicationsDetailBlock gotoPublicationsDetailBlock;
 @property(nonatomic) CGFloat headerBackHeight;
 // 运营位部分

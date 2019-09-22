@@ -451,4 +451,17 @@
     }];
 }
 
++ (TTHttpTask *)requestUpdateUGCNoticeContent:(NSString *)noticeContent actionType:(NSString *)type completion:(void (^)(NSError * _Nonnull))completion {
+    
+    NSString *queryPath = @"/f100/ugc/v1/refresh_tips";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        if (completion) {
+            completion(error);
+        }
+    }];
+}
 @end

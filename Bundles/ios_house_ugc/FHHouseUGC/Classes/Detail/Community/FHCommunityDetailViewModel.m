@@ -496,63 +496,138 @@
     }
 
 }
+
+- (NSAttributedString *)announcementAttributeString:(NSString *) announcement {
+    NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
+       if(!isEmptyString(announcement)) {
+           UIFont *titleFont = [UIFont themeFontSemibold:12];
+           NSDictionary *announcementTitleAttributes = @{
+                                                         NSFontAttributeName: titleFont,
+                                                         NSForegroundColorAttributeName: [UIColor themeGray1]
+                                                         };
+           NSAttributedString *announcementTitle = [[NSAttributedString alloc] initWithString:@"[公告] " attributes: announcementTitleAttributes];
+           
+           UIFont *contentFont = [UIFont themeFontRegular:12];
+           NSDictionary *announcemenContentAttributes = @{
+                                                          NSFontAttributeName: contentFont,
+                                                          NSForegroundColorAttributeName: [UIColor themeGray1]
+                                                          };
+           NSAttributedString *announcementContent = [[NSAttributedString alloc] initWithString:announcement attributes:announcemenContentAttributes];
+           
+           [attributedText appendAttributedString:announcementTitle];
+           [attributedText appendAttributedString:announcementContent];
+           
+           NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+           CGFloat lineHeight = 20;
+           paragraphStyle.minimumLineHeight = lineHeight;
+           paragraphStyle.maximumLineHeight = lineHeight;
+           paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+           
+           [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
+       }
+    return attributedText;
+}
+
 // 更新公告信息
 - (void)updatePublicationsWith:(FHUGCScialGroupDataModel *)data {
+
+    self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:data.announcement];
     
-    NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
+    // 是否显示公告区
+    BOOL isShowPublications = !isEmptyString(data.announcement);
     
-    if(!isEmptyString(data.announcement)) {
-        UIFont *titleFont = [UIFont themeFontSemibold:12];
-        NSDictionary *announcementTitleAttributes = @{
-                                                      NSFontAttributeName: titleFont,
-                                                      NSForegroundColorAttributeName: [UIColor themeGray1]
-                                                      };
-        NSAttributedString *announcementTitle = [[NSAttributedString alloc] initWithString:@"[公告] " attributes: announcementTitleAttributes];
-        
-        UIFont *contentFont = [UIFont themeFontRegular:12];
-        NSDictionary *announcemenContentAttributes = @{
-                                                       NSFontAttributeName: contentFont,
-                                                       NSForegroundColorAttributeName: [UIColor themeGray1]
-                                                       };
-        NSAttributedString *announcementContent = [[NSAttributedString alloc] initWithString:data.announcement attributes:announcemenContentAttributes];
-        
-        [attributedText appendAttributedString:announcementTitle];
-        [attributedText appendAttributedString:announcementContent];
-        
-        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-        CGFloat lineHeight = 20;
-        paragraphStyle.minimumLineHeight = lineHeight;
-        paragraphStyle.maximumLineHeight = lineHeight;
-        paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
-        
-        [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
+    // JOKER: TO BE DELETE TEST CODE
+    static BOOL isUserAdmin = NO;
+    UIButton *adminBtn = [self.viewController.view viewWithTag:888888];
+    if(!adminBtn) {
+        adminBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        adminBtn.frame = CGRectMake(0, (self.viewController.view.bounds.size.height - 50)/2.0, 100, 50);
+        [adminBtn setTitle:@"管理员" forState:UIControlStateNormal];
+        [adminBtn setTitleColor:[UIColor themeRed] forState:UIControlStateNormal];
+        adminBtn.titleLabel.font = [UIFont themeFontMedium:18];
+        adminBtn.backgroundColor = [UIColor grayColor];
+        adminBtn.tag = 888888;
+        [self.feedListController.view addSubview:adminBtn];
+        [adminBtn addTarget:self withActionBlock:^{
+            isUserAdmin = !isUserAdmin;
+        } forControlEvent:UIControlEventTouchUpInside];
     }
+    [self.feedListController.view bringSubviewToFront:adminBtn];
+    //---
+
+    /* 针对是否管理员进行处理 */
+    BOOL isAdmin = isUserAdmin;
     
-    self.headerView.publicationsContentLabel.attributedText = attributedText;
-    if(data.announcementUrl.length > 0) {
+    self.headerView.gotoPublicationsDetailBlock = nil;
+    BOOL hasDetailBtn = NO;
+    // 管理员
+    if(isAdmin) {
+        hasDetailBtn = YES;
+        self.headerView.publicationsDetailViewTitleLabel.text = @"编辑公告";
+        self.headerView.publicationsContentLabel.numberOfLines = 2;
+        
         self.headerView.gotoPublicationsDetailBlock = ^{
-            NSURLComponents *urlComponents = [NSURLComponents new];
-            urlComponents.scheme = @"fschema";
-            urlComponents.host = @"webview";
-            urlComponents.queryItems = @[
-                                         [[NSURLQueryItem alloc] initWithName:@"url" value: data.announcementUrl]
-                                         ];
-            NSURL *url = urlComponents.URL;
-            [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+            // 跳转公告编辑页
+            NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
+            urlComponents.scheme = @"sslocal";
+            urlComponents.host = @"ugc_notice_edit";
             
-            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            NSMutableDictionary *infoDict = @{}.mutableCopy;
+            infoDict[@"content"] = data.announcement;
+            infoDict[@"callback"] = ^(NSString *newContent){
+                data.announcement = newContent;
+                [self updateUIWithData:data];
+            };
+            NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
+            tracer[UT_ENTER_FROM] = @"community_group_detail";
+            infoDict[@"tracer"] = tracer;
+            
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+            [[TTRoute sharedRoute] openURLByViewController:urlComponents.URL userInfo:userInfo];
+            
+            // 点击编辑公告按钮埋点
+            NSMutableDictionary *param = @{}.mutableCopy;
             param[UT_ELEMENT_TYPE] = @"community_group_notice";
             param[UT_PAGE_TYPE] = @"community_group_detail";
-            param[@"click_position"] = @"community_notice_more";
             param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
-            TRACK_EVENT(@"click_community_notice_more", param);
+            param[@"click_position"] = @"community_notice_edit";
+            TRACK_EVENT(@"click_community_notice_edit", param);
         };
-    } else {
-        self.headerView.gotoPublicationsDetailBlock = nil;
+    }
+    // 非管理员
+    else {
+        self.headerView.publicationsDetailViewTitleLabel.text = @"点击查看";
+        self.headerView.publicationsContentLabel.numberOfLines = 3;
+        
+        // 有公告URL链接时优先进入链接页面
+        if(data.announcementUrl.length > 0) {
+            hasDetailBtn = YES;
+            self.headerView.gotoPublicationsDetailBlock = ^{
+                NSURLComponents *urlComponents = [NSURLComponents new];
+                urlComponents.scheme = @"fschema";
+                urlComponents.host = @"webview";
+                urlComponents.queryItems = @[
+                                             [[NSURLQueryItem alloc] initWithName:@"url" value: data.announcementUrl]
+                                             ];
+                NSURL *url = urlComponents.URL;
+                [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+                
+                NSMutableDictionary *param = [NSMutableDictionary dictionary];
+                param[UT_ELEMENT_TYPE] = @"community_group_notice";
+                param[UT_PAGE_TYPE] = @"community_group_detail";
+                param[@"click_position"] = @"community_notice_more";
+                param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+                TRACK_EVENT(@"click_community_notice_more", param);
+            };
+        }
+        else {
+            hasDetailBtn = NO;
+            self.headerView.gotoPublicationsDetailBlock = nil;
+        }
     }
     
-    [self.headerView updatePublicationsInfo: !isEmptyString(data.announcement)
-                               hasDetailBtn: !isEmptyString(data.announcementUrl)];
+    [self.headerView updatePublicationsInfo: isShowPublications
+                               hasDetailBtn: hasDetailBtn];
 }
 
 - (void)updateUIWithData:(FHUGCScialGroupDataModel *)data {
