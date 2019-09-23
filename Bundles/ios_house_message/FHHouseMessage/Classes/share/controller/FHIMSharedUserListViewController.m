@@ -22,6 +22,7 @@
 #import <ToastManager.h>
 #import <FHHouseBase/FHBaseTableView.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <FHHouseBase/FHHouseType.h>
 
 @interface FHIMSharedUserListViewController () <TTRouteInitializeProtocol, FHIMShareUserListViewModelDelegate, FHIMShareAlertViewDelegate, IMChatStateObserver>
 {
@@ -217,11 +218,11 @@
 -(NSString*)sourceByHouseType:(NSInteger)houseType {
     switch (houseType) {
         case 3://租房
-            return @"1.73";
+            return @"app_renthouse_share";//@"1.73";
         case 1://新房
-            return @"1.32";
+            return @"app_court_share";//@"1.32";
         default://二手房
-            return @"1.14";
+            return @"app_oldhouse_share";//@"1.14";
     }
 }
 
