@@ -22,12 +22,6 @@
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  1000
 
-typedef NS_ENUM(NSUInteger, FHClueFormErrorType) {
-    FHClueFormErrorTypeNone = 0,
-    FHClueFormErrorTypeNetFailure,
-    FHClueFormErrorTypeHttpFailure,
-    FHClueFormErrorTypeServerFailure,
-};
 
 @implementation FHMainApi (Contact)
 
@@ -73,7 +67,7 @@ typedef NS_ENUM(NSUInteger, FHClueFormErrorType) {
         NSMutableDictionary *categoryDict = @{}.mutableCopy;
         NSMutableDictionary *extraDict = @{}.mutableCopy;
         if (![TTReachability isNetworkConnected]) {
-            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueFormErrorTypeNetFailure];
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeNetFailure];
         }
         if (response.statusCode == 200) {
             if ([model respondsToSelector:@selector(status)]) {
@@ -83,13 +77,13 @@ typedef NS_ENUM(NSUInteger, FHClueFormErrorType) {
                         extraDict[@"error_code"] = status;
                     }
                     extraDict[@"message"] = model.message ? : error.domain;
-                    categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueFormErrorTypeServerFailure];
+                    categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeServerFailure];
                 }else {
-                    categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueFormErrorTypeNone];
+                    categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeNone];
                 }
             }
         }else {
-            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueFormErrorTypeHttpFailure];
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeHttpFailure];
             extraDict[@"error_code"] = [NSString stringWithFormat:@"%ld",response.statusCode];
         }
         [self addClueFormErrorRateLog:categoryDict extraDict:extraDict];
@@ -144,7 +138,7 @@ typedef NS_ENUM(NSUInteger, FHClueFormErrorType) {
         NSMutableDictionary *categoryDict = @{}.mutableCopy;
         NSMutableDictionary *extraDict = @{}.mutableCopy;
         if (![TTReachability isNetworkConnected]) {
-            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueFormErrorTypeNetFailure];
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeNetFailure];
         }
         if (response.statusCode == 200) {
             if ([model respondsToSelector:@selector(status)]) {
@@ -154,13 +148,13 @@ typedef NS_ENUM(NSUInteger, FHClueFormErrorType) {
                         extraDict[@"error_code"] = status;
                     }
                     extraDict[@"message"] = model.message ? : error.domain;
-                    categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueFormErrorTypeServerFailure];
+                    categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeServerFailure];
                 }else {
-                    categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueFormErrorTypeNone];
+                    categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeNone];
                 }
             }
         }else {
-            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueFormErrorTypeHttpFailure];
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeHttpFailure];
             extraDict[@"error_code"] = [NSString stringWithFormat:@"%ld",response.statusCode];
         }
         [self addClueFormErrorRateLog:categoryDict extraDict:extraDict];
@@ -197,20 +191,45 @@ typedef NS_ENUM(NSUInteger, FHClueFormErrorType) {
     if (fromStr.length > 0) {
         paramDic[@"enterfrom"] = fromStr;
     }
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:GET needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+
+    return [[TTNetworkManager shareInstance]requestForJSONWithResponse:url params:paramDic method:GET needCommonParams:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         
-        NSError *jerror = nil;
+        NSError *jerror = error;
         FHDetailVirtualNumResponseModel *model = [[FHDetailVirtualNumResponseModel alloc] initWithDictionary:jsonObj error:&jerror];
         if (![model.status isEqualToString:@"0"]) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+            jerror = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
         }
-        
+        NSMutableDictionary *categoryDict = @{}.mutableCopy;
+        NSMutableDictionary *extraDict = @{}.mutableCopy;
+        if (![TTReachability isNetworkConnected]) {
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeNetFailure];
+        }
+        if (response.statusCode == 200) {
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                if (status.integerValue != 0 || error != nil) {
+                    if (status) {
+                        extraDict[@"error_code"] = status;
+                    }
+                    extraDict[@"message"] = model.message ? : error.domain;
+                    categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeServerFailure];
+                    extraDict[@"request_url"] = response.URL.absoluteString;
+                    extraDict[@"response_headers"] = response.allHeaderFields;
+                }else {
+                    categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeNone];
+                }
+            }
+        }else {
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeHttpFailure];
+            extraDict[@"error_code"] = [NSString stringWithFormat:@"%ld",response.statusCode];
+        }
+        [self addClueCallErrorRateLog:categoryDict extraDict:extraDict];
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
+                completion(model,jerror);
             });
         }
-    } callbackInMainThread:NO];
+    }];
 }
 
 // 房源关注
@@ -277,6 +296,13 @@ typedef NS_ENUM(NSUInteger, FHClueFormErrorType) {
 
 + (void)addClueFormErrorRateLog:categoryDict extraDict:(NSDictionary *)extraDict
 {
-    [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_clue_form_error_rate" metric:nil category:categoryDict extra:extraDict];
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"clue_form_error_rate" metric:nil category:categoryDict extra:extraDict];
 }
+
++ (void)addClueCallErrorRateLog:categoryDict extraDict:(NSDictionary *)extraDict
+{
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"clue_call_error_rate" metric:nil category:categoryDict extra:extraDict];
+}
+
+
 @end
