@@ -274,6 +274,8 @@
             if (responseModel.data) {
                 // 更新圈子数据
                 [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:responseModel.data];
+                //传入选项信息
+                self.feedListController.operations = responseModel.data.permission;
             }
             return;
         }

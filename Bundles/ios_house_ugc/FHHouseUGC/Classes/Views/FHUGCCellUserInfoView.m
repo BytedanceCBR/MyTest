@@ -115,9 +115,12 @@
         viewModel.categoryID = self.cellModel.categoryId;
     }
     
-    FHUGCScialGroupDataModel * model = [[FHUGCConfig sharedInstance] socialGroupData:self.cellModel.community.socialGroupId];
-    if(model){
-        viewModel.permission = model.permission;
+//    FHUGCScialGroupDataModel * model = [[FHUGCConfig sharedInstance] socialGroupData:self.cellModel.community.socialGroupId];
+//    if(model){
+//        viewModel.permission = model.permission;
+//    }
+    if(self.cellModel.feedVC.operations.count > 0){
+        viewModel.permission = self.cellModel.feedVC.operations;
     }
     
 //    viewModel.isGood = YES;
@@ -133,6 +136,7 @@
 }
 
 - (void)handleItemselected:(FHFeedOperationView *) view {
+    __weak typeof(self) wself = self;
     if(view.selectdWord.type == FHFeedOperationWordTypeReport){
         //举报
         if(self.reportSuccessBlock){
@@ -147,33 +151,97 @@
     }else if(view.selectdWord.type == FHFeedOperationWordTypeDelete){
         [self trackClickDelete];
         //二次弹窗提醒
-        [self showDeleteAlert];
+        [self showAlert:@"是否确认要删除" cancelTitle:@"取消" confirmTitle:@"确定删除" cancelBlock:^{
+            [wself trackConfirmDeletePopupClick:YES];
+        } confirmBlock:^{
+            [wself trackConfirmDeletePopupClick:NO];
+            [wself postDelete];
+        }];
+        [self trackConfirmDeletePopupShow];
+        
+    }else if(view.selectdWord.type == FHFeedOperationWordTypeTop){
+        [self showAlert:@"确认要将帖子在对应的小区圈置顶？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
+
+        } confirmBlock:^{
+
+        }];
+    }else if(view.selectdWord.type == FHFeedOperationWordTypeCancelTop){
+        [self showAlert:@"确认要将帖子在对应的小区圈取消置顶？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
+            
+        } confirmBlock:^{
+            
+        }];
+    }else if(view.selectdWord.type == FHFeedOperationWordTypeGood){
+        [self showAlert:@"确认要给帖子在对应的小区圈加精？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
+            
+        } confirmBlock:^{
+            
+        }];
+    }else if(view.selectdWord.type == FHFeedOperationWordTypeCancelGood){
+        [self showAlert:@"确认要给帖子在对应的小区圈取消加精？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
+            
+        } confirmBlock:^{
+            
+        }];
+    }else if(view.selectdWord.type == FHFeedOperationWordTypeSelfLook){
+        [self showAlert:@"确认要将该帖子设置为自见？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
+            
+        } confirmBlock:^{
+            
+        }];
     }
 }
 
-- (void)showDeleteAlert {
+//- (void)showDeleteAlert {
+//    __weak typeof(self) wself = self;
+//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"是否确认要删除"
+//                                                                   message:nil
+//                                                            preferredStyle:UIAlertControllerStyleAlert];
+//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+//                                                           style:UIAlertActionStyleCancel
+//                                                         handler:^(UIAlertAction * _Nonnull action) {
+//                                                             // 点击取消按钮，调用此block
+//                                                             [wself trackConfirmDeletePopupClick:YES];
+//                                                         }];
+//    [alert addAction:cancelAction];
+//
+//    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"确定删除"
+//                                                            style:UIAlertActionStyleDefault
+//                                                          handler:^(UIAlertAction * _Nonnull action) {
+//                                                              // 点击按钮，调用此block
+//                                                              [wself trackConfirmDeletePopupClick:NO];
+//                                                              [wself postDelete];
+//                                                          }];
+//    [alert addAction:defaultAction];
+//    [[TTUIResponderHelper visibleTopViewController] presentViewController:alert animated:YES completion:nil];
+//    [self trackConfirmDeletePopupShow];
+//}
+
+- (void)showAlert:(NSString *)title cancelTitle:(NSString *)cancelTitle confirmTitle:(NSString *)confirmTitle cancelBlock:(void(^)())cancelBlock confirmBlock:(void(^)())confirmBlock {
     __weak typeof(self) wself = self;
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"是否确认要删除"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle
                                                            style:UIAlertActionStyleCancel
                                                          handler:^(UIAlertAction * _Nonnull action) {
                                                              // 点击取消按钮，调用此block
-                                                             [wself trackConfirmDeletePopupClick:YES];
+                                                             if(cancelBlock){
+                                                                 cancelBlock();
+                                                             }
                                                          }];
     [alert addAction:cancelAction];
-
-    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"确定删除"
+    
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:confirmTitle
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * _Nonnull action) {
                                                               // 点击按钮，调用此block
-                                                              [wself trackConfirmDeletePopupClick:NO];
-                                                              [wself postDelete];
+                                                              if(confirmBlock){
+                                                                  confirmBlock();
+                                                              }
                                                           }];
     [alert addAction:defaultAction];
     [[TTUIResponderHelper visibleTopViewController] presentViewController:alert animated:YES completion:nil];
-    [self trackConfirmDeletePopupShow];
 }
 
 - (void)postDelete {
