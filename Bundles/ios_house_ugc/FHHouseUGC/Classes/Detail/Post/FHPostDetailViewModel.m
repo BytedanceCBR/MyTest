@@ -172,6 +172,7 @@
         // 网络请求返回
         model.isFromDetail = YES;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+        cellModel.feedVC = self.detailData.feedVC;
         if (cellModel.community.socialGroupId.length <= 0) {
             cellModel.community = self.detailData.community;
         }
