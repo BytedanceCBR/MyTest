@@ -174,6 +174,11 @@
     self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.viewModel refreshMessageDot];
+}
+
 -(void)initConstraints
 {
     CGFloat height = [FHFakeInputNavbar perferredHeight];
