@@ -25,6 +25,7 @@
 #import "MJRefresh.h"
 #import "FHCommonDefines.h"
 #import "TTUIResponderHelper.h"
+#import <TTUGCEmojiParser.h>
 
 
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
@@ -512,7 +513,9 @@
                                                           NSFontAttributeName: contentFont,
                                                           NSForegroundColorAttributeName: [UIColor themeGray1]
                                                           };
-           NSAttributedString *announcementContent = [[NSAttributedString alloc] initWithString:announcement attributes:announcemenContentAttributes];
+           NSAttributedString *emojiSupportAnnouncement = [[TTUGCEmojiParser parseInTextKitContext:announcement fontSize:12] mutableCopy];
+           NSAttributedString *announcementContent = [[NSAttributedString alloc] initWithAttributedString:emojiSupportAnnouncement];
+           [[NSAttributedString alloc] initWithString:announcement attributes:announcemenContentAttributes];
            
            [attributedText appendAttributedString:announcementTitle];
            [attributedText appendAttributedString:announcementContent];
@@ -530,11 +533,6 @@
 
 // 更新公告信息
 - (void)updatePublicationsWith:(FHUGCScialGroupDataModel *)data {
-
-    self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:data.announcement];
-    
-    // 是否显示公告区
-    BOOL isShowPublications = !isEmptyString(data.announcement);
     
     // JOKER: TO BE DELETE TEST CODE
     static BOOL isUserAdmin = NO;
@@ -554,18 +552,21 @@
     }
     [self.feedListController.view bringSubviewToFront:adminBtn];
     //---
-
+    
     /* 针对是否管理员进行处理 */
     BOOL isAdmin = isUserAdmin;
-    
+    // 是否显示公告区
+    BOOL isShowPublications = !isEmptyString(data.announcement);
     self.headerView.gotoPublicationsDetailBlock = nil;
     BOOL hasDetailBtn = NO;
     // 管理员
     if(isAdmin) {
         hasDetailBtn = YES;
+        isShowPublications = YES;
         self.headerView.publicationsDetailViewTitleLabel.text = @"编辑公告";
         self.headerView.publicationsContentLabel.numberOfLines = 2;
-        
+        self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:(data.announcement.length > 0)?data.announcement: @"该小区圈暂无公告，管理员可点击编辑"];
+
         self.headerView.gotoPublicationsDetailBlock = ^{
             // 跳转公告编辑页
             NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
@@ -596,6 +597,7 @@
     }
     // 非管理员
     else {
+        self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:data.announcement];
         self.headerView.publicationsDetailViewTitleLabel.text = @"点击查看";
         self.headerView.publicationsContentLabel.numberOfLines = 3;
         

@@ -11,6 +11,10 @@
 #import <FHHouseUGCAPI.h>
 #import <ToastManager.h>
 #import "FHUserTracker.h"
+#import "TTUGCToolbar.h"
+#import "TTUGCTextViewMediator.h"
+#import <UIViewAdditions.h>
+#import "NSObject+MultiDelegates.h"
 
 typedef enum : NSUInteger {
     ActionTypeSaveOnly,
@@ -23,65 +27,28 @@ typedef enum : NSUInteger {
 
 #define TEXT_VIEW_FONT_SIZE 16
 #define TEXT_VIEW_LINE_HEIGHT 24
+#define TEXT_VIEW_LEFT_PADDING 20
+#define TEXT_VIEW_RIGHT_PADDING 20
+#define VGAP_BETWEEN_NAV_AND_TEXT_VIEW 15
+#define WORD_COUNT_LABEL_HEIGHT 32
 
-@interface FHUGCNoticeTextView: UITextView
-@end
-@implementation FHUGCNoticeTextView
-// 定制光标高度
--(CGRect)caretRectForPosition:(UITextPosition *)position {
-    CGRect originalRect = [super caretRectForPosition:position];
-    originalRect.size.height = TEXT_VIEW_FONT_SIZE + 2;
-    originalRect.origin.y += 2 + (TEXT_VIEW_LINE_HEIGHT - originalRect.size.height) / 2.0;
-    return originalRect;
-}
-@end
+@interface FHUGCNoticeEditViewController ()<TTUGCTextViewDelegate>
 
-@interface FHUGCNoticeEditViewController () <UITextViewDelegate>
-@property (nonatomic, strong) FHUGCNoticeTextView *textView;
-@property (nonatomic, strong) UILabel *wordCountLabel;
-@property (nonatomic, copy) NSString *content;
-@property (nonatomic, strong) UIButton *completeButton;
+@property (nonatomic, strong) UIButton              *completeButton;
+@property (nonatomic, strong) TTUGCTextView         *textView;
+@property (nonatomic, strong) UILabel               *wordCountLabel;
+@property (nonatomic, strong) TTUGCToolbar          *toolbar;
+
+@property (nonatomic, copy)   NSString              *content;
+@property (nonatomic, strong) TTUGCTextViewMediator *textViewMediator;
 @property (nonatomic, copy) void (^callback)(NSString *);
 @end
 
 @implementation FHUGCNoticeEditViewController
 
-#pragma mark - 属性成员
+// MARK: 属性成员
 
-- (FHUGCNoticeTextView *)textView {
-    if(!_textView) {
-        _textView = [FHUGCNoticeTextView new];
-        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-        paragraphStyle.maximumLineHeight = TEXT_VIEW_LINE_HEIGHT;
-        paragraphStyle.minimumLineHeight = TEXT_VIEW_LINE_HEIGHT;
-        _textView.typingAttributes = @{
-            NSForegroundColorAttributeName: [UIColor themeGray1],
-            NSFontAttributeName: [UIFont themeFontRegular:TEXT_VIEW_FONT_SIZE],
-            NSParagraphStyleAttributeName: paragraphStyle
-        };
-        _textView.tintColor = [UIColor themeRed1];
-        _textView.delegate = self;
-        [_textView becomeFirstResponder];
-        _textView.text = self.content;
-    }
-    return _textView;
-}
-
-- (UILabel *)wordCountLabel {
-    if(!_wordCountLabel) {
-        _wordCountLabel = [UILabel new];
-        _wordCountLabel.textAlignment = NSTextAlignmentRight;
-        _wordCountLabel.hidden = YES;
-        
-        _wordCountLabel.attributedText = [self wordCountAttributeStringWithTextCount:self.content.length];
-        _wordCountLabel.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shrinkKeyboard:)];
-        [_wordCountLabel addGestureRecognizer:tapGesture];
-    }
-    return _wordCountLabel;
-}
-
--(UIButton *)completeButton {
+- (UIButton *)completeButton {
     if(!_completeButton) {
         _completeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_completeButton setTitle:@"完成" forState:UIControlStateNormal];
@@ -93,7 +60,7 @@ typedef enum : NSUInteger {
     return _completeButton;
 }
 
-#pragma mark - 生命周期
+// MARK: 生命周期
 
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     if (self = [super initWithRouteParamObj:paramObj]) {
@@ -112,7 +79,7 @@ typedef enum : NSUInteger {
     [self configNotifications];
 }
 
-#pragma mark - UI
+// MARK: UI
 
 - (void)configNavBar {
     [self setupDefaultNavBar:NO];
@@ -137,65 +104,109 @@ typedef enum : NSUInteger {
         make.width.height.mas_offset(40);
     }];
 }
-
-
--(void)configContent {
+- (CGFloat)navbarHeight {
+    CGFloat navbarHeight = 65;
+    if (@available(iOS 11.0 , *)) {
+        navbarHeight =  44.f + self.view.tt_safeAreaInsets.top;
+    }
+    return navbarHeight;
+}
+- (CGFloat)toolbarHeightWithKeyboardShow:(BOOL)isShow {
+    return  80 + (isShow ? 0 : [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom);
+}
+- (void)configContent {
+    
+    CGFloat navbarHeight = [self navbarHeight];
+    CGFloat toolbarHeight = [self toolbarHeightWithKeyboardShow:NO];
+    
+    // textView
+    CGRect textViewFrame = CGRectMake(TEXT_VIEW_LEFT_PADDING, navbarHeight + VGAP_BETWEEN_NAV_AND_TEXT_VIEW, self.view.bounds.size.width - TEXT_VIEW_LEFT_PADDING - TEXT_VIEW_RIGHT_PADDING, self.view.bounds.size.height - navbarHeight - toolbarHeight);
+    self.textView = [[TTUGCTextView alloc] initWithFrame: textViewFrame];;
+    self.textView.keyboardAppearance = UIKeyboardAppearanceLight;
+    self.textView.isBanAt = YES;
+    self.textView.isBanHashtag = YES;
+    self.textView.source = @"community_notice_edit_detail";
+    self.textView.internalGrowingTextView.placeholder = @"请编辑群公告";
+    self.textView.internalGrowingTextView.placeholderColor = [UIColor themeGray3];
+        
+    NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+    paragraphStyle.maximumLineHeight = TEXT_VIEW_LINE_HEIGHT;
+    paragraphStyle.minimumLineHeight = TEXT_VIEW_LINE_HEIGHT;
+    self.textView.typingAttributes = @{
+        NSForegroundColorAttributeName: [UIColor themeGray1],
+        NSFontAttributeName: [UIFont themeFontRegular:TEXT_VIEW_FONT_SIZE],
+        NSParagraphStyleAttributeName: paragraphStyle
+    };
+    
+    self.textView.internalGrowingTextView.tintColor = [UIColor themeRed1];
+    self.textView.text = self.content;
+    
     [self.view addSubview:self.textView];
-    [self.view addSubview:self.wordCountLabel];
+    [self.textView becomeFirstResponder];
     
-    [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.view).offset(20);
-        make.right.equalTo(self.view).offset(-20);
-        make.top.equalTo(self.customNavBarView.mas_bottom).offset(15);
-        make.bottom.equalTo(self.wordCountLabel.mas_top);
-    }];
+    // toolbar
+    CGRect toolbarFrame = CGRectMake(0, self.view.bounds.size.height - toolbarHeight, self.view.bounds.size.width, toolbarHeight);
+    self.toolbar = [[TTUGCToolbar alloc] initWithFrame:toolbarFrame];
+    self.toolbar.emojiInputView.source = @"community_notice_edit_detail";
+    self.toolbar.banHashtagInput = YES;
+    self.toolbar.banLongText = YES;
+    self.toolbar.banAtInput = YES;
+    self.toolbar.banShoppingInput = YES;
+    self.toolbar.banPicInput = YES;
+    self.toolbar.picButtonClkBlk = nil;
+    [self.view addSubview:self.toolbar];
     
-    [self.wordCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.textView.mas_bottom);
-        make.left.equalTo(self.view).offset(20);
-        make.right.equalTo(self.view).offset(-20);
-        make.height.mas_equalTo(32);
-        make.bottom.equalTo(self.view);
-    }];
+    // 字数限制标签
+    CGRect wordCountLabelFrame = CGRectMake(20, 0, self.toolbar.size.width - 40, WORD_COUNT_LABEL_HEIGHT);
+    self.wordCountLabel = [[UILabel alloc] initWithFrame:wordCountLabelFrame];
+    self.wordCountLabel.textAlignment = NSTextAlignmentRight;
+    self.wordCountLabel.attributedText = [self wordCountAttributeStringWithTextCount:self.content.length];
+    self.wordCountLabel.userInteractionEnabled = YES;
+    [self.toolbar addSubview:self.wordCountLabel];
+    
+    self.textViewMediator.textView = self.textView;
+    self.textViewMediator.toolbar = self.toolbar;
+    self.toolbar.emojiInputView.delegate = self.textView;
+    self.toolbar.delegate = self.textViewMediator;
+    [self.toolbar tt_addDelegate:self asMainDelegate:NO];
+    self.textView.delegate = self.textViewMediator;
+    [self.textView tt_addDelegate:self asMainDelegate:NO];
+    self.textView.textLenDelegate = self;
 }
 
--(void)configNotifications {
+- (void)configNotifications {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
-#pragma mark - Logic
+// MARK: Logic
 
--(void)keyboardWillShow:(NSNotification *)notification {
-    
+- (void)keyboardWillShow:(NSNotification *)notification {
     CGFloat durition = [notification.userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] doubleValue];
-
     CGRect keyboardRect = [notification.userInfo[@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
-
     CGFloat keyboardHeight = keyboardRect.size.height;
-    
+    CGFloat navbarHeight = [self navbarHeight];
+    CGFloat toolbarHeight = [self toolbarHeightWithKeyboardShow:YES];
+    CGRect textViewFrame = self.textView.frame;
+    textViewFrame.size.height = self.view.bounds.size.height - navbarHeight - VGAP_BETWEEN_NAV_AND_TEXT_VIEW - toolbarHeight - keyboardHeight;
+    self.textView.internalGrowingTextView.maxHeight = textViewFrame.size.height;
     [UIView animateWithDuration:durition animations:^{
-        [self.wordCountLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.view).offset(-keyboardHeight-4);
-        }];
-        self.wordCountLabel.hidden = NO;
+        self.textView.frame = textViewFrame;
     }];
-    
-    [self.wordCountLabel.superview layoutIfNeeded];
 }
 
--(void)keyboardWillHide:(NSNotification *)notification {
+- (void)keyboardWillHide:(NSNotification *)notification {
     
     CGFloat duration = [notification.userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] doubleValue];
 
+    CGFloat navbarHeight = [self navbarHeight];
+    CGFloat toolbarHeight = [self toolbarHeightWithKeyboardShow:NO];
+    CGRect textViewFrame = self.textView.frame;
+    textViewFrame.size.height = self.view.bounds.size.height - navbarHeight - VGAP_BETWEEN_NAV_AND_TEXT_VIEW - toolbarHeight;
+    self.textView.internalGrowingTextView.maxHeight = textViewFrame.size.height;
     [UIView animateWithDuration:duration animations:^{
-        [self.wordCountLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.view).offset(0);
-        }];
-        self.wordCountLabel.hidden = YES;
+        self.textView.frame = textViewFrame;
     }];
-    
-    [self.wordCountLabel.superview layoutIfNeeded];
 }
 
 - (NSAttributedString *)wordCountAttributeStringWithTextCount: (NSInteger)textLength {
@@ -254,7 +265,7 @@ typedef enum : NSUInteger {
     [self presentViewController:alertVC animated:YES completion:nil];
 }
 
--(void)actionWithType:(ActionType)actionType {
+- (void)actionWithType:(ActionType)actionType {
     
     NSString *requestType = @"";
     NSString *traceClickNameString = @"";
@@ -341,13 +352,17 @@ typedef enum : NSUInteger {
     [self presentViewController:alertVC animated:YES completion:nil];
 }
 
-- (void)shrinkKeyboard: (UITapGestureRecognizer *)tap {
-    [self.textView resignFirstResponder];
+- (TTUGCTextViewMediator *)textViewMediator {
+    if(!_textViewMediator) {
+        _textViewMediator = [TTUGCTextViewMediator new];
+        _textViewMediator.showCanBeCreatedHashtag = NO;
+    }
+    return _textViewMediator;
 }
 
-#pragma mark - 埋点
+// MARK: 埋点
 
--(void)traceCompletedButtonPressed {
+- (void)traceCompletedButtonPressed {
     NSMutableDictionary *param = @{}.mutableCopy;
     param[UT_PAGE_TYPE] = [self pageTypeString];
     param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
@@ -355,14 +370,14 @@ typedef enum : NSUInteger {
     TRACK_EVENT(@"feed_publish_click", param);
 }
 
--(void)traceAlertShowWhenCompletedPressed {
+- (void)traceAlertShowWhenCompletedPressed {
     NSMutableDictionary *param = @{}.mutableCopy;
     param[UT_PAGE_TYPE] = [self pageTypeString];
     param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
     TRACK_EVENT(@"notice_sendtype_popup_show", param);
 }
 
--(void)traceAlertOptionClickWhenCompletedPressedWithOptionName: (NSString *)name {
+- (void)traceAlertOptionClickWhenCompletedPressedWithOptionName: (NSString *)name {
     if(name.length > 0) {
         NSMutableDictionary *param = @{}.mutableCopy;
         param[UT_PAGE_TYPE] = [self pageTypeString];
@@ -387,11 +402,12 @@ typedef enum : NSUInteger {
     TRACK_EVENT(@"notice_empty_popup_click", param);
 }
 
--(NSString *)pageTypeString {
+- (NSString *)pageTypeString {
     return @"community_notice_edit_detail";
 }
-#pragma mark - UItextViewDelegate
--(void)textViewDidChange:(UITextView *)textView {
+
+// MARK: TTUGCTextViewDelegate
+- (void)textViewDidChange:(TTUGCTextView *)textView {
     
     if(textView.text.length > MAX_WORD_COUNT) {
         textView.text = [textView.text substringWithRange:NSMakeRange(0, MAX_WORD_COUNT)];
