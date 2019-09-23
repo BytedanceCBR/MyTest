@@ -115,16 +115,26 @@
         viewModel.categoryID = self.cellModel.categoryId;
     }
     
-//    FHUGCScialGroupDataModel * model = [[FHUGCConfig sharedInstance] socialGroupData:self.cellModel.community.socialGroupId];
-//    if(model){
-//        viewModel.permission = model.permission;
-//    }
     if(self.cellModel.feedVC.operations.count > 0){
         viewModel.permission = self.cellModel.feedVC.operations;
     }
     
-//    viewModel.isGood = YES;
-//    viewModel.isTop = YES;
+    if(self.cellModel.isStick){
+        if(self.cellModel.stickStyle == FHFeedContentStickStyleTop || self.cellModel.stickStyle == FHFeedContentStickStyleTopAndGood){
+            viewModel.isTop = YES;
+        }else{
+            viewModel.isTop = NO;
+        }
+        
+        if(self.cellModel.stickStyle == FHFeedContentStickStyleGood || self.cellModel.stickStyle == FHFeedContentStickStyleTopAndGood){
+            viewModel.isGood = YES;
+        }else{
+            viewModel.isGood = NO;
+        }
+    }else{
+        viewModel.isGood = NO;
+        viewModel.isTop = NO;
+    }
 
     [dislikeView refreshWithModel:viewModel];
     CGPoint point = _moreBtn.center;
@@ -163,59 +173,34 @@
         [self showAlert:@"确认要将帖子在对应的小区圈置顶？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
 
         } confirmBlock:^{
-
+            [wself setOperationTop:YES];
         }];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeCancelTop){
         [self showAlert:@"确认要将帖子在对应的小区圈取消置顶？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
             
         } confirmBlock:^{
-            
+            [wself setOperationTop:NO];
         }];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeGood){
         [self showAlert:@"确认要给帖子在对应的小区圈加精？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
             
         } confirmBlock:^{
-            
+            [wself setOperationGood:YES];
         }];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeCancelGood){
         [self showAlert:@"确认要给帖子在对应的小区圈取消加精？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
             
         } confirmBlock:^{
-            
+            [wself setOperationGood:NO];
         }];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeSelfLook){
         [self showAlert:@"确认要将该帖子设置为自见？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
             
         } confirmBlock:^{
-            
+            [wself setOperationSelfLook];
         }];
     }
 }
-
-//- (void)showDeleteAlert {
-//    __weak typeof(self) wself = self;
-//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"是否确认要删除"
-//                                                                   message:nil
-//                                                            preferredStyle:UIAlertControllerStyleAlert];
-//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
-//                                                           style:UIAlertActionStyleCancel
-//                                                         handler:^(UIAlertAction * _Nonnull action) {
-//                                                             // 点击取消按钮，调用此block
-//                                                             [wself trackConfirmDeletePopupClick:YES];
-//                                                         }];
-//    [alert addAction:cancelAction];
-//
-//    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"确定删除"
-//                                                            style:UIAlertActionStyleDefault
-//                                                          handler:^(UIAlertAction * _Nonnull action) {
-//                                                              // 点击按钮，调用此block
-//                                                              [wself trackConfirmDeletePopupClick:NO];
-//                                                              [wself postDelete];
-//                                                          }];
-//    [alert addAction:defaultAction];
-//    [[TTUIResponderHelper visibleTopViewController] presentViewController:alert animated:YES completion:nil];
-//    [self trackConfirmDeletePopupShow];
-//}
 
 - (void)showAlert:(NSString *)title cancelTitle:(NSString *)cancelTitle confirmTitle:(NSString *)confirmTitle cancelBlock:(void(^)())cancelBlock confirmBlock:(void(^)())confirmBlock {
     __weak typeof(self) wself = self;
@@ -253,23 +238,107 @@
                 wself.deleteCellBlock();
             }
             //删除帖子成功发送通知
-            if (wself.cellModel.community.socialGroupId.length > 0) {
-                NSDictionary *dic = @{
-                                      @"social_group_id":wself.cellModel.community.socialGroupId,
-                                      @"cellModel":wself.cellModel,
-                                      };
-                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
-            } else {
-                // 没有圈子需信息
-                NSDictionary *dic = @{
-                                      @"cellModel":wself.cellModel,
-                                      };
-                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            if (self.cellModel.community.socialGroupId.length > 0) {
+                dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
             }
+            if(self.cellModel){
+                dic[@"cellModel"] = self.cellModel;
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
+            
         }else{
             [[ToastManager manager] showToast:@"删除失败"];
         }
     }];
+}
+
+- (void)setOperationSelfLook {
+    __weak typeof(self) wself = self;
+//    [FHHouseUGCAPI postDelete:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(bool success, NSError * _Nonnull error) {
+//        if(success){
+            //调用自见接口，和删帖的逻辑一致
+            if(wself.deleteCellBlock){
+                wself.deleteCellBlock();
+            }
+            //删除帖子成功发送通知
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    if (self.cellModel.community.socialGroupId.length > 0) {
+        dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
+    }
+    if(self.cellModel){
+        dic[@"cellModel"] = self.cellModel;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
+    
+//        }else{
+//            [[ToastManager manager] showToast:@"删除失败"];
+//        }
+//    }];
+}
+
+- (void)setOperationTop:(BOOL)isTop {
+    
+    NSString *imgUrl = @"http://p3.pstatp.com/origin/dac9000f02ec5048f3f8";
+    
+    if(isTop){
+        self.cellModel.isStick = YES;
+        self.cellModel.stickStyle = FHFeedContentStickStyleTop;
+        if(!self.cellModel.contentDecoration){
+            self.cellModel.contentDecoration = [[FHFeedUGCCellContentDecorationModel alloc] init];
+        }
+        self.cellModel.contentDecoration.url = imgUrl;
+    }else{
+        self.cellModel.isStick = NO;
+        self.cellModel.stickStyle = FHFeedContentStickStyleUnknown;
+        if(!self.cellModel.contentDecoration){
+            self.cellModel.contentDecoration = [[FHFeedUGCCellContentDecorationModel alloc] init];
+        }
+        self.cellModel.contentDecoration.url = @"";
+    }
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    if (self.cellModel.community.socialGroupId.length > 0) {
+        dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
+    }
+    if(self.cellModel){
+        dic[@"cellModel"] = self.cellModel;
+    }
+    dic[@"isTop"] = @(isTop);
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCTopPostNotification object:nil userInfo:dic];
+}
+
+- (void)setOperationGood:(BOOL)isGood {
+    NSString *imgUrl = @"http://p3.pstatp.com/origin/dac9000f02ec5048f3f8";
+    
+    if(isGood){
+        self.cellModel.isStick = YES;
+        self.cellModel.stickStyle = FHFeedContentStickStyleGood;
+        if(!self.cellModel.contentDecoration){
+            self.cellModel.contentDecoration = [[FHFeedUGCCellContentDecorationModel alloc] init];
+        }
+        self.cellModel.contentDecoration.url = imgUrl;
+    }else{
+        self.cellModel.isStick = NO;
+        self.cellModel.stickStyle = FHFeedContentStickStyleUnknown;
+        if(!self.cellModel.contentDecoration){
+            self.cellModel.contentDecoration = [[FHFeedUGCCellContentDecorationModel alloc] init];
+        }
+        self.cellModel.contentDecoration.url = @"";
+    }
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    if (self.cellModel.community.socialGroupId.length > 0) {
+        dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
+    }
+    if(self.cellModel){
+        dic[@"cellModel"] = self.cellModel;
+    }
+    dic[@"isGood"] = @(isGood);
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCGoodPostNotification object:nil userInfo:dic];
 }
 
 #pragma mark - 埋点

@@ -200,6 +200,8 @@
             feedContent.isFromDetail = YES;
             cellModel = [FHFeedUGCCellModel modelFromFeedContent:feedContent];
             cellModel.feedVC = self.detailController.detailData.feedVC;
+            cellModel.isStick = self.detailController.detailData.isStick;
+            cellModel.stickStyle = self.detailController.detailData.stickStyle;
             cellModel.tracerDic = self.detailController.tracerDict.mutableCopy;
             [self.detailController refreshUI];
         }

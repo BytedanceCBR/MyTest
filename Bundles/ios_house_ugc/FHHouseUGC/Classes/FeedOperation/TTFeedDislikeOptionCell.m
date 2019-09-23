@@ -153,7 +153,7 @@
         }
             break;
         case FHFeedOperationOptionTypeSelfLook: {
-            icon = [UIImage imageNamed:@"fh_ugc_delete"];
+            icon = [UIImage imageNamed:@"fh_ugc_self_look"];
         }
             break;
     }
