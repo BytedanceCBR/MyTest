@@ -190,6 +190,11 @@ typedef enum : NSUInteger {
     CGRect textViewFrame = self.textView.frame;
     textViewFrame.size.height = self.view.bounds.size.height - navbarHeight - VGAP_BETWEEN_NAV_AND_TEXT_VIEW - toolbarHeight - keyboardHeight;
     self.textView.internalGrowingTextView.maxHeight = textViewFrame.size.height;
+    CGRect interTextViewFrame = self.textView.internalGrowingTextView.frame;
+    CGFloat interTextViewContentHeight = [self.textView.internalGrowingTextView measureHeight];
+    interTextViewFrame.size.height = (interTextViewContentHeight < textViewFrame.size.height) ? interTextViewContentHeight : textViewFrame.size.height;
+    self.textView.internalGrowingTextView.frame = interTextViewFrame;
+    [self.textView.internalGrowingTextView scrollRangeToVisible:NSMakeRange(self.textView.text.length, 0)];
     [UIView animateWithDuration:durition animations:^{
         self.textView.frame = textViewFrame;
     }];
@@ -204,6 +209,10 @@ typedef enum : NSUInteger {
     CGRect textViewFrame = self.textView.frame;
     textViewFrame.size.height = self.view.bounds.size.height - navbarHeight - VGAP_BETWEEN_NAV_AND_TEXT_VIEW - toolbarHeight;
     self.textView.internalGrowingTextView.maxHeight = textViewFrame.size.height;
+    CGRect interTextViewFrame = self.textView.internalGrowingTextView.frame;
+    CGFloat interTextViewContentHeight = [self.textView.internalGrowingTextView measureHeight];
+    interTextViewFrame.size.height = (interTextViewContentHeight < textViewFrame.size.height) ? interTextViewContentHeight : textViewFrame.size.height;
+    self.textView.internalGrowingTextView.frame = interTextViewFrame;
     [UIView animateWithDuration:duration animations:^{
         self.textView.frame = textViewFrame;
     }];
