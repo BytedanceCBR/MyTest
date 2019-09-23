@@ -95,7 +95,8 @@
 
 -(void)initNavbar
 {
-    FHFakeInputNavbarType type = (_houseType == FHHouseTypeSecondHandHouse ? FHFakeInputNavbarTypeMap : FHFakeInputNavbarTypeDefault);
+    // FHFakeInputNavbarTypeMessageAndMap 二手房大类页显示消息和小红点
+    FHFakeInputNavbarType type = (_houseType == FHHouseTypeSecondHandHouse ? FHFakeInputNavbarTypeMessageAndMap : FHFakeInputNavbarTypeDefault);
     _navbar = [[FHFakeInputNavbar alloc] initWithType:type];
     __weak typeof(self) wself = self;
     _navbar.defaultBackAction = ^{
@@ -103,6 +104,10 @@
     };
     _navbar.showMapAction = ^{
         [wself.viewModel showMapSearch];
+    };
+    
+    _navbar.messageActionBlock = ^{
+        [wself.viewModel showMessageList];
     };
     
     _navbar.tapInputBar = ^{
@@ -127,6 +132,8 @@
     [self.view addSubview:_topContainerView];
     
     _viewModel = [[FHBaseMainListViewModel alloc] initWithTableView:self.tableView houseType:_houseType routeParam:self.paramObj];
+    
+    [_viewModel addNotiWithNaviBar:self.navbar];
     
     _topView = [[FHMainListTopView alloc] initWithBannerView:self.viewModel.topBannerView filterView:self.viewModel.filterPanel];
     

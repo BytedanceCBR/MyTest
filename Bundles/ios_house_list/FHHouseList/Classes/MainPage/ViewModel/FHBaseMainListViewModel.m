@@ -56,6 +56,8 @@
 #import <FHHouseBase/FHUtils.h>
 #import "FHHouseListNoHouseCell.h"
 #import "FHHouseOpenURLUtil.h"
+#import "FHEnvContext.h"
+#import "FHMessageManager.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -130,6 +132,29 @@ extern NSString *const INSTANT_DATA_KEY;
         _showRedirectTip = YES;
     }
     return self;
+}
+
+- (void)addNotiWithNaviBar:(FHFakeInputNavbar *)naviBar {
+    self.navbar = naviBar;
+    if (_mainListPage && _houseType == FHHouseTypeSecondHandHouse) {
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHMessageUnreadChangedNotification" object:nil];
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHChatMessageUnreadChangedNotification" object:nil];
+        [self refreshMessageDot];
+    }
+}
+
+- (void)refreshMessageDot {
+    if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
+        [self.navbar displayMessageDot:YES];
+    } else {
+        [self.navbar displayMessageDot:NO];
+    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void)initFilter
@@ -708,6 +733,29 @@ extern NSString *const INSTANT_DATA_KEY;
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }else{
         [self showOldMapSearch];
+    }
+}
+
+- (void)showMessageList {
+    // 二手房大类页
+    if (_mainListPage && _houseType == FHHouseTypeSecondHandHouse) {
+        // add by zyk 记得修改埋点数据
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        //    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        //    [params setValue:[_tracerDict objectForKey:@"page_type"]  forKey:@"page_type"];
+        //    [params setValue:[_tracerDict objectForKey:@"enter_from"]  forKey:@"enter_from"];
+        //    [params setValue:[_tracerDict objectForKey:@"rank"] forKey:@"rank"];
+        //    [params setValue:@"left_pic" forKey:@"card_type"];
+        //    [params setValue:[_tracerDict objectForKey:@"element_from"] forKey:@"element_from"];
+        //    [params setValue:[_tracerDict objectForKey:@"origin_from"] forKey:@"origin_from"];
+        //    [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
+        //    [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
+        //    [TTTracker eventV3:@"click_im_message" params:params];
+        
+        
+        NSString *messageSchema = @"sslocal://message_conversation_list";
+        NSURL *openUrl = [NSURL URLWithString:messageSchema];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl];
     }
 }
 

@@ -41,6 +41,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showMapSearch;
 
+- (void)addNotiWithNaviBar:(FHFakeInputNavbar *)naviBar;
+
+- (void)showMessageList;
+
 -(void)showInputSearch;
 
 -(NSString *)navbarPlaceholder;
