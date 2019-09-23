@@ -309,6 +309,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)setContactPhone:(FHDetailContactModel *)contactPhone
 {
     _contactPhone = contactPhone;
+        
     NSString *contactTitle = @"电话咨询";
     NSString *chatTitle = @"在线联系";
     
