@@ -536,27 +536,7 @@
 // 更新公告信息
 - (void)updatePublicationsWith:(FHUGCScialGroupDataModel *)data {
     
-    // JOKER: TO BE DELETE TEST CODE
-    static BOOL isUserAdmin = NO;
-    UIButton *adminBtn = [self.viewController.view viewWithTag:888888];
-    if(!adminBtn) {
-        adminBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        adminBtn.frame = CGRectMake(0, (self.viewController.view.bounds.size.height - 50)/2.0, 100, 50);
-        [adminBtn setTitle:@"管理员" forState:UIControlStateNormal];
-        [adminBtn setTitleColor:[UIColor themeRed] forState:UIControlStateNormal];
-        adminBtn.titleLabel.font = [UIFont themeFontMedium:18];
-        adminBtn.backgroundColor = [UIColor grayColor];
-        adminBtn.tag = 888888;
-        [self.feedListController.view addSubview:adminBtn];
-        [adminBtn addTarget:self withActionBlock:^{
-            isUserAdmin = !isUserAdmin;
-        } forControlEvent:UIControlEventTouchUpInside];
-    }
-    [self.feedListController.view bringSubviewToFront:adminBtn];
-    //---
-    
-    /* 针对是否管理员进行处理 */
-    BOOL isAdmin = isUserAdmin;
+    BOOL isAdmin = (self.data.userAuth != UserAuthTypeNormal);
     // 是否显示公告区
     BOOL isShowPublications = !isEmptyString(data.announcement);
     self.headerView.gotoPublicationsDetailBlock = nil;
