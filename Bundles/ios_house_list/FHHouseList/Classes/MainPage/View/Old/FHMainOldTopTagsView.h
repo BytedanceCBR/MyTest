@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHMainOldTagsView : UIControl
 
 @property (nonatomic, strong)   FHSearchFilterConfigOption       *optionData;
+@property (nonatomic, assign)   BOOL       isSelected;
 
 @end
 

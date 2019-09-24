@@ -11,6 +11,11 @@
 #import "FHMainOldTopCell.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import "FHEnvContext.h"
+#import <Masonry.h>
+#import <UIFont+House.h>
+#import <UIColor+Theme.h>
+#import "TTDeviceHelper.h"
+#import "FHUserTracker.h"
 
 @interface FHMainOldTopTagsView ()
 
@@ -56,27 +61,38 @@
         CGFloat itemMargin = 13;
         __block CGFloat leftOffset = 20;
         if ([self.tagsFilterData.options isKindOfClass:[NSArray class]]) {
+            NSArray *tempArray = nil;
             if (self.tagsFilterData.options.count >= 4) {
                 // 取前四个
-                for (int i = 0; i < 4; i++) {
-                    FHMainOldTagsView *tagView = [[FHMainOldTagsView alloc] initWithFrame:CGRectMake(leftOffset, top, itemWidth, 30)];
-                    [self addSubview:tagView];
-                    leftOffset += (itemMargin + itemWidth);
-                    tagView.optionData = self.tagsFilterData.options[i];
-                }
+                tempArray = [self.tagsFilterData.options subarrayWithRange:NSMakeRange(0, 4)];
             } else {
                 // 直接显示
-                [self.tagsFilterData.options enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                tempArray = self.tagsFilterData.options;
+            }
+            if (tempArray) {
+                [tempArray enumerateObjectsUsingBlock:^(FHSearchFilterConfigOption *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     FHMainOldTagsView *tagView = [[FHMainOldTagsView alloc] initWithFrame:CGRectMake(leftOffset, top, itemWidth, 30)];
                     [self addSubview:tagView];
                     leftOffset += (itemMargin + itemWidth);
                     tagView.optionData = obj;
+                    tagView.tag = [obj.value integerValue];
+                    [tagView addTarget:self action:@selector(tagsViewClick:) forControlEvents:UIControlEventTouchUpInside];
                 }];
             }
         }
     }
 }
 
+// 点击
+- (void)tagsViewClick:(FHMainOldTagsView *)tagView {
+    tagView.isSelected = !tagView.isSelected;
+}
+
+@end
+
+// FHMainOldTagsView
+@interface FHMainOldTagsView ()
+@property (nonatomic, strong)   UILabel       *label;
 @end
 
 @implementation FHMainOldTagsView
@@ -88,12 +104,38 @@
         self.backgroundColor = [UIColor themeGray7];
         self.layer.cornerRadius = 4.0;
         [self setupUI];
+        self.isSelected = NO;
     }
     return self;
 }
 
 - (void)setupUI {
-    
+    _label = [[UILabel alloc] init];
+    _label.textColor = [UIColor colorWithHexStr:@"#45494d"];
+    _label.font = [UIFont themeFontRegular:12];
+    _label.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:_label];
+    [_label mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self);
+    }];
+}
+
+- (void)setOptionData:(FHSearchFilterConfigOption *)optionData {
+    _optionData = optionData;
+    if (optionData) {
+        self.label.text = optionData.text;
+    }
+}
+
+- (void)setIsSelected:(BOOL)isSelected {
+    _isSelected = isSelected;
+    if (isSelected) {
+        self.backgroundColor = [UIColor colorWithHexStr:@"ffeef0"];
+        _label.textColor = [UIColor colorWithHexStr:@"#ff5969"];
+    } else {
+        self.backgroundColor = [UIColor themeGray7];
+        _label.textColor = [UIColor colorWithHexStr:@"#45494d"];
+    }
 }
 
 @end
