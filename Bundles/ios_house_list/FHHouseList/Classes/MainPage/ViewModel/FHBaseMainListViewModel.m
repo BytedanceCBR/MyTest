@@ -214,7 +214,6 @@ extern NSString *const INSTANT_DATA_KEY;
     if (self.houseType == FHHouseTypeSecondHandHouse && self.mainListPage) {
         self.topTagsView = [[FHMainOldTopTagsView alloc] init];
         self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterTagsViewHeight);
-//        self.topTagsView = nil;
     }
 }
 
