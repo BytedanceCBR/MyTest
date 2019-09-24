@@ -21,6 +21,7 @@
 #import "TTVideoArticleService+Action.h"
 #import "TTVideoArticleServiceMessage.h"
 #import "TTVFeedUserOpDataSyncMessage.h"
+#import <UIView+XWAddForRoundedCorner.h>
 
 @interface FHUGCCellBottomView ()
 
@@ -61,9 +62,10 @@
     self.positionView = [[UIView alloc] init];
     _positionView.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
     _positionView.layer.masksToBounds= YES;
-    _positionView.layer.cornerRadius = 4;
+//    _positionView.layer.cornerRadius = 4;
     _positionView.userInteractionEnabled = YES;
     _positionView.hidden = YES;
+    [_positionView xw_roundedCornerWithRadius:4 cornerColor:[UIColor whiteColor]];
     [self addSubview:_positionView];
     
     self.positionImageView = [[UIImageView alloc] init];
@@ -82,6 +84,8 @@
     [_commentBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
     [_commentBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
     _commentBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
+    _commentBtn.titleLabel.layer.masksToBounds = YES;
+    _commentBtn.titleLabel.backgroundColor = [UIColor whiteColor];
     [self addSubview:_commentBtn];
     
     self.likeBtn = [[UIButton alloc] init];
@@ -93,6 +97,8 @@
     [_likeBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
     _likeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [_likeBtn addTarget:self action:@selector(like:) forControlEvents:UIControlEventTouchUpInside];
+    _likeBtn.titleLabel.layer.masksToBounds = YES;
+    _likeBtn.titleLabel.backgroundColor = [UIColor whiteColor];
     [self addSubview:_likeBtn];
     
 //    self.likeView = [[UIView alloc] init];

@@ -20,6 +20,7 @@
 #import "FHUserTracker.h"
 #import "TTAccountManager.h"
 #import <FHUGCConfig.h>
+#import <UIView+XWAddForRoundedCorner.h>
 
 @implementation FHUGCCellUserInfoView
 
@@ -37,7 +38,8 @@
     _icon.backgroundColor = [UIColor themeGray7];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
-    _icon.layer.cornerRadius = 20;
+//    _icon.layer.cornerRadius = 20;
+    [_icon xw_roundedCornerWithRadius:20 cornerColor:[UIColor whiteColor]];
     [self addSubview:_icon];
     
     self.userName = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
