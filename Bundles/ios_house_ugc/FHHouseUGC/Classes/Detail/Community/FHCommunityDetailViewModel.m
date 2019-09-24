@@ -568,8 +568,10 @@
         urlComponents.host = @"ugc_notice_edit";
         
         NSMutableDictionary *infoDict = @{}.mutableCopy;
+        infoDict[@"socialGroupId"] = self.data.socialGroupId;
         infoDict[@"content"] = data.announcement;
         infoDict[@"isReadOnly"] = @(YES);
+        
         NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
         tracer[UT_ENTER_FROM] = @"community_group_detail";
         infoDict[@"tracer"] = tracer;
@@ -591,11 +593,14 @@
             urlComponents.host = @"ugc_notice_edit";
             
             NSMutableDictionary *infoDict = @{}.mutableCopy;
+            infoDict[@"socialGroupId"] = self.data.socialGroupId;
             infoDict[@"content"] = data.announcement;
+            infoDict[@"isReadOnly"] = @(NO);
             infoDict[@"callback"] = ^(NSString *newContent){
                 data.announcement = newContent;
                 [self updateUIWithData:data];
             };
+            
             NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
             tracer[UT_ENTER_FROM] = @"community_group_detail";
             infoDict[@"tracer"] = tracer;

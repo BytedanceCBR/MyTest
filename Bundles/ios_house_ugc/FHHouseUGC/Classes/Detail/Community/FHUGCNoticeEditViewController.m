@@ -18,10 +18,10 @@
 #import <TTUGCEmojiParser.h>
 
 typedef enum : NSUInteger {
-    ActionTypeSaveOnly,
-    ActionTypeSMS,
-    ActionTypePush,
-    ActionTypePushAndSMS
+    ActionTypeSaveOnly = 0,
+    ActionTypeSMS = 1,
+    ActionTypePush = 2,
+    ActionTypePushAndSMS = 3
 } ActionType;
 
 #define MAX_WORD_COUNT 200
@@ -42,10 +42,11 @@ typedef enum : NSUInteger {
 
 @property (nonatomic, copy)   NSString              *content;
 @property (nonatomic, strong) TTUGCTextViewMediator *textViewMediator;
-@property (nonatomic, copy) void (^callback)(NSString *);
+@property (nonatomic, copy)   void (^callback)(NSString *);
 @property (nonatomic, assign) BOOL isReadOnly;
 @property (nonatomic, assign) BOOL isSystemKeyboardVisible;
 @property (nonatomic, assign) CGFloat systemKeyboardHeight;
+@property (nonatomic, copy)   NSString *socialGroupId;
 @end
 
 @implementation FHUGCNoticeEditViewController
@@ -72,6 +73,7 @@ typedef enum : NSUInteger {
         self.content = paramObj.allParams[@"content"];
         self.callback = paramObj.allParams[@"callback"];
         self.title = self.isReadOnly ? @"小区圈公告" : @"编辑公告";
+        self.socialGroupId = paramObj.allParams[@"socialGroupId"];
     }
     return self;
 }
@@ -305,30 +307,17 @@ typedef enum : NSUInteger {
 
 - (void)actionWithType:(ActionType)actionType {
     
-    NSString *requestType = @"";
-    NSString *traceClickNameString = @"";
-    switch (actionType) {
-        case ActionTypeSaveOnly:
-            traceClickNameString = @"only_save";
-            break;
-        case ActionTypeSMS:
-            traceClickNameString = @"save_message";
-            break;
-        case ActionTypePush:
-            traceClickNameString = @"save_push";
-            break;
-        case ActionTypePushAndSMS:
-            traceClickNameString = @"save_push_message";
-            break;
-        default:
-            break;
-    }
+    [[ToastManager manager] showCustomLoading:@"正在保存"];
     // 弹窗选项点击埋点
-    [self traceAlertOptionClickWhenCompletedPressedWithOptionName:traceClickNameString];
+    [self traceAlertOptionClickWhenCompletedPressedWithActionType:actionType];
     
     // 发送请求
-    [[ToastManager manager] showCustomLoading:@"正在保存"];
-    [FHHouseUGCAPI requestUpdateUGCNoticeContent:self.textView.text actionType:requestType completion:^(NSError * _Nonnull error) {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"social_group_id"] = @(self.socialGroupId.longLongValue);
+    params[@"announcement"] = self.textView.text;
+    params[@"push_type"] = @(actionType);
+
+    [FHHouseUGCAPI requestUpdateUGCNoticeWithParam:params completion:^(NSError * _Nonnull error) {
         
         [[ToastManager manager] dismissCustomLoading];
         
@@ -428,12 +417,31 @@ typedef enum : NSUInteger {
     TRACK_EVENT(@"notice_sendtype_popup_show", param);
 }
 
-- (void)traceAlertOptionClickWhenCompletedPressedWithOptionName: (NSString *)name {
-    if(name.length > 0) {
+- (void)traceAlertOptionClickWhenCompletedPressedWithActionType: (ActionType)actionType {
+    NSString *traceClickNameString = @"";
+    
+    switch (actionType) {
+        case ActionTypeSaveOnly:
+            traceClickNameString = @"only_save";
+            break;
+        case ActionTypeSMS:
+            traceClickNameString = @"save_message";
+            break;
+        case ActionTypePush:
+            traceClickNameString = @"save_push";
+            break;
+        case ActionTypePushAndSMS:
+            traceClickNameString = @"save_push_message";
+            break;
+        default:
+            break;
+    }
+    
+    if(traceClickNameString.length > 0) {
         NSMutableDictionary *param = @{}.mutableCopy;
         param[UT_PAGE_TYPE] = [self pageTypeString];
         param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
-        param[@"click_position"] = name;
+        param[@"click_position"] = traceClickNameString;
         TRACK_EVENT(@"notice_sendtype_popup_click", param);
     }
 }
