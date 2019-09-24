@@ -12,6 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMainOldTopTagsView : UIView
 
+@property (nonatomic, strong)   NSMutableDictionary       *lastConditionDic;
+@property (nonatomic, copy)     dispatch_block_t       itemClickBlk;
+@property (nonatomic, copy)     NSString* condition;
+
 @end
 
 @interface FHMainOldTagsView : UIControl

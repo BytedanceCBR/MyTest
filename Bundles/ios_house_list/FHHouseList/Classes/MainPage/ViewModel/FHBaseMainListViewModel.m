@@ -214,6 +214,11 @@ extern NSString *const INSTANT_DATA_KEY;
     if (self.houseType == FHHouseTypeSecondHandHouse && self.mainListPage) {
         self.topTagsView = [[FHMainOldTopTagsView alloc] init];
         self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterTagsViewHeight);
+        __weak typeof(self) weakSelf = self;
+        self.topTagsView.itemClickBlk = ^{
+            [weakSelf.houseFilterBridge setFilterConditions:weakSelf.topTagsView.lastConditionDic];
+            [weakSelf.houseFilterViewModel trigerConditionChanged];
+        };
     }
 }
 
@@ -879,6 +884,11 @@ extern NSString *const INSTANT_DATA_KEY;
     self.navbar.placeHolder = placeholder;
     
     [self.houseFilterBridge setFilterConditions:paramObj.queryParams];
+    
+    if (self.topTagsView) {
+        FHMainOldTopTagsView *tagsView = self.topTagsView;
+        tagsView.lastConditionDic = [NSMutableDictionary dictionaryWithDictionary:paramObj.queryParams];
+    }
 }
 
 -(NSString *)navbarPlaceholder

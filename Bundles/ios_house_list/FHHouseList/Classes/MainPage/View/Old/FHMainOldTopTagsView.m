@@ -86,6 +86,56 @@
 // 点击
 - (void)tagsViewClick:(FHMainOldTagsView *)tagView {
     tagView.isSelected = !tagView.isSelected;
+    // 重新计算condition
+    NSArray *subVs = [self subviews];
+    NSMutableArray *tagsData = [NSMutableArray new];
+    [subVs enumerateObjectsUsingBlock:^(FHMainOldTagsView*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[FHMainOldTagsView class]]) {
+            if (obj.isSelected) {
+                [tagsData addObject:obj.optionData.value];
+            }
+        }
+    }];
+    _lastConditionDic[@"tags%5B%5D"] = tagsData;
+    if (self.itemClickBlk) {
+        self.itemClickBlk();
+    }
+}
+
+- (void)setLastConditionDic:(NSMutableDictionary *)lastConditionDic {
+    _lastConditionDic = lastConditionDic;
+    NSArray *subVs = [self subviews];
+    [subVs enumerateObjectsUsingBlock:^(FHMainOldTagsView*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[FHMainOldTagsView class]]) {
+            obj.isSelected = NO;
+        }
+    }];
+    if ([lastConditionDic isKindOfClass:[NSDictionary class]]) {
+        id tags = lastConditionDic[@"tags%5B%5D"];
+        if (tags && [tags isKindOfClass:[NSArray class]]) {
+            NSArray *tagsArr = (NSArray *)tags;
+            [tagsArr enumerateObjectsUsingBlock:^(NSString *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSString *tagId = obj;
+                // 选中id
+                if (tagId.length > 0) {
+                    FHMainOldTagsView *tagView = [self viewWithTag:[tagId integerValue]];
+                    if (tagView) {
+                        tagView.isSelected = YES;
+                    }
+                }
+            }];
+        }
+    }
+}
+
+// 筛选器条件变化修改tags UI展示(实时变化)
+- (void)setCondition:(NSString *)condition {
+    if (![condition isEqualToString:_condition]) {
+        _condition = condition;
+        if (condition.length > 0) {
+            
+        }
+    }
 }
 
 @end

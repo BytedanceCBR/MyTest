@@ -14,12 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
 @class TTRouteParamObj;
 @class FHBaseMainListViewController;
 @class FHMainListTopView;
+@class FHMainOldTopTagsView;
 @interface FHBaseMainListViewModel : NSObject
 
 @property(nonatomic , strong) UIView *filterPanel;
 @property(nonatomic , strong) UIView *filterBgControl;
 @property(nonatomic , strong) UIView *topBannerView;
-@property(nonatomic , strong) UIView *topTagsView;
+@property(nonatomic , strong) FHMainOldTopTagsView *topTagsView;
 
 @property(nonatomic , strong) FHFakeInputNavbar *navbar;
 @property(nonatomic , strong) FHErrorView *errorMaskView;
