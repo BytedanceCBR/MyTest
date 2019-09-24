@@ -15,6 +15,7 @@
 #import "TTUGCTextViewMediator.h"
 #import <UIViewAdditions.h>
 #import "NSObject+MultiDelegates.h"
+#import <TTUGCEmojiParser.h>
 
 typedef enum : NSUInteger {
     ActionTypeSaveOnly,
@@ -42,6 +43,8 @@ typedef enum : NSUInteger {
 @property (nonatomic, copy)   NSString              *content;
 @property (nonatomic, strong) TTUGCTextViewMediator *textViewMediator;
 @property (nonatomic, copy) void (^callback)(NSString *);
+@property (nonatomic, assign) BOOL isSystemKeyboardVisible;
+@property (nonatomic, assign) CGFloat systemKeyboardHeight;
 @end
 
 @implementation FHUGCNoticeEditViewController
@@ -104,6 +107,7 @@ typedef enum : NSUInteger {
         make.width.height.mas_offset(40);
     }];
 }
+
 - (CGFloat)navbarHeight {
     CGFloat navbarHeight = 65;
     if (@available(iOS 11.0 , *)) {
@@ -111,9 +115,11 @@ typedef enum : NSUInteger {
     }
     return navbarHeight;
 }
+
 - (CGFloat)toolbarHeightWithKeyboardShow:(BOOL)isShow {
     return  80 + (isShow ? 0 : [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom);
 }
+
 - (void)configContent {
     
     CGFloat navbarHeight = [self navbarHeight];
@@ -182,32 +188,27 @@ typedef enum : NSUInteger {
 // MARK: Logic
 
 - (void)keyboardWillShow:(NSNotification *)notification {
-    CGFloat durition = [notification.userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] doubleValue];
+    self.isSystemKeyboardVisible = YES;
+    CGFloat duration = [notification.userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] doubleValue];
     CGRect keyboardRect = [notification.userInfo[@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
-    CGFloat keyboardHeight = keyboardRect.size.height;
-    CGFloat navbarHeight = [self navbarHeight];
-    CGFloat toolbarHeight = [self toolbarHeightWithKeyboardShow:YES];
-    CGRect textViewFrame = self.textView.frame;
-    textViewFrame.size.height = self.view.bounds.size.height - navbarHeight - VGAP_BETWEEN_NAV_AND_TEXT_VIEW - toolbarHeight - keyboardHeight;
-    self.textView.internalGrowingTextView.maxHeight = textViewFrame.size.height;
-    CGRect interTextViewFrame = self.textView.internalGrowingTextView.frame;
-    CGFloat interTextViewContentHeight = [self.textView.internalGrowingTextView measureHeight];
-    interTextViewFrame.size.height = (interTextViewContentHeight < textViewFrame.size.height) ? interTextViewContentHeight : textViewFrame.size.height;
-    self.textView.internalGrowingTextView.frame = interTextViewFrame;
-    [self.textView.internalGrowingTextView scrollRangeToVisible:NSMakeRange(self.textView.text.length, 0)];
-    [UIView animateWithDuration:durition animations:^{
-        self.textView.frame = textViewFrame;
-    }];
+    self.systemKeyboardHeight = keyboardRect.size.height;
+    [self animateTextViewWithDuration:duration keyboardHeight:self.systemKeyboardHeight];
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
+    self.isSystemKeyboardVisible = NO;
     
     CGFloat duration = [notification.userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] doubleValue];
 
+    self.systemKeyboardHeight = 0;
+    [self animateTextViewWithDuration:duration keyboardHeight:self.systemKeyboardHeight];
+}
+
+- (void)animateTextViewWithDuration:(CGFloat)duration keyboardHeight:(CGFloat)height {
     CGFloat navbarHeight = [self navbarHeight];
-    CGFloat toolbarHeight = [self toolbarHeightWithKeyboardShow:NO];
+    CGFloat toolbarHeight = [self toolbarHeightWithKeyboardShow:self.isSystemKeyboardVisible];
     CGRect textViewFrame = self.textView.frame;
-    textViewFrame.size.height = self.view.bounds.size.height - navbarHeight - VGAP_BETWEEN_NAV_AND_TEXT_VIEW - toolbarHeight;
+    textViewFrame.size.height = self.view.bounds.size.height - navbarHeight - VGAP_BETWEEN_NAV_AND_TEXT_VIEW - toolbarHeight - height;
     self.textView.internalGrowingTextView.maxHeight = textViewFrame.size.height;
     CGRect interTextViewFrame = self.textView.internalGrowingTextView.frame;
     CGFloat interTextViewContentHeight = [self.textView.internalGrowingTextView measureHeight];
@@ -334,7 +335,7 @@ typedef enum : NSUInteger {
     if(isEmpty) {
         [self traceAlertShowWhenUserDecideWithEventName:@"notice_empty_popup_show"];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            [self.textView becomeFirstResponder];
+            [self exitPage];
             [self traceAlertClickWhenUserDecideWithOptionName:@"cancel"];
         }];
         UIAlertAction *confirmEmptyAction = [UIAlertAction actionWithTitle:@"清空" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -416,14 +417,33 @@ typedef enum : NSUInteger {
 }
 
 // MARK: TTUGCTextViewDelegate
+
 - (void)textViewDidChange:(TTUGCTextView *)textView {
     
-    if(textView.text.length > MAX_WORD_COUNT) {
-        textView.text = [textView.text substringWithRange:NSMakeRange(0, MAX_WORD_COUNT)];
+    if(textView.attributedText.length > MAX_WORD_COUNT) {
+        textView.text = [TTUGCEmojiParser stringify:[textView.attributedText attributedSubstringFromRange:NSMakeRange(0, MAX_WORD_COUNT)]];
     }
     
-    self.wordCountLabel.attributedText = [self wordCountAttributeStringWithTextCount: textView.text.length];
+    self.wordCountLabel.attributedText = [self wordCountAttributeStringWithTextCount: textView.attributedText.length];
     
     self.completeButton.enabled = ![self.content isEqualToString:self.textView.text];
+}
+
+- (void)toolbarDidClickEmojiButton:(BOOL)switchToEmojiInput {
+    CGFloat emojiInputViewHeight = self.toolbar.emojiInputView.frame.size.height;
+    if(switchToEmojiInput) {
+        [self animateTextViewWithDuration:0.25 keyboardHeight:emojiInputViewHeight];
+    }
+    else {
+        [self animateTextViewWithDuration:0.25 keyboardHeight:self.systemKeyboardHeight];
+    }
+}
+- (void)toolbarDidClickKeyboardButton:(BOOL)switchToKeyboardInput {
+    if(switchToKeyboardInput) {
+        // nothing for now
+    }
+    else {
+        [self animateTextViewWithDuration:0.25 keyboardHeight:self.systemKeyboardHeight];
+    }
 }
 @end
