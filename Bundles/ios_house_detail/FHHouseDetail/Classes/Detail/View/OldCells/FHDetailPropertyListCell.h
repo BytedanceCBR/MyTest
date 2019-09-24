@@ -39,6 +39,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)updateWithSecurityInfo:(FHRentDetailDataBaseExtraSecurityInformationModel *)securityInfo;
 
+-(void)updateWithBudgetData:(FHDetailDataBaseExtraBudgetModel *)budgetmodel;
+
+-(void)updateWithFloorInfo:(FHDetailDataBaseExtraFloorInfoModel *)floorInfo;
+
 @end
 
 // FHDetailPropertyListModel

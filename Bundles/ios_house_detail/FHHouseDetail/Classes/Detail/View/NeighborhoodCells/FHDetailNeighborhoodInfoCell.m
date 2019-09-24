@@ -26,13 +26,77 @@
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import "FHDetailSchoolInfoItemView.h"
 #import "FHDetailHeaderViewNoMargin.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
+
+@interface FHDetailNeighborhoodConsultView : UIView
+
+@property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) UILabel *infoLabel;
+@property (nonatomic, strong) UIImageView *consultImgView;
+
+@end
+
+@implementation FHDetailNeighborhoodConsultView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI
+{
+    self.backgroundColor = UIColor.whiteColor;
+    _nameLabel = [[UILabel alloc]init];
+    _nameLabel.font = [UIFont themeFontRegular:15];
+    _nameLabel.textColor = [UIColor themeGray3];
+    [self addSubview:_nameLabel];
+    
+    _infoLabel = [[UILabel alloc]init];
+    _infoLabel.font = [UIFont themeFontRegular:15];
+    _infoLabel.textColor = [UIColor themeRed1];
+    [self addSubview:_infoLabel];
+    _infoLabel.textAlignment = NSTextAlignmentLeft;
+    
+    UIImage *img = ICON_FONT_IMG(15, @"\U0000e691", [UIColor themeRed1]);
+    _consultImgView = [[UIImageView alloc] init];
+    _consultImgView.image = img;
+    _consultImgView.contentMode = UIViewContentModeScaleAspectFit;
+    [self addSubview:_consultImgView];
+
+    // 布局
+    [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(20).priorityHigh();
+        make.top.bottom.mas_equalTo(self);
+    }];
+    
+    [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.nameLabel.mas_right).offset(12);
+        make.right.mas_lessThanOrEqualTo(-30);
+        make.top.bottom.mas_equalTo(self);
+    }];
+    
+    [self.consultImgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.infoLabel.mas_right).offset(6);
+        make.centerY.mas_equalTo(self);
+        make.width.height.mas_equalTo(20);
+    }];
+    
+}
+
+
+
+@end
 
 @interface FHDetailNeighborhoodInfoCell ()
 
 @property (nonatomic, strong)   FHDetailHeaderViewNoMargin       *headerView;
 @property (nonatomic, strong)   UIView       *topView;
 @property (nonatomic, assign)   CGFloat       topHeight;
-//@property (nonatomic, strong)   UIView       *bottomView;
+@property (nonatomic, strong)   FHDetailNeighborhoodConsultView       *consultView;
 @property (nonatomic, strong)   UIView       *schoolView;
 
 @end
@@ -61,6 +125,7 @@
     for (UIView *subview in self.schoolView.subviews) {
         [subview removeFromSuperview];
     }
+    self.consultView.hidden = YES;
     FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)data;
     // 二手房
     if (model.neighborhoodInfo) {
@@ -98,6 +163,7 @@
         [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(self.topHeight);
         }];
+
         [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(26 + self.topHeight);
         }];
@@ -128,10 +194,28 @@
         [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(self.topHeight);
         }];
-        [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(26 + self.topHeight);
-        }];
-        [self updateSchoolView:model.neighborhoodInfo.schoolDictList];
+        
+        if (model.neighborhoodInfo.useSchoolIm) {
+            self.schoolView.hidden = YES;
+            self.consultView.hidden = NO;
+            self.consultView.nameLabel.text = @"学校资源";
+            self.consultView.infoLabel.text = model.neighborhoodInfo.schoolConsult.text;
+            [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(26 + self.topHeight);
+                make.height.mas_equalTo(24);
+            }];
+            [self.consultView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(26 + self.topHeight);
+                make.height.mas_equalTo(30);
+            }];
+        }else {
+            self.schoolView.hidden = NO;
+            self.consultView.hidden = YES;
+            [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(26 + self.topHeight);
+            }];
+            [self updateSchoolView:model.neighborhoodInfo.schoolDictList];
+        }
     }
 }
 
@@ -256,9 +340,13 @@
     _schoolView = [[UIView alloc] init];
     _schoolView.backgroundColor = [UIColor whiteColor];
 
+    _consultView = [[FHDetailNeighborhoodConsultView alloc] init];
+    _consultView.backgroundColor = [UIColor whiteColor];
+
     [self.contentView addSubview:_schoolView];
     [self.contentView addSubview:_topView];
-    
+    [self.contentView addSubview:_consultView];
+
     [_topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(26);
@@ -266,11 +354,12 @@
     }];
     [_schoolView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-//        make.top.mas_equalTo(self.topView.mas_bottom);
         make.height.mas_equalTo(0);
-//        make.bottom.mas_equalTo(self.bottomView.mas_top);
         make.bottom.mas_equalTo(-20);
-
+    }];
+    [_consultView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(0);
     }];
 }
 
