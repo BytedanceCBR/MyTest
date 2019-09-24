@@ -27,7 +27,8 @@ typedef NS_ENUM(NSUInteger, FHFeedOperationWordType) {
 @property(nonatomic,assign)BOOL isSelected;
 //是否隐藏，默认是显示
 @property(nonatomic,assign)BOOL isHidden;
-@property (nonatomic, readonly) FHFeedOperationWordType type;
+@property(nonatomic, readonly) FHFeedOperationWordType type;
+@property(nonatomic, copy) NSString *serverType;
 
 - (instancetype)initWithDict:(NSDictionary *)dict;
 

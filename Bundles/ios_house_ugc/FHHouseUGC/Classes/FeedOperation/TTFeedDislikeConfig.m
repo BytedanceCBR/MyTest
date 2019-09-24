@@ -60,6 +60,7 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
         }
         
         dic[@"id"] = [self getTypeString:permissionModel.id];
+        dic[@"serverType"] = permissionModel.id;
         
         [operationList addObject:dic];
     }
@@ -71,10 +72,12 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
                               @"id": @"1",
                               @"title": @"举报",
                               @"subTitle": @"广告、低俗、重复、过时",
+                              @"serverType":@"report"
                               },
                           @{
                               @"id": @"2",
-                              @"title": @"删除"
+                              @"title": @"删除",
+                              @"serverType":@"delete"
                               }
                           ].mutableCopy;
 
@@ -98,7 +101,7 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
         }
         
         dic[@"id"] = [self getTypeString:permissionModel.id];
-        
+        dic[@"serverType"] = permissionModel.id;
         [operationList addObject:dic];
     }
 

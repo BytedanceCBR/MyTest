@@ -49,6 +49,10 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
         // 发帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
+        // 置顶或取消置顶成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postTopSuccess:) name:kFHUGCTopPostNotification object:nil];
+        // 加精或取消加精成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postGoodSuccess:) name:kFHUGCGoodPostNotification object:nil];
     }
     
     return self;
@@ -417,6 +421,23 @@
     }
 }
 
+- (void)postTopSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        BOOL isTop = [userInfo[@"isTop"] boolValue];
+        [self topCell:cellModel isTop:isTop];
+    }
+}
+
+- (void)postGoodSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        [self refreshCell:cellModel];
+    }
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -680,6 +701,39 @@
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
     }
     self.needRefreshCell = NO;
+}
+
+- (void)topCell:(FHFeedUGCCellModel *)cellModel isTop:(BOOL)isTop {
+    NSInteger row = [self getCellIndex:cellModel];
+    if(row < self.dataList.count && row >= 0){
+        [self.dataList removeObjectAtIndex:row];
+        if(isTop){
+            [self.dataList insertObject:cellModel atIndex:0];
+        }else{
+            if(self.dataList.count == 0){
+                [self.dataList insertObject:cellModel atIndex:0];
+            }else{
+                for (NSInteger i = 0; i < self.dataList.count; i++) {
+                    FHFeedUGCCellModel *item = self.dataList[i];
+                    if(!item.isStick || (item.isStick && (item.stickStyle != FHFeedContentStickStyleTop && item.stickStyle != FHFeedContentStickStyleTopAndGood))){
+                        //找到第一个不是置顶的cell
+                        [self.dataList insertObject:cellModel atIndex:i];
+                        break;
+                    }
+                }
+            }
+        }
+        [self.tableView reloadData];
+    }
+}
+
+- (void)refreshCell:(FHFeedUGCCellModel *)cellModel {
+    NSInteger row = [self getCellIndex:cellModel];
+    if(row < self.dataList.count && row >= 0){
+        [self.dataList replaceObjectAtIndex:row withObject:cellModel];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath]  withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 #pragma mark - FHUGCBaseCellDelegate

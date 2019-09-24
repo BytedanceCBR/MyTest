@@ -18,6 +18,7 @@
         self.title = dict[@"title"];
         self.subTitle = dict[@"subTitle"];
         self.items = dict[@"items"];
+        self.serverType = dict[@"serverType"];
     }
     return self;
 }
