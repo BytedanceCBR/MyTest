@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMainListTopView : UIView
 
--(instancetype)initWithBannerView:(UIView *)bannerView filterView:(UIView *)filterView;
+-(instancetype)initWithBannerView:(UIView *)bannerView filterView:(UIView *)filterView filterTagsView:(UIView *)filterTagsView;
 
 -(CGFloat)showNotify:(NSString *)message willCompletion:(void (^)(void))willCompletion;
 

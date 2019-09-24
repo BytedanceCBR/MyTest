@@ -58,6 +58,7 @@
 #import "FHHouseOpenURLUtil.h"
 #import "FHEnvContext.h"
 #import "FHMessageManager.h"
+#import "FHMainOldTopTagsView.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -72,6 +73,7 @@
 #define ICON_HEADER_HEIGHT 115
 #define RENT_BANNER_HEIGHT 102
 #define OLD_ICON_HEADER_HEIGHT 80
+#define kFilterTagsViewHeight 58
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -125,6 +127,8 @@ extern NSString *const INSTANT_DATA_KEY;
         if (_mainListPage && _houseType == FHHouseTypeRentHouse) {
             self.tracerModel.originFrom = @"renting";
         }
+        
+        [self setupTopTagsView];
         
         _isFirstLoad = YES;
         _canChangeHouseSearchDic = YES;
@@ -203,6 +207,14 @@ extern NSString *const INSTANT_DATA_KEY;
         }
     }
     
+}
+
+- (void)setupTopTagsView {
+    // add by zyk 是否满足实验
+    if (self.houseType == FHHouseTypeSecondHandHouse && self.mainListPage) {
+        self.topTagsView = [[FHMainOldTopTagsView alloc] init];
+        self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterTagsViewHeight);
+    }
 }
 
 -(NSString *)originFrom

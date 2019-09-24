@@ -135,7 +135,7 @@
     
     [_viewModel addNotiWithNaviBar:self.navbar];
     
-    _topView = [[FHMainListTopView alloc] initWithBannerView:self.viewModel.topBannerView filterView:self.viewModel.filterPanel];
+    _topView = [[FHMainListTopView alloc] initWithBannerView:self.viewModel.topBannerView filterView:self.viewModel.filterPanel filterTagsView:self.viewModel.topTagsView];
     
     UIEdgeInsets insets = self.tableView.contentInset;
     insets.top = CGRectGetHeight(_topView.bounds);
@@ -157,7 +157,7 @@
     _viewModel.topContainerView = _topContainerView;
     _viewModel.topView = self.topView;
     
-    [self.containerView addSubview:self.viewModel.filterBgControl];
+    [self.view addSubview:self.viewModel.filterBgControl];
     self.viewModel.filterBgControl.hidden = YES;
     
     [self.view bringSubviewToFront:_navbar];
@@ -205,7 +205,7 @@
     
     [self.viewModel.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.viewModel.filterPanel.height);
+        make.top.mas_equalTo(self.navbar.mas_bottom).offset(self.viewModel.filterPanel.height);
     }];
     
     [self.errorView mas_makeConstraints:^(MASConstraintMaker *make) {

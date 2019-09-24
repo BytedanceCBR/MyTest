@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) UIView *filterPanel;
 @property(nonatomic , strong) UIView *filterBgControl;
 @property(nonatomic , strong) UIView *topBannerView;
+@property(nonatomic , strong) UIView *topTagsView;
 
 @property(nonatomic , strong) FHFakeInputNavbar *navbar;
 @property(nonatomic , strong) FHErrorView *errorMaskView;

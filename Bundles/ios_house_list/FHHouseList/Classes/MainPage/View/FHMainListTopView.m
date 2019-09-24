@@ -17,19 +17,22 @@
 
 @property(nonatomic , strong) UIView *bannerView;
 @property(nonatomic , strong) UIView *filterBarView;
+@property(nonatomic , strong) UIView *filterTagsView;
 @property(nonatomic , strong) UIView *bottomLine;
-@property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
+@property(nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
+@property(nonatomic , strong) UIView       *theBottomView;
 
 @end
 
 @implementation FHMainListTopView
 
--(instancetype)initWithBannerView:(UIView *)bannerView filterView:(UIView *)filterView
+-(instancetype)initWithBannerView:(UIView *)bannerView filterView:(UIView *)filterView filterTagsView:(UIView *)filterTagsView 
 {
     self = [super initWithFrame:CGRectZero];
     if (self) {
         self.bannerView = bannerView;
         self.filterBarView = filterView;
+        self.filterTagsView = filterTagsView;
         
         CGFloat width = SCREEN_WIDTH;
         
@@ -38,20 +41,31 @@
         top = bannerView.bottom;
         filterView.top = bannerView.bottom;
         top = filterView.bottom;
+        // 目前只有二手房大类页有tags标签，而且要做实验-setting控制
+        if (filterTagsView) {
+            filterTagsView.top = filterView.bottom;
+            top = filterTagsView.bottom;
+        }
         self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectMake(0, top, width, NOTIFY_HEIGHT)];
         _bottomLine = [[UIView alloc]initWithFrame:CGRectMake(0, top - ONE_PIXEL, filterView.width - 2*HOR_MARGIN, ONE_PIXEL)];
         _bottomLine.backgroundColor = [UIColor themeGray6];
         [self addSubview:_notifyBarView];
         if (bannerView) {
             [self addSubview:bannerView];
+            self.theBottomView = bannerView;
         }
         if (filterView) {
             [self addSubview:filterView];
-        }        
+            self.theBottomView = filterView;
+        }
+        if (filterTagsView) {
+            [self addSubview:filterTagsView];
+            self.theBottomView = filterTagsView;
+        }
         [self addSubview:_bottomLine];
         
         _notifyBarView.hidden = YES;
-        self.frame = CGRectMake(0, 0, width, filterView.bottom);
+        self.frame = CGRectMake(0, 0, width, self.theBottomView.bottom);
     }
     return self;
 }
@@ -77,7 +91,7 @@
 
 -(CGFloat)filterBottom
 {
-    return self.filterBarView.bottom;
+    return self.theBottomView.bottom;
 }
 
 //-(void)setFrame:(CGRect)frame
@@ -93,6 +107,12 @@
     top = _bannerView.bottom;
     _filterBarView.top = _bannerView.bottom;
     top = _filterBarView.bottom;
+    self.theBottomView = _filterBarView;
+    if (self.filterTagsView) {
+        self.filterTagsView.top = self.filterBarView.bottom;
+        top = self.filterTagsView.bottom;
+        self.theBottomView = self.filterTagsView;
+    }
 
     CGRect notifyBarFrame = _notifyBarView.frame;
     notifyBarFrame.origin.y = top;
@@ -103,7 +123,7 @@
     _bottomLine.frame = bottomFrame;
     
     CGRect frame = self.frame;
-    frame.size.height = _filterBarView.bottom;
+    frame.size.height = self.theBottomView.bottom;
     self.frame = frame;
     return frame;
 }
@@ -111,18 +131,10 @@
 -(void)willMoveToSuperview:(UIView *)newSuperview
 {
     if ([newSuperview isKindOfClass:[UIScrollView class]]) {
-        self.bottomLine.frame = CGRectMake(HOR_MARGIN, self.filterBarView.bottom - ONE_PIXEL, self.width - 2*HOR_MARGIN, ONE_PIXEL);
+        self.bottomLine.frame = CGRectMake(HOR_MARGIN, self.theBottomView.bottom - ONE_PIXEL, self.width - 2*HOR_MARGIN, ONE_PIXEL);
     }else{
-        self.bottomLine.frame = CGRectMake(0, self.filterBarView.bottom - ONE_PIXEL, self.width , ONE_PIXEL);
+        self.bottomLine.frame = CGRectMake(0, self.theBottomView.bottom - ONE_PIXEL, self.width , ONE_PIXEL);
     }
 }
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 @end
