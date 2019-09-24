@@ -62,6 +62,8 @@
 - (void)initViews {
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
+    _contentLabel.layer.masksToBounds = YES;
+    _contentLabel.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_contentLabel];
     
     self.imageViewContainer = [[UIView alloc] init];
