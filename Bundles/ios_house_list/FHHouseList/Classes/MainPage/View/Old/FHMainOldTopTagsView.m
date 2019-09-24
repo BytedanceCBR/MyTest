@@ -102,6 +102,7 @@
     }
 }
 
+// 更新Tags UI
 - (void)setLastConditionDic:(NSMutableDictionary *)lastConditionDic {
     _lastConditionDic = lastConditionDic;
     NSArray *subVs = [self subviews];
@@ -133,7 +134,22 @@
     if (![condition isEqualToString:_condition]) {
         _condition = condition;
         if (condition.length > 0) {
-            
+            // 重新计算condition
+            NSArray *subVs = [self subviews];
+            NSMutableArray *tagsData = [NSMutableArray new];
+            [subVs enumerateObjectsUsingBlock:^(FHMainOldTagsView*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj isKindOfClass:[FHMainOldTagsView class]]) {
+                    NSString *tagId = obj.optionData.value;
+                    if (tagId.length > 0) {
+                        NSString *findId = [NSString stringWithFormat:@"=%@",tagId];
+                        if ([condition containsString:findId]) {
+                            [tagsData addObject:tagId];
+                        }
+                    }
+                }
+            }];
+            _lastConditionDic[@"tags%5B%5D"] = tagsData;
+            self.lastConditionDic = self.lastConditionDic;
         }
     }
 }

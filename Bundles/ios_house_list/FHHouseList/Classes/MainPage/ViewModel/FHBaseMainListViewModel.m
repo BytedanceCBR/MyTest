@@ -886,8 +886,7 @@ extern NSString *const INSTANT_DATA_KEY;
     [self.houseFilterBridge setFilterConditions:paramObj.queryParams];
     
     if (self.topTagsView) {
-        FHMainOldTopTagsView *tagsView = self.topTagsView;
-        tagsView.lastConditionDic = [NSMutableDictionary dictionaryWithDictionary:paramObj.queryParams];
+        self.topTagsView.lastConditionDic = [NSMutableDictionary dictionaryWithDictionary:paramObj.queryParams];
     }
 }
 
@@ -1142,6 +1141,9 @@ extern NSString *const INSTANT_DATA_KEY;
     self.fromRecommend = NO;
 
     self.conditionFilter = condition;
+    if (self.topTagsView) {
+        self.topTagsView.condition = condition;
+    }
     
     [self.filterOpenUrlMdodel overwriteFliter:condition];
     [self.tableView triggerPullDown];
