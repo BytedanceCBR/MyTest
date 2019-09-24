@@ -456,4 +456,18 @@
     }];
 }
 
++ (TTHttpTask *)requestUpdateUGCNoticeWithParam:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull))completion {
+    
+    NSString *queryPath = @"/f100/ugc/social_group/announcement";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    [paramDic addEntriesFromDictionary:params];
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+        if (completion) {
+            completion(error);
+        }
+    }];
+}
 @end

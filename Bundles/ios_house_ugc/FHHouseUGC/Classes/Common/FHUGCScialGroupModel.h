@@ -15,6 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL hasOperation;
 @end
 
+typedef NS_ENUM(NSUInteger, UserAuthType) {
+    UserAuthTypeNormal = 0,
+    UserAuthTypeAdmin = 1,
+    UserAuthTypeSuperAdmin = 2,
+};
+
 @interface FHUGCScialGroupDataModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *announcement;
@@ -28,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
 @property (nonatomic, copy , nullable) NSString *hasFollow;
 @property (nonatomic, strong, nullable) FHUGCSocialGroupOperationModel *operation;
+@property (nonatomic, assign) UserAuthType userAuth;
 @property(nonatomic, strong, nullable) NSArray <FHUGCConfigDataPermissionModel> *permission;
 @property (nonatomic, copy , nullable) NSDictionary *logPb;
 

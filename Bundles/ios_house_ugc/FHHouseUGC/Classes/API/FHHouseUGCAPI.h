@@ -67,6 +67,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 获取话题Feed列表
 + (TTHttpTask *)requestTopicList:(NSString *)query_id tab_id:(NSString *)tab_id categoryName:(NSString *)category offset:(NSInteger)offset count:(NSInteger)count appExtraParams:(NSString *)appExtraParams completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
 
+// 管理员修改公告信息及通知用户
++ (TTHttpTask *)requestUpdateUGCNoticeWithParam:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull))completion;
 @end
 
 NS_ASSUME_NONNULL_END
