@@ -51,6 +51,8 @@
     [_positionView addSubview:_position];
     
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray4]];
+    _descLabel.layer.masksToBounds = YES;
+    _descLabel.backgroundColor = [UIColor whiteColor];
     [self addSubview:_descLabel];
     
     self.moreBtn = [[UIButton alloc] init];

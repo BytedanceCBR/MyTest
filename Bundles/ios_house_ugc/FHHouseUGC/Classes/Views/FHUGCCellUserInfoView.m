@@ -85,6 +85,8 @@
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
     label.textColor = textColor;
+    label.layer.masksToBounds = YES;
+    label.backgroundColor = [UIColor whiteColor];
     return label;
 }
 
