@@ -750,6 +750,7 @@ extern NSString *const INSTANT_DATA_KEY;
 }
 
 - (void)showMessageList {
+    [self.houseFilterViewModel closeConditionFilterPanel];
     // 二手房大类页
     if (_mainListPage && _houseType == FHHouseTypeSecondHandHouse) {
         // add by zyk 记得修改埋点数据
@@ -1429,7 +1430,6 @@ extern NSString *const INSTANT_DATA_KEY;
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    NSLog(@"---------:%lf,,%lf,,%lf",scrollView.contentOffset.y,scrollView.contentOffset.y + scrollView.contentInset.top,[self.topView filterTop]);
     if (self.showFilter) {
         //正在展示筛选器
         return;
@@ -1517,7 +1517,9 @@ extern NSString *const INSTANT_DATA_KEY;
             [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
         } else {
             if (self.tableView.contentOffset.y >= -[self.topView filterBottom]) {
-                if (self.tableView.contentOffset.y <= ([self.topView filterTop] - topViewHeight)) {
+                if (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight - [self.topView notifyHeight])) {
+                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + [self.topView notifyHeight]);
+                } else {
                     self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
                 }
             }

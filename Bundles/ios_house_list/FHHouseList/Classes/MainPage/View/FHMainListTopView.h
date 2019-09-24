@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(CGFloat)filterBottom;
 
+-(CGFloat)notifyHeight;
+
 -(CGRect)relayout;
 
 @end
