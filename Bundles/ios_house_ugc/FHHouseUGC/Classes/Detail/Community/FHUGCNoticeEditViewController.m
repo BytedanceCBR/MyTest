@@ -43,6 +43,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, copy)   NSString              *content;
 @property (nonatomic, strong) TTUGCTextViewMediator *textViewMediator;
 @property (nonatomic, copy) void (^callback)(NSString *);
+@property (nonatomic, assign) BOOL isReadOnly;
 @property (nonatomic, assign) BOOL isSystemKeyboardVisible;
 @property (nonatomic, assign) CGFloat systemKeyboardHeight;
 @end
@@ -67,9 +68,10 @@ typedef enum : NSUInteger {
 
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     if (self = [super initWithRouteParamObj:paramObj]) {
+        self.isReadOnly = [paramObj.allParams[@"isReadOnly"] boolValue];
         self.content = paramObj.allParams[@"content"];
         self.callback = paramObj.allParams[@"callback"];
-        self.title = @"编辑公告";
+        self.title = self.isReadOnly ? @"小区圈公告" : @"编辑公告";
     }
     return self;
 }
@@ -124,9 +126,9 @@ typedef enum : NSUInteger {
     
     CGFloat navbarHeight = [self navbarHeight];
     CGFloat toolbarHeight = [self toolbarHeightWithKeyboardShow:NO];
+    CGRect textViewFrame = CGRectMake(TEXT_VIEW_LEFT_PADDING, navbarHeight + VGAP_BETWEEN_NAV_AND_TEXT_VIEW, self.view.bounds.size.width - TEXT_VIEW_LEFT_PADDING - TEXT_VIEW_RIGHT_PADDING, self.view.bounds.size.height - navbarHeight - toolbarHeight);
     
     // textView
-    CGRect textViewFrame = CGRectMake(TEXT_VIEW_LEFT_PADDING, navbarHeight + VGAP_BETWEEN_NAV_AND_TEXT_VIEW, self.view.bounds.size.width - TEXT_VIEW_LEFT_PADDING - TEXT_VIEW_RIGHT_PADDING, self.view.bounds.size.height - navbarHeight - toolbarHeight);
     self.textView = [[TTUGCTextView alloc] initWithFrame: textViewFrame];;
     self.textView.keyboardAppearance = UIKeyboardAppearanceLight;
     self.textView.isBanAt = YES;
@@ -143,14 +145,39 @@ typedef enum : NSUInteger {
         NSFontAttributeName: [UIFont themeFontRegular:TEXT_VIEW_FONT_SIZE],
         NSParagraphStyleAttributeName: paragraphStyle
     };
-    
     self.textView.internalGrowingTextView.tintColor = [UIColor themeRed1];
-    self.textView.text = self.content;
-    
     [self.view addSubview:self.textView];
-    [self.textView becomeFirstResponder];
     
+    // 小区圈公告，只读模式
+    if(self.isReadOnly) {
+        [self configContentForReadOnly];
+    }
+    // 小区圈公告，编辑模式
+    else {
+        [self configContentForEdit];
+    }
+    
+    // 所有textView配置完成后再设置内容
+    self.textView.text = self.content;
+}
+
+- (void)configContentForReadOnly {
+    // 使内部growTextView的大小和外部一致
+    CGRect textViewFrame = self.textView.frame;
+    self.textView.internalGrowingTextView.maxHeight = textViewFrame.size.height;
+    CGRect interTextViewFrame = self.textView.internalGrowingTextView.frame;
+    CGFloat interTextViewContentHeight = [self.textView.internalGrowingTextView measureHeight];
+    interTextViewFrame.size.height = (interTextViewContentHeight < textViewFrame.size.height) ? interTextViewContentHeight : textViewFrame.size.height;
+    self.textView.internalGrowingTextView.frame = interTextViewFrame;
+    self.textView.internalGrowingTextView.editable = NO;
+    self.completeButton.hidden = YES;
+}
+
+- (void)configContentForEdit {
+    [self.textView addGestureRecognizer:[self toggleKeyboardTapGesture]];
+    [self.textView becomeFirstResponder];
     // toolbar
+    CGFloat toolbarHeight = [self toolbarHeightWithKeyboardShow:NO];
     CGRect toolbarFrame = CGRectMake(0, self.view.bounds.size.height - toolbarHeight, self.view.bounds.size.width, toolbarHeight);
     self.toolbar = [[TTUGCToolbar alloc] initWithFrame:toolbarFrame];
     self.toolbar.emojiInputView.source = @"community_notice_edit_detail";
@@ -168,6 +195,7 @@ typedef enum : NSUInteger {
     self.wordCountLabel.textAlignment = NSTextAlignmentRight;
     self.wordCountLabel.attributedText = [self wordCountAttributeStringWithTextCount:self.content.length];
     self.wordCountLabel.userInteractionEnabled = YES;
+    [self.wordCountLabel addGestureRecognizer:[self toggleKeyboardTapGesture]];
     [self.toolbar addSubview:self.wordCountLabel];
     
     self.textViewMediator.textView = self.textView;
@@ -368,6 +396,19 @@ typedef enum : NSUInteger {
         _textViewMediator.showCanBeCreatedHashtag = NO;
     }
     return _textViewMediator;
+}
+
+- (UITapGestureRecognizer *)toggleKeyboardTapGesture {
+    return [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleKeyboard:)];
+}
+
+- (void)toggleKeyboard: (UITapGestureRecognizer*)tap {
+    if(self.isSystemKeyboardVisible) {
+        [self.textView resignFirstResponder];
+    }
+    else {
+        [self.textView becomeFirstResponder];
+    }
 }
 
 // MARK: 埋点

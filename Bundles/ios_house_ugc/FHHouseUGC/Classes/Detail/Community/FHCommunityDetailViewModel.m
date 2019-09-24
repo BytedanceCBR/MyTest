@@ -561,12 +561,27 @@
     BOOL isShowPublications = !isEmptyString(data.announcement);
     self.headerView.gotoPublicationsDetailBlock = nil;
     BOOL hasDetailBtn = NO;
+    self.headerView.gotoPublicationsContentDetailBlock = ^{
+        // 跳转公告详情页
+        NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
+        urlComponents.scheme = @"sslocal";
+        urlComponents.host = @"ugc_notice_edit";
+        
+        NSMutableDictionary *infoDict = @{}.mutableCopy;
+        infoDict[@"content"] = data.announcement;
+        infoDict[@"isReadOnly"] = @(YES);
+        NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
+        tracer[UT_ENTER_FROM] = @"community_group_detail";
+        infoDict[@"tracer"] = tracer;
+        
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+        [[TTRoute sharedRoute] openURLByViewController:urlComponents.URL userInfo:userInfo];
+    };
     // 管理员
     if(isAdmin) {
         hasDetailBtn = YES;
         isShowPublications = YES;
         self.headerView.publicationsDetailViewTitleLabel.text = @"编辑公告";
-        self.headerView.publicationsContentLabel.numberOfLines = 2;
         self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:(data.announcement.length > 0)?data.announcement: @"该小区圈暂无公告，管理员可点击编辑"];
 
         self.headerView.gotoPublicationsDetailBlock = ^{
@@ -601,7 +616,6 @@
     else {
         self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:data.announcement];
         self.headerView.publicationsDetailViewTitleLabel.text = @"点击查看";
-        self.headerView.publicationsContentLabel.numberOfLines = 3;
         
         // 有公告URL链接时优先进入链接页面
         if(data.announcementUrl.length > 0) {
