@@ -218,8 +218,24 @@ extern NSString *const INSTANT_DATA_KEY;
         self.topTagsView.itemClickBlk = ^{
             [weakSelf.houseFilterBridge setFilterConditions:weakSelf.topTagsView.lastConditionDic];
             [weakSelf.houseFilterViewModel trigerConditionChanged];
+            [weakSelf addTagsViewClick];
         };
     }
+}
+
+- (void)addTagsViewClick {
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[UT_PAGE_TYPE] = [self categoryName] ? : @"be_null";
+    param[UT_ELEMENT_TYPE] = @"select_options";
+    param[UT_SEARCH_ID] = self.searchId ? : @"be_null";
+    param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ? : @"be_null";
+    param[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
+    // add by zyk 这个点需要再确认 click_position
+    /*click_position
+     天眼验真”：‘verity_real‘；；新上房源‘：’new_sale_house'；‘降价’：‘reduce_price’；‘近地铁’：‘near_subway‘；’南北通透‘：’north_south'
+     */
+    param[@"click_position"] = @"verity_real";
+    TRACK_EVENT(@"click_options", param);
 }
 
 -(NSString *)originFrom
@@ -758,18 +774,16 @@ extern NSString *const INSTANT_DATA_KEY;
     // 二手房大类页
     if (_mainListPage && _houseType == FHHouseTypeSecondHandHouse) {
         // add by zyk 记得修改埋点数据
-        NSMutableDictionary *params = [NSMutableDictionary dictionary];
-        //    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
-        //    [params setValue:[_tracerDict objectForKey:@"page_type"]  forKey:@"page_type"];
-        //    [params setValue:[_tracerDict objectForKey:@"enter_from"]  forKey:@"enter_from"];
-        //    [params setValue:[_tracerDict objectForKey:@"rank"] forKey:@"rank"];
-        //    [params setValue:@"left_pic" forKey:@"card_type"];
-        //    [params setValue:[_tracerDict objectForKey:@"element_from"] forKey:@"element_from"];
-        //    [params setValue:[_tracerDict objectForKey:@"origin_from"] forKey:@"origin_from"];
-        //    [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
-        //    [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
-        //    [TTTracker eventV3:@"click_im_message" params:params];
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[UT_PAGE_TYPE] = [self categoryName] ? : @"be_null";
+        param[UT_ENTER_FROM] = self.tracerModel.enterFrom ? : @"be_null";
+        param[UT_ENTER_TYPE] = self.tracerModel.enterType ? : @"be_null";
+        param[UT_ELEMENT_FROM] = self.tracerModel.elementFrom ? : @"be_null";
+        param[UT_SEARCH_ID] = self.searchId ? : @"be_null";
+        param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ? : @"be_null";
+        param[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
         
+        TRACK_EVENT(@"click_im_message", param);
         
         NSString *messageSchema = @"sslocal://message_conversation_list";
         NSURL *openUrl = [NSURL URLWithString:messageSchema];
