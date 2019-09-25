@@ -166,8 +166,6 @@
     self.publicationsContentLabel.font = [UIFont themeFontRegular:12];
     self.publicationsContentLabel.textColor = [UIColor themeGray1];
     self.publicationsContentLabel.numberOfLines = 2;
-    self.publicationsContentLabel.userInteractionEnabled = YES;
-    [self.publicationsContentLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showPublicationContentDetail:)]];
     [self.publicationsContentLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     
     [self.publicationsContainer addSubview:self.publicationsContentLabel];
@@ -302,12 +300,6 @@
 -(void)gotoOperationDetail:(UITapGestureRecognizer *)tap {
     if(self.gotoOperationBlock) {
         self.gotoOperationBlock();
-    }
-}
-
--(void)showPublicationContentDetail:(UITapGestureRecognizer *)tap {
-    if(self.gotoPublicationsContentDetailBlock) {
-        self.gotoPublicationsContentDetailBlock();
     }
 }
 @end
