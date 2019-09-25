@@ -540,28 +540,10 @@
     // 是否显示公告区
     BOOL isShowPublications = !isEmptyString(data.announcement);
     self.headerView.gotoPublicationsDetailBlock = nil;
-    BOOL hasDetailBtn = NO;
-    self.headerView.gotoPublicationsContentDetailBlock = ^{
-        // 跳转公告详情页
-        NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
-        urlComponents.scheme = @"sslocal";
-        urlComponents.host = @"ugc_notice_edit";
-        
-        NSMutableDictionary *infoDict = @{}.mutableCopy;
-        infoDict[@"socialGroupId"] = self.data.socialGroupId;
-        infoDict[@"content"] = data.announcement;
-        infoDict[@"isReadOnly"] = @(YES);
-        
-        NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
-        tracer[UT_ENTER_FROM] = @"community_group_detail";
-        infoDict[@"tracer"] = tracer;
-        
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-        [[TTRoute sharedRoute] openURLByViewController:urlComponents.URL userInfo:userInfo];
-    };
+    BOOL hasDetailBtn = YES;
+
     // 管理员
     if(isAdmin) {
-        hasDetailBtn = YES;
         isShowPublications = YES;
         self.headerView.publicationsDetailViewTitleLabel.text = @"编辑公告";
         self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:(data.announcement.length > 0)?data.announcement: @"该小区圈暂无公告，管理员可点击编辑"];
@@ -601,32 +583,31 @@
     else {
         self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:data.announcement];
         self.headerView.publicationsDetailViewTitleLabel.text = @"点击查看";
-        
-        // 有公告URL链接时优先进入链接页面
-        if(data.announcementUrl.length > 0) {
-            hasDetailBtn = YES;
-            self.headerView.gotoPublicationsDetailBlock = ^{
-                NSURLComponents *urlComponents = [NSURLComponents new];
-                urlComponents.scheme = @"fschema";
-                urlComponents.host = @"webview";
-                urlComponents.queryItems = @[
-                                             [[NSURLQueryItem alloc] initWithName:@"url" value: data.announcementUrl]
-                                             ];
-                NSURL *url = urlComponents.URL;
-                [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
-                
-                NSMutableDictionary *param = [NSMutableDictionary dictionary];
-                param[UT_ELEMENT_TYPE] = @"community_group_notice";
-                param[UT_PAGE_TYPE] = @"community_group_detail";
-                param[@"click_position"] = @"community_notice_more";
-                param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
-                TRACK_EVENT(@"click_community_notice_more", param);
-            };
-        }
-        else {
-            hasDetailBtn = NO;
-            self.headerView.gotoPublicationsDetailBlock = nil;
-        }
+        self.headerView.gotoPublicationsDetailBlock = ^{
+            // 跳转只读模式的公告详情页
+            NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
+            urlComponents.scheme = @"sslocal";
+            urlComponents.host = @"ugc_notice_edit";
+            
+            NSMutableDictionary *infoDict = @{}.mutableCopy;
+            infoDict[@"socialGroupId"] = self.data.socialGroupId;
+            infoDict[@"content"] = data.announcement;
+            infoDict[@"isReadOnly"] = @(YES);
+            
+            NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
+            tracer[UT_ENTER_FROM] = @"community_group_detail";
+            infoDict[@"tracer"] = tracer;
+            
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+            [[TTRoute sharedRoute] openURLByViewController:urlComponents.URL userInfo:userInfo];
+            
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            param[UT_ELEMENT_TYPE] = @"community_group_notice";
+            param[UT_PAGE_TYPE] = @"community_group_detail";
+            param[@"click_position"] = @"community_notice_more";
+            param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+            TRACK_EVENT(@"click_community_notice_more", param);
+        };
     }
     
     [self.headerView updatePublicationsInfo: isShowPublications
