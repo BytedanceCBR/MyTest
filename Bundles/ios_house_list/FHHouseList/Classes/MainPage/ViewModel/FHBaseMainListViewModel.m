@@ -1316,7 +1316,12 @@ extern NSString *const INSTANT_DATA_KEY;
             }
             if (cellModel) {
                 CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseSmallItemCell recommendReasonHeight] : 0; //显示榜单推荐
-                [scell refreshTopMargin: 10];
+                if (self.topTagsView) {
+                    [scell refreshTopMargin: 0];
+                } else {
+                    [scell refreshTopMargin: 10];
+                }
+                
                 [scell updateWithHouseCellModel:cellModel];
             }
             
