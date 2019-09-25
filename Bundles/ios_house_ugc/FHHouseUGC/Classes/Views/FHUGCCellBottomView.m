@@ -77,6 +77,7 @@
     [_positionView addSubview:_position];
     
     self.commentBtn = [[UIButton alloc] init];
+    _commentBtn.opaque = YES;
     _commentBtn.imageView.contentMode = UIViewContentModeCenter;
     [_commentBtn setImage:ICON_FONT_IMG(20, @"\U0000e699", nil) forState:UIControlStateNormal];// @"fh_ugc_comment"
     [_commentBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
