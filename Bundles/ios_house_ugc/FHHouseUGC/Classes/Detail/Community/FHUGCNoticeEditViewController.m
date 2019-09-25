@@ -487,6 +487,7 @@ typedef enum : NSUInteger {
         [self animateTextViewWithDuration:0.25 keyboardHeight:self.systemKeyboardHeight];
     }
 }
+
 - (void)toolbarDidClickKeyboardButton:(BOOL)switchToKeyboardInput {
     if(switchToKeyboardInput) {
         // nothing for now
