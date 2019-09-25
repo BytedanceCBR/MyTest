@@ -382,7 +382,7 @@
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(0);
         layout.height = YGPointValue(22);
-        layout.maxWidth = YGPointValue([self contentMaxWidth] - 20);
+        layout.maxWidth = YGPointValue([self contentMaxWidth]);
     }];
     
     _tagTitleLabel.hidden = YES;
@@ -487,7 +487,6 @@
 
 -(void)updateHomeHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel andType:(FHHouseType)houseType
 {
-    self.tagTitleLabel.hidden = YES;
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
     self.mainTitleLabel.text = commonModel.displayTitle;
     self.subTitleLabel.text = commonModel.displayDescription;
@@ -552,7 +551,6 @@
     //    }else{
     //        self.closeBtn.hidden = YES;
     //    }
-    self.tagTitleLabel.hidden = YES;
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
     self.mainTitleLabel.text = commonModel.displayTitle;
     self.subTitleLabel.text = commonModel.displayDescription;
@@ -672,7 +670,6 @@
 
 - (void)updateWithNeighborModel:(FHHouseNeighborDataItemsModel *)model
 {
-    self.tagTitleLabel.hidden = YES;
     self.houseVideoImageView.hidden = YES;
     FHImageModel *imageModel = model.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
@@ -696,7 +693,6 @@
 
 #pragma mark 新房
 -(void)updateWithNewHouseModel:(FHNewHouseItemModel *)model {
-    self.tagTitleLabel.hidden = YES;
     self.houseVideoImageView.hidden = YES;
     FHImageModel *imageModel = model.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
@@ -779,10 +775,23 @@
     self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = model.displaySubtitle;
 
-    // 根据是否显示 降 榜 等标签来更新布局
-    [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.maxWidth = YGPointValue([self contentMaxWidth]);
-    }];
+    BOOL imageTagHidden = self.imageTagLabelBgView.hidden;
+    if (model.houseTitleTag) {
+        self.imageTagLabelBgView.hidden = YES;
+        self.tagTitleLabel.hidden = NO;
+        [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.maxWidth = YGPointValue([self contentMaxWidth] - 20);
+        }];
+        self.tagTitleLabel.text = model.houseTitleTag.text;
+        self.tagTitleLabel.backgroundColor = [UIColor colorWithHexString:model.houseTitleTag.backgroundColor];
+        self.tagTitleLabel.textColor = [UIColor colorWithHexString:model.houseTitleTag.textColor];
+    } else {
+        self.imageTagLabelBgView.hidden = imageTagHidden;
+        self.tagTitleLabel.hidden = YES;
+        [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.maxWidth = YGPointValue([self contentMaxWidth]);
+        }];
+    }
     [self.mainTitleLabel.yoga markDirty];
     
     if (model.externalInfo && model.externalInfo.isExternalSite.boolValue) {
@@ -832,7 +841,6 @@
 #pragma mark 租房
 -(void)updateWithRentHouseModel:(FHHouseRentDataItemsModel *)model
 {
-    self.tagTitleLabel.hidden = YES;
     self.houseVideoImageView.hidden = YES;
     self.mainTitleLabel.text = model.title;
     self.subTitleLabel.text = model.subtitle;
