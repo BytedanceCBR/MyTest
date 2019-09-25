@@ -94,8 +94,8 @@
     self.backgroundColor = [UIColor whiteColor];
     
     self.titleLabel.font = [UIFont themeFontRegular:12];
-    self.titleLabel.backgroundColor = [UIColor whiteColor];
-    self.titleLabel.layer.masksToBounds = YES;
+//    self.titleLabel.backgroundColor = [UIColor whiteColor];
+//    self.titleLabel.layer.masksToBounds = YES;
     [self setTitle:@"关注" forState:UIControlStateNormal];
     [self setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     
