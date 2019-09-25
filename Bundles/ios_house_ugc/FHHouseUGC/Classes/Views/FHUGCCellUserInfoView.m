@@ -110,7 +110,8 @@
     FHFeedOperationViewModel *viewModel = [[FHFeedOperationViewModel alloc] init];
 
     dislikeView.dislikeTracerBlock = ^{
-        [wself trackClickReport];
+//        [wself trackClickReport];
+        [wself trackClickWithEvent:@"click_report" position:@"feed_report"];
     };
     
     if(self.cellModel){
@@ -163,7 +164,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCReportPostNotification object:nil userInfo:dic];
         
     }else if(view.selectdWord.type == FHFeedOperationWordTypeDelete){
-        [self trackClickDelete];
+        [self trackClickWithEvent:@"click_delete" position:@"feed_delete"];
         //二次弹窗提醒
         [self showAlert:@"是否确认要删除" cancelTitle:@"取消" confirmTitle:@"确定删除" cancelBlock:^{
             [wself trackConfirmDeletePopupClick:YES];
@@ -171,38 +172,53 @@
             [wself trackConfirmDeletePopupClick:NO];
             [wself postDelete];
         }];
-        [self trackConfirmDeletePopupShow];
+        [self trackConfirmPopupShow:@"confirm_delete_popup_show"];
         
     }else if(view.selectdWord.type == FHFeedOperationWordTypeTop){
+        [self trackClickWithEvent:@"click_top_feed" position:@"top_feed"];
         [self showAlert:@"确认要将帖子在对应的小区圈置顶？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
-
+            [wself trackConfirmPopupClickWithEvent:@"confirm_topfeed_popup_click" isCancel:YES];
         } confirmBlock:^{
+            [wself trackConfirmPopupClickWithEvent:@"confirm_topfeed_popup_click" isCancel:NO];
             [wself setOperationTop:YES];
         }];
+        [self trackConfirmPopupShow:@"confirm_topfeed_popup_show"];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeCancelTop){
+        [self trackClickWithEvent:@"click_cancel_topfeed" position:@"cancel_top_feed"];
         [self showAlert:@"确认要将帖子在对应的小区圈取消置顶？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
-            
+            [wself trackConfirmPopupClickWithEvent:@"cancel_topfeed_popup_click" isCancel:YES];
         } confirmBlock:^{
+            [wself trackConfirmPopupClickWithEvent:@"cancel_topfeed_popup_click" isCancel:NO];
             [wself setOperationTop:NO];
         }];
+        [self trackConfirmPopupShow:@"cancel_topfeed_popup_show"];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeGood){
+        [self trackClickWithEvent:@"click_essence_feed" position:@"essence_feed"];
         [self showAlert:@"确认要给帖子在对应的小区圈加精？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
-            
+            [wself trackConfirmPopupClickWithEvent:@"essence_feed_popup_click" isCancel:YES];
         } confirmBlock:^{
+            [wself trackConfirmPopupClickWithEvent:@"essence_feed_popup_click" isCancel:NO];
             [wself setOperationGood:YES];
         }];
+        [self trackConfirmPopupShow:@"essence_feed_popup_show"];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeCancelGood){
+        [self trackClickWithEvent:@"click_cancel_essence" position:@"cancel_essence_feed"];
         [self showAlert:@"确认要给帖子在对应的小区圈取消加精？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
-            
+            [wself trackConfirmPopupClickWithEvent:@"cancel_essence_popup_click" isCancel:YES];
         } confirmBlock:^{
+            [wself trackConfirmPopupClickWithEvent:@"cancel_essence_popup_click" isCancel:NO];
             [wself setOperationGood:NO];
         }];
+        [self trackConfirmPopupShow:@"cancel_essence_popup_show"];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeSelfLook){
+        [self trackClickWithEvent:@"click_own_see" position:@"feed_own_see"];
         [self showAlert:@"确认要将该帖子设置为自见？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
-            
+            [wself trackConfirmPopupClickWithEvent:@"own_see_popup_click" isCancel:YES];
         } confirmBlock:^{
+            [wself trackConfirmPopupClickWithEvent:@"own_see_popup_click" isCancel:NO];
             [wself setOperationSelfLook];
         }];
+        [self trackConfirmPopupShow:@"own_see_popup_show"];
     }
 }
 
@@ -353,22 +369,43 @@
     TRACK_EVENT(@"click_options", dict);
 }
 
-- (void)trackClickReport {
+- (void)trackClickWithEvent:(NSString *)event position:(NSString *)position {
     NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-    dict[@"click_position"] = @"feed_report";
-    TRACK_EVENT(@"click_report", dict);
+    dict[@"click_position"] = position;
+    TRACK_EVENT(event, dict);
 }
 
-- (void)trackClickDelete {
+- (void)trackConfirmPopupShow:(NSString *)event {
     NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-    dict[@"click_position"] = @"feed_delete";
-    TRACK_EVENT(@"click_delete", dict);
+    TRACK_EVENT(event, dict);
 }
 
-- (void)trackConfirmDeletePopupShow {
+- (void)trackConfirmPopupClickWithEvent:(NSString *)event isCancel:(BOOL)isCancel {
     NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-    TRACK_EVENT(@"confirm_delete_popup_show", dict);
+    if(isCancel){
+        dict[@"click_position"] = @"cancel";
+    }else{
+        dict[@"click_position"] = @"confrim";
+    }
+    TRACK_EVENT(event, dict);
 }
+
+//- (void)trackClickReport {
+//    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+//    dict[@"click_position"] = @"feed_report";
+//    TRACK_EVENT(@"click_report", dict);
+//}
+
+//- (void)trackClickDelete {
+//    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+//    dict[@"click_position"] = @"feed_delete";
+//    TRACK_EVENT(@"click_delete", dict);
+//}
+
+//- (void)trackConfirmDeletePopupShow {
+//    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+//    TRACK_EVENT(@"confirm_delete_popup_show", dict);
+//}
 
 - (void)trackConfirmDeletePopupClick:(BOOL)isCancel {
     NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
