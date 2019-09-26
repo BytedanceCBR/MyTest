@@ -211,7 +211,8 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)setupTopTagsView {
     // add by zyk 是否满足实验
-    if (self.houseType == FHHouseTypeSecondHandHouse && self.mainListPage) {
+    BOOL isEnableFilterTag = YES;// 修改此处
+    if (self.houseType == FHHouseTypeSecondHandHouse && self.mainListPage && isEnableFilterTag) {
         self.topTagsView = [[FHMainOldTopTagsView alloc] init];
         self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterTagsViewHeight);
         __weak typeof(self) weakSelf = self;
