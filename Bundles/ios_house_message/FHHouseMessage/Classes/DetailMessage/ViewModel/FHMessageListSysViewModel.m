@@ -177,7 +177,13 @@
         return;
     }
     
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    NSMutableDictionary *infoDic = @{}.mutableCopy;
+    infoDic[TRACER_KEY] = @{
+        UT_ENTER_TYPE: @"click"
+    };
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDic];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
 @end
