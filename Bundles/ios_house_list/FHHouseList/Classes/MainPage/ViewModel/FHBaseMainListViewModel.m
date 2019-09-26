@@ -216,25 +216,34 @@ extern NSString *const INSTANT_DATA_KEY;
         self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterTagsViewHeight);
         __weak typeof(self) weakSelf = self;
         self.topTagsView.itemClickBlk = ^{
+            __block NSString *value_id = nil;
+            NSArray *temp = weakSelf.topTagsView.lastConditionDic[@"tags%5B%5D"];
+            if ([temp isKindOfClass:[NSArray class]] && temp.count > 0) {
+                [temp enumerateObjectsUsingBlock:^(NSString*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if (value_id.length > 0) {
+                        value_id = [NSString stringWithFormat:@"%@,%@",value_id,obj];
+                    } else {
+                        value_id = obj;
+                    }
+                }];
+            } else {
+                value_id = nil;//
+            }
             [weakSelf.houseFilterBridge setFilterConditions:weakSelf.topTagsView.lastConditionDic];
             [weakSelf.houseFilterViewModel trigerConditionChanged];
-            [weakSelf addTagsViewClick];
+            [weakSelf addTagsViewClick:value_id];
         };
     }
 }
 
-- (void)addTagsViewClick {
+- (void)addTagsViewClick:(NSString *)value_id {
     NSMutableDictionary *param = @{}.mutableCopy;
     param[UT_PAGE_TYPE] = [self categoryName] ? : @"be_null";
     param[UT_ELEMENT_TYPE] = @"select_options";
     param[UT_SEARCH_ID] = self.searchId ? : @"be_null";
     param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ? : @"be_null";
     param[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
-    // add by zyk 这个点需要再确认 click_position
-    /*click_position
-     天眼验真”：‘verity_real‘；；新上房源‘：’new_sale_house'；‘降价’：‘reduce_price’；‘近地铁’：‘near_subway‘；’南北通透‘：’north_south'
-     */
-    param[@"click_position"] = @"verity_real";
+    param[@"value_id"] = value_id ?: @"be_null";
     TRACK_EVENT(@"click_options", param);
 }
 
@@ -773,7 +782,7 @@ extern NSString *const INSTANT_DATA_KEY;
     [self.houseFilterViewModel closeConditionFilterPanel];
     // 二手房大类页
     if (_mainListPage && _houseType == FHHouseTypeSecondHandHouse) {
-        // add by zyk 记得修改埋点数据
+
         NSMutableDictionary *param = @{}.mutableCopy;
         param[UT_PAGE_TYPE] = [self categoryName] ? : @"be_null";
         param[UT_ENTER_FROM] = self.tracerModel.enterFrom ? : @"be_null";
