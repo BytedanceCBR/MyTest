@@ -8,6 +8,8 @@
 
 #import "FHMotionImageView.h"
 #import <CoreMotion/CoreMotion.h>
+#import <Lottie/LOTAnimationView.h>
+#import <Masonry.h>
 
 static CGFloat widthXRate = 0.25f;
 static CGFloat heightYRate = 1.0f;
@@ -16,7 +18,7 @@ static CGFloat heightYHalf = 0.5f;
 
 @interface FHMotionImageView()
 @property(nonatomic,strong)UIImageView *contentImageView;
-@property(nonatomic,strong)UIImageView *loadingImageView;
+@property (nonatomic, strong) LOTAnimationView *lotLoadingView;
 @property(strong,nonatomic) CMMotionManager *manager;
 
 @end
@@ -31,7 +33,6 @@ static CGFloat multiplier = 4;
     if (self) {
         self.backgroundColor = [UIColor redColor];
  
-
         [self setupUI];
         [self setupBackground];
         self.clipsToBounds = YES;
@@ -61,6 +62,16 @@ static CGFloat multiplier = 4;
     self.contentImageView.center = CGPointMake(self.frame.size.width/2, self.frame.size.height/2);
     
     [self insertSubview:self.contentImageView atIndex:1];
+    
+    
+    [self addSubview:self.lotLoadingView];
+    [_lotLoadingView play];
+    [_lotLoadingView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self);
+        make.centerY.mas_equalTo(self);
+        make.width.mas_equalTo(52);
+        make.width.mas_equalTo(60);
+    }];
 }
 
 
@@ -69,6 +80,9 @@ static CGFloat multiplier = 4;
     CGFloat centerWidthHalf = self.frame.size.width / 2.0f;
     CGFloat centerheightHalf= self.frame.size.height / 2.0f;
     
+    
+    __weak typeof(self) weakSelf = self;
+
     //    开始使用陀螺仪
     if (self.manager.gyroAvailable) {
         self.manager.gyroUpdateInterval = 1 / 60;
@@ -83,34 +97,48 @@ static CGFloat multiplier = 4;
             NSLog(@"x=%.2f,y=%.2f,z=%.2f",gyroData.rotationRate.x,gyroData.rotationRate.y,gyroData.rotationRate.z);
             
             // 让背景图片开始随着屏幕进行移动
-            CGFloat imageRotationX = self.contentImageView.center.x + gyroData.rotationRate.y * multiplier;
-            CGFloat imageRotationY = self.contentImageView.center.y + gyroData.rotationRate.x * multiplier;
+            CGFloat imageRotationX = weakSelf.contentImageView.center.x + gyroData.rotationRate.y * multiplier;
+            CGFloat imageRotationY = weakSelf.contentImageView.center.y + gyroData.rotationRate.x * multiplier;
             
+            CGFloat rotationTmp = weakSelf.frame.size.width * widthXHalf +  centerWidthHalf;
             // 为了防止超出边界，进行限制
-            if (imageRotationX > self.frame.size.width * widthXHalf +  centerWidthHalf) {
-                imageRotationX = self.frame.size.width * widthXHalf +  centerWidthHalf;
+            if (imageRotationX > rotationTmp) {
+                imageRotationX = rotationTmp;
             }
             
-            if(imageRotationX < (centerWidthHalf - self.frame.size.width * widthXHalf)){
-                imageRotationX = (centerWidthHalf - self.frame.size.width * widthXHalf);
+            rotationTmp = centerWidthHalf - weakSelf.frame.size.width * widthXHalf;
+            if(imageRotationX < rotationTmp){
+                imageRotationX = rotationTmp;
             }
             
-            if (imageRotationY >= (self.frame.size.height * heightYHalf + centerheightHalf)) {
-                imageRotationY = (self.frame.size.height * heightYHalf + centerheightHalf);
+            rotationTmp = weakSelf.frame.size.height * heightYHalf + centerheightHalf;
+            if (imageRotationY >= rotationTmp) {
+                imageRotationY = rotationTmp;
             }
             
-            if (imageRotationY < (centerheightHalf - self.frame.size.height * heightYHalf)) {
-                imageRotationY = (centerheightHalf - self.frame.size.height * heightYHalf);
+            rotationTmp = centerheightHalf - weakSelf.frame.size.height * heightYHalf;
+            if (imageRotationY < rotationTmp) {
+                imageRotationY = rotationTmp;
             }
             
             //动画进行背景图变化
             [UIView animateWithDuration:0.3 delay:0.05 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction |
              UIViewAnimationOptionCurveEaseOut animations:^{
-                 self.contentImageView.center = CGPointMake(imageRotationX, imageRotationY);
+                 weakSelf.contentImageView.center = CGPointMake(imageRotationX, imageRotationY);
              } completion:nil];
             
         }];
     }
+}
+
+-(LOTAnimationView *)lotLoadingView
+{
+    if (!_lotLoadingView) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
+        _lotLoadingView = [LOTAnimationView animationWithFilePath:path];
+        _lotLoadingView.loopAnimation = YES;
+    }
+    return _lotLoadingView;
 }
 
 - (CMMotionManager *)manager {
