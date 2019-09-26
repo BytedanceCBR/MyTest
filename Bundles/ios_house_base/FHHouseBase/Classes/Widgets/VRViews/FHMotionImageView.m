@@ -10,6 +10,8 @@
 #import <CoreMotion/CoreMotion.h>
 #import <Lottie/LOTAnimationView.h>
 #import <Masonry.h>
+#import <UIImageView+BDWebImage.h>
+#import <BDWebImage/BDWebImageManager.h>
 
 static CGFloat widthXRate = 0.25f;
 static CGFloat heightYRate = 1.0f;
@@ -64,14 +66,20 @@ static CGFloat multiplier = 4;
     [self insertSubview:self.contentImageView atIndex:1];
     
     
-    [self addSubview:self.lotLoadingView];
+    [self bringSubviewToFront:self.lotLoadingView];
     [_lotLoadingView play];
+    [self.lotLoadingView setBackgroundColor:[UIColor blueColor]];
     [_lotLoadingView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
         make.centerY.mas_equalTo(self);
         make.width.mas_equalTo(52);
         make.width.mas_equalTo(60);
     }];
+}
+
+- (void)updateImageUrl:(NSURL *)imageUrl andPlaceHolder:(UIImage *)placeHolderImage
+{
+    [self.contentImageView bd_setImageWithURL:imageUrl placeholder:placeHolderImage];
 }
 
 

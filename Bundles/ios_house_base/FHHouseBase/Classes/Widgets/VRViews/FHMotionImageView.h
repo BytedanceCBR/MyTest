@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMotionImageView : UIView
 
+- (void)updateImageUrl:(NSURL *)imageUrl andPlaceHolder:(UIImage *)placeHolderImage;
+
 @end
 
 NS_ASSUME_NONNULL_END

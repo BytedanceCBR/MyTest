@@ -133,6 +133,19 @@
             
             NSInteger index = 0;
             NSArray<FHImageModel> *instantHouseImageList = listModel.instantHouseImageList;
+            
+            FHMultiMediaItemModel *itemModelVR = [[FHMultiMediaItemModel alloc] init];
+            itemModelVR.mediaType = FHMultiMediaTypeVRPicture;
+            itemModelVR.imageUrl = @"http://vrlab-image.ljcdn.com//release//vradmin//1000000020287257//images//06df2d77-2224-4d90-a60f-b07ff257df94.png.q_70.jpg";
+            itemModelVR.groupType = @"VR";
+            if (instantHouseImageList.count > index) {
+                FHImageModel *instantImgModel = instantHouseImageList[index];
+                itemModelVR.instantImageUrl = instantImgModel.url;
+            }
+            [itemArray addObject:itemModelVR];
+            [self.imageList addObject:itemModelVR];
+            
+            
             for (FHImageModel *imageModel in listModel.houseImageList) {
                 if (imageModel.url.length > 0) {
                     FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];

@@ -15,9 +15,11 @@
 #import "FHVideoAndImageItemView.h"
 #import "FHVideoModel.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
+#import "FHMultiMediaVRImageCell.h"
 
 #define k_VIDEOCELLID @"video_cell_id"
 #define k_IMAGECELLID @"image_cell_id"
+#define k_VRELLID @"vr_cell_id"
 
 @interface FHMultiMediaScrollView ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -63,7 +65,8 @@
     
     [_colletionView registerClass:[FHMultiMediaImageCell class] forCellWithReuseIdentifier:k_IMAGECELLID];
     [_colletionView registerClass:[FHMultiMediaVideoCell class] forCellWithReuseIdentifier:k_VIDEOCELLID];
-    
+    [_colletionView registerClass:[FHMultiMediaVRImageCell class] forCellWithReuseIdentifier:k_VRELLID];
+
     _colletionView.delegate = self;
     _colletionView.dataSource = self;
     
@@ -299,6 +302,8 @@
             if (!self.isShowenPictureVC) {
                 [self updateVideo:model];
             }
+        }else if(model.mediaType == FHMultiMediaTypeVRPicture){
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_VRELLID forIndexPath:indexPath];
         }else{
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_IMAGECELLID forIndexPath:indexPath];
         }
