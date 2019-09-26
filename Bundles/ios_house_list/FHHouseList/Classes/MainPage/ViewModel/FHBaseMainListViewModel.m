@@ -796,7 +796,12 @@ extern NSString *const INSTANT_DATA_KEY;
         
         NSString *messageSchema = @"sslocal://message_conversation_list";
         NSURL *openUrl = [NSURL URLWithString:messageSchema];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[UT_ENTER_FROM] = [self categoryName] ? : @"be_null";
+        dict[@"tracer"] = tracerDict;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
