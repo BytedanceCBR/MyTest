@@ -66,14 +66,13 @@ static CGFloat multiplier = 4;
     [self insertSubview:self.contentImageView atIndex:1];
     
     
-    [self bringSubviewToFront:self.lotLoadingView];
+    [self addSubview:self.lotLoadingView];
     [_lotLoadingView play];
-    [self.lotLoadingView setBackgroundColor:[UIColor blueColor]];
-    [_lotLoadingView mas_updateConstraints:^(MASConstraintMaker *make) {
+    [_lotLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
         make.centerY.mas_equalTo(self);
-        make.width.mas_equalTo(52);
-        make.width.mas_equalTo(60);
+        make.width.mas_equalTo(70);
+        make.width.mas_equalTo(70);
     }];
 }
 
@@ -88,6 +87,7 @@ static CGFloat multiplier = 4;
     CGFloat centerWidthHalf = self.frame.size.width / 2.0f;
     CGFloat centerheightHalf= self.frame.size.height / 2.0f;
     
+    [_lotLoadingView play];
     
     __weak typeof(self) weakSelf = self;
 
@@ -101,8 +101,6 @@ static CGFloat multiplier = 4;
             if (fabs(gyroData.rotationRate.x) * multiplier < 0.2 && fabs(gyroData.rotationRate.y) * multiplier < 0.2) {
                 return ;
             }
-            
-            NSLog(@"x=%.2f,y=%.2f,z=%.2f",gyroData.rotationRate.x,gyroData.rotationRate.y,gyroData.rotationRate.z);
             
             // 让背景图片开始随着屏幕进行移动
             CGFloat imageRotationX = weakSelf.contentImageView.center.x + gyroData.rotationRate.y * multiplier;
