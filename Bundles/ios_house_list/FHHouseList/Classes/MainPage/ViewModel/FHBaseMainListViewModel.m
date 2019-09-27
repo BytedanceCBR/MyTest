@@ -59,6 +59,7 @@
 #import "FHEnvContext.h"
 #import "FHMessageManager.h"
 #import "FHMainOldTopTagsView.h"
+#import <SSCommonLogic.h>
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -211,7 +212,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)setupTopTagsView {
     // add by zyk 是否满足实验
-    BOOL isEnableFilterTag = YES;// 修改此处
+    BOOL isEnableFilterTag = [SSCommonLogic enabledOldListQuickCondition];
     if (self.houseType == FHHouseTypeSecondHandHouse && self.mainListPage && isEnableFilterTag) {
         self.topTagsView = [[FHMainOldTopTagsView alloc] init];
         self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterTagsViewHeight);
