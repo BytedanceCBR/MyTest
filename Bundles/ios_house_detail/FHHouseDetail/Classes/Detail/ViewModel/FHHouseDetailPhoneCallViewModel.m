@@ -26,6 +26,8 @@
 #import <FHIESGeckoManager.h>
 #import <FHRNHelper.h>
 
+#define IM_OPEN_URL @"im_open_url"
+
 extern NSString *const kFHToastCountKey;
 extern NSString *const kFHPhoneNumberCacheKey;
 
@@ -87,7 +89,11 @@ extern NSString *const kFHPhoneNumberCacheKey;
         dict[@"search_id"] = logPbDict[@"search_id"] ? : @"be_null";
         dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
     }
-    NSURL *openUrl = [NSURL URLWithString:contactPhone.imOpenUrl];
+    NSString *urlStr = contactPhone.imOpenUrl;
+    if (extra[IM_OPEN_URL]) {
+        urlStr = extra[IM_OPEN_URL];
+    }
+    NSURL *openUrl = [NSURL URLWithString:urlStr];
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":dict, @"from": from}];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     

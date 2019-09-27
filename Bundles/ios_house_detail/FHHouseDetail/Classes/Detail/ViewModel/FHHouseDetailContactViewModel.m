@@ -45,6 +45,7 @@
 #import <FHIESGeckoManager.h>
 #import "FHHouseDetailPhoneCallViewModel.h"
 #import "FHHouseDetailViewController.h"
+#import <FHHouseBase/FHHouseContactDefines.h>
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -459,6 +460,18 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
         if (extraDict[@"item_id"]) {
             imExtra[@"item_id"] = extraDict[@"item_id"];
+        }
+        if (extraDict[@"im_open_url"]) {
+            imExtra[@"im_open_url"] = extraDict[@"im_open_url"];
+        }
+        if (extraDict[@"from_source"]) {
+            imExtra[@"from_source"] = extraDict[@"from_source"];
+        }
+        if (extraDict[kFHClueEndpoint]) {
+            imExtra[kFHClueEndpoint] = extraDict[kFHClueEndpoint];
+        }
+        if (extraDict[kFHCluePage]) {
+            imExtra[kFHCluePage] = extraDict[kFHCluePage];
         }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];

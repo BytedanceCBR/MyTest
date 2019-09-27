@@ -27,12 +27,17 @@
 #import "FHDetailSchoolInfoItemView.h"
 #import "FHDetailHeaderViewNoMargin.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import "FHHouseDetailContactViewModel.h"
+#import <TTBaseLib/UIViewAdditions.h>
+#import <FHHouseBase/FHHouseContactDefines.h>
 
 @interface FHDetailNeighborhoodConsultView : UIView
 
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) UILabel *infoLabel;
 @property (nonatomic, strong) UIImageView *consultImgView;
+@property (nonatomic, strong) UIButton *consultBtn;
+@property (nonatomic, copy) void (^actionBlock)(void);
 
 @end
 
@@ -61,6 +66,11 @@
     [self addSubview:_infoLabel];
     _infoLabel.textAlignment = NSTextAlignmentLeft;
     
+    _consultBtn = [[UIButton alloc]init];
+    [self addSubview:_consultBtn];
+    _consultBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -5, -5, -5);
+    [_consultBtn addTarget:self action:@selector(consultBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    
     UIImage *img = ICON_FONT_IMG(15, @"\U0000e691", [UIColor themeRed1]);
     _consultImgView = [[UIImageView alloc] init];
     _consultImgView.image = img;
@@ -84,10 +94,17 @@
         make.centerY.mas_equalTo(self);
         make.width.height.mas_equalTo(20);
     }];
-    
+    [self.consultBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.consultImgView);
+    }];
 }
 
-
+- (void)consultBtnDidClick:(UIButton *)btn
+{
+    if (self.actionBlock) {
+        self.actionBlock();
+    }
+}
 
 @end
 
@@ -219,6 +236,24 @@
     }
 }
 
+- (void)imAction
+{
+    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
+    if (model.neighborhoodInfo.useSchoolIm && model.neighborhoodInfo.schoolConsult.openUrl.length > 0) {
+        
+        NSMutableDictionary *imExtra = @{}.mutableCopy;
+        imExtra[@"from"] = @"app_oldhouse_school";
+        imExtra[@"from_source"] = @"education_type";
+        imExtra[@"im_open_url"] = model.neighborhoodInfo.schoolConsult.openUrl;
+        imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
+        imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHCluePageTypeCOldSchool];
+        [model.contactViewModel onlineActionWithExtraDict:imExtra];
+        if (self.baseViewModel) {
+            [self.baseViewModel addClickOptionLog:@"education_type"];
+        }
+    }
+}
+
 - (void)updateSchoolView:(NSArray<FHDetailDataNeighborhoodInfoSchoolItemModel>*)schoolDictList
 {
     if (schoolDictList.count < 1) {
@@ -340,8 +375,12 @@
     _schoolView = [[UIView alloc] init];
     _schoolView.backgroundColor = [UIColor whiteColor];
 
+    __weak typeof(self)wself = self;
     _consultView = [[FHDetailNeighborhoodConsultView alloc] init];
     _consultView.backgroundColor = [UIColor whiteColor];
+    _consultView.actionBlock = ^{
+        [wself imAction];
+    };
 
     [self.contentView addSubview:_schoolView];
     [self.contentView addSubview:_topView];

@@ -14,6 +14,8 @@
 #import "UILabel+House.h"
 #import "FHAgencyNameInfoView.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import "FHHouseDetailContactViewModel.h"
+#import <FHHouseBase/FHHouseContactDefines.h>
 
 extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 
@@ -147,7 +149,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         FHDetailExtarInfoRowView *rowView = nil;
         if (model.extraInfo.budget) {
             rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
-            [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
+            [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
             [rowView updateWithBudgetData:model.extraInfo.budget];
             [self.contentView addSubview:rowView];
             [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -164,7 +166,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         }
         if (model.extraInfo.floorInfo) {
             rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
-            [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
+            [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
             [rowView updateWithFloorInfo:model.extraInfo.floorInfo];
             [self.contentView addSubview:rowView];
             [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -300,6 +302,45 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 -(void)onRowViewAction:(FHDetailExtarInfoRowView *)view
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:DETAIL_SHOW_POP_LAYER_NOTIFICATION object:nil userInfo:@{@"cell":self,@"model":view.data?:@""}];
+}
+
+
+- (void)jump2Page:(FHDetailExtarInfoRowView *)view
+{
+    NSString *positionStr = @"be_null";
+    if ([view.data isKindOfClass:[FHDetailDataBaseExtraBudgetModel class]]) {
+        FHDetailDataBaseExtraBudgetModel *budgetModel = (FHDetailDataBaseExtraBudgetModel *)view.data;
+        NSDictionary *userInfoDict = @{@"tracer":@{}};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+        NSString *openUrl = budgetModel.openUrl;
+        if (openUrl.length > 0) {
+            NSURL *url = [NSURL URLWithString:openUrl];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+        positionStr = @"debit_calculator";
+    }else if ([view.data isKindOfClass:[FHDetailDataBaseExtraFloorInfoModel class]]) {
+        FHDetailDataBaseExtraFloorInfoModel *floorInfo = (FHDetailDataBaseExtraFloorInfoModel *)view.data;
+        [self imAction:floorInfo.openUrl];
+        positionStr = @"floor_type";
+    }
+    if (self.baseViewModel) {
+        [self.baseViewModel addClickOptionLog:positionStr];
+    }
+}
+
+- (void)imAction:(NSString *)openUrl
+{
+    if (openUrl.length < 1) {
+        return;
+    }
+    FHDetailPropertyListModel *propertyModel = (FHDetailPropertyListModel *)self.currentData;
+    NSMutableDictionary *imExtra = @{}.mutableCopy;
+    imExtra[@"from"] = @"app_oldhouse_floor";
+    imExtra[@"from_source"] = @"floor_type";
+    imExtra[@"im_open_url"] = openUrl;
+    imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
+    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHCluePageTypeCOldSchool];
+    [propertyModel.contactViewModel onlineActionWithExtraDict:imExtra];
 }
 
 @end
