@@ -214,15 +214,15 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
         type = FHFeedOperationWordTypeReport;
     }else if([serverKey isEqualToString:@"delete"]){
         type = FHFeedOperationWordTypeDelete;
-    }else if([serverKey isEqualToString:@"top"]){
+    }else if([serverKey isEqualToString:@"topping"]){
         type = FHFeedOperationWordTypeTop;
-    }else if([serverKey isEqualToString:@"cancelTop"]){
+    }else if([serverKey isEqualToString:@"un_topping"]){
         type = FHFeedOperationWordTypeCancelTop;
-    }else if([serverKey isEqualToString:@"good"]){
+    }else if([serverKey isEqualToString:@"essence"]){
         type = FHFeedOperationWordTypeGood;
-    }else if([serverKey isEqualToString:@"cancelGood"]){
+    }else if([serverKey isEqualToString:@"un_essence"]){
         type = FHFeedOperationWordTypeCancelGood;
-    }else if([serverKey isEqualToString:@"self"]){
+    }else if([serverKey isEqualToString:@"self_visiable"]){
         type = FHFeedOperationWordTypeSelfLook;
     }else{
         type = FHFeedOperationWordTypeOther;

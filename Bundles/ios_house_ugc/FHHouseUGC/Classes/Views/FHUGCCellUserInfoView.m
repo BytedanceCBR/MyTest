@@ -21,6 +21,7 @@
 #import "TTAccountManager.h"
 #import <FHUGCConfig.h>
 #import <UIView+XWAddForRoundedCorner.h>
+#import "FHFeedOperationResultModel.h"
 
 @implementation FHUGCCellUserInfoView
 
@@ -110,7 +111,6 @@
     FHFeedOperationViewModel *viewModel = [[FHFeedOperationViewModel alloc] init];
 
     dislikeView.dislikeTracerBlock = ^{
-//        [wself trackClickReport];
         [wself trackClickWithEvent:@"click_report" position:@"feed_report"];
     };
     
@@ -170,7 +170,7 @@
             [wself trackConfirmDeletePopupClick:YES];
         } confirmBlock:^{
             [wself trackConfirmDeletePopupClick:NO];
-            [wself postDelete];
+            [wself postDelete:view.selectdWord.serverType];
         }];
         [self trackConfirmPopupShow:@"confirm_delete_popup_show"];
         
@@ -180,7 +180,7 @@
             [wself trackConfirmPopupClickWithEvent:@"confirm_topfeed_popup_click" isCancel:YES];
         } confirmBlock:^{
             [wself trackConfirmPopupClickWithEvent:@"confirm_topfeed_popup_click" isCancel:NO];
-            [wself setOperationTop:YES];
+            [wself setOperationTop:YES operationCode:view.selectdWord.serverType];
         }];
         [self trackConfirmPopupShow:@"confirm_topfeed_popup_show"];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeCancelTop){
@@ -189,7 +189,7 @@
             [wself trackConfirmPopupClickWithEvent:@"cancel_topfeed_popup_click" isCancel:YES];
         } confirmBlock:^{
             [wself trackConfirmPopupClickWithEvent:@"cancel_topfeed_popup_click" isCancel:NO];
-            [wself setOperationTop:NO];
+            [wself setOperationTop:NO operationCode:view.selectdWord.serverType];
         }];
         [self trackConfirmPopupShow:@"cancel_topfeed_popup_show"];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeGood){
@@ -198,7 +198,7 @@
             [wself trackConfirmPopupClickWithEvent:@"essence_feed_popup_click" isCancel:YES];
         } confirmBlock:^{
             [wself trackConfirmPopupClickWithEvent:@"essence_feed_popup_click" isCancel:NO];
-            [wself setOperationGood:YES];
+            [wself setOperationGood:YES operationCode:view.selectdWord.serverType];
         }];
         [self trackConfirmPopupShow:@"essence_feed_popup_show"];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeCancelGood){
@@ -207,7 +207,7 @@
             [wself trackConfirmPopupClickWithEvent:@"cancel_essence_popup_click" isCancel:YES];
         } confirmBlock:^{
             [wself trackConfirmPopupClickWithEvent:@"cancel_essence_popup_click" isCancel:NO];
-            [wself setOperationGood:NO];
+            [wself setOperationGood:NO operationCode:view.selectdWord.serverType];
         }];
         [self trackConfirmPopupShow:@"cancel_essence_popup_show"];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeSelfLook){
@@ -216,7 +216,7 @@
             [wself trackConfirmPopupClickWithEvent:@"own_see_popup_click" isCancel:YES];
         } confirmBlock:^{
             [wself trackConfirmPopupClickWithEvent:@"own_see_popup_click" isCancel:NO];
-            [wself setOperationSelfLook];
+            [wself setOperationSelfLook:view.selectdWord.serverType];
         }];
         [self trackConfirmPopupShow:@"own_see_popup_show"];
     }
@@ -249,15 +249,15 @@
     [[TTUIResponderHelper visibleTopViewController] presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)postDelete {
+- (void)postDelete:(NSString *)operationCode {
     __weak typeof(self) wself = self;
-    [FHHouseUGCAPI postDelete:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(bool success, NSError * _Nonnull error) {
-        if(success){
-            //调用删除接口
+    [FHHouseUGCAPI postOperation:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        
+        if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
             if(wself.deleteCellBlock){
                 wself.deleteCellBlock();
             }
-            //删除帖子成功发送通知
+
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
             if (self.cellModel.community.socialGroupId.length > 0) {
                 dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
@@ -266,99 +266,123 @@
                 dic[@"cellModel"] = self.cellModel;
             }
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
-            
         }else{
             [[ToastManager manager] showToast:@"删除失败"];
         }
     }];
-}
-
-- (void)setOperationSelfLook {
-    __weak typeof(self) wself = self;
+    
+    
 //    [FHHouseUGCAPI postDelete:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(bool success, NSError * _Nonnull error) {
 //        if(success){
-            //调用自见接口，和删帖的逻辑一致
-            if(wself.deleteCellBlock){
-                wself.deleteCellBlock();
-            }
-            //删除帖子成功发送通知
-    
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    if (self.cellModel.community.socialGroupId.length > 0) {
-        dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
-    }
-    if(self.cellModel){
-        dic[@"cellModel"] = self.cellModel;
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
-    
+//            //调用删除接口
+//            if(wself.deleteCellBlock){
+//                wself.deleteCellBlock();
+//            }
+//            //删除帖子成功发送通知
+//            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+//            if (self.cellModel.community.socialGroupId.length > 0) {
+//                dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
+//            }
+//            if(self.cellModel){
+//                dic[@"cellModel"] = self.cellModel;
+//            }
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
+//
 //        }else{
 //            [[ToastManager manager] showToast:@"删除失败"];
 //        }
 //    }];
 }
 
-- (void)setOperationTop:(BOOL)isTop {
+- (void)setOperationSelfLook:(NSString *)operationCode {
+    __weak typeof(self) wself = self;
+    [FHHouseUGCAPI postOperation:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        
+        if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
+            if(wself.deleteCellBlock){
+                wself.deleteCellBlock();
+            }
     
-    NSString *imgUrl = @"http://p3.pstatp.com/origin/dac9000f02ec5048f3f8";
-    
-    if(isTop){
-        self.cellModel.isStick = YES;
-        self.cellModel.stickStyle = FHFeedContentStickStyleTop;
-        if(!self.cellModel.contentDecoration){
-            self.cellModel.contentDecoration = [[FHFeedUGCCellContentDecorationModel alloc] init];
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            if (self.cellModel.community.socialGroupId.length > 0) {
+                dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
+            }
+            if(self.cellModel){
+                dic[@"cellModel"] = self.cellModel;
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
+        }else{
+            [[ToastManager manager] showToast:@"设置仅发帖人可见失败"];
         }
-        self.cellModel.contentDecoration.url = imgUrl;
-    }else{
-        self.cellModel.isStick = NO;
-        self.cellModel.stickStyle = FHFeedContentStickStyleUnknown;
-        if(!self.cellModel.contentDecoration){
-            self.cellModel.contentDecoration = [[FHFeedUGCCellContentDecorationModel alloc] init];
-        }
-        self.cellModel.contentDecoration.url = @"";
-    }
-    
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    if (self.cellModel.community.socialGroupId.length > 0) {
-        dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
-    }
-    if(self.cellModel){
-        dic[@"cellModel"] = self.cellModel;
-    }
-    dic[@"isTop"] = @(isTop);
-
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCTopPostNotification object:nil userInfo:dic];
+    }];
 }
 
-- (void)setOperationGood:(BOOL)isGood {
-    NSString *imgUrl = @"http://p3.pstatp.com/origin/dac9000f02ec5048f3f8";
+- (void)setOperationTop:(BOOL)isTop operationCode:(NSString *)operationCode {
+    __weak typeof(self) wself = self;
+    [FHHouseUGCAPI postOperation:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        
+        if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
+            FHFeedOperationResultModel *resultModel = (FHFeedOperationResultModel *)model;
     
-    if(isGood){
-        self.cellModel.isStick = YES;
-        self.cellModel.stickStyle = FHFeedContentStickStyleGood;
-        if(!self.cellModel.contentDecoration){
-            self.cellModel.contentDecoration = [[FHFeedUGCCellContentDecorationModel alloc] init];
+            self.cellModel.isStick = resultModel.data.isStick;
+            self.cellModel.stickStyle = [resultModel.data.stickStyle integerValue];
+            if(!self.cellModel.contentDecoration){
+                self.cellModel.contentDecoration = [[FHFeedUGCCellContentDecorationModel alloc] init];
+            }
+            self.cellModel.contentDecoration.url = resultModel.data.url;
+
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            if (self.cellModel.community.socialGroupId.length > 0) {
+                dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
+            }
+            if(self.cellModel){
+                dic[@"cellModel"] = self.cellModel;
+            }
+            dic[@"isTop"] = @(isTop);
+
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCTopPostNotification object:nil userInfo:dic];
+        }else{
+            if(isTop){
+                [[ToastManager manager] showToast:@"置顶失败"];
+            }else{
+                [[ToastManager manager] showToast:@"取消置顶失败"];
+            }
         }
-        self.cellModel.contentDecoration.url = imgUrl;
-    }else{
-        self.cellModel.isStick = NO;
-        self.cellModel.stickStyle = FHFeedContentStickStyleUnknown;
-        if(!self.cellModel.contentDecoration){
-            self.cellModel.contentDecoration = [[FHFeedUGCCellContentDecorationModel alloc] init];
+    }];
+}
+
+- (void)setOperationGood:(BOOL)isGood operationCode:(NSString *)operationCode {
+    __weak typeof(self) wself = self;
+    [FHHouseUGCAPI postOperation:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        
+        if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
+            FHFeedOperationResultModel *resultModel = (FHFeedOperationResultModel *)model;
+    
+            self.cellModel.isStick = resultModel.data.isStick;
+            self.cellModel.stickStyle = [resultModel.data.stickStyle integerValue];
+            if(!self.cellModel.contentDecoration){
+                self.cellModel.contentDecoration = [[FHFeedUGCCellContentDecorationModel alloc] init];
+            }
+            self.cellModel.contentDecoration.url = resultModel.data.url;
+
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            if (self.cellModel.community.socialGroupId.length > 0) {
+                dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
+            }
+            if(self.cellModel){
+                dic[@"cellModel"] = self.cellModel;
+            }
+            dic[@"isGood"] = @(isGood);
+
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCGoodPostNotification object:nil userInfo:dic];
+        }else{
+            if(isGood){
+                [[ToastManager manager] showToast:@"加精失败"];
+            }else{
+                [[ToastManager manager] showToast:@"取消加精失败"];
+            }
         }
-        self.cellModel.contentDecoration.url = @"";
-    }
-    
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    if (self.cellModel.community.socialGroupId.length > 0) {
-        dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
-    }
-    if(self.cellModel){
-        dic[@"cellModel"] = self.cellModel;
-    }
-    dic[@"isGood"] = @(isGood);
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCGoodPostNotification object:nil userInfo:dic];
+    }];
 }
 
 #pragma mark - 埋点
@@ -389,23 +413,6 @@
     }
     TRACK_EVENT(event, dict);
 }
-
-//- (void)trackClickReport {
-//    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-//    dict[@"click_position"] = @"feed_report";
-//    TRACK_EVENT(@"click_report", dict);
-//}
-
-//- (void)trackClickDelete {
-//    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-//    dict[@"click_position"] = @"feed_delete";
-//    TRACK_EVENT(@"click_delete", dict);
-//}
-
-//- (void)trackConfirmDeletePopupShow {
-//    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-//    TRACK_EVENT(@"confirm_delete_popup_show", dict);
-//}
 
 - (void)trackConfirmDeletePopupClick:(BOOL)isCancel {
     NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];

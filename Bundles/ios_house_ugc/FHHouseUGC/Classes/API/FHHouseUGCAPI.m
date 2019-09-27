@@ -14,6 +14,7 @@
 #import "FHTopicHeaderModel.h"
 #import "FHURLSettings.h"
 #import "FHTopicFeedListModel.h"
+#import "FHFeedOperationResultModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -285,6 +286,44 @@
         }
         if (completion) {
             completion(success,error);
+        }
+    }];
+}
+
++ (TTHttpTask *)postOperation:(NSString *)groupId socialGroupId:(NSString *)socialGroupId operationCode:(NSString *)operationCode enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void (^ _Nonnull)(id<FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/stick_operate";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(groupId){
+        paramDic[@"group_id"] = groupId;
+    }
+    if(socialGroupId){
+        paramDic[@"social_group_id"] = socialGroupId;
+    }
+    if(enterFrom){
+        paramDic[@"enter_from"] = enterFrom;
+    }
+    if(pageType){
+        paramDic[@"page_type"] = pageType;
+    }
+    if(operationCode){
+        paramDic[@"operate_code"] = operationCode;
+    }
+    
+    Class jsonCls = [FHFeedOperationResultModel class];
+    
+    //json
+//    return [FHMainApi postJsonRequest:queryPath query:nil params:paramDic jsonClass:jsonCls completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+//        if (completion) {
+//            completion(model,error);
+//        }
+//    }];
+    
+    //非json
+    return [FHMainApi postRequest:queryPath query:nil params:paramDic jsonClass:jsonCls completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        if (completion) {
+            completion(model,error);
         }
     }];
 }

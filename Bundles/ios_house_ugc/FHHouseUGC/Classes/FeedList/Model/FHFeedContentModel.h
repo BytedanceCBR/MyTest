@@ -512,7 +512,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
     FHFeedContentStickStyleUnknown,
     FHFeedContentStickStyleTop = 1,             //置顶
     FHFeedContentStickStyleGood = 2,            //加精
-    FHFeedContentStickStyleTopAndGood = 100,    //置顶和加精
+    FHFeedContentStickStyleTopAndGood = 3,    //置顶和加精
 };
 
 @interface FHFeedContentModel : JSONModel 

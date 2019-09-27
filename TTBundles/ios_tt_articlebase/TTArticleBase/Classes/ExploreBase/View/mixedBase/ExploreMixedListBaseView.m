@@ -3021,9 +3021,9 @@ TTRefreshViewDelegate
 
 - (void)setListTopInset:(CGFloat)topInset BottomInset:(CGFloat)bottomInset
 {
-//    [self setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
-//    [self.listView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
-//    [self.listView setScrollIndicatorInsets:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+    [self setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+    [self.listView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+    [self.listView setScrollIndicatorInsets:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
 }
 
 - (void)clearListContent
