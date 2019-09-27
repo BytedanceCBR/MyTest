@@ -132,7 +132,6 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     [self setupCallCenter];
-    [self startLoadData];
     self.isViewDidDisapper = NO;
     
     if(![SSCommonLogic disableDetailInstantShow] && [TTReachability isNetworkConnected]){
@@ -145,7 +144,9 @@
     }else{
         self.instantData = nil;
     }
-        
+    
+    [self startLoadData];
+    
     if (!self.isDisableGoDetail) {
         [self.viewModel addGoDetailLog];
     }
