@@ -243,7 +243,7 @@
         
         NSMutableDictionary *imExtra = @{}.mutableCopy;
         imExtra[@"from"] = @"app_oldhouse_school";
-        imExtra[@"from_source"] = @"education_type";
+        imExtra[@"source_from"] = @"education_type";
         imExtra[@"im_open_url"] = model.neighborhoodInfo.schoolConsult.openUrl;
         imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
         imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHCluePageTypeCOldSchool];

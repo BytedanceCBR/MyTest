@@ -336,7 +336,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     FHDetailPropertyListModel *propertyModel = (FHDetailPropertyListModel *)self.currentData;
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"from"] = @"app_oldhouse_floor";
-    imExtra[@"from_source"] = @"floor_type";
+    imExtra[@"source_from"] = @"floor_type";
     imExtra[@"im_open_url"] = openUrl;
     imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
     imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHCluePageTypeCOldSchool];

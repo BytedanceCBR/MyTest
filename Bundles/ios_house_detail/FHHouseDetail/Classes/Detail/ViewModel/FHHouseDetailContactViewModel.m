@@ -464,8 +464,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (extraDict[@"im_open_url"]) {
             imExtra[@"im_open_url"] = extraDict[@"im_open_url"];
         }
-        if (extraDict[@"from_source"]) {
-            imExtra[@"from_source"] = extraDict[@"from_source"];
+        if (extraDict[@"source_from"]) {
+            imExtra[@"source_from"] = extraDict[@"source_from"];
         }
         if (extraDict[kFHClueEndpoint]) {
             imExtra[kFHClueEndpoint] = extraDict[kFHClueEndpoint];
