@@ -322,7 +322,7 @@ typedef enum : NSUInteger {
         [[ToastManager manager] dismissCustomLoading];
         
         if(error) {
-            [[ToastManager manager] showToast:@"网络不佳， 公告更新失败，请重试" duration:3 isUserInteraction:YES];
+            [[ToastManager manager] showToast:@"网络不佳， 公告更新失败，请重试"];
             [self.textView becomeFirstResponder];
         }
         else {
@@ -487,6 +487,7 @@ typedef enum : NSUInteger {
         [self animateTextViewWithDuration:0.25 keyboardHeight:self.systemKeyboardHeight];
     }
 }
+
 - (void)toolbarDidClickKeyboardButton:(BOOL)switchToKeyboardInput {
     if(switchToKeyboardInput) {
         // nothing for now
