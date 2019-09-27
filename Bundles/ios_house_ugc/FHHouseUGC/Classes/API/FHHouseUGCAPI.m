@@ -531,6 +531,9 @@
     NSString *queryPath = @"/f100/ugc/social_group/announcement";
     NSString *url = QURL(queryPath);
     
+    // TODO: 暂时为了测试写死开发机地址，走查完删除
+    url = @"http://10.224.10.118:6789/f100/ugc/social_group/announcement";
+    
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     [paramDic addEntriesFromDictionary:params];
     

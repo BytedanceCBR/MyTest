@@ -326,6 +326,7 @@ typedef enum : NSUInteger {
             [self.textView becomeFirstResponder];
         }
         else {
+            [[ToastManager manager] showToast:@"操作成功"];
             if(self.callback) {
                 self.callback(self.textView.text);
             }
