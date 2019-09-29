@@ -21,6 +21,7 @@ static CGFloat heightYHalf = 0.5f;
 @interface FHMotionImageView()
 @property(nonatomic,strong)UIImageView *contentImageView;
 @property (nonatomic, strong) LOTAnimationView *lotLoadingView;
+@property (nonatomic, strong) UIView *maskBlackView;
 @property(strong,nonatomic) CMMotionManager *manager;
 
 @end
@@ -65,6 +66,14 @@ static CGFloat multiplier = 4;
     
     [self insertSubview:self.contentImageView atIndex:1];
     
+    
+    self.maskBlackView = [UIView new];
+    [self.maskBlackView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.2]];
+    [self addSubview:self.maskBlackView];
+    [self.maskBlackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
+    }];
+
     
     [self addSubview:self.lotLoadingView];
     [_lotLoadingView play];

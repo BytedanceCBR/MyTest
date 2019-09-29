@@ -185,6 +185,13 @@
             return;
         }
     }
+    
+    //VR
+    if (index == 0) {
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_nav_bar=true&url=http://f-boe.bytedance.net/f100/activity/client/pano"]];
+        return;
+    }
+    
     __weak typeof(self) weakSelf = self;
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
@@ -443,6 +450,7 @@
 #pragma mark - FHMultiMediaScrollViewDelegate
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
+    
     if ([(FHDetailMediaHeaderModel *)self.currentData isInstantData]) {
         //列表页带入的数据不响应
         return;

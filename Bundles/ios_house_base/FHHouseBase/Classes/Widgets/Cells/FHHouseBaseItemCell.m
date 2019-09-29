@@ -25,6 +25,7 @@
 #import "TTReachability.h"
 #import "FHUserTracker.h"
 #import "UIImage+FIconFont.h"
+#import <Lottie/LOTAnimationView.h>
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -66,6 +67,7 @@
 @property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 @property(nonatomic, strong) UIButton *closeBtn; //x按钮
+@property (nonatomic, strong) LOTAnimationView *lotLoadingView;
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 
@@ -229,6 +231,17 @@
     }
     return _pricePerSqmLabel;
 }
+
+-(LOTAnimationView *)lotLoadingView
+{
+    if (!_lotLoadingView) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
+        _lotLoadingView = [LOTAnimationView animationWithFilePath:path];
+        _lotLoadingView.loopAnimation = YES;
+    }
+    return _lotLoadingView;
+}
+
 
 -(UILabel *)distanceLabel
 {
@@ -650,6 +663,16 @@
             
             self.imageTagLabelBgView.hidden = YES;
         }
+        
+        [self.leftInfoView addSubview:self.lotLoadingView];
+        [self.lotLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.isEnabled = YES;
+            layout.position = YGPositionTypeAbsolute;
+            layout.top = YGPointValue(28);
+            layout.left = YGPointValue(42);
+            layout.width = YGPointValue(26);
+            layout.height = YGPointValue(26);
+        }];        
         
     } else if (houseType == FHHouseTypeRentHouse) {
         

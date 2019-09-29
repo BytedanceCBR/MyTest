@@ -167,6 +167,9 @@
 "house_real_web" = "FHHouseDetailWebViewController";
 "house_fake_list" = "FHFalseHouseListViewController";
 
+//VR详情页
+"house_vr_web" = "FHVRDetailWebViewController";
+
 //UGC相关
 "ugc_post" = "FHPostUGCViewController";
 "thread_detail" = "FHPostDetailViewController";
