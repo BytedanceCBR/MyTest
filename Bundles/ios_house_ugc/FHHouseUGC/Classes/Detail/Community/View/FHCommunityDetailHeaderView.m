@@ -165,7 +165,7 @@
     self.publicationsContentLabel = [UILabel new];
     self.publicationsContentLabel.font = [UIFont themeFontRegular:12];
     self.publicationsContentLabel.textColor = [UIColor themeGray1];
-    self.publicationsContentLabel.numberOfLines = 2;
+    self.publicationsContentLabel.numberOfLines = PublicationsContentLabel_numberOfLines;
     [self.publicationsContentLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     
     [self.publicationsContainer addSubview:self.publicationsContentLabel];
@@ -301,5 +301,14 @@
     if(self.gotoOperationBlock) {
         self.gotoOperationBlock();
     }
+}
+
+-(BOOL)isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow {
+    BOOL ret = NO;
+    CGFloat leftPadding = 20;
+    CGFloat rightPadding = 15;
+    CGRect rect = [self.publicationsContentLabel textRectForBounds:CGRectMake(0, 0, self.bounds.size.width - leftPadding - rightPadding, CGFLOAT_MAX) limitedToNumberOfLines:0];
+    ret = rect.size.height > (PublicationsContentLabel_numberOfLines * PublicationsContentLabel_lineHeight);
+    return ret;
 }
 @end
