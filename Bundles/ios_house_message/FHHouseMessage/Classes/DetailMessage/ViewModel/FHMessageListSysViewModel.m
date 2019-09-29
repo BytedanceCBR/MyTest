@@ -13,6 +13,7 @@
 #import "FHUserTracker.h"
 #import "FHSystemMsgModel.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
+#import <TTUGCEmojiParser.h>
 
 #define kCellId @"FHBSystemMsgCell_id"
 
@@ -137,7 +138,8 @@
     
     cell.dateLabel.text = model.dateStr;
     cell.titleLabel.text = model.title;
-    cell.descLabel.text = model.content;
+    NSMutableAttributedString *emojiSupportAttributeText = [[TTUGCEmojiParser parseInTextKitContext:model.content fontSize:cell.descLabel.font.pointSize] mutableCopy];
+    cell.descLabel.attributedText = emojiSupportAttributeText;
     cell.lookDetailLabel.text = model.buttonName;
     
     FHSystemMsgDataItemsImagesModel *imageModel = model.images;

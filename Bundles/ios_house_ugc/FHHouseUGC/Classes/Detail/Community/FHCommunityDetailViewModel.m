@@ -510,14 +510,8 @@
                                                          };
            NSAttributedString *announcementTitle = [[NSAttributedString alloc] initWithString:@"[公告] " attributes: announcementTitleAttributes];
            
-           UIFont *contentFont = [UIFont themeFontRegular:12];
-           NSDictionary *announcemenContentAttributes = @{
-                                                          NSFontAttributeName: contentFont,
-                                                          NSForegroundColorAttributeName: [UIColor themeGray1]
-                                                          };
            NSAttributedString *emojiSupportAnnouncement = [[TTUGCEmojiParser parseInTextKitContext:announcement fontSize:12] mutableCopy];
            NSAttributedString *announcementContent = [[NSAttributedString alloc] initWithAttributedString:emojiSupportAnnouncement];
-           [[NSAttributedString alloc] initWithString:announcement attributes:announcemenContentAttributes];
            
            [attributedText appendAttributedString:announcementTitle];
            [attributedText appendAttributedString:announcementContent];
