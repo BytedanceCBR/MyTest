@@ -17,8 +17,6 @@
 #import "UILabel+SizeToTextParagraphStyle.h"
 #import <FHCommonUI/UIView+House.h>
 #import <TTBaseLib/UIButton+TTAdditions.h>
-#import <TTUGCEmojiParser.h>
-
 
 #define kTTWeakPushAlertViewToMarginBottom      (44 + [TTDeviceUIUtils tt_padding:8])
 #define kTTWeakPushAlertViewHorZoomBoundary     (10.f)
@@ -92,10 +90,8 @@ typedef NS_ENUM(NSInteger, TTPanGestureMoveDirection) {
         
         self.titleLabel.text = aModel.titleString;
         [self.titleLabel sizeToFit];
-        
-        NSMutableAttributedString *emojiSupportAttributeText = [[TTUGCEmojiParser parseInTextKitContext:aModel.detailString fontSize:self.detailLabel.font.pointSize] mutableCopy];
+            
         self.detailLabel.text = aModel.detailString;
-        self.detailLabel.attributedText = emojiSupportAttributeText;
         [self.detailLabel sizeToFit];
         
         id imageObject = aModel.firstImageObject;
