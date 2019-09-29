@@ -351,10 +351,24 @@
         layout.height = YGPercentValue(100);
     }];
     
-    [_rightInfoView addSubview:self.mainTitleLabel];
+    UIView *titleView = [[UIView alloc] init];
+    [_rightInfoView addSubview:titleView];
     [_rightInfoView addSubview:self.subTitleLabel];
     [_rightInfoView addSubview:self.statInfoLabel];
     [_rightInfoView addSubview:self.tagLabel];
+    
+    [titleView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.flexDirection = YGFlexDirectionRow;
+        layout.paddingLeft = YGPointValue(0);
+        layout.paddingRight = YGPointValue(0);
+        layout.alignItems = YGAlignFlexStart;
+        layout.marginTop = YGPointValue(0);
+        layout.height = YGPointValue(22);
+        layout.maxWidth = YGPointValue([self contentMaxWidth]);
+    }];
+    [titleView addSubview:self.mainTitleLabel];
+    [titleView addSubview:self.tagTitleLabel];
     
     [_mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;

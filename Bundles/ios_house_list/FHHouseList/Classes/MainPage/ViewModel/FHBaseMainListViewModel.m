@@ -129,7 +129,8 @@ extern NSString *const INSTANT_DATA_KEY;
             self.tracerModel.originFrom = @"renting";
         }
         
-        [self setupTopTagsView];
+        //暂时去掉这个逻辑，等安卓实验结论上
+//        [self setupTopTagsView];
         
         _isFirstLoad = YES;
         _canChangeHouseSearchDic = YES;
