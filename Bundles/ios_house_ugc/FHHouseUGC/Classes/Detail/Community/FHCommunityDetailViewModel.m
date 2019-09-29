@@ -654,6 +654,8 @@
         }];
         
         self.feedListController.tableView.tableHeaderView = headerView;
+        [self.feedListController.tableView bringSubviewToFront:self.feedListController.tableView.mj_header];
+        
     }
 
     //仅仅在未关注时显示引导页
