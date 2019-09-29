@@ -307,7 +307,7 @@
     BOOL ret = NO;
     CGFloat leftPadding = 20;
     CGFloat rightPadding = 15;
-    CGRect rect = [self.publicationsContentLabel textRectForBounds:CGRectMake(0, 0, self.bounds.size.width - leftPadding - rightPadding, CGFLOAT_MAX) limitedToNumberOfLines:0];
+    CGRect rect = [self.publicationsContentLabel textRectForBounds:CGRectMake(0, 0, SCREEN_WIDTH - leftPadding - rightPadding, CGFLOAT_MAX) limitedToNumberOfLines:0];
     ret = rect.size.height > (PublicationsContentLabel_numberOfLines * PublicationsContentLabel_lineHeight);
     return ret;
 }
