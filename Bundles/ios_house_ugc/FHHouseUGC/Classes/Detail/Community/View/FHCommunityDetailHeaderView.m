@@ -234,7 +234,7 @@
     [self.publicationsDetailView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(0);
         make.left.equalTo(self.publicationsContentLabel.mas_right).offset(10);
-        make.right.equalTo(self.publicationsContainer).offset(-15).priorityHigh();
+        make.right.equalTo(self.publicationsContainer).offset(-15);
         make.top.bottom.equalTo(self.publicationsContentLabel);
     }];
      
