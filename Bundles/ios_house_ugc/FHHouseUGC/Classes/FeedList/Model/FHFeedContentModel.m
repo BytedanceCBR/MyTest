@@ -463,6 +463,9 @@
                            @"titleRichSpan": @"title_rich_span",
                            @"createTime": @"create_time",
                            @"videoContent": @"video_content",
+                           @"isStick": @"is_stick",
+                           @"stickStyle": @"stick_style",
+                           @"contentDecoration": @"content_decoration",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

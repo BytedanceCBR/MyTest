@@ -1,6 +1,14 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 NS_ASSUME_NONNULL_BEGIN
+
+typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
+    FHFeedContentStickStyleUnknown = 0,
+    FHFeedContentStickStyleTop = 1,             //置顶
+    FHFeedContentStickStyleGood = 2,            //加精
+    FHFeedContentStickStyleTopAndGood = 3,    //置顶和加精
+};
+
 @interface FHFeedContentRawDataVideoPlayAddrModel : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray *urlList;
@@ -492,7 +500,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *videoContent;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseActionModel *action ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *firstFrameImageList;
-
+@property (nonatomic, assign)   BOOL       isStick;      // 是否置顶
+@property (nonatomic, assign)   FHFeedContentStickStyle  stickStyle; // 置顶类型：精华或其它
+@property (nonatomic, copy , nullable) NSString *contentDecoration;
 @end
 
 @interface FHFeedContentVideoDetailInfoModel : JSONModel
@@ -507,13 +517,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *showPgcSubscribe;
 @property (nonatomic, copy , nullable) NSString *videoWatchCount;
 @end
-
-typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
-    FHFeedContentStickStyleUnknown,
-    FHFeedContentStickStyleTop = 1,             //置顶
-    FHFeedContentStickStyleGood = 2,            //加精
-    FHFeedContentStickStyleTopAndGood = 3,    //置顶和加精
-};
 
 @interface FHFeedContentModel : JSONModel 
 
