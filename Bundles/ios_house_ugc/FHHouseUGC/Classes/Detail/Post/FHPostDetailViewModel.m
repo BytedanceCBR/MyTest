@@ -172,6 +172,7 @@
         // 网络请求返回
         model.isFromDetail = YES;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+        self.serverData = cellModel;
         cellModel.feedVC = self.detailData.feedVC;
         cellModel.isStick = self.detailData.isStick;
         cellModel.stickStyle = self.detailData.stickStyle;
