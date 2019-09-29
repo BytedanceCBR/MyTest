@@ -13,6 +13,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+typedef NS_ENUM(NSUInteger, FHClueErrorType) {
+    FHClueErrorTypeNone = 0,
+    FHClueErrorTypeNetFailure,
+    FHClueErrorTypeHttpFailure,
+    FHClueErrorTypeServerFailure,
+};
+
 @class FHFillFormAgencyListItemModel;
 @interface FHMainApi (Contact)
 
