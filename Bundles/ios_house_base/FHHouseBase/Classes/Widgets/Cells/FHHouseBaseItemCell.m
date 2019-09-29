@@ -803,6 +803,7 @@
                 layout.maxWidth = YGPointValue([self contentMaxWidth]);
             }];
         }
+        [self.mainTitleLabel.yoga markDirty];
         
     } else if (houseType == FHHouseTypeRentHouse) {
         
