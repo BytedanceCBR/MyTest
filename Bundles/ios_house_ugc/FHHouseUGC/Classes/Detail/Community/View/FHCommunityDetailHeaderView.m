@@ -39,7 +39,7 @@
         
         // 左边垂直分割线
         UIView *vSepLine = [UIView new];
-        vSepLine.backgroundColor = [UIColor themeGray4];
+        vSepLine.backgroundColor = [UIColor themeGray6];
         [_publicationsDetailView addSubview:vSepLine];
         
         // 点击查看按钮
