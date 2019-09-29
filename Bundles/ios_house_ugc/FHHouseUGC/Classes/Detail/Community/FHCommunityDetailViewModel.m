@@ -523,7 +523,7 @@
            [attributedText appendAttributedString:announcementContent];
            
            NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-           CGFloat lineHeight = 20;
+           CGFloat lineHeight = PublicationsContentLabel_lineHeight;
            paragraphStyle.minimumLineHeight = lineHeight;
            paragraphStyle.maximumLineHeight = lineHeight;
            paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
@@ -608,6 +608,7 @@
             param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
             TRACK_EVENT(@"click_community_notice_more", param);
         };
+        hasDetailBtn = [self.headerView isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow];
     }
     
     [self.headerView updatePublicationsInfo: isShowPublications

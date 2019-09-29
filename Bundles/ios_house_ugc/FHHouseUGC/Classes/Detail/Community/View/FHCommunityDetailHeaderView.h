@@ -4,6 +4,9 @@
 
 #import <Foundation/Foundation.h>
 
+#define PublicationsContentLabel_numberOfLines 2
+#define PublicationsContentLabel_lineHeight 20
+
 @class FHUGCFollowButton;
 @class FHCommunityDetailMJRefreshHeader;
 
@@ -36,4 +39,7 @@ typedef void(^GotoPublicationsDetailBlock)(void);
 - (void)updateOperationInfo:(BOOL)isShow whRatio:(CGFloat)whRatio;
 
 - (void)updatePublicationsInfo:(BOOL)isShow hasDetailBtn:(BOOL)hasDetailBtn;
+
+// 非管理员状态，判断如果没有查看详情按钮时公告内容标签的布局是否超过两行
+-(BOOL)isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow;
 @end
