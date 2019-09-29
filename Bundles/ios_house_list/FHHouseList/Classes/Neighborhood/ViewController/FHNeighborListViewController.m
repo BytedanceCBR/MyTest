@@ -241,11 +241,12 @@
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     
     [self realRequestWithOffset:0];
+    self.viewModel.currentOffset = 0;
 }
 
 - (void)loadMore {
     [self.viewModel addCategoryRefreshLog];
-    [self realRequestWithOffset:self.viewModel.houseList.count];
+    [self realRequestWithOffset:self.viewModel.currentOffset];
 }
 
 - (void)realRequestWithOffset:(NSInteger)offset {

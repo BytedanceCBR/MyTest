@@ -73,6 +73,10 @@
 
 extern NSString *const INSTANT_DATA_KEY;
 
+@interface FHBaseMainListViewModel ()
+
+@end
+
 @implementation FHBaseMainListViewModel
 
 -(instancetype)initWithTableView:(UITableView *)tableView houseType:(FHHouseType)houseType  routeParam:(TTRouteParamObj *)paramObj
@@ -83,6 +87,10 @@ extern NSString *const INSTANT_DATA_KEY;
         _houseList = [NSMutableArray new];
         _sugesstHouseList = [NSMutableArray new];
         _showHouseDict = [NSMutableDictionary new];
+        
+        _currentRecommendHouseDataModel = nil;
+        _currentHouseDataModel = nil;
+        _currentRentDataModel = nil;
         
         self.tableView = tableView;
         self.houseType = houseType;
@@ -443,11 +451,14 @@ extern NSString *const INSTANT_DATA_KEY;
             self.recommendSearchId = recommendHouseDataModel.searchId;
             hasMore = recommendHouseDataModel.hasMore;
             recommendItems = recommendHouseDataModel.items;
+            self.currentHouseDataModel = recommendHouseDataModel;
+            
         } else if ([model isKindOfClass:[FHSearchHouseModel class]]) { // 列表页
             
             FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
+            self.currentHouseDataModel = houseModel;
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             items = [NSMutableArray arrayWithArray:houseModel.items];
@@ -526,7 +537,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }
         }else if ([model isKindOfClass:[FHHouseRentModel class]]){ //租房大类页
             FHHouseRentDataModel *rentModel = [(FHHouseRentModel *)model data];
-            
+            self.currentRentDataModel = rentModel;
             self.houseListOpenUrl = rentModel.houseListOpenUrl;
             self.mapFindHouseOpenUrl = rentModel.mapFindHouseOpenUrl;
             
