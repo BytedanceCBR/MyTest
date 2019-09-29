@@ -37,11 +37,6 @@
     return self;
 }
 
--(void)dealloc
-{
-    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -79,7 +74,6 @@
     if (![TTReachability isNetworkConnected]) {
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
-    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
     
     __weak typeof(self) wself = self;
     self.panBeginAction = ^{
@@ -108,13 +102,6 @@
         make.top.mas_equalTo(self.inputBar.mas_bottom);
     }];
     
-}
-
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    
-    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
-        [self.view endEditing:YES];
-    }
 }
 
 @end

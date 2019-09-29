@@ -132,7 +132,6 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     [self setupCallCenter];
-    [self startLoadData];
     self.isViewDidDisapper = NO;
     
     if(![SSCommonLogic disableDetailInstantShow] && [TTReachability isNetworkConnected]){
@@ -145,7 +144,9 @@
     }else{
         self.instantData = nil;
     }
-        
+    
+    [self startLoadData];
+    
     if (!self.isDisableGoDetail) {
         [self.viewModel addGoDetailLog];
     }
@@ -310,6 +311,29 @@
     }];
     
     [self.view bringSubviewToFront:_navBar];
+}
+
+-(void)updateLayout:(BOOL)isInstant
+{
+    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.view);
+        if (isInstant) {
+            make.bottom.mas_equalTo(self.view);
+        }else{
+            make.bottom.mas_equalTo(self.bottomBar.mas_top);
+        }
+    }];
+    self.bottomBar.hidden = isInstant;
+    self.bottomMaskView.hidden = isInstant;
+    self.bottomStatusBar.hidden = isInstant;
+    
+    if (isInstant) {
+        [self.view bringSubviewToFront:self.tableView];
+    }else{
+        [self.view sendSubviewToBack:self.tableView];
+    }
+    
+    [self.view setNeedsUpdateConstraints];
 }
 
 - (void)setupCallCenter {

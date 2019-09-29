@@ -177,7 +177,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model{
-    
     self.detailData = model;
     if (model.data.status != -1) {
         [self addDetailCoreInfoExcetionLog];
@@ -531,7 +530,14 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
-    [self reloadData];
+    if (model.isInstantData) {
+        [self.tableView reloadData];
+    }else{
+        [self reloadData];
+    }
+    
+    [self.detailController updateLayout:model.isInstantData];
+    
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated
