@@ -79,6 +79,9 @@
     self.refreshHeader = [FHCommunityDetailMJRefreshHeader headerWithRefreshingBlock:^{
         [weakSelf requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
     }];
+    self.refreshHeader.endRefreshingCompletionBlock = ^{
+        [weakSelf updateUIWithData:weakSelf.data];
+    };
     self.refreshHeader.mj_h = 14;
     self.refreshHeader.alpha = 0.0f;
 
