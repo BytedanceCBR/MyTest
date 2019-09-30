@@ -28,6 +28,7 @@
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic, assign) BOOL needReloadData;
 @property(nonatomic, copy) void(^notifyCompletionBlock)(void);
+@property(nonatomic, assign) NSInteger currentCityId;
 
 @end
 
@@ -157,6 +158,8 @@
     if(self.listType == FHCommunityFeedListTypeNearby){
         viewModel = [[FHCommunityFeedListNearbyViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = @"f_ugc_neighbor";
+//        viewModel.categoryId = @"f_shipin";
+//        viewModel.categoryId = @"f_hotsoon_video";
     }else if(self.listType == FHCommunityFeedListTypeMyJoin) {
         viewModel = [[FHCommunityFeedListMyJoinViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = @"f_ugc_follow";
@@ -173,7 +176,11 @@
     WeakSelf;
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
         StrongSelf;
-        self.needReloadData = YES;
+        NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+        if(self.currentCityId != cityId){
+            self.needReloadData = YES;
+            self.currentCityId = cityId;
+        }
     }];
 }
 
@@ -331,9 +338,10 @@
 #pragma mark - TTAccountMulticaastProtocol
 
 // 帐号切换
-- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
-{
-    self.needReloadData = YES;
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
+    if(self.listType != FHCommunityFeedListTypePostDetail) {
+        self.needReloadData = YES;
+    }
 }
 
 #pragma mark -- SSImpressionProtocol

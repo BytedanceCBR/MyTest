@@ -20,6 +20,8 @@ typedef enum FHDetailDiggType{
     FHDetailDiggTypeTHREAD = 2,     // 帖子点赞
     FHDetailDiggTypeREPLY = 3,      // 回复点赞
     FHDetailDiggTypeITEM = 4,       // 文章点赞
+    FHDetailDiggTypeSMALLVIDEO = 6, // 小视频
+    FHDetailDiggTypeVIDEO = 23,     // 视频
     FHDetailDiggTypeANSWER = 1025,  // 答案点赞
     FHDetailDiggTypeQUESTION = 1026,// 问题点赞
 } FHDetailDiggType;

@@ -48,6 +48,8 @@
     self.iconView = [[UIImageView alloc] init];
     _iconView.hidden = YES;
     _iconView.backgroundColor = [UIColor whiteColor];
+    _iconView.contentMode = UIViewContentModeScaleAspectFill;
+    _iconView.clipsToBounds = YES;
     [self addSubview:_iconView];
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];

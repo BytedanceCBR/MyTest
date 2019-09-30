@@ -121,6 +121,7 @@
     [self setupUI];
     self.isViewAppear = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToSubScrollView:) name:@"kScrollToSubScrollView" object:nil];
     [[SSImpressionManager shareInstance] addRegist:self];
     __weak typeof(self) weakSelf = self;
     self.panBeginAction = ^{
@@ -130,7 +131,9 @@
         weakSelf.mainScrollView.scrollEnabled = YES;
     };
 }
-
+-(void)scrollToSubScrollView:(NSNotification *)notification {
+    [self.mainScrollView setContentOffset:self.subScrollView.frame.origin animated:YES];
+}
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];

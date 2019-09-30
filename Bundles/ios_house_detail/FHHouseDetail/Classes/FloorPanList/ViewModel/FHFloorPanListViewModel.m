@@ -207,7 +207,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         {
             //售磬
 //            status = [NSString stringWithFormat:@"%d",self.currentTapLabel.tag];
-            status = @"售磬";
+            status = @"售罄";
         }
     }
     

@@ -27,6 +27,7 @@
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import "FHCommonApi.h"
 
 #define VideoWatchCountKey              @"video_watch_count"
 
@@ -273,10 +274,12 @@ inline CGFloat kVideoTitleLineHeight() {
      parameter.group_id = self.infoModel.groupId;
      parameter.ad_id = self.infoModel.adId;
      NSString *unique_id = self.infoModel.groupId ? self.infoModel.groupId : self.infoModel.adId;
-     [service digg:parameter completion:^(TT2DataItemActionResponseModel *response, NSError *error) {
-         SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:YES uniqueIDStr:unique_id);
-         SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:count uniqueIDStr:unique_id);
-     }];
+
+    FHDetailDiggType diggType = FHDetailDiggTypeVIDEO;
+    [FHCommonApi requestCommonDigg:unique_id groupType:diggType action:1 completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:YES uniqueIDStr:unique_id);
+        SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:count uniqueIDStr:unique_id);
+    }];
     
     //可能显示appStore评分视图
     [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"like"}];
@@ -296,7 +299,9 @@ inline CGFloat kVideoTitleLineHeight() {
     parameter.group_id = self.infoModel.groupId;
     parameter.ad_id = self.infoModel.adId;
     NSString *unique_id = self.infoModel.groupId ? self.infoModel.groupId : self.infoModel.adId;
-    [service cancelDigg:parameter completion:^(TT2DataItemActionResponseModel *response, NSError *error) {
+
+    FHDetailDiggType diggType = FHDetailDiggTypeVIDEO;
+    [FHCommonApi requestCommonDigg:unique_id groupType:diggType action:0 completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:NO uniqueIDStr:unique_id);
         SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:count uniqueIDStr:unique_id);
     }];

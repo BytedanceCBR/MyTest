@@ -45,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 //更新
 - (void)updateLoadFinish;
 
+-(void)updateLayout:(BOOL)isInstant;
+
 @end
 
 NS_ASSUME_NONNULL_END

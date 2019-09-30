@@ -8,6 +8,9 @@
 #import "FHUGCCellHelper.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import <TTBusinessManager+StringUtils.h>
+#import "TTVFeedListItem.h"
+#import <TTVFeedCellAction.h>
 
 @implementation FHUGCCellHelper
 
@@ -332,5 +335,44 @@
         model.vote.contentAStr = nil;
     }
 }
+
++ (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel {
+    TTVFeedListItem *item = [[TTVFeedListItem alloc] init];
+    item.originData = cellModel.videoFeedItem;
+    item.categoryId = cellModel.categoryId;
+    item.hideTitleAndWatchCount = YES;
+    item.refer = 1;
+
+    item.cellAction = [[TTVFeedCellVideoAction alloc] init];
+    item.isFirstCached = NO;
+    item.followedWhenInit = NO;
+
+    NSInteger playTimes = [cellModel.videoDetailInfo.videoWatchCount integerValue];
+    item.playTimes = [[TTBusinessManager formatPlayCount:playTimes] stringByAppendingString:@"次播放"];
+    NSString *durationText = nil;
+    int64_t duration = cellModel.videoDuration;
+    if (duration > 0) {
+        int minute = (int)duration / 60;
+        int second = (int)duration % 60;
+        durationText = [NSString stringWithFormat:@"%02i:%02i", minute, second];
+    }
+    item.durationTimeString = durationText;
+    
+    if([cellModel.imageList firstObject]){
+        item.imageModel = [self convertTTImageInfosModel:[cellModel.imageList firstObject]];;
+    }
+    
+    return item;
+}
+
++ (TTImageInfosModel *)convertTTImageInfosModel:(FHFeedContentImageListModel *)imageModel {
+    if(imageModel){
+        NSDictionary *dict = [imageModel toDictionary];
+        return [[TTImageInfosModel alloc] initWithDictionary:dict];
+    }
+    
+    return nil;
+}
+
 
 @end

@@ -52,8 +52,8 @@ def fhPods
     pod 'FHCommonUI', '0.0.3'
 
     #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9106c57f2bedcb8b652636e459fb8a0fc045c213'
-    pod 'ios_house_im' , '0.1.9'
-#    pod 'ios_house_im' , :path => '../../ios_house_im/ios_house_im/'
+    pod 'ios_house_im' , '0.1.10-rc.1'
+#    pod 'ios_house_im' , :path => '../../../Bundles/ios_house_im/'
 
     #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
     pod 'ios_house_filter' , '1.0.1'
@@ -157,6 +157,17 @@ def appPods
     'Performance'
     ]
     pod 'TTLocationManager','1.0.22'
+    pod 'BDUGLocationKit', '1.0.0-rc.5',:subspecs => [ # , '1.1.0'
+        'Core',
+        'DataCollection',
+        'ByteDancePlacemark',
+        'AmapLocation'
+        
+#        'Adapter'
+    ]
+    pod 'BDUGSettingsInterface' , '1.1.0'
+    pod 'BDUGKit' , '1.3.3'
+    
     pod 'Gaia','1.0.7-rc.1'
     pod 'TTGaiaExtension','0.4.2'
     pod 'BDAssert','2.0.0',:subspecs => [
@@ -318,9 +329,10 @@ def appPods
     pod_binary 'TTThemed','0.1.36'
 
     #-----头条UI组件库-----
-#    pod 'TTUIWidget', :path => '../AKPlugins/TTUIWidget', :inhibit_warnings => false
+    # add by zjing for test
+    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => 'a11e3ee98d9848465d217f75d24ddec526c50a32'
 #    pod 'TTUIWidget','1.4.0'
-    pod 'TTUIWidget', :path => '../../testPod/tt_pods_ui', :inhibit_warnings => false
+#    pod 'TTUIWidget', :path => '../../testPod/tt_pods_ui', :inhibit_warnings => false
 
     pod_binary 'ByteDanceKit', '1.0.0-rc.3', :subspecs => [
     'Foundation',
@@ -573,7 +585,7 @@ def appPods
     pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
 
 
-    pod 'TTIMSDK', '0.7.7', :subspecs => [
+    pod 'TTIMSDK', '0.8.8-alpha.1', :subspecs => [
         'IMKit',
         'IMKit_WebSocket',
         'Feature_ApplicationStatus',
@@ -639,6 +651,7 @@ target 'NewsLiteInHouse' do
     pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
     pod_binary 'TTSettingsManager/Debug'
     pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
+#    pod 'BDUGLocationKit/Debug' #, '1.1.0'
     #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine_inhouse'
     fhPods
     appPods

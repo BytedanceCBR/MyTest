@@ -1900,8 +1900,18 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 #pragma mark -
 - (void)changeTabbarIndex:(NSNotification *)notification {
-    NSString *tag = [notification.userInfo tt_stringValueForKey:@"tag"];
     
+    //在跳转之前先把现在的导航控制器pop到根视图,需要在通知中传入needToRoot的值，这是为了不影响其他地方的跳转逻辑
+    BOOL needToRoot = [notification.userInfo tt_boolValueForKey:@"needToRoot"];
+    if(needToRoot){
+        id vc = self.selectedViewController;
+        if([vc isKindOfClass:[UINavigationController class]]){
+            UINavigationController *naviVC = (UINavigationController *)vc;
+            [naviVC popToRootViewControllerAnimated:NO];
+        }
+    }
+    
+    NSString *tag = [notification.userInfo tt_stringValueForKey:@"tag"];
     [self updateSelectedViewControllerForTag:tag];
 }
 

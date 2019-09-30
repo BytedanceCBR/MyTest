@@ -47,9 +47,21 @@ PODS:
   - BDUGAccountOnekeyLogin (1.1.3)
   - BDUGContainer (1.1.2)
   - BDUGDeepLink (1.1.1)
+  - BDUGKit (1.3.3):
+    - BDUGKit/Category (= 1.3.3)
+    - BDUGKit/Macro (= 1.3.3)
+    - BDUGKit/Network (= 1.3.3)
+  - BDUGKit/Category (1.3.3)
+  - BDUGKit/Macro (1.3.3)
+  - BDUGKit/Network (1.3.3)
+  - BDUGLocationKit/AmapLocation (1.0.0-rc.5)
+  - BDUGLocationKit/ByteDancePlacemark (1.0.0-rc.5)
+  - BDUGLocationKit/Core (1.0.0-rc.5)
+  - BDUGLocationKit/DataCollection (1.0.0-rc.5)
   - BDUGMonitorInterface (1.0.0):
     - BDUGMonitorInterface/Core (= 1.0.0)
   - BDUGMonitorInterface/Core (1.0.0)
+  - BDUGSettingsInterface (1.1.0)
   - BDUGTrackerInterface (1.1.1)
   - BDUGUnionSDK (0.1.2.1-binary)
   - BDWebImage/Core (0.2.2.1-binary)
@@ -160,7 +172,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.9)
+  - ios_house_im (0.1.10-rc.1)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -368,26 +380,26 @@ PODS:
   - TTImagePicker/Model (1.1.6)
   - TTImagePreviewAnimateManager (1.0.13.1-binary)
   - TTImpression (0.0.26.1-binary)
-  - TTIMSDK/Bridges (0.7.7)
-  - TTIMSDK/Feature_ApplicationStatus (0.7.7)
-  - TTIMSDK/Feature_Core (0.7.7)
-  - TTIMSDK/Feature_Core_Config (0.7.7)
-  - TTIMSDK/Feature_Core_ConversationInfo (0.7.7)
-  - TTIMSDK/Feature_Core_CurrentUser (0.7.7)
-  - TTIMSDK/Feature_Core_ErrorHandler (0.7.7)
-  - TTIMSDK/Feature_Core_Logger (0.7.7)
-  - TTIMSDK/Feature_Core_Notifier (0.7.7)
-  - TTIMSDK/Feature_Core_Puller (0.7.7)
-  - TTIMSDK/Feature_Core_Sender (0.7.7)
-  - TTIMSDK/Feature_Core_Store (0.7.7)
-  - TTIMSDK/Feature_Essential (0.7.7)
-  - TTIMSDK/Feature_Essential_PB (0.7.7)
-  - TTIMSDK/Feature_WebSocket (0.7.7)
-  - TTIMSDK/Foundation (0.7.7)
-  - TTIMSDK/Foundation_Plugin_TTNetwork (0.7.7)
-  - TTIMSDK/IMKit (0.7.7)
-  - TTIMSDK/IMKit_Core (0.7.7)
-  - TTIMSDK/IMKit_WebSocket (0.7.7)
+  - TTIMSDK/Bridges (0.8.8-alpha.1)
+  - TTIMSDK/Feature_ApplicationStatus (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Config (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_ConversationInfo (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_CurrentUser (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_ErrorHandler (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Logger (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Notifier (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Puller (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Sender (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Store (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Essential (0.8.8-alpha.1)
+  - TTIMSDK/Feature_Essential_PB (0.8.8-alpha.1)
+  - TTIMSDK/Feature_WebSocket (0.8.8-alpha.1)
+  - TTIMSDK/Foundation (0.8.8-alpha.1)
+  - TTIMSDK/Foundation_Plugin_TTNetwork (0.8.8-alpha.1)
+  - TTIMSDK/IMKit (0.8.8-alpha.1)
+  - TTIMSDK/IMKit_Core (0.8.8-alpha.1)
+  - TTIMSDK/IMKit_WebSocket (0.8.8-alpha.1)
   - TTInstallService (1.3.1.1-binary)
   - TTKitchen/Core (3.0.1)
   - TTKitchen/SettingsSyncer (3.0.1)
@@ -655,7 +667,13 @@ DEPENDENCIES:
   - BDUGAccountOnekeyLogin (= 1.1.3)
   - BDUGContainer (= 1.1.2)
   - BDUGDeepLink (= 1.1.1)
+  - BDUGKit (= 1.3.3)
+  - BDUGLocationKit/AmapLocation (= 1.0.0-rc.5)
+  - BDUGLocationKit/ByteDancePlacemark (= 1.0.0-rc.5)
+  - BDUGLocationKit/Core (= 1.0.0-rc.5)
+  - BDUGLocationKit/DataCollection (= 1.0.0-rc.5)
   - BDUGMonitorInterface (= 1.0.0)
+  - BDUGSettingsInterface (= 1.1.0)
   - BDUGTrackerInterface (= 1.1.1)
   - BDUGUnionSDK (= 0.1.2.1-binary)
   - BDWebImage/Core (= 0.2.2.1-binary)
@@ -727,7 +745,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.9)
+  - ios_house_im (= 0.1.10-rc.1)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -829,26 +847,26 @@ DEPENDENCIES:
   - TTImagePicker (from `../AKPlugins/AKImagePicker`)
   - TTImagePreviewAnimateManager (= 1.0.13.1-binary)
   - TTImpression (= 0.0.26.1-binary)
-  - TTIMSDK/Bridges (= 0.7.7)
-  - TTIMSDK/Feature_ApplicationStatus (= 0.7.7)
-  - TTIMSDK/Feature_Core (= 0.7.7)
-  - TTIMSDK/Feature_Core_Config (= 0.7.7)
-  - TTIMSDK/Feature_Core_ConversationInfo (= 0.7.7)
-  - TTIMSDK/Feature_Core_CurrentUser (= 0.7.7)
-  - TTIMSDK/Feature_Core_ErrorHandler (= 0.7.7)
-  - TTIMSDK/Feature_Core_Logger (= 0.7.7)
-  - TTIMSDK/Feature_Core_Notifier (= 0.7.7)
-  - TTIMSDK/Feature_Core_Puller (= 0.7.7)
-  - TTIMSDK/Feature_Core_Sender (= 0.7.7)
-  - TTIMSDK/Feature_Core_Store (= 0.7.7)
-  - TTIMSDK/Feature_Essential (= 0.7.7)
-  - TTIMSDK/Feature_Essential_PB (= 0.7.7)
-  - TTIMSDK/Feature_WebSocket (= 0.7.7)
-  - TTIMSDK/Foundation (= 0.7.7)
-  - TTIMSDK/Foundation_Plugin_TTNetwork (= 0.7.7)
-  - TTIMSDK/IMKit (= 0.7.7)
-  - TTIMSDK/IMKit_Core (= 0.7.7)
-  - TTIMSDK/IMKit_WebSocket (= 0.7.7)
+  - TTIMSDK/Bridges (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_ApplicationStatus (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Config (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_ConversationInfo (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_CurrentUser (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_ErrorHandler (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Logger (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Notifier (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Puller (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Sender (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Core_Store (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Essential (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_Essential_PB (= 0.8.8-alpha.1)
+  - TTIMSDK/Feature_WebSocket (= 0.8.8-alpha.1)
+  - TTIMSDK/Foundation (= 0.8.8-alpha.1)
+  - TTIMSDK/Foundation_Plugin_TTNetwork (= 0.8.8-alpha.1)
+  - TTIMSDK/IMKit (= 0.8.8-alpha.1)
+  - TTIMSDK/IMKit_Core (= 0.8.8-alpha.1)
+  - TTIMSDK/IMKit_WebSocket (= 0.8.8-alpha.1)
   - TTInstallService (= 1.3.1.1-binary)
   - TTKitchen/Core (= 3.0.1)
   - TTKitchen/SettingsSyncer (= 3.0.1)
@@ -889,7 +907,7 @@ DEPENDENCIES:
   - TTThemed (= 0.1.36.1-binary)
   - TTTracker (= 10.0.5.1-binary)
   - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
-  - TTUIWidget (from `../../testPod/tt_pods_ui`)
+  - TTUIWidget (from `git@code.byted.org:TTIOS/tt_pods_ui.git`, commit `a11e3ee98d9848465d217f75d24ddec526c50a32`)
   - TTUserProfile (from `../TTBundles/ios_tt_userprofile`)
   - TTUserSettings (= 0.3.4.1-binary)
   - TTVContainerScrollView (= 0.1.2.1-binary)
@@ -1015,13 +1033,19 @@ EXTERNAL SOURCES:
   TTUGCFoundation:
     :path: ../Vendor/TTUGCFoundation
   TTUIWidget:
-    :path: ../../testPod/tt_pods_ui
+    :commit: a11e3ee98d9848465d217f75d24ddec526c50a32
+    :git: git@code.byted.org:TTIOS/tt_pods_ui.git
   TTUserProfile:
     :path: ../TTBundles/ios_tt_userprofile
   TTVPlayerPod:
     :path: ../AKPlugins/TTVPlayer
   yoga:
     :path: ../ReactCommon/yoga
+
+CHECKOUT OPTIONS:
+  TTUIWidget:
+    :commit: a11e3ee98d9848465d217f75d24ddec526c50a32
+    :git: git@code.byted.org:TTIOS/tt_pods_ui.git
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
@@ -1052,7 +1076,10 @@ SPEC CHECKSUMS:
   BDUGAccountOnekeyLogin: 6b9b71170a10e55b79b3d67f87cb19864479f372
   BDUGContainer: 28193629e67c7c9244f5d5836bfed611bf631321
   BDUGDeepLink: 44dfefe43051d60cb1fd918ebdca3abcc090d365
+  BDUGKit: 215f3f098840a16e1c491447d56e49093f08075d
+  BDUGLocationKit: bbae7302555c5c7d23e285312487323cd67c20ed
   BDUGMonitorInterface: e64b2d5bcb2a3283af8f83daeaa0599a160351f1
+  BDUGSettingsInterface: 5cb90d9373928d36e371c72449061cabe491359f
   BDUGTrackerInterface: c41760f7de16c6f4b84395e71e85875a4cd87611
   BDUGUnionSDK: 837abef87c8d0f8cce87fb945dc18f2317d3d838
   BDWebImage: cb9435b175d994f7156ffdc736477d794db576dd
@@ -1091,12 +1118,12 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 314f15ca4b52a6664661b2066d67e3e1917e900e
+  ios_house_im: 9965ac763d29b1301c8458cb7430bfe6141b47a5
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
   libwebp: c184f52cefe46b52c753216233ac467ba8f61730
-  lottie-ios: 35dd57473fff703c4a9c9c4d4d1ad7c2e2c84a4d
+  lottie-ios: f2b8cad625e57b90974a282efac4fce375ba3860
   Mantle: 12334925664929842f283b898dce59a3979edb8e
   Masonry: e7568c8ebfa71397954e471aa5afa2bc4cc73cf4
   MBProgressHUD: 3dcb01b57ae9af405717a0e338566a0087cca22a
@@ -1109,7 +1136,7 @@ SPEC CHECKSUMS:
   React: 5e1cd3dbd5d3472c64a378caad5cf4468a60c615
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
-  RSSwizzle: 9b7cf78908bc6b249f1403926c168f730f840e91
+  RSSwizzle: 535f53ac21a545718af9b3bae51f7c3df5ad7bc0
   RXCollections: fc5eb6c41b5a3646601e6a01c1ee444c354a9bfc
   SDWebImage: abd373dadf531cf5d1738f6a8e9487f7f4a12f14
   SecGuard: 4cb7fa89163ad3f896cf6c5600d343fd479e9905
@@ -1154,7 +1181,7 @@ SPEC CHECKSUMS:
   TTImagePicker: 728917a7f6b46e1029ec5fcd755ce7a62f311166
   TTImagePreviewAnimateManager: 89284791379992856207b5b92662037d07cb08eb
   TTImpression: d2d80c26abef863c5be6dc8b6fe10ebef3331b84
-  TTIMSDK: bc920322f0cb1a542bc0f6c7cfdef1f8576dbc3c
+  TTIMSDK: 18b9e0181db32b3a22338d6c76efb5dcf687c7f2
   TTInstallService: 278ab1b8adf5f1a632507406386a2a80df58d84f
   TTKitchen: 4a9860af825fc06ca6747379c6036d7c26b9ffe0
   TTKitchenExtension: 8e66b1d9df811a5c483ce1d838c50d6e6042019b
@@ -1189,7 +1216,7 @@ SPEC CHECKSUMS:
   TTThemed: 921e544fa8ca8c34b3a091af38b8612609c18480
   TTTracker: 53b746772e7240481e57bee23ae866924fdc0193
   TTUGCFoundation: f67fd0f474fef086cd3e986a4ad2c8bb79220d94
-  TTUIWidget: d89c644326aafc74736cd3e76d9df07a560f5612
+  TTUIWidget: 777b4408e020d5068dbd531fef3d09b4b29dd3a4
   TTUserProfile: e9f6d23e86b3c1232b15a79a239e5d3a27e5b2f3
   TTUserSettings: ae3d4a3efeb987e7a2fe528545cfdb87a7798c72
   TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932
@@ -1215,6 +1242,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: e92da8e2c200603166a666d1f3117373a5f382de
+PODFILE CHECKSUM: 658a8fbfcf6b2bf77cb52cec20d9f1a987b257a0
 
 COCOAPODS: 1.4.0

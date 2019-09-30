@@ -312,15 +312,39 @@
     [self.view bringSubviewToFront:_navBar];
 }
 
+-(void)updateLayout:(BOOL)isInstant
+{
+    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.view);
+        if (isInstant) {
+            make.bottom.mas_equalTo(self.view);
+        }else{
+            make.bottom.mas_equalTo(self.bottomBar.mas_top);
+        }
+    }];
+    self.bottomBar.hidden = isInstant;
+    self.bottomMaskView.hidden = isInstant;
+    self.bottomStatusBar.hidden = isInstant;
+    
+    if (isInstant) {
+        [self.view bringSubviewToFront:self.tableView];
+    }else{
+        [self.view sendSubviewToBack:self.tableView];
+    }
+    
+    [self.view setNeedsUpdateConstraints];
+}
+
 - (void)setupCallCenter {
-    __weak typeof(self) wself = self;
+    @weakify(self);
     self.callCenter = [[CTCallCenter alloc] init];
     _callCenter.callEventHandler = ^(CTCall* call){
+        @strongify(self);
         if ([call.callState isEqualToString:CTCallStateDisconnected]){
             //未接通
         }else if ([call.callState isEqualToString:CTCallStateConnected]){
             //通话中
-            wself.isPhoneCallPickUp = YES;
+            self.isPhoneCallPickUp = YES;
         }else if([call.callState isEqualToString:CTCallStateIncoming]){
             //来电话
         }else if ([call.callState isEqualToString:CTCallStateDialing]){
