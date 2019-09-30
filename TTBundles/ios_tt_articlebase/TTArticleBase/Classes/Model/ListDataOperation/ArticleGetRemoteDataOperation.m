@@ -39,6 +39,8 @@
 #import "ExploreFetchListManager.h"
 #import "SSCommonLogic.h"
 #import "ExploreLogicSetting.h"
+#import <HMDTTMonitor.h>
+#import <TTReachability/TTReachability.h>
 
 @interface ArticleGetRemoteDataOperation ()
 @property(nonatomic, strong)TTHttpTask *httpTask;
@@ -163,6 +165,9 @@
     
     [self.httpTask cancel];
     
+    NSTimeInterval startMonitorTime = [[NSDate date] timeIntervalSince1970];
+    NSLog(@"request start %lf", startMonitorTime);
+    
     WeakSelf;
     self.httpTask = [[TTNetworkManager shareInstance] requestForJSONWithURL:completeURLStr
                                                                      params:parameters
@@ -171,6 +176,33 @@
                                                                    callback:^(NSError *error, id jsonObj) {
                                                                        StrongSelf;
                                                                        self.httpTask = nil;
+                                                                       
+                                                                       NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+                                                                       
+                                                                       NSString *durationStr = [NSString stringWithFormat:@"%.1f",(now - startMonitorTime) * 1000.0f];
+                                                                       NSString *serviceName = [NSString stringWithFormat:@"f_api_performance_feed_%@",getParameter[@"category"]];
+                                                                       
+                                                                       NSInteger metricStatus = 0;
+
+                                                                       if (error || !jsonObj) {
+                                                                           metricStatus = 1;
+                                                                           if (![TTReachability isNetworkConnected]) {
+                                                                               metricStatus = 2;
+                                                                           }
+                                                                       }
+                                                                       
+                                                                       if (durationStr) {
+                                                                           NSMutableDictionary *metric = @{}.mutableCopy;
+                                                                           NSMutableDictionary *extraDict = @{}.mutableCopy;
+
+                                                                           metric[@"api_duration_network"] = durationStr;
+                                                                           extraDict[@"error_code"] = @(error.code);
+                                                                     
+                                                                           extraDict[@"error_message"] = error.description;
+                                                                           
+                                                                           [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:metric category:@{@"status":@(metricStatus)} extra:nil];
+                                                                       }
+                                                                       
                                                                        
                                                                        if (jsonObj) {
                                                                            jsonObj = @{@"result":jsonObj};

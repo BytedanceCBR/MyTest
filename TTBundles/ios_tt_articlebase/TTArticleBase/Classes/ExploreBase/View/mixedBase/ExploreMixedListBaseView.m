@@ -174,7 +174,7 @@
 #import "TTSandBoxHelper.h"
 #import <FHUtils.h>
 #import <TTTabBarItem.h>
-
+#import <HMDTTMonitor.h>
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -2249,7 +2249,6 @@ TTRefreshViewDelegate
     }
     else {
         self.ttViewType = TTFullScreenErrorViewTypeEmpty;
-        
     }
     
     //统计计时
@@ -2270,6 +2269,13 @@ TTRefreshViewDelegate
     
     [self userRefreshGuideHideTabbarBubbleView];
     
+    
+    NSTimeInterval startMonitorTime = 0;
+    if (fromRemote) {
+        startMonitorTime = [[NSDate date] timeIntervalSince1970];
+        NSLog(@"data %lf", startMonitorTime);
+    }
+    
     int64_t startTime = [NSObject currentUnixTime];
     [_fetchListManager startExecuteWithCondition:condition
                                        fromLocal:fromLocal
@@ -2289,6 +2295,20 @@ TTRefreshViewDelegate
                                              [userInfo setValue:wself.categoryID forKey:@"categoryID"];
                                              [userInfo setValue:@(increaseItems.count) forKey:@"count"];
                                              [[NSNotificationCenter defaultCenter] postNotificationName:kNewsListFetchedRemoteReloadItemCountNotification object:nil userInfo:userInfo];
+                                         }
+                                         
+                                         
+                                         if (fromRemote) {
+                                             NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+                                             
+                                             NSString *durationStr = [NSString stringWithFormat:@"%.1f",(now - startMonitorTime) * 1000.0f];
+                                             NSString *serviceName = [NSString stringWithFormat:@"f_api_performance_feed_%@",_categoryID];
+                                             
+                                             if (durationStr) {
+                                                 NSMutableDictionary *metric = @{}.mutableCopy;
+                                                 metric[@"api_duration_business"] = durationStr;
+                                                 [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:metric category:@{@"status":@(0)} extra:nil];
+                                             }
                                          }
                                          
                                          int64_t endTime = [NSObject currentUnixTime];
@@ -2601,6 +2621,7 @@ TTRefreshViewDelegate
                                                      }
                                                  }
                                              }
+                                             
                                              
                                              if (isFinish && isResponseFromRemote) {
                                                  
