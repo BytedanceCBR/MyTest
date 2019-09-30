@@ -78,9 +78,10 @@
     MJWeakSelf;
     self.refreshHeader = [FHCommunityDetailMJRefreshHeader headerWithRefreshingBlock:^{
         [weakSelf requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+        weakSelf.feedListController.view.userInteractionEnabled = NO;
     }];
     self.refreshHeader.endRefreshingCompletionBlock = ^{
-        [weakSelf updateUIWithData:weakSelf.data];
+        weakSelf.feedListController.view.userInteractionEnabled = YES;
     };
     self.refreshHeader.mj_h = 14;
     self.refreshHeader.alpha = 0.0f;

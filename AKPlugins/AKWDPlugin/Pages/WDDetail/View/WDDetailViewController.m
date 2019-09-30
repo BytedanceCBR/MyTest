@@ -790,7 +790,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_showTitle:(BOOL)show
 {
-    BOOL isShow = self.profileTitleView.isShow;
     [self.profileTitleView show:show animated:YES];
     self.rightFollowButton.hidden = YES;
     if (show) {
@@ -1238,7 +1237,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
     [self.detailView.detailWebView openFooterView:NO];
     self.wasTitleViewShowed = self.profileTitleView.isShow;
-    [self p_showTitle:YES];
+    self.rightFollowButton.hidden = YES;
+    self.navigationItem.titleView = self.profileTitleView;
 }
 
 - (void)p_closeNatantView
