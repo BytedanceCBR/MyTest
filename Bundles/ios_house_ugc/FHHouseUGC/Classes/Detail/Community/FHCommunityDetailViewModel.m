@@ -544,7 +544,8 @@
     if(isAdmin) {
         isShowPublications = YES;
         self.headerView.publicationsDetailViewTitleLabel.text = @"编辑公告";
-        self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:(data.announcement.length > 0)?data.announcement: @"该小区圈暂无公告，管理员可点击编辑"];
+        NSString *defaultAnnouncement = [NSString stringWithFormat:@"与%@有关的话题都可以在这里分享讨论哦", data.socialGroupName];
+        self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:(data.announcement.length > 0)?data.announcement: defaultAnnouncement];
 
         self.headerView.gotoPublicationsDetailBlock = ^{
             // 跳转公告编辑页

@@ -96,11 +96,7 @@ typedef enum : NSUInteger {
     
     __weak typeof(self) wself = self;
     self.customNavBarView.leftButtonBlock = ^{
-        if(![wself.textView.text isEqualToString:wself.content]) {
-            [wself showAlertToAskUserDecision];
-        } else {
-            [wself exitPage];
-        }
+        [wself showAlertToAskUserDecision];
     };
     
     [self.customNavBarView addSubview:self.completeButton];
@@ -345,7 +341,7 @@ typedef enum : NSUInteger {
     
     [self.textView resignFirstResponder];
     
-    BOOL isEmpty = (self.textView.text.length == 0);
+    BOOL isEmpty = (self.textView.text.length == 0) && ![self.textView.text isEqualToString:self.content];
     NSString *title = isEmpty ? @"确定清空公告栏?" : @"退出编辑?";
     
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];

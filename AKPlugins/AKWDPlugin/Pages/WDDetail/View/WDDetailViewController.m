@@ -790,10 +790,12 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_showTitle:(BOOL)show
 {
-    [self.profileTitleView show:show animated:YES];
-    self.rightFollowButton.hidden = YES;
     if (show) {
         self.navigationItem.titleView = self.profileTitleView;
+    }
+    self.rightFollowButton.hidden = YES;
+    if(show != self.profileTitleView.isShow) {
+        [self.profileTitleView show:show animated:YES];
     }
 }
 
