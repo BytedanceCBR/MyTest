@@ -2273,7 +2273,6 @@ TTRefreshViewDelegate
     NSTimeInterval startMonitorTime = 0;
     if (fromRemote) {
         startMonitorTime = [[NSDate date] timeIntervalSince1970];
-        NSLog(@"data %lf", startMonitorTime);
     }
     
     int64_t startTime = [NSObject currentUnixTime];

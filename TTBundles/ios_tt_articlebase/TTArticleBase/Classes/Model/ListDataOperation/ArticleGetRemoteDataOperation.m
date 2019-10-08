@@ -166,7 +166,6 @@
     [self.httpTask cancel];
     
     NSTimeInterval startMonitorTime = [[NSDate date] timeIntervalSince1970];
-    NSLog(@"request start %lf", startMonitorTime);
     
     WeakSelf;
     self.httpTask = [[TTNetworkManager shareInstance] requestForJSONWithURL:completeURLStr
