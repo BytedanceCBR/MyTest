@@ -644,6 +644,10 @@ target 'NewsLiteInHouse' do
     pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
     pod_binary 'TTSettingsManager/Debug'
     pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
+    pod_binary 'MLeaksFinder','1.0.2-rc.0',:subspecs => [
+    'Core'
+    ]
+    pod_binary 'FBRetainCycleDetector','0.1.5-alpha.2'
 #    pod 'BDUGLocationKit/Debug' #, '1.1.0'
     #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine_inhouse'
     fhPods

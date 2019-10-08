@@ -92,6 +92,7 @@ PODS:
   - Crashlytics (3.12.0.1-binary)
   - EAccountApiSDK (1.1.1.1-binary)
   - Fabric (1.10.2.1-binary)
+  - FBRetainCycleDetector (0.1.5-alpha.2.1.binary)
   - FHCHousePush (0.1.0)
   - FHCommonUI (0.0.4)
   - FHHouseBase (0.1.0)
@@ -223,6 +224,7 @@ PODS:
   - MBProgressHUD (1.1.0.1-binary)
   - MJExtension (3.0.12.1-binary)
   - MJRefresh (3.1.15.7.1-binary)
+  - MLeaksFinder/Core (1.0.2-rc.0.1.binary)
   - OHHTTPStubs (4.2.1.1-binary):
     - OHHTTPStubs/Core (= 4.2.1.1-binary)
     - OHHTTPStubs/Default (= 4.2.1.1-binary)
@@ -627,6 +629,7 @@ DEPENDENCIES:
   - Crashlytics (= 3.12.0.1-binary)
   - EAccountApiSDK (= 1.1.1.1-binary)
   - Fabric (= 1.10.2.1-binary)
+  - FBRetainCycleDetector (= 0.1.5-alpha.2.1.binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
   - FHCommonUI (= 0.0.4)
   - FHHouseBase (from `../Bundles/ios_house_base`)
@@ -690,6 +693,7 @@ DEPENDENCIES:
   - MBProgressHUD (= 1.1.0.1-binary)
   - MJExtension (= 3.0.12.1-binary)
   - MJRefresh (= 3.1.15.7.1-binary)
+  - MLeaksFinder/Core (= 1.0.2-rc.0.1.binary)
   - OHHTTPStubs (= 4.2.1.1-binary)
   - OpenSSL-Universal (= 1.0.1.20.1-binary)
   - OpenUDID (= 0.1.0.1-binary)
@@ -1018,6 +1022,7 @@ SPEC CHECKSUMS:
   Crashlytics: bf08c2834d9231328142ef5588ee1ae5b78229a9
   EAccountApiSDK: 29385b846225d7ef532237b4a71aa10647914f35
   Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
+  FBRetainCycleDetector: 9efb6dac5baef178b6e60ba2f85112a7aff8dca4
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
   FHCommonUI: c7eeabaebb19bb0e281e97e7814294a60edb8ece
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
@@ -1056,6 +1061,7 @@ SPEC CHECKSUMS:
   MBProgressHUD: 3dcb01b57ae9af405717a0e338566a0087cca22a
   MJExtension: da69d633398f365e84e052720b7943206f467935
   MJRefresh: 0163f5b55692ab35b37f1d11c094f98218b93a5e
+  MLeaksFinder: a0db6991409e90f0e3b54e38df7481a52f38e723
   OHHTTPStubs: 8fe4a9bac9386d3450c6cdaeca77e5d07d0f6cf4
   OpenSSL-Universal: 7bd04be21cd79882c6b2e4afd9433b3e94f88ac0
   OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
@@ -1169,6 +1175,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 26a668336f8294fbb2ab3bd8947950a33bd04890
+PODFILE CHECKSUM: 3eaece9f6ee8afa113b57085e880d5e07ff03b93
 
 COCOAPODS: 1.4.0

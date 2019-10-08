@@ -448,8 +448,28 @@ static NSInteger kGetLightRequestRetryCount = 3;
     dispatch_async(dispatch_get_main_queue(), ^{
         [FHIESGeckoManager configGeckoInfo];
         [FHIESGeckoManager configIESWebFalcon];
+        [self configMemLeaks];
     });
     
+}
+
+- (void)configMemLeaks {
+#if MLeaksFinder
+    NSString * appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+    NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
+    NSString *didStr = [NSString stringWithFormat:@"Device ID:\n%@",deviceId];
+    MLeaksConfig *config = [[MLeaksConfig alloc] initWithAid:@"1370"
+                                  enableAssociatedObjectHook:YES
+                                                     filters:nil
+                                               viewStackType:MLeaksViewStackTypeViewController
+                                                  appVersion:appVersion
+                                                   buildInfo:buildVersionRaw
+                                               userInfoBlock:^NSString *{
+                                                   return didStr;
+                                               }];
+    [TTMLeaksFinder startDetectMemoryLeakWithConfig:config];
+#endif
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
