@@ -30,6 +30,8 @@
 #import <TTTabBarItem.h>
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import <TTArticleTabBarController.h>
+#import "MLeaksConfig.h"
+#import "MLeaksFinder.h"
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -470,6 +472,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
                                                }];
     [TTMLeaksFinder startDetectMemoryLeakWithConfig:config];
 #endif
+    //#MLeaksFinder宏会跟随MLeaksFinder库注入
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
