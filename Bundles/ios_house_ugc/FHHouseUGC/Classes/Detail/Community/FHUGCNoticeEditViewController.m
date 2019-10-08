@@ -16,6 +16,7 @@
 #import <UIViewAdditions.h>
 #import "NSObject+MultiDelegates.h"
 #import <TTUGCEmojiParser.h>
+#import "FHUGCNoticeModel.h"
 
 typedef enum : NSUInteger {
     ActionTypeSaveOnly = 0,
@@ -317,7 +318,7 @@ typedef enum : NSUInteger {
     params[@"announcement"] = self.textView.text;
     params[@"push_type"] = @(actionType);
 
-    [FHHouseUGCAPI requestUpdateUGCNoticeWithParam:params completion:^(NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestUpdateUGCNoticeWithParam:params completion:^(FHUGCNoticeModel *model, NSError * _Nonnull error) {
         
         [[ToastManager manager] dismissCustomLoading];
         
@@ -328,7 +329,7 @@ typedef enum : NSUInteger {
         else {
             [[ToastManager manager] showToast:@"操作成功"];
             if(self.callback) {
-                self.callback(self.textView.text);
+                self.callback(model.data.announcement);
             }
             [self exitPage];
         }
