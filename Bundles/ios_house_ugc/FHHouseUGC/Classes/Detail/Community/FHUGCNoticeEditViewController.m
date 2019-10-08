@@ -274,7 +274,7 @@ typedef enum : NSUInteger {
     [self traceAlertShowWhenCompletedPressed];
     [self.textView resignFirstResponder];
     
-    NSString *title = @"向圈子中的人发送公告";
+    NSString *title = @"向圈子中的人发送公告？";
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle: title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     UIAlertAction *saveOnlyAction = [UIAlertAction actionWithTitle:@"仅保存" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
