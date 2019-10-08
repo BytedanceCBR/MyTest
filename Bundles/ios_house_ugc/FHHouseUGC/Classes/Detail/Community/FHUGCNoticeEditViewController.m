@@ -96,7 +96,11 @@ typedef enum : NSUInteger {
     
     __weak typeof(self) wself = self;
     self.customNavBarView.leftButtonBlock = ^{
-        [wself showAlertToAskUserDecision];
+        if(wself.isReadOnly) {
+            [wself exitPage];
+        } else {
+            [wself showAlertToAskUserDecision];
+        }
     };
     
     [self.customNavBarView addSubview:self.completeButton];
