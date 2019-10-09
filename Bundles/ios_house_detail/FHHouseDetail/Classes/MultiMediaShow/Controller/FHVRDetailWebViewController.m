@@ -8,13 +8,18 @@
 #import "FHVRDetailWebViewController.h"
 
 @interface FHVRDetailWebViewController ()
-
+@property(nonatomic,strong)UIImageView *maskLoadingView;
 @end
 
 @implementation FHVRDetailWebViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    __weak __typeof(self) weakSelf = self;
+    [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
+        [_maskLoadingView removeFromSuperview];
+    } forMethodName:@"closeLoading"];
     // Do any additional setup after loading the view.
 }
 
@@ -22,6 +27,16 @@
 {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
+
+    if (!_maskLoadingView) {
+        _maskLoadingView = [UIImageView new];
+        [_maskLoadingView setImage:[UIImage imageNamed:@"fh_vr_loading"]];
+        [_maskLoadingView setFrame:self.view.frame];
+        _maskLoadingView.contentMode = UIViewContentModeScaleAspectFill;
+        [_maskLoadingView setBackgroundColor:[UIColor redColor]];
+        [self.view addSubview:_maskLoadingView];
+        [self.view bringSubviewToFront:_maskLoadingView];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated

@@ -34,7 +34,7 @@ static CGFloat multiplier = 4;
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor redColor];
+        self.backgroundColor = [UIColor whiteColor];
  
         [self setupUI];
         [self setupBackground];

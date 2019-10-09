@@ -188,7 +188,7 @@
     
     //VR
     if (index == 0) {
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_nav_bar=true&url=http://f-boe.bytedance.net/f100/activity/client/pano"]];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=http://f-boe.bytedance.net/f100/activity/client/pano"]];
         return;
     }
     
