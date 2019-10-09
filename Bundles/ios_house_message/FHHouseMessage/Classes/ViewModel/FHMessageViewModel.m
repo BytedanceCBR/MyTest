@@ -54,6 +54,7 @@
 @property(nonatomic, strong) id <FHMessageBridgeProtocol> messageBridge;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSString *pageType;
+@property (nonatomic, copy)     NSString       *enterFrom;
 
 @property(nonatomic, strong) DeleteAlertDelegate *deleteAlertDelegate;
 
@@ -97,6 +98,10 @@
 
 - (void)setPageType:(NSString *)pageType {
     _pageType = pageType;
+}
+
+- (void)setEnterFrom:(NSString *)enterFrom {
+    _enterFrom = enterFrom;
 }
 
 - (void)requestData {
@@ -347,10 +352,11 @@
     [conv setSyncExtEntry:params completion:^(id _Nullable response, NSError *_Nullable error) {
         if (error == nil) {
             [conv setDraft:nil];
-            NSDictionary *params = @{@"event_type": @"house_app2c_v2",
+            NSDictionary *params = @{
                     @"page_type": _pageType,
                     @"conversation_id": conversationId,
                     @"realtor_id": targetUserId,
+                    @"enter_from":self.enterFrom ?: @"be_null"
             };
             [FHUserTracker writeEvent:@"delete_conversation" params:params];
         }
@@ -361,10 +367,10 @@
     NSString *conversationId = conv.identifier;
     NSString *targetUserId = [conv getTargetUserId:[[TTAccount sharedAccount] userIdString]];
     NSDictionary *params = @{
-            @"event_type": @"house_app2b",
             @"page_type": _pageType,
             @"conversation_id": conversationId,
             @"realtor_id": targetUserId,
+            @"enter_from":self.enterFrom ?: @"be_null"
     };
     [FHUserTracker writeEvent:@"click_conversation" params:params];
 }
