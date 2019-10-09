@@ -19,6 +19,7 @@
 #import <UIImageView+BDWebImage.h>
 #import "TTRoute.h"
 #import "JSONAdditions.h"
+#import <UIView+XWAddForRoundedCorner.h>
 
 @interface FHUGCCellOriginItemView ()
 
@@ -40,7 +41,9 @@
 
 - (void)initViews {
     self.backgroundColor = [UIColor themeGray7];
-    self.layer.cornerRadius = 4;
+    self.layer.masksToBounds = YES;
+//    self.layer.cornerRadius = 4;
+    [self xw_roundedCornerWithRadius:4 cornerColor:[UIColor whiteColor]];
     
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToDetail:)];
     [self addGestureRecognizer:singleTap];
@@ -54,6 +57,8 @@
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = 2;
+    _contentLabel.layer.masksToBounds = YES;
+    _contentLabel.backgroundColor = [UIColor themeGray7];
     [self addSubview:_contentLabel];
 }
 

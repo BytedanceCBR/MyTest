@@ -13,14 +13,7 @@
 @implementation FHFeedOperationOption
 
 + (FHFeedOperationOptionType)optionTypeForKeyword:(FHFeedOperationWord *)keyword {
-    switch (keyword.type) {
-        case FHFeedOperationWordTypeOthers:
-            return FHFeedOperationOptionTypeOther;
-        case FHFeedOperationWordTypeReport:
-            return FHFeedOperationOptionTypeReport;
-        case FHFeedOperationWordTypeDelete:
-            return FHFeedOperationOptionTypeDelete;
-    }
+    return (FHFeedOperationOptionType)keyword.type;
 }
 
 @end

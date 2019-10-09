@@ -154,9 +154,9 @@
     cellModel.aggrType = model.aggrType;
     cellModel.needLinkSpan = YES;
     cellModel.behotTime = model.behotTime;
-    cellModel.isStick = model.isStick;
-    cellModel.stickStyle = model.stickStyle;
-    cellModel.contentDecoration = [self contentDecorationFromString:model.contentDecoration];
+    cellModel.isStick = (model.isStick || model.rawData.isStick);
+    cellModel.stickStyle = ((model.stickStyle != FHFeedContentStickStyleUnknown) ? model.stickStyle : model.rawData.stickStyle);
+    cellModel.contentDecoration = [self contentDecorationFromString:(model.contentDecoration.length > 0 ? model.contentDecoration : model.rawData.contentDecoration)];
     cellModel.originData = model;
     //目前仅支持话题类型
     cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
@@ -259,7 +259,8 @@
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
             }
         }
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         cellModel.groupId = model.rawData.groupId;
         cellModel.title = model.rawData.content.question.title;
         cellModel.openUrl = model.rawData.content.question.questionListSchema;
@@ -289,7 +290,8 @@
         }else{
             cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
         }
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
         cellModel.groupId = model.rawData.groupId;
         cellModel.content = model.rawData.content.answer.abstractText;
         cellModel.openUrl = model.rawData.content.answer.answerDetailSchema;
@@ -339,7 +341,8 @@
         }
         
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
         cellModel.groupId = model.rawData.commentBase.id;
         cellModel.content = model.rawData.commentBase.content;
         cellModel.openUrl = model.rawData.commentBase.detailSchema;
@@ -398,7 +401,8 @@
         }
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
         
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2){
         cellModel.groupId = model.rawData.groupId;
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBanner;
         
@@ -413,7 +417,8 @@
         }else{
             cellModel.openUrl = model.rawData.operation.url;
         }
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
         cellModel.groupId = model.rawData.groupId;
         if(model.recommendSocialGroupList){
@@ -422,7 +427,8 @@
             cellModel.recommendSocialGroupList = model.rawData.recommendSocialGroupList;
         }
         cellModel.elementFrom = @"like_neighborhood";
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCHotTopic){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCHotTopic){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotTopic;
         cellModel.groupId = model.rawData.groupId;
         cellModel.hotTopicList = model.rawData.hotTopicList;
@@ -430,7 +436,8 @@
         if(cellModel.hotTopicList.count <= 0){
             return nil;
         }
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVote;
         cellModel.groupId = model.rawData.vote.voteId;
         
@@ -446,7 +453,8 @@
         cellModel.vote = vote;
         
         [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;
         cellModel.groupId = model.rawData.groupId;
         cellModel.openUrl = model.rawData.detailSchema;

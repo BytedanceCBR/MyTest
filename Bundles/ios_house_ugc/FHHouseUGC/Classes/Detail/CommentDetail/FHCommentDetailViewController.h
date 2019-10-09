@@ -8,11 +8,15 @@
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
 #import "TTCommentDetailReplyCommentModelProtocol.h"
+#import <FHFeedUGCCellModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 // 评论详情
 @interface FHCommentDetailViewController : FHBaseViewController
+
+// 列表页数据
+@property (nonatomic, strong)   FHFeedUGCCellModel       *detailData;
 
 - (void)refreshUI;
 - (void)openWriteCommentViewWithReplyCommentModel:(id<TTCommentDetailReplyCommentModelProtocol>)replyCommentModel;
