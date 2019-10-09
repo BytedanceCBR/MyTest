@@ -289,7 +289,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSMutableDictionary *imdic = [NSMutableDictionary dictionaryWithDictionary:_imParams];
     [imdic setValue:contactPhone.realtorId forKey:@"target_user_id"];
     [imdic setValue:contactPhone.realtorName forKey:@"chat_title"];
-    imdic[@"source"] = @"1.81";
+    imdic[@"source"] = @"app_realtor_mainpage";
     NSString *imParams = nil;
     NSError *imParseError = nil;
     NSData *imJsonData = [NSJSONSerialization dataWithJSONObject:imdic options:0 error:&imParseError];
