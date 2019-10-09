@@ -24,7 +24,7 @@
 }
 
 #pragma mark - 网络请求
--(TTHttpTask *)loadData:(BOOL)isRefresh fromRecommend:(BOOL)isFromRecommend query:(NSString *)query  completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion
+-(TTHttpTask *)loadData:(BOOL)isRefresh fromRecommend:(BOOL)isFromRecommend query:(NSString *)query completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion
 {
     NSInteger offset = 0;
     NSMutableDictionary *param = [NSMutableDictionary new];
@@ -49,9 +49,11 @@
         self.searchId = nil;
     } else {
         if (isFromRecommend) {
-            offset = self.sugesstHouseList.count - 1;
+            offset = self.currentRecommendHouseDataModel.offset;
+//            offset = self.sugesstHouseList.count - 1;
         } else {
-            offset = self.houseList.count;
+            offset = self.currentHouseDataModel.offset;
+//            offset = self.houseList.count;
         }
     }
     

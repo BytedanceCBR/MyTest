@@ -223,6 +223,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *recommendTitle;
 @property (nonatomic, copy , nullable) NSString *searchHint;
 @property (nonatomic, assign) BOOL hasMore;
+@property (nonatomic, assign) NSInteger offset;
 
 @end
 
@@ -284,6 +285,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic, strong, nullable) FHRecommendSecondhandHouseDataModel *recommendSearchModel;
 @property (nonatomic, strong, nullable) FHSugSubscribeDataDataSubscribeInfoModel *subscribeInfo;
+@property (nonatomic, assign) NSInteger offset;
 
 @end
 

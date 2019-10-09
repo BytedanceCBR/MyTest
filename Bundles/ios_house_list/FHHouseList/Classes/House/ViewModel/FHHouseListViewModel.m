@@ -103,6 +103,13 @@ extern NSString *const INSTANT_DATA_KEY;
 @property (nonatomic , strong) NSDictionary * subScribeShowDict;
 @property (nonatomic , assign) BOOL isShowSubscribeCell;
 
+@property (nonatomic, strong) FHRecommendSecondhandHouseDataModel *currentRecommendHouseDataModel;
+@property (nonatomic, strong) FHSearchHouseDataModel *currentHouseDataModel;
+@property (nonatomic, strong) FHHouseRentDataModel *currentRentDataModel;
+@property (nonatomic, strong) FHHouseNeighborDataModel *currentNeighborDataModel;
+@property (nonatomic, strong) FHNewHouseListDataModel *currentNewDataModel;
+
+
 @end
 
 
@@ -356,9 +363,34 @@ extern NSString *const INSTANT_DATA_KEY;
         self.searchId = nil;
     } else {
         if (isFromRecommend) {
-            offset = self.sugesstHouseList.count - 1;
+//            offset = self.sugesstHouseList.count - 1;
+            offset = self.currentRecommendHouseDataModel.offset;
         } else {
-            offset = self.houseList.count;
+//            offset = self.houseList.count;
+            switch (self.houseType) {
+                case FHHouseTypeNewHouse:
+                    offset = self.currentNewDataModel.offset;
+                    break;
+                case FHHouseTypeSecondHandHouse:
+                    if (isFromRecommend) {
+                        offset = self.currentRecommendHouseDataModel.offset;
+                    } else {
+                        offset = self.currentHouseDataModel.offset;
+                    }
+                    break;
+                    
+                case FHHouseTypeRentHouse:
+                    offset = self.currentRentDataModel.offset;
+                    break;
+                    
+                case FHHouseTypeNeighborhood:
+                    
+                    offset = self.currentNeighborDataModel.offset;
+                    break;
+                    
+                default:
+                    break;
+            }
         }
     }
     
@@ -716,10 +748,11 @@ extern NSString *const INSTANT_DATA_KEY;
             self.recommendSearchId = recommendHouseDataModel.searchId;
             hasMore = recommendHouseDataModel.hasMore;
             recommendItemArray = recommendHouseDataModel.items;
-            
+            self.currentRecommendHouseDataModel = recommendHouseDataModel;
         } else if ([model isKindOfClass:[FHSearchHouseModel class]]) {
 
             FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
+            self.currentHouseDataModel = houseModel;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
             hasMore = houseModel.hasMore;
@@ -738,6 +771,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 recommendTitleModel.noDataTip = recommendHouseDataModel.searchHint;
                 recommendTitleModel.title = recommendHouseDataModel.recommendTitle;
                 [self.sugesstHouseList addObject:recommendTitleModel];
+                self.currentRecommendHouseDataModel = recommendHouseDataModel;
             }
             
             if (self.isRefresh) {
@@ -793,6 +827,7 @@ extern NSString *const INSTANT_DATA_KEY;
         } else if ([model isKindOfClass:[FHNewHouseListResponseModel class]]) {
             
             FHNewHouseListDataModel *houseModel = ((FHNewHouseListResponseModel *)model).data;
+            self.currentNewDataModel = houseModel;
             self.searchId = houseModel.searchId;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             if (self.houseListOpenUrl.length <= 0) {
@@ -806,6 +841,7 @@ extern NSString *const INSTANT_DATA_KEY;
         } else if ([model isKindOfClass:[FHHouseRentModel class]]) {
 
             FHHouseRentDataModel *houseModel = ((FHHouseRentModel *)model).data;
+            self.currentRentDataModel = houseModel;
             self.searchId = houseModel.searchId;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
@@ -820,6 +856,7 @@ extern NSString *const INSTANT_DATA_KEY;
         } else if ([model isKindOfClass:[FHHouseNeighborModel class]]) {
 
             FHHouseNeighborDataModel *houseModel = ((FHHouseNeighborModel *)model).data;
+            self.currentNeighborDataModel = houseModel;
             self.searchId = houseModel.searchId;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             hasMore = houseModel.hasMore;
