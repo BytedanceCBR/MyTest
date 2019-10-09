@@ -79,6 +79,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
 
     NSString* from = extra[@"from"] ? : @"be_null";
+    NSString *source = extra[@"source"];
     
     [FHUserTracker writeEvent:@"click_im" params:dict];
     dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
@@ -94,7 +95,11 @@ extern NSString *const kFHPhoneNumberCacheKey;
         urlStr = extra[IM_OPEN_URL];
     }
     NSURL *openUrl = [NSURL URLWithString:urlStr];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":dict, @"from": from}];
+    NSMutableDictionary * userInfoDict = @{@"tracer":dict, @"from": from}.mutableCopy;
+    if (!isEmptyString(source)) {
+        userInfoDict[@"source"] = source;
+    }
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     
     [self silentFollow:extra];

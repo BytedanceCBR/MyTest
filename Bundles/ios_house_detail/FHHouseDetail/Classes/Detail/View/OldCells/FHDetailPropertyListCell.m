@@ -340,7 +340,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     imExtra[@"source_from"] = @"floor_type";
     imExtra[@"im_open_url"] = openUrl;
     imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHCluePageTypeCOldSchool];
+    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHCluePageTypeCOldFloor];
     [propertyModel.contactViewModel onlineActionWithExtraDict:imExtra];
 }
 

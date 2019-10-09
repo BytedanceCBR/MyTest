@@ -454,6 +454,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"realtor_position"] = realtor_pos;
     imExtra[@"from"] = params[@"from"] ?: (self.contactPhone.realtorType == FHRealtorTypeNormal ? @"app_oldhouse" : @"app_oldhouse_expert");
+    if (params[@"source"]) {
+        imExtra[@"source"] = params[@"source"];
+    }
     if (extraDict && [extraDict isKindOfClass:[NSDictionary class]]) {
         if (extraDict[@"element_from"]) {
             imExtra[@"element_from"] = extraDict[@"element_from"];
