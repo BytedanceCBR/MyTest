@@ -83,6 +83,7 @@
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
                                 cellModel.showCommunity = NO;
+                                cellModel.feedVC = self.viewController;
                                 if (cellModel && [cellModel.community.socialGroupId isEqualToString:self.viewController.forumId]) {
                                     //去重逻辑
                                     [self removeDuplicaionModel:cellModel.groupId];
@@ -428,6 +429,7 @@
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        cellModel.showCommunity = NO;
         BOOL isTop = [userInfo[@"isTop"] boolValue];
         [self topCell:cellModel isTop:isTop];
     }
@@ -437,6 +439,7 @@
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        cellModel.showCommunity = NO;
         [self refreshCell:cellModel];
     }
 }
