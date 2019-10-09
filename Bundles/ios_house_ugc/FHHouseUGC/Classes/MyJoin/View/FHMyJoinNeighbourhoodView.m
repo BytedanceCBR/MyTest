@@ -39,6 +39,7 @@
     
     self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
     _headerView.titleLabel.text = @"我关注的小区圈";
+    _headerView.titleLabel.backgroundColor = [UIColor themeGray7];
     _headerView.moreBtn.hidden = YES;
     [self addSubview:_headerView];
     

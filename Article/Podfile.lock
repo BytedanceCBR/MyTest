@@ -413,7 +413,7 @@ PODS:
   - TTMonitor/BackTrace (0.7.11.0.1-binary)
   - TTMonitor/Monitor (0.7.11.0.1-binary)
   - TTNetBusiness (0.0.10.1-binary)
-  - TTNetworkManager (2.2.8.55-rc.1.1.binary)
+  - TTNetworkManager (2.2.10.7.1-binary)
   - TTNewsAccountBusiness (0.2.4):
     - TTNewsAccountBusiness/Classes (= 0.2.4)
     - TTNewsAccountBusiness/SSCookieManager (= 0.2.4)
@@ -814,7 +814,7 @@ DEPENDENCIES:
   - TTMacroManager (= 1.0.1)
   - TTMonitor (= 0.7.11.0.1-binary)
   - TTNetBusiness (= 0.0.10.1-binary)
-  - TTNetworkManager (= 2.2.8.55-rc.1.1.binary)
+  - TTNetworkManager (= 2.2.10.7.1-binary)
   - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
   - TTPersistence (= 0.2.3.1-binary)
   - TTPhotoScrollVC (from `../AKPlugins/TTPhotoScrollVC`)
@@ -1123,7 +1123,7 @@ SPEC CHECKSUMS:
   TTMacroManager: 915aadf3841523767f16a230fd97fe546aa800eb
   TTMonitor: e56002040d636af0f7489db64e68e75aadae3843
   TTNetBusiness: e436bc6d648bf01946cc01756c86adfd0d718e5c
-  TTNetworkManager: 6afdda81f4f04c85b9d38c22d1d542d24b5d9141
+  TTNetworkManager: 11c27f6c6b5e6f96ae70ed47903d5815369679ef
   TTNewsAccountBusiness: 50125377b67c11155b3677cf0e6d3d02ed718a03
   TTPersistence: e0685fe3f0cfd826ccf6917ab5e8227fd6331947
   TTPhotoScrollVC: f34664f26861dbfbf617e47385a2522ba8bf1755
@@ -1175,6 +1175,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 3eaece9f6ee8afa113b57085e880d5e07ff03b93
+PODFILE CHECKSUM: 106d603a885cf71fd24b9dc64d11f305af9d7052
 
 COCOAPODS: 1.4.0

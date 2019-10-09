@@ -23,6 +23,14 @@
 
 @implementation FHCommunityDetailHeaderView
 
+-(UILabel *)publicationsDetailViewTitleLabel {
+    if(!_publicationsDetailViewTitleLabel) {
+        _publicationsDetailViewTitleLabel = [UILabel new];
+        _publicationsDetailViewTitleLabel.textColor = [UIColor themeGray1];
+        _publicationsDetailViewTitleLabel.font = [UIFont themeFontRegular:12];
+    }
+    return _publicationsDetailViewTitleLabel;
+}
 
 - (UIButton *)publicationsDetailView {
     if(!_publicationsDetailView) {
@@ -31,15 +39,11 @@
         
         // 左边垂直分割线
         UIView *vSepLine = [UIView new];
-        vSepLine.backgroundColor = [UIColor themeGray4];
+        vSepLine.backgroundColor = [UIColor themeGray6];
         [_publicationsDetailView addSubview:vSepLine];
         
         // 点击查看按钮
-        UILabel *detailText = [UILabel new];
-        detailText.textColor = [UIColor themeGray1];
-        detailText.font = [UIFont themeFontRegular:12];
-        detailText.text = @"点击查看";
-        [_publicationsDetailView addSubview:detailText];
+        [_publicationsDetailView addSubview:self.publicationsDetailViewTitleLabel];
         
         // 右箭头
         UIImageView *arrowImageView = [UIImageView new];
@@ -52,17 +56,17 @@
             make.width.mas_equalTo(0.5);
         }];
         
-        [detailText mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.publicationsDetailViewTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(vSepLine).offset(10);
             make.top.bottom.equalTo(vSepLine);
             make.right.equalTo(arrowImageView.mas_left);
         }];
         
         [arrowImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(detailText);
+            make.centerY.equalTo(self.publicationsDetailViewTitleLabel);
             make.width.height.mas_equalTo(14);
             make.right.equalTo(self.publicationsDetailView);
-            make.left.equalTo(detailText.mas_right);
+            make.left.equalTo(self.publicationsDetailViewTitleLabel.mas_right);
         }];
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoPublicationsDetail:)];
@@ -161,7 +165,7 @@
     self.publicationsContentLabel = [UILabel new];
     self.publicationsContentLabel.font = [UIFont themeFontRegular:12];
     self.publicationsContentLabel.textColor = [UIColor themeGray1];
-    self.publicationsContentLabel.numberOfLines = 3;
+    self.publicationsContentLabel.numberOfLines = PublicationsContentLabel_numberOfLines;
     [self.publicationsContentLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     
     [self.publicationsContainer addSubview:self.publicationsContentLabel];
@@ -230,7 +234,7 @@
     [self.publicationsDetailView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(0);
         make.left.equalTo(self.publicationsContentLabel.mas_right).offset(10);
-        make.right.equalTo(self.publicationsContainer).offset(-15).priorityHigh();
+        make.right.equalTo(self.publicationsContainer).offset(-15);
         make.top.bottom.equalTo(self.publicationsContentLabel);
     }];
      
@@ -297,5 +301,14 @@
     if(self.gotoOperationBlock) {
         self.gotoOperationBlock();
     }
+}
+
+-(BOOL)isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow {
+    BOOL ret = NO;
+    CGFloat leftPadding = 20;
+    CGFloat rightPadding = 15;
+    CGRect rect = [self.publicationsContentLabel textRectForBounds:CGRectMake(0, 0, SCREEN_WIDTH - leftPadding - rightPadding, CGFLOAT_MAX) limitedToNumberOfLines:0];
+    ret = rect.size.height > (PublicationsContentLabel_numberOfLines * PublicationsContentLabel_lineHeight);
+    return ret;
 }
 @end

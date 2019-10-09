@@ -111,7 +111,7 @@
     // 导航栏
     [self setupDetailNaviBar];
     // 全部评论
-    [self commentCountChanged];
+    [self firstLoadCommentCount];
     // 列表页数据
     if (self.detailData) {
 //        [self.viewModel.items addObject:self.detailData];
@@ -128,12 +128,15 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self addStayPageLog];
-    if (self.detailData) {
-        // 修改列表页数据
-        self.detailData.commentCount = [NSString stringWithFormat:@"%lld",self.comment_count];
-        self.detailData.userDigg = [NSString stringWithFormat:@"%ld",self.user_digg];
-        self.detailData.diggCount = [NSString stringWithFormat:@"%lld",self.digg_count];
-    }
+//    if (self.detailData) {
+//        // 修改列表页数据
+//        self.detailData.commentCount = [NSString stringWithFormat:@"%lld",self.comment_count];
+//        self.detailData.userDigg = [NSString stringWithFormat:@"%ld",self.user_digg];
+//        self.detailData.diggCount = [NSString stringWithFormat:@"%lld",self.digg_count];
+//        self.detailData.isStick = self.weakViewModel.serverData.isStick;
+//        self.detailData.stickStyle = self.weakViewModel.serverData.stickStyle;
+//        self.detailData.contentDecoration = self.weakViewModel.serverData.contentDecoration;
+//    }
     //跳页时关闭举报的弹窗
     [FHFeedOperationView dismissIfVisible];
 }
@@ -209,6 +212,21 @@
     }
 }
 
+- (void)firstLoadCommentCount {
+    if (self.commentAllFooter == nil) {
+        self.commentAllFooter = [[FHDetailCommentAllFooter alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 52)];
+        self.tableView.tableFooterView = self.commentAllFooter;
+    }
+    // 全部评论
+    NSString *commentStr = @"全部评论";
+    if (self.comment_count > 0) {
+        commentStr = [NSString stringWithFormat:@"全部评论(%@)",[TTBusinessManager formatCommentCount:self.comment_count]];
+    } else {
+        commentStr = [NSString stringWithFormat:@"全部评论(0)"];
+    }
+    self.commentAllFooter.allCommentLabel.text = commentStr;
+}
+
 - (void)commentCountChanged {
     if (self.commentAllFooter == nil) {
         self.commentAllFooter = [[FHDetailCommentAllFooter alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 52)];
@@ -222,6 +240,14 @@
         commentStr = [NSString stringWithFormat:@"全部评论(0)"];
     }
     self.commentAllFooter.allCommentLabel.text = commentStr;
+    
+    //评论完成后发送通知修改评论数
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+               userInfo[@"group_id"] = self.detailData.groupId;
+               userInfo[@"comment_conut"] = @(self.comment_count);
+               [[NSNotificationCenter defaultCenter] postNotificationName:@"kPostMessageFinishedNotification"
+                                                                   object:nil
+                                                                 userInfo:userInfo];
 }
 
 - (void)headerInfoChanged {

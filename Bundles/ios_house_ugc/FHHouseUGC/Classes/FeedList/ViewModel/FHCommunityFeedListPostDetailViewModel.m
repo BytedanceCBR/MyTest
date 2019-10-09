@@ -49,6 +49,10 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
         // 发帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
+        // 置顶或取消置顶成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postTopSuccess:) name:kFHUGCTopPostNotification object:nil];
+        // 加精或取消加精成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postGoodSuccess:) name:kFHUGCGoodPostNotification object:nil];
     }
     
     return self;
@@ -79,13 +83,17 @@
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
                                 cellModel.showCommunity = NO;
+                                cellModel.feedVC = self.viewController;
                                 if (cellModel && [cellModel.community.socialGroupId isEqualToString:self.viewController.forumId]) {
                                     //去重逻辑
                                     [self removeDuplicaionModel:cellModel.groupId];
-                                    //找到第一个非置顶贴的下标
+                                    // JOKER: 找到第一个非置顶贴的下标
                                     __block NSUInteger index = 0;
                                     [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                                        if(!cellModel.isStick) {
+                                        
+                                        BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
+                                        
+                                        if(!isStickTop) {
                                             index = idx;
                                             *stop = YES;
                                         }
@@ -417,6 +425,33 @@
     }
 }
 
+- (void)postTopSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        cellModel.showCommunity = NO;
+        BOOL isTop = [userInfo[@"isTop"] boolValue];
+        [self topCell:cellModel isTop:isTop];
+    }
+}
+
+- (void)postGoodSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        NSInteger row = [self getCellIndex:cellModel];
+        
+        if(row < self.dataList.count && row >= 0){
+            FHFeedUGCCellModel *originCellModel = self.dataList[row];
+            originCellModel.isStick = cellModel.isStick;
+            originCellModel.stickStyle = cellModel.stickStyle;
+            originCellModel.contentDecoration = cellModel.contentDecoration;
+            
+            [self refreshCell:originCellModel];
+        }
+    }
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -657,7 +692,6 @@
     
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    self.needRefreshCell = YES;
 }
 
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
@@ -682,6 +716,35 @@
     self.needRefreshCell = NO;
 }
 
+- (void)topCell:(FHFeedUGCCellModel *)cellModel isTop:(BOOL)isTop {
+    NSInteger row = [self getCellIndex:cellModel];
+    if(row < self.dataList.count && row >= 0){
+        FHFeedUGCCellModel *originCellModel = self.dataList[row];
+        originCellModel.isStick = cellModel.isStick;
+        originCellModel.stickStyle = cellModel.stickStyle;
+        originCellModel.contentDecoration = cellModel.contentDecoration;
+        
+        [self.dataList removeObjectAtIndex:row];
+        if(isTop){
+            [self.dataList insertObject:originCellModel atIndex:0];
+        }else{
+            if(self.dataList.count == 0){
+                [self.dataList insertObject:originCellModel atIndex:0];
+            }else{
+                for (NSInteger i = 0; i < self.dataList.count; i++) {
+                    FHFeedUGCCellModel *item = self.dataList[i];
+                    if(!item.isStick || (item.isStick && (item.stickStyle != FHFeedContentStickStyleTop && item.stickStyle != FHFeedContentStickStyleTopAndGood))){
+                        //找到第一个不是置顶的cell
+                        [self.dataList insertObject:originCellModel atIndex:i];
+                        break;
+                    }
+                }
+            }
+        }
+        [self.tableView reloadData];
+    }
+}
+
 #pragma mark - FHUGCBaseCellDelegate
 
 - (void)deleteCell:(FHFeedUGCCellModel *)cellModel {
@@ -691,16 +754,6 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
     }
-}
-
-- (NSInteger)getCellIndex:(FHFeedUGCCellModel *)cellModel {
-    for (NSInteger i = 0; i < self.dataList.count; i++) {
-        FHFeedUGCCellModel *model = self.dataList[i];
-        if([model.groupId isEqualToString:cellModel.groupId]){
-            return i;
-        }
-    }
-    return -1;
 }
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {

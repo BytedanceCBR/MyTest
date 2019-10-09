@@ -27,6 +27,7 @@
 #import <FHCHousePush/FHPushAuthorizeHelper.h>
 #import <FHCHousePush/FHPushMessageTipView.h>
 #import <FHHouseBase/FHBaseTableView.h>
+#import <FHMessageNotificationManager.h>
 
 @interface FHMessageViewController ()
 
@@ -51,6 +52,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:kReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 //     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(periodicalFetchUnreadMessage:) name:kPeriodicalFetchUnreadMessage object:nil];
 }
 
 - (void)applicationDidBecomeActive
@@ -64,6 +67,11 @@
     [self.pushTipView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(pushTipHeight);
     }];
+}
+
+
+- (void)periodicalFetchUnreadMessage:(NSNotification *)notification {
+    [self startLoadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
