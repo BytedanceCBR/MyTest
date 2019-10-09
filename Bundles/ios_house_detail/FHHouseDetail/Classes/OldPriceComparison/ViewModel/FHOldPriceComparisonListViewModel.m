@@ -39,6 +39,7 @@
 @property(nonatomic ,assign) BOOL isRefresh;
 @property(nonatomic ,strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic ,weak) FHErrorView *maskView;
+@property(nonatomic ,strong) FHSearchHouseDataModel *currentHouseModel;
 
 @end
 
@@ -96,7 +97,7 @@
 
 - (void)loadMore {
     [self addCategoryRefreshLog];
-    [self requestErshouHouseListData:NO query:self.query offset:self.houseList.count searchId:self.searchId];
+    [self requestErshouHouseListData:NO query:self.query offset:self.currentHouseModel.offset searchId:self.searchId];
 }
 
 - (void)requestErshouHouseListData:(BOOL)isRefresh query:(NSString *)query offset:(NSInteger)offset searchId:(nullable NSString *)searchId {
@@ -134,6 +135,7 @@
 - (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error {
     if (model != NULL && error == NULL) {
         FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
+        self.currentHouseModel = houseModel;
         BOOL hasMore = houseModel.hasMore;
         self.searchId = houseModel.searchId;
         NSArray *items = houseModel.items;

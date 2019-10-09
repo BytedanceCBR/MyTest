@@ -49,7 +49,7 @@ def fhPods
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
     
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev' #
-    pod 'FHCommonUI', '0.0.3'
+    pod 'FHCommonUI', '0.0.4'
 
 #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '88a09a5a6837e034499e8e2251b56a37c712abfe'
     pod 'ios_house_im' , '0.1.10-alpha.0'
@@ -334,7 +334,7 @@ def appPods
     #-----头条网络库-----
 #    pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'fea3c88cb586f624970bdf5629f11aa1dc9c8521'
 #pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'e2434b5'
-    pod_binary 'TTNetworkManager' , '2.2.8.55-rc.1'
+    pod_binary 'TTNetworkManager' , '2.2.10.7'
 
 #    pod 'TTNetworkManager', '2.2.8.16'#httpdns can config timeout
     #pod 'IESAntiSpam', '0.5.9', :subspecs => ['RequestEncrypt']
@@ -644,6 +644,11 @@ def testPods
     pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
     pod_binary 'TTSettingsManager/Debug'
     pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
+    pod_binary 'MLeaksFinder','1.0.2-rc.0',:subspecs => [
+    'Core'
+    ]
+    pod_binary 'FBRetainCycleDetector','0.1.5-alpha.2'
+    
 end
 
 target 'NewsLiteInHouse' do
