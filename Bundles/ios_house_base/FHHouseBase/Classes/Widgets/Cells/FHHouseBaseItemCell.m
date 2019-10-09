@@ -68,6 +68,7 @@
 @property(nonatomic, strong) UIButton *closeBtn; //x按钮
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
+@property(nonatomic, strong) FHCornerItemLabel *tagTitleLabel; //降 新 榜等标签
 
 @end
 
@@ -147,6 +148,17 @@
         _imageTagLabel.textColor = [UIColor whiteColor];
     }
     return _imageTagLabel;
+}
+
+-(FHCornerItemLabel *)tagTitleLabel {
+    if (!_tagTitleLabel) {
+        _tagTitleLabel = [[FHCornerItemLabel alloc] init];
+        _tagTitleLabel.textAlignment = NSTextAlignmentCenter;
+        _tagTitleLabel.font = [UIFont themeFontMedium:10];
+        _tagTitleLabel.textColor = [UIColor themeWhite];
+        _tagTitleLabel.frame = CGRectMake(0, 0, 16, 16);
+    }
+    return _tagTitleLabel;
 }
 
 -(FHCornerView *)imageTagLabelBgView
@@ -501,10 +513,24 @@
         layout.height = YGPointValue(75);
     }];
     
-    [_rightInfoView addSubview:self.mainTitleLabel];
+    UIView *titleView = [[UIView alloc] init];
+    [_rightInfoView addSubview:titleView];
     [_rightInfoView addSubview:self.subTitleLabel];
     [_rightInfoView addSubview:self.statInfoLabel];
     [_rightInfoView addSubview:self.tagLabel];
+    
+    [titleView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.flexDirection = YGFlexDirectionRow;
+        layout.paddingLeft = YGPointValue(0);
+        layout.paddingRight = YGPointValue(0);
+        layout.alignItems = YGAlignFlexStart;
+        layout.marginTop = YGPointValue(0);
+        layout.height = YGPointValue(22);
+        layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
+    }];
+    [titleView addSubview:self.mainTitleLabel];
+    [titleView addSubview:self.tagTitleLabel];
     
     _mainTitleLabel.font = [UIFont themeFontSemibold:16];
     [_mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -512,6 +538,15 @@
         layout.marginTop = YGPointValue(0);
         layout.height = YGPointValue(20);
         layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
+    }];
+    
+    _tagTitleLabel.hidden = YES;
+    [_tagTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.marginTop = YGPointValue(3);
+        layout.marginLeft = YGPointValue(4);
+        layout.height = YGPointValue(16);
+        layout.width = YGPointValue(16);
     }];
     
     [_subTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -735,6 +770,26 @@
         }else {
             self.imageTagLabelBgView.hidden = YES;
         }
+        
+        //处理标签
+        BOOL imageTagHidden = self.imageTagLabelBgView.hidden;
+        if (commonModel.titleTag) {
+            self.imageTagLabelBgView.hidden = YES;
+            self.tagTitleLabel.hidden = NO;
+            [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - 20);
+            }];
+            self.tagTitleLabel.text = commonModel.titleTag.text;
+            self.tagTitleLabel.backgroundColor = [UIColor colorWithHexString:commonModel.titleTag.backgroundColor];
+            self.tagTitleLabel.textColor = [UIColor colorWithHexString:commonModel.titleTag.textColor];
+        } else {
+            self.imageTagLabelBgView.hidden = imageTagHidden;
+            self.tagTitleLabel.hidden = YES;
+            [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
+            }];
+        }
+        [self.mainTitleLabel.yoga markDirty];
         
     } else if (houseType == FHHouseTypeRentHouse) {
         
