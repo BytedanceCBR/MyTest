@@ -388,7 +388,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 //        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
 //    }
     
-    
+     
     //开屏广告启动不会展示，保留逻辑代码
     if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
         self.adColdHadJump = YES;

@@ -17,6 +17,7 @@
 #import "NSObject+MultiDelegates.h"
 #import <TTUGCEmojiParser.h>
 #import "FHUGCNoticeModel.h"
+#import <TTNavigationController.h>
 
 typedef enum : NSUInteger {
     ActionTypeSaveOnly = 0,
@@ -86,6 +87,18 @@ typedef enum : NSUInteger {
     [self configContent];
     [self configNotifications];
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear: animated];
+    [self navigationControllerPanGestureDisable:YES];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear: animated];
+    
+    [self navigationControllerPanGestureDisable:NO];
+}
+
 
 // MARK: UI
 
@@ -399,6 +412,12 @@ typedef enum : NSUInteger {
     }
     else {
         [self.textView becomeFirstResponder];
+    }
+}
+ 
+- (void)navigationControllerPanGestureDisable:(BOOL)isDisable {
+    if ([self.navigationController isKindOfClass:[TTNavigationController class]]) {
+        [(TTNavigationController*)self.navigationController panRecognizer].enabled = self.isReadOnly || !isDisable;
     }
 }
 
