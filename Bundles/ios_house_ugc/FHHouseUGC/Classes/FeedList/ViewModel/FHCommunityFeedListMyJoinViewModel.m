@@ -110,10 +110,13 @@
                                     //去重逻辑
                                     [self removeDuplicaionModel:cellModel.groupId];
                                     
-                                    //找到第一个非置顶贴的下标
+                                    // JOKER: 找到第一个非置顶贴的下标
                                     __block NSUInteger index = 0;
                                     [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                                        if(!cellModel.isStick) {
+                                        
+                                        BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
+                                        
+                                        if(!isStickTop) {
                                             index = idx;
                                             *stop = YES;
                                         }
