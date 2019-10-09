@@ -270,28 +270,6 @@
             [[ToastManager manager] showToast:@"删除失败"];
         }
     }];
-    
-    
-//    [FHHouseUGCAPI postDelete:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(bool success, NSError * _Nonnull error) {
-//        if(success){
-//            //调用删除接口
-//            if(wself.deleteCellBlock){
-//                wself.deleteCellBlock();
-//            }
-//            //删除帖子成功发送通知
-//            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-//            if (self.cellModel.community.socialGroupId.length > 0) {
-//                dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
-//            }
-//            if(self.cellModel){
-//                dic[@"cellModel"] = self.cellModel;
-//            }
-//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
-//
-//        }else{
-//            [[ToastManager manager] showToast:@"删除失败"];
-//        }
-//    }];
 }
 
 - (void)setOperationSelfLook:(NSString *)operationCode {
@@ -341,6 +319,16 @@
             dic[@"isTop"] = @(isTop);
 
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCTopPostNotification object:nil userInfo:dic];
+            
+            NSString *pageType = wself.cellModel.tracerDic[@"page_type"];
+            if([pageType isEqualToString:@"feed_detail"]){
+                if(isTop){
+                    [[ToastManager manager] showToast:@"置顶成功"];
+                }else{
+                    [[ToastManager manager] showToast:@"取消置顶成功"];
+                }
+            }
+            
         }else{
             if(isTop){
                 [[ToastManager manager] showToast:@"置顶失败"];
@@ -375,6 +363,16 @@
             dic[@"isGood"] = @(isGood);
 
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCGoodPostNotification object:nil userInfo:dic];
+            
+            NSString *pageType = wself.cellModel.tracerDic[@"page_type"];
+            if([pageType isEqualToString:@"feed_detail"]){
+                if(isGood){
+                    [[ToastManager manager] showToast:@"加精成功"];
+                }else{
+                    [[ToastManager manager] showToast:@"取消加精成功"];
+                }
+            }
+            
         }else{
             if(isGood){
                 [[ToastManager manager] showToast:@"加精失败"];
