@@ -182,6 +182,7 @@
     if(cellModel.originItemModel){
         self.originView.hidden = NO;
         [self.originView refreshWithdata:cellModel];
+        self.originView.top = self.multiImageView.bottom + 10;
         self.originView.height = cellModel.originItemHeight;
         self.bottomView.top = self.multiImageView.bottom + cellModel.originItemHeight + 20;
     }else{
