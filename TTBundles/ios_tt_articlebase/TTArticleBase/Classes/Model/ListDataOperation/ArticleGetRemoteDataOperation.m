@@ -176,32 +176,35 @@
                                                                        StrongSelf;
                                                                        self.httpTask = nil;
                                                                        
-                                                                       NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-                                                                       
-                                                                       NSString *durationStr = [NSString stringWithFormat:@"%.1f",(now - startMonitorTime) * 1000.0f];
-                                                                       NSString *serviceName = [NSString stringWithFormat:@"f_api_performance_feed_%@",getParameter[@"category"]];
-                                                                       
-                                                                       NSInteger metricStatus = 0;
-
-                                                                       if (error || !jsonObj) {
-                                                                           metricStatus = 1;
-                                                                           if (![TTReachability isNetworkConnected]) {
-                                                                               metricStatus = 2;
-                                                                           }
-                                                                       }
-                                                                       
-                                                                       if (durationStr) {
-                                                                           NSMutableDictionary *metric = @{}.mutableCopy;
-                                                                           NSMutableDictionary *extraDict = @{}.mutableCopy;
-
-                                                                           metric[@"api_duration_network"] = durationStr;
-                                                                           extraDict[@"error_code"] = @(error.code);
-                                                                     
-                                                                           extraDict[@"error_message"] = error.description;
+                                                                       if ([getParameter[@"category"] isKindOfClass:[NSString class]]) {
+                                                                           NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
                                                                            
-                                                                           [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:metric category:@{@"status":@(metricStatus)} extra:nil];
+                                                                           NSString *durationStr = [NSString stringWithFormat:@"%.1f",(now - startMonitorTime) * 1000.0f];
+                                                                           NSString *serviceName = [NSString stringWithFormat:@"f_api_performance_feed_%@",getParameter[@"category"]];
+                                                                           
+                                                                           NSInteger metricStatus = 0;
+                                                                           
+                                                                           if (error || !jsonObj) {
+                                                                               metricStatus = 1;
+                                                                               if (![TTReachability isNetworkConnected]) {
+                                                                                   metricStatus = 2;
+                                                                               }
+                                                                           }
+                                                                           
+                                                                           if (durationStr) {
+                                                                               NSMutableDictionary *metric = @{}.mutableCopy;
+                                                                               NSMutableDictionary *extraDict = @{}.mutableCopy;
+                                                                               
+                                                                               metric[@"api_duration_network"] = durationStr;
+                                                                               extraDict[@"error_code"] = @(error.code);
+                                                                               
+                                                                               extraDict[@"error_message"] = error.description;
+                                                                               
+                                                                               [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:metric category:@{@"status":@(metricStatus)} extra:nil];
+                                                                           }
+                                                                           
                                                                        }
-                                                                       
+                                                                     
                                                                        
                                                                        if (jsonObj) {
                                                                            jsonObj = @{@"result":jsonObj};

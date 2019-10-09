@@ -2297,7 +2297,7 @@ TTRefreshViewDelegate
                                          }
                                          
                                          
-                                         if (fromRemote) {
+                                         if (fromRemote && _categoryID) {
                                              NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
                                              
                                              NSString *durationStr = [NSString stringWithFormat:@"%.1f",(now - startMonitorTime) * 1000.0f];
