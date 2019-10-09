@@ -16,6 +16,8 @@
 #import <UIViewAdditions.h>
 #import "NSObject+MultiDelegates.h"
 #import <TTUGCEmojiParser.h>
+#import "FHUGCNoticeModel.h"
+#import <TTNavigationController.h>
 
 typedef enum : NSUInteger {
     ActionTypeSaveOnly = 0,
@@ -86,6 +88,18 @@ typedef enum : NSUInteger {
     [self configNotifications];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear: animated];
+    [self navigationControllerPanGestureDisable:YES];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear: animated];
+    
+    [self navigationControllerPanGestureDisable:NO];
+}
+
+
 // MARK: UI
 
 - (void)configNavBar {
@@ -96,7 +110,11 @@ typedef enum : NSUInteger {
     
     __weak typeof(self) wself = self;
     self.customNavBarView.leftButtonBlock = ^{
-        [wself showAlertToAskUserDecision];
+        if(wself.isReadOnly) {
+            [wself exitPage];
+        } else {
+            [wself showAlertToAskUserDecision];
+        }
     };
     
     [self.customNavBarView addSubview:self.completeButton];
@@ -269,7 +287,7 @@ typedef enum : NSUInteger {
     [self traceAlertShowWhenCompletedPressed];
     [self.textView resignFirstResponder];
     
-    NSString *title = @"向圈子中的人发送公告";
+    NSString *title = @"向圈子中的人发送公告？";
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle: title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     UIAlertAction *saveOnlyAction = [UIAlertAction actionWithTitle:@"仅保存" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -313,7 +331,7 @@ typedef enum : NSUInteger {
     params[@"announcement"] = self.textView.text;
     params[@"push_type"] = @(actionType);
 
-    [FHHouseUGCAPI requestUpdateUGCNoticeWithParam:params completion:^(NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestUpdateUGCNoticeWithParam:params completion:^(FHUGCNoticeModel *model, NSError * _Nonnull error) {
         
         [[ToastManager manager] dismissCustomLoading];
         
@@ -324,7 +342,7 @@ typedef enum : NSUInteger {
         else {
             [[ToastManager manager] showToast:@"操作成功"];
             if(self.callback) {
-                self.callback(self.textView.text);
+                self.callback(model.data.announcement);
             }
             [self exitPage];
         }
@@ -394,6 +412,12 @@ typedef enum : NSUInteger {
     }
     else {
         [self.textView becomeFirstResponder];
+    }
+}
+ 
+- (void)navigationControllerPanGestureDisable:(BOOL)isDisable {
+    if ([self.navigationController isKindOfClass:[TTNavigationController class]]) {
+        [(TTNavigationController*)self.navigationController panRecognizer].enabled = self.isReadOnly || !isDisable;
     }
 }
 
