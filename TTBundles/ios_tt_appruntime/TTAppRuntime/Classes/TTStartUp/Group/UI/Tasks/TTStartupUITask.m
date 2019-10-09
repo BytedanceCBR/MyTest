@@ -31,7 +31,7 @@
 #import "NSDictionary+TTAdditions.h"
 #import "TTInstallIDManager.h"
 
-#if INHOUSE && !DEBUG && !TARGET_IPHONE_SIMULATOR
+#if INHOUSE
 #import "MLeaksConfig.h"
 #import "MLeaksFinder.h"
 #endif
@@ -59,8 +59,8 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 // 是否开启内存泄漏检测
 - (void)configMemLeaks {
-// 采用条件宏，只在内测版，非 DEBUG，非模拟器条件下
-#if INHOUSE && !DEBUG && !TARGET_IPHONE_SIMULATOR
+// 采用条件宏，只在内测版
+#if INHOUSE
     NSString * appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
     NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
