@@ -55,6 +55,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHDetailOldDataNeighborhoodInfoSchoolConsult : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *text;
+
+@end
 
 @interface FHDetailOldDataNeighborhoodInfoModel : JSONModel
 
@@ -79,6 +85,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel *evaluationInfo;
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolItemModel> *schoolDictList;
+@property (nonatomic, assign) BOOL useSchoolIm;
+@property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoSchoolConsult *schoolConsult;
+
 @end
 
 @interface FHDetailOldDataNeighborEvalModel : JSONModel
@@ -335,11 +344,31 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraDialogsModel *dialogs ;
 @end
 
+@interface FHDetailDataBaseExtraBudgetModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *baseContent;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
+
+@interface FHDetailDataBaseExtraFloorInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *baseContent;
+@property (nonatomic, copy , nullable) NSString *extraContent;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
+
 
 @interface FHDetailDataBaseExtraModel : JSONModel
 
-@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDetectiveModel *detective ;
-@property (nonatomic, strong , nullable) FHDetailDataBaseExtraOfficialModel *official ;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDetectiveModel *detective;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraOfficialModel *official;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraBudgetModel *budget;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraFloorInfoModel *floorInfo;
+
 @end
 
 @protocol FHDetailHouseReviewCommentModel

@@ -29,6 +29,8 @@
 
 - (void)initViews {
     self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:15] textColor:[UIColor themeGray1]];
+    _titleLabel.backgroundColor = [UIColor whiteColor];
+    _titleLabel.layer.masksToBounds = YES;
     [self addSubview:_titleLabel];
     
     self.moreBtn = [[UIButton alloc] init];

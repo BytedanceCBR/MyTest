@@ -47,8 +47,27 @@
 - (void)refreshCurrentCell {
     if(self.needRefreshCell){
         self.needRefreshCell = NO;
-        [self.currentCell refreshWithData:self.currentCellModel];
+        [self refreshCell:self.currentCellModel];
     }
+}
+
+- (void)refreshCell:(FHFeedUGCCellModel *)cellModel {
+    NSInteger row = [self getCellIndex:cellModel];
+    if(row < self.dataList.count && row >= 0){
+        [self.dataList replaceObjectAtIndex:row withObject:cellModel];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath]  withRowAnimation:UITableViewRowAnimationNone];
+    }
+}
+
+- (NSInteger)getCellIndex:(FHFeedUGCCellModel *)cellModel {
+    for (NSInteger i = 0; i < self.dataList.count; i++) {
+        FHFeedUGCCellModel *model = self.dataList[i];
+        if([model.groupId isEqualToString:cellModel.groupId]){
+            return i;
+        }
+    }
+    return -1;
 }
 
 - (void)recordGroupWithCellModel:(FHFeedUGCCellModel *)cellModel status:(SSImpressionStatus)status {

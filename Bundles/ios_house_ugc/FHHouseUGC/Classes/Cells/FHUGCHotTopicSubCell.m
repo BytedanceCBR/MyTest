@@ -43,7 +43,7 @@
 }
 
 - (void)initView {
-    self.contentView.backgroundColor = [UIColor clearColor];
+    self.contentView.backgroundColor = [UIColor whiteColor];
     
     self.bgView = [[UIImageView alloc] init];
     _bgView.contentMode = UIViewContentModeScaleAspectFill;

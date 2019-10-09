@@ -464,6 +464,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
 //                }
                 NSDictionary* info = @{@"isFromPush": @(1),
                                        @"tracer":@{@"enter_from": @"push",
+                                                   @"enter_type": @"click",
                                                    @"element_from": @"be_null",
                                                    @"rank": @"be_null",
                                                    @"card_type": @"be_null",

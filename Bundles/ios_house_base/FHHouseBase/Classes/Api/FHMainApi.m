@@ -519,6 +519,27 @@
     }];
 }
 
++(TTHttpTask *)postJsonRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param jsonClass:(Class _Nonnull)clazz completion:(void(^_Nullable)(JSONModel *_Nullable model , NSError *_Nullable error))completion
+{
+    NSString *url = QURL(path);
+    
+    if (!IS_EMPTY_STRING(query)) {
+        url = [url stringByAppendingFormat:@"?%@",query];
+    }
+    
+    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:param method:POST needCommonParams:YES requestSerializer:[FHJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            id rmodel = [self  generateModel:obj class:clazz error:&backError];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(rmodel,error);
+                });
+            }
+        });
+    }];
+}
+
 
 @end
 

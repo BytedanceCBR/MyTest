@@ -35,6 +35,7 @@
 #import "TTLaunchDefine.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import <TTBaseLib/TTNetworkHelper.h>
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 
 DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
 
@@ -138,19 +139,11 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
 
     }];
 
-    //重入时 计算 commonURLParameters有可能会卡死，放到外面
-    NSDictionary *commonURLParams = [TTNetworkUtilities commonURLParameters];
-    
+
     //改为动态的
     [[TTNetworkManager shareInstance] setCommonParamsblock:^(void) {
-        
-        NSMutableDictionary *commonParams = [[NSMutableDictionary alloc] init];
-        
-        [commonParams addEntriesFromDictionary:commonURLParams];
-        
-        //网络状态要实时更新
-        [commonParams setValue:[TTNetworkHelper connectMethodName] forKey:@"ac"];
-        
+        NSMutableDictionary *commonParams = [NSMutableDictionary dictionaryWithDictionary:[TTNetworkUtilities commonURLParameters]];
+    
         //因为fparams里会有未处理的version_code ，需要后面的把这个冲掉 @xiefei
         NSDictionary* fParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
         
@@ -229,9 +222,15 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     //            }
     //        }
     //    };
-    [TTNetworkManager shareInstance].responseFilterBlock = ^(TTHttpResponse *response, id data, NSError *responseError){
+    
+    [TTNetworkManager shareInstance].responseFilterBlock = ^(TTHttpRequest *request, TTHttpResponse *response, id data, NSError *responseError) {
+        
         BOOL sessionExpired = NO;
         if ([data isKindOfClass:[NSData class]]) {
+//            if ([(NSData *)data length] > 300) {
+//                //长度大于 300 不会出现 session_expired
+//                return;
+//            }
             NSError *serializationError = nil;
             id tmpdata = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&serializationError];
             if (!serializationError && [tmpdata isKindOfClass:[NSDictionary class]]) {
@@ -251,6 +250,10 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     };
 
     [[TTNetworkManager shareInstance] start];
+    if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
+        [[TTNetworkManager shareInstance] setBoeProxyEnabled:YES];
+    }
+    
     LOGI(@"isEncryptQueryInHeader = %d, isEncryptQuery = %d, isKeepPlainQuery = %d", [TTNetworkManager shareInstance].isEncryptQueryInHeader, [TTNetworkManager shareInstance].isEncryptQuery, [TTNetworkManager shareInstance].isKeepPlainQuery);
 }
 

@@ -541,7 +541,6 @@
     
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    self.needRefreshCell = YES;
 }
 
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
@@ -578,16 +577,6 @@
         [self.tableView layoutIfNeeded];
         [self.tableView endUpdates];
     }
-}
-
-- (NSInteger)getCellIndex:(FHFeedUGCCellModel *)cellModel {
-    for (NSInteger i = 0; i < self.dataList.count; i++) {
-        FHFeedUGCCellModel *model = self.dataList[i];
-        if([model.groupId isEqualToString:cellModel.groupId]){
-            return i;
-        }
-    }
-    return -1;
 }
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
