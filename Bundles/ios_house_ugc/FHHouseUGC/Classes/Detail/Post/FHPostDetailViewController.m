@@ -34,7 +34,6 @@
 @property (nonatomic, strong)   FHUGCFollowButton       *followButton;// 关注
 @property (nonatomic, assign)   BOOL       isViewAppearing;
 @property (nonatomic, copy)     NSString       *lastPageSocialGroupId;
-@property (nonatomic, strong)   id       testSelf;
 
 @end
 
@@ -124,7 +123,6 @@
     // 请求 详情页数据
     [self startLoadData];
     [self addGoDetailLog];
-    self.testSelf = self;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
