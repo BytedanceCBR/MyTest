@@ -318,14 +318,17 @@
             searchId = ((FHSameNeighborhoodHouseResponse *)model).data.searchId;
             hasMore = ((FHSameNeighborhoodHouseResponse *)model).data.hasMore;
             items = ((FHSameNeighborhoodHouseResponse *)model).data.items;
+            self.currentOffset = ((FHSameNeighborhoodHouseResponse *)model).data.offset;
         } else if ([model isKindOfClass:[FHHouseRentModel class]]) {
             searchId = ((FHHouseRentModel *)model).data.searchId;
             hasMore = ((FHHouseRentModel *)model).data.hasMore;
             items = ((FHHouseRentModel *)model).data.items;
+            self.currentOffset = ((FHHouseRentModel *)model).data.offset;
         } else if ([model isKindOfClass:[FHRelatedHouseResponse class]]) {
             searchId = ((FHRelatedHouseResponse *)model).data.searchId;
             hasMore = ((FHRelatedHouseResponse *)model).data.hasMore;
             items = ((FHRelatedHouseResponse *)model).data.items;
+            self.currentOffset = ((FHRelatedHouseResponse *)model).data.offset;
         }
         if (searchId.length > 0) {
             self.searchId = searchId;

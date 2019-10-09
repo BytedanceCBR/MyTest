@@ -227,10 +227,10 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
         
         BOOL sessionExpired = NO;
         if ([data isKindOfClass:[NSData class]]) {
-            if ([(NSData *)data length] > 300) {
-                //长度大于 300 不会出现 session_expired
-                return;
-            }
+//            if ([(NSData *)data length] > 300) {
+//                //长度大于 300 不会出现 session_expired
+//                return;
+//            }
             NSError *serializationError = nil;
             id tmpdata = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&serializationError];
             if (!serializationError && [tmpdata isKindOfClass:[NSDictionary class]]) {
