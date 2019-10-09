@@ -277,6 +277,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         propertyModel.baseInfo = model.data.baseInfo;
         propertyModel.certificate = model.data.certificate;
         propertyModel.extraInfo = model.data.baseExtra;
+        propertyModel.contactViewModel = self.contactViewModel;
         [self.items addObject:propertyModel];
     }
     
@@ -438,6 +439,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
         infoModel.tableView = self.tableView;
+        infoModel.contactViewModel = self.contactViewModel;
         [self.items addObject:infoModel];
     }
     // 小区评测

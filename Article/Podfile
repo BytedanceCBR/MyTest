@@ -51,9 +51,9 @@ def fhPods
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev' #
     pod 'FHCommonUI', '0.0.4'
 
-    #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9106c57f2bedcb8b652636e459fb8a0fc045c213'
-    pod 'ios_house_im' , '0.1.10-rc.1'
-#    pod 'ios_house_im' , :path => '../../../Bundles/ios_house_im/'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '88a09a5a6837e034499e8e2251b56a37c712abfe'
+    pod 'ios_house_im' , '0.1.10-alpha.0'
+#    pod 'ios_house_im' , :path => '../../Bundles/ios_house_im'
 
     #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
     pod 'ios_house_filter' , '1.0.1'
@@ -638,7 +638,7 @@ def appPods
     pod 'BDUGDeepLink', '1.1.1'
 end
 
-target 'NewsLiteInHouse' do
+def testPods
     pod 'BDSSOAuthSDK'
     pod_binary 'TTDebugAssistant', '0.2.33'
     pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
@@ -648,6 +648,11 @@ target 'NewsLiteInHouse' do
     'Core'
     ]
     pod_binary 'FBRetainCycleDetector','0.1.5-alpha.2'
+    
+end
+
+target 'NewsLiteInHouse' do
+    testPods
 #    pod 'BDUGLocationKit/Debug' #, '1.1.0'
     #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine_inhouse'
     fhPods

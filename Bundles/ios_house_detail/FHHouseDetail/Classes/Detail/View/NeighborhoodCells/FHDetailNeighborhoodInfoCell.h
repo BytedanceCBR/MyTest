@@ -14,6 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHHouseDetailContactViewModel;
 // 小区信息（二手房、租房）
 @interface FHDetailNeighborhoodInfoCell : FHDetailBaseCell
 
@@ -25,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoModel *neighborhoodInfo ;
 @property (nonatomic, strong , nullable) FHRentDetailResponseDataNeighborhoodInfoModel *rent_neighborhoodInfo ;
 @property (nonatomic, weak)     UITableView       *tableView;
+@property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
+
 
 @end
 
