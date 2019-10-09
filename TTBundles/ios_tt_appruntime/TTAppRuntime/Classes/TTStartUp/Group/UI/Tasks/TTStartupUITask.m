@@ -30,11 +30,7 @@
 #import "BDSSOAuthManager.h"
 #import "NSDictionary+TTAdditions.h"
 #import "TTInstallIDManager.h"
-
-#if INHOUSE
-#import "MLeaksConfig.h"
-#import "MLeaksFinder.h"
-#endif
+#import "TTSandBoxHelper.h"
 
 DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
@@ -52,30 +48,20 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     }
     [self registerHomePageViewControllers];
     [[self class] setLaunchController];
+    // 后续inhouse功能都可以在此处添加添加
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self configMemLeaks];
+        [self configInHouseFunc];
     });
 }
 
-// 是否开启内存泄漏检测
-- (void)configMemLeaks {
-// 采用条件宏，只在内测版
-#if INHOUSE
-    NSString * appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
-    NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
-    NSString *didStr = [NSString stringWithFormat:@"Device ID:\n%@",deviceId];
-    MLeaksConfig *config = [[MLeaksConfig alloc] initWithAid:@"1370"
-                                  enableAssociatedObjectHook:YES
-                                                     filters:nil
-                                               viewStackType:MLeaksViewStackTypeViewController
-                                                  appVersion:appVersion
-                                                   buildInfo:buildVersionRaw
-                                               userInfoBlock:^NSString *{
-                                                   return didStr;
-                                               }];
-    [TTMLeaksFinder startDetectMemoryLeakWithConfig:config];
-#endif
+// 是否在内测版本开启某些功能
+- (void)configInHouseFunc {
+    // 内测泄漏检测-企业包
+    if ([TTSandBoxHelper isInHouseApp] && NSClassFromString(@"FHDebugTools")) {
+        Class cls = NSClassFromString(@"FHDebugTools");
+        id instance = [[cls alloc] init];
+        [instance performSelector:@selector(configMemLeaks)];
+    }
 }
 
 + (void)makeKeyWindowVisible {
