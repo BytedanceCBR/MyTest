@@ -29,6 +29,12 @@
 #import "TTLaunchDefine.h"
 #import "BDSSOAuthManager.h"
 #import "NSDictionary+TTAdditions.h"
+#import "TTInstallIDManager.h"
+
+#if INHOUSE
+#import "MLeaksConfig.h"
+#import "MLeaksFinder.h"
+#endif
 
 DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
@@ -46,6 +52,30 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     }
     [self registerHomePageViewControllers];
     [[self class] setLaunchController];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self configMemLeaks];
+    });
+}
+
+// 是否开启内存泄漏检测
+- (void)configMemLeaks {
+// 采用条件宏，只在内测版
+#if INHOUSE
+    NSString * appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+    NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
+    NSString *didStr = [NSString stringWithFormat:@"Device ID:\n%@",deviceId];
+    MLeaksConfig *config = [[MLeaksConfig alloc] initWithAid:@"1370"
+                                  enableAssociatedObjectHook:YES
+                                                     filters:nil
+                                               viewStackType:MLeaksViewStackTypeViewController
+                                                  appVersion:appVersion
+                                                   buildInfo:buildVersionRaw
+                                               userInfoBlock:^NSString *{
+                                                   return didStr;
+                                               }];
+    [TTMLeaksFinder startDetectMemoryLeakWithConfig:config];
+#endif
 }
 
 + (void)makeKeyWindowVisible {

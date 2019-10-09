@@ -27,6 +27,8 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTThemed/TTThemeManager.h>
 #import "FHCommonApi.h"
+#import "TTSandBoxHelper.h"
+#import "TTIndicatorView.h"
 
 
 
@@ -50,6 +52,7 @@
 @property (nonatomic, strong) DetailActionRequestManager *actionManager;
 @property (nonatomic, strong) NSArray *menuItems;
 @property (nonatomic, strong) TTActionSheetController *actionSheetController;
+@property (nonatomic, strong) TTAsyncLabel *debugGidLabel;             //debug gid
 
 @end
 
@@ -77,6 +80,20 @@
     [self.contentView addSubview:self.replyButton];
     [self.contentView addSubview:self.deleteButton];
     [self.contentView addSubview:self.digButton];
+    [self.contentView addSubview:self.debugGidLabel];
+    if ([TTSandBoxHelper isInHouseApp] && [self shouldShowDebug]) {
+        UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressSelectorView:)];
+        gesture.minimumPressDuration = 1.0;
+        [self.debugGidLabel addGestureRecognizer:gesture];
+    }
+}
+
+- (void)didLongPressSelectorView:(UILongPressGestureRecognizer *)gesture {
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        pasteboard.string = [NSString stringWithFormat:@"%@", self.debugGidLabel.text];
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
+    }
 }
 
 #pragma mark - refresh view with layout
@@ -107,6 +124,7 @@
     [self refreshReplayButton];
     [self refreshDeleteButton];
     [self refreshReplayList];
+    [self refreshDebugGidLabel];
 }
 
 - (void)refreshAvatarView {
@@ -118,6 +136,20 @@
 - (void)refreshNameView {
     CGFloat maxWidth = self.width - [TTUniversalCommentCellLiteHelper cellRightPadding] - self.digButton.width - [TTUniversalCommentCellLiteHelper nameViewRightPadding] - self.nameView.left;
     [self.nameView refreshWithTitle:self.commentModel.userName relation:self.commentModel.userRelationStr verifiedInfo:nil verified:NO owner:self.commentModel.isOwner maxWidth:maxWidth appendLogoInfoArray:self.commentModel.authorBadgeList];
+}
+
+- (void)refreshDebugGidLabel {
+    if ([TTSandBoxHelper isInHouseApp] && [self shouldShowDebug]) {
+        self.debugGidLabel.hidden = NO;
+        self.debugGidLabel.frame = CGRectMake(self.layout.timeLayout.left, self.layout.contentLayout.top - 8, 200, 20);
+        self.debugGidLabel.text = [NSString stringWithFormat:@"gid:%@",self.commentModel.commentID];
+    } else {
+        self.debugGidLabel.hidden = YES;
+    }
+}
+
+- (BOOL)shouldShowDebug {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"kUGCDebugConfigKey"];
 }
 
 - (void)refreshTimeLabel {
@@ -576,6 +608,18 @@
         _timeLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
     }
     return _timeLabel;
+}
+
+- (TTAsyncLabel *)debugGidLabel {
+    if (!_debugGidLabel) {
+        _debugGidLabel = [[TTAsyncLabel alloc] init];
+        _debugGidLabel.font = [TTUniversalCommentCellLiteHelper timeLabelFont];
+        _debugGidLabel.textColor = [UIColor tt_themedColorForKey:@"red1"];
+        _debugGidLabel.numberOfLines = 0;
+        _debugGidLabel.backgroundColor = [UIColor clearColor];
+        _debugGidLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
+    }
+    return _debugGidLabel;
 }
 
 - (TTUGCAttributedLabel *)contentLabel {

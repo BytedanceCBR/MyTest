@@ -92,8 +92,9 @@ PODS:
   - Crashlytics (3.12.0.1-binary)
   - EAccountApiSDK (1.1.1.1-binary)
   - Fabric (1.10.2.1-binary)
+  - FBRetainCycleDetector (0.1.5-alpha.2.1.binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.3)
+  - FHCommonUI (0.0.4)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -223,6 +224,7 @@ PODS:
   - MBProgressHUD (1.1.0.1-binary)
   - MJExtension (3.0.12.1-binary)
   - MJRefresh (3.1.15.7.1-binary)
+  - MLeaksFinder/Core (1.0.2-rc.0.1.binary)
   - OHHTTPStubs (4.2.1.1-binary):
     - OHHTTPStubs/Core (= 4.2.1.1-binary)
     - OHHTTPStubs/Default (= 4.2.1.1-binary)
@@ -627,8 +629,9 @@ DEPENDENCIES:
   - Crashlytics (= 3.12.0.1-binary)
   - EAccountApiSDK (= 1.1.1.1-binary)
   - Fabric (= 1.10.2.1-binary)
+  - FBRetainCycleDetector (= 0.1.5-alpha.2.1.binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.3)
+  - FHCommonUI (= 0.0.4)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -690,6 +693,7 @@ DEPENDENCIES:
   - MBProgressHUD (= 1.1.0.1-binary)
   - MJExtension (= 3.0.12.1-binary)
   - MJRefresh (= 3.1.15.7.1-binary)
+  - MLeaksFinder/Core (= 1.0.2-rc.0.1.binary)
   - OHHTTPStubs (= 4.2.1.1-binary)
   - OpenSSL-Universal (= 1.0.1.20.1-binary)
   - OpenUDID (= 0.1.0.1-binary)
@@ -1018,8 +1022,9 @@ SPEC CHECKSUMS:
   Crashlytics: bf08c2834d9231328142ef5588ee1ae5b78229a9
   EAccountApiSDK: 29385b846225d7ef532237b4a71aa10647914f35
   Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
+  FBRetainCycleDetector: 9efb6dac5baef178b6e60ba2f85112a7aff8dca4
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: b0120ae743420b9524eeefcb375f19a516c8e2a8
+  FHCommonUI: c7eeabaebb19bb0e281e97e7814294a60edb8ece
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1056,6 +1061,7 @@ SPEC CHECKSUMS:
   MBProgressHUD: 3dcb01b57ae9af405717a0e338566a0087cca22a
   MJExtension: da69d633398f365e84e052720b7943206f467935
   MJRefresh: 0163f5b55692ab35b37f1d11c094f98218b93a5e
+  MLeaksFinder: a0db6991409e90f0e3b54e38df7481a52f38e723
   OHHTTPStubs: 8fe4a9bac9386d3450c6cdaeca77e5d07d0f6cf4
   OpenSSL-Universal: 7bd04be21cd79882c6b2e4afd9433b3e94f88ac0
   OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
@@ -1063,7 +1069,7 @@ SPEC CHECKSUMS:
   React: 5e1cd3dbd5d3472c64a378caad5cf4468a60c615
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
-  RSSwizzle: 9b7cf78908bc6b249f1403926c168f730f840e91
+  RSSwizzle: 535f53ac21a545718af9b3bae51f7c3df5ad7bc0
   RXCollections: fc5eb6c41b5a3646601e6a01c1ee444c354a9bfc
   SDWebImage: abd373dadf531cf5d1738f6a8e9487f7f4a12f14
   SecGuard: 4cb7fa89163ad3f896cf6c5600d343fd479e9905
@@ -1169,6 +1175,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: e7e98e4104b18e231494328074aa74009f4b4bbe
+PODFILE CHECKSUM: 3eaece9f6ee8afa113b57085e880d5e07ff03b93
 
 COCOAPODS: 1.4.0
