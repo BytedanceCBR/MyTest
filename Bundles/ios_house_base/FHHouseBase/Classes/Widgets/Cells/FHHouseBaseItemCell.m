@@ -481,6 +481,17 @@
         layout.height = YGPointValue(20.0f);
     }];
     
+    [self.leftInfoView addSubview:self.lotLoadingView];
+//    [self.lotLoadingView setBackgroundColor:[UIColor redColor]];
+    [self.lotLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.position = YGPositionTypeAbsolute;
+        layout.top = YGPointValue(25.0f);
+        layout.left = YGPointValue(23.0f);
+        layout.width = YGPointValue(24);
+        layout.height = YGPointValue(24);
+    }];
+    
     [_imageTagLabelBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
@@ -663,16 +674,7 @@
             
             self.imageTagLabelBgView.hidden = YES;
         }
-        
-        [self.leftInfoView addSubview:self.lotLoadingView];
-        [self.lotLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.isEnabled = YES;
-            layout.position = YGPositionTypeAbsolute;
-            layout.top = YGPointValue(28);
-            layout.left = YGPointValue(42);
-            layout.width = YGPointValue(26);
-            layout.height = YGPointValue(26);
-        }];        
+    
         
     } else if (houseType == FHHouseTypeRentHouse) {
         
@@ -684,13 +686,11 @@
         [self updateMainImageWithUrl:imageModel.url];
         
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
-            
             self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
             self.imageTagLabel.text = commonModel.houseImageTag.text;
             self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
             self.imageTagLabelBgView.hidden = NO;
         }else {
-            
             self.imageTagLabelBgView.hidden = YES;
         }
     } else {
@@ -758,6 +758,8 @@
         }else {
             self.imageTagLabelBgView.hidden = YES;
         }
+    
+        [self.lotLoadingView play];
         
     } else if (houseType == FHHouseTypeRentHouse) {
         
@@ -962,6 +964,10 @@
     self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = model.displaySubtitle;
     self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
+    
+    if (self.lotLoadingView) {
+        [self.lotLoadingView play];
+    }
     
     self.priceLabel.text = model.displayPrice;
     self.pricePerSqmLabel.text = model.displayPricePerSqm;
