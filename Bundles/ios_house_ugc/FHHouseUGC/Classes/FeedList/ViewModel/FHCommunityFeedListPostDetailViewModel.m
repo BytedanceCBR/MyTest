@@ -88,7 +88,7 @@
                                     //去重逻辑
                                     [self removeDuplicaionModel:cellModel.groupId];
                                     // JOKER: 找到第一个非置顶贴的下标
-                                    __block NSUInteger index = 0;
+                                    __block NSUInteger index = self.dataList.count;
                                     [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
                                         
                                         BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
