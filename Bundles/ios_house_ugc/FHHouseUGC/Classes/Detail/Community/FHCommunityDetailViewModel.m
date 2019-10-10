@@ -505,6 +505,7 @@
 }
 
 - (NSAttributedString *)announcementAttributeString:(NSString *) announcement {
+    announcement = [announcement stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
        if(!isEmptyString(announcement)) {
            UIFont *titleFont = [UIFont themeFontSemibold:12];
