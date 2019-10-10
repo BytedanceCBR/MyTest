@@ -466,7 +466,9 @@
     NSString *imageUrlString = model.imageUrl;
  
     if(linkUrlString.length > 0) {
+        WeakSelf;
         self.headerView.gotoOperationBlock = ^{
+            StrongSelf;
             NSURLComponents *urlComponents = [NSURLComponents new];
             urlComponents.scheme = @"fschema";
             urlComponents.host = @"webview";
