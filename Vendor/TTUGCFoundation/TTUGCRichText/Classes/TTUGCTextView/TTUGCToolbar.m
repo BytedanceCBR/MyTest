@@ -402,6 +402,15 @@
     [self refreshButtonsUI];
 }
 
+-(void)setBanPicInput:(BOOL)banPicInput {
+    _banPicInput = banPicInput;
+    
+    self.picButton.enabled = !banPicInput;
+    self.picButton.hidden = banPicInput;
+    
+    [self refreshButtonsUI];
+}
+
 - (void)markKeyboardAsVisible {
     self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_normal";
     self.keyboardButton.accessibilityLabel = @"收起键盘";

@@ -20,6 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHHomeHouseDataItemsTitleTagModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@end
 
 @protocol FHHomeHouseDataItemsCommentListModel<NSObject>
 
@@ -283,6 +290,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *pricePerSqmUnit;
 @property (nonatomic, strong , nullable) NSArray<FHRentFacilitiesModel> *facilities;
 @property (nonatomic, strong , nullable) NSArray<FHHomeHouseDataItemsDislikeInfoModel> *dislikeInfo;
+//标签
+@property (nonatomic, strong , nullable) FHHomeHouseDataItemsTitleTagModel *titleTag ;
 //埋点使用
 @property (nonatomic, strong , nullable) NSDictionary *tracerDict;
 

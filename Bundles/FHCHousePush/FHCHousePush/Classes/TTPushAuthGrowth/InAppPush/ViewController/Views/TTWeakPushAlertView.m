@@ -18,7 +18,6 @@
 #import <FHCommonUI/UIView+House.h>
 #import <TTBaseLib/UIButton+TTAdditions.h>
 
-
 #define kTTWeakPushAlertViewToMarginBottom      (44 + [TTDeviceUIUtils tt_padding:8])
 #define kTTWeakPushAlertViewHorZoomBoundary     (10.f)
 #define kTTWeakPushAlertViewHorDismissBoundary  (60.f)
@@ -91,6 +90,7 @@ typedef NS_ENUM(NSInteger, TTPanGestureMoveDirection) {
         
         self.titleLabel.text = aModel.titleString;
         [self.titleLabel sizeToFit];
+            
         self.detailLabel.text = aModel.detailString;
         [self.detailLabel sizeToFit];
         

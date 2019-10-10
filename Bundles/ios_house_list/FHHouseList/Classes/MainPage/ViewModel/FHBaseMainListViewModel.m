@@ -56,6 +56,10 @@
 #import <FHHouseBase/FHUtils.h>
 #import "FHHouseListNoHouseCell.h"
 #import "FHHouseOpenURLUtil.h"
+#import "FHEnvContext.h"
+#import "FHMessageManager.h"
+#import "FHMainOldTopTagsView.h"
+#import <SSCommonLogic.h>
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -70,8 +74,13 @@
 #define ICON_HEADER_HEIGHT 115
 #define RENT_BANNER_HEIGHT 102
 #define OLD_ICON_HEADER_HEIGHT 80
+#define kFilterTagsViewHeight 58
 
 extern NSString *const INSTANT_DATA_KEY;
+
+@interface FHBaseMainListViewModel ()
+
+@end
 
 @implementation FHBaseMainListViewModel
 
@@ -83,6 +92,10 @@ extern NSString *const INSTANT_DATA_KEY;
         _houseList = [NSMutableArray new];
         _sugesstHouseList = [NSMutableArray new];
         _showHouseDict = [NSMutableDictionary new];
+        
+        _currentRecommendHouseDataModel = nil;
+        _currentHouseDataModel = nil;
+        _currentRentDataModel = nil;
         
         self.tableView = tableView;
         self.houseType = houseType;
@@ -124,12 +137,38 @@ extern NSString *const INSTANT_DATA_KEY;
             self.tracerModel.originFrom = @"renting";
         }
         
+        //暂时去掉这个逻辑，等安卓实验结论上
+//        [self setupTopTagsView];
+        
         _isFirstLoad = YES;
         _canChangeHouseSearchDic = YES;
         _showPlaceHolder = YES;
         _showRedirectTip = YES;
     }
     return self;
+}
+
+- (void)addNotiWithNaviBar:(FHFakeInputNavbar *)naviBar {
+    self.navbar = naviBar;
+    if (_mainListPage && _houseType == FHHouseTypeSecondHandHouse) {
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHMessageUnreadChangedNotification" object:nil];
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHChatMessageUnreadChangedNotification" object:nil];
+        [self refreshMessageDot];
+    }
+}
+
+- (void)refreshMessageDot {
+    if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
+        [self.navbar displayMessageDot:YES];
+    } else {
+        [self.navbar displayMessageDot:NO];
+    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void)initFilter
@@ -178,6 +217,45 @@ extern NSString *const INSTANT_DATA_KEY;
         }
     }
     
+}
+
+- (void)setupTopTagsView {
+    // add by zyk 是否满足实验
+    BOOL isEnableFilterTag = [SSCommonLogic enabledOldListQuickCondition];
+    if (self.houseType == FHHouseTypeSecondHandHouse && self.mainListPage && isEnableFilterTag) {
+        self.topTagsView = [[FHMainOldTopTagsView alloc] init];
+        self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterTagsViewHeight);
+        __weak typeof(self) weakSelf = self;
+        self.topTagsView.itemClickBlk = ^{
+            __block NSString *value_id = nil;
+            NSArray *temp = weakSelf.topTagsView.lastConditionDic[@"tags%5B%5D"];
+            if ([temp isKindOfClass:[NSArray class]] && temp.count > 0) {
+                [temp enumerateObjectsUsingBlock:^(NSString*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if (value_id.length > 0) {
+                        value_id = [NSString stringWithFormat:@"%@,%@",value_id,obj];
+                    } else {
+                        value_id = obj;
+                    }
+                }];
+            } else {
+                value_id = nil;//
+            }
+            [weakSelf.houseFilterBridge setFilterConditions:weakSelf.topTagsView.lastConditionDic];
+            [weakSelf.houseFilterViewModel trigerConditionChanged];
+            [weakSelf addTagsViewClick:value_id];
+        };
+    }
+}
+
+- (void)addTagsViewClick:(NSString *)value_id {
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[UT_PAGE_TYPE] = [self categoryName] ? : @"be_null";
+    param[UT_ELEMENT_TYPE] = @"select_options";
+    param[UT_SEARCH_ID] = self.searchId ? : @"be_null";
+    param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ? : @"be_null";
+    param[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
+    param[@"value_id"] = value_id ?: @"be_null";
+    TRACK_EVENT(@"click_options", param);
 }
 
 -(NSString *)originFrom
@@ -443,11 +521,14 @@ extern NSString *const INSTANT_DATA_KEY;
             self.recommendSearchId = recommendHouseDataModel.searchId;
             hasMore = recommendHouseDataModel.hasMore;
             recommendItems = recommendHouseDataModel.items;
+            self.currentHouseDataModel = recommendHouseDataModel;
+            
         } else if ([model isKindOfClass:[FHSearchHouseModel class]]) { // 列表页
             
             FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
+            self.currentHouseDataModel = houseModel;
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             items = [NSMutableArray arrayWithArray:houseModel.items];
@@ -526,7 +607,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }
         }else if ([model isKindOfClass:[FHHouseRentModel class]]){ //租房大类页
             FHHouseRentDataModel *rentModel = [(FHHouseRentModel *)model data];
-            
+            self.currentRentDataModel = rentModel;
             self.houseListOpenUrl = rentModel.houseListOpenUrl;
             self.mapFindHouseOpenUrl = rentModel.mapFindHouseOpenUrl;
             
@@ -711,6 +792,33 @@ extern NSString *const INSTANT_DATA_KEY;
     }
 }
 
+- (void)showMessageList {
+    [self.houseFilterViewModel closeConditionFilterPanel];
+    // 二手房大类页
+    if (_mainListPage && _houseType == FHHouseTypeSecondHandHouse) {
+
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[UT_PAGE_TYPE] = [self categoryName] ? : @"be_null";
+        param[UT_ENTER_FROM] = self.tracerModel.enterFrom ? : @"be_null";
+        param[UT_ENTER_TYPE] = self.tracerModel.enterType ? : @"be_null";
+        param[UT_ELEMENT_FROM] = self.tracerModel.elementFrom ? : @"be_null";
+        param[UT_SEARCH_ID] = self.searchId ? : @"be_null";
+        param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ? : @"be_null";
+        param[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
+        
+        TRACK_EVENT(@"click_im_message", param);
+        
+        NSString *messageSchema = @"sslocal://message_conversation_list";
+        NSURL *openUrl = [NSURL URLWithString:messageSchema];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[UT_ENTER_FROM] = [self categoryName] ? : @"be_null";
+        dict[@"tracer"] = tracerDict;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
+}
+
 #pragma mark 地图找房
 -(void)showOldMapSearch
 {
@@ -818,6 +926,10 @@ extern NSString *const INSTANT_DATA_KEY;
     self.navbar.placeHolder = placeholder;
     
     [self.houseFilterBridge setFilterConditions:paramObj.queryParams];
+    
+    if (self.topTagsView) {
+        self.topTagsView.lastConditionDic = [NSMutableDictionary dictionaryWithDictionary:paramObj.queryParams];
+    }
 }
 
 -(NSString *)navbarPlaceholder
@@ -1071,6 +1183,9 @@ extern NSString *const INSTANT_DATA_KEY;
     self.fromRecommend = NO;
 
     self.conditionFilter = condition;
+    if (self.topTagsView) {
+        self.topTagsView.condition = condition;
+    }
     
     [self.filterOpenUrlMdodel overwriteFliter:condition];
     [self.tableView triggerPullDown];
@@ -1243,7 +1358,12 @@ extern NSString *const INSTANT_DATA_KEY;
             }
             if (cellModel) {
                 CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseSmallItemCell recommendReasonHeight] : 0; //显示榜单推荐
-                [scell refreshTopMargin: 10];
+                if (self.topTagsView) {
+                    [scell refreshTopMargin: 0];
+                } else {
+                    [scell refreshTopMargin: 10];
+                }
+                
                 [scell updateWithHouseCellModel:cellModel];
             }
             
@@ -1451,14 +1571,14 @@ extern NSString *const INSTANT_DATA_KEY;
             self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
         }
     }else{
-        //        
         if (isTop) {
             [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
-        }else{
-            if (self.tableView.contentOffset.y >= -[self.topView filterTop]) {
-                if (self.tableView.contentOffset.y <= ([self.topView filterTop] - topViewHeight)) {
-//                    self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
-                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y+(topViewHeight - [self.topView filterTop]));
+        } else {
+            if (self.tableView.contentOffset.y >= -[self.topView filterBottom]) {
+                if (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight - [self.topView notifyHeight])) {
+                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + [self.topView notifyHeight]);
+                } else {
+                    self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
                 }
             }
         }

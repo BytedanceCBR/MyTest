@@ -690,6 +690,13 @@
 	}
 }
 
-
-
+- (BOOL)textView:(UITextView *)textView shouldInteractWithTextAttachment:(NSTextAttachment *)textAttachment inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction  API_AVAILABLE(ios(10.0)) {
+    switch (interaction) {
+        case UITextItemInteractionInvokeDefaultAction:
+            return YES;
+            break;
+        default:
+            return NO;
+    }
+}
 @end
