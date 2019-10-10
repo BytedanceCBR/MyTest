@@ -193,11 +193,13 @@
         NSMutableDictionary* dict = [_queryParams mutableCopy];
         NSMutableDictionary* theTracerDict = [self.tracerDict mutableCopy];
         theTracerDict[@"page_type"] = @"realotr_pick";
+        theTracerDict[@"from"] = [self sourceByHouseType:_houseType];
         dict[@"tracer"] = theTracerDict;
         dict[@"target_user_id"] = _target.userId;
         dict[@"chat_title"] = _target.username;
         dict[@"from_im_share"] = @(1);
         dict[@"source"] = [self sourceByHouseType:_houseType];
+        dict[@"from"] = [self sourceByHouseType:_houseType];
         TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://open_single_chat"] userInfo:info];
     } else {
