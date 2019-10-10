@@ -7,6 +7,8 @@
 
 #import "FHVRDetailWebViewController.h"
 #import <BDImageView.h>
+#import <TTUIWidget/UIView+Refresh_ErrorHandler.h>
+
 @interface FHVRDetailWebViewController ()
 @property(nonatomic,strong)BDImageView *maskLoadingView;
 @end
@@ -18,7 +20,8 @@
     
     __weak __typeof(self) weakSelf = self;
     [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
-//        [_maskLoadingView removeFromSuperview];
+        [_maskLoadingView removeFromSuperview];
+        [self.ssWebView.ssWebContainer tt_endUpdataData];
     } forMethodName:@"closeLoading"];
     // Do any additional setup after loading the view.
 }
@@ -29,11 +32,7 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
 
     if (!_maskLoadingView) {
-        
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"vrloadingImage" ofType:@"webp"];
-        NSData *data = [[NSData alloc] initWithContentsOfFile:path];
-        UIImage *imageData = [BDImage imageWithData:data];
-        
+        UIImage *imageData = [UIImage imageNamed:@"fh_vr_loading"];
         _maskLoadingView = [BDImageView new];
         [_maskLoadingView setImage:imageData];
         [_maskLoadingView setFrame:self.view.frame];
