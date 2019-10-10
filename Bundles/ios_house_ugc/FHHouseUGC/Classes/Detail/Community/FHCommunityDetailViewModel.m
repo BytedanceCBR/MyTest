@@ -466,7 +466,9 @@
     NSString *imageUrlString = model.imageUrl;
  
     if(linkUrlString.length > 0) {
+        WeakSelf;
         self.headerView.gotoOperationBlock = ^{
+            StrongSelf;
             NSURLComponents *urlComponents = [NSURLComponents new];
             urlComponents.scheme = @"fschema";
             urlComponents.host = @"webview";
@@ -505,6 +507,7 @@
 }
 
 - (NSAttributedString *)announcementAttributeString:(NSString *) announcement {
+    announcement = [announcement stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
        if(!isEmptyString(announcement)) {
            UIFont *titleFont = [UIFont themeFontSemibold:12];
