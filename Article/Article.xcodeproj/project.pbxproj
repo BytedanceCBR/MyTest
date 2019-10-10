@@ -123,6 +123,8 @@
 		B373CF022174587A008F9905 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C000AF16F7426D00FC365B /* AssetsLibrary.framework */; };
 		B388CB272142652A00653188 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E32142652800653188 /* Assets.xcassets */; };
 		B388CB292142652A00653188 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
+		D4280B10234EDE930038493A /* vrloadingImage.webp in Resources */ = {isa = PBXBuildFile; fileRef = D4280B0F234EDE920038493A /* vrloadingImage.webp */; };
+		D4280B11234EDE930038493A /* vrloadingImage.webp in Resources */ = {isa = PBXBuildFile; fileRef = D4280B0F234EDE920038493A /* vrloadingImage.webp */; };
 		D48E93C1233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		EB988F3EBE29F7D165C85289 /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A95054107C5636D5192DC02 /* libPods-NewsLiteInHouse.a */; };
@@ -368,6 +370,7 @@
 		D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = FrameworkResource.xcassets; sourceTree = "<group>"; };
 		D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CommonResource.xcassets; sourceTree = "<group>"; };
+		D4280B0F234EDE920038493A /* vrloadingImage.webp */ = {isa = PBXFileReference; lastKnownFileType = file; path = vrloadingImage.webp; sourceTree = "<group>"; };
 		D48E93C0233CF142005A42CD /* VRImageLoading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VRImageLoading.json; sourceTree = "<group>"; };
 		D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = VideoResource.xcassets; sourceTree = "<group>"; };
 		EF3B84B5173BDC690017F4E7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -727,6 +730,7 @@
 		B388C9D82142652800653188 /* Bubble */ = {
 			isa = PBXGroup;
 			children = (
+				D4280B0F234EDE920038493A /* vrloadingImage.webp */,
 				3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */,
 				B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */,
 				B388C9E32142652800653188 /* Assets.xcassets */,
@@ -971,6 +975,7 @@
 				6114B09F21B3E78C00331D12 /* house_refresh.json in Resources */,
 				B373CE9E2174587A008F9905 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				7623E3B22275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */,
+				D4280B11234EDE930038493A /* vrloadingImage.webp in Resources */,
 				B373CEA42174587A008F9905 /* PushNotification.xcassets in Resources */,
 				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
@@ -1061,6 +1066,7 @@
 				FEFA5A22205FB1A8001F50D8 /* default_profile_background_image.jpg in Resources */,
 				B388CB272142652A00653188 /* Assets.xcassets in Resources */,
 				3DB49F8A2265E34900A0780E /* ProjectDayModeThemeUISetting.strings in Resources */,
+				D4280B10234EDE930038493A /* vrloadingImage.webp in Resources */,
 				3DB49F862265E34900A0780E /* IPhoneProjectLogicSetting.strings in Resources */,
 				FEFA5A24205FB1A8001F50D8 /* VideoResource.xcassets in Resources */,
 			);
