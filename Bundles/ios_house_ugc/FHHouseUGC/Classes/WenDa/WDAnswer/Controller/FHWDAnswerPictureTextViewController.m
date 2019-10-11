@@ -125,7 +125,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         self.answerSchema = @"";
         self.isForbidComment = NO;
         self.isPosting = NO;
-        self.gdExtJson = nil;
+        self.gdExtJson = params[@"gd_ext_json"];
         
         self.tracerDict[@"page_type"] = @"answer_publisher";
     }
