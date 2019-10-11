@@ -45,6 +45,7 @@
 #import <FHIESGeckoManager.h>
 #import "FHHouseDetailPhoneCallViewModel.h"
 #import "FHHouseDetailViewController.h"
+#import <FHHouseBase/FHHouseContactDefines.h>
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -453,12 +454,27 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"realtor_position"] = realtor_pos;
     imExtra[@"from"] = params[@"from"] ?: (self.contactPhone.realtorType == FHRealtorTypeNormal ? @"app_oldhouse" : @"app_oldhouse_expert");
+    if (params[@"source"]) {
+        imExtra[@"source"] = params[@"source"];
+    }
     if (extraDict && [extraDict isKindOfClass:[NSDictionary class]]) {
         if (extraDict[@"element_from"]) {
             imExtra[@"element_from"] = extraDict[@"element_from"];
         }
         if (extraDict[@"item_id"]) {
             imExtra[@"item_id"] = extraDict[@"item_id"];
+        }
+        if (extraDict[@"im_open_url"]) {
+            imExtra[@"im_open_url"] = extraDict[@"im_open_url"];
+        }
+        if (extraDict[@"source_from"]) {
+            imExtra[@"source_from"] = extraDict[@"source_from"];
+        }
+        if (extraDict[kFHClueEndpoint]) {
+            imExtra[kFHClueEndpoint] = extraDict[kFHClueEndpoint];
+        }
+        if (extraDict[kFHCluePage]) {
+            imExtra[kFHCluePage] = extraDict[kFHCluePage];
         }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];

@@ -14,9 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showOldMapSearch;
 
--(TTHttpTask *)loadData:(BOOL)isRefresh  query:(NSString *)query completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion;
+-(TTHttpTask *)loadData:(BOOL)isRefresh query:(NSString *)query completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion;
 
--(TTHttpTask *)loadData:(BOOL)isRefresh fromRecommend:(BOOL)isFromRecommend query:(NSString *)query  completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion;
+-(TTHttpTask *)loadData:(BOOL)isRefresh fromRecommend:(BOOL)isFromRecommend query:(NSString *)query completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion;
 
 - (void)updateRedirectTipInfo;
 

@@ -85,9 +85,9 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 }
 
 - (void)saveCurrentLocationData {
-    if (self.currentReGeocode) {
-        [self.locationCache setObject:self.currentReGeocode forKey:@"fh_currentReGeocode"];
-    }
+//    if (self.currentReGeocode) {
+//        [self.locationCache setObject:self.currentReGeocode forKey:@"fh_currentReGeocode"];
+//    }
     if (self.currentLocaton) {
         [self.locationCache setObject:self.currentLocaton forKey:@"fh_currentLocaton"];
     }

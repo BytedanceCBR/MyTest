@@ -179,6 +179,7 @@
 "ugc_community_list" = "FHUGCCommunityListViewController";
 "ugc_comment_detail" = "FHCommentDetailViewController";
 "concern" = "FHTopicDetailViewController";// 话题详情页
+"ugc_notice_edit" = "FHUGCNoticeEditViewController";
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";

@@ -21,7 +21,8 @@
 {
     NSInteger offset = 0;
     if (!isHead) {
-        offset = self.houseList.count;
+        offset = self.currentRentDataModel.offset;
+//        offset = self.houseList.count;
     }
     NSDictionary *params = @{CHANNEL_ID:CHANNEL_ID_SEARCH_RENT_WITH_BANNER};
     return   [FHMainApi searchRent:query params:params offset:offset searchId:self.searchId sugParam:nil completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {

@@ -63,6 +63,7 @@
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 //@property(nonatomic, strong) UIButton *closeBtn; //x按钮
 @property(nonatomic, strong) YYLabel *trueHouseLabel; // 天眼验真
+@property(nonatomic, strong) FHCornerItemLabel *tagTitleLabel; //降 新 榜等标签
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 
@@ -149,6 +150,17 @@
         _imageTagLabelBgView.hidden = YES;
     }
     return _imageTagLabelBgView;
+}
+
+-(FHCornerItemLabel *)tagTitleLabel {
+    if (!_tagTitleLabel) {
+        _tagTitleLabel = [[FHCornerItemLabel alloc] init];
+        _tagTitleLabel.textAlignment = NSTextAlignmentCenter;
+        _tagTitleLabel.font = [UIFont themeFontMedium:10];
+        _tagTitleLabel.textColor = [UIColor themeWhite];
+        _tagTitleLabel.frame = CGRectMake(0, 0, 16, 16);
+    }
+    return _tagTitleLabel;
 }
 
 -(UILabel *)mainTitleLabel
@@ -346,10 +358,24 @@
         layout.height = YGPointValue(CELL_HEIGHT);
     }];
     
-    [_rightInfoView addSubview:self.mainTitleLabel];
+    UIView *titleView = [[UIView alloc] init];
+    [_rightInfoView addSubview:titleView];
     [_rightInfoView addSubview:self.subTitleLabel];
     [_rightInfoView addSubview:self.statInfoLabel];
     [_rightInfoView addSubview:self.tagLabel];
+    
+    [titleView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.flexDirection = YGFlexDirectionRow;
+        layout.paddingLeft = YGPointValue(0);
+        layout.paddingRight = YGPointValue(0);
+        layout.alignItems = YGAlignFlexStart;
+        layout.marginTop = YGPointValue(0);
+        layout.height = YGPointValue(22);
+        layout.maxWidth = YGPointValue([self contentMaxWidth]);
+    }];
+    [titleView addSubview:self.mainTitleLabel];
+    [titleView addSubview:self.tagTitleLabel];
     
     _mainTitleLabel.font = [UIFont themeFontSemibold:16];
     [_mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -357,6 +383,15 @@
         layout.marginTop = YGPointValue(0);
         layout.height = YGPointValue(22);
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
+    }];
+    
+    _tagTitleLabel.hidden = YES;
+    [_tagTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.marginTop = YGPointValue(3);
+        layout.marginLeft = YGPointValue(4);
+        layout.height = YGPointValue(16);
+        layout.width = YGPointValue(16);
     }];
     
     [_subTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -516,7 +551,6 @@
     //    }else{
     //        self.closeBtn.hidden = YES;
     //    }
-    
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
     self.mainTitleLabel.text = commonModel.displayTitle;
     self.subTitleLabel.text = commonModel.displayDescription;
@@ -705,6 +739,7 @@
 #pragma mark 二手房
 -(void)updateWithSecondHouseModel:(FHSearchHouseDataItemsModel *)model
 {
+    self.tagTitleLabel.hidden = YES;
     self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
     FHImageModel *imageModel = model.houseImage.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
@@ -740,6 +775,24 @@
     self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = model.displaySubtitle;
 
+    BOOL imageTagHidden = self.imageTagLabelBgView.hidden;
+    if (model.houseTitleTag) {
+        self.imageTagLabelBgView.hidden = YES;
+        self.tagTitleLabel.hidden = NO;
+        [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.maxWidth = YGPointValue([self contentMaxWidth] - 20);
+        }];
+        self.tagTitleLabel.text = model.houseTitleTag.text;
+        self.tagTitleLabel.backgroundColor = [UIColor colorWithHexString:model.houseTitleTag.backgroundColor];
+        self.tagTitleLabel.textColor = [UIColor colorWithHexString:model.houseTitleTag.textColor];
+    } else {
+        self.imageTagLabelBgView.hidden = imageTagHidden;
+        self.tagTitleLabel.hidden = YES;
+        [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.maxWidth = YGPointValue([self contentMaxWidth]);
+        }];
+    }
+    [self.mainTitleLabel.yoga markDirty];
     
     if (model.externalInfo && model.externalInfo.isExternalSite.boolValue) {
         [self updateThirdPartHouseSourceStr:model.externalInfo.externalName];
@@ -832,6 +885,8 @@
             layout.isIncludedInLayout = showTags;
         }];
     }
+    
+    [self.mainTitleLabel.yoga markDirty];
     [self.rightInfoView.yoga markDirty];
     [self.tagLabel.yoga markDirty];
     [self.priceLabel.yoga markDirty];

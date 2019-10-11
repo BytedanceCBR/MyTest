@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *subtitle;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, assign) BOOL isHidden;
 @end
 
 //给圈子做分类，每个城市的区域以及推荐和关注

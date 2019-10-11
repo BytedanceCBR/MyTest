@@ -21,6 +21,7 @@
     @"operation": @"operation",
     @"logPb":@"log_pb",
     @"announcementUrl":@"announcement_url",
+    @"userAuth": @"user_auth",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

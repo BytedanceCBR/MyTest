@@ -25,6 +25,7 @@
 #import "MJRefresh.h"
 #import "FHCommonDefines.h"
 #import "TTUIResponderHelper.h"
+#import <TTUGCEmojiParser.h>
 
 
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
@@ -77,7 +78,11 @@
     MJWeakSelf;
     self.refreshHeader = [FHCommunityDetailMJRefreshHeader headerWithRefreshingBlock:^{
         [weakSelf requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+        weakSelf.feedListController.view.userInteractionEnabled = NO;
     }];
+    self.refreshHeader.endRefreshingCompletionBlock = ^{
+        weakSelf.feedListController.view.userInteractionEnabled = YES;
+    };
     self.refreshHeader.mj_h = 14;
     self.refreshHeader.alpha = 0.0f;
 
@@ -274,6 +279,8 @@
             if (responseModel.data) {
                 // 更新圈子数据
                 [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:responseModel.data];
+                //传入选项信息
+                self.feedListController.operations = responseModel.data.permission;
             }
             return;
         }
@@ -459,7 +466,9 @@
     NSString *imageUrlString = model.imageUrl;
  
     if(linkUrlString.length > 0) {
+        WeakSelf;
         self.headerView.gotoOperationBlock = ^{
+            StrongSelf;
             NSURLComponents *urlComponents = [NSURLComponents new];
             urlComponents.scheme = @"fschema";
             urlComponents.host = @"webview";
@@ -496,49 +505,105 @@
     }
 
 }
+
+- (NSAttributedString *)announcementAttributeString:(NSString *) announcement {
+    announcement = [announcement stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
+       if(!isEmptyString(announcement)) {
+           UIFont *titleFont = [UIFont themeFontSemibold:12];
+           NSDictionary *announcementTitleAttributes = @{
+                                                         NSFontAttributeName: titleFont,
+                                                         NSForegroundColorAttributeName: [UIColor themeGray1]
+                                                         };
+           NSAttributedString *announcementTitle = [[NSAttributedString alloc] initWithString:@"[公告] " attributes: announcementTitleAttributes];
+           
+           NSAttributedString *emojiSupportAnnouncement = [[TTUGCEmojiParser parseInTextKitContext:announcement fontSize:12] mutableCopy];
+           NSAttributedString *announcementContent = [[NSAttributedString alloc] initWithAttributedString:emojiSupportAnnouncement];
+           
+           [attributedText appendAttributedString:announcementTitle];
+           [attributedText appendAttributedString:announcementContent];
+           
+           NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+           CGFloat lineHeight = PublicationsContentLabel_lineHeight;
+           paragraphStyle.minimumLineHeight = lineHeight;
+           paragraphStyle.maximumLineHeight = lineHeight;
+           paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+           
+           [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
+       }
+    return attributedText;
+}
+
 // 更新公告信息
 - (void)updatePublicationsWith:(FHUGCScialGroupDataModel *)data {
-    
-    NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
-    
-    if(!isEmptyString(data.announcement)) {
-        UIFont *titleFont = [UIFont themeFontSemibold:12];
-        NSDictionary *announcementTitleAttributes = @{
-                                                      NSFontAttributeName: titleFont,
-                                                      NSForegroundColorAttributeName: [UIColor themeGray1]
-                                                      };
-        NSAttributedString *announcementTitle = [[NSAttributedString alloc] initWithString:@"[公告] " attributes: announcementTitleAttributes];
-        
-        UIFont *contentFont = [UIFont themeFontRegular:12];
-        NSDictionary *announcemenContentAttributes = @{
-                                                       NSFontAttributeName: contentFont,
-                                                       NSForegroundColorAttributeName: [UIColor themeGray1]
-                                                       };
-        NSAttributedString *announcementContent = [[NSAttributedString alloc] initWithString:data.announcement attributes:announcemenContentAttributes];
-        
-        [attributedText appendAttributedString:announcementTitle];
-        [attributedText appendAttributedString:announcementContent];
-        
-        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-        CGFloat lineHeight = 20;
-        paragraphStyle.minimumLineHeight = lineHeight;
-        paragraphStyle.maximumLineHeight = lineHeight;
-        paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
-        
-        [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
-    }
-    
-    self.headerView.publicationsContentLabel.attributedText = attributedText;
-    if(data.announcementUrl.length > 0) {
+    WeakSelf;
+    BOOL isAdmin = (self.data.userAuth != UserAuthTypeNormal);
+    // 是否显示公告区
+    BOOL isShowPublications = !isEmptyString(data.announcement);
+    self.headerView.gotoPublicationsDetailBlock = nil;
+    BOOL hasDetailBtn = YES;
+
+    // 管理员
+    if(isAdmin) {
+        isShowPublications = YES;
+        self.headerView.publicationsDetailViewTitleLabel.text = @"编辑公告";
+        NSString *defaultAnnouncement = [NSString stringWithFormat:@"与%@有关的话题都可以在这里分享讨论哦", data.socialGroupName];
+        self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:(data.announcement.length > 0)?data.announcement: defaultAnnouncement];
+
         self.headerView.gotoPublicationsDetailBlock = ^{
-            NSURLComponents *urlComponents = [NSURLComponents new];
-            urlComponents.scheme = @"fschema";
-            urlComponents.host = @"webview";
-            urlComponents.queryItems = @[
-                                         [[NSURLQueryItem alloc] initWithName:@"url" value: data.announcementUrl]
-                                         ];
-            NSURL *url = urlComponents.URL;
-            [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+            StrongSelf;
+            // 跳转公告编辑页
+            NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
+            urlComponents.scheme = @"sslocal";
+            urlComponents.host = @"ugc_notice_edit";
+            
+            NSMutableDictionary *infoDict = @{}.mutableCopy;
+            infoDict[@"socialGroupId"] = self.data.socialGroupId;
+            infoDict[@"content"] = data.announcement;
+            infoDict[@"isReadOnly"] = @(NO);
+            infoDict[@"callback"] = ^(NSString *newContent){
+                data.announcement = newContent;
+                [self updateUIWithData:data];
+            };
+            
+            NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
+            tracer[UT_ENTER_FROM] = @"community_group_detail";
+            infoDict[@"tracer"] = tracer;
+            
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+            [[TTRoute sharedRoute] openURLByViewController:urlComponents.URL userInfo:userInfo];
+            
+            // 点击编辑公告按钮埋点
+            NSMutableDictionary *param = @{}.mutableCopy;
+            param[UT_ELEMENT_TYPE] = @"community_group_notice";
+            param[UT_PAGE_TYPE] = @"community_group_detail";
+            param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+            param[@"click_position"] = @"community_notice_edit";
+            TRACK_EVENT(@"click_community_notice_edit", param);
+        };
+    }
+    // 非管理员
+    else {
+        self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:data.announcement];
+        self.headerView.publicationsDetailViewTitleLabel.text = @"点击查看";
+        self.headerView.gotoPublicationsDetailBlock = ^{
+            StrongSelf;
+            // 跳转只读模式的公告详情页
+            NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
+            urlComponents.scheme = @"sslocal";
+            urlComponents.host = @"ugc_notice_edit";
+            
+            NSMutableDictionary *infoDict = @{}.mutableCopy;
+            infoDict[@"socialGroupId"] = self.data.socialGroupId;
+            infoDict[@"content"] = data.announcement;
+            infoDict[@"isReadOnly"] = @(YES);
+            
+            NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
+            tracer[UT_ENTER_FROM] = @"community_group_detail";
+            infoDict[@"tracer"] = tracer;
+            
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+            [[TTRoute sharedRoute] openURLByViewController:urlComponents.URL userInfo:userInfo];
             
             NSMutableDictionary *param = [NSMutableDictionary dictionary];
             param[UT_ELEMENT_TYPE] = @"community_group_notice";
@@ -547,12 +612,11 @@
             param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
             TRACK_EVENT(@"click_community_notice_more", param);
         };
-    } else {
-        self.headerView.gotoPublicationsDetailBlock = nil;
+        hasDetailBtn = [self.headerView isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow];
     }
     
-    [self.headerView updatePublicationsInfo: !isEmptyString(data.announcement)
-                               hasDetailBtn: !isEmptyString(data.announcementUrl)];
+    [self.headerView updatePublicationsInfo: isShowPublications
+                               hasDetailBtn: hasDetailBtn];
 }
 
 - (void)updateUIWithData:(FHUGCScialGroupDataModel *)data {
@@ -600,6 +664,8 @@
         }];
         
         self.feedListController.tableView.tableHeaderView = headerView;
+        [self.feedListController.tableView bringSubviewToFront:self.feedListController.tableView.mj_header];
+        
     }
 
     //仅仅在未关注时显示引导页

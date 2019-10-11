@@ -46,6 +46,7 @@
 @property (nonatomic, assign) BOOL banHashtagInput; // 是否支持添加话题
 @property (nonatomic, assign) BOOL banEmojiInput; // 是否支持表情输入
 @property (nonatomic, assign) BOOL banShoppingInput; // 是否支持电商
+@property (nonatomic, assign) BOOL banPicInput; // 是否支持图片
 
 @property (nonatomic, assign) BOOL emojiInputViewVisible; // 表情输入框是否可见
 

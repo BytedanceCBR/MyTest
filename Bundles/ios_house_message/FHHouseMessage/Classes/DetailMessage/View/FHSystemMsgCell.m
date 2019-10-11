@@ -80,7 +80,7 @@
     
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
     self.descLabel.textAlignment = NSTextAlignmentLeft;
-    self.descLabel.numberOfLines = 0;
+    self.descLabel.numberOfLines = 2;
     [_cardView addSubview:_descLabel];
     
     self.lookDetailView = [[UIView alloc] init];

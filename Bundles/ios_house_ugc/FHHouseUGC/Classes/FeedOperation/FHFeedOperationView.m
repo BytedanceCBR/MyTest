@@ -981,7 +981,12 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
     
     self.optionSelectorView.commonTrackingParameters = commonTrackingParameters;
     
-    NSArray<FHFeedOperationWord *> *items = [TTFeedDislikeConfig operationWordList:self.viewModel.userID];
+    NSArray<FHFeedOperationWord *> *items = [TTFeedDislikeConfig operationWordListWithViewModel:self.viewModel];
+//    if(self.viewModel.permission.count > 0){
+//        items = [TTFeedDislikeConfig operationWordListWithPermission:self.viewModel.permission];
+//    }else{
+//        items = [TTFeedDislikeConfig operationWordList:self.viewModel.userID];
+//    }
     
     if ([TTSandBoxHelper isInHouseApp] && [self shouldShowDebug]) {
         for (FHFeedOperationWord *word in items) {
