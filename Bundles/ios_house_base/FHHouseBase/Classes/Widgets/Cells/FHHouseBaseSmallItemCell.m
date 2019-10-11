@@ -885,6 +885,8 @@
             layout.isIncludedInLayout = showTags;
         }];
     }
+    
+    [self.mainTitleLabel.yoga markDirty];
     [self.rightInfoView.yoga markDirty];
     [self.tagLabel.yoga markDirty];
     [self.priceLabel.yoga markDirty];
