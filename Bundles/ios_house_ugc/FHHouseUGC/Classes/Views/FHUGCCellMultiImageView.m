@@ -179,9 +179,9 @@
 //            [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
             if (imageModel && imageModel.url.length > 0) {
                 TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
-                __weak typeof(self) wSelf = self;
+                __weak typeof(imageView) wImageView = imageView;
                 [imageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
-                    [imageView setImage:nil];
+                    [wImageView setImage:nil];
                 }];
             }
             //只对单图做重新布局，多图都是1：1
