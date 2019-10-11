@@ -1281,6 +1281,36 @@ extern NSString *const INSTANT_DATA_KEY;
 
 }
 
+#pragma mark 消息列表
+- (void)showMessageList {
+    // 二手列表页
+    if (_houseType == FHHouseTypeSecondHandHouse) {
+        // add by zyk 埋点查看
+        if (self.closeConditionFilter) {
+            self.closeConditionFilter();
+        }
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[UT_PAGE_TYPE] = [self categoryName] ? : @"be_null";
+        param[UT_ENTER_FROM] = self.tracerModel.enterFrom ? : @"be_null";
+        param[UT_ENTER_TYPE] = self.tracerModel.enterType ? : @"be_null";
+        param[UT_ELEMENT_FROM] = self.tracerModel.elementFrom ? : @"be_null";
+        param[UT_SEARCH_ID] = self.searchId ? : @"be_null";
+        param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ? : @"be_null";
+        param[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
+        
+        TRACK_EVENT(@"click_im_message", param);
+        
+        NSString *messageSchema = @"sslocal://message_conversation_list";
+        NSURL *openUrl = [NSURL URLWithString:messageSchema];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[UT_ENTER_FROM] = [self categoryName] ? : @"be_null";
+        dict[@"tracer"] = tracerDict;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
+}
+
 -(void)refreshHouseListUrlCallback:(NSString *)openUrl {
 
     if (openUrl.length < 1) {

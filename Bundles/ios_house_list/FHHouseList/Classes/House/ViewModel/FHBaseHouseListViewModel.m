@@ -50,6 +50,11 @@
     
 }
 
+-(void)showMessageList {
+    
+    
+}
+
 -(void)viewWillAppear:(BOOL)animated {
     
     
