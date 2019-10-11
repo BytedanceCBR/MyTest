@@ -13,6 +13,7 @@
 #import <UIView+XWAddForRoundedCorner.h>
 #import "FHPersonalHomePageItemView.h"
 #import <UIImageView+BDWebImage.h>
+#import <TTRoute.h>
 
 #define iconWidth 76
 #define topMargin 20
@@ -106,7 +107,12 @@
 }
 
 - (void)focusClicked {
-    NSLog(@"in");
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"person_id"] = @"";
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    //跳转到关注列表
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_focus_list"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 @end
