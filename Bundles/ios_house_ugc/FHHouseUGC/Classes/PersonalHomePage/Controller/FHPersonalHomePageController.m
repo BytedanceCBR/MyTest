@@ -13,13 +13,12 @@
 #import "FHCommentViewController.h"
 #import "TTDeviceHelper.h"
 #import "FHCommonDefines.h"
-#import "FHTopicHeaderInfo.h"
 #import "FHBaseTableView.h"
 #import "FHPersonalHomePageViewModel.h"
 #import "TTReachability.h"
 #import "FHUGCCellManager.h"
 #import "FHUGCCellHelper.h"
-#import "FHTopicTopBackView.h"
+#import "FHPersonalHomePageHeaderView.h"
 #import "FHUGCTopicRefreshHeader.h"
 #import "FHRefreshCustomFooter.h"
 #import "UILabel+House.h"
@@ -36,7 +35,7 @@
 @interface FHPersonalHomePageController ()<UIScrollViewDelegate,TTUIViewControllerTrackProtocol,SSImpressionProtocol>
 
 @property (nonatomic, strong)   UIScrollView       *mainScrollView;
-@property (nonatomic, strong)   FHTopicTopBackView        *topHeaderView;
+@property (nonatomic, strong)   FHPersonalHomePageHeaderView        *topHeaderView;
 @property (nonatomic, assign)   CGFloat       minSubScrollViewHeight;
 @property (nonatomic, assign)   CGFloat       maxSubScrollViewHeight;
 @property (nonatomic, assign)   CGFloat       criticalPointHeight;// 临界点长度
@@ -54,7 +53,6 @@
 @property (nonatomic, assign)   BOOL canScroll;
 @property (nonatomic, assign)   CGFloat       defaultTopHeight;
 @property (nonatomic, assign)   int64_t cid;// 话题id
-//@property (nonatomic, strong)   UIButton       *publishBtn;
 @property (nonatomic, copy)     NSString       *enter_from;// 从哪进入的当前页面
 
 @end
@@ -188,13 +186,9 @@
     }];
     
     // _topHeaderView
-    _topHeaderView = [[FHTopicTopBackView alloc] init];
+    _topHeaderView = [[FHPersonalHomePageHeaderView alloc] init];
     _topHeaderView.frame = CGRectMake(0, self.navOffset, SCREEN_WIDTH, self.defaultTopHeight);
     [self.mainScrollView addSubview:_topHeaderView];
-    
-    [self.topHeaderView.avatar mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.mainScrollView).offset(20);
-    }];
     _topHeaderView.hidden = YES;
     
     self.mainScrollView.backgroundColor = [UIColor themeGray7];
@@ -246,7 +240,6 @@
     if ([tabIndexStrs isKindOfClass:[NSArray class]] && tabIndexStrs.count > 0) {
         [self.emptyView hideEmptyView];
         self.mainScrollView.hidden = NO;
-        [self setNavBarTransparent:YES];
         NSInteger tabCount = tabIndexStrs.count;
         _subScrollView.contentSize = CGSizeMake(SCREEN_WIDTH * tabCount, self.maxSubScrollViewHeight);
         _subScrollView.pagingEnabled = YES;
@@ -268,7 +261,6 @@
     } else {
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
         self.mainScrollView.hidden = YES;
-        [self setNavBarTransparent:NO];
     }
 }
 
@@ -304,48 +296,12 @@
     return _tableView;
 }
 
-// 导航栏透明
-- (void)setNavBarTransparent:(BOOL)transparent {
-//    if (!transparent) {
-//        self.customNavBarView.title.textColor = [UIColor themeGray1];
-//        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-//        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
-//        [self.customNavBarView setNaviBarTransparent:NO];
-//    } else {
-//        self.customNavBarView.title.textColor = [UIColor whiteColor];
-//        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
-//        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
-//        [self.customNavBarView setNaviBarTransparent:YES];
-//    }
-}
-
 - (void)refreshHeaderData {
-    FHTopicHeaderModel       *headerModel = self.viewModel.headerModel;
+    FHTopicHeaderModel *headerModel = self.viewModel.headerModel;
     if (headerModel && headerModel.forum) {
         [self hiddenEmptyView];
         self.topHeaderView.hidden = NO;
-//        self.headerInfoView.hidden = NO;
-        NSString *forumName = headerModel.forum.forumName;
-        if (![headerModel.forum.forumName hasPrefix:@"#"]) {
-            forumName = [NSString stringWithFormat:@"#%@#",headerModel.forum.forumName];
-        }
-        self.titleLabel.text = forumName;
-        self.subTitleLabel.text = headerModel.forum.subDesc;
-        [self.topHeaderView updateWithInfo:headerModel];
-//        [self updateTopicNotice:headerModel.forum.desc];// 话题简介
-//        // 更新顶部布局
-//        self.topHeightOffset = CGRectGetMaxY(self.topHeaderView.frame) + 5;
-//        if (headerModel.forum.desc.length > 0) {
-//            self.headerInfoView.hidden = NO;
-//            self.topHeightOffset = CGRectGetMaxY(self.headerInfoView.frame) + 5;
-//        } else {
-//            self.headerInfoView.hidden = YES;
-//            self.topHeightOffset = CGRectGetMaxY(self.topHeaderView.frame);
-//        }
-//        self.minSubScrollViewHeight = SCREEN_HEIGHT - self.topHeightOffset;
-//        self.criticalPointHeight = self.maxSubScrollViewHeight - self.minSubScrollViewHeight;
-//        self.subScrollView.frame = CGRectMake(0, self.topHeightOffset, SCREEN_WIDTH, self.maxSubScrollViewHeight);
-//        self.mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, self.maxSubScrollViewHeight + self.topHeightOffset);
+        [self.topHeaderView updateData];
     }
 }
 
@@ -378,30 +334,6 @@
     if (!self.isLoadingData) {
         [self startLoadData];
     }
-}
-
-- (void)endRefreshHeader {
-//    __weak typeof(self) wSelf = self;
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [wSelf.refreshHeader endRefreshing];
-//    });
-}
-
-- (void)mainScrollToTop {
-    __weak typeof(self) wSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [wSelf.mainScrollView setContentOffset:CGPointZero animated:YES];
-        [wSelf.viewModel.currentTableView setContentOffset:CGPointZero animated:NO];
-    });
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [wSelf.viewModel.currentTableView setContentOffset:CGPointZero animated:YES];
-//    });
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [wSelf.mainScrollView setContentOffset:CGPointZero animated:NO];
-//    });
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [wSelf.mainScrollView setContentOffset:CGPointZero animated:NO];
-//    });
 }
 
 // 上拉加载
@@ -486,12 +418,12 @@
 
 #pragma mark - Tracer
 
--(void)addGoDetailLog {
+- (void)addGoDetailLog {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
 }
 
--(void)addStayPageLog {
+- (void)addStayPageLog {
     NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
     if (duration == 0) {
         return;

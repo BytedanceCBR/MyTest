@@ -15,7 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)showEmptyWithType:(FHEmptyMaskViewType)maskViewType;
 - (void)hiddenEmptyView;
 - (void)refreshHeaderData;
-//- (void)endRefreshHeader;
 - (void)mainScrollToTop;
 
 @end

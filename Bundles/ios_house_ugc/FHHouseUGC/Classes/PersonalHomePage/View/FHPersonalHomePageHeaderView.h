@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPersonalHomePageHeaderView : UIView
 
+- (void)updateData;
+
 @end
 
 NS_ASSUME_NONNULL_END
