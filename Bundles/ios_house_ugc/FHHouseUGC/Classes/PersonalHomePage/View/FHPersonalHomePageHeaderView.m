@@ -103,7 +103,12 @@
 }
 
 - (void)commentClicked {
-    NSLog(@"in");
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"person_id"] = @"";
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    //跳转到评论列表
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_comment_list"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 - (void)focusClicked {

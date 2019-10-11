@@ -218,7 +218,7 @@
     // viewModel
     _viewModel = [[FHPersonalHomePageViewModel alloc] initWithController:self];
     _viewModel.currentSelectIndex = 0;
-    // self.cid = 1642474912698382;//1643171844947979;//1642474912698382;
+     self.cid = 1643560283994120;//1643171844947979;//1642474912698382;
     _viewModel.cid = self.cid;
     _viewModel.enter_from = self.enter_from;
     

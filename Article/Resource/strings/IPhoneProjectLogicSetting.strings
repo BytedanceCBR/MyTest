@@ -32,7 +32,10 @@
 // SSAppPageController
 "home"                  = "FHHomeSchemaObject";
 "main"                  = "FHHomeSchemaObject";
-"profile"               = "ArticleMomentProfileViewController";
+
+//"profile"               = "ArticleMomentProfileViewController"; //旧版个人主页
+"profile"               = "FHPersonalHomePageController"; //旧版个人主页
+
 "invite_friend"         = "ArticleInviteFriendViewController";
 "address_list"          = "TTAddressListFriendViewController";
 ///...
@@ -181,7 +184,8 @@
 //"concern" = "FHTopicDetailViewController";// 话题详情页
 "concern" = "FHPersonalHomePageController";// 话题详情页
 "ugc_notice_edit" = "FHUGCNoticeEditViewController";
-"ugc_focus_list" = "FHUGCFollowListController";
+"ugc_focus_list" = "FHUGCFollowListController"; //关注列表页
+"ugc_comment_list" = "FHUGCCommentListController"; //评论列表页
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";
