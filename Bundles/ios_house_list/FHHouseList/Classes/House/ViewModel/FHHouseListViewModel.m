@@ -271,13 +271,7 @@ extern NSString *const INSTANT_DATA_KEY;
     __weak typeof(self)wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         wself.isRefresh = NO;
-        if (wself.sugesstHouseList.count > 0) {
-            wself.fromRecommend = YES;
-            [wself loadData:wself.isRefresh fromRecommend:YES];
-        } else {
-            wself.fromRecommend = NO;
-            [wself loadData:wself.isRefresh];
-        }
+        [wself loadData:wself.isRefresh];
     }];
     self.tableView.mj_footer = self.refreshFooter;
     
@@ -742,13 +736,15 @@ extern NSString *const INSTANT_DATA_KEY;
         FHSearchHouseDataRedirectTipsModel *redirectTips;
         FHRecommendSecondhandHouseDataModel *recommendHouseDataModel;
         BOOL needUploadMapFindHouseUrlEvent = NO;
-
+        BOOL fromRecommend = NO;
+        
         if ([model isKindOfClass:[FHRecommendSecondhandHouseModel class]]) {
             recommendHouseDataModel = ((FHRecommendSecondhandHouseModel *)model).data;
             self.recommendSearchId = recommendHouseDataModel.searchId;
             hasMore = recommendHouseDataModel.hasMore;
             recommendItemArray = recommendHouseDataModel.items;
             self.currentRecommendHouseDataModel = recommendHouseDataModel;
+            fromRecommend = YES;
         } else if ([model isKindOfClass:[FHSearchHouseModel class]]) {
 
             FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
@@ -772,6 +768,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 recommendTitleModel.title = recommendHouseDataModel.recommendTitle;
                 [self.sugesstHouseList addObject:recommendTitleModel];
                 self.currentRecommendHouseDataModel = recommendHouseDataModel;
+                fromRecommend = YES;
             }
             
             if (self.isRefresh) {
@@ -867,6 +864,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 redirectTips = houseModel.redirectTips;
             }
         }
+        self.fromRecommend = fromRecommend;
         
         // 二手房、租房应该有 houseListOpenUrl
         /* 暂时无用 注释掉
