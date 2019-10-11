@@ -20,6 +20,7 @@
 #import "FHHouseRecommendReasonView.h"
 #import "UIButton+TTAdditions.h"
 #import "FHHouseDislikeView.h"
+#import <Lottie/LOTAnimationView.h>
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -63,6 +64,7 @@
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 //@property(nonatomic, strong) UIButton *closeBtn; //x按钮
 @property(nonatomic, strong) YYLabel *trueHouseLabel; // 天眼验真
+@property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 
@@ -117,6 +119,16 @@
         _mainImageView.layer.borderColor = [UIColor themeGray6].CGColor;
     }
     return _mainImageView;
+}
+
+-(LOTAnimationView *)vrLoadingView
+{
+    if (!_vrLoadingView) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
+        _vrLoadingView = [LOTAnimationView animationWithFilePath:path];
+        _vrLoadingView.loopAnimation = YES;
+    }
+    return _vrLoadingView;
 }
 
 -(UIImageView *)houseVideoImageView
@@ -313,6 +325,17 @@
         layout.left = YGPointValue(25.0f);
         layout.width = YGPointValue(20.0f);
         layout.height = YGPointValue(20.0f);
+    }];
+    
+    [self.leftInfoView addSubview:self.vrLoadingView];
+    //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
+    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.position = YGPositionTypeAbsolute;
+        layout.top = YGPointValue(25.0f);
+        layout.left = YGPointValue(23.0f);
+        layout.width = YGPointValue(24);
+        layout.height = YGPointValue(24);
     }];
     
     [_imageTagLabelBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -749,6 +772,10 @@
         self.tagLabel.attributedText =  attributeString;
     }
 
+    if (_vrLoadingView) {
+        [_vrLoadingView play];
+    }
+    
     self.priceLabel.text = model.displayPrice;
     self.pricePerSqmLabel.text = model.displayPricePerSqm;
     

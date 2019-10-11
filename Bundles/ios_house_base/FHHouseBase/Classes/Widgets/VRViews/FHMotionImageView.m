@@ -20,7 +20,7 @@ static CGFloat heightYHalf = 0.5f;
 
 @interface FHMotionImageView()
 @property(nonatomic,strong)UIImageView *contentImageView;
-@property (nonatomic, strong) LOTAnimationView *lotLoadingView;
+@property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 @property (nonatomic, strong) UIView *maskBlackView;
 @property(strong,nonatomic) CMMotionManager *manager;
 
@@ -75,9 +75,9 @@ static CGFloat multiplier = 4;
     }];
 
     
-    [self addSubview:self.lotLoadingView];
-    [_lotLoadingView play];
-    [_lotLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self addSubview:self.vrLoadingView];
+    [_vrLoadingView play];
+    [_vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
         make.centerY.mas_equalTo(self);
         make.width.mas_equalTo(70);
@@ -96,7 +96,7 @@ static CGFloat multiplier = 4;
     CGFloat centerWidthHalf = self.frame.size.width / 2.0f;
     CGFloat centerheightHalf= self.frame.size.height / 2.0f;
     
-    [_lotLoadingView play];
+    [_vrLoadingView play];
     
     __weak typeof(self) weakSelf = self;
 
@@ -146,14 +146,14 @@ static CGFloat multiplier = 4;
     }
 }
 
--(LOTAnimationView *)lotLoadingView
+-(LOTAnimationView *)vrLoadingView
 {
-    if (!_lotLoadingView) {
+    if (!_vrLoadingView) {
         NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
-        _lotLoadingView = [LOTAnimationView animationWithFilePath:path];
-        _lotLoadingView.loopAnimation = YES;
+        _vrLoadingView = [LOTAnimationView animationWithFilePath:path];
+        _vrLoadingView.loopAnimation = YES;
     }
-    return _lotLoadingView;
+    return _vrLoadingView;
 }
 
 - (CMMotionManager *)manager {

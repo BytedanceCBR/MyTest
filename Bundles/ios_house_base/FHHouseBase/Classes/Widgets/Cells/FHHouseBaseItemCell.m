@@ -67,7 +67,7 @@
 @property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 @property(nonatomic, strong) UIButton *closeBtn; //x按钮
-@property (nonatomic, strong) LOTAnimationView *lotLoadingView;
+@property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 
@@ -232,14 +232,14 @@
     return _pricePerSqmLabel;
 }
 
--(LOTAnimationView *)lotLoadingView
+-(LOTAnimationView *)vrLoadingView
 {
-    if (!_lotLoadingView) {
+    if (!_vrLoadingView) {
         NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
-        _lotLoadingView = [LOTAnimationView animationWithFilePath:path];
-        _lotLoadingView.loopAnimation = YES;
+        _vrLoadingView = [LOTAnimationView animationWithFilePath:path];
+        _vrLoadingView.loopAnimation = YES;
     }
-    return _lotLoadingView;
+    return _vrLoadingView;
 }
 
 
@@ -481,9 +481,9 @@
         layout.height = YGPointValue(20.0f);
     }];
     
-    [self.leftInfoView addSubview:self.lotLoadingView];
-//    [self.lotLoadingView setBackgroundColor:[UIColor redColor]];
-    [self.lotLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+    [self.leftInfoView addSubview:self.vrLoadingView];
+//    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
+    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
         layout.top = YGPointValue(25.0f);
@@ -759,7 +759,7 @@
             self.imageTagLabelBgView.hidden = YES;
         }
     
-        [self.lotLoadingView play];
+        [self.vrLoadingView play];
         
     } else if (houseType == FHHouseTypeRentHouse) {
         
@@ -964,10 +964,7 @@
     self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = model.displaySubtitle;
     self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
-    
-    if (self.lotLoadingView) {
-        [self.lotLoadingView play];
-    }
+
     
     self.priceLabel.text = model.displayPrice;
     self.pricePerSqmLabel.text = model.displayPricePerSqm;
