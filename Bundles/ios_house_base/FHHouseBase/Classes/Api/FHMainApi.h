@@ -69,6 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(TTHttpTask *)queryData:(NSString *_Nullable)queryPath uploadLog:(BOOL)uploadLog params:(NSDictionary *_Nullable)param class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
 
++(TTHttpTask *)queryData:(NSString *_Nullable)queryPath uploadLog:(BOOL)uploadLog params:(NSDictionary *_Nullable)param class:(Class)cls logPath:(NSString *)logPath completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
 /*
  * 基础GET 方法
  * @param: path 请求的path

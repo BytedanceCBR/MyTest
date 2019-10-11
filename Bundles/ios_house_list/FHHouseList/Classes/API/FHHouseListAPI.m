@@ -103,7 +103,7 @@
         qparam[@"suggestion_params"] = sugParam;
     }
     
-    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
+    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls logPath:@"search_second" completion:completion];
     
 }
 

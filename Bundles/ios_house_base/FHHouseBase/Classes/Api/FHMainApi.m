@@ -99,10 +99,35 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
         requestParam[@"gaode_city_id"] = gCityId;
     }
     
-    return [self getRequest:url query:nil params:requestParam jsonClass:[FHConfigModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
-        if (completion) {
-            completion(model,error);
-        }
+    NSDate *startDate = [NSDate date];
+    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:requestParam method:GET needCommonParams:false callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        __block NSError *backError = error;
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            NSDate *backDate = [NSDate date];
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            
+            
+            FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&backError];
+            
+            NSDate *serializeDate = [NSDate date];
+            
+            if (response.statusCode != 200) {
+                resultType = FHNetworkMonitorTypeNetFailed;
+            }else if (backError){
+                resultType = FHNetworkMonitorTypeBizFailed;
+                code = backError.code;
+                errMsg = backError.domain;
+            }
+            [self addRequestLog:@"config" startDate:startDate backDate:backDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
     }];
 }
 
@@ -281,6 +306,10 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
 
 +(TTHttpTask *)queryData:(NSString *_Nullable)queryPath uploadLog:(BOOL)uploadLog params:(NSDictionary *_Nullable)param class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
 {
+    return [self queryData:queryPath uploadLog:uploadLog params:param class:cls logPath:nil completion:completion];
+}
++(TTHttpTask *)queryData:(NSString *_Nullable)queryPath uploadLog:(BOOL)uploadLog params:(NSDictionary *_Nullable)param class:(Class)cls logPath:(NSString *)logPath completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
+{
     NSString *url = QURL(queryPath);
     
     NSDate *startDate = [NSDate date];
@@ -317,7 +346,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                 resultType = FHNetworkMonitorTypeNetFailed;
             }
             
-            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg];
+            [self addRequestLog:logPath?:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg];
             
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -440,13 +469,28 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
         metricDict[@"error_message"] = errorMsg;
         
         extra = [NSMutableDictionary new];
-        extra[@"network_status"] = @([[FHEnvContext  sharedInstance].reachability currentReachabilityStatus]);
+        NSString *ntType = @"UNKNOWN";
+        /*
+         NotReachable = 0,
+         ReachableViaWiFi,
+         ReachableViaWWAN
+         */
+        switch([[FHEnvContext  sharedInstance].reachability currentReachabilityStatus]){
+            case ReachableViaWiFi:
+                ntType = @"WIFI";
+                break;
+            case ReachableViaWWAN:
+                ntType = @"MOBILE";
+                break;
+            case NotReachable:
+                ntType = @"NONE";
+        }
+        extra[@"network_status"] = ntType;
     }
     
-    NSLog(@"[API] key: %@  metric is: %@",key,metricDict);
-    
+//    NSLog(@"[API] key: %@  metric is: %@",key,metricDict);
     [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:nil extra:extra];
-    
+        
 }
 
 #pragma Mark - base request

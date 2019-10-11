@@ -1420,6 +1420,7 @@ extern NSString *const BOE_OPEN_KEY ;
 {
     BOOL isOn = [self.class isBOEOn];
     [[NSUserDefaults standardUserDefaults] setBool:!isOn forKey:BOE_OPEN_KEY];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 +(BOOL)isBOEOn
