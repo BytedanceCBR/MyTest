@@ -115,7 +115,8 @@
 "test_detail"           = "FHHouseDetailViewController";
 
 "react" = "FHRNBaseViewController";
-
+//im 群聊
+"open_group_chat" = "GroupChatRootViewController";
 //im 单聊
 "open_single_chat" = "ChatRootViewController";
 "im_house_share" = "FHIMSharedUserListViewController";

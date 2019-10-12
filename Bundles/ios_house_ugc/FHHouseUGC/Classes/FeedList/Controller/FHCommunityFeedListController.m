@@ -256,6 +256,7 @@
            NSMutableSet* set = [NSMutableSet set];
            [set addObject:@"103002277932"];
            [set addObject:@"25505054509"];
+           [set addObject:@"2422949347070968"];
            [[IMManager shareInstance].chatService createGroupConversation:options
                                                          withParticipants:set
                                                  withIdempotentIdentifier:_forumId
