@@ -66,6 +66,9 @@
         NSDictionary *params = paramObj.allParams;
         int64_t cid = [[params objectForKey:@"cid"] longLongValue];
         self.cid = cid;
+        if(params[@"title"]){
+            self.title = params[@"title"];
+        }
         // 埋点
         self.tracerDict[@"page_type"] = @"topic_detail";
         // 取链接中的埋点数据
@@ -165,7 +168,7 @@
     self.isTopIsCanNotMoveTabViewPre = NO;
     
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.title.text = @"个人主页";
+    self.customNavBarView.title.text = self.title;
      
     self.defaultTopHeight = 116;
     

@@ -39,7 +39,6 @@
     _icon.backgroundColor = [UIColor themeGray7];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
-//    _icon.layer.cornerRadius = 20;
     [_icon xw_roundedCornerWithRadius:20 cornerColor:[UIColor whiteColor]];
     [self addSubview:_icon];
     
@@ -389,15 +388,12 @@
 }
 
 - (void)goToPersonalHomePage {
-//    NSMutableDictionary *dict = @{}.mutableCopy;
-//    dict[@"person_id"] = @"";
-//
-//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//    //跳转到关注列表
-//    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_focus_list"];
     if(self.cellModel.user.schema){
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"title"] = self.cellModel.user.name;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
