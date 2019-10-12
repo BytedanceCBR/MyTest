@@ -47,6 +47,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, assign) BOOL isShowToasting;
 @property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
 @property (nonatomic) BOOL adColdHadJump;
+@property (nonatomic) BOOL adUGCHadJump;
 @property (nonatomic, strong) TTTopBar *topBar;
 @property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
@@ -79,12 +80,14 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     self.isRefreshing = NO;
     self.adColdHadJump = NO;
+    self.adUGCHadJump = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     [self registerNotifications];
     
     [self resetMaintableView];
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
+    
 }
 
 - (void)scrollMainTableToTop
@@ -415,7 +418,10 @@ static CGFloat const kSectionHeaderHeight = 38;
     [FHEnvContext addTabUGCGuid];
     
     [TTSandBoxHelper setAppFirstLaunchForAd];
+    
+    [self checkPasteboard];
 }
+
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
@@ -601,5 +607,48 @@ static CGFloat const kSectionHeaderHeight = 38;
 //{
 //
 //}
+
+#pragma mark UGC线上线下推广
+
+- (void)checkPasteboard
+{
+    __weak typeof(self) weakSelf = self;
+    //据说主线程读剪切板会导致app卡死。。。改为子线程读
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        NSArray<NSString *> *pasteboardStrs = [pasteboard strings];
+        
+        if (!([pasteboardStrs isKindOfClass:[NSArray class]] && pasteboardStrs.count > 0)) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (!weakSelf.adUGCHadJump) {
+                    weakSelf.adUGCHadJump = YES;
+                    [[FHEnvContext sharedInstance] sendUGCADUserIsLaunch];
+                }
+                __block NSString *pasteboardStr = nil;
+                [pasteboardStrs enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj hasPrefix:@""]) {
+                        pasteboardStr = obj;
+                        *stop = YES;
+                    }
+                }];
+                
+                if (pasteboardStr) {
+                    NSString *base64Str = [pasteboardStr stringByReplacingOccurrencesOfString:@"" withString:@""];
+                    NSData *decodeData = [[NSData alloc] initWithBase64EncodedString:base64Str options:NSDataBase64DecodingIgnoreUnknownCharacters];
+                    NSCParameterAssert(decodeData);
+                    if (!decodeData) {
+                        return;
+                    }
+                    NSString *schema = [[NSString alloc] initWithData:decodeData encoding:NSUTF8StringEncoding];
+                    
+                    //清空剪切板
+                    NSMutableArray * strs = pasteboardStrs.mutableCopy;
+                    [strs removeObject:pasteboardStr];
+                    pasteboard.strings = strs;
+                }
+            });
+        }
+    });
+}
 
 @end

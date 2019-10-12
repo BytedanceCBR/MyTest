@@ -205,6 +205,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)getGetOriginFromAndOriginId;
 
 /*
+  UGC线上线下推广,植入种子
+ */
+- (void)sendUGCADUserIsLaunch;
+
+/*
+ UGC线上线下推广,获取种子
+ */
+- (void)getUGCADUserIsLaunch;
+
+/*
  DeepLink Zlink
  */
 - (void)checkZLink;

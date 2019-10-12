@@ -30,6 +30,9 @@
 #import <TTTabBarItem.h>
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import <TTArticleTabBarController.h>
+#import <TTCategoryBadgeNumberManager.h>
+
+#define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -105,6 +108,98 @@ static NSInteger kGetLightRequestRetryCount = 3;
                         [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
                             
                         }];
+                    }
+                    //重试3次请求频道
+                    if (!isSuccessed && (retryGetLightCount > 0)) {
+                        retryGetLightCount--;
+                        [[TTArticleCategoryManager sharedManager] startGetCategory];
+                    }
+                    if ([[paramsExtra description] isKindOfClass:[NSString class]]) {
+                        BDALOG_WARN_TAG(@"get_light_error_reason", [paramsExtra description]);
+                    }
+                }];
+                
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:0 extra:paramsExtra];
+                
+            }else
+            {
+                if(completion)
+                {
+                    completion(NO);
+                }
+                [[ToastManager manager] dismissCustomLoading];
+                [[ToastManager manager] showToast:@"切换城市失败"];
+                NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
+                
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:1 extra:paramsExtra];
+                
+                if ([[paramsExtra description] isKindOfClass:[NSString class]]) {
+                    BDALOG_WARN_TAG(@"config_error_reason", [paramsExtra description]);
+                }
+            }
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kArticleCategoryHasChangeNotification object:nil];
+        }];
+    }else
+    {
+        if (!cityId) {
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"home_city_id_error" attributes:@{@"desc":@"上报切换城市id不合法,",@"reason":@"city_id为0或者其他"}];
+        }
+    }
+}
+
++ (void)silentOpenSwitchCityURL:(NSString *)urlString completion:(void(^)(BOOL isSuccess))completion
+{
+    NSInteger cityId = 0;
+    
+    if (![FHEnvContext isNetworkConnected])
+    {
+        [[ToastManager manager] showToast:@"网络错误"];
+        return;
+    }
+    
+    if ([urlString containsString:@"city_id"]) {
+        NSArray *paramsArrary = [urlString componentsSeparatedByString:@"?"];
+        NSString *paramsStr = [paramsArrary lastObject];
+        
+        for (NSString *paramStr in [paramsStr componentsSeparatedByString:@"&"]) {
+            NSArray *elts = [paramStr componentsSeparatedByString:@"="];
+            if([elts count] < 2) continue;
+            if ([elts.lastObject respondsToSelector:@selector(integerValue)]) {
+                cityId = [elts.lastObject integerValue];
+            }
+        }
+        
+        __block NSInteger retryGetLightCount = kGetLightRequestRetryCount;
+        
+        [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
+        [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
+            
+            NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
+            
+            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            
+            if (isSuccess) {
+                [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
+                FHConfigDataModel *configModel = model.data;
+                [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
+                
+                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
+                    //首次请求频道无论成功失败都跳转
+                    if (retryGetLightCount == kGetLightRequestRetryCount) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
+                        
+                        if(completion)
+                        {
+                            completion(YES);
+                        }
+                        [[ToastManager manager] dismissCustomLoading];
+                        
+                        
+                        if ([FHEnvContext isUGCOpen]) {
+                            [[FHEnvContext sharedInstance] jumpUGCTab];
+                        }
+                        
                     }
                     //重试3次请求频道
                     if (!isSuccessed && (retryGetLightCount > 0)) {
@@ -730,6 +825,56 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [[TTRoute sharedRoute] openURLByPushViewController:url];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kFHDeepLinkFirstLaunchKey"];
     }
+}
+
+/*
+ UGC线上线下推广,植入种子
+ */
+- (void)sendUGCADUserIsLaunch
+{
+    NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",@(122)];
+    [FHEnvContext silentOpenSwitchCityURL:url completion:^(BOOL isSuccess) {
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self jumpUGCTab];
+            });
+        });
+    }];
+}
+
+/*
+ UGC线上线下推广,获取种子
+ */
+- (void)getUGCADUserIsLaunch
+{
+    
+    NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",@(122)];
+    [FHEnvContext silentOpenSwitchCityURL:url completion:^(BOOL isSuccess) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self jumpUGCTab];
+            });
+        });
+    }];
+}
+
+- (void)jumpUGCTab
+{
+    // 进历史
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:kFHHouseMixedCategoryID withShow:NO];
+    [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
+    //    [[EnvContext shared].client.messageManager startSyncCategoryBadge];
+    if ([TTTabBarManager sharedTTTabBarManager].tabItems.count > 1) {
+        NSString *secondTabItemIdentifier = [TTTabBarManager sharedTTTabBarManager].tabItems[1].identifier;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:({
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+            [userInfo setValue:secondTabItemIdentifier forKey:@"tag"];
+            [userInfo setValue:@1 forKey:@"needToRoot"];
+            [userInfo copy];
+        })];
+    }
+
 }
 
 @end
