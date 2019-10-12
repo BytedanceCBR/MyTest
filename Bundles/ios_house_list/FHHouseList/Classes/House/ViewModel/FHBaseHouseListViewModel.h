@@ -11,6 +11,7 @@
 #import "FHErrorView.h"
 #import <TTRoute.h>
 #import "FHTracerModel.h"
+#import "FHFakeInputNavbar.h"
 
 #define kFHHouseListCellId @"kFHHouseListCellId"
 #define kFHHouseListSubscribCellId @"kFHHouseListSubscribCellId"
@@ -60,6 +61,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)showMapSearch;
 
 -(void)showMessageList;
+
+- (void)addNotiWithNaviBar:(FHFakeInputNavbar *)naviBar;
 
 @end
 

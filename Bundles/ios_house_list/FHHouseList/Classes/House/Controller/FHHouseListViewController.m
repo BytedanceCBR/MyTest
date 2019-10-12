@@ -445,7 +445,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-
+    [self.viewModel refreshMessageDot];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -533,6 +533,7 @@
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
     self.viewModel.searchType = self.searchType;
     self.viewModel.listVC = self;
+    [self.viewModel addNotiWithNaviBar:self.navbar];
     [self initFilter];
     [self setupViewModelBlock];
 

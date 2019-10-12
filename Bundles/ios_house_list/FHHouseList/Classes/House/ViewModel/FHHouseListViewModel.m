@@ -52,6 +52,9 @@
 #import <FHHouseBase/FHUtils.h>
 #import "FHHouseListNoHouseCell.h"
 #import "FHHouseOpenURLUtil.h"
+#import "FHFakeInputNavbar.h"
+#import "FHEnvContext.h"
+#import "FHMessageManager.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -109,6 +112,7 @@ extern NSString *const INSTANT_DATA_KEY;
 @property (nonatomic, strong) FHHouseNeighborDataModel *currentNeighborDataModel;
 @property (nonatomic, strong) FHNewHouseListDataModel *currentNewDataModel;
 
+@property (nonatomic, weak)     FHFakeInputNavbar       *navbar;
 
 @end
 
@@ -246,6 +250,29 @@ extern NSString *const INSTANT_DATA_KEY;
 
     }
     return self;
+}
+
+- (void)addNotiWithNaviBar:(FHFakeInputNavbar *)naviBar {
+    self.navbar = naviBar;
+    if (_houseType == FHHouseTypeSecondHandHouse) {
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHMessageUnreadChangedNotification" object:nil];
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHChatMessageUnreadChangedNotification" object:nil];
+        [self refreshMessageDot];
+    }
+}
+
+- (void)refreshMessageDot {
+    if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
+        [self.navbar displayMessageDot:YES];
+    } else {
+        [self.navbar displayMessageDot:NO];
+    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
@@ -1285,7 +1312,6 @@ extern NSString *const INSTANT_DATA_KEY;
 - (void)showMessageList {
     // 二手列表页
     if (_houseType == FHHouseTypeSecondHandHouse) {
-        // add by zyk 埋点查看
         if (self.closeConditionFilter) {
             self.closeConditionFilter();
         }

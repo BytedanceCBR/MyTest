@@ -65,4 +65,12 @@
     
 }
 
+- (void)addNotiWithNaviBar:(FHFakeInputNavbar *)naviBar {
+    
+}
+
+- (void)refreshMessageDot {
+    
+}
+
 @end
