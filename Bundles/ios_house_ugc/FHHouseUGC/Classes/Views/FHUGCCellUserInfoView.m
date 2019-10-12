@@ -43,6 +43,11 @@
     [_icon xw_roundedCornerWithRadius:20 cornerColor:[UIColor whiteColor]];
     [self addSubview:_icon];
     
+    _icon.userInteractionEnabled = YES;
+     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
+    [_icon addGestureRecognizer:tap];
+    
+    
     self.userName = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     [self addSubview:_userName];
     
@@ -381,6 +386,19 @@
             }
         }
     }];
+}
+
+- (void)goToPersonalHomePage {
+//    NSMutableDictionary *dict = @{}.mutableCopy;
+//    dict[@"person_id"] = @"";
+//
+//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+//    //跳转到关注列表
+//    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_focus_list"];
+    if(self.cellModel.user.schema){
+        NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }
 }
 
 #pragma mark - 埋点

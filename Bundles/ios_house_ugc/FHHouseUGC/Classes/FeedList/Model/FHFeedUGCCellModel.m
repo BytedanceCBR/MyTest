@@ -188,6 +188,7 @@
             user.name = model.userInfo.name;
             user.avatarUrl = model.userInfo.avatarUrl;
             user.userId = model.userInfo.userId;
+            user.schema = model.userInfo.schema;
             cellModel.user = user;
             
             [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
@@ -314,6 +315,7 @@
         user.name = model.rawData.content.user.uname;
         user.avatarUrl = model.rawData.content.user.avatarUrl;
         user.userId = model.rawData.content.user.userId;
+        user.schema = model.rawData.content.user.userSchema;
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
@@ -364,6 +366,7 @@
         user.name = model.rawData.commentBase.user.info.name;
         user.avatarUrl = model.rawData.commentBase.user.info.avatarUrl;
         user.userId = model.rawData.commentBase.user.info.userId;
+        user.schema = model.rawData.commentBase.user.info.schema;
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
@@ -471,6 +474,7 @@
         user.name = model.rawData.user.info.name;
         user.avatarUrl = model.rawData.user.info.avatarUrl;
         user.userId = model.rawData.user.info.userId;
+        user.schema = model.rawData.user.info.schema;
         cellModel.user = user;
         
         cellModel.diggCount = model.rawData.action.diggCount;
@@ -526,6 +530,7 @@
     user.name = model.user.name;
     user.avatarUrl = model.user.avatarUrl;
     user.userId = model.user.userId;
+    user.schema = model.user.schema;
     cellModel.user = user;
     
     NSMutableArray *cellImageList = [NSMutableArray array];
