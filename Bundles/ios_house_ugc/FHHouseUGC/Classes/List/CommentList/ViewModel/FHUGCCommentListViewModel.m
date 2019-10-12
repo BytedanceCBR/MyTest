@@ -32,23 +32,15 @@
 #import <TTVFeedCellWillDisplayContext.h>
 #import <TTVFeedCellAction.h>
 
-@interface FHUGCCommentListViewModel () <UITableViewDelegate, UITableViewDataSource,FHUGCBaseCellDelegate>
+@interface FHUGCCommentListViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
 @end
 
 @implementation FHUGCCommentListViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHUGCCommentListController *)viewController {
-    self = [super init];
+    self = [super initWithTableView:tableView controller:viewController];
     if (self) {
-        self.tableView = tableView;
-        self.viewController = viewController;
-        
-        self.cellManager = [[FHUGCCellManager alloc] init];
-        [self.cellManager registerAllCell:tableView];
-        
-        self.refer = 1;
-        
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
         // 删帖成功
@@ -120,11 +112,6 @@
         FHFeedUGCCellModel *cellModel = [self.dataList firstObject];
         behotTime = [cellModel.behotTime doubleValue];
         lastGroupId = cellModel.groupId;
-    }
-    
-    //下拉刷新关闭视频播放
-    if(isHead){
-        [self endDisplay];
     }
     
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];

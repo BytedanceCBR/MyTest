@@ -43,6 +43,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
+    [self initNavbar];
     [self initView];
     [self initConstraints];
     [self initViewModel];
@@ -53,13 +54,18 @@
     
 }
 
-- (void)viewWillAppear {
-    [self.viewModel viewWillAppear];
-}
+//- (void)viewWillAppear {
+//    [self.viewModel viewWillAppear];
+//}
+//
+//- (void)viewWillDisappear {
+//    [self.viewModel viewWillDisappear];
+//    [FHFeedOperationView dismissIfVisible];
+//}
 
-- (void)viewWillDisappear {
-    [self.viewModel viewWillDisappear];
-    [FHFeedOperationView dismissIfVisible];
+- (void)initNavbar {
+    [self setupDefaultNavBar:NO];
+    self.customNavBarView.title.text = @"TA的评论";
 }
 
 - (void)initView {
@@ -111,7 +117,12 @@
 
 - (void)initConstraints {
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
+        if (@available(iOS 11.0, *)) {
+            make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
+        } else {
+            make.top.mas_equalTo(64);
+        }
+        make.left.right.bottom.mas_equalTo(self.view);
     }];
     
     [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -129,6 +140,7 @@
 - (void)initViewModel {
     self.viewModel = [[FHUGCCommentListViewModel alloc] initWithTableView:_tableView controller:self];
     self.needReloadData = YES;
+    _viewModel.categoryId = @"f_project_social";
 }
 
 - (void)startLoadData {
@@ -150,19 +162,6 @@
         }
     }
 }
-
-//- (void)scrollToTopAndRefreshAllData {
-//    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-//    [self startLoadData];
-//}
-//
-//- (void)scrollToTopAndRefresh {
-//    if(self.viewModel.isRefreshingTip || self.isLoadingData){
-//        return;
-//    }
-//    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-//    [self.tableView triggerPullDown];
-//}
 
 - (void)retryLoadData {
     [self startLoadData];
