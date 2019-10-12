@@ -22,6 +22,7 @@
 #import <UIScrollView+Refresh.h>
 #import "FHFeedOperationView.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "IMManager.h"
 
 @interface FHCommunityFeedListController ()<SSImpressionProtocol>
 
@@ -84,6 +85,9 @@
     [self initTableView];
     [self initNotifyBarView];
     [self initPublishBtn];
+    if (_forumId > 0) {
+        [self initGroupChatBtn];
+    }
     
     if(self.showErrorView){
         [self addDefaultEmptyViewFullScreen];
@@ -128,6 +132,14 @@
     [self.view addSubview:self.notifyBarView];
 }
 
+- (void)initGroupChatBtn {
+    self.groupChatBtn = [[UIButton alloc] init];
+    [_groupChatBtn setImage:[UIImage imageNamed:@"fh_ugc_publish"] forState:UIControlStateNormal];
+    [_groupChatBtn addTarget:self action:@selector(gotoGroupChat) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_groupChatBtn];
+}
+
+
 - (void)initPublishBtn {
     self.publishBtn = [[UIButton alloc] init];
     [_publishBtn setImage:[UIImage imageNamed:@"fh_ugc_publish"] forState:UIControlStateNormal];
@@ -147,6 +159,12 @@
     
     [self.publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.view).offset(-self.publishBtnBottomHeight);
+        make.right.mas_equalTo(self.view).offset(-12);
+        make.width.height.mas_equalTo(64);
+    }];
+    
+    [self.groupChatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.view).offset(-70);
         make.right.mas_equalTo(self.view).offset(-12);
         make.width.height.mas_equalTo(64);
     }];
@@ -229,6 +247,31 @@
     [self gotoPostThreadVC];
 }
 
+- (void)gotoGroupChat {
+   if ([TTAccountManager isLogin]) {
+       if (isEmptyString(_conversationId)) {
+           NSMutableDictionary* options = [NSMutableDictionary dictionary];
+           [options setValue:_forumId forKey:@"community_id"];
+           
+           NSMutableSet* set = [NSMutableSet set];
+           [set addObject:@"103002277932"];
+           [set addObject:@"25505054509"];
+           [[IMManager shareInstance].chatService createGroupConversation:options
+                                                         withParticipants:set
+                                                 withIdempotentIdentifier:_forumId
+                                                           withCompletion:^(NSString * _Nullable conversationIdentifier, NSDictionary * _Nullable response, NSError * _Nullable error) {
+               if(!error) {
+                   [self gotoGroupChatVC:conversationIdentifier];
+               }
+           }];
+       } else {
+           [self gotoGroupChatVC:_conversationId];
+       }
+   } else {
+       [self gotoLogin];
+   }
+}
+
 // 发布按钮点击
 - (void)gotoPostThreadVC {
     if ([TTAccountManager isLogin]) {
@@ -287,6 +330,17 @@
     
     NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];
     [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
+}
+
+- (void)gotoGroupChatVC:(NSString *)convId {
+    //跳转到群聊页面
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"chat_title"] = @"群聊";
+    dict[@"conversation_id"] = convId;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL* url = [NSURL URLWithString:@"sslocal://open_group_chat"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
 #pragma mark - show notify

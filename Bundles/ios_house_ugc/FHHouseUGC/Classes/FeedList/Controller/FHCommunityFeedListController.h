@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 //发布按钮
 @property(nonatomic, strong) UIButton *publishBtn;
+//群聊按钮
+@property(nonatomic, strong) UIButton *groupChatBtn;
 @property(nonatomic, copy) void(^publishBlock)(void);
 //附加在feed上面的自定义view
 @property(nonatomic, strong) UIView *tableHeaderView;
@@ -32,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) CLLocation *currentLocaton;
 //小区详情页进入需要传这个参数，小区圈子id
 @property(nonatomic, strong) NSString *forumId;
+//小区群聊的conversation id
+@property(nonatomic, strong) NSString *conversationId;
 //传入以后点击三个点以后显示该数组的内容
 @property(nonatomic, strong) NSArray *operations;
 //当接口返回空数据的时候是否显示空态页，默认为YES
