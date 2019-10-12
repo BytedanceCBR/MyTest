@@ -77,6 +77,7 @@
 -(void)setTitle:(NSString *)title
 {
     [super setTitle:title];
+    self.titleName = title;
     if ([self.navigationItem.titleView isKindOfClass:[UILabel class]]) {
         UILabel *titleLabel = (UILabel *)self.navigationItem.titleView;
         titleLabel.text = title;
