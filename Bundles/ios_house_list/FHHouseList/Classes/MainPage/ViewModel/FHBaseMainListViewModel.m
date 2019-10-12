@@ -115,13 +115,7 @@ extern NSString *const INSTANT_DATA_KEY;
         
         __weak typeof(self) wself = self;
         FHRefreshCustomFooter *footer = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-            if (wself.sugesstHouseList.count > 0) {
-                wself.fromRecommend = YES;
-                [wself requestData:NO ];
-            } else {
-                wself.fromRecommend = NO;
-                [wself requestData:NO];
-            }
+            [wself requestData:NO];
         }];
         _tableView.mj_footer = footer;
         [footer setUpNoMoreDataText:@"没有更多信息了"];
@@ -465,7 +459,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }else{
             query = [NSString stringWithFormat:@"%@=%@",CHANNEL_ID,channelId];
         }
-        self.requestTask = [self loadData:isHead fromRecommend:self.isFromRecommend query:query completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        self.requestTask = [self loadData:isHead fromRecommend:self.fromRecommend query:query completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
             [wself processData:model error:error isRefresh:isHead];
         }];
     }
@@ -515,14 +509,15 @@ extern NSString *const INSTANT_DATA_KEY;
         NSString *refreshTip = nil;
         FHSearchHouseDataRedirectTipsModel *redirectTips = nil;
         FHRecommendSecondhandHouseDataModel *recommendHouseDataModel = nil;
-        
+        BOOL fromRecommend = NO;
+
         if ([model isKindOfClass:[FHRecommendSecondhandHouseModel class]]) { //推荐
             recommendHouseDataModel = ((FHRecommendSecondhandHouseModel *)model).data;
             self.recommendSearchId = recommendHouseDataModel.searchId;
             hasMore = recommendHouseDataModel.hasMore;
             recommendItems = recommendHouseDataModel.items;
-            self.currentHouseDataModel = recommendHouseDataModel;
-            
+            self.currentRecommendHouseDataModel = recommendHouseDataModel;
+            fromRecommend = YES;
         } else if ([model isKindOfClass:[FHSearchHouseModel class]]) { // 列表页
             
             FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
@@ -545,6 +540,8 @@ extern NSString *const INSTANT_DATA_KEY;
                 recommendTitleModel.noDataTip = recommendHouseDataModel.searchHint;
                 recommendTitleModel.title = recommendHouseDataModel.recommendTitle;
                 [self.sugesstHouseList addObject:recommendTitleModel];
+                self.currentRecommendHouseDataModel = houseModel.recommendSearchModel;
+                fromRecommend = YES;
             }
             
             if (isRefresh) {
@@ -616,7 +613,8 @@ extern NSString *const INSTANT_DATA_KEY;
             items = [NSMutableArray arrayWithArray:rentModel.items];
             self.searchId = rentModel.searchId;
         }
-        
+        self.fromRecommend = fromRecommend;
+
         self.viewController.tracerModel.searchId = self.searchId;
         if (self.isFirstLoad) {
             self.viewController.tracerModel.originSearchId = self.searchId;
@@ -696,12 +694,12 @@ extern NSString *const INSTANT_DATA_KEY;
         
         [self.tableView reloadData];
         
-        if (self.houseList.count > 10) {
+        if (self.houseList.count > 10 || self.sugesstHouseList.count > 10) {
             self.tableView.mj_footer.hidden = NO;
         }else{
             self.tableView.mj_footer.hidden = YES;
         }
-        
+
         if (hasMore == NO) {
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }else {
