@@ -47,9 +47,9 @@
 + (TTHttpTask *)requestRelatedHouseSearchWithQuery:(NSString *)query houseId:(NSString *)houseId offset:(NSInteger)offset count:(NSInteger)count class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
 {
     NSString *queryPath = @"/f100/api/related_house";
-    queryPath = [NSString stringWithFormat:@"%@?house_id%@&offset=%ld",queryPath, houseId ?: @"",offset];
+    queryPath = [NSString stringWithFormat:@"%@?house_id=%@&offset=%ld",queryPath, houseId ?: @"",offset];
     if (query.length > 0) {
-        queryPath = [NSString stringWithFormat:@"%@?%@",queryPath,query];
+        queryPath = [NSString stringWithFormat:@"%@%@",queryPath,query];
     }
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"house_id"] = houseId ?: @"";
