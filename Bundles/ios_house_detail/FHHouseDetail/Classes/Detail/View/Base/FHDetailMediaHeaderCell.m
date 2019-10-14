@@ -118,10 +118,25 @@
     NSMutableArray *itemArray = [NSMutableArray array];
     NSArray *houseImageDict = ((FHDetailMediaHeaderModel *)self.currentData).houseImageDictList;
     FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
+    FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderModel *)self.currentData).vrModel;
     if (vedioModel && vedioModel.videoID.length > 0) {
         self.vedioCount = 1;
         [itemArray addObject:vedioModel];
     }
+    
+    
+    if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]]) {
+        FHMultiMediaItemModel *itemModelVR = [[FHMultiMediaItemModel alloc] init];
+        itemModelVR.mediaType = FHMultiMediaTypeVRPicture;
+        
+        if (vrModel.vrImage.url) {
+            itemModelVR.imageUrl = vrModel.vrImage.url;
+        }
+        itemModelVR.groupType = @"VR";
+        [itemArray addObject:itemModelVR];
+        [self.imageList addObject:itemModelVR];
+    }
+    
     for (FHDetailOldDataHouseImageDictListModel *listModel in houseImageDict) {
         if (listModel.houseImageTypeName.length > 0) {
             NSString *groupType = nil;
@@ -133,18 +148,7 @@
             
             NSInteger index = 0;
             NSArray<FHImageModel> *instantHouseImageList = listModel.instantHouseImageList;
-            
-            FHMultiMediaItemModel *itemModelVR = [[FHMultiMediaItemModel alloc] init];
-            itemModelVR.mediaType = FHMultiMediaTypeVRPicture;
-            itemModelVR.imageUrl = @"http://vrlab-image.ljcdn.com//release//vradmin//1000000020287257//images//06df2d77-2224-4d90-a60f-b07ff257df94.png.q_70.jpg";
-            itemModelVR.groupType = @"VR";
-            if (instantHouseImageList.count > index) {
-                FHImageModel *instantImgModel = instantHouseImageList[index];
-                itemModelVR.instantImageUrl = instantImgModel.url;
-            }
-            [itemArray addObject:itemModelVR];
-            [self.imageList addObject:itemModelVR];
-            
+
             
             for (FHImageModel *imageModel in listModel.houseImageList) {
                 if (imageModel.url.length > 0) {
@@ -174,6 +178,17 @@
 -(void)showImagesWithCurrentIndex:(NSInteger)index
 {
     NSArray *images = self.imageList;
+    
+    if([images.firstObject isKindOfClass:[FHMultiMediaItemModel class]])
+    {
+        FHMultiMediaItemModel *model = (FHMultiMediaItemModel *)images.firstObject;
+        if (model.mediaType == FHMultiMediaTypeVRPicture) {
+            NSMutableArray *imageListArray = [NSMutableArray arrayWithArray:images];
+            [imageListArray removeObjectAtIndex:0];
+            images = imageListArray;
+        }
+    }
+    
     if (index < 0 || index >= (images.count + self.vedioCount)) {
         return;
     }
@@ -186,18 +201,15 @@
         }
     }
     
+    FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderModel *)self.currentData).vrModel;
     //VR
-    if (index == 0) {
-        
+    if (index == 0 && vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
         if (![TTReachability isNetworkConnected]) {
             [[ToastManager manager] showToast:@"网络异常"];
             return;
         }
         
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=http://f-boe.bytedance.net/f100/activity/client/pano"]];
-        return;
-    }else
-    {
         return;
     }
     

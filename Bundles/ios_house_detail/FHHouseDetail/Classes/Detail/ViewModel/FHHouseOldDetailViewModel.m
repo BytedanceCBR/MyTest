@@ -185,11 +185,17 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.items removeAllObjects];
     // 添加头滑动图片 && 视频
     BOOL hasVideo = NO;
+    BOOL hasVR = NO;
     BOOL isInstant = model.isInstantData;
     if (model.data.houseVideo && model.data.houseVideo.videoInfos.count > 0) {
         hasVideo = YES;
     }
-    if (model.data.houseImageDictList.count > 0 || hasVideo) {
+    
+    if (model.data.vrData && model.data.vrData.hasVr) {
+        hasVR = YES;
+    }
+    
+    if (model.data.houseImageDictList.count > 0 || hasVideo || hasVR) {
         FHMultiMediaItemModel *itemModel = nil;
         if (hasVideo) {
             FHVideoHouseVideoVideoInfosModel *info = model.data.houseVideo.videoInfos[0];
@@ -228,6 +234,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             FHDetailOldDataHouseImageDictListModel *imgModel = [headerCellModel.houseImageDictList firstObject];
             imgModel.instantHouseImageList = [self instantHouseImages];
         }
+        headerCellModel.vrModel = model.data.vrData;
         headerCellModel.vedioModel = itemModel;// 添加视频模型数据
         headerCellModel.contactViewModel = self.contactViewModel;
         headerCellModel.isInstantData = model.isInstantData;
