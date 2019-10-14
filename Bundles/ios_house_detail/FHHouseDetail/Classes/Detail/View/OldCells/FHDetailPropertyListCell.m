@@ -326,12 +326,14 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 {
     NSString *positionStr = @"be_null";
     if ([view.data isKindOfClass:[FHDetailDataBaseExtraNeighborhoodModel class]]) {
+        // 二手房详情下发小区字段
         FHDetailDataBaseExtraNeighborhoodModel *neighborhoodModel = (FHDetailDataBaseExtraNeighborhoodModel *)view.data;
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-        tracerDic[@"card_type"] = @"left_pic";
-        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
-        tracerDic[@"element_from"] = @"related";
+        // tracerDic[@"card_type"] = @"no_pic";
+        tracerDic[@"element_from"] = @"neighborhood_type";
         tracerDic[@"enter_from"] = @"old_detail";
+        [tracerDic removeObjectForKey:@"rank"];
+        [tracerDic removeObjectForKey:@"card_type"];
         if (!tracerDic) {
             tracerDic = @{};
         }
