@@ -164,7 +164,7 @@
     }];
     
     [self.groupChatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.view).offset(-70);
+        make.bottom.mas_equalTo(self.view).offset(-self.publishBtnBottomHeight - 64);
         make.right.mas_equalTo(self.view).offset(-12);
         make.width.height.mas_equalTo(64);
     }];
@@ -272,6 +272,7 @@
     NSMutableSet* set = [NSMutableSet set];
     [set addObject:@"103002277932"];
     [set addObject:@"25505054509"];
+    [set addObject:@"2422949347070968"];
     [[IMManager shareInstance].chatService createGroupConversation:options
                                                   withParticipants:set
                                           withIdempotentIdentifier:[_forumId substringToIndex:(_forumId.length-3)]
