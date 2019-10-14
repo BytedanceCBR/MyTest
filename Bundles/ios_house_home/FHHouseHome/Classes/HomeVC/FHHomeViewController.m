@@ -34,10 +34,13 @@
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import <TTArticleTabBarController.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
+#import <TTThemedAlertController.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
 static CGFloat const kSectionHeaderHeight = 38;
+
+static NSString * const kFUGCPrefixStr = @"fugc";
 
 @interface FHHomeViewController ()<TTAppUpdateHelperProtocol>
 
@@ -616,9 +619,10 @@ static CGFloat const kSectionHeaderHeight = 38;
     //据说主线程读剪切板会导致app卡死。。。改为子线程读
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-        NSArray<NSString *> *pasteboardStrs = [pasteboard strings];
-        
-        if (!([pasteboardStrs isKindOfClass:[NSArray class]] && pasteboardStrs.count > 0)) {
+//        NSArray<NSString *> *pasteboardStrs = [pasteboard strings];
+        NSArray<NSString *> *pasteboardStrs = @[@"fugcewogICAgInR5cGUiOiAiZl91Z2NfcHJvbW90aW9uIiwKICAgICJkYXRhIjogewogICAgfQp9"];
+
+        if (([pasteboardStrs isKindOfClass:[NSArray class]] && pasteboardStrs.count > 0)) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (!weakSelf.adUGCHadJump) {
                     weakSelf.adUGCHadJump = YES;
@@ -626,14 +630,14 @@ static CGFloat const kSectionHeaderHeight = 38;
                 }
                 __block NSString *pasteboardStr = nil;
                 [pasteboardStrs enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if ([obj hasPrefix:@""]) {
+                    if ([obj hasPrefix:kFUGCPrefixStr]) {
                         pasteboardStr = obj;
                         *stop = YES;
                     }
                 }];
                 
                 if (pasteboardStr) {
-                    NSString *base64Str = [pasteboardStr stringByReplacingOccurrencesOfString:@"" withString:@""];
+                    NSString *base64Str = [pasteboardStr stringByReplacingOccurrencesOfString:kFUGCPrefixStr withString:@""];
                     NSData *decodeData = [[NSData alloc] initWithBase64EncodedString:base64Str options:NSDataBase64DecodingIgnoreUnknownCharacters];
                     NSCParameterAssert(decodeData);
                     if (!decodeData) {
@@ -641,6 +645,7 @@ static CGFloat const kSectionHeaderHeight = 38;
                     }
                     NSString *schema = [[NSString alloc] initWithData:decodeData encoding:NSUTF8StringEncoding];
                     
+                    [weakSelf requestSendUGCUserAD:schema];
                     //清空剪切板
                     NSMutableArray * strs = pasteboardStrs.mutableCopy;
                     [strs removeObject:pasteboardStr];
@@ -649,6 +654,20 @@ static CGFloat const kSectionHeaderHeight = 38;
             });
         }
     });
+}
+
+- (void)requestSendUGCUserAD:(NSString *)titlStr
+{
+    TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:titlStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
+    
+    [alertVC addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+        
+    }];
+    
+    UIViewController *topVC = [TTUIResponderHelper topmostViewController];
+    if (topVC) {
+        [alertVC showFrom:topVC animated:YES];
+    }
 }
 
 @end
