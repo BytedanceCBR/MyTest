@@ -247,25 +247,48 @@
     [self gotoPostThreadVC];
 }
 
+//创建新群聊时配置群聊的名称和头像
+- (void)initNewGroupChatOptions:(NSString * _Nullable)conversationIdentifier {
+    NSString *icon = _scialGroupData.avatar;
+    NSString *groupChatName = _scialGroupData.socialGroupName;
+    TIMOConversation *sdkConversation = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:conversationIdentifier];
+    [sdkConversation setIcon:icon completion:^(id<TIMOConversationOperationResponse>  _Nullable response, NSError * _Nullable error) {
+        if (!error && response.status == 0) {
+            NSLog(@"FHIM_Group_chat_avatar_succes");
+        }
+    }];
+    [sdkConversation setName:groupChatName completion:^(id<TIMOConversationOperationResponse>  _Nullable response, NSError * _Nullable error) {
+        if (!error && response.status == 0) {
+           NSLog(@"FHIM_Group_chat_name_succes");
+        }
+    }];
+}
+
+- (void)createNewGroupChat {
+    NSMutableDictionary* options = [NSMutableDictionary dictionary];
+    [options setValue:_forumId forKey:@"community_id"];
+    [options setValue:@"ugc_group" forKey:@"business_type"];
+    
+    NSMutableSet* set = [NSMutableSet set];
+    [set addObject:@"103002277932"];
+    [set addObject:@"25505054509"];
+    [[IMManager shareInstance].chatService createGroupConversation:options
+                                                  withParticipants:set
+                                          withIdempotentIdentifier:[_forumId substringToIndex:(_forumId.length-3)]
+                                                    withCompletion:^(NSString * _Nullable conversationIdentifier, NSDictionary * _Nullable response, NSError * _Nullable error) {
+        if(!error) {
+            [self initNewGroupChatOptions:conversationIdentifier];
+            [self gotoGroupChatVC:conversationIdentifier isCreate:YES];
+        }
+    }];
+}
+
 - (void)gotoGroupChat {
    if ([TTAccountManager isLogin]) {
        if (isEmptyString(_conversationId)) {
-           NSMutableDictionary* options = [NSMutableDictionary dictionary];
-           [options setValue:_forumId forKey:@"community_id"];
-           
-           NSMutableSet* set = [NSMutableSet set];
-           [set addObject:@"103002277932"];
-           [set addObject:@"25505054509"];
-           [[IMManager shareInstance].chatService createGroupConversation:options
-                                                         withParticipants:set
-                                                 withIdempotentIdentifier:_forumId
-                                                           withCompletion:^(NSString * _Nullable conversationIdentifier, NSDictionary * _Nullable response, NSError * _Nullable error) {
-               if(!error) {
-                   [self gotoGroupChatVC:conversationIdentifier];
-               }
-           }];
+           [self createNewGroupChat];
        } else {
-           [self gotoGroupChatVC:_conversationId];
+           [self gotoGroupChatVC:_conversationId isCreate:NO];
        }
    } else {
        [self gotoLogin];
@@ -332,11 +355,16 @@
     [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
 }
 
-- (void)gotoGroupChatVC:(NSString *)convId {
+- (void)gotoGroupChatVC:(NSString *)convId isCreate:(BOOL)isCreate {
     //跳转到群聊页面
+    NSString *title = [@"" stringByAppendingFormat:@"%@(%@)", _scialGroupData.socialGroupName, _scialGroupData.followerCount];
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"chat_title"] = @"群聊";
+    dict[@"chat_title"] = title;
     dict[@"conversation_id"] = convId;
+    if (isCreate) {
+        dict[@"is_create"] = @"1";
+    }
+    
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
     NSURL* url = [NSURL URLWithString:@"sslocal://open_group_chat"];

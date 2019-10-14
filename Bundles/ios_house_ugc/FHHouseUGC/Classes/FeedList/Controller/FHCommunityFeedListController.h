@@ -11,6 +11,7 @@
 #import "ArticleListNotifyBarView.h"
 #import "SSImpressionManager.h"
 #import "ArticleImpressionHelper.h"
+#import "FHUGCScialGroupModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -40,6 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSArray *operations;
 //当接口返回空数据的时候是否显示空态页，默认为YES
 @property(nonatomic, assign) BOOL showErrorView;
+//圈子信息
+@property(nonatomic, strong) FHUGCScialGroupDataModel *scialGroupData;
 
 @property(nonatomic, weak) id<UIScrollViewDelegate> scrollViewDelegate;
 - (void)showNotify:(NSString *)message ;

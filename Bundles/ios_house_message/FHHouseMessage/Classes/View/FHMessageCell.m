@@ -117,17 +117,21 @@
 }
 
 -(void)displaySendState:(ChatMsg *)msg {
-
-    if (msg.state == ChatMsgStateFail) {
+    if (msg.type == ChatMstTypeNotice) {
+        [self.msgStateView setHidden:YES];
+        [self updateLayoutForMsgState:ChatMsgStateSuccess];
+    } else if (msg.state == ChatMsgStateFail) {
         [self.msgStateView setImage:[UIImage imageNamed:@"chat_state_fail_ic"]];
         [self.msgStateView setHidden:NO];
+        [self updateLayoutForMsgState:msg.state];
     } else if (msg.state == ChatMsgStateSending) {
         [self.msgStateView setImage:[UIImage imageNamed:@"chat_state_message_sending_ic"]];
         [self.msgStateView setHidden:NO];
+        [self updateLayoutForMsgState:msg.state];
     } else {
         [self.msgStateView setHidden:YES];
+        [self updateLayoutForMsgState:msg.state];
     }
-    [self updateLayoutForMsgState:msg.state];
 }
 
 -(void)updateLayoutForMsgState:(ChatMsgState)state
