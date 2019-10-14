@@ -54,15 +54,6 @@
     
 }
 
-//- (void)viewWillAppear {
-//    [self.viewModel viewWillAppear];
-//}
-//
-//- (void)viewWillDisappear {
-//    [self.viewModel viewWillDisappear];
-//    [FHFeedOperationView dismissIfVisible];
-//}
-
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"TA的评论";
@@ -71,10 +62,7 @@
 - (void)initView {
     [self initTableView];
     [self initNotifyBarView];
-    
-    if(self.showErrorView){
-        [self addDefaultEmptyViewFullScreen];
-    }
+    [self addDefaultEmptyViewFullScreen];
 }
 
 - (void)initTableView {

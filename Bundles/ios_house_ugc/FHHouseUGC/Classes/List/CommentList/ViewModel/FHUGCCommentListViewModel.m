@@ -127,7 +127,7 @@
         [extraDic setObject:lastGroupId forKey:@"last_group_id"];
     }
     
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestMyCommentListWithUserId:nil offset:0 completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
         if(isFirst){
             [wself.viewController endLoading];
@@ -196,16 +196,16 @@
             }
             [wself.tableView reloadData];
             
-            NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
-                wself.isRefreshingTip = YES;
-                [wself.viewController showNotify:refreshTip completion:^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        wself.isRefreshingTip = NO;
-                    });
-                }];
-                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-            }
+//            NSString *refreshTip = feedListModel.tips.displayInfo;
+//            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
+//                wself.isRefreshingTip = YES;
+//                [wself.viewController showNotify:refreshTip completion:^{
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        wself.isRefreshingTip = NO;
+//                    });
+//                }];
+//                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+//            }
         }
     }];
 }
@@ -226,7 +226,7 @@
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         cellModel.categoryId = self.categoryId;
-//        cellModel.feedVC = self.viewController;
+        cellModel.hiddenMore = YES;
         cellModel.tableView = self.tableView;
         if(cellModel){
             if(isHead){

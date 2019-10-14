@@ -99,12 +99,17 @@
 
 - (void)setCellModel:(FHFeedUGCCellModel *)cellModel {
     _cellModel = cellModel;
-    //针对一下两种类型，隐藏...按钮
-    if(cellModel.cellType == FHUGCFeedListCellTypeAnswer || cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
-        BOOL hideDelete = [TTAccountManager isLogin] && [[TTAccountManager userID] isEqualToString:cellModel.user.userId];
-        self.moreBtn.hidden = hideDelete;
+    
+    if(cellModel.hiddenMore){
+        self.moreBtn.hidden = YES;
     }else{
-        self.moreBtn.hidden = NO;
+        //针对一下两种类型，隐藏...按钮
+        if(cellModel.cellType == FHUGCFeedListCellTypeAnswer || cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
+            BOOL hideDelete = [TTAccountManager isLogin] && [[TTAccountManager userID] isEqualToString:cellModel.user.userId];
+            self.moreBtn.hidden = hideDelete;
+        }else{
+            self.moreBtn.hidden = NO;
+        }
     }
 }
 

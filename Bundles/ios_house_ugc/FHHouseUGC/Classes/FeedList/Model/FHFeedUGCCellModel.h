@@ -141,6 +141,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) FHFeedContentStickStyle stickStyle;
 // 内容装饰
 @property (nonatomic, strong) FHFeedUGCCellContentDecorationModel *contentDecoration;
+// 隐藏...,默认为显示
+@property (nonatomic, assign) BOOL hiddenMore;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

@@ -268,29 +268,48 @@
 
 //问答回答和文章优质评论
 + (void)setOriginContentAttributeString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
-    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
-    
-    if([self typeAttr:model]){
-        [desc appendAttributedString:[self typeAttr:model]];
+    NSString *content = model.originItemModel.content;
+    if (!isEmptyString(content)) {
+        NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
+        
+        if([self typeAttr:model]){
+            [desc appendAttributedString:[self typeAttr:model]];
+        }
+
+        NSInteger parseEmojiCount = -1;
+        if (model.numberOfLines > 0) {
+            parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
+        }
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:content fontSize:16 needParseCount:parseEmojiCount];
+        if (attrStr) {
+            UIFont *font = [UIFont themeFontRegular:16];
+            NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
+            NSMutableDictionary *attributes = @{}.mutableCopy;
+            [attributes setValue:[UIColor themeGray2] forKey:NSForegroundColorAttributeName];
+            [attributes setValue:font forKey:NSFontAttributeName];
+
+            [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
+            [desc appendAttributedString:mutableAttributedString];
+        }
+        
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        paragraphStyle.minimumLineHeight = 21;
+        paragraphStyle.maximumLineHeight = 21;
+        paragraphStyle.lineSpacing = 2;
+        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+
+        [desc addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, desc.length)];
+        
+        model.originItemModel.contentAStr = desc;
+
+        CGSize size = [self sizeThatFitsAttributedString:desc
+                                         withConstraints:CGSizeMake(width, FLT_MAX)
+                                        maxNumberOfLines:numberOfLines
+                                  limitedToNumberOfLines:&numberOfLines];
+        model.originItemHeight = size.height + 36;
+    }else{
+        model.originItemHeight = 0;
     }
-    if([self contentAttr:model]){
-        [desc appendAttributedString:[self contentAttr:model]];
-    }
-    
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.minimumLineHeight = 21;
-    paragraphStyle.maximumLineHeight = 21;
-    paragraphStyle.lineSpacing = 2;
-    
-    [desc addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, desc.length)];
-    
-    model.originItemModel.contentAStr = desc;
-    
-    CGSize size = [self sizeThatFitsAttributedString:desc
-                                     withConstraints:CGSizeMake(width, FLT_MAX)
-                                    maxNumberOfLines:numberOfLines
-                              limitedToNumberOfLines:&numberOfLines];
-    model.originItemHeight = size.height + 36;
 }
 
 + (NSAttributedString *)typeAttr:(FHFeedUGCCellModel *)model {

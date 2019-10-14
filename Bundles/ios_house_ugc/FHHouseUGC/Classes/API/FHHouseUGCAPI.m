@@ -562,4 +562,17 @@
         }
     }];
 }
+
++ (TTHttpTask *)requestMyCommentListWithUserId:(NSString *)userId offset:(NSInteger)offset completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/api/feed/my_comments/v1/?";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"count"] = @(20);
+    paramDic[@"offset"] = @(offset);
+    
+    Class cls = NSClassFromString(@"FHUGCCommentListModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end
