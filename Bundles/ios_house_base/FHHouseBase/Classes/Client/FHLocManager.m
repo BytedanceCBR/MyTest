@@ -283,8 +283,9 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 {
     NSMutableArray *geocoders = [[NSMutableArray alloc] init];
     //    [BDUGAmapGeocoder sharedGeocoder].apiKey = kAmapKey;
-    [geocoders addObject:[BDUGAmapGeocoder sharedGeocoder]];
     [geocoders addObject:[BDUGSystemGeocoder sharedGeocoder]];
+    [geocoders addObject:[BDUGAmapGeocoder sharedGeocoder]];
+    
     
     __weak typeof(self) wSelf = self;
     [[BDUGLocationManager sharedManager]requestLocationWithDesiredAccuracy:BDUGLocationAccuracyHundredMeters geocoders:geocoders timeout:4 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
@@ -340,16 +341,18 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             }
         }
         
+        CLLocationCoordinate2D gcjLocation = AMapLocationCoordinateConvert(locationInfo.coordinate,AMapLocationCoordinateTypeGPS);
+        
         NSMutableDictionary * amapInfo = [NSMutableDictionary new];
         
         amapInfo[@"sub_locality"] = location.district;
         amapInfo[@"locality"] = location.city;
         if (locationInfo.coordinate.latitude) {
-            amapInfo[@"latitude"] = @(locationInfo.coordinate.latitude);
+            amapInfo[@"latitude"] = @(gcjLocation.latitude);
         }
         
         if (locationInfo.coordinate.longitude) {
-            amapInfo[@"longitude"] = @(locationInfo.coordinate.longitude);
+            amapInfo[@"longitude"] = @(gcjLocation.longitude);
         }
         
         [[[FHHouseBridgeManager sharedInstance] envContextBridge] setUpLocationInfo:amapInfo];
@@ -358,8 +361,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             wSelf.currentReGeocode = location;
         }
         
-        if (locationInfo) {
-            wSelf.currentLocaton = [[CLLocation alloc] initWithLatitude:locationInfo.coordinate.latitude longitude:locationInfo.coordinate.longitude];
+        if (locationInfo) {            
+            wSelf.currentLocaton = [[CLLocation alloc] initWithLatitude:gcjLocation.latitude longitude:gcjLocation.longitude];
         }
         
         // 存储当前定位信息
@@ -374,7 +377,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             if ([[FHEnvContext getCurrentSelectCityIdFromLocal] respondsToSelector:@selector(integerValue)]) {
                 cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
             }
-            [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:locationInfo.coordinate gaodeCityId:location.cityCode gaodeCityName:location.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
+            [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:gcjLocation gaodeCityId:location.cityCode gaodeCityName:location.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
                 if (!model || error) {
                     wSelf.retryConfigCount -= 1;
                     if (wSelf.retryConfigCount >= 0)
