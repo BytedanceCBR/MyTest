@@ -6,12 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHPersonalHomePageModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPersonalHomePageHeaderView : UIView
 
-- (void)updateData;
+- (void)updateData:(FHPersonalHomePageModel *)model;
 
 @end
 

@@ -96,10 +96,10 @@
     return label;
 }
 
-- (void)updateData {
-    [self.icon bd_setImageWithURL:[NSURL URLWithString:@"http://p99.pstatp.com/origin/dae90013969ce8c8e4f0"] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
-    [self.commentView updateWithTopContent:@"1012" bottomContent:@"评论"];
-    [self.focusView updateWithTopContent:@"8" bottomContent:@"TA的关注"];
+- (void)updateData:(FHPersonalHomePageModel *)model {
+    [self.icon bd_setImageWithURL:[NSURL URLWithString:model.data.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    [self.commentView updateWithTopContent:model.data.fCommentCount bottomContent:@"评论"];
+    [self.focusView updateWithTopContent:model.data.fFollowSgCount bottomContent:@"TA的关注"];
 }
 
 - (void)commentClicked {

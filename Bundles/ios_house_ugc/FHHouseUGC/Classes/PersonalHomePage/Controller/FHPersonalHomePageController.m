@@ -117,8 +117,8 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     self.isViewAppear = YES;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToSubScrollView:) name:@"kScrollToSubScrollView" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:@"homePage"];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToSubScrollView:) name:@"kScrollToSubScrollView" object:@"homePage"];
     [[SSImpressionManager shareInstance] addRegist:self];
     __weak typeof(self) weakSelf = self;
     self.panBeginAction = ^{
@@ -159,10 +159,6 @@
         navOffset = 65;
     }
     self.navOffset = navOffset;
-//    self.defaultTopHeight = 144;
-//    if ([TTDeviceHelper isIPhoneXSeries]) {
-//        self.defaultTopHeight = self.navOffset + 80;
-//    }
     self.canScroll = NO;
     self.isTopIsCanNotMoveTabView = NO;
     self.isTopIsCanNotMoveTabViewPre = NO;
@@ -271,7 +267,7 @@
     UITableView *_tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
+    _tableView.showsVerticalScrollIndicator = NO;
     _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
@@ -300,11 +296,11 @@
 }
 
 - (void)refreshHeaderData {
-    FHTopicHeaderModel *headerModel = self.viewModel.headerModel;
-    if (headerModel && headerModel.forum) {
+    FHPersonalHomePageModel *headerModel = self.viewModel.headerModel;
+    if (headerModel) {
         [self hiddenEmptyView];
         self.topHeaderView.hidden = NO;
-        [self.topHeaderView updateData];
+        [self.topHeaderView updateData:headerModel];
     }
 }
 
@@ -385,7 +381,7 @@
         if (_isTopIsCanNotMoveTabView != _isTopIsCanNotMoveTabViewPre) {
             if (!_isTopIsCanNotMoveTabViewPre) {
                 // 滑动到顶端
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCGoTop" object:nil userInfo:@{@"canScroll":@"1"}];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCGoTop" object:@"homePage" userInfo:@{@"canScroll":@"1"}];
                 _canScroll = NO;
             }
             if(_isTopIsCanNotMoveTabViewPre){
@@ -397,6 +393,8 @@
         }
     } if (scrollView == _subScrollView) {
         // 列表父scrollview
+        
+        NSLog(@"sub_table_%f",_subScrollView.contentOffset.y);
     } else {
         // nothing
     }

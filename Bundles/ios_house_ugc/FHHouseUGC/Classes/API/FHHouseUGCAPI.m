@@ -575,4 +575,17 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
++ (TTHttpTask *)requestHomePageInfoWithUserId:(NSString *)userId completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/user/profile/homepage/v7/?";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(userId){
+        paramDic[@"userId"] = userId;
+    }
+    
+    Class cls = NSClassFromString(@"FHPersonalHomePageModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end

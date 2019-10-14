@@ -11,6 +11,7 @@
 #import "FHUGCCellManager.h"
 #import "FHTopicHeaderModel.h"
 #import "SSImpressionManager.h"
+#import "FHPersonalHomePageModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSHashTable<id>      *hashTable;
 @property (nonatomic, assign)   NSInteger       currentSelectIndex;
 @property (nonatomic, strong)     UITableView       *currentTableView;
-@property (nonatomic, strong)   FHTopicHeaderModel       *headerModel;
+@property (nonatomic, strong)   FHPersonalHomePageModel       *headerModel;
 @property (nonatomic, assign)   int64_t cid;// 话题id
 @property (nonatomic, copy)     NSString       *enter_from;// 从哪进入的当前页面
 

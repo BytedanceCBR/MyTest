@@ -72,8 +72,8 @@
         self.feedOffset = 0;
         self.dataList = [[NSMutableArray alloc] init];
         self.hashTable = [NSHashTable weakObjectsHashTable];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoTop" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoTop" object:@"homePage"];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:@"homePage"];
         // 删帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 举报成功
@@ -113,30 +113,27 @@
     }
     __weak typeof(self) wSelf = self;
     NSString *cidStr = [NSString stringWithFormat:@"%lld",self.cid];// 话题id
-    self.httpTopHeaderTask = [FHHouseUGCAPI requestTopicHeader:cidStr completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+
+    self.httpTopListTask = [FHHouseUGCAPI requestHomePageInfoWithUserId:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wSelf.loadDataSuccessCount += 1;
         if (error) {
             wSelf.headerModel = nil;
             // 强制endLoading
             wSelf.loadDataSuccessCount += 1;
         } else {
-            if ([model isKindOfClass:[FHTopicHeaderModel class]]) {
-                wSelf.headerModel = model;
-                [wSelf.detailController refreshHeaderData];
-                if ([wSelf.headerModel.tabs isKindOfClass:[NSArray class]] && wSelf.headerModel.tabs.count > 0) {
-                    FHTopicHeaderTabsModel *first = [wSelf.headerModel.tabs firstObject];
-                    if ([first isKindOfClass:[FHTopicHeaderTabsModel class]]) {
-                        if (first.tabId.length > 0) {
-                            wSelf.tab_id = first.tabId;
-                        }
-                        if (first.categoryName.length > 0) {
-                            wSelf.categoryName = first.categoryName;
-                        }
-                    }
+            if ([model isKindOfClass:[FHPersonalHomePageModel class]]) {
+                if([model.message isEqualToString:@"error"]){
+                    wSelf.headerModel = nil;
+                    // 强制endLoading
+                    wSelf.loadDataSuccessCount += 1;
+                }else{
+                    wSelf.headerModel = model;
+                    [wSelf.detailController refreshHeaderData];
+                    // 加载列表数据
+                    [wSelf loadFeedListData];
                 }
-                // 加载列表数据
-                [wSelf loadFeedListData];
             } else {
+                wSelf.headerModel = nil;
                 // 强制endLoading
                 wSelf.loadDataSuccessCount += 1;
             }
@@ -375,12 +372,13 @@
     }
     CGFloat offsetY = scrollView.contentOffset.y;
     if (offsetY<=0) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCLeaveTop" object:nil userInfo:@{@"canScroll":@"1"}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCLeaveTop" object:@"homePage" userInfo:@{@"canScroll":@"1"}];
     }
 }
 
 -(void)acceptMsg:(NSNotification *)notification{
     NSString *notificationName = notification.name;
+    id obj = notification.object;
     if ([notificationName isEqualToString:@"kFHUGCGoTop"]) {
         NSDictionary *userInfo = notification.userInfo;
         NSString *canScroll = userInfo[@"canScroll"];
@@ -490,7 +488,7 @@
                                                 CGRect rect = [tableView rectForRowAtIndexPath:indexPath];
                                                 self.canScroll = YES;
                                                 [tableView setContentOffset:rect.origin animated:NO];
-                                                [[NSNotificationCenter defaultCenter] postNotificationName:@"kScrollToSubScrollView" object:nil];
+                                                [[NSNotificationCenter defaultCenter] postNotificationName:@"kScrollToSubScrollView" object:@"homePage"];
                                             }
                                             break;
                                         }

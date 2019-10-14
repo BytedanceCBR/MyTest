@@ -77,6 +77,9 @@ NS_ASSUME_NONNULL_BEGIN
 //请求评论列表
 + (TTHttpTask *)requestMyCommentListWithUserId:(NSString *)userId offset:(NSInteger)offset completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
+//请求个人主页  个人信息
++ (TTHttpTask *)requestHomePageInfoWithUserId:(NSString *)userId completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
 
 @end
 
