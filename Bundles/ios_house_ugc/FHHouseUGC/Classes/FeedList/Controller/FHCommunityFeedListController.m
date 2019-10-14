@@ -164,7 +164,7 @@
     }];
     
     [self.groupChatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.view).offset(-70);
+        make.bottom.mas_equalTo(self.view).offset(-self.publishBtnBottomHeight - 64);
         make.right.mas_equalTo(self.view).offset(-12);
         make.width.height.mas_equalTo(64);
     }];
