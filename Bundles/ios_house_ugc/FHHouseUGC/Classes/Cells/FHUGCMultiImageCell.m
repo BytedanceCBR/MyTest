@@ -16,6 +16,7 @@
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
 #import <TTBusinessManager+StringUtils.h>
+#import <UIViewAdditions.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -63,11 +64,11 @@
 }
 
 - (void)initViews {
-    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
+    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     __weak typeof(self) wself = self;
     [self.contentView addSubview:_userInfoView];
     
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
@@ -85,11 +86,11 @@
     [self.contentView addSubview:_multiImageView];
     self.imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
     
-    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
+    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
     _originView.hidden = YES;
     [self.contentView addSubview:_originView];
     
-    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
+    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
@@ -99,37 +100,30 @@
 }
 
 - (void)initConstraints {
-    [self.userInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(20);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(40);
-    }];
+    self.userInfoView.top = topMargin;
+    self.userInfoView.left = 0;
+    self.userInfoView.width = [UIScreen mainScreen].bounds.size.width;
+    self.userInfoView.height = userInfoViewHeight;
     
-    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-    }];
+    self.contentLabel.top = self.userInfoView.bottom + 10;
+    self.contentLabel.left = leftMargin;
+    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    self.contentLabel.height = 0;
     
-    [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-        make.height.mas_equalTo(self.imageViewheight);
-    }];
+    self.multiImageView.top = self.userInfoView.bottom + 10;
+    self.multiImageView.left = leftMargin;
+    self.multiImageView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    self.multiImageView.height = self.imageViewheight;
+
+    self.bottomView.top = self.multiImageView.bottom + 10;
+    self.bottomView.left = 0;
+    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomView.height = bottomViewHeight;
     
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
-        make.height.mas_equalTo(49);
-        make.left.right.mas_equalTo(self.contentView);
-    }];
-    
-    [self.originView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
-        make.height.mas_equalTo(originViewHeight);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-    }];
+    self.originView.top = self.multiImageView.bottom + 10;
+    self.originView.left = leftMargin;
+    self.originView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    self.originView.height = originViewHeight;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -143,10 +137,15 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
-    self.currentData = data;
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-    _cellModel = cellModel;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    
+    self.currentData = data;
+    self.cellModel = cellModel;
     //设置userInfo
     self.userInfoView.cellModel = cellModel;
     self.userInfoView.userName.text = cellModel.user.name;
@@ -170,20 +169,12 @@
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
-        [self.multiImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-            make.left.mas_equalTo(self.contentView).offset(leftMargin);
-            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-            make.height.mas_equalTo(self.imageViewheight);
-        }];
+        self.contentLabel.height = 0;
+        self.multiImageView.top = self.userInfoView.bottom + 10;
     }else{
         self.contentLabel.hidden = NO;
-        [self.multiImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-            make.left.mas_equalTo(self.contentView).offset(leftMargin);
-            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-            make.height.mas_equalTo(self.imageViewheight);
-        }];
+        self.contentLabel.height = cellModel.contentHeight;
+        self.multiImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
     }
     //图片
@@ -192,17 +183,12 @@
     if(cellModel.originItemModel){
         self.originView.hidden = NO;
         [self.originView refreshWithdata:cellModel];
-        [self.originView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(cellModel.originItemHeight);
-        }];
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(cellModel.originItemHeight + 20);
-        }];
+        self.originView.top = self.multiImageView.bottom + 10;
+        self.originView.height = cellModel.originItemHeight;
+        self.bottomView.top = self.multiImageView.bottom + cellModel.originItemHeight + 20;
     }else{
         self.originView.hidden = YES;
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.multiImageView.mas_bottom).offset(10);
-        }];
+        self.bottomView.top = self.multiImageView.bottom + 10;
     }
     
     [self showGuideView];
@@ -235,13 +221,9 @@
 
 - (void)showGuideView {
     if(_cellModel.isInsertGuideCell){
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(66);
-        }];
+        self.bottomView.height = bottomViewHeight + guideViewHeight;
     }else{
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(49);
-        }];
+        self.bottomView.height = bottomViewHeight;
     }
 }
 
