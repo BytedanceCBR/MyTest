@@ -12,10 +12,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// UGC 搜索
+// UGC 用户关注列表 搜索
 @interface FHUGCUserFollowListController : FHBaseViewController
-
-@property (nonatomic, strong)     FHUGCSearchBar     *naviBar;
 
 @end
 

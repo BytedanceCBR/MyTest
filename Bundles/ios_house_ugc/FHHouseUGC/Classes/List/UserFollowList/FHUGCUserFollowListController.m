@@ -27,6 +27,7 @@
 #import "ToastManager.h"
 #import "FHUGCConfig.h"
 #import "FHUGCCommunityListViewController.h"
+#import "FHUGCUserFollowSearchView.h"
 
 @interface FHUGCUserFollowListController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -40,6 +41,7 @@
 @property(nonatomic, assign) BOOL keyboardVisible;
 @property(nonatomic, strong) NSMutableDictionary *showCache;
 @property(nonatomic, assign) NSInteger associatedCount;
+@property (nonatomic, strong)   FHUGCUserFollowSearchView       *searchView;
 
 @property(nonatomic, assign) FHCommunityListType listType;
 @property(nonatomic, weak) id <FHUGCCommunityChooseDelegate> chooseDelegate;
@@ -70,11 +72,10 @@
     [self setupData];
     __weak typeof(self) weakSelf = self;
     self.panBeginAction = ^{
-        [weakSelf.naviBar.searchInput resignFirstResponder];
+        [weakSelf.searchView.searchInput resignFirstResponder];
     };
     [self startLoadData];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardVisibleChanged:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardVisibleChanged:) name:UIKeyboardWillHideNotification object:nil];
 }
@@ -89,7 +90,7 @@
     if (self.isKeybordShow) {
         __weak typeof(self) weakSelf = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [weakSelf.naviBar.searchInput becomeFirstResponder];
+            [weakSelf.searchView.searchInput becomeFirstResponder];
         });
     }
 }
@@ -97,26 +98,6 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     self.isViewAppearing = NO;
-}
-
-- (void)followStateChanged:(NSNotification *)notification {
-    if (notification) {
-//        if (self.isViewAppearing) {
-//            return;
-//        }
-//        NSDictionary *userInfo = notification.userInfo;
-//        BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
-//        NSString *groupId = notification.userInfo[@"social_group_id"];
-//        if(groupId.length > 0){
-//            [self.items enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//                if ([obj.socialGroupId isEqualToString:groupId]) {
-//                    obj.hasFollow = followed ? @"1" : @"0";
-//                    self.needReloadData = YES;
-//                    *stop = YES;
-//                }
-//            }];
-//        }
-    }
 }
 
 #pragma mark - UIKeyboardNotification
@@ -141,17 +122,19 @@
 }
 
 - (void)setupNaviBar {
+    [self setupDefaultNavBar:YES];
+    CGFloat height = [FHFakeInputNavbar perferredHeight];
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
-    _naviBar = [[FHUGCSearchBar alloc] initWithFrame:CGRectZero];
-    [_naviBar setSearchPlaceHolderText:@"搜索小区圈"];
-    [self.view addSubview:_naviBar];
-    CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
-    [_naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(naviHeight);
+    
+    self.searchView = [[FHUGCUserFollowSearchView alloc] init];
+    [self.view addSubview:self.searchView];
+    [self.searchView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.view).offset(height + 4);
+        make.left.right.mas_equalTo(self.view);
+        make.height.mas_equalTo(32);
     }];
-    [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
-    _naviBar.searchInput.delegate = self;
+    
+    self.searchView.searchInput.delegate = self;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
 }
@@ -211,17 +194,17 @@
     }
 
     NSInteger maxCount = 80;
-    NSString *text = self.naviBar.searchInput.text;
-    UITextRange *selectedRange = [self.naviBar.searchInput markedTextRange];
+    NSString *text = self.searchView.searchInput.text;
+    UITextRange *selectedRange = [self.searchView.searchInput markedTextRange];
     //获取高亮部分
-    UITextPosition *position = [self.naviBar.searchInput positionFromPosition:selectedRange.start offset:0];
+    UITextPosition *position = [self.searchView.searchInput positionFromPosition:selectedRange.start offset:0];
     // 没有高亮选择的字，说明不是拼音输入
     if (position) {
         return;
     }
     if (text.length > maxCount) {
         text = [text substringToIndex:maxCount];
-        self.naviBar.searchInput.text = text;
+        self.searchView.searchInput.text = text;
     }
     BOOL hasText = text.length > 0;
     self.searchText = text;
@@ -263,7 +246,7 @@
 
 // 输入框执行搜索
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    //  NSString *userInputText = self.naviBar.searchInput.text;
+    
 }
 
 #pragma mark - dealloc
@@ -357,7 +340,7 @@
             return;
         }
 
-        //点击埋点
+        // 点击埋点
         [self addCommunityClickLog:data rank:row];
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = data.socialGroupId;
