@@ -138,7 +138,7 @@
     
     cell.dateLabel.text = model.dateStr;
     cell.titleLabel.text = model.title;
-    NSMutableAttributedString *emojiSupportAttributeText = [[TTUGCEmojiParser parseInTextKitContext:model.content fontSize:cell.descLabel.font.pointSize] mutableCopy];
+    NSMutableAttributedString *emojiSupportAttributeText = [[TTUGCEmojiParser parseInTextKitContext:[model.content stringByReplacingOccurrencesOfString:@"\n" withString:@""] fontSize:cell.descLabel.font.pointSize] mutableCopy];
     cell.descLabel.attributedText = emojiSupportAttributeText;
     cell.lookDetailLabel.text = model.buttonName;
     

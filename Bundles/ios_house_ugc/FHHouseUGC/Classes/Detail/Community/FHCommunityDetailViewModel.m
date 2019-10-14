@@ -466,7 +466,9 @@
     NSString *imageUrlString = model.imageUrl;
  
     if(linkUrlString.length > 0) {
+        WeakSelf;
         self.headerView.gotoOperationBlock = ^{
+            StrongSelf;
             NSURLComponents *urlComponents = [NSURLComponents new];
             urlComponents.scheme = @"fschema";
             urlComponents.host = @"webview";
@@ -505,6 +507,7 @@
 }
 
 - (NSAttributedString *)announcementAttributeString:(NSString *) announcement {
+    announcement = [announcement stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
        if(!isEmptyString(announcement)) {
            UIFont *titleFont = [UIFont themeFontSemibold:12];
@@ -533,7 +536,7 @@
 
 // 更新公告信息
 - (void)updatePublicationsWith:(FHUGCScialGroupDataModel *)data {
-    
+    WeakSelf;
     BOOL isAdmin = (self.data.userAuth != UserAuthTypeNormal);
     // 是否显示公告区
     BOOL isShowPublications = !isEmptyString(data.announcement);
@@ -548,6 +551,7 @@
         self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:(data.announcement.length > 0)?data.announcement: defaultAnnouncement];
 
         self.headerView.gotoPublicationsDetailBlock = ^{
+            StrongSelf;
             // 跳转公告编辑页
             NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
             urlComponents.scheme = @"sslocal";
@@ -583,6 +587,7 @@
         self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:data.announcement];
         self.headerView.publicationsDetailViewTitleLabel.text = @"点击查看";
         self.headerView.gotoPublicationsDetailBlock = ^{
+            StrongSelf;
             // 跳转只读模式的公告详情页
             NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
             urlComponents.scheme = @"sslocal";
