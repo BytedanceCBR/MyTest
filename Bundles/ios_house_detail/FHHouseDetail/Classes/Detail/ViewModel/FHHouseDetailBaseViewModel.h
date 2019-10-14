@@ -70,6 +70,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 // 埋点相关
 - (void)addGoDetailLog;
 - (void)addStayPageLog:(NSTimeInterval)stayTime;
+- (void)addClickOptionLog:(NSString *)position;
 
 // excetionLog
 - (void)addDetailCoreInfoExcetionLog;

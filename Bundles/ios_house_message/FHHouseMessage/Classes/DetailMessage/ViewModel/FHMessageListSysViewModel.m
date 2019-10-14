@@ -13,6 +13,7 @@
 #import "FHUserTracker.h"
 #import "FHSystemMsgModel.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
+#import <TTUGCEmojiParser.h>
 
 #define kCellId @"FHBSystemMsgCell_id"
 
@@ -137,7 +138,8 @@
     
     cell.dateLabel.text = model.dateStr;
     cell.titleLabel.text = model.title;
-    cell.descLabel.text = model.content;
+    NSMutableAttributedString *emojiSupportAttributeText = [[TTUGCEmojiParser parseInTextKitContext:[model.content stringByReplacingOccurrencesOfString:@"\n" withString:@""] fontSize:cell.descLabel.font.pointSize] mutableCopy];
+    cell.descLabel.attributedText = emojiSupportAttributeText;
     cell.lookDetailLabel.text = model.buttonName;
     
     FHSystemMsgDataItemsImagesModel *imageModel = model.images;
@@ -177,7 +179,13 @@
         return;
     }
     
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    NSMutableDictionary *infoDic = @{}.mutableCopy;
+    infoDic[TRACER_KEY] = @{
+        UT_ENTER_TYPE: @"click"
+    };
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDic];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
 @end

@@ -1826,6 +1826,14 @@ static const CGFloat kFloatingViewOriginY = 230;
                 self.model.commentCount = [self.commentManager totalCommentCount];
                 [self.model save];
                 [self updateViews];
+                //发送通知 其他页面同步评论数
+                NSMutableDictionary *userInfo = @{}.mutableCopy;
+                userInfo[@"group_id"] = self.model.groupID;
+                userInfo[@"comment_conut"] = @(self.model.commentCount);
+                [[NSNotificationCenter defaultCenter] postNotificationName:kPostMessageFinishedNotification
+                                                                    object:nil
+                                                                  userInfo:userInfo];
+                
             });
         }else{
             [HTSVideoPlayToast show:@"操作失败，请重试"];

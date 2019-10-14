@@ -390,6 +390,7 @@
                            @"pricePerSqmNum":@"price_per_sqm_num",
                            @"pricePerSqmUnit":@"price_per_sqm_unit",
                            @"dislikeInfo": @"dislike_info",
+                           @"titleTag": @"title_tag",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -484,4 +485,21 @@
     return YES;
 }
 
+@end
+
+@implementation FHHomeHouseDataItemsTitleTagModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"backgroundColor": @"background_color",
+    @"textColor": @"text_color",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
 @end

@@ -41,6 +41,8 @@
 }
 
 - (void)initViews {
+    __weak typeof(self) wself = self;
+    
     self.scrollView = [[UIScrollView alloc] init];
     _scrollView.backgroundColor = [UIColor whiteColor];
     if (@available(iOS 11.0, *)) {
@@ -67,7 +69,7 @@
     self.neiborhoodItemView = [[FHPriceValuationItemView alloc] initWithFrame:CGRectZero type:FHPriceValuationItemViewTypeNormal];
     _neiborhoodItemView.titleLabel.text = @"小区";
     _neiborhoodItemView.tapBlock = ^{
-        [self goToNeighborhoodSearch];
+        [wself goToNeighborhoodSearch];
     };
     [self.inputView addSubview:_neiborhoodItemView];
 
@@ -82,7 +84,7 @@
     _floorItemView.titleLabel.text = @"户型";
     _floorItemView.bottomLine.hidden = YES;
     _floorItemView.tapBlock = ^{
-        [self chooseFloor];
+        [wself chooseFloor];
     };
     [self.inputView addSubview:_floorItemView];
 

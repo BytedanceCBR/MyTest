@@ -15,6 +15,7 @@
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
 #import <TTBusinessManager+StringUtils.h>
+#import <UIView+XWAddForRoundedCorner.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -70,6 +71,8 @@
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
+    _contentLabel.layer.masksToBounds = YES;
+    _contentLabel.backgroundColor = [UIColor whiteColor];
     NSDictionary *linkAttributes = @{
                                      NSForegroundColorAttributeName : [UIColor themeRed3],
                                      NSFontAttributeName : [UIFont themeFontRegular:16]
@@ -83,11 +86,12 @@
     self.videoImageView = [[TTImageView alloc] initWithFrame:CGRectZero];
     _videoImageView.backgroundColor = [UIColor themeGray7];
     _videoImageView.layer.masksToBounds = YES;
-    _videoImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
-    _videoImageView.layer.borderWidth = 0.5;
-    _videoImageView.layer.cornerRadius = 4;
+//    _videoImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
+//    _videoImageView.layer.borderWidth = 0.5;
+//    _videoImageView.layer.cornerRadius = 4;
     _videoImageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
     _videoImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [_videoImageView xw_roundedCornerWithCornerRadii:CGSizeMake(4, 4) cornerColor:[UIColor whiteColor] corners:UIRectCornerAllCorners borderColor:[UIColor themeGray6] borderWidth:0.5];
     [self.contentView addSubview:_videoImageView];
     self.imageViewheight = 200;
     self.imageViewWidth = 150;

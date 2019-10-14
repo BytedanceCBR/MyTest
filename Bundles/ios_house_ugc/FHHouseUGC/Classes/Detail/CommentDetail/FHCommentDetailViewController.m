@@ -64,6 +64,8 @@
             if(paramObj.allParams[@"begin_show_comment"]) {
                 self.beginShowComment = [paramObj.allParams[@"begin_show_comment"] boolValue];
             }
+            // 列表页数据
+            self.detailData = params[@"data"];
         }
     }
     return self;
