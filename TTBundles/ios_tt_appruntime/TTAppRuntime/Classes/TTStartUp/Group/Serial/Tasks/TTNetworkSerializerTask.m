@@ -248,11 +248,13 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
         }
         //[BDAccountSessionXTTToken setXTokenWithResponse:response responseError:responseError sessionHasExpired:sessionExpired];
     };
-
-    [[TTNetworkManager shareInstance] start];
+    
     if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
+        //设置BOE环境和白名单 https://wiki.bytedance.net/pages/viewpage.action?pageId=336579929
         [[TTNetworkManager shareInstance] setBoeProxyEnabled:YES];
+        [[TTNetworkManager shareInstance] setBypassBoeJSON:@"{\"bypass_boe_host_list\": [\"mon.haoduofangs.com\", \"mon.snssdk.com\", \"soulkiller.bytedance.net\",\"p3.pstatp.com\"]}"];
     }
+    [[TTNetworkManager shareInstance] start];
     
     LOGI(@"isEncryptQueryInHeader = %d, isEncryptQuery = %d, isKeepPlainQuery = %d", [TTNetworkManager shareInstance].isEncryptQueryInHeader, [TTNetworkManager shareInstance].isEncryptQuery, [TTNetworkManager shareInstance].isKeepPlainQuery);
 }
