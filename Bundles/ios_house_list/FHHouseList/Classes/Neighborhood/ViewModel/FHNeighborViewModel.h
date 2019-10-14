@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   NSMutableDictionary       *houseShowTracerDic; // 埋点key记录
 @property (nonatomic, assign)   BOOL       firstRequestData;
 @property (nonatomic, assign)   BOOL       isShowRealHouseInfo;
+@property (nonatomic, assign) NSInteger currentOffset;
 
 -(instancetype)initWithController:(FHNeighborListViewController *)viewController tableView:(UITableView *)tableView;
 

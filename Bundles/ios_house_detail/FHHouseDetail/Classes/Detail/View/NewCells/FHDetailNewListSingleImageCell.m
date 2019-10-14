@@ -165,14 +165,14 @@
     
     __weak typeof(self) wSelf = self;
     self.didClickCellBlk = ^{
-        FHNewHouseItemModel *theModel = self.itemModel;
+        FHNewHouseItemModel *theModel = wSelf.itemModel;
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         traceParam[@"enter_from"] = @"new_detail";
         traceParam[@"log_pb"] = theModel.logPb;
-        traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
+        traceParam[@"origin_from"] = wSelf.baseViewModel.detailTracerDic[@"origin_from"];
         traceParam[@"card_type"] = @"left_pic";
         traceParam[@"rank"] = @(theModel.index);
-        traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+        traceParam[@"origin_search_id"] = wSelf.baseViewModel.detailTracerDic[@"origin_search_id"];
         traceParam[@"element_from"] = @"related";
         
         NSDictionary *dict = @{@"house_type":@(1),

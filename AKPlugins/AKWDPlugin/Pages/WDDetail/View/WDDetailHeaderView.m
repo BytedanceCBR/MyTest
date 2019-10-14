@@ -71,6 +71,19 @@ NSString * const kWDDetailHeaderViewAnswerText = @"回答";
     [self updateFrame];
 }
 
+- (void)dealloc
+{
+    @try {
+        [self removeObserver:self forKeyPath:@"self.frame"];
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        
+    }
+}
+
 - (void)addKVO {
     NSArray *keyPaths = @[NSStringFromSelector(@selector(allAnswerText)), [NSString stringWithFormat:@"%@.%@", NSStringFromSelector(@selector(answerEntity)), NSStringFromSelector(@selector(profitLabel))], NSStringFromSelector(@selector(showTips))];
     WeakSelf;
@@ -78,14 +91,18 @@ NSString * const kWDDetailHeaderViewAnswerText = @"回答";
         StrongSelf;
         [self reloadView];
     }];
-    [self.KVOController observe:self keyPath:NSStringFromSelector(@selector(frame)) options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-        StrongSelf;
+    [self addObserver:self forKeyPath:@"self.frame" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"self.frame"]) {
         if (self.detailModel.showPostAnswer) {
             [self detectGoodAnswerButtonIsShow];
         } else {
             [self detectAnswerButtonIsShow];
         }
-    }];
+    }
 }
 
 - (void)detectAnswerButtonIsShow

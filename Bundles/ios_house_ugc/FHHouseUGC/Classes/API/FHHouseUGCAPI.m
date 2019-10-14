@@ -15,6 +15,7 @@
 #import "FHURLSettings.h"
 #import "FHTopicFeedListModel.h"
 #import "FHFeedOperationResultModel.h"
+#import "FHUGCNoticeModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -526,7 +527,7 @@
     }];
 }
 
-+ (TTHttpTask *)requestUpdateUGCNoticeWithParam:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull))completion {
++ (TTHttpTask *)requestUpdateUGCNoticeWithParam:(NSDictionary *)params completion:(void (^)(FHUGCNoticeModel *model, NSError *error))completion {
     
     NSString *queryPath = @"/f100/ugc/social_group/announcement";
     NSString *url = QURL(queryPath);
@@ -537,6 +538,7 @@
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
         
         BOOL success = NO;
+        FHUGCNoticeModel *ugcNoticeModel = nil;
         if (!error) {
             @try{
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
@@ -545,6 +547,10 @@
                     NSString *msg = json[@"message"];
                     error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
                 }
+                else
+                {
+                    ugcNoticeModel = [[FHUGCNoticeModel alloc] initWithDictionary:json error:&error];
+                }
             }
             @catch(NSException *e){
                 error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
@@ -552,7 +558,7 @@
         }
         
         if (completion) {
-            completion(error);
+            completion(ugcNoticeModel,error);
         }
     }];
 }

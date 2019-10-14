@@ -26,6 +26,8 @@
 #import <FHIESGeckoManager.h>
 #import <FHRNHelper.h>
 
+#define IM_OPEN_URL @"im_open_url"
+
 extern NSString *const kFHToastCountKey;
 extern NSString *const kFHPhoneNumberCacheKey;
 
@@ -77,6 +79,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
 
     NSString* from = extra[@"from"] ? : @"be_null";
+    NSString *source = extra[@"source"];
     
     [FHUserTracker writeEvent:@"click_im" params:dict];
     dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
@@ -87,8 +90,16 @@ extern NSString *const kFHPhoneNumberCacheKey;
         dict[@"search_id"] = logPbDict[@"search_id"] ? : @"be_null";
         dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
     }
-    NSURL *openUrl = [NSURL URLWithString:contactPhone.imOpenUrl];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":dict, @"from": from}];
+    NSString *urlStr = contactPhone.imOpenUrl;
+    if (extra[IM_OPEN_URL]) {
+        urlStr = extra[IM_OPEN_URL];
+    }
+    NSURL *openUrl = [NSURL URLWithString:urlStr];
+    NSMutableDictionary * userInfoDict = @{@"tracer":dict, @"from": from}.mutableCopy;
+    if (!isEmptyString(source)) {
+        userInfoDict[@"source"] = source;
+    }
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     
     [self silentFollow:extra];
@@ -283,7 +294,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSMutableDictionary *imdic = [NSMutableDictionary dictionaryWithDictionary:_imParams];
     [imdic setValue:contactPhone.realtorId forKey:@"target_user_id"];
     [imdic setValue:contactPhone.realtorName forKey:@"chat_title"];
-    imdic[@"source"] = @"1.81";
+    imdic[@"source"] = @"app_realtor_mainpage";
     NSString *imParams = nil;
     NSError *imParseError = nil;
     NSData *imJsonData = [NSJSONSerialization dataWithJSONObject:imdic options:0 error:&imParseError];

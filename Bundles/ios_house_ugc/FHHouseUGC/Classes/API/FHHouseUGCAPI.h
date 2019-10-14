@@ -11,6 +11,7 @@
 #import <FHHouseBase/FHCommonApi.h>
 
 @class TTHttpTask;
+@class FHUGCNoticeModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -71,7 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (TTHttpTask *)requestTopicList:(NSString *)query_id tab_id:(NSString *)tab_id categoryName:(NSString *)category offset:(NSInteger)offset count:(NSInteger)count appExtraParams:(NSString *)appExtraParams completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
 
 // 管理员修改公告信息及通知用户
-+ (TTHttpTask *)requestUpdateUGCNoticeWithParam:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull))completion;
++ (TTHttpTask *)requestUpdateUGCNoticeWithParam:(NSDictionary *)params completion:(void (^)(FHUGCNoticeModel *model, NSError *error))completion;
 @end
 
 NS_ASSUME_NONNULL_END

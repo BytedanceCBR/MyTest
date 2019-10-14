@@ -29,6 +29,8 @@
 #import "TTLaunchDefine.h"
 #import "BDSSOAuthManager.h"
 #import "NSDictionary+TTAdditions.h"
+#import "TTInstallIDManager.h"
+#import "TTSandBoxHelper.h"
 
 DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
@@ -46,6 +48,20 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     }
     [self registerHomePageViewControllers];
     [[self class] setLaunchController];
+    // 后续inhouse功能都可以在此处添加添加
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self configInHouseFunc];
+    });
+}
+
+// 是否在内测版本开启某些功能
+- (void)configInHouseFunc {
+    // 内测泄漏检测-企业包
+    if ([TTSandBoxHelper isInHouseApp] && NSClassFromString(@"FHDebugTools")) {
+        Class cls = NSClassFromString(@"FHDebugTools");
+        id instance = [[cls alloc] init];
+        [instance performSelector:@selector(configMemLeaks)];
+    }
 }
 
 + (void)makeKeyWindowVisible {

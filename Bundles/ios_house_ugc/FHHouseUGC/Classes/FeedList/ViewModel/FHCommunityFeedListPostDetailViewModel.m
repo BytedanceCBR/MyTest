@@ -83,13 +83,17 @@
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
                                 cellModel.showCommunity = NO;
+                                cellModel.feedVC = self.viewController;
                                 if (cellModel && [cellModel.community.socialGroupId isEqualToString:self.viewController.forumId]) {
                                     //去重逻辑
                                     [self removeDuplicaionModel:cellModel.groupId];
-                                    //找到第一个非置顶贴的下标
-                                    __block NSUInteger index = 0;
+                                    // JOKER: 找到第一个非置顶贴的下标
+                                    __block NSUInteger index = self.dataList.count;
                                     [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                                        if(!cellModel.isStick) {
+                                        
+                                        BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
+                                        
+                                        if(!isStickTop) {
                                             index = idx;
                                             *stop = YES;
                                         }
@@ -425,6 +429,7 @@
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        cellModel.showCommunity = NO;
         BOOL isTop = [userInfo[@"isTop"] boolValue];
         [self topCell:cellModel isTop:isTop];
     }
@@ -434,7 +439,16 @@
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
-        [self refreshCell:cellModel];
+        NSInteger row = [self getCellIndex:cellModel];
+        
+        if(row < self.dataList.count && row >= 0){
+            FHFeedUGCCellModel *originCellModel = self.dataList[row];
+            originCellModel.isStick = cellModel.isStick;
+            originCellModel.stickStyle = cellModel.stickStyle;
+            originCellModel.contentDecoration = cellModel.contentDecoration;
+            
+            [self refreshCell:originCellModel];
+        }
     }
 }
 
@@ -705,18 +719,23 @@
 - (void)topCell:(FHFeedUGCCellModel *)cellModel isTop:(BOOL)isTop {
     NSInteger row = [self getCellIndex:cellModel];
     if(row < self.dataList.count && row >= 0){
+        FHFeedUGCCellModel *originCellModel = self.dataList[row];
+        originCellModel.isStick = cellModel.isStick;
+        originCellModel.stickStyle = cellModel.stickStyle;
+        originCellModel.contentDecoration = cellModel.contentDecoration;
+        
         [self.dataList removeObjectAtIndex:row];
         if(isTop){
-            [self.dataList insertObject:cellModel atIndex:0];
+            [self.dataList insertObject:originCellModel atIndex:0];
         }else{
             if(self.dataList.count == 0){
-                [self.dataList insertObject:cellModel atIndex:0];
+                [self.dataList insertObject:originCellModel atIndex:0];
             }else{
                 for (NSInteger i = 0; i < self.dataList.count; i++) {
                     FHFeedUGCCellModel *item = self.dataList[i];
                     if(!item.isStick || (item.isStick && (item.stickStyle != FHFeedContentStickStyleTop && item.stickStyle != FHFeedContentStickStyleTopAndGood))){
                         //找到第一个不是置顶的cell
-                        [self.dataList insertObject:cellModel atIndex:i];
+                        [self.dataList insertObject:originCellModel atIndex:i];
                         break;
                     }
                 }

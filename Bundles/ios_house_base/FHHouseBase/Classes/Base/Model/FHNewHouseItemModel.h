@@ -95,6 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *total;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
+@property (nonatomic, assign) NSInteger offset;
 
 @end
 

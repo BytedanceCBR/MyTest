@@ -33,6 +33,7 @@
 
 @property(nonatomic, strong) FHMessageViewModel *viewModel;
 @property(nonatomic, strong) FHPushMessageTipView *pushTipView;
+@property (nonatomic, copy)     NSString       *enter_from;// 外部传入
 
 @end
 
@@ -43,7 +44,7 @@
     // Do any additional setup after loading the view.
     self.showenRetryButton = YES;
     self.ttTrackStayEnable = YES;
-    
+    self.enter_from = self.tracerDict[UT_ENTER_FROM];
     [self initNavbar];
     [self initView];
     [self initConstraints];
@@ -240,6 +241,9 @@
 - (void)initViewModel {
     _viewModel = [[FHMessageViewModel alloc] initWithTableView:_tableView controller:self];
     [_viewModel setPageType:[self getPageType]];
+    if (self.enter_from.length > 0) {
+        [_viewModel setEnterFrom:self.enter_from];
+    }
 }
 
 - (NSString *)getPageType {

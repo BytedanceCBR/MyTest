@@ -20,6 +20,8 @@
 #import "TTAsyncCornerImageView+VerifyIcon.h"
 #import "NSDictionary+TTAdditions.h"
 #import "NSStringAdditions.h"
+#import "TTSandBoxHelper.h"
+#import "TTIndicatorView.h"
 
 @interface AWEVideoCommentCell () <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
@@ -33,6 +35,7 @@
 @property (nonatomic, strong) UILabel *timeLabel;
 @property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UIButton *likeButton;
+@property (nonatomic, strong) UILabel *debugGidLabel;             //debug gid
 
 @end
 
@@ -105,6 +108,20 @@
         [self.commentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.userLabel.mas_bottom).offset(8);
             make.left.equalTo(@60);
+            make.right.equalTo(self.mas_right).offset(-15);
+        }];
+        
+        self.debugGidLabel = [UILabel new];
+        self.debugGidLabel.hidden = YES;
+        self.debugGidLabel.text = nil;
+        self.debugGidLabel.numberOfLines = 0;
+        self.debugGidLabel.font = [UIFont systemFontOfSize:12.0];
+        self.debugGidLabel.textColor = [UIColor tt_themedColorForKey:@"red1"];
+        [self addSubview:self.debugGidLabel];
+        [self.debugGidLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.userLabel.mas_bottom).offset(-5);
+            make.left.mas_equalTo(60);
+            make.height.mas_equalTo(15);
             make.right.equalTo(self.mas_right).offset(-15);
         }];
         
@@ -221,7 +238,26 @@
 //        return [TTVerifyIconHelper tt_newSize:standardSize];
 //    }];
     [self.thumbView showOrHideVerifyViewWithVerifyInfo:self.commentModel.userAuthInfo decoratorInfo:self.commentModel.userDecoration sureQueryWithID:NO userID:nil disableNightCover:NO];
+    [self refreshDebugGidLabelWithCommentModel:model];
     [self setNeedsLayout];
+}
+
+- (void)refreshDebugGidLabelWithCommentModel:(AWECommentModel *)model {
+    if ([TTSandBoxHelper isInHouseApp] && [self shouldShowDebug]) {
+        self.debugGidLabel.hidden = NO;
+        if (model.replyToComment) {
+            // 回复的id
+            self.debugGidLabel.text = [NSString stringWithFormat:@"replygid:%@",model.replyToComment.id];
+        } else {
+            self.debugGidLabel.text = [NSString stringWithFormat:@"gid:%@",model.id];
+        }
+    } else {
+        self.debugGidLabel.hidden = YES;
+    }
+}
+
+- (BOOL)shouldShowDebug {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"kUGCDebugConfigKey"];
 }
 
 - (void)refreshCellWithDiggModel:(AWECommentModel *)model cancelDigg:(BOOL)cancelDigg
@@ -331,6 +367,14 @@
 
 - (void)cellLongPress:(UILongPressGestureRecognizer*)sender
 {
+    if ([TTSandBoxHelper isInHouseApp] && [self shouldShowDebug]) {
+        if (sender.state == UIGestureRecognizerStateBegan) {
+            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+            pasteboard.string = [NSString stringWithFormat:@"%@", self.debugGidLabel.text];
+            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
+        }
+        return;
+    }
     if (sender.state == UIGestureRecognizerStateBegan) {
         __weak typeof(self) weakSelf = self;
         if ([TTDeviceHelper OSVersionNumber] >= 8.0) {
