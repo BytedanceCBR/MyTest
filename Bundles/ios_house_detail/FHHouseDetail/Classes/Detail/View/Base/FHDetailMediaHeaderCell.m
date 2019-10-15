@@ -120,7 +120,7 @@
     FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
     FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderModel *)self.currentData).vrModel;
     
-    if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]]) {
+    if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
         FHMultiMediaItemModel *itemModelVR = [[FHMultiMediaItemModel alloc] init];
         itemModelVR.mediaType = FHMultiMediaTypeVRPicture;
         

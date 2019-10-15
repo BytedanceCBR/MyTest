@@ -20,8 +20,8 @@
     
     __weak __typeof(self) weakSelf = self;
     [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
-        [_maskLoadingView removeFromSuperview];
-        [self.ssWebView.ssWebContainer tt_endUpdataData];
+        [weakSelf.maskLoadingView removeFromSuperview];
+        [weakSelf.ssWebView.ssWebContainer tt_endUpdataData];
     } forMethodName:@"closeLoading"];
     // Do any additional setup after loading the view.
 }
