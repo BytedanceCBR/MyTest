@@ -150,6 +150,8 @@
     UIView *sepLine = [[UIView alloc] initWithFrame:CGRectMake(0, 3.5, 0.5, 10)];
     sepLine.backgroundColor = [UIColor whiteColor];
     [self.userCountBgView addSubview:sepLine];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoSocialFollowUserList:)];
+    [self.userCountBgView addGestureRecognizer:tap];
     
     self.userCountLabel = [UILabel new];
     self.userCountLabel.font = [UIFont themeFontRegular:12];
@@ -333,6 +335,11 @@
     if(self.gotoPublicationsDetailBlock) {
         self.gotoPublicationsDetailBlock();
     }
+}
+
+// 小区圈关注列表
+- (void)gotoSocialFollowUserList: (UITapGestureRecognizer *)gesture {
+    
 }
 
 -(void)gotoOperationDetail:(UITapGestureRecognizer *)tap {
