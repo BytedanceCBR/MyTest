@@ -119,11 +119,6 @@
     NSArray *houseImageDict = ((FHDetailMediaHeaderModel *)self.currentData).houseImageDictList;
     FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
     FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderModel *)self.currentData).vrModel;
-    if (vedioModel && vedioModel.videoID.length > 0) {
-        self.vedioCount = 1;
-        [itemArray addObject:vedioModel];
-    }
-    
     
     if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]]) {
         FHMultiMediaItemModel *itemModelVR = [[FHMultiMediaItemModel alloc] init];
@@ -135,6 +130,11 @@
         itemModelVR.groupType = @"VR";
         [itemArray addObject:itemModelVR];
         [self.imageList addObject:itemModelVR];
+    }
+    
+    if (vedioModel && vedioModel.videoID.length > 0) {
+        self.vedioCount = 1;
+        [itemArray addObject:vedioModel];
     }
     
     for (FHDetailOldDataHouseImageDictListModel *listModel in houseImageDict) {
@@ -209,7 +209,10 @@
             return;
         }
         
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=http://f-boe.bytedance.net/f100/activity/client/pano"]];
+        if (vrModel.openUrl) {
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",vrModel.openUrl]]];
+        }
+
         return;
     }
     
