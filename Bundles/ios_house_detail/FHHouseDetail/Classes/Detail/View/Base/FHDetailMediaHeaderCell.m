@@ -15,6 +15,8 @@
 #import "FHMultiMediaVideoCell.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <NSString+URLEncoding.h>
+#import <FHUtils.h>
+
 @interface FHDetailMediaHeaderCell ()<FHMultiMediaScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
 @property(nonatomic, strong) FHMultiMediaScrollView *mediaView;
@@ -210,7 +212,17 @@
         }
         
         if (vrModel.openUrl) {
-            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",[vrModel.openUrl URLEncodedString]]]];
+            NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
+            NSMutableDictionary *param = [NSMutableDictionary new];
+            param[UT_ELEMENT_TYPE] = @"happiness_eye_tip";
+            param[@"enter_from"] = tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+            param[UT_ELEMENT_FROM] = tracerDict[UT_ELEMENT_FROM]?:UT_BE_NULL;
+            param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+            param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
+            param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;
+            NSString *reportParams = [FHUtils getJsonStrFrom:param];
+            NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@",vrModel.openUrl,reportParams];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",[openUrl URLEncodedString]]]];
         }
 
         return;
