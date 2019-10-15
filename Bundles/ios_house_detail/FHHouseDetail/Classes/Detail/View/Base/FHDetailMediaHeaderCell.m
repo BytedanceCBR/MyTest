@@ -14,7 +14,7 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "FHMultiMediaVideoCell.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
-
+#import <NSString+URLEncoding.h>
 @interface FHDetailMediaHeaderCell ()<FHMultiMediaScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
 @property(nonatomic, strong) FHMultiMediaScrollView *mediaView;
@@ -210,7 +210,7 @@
         }
         
         if (vrModel.openUrl) {
-            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",vrModel.openUrl]]];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",[vrModel.openUrl URLEncodedString]]]];
         }
 
         return;
