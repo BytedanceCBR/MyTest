@@ -174,7 +174,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSearchHouseVRModel : JSONModel
 
-@property (nonatomic, assign , nullable) BOOL hasVr;
+@property (nonatomic, assign) BOOL hasVr;
 
 @end
 

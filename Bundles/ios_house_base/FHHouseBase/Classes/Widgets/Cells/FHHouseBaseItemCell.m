@@ -482,6 +482,7 @@
     }];
     
     [self.leftInfoView addSubview:self.vrLoadingView];
+    self.vrLoadingView.hidden = YES;
 //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
     [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;

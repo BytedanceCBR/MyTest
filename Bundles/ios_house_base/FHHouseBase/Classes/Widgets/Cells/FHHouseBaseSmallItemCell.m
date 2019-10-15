@@ -328,6 +328,7 @@
     }];
     
     [self.leftInfoView addSubview:self.vrLoadingView];
+    self.vrLoadingView.hidden = YES;
     //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
     [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -772,8 +773,12 @@
         self.tagLabel.attributedText =  attributeString;
     }
 
-    if (_vrLoadingView) {
+    if (_vrLoadingView && model.vrInfo.hasVr) {
+        _vrLoadingView.hidden = NO;
         [_vrLoadingView play];
+    }else
+    {
+        _vrLoadingView.hidden = YES;
     }
     
     self.priceLabel.text = model.displayPrice;
