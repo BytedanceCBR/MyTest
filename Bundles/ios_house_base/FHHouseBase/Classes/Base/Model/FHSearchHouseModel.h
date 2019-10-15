@@ -172,6 +172,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *textColor;
 @end
 
+@interface FHSearchHouseVRModel : JSONModel
+
+@property (nonatomic, assign , nullable) BOOL hasVr;
+
+@end
+
 @interface  FHSearchHouseDataItemsModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
@@ -190,6 +196,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *cellStyle;
 @property (nonatomic, copy , nullable) NSString *displayPrice;
 @property (nonatomic, strong, nullable) FHHouseItemHouseExternalModel *externalInfo;
+@property (nonatomic, strong, nullable) FHSearchHouseVRModel *vrInfo;
 @property (nonatomic, copy , nullable) FHSearchHouseDataItemsFakeReasonModel *fakeReason;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsBaseInfoMapModel *baseInfoMap ;
 @property (nonatomic, strong , nullable) NSArray<FHHouseCoreInfoModel> *coreInfo;
