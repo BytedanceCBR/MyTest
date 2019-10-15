@@ -11,6 +11,7 @@
 #import <Masonry.h>
 #import <UIImageView+BDWebImage.h>
 #import "FHUGCModel.h"
+#import <UIView+XWAddForRoundedCorner.h>
 
 #define iconWidth 50
 
@@ -27,7 +28,6 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor whiteColor];
         [self initView];
         [self initConstains];
     }
@@ -46,16 +46,18 @@
 }
 
 - (void)initView {
+    self.backgroundColor = [UIColor whiteColor];
     self.layer.masksToBounds = YES;
-    self.layer.cornerRadius = 4;
+    [self xw_roundedCornerWithRadius:4 cornerColor:[UIColor themeGray7]];
     
     self.icon = [[UIImageView alloc] init];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
-    _icon.layer.cornerRadius = 4;
+//    _icon.layer.cornerRadius = 4;
     _icon.backgroundColor = [UIColor themeGray7];
-    _icon.layer.borderWidth = 0.5;
-    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
+//    _icon.layer.borderWidth = 0.5;
+//    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
+    [_icon xw_roundedCornerWithCornerRadii:CGSizeMake(4, 4) cornerColor:[UIColor whiteColor] corners:UIRectCornerAllCorners borderColor:[UIColor themeGray6] borderWidth:0.5];
     [self.contentView addSubview:_icon];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
@@ -93,6 +95,8 @@
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
     label.textColor = textColor;
+    label.layer.masksToBounds = YES;
+    label.backgroundColor = [UIColor whiteColor];
     return label;
 }
 

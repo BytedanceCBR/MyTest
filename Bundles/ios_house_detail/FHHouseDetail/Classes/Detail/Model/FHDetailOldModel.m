@@ -84,6 +84,23 @@
 }
 @end
 
+@implementation FHDetailOldDataNeighborhoodInfoSchoolConsult
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"openUrl": @"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+
 @implementation FHDetailOldDataNeighborhoodInfoModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -105,6 +122,9 @@
                            @"gaodeImageUrl": @"gaode_image_url",
                            @"evaluationInfo": @"evaluation_info",
                            @"schoolDictList": @"school_dict_list",
+                           @"useSchoolIm": @"use_school_im",
+                           @"schoolConsult": @"school_consult",
+
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -351,7 +371,54 @@
 }
 @end
 
+@implementation FHDetailDataBaseExtraBudgetModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"baseTitle": @"base_title",
+                           @"baseContent":@"base_content",
+                           @"openUrl":@"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailDataBaseExtraFloorInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"baseTitle": @"base_title",
+                           @"baseContent":@"base_content",
+                           @"extraContent":@"extra_content",
+                           @"openUrl":@"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailDataBaseExtraModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"floorInfo": @"floor_info",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {

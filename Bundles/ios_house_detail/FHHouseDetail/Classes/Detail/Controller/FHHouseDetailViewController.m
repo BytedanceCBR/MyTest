@@ -132,7 +132,6 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     [self setupCallCenter];
-    [self startLoadData];
     self.isViewDidDisapper = NO;
     
     if(![SSCommonLogic disableDetailInstantShow] && [TTReachability isNetworkConnected]){
@@ -145,7 +144,9 @@
     }else{
         self.instantData = nil;
     }
-        
+    
+    [self startLoadData];
+    
     if (!self.isDisableGoDetail) {
         [self.viewModel addGoDetailLog];
     }
@@ -404,6 +405,12 @@
                 }
             }
         }
+    }
+    
+    id tracerLogPb = self.tracerDict[@"log_pb"];
+    //IM 新房等进入时log_pb 是字符串
+    if ([tracerLogPb isKindOfClass:[NSString class]]) {
+        self.tracerDict[@"log_pb"] = self.tracerModel.logPb;
     }
     
     // rank字段特殊处理：外部可能传入字段为rank和index不同类型的数据

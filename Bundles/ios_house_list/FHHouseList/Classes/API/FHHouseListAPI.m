@@ -47,9 +47,9 @@
 + (TTHttpTask *)requestRelatedHouseSearchWithQuery:(NSString *)query houseId:(NSString *)houseId offset:(NSInteger)offset count:(NSInteger)count class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
 {
     NSString *queryPath = @"/f100/api/related_house";
-    queryPath = [NSString stringWithFormat:@"%@?house_id%@&offset=%ld",queryPath, houseId ?: @"",offset];
+    queryPath = [NSString stringWithFormat:@"%@?house_id=%@&offset=%ld",queryPath, houseId ?: @"",offset];
     if (query.length > 0) {
-        queryPath = [NSString stringWithFormat:@"%@?%@",queryPath,query];
+        queryPath = [NSString stringWithFormat:@"%@%@",queryPath,query];
     }
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"house_id"] = houseId ?: @"";
@@ -103,7 +103,7 @@
         qparam[@"suggestion_params"] = sugParam;
     }
     
-    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
+    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls logPath:@"search_second" completion:completion];
     
 }
 
@@ -230,7 +230,7 @@
  */
 +(TTHttpTask *)searchNeighborhoodDealList:(NSString *_Nullable)query searchType:(NSString *)searchType offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion
 {
-    NSString *queryPath = @"/f100/api/search_neighborhood_deal?";
+    NSString *queryPath = @"/f100/api/search_neighborhood_deal";
     
     NSMutableDictionary *qparam = [NSMutableDictionary new];
     if (query.length > 0) {

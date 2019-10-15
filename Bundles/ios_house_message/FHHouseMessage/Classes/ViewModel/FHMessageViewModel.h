@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setPageType:(NSString *)pageType;
 
+- (void)setEnterFrom:(NSString *)enterFrom;
+
 @end
 
 NS_ASSUME_NONNULL_END

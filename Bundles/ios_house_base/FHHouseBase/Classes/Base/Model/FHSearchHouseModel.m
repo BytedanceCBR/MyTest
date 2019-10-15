@@ -361,6 +361,7 @@
                            @"displayBuiltYear": @"display_built_year",
                            @"displayTitle": @"display_title",
                            @"houseImageTag": @"house_image_tag",
+                           @"houseTitleTag": @"title_tag",
                            @"displayDescription": @"display_description",
                            @"displayPricePerSqm": @"display_price_per_sqm",
                            @"uploadAt": @"upload_at",

@@ -52,6 +52,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshCurrentCell;
 
+- (void)refreshCell:(FHFeedUGCCellModel *)cellModel;
+
+- (NSInteger)getCellIndex:(FHFeedUGCCellModel *)cellModel;
+
 // 小视频
 - (UIView *)currentSelectSmallVideoView;
 

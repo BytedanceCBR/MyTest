@@ -87,7 +87,7 @@ extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
 extern NSDictionary *ttvs_videoMidInsertADDict(void);
 extern NSInteger ttvs_getVideoMidInsertADReqStartTime(void);
 extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
-
+extern NSString *const BOE_OPEN_KEY ;
 
 @interface SSDebugViewController () {
     
@@ -375,7 +375,13 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         item71.switchStyle = YES;
         item71.checked = [self _shouldAllowHttps];
         item71.switchAction = @selector(_httpsSettingActionFired:);
-        STTableViewSectionItem *section7 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"Https 开关" items:@[item71]];
+        
+        STTableViewCellItem *item72 = [[STTableViewCellItem alloc] initWithTitle:@"BOE开关" target:self action:nil];
+        item72.switchStyle = YES;
+        item72.checked = [self.class isBOEOn];
+        item72.switchAction = @selector(switchBOE:);
+        
+        STTableViewSectionItem *section7 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"网络 开关" items:@[item71,item72]];
         
         [dataSource addObject:section7];
     }
@@ -1410,6 +1416,18 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"kHttpsSettingSwitchKey"];
 }
 
+-(void)switchBOE:(UISwitch *)sw
+{
+    BOOL isOn = [self.class isBOEOn];
+    [[NSUserDefaults standardUserDefaults] setBool:!isOn forKey:BOE_OPEN_KEY];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++(BOOL)isBOEOn
+{
+    return [[NSUserDefaults standardUserDefaults]boolForKey:BOE_OPEN_KEY];
+}
+
 static SSDebugItems _supportedItems = SSDebugItemController;
 + (BOOL)supportDebugItem:(SSDebugItems)debugItem {
 #if INHOUSE
@@ -1470,3 +1488,5 @@ static SSDebugSubitems _suppertedSubitems = SSDebugSubitemAll;
 #endif
 
 #endif
+
+NSString *const BOE_OPEN_KEY = @"BOE_OPEN_KEY";

@@ -14,6 +14,9 @@
 #import "TTPhotoScrollViewController.h"
 #import "TTBaseMacro.h"
 #import "TTInteractExitHelper.h"
+#import <TTImageView+TrafficSave.h>
+#import <FHUGCCellHelper.h>
+#import <UIView+XWAddForRoundedCorner.h>
 
 #define itemPadding 4
 #define kMaxCount 9
@@ -49,16 +52,18 @@
 
 - (void)initViews {
     for (NSInteger i = 0; i < self.count; i++) {
-        UIImageView *imageView = [[UIImageView alloc] init];
+        TTImageView *imageView = [[TTImageView alloc] initWithFrame:CGRectZero];
         imageView.clipsToBounds = YES;
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
+//        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
         imageView.backgroundColor = [UIColor themeGray6];
-        imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
-        imageView.layer.borderWidth = 0.5;
+//        imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
+//        imageView.layer.borderWidth = 0.5;
         imageView.layer.masksToBounds = YES;
-        imageView.layer.cornerRadius = 4;
+//        imageView.layer.cornerRadius = 4;
         imageView.hidden = YES;
         imageView.tag = i;
+        [imageView xw_roundedCornerWithCornerRadii:CGSizeMake(4, 4) cornerColor:[UIColor whiteColor] corners:UIRectCornerAllCorners borderColor:[UIColor themeGray6] borderWidth:0.5];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTaped:)];
         [imageView addGestureRecognizer:tap];
         [self addSubview:imageView];
@@ -158,7 +163,7 @@
     self.largeImageList = largeImageList;
     
     for (NSInteger i = 0; i < self.imageViewList.count; i++) {
-        UIImageView *imageView = self.imageViewList[i];
+        TTImageView *imageView = self.imageViewList[i];
         if(i < imageList.count){
             FHFeedContentImageListModel *imageModel = imageList[i];
             
@@ -171,7 +176,14 @@
                     continue;
                 }
             }
-            [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+//            [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+            if (imageModel && imageModel.url.length > 0) {
+                TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
+                __weak typeof(imageView) wImageView = imageView;
+                [imageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
+                    [wImageView setImage:nil];
+                }];
+            }
             //只对单图做重新布局，多图都是1：1
             if(self.count == 1 && !self.fixedSingleImage){
                 self.viewHeight = self.imageWidth * height/width;
@@ -212,8 +224,8 @@
         return;
     }
     
-    UIImageView *view = (UIImageView *)tap.view;
-    if (view.image == nil) {
+    TTImageView *view = (UIImageView *)tap.view;
+    if (view.imageView.image == nil) {
         return;
     }
     [self imageTouched:tap.view];
@@ -251,7 +263,7 @@
     [controller setStartWithIndex:sender.tag];
     
     NSMutableArray * frames = [NSMutableArray arrayWithCapacity:9];
-    for (UIImageView *view in self.imageViewList) {
+    for (TTImageView *view in self.imageViewList) {
         CGRect frame = [view convertRect:view.bounds toView:nil];
         [frames addObject:[NSValue valueWithCGRect:frame]];
     }
@@ -268,10 +280,10 @@
     }
     for (NSInteger i = 0; i < picCount; i++) {
         if(i < self.imageViewList.count){
-            UIImageView *View = self.imageViewList[i];
+            TTImageView *view = self.imageViewList[i];
             //  此处需要优化
-            if (View.image) {
-                [photoObjs addObject:View.image];
+            if (view.imageView.image) {
+                [photoObjs addObject:view.imageView.image];
             }
         }
     }

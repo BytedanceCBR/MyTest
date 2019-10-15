@@ -465,10 +465,13 @@
                                             if (self.dataList.count == 0) {
                                                 self.hasMore = NO;
                                             }
-                                            //找到第一个非置顶贴的下标
-                                            __block NSUInteger index = 0;
+                                            // JOKER: 找到第一个非置顶贴的下标
+                                            __block NSUInteger index = self.dataList.count;
                                             [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                                                if(!cellModel.isStick) {
+                                                
+                                                BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
+                                                
+                                                if(!isStickTop) {
                                                     index = idx;
                                                     *stop = YES;
                                                 }
@@ -687,7 +690,6 @@
     
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    self.needRefreshCell = YES;
 }
 
 - (UIView *)currentSelectSmallVideoView {

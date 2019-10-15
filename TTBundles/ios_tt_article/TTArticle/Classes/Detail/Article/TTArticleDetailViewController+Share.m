@@ -755,6 +755,17 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
             }
         } else {
             label = @"unfavorite_button";
+            //新增取消收藏打点 by xsm
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+            [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+            [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+            //        [params setValue:model.userID.stringValue forKey:@"user_id"];
+            [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
+            [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
+            [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
+            [params setValue:@"detail" forKey:@"position"];
+            [TTTrackerWrapper eventV3:@"rt_unfavourite" params:params];
             // 原来的打点方法
             [self report_p_sendDetailLogicTrackWithLabel:label];
             [self.itemActionManager unfavoriteForOriginalData:self.detailModel.article adID:self.detailModel.adID finishBlock:nil];

@@ -110,10 +110,13 @@
                                     //去重逻辑
                                     [self removeDuplicaionModel:cellModel.groupId];
                                     
-                                    //找到第一个非置顶贴的下标
-                                    __block NSUInteger index = 0;
+                                    // JOKER: 找到第一个非置顶贴的下标
+                                    __block NSUInteger index = self.dataList.count;
                                     [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                                        if(!cellModel.isStick) {
+                                        
+                                        BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
+                                        
+                                        if(!isStickTop) {
                                             index = idx;
                                             *stop = YES;
                                         }
@@ -711,7 +714,6 @@
     
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    self.needRefreshCell = YES;
 }
 
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
@@ -745,16 +747,6 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
     }
-}
-
-- (NSInteger)getCellIndex:(FHFeedUGCCellModel *)cellModel {
-    for (NSInteger i = 0; i < self.dataList.count; i++) {
-        FHFeedUGCCellModel *model = self.dataList[i];
-        if([model.groupId isEqualToString:cellModel.groupId]){
-            return i;
-        }
-    }
-    return -1;
 }
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {

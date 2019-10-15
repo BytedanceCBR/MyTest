@@ -523,17 +523,16 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 
 - (void)sendAnswer {
     if (self && [TTAccountManager isLogin] && self.qid.length > 0) {
-//        BOOL containsImage = !SSIsEmptyArray(self.addImagesView.selectedImageCacheTasks);
+        __weak typeof(self) wself = self;
         self.sendingIndicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView indicatorText:NSLocalizedString(@"正在发送...", nil) indicatorImage:nil dismissHandler:^(BOOL isUserDismiss){
             if (isUserDismiss) {
                 //点击取消按钮
-                [self cancelImageUpload];
+                [wself cancelImageUpload];
             }
         }];
         self.sendingIndicatorView.autoDismiss = NO;
         self.sendingIndicatorView.showDismissButton = YES;
         [self.sendingIndicatorView showFromParentView:nil];
-        __weak typeof(self) wself = self;
         [self postAnswerWithApiParam:self.apiParam source:self.source listEntrance:self.listEntrance imageUploadComplete:^{
             //图片上传成功，隐藏关闭按钮
             [wself.sendingIndicatorView updateIndicatorWithText:NSLocalizedString(@"上传成功，加载中...", nil) shouldRemoveWaitingView:NO];

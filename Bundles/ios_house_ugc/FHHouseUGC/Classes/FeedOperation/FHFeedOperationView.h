@@ -8,6 +8,7 @@
 #import "TTFeedPopupView.h"
 #import "TTFeedDislikeConfig.h"
 #import "FHFeedOperationOption.h"
+#import <FHUGCConfigModel.h>
 
 //NS_ASSUME_NONNULL_BEGIN
 //
@@ -50,6 +51,11 @@ typedef NS_ENUM(NSInteger, TTFeedDislikeViewPushFrom) {
 @property (nonatomic, strong, nullable) NSDictionary *extrasDict;
 @property (nonatomic, strong, nullable) NSDictionary *trackExtraDict; // 埋点透传字段(modern模式使用)
 @property (nonatomic, assign)           BOOL dislikeFilterFlag;  //https://wiki.bytedance.net/pages/viewpage.action?pageId=175543655
+@property(nonatomic, strong, nullable) NSArray <FHUGCConfigDataPermissionModel> *permission;
+//是否置顶
+@property (nonatomic, assign) BOOL isTop;
+//是否加精
+@property (nonatomic, assign) BOOL isGood;
 @end
 
 //------------------------------------------------------------------

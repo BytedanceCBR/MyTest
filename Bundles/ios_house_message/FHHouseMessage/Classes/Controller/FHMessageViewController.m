@@ -27,11 +27,13 @@
 #import <FHCHousePush/FHPushAuthorizeHelper.h>
 #import <FHCHousePush/FHPushMessageTipView.h>
 #import <FHHouseBase/FHBaseTableView.h>
+#import <FHMessageNotificationManager.h>
 
 @interface FHMessageViewController ()
 
 @property(nonatomic, strong) FHMessageViewModel *viewModel;
 @property(nonatomic, strong) FHPushMessageTipView *pushTipView;
+@property (nonatomic, copy)     NSString       *enter_from;// 外部传入
 
 @end
 
@@ -42,7 +44,7 @@
     // Do any additional setup after loading the view.
     self.showenRetryButton = YES;
     self.ttTrackStayEnable = YES;
-    
+    self.enter_from = self.tracerDict[UT_ENTER_FROM];
     [self initNavbar];
     [self initView];
     [self initConstraints];
@@ -50,6 +52,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:kReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 //     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(periodicalFetchUnreadMessage:) name:kPeriodicalFetchUnreadMessage object:nil];
 }
 
 - (void)applicationDidBecomeActive
@@ -63,6 +67,11 @@
     [self.pushTipView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(pushTipHeight);
     }];
+}
+
+
+- (void)periodicalFetchUnreadMessage:(NSNotification *)notification {
+    [self startLoadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -232,6 +241,9 @@
 - (void)initViewModel {
     _viewModel = [[FHMessageViewModel alloc] initWithTableView:_tableView controller:self];
     [_viewModel setPageType:[self getPageType]];
+    if (self.enter_from.length > 0) {
+        [_viewModel setEnterFrom:self.enter_from];
+    }
 }
 
 - (NSString *)getPageType {

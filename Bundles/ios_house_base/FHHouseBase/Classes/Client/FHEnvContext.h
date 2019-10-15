@@ -39,7 +39,7 @@ static NSString *const kTracerEventType = @"house_app2c_v2";
 static NSString *const kFHSwitchGetLightFinishedNotification = @"k_fh_get_light_finish";
 
 @class FHMessageManager;
-
+@class TTReachability;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHEnvContext : NSObject
@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
 @property (nonatomic , strong) FHMessageManager *messageManager;
-
+@property (nonatomic, strong , readonly) TTReachability *reachability;
 //第二个tab小红点显示逻辑，非ugc情况下
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL isShowDots;
