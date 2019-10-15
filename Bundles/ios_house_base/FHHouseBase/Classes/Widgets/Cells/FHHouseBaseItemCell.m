@@ -675,6 +675,8 @@
             
             self.imageTagLabelBgView.hidden = YES;
         }
+        
+        
     
         
     } else if (houseType == FHHouseTypeRentHouse) {
@@ -760,8 +762,14 @@
             self.imageTagLabelBgView.hidden = YES;
         }
     
-        [self.vrLoadingView play];
-        
+        if (_vrLoadingView && commonModel.vrInfo.hasVr) {
+            _vrLoadingView.hidden = NO;
+            [_vrLoadingView play];
+            self.houseVideoImageView.hidden = YES;
+        }else
+        {
+            _vrLoadingView.hidden = YES;
+        }
     } else if (houseType == FHHouseTypeRentHouse) {
         
         self.mainTitleLabel.text = commonModel.title;

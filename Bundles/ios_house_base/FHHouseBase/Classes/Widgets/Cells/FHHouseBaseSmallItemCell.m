@@ -776,6 +776,7 @@
     if (_vrLoadingView && model.vrInfo.hasVr) {
         _vrLoadingView.hidden = NO;
         [_vrLoadingView play];
+        self.houseVideoImageView.hidden = YES;
     }else
     {
         _vrLoadingView.hidden = YES;
