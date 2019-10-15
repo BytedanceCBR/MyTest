@@ -704,6 +704,48 @@
       "font_class": "deletecopyx",
       "unicode": "e6bb",
       "unicode_decimal": 59067
+    },
+    {
+      "icon_id": "11103247",
+      "name": "icon_delete_light_normal@3x",
+      "font_class": "icon_delete_light_normalx",
+      "unicode": "e6be",
+      "unicode_decimal": 59070
+    },
+    {
+      "icon_id": "11103248",
+      "name": "icon_jubao_light_normal@3x",
+      "font_class": "icon_jubao_light_normalx",
+      "unicode": "e6bf",
+      "unicode_decimal": 59071
+    },
+    {
+      "icon_id": "11103249",
+      "name": "icon_top_light_normal@3x",
+      "font_class": "icon_top_light_normalx",
+      "unicode": "e6c0",
+      "unicode_decimal": 59072
+    },
+    {
+      "icon_id": "11103250",
+      "name": "icon_jiajing_light_normal@3x",
+      "font_class": "icon_jiajing_light_normalx",
+      "unicode": "e6c1",
+      "unicode_decimal": 59073
+    },
+    {
+      "icon_id": "11103251",
+      "name": "icon_zijian_light_normal@3x",
+      "font_class": "icon_zijian_light_normalx",
+      "unicode": "e6c2",
+      "unicode_decimal": 59074
+    },
+    {
+      "icon_id": "11287894",
+      "name": "发送@2x",
+      "font_class": "fasongx",
+      "unicode": "e6c3",
+      "unicode_decimal": 59075
     }
   ]
 }

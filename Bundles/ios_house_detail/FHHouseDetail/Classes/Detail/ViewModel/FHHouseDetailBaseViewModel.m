@@ -20,6 +20,7 @@
 #import <FHHouseBase/FHURLSettings.h>
 #import "FHHouseDetailAPI.h"
 #import <TTReachability/TTReachability.h>
+#import "FHDetailQuestionPopView.h"
 
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -134,6 +135,39 @@
 -(BOOL)currentIsInstantData
 {
     return NO;
+}
+
+- (void)setQuestionBtn:(FHDetailQuestionButton *)questionBtn
+{
+    _questionBtn = questionBtn;
+    [_questionBtn.btn addTarget:self action:@selector(questionBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)questionBtnDidClick:(UIButton *)btn
+{
+    // add by zjing for test
+    FHDetailQuestionPopMenuItem *item = [[FHDetailQuestionPopMenuItem alloc]init];
+    item.title = @"你好，方便介绍一下这套房子的情况吗？take my hands and take my whole life too";
+    NSMutableArray *menus = @[].mutableCopy;
+    [menus addObject:item];
+    [menus addObject:item];
+    [menus addObject:item];
+    
+    [menus addObject:item];
+    [menus addObject:item];
+    [menus addObject:item];
+    
+    __weak typeof(self)wself = self;
+    FHDetailQuestionPopView *popView = [[FHDetailQuestionPopView alloc]init];
+    [popView updateTitle:@"提问啦"];
+    popView.menus = menus;
+    popView.completionBlock = ^{
+        wself.questionBtn.hidden = NO;
+        wself.questionBtn.isFold = YES;
+    };
+    UIView *view = self.questionBtn;
+    [popView showAtPoint:view.origin parentView:self.detailController.view];
+    self.questionBtn.hidden = YES;
 }
 
 #pragma mark - 需要子类实现的方法
@@ -316,6 +350,34 @@
     self.lastPointOffset = offset;
     
     [self.detailController refreshContentOffset:scrollView.contentOffset];
+    
+    self.questionBtn.left = [UIScreen mainScreen].bounds.size.width - 24;
+    self.questionBtn.userInteractionEnabled = NO;
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (scrollView != self.tableView) {
+        return;
+    }
+    [UIView animateWithDuration:0.25 animations:^{
+        self.questionBtn.right = [UIScreen mainScreen].bounds.size.width - 20;
+        self.questionBtn.userInteractionEnabled = YES;
+    }];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (decelerate) {
+        return;
+    }
+    if (scrollView != self.tableView) {
+        return;
+    }
+    [UIView animateWithDuration:0.25 animations:^{
+        self.questionBtn.right = [UIScreen mainScreen].bounds.size.width - 20;
+        self.questionBtn.userInteractionEnabled = YES;
+    }];
 }
 
 #pragma mark - 埋点

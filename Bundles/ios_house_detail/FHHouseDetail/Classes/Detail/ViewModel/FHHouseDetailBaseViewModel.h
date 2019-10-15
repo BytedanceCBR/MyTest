@@ -15,6 +15,7 @@
 #import "FHDetailNavBar.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import "FHDetailHalfPopLayer.h"
+#import "FHDetailQuestionButton.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,6 +26,9 @@ typedef enum : NSUInteger {
 } FHDetailCoreInfoErrorType;
 
 extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显示半屏弹窗
+
+
+@class FHDetailQuestionButton;
 
 @interface FHHouseDetailBaseViewModel : NSObject
 
@@ -45,6 +49,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 @property (nonatomic, strong) NSMutableArray *items;// 子类维护的数据源
 @property (nonatomic, strong)   NSObject       *detailData; // 详情页数据：FHDetailOldDataModel等
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
+@property(nonatomic , weak) FHDetailQuestionButton *questionBtn;
 
 // 子类实现
 - (void)registerCellClasses;
