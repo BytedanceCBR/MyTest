@@ -826,7 +826,6 @@
         }
         [self.mainTitleLabel.yoga markDirty];
         
->>>>>>> 05beb1f88c5741829aae7b56b98dc8e012b712d1
     } else if (houseType == FHHouseTypeRentHouse) {
         
         self.mainTitleLabel.text = commonModel.title;
