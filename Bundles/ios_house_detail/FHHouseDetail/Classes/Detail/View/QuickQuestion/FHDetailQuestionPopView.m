@@ -167,7 +167,7 @@
         make.bottom.mas_equalTo(-80 - bottomMargin);
     }];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-20);
+        make.right.mas_equalTo(-10);
         make.width.mas_equalTo(width);
         make.bottom.mas_equalTo(self.questionBtn.mas_top).mas_offset(height / 2);
         make.height.mas_equalTo(0);
@@ -293,9 +293,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     FHDetailQuestionPopItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHDetailPopCellId];
-    
     if(indexPath.row < self.menus.count) {
-
         FHDetailQuestionPopMenuItem *item = self.menus[indexPath.row];
         if ([item isKindOfClass:[FHDetailQuestionPopMenuItem class]]) {
             cell.titleLabel.text = item.title;
@@ -315,7 +313,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    if(indexPath.row < self.menus.count) {
+        FHDetailQuestionPopMenuItem *item = self.menus[indexPath.row];
+        if (![item isKindOfClass:[FHDetailQuestionPopMenuItem class]]) {
+            return;
+        }
+        if (item.itemClickBlock) {
+            item.itemClickBlock(item);
+        };
+        [self dismiss];
+    }
 }
 
 

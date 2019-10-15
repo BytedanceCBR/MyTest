@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailQuestionPopMenuItem : NSObject
 
 @property(nonatomic, copy) NSString *title;
+@property(nonatomic, strong) id model;
+@property(nonatomic, assign) NSInteger index;
+@property(nonatomic, copy) void(^itemClickBlock)(FHDetailQuestionPopMenuItem *menuItem);
 
 
 @end
