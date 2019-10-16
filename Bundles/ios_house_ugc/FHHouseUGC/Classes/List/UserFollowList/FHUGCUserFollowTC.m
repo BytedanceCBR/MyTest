@@ -18,7 +18,7 @@
 
 @interface FHUGCUserFollowTC ()
 
-@property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, strong) UILabel *nameLabel;
 @property(nonatomic, strong) UILabel *descLabel;
 @property(nonatomic, strong) UIImageView *icon;
 
@@ -38,20 +38,40 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (![data isKindOfClass:[FHUGCUserFollowDataAdminListModel class]]) {
+    if (![data isKindOfClass:[FHUGCUserFollowDataFollowListModel class]]) {
         return;
     }
     self.currentData = data;
     
-    FHUGCUserFollowDataAdminListModel *headerModel = (FHUGCUserFollowDataAdminListModel *)self.currentData;
+    FHUGCUserFollowDataFollowListModel *model = (FHUGCUserFollowDataFollowListModel *)self.currentData;
     
-//    _titleLabel.text = headerModel.socialGroupModel.socialGroupName;
-//    _descLabel.text = headerModel.socialGroupModel.countText;
-//    [self.icon bd_setImageWithURL:[NSURL URLWithString:headerModel.socialGroupModel.avatar] placeholder:nil];
-//    BOOL isFollowed = [headerModel.socialGroupModel.hasFollow boolValue];
-//    self.joinBtn.followed = isFollowed;
-//    self.joinBtn.tracerDic = headerModel.tracerDict;
-//    self.joinBtn.groupId = headerModel.socialGroupModel.socialGroupId;
+    _nameLabel.text = model.userName;
+    _descLabel.text = [NSString stringWithFormat:@"已关注：%@",model.followTime];
+    [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholder:nil];
+    if (model.followTime.length > 0) {
+        self.descLabel.hidden = NO;
+        [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.icon).offset(3);
+            make.left.mas_equalTo(self.icon.mas_right).offset(10);
+            make.right.mas_equalTo(self).offset(-10);
+            make.height.mas_equalTo(21);
+        }];
+        
+        [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(2);
+            make.left.mas_equalTo(self.nameLabel);
+            make.right.mas_equalTo(self.nameLabel);
+            make.height.mas_equalTo(19);
+        }];
+    } else {
+        self.descLabel.hidden = YES;
+        [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(self);
+            make.left.mas_equalTo(self.icon.mas_right).offset(10);
+            make.right.mas_equalTo(self).offset(-10);
+            make.height.mas_equalTo(21);
+        }];
+    }
 }
 
 
@@ -69,52 +89,45 @@
     self.icon = [[UIImageView alloc] init];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
-    _icon.layer.cornerRadius = 4;
+    _icon.layer.cornerRadius = 24;
     _icon.backgroundColor = [UIColor themeGray7];
-    _icon.layer.borderWidth = 0.5;
-    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_icon];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:15] textColor:[UIColor themeGray1]];
-    [self.contentView addSubview:_titleLabel];
+    self.nameLabel = [self LabelWithFont:[UIFont themeFontRegular:15] textColor:[UIColor themeGray1]];
+    [self.contentView addSubview:_nameLabel];
     
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self.contentView addSubview:_descLabel];
     
-    
     [self setupConstraints];
-    
-    __weak typeof(self) wSelf = self;
-    self.didClickCellBlk = ^{
-    };
 }
 
 
 - (void)setupConstraints {
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(15);
-        make.bottom.mas_equalTo(self.contentView).offset(-15);
+        make.centerY.mas_equalTo(self.contentView);
         make.left.mas_equalTo(self.contentView).offset(20);
-        make.width.height.mas_equalTo(50);
+        make.width.height.mas_equalTo(48);
     }];
     
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(21);
+    [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.icon).offset(3);
         make.left.mas_equalTo(self.icon.mas_right).offset(10);
-        make.right.mas_equalTo(self.mas_right).offset(-10);
+        make.right.mas_equalTo(self).offset(-10);
         make.height.mas_equalTo(21);
     }];
     
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(1);
-        make.left.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.titleLabel);
-        make.height.mas_equalTo(17);
+        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(2);
+        make.left.mas_equalTo(self.nameLabel);
+        make.right.mas_equalTo(self.nameLabel);
+        make.height.mas_equalTo(19);
     }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
     UILabel *label = [[UILabel alloc] init];
+    label.numberOfLines = 1;
     label.font = font;
     label.textColor = textColor;
     return label;

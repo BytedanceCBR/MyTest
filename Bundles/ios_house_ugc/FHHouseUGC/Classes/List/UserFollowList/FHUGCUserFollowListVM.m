@@ -33,6 +33,7 @@
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *followList;// 用户列表
 @property (nonatomic, strong)   NSMutableArray       *adminList;// 管理员
+@property (nonatomic, strong)   NSMutableArray       *mergedArray;
 @property (nonatomic, strong)   FHRefreshCustomFooter       *refreshFooter;
 
 @end
@@ -50,6 +51,7 @@
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.followList = [NSMutableArray array];
         self.adminList = [NSMutableArray array];
+        self.mergedArray = [NSMutableArray array];
         
         __weak typeof(self) weakSelf = self;
         
@@ -106,6 +108,13 @@
     }
     // 后处理
     if (self.adminList.count > 0 || self.followList.count > 0) {
+        [self.mergedArray removeAllObjects];
+        if (self.adminList.count > 0) {
+            [self.mergedArray addObject:self.adminList];
+        }
+        if (self.followList.count > 0) {
+            [self.mergedArray addObject:self.followList];
+        }
         self.viewController.hasValidateData = YES;
         self.viewController.ttNeedHideBottomLine = YES;
         [self.viewController.emptyView hideEmptyView];
@@ -123,35 +132,32 @@
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return self.mergedArray.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.followList.count;
+    if (section < self.mergedArray.count) {
+        NSArray *arr = self.mergedArray[section];
+        return arr.count;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    FHUGCSearchListCell *cell = (FHUGCSearchListCell *) [tableView dequeueReusableCellWithIdentifier:@"FHUGCSearchListCell" forIndexPath:indexPath];
-//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//
-//    NSInteger row = indexPath.row;
-//    if (row >= 0 && row < self.items.count) {
-//        cell.highlightedText = self.searchText;
-//        FHUGCScialGroupDataModel *data = self.items[row];
-//        // 埋点
-//        NSMutableDictionary *tracerDic = @{}.mutableCopy;
-//        tracerDic[@"card_type"] = @"left_pic";
-//        tracerDic[@"page_type"] = @"community_search";
-//        tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-//        tracerDic[@"rank"] = @(row);
-//        tracerDic[@"click_position"] = @"join_like";
-//        tracerDic[@"log_pb"] = data.logPb ?: @"be_null";
-//        cell.tracerDic = tracerDic;
-//        // 刷新数据
-//    }
-//
-//    return cell;
-    return [UITableViewCell new];
+    FHUGCUserFollowTC *cell = (FHUGCUserFollowTC *) [tableView dequeueReusableCellWithIdentifier:@"FHUGCUserFollowTC_List" forIndexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+    NSInteger row = indexPath.row;
+    NSInteger section = indexPath.section;
+    if (section < self.mergedArray.count) {
+        NSArray *data = self.mergedArray[section];
+        if (row < data.count) {
+            FHUGCUserFollowDataFollowListModel *itemData = (FHUGCUserFollowDataFollowListModel *)data[row];
+            [cell refreshWithData:itemData];
+        }
+    }
+
+    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {

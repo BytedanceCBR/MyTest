@@ -779,8 +779,8 @@ TTAccountMulticastProtocol
         [sself loadMore];
     }];
 
-    if ([self.collectionView.pullDownView respondsToSelector:@selector(titleLabel)]) {
-        UILabel *titleLabel = [self.collectionView.pullDownView performSelector:@selector(titleLabel)];
+    if ([self.collectionView.pullDownView respondsToSelector:@selector(nameLabel)]) {
+        UILabel *titleLabel = [self.collectionView.pullDownView performSelector:@selector(nameLabel)];
         titleLabel.contentMode = UIViewContentModeCenter;
     }
 }

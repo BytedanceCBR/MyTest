@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHUGCUserFollowDataModel : JSONModel 
 
 @property (nonatomic, assign) BOOL hasMore;
-@property (nonatomic, strong , nullable) NSArray<FHUGCUserFollowDataAdminListModel> *adminList;
+@property (nonatomic, strong , nullable) NSArray<FHUGCUserFollowDataFollowListModel> *adminList;
 @property (nonatomic, strong , nullable) NSArray<FHUGCUserFollowDataFollowListModel> *followList;
 @property (nonatomic, assign) NSInteger offset;
 @end
