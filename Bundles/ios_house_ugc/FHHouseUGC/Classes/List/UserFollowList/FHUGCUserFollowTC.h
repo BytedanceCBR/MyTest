@@ -14,4 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHUGCUserFollowSectionHeader : UIView
+
+@property(nonatomic, strong) UILabel *sectionLabel;
+
+@end
+
 NS_ASSUME_NONNULL_END

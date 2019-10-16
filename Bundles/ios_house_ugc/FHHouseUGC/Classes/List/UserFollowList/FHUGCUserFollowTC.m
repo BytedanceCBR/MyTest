@@ -53,7 +53,7 @@
         [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.icon).offset(3);
             make.left.mas_equalTo(self.icon.mas_right).offset(10);
-            make.right.mas_equalTo(self).offset(-10);
+            make.right.mas_equalTo(self).offset(-20);
             make.height.mas_equalTo(21);
         }];
         
@@ -68,7 +68,7 @@
         [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(self);
             make.left.mas_equalTo(self.icon.mas_right).offset(10);
-            make.right.mas_equalTo(self).offset(-10);
+            make.right.mas_equalTo(self).offset(-20);
             make.height.mas_equalTo(21);
         }];
     }
@@ -113,7 +113,7 @@
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.icon).offset(3);
         make.left.mas_equalTo(self.icon.mas_right).offset(10);
-        make.right.mas_equalTo(self).offset(-10);
+        make.right.mas_equalTo(self).offset(-20);
         make.height.mas_equalTo(21);
     }];
     
@@ -122,6 +122,51 @@
         make.left.mas_equalTo(self.nameLabel);
         make.right.mas_equalTo(self.nameLabel);
         make.height.mas_equalTo(19);
+    }];
+}
+
+- (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
+    UILabel *label = [[UILabel alloc] init];
+    label.numberOfLines = 1;
+    label.font = font;
+    label.textColor = textColor;
+    return label;
+}
+
+@end
+
+// FHUGCUserFollowSectionHeader
+@interface FHUGCUserFollowSectionHeader ()
+
+@end
+
+@implementation FHUGCUserFollowSectionHeader
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI {
+    
+    self.sectionLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    [self addSubview:_sectionLabel];
+    
+    [self setupConstraints];
+}
+
+
+- (void)setupConstraints {
+    
+    [self.sectionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self).offset(-10);
+        make.left.mas_equalTo(self).offset(20);
+        make.right.mas_equalTo(self).offset(-20);
+        make.height.mas_equalTo(17);
     }];
 }
 

@@ -134,7 +134,7 @@
     [self.searchView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.view).offset(height);
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(36);
+        make.height.mas_equalTo(36+4);
     }];
     
     self.searchView.searchInput.delegate = self;
@@ -192,7 +192,7 @@
 }
 
 - (UITableView *)configTableView2 {
-    FHUGCSuggectionTableView *tableView = [[FHUGCSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    FHUGCSuggectionTableView *tableView = [[FHUGCSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     __weak typeof(self) weakSelf = self;
     tableView.handleTouch = ^{

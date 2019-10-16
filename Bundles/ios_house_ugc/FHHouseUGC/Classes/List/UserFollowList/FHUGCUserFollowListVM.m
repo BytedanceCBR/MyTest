@@ -28,10 +28,10 @@
 
 @property (nonatomic, assign)   NSInteger       offset;
 @property (nonatomic, assign)   BOOL       hasMore;
-@property(nonatomic, weak) UITableView *tableView;
-@property(nonatomic, weak) FHUGCUserFollowListController *viewController;
-@property(nonatomic, weak) TTHttpTask *requestTask;
-@property(nonatomic, strong) NSMutableArray *followList;// 用户列表
+@property (nonatomic, weak) UITableView *tableView;
+@property (nonatomic, weak) FHUGCUserFollowListController *viewController;
+@property (nonatomic, weak) TTHttpTask *requestTask;
+@property (nonatomic, strong) NSMutableArray *followList;// 用户列表
 @property (nonatomic, strong)   NSMutableArray       *adminList;// 管理员
 @property (nonatomic, strong)   NSMutableArray       *mergedArray;
 @property (nonatomic, strong)   FHRefreshCustomFooter       *refreshFooter;
@@ -168,7 +168,35 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return CGFLOAT_MIN;
+    if (section == 0) {
+        return 33;
+    }
+    return 37;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    FHUGCUserFollowSectionHeader *v = [[FHUGCUserFollowSectionHeader alloc] init];
+    v.backgroundColor = [UIColor whiteColor];
+    if (section < self.mergedArray.count) {
+        NSArray *data = self.mergedArray[section];
+        if (self.mergedArray.count == 2) {
+            if (section == 0) {
+                v.sectionLabel.text = [NSString stringWithFormat:@"管理员（%ld人）",data.count];
+            }
+            if (section == 1) {
+                v.sectionLabel.text = [NSString stringWithFormat:@"小区圈成员（%ld人）",data.count];
+            }
+        } else if (self.mergedArray.count == 1) {
+            // 只有一个section
+            if (self.adminList.count > 0) {
+                v.sectionLabel.text = [NSString stringWithFormat:@"管理员（%ld人）",self.adminList.count];
+            }
+            if (self.followList.count > 0) {
+                v.sectionLabel.text = [NSString stringWithFormat:@"小区圈成员（%ld人）",self.followList.count];
+            }
+        }
+    }
+    return v;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
