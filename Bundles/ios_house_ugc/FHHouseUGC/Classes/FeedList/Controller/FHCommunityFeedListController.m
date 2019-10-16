@@ -270,12 +270,14 @@
     [options setValue:@"ugc_group" forKey:@"business_type"];
     
     NSMutableSet* set = [NSMutableSet set];
-    [set addObject:@"103002277932"];
-    [set addObject:@"25505054509"];
-    [set addObject:@"2422949347070968"];
+    [set addObject:@103002277932];
+    [set addObject:@25505054509];
+    [set addObject:@2422949347070968];
+    [set addObject:@50264240862];
+    [set addObject:@74002224351];
     [[IMManager shareInstance].chatService createGroupConversation:options
                                                   withParticipants:set
-                                          withIdempotentIdentifier:[_forumId substringToIndex:(_forumId.length-3)]
+                                          withIdempotentIdentifier:[_forumId substringToIndex:(_forumId.length-5)]
                                                     withCompletion:^(NSString * _Nullable conversationIdentifier, NSDictionary * _Nullable response, NSError * _Nullable error) {
         if(!error) {
             [self initNewGroupChatOptions:conversationIdentifier];
