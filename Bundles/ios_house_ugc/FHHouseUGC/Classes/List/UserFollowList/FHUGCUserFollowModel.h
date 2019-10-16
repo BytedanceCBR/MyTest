@@ -1,0 +1,47 @@
+//GENERATED CODE , DON'T EDIT
+#import <JSONModel.h>
+NS_ASSUME_NONNULL_BEGIN
+@protocol FHUGCUserFollowDataAdminListModel<NSObject>
+@end
+
+@interface FHUGCUserFollowDataAdminListModel : JSONModel 
+
+@property (nonatomic, copy , nullable) NSString *userId;
+@property (nonatomic, copy , nullable) NSString *userName;
+@property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, assign) BOOL homepageAuth;
+@property (nonatomic, copy , nullable) NSString *followTime;
+@property (nonatomic, copy , nullable) NSString *schema;
+@end
+
+@protocol FHUGCUserFollowDataFollowListModel<NSObject>
+@end
+
+@interface FHUGCUserFollowDataFollowListModel : JSONModel 
+
+@property (nonatomic, copy , nullable) NSString *userId;
+@property (nonatomic, copy , nullable) NSString *userName;
+@property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, assign) BOOL homepageAuth;
+@property (nonatomic, copy , nullable) NSString *followTime;
+@property (nonatomic, copy , nullable) NSString *schema;
+@end
+
+@interface FHUGCUserFollowDataModel : JSONModel 
+
+@property (nonatomic, assign) BOOL hasMore;
+@property (nonatomic, strong , nullable) NSArray<FHUGCUserFollowDataAdminListModel> *adminList;
+@property (nonatomic, strong , nullable) NSArray<FHUGCUserFollowDataFollowListModel> *followList;
+@property (nonatomic, assign) NSInteger offset;
+@end
+
+@interface FHUGCUserFollowModel : JSONModel 
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHUGCUserFollowDataModel *data ;  
+@end
+
+
+NS_ASSUME_NONNULL_END
+//END OF HEADER

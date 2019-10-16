@@ -28,12 +28,16 @@
 #import "FHUGCConfig.h"
 #import "FHUGCCommunityListViewController.h"
 #import "FHUGCUserFollowSearchView.h"
+#import "FHUGCUserFollowModel.h"
 
 @interface FHUGCUserFollowListController () <UITableViewDelegate, UITableViewDataSource>
 
 @property(nonatomic, strong) FHUGCSuggectionTableView *tableView;
 @property(nonatomic, strong) NSMutableArray *items;
+@property(nonatomic, weak) TTHttpTask *listHttpTask;
+@property (nonatomic, assign)   NSInteger       listOffset;
 @property(nonatomic, weak) TTHttpTask *sugHttpTask;
+@property (nonatomic, assign)   NSInteger       sugOffset;
 @property(nonatomic, copy) NSString *searchText;
 @property(nonatomic, assign) BOOL isViewAppearing;
 @property(nonatomic, assign) BOOL needReloadData;
@@ -41,6 +45,7 @@
 @property(nonatomic, assign) BOOL keyboardVisible;
 @property(nonatomic, assign) NSInteger associatedCount;
 @property (nonatomic, strong)   FHUGCUserFollowSearchView       *searchView;
+@property (nonatomic, copy)     NSString       *socialGroupId;
 @end
 
 @implementation FHUGCUserFollowListController
@@ -48,7 +53,10 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        NSDictionary *params = paramObj.allParams;
+        NSString *social_group_id = params[@"social_group_id"];
         self.associatedCount = 0;
+        self.socialGroupId = social_group_id;
     }
     return self;
 }
@@ -63,6 +71,8 @@
     self.panBeginAction = ^{
         [weakSelf.searchView.searchInput resignFirstResponder];
     };
+    [self addDefaultEmptyViewFullScreen];
+    [self.emptyView hideEmptyView];
     [self startLoadData];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardVisibleChanged:) name:UIKeyboardWillShowNotification object:nil];
@@ -108,6 +118,8 @@
     self.needReloadData = NO;
     self.isKeybordShow = NO;
     self.keyboardVisible = NO;
+    self.listOffset = 0;
+    self.sugOffset = 0;
 }
 
 - (void)setupNaviBar {
@@ -166,13 +178,18 @@
 }
 
 - (void)startLoadData {
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
+    if ([TTReachability isNetworkConnected]) {
+        // 请求用户列表
+        self.listOffset = 0;
+        [self requestUserList];
+    } else {
+        //[[ToastManager manager] showToast:@"网络异常"];
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
 }
 
 - (void)retryLoadData {
-
+    [self startLoadData];
 }
 
 // 文本框文字变化，进行sug请求
@@ -207,9 +224,21 @@
     }
 }
 
+// 请求用户列表
+- (void)requestUserList {
+    if (self.listHttpTask) {
+        [self.listHttpTask cancel];
+    }
+    __weak typeof(self) weakSelf = self;
+    self.listHttpTask = [FHHouseUGCAPI requestFollowUserListBySocialGroupId:self.socialGroupId offset:self.listOffset class:[FHUGCUserFollowModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        if (model != NULL && error == NULL) {
+            NSLog(@"%@",model);
+        }
+    }];
+}
+
 // sug建议
 - (void)requestSuggestion:(NSString *)text {
-    // NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
     if (self.sugHttpTask) {
         [self.sugHttpTask cancel];
     }
