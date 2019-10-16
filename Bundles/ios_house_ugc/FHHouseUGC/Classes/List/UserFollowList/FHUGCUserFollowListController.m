@@ -39,12 +39,8 @@
 @property(nonatomic, assign) BOOL needReloadData;
 @property(nonatomic, assign) BOOL isKeybordShow;
 @property(nonatomic, assign) BOOL keyboardVisible;
-@property(nonatomic, strong) NSMutableDictionary *showCache;
 @property(nonatomic, assign) NSInteger associatedCount;
 @property (nonatomic, strong)   FHUGCUserFollowSearchView       *searchView;
-
-@property(nonatomic, assign) FHCommunityListType listType;
-@property(nonatomic, weak) id <FHUGCCommunityChooseDelegate> chooseDelegate;
 @end
 
 @implementation FHUGCUserFollowListController
@@ -52,13 +48,6 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        self.listType = FHCommunityListTypeFollow;
-        if (paramObj.allParams[@"action_type"]) {
-            self.listType = [paramObj.allParams[@"action_type"] integerValue];
-        }
-        NSHashTable <FHUGCCommunityChooseDelegate> *choose_delegate = paramObj.allParams[@"choose_delegate"];
-        self.chooseDelegate = choose_delegate.anyObject;
-        self.showCache = [NSMutableDictionary dictionary];
         self.associatedCount = 0;
     }
     return self;
@@ -117,21 +106,22 @@
 - (void)setupData {
     self.items = [NSMutableArray new];
     self.needReloadData = NO;
-    self.isKeybordShow = YES;
+    self.isKeybordShow = NO;
     self.keyboardVisible = NO;
 }
 
 - (void)setupNaviBar {
     [self setupDefaultNavBar:YES];
+    self.ttNeedHideBottomLine = YES;
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
     
     self.searchView = [[FHUGCUserFollowSearchView alloc] init];
     [self.view addSubview:self.searchView];
     [self.searchView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.view).offset(height + 4);
+        make.top.mas_equalTo(self.view).offset(height);
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(32);
+        make.height.mas_equalTo(36);
     }];
     
     self.searchView.searchInput.delegate = self;
@@ -151,7 +141,7 @@
     [_tableView registerClass:[FHUGCSearchListCell class] forCellReuseIdentifier:@"FHUGCSearchListCell"];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.view).offset(height);
+        make.top.mas_equalTo(self.searchView.mas_bottom).offset(0);
         make.bottom.mas_equalTo(self.view);
     }];
 }
@@ -289,24 +279,6 @@
 }
 
 -(void)onItemSelected:(FHUGCScialGroupDataModel*)item{
-    NSMutableArray<UIViewController *> *viewControllers = [self.navigationController.viewControllers mutableCopy];
-
-    UIViewController *last = viewControllers.lastObject;
-    UIViewController *pre = nil;
-
-    if (self.chooseDelegate) {
-        [self.chooseDelegate selectedItem:item];
-    }
-
-    //至少存在根控制器
-    if(viewControllers.count > 2){
-        pre = viewControllers[viewControllers.count - 2];
-    }
-    if(last == self && [pre isKindOfClass:[FHUGCCommunityListViewController class]]){
-        [viewControllers removeObject:pre];
-        self.navigationController.viewControllers = [viewControllers copy];
-        [self.navigationController popViewControllerAnimated:YES];
-    }
 
 }
 
@@ -334,11 +306,6 @@
         self.isKeybordShow = self.keyboardVisible;
         
         FHUGCScialGroupDataModel *data = self.items[row];
-        if (self.listType == FHCommunityListTypeChoose) {
-            [self addSelectLog:data rank:row];
-            [self onItemSelected:data];
-            return;
-        }
 
         // 点击埋点
         [self addCommunityClickLog:data rank:row];

@@ -32,19 +32,19 @@
 }
 
 - (void)setupUI {
-    self.backgroundColor = [UIColor themeGray7];
+    self.backgroundColor = [UIColor whiteColor];
     // searchAreaPanel
     _searchAreaPanel = [[UIView alloc] init];
-    _searchAreaPanel.backgroundColor = [UIColor whiteColor];
+    _searchAreaPanel.backgroundColor = [UIColor themeGray7];
     _searchAreaPanel.layer.masksToBounds = YES;
     _searchAreaPanel.layer.cornerRadius = 4.0;
-    _searchAreaPanel.layer.borderWidth = 1.0;
-    _searchAreaPanel.layer.borderColor = [UIColor themeGray6].CGColor;
+    //_searchAreaPanel.layer.borderWidth = 1.0;
+    //_searchAreaPanel.layer.borderColor = [UIColor themeGray6].CGColor;
     [self addSubview:_searchAreaPanel];
     [_searchAreaPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(10);
+        make.top.mas_equalTo(4);
         make.left.mas_equalTo(20);
-        make.height.mas_equalTo(44);
+        make.height.mas_equalTo(32);
         make.right.mas_equalTo(-20);
     }];
     
@@ -53,7 +53,7 @@
     _searchIcon.image = [UIImage imageNamed:@"icon-search-titlebar"];
     [_searchAreaPanel addSubview:_searchIcon];
     [_searchIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.searchAreaPanel).offset(15);
+        make.left.mas_equalTo(self.searchAreaPanel).offset(10);
         make.height.width.mas_equalTo(12);
         make.centerY.mas_equalTo(self.searchAreaPanel);
     }];
@@ -85,7 +85,7 @@
 
 - (void)setSearchPlaceHolderText:(NSString *)text {
     if (text.length > 0) {
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:15],NSForegroundColorAttributeName:[UIColor themeGray3]};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:[UIColor themeGray3]};
         NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:text attributes:attr];
         _searchInput.attributedPlaceholder = attrStr;
     }
