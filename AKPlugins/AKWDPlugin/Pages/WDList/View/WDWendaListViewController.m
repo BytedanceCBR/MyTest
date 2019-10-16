@@ -423,6 +423,9 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     tracerDict[@"log_pb"] = self.goDetailDict[@"log_pb"];
     dict[@"tracer"] = tracerDict;
     dict[@"title"] = @"写回答";
+    if (self.viewModel.post_gdExtJson && [self.viewModel.post_gdExtJson isKindOfClass:[NSDictionary class]]) {
+        dict[@"gd_ext_json"] = self.viewModel.post_gdExtJson;
+    }
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
