@@ -379,8 +379,10 @@
     
     [self.detailController refreshContentOffset:scrollView.contentOffset];
     
-    self.questionBtn.left = [UIScreen mainScreen].bounds.size.width - 24;
     self.questionBtn.userInteractionEnabled = NO;
+    [UIView animateWithDuration:0.25 animations:^{
+        self.questionBtn.left = [UIScreen mainScreen].bounds.size.width - 24;
+    }];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -388,9 +390,9 @@
     if (scrollView != self.tableView) {
         return;
     }
+    self.questionBtn.userInteractionEnabled = YES;
     [UIView animateWithDuration:0.25 animations:^{
         self.questionBtn.right = [UIScreen mainScreen].bounds.size.width - 20;
-        self.questionBtn.userInteractionEnabled = YES;
     }];
 }
 
@@ -402,9 +404,9 @@
     if (scrollView != self.tableView) {
         return;
     }
+    self.questionBtn.userInteractionEnabled = YES;
     [UIView animateWithDuration:0.25 animations:^{
         self.questionBtn.right = [UIScreen mainScreen].bounds.size.width - 20;
-        self.questionBtn.userInteractionEnabled = YES;
     }];
 }
 

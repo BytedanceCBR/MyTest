@@ -97,6 +97,8 @@
         _containerView = [[UIView alloc] init];
         _containerView.backgroundColor = [UIColor whiteColor];
         CALayer * layer = _containerView.layer;
+        layer.borderColor = [UIColor themeGray6].CGColor;
+        layer.borderWidth = 0.5;
         layer.cornerRadius = 4;
         layer.masksToBounds = YES;
     }
