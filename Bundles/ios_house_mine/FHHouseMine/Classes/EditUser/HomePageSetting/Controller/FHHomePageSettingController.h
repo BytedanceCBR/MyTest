@@ -9,7 +9,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHHomePageSettingControllerDelegate <NSObject>
+
+- (void)reloadAuthDesc:(NSInteger)auth;
+
+@end
+
 @interface FHHomePageSettingController : FHBaseViewController
+
+@property (nonatomic, assign) NSInteger currentAuth;
+
+@property(nonatomic , weak) id<FHHomePageSettingControllerDelegate> delegate;
 
 @end
 

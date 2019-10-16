@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHHomePageSettingController *)viewController;
 
+- (void)loadData;
+
 @end
 
 NS_ASSUME_NONNULL_END

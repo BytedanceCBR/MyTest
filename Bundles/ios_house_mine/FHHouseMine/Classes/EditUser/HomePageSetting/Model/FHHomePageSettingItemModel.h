@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHomePageSettingItemModel : NSObject
 
 @property (nonatomic, strong) NSString *name;
+@property (nonatomic, assign) NSInteger auth;
+@property (nonatomic, assign) BOOL isSelected;
 
 @end
 

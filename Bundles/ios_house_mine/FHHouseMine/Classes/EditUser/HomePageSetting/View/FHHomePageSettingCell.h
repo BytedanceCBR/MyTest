@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomePageSettingCell : UITableViewCell
 
+- (void)refreshWithData:(id)data;
+
 @end
 
 NS_ASSUME_NONNULL_END

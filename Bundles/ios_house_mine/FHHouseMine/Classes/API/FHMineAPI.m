@@ -190,20 +190,12 @@
     }];
 }
 
-+ (TTHttpTask *)setHomePageAuth:(BOOL)isOn completion:(void (^ _Nonnull)(BOOL success, NSError *error))completion {
++ (TTHttpTask *)setHomePageAuth:(NSInteger)auth completion:(void (^ _Nonnull)(BOOL success, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/homepage_auth";
     NSString *url = QURL(queryPath);
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
-    // 0 所有人可见  1 不可见
-    paramDic[@"homepage_auth"] = isOn ? @0 : @1;
-    
-    //json
-//    return [FHMainApi postJsonRequest:queryPath query:nil params:paramDic jsonClass:jsonCls completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
-//        if (completion) {
-//            completion(model,error);
-//        }
-//    }];
+    paramDic[@"homepage_auth"] = @(auth);
     
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
         BOOL success = NO;

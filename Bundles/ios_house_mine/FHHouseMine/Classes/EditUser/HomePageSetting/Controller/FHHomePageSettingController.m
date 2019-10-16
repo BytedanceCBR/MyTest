@@ -20,7 +20,10 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-
+        self.currentAuth = [paramObj.allParams[@"auth"] integerValue];
+        
+        NSHashTable<FHHomePageSettingControllerDelegate> *delegate = paramObj.allParams[@"delegate"];
+        self.delegate = delegate.anyObject;
     }
     return self;
 }
@@ -64,6 +67,7 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHHomePageSettingViewModel alloc] initWithTableView:_tableView controller:self];
+    [_viewModel loadData];
 }
 
 @end

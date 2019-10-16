@@ -21,8 +21,9 @@
 #import "FHMineAPI.h"
 #import <FHCommonApi.h>
 #import "FHUserInfoManager.h"
+#import "FHHomePageSettingController.h"
 
-@interface FHEditUserViewModel()<UITableViewDelegate,UITableViewDataSource,FHEditingInfoControllerDelegate,FHEditUserBaseCellDelegate>
+@interface FHEditUserViewModel()<UITableViewDelegate,UITableViewDataSource,FHEditingInfoControllerDelegate,FHEditUserBaseCellDelegate,FHHomePageSettingControllerDelegate>
 
 @property(nonatomic, strong) NSArray *dataList;
 @property(nonatomic, strong) UITableView *tableView;
@@ -82,7 +83,7 @@
                               @"key":@"homePageSetting",
                               @"cellId":@"textCellId",
                               @"cellClassName":@"FHEditUserTextCell",
-                              @"content":[self getHomeAuthDesc:[self.userInfo.homePageAuth integerValue]],
+                              @"content":[self getHomeAuthDesc:self.userInfo.homePageAuth],
                               },
                           ],
                       @[
@@ -102,22 +103,21 @@
         __weak typeof(self) wself = self;
         
         [TTAccount getUserAuditInfoIgnoreDispatchWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
-            __weak typeof(wself) sself = wself;
             if (!error) {
                 TTAccountUserAuditSet *newAuditInfo = [userEntity.auditInfoSet copy];
-                sself.userInfo.isAuditing  = [newAuditInfo isAuditing];
-                sself.userInfo.editEnabled = [newAuditInfo modifyUserInfoEnabled];
-                sself.userInfo.name        = [newAuditInfo username];
-                sself.userInfo.avatarURL  = [newAuditInfo userAvatarURLString];
-                sself.userInfo.userDescription = [newAuditInfo userDescription];
+                wself.userInfo.isAuditing  = [newAuditInfo isAuditing];
+                wself.userInfo.editEnabled = [newAuditInfo modifyUserInfoEnabled];
+                wself.userInfo.name        = [newAuditInfo username];
+                wself.userInfo.avatarURL  = [newAuditInfo userAvatarURLString];
+                wself.userInfo.userDescription = [newAuditInfo userDescription];
                 
-                [sself reloadViewModel];
+                [wself reloadViewModel];
             }
         }];
         
         [TTAccount getUserInfoWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
             if(!error){
-                wself.userInfo.homePageAuth = [FHUserInfoManager sharedInstance].userInfo.data.fHomepageAuth;
+                wself.userInfo.homePageAuth = [[FHUserInfoManager sharedInstance].userInfo.data.fHomepageAuth integerValue];
 
                 [wself reloadViewModel];
             }
@@ -149,7 +149,7 @@
     _userInfo.userDescription = userInfo.userDescription;
     
     //F自己的字段
-    _userInfo.homePageAuth = [FHUserInfoManager sharedInstance].userInfo.data.fHomepageAuth;
+    _userInfo.homePageAuth = [[FHUserInfoManager sharedInstance].userInfo.data.fHomepageAuth integerValue];
 }
 
 - (void)triggerLogoutUnRegister {
@@ -203,7 +203,7 @@
     dict[@"delegate"] = delegateTable;
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://homePageSetting?auth=%i", [self.userInfo.homePageAuth integerValue]];
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://homePageSetting?auth=%i", self.userInfo.homePageAuth];
 
     if (urlStr) {
         NSURL* url = [NSURL URLWithString:urlStr];
@@ -426,12 +426,11 @@
     [self reloadViewModel];
 }
 
-#pragma mark - FHEditUserBaseCellDelegate
+#pragma mark - FHHomePageSettingControllerDelegate
 
-- (void)changeHomePageAuth:(BOOL)isOpen {
-    [FHMineAPI setHomePageAuth:isOpen completion:^(BOOL success, NSError * _Nonnull error) {
-        NSLog(@"1");
-    }];
+- (void)reloadAuthDesc:(NSInteger)auth {
+    self.userInfo.homePageAuth = auth;
+    [self reloadViewModel];
 }
 
 @end

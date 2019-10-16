@@ -7,6 +7,10 @@
 
 #import "FHHomePageSettingViewModel.h"
 #import "FHHomePageSettingCell.h"
+#import "FHHomePageSettingItemModel.h"
+#import "FHMineAPI.h"
+#import <ToastManager.h>
+#import <FHUserInfoManager.h>
 
 @interface FHHomePageSettingViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -21,6 +25,7 @@
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHHomePageSettingController *)viewController {
     self = [super init];
     if (self) {
+        self.dataList = [NSMutableArray array];
         self.tableView = tableView;
         
         tableView.delegate = self;
@@ -33,8 +38,30 @@
     return self;
 }
 
-- (void)initData {
-
+- (void)loadData {
+    [self.dataList removeAllObjects];
+    
+    NSArray *options = @[
+        @{
+            @"name":@"公开",
+            @"auth":@0,
+        },
+        @{
+            @"name":@"仅个人可见",
+            @"auth":@1,
+        }
+    ];
+    
+    for (NSDictionary *option in options) {
+        FHHomePageSettingItemModel *item = [[FHHomePageSettingItemModel alloc] init];
+        item.name = option[@"name"];
+        item.auth = [option[@"auth"] integerValue];
+        item.isSelected = (item.auth == self.viewController.currentAuth);
+        
+        [self.dataList addObject:item];
+    }
+    
+    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource
@@ -48,11 +75,11 @@
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    NSArray *items = self.dataList[indexPath.section];
-
     FHHomePageSettingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellId"];
-//    cell.delegate = self;
-//    [cell updateCell:items[indexPath.row]];
+    if(indexPath.row < self.dataList.count){
+        FHHomePageSettingItemModel *model = self.dataList[indexPath.row];
+        [cell refreshWithData:model];
+    }
     
     return cell;
 }
@@ -64,9 +91,6 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if(section != 0){
-        return 10.0f;
-    }
     return 0.001f;
 }
 
@@ -74,24 +98,29 @@
     return 0.001f;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView *view = nil;
-    if(section != 0){
-        view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 10.0f)];
-    }
-    return view;
-}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-//    NSArray *items = self.dataList[indexPath.section];
-//    NSDictionary *dic = items[indexPath.row];
-//    if(dic[@"isAuditing"] && [dic[@"isAuditing"] boolValue]){
-//        //审核中不可编辑
-//        return;
-//    }
-//    [self doOtherAction:dic[@"key"]];
+    if(indexPath.row < self.dataList.count){
+        FHHomePageSettingItemModel *model = self.dataList[indexPath.row];
+        if(model.auth != self.viewController.currentAuth){
+            __weak typeof(self) wself = self;
+            [FHMineAPI setHomePageAuth:model.auth completion:^(BOOL success, NSError * _Nonnull error) {
+                if(success && !error){
+                    //更新数据
+                    wself.viewController.currentAuth = model.auth;
+                    [FHUserInfoManager sharedInstance].userInfo.data.fHomepageAuth = [NSString stringWithFormat:@"%i",model.auth];
+                    [wself loadData];
+                    
+                    if(wself.viewController.delegate && [wself.viewController.delegate respondsToSelector:@selector(reloadAuthDesc:)]){
+                        [wself.viewController.delegate reloadAuthDesc:model.auth];
+                    }
+                    
+                }else{
+                    [[ToastManager manager] showToast:@"个人主页设置失败"];
+                }
+            }];
+        }
+    }
 }
 
 @end
