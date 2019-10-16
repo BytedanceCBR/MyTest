@@ -19,8 +19,10 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHMineAPI.h"
+#import <FHCommonApi.h>
+#import "FHUserInfoManager.h"
 
-@interface FHEditUserViewModel()<UITableViewDelegate,UITableViewDataSource,FHEditingInfoControllerDelegate>
+@interface FHEditUserViewModel()<UITableViewDelegate,UITableViewDataSource,FHEditingInfoControllerDelegate,FHEditUserBaseCellDelegate>
 
 @property(nonatomic, strong) NSArray *dataList;
 @property(nonatomic, strong) UITableView *tableView;
@@ -41,6 +43,7 @@
         
         [tableView registerClass:NSClassFromString(@"FHEditUserImageCell") forCellReuseIdentifier:@"imageCellId"];
         [tableView registerClass:NSClassFromString(@"FHEditUserTextCell") forCellReuseIdentifier:@"textCellId"];
+        [tableView registerClass:NSClassFromString(@"FHEditUserSwitchCell") forCellReuseIdentifier:@"switchCellId"];
         
         self.viewController = viewController;
     }
@@ -74,6 +77,13 @@
                               @"content":(self.userInfo.userDescription ? self.userInfo.userDescription : @""),
                               @"isAuditing":(self.userInfo.isAuditing ? @"1" : @"0"),
                               },
+                          @{
+                              @"name":@"个人主页设置",
+                              @"key":@"homePageSetting",
+                              @"cellId":@"textCellId",
+                              @"cellClassName":@"FHEditUserTextCell",
+                              @"content":[self getHomeAuthDesc:[self.userInfo.homePageAuth integerValue]],
+                              },
                           ],
                       @[
                           @{
@@ -105,7 +115,13 @@
             }
         }];
         
-        
+        [TTAccount getUserInfoWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
+            if(!error){
+                wself.userInfo.homePageAuth = [FHUserInfoManager sharedInstance].userInfo.data.fHomepageAuth;
+
+                [wself reloadViewModel];
+            }
+        }];
     }
 }
 
@@ -131,6 +147,9 @@
     _userInfo.name        = userInfo.name;
     _userInfo.avatarURL   = userInfo.avatarURL;
     _userInfo.userDescription = userInfo.userDescription;
+    
+    //F自己的字段
+    _userInfo.homePageAuth = [FHUserInfoManager sharedInstance].userInfo.data.fHomepageAuth;
 }
 
 - (void)triggerLogoutUnRegister {
@@ -169,6 +188,23 @@
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
+    if (urlStr) {
+        NSURL* url = [NSURL URLWithString:urlStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+}
+
+- (void)goToHomePageSetting {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+
+    NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [delegateTable addObject:self];
+    
+    dict[@"delegate"] = delegateTable;
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://homePageSetting?auth=%i", [self.userInfo.homePageAuth integerValue]];
+
     if (urlStr) {
         NSURL* url = [NSURL URLWithString:urlStr];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
@@ -296,6 +332,22 @@
     [FHMineAPI uploadUserPhoto:image completion:didCompletedBlock];
 }
 
+- (NSString *)getHomeAuthDesc:(NSInteger)auth {
+    //默认是公开
+    NSString *desc = @"公开";
+    switch (auth) {
+        case 0:
+            desc = @"公开";
+            break;
+        case 1:
+            desc = @"仅个人可见";
+            break;
+        default:
+            break;
+    }
+    return desc;
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -311,6 +363,7 @@
     NSArray *items = self.dataList[indexPath.section];
     NSString *cellId = items[indexPath.row][@"cellId"];
     FHEditUserBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
+    cell.delegate = self;
     [cell updateCell:items[indexPath.row]];
     
     return cell;
@@ -362,6 +415,8 @@
         [self goToEditingInfo:key];
     }else if([key isEqualToString:@"userDesc"]){
         [self goToEditingInfo:key];
+    }else if([key isEqualToString:@"homePageSetting"]){
+        [self goToHomePageSetting];
     }
 }
 
@@ -369,6 +424,14 @@
 
 - (void)reloadData {
     [self reloadViewModel];
+}
+
+#pragma mark - FHEditUserBaseCellDelegate
+
+- (void)changeHomePageAuth:(BOOL)isOpen {
+    [FHMineAPI setHomePageAuth:isOpen completion:^(BOOL success, NSError * _Nonnull error) {
+        NSLog(@"1");
+    }];
 }
 
 @end

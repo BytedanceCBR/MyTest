@@ -164,9 +164,9 @@
     self.isTopIsCanNotMoveTabViewPre = NO;
     
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.title.text = self.title;
+    self.customNavBarView.title.text = @"TA的主页";
      
-    self.defaultTopHeight = 116;
+    self.defaultTopHeight = 100;
     
     // _mainScrollView
     _mainScrollView = [[FHPersonalHomePageScrollView alloc] init];

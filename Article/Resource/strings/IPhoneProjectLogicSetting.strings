@@ -28,13 +28,14 @@
 //"editUserProfile"       = "TTEditUserProfileViewController";
 "editUserProfile"       = "FHEditUserController";
 "editingInfo"           = "FHEditingInfoController";
+"homePageSetting"       = "FHHomePageSettingController"; //个人主页设置
 
 // SSAppPageController
 "home"                  = "FHHomeSchemaObject";
 "main"                  = "FHHomeSchemaObject";
 
 //"profile"               = "ArticleMomentProfileViewController"; //旧版个人主页
-"profile"               = "FHPersonalHomePageController"; //旧版个人主页
+"profile"               = "FHPersonalHomePageController"; //新版个人主页
 
 "invite_friend"         = "ArticleInviteFriendViewController";
 "address_list"          = "TTAddressListFriendViewController";

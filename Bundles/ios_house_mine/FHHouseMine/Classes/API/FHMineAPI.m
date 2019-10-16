@@ -190,4 +190,35 @@
     }];
 }
 
++ (TTHttpTask *)setHomePageAuth:(BOOL)isOn completion:(void (^ _Nonnull)(BOOL success, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/homepage_auth";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    // 0 所有人可见  1 不可见
+    paramDic[@"homepage_auth"] = isOn ? @0 : @1;
+    
+    //json
+//    return [FHMainApi postJsonRequest:queryPath query:nil params:paramDic jsonClass:jsonCls completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+//        if (completion) {
+//            completion(model,error);
+//        }
+//    }];
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+        BOOL success = NO;
+        @try{
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+            success = ([json[@"status"] integerValue] == 0);
+        }
+        @catch(NSException *e){
+            error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+        }
+
+        if (completion) {
+            completion(success, error);
+        }
+    }];
+}
+
 @end

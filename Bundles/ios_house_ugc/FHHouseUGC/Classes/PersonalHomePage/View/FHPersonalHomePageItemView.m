@@ -33,26 +33,26 @@
 - (void)initViews {
     self.backgroundColor = [UIColor whiteColor];
     
-    self.topLabel = [self LabelWithFont:[UIFont themeFontDINAlternateBold:18] textColor:[UIColor themeGray1]];
-    _topLabel.textAlignment = NSTextAlignmentCenter;
+    self.topLabel = [self LabelWithFont:[UIFont themeFontDINAlternateBold:14] textColor:[UIColor themeGray1]];
     _topLabel.text = @"110";
     [self addSubview:_topLabel];
-    
+
     self.bottomLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray2]];
-    _bottomLabel.textAlignment = NSTextAlignmentCenter;
     _bottomLabel.text = @"评论";
     [self addSubview:_bottomLabel];
 }
 
 - (void)initConstraints {
     [self.topLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self);
-        make.height.mas_equalTo(21);
+        make.centerY.mas_equalTo(self);
+        make.left.mas_equalTo(self);
+        make.height.mas_equalTo(17);
     }];
-    
+
     [self.bottomLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.topLabel.mas_bottom);
-        make.left.right.mas_equalTo(self);
+        make.centerY.mas_equalTo(self);
+        make.left.mas_equalTo(self.topLabel.mas_right).offset(4);
+        make.right.mas_equalTo(self);
         make.height.mas_equalTo(17);
     }];
 }
@@ -65,8 +65,8 @@
 }
 
 - (void)updateWithTopContent:(NSString *)topContent bottomContent:(NSString *)bottomContent {
-    self.topLabel.text = topContent;
-    self.bottomLabel.text = bottomContent;
+//    self.topLabel.text = topContent;
+//    self.bottomLabel.text = bottomContent;
 }
 
 - (void)setItemClickBlock:(void (^)(void))itemClickBlock {
