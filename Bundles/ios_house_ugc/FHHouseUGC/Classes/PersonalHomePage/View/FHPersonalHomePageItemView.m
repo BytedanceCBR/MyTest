@@ -34,25 +34,24 @@
     self.backgroundColor = [UIColor whiteColor];
     
     self.topLabel = [self LabelWithFont:[UIFont themeFontDINAlternateBold:14] textColor:[UIColor themeGray1]];
-    _topLabel.text = @"110";
+    _topLabel.text = @"*";
     [self addSubview:_topLabel];
 
     self.bottomLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray2]];
-    _bottomLabel.text = @"评论";
     [self addSubview:_bottomLabel];
 }
 
 - (void)initConstraints {
     [self.topLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self);
-        make.left.mas_equalTo(self);
+        make.left.mas_equalTo(self).offset(10);
         make.height.mas_equalTo(17);
     }];
 
     [self.bottomLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self);
         make.left.mas_equalTo(self.topLabel.mas_right).offset(4);
-        make.right.mas_equalTo(self);
+        make.right.mas_equalTo(self).offset(-10);
         make.height.mas_equalTo(17);
     }];
 }
@@ -65,8 +64,8 @@
 }
 
 - (void)updateWithTopContent:(NSString *)topContent bottomContent:(NSString *)bottomContent {
-//    self.topLabel.text = topContent;
-//    self.bottomLabel.text = bottomContent;
+    self.topLabel.text = topContent;
+    self.bottomLabel.text = bottomContent;
 }
 
 - (void)setItemClickBlock:(void (^)(void))itemClickBlock {

@@ -34,14 +34,12 @@
 
 @interface FHPersonalHomePageController ()<UIScrollViewDelegate,TTUIViewControllerTrackProtocol,SSImpressionProtocol>
 
-@property (nonatomic, strong)   UIScrollView       *mainScrollView;
 @property (nonatomic, strong)   FHPersonalHomePageHeaderView        *topHeaderView;
 @property (nonatomic, assign)   CGFloat       minSubScrollViewHeight;
 @property (nonatomic, assign)   CGFloat       maxSubScrollViewHeight;
 @property (nonatomic, assign)   CGFloat       criticalPointHeight;// 临界点长度
 @property (nonatomic, assign)   CGFloat       topHeightOffset;
 @property (nonatomic, assign)   CGFloat       navOffset;
-@property (nonatomic, strong)   UIScrollView       *subScrollView;
 @property (nonatomic, strong)   FHPersonalHomePageViewModel       *viewModel;
 @property (nonatomic, assign)   BOOL       isViewAppear;
 @property (nonatomic, strong)   UILabel *titleLabel;
@@ -53,7 +51,7 @@
 @property (nonatomic, assign)   BOOL canScroll;
 @property (nonatomic, assign)   CGFloat       defaultTopHeight;
 @property (nonatomic, assign)   int64_t cid;// 话题id
-@property (nonatomic, copy)     NSString       *enter_from;// 从哪进入的当前页面
+@property (nonatomic, copy)     NSString       *enter_from;  // 从哪进入的当前页面
 
 @end
 
@@ -214,6 +212,9 @@
     // 空态页
     [self addDefaultEmptyViewFullScreen];
     
+    //覆盖在下方的空态页
+    [self addTableErrorView];
+    
     // viewModel
     _viewModel = [[FHPersonalHomePageViewModel alloc] initWithController:self];
     _viewModel.currentSelectIndex = 0;
@@ -233,6 +234,16 @@
     
     // goDetail
     [self addGoDetailLog];
+}
+
+- (void)addTableErrorView {
+    self.tableErrorView = [[FHErrorView alloc] init];
+    _tableErrorView.hidden = YES;
+    [self.view addSubview:_tableErrorView];
+    [_tableErrorView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.view).offset(self.topHeightOffset);
+        make.left.right.bottom.equalTo(self.view);
+    }];
 }
 
 - (void)setupSubTableViews:(NSArray *)tabIndexStrs {

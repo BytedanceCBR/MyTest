@@ -12,6 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 // 个人主页
 @interface FHPersonalHomePageController : FHBaseViewController
 
+@property (nonatomic, strong) UIScrollView *mainScrollView;
+@property (nonatomic, strong) UIScrollView *subScrollView;
+@property (nonatomic, strong) FHErrorView *tableErrorView; // 覆盖在下方的error页
+
 - (void)showEmptyWithType:(FHEmptyMaskViewType)maskViewType;
 - (void)hiddenEmptyView;
 - (void)refreshHeaderData;

@@ -98,24 +98,22 @@
 //    CGFloat width = ([UIScreen mainScreen].bounds.size.width - x - rightMargin)/2;
     
     [self.commentView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.icon.mas_right).offset(middleMargin);
-        make.top.mas_equalTo(self.userNameLabel.mas_bottom).offset(8);
-        make.height.mas_equalTo(17);
-//        make.width.mas_equalTo(80);
+        make.left.mas_equalTo(self.icon.mas_right);
+        make.top.mas_equalTo(self.userNameLabel.mas_bottom);
+        make.height.mas_equalTo(33);
     }];
     
     [self.spLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.commentView.mas_right).offset(middleMargin);
+        make.left.mas_equalTo(self.commentView.mas_right);
         make.centerY.mas_equalTo(self.commentView);
         make.width.mas_equalTo(0.5);
         make.height.mas_equalTo(10);
     }];
 
     [self.focusView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.spLine.mas_right).offset(9.5);
+        make.left.mas_equalTo(self.spLine.mas_right);
         make.centerY.mas_equalTo(self.commentView);
-        make.height.mas_equalTo(17);
-//        make.width.mas_equalTo(80);
+        make.height.mas_equalTo(33);
     }];
 }
 

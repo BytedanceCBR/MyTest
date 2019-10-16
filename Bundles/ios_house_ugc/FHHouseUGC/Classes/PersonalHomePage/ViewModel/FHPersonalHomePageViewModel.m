@@ -28,28 +28,28 @@
 
 @interface FHPersonalHomePageViewModel ()<FHUGCBaseCellDelegate>
 
-@property(nonatomic , weak) FHPersonalHomePageController *detailController;
-@property(nonatomic , weak) TTHttpTask *httpTopHeaderTask;
-@property(nonatomic , weak) TTHttpTask *httpTopListTask;
-@property (nonatomic, assign)   BOOL       canScroll;
-@property (nonatomic, assign)   NSInteger       loadDataSuccessCount;
-@property (nonatomic, strong)   NSMutableArray       *dataList;// FeedList数据，目前只有一个tab
-@property (nonatomic, assign)   BOOL       hasFeedListData;// 第一次加载数据成功
-@property (nonatomic, assign)   NSInteger       count;
-@property (nonatomic, assign)   NSInteger       feedOffset;
-@property (nonatomic, assign)   BOOL       hasMore;
+@property (nonatomic, weak) FHPersonalHomePageController *detailController;
+@property (nonatomic, weak) TTHttpTask *httpTopHeaderTask;
+@property (nonatomic, weak) TTHttpTask *httpTopListTask;
+@property (nonatomic, assign) BOOL canScroll;
+@property (nonatomic, assign) NSInteger loadDataSuccessCount;
+@property (nonatomic, strong) NSMutableArray *dataList;// FeedList数据，目前只有一个tab
+@property (nonatomic, assign) BOOL hasFeedListData;// 第一次加载数据成功
+@property (nonatomic, assign) NSInteger count;
+@property (nonatomic, assign) NSInteger feedOffset;
+@property (nonatomic, assign) BOOL hasMore;
 
-@property(nonatomic, strong) FHUGCBaseCell *currentCell;
-@property(nonatomic, strong) FHFeedUGCCellModel *currentCellModel;
-@property (nonatomic, assign)   BOOL       needRefreshCell;
-@property(nonatomic, strong) NSMutableDictionary *clientShowDict;
+@property (nonatomic, strong) FHUGCBaseCell *currentCell;
+@property (nonatomic, strong) FHFeedUGCCellModel *currentCellModel;
+@property (nonatomic, assign) BOOL needRefreshCell;
+@property (nonatomic, strong) NSMutableDictionary *clientShowDict;
 
-@property(nonatomic, assign) NSInteger refer;
-@property(nonatomic, assign) BOOL isShowing;
-@property(nonatomic, copy) NSString *categoryName;
-@property (nonatomic, copy)     NSString       *tab_id;
-@property (nonatomic, copy)     NSString       *appExtraParams;
-@property (nonatomic, weak)     FHErrorView       *tableEmptyView;// 暂时记一个就好了
+@property (nonatomic, assign) NSInteger refer;
+@property (nonatomic, assign) BOOL isShowing;
+@property (nonatomic, copy) NSString *categoryName;
+@property (nonatomic, copy) NSString *tab_id;
+@property (nonatomic, copy) NSString *appExtraParams;
+@property (nonatomic, strong) FHErrorView *tableEmptyView;
 
 @end
 
@@ -80,6 +80,8 @@
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
         // 发帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
+        
+        self.tableEmptyView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 500)];
     }
     return self;
 }
@@ -129,8 +131,11 @@
                 }else{
                     wSelf.headerModel = model;
                     [wSelf.detailController refreshHeaderData];
-                    // 加载列表数据
-                    [wSelf loadFeedListData];
+                    
+                    if([wSelf.headerModel.data.fHomepageAuth integerValue] == 0){
+                        // 加载列表数据
+                        [wSelf loadFeedListData];
+                    }
                 }
             } else {
                 wSelf.headerModel = nil;
@@ -239,11 +244,18 @@
 
 // 刷新数据和状态
 - (void)processLoadingState {
-    if (self.loadDataSuccessCount >= 2) {
+    NSInteger requestCount = 0;
+    if([self.headerModel.data.fHomepageAuth integerValue] == 0){
+        requestCount = 2;
+    }else{
+        requestCount = 1;
+    }
+    
+    if (self.loadDataSuccessCount >= requestCount) {
         [self.detailController endLoading];
         self.detailController.isLoadingData = NO;
         // 刷新数据
-        if (self.headerModel && self.hasFeedListData && self.dataList.count > 0) {
+        if (self.headerModel && self.dataList.count > 0) {
             // 数据ok
             [self.detailController hiddenEmptyView];
             [self.detailController refreshHeaderData];
@@ -251,6 +263,7 @@
             if (self.tableEmptyView) {
                 [self.tableEmptyView removeFromSuperview];
             }
+            self.currentTableView.scrollEnabled = YES;
             [self.currentTableView reloadData];
             // hasMore
             FHRefreshCustomFooter *refreshFooter = (FHRefreshCustomFooter *)self.currentTableView.mj_footer;
@@ -265,13 +278,19 @@
             if (self.headerModel) {
                 [self.detailController refreshHeaderData];
                 self.currentTableView.mj_footer.hidden = YES;
-                if (self.dataList.count <= 0) {
+                
+                if([self.headerModel.data.fHomepageAuth integerValue] == 0){
+                    if (self.dataList.count <= 0) {
+                        // 添加空态页
+                        [self.currentTableView addSubview:self.tableEmptyView];
+                        [self.tableEmptyView showEmptyWithTip:@"TA没有留下任何足迹，去其他地方看看吧！" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
+                        self.currentTableView.scrollEnabled = NO;
+                    }
+                }else{
                     // 添加空态页
-                    FHErrorView *emptyView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 500)];
-                    emptyView.backgroundColor = [UIColor themeGray7];
-                    [self.currentTableView addSubview:emptyView];
-                    [emptyView showEmptyWithTip:@"这里还没有内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
-                    self.tableEmptyView = emptyView;
+                    [self.currentTableView addSubview:self.tableEmptyView];
+                    [self.tableEmptyView showEmptyWithTip:@"TA暂时没有对外公开个人页面" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
+                    self.currentTableView.scrollEnabled = NO;
                 }
             } else {
                 [self.detailController showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
