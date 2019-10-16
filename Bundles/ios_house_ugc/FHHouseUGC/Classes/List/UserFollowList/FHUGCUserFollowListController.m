@@ -29,13 +29,13 @@
 #import "FHUGCCommunityListViewController.h"
 #import "FHUGCUserFollowSearchView.h"
 #import "FHUGCUserFollowModel.h"
+#import "FHUGCUserFollowListVM.h"
 
 @interface FHUGCUserFollowListController () <UITableViewDelegate, UITableViewDataSource>
 
-@property(nonatomic, strong) FHUGCSuggectionTableView *tableView;
-@property(nonatomic, strong) NSMutableArray *items;
-@property(nonatomic, weak) TTHttpTask *listHttpTask;
-@property (nonatomic, assign)   NSInteger       listOffset;
+@property(nonatomic, strong) FHUGCSuggectionTableView *tableView;// sug列表
+@property(nonatomic, strong) FHUGCSuggectionTableView *userTableView;// 用户关注列表
+@property(nonatomic, strong) NSMutableArray *items;// sug 列表
 @property(nonatomic, weak) TTHttpTask *sugHttpTask;
 @property (nonatomic, assign)   NSInteger       sugOffset;
 @property(nonatomic, copy) NSString *searchText;
@@ -46,6 +46,7 @@
 @property(nonatomic, assign) NSInteger associatedCount;
 @property (nonatomic, strong)   FHUGCUserFollowSearchView       *searchView;
 @property (nonatomic, copy)     NSString       *socialGroupId;
+@property (nonatomic, strong)   FHUGCUserFollowListVM       *viewModel;// 用户列表VM
 @end
 
 @implementation FHUGCUserFollowListController
@@ -118,7 +119,6 @@
     self.needReloadData = NO;
     self.isKeybordShow = NO;
     self.keyboardVisible = NO;
-    self.listOffset = 0;
     self.sugOffset = 0;
 }
 
@@ -156,6 +156,19 @@
         make.top.mas_equalTo(self.searchView.mas_bottom).offset(0);
         make.bottom.mas_equalTo(self.view);
     }];
+    _tableView.hidden = YES;
+    
+    // 用户列表
+    self.userTableView = [self configTableView2];
+    [self.view addSubview:self.userTableView];
+    self.viewModel = [[FHUGCUserFollowListVM alloc] initWithController:self tableView:self.userTableView];
+    self.viewModel.socialGroupId = self.socialGroupId;
+    
+    [self.userTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.searchView.mas_bottom).offset(0);
+        make.bottom.mas_equalTo(self.view);
+    }];
 }
 
 - (void)configTableView {
@@ -177,11 +190,30 @@
     }
 }
 
+- (UITableView *)configTableView2 {
+    FHUGCSuggectionTableView *tableView = [[FHUGCSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    __weak typeof(self) weakSelf = self;
+    tableView.handleTouch = ^{
+        [weakSelf.view endEditing:YES];
+    };
+    tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    if (@available(iOS 11.0, *)) {
+        tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    tableView.estimatedRowHeight = 70;
+    tableView.estimatedSectionFooterHeight = 0;
+    tableView.estimatedSectionHeaderHeight = 0;
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+    }
+    return tableView;
+}
+
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
         // 请求用户列表
-        self.listOffset = 0;
-        [self requestUserList];
+        [self.viewModel requestUserList];
     } else {
         //[[ToastManager manager] showToast:@"网络异常"];
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -222,19 +254,6 @@
         [self.items removeAllObjects];
         [self.tableView reloadData];
     }
-}
-
-// 请求用户列表
-- (void)requestUserList {
-    if (self.listHttpTask) {
-        [self.listHttpTask cancel];
-    }
-    __weak typeof(self) weakSelf = self;
-    self.listHttpTask = [FHHouseUGCAPI requestFollowUserListBySocialGroupId:self.socialGroupId offset:self.listOffset class:[FHUGCUserFollowModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        if (model != NULL && error == NULL) {
-            NSLog(@"%@",model);
-        }
-    }];
 }
 
 // sug建议
@@ -430,3 +449,4 @@
 }
 
 @end
+
