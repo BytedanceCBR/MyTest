@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateImageUrl:(NSURL *)imageUrl andPlaceHolder:(UIImage *)placeHolderImage;
 
+- (void)checkLoadingState;
+
 @end
 
 NS_ASSUME_NONNULL_END

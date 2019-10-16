@@ -163,6 +163,13 @@ static CGFloat multiplier = 4;
     return _manager;
 }
 
+- (void)checkLoadingState
+{
+    if (_vrLoadingView) {
+        [_vrLoadingView play];
+    }
+}
+
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];

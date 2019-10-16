@@ -44,4 +44,9 @@
     [self.imageView updateImageUrl:url andPlaceHolder:placeholder];
 }
 
+- (void)checkVRLoadingAnimate
+{
+    [_imageView checkLoadingState];
+}
+
 @end

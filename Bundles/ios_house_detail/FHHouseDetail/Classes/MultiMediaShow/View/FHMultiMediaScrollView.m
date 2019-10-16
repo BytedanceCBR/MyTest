@@ -33,6 +33,7 @@
 @property(nonatomic, strong) NSMutableArray *itemArray;
 @property(nonatomic, strong) UICollectionViewCell *lastCell;
 @property(nonatomic, strong) FHMultiMediaVideoCell *firstVideoCell;
+@property(nonatomic, weak) FHMultiMediaVRImageCell *firstVRCell;
 @property(nonatomic, assign) CGFloat beginX;
 @property(nonatomic, strong) UIView *bottomBannerView;
 @property(nonatomic, strong) UIView *bottomGradientView;
@@ -304,6 +305,7 @@
             }
         }else if(model.mediaType == FHMultiMediaTypeVRPicture){
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_VRELLID forIndexPath:indexPath];
+            self.firstVRCell = cell;
         }else{
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_IMAGECELLID forIndexPath:indexPath];
         }
@@ -496,6 +498,13 @@
         }];
     }else{
         self.itemView.hidden = YES;
+    }
+}
+
+- (void)checkVRLoadingAnimate
+{
+    if (self.firstVRCell) {
+        [self.firstVRCell checkVRLoadingAnimate];
     }
 }
 

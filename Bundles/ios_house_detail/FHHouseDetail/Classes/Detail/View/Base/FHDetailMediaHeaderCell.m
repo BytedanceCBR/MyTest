@@ -552,6 +552,7 @@
 //    if (self.vcParentView) {
 //        [self fhDetail_scrollViewDidScroll:self.vcParentView];
 //    }
+    [self.mediaView checkVRLoadingAnimate];
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {
