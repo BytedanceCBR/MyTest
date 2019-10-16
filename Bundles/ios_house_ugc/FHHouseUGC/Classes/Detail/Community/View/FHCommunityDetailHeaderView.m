@@ -13,6 +13,7 @@
 #import "TTDeviceHelper.h"
 #import "FHCommunityDetailMJRefreshHeader.h"
 #import <UIFont+House.h>
+#import "TTRoute.h"
 
 @interface FHCommunityDetailHeaderView ()
 
@@ -339,7 +340,12 @@
 
 // 小区圈关注列表
 - (void)gotoSocialFollowUserList: (UITapGestureRecognizer *)gesture {
-    
+    NSMutableDictionary *infoDict = @{}.mutableCopy;
+    NSMutableDictionary *tracer = @{}.mutableCopy;
+    [infoDict setValue:tracer forKey:@"tracer"];
+    infoDict[@"title"] = @"XXX小区圈";
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://ugc_follow_user_list"] userInfo:info];
 }
 
 -(void)gotoOperationDetail:(UITapGestureRecognizer *)tap {
