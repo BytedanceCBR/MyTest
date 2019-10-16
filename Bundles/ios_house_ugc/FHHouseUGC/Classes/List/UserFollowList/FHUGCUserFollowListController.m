@@ -30,6 +30,7 @@
 #import "FHUGCUserFollowSearchView.h"
 #import "FHUGCUserFollowModel.h"
 #import "FHUGCUserFollowListVM.h"
+#import "FHUGCUserFollowTC.h"
 
 @interface FHUGCUserFollowListController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -150,7 +151,7 @@
     [self.view addSubview:_tableView];
     _tableView.dataSource = self;
     _tableView.delegate = self;
-    [_tableView registerClass:[FHUGCSearchListCell class] forCellReuseIdentifier:@"FHUGCSearchListCell"];
+    [_tableView registerClass:[FHUGCUserFollowTC class] forCellReuseIdentifier:@"FHUGCUserFollowTC_Sug"];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.searchView.mas_bottom).offset(0);

@@ -20,6 +20,9 @@
 #import "FHUserTracker.h"
 #import "FHUGCUserFollowListController.h"
 #import "FHUGCUserFollowModel.h"
+#import "FHUGCUserFollowTC.h"
+#import "FHRefreshCustomFooter.h"
+#import "TTReachability.h"
 
 @interface FHUGCUserFollowListVM ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -28,7 +31,9 @@
 @property(nonatomic, weak) UITableView *tableView;
 @property(nonatomic, weak) FHUGCUserFollowListController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
-@property(nonatomic, strong) NSMutableArray *dataList;
+@property(nonatomic, strong) NSMutableArray *followList;// 用户列表
+@property (nonatomic, strong)   NSMutableArray       *adminList;// 管理员
+@property (nonatomic, strong)   FHRefreshCustomFooter       *refreshFooter;
 
 @end
 
@@ -41,11 +46,36 @@
         self.tableView = tableView;
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
-//        [_tableView registerClass:[FHUGCSearchListCell class] forCellReuseIdentifier:@"FHUGCSearchListCell"];
+        [_tableView registerClass:[FHUGCUserFollowTC class] forCellReuseIdentifier:@"FHUGCUserFollowTC_List"];
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        self.dataList = [NSMutableArray array];
+        self.followList = [NSMutableArray array];
+        self.adminList = [NSMutableArray array];
+        
+        __weak typeof(self) weakSelf = self;
+        
+        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+            if (![TTReachability isNetworkConnected]) {
+                [[ToastManager manager] showToast:@"网络异常"];
+                [weakSelf updateTableViewWithMoreData:weakSelf.tableView.hasMore];
+            } else {
+                [weakSelf requestUserList];
+            }
+        }];
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多成员了"];
+        self.tableView.mj_footer = self.refreshFooter;
+        self.tableView.mj_footer.hidden = YES;
     }
     return self;
+}
+
+- (void)updateTableViewWithMoreData:(BOOL)hasMore {
+    self.tableView.mj_footer.hidden = NO;
+    if (hasMore == NO) {
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多成员了"];
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }else {
+        [self.tableView.mj_footer endRefreshing];
+    }
 }
 
 // 请求用户列表
@@ -56,9 +86,38 @@
     __weak typeof(self) weakSelf = self;
     self.requestTask = [FHHouseUGCAPI requestFollowUserListBySocialGroupId:self.socialGroupId offset:self.offset class:[FHUGCUserFollowModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
-            NSLog(@"%@",model);
+            [weakSelf processDataWith:(FHUGCUserFollowModel *)model];
+        } else {
+            [weakSelf processDataWith:nil];
         }
     }];
+}
+
+- (void)processDataWith:(FHUGCUserFollowModel *)model {
+    if (model && [model isKindOfClass:[FHUGCUserFollowModel class]] && model.data) {
+        if (model.data.adminList.count > 0 && self.offset == 0) {
+            [self.adminList addObjectsFromArray:model.data.adminList];
+        }
+        if (model.data.followList.count > 0) {
+            [self.followList addObjectsFromArray:model.data.followList];
+        }
+        self.hasMore = model.data.hasMore;
+        self.offset = model.data.offset;
+    }
+    // 后处理
+    if (self.adminList.count > 0 || self.followList.count > 0) {
+        self.viewController.hasValidateData = YES;
+        self.viewController.ttNeedHideBottomLine = YES;
+        [self.viewController.emptyView hideEmptyView];
+        self.tableView.hasMore = self.hasMore;
+        [self updateTableViewWithMoreData:self.hasMore];
+        [self.tableView reloadData];
+    } else {
+        self.viewController.hasValidateData = NO;
+        self.viewController.ttNeedHideBottomLine = NO;
+        // 显示空的关注页面-数据走丢了
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+    }
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
@@ -68,7 +127,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.dataList.count;
+    return self.followList.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -92,14 +151,14 @@
 //    }
 //
 //    return cell;
-    return nil;
+    return [UITableViewCell new];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 70;
+    return 66;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -114,7 +173,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     NSInteger row = indexPath.row;
-    if (row >= 0 && row < self.dataList.count) {
+    if (row >= 0 && row < self.followList.count) {
 //        // 键盘是否显示
 //        self.isKeybordShow = self.keyboardVisible;
 //
