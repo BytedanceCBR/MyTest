@@ -188,24 +188,13 @@
             NSMutableArray *imageListArray = [NSMutableArray arrayWithArray:images];
             [imageListArray removeObjectAtIndex:0];
             images = imageListArray;
-        }
-    }
-    
-    if (index < 0 || index >= (images.count + self.vedioCount)) {
-        return;
-    }
-    if (index < self.vedioCount) {
-        // 视频
-        if (self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStateStopped || self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStatePaused) {
-            // 第一次 非播放状态直接播放即可
-            [self.mediaView.videoVC play];
-            return;
+            index = index - 1;
         }
     }
     
     FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderModel *)self.currentData).vrModel;
     //VR
-    if (index == 0 && vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
+    if (index < 0 && vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
         if (![TTReachability isNetworkConnected]) {
             [[ToastManager manager] showToast:@"网络异常"];
             return;
@@ -224,8 +213,20 @@
             NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@",vrModel.openUrl,reportParams];
             [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",[openUrl URLEncodedString]]]];
         }
-
+        
         return;
+    }
+    
+    if (index < 0 || index >= (images.count + self.vedioCount)) {
+        return;
+    }
+    if (index < self.vedioCount) {
+        // 视频
+        if (self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStateStopped || self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStatePaused) {
+            // 第一次 非播放状态直接播放即可
+            [self.mediaView.videoVC play];
+            return;
+        }
     }
     
     __weak typeof(self) weakSelf = self;
