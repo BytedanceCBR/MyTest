@@ -145,7 +145,7 @@
 
 - (void)questionBtnDidClick:(UIButton *)btn
 {
-    [self addQuickQuestionClickOptionLog:self.questionBtn.isFold];
+    [self addQuickQuestionClickOptionLog:NO];
     
     FHDetailOldDataModel *dataModel = nil;
     if ([self.detailData isKindOfClass:[FHDetailOldModel class]]) {
@@ -176,6 +176,7 @@
     popView.completionBlock = ^{
         wself.questionBtn.hidden = NO;
         wself.questionBtn.isFold = YES;
+        [wself addQuickQuestionClickOptionLog:YES];
     };
     UIView *view = self.questionBtn;
     [popView showAtPoint:view.origin parentView:self.detailController.view];
@@ -184,7 +185,6 @@
 
 - (void)imAction:(FHDetailDataQuickQuestionItemModel *)model
 {
-    // add by zjing for test
     if (![model isKindOfClass:[FHDetailDataQuickQuestionItemModel class]]) {
         return;
     }
@@ -196,9 +196,6 @@
     imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHCluePageTypeCQuickQuestion];
     imExtra[@"question_id"] = model.id;
     [self.contactViewModel onlineActionWithExtraDict:imExtra];
-//    if (self.baseViewModel) {
-//        [self.baseViewModel addClickOptionLog:@"education_type"];
-//    }
 }
 
 #pragma mark - 需要子类实现的方法
@@ -519,9 +516,12 @@
 //    8.click_position：house_ask_question（提问按钮）
 //    9.show_type：展示状态：“问题内容展开”：“open”；“问题内容收起”：“close”
     NSMutableDictionary *params = @{}.mutableCopy;
-    if (self.detailTracerDic) {
-        [params addEntriesFromDictionary:self.detailTracerDic];
-    }
+    params[@"page_type"] = self.detailTracerDic[@"page_type"];
+    params[@"element_from"] = self.detailTracerDic[@"element_from"];
+    params[@"enter_from"] = self.detailTracerDic[@"enter_from"];
+    params[@"origin_from"] = self.detailTracerDic[@"origin_from"];
+    params[@"origin_search_id"] = self.detailTracerDic[@"origin_search_id"];
+    params[@"log_pb"] = self.detailTracerDic[@"log_pb"];
     params[@"click_position"] = @"house_ask_question";
     params[@"show_type"] = isFold ? @"close" : @"open";
     [FHUserTracker writeEvent:@"click_options" params:params];
