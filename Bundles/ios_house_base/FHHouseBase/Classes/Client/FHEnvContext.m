@@ -837,7 +837,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
         if (!error && [result isKindOfClass:[NSDictionary class]]) {
             BOOL isADUser = NO;
             if ([result[@"data"] isKindOfClass:[NSDictionary class]]) {
-                NSNumber *isPromotionUser = result[@"data"][@"is_promotion_user"];
+                NSNumber *isPromotionUser = result[@"data"][@"is_promotion"];
                 if ([isPromotionUser isKindOfClass:[NSNumber class]]) {
                     isADUser = [isPromotionUser boolValue];
                 }

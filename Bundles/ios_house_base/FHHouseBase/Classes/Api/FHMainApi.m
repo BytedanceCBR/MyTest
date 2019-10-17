@@ -574,7 +574,7 @@
 {
     NSString *url = QURL(@"/f100/ugc/promotion/check");
     
-    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:param method:POST needCommonParams:YES requestSerializer:[FHJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:param method:GET needCommonParams:YES callback:^(NSError *error, id obj) {
         if (completion) {
             NSDictionary *json = nil;
             
