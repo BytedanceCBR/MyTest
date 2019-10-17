@@ -342,6 +342,11 @@
 
 #pragma mark - UITextFieldDelegate
 
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    [self addMemberSearchLog];
+    return YES;
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     return YES;
 }
@@ -451,6 +456,11 @@
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
     [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
     [self tt_resetStayTime];
+}
+
+-(void)addMemberSearchLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [FHUserTracker writeEvent:@"click_member_search" params:tracerDict];
 }
 
 // 联想词埋点

@@ -697,8 +697,19 @@
     if (!item && [item isKindOfClass:[FHUGCScialGroupDataModel class]]) {
         return;
     }
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"element_type"] = @"community_group_join_member";
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    params[@"click_position"] = @"community_group_join_member";
+    params[@"page_type"] = [self pageTypeString];
+    [FHUserTracker writeEvent:@"click_options" params:params];
     NSMutableDictionary *infoDict = @{}.mutableCopy;
     NSMutableDictionary *tracer = @{}.mutableCopy;
+    tracer[@"enter_type"] = @"click";
+    tracer[@"enter_from"] = [self pageTypeString];
+    //tracer[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+    tracer[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     // 埋点
     [infoDict setValue:tracer forKey:@"tracer"];
     // NSString *name = [NSString stringWithFormat:@"%@小区圈",item.socialGroupName];
