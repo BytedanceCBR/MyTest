@@ -12,18 +12,23 @@
 #import "FHTopicHeaderModel.h"
 #import "SSImpressionManager.h"
 #import "FHPersonalHomePageModel.h"
+#import "FHFeedUGCCellModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPersonalHomePageViewModel : FHUGCBaseViewModel<UITableViewDelegate,UITableViewDataSource>
 
-@property (nonatomic, strong)   FHUGCCellManager       *ugcCellManager;
-@property (nonatomic, strong) NSHashTable<id>      *hashTable;
-@property (nonatomic, assign)   NSInteger       currentSelectIndex;
-@property (nonatomic, strong)     UITableView       *currentTableView;
-@property (nonatomic, strong)   FHPersonalHomePageModel       *headerModel;
-@property (nonatomic, assign)   int64_t cid;// 话题id
-@property (nonatomic, copy)     NSString       *enter_from;// 从哪进入的当前页面
+@property (nonatomic, strong) FHUGCCellManager *ugcCellManager;
+@property (nonatomic, strong) NSHashTable<id> *hashTable;
+@property (nonatomic, assign) NSInteger currentSelectIndex;
+@property (nonatomic, strong) UITableView *currentTableView;
+@property (nonatomic, strong) FHPersonalHomePageModel *headerModel;
+@property (nonatomic, assign) int64_t cid;// 话题id
+@property (nonatomic, copy) NSString *enter_from;// 从哪进入的当前页面
+//视频相关
+@property(nonatomic, strong) NSMutableArray *movieViews;
+@property(nonatomic, strong) UIView *movieView;
+@property(nonatomic, strong) FHFeedUGCCellModel *movieViewCellData;
 
 -(instancetype)initWithController:(FHPersonalHomePageController *)viewController;
 
