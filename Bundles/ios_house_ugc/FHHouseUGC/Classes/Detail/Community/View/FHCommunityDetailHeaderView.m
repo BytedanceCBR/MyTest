@@ -159,7 +159,7 @@
     self.userCountLabel.font = [UIFont themeFontRegular:12];
     self.userCountLabel.textColor = [UIColor themeWhite];
     self.userCountLabel.numberOfLines = 1;
-    self.userCountLabel.text = @"xxx个成员";
+    self.userCountLabel.text = @"0个成员";
     [self.userCountBgView addSubview:self.userCountLabel];
     
     self.userCountRightArrow = [UIImageView new];

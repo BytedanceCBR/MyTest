@@ -637,9 +637,13 @@
     self.headerView.nameLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
     NSString *subtitle = data.countText;
     self.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
-    
-    self.headerView.userCountBgView.hidden = NO;// add by zyk 服务端控制显示和隐藏
-    self.headerView.userCountLabel.text = @"ABC个成员";
+    NSInteger followerCount = [data.followerCount integerValue];
+    if (followerCount <= 0) {
+       self.headerView.userCountBgView.hidden = YES;
+    } else {
+        self.headerView.userCountBgView.hidden = NO;
+        self.headerView.userCountLabel.text = [NSString stringWithFormat:@"%ld个成员",followerCount];
+    }
     
     // 配置公告
     [self updatePublicationsWith:data];
@@ -673,7 +677,6 @@
         
         self.feedListController.tableView.tableHeaderView = headerView;
         [self.feedListController.tableView bringSubviewToFront:self.feedListController.tableView.mj_header];
-        
     }
 
     //仅仅在未关注时显示引导页
@@ -698,7 +701,7 @@
     NSMutableDictionary *tracer = @{}.mutableCopy;
     // 埋点
     [infoDict setValue:tracer forKey:@"tracer"];
-//    NSString *name = [NSString stringWithFormat:@"%@小区圈",item.socialGroupName];
+    // NSString *name = [NSString stringWithFormat:@"%@小区圈",item.socialGroupName];
     infoDict[@"title"] = item.socialGroupName;
     infoDict[@"social_group_id"] = item.socialGroupId;
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
