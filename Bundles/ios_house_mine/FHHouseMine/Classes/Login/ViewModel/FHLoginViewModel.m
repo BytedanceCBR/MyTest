@@ -378,7 +378,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
         [self loginSuccessedWithPhoneNum:phoneNumber];
         
-        [[FHEnvContext sharedInstance] sendUGCADUserIsLaunch];
+        [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:YES];
         
     } else if (captchaImage) {
         [self loginShowCaptcha:captchaImage error:error phoneNumber:phoneNumber smsCode:smsCode];

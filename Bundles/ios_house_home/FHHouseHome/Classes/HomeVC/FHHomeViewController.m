@@ -35,6 +35,7 @@
 #import <TTArticleTabBarController.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <TTThemedAlertController.h>
+#import <FHUtils.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -624,10 +625,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
         if (([pasteboardStrs isKindOfClass:[NSArray class]] && pasteboardStrs.count > 0)) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (!weakSelf.adUGCHadJump) {
-                    weakSelf.adUGCHadJump = YES;
-                    [[FHEnvContext sharedInstance] sendUGCADUserIsLaunch];
-                }
                 __block NSString *pasteboardStr = nil;
                 [pasteboardStrs enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     if ([obj hasPrefix:kFUGCPrefixStr]) {
@@ -654,20 +651,65 @@ static NSString * const kFUGCPrefixStr = @"fugc";
             });
         }
     });
+
+    NSString *localMark = [FHUtils contentForKey:@"is_promotion_user"];
+    
+    if ([localMark isKindOfClass:[NSString class]] && [localMark isEqualToString:@"1"]) {
+        NSString *cityIdStr = [FHEnvContext getCurrentSelectCityIdFromLocal];
+        NSNumber *cityIdNum = nil;
+        if ([cityIdStr isKindOfClass:[NSString class]]) {
+            cityIdNum = [NSNumber numberWithInteger:[cityIdStr integerValue]];
+        }
+        [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityIdNum];
+    }
+    
+    //只保存数据
+    [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
 }
 
-- (void)requestSendUGCUserAD:(NSString *)titlStr
+- (void)requestSendUGCUserAD:(NSString *)requestStr
 {
-    TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:titlStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
-    
-    [alertVC addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    [params setValue:requestStr forKey:@"promotion_code"];
+    __weak typeof(self) weakSelf = self;
+
+    [FHMainApi uploadUGCPostPromotionparams:params completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
         
+        if (!error && [result isKindOfClass:[NSDictionary class]]) {
+            NSNumber *cityId = nil;
+            NSString *alertStr = nil;
+            NSNumber *inviteStatus = nil;
+            if ([result[@"city_id"] isKindOfClass:[NSNumber class]]) {
+                cityId = result[@"city_id"];
+            }
+            
+            if ([result[@"tips"] isKindOfClass:[NSString class]]) {
+                alertStr = result[@"tips"];
+            }
+            
+            if ([result[@"invite_status"] isKindOfClass:[NSNumber class]]) {
+                inviteStatus = result[@"invite_status"];
+            }
+            
+            if (alertStr && inviteStatus && [inviteStatus integerValue] != 2) {
+                TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:alertStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
+                
+                [alertVC addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+                    
+                }];
+                
+                UIViewController *topVC = [TTUIResponderHelper topmostViewController];
+                if (topVC) {
+                    [alertVC showFrom:topVC animated:YES];
+                }
+            }
+            
+            if (!weakSelf.adUGCHadJump && [inviteStatus integerValue] != 2) {
+                weakSelf.adUGCHadJump = YES;
+                [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityId];
+            }
+        }
     }];
-    
-    UIViewController *topVC = [TTUIResponderHelper topmostViewController];
-    if (topVC) {
-        [alertVC showFrom:topVC animated:YES];
-    }
 }
 
 @end

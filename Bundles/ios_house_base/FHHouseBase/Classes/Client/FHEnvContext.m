@@ -31,6 +31,7 @@
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import <TTArticleTabBarController.h>
 #import <TTCategoryBadgeNumberManager.h>
+#import "FHMainApi.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -830,33 +831,58 @@ static NSInteger kGetLightRequestRetryCount = 3;
 /*
  UGC线上线下推广,植入种子
  */
-- (void)sendUGCADUserIsLaunch
+- (void)checkUGCADUserIsLaunch:(BOOL)isAutoSwitch
 {
-    NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",@(122)];
-    [FHEnvContext silentOpenSwitchCityURL:url completion:^(BOOL isSuccess) {
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self jumpUGCTab];
-            });
-        });
+    [FHMainApi checkUGCPostPromotionparams:nil completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
+        if (!error && [result isKindOfClass:[NSDictionary class]]) {
+            BOOL isADUser = NO;
+            if ([result[@"data"] isKindOfClass:[NSDictionary class]]) {
+                NSNumber *isPromotionUser = result[@"data"][@"is_promotion_user"];
+                if ([isPromotionUser isKindOfClass:[NSNumber class]]) {
+                    isADUser = [isPromotionUser boolValue];
+                }
+            }
+            
+            if(isADUser)
+            {
+                [FHUtils setContent:@"1" forKey:@"is_promotion_user"];
+            }else
+            {
+                [FHUtils setContent:@"0" forKey:@"is_promotion_user"];
+            }
+            
+            if (isADUser) {
+                if (isAutoSwitch) {
+                    if([FHEnvContext isUGCOpen])
+                    {
+                        [[FHEnvContext sharedInstance] jumpUGCTab];
+                    }else
+                    {
+                        NSString *cityIdStr = [FHEnvContext getCurrentSelectCityIdFromLocal];
+                        NSNumber *cityIdNum = nil;
+                        if ([cityIdStr isKindOfClass:[NSString class]]) {
+                            cityIdNum = [NSNumber numberWithInteger:[cityIdStr integerValue]];
+                        }
+                        [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityIdNum];
+                    }
+                }
+            }
+        }
     }];
 }
 
-/*
- UGC线上线下推广,获取种子
- */
-- (void)getUGCADUserIsLaunch
+- (void)switchCityConfigForUGCADUser:(NSNumber *)cityId
 {
-    
-    NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",@(122)];
-    [FHEnvContext silentOpenSwitchCityURL:url completion:^(BOOL isSuccess) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self jumpUGCTab];
+    if ([cityId isKindOfClass:[NSNumber class]]) {
+        NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",cityId];
+        [FHEnvContext silentOpenSwitchCityURL:url completion:^(BOOL isSuccess) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self jumpUGCTab];
+                });
             });
-        });
-    }];
+        }];
+    }
 }
 
 - (void)jumpUGCTab

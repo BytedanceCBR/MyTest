@@ -544,10 +544,25 @@
  UGC推广 增加植入种子
  */
 
-+(TTHttpTask *_Nullable)sendUGCPostPromotionparams:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion
++(TTHttpTask *_Nullable)uploadUGCPostPromotionparams:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion
 {
+    NSString *url = QURL(@"/f100/ugc/promotion/upload");
     
-    
+    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:param method:POST needCommonParams:YES requestSerializer:[FHJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        if (completion) {
+            NSDictionary *json = nil;
+            
+            if (!error) {
+                @try{
+                    json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                }
+                @catch(NSException *e){
+                    error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+                }
+            }
+            completion(json,error);
+        }
+    }];
 }
 
 
@@ -555,9 +570,25 @@
  UGC推广 获取种子
  */
 
-+(TTHttpTask *_Nullable)getUGCPostPromotionparams:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion
++(TTHttpTask *_Nullable)checkUGCPostPromotionparams:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion
 {
+    NSString *url = QURL(@"/f100/ugc/promotion/check");
     
+    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:param method:POST needCommonParams:YES requestSerializer:[FHJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        if (completion) {
+            NSDictionary *json = nil;
+            
+            if (!error) {
+                @try{
+                    json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                }
+                @catch(NSException *e){
+                    error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+                }
+            }
+            completion(json,error);
+        }
+    }];
 }
 
 

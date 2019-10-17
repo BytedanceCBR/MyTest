@@ -205,14 +205,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)getGetOriginFromAndOriginId;
 
 /*
-  UGC线上线下推广,植入种子
+  UGC线上线下推广,切换城市拉取config
  */
-- (void)sendUGCADUserIsLaunch;
+- (void)switchCityConfigForUGCADUser:(NSNumber *)cityId;
 
 /*
- UGC线上线下推广,获取种子
  */
-- (void)getUGCADUserIsLaunch;
+- (void)checkUGCADUserIsLaunch:(BOOL)isAutoSwitch;
 
 /*
  DeepLink Zlink
