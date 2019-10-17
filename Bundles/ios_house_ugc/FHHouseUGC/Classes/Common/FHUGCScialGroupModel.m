@@ -22,6 +22,10 @@
     @"logPb":@"log_pb",
     @"announcementUrl":@"announcement_url",
     @"userAuth": @"user_auth",
+    @"conversationId": @"conversation_id",
+    @"conversationStatus": @"user_status",
+    @"maxConversationCount": @"user_limit",
+    @"currentConversationCount": @"user_count"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

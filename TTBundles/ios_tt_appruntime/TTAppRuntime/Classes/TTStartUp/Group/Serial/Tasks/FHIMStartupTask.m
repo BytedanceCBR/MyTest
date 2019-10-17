@@ -83,6 +83,10 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     [[FHBubbleTipManager shareInstance] tryShowBubbleTip:msg openUrl:@""];
 }
 
+- (NSString *)appVersionCode {
+    return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+}
+
 - (void)tryGetPhoneNumber:(nonnull NSString *)userId withImprId:(nonnull NSString *)imprId tracer:(nonnull NSDictionary *)tracer withBlock:(nullable PhoneCallback)finishBlock{
     if (isEmptyString(userId)) {
         finishBlock(@"click_call", imprId,true);
