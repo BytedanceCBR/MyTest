@@ -34,6 +34,9 @@
     @"hasMore": @"has_more",
     @"adminList": @"admin_list",
     @"followList": @"follow_list",
+    @"suggestList": @"suggest_list",
+    @"adminCount": @"admin_count",
+    @"followCount": @"follow_count",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

@@ -31,6 +31,8 @@
 #import "FHUGCUserFollowModel.h"
 #import "FHUGCUserFollowListVM.h"
 #import "FHUGCUserFollowTC.h"
+#import "FHRefreshCustomFooter.h"
+#import "UIScrollView+Refresh.h"
 
 @interface FHUGCUserFollowListController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -39,6 +41,7 @@
 @property(nonatomic, strong) NSMutableArray *items;// sug 列表
 @property(nonatomic, weak) TTHttpTask *sugHttpTask;
 @property (nonatomic, assign)   NSInteger       sugOffset;
+@property (nonatomic, assign)   BOOL       hasMore;
 @property(nonatomic, copy) NSString *searchText;
 @property(nonatomic, assign) BOOL isViewAppearing;
 @property(nonatomic, assign) BOOL needReloadData;
@@ -48,6 +51,7 @@
 @property (nonatomic, strong)   FHUGCUserFollowSearchView       *searchView;
 @property (nonatomic, copy)     NSString       *socialGroupId;
 @property (nonatomic, strong)   FHUGCUserFollowListVM       *viewModel;// 用户列表VM
+@property (nonatomic, strong)   FHRefreshCustomFooter       *refreshFooter;
 @end
 
 @implementation FHUGCUserFollowListController
@@ -146,18 +150,6 @@
     [self setupNaviBar];
 
     CGFloat height = [FHFakeInputNavbar perferredHeight];
-
-    [self configTableView];
-    [self.view addSubview:_tableView];
-    _tableView.dataSource = self;
-    _tableView.delegate = self;
-    [_tableView registerClass:[FHUGCUserFollowTC class] forCellReuseIdentifier:@"FHUGCUserFollowTC_Sug"];
-    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.searchView.mas_bottom).offset(0);
-        make.bottom.mas_equalTo(self.view);
-    }];
-    _tableView.hidden = YES;
     
     // 用户列表
     self.userTableView = [self configTableView2];
@@ -170,6 +162,32 @@
         make.top.mas_equalTo(self.searchView.mas_bottom).offset(0);
         make.bottom.mas_equalTo(self.view);
     }];
+    
+    // sug列表
+    [self configTableView];
+    [self.view addSubview:_tableView];
+    _tableView.dataSource = self;
+    _tableView.delegate = self;
+    [_tableView registerClass:[FHUGCUserFollowTC class] forCellReuseIdentifier:@"FHUGCUserFollowTC_Sug"];
+    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.searchView.mas_bottom).offset(0);
+        make.bottom.mas_equalTo(self.view);
+    }];
+    _tableView.hidden = YES;
+    __weak typeof(self) weakSelf = self;
+    
+    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+        if (![TTReachability isNetworkConnected]) {
+            [[ToastManager manager] showToast:@"网络异常"];
+            [weakSelf updateTableViewWithMoreData:weakSelf.tableView.hasMore];
+        } else {
+            [weakSelf requestSuggestion:weakSelf.searchText];
+        }
+    }];
+    [self.refreshFooter setUpNoMoreDataText:@""];
+    self.tableView.mj_footer = self.refreshFooter;
+    self.tableView.mj_footer.hidden = YES;
 }
 
 - (void)configTableView {
@@ -184,7 +202,7 @@
     if (@available(iOS 11.0, *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    _tableView.estimatedRowHeight = 70;
+    _tableView.estimatedRowHeight = 66;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
     if ([TTDeviceHelper isIPhoneXDevice]) {
@@ -204,7 +222,7 @@
     if (@available(iOS 11.0, *)) {
         tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    tableView.estimatedRowHeight = 70;
+    tableView.estimatedRowHeight = 66;
     tableView.estimatedSectionFooterHeight = 0;
     tableView.estimatedSectionHeaderHeight = 0;
     if ([TTDeviceHelper isIPhoneXDevice]) {
@@ -251,11 +269,15 @@
     BOOL hasText = text.length > 0;
     self.searchText = text;
     if (hasText) {
+        self.tableView.hidden = NO;
+        self.sugOffset = 0;
+        self.hasMore = NO;
         [self requestSuggestion:text];
     } else {
         // 清空sug列表数据
         [self.items removeAllObjects];
         [self.tableView reloadData];
+        self.tableView.hidden = YES;
     }
 }
 
@@ -265,18 +287,45 @@
         [self.sugHttpTask cancel];
     }
     __weak typeof(self) weakSelf = self;
-    self.sugHttpTask = [FHHouseUGCAPI requestSocialSearchByText:text class:[FHUGCSearchModel class] completion:^(id <FHBaseModelProtocol> _Nonnull model, NSError *_Nonnull error) {
+    self.sugHttpTask = [FHHouseUGCAPI requestFollowSugSearchByText:text socialGroupId:self.socialGroupId offset:self.sugOffset class:[FHUGCUserFollowModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
             weakSelf.associatedCount +=1;
             [weakSelf.items removeAllObjects];
-            FHUGCSearchModel *tModel = model;
-            if (tModel.data.count > 0) {
-                [weakSelf.items addObjectsFromArray:tModel.data];
-            }
-            [weakSelf addAssociateCommunityShowLog];
-            [weakSelf.tableView reloadData];
+            [weakSelf processDataWith:(FHUGCUserFollowModel *)model];
+        } else {
+            [weakSelf processDataWith:nil];
         }
     }];
+}
+
+- (void)processDataWith:(FHUGCUserFollowModel *)model {
+    if (model && [model isKindOfClass:[FHUGCUserFollowModel class]] && model.data) {
+        if (model.data.suggestList.count > 0) {
+            [self.items addObjectsFromArray:model.data.suggestList];
+        }
+        self.hasMore = model.data.hasMore;
+        self.sugOffset = model.data.offset;
+    }
+    // 后处理
+    if (self.items.count > 0) {
+        self.hasValidateData = YES;
+        self.tableView.hasMore = self.hasMore;
+        [self updateTableViewWithMoreData:self.hasMore];
+        [self.tableView reloadData];
+    } else {
+        self.hasValidateData = NO;
+        [self.tableView reloadData];
+    }
+}
+
+- (void)updateTableViewWithMoreData:(BOOL)hasMore {
+    self.tableView.mj_footer.hidden = NO;
+    if (hasMore == NO) {
+        [self.refreshFooter setUpNoMoreDataText:@""];
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }else {
+        [self.tableView.mj_footer endRefreshing];
+    }
 }
 
 #pragma mark - UITextFieldDelegate
@@ -307,25 +356,15 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHUGCSearchListCell *cell = (FHUGCSearchListCell *) [tableView dequeueReusableCellWithIdentifier:@"FHUGCSearchListCell" forIndexPath:indexPath];
+    FHUGCUserFollowTC *cell = (FHUGCUserFollowTC *) [tableView dequeueReusableCellWithIdentifier:@"FHUGCUserFollowTC_Sug" forIndexPath:indexPath];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
+    
     NSInteger row = indexPath.row;
-    if (row >= 0 && row < self.items.count) {
-        cell.highlightedText = self.searchText;
-        FHUGCScialGroupDataModel *data = self.items[row];
-        // 埋点
-        NSMutableDictionary *tracerDic = @{}.mutableCopy;
-        tracerDic[@"card_type"] = @"left_pic";
-        tracerDic[@"page_type"] = @"community_search";
-        tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-        tracerDic[@"rank"] = @(row);
-        tracerDic[@"click_position"] = @"join_like";
-        tracerDic[@"log_pb"] = data.logPb ?: @"be_null";
-        cell.tracerDic = tracerDic;
-        // 刷新数据
+    if (row < self.items.count) {
+        FHUGCUserFollowDataFollowListModel *itemData = (FHUGCUserFollowDataFollowListModel *)self.items[row];
+        [cell refreshWithData:itemData];
     }
-
+    
     return cell;
 }
 
@@ -337,7 +376,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 70;
+    return 66;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -358,18 +397,18 @@
         
         FHUGCScialGroupDataModel *data = self.items[row];
 
-        // 点击埋点
-        [self addCommunityClickLog:data rank:row];
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"community_id"] = data.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"community_search_show",
-                            @"enter_type":@"click",
-                            @"rank":@(row),
-                            @"log_pb":data.logPb ?: @"be_null"};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        // 跳转到圈子详情页
-        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+//        // 点击埋点
+//        [self addCommunityClickLog:data rank:row];
+//        NSMutableDictionary *dict = @{}.mutableCopy;
+//        dict[@"community_id"] = data.socialGroupId;
+//        dict[@"tracer"] = @{@"enter_from":@"community_search_show",
+//                            @"enter_type":@"click",
+//                            @"rank":@(row),
+//                            @"log_pb":data.logPb ?: @"be_null"};
+//        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+//        // 跳转到圈子详情页
+//        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
+//        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
