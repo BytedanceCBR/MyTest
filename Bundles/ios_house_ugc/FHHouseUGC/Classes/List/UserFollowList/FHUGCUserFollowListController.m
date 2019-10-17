@@ -77,7 +77,8 @@
     self.panBeginAction = ^{
         [weakSelf.searchView.searchInput resignFirstResponder];
     };
-    [self addDefaultEmptyViewFullScreen];
+    CGFloat height = [FHFakeInputNavbar perferredHeight];
+    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
     [self.emptyView hideEmptyView];
     [self startLoadData];
 
