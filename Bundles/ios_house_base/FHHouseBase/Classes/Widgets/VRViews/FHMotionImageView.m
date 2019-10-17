@@ -13,10 +13,10 @@
 #import <UIImageView+BDWebImage.h>
 #import <BDWebImage/BDWebImageManager.h>
 
-static CGFloat widthXRate = 0.25f;
-static CGFloat heightYRate = 1.0f;
-static CGFloat widthXHalf = 0.125f;
-static CGFloat heightYHalf = 0.5f;
+static CGFloat widthXRate = 0.20f;
+static CGFloat heightYRate = 0.4f;
+static CGFloat widthXHalf = 0.1f;
+static CGFloat heightYHalf = 0.2f;
 
 @interface FHMotionImageView()
 @property(nonatomic,strong)UIImageView *contentImageView;
@@ -26,7 +26,7 @@ static CGFloat heightYHalf = 0.5f;
 
 @end
 
-static CGFloat multiplier = 4;
+static CGFloat multiplier = 2;
 
 @implementation FHMotionImageView
 
