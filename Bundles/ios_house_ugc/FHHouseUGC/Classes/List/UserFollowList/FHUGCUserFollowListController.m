@@ -33,6 +33,8 @@
 #import "FHUGCUserFollowTC.h"
 #import "FHRefreshCustomFooter.h"
 #import "UIScrollView+Refresh.h"
+#import "FHUserTracker.h"
+#import "UIViewController+Track.h"
 
 @interface FHUGCUserFollowListController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -63,6 +65,8 @@
         NSString *social_group_id = params[@"social_group_id"];
         self.associatedCount = 0;
         self.socialGroupId = social_group_id;
+        self.tracerDict[@"page_type"] = @"community_group_join_member";
+        self.ttTrackStayEnable = YES;
     }
     return self;
 }
@@ -82,6 +86,8 @@
     [self.emptyView hideEmptyView];
     [self startLoadData];
 
+    [self addGoDetailLog];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardVisibleChanged:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardVisibleChanged:) name:UIKeyboardWillHideNotification object:nil];
 }
@@ -104,6 +110,7 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     self.isViewAppearing = NO;
+    [self addStayPageLog];
 }
 
 #pragma mark - UIKeyboardNotification
@@ -143,6 +150,7 @@
     }];
     
     self.searchView.searchInput.delegate = self;
+    self.searchView.hidden = YES;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
 }
@@ -246,6 +254,11 @@
     [self startLoadData];
 }
 
+- (void)setHasValidateData:(BOOL)hasValidateData {
+    [super setHasValidateData:hasValidateData];
+    self.searchView.hidden = !hasValidateData;
+}
+
 // 文本框文字变化，进行sug请求
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {
 
@@ -257,7 +270,7 @@
     NSInteger maxCount = 80;
     NSString *text = self.searchView.searchInput.text;
     UITextRange *selectedRange = [self.searchView.searchInput markedTextRange];
-    //获取高亮部分
+    // 获取高亮部分
     UITextPosition *position = [self.searchView.searchInput positionFromPosition:selectedRange.start offset:0];
     // 没有高亮选择的字，说明不是拼音输入
     if (position) {
@@ -309,12 +322,10 @@
     }
     // 后处理
     if (self.items.count > 0) {
-        self.hasValidateData = YES;
         self.tableView.hasMore = self.hasMore;
         [self updateTableViewWithMoreData:self.hasMore];
         [self.tableView reloadData];
     } else {
-        self.hasValidateData = NO;
         [self.tableView reloadData];
     }
 }
@@ -369,8 +380,8 @@
     return cell;
 }
 
--(void)onItemSelected:(FHUGCScialGroupDataModel*)item{
-
+-(void)onItemSelected:(FHUGCUserFollowDataFollowListModel*)item{
+    
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -388,6 +399,7 @@
     return CGFLOAT_MIN;
 }
 
+// 联想词点击
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
@@ -396,31 +408,60 @@
         // 键盘是否显示
         self.isKeybordShow = self.keyboardVisible;
         
-        FHUGCScialGroupDataModel *data = self.items[row];
-
-//        // 点击埋点
-//        [self addCommunityClickLog:data rank:row];
-//        NSMutableDictionary *dict = @{}.mutableCopy;
-//        dict[@"community_id"] = data.socialGroupId;
-//        dict[@"tracer"] = @{@"enter_from":@"community_search_show",
-//                            @"enter_type":@"click",
-//                            @"rank":@(row),
-//                            @"log_pb":data.logPb ?: @"be_null"};
-//        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//        // 跳转到圈子详情页
-//        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
-//        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+        FHUGCUserFollowDataFollowListModel *data = self.items[row];
+        if (data.schema.length > 0) {
+            // 点击埋点
+            // [self addCommunityClickLog:data rank:row];
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"tracer"] = @{@"enter_from":@"member_search_show",
+                                @"enter_type":@"click",
+                                @"rank":@(row)};
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            // 跳转到个人主页
+            NSURL *openUrl = [NSURL URLWithString:data.schema];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+        }
     }
 }
 
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayPageLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+#pragma mark - Tracer
+
+-(void)addGoDetailLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
+}
+
+-(void)addStayPageLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
+    [self tt_resetStayTime];
+}
+
 // 联想词埋点
+/*
 - (void)addAssociateCommunityShowLog {
     NSMutableArray *wordList = [NSMutableArray new];
     for (NSInteger index = 0; index < self.items.count; index++) {
-        FHUGCScialGroupDataModel *item = self.items[index];
+        FHUGCUserFollowDataFollowListModel *item = self.items[index];
         NSDictionary *dic = @{
-                @"text": item.socialGroupName ?: @"be_null",
-                @"word_id": item.socialGroupId ?: @"be_null",
+                @"text": item.userName ?: @"be_null",
+                @"word_id": item.userId ?: @"be_null",
                 @"rank": @(index)
         };
         [wordList addObject:dic];
@@ -431,32 +472,26 @@
     if (data && error == NULL) {
         wordListStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     }
-    NSDictionary *logPb;
-    if (self.items.count > 0) {
-        FHUGCScialGroupDataModel *item = self.items[0];
-        logPb = item.logPb;
-    }
     NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
     tracerDic[@"community_list"] = wordListStr ?: @"be_null";
     tracerDic[@"associate_cnt"] = @(self.associatedCount);
-    tracerDic[@"associate_type"] = @"community_group";
+    tracerDic[@"associate_type"] = @"join_menber";
     tracerDic[@"community_cnt"] = @(wordList.count);
     tracerDic[@"element_type"] = self.tracerDict[@"element_type"] ?: @"be_null";
-    tracerDic[@"log_pb"] = logPb;
-    [FHUserTracker writeEvent:@"associate_community_show" params:tracerDic];
+    [FHUserTracker writeEvent:@"associate_member_show" params:tracerDic];
 }
 
-- (void)addCommunityClickLog:(FHUGCScialGroupDataModel *)model rank:(NSInteger)rank  {
+- (void)addCommunityClickLog:(FHUGCUserFollowDataFollowListModel *)model rank:(NSInteger)rank  {
     if(!model){
         return;
     }
 
     NSMutableArray *wordList = [NSMutableArray new];
     for (NSInteger index = 0; index < self.items.count; index++) {
-        FHUGCScialGroupDataModel *item = self.items[index];
+        FHUGCUserFollowDataFollowListModel *item = self.items[index];
         NSDictionary *dic = @{
-                @"text": item.socialGroupName ?: @"be_null",
-                @"word_id": item.socialGroupId ?: @"be_null",
+                @"text": item.userName ?: @"be_null",
+                @"word_id": item.userId ?: @"be_null",
                 @"rank": @(index)
         };
         [wordList addObject:dic];
@@ -471,25 +506,13 @@
     NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
     tracerDic[@"community_list"] = wordListStr ?: @"be_null";
     tracerDic[@"associate_cnt"] = @(self.associatedCount);
-    tracerDic[@"associate_type"] = @"community_group";
+    tracerDic[@"associate_type"] = @"join_menber";
     tracerDic[@"community_cnt"] = @(wordList.count);
     tracerDic[@"element_type"] = self.tracerDict[@"element_type"] ?: @"be_null";
-    tracerDic[@"word_id"] = model.socialGroupId;
+    tracerDic[@"word_id"] = model.userId;
     tracerDic[@"rank"] = @(rank);
-    tracerDic[@"log_pb"] = model.logPb;
-    [FHUserTracker writeEvent:@"associate_community_click" params:tracerDic];
+    [FHUserTracker writeEvent:@"associate_member_click" params:tracerDic];
 }
-
--(void)addSelectLog:(FHUGCScialGroupDataModel *)model rank:(NSInteger)rank{
-    NSMutableDictionary *tracerDic = @{}.mutableCopy;
-    tracerDic[@"card_type"] = @"left_pic";
-    tracerDic[@"page_type"] = @"community_search";
-    tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-    tracerDic[@"rank"] = @(rank);
-    tracerDic[@"log_pb"] = model.logPb ?: @"be_null";
-    tracerDic[@"click_position"] = @"select_like";
-    [FHUserTracker writeEvent:@"click_select" params:tracerDic];
-}
-
+*/
 @end
 
