@@ -620,8 +620,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     //据说主线程读剪切板会导致app卡死。。。改为子线程读
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-//        NSArray<NSString *> *pasteboardStrs = [pasteboard strings];
-        NSArray<NSString *> *pasteboardStrs = @[@"fugcewogICAgInR5cGUiOiAiZl91Z2NfcHJvbW90aW9uIiwKICAgICJkYXRhIjogewogICAgfQp9"];
+        NSArray<NSString *> *pasteboardStrs = [pasteboard strings];
 
         if (([pasteboardStrs isKindOfClass:[NSArray class]] && pasteboardStrs.count > 0)) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -635,14 +634,10 @@ static NSString * const kFUGCPrefixStr = @"fugc";
                 
                 if (pasteboardStr) {
                     NSString *base64Str = [pasteboardStr stringByReplacingOccurrencesOfString:kFUGCPrefixStr withString:@""];
-                    NSData *decodeData = [[NSData alloc] initWithBase64EncodedString:base64Str options:NSDataBase64DecodingIgnoreUnknownCharacters];
-                    NSCParameterAssert(decodeData);
-                    if (!decodeData) {
-                        return;
-                    }
-                    NSString *schema = [[NSString alloc] initWithData:decodeData encoding:NSUTF8StringEncoding];
                     
-                    [weakSelf requestSendUGCUserAD:schema];
+                    if (base64Str) {
+                        [weakSelf requestSendUGCUserAD:base64Str];
+                    }
                     //清空剪切板
                     NSMutableArray * strs = pasteboardStrs.mutableCopy;
                     [strs removeObject:pasteboardStr];
