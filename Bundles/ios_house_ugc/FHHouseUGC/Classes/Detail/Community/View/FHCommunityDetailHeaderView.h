@@ -28,6 +28,7 @@ typedef void(^GotoPublicationsDetailBlock)(void);
 @property(nonatomic, strong) UILabel *publicationsContentLabel;
 @property(nonatomic, strong) UILabel *publicationsDetailViewTitleLabel;
 @property(nonatomic, copy) GotoPublicationsDetailBlock gotoPublicationsDetailBlock;               // 公告区显示详情按钮block
+@property (nonatomic, copy)     dispatch_block_t       gotoSocialFollowUserListBlk;
 @property(nonatomic) CGFloat headerBackHeight;
 // 运营位部分
 @property(nonatomic, copy) GotoOperationDetailBlock gotoOperationBlock;

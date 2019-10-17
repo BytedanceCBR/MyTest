@@ -104,6 +104,11 @@
         StrongSelf;
         [self gotoPostThreadVC];
     };
+    
+    self.headerView.gotoSocialFollowUserListBlk = ^{
+        StrongSelf;
+        [self gotoSocialFollowUserList];
+    };
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onGlobalFollowListLoad:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
@@ -633,6 +638,9 @@
     NSString *subtitle = data.countText;
     self.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
     
+    self.headerView.userCountBgView.hidden = NO;// add by zyk 服务端控制显示和隐藏
+    self.headerView.userCountLabel.text = @"ABC个成员";
+    
     // 配置公告
     [self updatePublicationsWith:data];
     // 配置运营位
@@ -679,6 +687,22 @@
     self.headerView.followButton.followed = followed;
     self.rightBtn.followed = followed;
     [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
+}
+
+- (void)gotoSocialFollowUserList {
+    FHUGCScialGroupDataModel *item = self.data;
+    if (!item && [item isKindOfClass:[FHUGCScialGroupDataModel class]]) {
+        return;
+    }
+    NSMutableDictionary *infoDict = @{}.mutableCopy;
+    NSMutableDictionary *tracer = @{}.mutableCopy;
+    // 埋点
+    [infoDict setValue:tracer forKey:@"tracer"];
+//    NSString *name = [NSString stringWithFormat:@"%@小区圈",item.socialGroupName];
+    infoDict[@"title"] = item.socialGroupName;
+    infoDict[@"social_group_id"] = item.socialGroupId;
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://ugc_follow_user_list"] userInfo:info];
 }
 
 #pragma UIScrollViewDelegate
