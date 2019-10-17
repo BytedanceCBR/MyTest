@@ -26,9 +26,11 @@
 #import "FHCommonDefines.h"
 #import "TTUIResponderHelper.h"
 #import <TTUGCEmojiParser.h>
-#import "IAccountCenter.h"
+#import "TTAccount.h"
+#import "TTAccount+Multicast.h"
+#import "TTAccountManager.h"
 
-@interface FHCommunityDetailViewModel () <FHUGCFollowObserver, AccountStatusListener, CommunityGroupChatLoginDelegate>
+@interface FHCommunityDetailViewModel () <FHUGCFollowObserver, CommunityGroupChatLoginDelegate>
 
 @property(nonatomic, weak) FHCommunityDetailViewController *viewController;
 @property(nonatomic, strong) FHCommunityFeedListController *feedListController;
@@ -41,6 +43,7 @@
 @property(nonatomic, strong) MJRefreshHeader *refreshHeader;
 @property (nonatomic, assign)   BOOL       isViewAppear;
 @property(nonatomic, assign) BOOL isLoginSatusChangeFromGroupChat;
+@property(nonatomic, assign) BOOL isLogin;
 
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic) BOOL shouldShowUGcGuide;
@@ -56,6 +59,7 @@
         [self initView];
         self.shouldShowUGcGuide = YES;
         self.isViewAppear = YES;
+        self.isLogin = TTAccountManager.isLogin;
     }
     return self;
 }
@@ -106,6 +110,7 @@
         [self gotoPostThreadVC];
     };
 
+    [TTAccount addMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onGlobalFollowListLoad:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
@@ -151,6 +156,7 @@
 }
 
 - (void)dealloc {
+    [TTAccount removeMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -764,12 +770,14 @@
     return [params copy];
 }
 
-- (void)didLogin {
-    [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
-}
-
-- (void)didLogout {
-    [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+// 帐号切换
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
+{
+    if (_isLogin != TTAccountManager.isLogin) {
+        [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+        _isLogin = TTAccountManager.isLogin;
+    }
+    
 }
 
 - (void)onLoginIn {

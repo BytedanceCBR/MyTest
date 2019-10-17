@@ -23,6 +23,8 @@
 #import "FHFeedOperationView.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "IMManager.h"
+#import "FHUGCConfig.h"
+#import "ToastManager.h"
 
 @interface CreateGroupChatAlertDelegate : NSObject <UIAlertViewDelegate>
 @property(nonatomic, weak) FHCommunityFeedListController *controller;
@@ -47,6 +49,9 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
         [_controller gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
+        [[FHUGCConfig sharedInstance] followUGCBy:_controller.forumId isFollow:YES completion:^(BOOL isSuccess) {
+            
+        }];
     }
 }
 
@@ -115,7 +120,12 @@
     [self initTableView];
     [self initNotifyBarView];
     [self initPublishBtn];
-    if (_forumId > 0 && (_scialGroupData.userAuth > UserAuthTypeNormal || _scialGroupData.conversationId >= 0 || [@"50264240862" isEqualToString:TTAccountManager.userID])) {
+//    if (_forumId > 0 && (_scialGroupData.userAuth > UserAuthTypeNormal || _scialGroupData.conversationId >= 0 || [@"50264240862" isEqualToString:TTAccountManager.userID])) {
+//        [self initGroupChatBtn];
+//        [self initBageView];
+//    }
+    
+    if (_forumId > 0) {
         [self initGroupChatBtn];
         [self initBageView];
     }
@@ -211,6 +221,16 @@
         make.right.mas_equalTo(self.self.groupChatBtn).offset(-5);
         make.height.mas_equalTo(15);
     }];
+}
+
+- (void)updateViews {
+    if (_scialGroupData.conversationStatus == joinConversation) {
+        if ([[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.conversationId].mute) {
+            _bageView.badgeNumber = TTBadgeNumberPoint;
+        } else {
+            _bageView.badgeNumber = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.conversationId].unreadCount;
+        }
+    }
 }
 
 - (void)initViewModel {
@@ -358,20 +378,26 @@
 }
 
 - (void)tryJoinConversation {
-    self.followCommunityDelegate = [[FollowCommunityAlertDelegate alloc] init];
-    self.followCommunityDelegate.controller = self;
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
-                                                        message:@"你还未关注圈子，是否关注？"
-                                                       delegate:self.followCommunityDelegate
-                                              cancelButtonTitle:@"取消"
-                                              otherButtonTitles:@"确认", nil];
-    
-    [alertView show];
+    if ([_scialGroupData.hasFollow integerValue] == 1) {
+         [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
+    } else {
+        self.followCommunityDelegate = [[FollowCommunityAlertDelegate alloc] init];
+        self.followCommunityDelegate.controller = self;
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
+                                                            message:@"你还未关注圈子，是否关注？"
+                                                           delegate:self.followCommunityDelegate
+                                                  cancelButtonTitle:@"取消"
+                                                  otherButtonTitles:@"确认", nil];
+        
+        [alertView show];
+    }
 }
 
 - (void)gotoGroupChat {
    if ([TTAccountManager isLogin]) {
-       if (isEmptyString(_conversationId)) {
+       if (_scialGroupData.currentConversationCount >= _scialGroupData.maxConversationCount) {
+           [[ToastManager manager] showToast:@"成员已达上限"];
+       } else if ([_conversationId integerValue] > 0) {
            if (_scialGroupData.userAuth > UserAuthTypeNormal || [@"50264240862" isEqualToString:TTAccountManager.userID]) {
                [self tryCreateNewGroupChat];
            }
@@ -455,7 +481,11 @@
 
 - (void)gotoGroupChatVC:(NSString *)convId isCreate:(BOOL)isCreate autoJoin:(BOOL)autoJoin {
     //跳转到群聊页面
-    NSString *title = [@"" stringByAppendingFormat:@"%@(%@)", _scialGroupData.socialGroupName, _scialGroupData.followerCount];
+//    NSString *title = nil;
+//    if (_scialGroupData.currentConversationCount == nil || _scialGroupData.currentConversationCount <= 0) {
+//        _scialGroupData.currentConversationCount = 1;
+//    }
+    NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", _scialGroupData.socialGroupName, _scialGroupData.currentConversationCount];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"chat_title"] = title;
     dict[@"conversation_id"] = convId;
@@ -468,12 +498,10 @@
     }
     if (autoJoin) {
         dict[@"auto_join"] = @"1";
+        dict[@"conversation_id"] = @"6748741916986179843";
+        dict[@"short_conversation_id"] = @"6748741916986179843";
     }
-    if (_scialGroupData.userAuth > UserAuthTypeNormal) {
-        dict[@"member_role"] = [NSString stringWithFormat: @"%d", TIMOConversationParticipantRoleAdmin];
-    } else {
-        dict[@"member_role"] = [NSString stringWithFormat: @"%d", TIMOConversationParticipantRoleNormal];
-    }
+    dict[@"member_role"] = [NSString stringWithFormat: @"%d", _scialGroupData.userAuth];
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     

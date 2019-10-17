@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)gotoGroupChat;
 - (void)gotoGroupChatVC:(NSString *)convId isCreate:(BOOL)isCreate autoJoin:(BOOL)autoJoin;
-
+- (void)updateViews;
 @end
 
 NS_ASSUME_NONNULL_END
