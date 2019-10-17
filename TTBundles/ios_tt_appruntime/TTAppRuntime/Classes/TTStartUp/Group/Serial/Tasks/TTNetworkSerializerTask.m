@@ -252,7 +252,7 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
         //设置BOE环境和白名单 https://wiki.bytedance.net/pages/viewpage.action?pageId=336579929
         [[TTNetworkManager shareInstance] setBoeProxyEnabled:YES];
-        [[TTNetworkManager shareInstance] setBypassBoeJSON:@"{\"bypass_boe_host_list\": [\"mon.haoduofangs.com\", \"mon.snssdk.com\", \"soulkiller.bytedance.net\",\"p3.pstatp.com\"]}"];
+        [[TTNetworkManager shareInstance] setBypassBoeJSON:@"{\"bypass_boe_host_list\": [\"mon.haoduofangs.com\", \"mon.snssdk.com\", \"soulkiller.bytedance.net\",\"p1.pstatp.com\",\"p3.pstatp.com\",\"p6.pstatp.com\",\"p9.pstatp.com\",\"p11.pstatp.com\",\"p9-tt.bytecdn.cn\"]}"];
     }
     [[TTNetworkManager shareInstance] start];
     
