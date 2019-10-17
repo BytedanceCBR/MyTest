@@ -35,6 +35,8 @@
 @property (nonatomic, strong)   NSMutableArray       *adminList;// 管理员
 @property (nonatomic, strong)   NSMutableArray       *mergedArray;
 @property (nonatomic, strong)   FHRefreshCustomFooter       *refreshFooter;
+@property (nonatomic, assign)   NSInteger       adminCount;
+@property (nonatomic, assign)   NSInteger       followCount;
 
 @end
 
@@ -52,6 +54,8 @@
         self.followList = [NSMutableArray array];
         self.adminList = [NSMutableArray array];
         self.mergedArray = [NSMutableArray array];
+        self.adminCount = 0;
+        self.followCount = 0;
         
         __weak typeof(self) weakSelf = self;
         
@@ -105,6 +109,8 @@
         }
         self.hasMore = model.data.hasMore;
         self.offset = model.data.offset;
+        self.adminCount = model.data.adminCount;
+        self.followCount = model.data.followCount;
     }
     // 后处理
     if (self.adminList.count > 0 || self.followList.count > 0) {
@@ -181,18 +187,18 @@
         NSArray *data = self.mergedArray[section];
         if (self.mergedArray.count == 2) {
             if (section == 0) {
-                v.sectionLabel.text = [NSString stringWithFormat:@"管理员（%ld人）",data.count];
+                v.sectionLabel.text = [NSString stringWithFormat:@"管理员（%ld人）",self.adminCount];
             }
             if (section == 1) {
-                v.sectionLabel.text = [NSString stringWithFormat:@"小区圈成员（%ld人）",data.count];
+                v.sectionLabel.text = [NSString stringWithFormat:@"小区圈成员（%ld人）",self.followCount];
             }
         } else if (self.mergedArray.count == 1) {
             // 只有一个section
             if (self.adminList.count > 0) {
-                v.sectionLabel.text = [NSString stringWithFormat:@"管理员（%ld人）",self.adminList.count];
+                v.sectionLabel.text = [NSString stringWithFormat:@"管理员（%ld人）",self.adminCount];
             }
             if (self.followList.count > 0) {
-                v.sectionLabel.text = [NSString stringWithFormat:@"小区圈成员（%ld人）",self.followList.count];
+                v.sectionLabel.text = [NSString stringWithFormat:@"小区圈成员（%ld人）",self.followCount];
             }
         }
     }
