@@ -175,6 +175,7 @@
 - (void)configTableView {
     _tableView = [[FHUGCSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _tableView.backgroundColor = [UIColor whiteColor];
     __weak typeof(self) weakSelf = self;
     _tableView.handleTouch = ^{
         [weakSelf.view endEditing:YES];
@@ -193,6 +194,7 @@
 
 - (UITableView *)configTableView2 {
     FHUGCSuggectionTableView *tableView = [[FHUGCSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    tableView.backgroundColor = [UIColor whiteColor];
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     __weak typeof(self) weakSelf = self;
     tableView.handleTouch = ^{
