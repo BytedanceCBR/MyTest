@@ -420,7 +420,7 @@ def appPods
 #    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'
     pod_binary 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
     pod 'TTPushManager', '0.0.13.4'
-    pod_binary 'TTReachability', '0.5.2'
+    pod_binary 'TTReachability', '0.6.2'
     pod_binary 'Protobuf', '3.0.1-ttv'
     #----- 存储库 -----
     pod_binary 'TTPersistence', '0.2.3'
