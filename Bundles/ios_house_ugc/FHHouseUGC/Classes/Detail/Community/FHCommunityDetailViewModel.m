@@ -26,9 +26,9 @@
 #import "FHCommonDefines.h"
 #import "TTUIResponderHelper.h"
 #import <TTUGCEmojiParser.h>
+#import "IAccountCenter.h"
 
-
-@interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
+@interface FHCommunityDetailViewModel () <FHUGCFollowObserver, AccountStatusListener, CommunityGroupChatLoginDelegate>
 
 @property(nonatomic, weak) FHCommunityDetailViewController *viewController;
 @property(nonatomic, strong) FHCommunityFeedListController *feedListController;
@@ -40,6 +40,7 @@
 @property(nonatomic, strong) UIView *titleContainer;
 @property(nonatomic, strong) MJRefreshHeader *refreshHeader;
 @property (nonatomic, assign)   BOOL       isViewAppear;
+@property(nonatomic, assign) BOOL isLoginSatusChangeFromGroupChat;
 
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic) BOOL shouldShowUGcGuide;
@@ -282,6 +283,11 @@
                 //传入选项信息
                 self.feedListController.operations = responseModel.data.permission;
                 self.feedListController.scialGroupData = responseModel.data;
+                self.feedListController.loginDelegate = wself;
+                if (_isLoginSatusChangeFromGroupChat) {
+                    [self.feedListController gotoGroupChat];
+                    _isLoginSatusChangeFromGroupChat = NO;
+                }
             }
             return;
         }
@@ -756,6 +762,18 @@
     params[@"click_position"] = @"join_like";
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     return [params copy];
+}
+
+- (void)didLogin {
+    [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+}
+
+- (void)didLogout {
+    [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+}
+
+- (void)onLoginIn {
+    _isLoginSatusChangeFromGroupChat = YES;
 }
 
 @end

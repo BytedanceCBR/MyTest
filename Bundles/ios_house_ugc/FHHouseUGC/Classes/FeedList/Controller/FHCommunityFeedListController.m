@@ -24,12 +24,42 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import "IMManager.h"
 
+@interface CreateGroupChatAlertDelegate : NSObject <UIAlertViewDelegate>
+@property(nonatomic, weak) FHCommunityFeedListController *controller;
+@end
+
+@implementation CreateGroupChatAlertDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        [_controller gotoGroupChatVC:@"-1" isCreate:YES autoJoin:NO];
+    }
+}
+
+@end
+
+@interface FollowCommunityAlertDelegate : NSObject <UIAlertViewDelegate>
+@property(nonatomic, weak) FHCommunityFeedListController *controller;
+@end
+
+@implementation FollowCommunityAlertDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        [_controller gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
+    }
+}
+
+@end
+
 @interface FHCommunityFeedListController ()<SSImpressionProtocol>
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic, assign) BOOL needReloadData;
 @property(nonatomic, copy) void(^notifyCompletionBlock)(void);
 @property(nonatomic, assign) NSInteger currentCityId;
+@property(nonatomic, strong) CreateGroupChatAlertDelegate *createGroupDelegate;
+@property(nonatomic, strong) FollowCommunityAlertDelegate *followCommunityDelegate;
 
 @end
 
@@ -85,8 +115,9 @@
     [self initTableView];
     [self initNotifyBarView];
     [self initPublishBtn];
-    if (_forumId > 0) {
+    if (_forumId > 0 && (_scialGroupData.userAuth > UserAuthTypeNormal || _scialGroupData.conversationId >= 0 || [@"50264240862" isEqualToString:TTAccountManager.userID])) {
         [self initGroupChatBtn];
+        [self initBageView];
     }
     
     if(self.showErrorView){
@@ -134,9 +165,15 @@
 
 - (void)initGroupChatBtn {
     self.groupChatBtn = [[UIButton alloc] init];
-    [_groupChatBtn setImage:[UIImage imageNamed:@"fh_ugc_publish"] forState:UIControlStateNormal];
+    [_groupChatBtn setImage:[UIImage imageNamed:@"fh_ugc_group_chat_tip"] forState:UIControlStateNormal];
     [_groupChatBtn addTarget:self action:@selector(gotoGroupChat) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_groupChatBtn];
+}
+
+- (void)initBageView {
+    self.bageView = [[TTBadgeNumberView alloc] init];
+    _bageView.badgeNumber = [[NSNumber numberWithInt:0] integerValue];
+    [self.view addSubview:_bageView];
 }
 
 
@@ -167,6 +204,12 @@
         make.bottom.mas_equalTo(self.view).offset(-self.publishBtnBottomHeight - 64);
         make.right.mas_equalTo(self.view).offset(-12);
         make.width.height.mas_equalTo(64);
+    }];
+    
+    [self.bageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.groupChatBtn).offset(5);
+        make.right.mas_equalTo(self.self.groupChatBtn).offset(-5);
+        make.height.mas_equalTo(15);
     }];
 }
 
@@ -247,52 +290,102 @@
     [self gotoPostThreadVC];
 }
 
-//创建新群聊时配置群聊的名称和头像
-- (void)initNewGroupChatOptions:(NSString * _Nullable)conversationIdentifier {
-    NSString *icon = _scialGroupData.avatar;
-    NSString *groupChatName = _scialGroupData.socialGroupName;
-    TIMOConversation *sdkConversation = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:conversationIdentifier];
-    [sdkConversation setIcon:icon completion:^(id<TIMOConversationOperationResponse>  _Nullable response, NSError * _Nullable error) {
-        if (!error && response.status == 0) {
-            NSLog(@"FHIM_Group_chat_avatar_succes");
-        }
-    }];
-    [sdkConversation setName:groupChatName completion:^(id<TIMOConversationOperationResponse>  _Nullable response, NSError * _Nullable error) {
-        if (!error && response.status == 0) {
-           NSLog(@"FHIM_Group_chat_name_succes");
-        }
-    }];
+////创建新群聊时配置群聊的名称和头像
+//- (void)initNewGroupChatOptions:(NSString * _Nullable)conversationIdentifier {
+//    NSString *icon = _scialGroupData.avatar;
+//    NSString *groupChatName = _scialGroupData.socialGroupName;
+//    TIMOConversation *sdkConversation = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:conversationIdentifier];
+//    [sdkConversation setIcon:icon completion:^(id<TIMOConversationOperationResponse>  _Nullable response, NSError * _Nullable error) {
+//        if (!error && response.status == 0) {
+//            NSLog(@"FHIM_Group_chat_avatar_succes");
+//        }
+//    }];
+//    [sdkConversation setName:groupChatName completion:^(id<TIMOConversationOperationResponse>  _Nullable response, NSError * _Nullable error) {
+//        if (!error && response.status == 0) {
+//           NSLog(@"FHIM_Group_chat_name_succes");
+//        }
+//    }];
+//    NSDictionary *syncExt = @{@"f_im_biz_type": @"2"};
+//    [sdkConversation setSharedSyncedExtWithEntries:syncExt completion:^(id<TIMOConversationOperationResponse>  _Nullable response, NSError * _Nullable error) {
+//        if (!error && response.status == 0) {
+//            NSLog(@"FHIM_Group_chat_biztype_succes");
+//        }
+//    }];
+//}
+//
+//- (void)createNewGroupChat {
+//    NSMutableDictionary* options = [NSMutableDictionary dictionary];
+//    [options setValue:_forumId forKey:@"community_id"];
+//    [options setValue:@"ugc_group" forKey:@"business_type"];
+//
+//    NSMutableSet* set = [NSMutableSet set];
+//    [set addObject:@"103002277932"];
+//    [set addObject:@"25505054509"];
+//    [set addObject:@"2422949347070968"];
+//    [[IMManager shareInstance].chatService createGroupConversation:options
+//                                                  withParticipants:set
+//                                          withIdempotentIdentifier:[_forumId substringToIndex:(_forumId.length-3)]
+//                                                    withCompletion:^(NSString * _Nullable conversationIdentifier, NSDictionary * _Nullable response, NSError * _Nullable error) {
+//        if(!error) {
+//            [self initNewGroupChatOptions:conversationIdentifier];
+//
+//        }
+//    }];
+//}
+
+//- (void)tryJoinConversation {
+//    NSSet *user = [NSSet setWithObject:[TTAccountManager currentUser].userID];
+//    [[[IMManager shareInstance].chatService sdkConversationWithIdentifier:_conversationId] addParticipants:user completion:^(NSSet<NSNumber *> * _Nonnull addedParticipants, id<TIMOConversationOperationResponse>  _Nullable response, NSError * _Nullable error) {
+//        [self gotoGroupChatVC:_conversationId isCreate:NO];
+//        if (_scialGroupData.userAuth > UserAuthTypeNormal) {
+//            [[[IMManager shareInstance].chatService sdkConversationWithIdentifier:_conversationId] setRoleForParticipant:[[TTAccountManager currentUser].userID longLongValue] role:TIMOConversationParticipantRoleAdmin completion:^(id<TIMOConversationOperationResponse>  _Nullable response, NSError * _Nullable error) {
+//
+//            }];
+//        }
+//    }];
+//}
+
+- (void)tryCreateNewGroupChat {
+    self.createGroupDelegate = [[CreateGroupChatAlertDelegate alloc] init];
+    self.createGroupDelegate.controller = self;
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
+                                                        message:@"确认开启圈子群聊，所有关注用户将默认加入群聊"
+                                                       delegate:self.createGroupDelegate
+                                              cancelButtonTitle:@"取消"
+                                              otherButtonTitles:@"确认", nil];
+    
+    [alertView show];
 }
 
-- (void)createNewGroupChat {
-    NSMutableDictionary* options = [NSMutableDictionary dictionary];
-    [options setValue:_forumId forKey:@"community_id"];
-    [options setValue:@"ugc_group" forKey:@"business_type"];
+- (void)tryJoinConversation {
+    self.followCommunityDelegate = [[FollowCommunityAlertDelegate alloc] init];
+    self.followCommunityDelegate.controller = self;
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
+                                                        message:@"你还未关注圈子，是否关注？"
+                                                       delegate:self.followCommunityDelegate
+                                              cancelButtonTitle:@"取消"
+                                              otherButtonTitles:@"确认", nil];
     
-    NSMutableSet* set = [NSMutableSet set];
-    [set addObject:@"103002277932"];
-    [set addObject:@"25505054509"];
-    [set addObject:@"2422949347070968"];
-    [[IMManager shareInstance].chatService createGroupConversation:options
-                                                  withParticipants:set
-                                          withIdempotentIdentifier:[_forumId substringToIndex:(_forumId.length-3)]
-                                                    withCompletion:^(NSString * _Nullable conversationIdentifier, NSDictionary * _Nullable response, NSError * _Nullable error) {
-        if(!error) {
-            [self initNewGroupChatOptions:conversationIdentifier];
-            [self gotoGroupChatVC:conversationIdentifier isCreate:YES];
-        }
-    }];
+    [alertView show];
 }
 
 - (void)gotoGroupChat {
    if ([TTAccountManager isLogin]) {
        if (isEmptyString(_conversationId)) {
-           [self createNewGroupChat];
+           if (_scialGroupData.userAuth > UserAuthTypeNormal || [@"50264240862" isEqualToString:TTAccountManager.userID]) {
+               [self tryCreateNewGroupChat];
+           }
+       } else if(_scialGroupData.conversationStatus == joinConversation) {
+           [self gotoGroupChatVC:_conversationId isCreate:NO autoJoin:NO];
+       } else if (_scialGroupData.conversationStatus == leaveConversation) {
+           [self tryJoinConversation];
+       } else if(_scialGroupData.conversationStatus == KickOutConversation) {
+           //todo toast
        } else {
-           [self gotoGroupChatVC:_conversationId isCreate:NO];
+          [self tryJoinConversation];
        }
    } else {
-       [self gotoLogin];
+       [self gotoLogin:1];
    }
 }
 
@@ -301,11 +394,11 @@
     if ([TTAccountManager isLogin]) {
         [self gotoPostVC];
     } else {
-        [self gotoLogin];
+        [self gotoLogin:0];
     }
 }
 
-- (void)gotoLogin {
+- (void)gotoLogin:(NSUInteger *)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *page_type = @"nearby_list";
     if (self.listType == FHCommunityFeedListTypeMyJoin) {
@@ -323,9 +416,13 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [wSelf gotoPostVC];
-                });
+                if (from == 0) {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                       [wSelf gotoPostVC];
+                                   });
+                } else {
+                    [_loginDelegate onLoginIn];
+                }
             }
         }
     }];
@@ -356,14 +453,26 @@
     [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
 }
 
-- (void)gotoGroupChatVC:(NSString *)convId isCreate:(BOOL)isCreate {
+- (void)gotoGroupChatVC:(NSString *)convId isCreate:(BOOL)isCreate autoJoin:(BOOL)autoJoin {
     //跳转到群聊页面
     NSString *title = [@"" stringByAppendingFormat:@"%@(%@)", _scialGroupData.socialGroupName, _scialGroupData.followerCount];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"chat_title"] = title;
     dict[@"conversation_id"] = convId;
+    dict[@"chat_avatar"] = _scialGroupData.avatar;
+    dict[@"chat_name"] = _scialGroupData.socialGroupName;
+    dict[@"community_id"] = _scialGroupData.socialGroupId;
+ 
     if (isCreate) {
         dict[@"is_create"] = @"1";
+    }
+    if (autoJoin) {
+        dict[@"auto_join"] = @"1";
+    }
+    if (_scialGroupData.userAuth > UserAuthTypeNormal) {
+        dict[@"member_role"] = [NSString stringWithFormat: @"%d", TIMOConversationParticipantRoleAdmin];
+    } else {
+        dict[@"member_role"] = [NSString stringWithFormat: @"%d", TIMOConversationParticipantRoleNormal];
     }
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
