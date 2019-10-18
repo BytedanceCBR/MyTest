@@ -12,6 +12,7 @@
 #import "FHUGCCellHelper.h"
 #import <TTVideoApiModel.h>
 #import "TTVFeedItem+Extension.h"
+#import "FHLocManager.h"
 
 @implementation FHFeedUGCCellCommunityModel
 
@@ -575,7 +576,8 @@
         [desc appendAttributedString:publishTimeAStr];
     }
     
-    if(!isEmptyString(model.distanceInfo)){
+    // 法务合规，如果没有定位权限，不展示位置信息
+    if(!isEmptyString(model.distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
         NSString *distance = [NSString stringWithFormat:@"   %@",model.distanceInfo];
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
         attachment.bounds = CGRectMake(8, 0, 8, 8);
