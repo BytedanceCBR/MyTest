@@ -457,6 +457,14 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                 // 登录成功
                 if ([TTAccountManager isLogin]) {
                     [wSelf followUGCBy:social_group_id isFollow:follow completion:completion];
+                } else {
+                    if (completion) {
+                        completion(NO);
+                    }
+                }
+            } else {
+                if (completion) {
+                    completion(NO);
                 }
             }
         }];
