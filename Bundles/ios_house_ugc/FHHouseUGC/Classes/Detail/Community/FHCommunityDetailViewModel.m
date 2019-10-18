@@ -367,7 +367,8 @@
 - (void)followCommunity:(NSString *)groupId {
     if (groupId) {
         WeakSelf;
-        [[FHUGCConfig sharedInstance] followUGCBy:groupId isFollow:YES completion:^(BOOL isSuccess) {
+        NSString *enter_from = @"community_group_detail";
+        [[FHUGCConfig sharedInstance] followUGCBy:groupId isFollow:YES enterFrom:enter_from enterType:@"click" completion:^(BOOL isSuccess) {
             StrongSelf;
             if (isSuccess) {
                 [wself gotoPostVC];
