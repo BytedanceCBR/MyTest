@@ -132,6 +132,8 @@
         itemModelVR.groupType = @"VR";
         [itemArray addObject:itemModelVR];
         [self.imageList addObject:itemModelVR];
+        
+        [self trackVRElementShow];
     }
     
     if (vedioModel && vedioModel.videoID.length > 0) {
@@ -201,6 +203,9 @@
         }
         
         if (vrModel.openUrl) {
+            
+            [self trackClickOptions:@"house_vr_icon"];
+            
             NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
             NSMutableDictionary *param = [NSMutableDictionary new];
             param[UT_ELEMENT_TYPE] = @"happiness_eye_tip";
@@ -449,6 +454,10 @@
             dict[@"click_position"] = @"house_model";
         }else if([str isEqualToString:@"视频"]){
             dict[@"click_position"] = @"video";
+        }else if([str isEqualToString:@"house_vr_icon"]){
+            dict[@"click_position"] = @"house_vr_icon";
+        }else if([str isEqualToString:@"VR"]){
+            dict[@"click_position"] = @"house_vr";
         }
 
         dict[@"rank"] = @"be_null";
@@ -530,6 +539,19 @@
     param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
     param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
     param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;    
+    TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
+}
+
+- (void)trackVRElementShow
+{
+    NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_ELEMENT_TYPE] = @"house_vr";
+    param[UT_PAGE_TYPE] = tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+    param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+    param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
+    param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;
+    param[UT_RANK] = tracerDict[UT_RANK]?:UT_BE_NULL;
     TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
 }
 
