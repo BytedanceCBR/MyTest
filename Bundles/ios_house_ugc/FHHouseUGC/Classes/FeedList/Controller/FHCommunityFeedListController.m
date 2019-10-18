@@ -224,11 +224,11 @@
 }
 
 - (void)updateViews {
-    if (_scialGroupData.conversationStatus == joinConversation) {
-        if ([[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.conversationId].mute) {
+    if (_scialGroupData.chatStatus.conversationStatus == joinConversation) {
+        if ([[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.chatStatus.conversationId].mute) {
             _bageView.badgeNumber = TTBadgeNumberPoint;
         } else {
-            _bageView.badgeNumber = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.conversationId].unreadCount;
+            _bageView.badgeNumber = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.chatStatus.conversationId].unreadCount;
         }
     }
 }
@@ -340,17 +340,17 @@
 
 - (void)gotoGroupChat {
    if ([TTAccountManager isLogin]) {
-       if (_scialGroupData.currentConversationCount >= _scialGroupData.maxConversationCount) {
+       if (_scialGroupData.chatStatus.currentConversationCount >= _scialGroupData.chatStatus.maxConversationCount) {
            [[ToastManager manager] showToast:@"成员已达上限"];
-       } else if ([_conversationId integerValue] > 0) {
+       } else if ([_conversationId integerValue] <= 0) {
            if (_scialGroupData.userAuth > UserAuthTypeNormal || [@"50264240862" isEqualToString:TTAccountManager.userID]) {
                [self tryCreateNewGroupChat];
            }
-       } else if(_scialGroupData.conversationStatus == joinConversation) {
+       } else if(_scialGroupData.chatStatus.conversationStatus == joinConversation) {
            [self gotoGroupChatVC:_conversationId isCreate:NO autoJoin:NO];
-       } else if (_scialGroupData.conversationStatus == leaveConversation) {
+       } else if (_scialGroupData.chatStatus.conversationStatus == leaveConversation) {
            [self tryJoinConversation];
-       } else if(_scialGroupData.conversationStatus == KickOutConversation) {
+       } else if(_scialGroupData.chatStatus.conversationStatus == KickOutConversation) {
            [[ToastManager manager]showToast:@"你已被踢出群聊"];
        } else {
           [self tryJoinConversation];
@@ -426,13 +426,7 @@
 
 - (void)gotoGroupChatVC:(NSString *)convId isCreate:(BOOL)isCreate autoJoin:(BOOL)autoJoin {
     //跳转到群聊页面
-//    NSString *title = nil;
-//    if (_scialGroupData.currentConversationCount == nil || _scialGroupData.currentConversationCount <= 0) {
-//        _scialGroupData.currentConversationCount = 1;
-//    }
-    NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", _scialGroupData.socialGroupName, _scialGroupData.currentConversationCount];
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"chat_title"] = title;
     dict[@"conversation_id"] = convId;
     dict[@"chat_avatar"] = _scialGroupData.avatar;
     dict[@"chat_name"] = _scialGroupData.socialGroupName;
@@ -440,11 +434,19 @@
  
     if (isCreate) {
         dict[@"is_create"] = @"1";
-    }
-    if (autoJoin) {
+        NSString *title = [@"" stringByAppendingFormat:@"%@(%@)", _scialGroupData.socialGroupName, _scialGroupData.followerCount];
+        dict[@"chat_title"] = title;
+        dict[@"chat_member_count"] = _scialGroupData.followerCount;
+    } else if (autoJoin) {
         dict[@"auto_join"] = @"1";
-        dict[@"conversation_id"] = @"6748741916986179843";
-        dict[@"short_conversation_id"] = @"6748741916986179843";
+        dict[@"conversation_id"] = _scialGroupData.chatStatus.conversationId;
+        dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:_scialGroupData.chatStatus.conversationShortId] stringValue];
+        NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", _scialGroupData.socialGroupName, _scialGroupData.chatStatus.currentConversationCount];
+        dict[@"chat_title"] = title;
+    } else {
+        NSInteger count = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:convId].participantsCount;
+        NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", _scialGroupData.socialGroupName, count];
+        dict[@"chat_title"] = title;
     }
     dict[@"member_role"] = [NSString stringWithFormat: @"%d", _scialGroupData.userAuth];
     
