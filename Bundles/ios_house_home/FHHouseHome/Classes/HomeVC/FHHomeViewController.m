@@ -92,6 +92,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [self resetMaintableView];
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    [self checkPasteboard];
 }
 
 - (void)scrollMainTableToTop
@@ -395,7 +398,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 //        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
 //    }
     
-     
+    
     //开屏广告启动不会展示，保留逻辑代码
     if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
         self.adColdHadJump = YES;
@@ -422,8 +425,13 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [FHEnvContext addTabUGCGuid];
     
     [TTSandBoxHelper setAppFirstLaunchForAd];
-    
-    [self checkPasteboard];
+}
+
+- (void)_willEnterForeground:(NSNotification *)notification
+{
+    if (self.isShowing) {
+        [self checkPasteboard];
+    }
 }
 
 
@@ -616,6 +624,19 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)checkPasteboard
 {
+    NSString *localMark = [FHUtils contentForKey:@"is_promotion_user"];
+    
+    if ([localMark isKindOfClass:[NSString class]] && [localMark isEqualToString:@"1"]) {
+        NSString *cityIdStr = [FHEnvContext getCurrentSelectCityIdFromLocal];
+        NSNumber *cityIdNum = nil;
+        if ([cityIdStr isKindOfClass:[NSString class]]) {
+            cityIdNum = [NSNumber numberWithInteger:[cityIdStr integerValue]];
+        }
+        [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityIdNum];
+    }
+    
+    [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
+
     __weak typeof(self) weakSelf = self;
     //据说主线程读剪切板会导致app卡死。。。改为子线程读
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -646,20 +667,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
             });
         }
     });
-
-    NSString *localMark = [FHUtils contentForKey:@"is_promotion_user"];
-    
-    if ([localMark isKindOfClass:[NSString class]] && [localMark isEqualToString:@"1"]) {
-        NSString *cityIdStr = [FHEnvContext getCurrentSelectCityIdFromLocal];
-        NSNumber *cityIdNum = nil;
-        if ([cityIdStr isKindOfClass:[NSString class]]) {
-            cityIdNum = [NSNumber numberWithInteger:[cityIdStr integerValue]];
-        }
-        [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityIdNum];
-    }
-    
-    //只保存数据
-    [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
 }
 
 - (void)requestSendUGCUserAD:(NSString *)requestStr
@@ -697,12 +704,18 @@ static NSString * const kFUGCPrefixStr = @"fugc";
                 if (topVC) {
                     [alertVC showFrom:topVC animated:YES];
                 }
+                
+                [FHUtils setContent:@"1" forKey:@"is_promotion_user"];
             }
             
             if (!weakSelf.adUGCHadJump && [inviteStatus integerValue] != 2) {
                 weakSelf.adUGCHadJump = YES;
                 [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityId];
             }
+            
+            
+            //只保存数据
+            [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
         }
     }];
 }
