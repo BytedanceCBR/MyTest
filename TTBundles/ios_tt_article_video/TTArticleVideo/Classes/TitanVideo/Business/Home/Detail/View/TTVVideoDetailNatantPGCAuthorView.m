@@ -592,7 +592,7 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
 //    id<TTVVideoDetailNatantPGCModelProtocol> pgcModel = self.viewModel.pgcModel;
 //    openURL = [TTUGCTrackerHelper schemaTrackForPersonalHomeSchema:openURL categoryName:pgcModel.categoryName fromPage:@"detail_video" groupId:pgcModel.groupIDStr profileUserId:nil];
     
-    NSString *openURL = [NSString stringWithFormat:@"sslocal://profile?uid=",self.viewModel.pgcModel.contentInfo.ttgc_contentID];
+    NSString *openURL = [NSString stringWithFormat:@"sslocal://profile?uid=%@",self.viewModel.pgcModel.contentInfo.ttgc_contentID];
     [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:openURL]];
 }
 

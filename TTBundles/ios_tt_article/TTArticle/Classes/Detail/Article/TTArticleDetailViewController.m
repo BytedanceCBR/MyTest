@@ -647,7 +647,7 @@
         
         if (wself.detailModel.article.mediaInfo[@"media_id"]) {
             NSString *mediaID = [NSString stringWithFormat:@"%@", wself.detailModel.article.mediaInfo[@"media_id"]];
-            NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=",mediaID];
+            NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@",mediaID];
             NSURL *openUrl = [NSURL URLWithString:url];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
             

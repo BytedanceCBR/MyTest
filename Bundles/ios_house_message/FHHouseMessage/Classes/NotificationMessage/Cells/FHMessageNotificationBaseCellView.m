@@ -549,10 +549,7 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
 
 - (void)goToPersonalHomePage {
     if(self.messageModel.user.userID){
-//        NSMutableDictionary *dict = @{}.mutableCopy;
-//        dict[@"title"] = self.cellModel.user.name;
-//        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=",self.messageModel.user.userID];
+        NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=feed_message_list",self.messageModel.user.userID];
         NSURL *openUrl = [NSURL URLWithString:url];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
     }
