@@ -304,7 +304,15 @@
         if (currentIndex >= 0 && currentIndex < weakSelf.model.medias.count) {
             weakSelf.currentIndex = currentIndex;
             weakSelf.isLarge = YES;
-            NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 inSection:0];
+            
+            NSInteger vrOffset = 0;
+            FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderModel *)weakSelf.currentData).vrModel;
+            //VR增加偏移
+            if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr)
+            {
+                vrOffset = 1;
+            }
+            NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 + vrOffset inSection:0];
             [weakSelf.mediaView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
             [weakSelf.mediaView updateItemAndInfoLabel];
             [weakSelf.mediaView updateVideoState];
