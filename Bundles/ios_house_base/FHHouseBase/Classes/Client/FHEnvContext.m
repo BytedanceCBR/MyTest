@@ -106,9 +106,15 @@ static NSInteger kGetLightRequestRetryCount = 3;
                             completion(YES);
                         }
                         [[ToastManager manager] dismissCustomLoading];
-                        [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
-                            
-                        }];
+                        
+                        if ([FHEnvContext isUGCOpen] && [FHEnvContext isUGCAdUser]) {
+                            [[FHEnvContext sharedInstance] jumpUGCTab];
+                        }else
+                        {
+                            [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                                
+                            }];
+                        }
                     }
                     //重试3次请求频道
                     if (!isSuccessed && (retryGetLightCount > 0)) {
@@ -696,6 +702,19 @@ static NSInteger kGetLightRequestRetryCount = 3;
 {
     return [[FHEnvContext sharedInstance] getConfigFromCache].ugcCitySwitch;
 }
+
++ (BOOL)isUGCAdUser
+{
+    NSString *localMark = [FHUtils contentForKey:@"is_promotion_user"];
+    
+    if ([localMark isKindOfClass:[NSString class]] && [localMark isEqualToString:@"1"]){
+        return YES;
+    }else
+    {
+        return NO;
+    }
+}
+
 
 + (NSDictionary *)ugcTabName {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];

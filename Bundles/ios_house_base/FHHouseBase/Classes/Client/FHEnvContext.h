@@ -176,6 +176,11 @@ NS_ASSUME_NONNULL_BEGIN
  判断是否开通ugc模块
  */
 + (BOOL)isUGCOpen;
+
+/*
+ 判断是否ugc种子用户
+ */
++ (BOOL)isUGCAdUser;
 /*
  ugc tab 显示的文案
  */
@@ -219,6 +224,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)checkZLink;
 
 - (void)jumpUGCTab;
+
 
 @end
 

@@ -94,7 +94,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
-    [self checkPasteboard];
+    [self checkPasteboard:YES];
 }
 
 - (void)scrollMainTableToTop
@@ -435,7 +435,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)_willEnterForeground:(NSNotification *)notification
 {
     if (self.isShowing) {
-        [self checkPasteboard];
+        [self checkPasteboard:NO];
     }
 }
 
@@ -627,11 +627,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 #pragma mark UGC线上线下推广
 
-- (void)checkPasteboard
+- (void)checkPasteboard:(BOOL)isAutoJump
 {
-    NSString *localMark = [FHUtils contentForKey:@"is_promotion_user"];
-    
-    if ([localMark isKindOfClass:[NSString class]] && [localMark isEqualToString:@"1"]) {
+    if ([FHEnvContext isUGCAdUser] && isAutoJump) {
         if ([FHEnvContext isUGCOpen]) {
             [[FHEnvContext sharedInstance] jumpUGCTab];
         }else
