@@ -435,8 +435,8 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         }
         return;
     }
-    // 登录
-    if ([TTAccountManager isLogin]) {
+    // 登录 或者 是取消关注(取关可以不登录)
+    if ([TTAccountManager isLogin] || !follow) {
         [self followUGCBy:social_group_id isFollow:follow completion:completion];
     } else {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
