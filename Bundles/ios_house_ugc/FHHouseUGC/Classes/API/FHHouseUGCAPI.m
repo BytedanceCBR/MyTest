@@ -617,6 +617,9 @@
     
     Class cls = NSClassFromString(@"FHUGCModel");
     
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+    
 + (TTHttpTask *)requestFollowUserListBySocialGroupId:(NSString *)socialGroupId offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/follow_list";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];

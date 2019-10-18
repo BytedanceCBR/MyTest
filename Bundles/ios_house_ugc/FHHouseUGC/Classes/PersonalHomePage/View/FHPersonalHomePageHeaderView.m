@@ -10,7 +10,6 @@
 #import "UIFont+House.h"
 #import <Masonry.h>
 #import "TTDeviceHelper.h"
-#import <UIView+XWAddForRoundedCorner.h>
 #import "FHPersonalHomePageItemView.h"
 #import <UIImageView+BDWebImage.h>
 #import <TTRoute.h>
@@ -56,7 +55,7 @@
     _icon.backgroundColor = [UIColor themeGray7];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
-    [_icon xw_roundedCornerWithRadius:iconWidth/2 cornerColor:[UIColor whiteColor]];
+    _icon.layer.cornerRadius = iconWidth/2;
     [self addSubview:_icon];
     
     _icon.userInteractionEnabled = YES;
@@ -124,11 +123,14 @@
     return label;
 }
 
-- (void)updateData:(FHPersonalHomePageModel *)model tracerDic:(nonnull NSDictionary *)tracerDic {
+- (void)updateData:(FHPersonalHomePageModel *)model tracerDic:(nonnull NSDictionary *)tracerDic refreshAvatar:(BOOL)refreshAvatar {
     self.model = model;
     self.tracerDic = tracerDic;
     self.userNameLabel.text = model.data.name;
-    [self.icon bd_setImageWithURL:[NSURL URLWithString:model.data.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    
+    if(refreshAvatar){
+        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.data.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    }
     
     if([model.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:self.model.data.userId]){
         [self.commentView updateWithTopContent:(isEmptyString(model.data.fCommentCount) ? @"0" : model.data.fCommentCount) bottomContent:@"评论"];

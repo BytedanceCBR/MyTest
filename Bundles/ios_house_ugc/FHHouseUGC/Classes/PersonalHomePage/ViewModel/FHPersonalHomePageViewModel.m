@@ -126,7 +126,7 @@
         if (!error && [model isKindOfClass:[FHPersonalHomePageModel class]]) {
             if(![model.message isEqualToString:@"error"]){
                 wSelf.headerModel = model;
-                [wSelf.detailController refreshHeaderData];
+                [wSelf.detailController refreshHeaderData:NO];
             }
         }
     }];
@@ -156,7 +156,7 @@
                     if(wSelf.headerModel.data.logPb){
                         wSelf.detailController.tracerDict[@"log_pb"] = wSelf.headerModel.data.logPb;
                     }
-                    [wSelf.detailController refreshHeaderData];
+                    [wSelf.detailController refreshHeaderData:YES];
                     
                     if([wSelf.headerModel.data.fHomepageAuth integerValue] == 0){
                         // 加载列表数据
@@ -283,7 +283,7 @@
         if (self.headerModel && self.dataList.count > 0) {
             // 数据ok
             [self.detailController hiddenEmptyView];
-            [self.detailController refreshHeaderData];
+//            [self.detailController refreshHeaderData:NO];
             // 移除空页面
             if (self.tableEmptyView) {
                 [self.tableEmptyView removeFromSuperview];
@@ -305,7 +305,7 @@
             
         } else {
             if (self.headerModel) {
-                [self.detailController refreshHeaderData];
+//                [self.detailController refreshHeaderData:NO];
                 self.currentTableView.mj_footer.hidden = YES;
                 
                 if([self.headerModel.data.fHomepageAuth integerValue] == 0){

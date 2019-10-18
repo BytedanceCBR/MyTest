@@ -299,12 +299,12 @@
     return _tableView;
 }
 
-- (void)refreshHeaderData {
+- (void)refreshHeaderData:(BOOL)refreshAvatar {
     FHPersonalHomePageModel *headerModel = self.viewModel.headerModel;
     if (headerModel) {
         [self hiddenEmptyView];
         self.topHeaderView.hidden = NO;
-        [self.topHeaderView updateData:headerModel tracerDic:self.tracerDict];
+        [self.topHeaderView updateData:headerModel tracerDic:self.tracerDict refreshAvatar:refreshAvatar];
     }
 }
 

@@ -32,7 +32,6 @@
 #import <TTVFeedUserOpDataSyncMessage.h>
 #import <SSCommonLogic.h>
 #import <TTVFeedItem+TTVConvertToArticle.h>
-#import <UIView+XWAddForRoundedCorner.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -104,7 +103,9 @@
     self.videoViewheight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * 188.0/335.0;
     self.videoView = [[FHUGCVideoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, self.videoViewheight)];
     _videoView.layer.masksToBounds = YES;
-    [_videoView xw_roundedCornerWithCornerRadii:CGSizeMake(4, 4) cornerColor:[UIColor whiteColor] corners:UIRectCornerAllCorners borderColor:[UIColor themeGray6] borderWidth:0.5];
+    _videoView.layer.borderColor = [[UIColor themeGray6] CGColor];
+    _videoView.layer.borderWidth = 0.5;
+    _videoView.layer.cornerRadius = 4;
     [self.contentView addSubview:_videoView];
 
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];

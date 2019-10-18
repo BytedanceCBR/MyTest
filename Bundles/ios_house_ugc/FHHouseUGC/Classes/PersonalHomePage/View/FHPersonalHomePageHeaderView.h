@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPersonalHomePageHeaderView : UIView
 
-- (void)updateData:(FHPersonalHomePageModel *)model tracerDic:(NSDictionary *)tracerDic;
+- (void)updateData:(FHPersonalHomePageModel *)model tracerDic:(nonnull NSDictionary *)tracerDic refreshAvatar:(BOOL)refreshAvatar;
 
 @end
 

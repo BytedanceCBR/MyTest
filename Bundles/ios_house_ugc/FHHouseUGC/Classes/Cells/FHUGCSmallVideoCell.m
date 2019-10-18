@@ -15,7 +15,6 @@
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
 #import <TTBusinessManager+StringUtils.h>
-#import <UIView+XWAddForRoundedCorner.h>
 #import <UIViewAdditions.h>
 
 #define leftMargin 20
@@ -88,7 +87,9 @@
     _videoImageView.backgroundColor = [UIColor themeGray7];
     _videoImageView.layer.masksToBounds = YES;
     _videoImageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
-    [_videoImageView xw_roundedCornerWithCornerRadii:CGSizeMake(4, 4) cornerColor:[UIColor whiteColor] corners:UIRectCornerAllCorners borderColor:[UIColor themeGray6] borderWidth:0.5];
+    _videoImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
+    _videoImageView.layer.borderWidth = 0.5;
+    _videoImageView.layer.cornerRadius = 4;
     [self.contentView addSubview:_videoImageView];
     
     self.playIcon = [[UIImageView alloc] init];
