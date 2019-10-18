@@ -50,7 +50,7 @@
 @property (nonatomic, assign)   BOOL isTopIsCanNotMoveTabViewPre;
 @property (nonatomic, assign)   BOOL canScroll;
 @property (nonatomic, assign)   CGFloat       defaultTopHeight;
-@property (nonatomic, assign)   int64_t cid;// 话题id
+@property (nonatomic, strong)   NSString *userId;//用户id
 @property (nonatomic, copy)     NSString       *enter_from;  // 从哪进入的当前页面
 
 @end
@@ -62,49 +62,42 @@
     if (self) {
         // 话题
         NSDictionary *params = paramObj.allParams;
-        int64_t cid = [[params objectForKey:@"cid"] longLongValue];
-        self.cid = cid;
-        if(params[@"title"]){
-            self.title = params[@"title"];
-        }
+        self.userId = [params objectForKey:@"uid"];
         // 埋点
-        self.tracerDict[@"page_type"] = @"topic_detail";
+        self.tracerDict[@"page_type"] = @"personal_homepage_detail";
         // 取链接中的埋点数据
-        NSString *enter_from = params[@"enter_from"];
+        NSString *enter_from = params[@"from_page"];
         if (enter_from.length > 0) {
             self.tracerDict[@"enter_from"] = enter_from;
+        }else{
+            self.tracerDict[@"enter_from"] = @"default";
         }
-        NSString *enter_type = params[@"enter_type"];
-        if (enter_type.length > 0) {
-            self.tracerDict[@"enter_type"] = enter_type;
-        }
-        NSString *element_from = params[@"element_from"];
-        if (element_from.length > 0) {
-            self.tracerDict[@"element_from"] = element_from;
-        }
-        NSString *log_pb_str = params[@"log_pb"];
-        if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
-            NSData *jsonData = [log_pb_str dataUsingEncoding:NSUTF8StringEncoding];
-            NSError *err = nil;
-            NSDictionary *dic = nil;
-            @try {
-                dic = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                      options:NSJSONReadingMutableContainers
-                                                        error:&err];
-            } @catch (NSException *exception) {
-                
-            } @finally {
-                
-            }
-            if (!err && [dic isKindOfClass:[NSDictionary class]] && dic.count > 0) {
-                self.tracerDict[@"log_pb"] = dic;
-            }
-        }
+        
+        self.tracerDict[@"enter_type"] = @"click";
+
+//        NSString *log_pb_str = params[@"log_pb"];
+//        if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
+//            NSData *jsonData = [log_pb_str dataUsingEncoding:NSUTF8StringEncoding];
+//            NSError *err = nil;
+//            NSDictionary *dic = nil;
+//            @try {
+//                dic = [NSJSONSerialization JSONObjectWithData:jsonData
+//                                                      options:NSJSONReadingMutableContainers
+//                                                        error:&err];
+//            } @catch (NSException *exception) {
+//                
+//            } @finally {
+//                
+//            }
+//            if (!err && [dic isKindOfClass:[NSDictionary class]] && dic.count > 0) {
+//                self.tracerDict[@"log_pb"] = dic;
+//            }
+//        }
         // 取url中的埋点数据结束
         self.enter_from = self.tracerDict[@"enter_from"];
-        if (cid > 0) {
-            self.tracerDict[@"concern_id"] = @(cid);
-        }
+//        if (cid > 0) {
+//            self.tracerDict[@"concern_id"] = @(cid);
+//        }
         self.ttTrackStayEnable = YES;
     }
     return self;
@@ -162,7 +155,7 @@
     self.isTopIsCanNotMoveTabViewPre = NO;
     
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.title.text = @"TA的主页";
+    self.customNavBarView.title.text = [[TTAccountManager userID] isEqualToString:self.userId] ? @"我的主页" : @"TA的主页";
      
     self.defaultTopHeight = 100;
     
@@ -218,8 +211,8 @@
     // viewModel
     _viewModel = [[FHPersonalHomePageViewModel alloc] initWithController:self];
     _viewModel.currentSelectIndex = 0;
-     self.cid = 1643560283994120;//1643171844947979;//1642474912698382;
-    _viewModel.cid = self.cid;
+//     self.cid = 1643560283994120;//1643171844947979;//1642474912698382;
+    _viewModel.userId = self.userId;
     _viewModel.enter_from = self.enter_from;
     
     // self.mainScrollView.hidden = YES;
@@ -233,7 +226,7 @@
     [self startLoadData];
     
     // goDetail
-    [self addGoDetailLog];
+//    [self addGoDetailLog];
 }
 
 - (void)addTableErrorView {
@@ -311,7 +304,7 @@
     if (headerModel) {
         [self hiddenEmptyView];
         self.topHeaderView.hidden = NO;
-        [self.topHeaderView updateData:headerModel];
+        [self.topHeaderView updateData:headerModel tracerDic:self.tracerDict];
     }
 }
 
@@ -432,7 +425,7 @@
 
 - (void)addGoDetailLog {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
+    [FHUserTracker writeEvent:@"go_detail_personal" params:tracerDict];
 }
 
 - (void)addStayPageLog {
@@ -442,7 +435,7 @@
     }
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
+    [FHUserTracker writeEvent:@"stay_page_personal" params:tracerDict];
     [self tt_resetStayTime];
 }
 

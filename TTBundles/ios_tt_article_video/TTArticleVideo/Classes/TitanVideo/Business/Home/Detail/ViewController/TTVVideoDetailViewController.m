@@ -1874,10 +1874,6 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 }
 
 - (void)p_enterProfileWithUserID:(NSString *)userID {
-    
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
     [baseCondition setValue:userID forKey:@"uid"];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
@@ -1893,10 +1889,6 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 
 - (void)commentViewController:(id<TTVCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(nonnull id<TTVCommentModelProtocol, TTCommentDetailModelProtocol>)model
 {
-    
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     if ([model.userID longLongValue] == 0) {
         return;
     }

@@ -642,7 +642,9 @@
 #pragma mark - TTCommentDetailCellDelegate
 
 - (void)tt_commentCell:(UITableViewCell *)view avatarTappedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-
+    NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=",model.user.ID];
+    NSURL *openUrl = [NSURL URLWithString:url];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view deleteCommentWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
@@ -685,7 +687,9 @@
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view nameViewonClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-
+    NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=",model.user.ID];
+    NSURL *openUrl = [NSURL URLWithString:url];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view quotedNameOnClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {

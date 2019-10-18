@@ -580,10 +580,42 @@
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if(userId){
-        paramDic[@"userId"] = userId;
+        paramDic[@"user_id"] = userId;
     }
     
+    paramDic[@"refer"] = @"all";
+    
     Class cls = NSClassFromString(@"FHPersonalHomePageModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestHomePageFeedListWithUserId:(NSString *)userId offset:(NSInteger)offset count:(NSInteger)count completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/api/feed/profile/v1/?";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(userId){
+        paramDic[@"visited_uid"] = userId;
+    }
+    paramDic[@"category"] = @"profile_all";
+    paramDic[@"count"] = @(count);
+    paramDic[@"offset"] = @(offset);
+    paramDic[@"stream_api_version"] = [FHURLSettings streamAPIVersionString];
+    
+    Class cls = NSClassFromString(@"FHFeedListModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestFocusListWithUserId:(NSString *)userId completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/f100/ugc/follow_sg_list";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(userId){
+        paramDic[@"user_id"] = userId;
+    }
+    
+    Class cls = NSClassFromString(@"FHUGCModel");
     
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }

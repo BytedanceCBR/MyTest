@@ -373,8 +373,7 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
         _avatarView.placeholderName = @"big_defaulthead_head";
         _avatarView.borderWidth = 0;
         _avatarView.borderColor = [UIColor clearColor];
-        // add by zjing icon去掉点击
-//        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
+        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }
     return _avatarView;
 }

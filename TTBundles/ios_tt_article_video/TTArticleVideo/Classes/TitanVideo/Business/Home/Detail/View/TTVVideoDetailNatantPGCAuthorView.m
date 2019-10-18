@@ -195,9 +195,8 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
     if (!_backgroundView) {
         CGFloat  height = kPGCViewHeightOnTop;
         _backgroundView = [[TTAlphaThemedButton alloc] initWithFrame:CGRectMake(0, 0, self.width, [TTDeviceUIUtils tt_newPadding:height])];
-        // add by zjing 去掉头像点击
-        _backgroundView.userInteractionEnabled = NO;
-//        [_backgroundView addTarget:self action:@selector(showPGCView) forControlEvents:UIControlEventTouchUpInside];
+        _backgroundView.userInteractionEnabled = YES;
+        [_backgroundView addTarget:self action:@selector(showPGCView) forControlEvents:UIControlEventTouchUpInside];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshPGCSubscribeState:) name:kEntrySubscribeStatusChangedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshPGCSubscribeState:) name:RelationActionSuccessNotification object:nil];
     }
@@ -573,25 +572,27 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
 
 - (void)showPGCView
 {
-    [self logClickPGC];
+//    [self logClickPGC];
+//
+//    NSString *openURL;
+//    if ([self.viewModel.pgcModel.contentInfo ttgc_contentType] == TTGeneratedContentTypePGC) {
+//        openURL = [TTVideoCommon PGCOpenURLWithMediaID:[self.viewModel.pgcModel.contentInfo ttgc_contentID] enterType:kPGCProfileEnterSourceVideoArticleTopAuthor];
+//        openURL = [openURL stringByAppendingString:[NSString stringWithFormat:@"&page_source=%@", @(1)]];
+//        //增加item_id
+//        openURL = [NSString stringWithFormat:@"%@&item_id=%@",openURL,self.viewModel.pgcModel.itemId];
+//        wrapperTrackEvent(@"detail", @"detail_enter_pgc");
+//    } else {
+//        openURL = [NSString stringWithFormat:@"sslocal://pgcprofile?uid=%@&page_source=%@&gd_ext_json=%@&page_type=0", [self.viewModel.pgcModel.contentInfo ttgc_contentID], @(1), kPGCProfileEnterSourceVideoArticleTopAuthor];
+//        NSMutableDictionary *extraDict = [[NSMutableDictionary alloc] init];
+//        [extraDict setValue:@{@"ugc":@(1)} forKey:@"extra"];
+//        [extraDict setValue:[self.viewModel.pgcModel.contentInfo ttgc_contentID] forKey:@"ext_value"];
+//        wrapperTrackEvent(@"detail", @"detail_enter_ugc");
+//    }
+//
+//    id<TTVVideoDetailNatantPGCModelProtocol> pgcModel = self.viewModel.pgcModel;
+//    openURL = [TTUGCTrackerHelper schemaTrackForPersonalHomeSchema:openURL categoryName:pgcModel.categoryName fromPage:@"detail_video" groupId:pgcModel.groupIDStr profileUserId:nil];
     
-    NSString *openURL;
-    if ([self.viewModel.pgcModel.contentInfo ttgc_contentType] == TTGeneratedContentTypePGC) {
-        openURL = [TTVideoCommon PGCOpenURLWithMediaID:[self.viewModel.pgcModel.contentInfo ttgc_contentID] enterType:kPGCProfileEnterSourceVideoArticleTopAuthor];
-        openURL = [openURL stringByAppendingString:[NSString stringWithFormat:@"&page_source=%@", @(1)]];
-        //增加item_id
-        openURL = [NSString stringWithFormat:@"%@&item_id=%@",openURL,self.viewModel.pgcModel.itemId];
-        wrapperTrackEvent(@"detail", @"detail_enter_pgc");
-    } else {
-        openURL = [NSString stringWithFormat:@"sslocal://pgcprofile?uid=%@&page_source=%@&gd_ext_json=%@&page_type=0", [self.viewModel.pgcModel.contentInfo ttgc_contentID], @(1), kPGCProfileEnterSourceVideoArticleTopAuthor];
-        NSMutableDictionary *extraDict = [[NSMutableDictionary alloc] init];
-        [extraDict setValue:@{@"ugc":@(1)} forKey:@"extra"];
-        [extraDict setValue:[self.viewModel.pgcModel.contentInfo ttgc_contentID] forKey:@"ext_value"];
-        wrapperTrackEvent(@"detail", @"detail_enter_ugc");
-    }
-    
-    id<TTVVideoDetailNatantPGCModelProtocol> pgcModel = self.viewModel.pgcModel;
-    openURL = [TTUGCTrackerHelper schemaTrackForPersonalHomeSchema:openURL categoryName:pgcModel.categoryName fromPage:@"detail_video" groupId:pgcModel.groupIDStr profileUserId:nil];
+    NSString *openURL = [NSString stringWithFormat:@"sslocal://profile?uid=",self.viewModel.pgcModel.contentInfo.ttgc_contentID];
     [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:openURL]];
 }
 

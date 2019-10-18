@@ -646,17 +646,22 @@
         }
         
         if (wself.detailModel.article.mediaInfo[@"media_id"]) {
-            NSMutableDictionary *extra = [NSMutableDictionary dictionary];
-            [extra setValue:wself.detailModel.article.itemID forKey:@"item_id"];
-            
-            [TTTrackerWrapper event:@"detail" label:@"click_titlebar_pgc" value:wself.detailModel.article.mediaInfo[@"media_id"] extValue:wself.detailModel.adID extValue2:nil dict:extra];
-            
-            NSString *enterItemId = wself.detailModel.article.groupModel.itemID;
             NSString *mediaID = [NSString stringWithFormat:@"%@", wself.detailModel.article.mediaInfo[@"media_id"]];
+            NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=",mediaID];
+            NSURL *openUrl = [NSURL URLWithString:url];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
             
-            NSString *enterSource = @"article_top_titlebar";
-            NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://media_account?media_id=%@&source=%@&itemt_id=%@", mediaID, enterSource, enterItemId];
-            [[TTRoute sharedRoute] openURLByPushViewController:[TTNetworkUtil URLWithURLString:[TTUGCTrackerHelper schemaTrackForPersonalHomeSchema:linkURLString categoryName:wself.detailModel.categoryID fromPage:@"detail_article" groupId:wself.detailModel.article.groupModel.groupID profileUserId:nil]]];
+//            NSMutableDictionary *extra = [NSMutableDictionary dictionary];
+//            [extra setValue:wself.detailModel.article.itemID forKey:@"item_id"];
+//
+//            [TTTrackerWrapper event:@"detail" label:@"click_titlebar_pgc" value:wself.detailModel.article.mediaInfo[@"media_id"] extValue:wself.detailModel.adID extValue2:nil dict:extra];
+//
+//            NSString *enterItemId = wself.detailModel.article.groupModel.itemID;
+//            NSString *mediaID = [NSString stringWithFormat:@"%@", wself.detailModel.article.mediaInfo[@"media_id"]];
+//
+//            NSString *enterSource = @"article_top_titlebar";
+//            NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://media_account?media_id=%@&source=%@&itemt_id=%@", mediaID, enterSource, enterItemId];
+//            [[TTRoute sharedRoute] openURLByPushViewController:[TTNetworkUtil URLWithURLString:[TTUGCTrackerHelper schemaTrackForPersonalHomeSchema:linkURLString categoryName:wself.detailModel.categoryID fromPage:@"detail_article" groupId:wself.detailModel.article.groupModel.groupID profileUserId:nil]]];
         }
     }];
     [self p_updateNavigationTitleView];
@@ -2674,18 +2679,15 @@
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(id<TTCommentModelProtocol>)model
 {
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     if ([model.userID longLongValue] == 0) {
         return;
     }
     
     NSString * userID = [NSString stringWithFormat:@"%@", model.userID];
-    NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://media_account?uid=%@", userID];
+    NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@", userID];
     
-    NSString *trackLinkString = [TTUGCTrackerHelper schemaTrackForPersonalHomeSchema:linkURLString categoryName:self.detailModel.categoryID fromPage:@"detail_article_comment" groupId:self.detailModel.article.groupModel.groupID profileUserId:nil];
-    [[TTRoute sharedRoute] openURLByPushViewController:[TTNetworkUtil URLWithURLString:trackLinkString]];
+//    NSString *trackLinkString = [TTUGCTrackerHelper schemaTrackForPersonalHomeSchema:linkURLString categoryName:self.detailModel.categoryID fromPage:@"detail_article_comment" groupId:self.detailModel.article.groupModel.groupID profileUserId:nil];
+    [[TTRoute sharedRoute] openURLByPushViewController:[TTNetworkUtil URLWithURLString:linkURLString]];
     
 }
 

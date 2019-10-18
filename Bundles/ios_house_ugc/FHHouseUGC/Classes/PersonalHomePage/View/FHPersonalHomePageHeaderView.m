@@ -17,6 +17,8 @@
 #import "TTPhotoScrollViewController.h"
 #import "TTBaseMacro.h"
 #import "TTInteractExitHelper.h"
+#import "FHUserTracker.h"
+#import "TTAccountManager.h"
 
 #define iconWidth 60
 #define topMargin 20
@@ -32,6 +34,7 @@
 @property(nonatomic, strong) FHPersonalHomePageItemView *commentView;
 @property(nonatomic, strong) FHPersonalHomePageItemView *focusView;
 @property(nonatomic, strong) FHPersonalHomePageModel *model;
+@property(nonatomic, strong) NSDictionary *tracerDic;
 
 @end
 
@@ -94,9 +97,6 @@
         make.height.mas_equalTo(25);
     }];
     
-//    CGFloat x = leftMargin + iconWidth + middleMargin;
-//    CGFloat width = ([UIScreen mainScreen].bounds.size.width - x - rightMargin)/2;
-    
     [self.commentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.icon.mas_right);
         make.top.mas_equalTo(self.userNameLabel.mas_bottom);
@@ -124,33 +124,49 @@
     return label;
 }
 
-- (void)updateData:(FHPersonalHomePageModel *)model {
+- (void)updateData:(FHPersonalHomePageModel *)model tracerDic:(nonnull NSDictionary *)tracerDic {
     self.model = model;
+    self.tracerDic = tracerDic;
     self.userNameLabel.text = model.data.name;
     [self.icon bd_setImageWithURL:[NSURL URLWithString:model.data.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
-    [self.commentView updateWithTopContent:model.data.fCommentCount bottomContent:@"评论"];
-    [self.focusView updateWithTopContent:model.data.fFollowSgCount bottomContent:@"关注"];
+    
+    if([model.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:self.model.data.userId]){
+        [self.commentView updateWithTopContent:(isEmptyString(model.data.fCommentCount) ? @"0" : model.data.fCommentCount) bottomContent:@"评论"];
+        [self.focusView updateWithTopContent:(isEmptyString(model.data.fFollowSgCount) ? @"0" : model.data.fFollowSgCount) bottomContent:@"关注"];
+    }else{
+        [self.commentView updateWithTopContent:@"*" bottomContent:@"评论"];
+        [self.focusView updateWithTopContent:@"*" bottomContent:@"关注"];
+    }
 }
 
 - (void)commentClicked {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"person_id"] = @"";
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    //跳转到评论列表
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_comment_list"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    if([[TTAccountManager userID] isEqualToString:self.model.data.userId]){
+        [self tracerClickOptions:@"personal_comment_list"];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"uid"] = self.model.data.userId;
+        dict[@"enter_from"] = @"personal_homepage_detail";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        //跳转到评论列表
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_comment_list"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
 }
 
 - (void)focusClicked {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"person_id"] = @"";
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    //跳转到关注列表
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_focus_list"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    if([self.model.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:self.model.data.userId]){
+        [self tracerClickOptions:@"personal_join_list"];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"uid"] = self.model.data.userId;
+        dict[@"enter_from"] = @"personal_homepage_detail";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        //跳转到关注列表
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_focus_list"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
 }
 
 - (void)showBigAvatar:(UIView *)sender {
+    [self tracerClickOptions:@"personal_picture"];
     TTPhotoScrollViewController * controller = [[TTPhotoScrollViewController alloc] init];
     controller.mode = PhotosScrollViewSupportBrowse;
     controller.finishBackView = [TTInteractExitHelper getSuitableFinishBackViewWithCurrentContext];
@@ -179,6 +195,17 @@
         [photoObjs addObject:self.icon.image];
     }
     return photoObjs;
+}
+
+#pragma mark - 埋点
+
+- (void)tracerClickOptions:(NSString *)clickPosition {
+    NSMutableDictionary *tracerDict = self.tracerDic.mutableCopy;
+    
+    tracerDict[@"click_position"] = clickPosition;
+    [tracerDict removeObjectsForKeys:@[@"enter_type"]];
+    
+    TRACK_EVENT(@"click_options", tracerDict);
 }
 
 @end

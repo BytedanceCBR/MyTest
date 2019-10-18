@@ -77,6 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *avatarUrl;
 @property (nonatomic, assign) BOOL isFollowing;
 @property (nonatomic, copy , nullable) NSString *hideFollowCount;
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
 @end
 
 @interface FHPersonalHomePageModel : JSONModel 

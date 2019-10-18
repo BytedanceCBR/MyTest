@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger currentSelectIndex;
 @property (nonatomic, strong) UITableView *currentTableView;
 @property (nonatomic, strong) FHPersonalHomePageModel *headerModel;
-@property (nonatomic, assign) int64_t cid;// 话题id
+@property (nonatomic, strong) NSString *userId;// 用户id
 @property (nonatomic, copy) NSString *enter_from;// 从哪进入的当前页面
 //视频相关
 @property(nonatomic, strong) NSMutableArray *movieViews;

@@ -20,10 +20,6 @@
 
 + (void)openProfileForUserID:(int64_t)uid
 {
-    
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://profile?uid=%lli&refer=wenda", uid]];
     [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
 }

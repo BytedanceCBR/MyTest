@@ -281,6 +281,10 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
         _avatarImageView.clipsToBounds = YES;
         _avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:_avatarImageView];
+        
+        _avatarImageView.userInteractionEnabled = YES;
+         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
+        [_avatarImageView addGestureRecognizer:tap];
     }
     return _avatarImageView;
 }
@@ -291,6 +295,10 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
         _roleInfoView.font = [UIFont systemFontOfSize:FHMNRoleInfoViewFontSize()];
         _roleInfoView.textColor = [UIColor themeGray1];
         [self addSubview:_roleInfoView];
+        
+        _roleInfoView.userInteractionEnabled = YES;
+         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
+        [_roleInfoView addGestureRecognizer:tap];
     }
     return _roleInfoView;
 }
@@ -537,6 +545,17 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
 - (void)themeChanged:(NSNotification *)notification {
     [super themeChanged:notification];
     self.avatarImageView.image = [UIImage themedImageNamed:@"defaulthead_message"];
+}
+
+- (void)goToPersonalHomePage {
+    if(self.messageModel.user.userID){
+//        NSMutableDictionary *dict = @{}.mutableCopy;
+//        dict[@"title"] = self.cellModel.user.name;
+//        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=",self.messageModel.user.userID];
+        NSURL *openUrl = [NSURL URLWithString:url];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }
 }
 
 @end

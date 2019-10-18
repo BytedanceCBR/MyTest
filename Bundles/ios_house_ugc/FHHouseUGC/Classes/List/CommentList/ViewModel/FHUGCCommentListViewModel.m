@@ -34,6 +34,10 @@
 
 @interface FHUGCCommentListViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
+@property (nonatomic, assign) NSInteger count;
+@property (nonatomic, assign) NSInteger feedOffset;
+@property (nonatomic, assign) BOOL hasMore;
+
 @end
 
 @implementation FHUGCCommentListViewModel
@@ -65,15 +69,6 @@
     }];
     self.tableView.mj_footer = self.refreshFooter;
     self.refreshFooter.hidden = YES;
-    
-    if(self.viewController.tableViewNeedPullDown){
-        // 下拉刷新
-        [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
-            wself.isRefreshingTip = NO;
-            [wself.viewController hideImmediately];
-            [wself requestData:YES first:NO];
-        }];
-    }
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -97,37 +92,11 @@
     NSInteger listCount = self.dataList.count;
     
     if(isFirst){
-        listCount = 0;
+        self.feedOffset = 0;
     }
     
-    double behotTime = 0;
-    NSString *lastGroupId = nil;
-    
-    if(!isHead && listCount > 0){
-        FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
-        behotTime = [cellModel.behotTime doubleValue];
-        lastGroupId = cellModel.groupId;
-    }
-    if(isHead && listCount > 0){
-        FHFeedUGCCellModel *cellModel = [self.dataList firstObject];
-        behotTime = [cellModel.behotTime doubleValue];
-        lastGroupId = cellModel.groupId;
-    }
-    
-    NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
-    NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    if(fCityId){
-        [extraDic setObject:fCityId forKey:@"f_city_id"];
-    }
-    self.socialGroupId = @"6719064699524088071";
-    if(self.socialGroupId){
-        [extraDic setObject:self.socialGroupId forKey:@"social_group_id"];
-    }
-    if(lastGroupId){
-        [extraDic setObject:lastGroupId forKey:@"last_group_id"];
-    }
-    
-    self.requestTask = [FHHouseUGCAPI requestMyCommentListWithUserId:nil offset:0 completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    //目前只支持查看自己的评论
+    self.requestTask = [FHHouseUGCAPI requestMyCommentListWithUserId:nil offset:self.feedOffset completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
         if(isFirst){
             [wself.viewController endLoading];
@@ -158,14 +127,8 @@
         }
         
         if(model){
-            if(isHead){
-                if(feedListModel.hasMore){
-                    [wself.dataList removeAllObjects];
-                }
-                wself.tableView.hasMore = YES;
-            }else{
-                wself.tableView.hasMore = feedListModel.hasMore;
-            }
+            wself.tableView.hasMore = feedListModel.hasMore;
+            wself.feedOffset = feedListModel.offset;
             
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
             
@@ -174,10 +137,6 @@
                 [wself.dataList removeAllObjects];
             }
             if(isHead){
-                // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
-                [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                    cellModel.isStick = NO;
-                }];
                 // 头部插入新数据
                 [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
             }else{
@@ -195,17 +154,6 @@
                 wself.refreshFooter.hidden = YES;
             }
             [wself.tableView reloadData];
-            
-//            NSString *refreshTip = feedListModel.tips.displayInfo;
-//            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
-//                wself.isRefreshingTip = YES;
-//                [wself.viewController showNotify:refreshTip completion:^{
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        wself.isRefreshingTip = NO;
-//                    });
-//                }];
-//                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-//            }
         }
     }];
 }

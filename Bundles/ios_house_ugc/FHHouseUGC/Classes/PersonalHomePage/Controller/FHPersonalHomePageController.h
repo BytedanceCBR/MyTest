@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refreshHeaderData;
 - (void)mainScrollToTop;
 
+- (void)addGoDetailLog;
+- (void)addStayPageLog;
+
 @end
 
 @interface FHPersonalHomePageScrollView : UIScrollView

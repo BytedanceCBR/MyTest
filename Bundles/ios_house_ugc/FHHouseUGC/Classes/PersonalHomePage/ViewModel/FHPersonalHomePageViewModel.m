@@ -31,6 +31,7 @@
 #import <TTVPlayVideo.h>
 #import <TTVFeedCellWillDisplayContext.h>
 #import <TTVFeedCellAction.h>
+#import "FHFeedListModel.h"
 
 @interface FHPersonalHomePageViewModel ()<FHUGCBaseCellDelegate>
 
@@ -56,6 +57,8 @@
 @property (nonatomic, copy) NSString *tab_id;
 @property (nonatomic, copy) NSString *appExtraParams;
 @property (nonatomic, strong) FHErrorView *tableEmptyView;
+//只上报一次埋点
+@property (nonatomic, assign) BOOL reportedGoDetail;
 
 @end
 
@@ -117,10 +120,9 @@
     if (self.httpTopHeaderTask) {
         [self.httpTopHeaderTask cancel];
     }
+    
     __weak typeof(self) wSelf = self;
-    NSString *cidStr = [NSString stringWithFormat:@"%lld",self.cid];// 话题id
-
-    self.httpTopListTask = [FHHouseUGCAPI requestHomePageInfoWithUserId:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.httpTopListTask = [FHHouseUGCAPI requestHomePageInfoWithUserId:self.userId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (!error && [model isKindOfClass:[FHPersonalHomePageModel class]]) {
             if(![model.message isEqualToString:@"error"]){
                 wSelf.headerModel = model;
@@ -135,10 +137,9 @@
     if (self.httpTopHeaderTask) {
         [self.httpTopHeaderTask cancel];
     }
+    
     __weak typeof(self) wSelf = self;
-    NSString *cidStr = [NSString stringWithFormat:@"%lld",self.cid];// 话题id
-
-    self.httpTopListTask = [FHHouseUGCAPI requestHomePageInfoWithUserId:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.httpTopListTask = [FHHouseUGCAPI requestHomePageInfoWithUserId:self.userId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wSelf.loadDataSuccessCount += 1;
         if (error) {
             wSelf.headerModel = nil;
@@ -152,6 +153,9 @@
                     wSelf.loadDataSuccessCount += 1;
                 }else{
                     wSelf.headerModel = model;
+                    if(wSelf.headerModel.data.logPb){
+                        wSelf.detailController.tracerDict[@"log_pb"] = wSelf.headerModel.data.logPb;
+                    }
                     [wSelf.detailController refreshHeaderData];
                     
                     if([wSelf.headerModel.data.fHomepageAuth integerValue] == 0){
@@ -175,11 +179,11 @@
         [self.httpTopListTask cancel];
     }
     self.detailController.isLoadingData = YES;
+    
     __weak typeof(self) wSelf = self;
-    NSString *cidStr = [NSString stringWithFormat:@"%lld",self.cid];// 话题id
-    self.httpTopListTask = [FHHouseUGCAPI requestTopicList:cidStr tab_id:self.tab_id categoryName:self.categoryName offset:self.feedOffset count:self.count appExtraParams:self.appExtraParams completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.httpTopListTask = [FHHouseUGCAPI requestHomePageFeedListWithUserId:@"110720295922" offset:self.feedOffset count:self.count completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wSelf.loadDataSuccessCount += 1;
-//        [wSelf.detailController endRefreshHeader];
+
         if (error) {
             if (wSelf.feedOffset == 0) {
                 // 说明是第一次请求
@@ -187,13 +191,13 @@
                 // 上拉加载loadmore
             }
         } else {
-            if ([model isKindOfClass:[FHTopicFeedListModel class]]) {
-                FHTopicFeedListModel *feedList = (FHTopicFeedListModel *)model;
+            if ([model isKindOfClass:[FHFeedListModel class]]) {
+                FHFeedListModel *feedList = (FHFeedListModel *)model;
                 
                 // 数据转模型 添加数据
                 NSMutableArray *tempArray = [NSMutableArray new];
-                [feedList.data enumerateObjectsUsingBlock:^(FHTopicFeedListDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if ([obj isKindOfClass:[FHTopicFeedListDataModel class]]) {
+                [feedList.data enumerateObjectsUsingBlock:^(FHFeedListDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj isKindOfClass:[FHFeedListDataModel class]]) {
                         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:obj.content];
                         if (cellModel) {
                             [tempArray addObject:cellModel];
@@ -247,7 +251,6 @@
         
                 wSelf.hasMore = feedList.hasMore;
                 wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
-                wSelf.appExtraParams = feedList.apiBaseInfo.appExtraParams;
             }
         }
         [wSelf processLoadingState];
@@ -265,6 +268,7 @@
 
 // 刷新数据和状态
 - (void)processLoadingState {
+    NSString *showType = @"be_null";
     NSInteger requestCount = 0;
     if([self.headerModel.data.fHomepageAuth integerValue] == 0){
         requestCount = 2;
@@ -295,6 +299,10 @@
             }else {
                 [refreshFooter endRefreshing];
             }
+            
+            showType = @"personal_full";
+            [self trackGoDetail:showType];
+            
         } else {
             if (self.headerModel) {
                 [self.detailController refreshHeaderData];
@@ -306,12 +314,18 @@
                         [self.currentTableView addSubview:self.tableEmptyView];
                         [self.tableEmptyView showEmptyWithTip:@"TA没有留下任何足迹，去其他地方看看吧！" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
                         self.currentTableView.scrollEnabled = NO;
+                        
+                        showType = @"personal_blank";
+                        [self trackGoDetail:showType];
                     }
                 }else{
                     // 添加空态页
                     [self.currentTableView addSubview:self.tableEmptyView];
                     [self.tableEmptyView showEmptyWithTip:@"TA暂时没有对外公开个人页面" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
                     self.currentTableView.scrollEnabled = NO;
+                    
+                    showType = @"personal_null";
+                    [self trackGoDetail:showType];
                 }
             } else {
                 [self.detailController showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -842,7 +856,7 @@
 }
 
 - (NSString *)pageType {
-    return @"topic_detail";
+    return @"personal_homepage_detail";
 }
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
@@ -885,6 +899,16 @@
                 }
             }
         }
+    }
+}
+
+#pragma mark - 埋点
+
+- (void)trackGoDetail:(NSString *)showType {
+    if(!self.reportedGoDetail){
+        self.reportedGoDetail = YES;
+        self.detailController.tracerDict[@"show_type"] = showType;
+        [self.detailController addGoDetailLog];
     }
 }
 

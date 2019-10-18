@@ -19,6 +19,9 @@
 #import <UIScrollView+Refresh.h>
 #import "FHFeedOperationView.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHUserTracker.h"
+#import "UIViewController+Track.h"
+#import "TTAccountManager.h"
 
 @interface FHUGCCommentListController ()
 
@@ -26,15 +29,33 @@
 @property(nonatomic, assign) BOOL needReloadData;
 @property(nonatomic, copy) void(^notifyCompletionBlock)(void);
 
+@property (nonatomic, strong) NSString *userId;//用户id
+
 @end
 
 @implementation FHUGCCommentListController
 
--(instancetype)init{
-    self = [super init];
-    if(self){
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+        
         _tableViewNeedPullDown = YES;
         _showErrorView = YES;
+
+        NSDictionary *params = paramObj.allParams;
+        self.userId = [params objectForKey:@"uid"];
+    
+        // 埋点
+        self.tracerDict[@"page_type"] = @"personal_comment_list";
+        // 取链接中的埋点数据
+        NSString *enterFrom = params[@"enter_from"];
+        if (enterFrom.length > 0) {
+            self.tracerDict[@"enter_from"] = enterFrom;
+        }
+
+        self.tracerDict[@"enter_type"] = @"click";
+
+        self.ttTrackStayEnable = YES;
     }
     return self;
 }
@@ -56,7 +77,7 @@
 
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.title.text = @"TA的评论";
+    self.customNavBarView.title.text = [[TTAccountManager userID] isEqualToString:self.userId] ? @"我的评论" : @"TA的评论";
 }
 
 - (void)initView {
@@ -199,6 +220,24 @@
 
 - (void)hideImmediately {
     [self.notifyBarView hideImmediately];
+}
+
+#pragma mark - 埋点
+
+- (void)addGoDetailLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    TRACK_EVENT(@"go_detail", tracerDict);
+}
+
+- (void)addStayPageLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_page_personal" params:tracerDict];
+    [self tt_resetStayTime];
 }
 
 @end

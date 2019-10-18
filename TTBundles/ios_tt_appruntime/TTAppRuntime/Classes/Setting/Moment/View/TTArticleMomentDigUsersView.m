@@ -143,16 +143,17 @@
         _nameView.isBanShowAuthor = self.isBanShowAuthor;
         [_nameView refreshWithTitle:text relation:[self getRelationStr:userModel] verifiedInfo:nil verified:NO owner:userModel.isOwner maxWidth:0 appendLogoInfoArray:userModel.authorBadgeList];
     }
+    
+    _nameView.userInteractionEnabled = NO;
 
-    [_nameView clickTitleWithAction:^(NSString *title) {
-        NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
-        [baseCondition setValue:userModel.ID forKey:@"uid"];
-        [baseCondition setValue:kFromFeedDetailDig forKey:@"from"];
-        
-        // add by zjing 去掉头像点击
+//    [_nameView clickTitleWithAction:^(NSString *title) {
+//        NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
+//        [baseCondition setValue:userModel.ID forKey:@"uid"];
+//        [baseCondition setValue:kFromFeedDetailDig forKey:@"from"];
+//
 //        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
 //        wrapperTrackEvent(@"update_detail", @"diggers_profile");
-    }];
+//    }];
     _avatarView.left = kCellAvatarViewLeftPadding;
     _avatarView.centerY = self.contentView.centerY;
     NSString *descStr = nil;
@@ -361,6 +362,7 @@
         if (!cell) {
             cell = [[TTArticleMomentDigUsersViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         SSUserModel * digUser = [[self.diggManger diggUsers] objectAtIndex:indexPath.row];
         cell.isBanShowAuthor = self.isBanShowAuthor;
         [cell refreshUserModel:digUser width:[TTUIResponderHelper splitViewFrameForView:self].size.width];
@@ -396,6 +398,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row < [[self.diggManger diggUsers] count]) {
         SSUserModel * digUser = [[self.diggManger diggUsers] objectAtIndex:indexPath.row];
         NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
@@ -404,10 +407,9 @@
         [baseCondition setValue:self.categoryName forKey:@"category_name"];
         [baseCondition setValue:self.fromPage forKey:@"from_page"];
         [baseCondition setValue:self.groupId forKey:@"group_id"];
-        // add by zjing 去掉头像点击
-//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
+
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
         wrapperTrackEvent(@"update_detail", @"diggers_profile");
     }
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 @end

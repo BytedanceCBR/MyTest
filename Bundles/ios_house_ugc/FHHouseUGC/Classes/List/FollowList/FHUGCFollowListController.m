@@ -20,12 +20,17 @@
 #import "FHUGCConfig.h"
 #import "FHUGCFollowListCell.h"
 #import "UIViewController+Track.h"
+#import "FHUserTracker.h"
+#import "TTAccountManager.h"
+#import "FHHouseUGCAPI.h"
 
 @interface FHUGCFollowListController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic, strong) NSMutableDictionary *houseShowTracerDic;
+
+@property (nonatomic, strong) NSString *userId;//用户id
 
 @end
 
@@ -35,7 +40,14 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         // 埋点
-        self.tracerDict[@"category_name"] = [self categoryName];
+        NSDictionary *params = paramObj.allParams;
+        self.userId = [params objectForKey:@"uid"];
+        
+        NSString *enterFrom = params[@"enter_from"];
+        if (enterFrom.length > 0) {
+            self.tracerDict[@"enter_from"] = enterFrom;
+        }
+        
         self.ttTrackStayEnable = YES;
     }
     return self;
@@ -55,9 +67,8 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.items = [NSMutableArray new];
     [self setupUI];
-    [self setupData];
+//    [self setupData];
     [self startLoadData];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFollowDataFinished:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     // 埋点
      self.houseShowTracerDic = [NSMutableDictionary new];
     [self addEnterCategoryLog];
@@ -70,28 +81,9 @@
     }
 }
 
-- (void)loadFollowDataFinished:(NSNotification *)noti {
-    [self setupData];
-}
-
-- (void)setupData {
-    [self.items removeAllObjects];
-    // 是否有数据
-    if ([FHUGCConfig sharedInstance].followData && [FHUGCConfig sharedInstance].followData.data.userFollowSocialGroups.count > 0) {
-        // 有数据
-        [self.items addObjectsFromArray:[FHUGCConfig sharedInstance].followData.data.userFollowSocialGroups];
-        [self.emptyView hideEmptyView];
-        [self.tableView reloadData];
-    } else {
-        // 暂时没有数据
-        [self.emptyView showEmptyWithTip:@"你还没有关注任何小区" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
-        [self.emptyView.retryButton setTitle:@"关注小区" forState:UIControlStateNormal];
-    }
-}
-
 - (void)setupUI {
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.title.text = @"TA关注的小区圈";
+    self.customNavBarView.title.text = [[TTAccountManager userID] isEqualToString:self.userId] ? @"我关注的小区圈" : @"TA关注的小区圈";
     
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
@@ -123,27 +115,61 @@
 }
 
 - (void)startLoadData {
-    
+    __weak typeof(self) wself = self;
+    [self startLoading];
+    [self.items removeAllObjects];
+    [FHHouseUGCAPI requestFocusListWithUserId:self.userId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        [wself endLoading];
+        
+        FHUGCModel *focusModel = (FHUGCModel *)model;
+        
+        if (!wself) {
+            return;
+        }
+        
+        if (error) {
+            //TODO: show handle error
+            if(error.code != -999){
+                [wself.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+                wself.showenRetryButton = YES;
+            }
+            return;
+        }
+        
+        if(focusModel){
+            [wself.items addObjectsFromArray:focusModel.data.userFollowSocialGroups];
+            wself.hasValidateData = wself.items.count > 0;
+            
+            if(wself.items.count > 0){
+                [wself.emptyView hideEmptyView];
+            }else{
+                [wself.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                wself.showenRetryButton = YES;
+            }
+            [wself.tableView reloadData];
+        }
+    }];
 }
 
 - (void)retryLoadData {
-    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"join_like_neighborhood";
-    NSString *category_name = self.tracerDict[@"category_name"];
-    tracerDict[@"page_type"] = category_name ?: @"be_null";
-    [tracerDict removeObjectForKey:@"category_name"];
-    [FHUserTracker writeEvent:@"click_join_like_neighborhood" params:tracerDict];
-    
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    NSMutableDictionary *traceParam = @{}.mutableCopy;
-    NSString *enter_from = @"join_like_neighborhood";
-    traceParam[@"enter_from"] = enter_from;
-    dict[TRACER_KEY] = traceParam;
-    
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    // 关注小区 按钮点击
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_my_interest"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+//    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+//    tracerDict[@"click_position"] = @"join_like_neighborhood";
+//    NSString *category_name = self.tracerDict[@"category_name"];
+//    tracerDict[@"page_type"] = category_name ?: @"be_null";
+//    [tracerDict removeObjectForKey:@"category_name"];
+//    [FHUserTracker writeEvent:@"click_join_like_neighborhood" params:tracerDict];
+//
+//    NSMutableDictionary *dict = @{}.mutableCopy;
+//    NSMutableDictionary *traceParam = @{}.mutableCopy;
+//    NSString *enter_from = @"join_like_neighborhood";
+//    traceParam[@"enter_from"] = enter_from;
+//    dict[TRACER_KEY] = traceParam;
+//
+//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+//    // 关注小区 按钮点击
+//    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_my_interest"];
+//    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    [self startLoadData];
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource

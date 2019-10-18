@@ -784,10 +784,6 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark - TTDynamicDetailHeaderDelegate
 
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header avatarViewOnClick:(id)sender {
-    
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:self.pageState.detailModel.user.ID];
     NSMutableDictionary *mdict = action.payload.mutableCopy;
     [mdict setValue:_categoryName forKey:@"categoryName"];
@@ -802,10 +798,6 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 }
 
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header nameViewOnClick:(id)sender {
-    
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:self.pageState.detailModel.user.ID];
     [self.store dispatch:action];
 }
@@ -964,10 +956,6 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark - TTCommentDetailCellDelegate
 
 - (void)tt_commentCell:(UITableViewCell *)view avatarTappedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-    
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.user.ID];
     [self.store dispatch:action];
 }
@@ -1005,10 +993,6 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view nameViewonClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-    
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.user.ID];
     [self.store dispatch:action];
 }

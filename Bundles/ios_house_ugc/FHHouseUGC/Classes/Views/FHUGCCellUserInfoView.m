@@ -46,9 +46,12 @@
      UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
     [_icon addGestureRecognizer:tap];
     
-    
     self.userName = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     [self addSubview:_userName];
+    
+    _userName.userInteractionEnabled = YES;
+     UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
+    [_userName addGestureRecognizer:tap1];
     
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self addSubview:_descLabel];
@@ -76,7 +79,7 @@
     [self.userName mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.icon);
         make.left.mas_equalTo(self.icon.mas_right).offset(10);
-        make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
+        make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 100);
         make.height.mas_equalTo(22);
     }];
     
@@ -397,7 +400,7 @@
 - (void)goToPersonalHomePage {
     if(self.cellModel.user.schema){
         NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"title"] = self.cellModel.user.name;
+        dict[@"from_page"] = self.cellModel.tracerDic[@"page_type"] ? self.cellModel.tracerDic[@"page_type"] : @"default";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
