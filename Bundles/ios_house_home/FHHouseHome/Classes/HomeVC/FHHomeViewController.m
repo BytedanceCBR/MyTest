@@ -242,6 +242,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 -(void)showNotify:(NSString *)message
 {
+    //如果首页没有显示，则不提示tip
+    if (!self.isShowing) {
+        return;
+    }
+    
     [self hideImmediately];
     
     self.isShowRefreshTip = YES;
@@ -627,12 +632,17 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     NSString *localMark = [FHUtils contentForKey:@"is_promotion_user"];
     
     if ([localMark isKindOfClass:[NSString class]] && [localMark isEqualToString:@"1"]) {
-        NSString *cityIdStr = [FHEnvContext getCurrentSelectCityIdFromLocal];
-        NSNumber *cityIdNum = nil;
-        if ([cityIdStr isKindOfClass:[NSString class]]) {
-            cityIdNum = [NSNumber numberWithInteger:[cityIdStr integerValue]];
+        if ([FHEnvContext isUGCOpen]) {
+            [[FHEnvContext sharedInstance] jumpUGCTab];
+        }else
+        {
+            NSString *cityIdStr = [FHEnvContext getCurrentSelectCityIdFromLocal];
+            NSNumber *cityIdNum = nil;
+            if ([cityIdStr isKindOfClass:[NSString class]]) {
+                cityIdNum = [NSNumber numberWithInteger:[cityIdStr integerValue]];
+            }
+            [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityIdNum];
         }
-        [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityIdNum];
     }
     
     [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
@@ -681,19 +691,19 @@ static NSString * const kFUGCPrefixStr = @"fugc";
             NSNumber *cityId = nil;
             NSString *alertStr = nil;
             NSNumber *inviteStatus = nil;
-            if ([result[@"city_id"] isKindOfClass:[NSNumber class]]) {
-                cityId = result[@"city_id"];
+            if ([result[@"data"] isKindOfClass:[NSDictionary class]] && [result[@"data"][@"city_id"] isKindOfClass:[NSNumber class]]) {
+                cityId = result[@"data"][@"city_id"];
             }
             
-            if ([result[@"tips"] isKindOfClass:[NSString class]]) {
-                alertStr = result[@"tips"];
+            if ([result[@"data"] isKindOfClass:[NSDictionary class]] && [result[@"data"][@"tips"] isKindOfClass:[NSString class]]) {
+                alertStr = result[@"data"][@"tips"];
             }
             
-            if ([result[@"invite_status"] isKindOfClass:[NSNumber class]]) {
-                inviteStatus = result[@"invite_status"];
+            if ([result[@"data"] isKindOfClass:[NSDictionary class]] && [result[@"data"][@"invite_status"] isKindOfClass:[NSNumber class]]) {
+                inviteStatus = result[@"data"][@"invite_status"];
             }
             
-            if (alertStr && inviteStatus && [inviteStatus integerValue] != 2) {
+            if (alertStr && [inviteStatus isKindOfClass:[NSNumber class]] && [inviteStatus integerValue] != 2) {
                 TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:alertStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
                 
                 [alertVC addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeCancel actionBlock:^{

@@ -196,23 +196,16 @@ static NSInteger kGetLightRequestRetryCount = 3;
                         }
                         [[ToastManager manager] dismissCustomLoading];
                         
-                        
                         if ([FHEnvContext isUGCOpen]) {
                             [[FHEnvContext sharedInstance] jumpUGCTab];
                         }
-                        
                     }
                     //重试3次请求频道
                     if (!isSuccessed && (retryGetLightCount > 0)) {
                         retryGetLightCount--;
                         [[TTArticleCategoryManager sharedManager] startGetCategory];
                     }
-                    if ([[paramsExtra description] isKindOfClass:[NSString class]]) {
-                        BDALOG_WARN_TAG(@"get_light_error_reason", [paramsExtra description]);
-                    }
                 }];
-                
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:0 extra:paramsExtra];
                 
             }else
             {
@@ -221,7 +214,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
                     completion(NO);
                 }
                 [[ToastManager manager] dismissCustomLoading];
-                [[ToastManager manager] showToast:@"切换城市失败"];
                 NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
                 
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:1 extra:paramsExtra];
@@ -231,7 +223,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 }
             }
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:kArticleCategoryHasChangeNotification object:nil];
         }];
     }else
     {
@@ -878,7 +869,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [FHEnvContext silentOpenSwitchCityURL:url completion:^(BOOL isSuccess) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self jumpUGCTab];
+                    if ([FHEnvContext isUGCOpen]) {
+                        [self jumpUGCTab];
+                    }
                 });
             });
         }];
