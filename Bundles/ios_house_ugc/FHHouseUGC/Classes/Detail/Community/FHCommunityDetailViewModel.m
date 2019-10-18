@@ -289,6 +289,7 @@
                 //传入选项信息
                 self.feedListController.operations = responseModel.data.permission;
                 self.feedListController.scialGroupData = responseModel.data;
+                [self.feedListController updateViews];
                 self.feedListController.loginDelegate = wself;
                 if (_isLoginSatusChangeFromGroupChat) {
                     [self.feedListController gotoGroupChat];
