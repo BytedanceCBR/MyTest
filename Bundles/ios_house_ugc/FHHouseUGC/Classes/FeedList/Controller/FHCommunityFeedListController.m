@@ -449,6 +449,7 @@
         dict[@"chat_title"] = title;
     }
     dict[@"member_role"] = [NSString stringWithFormat: @"%d", _scialGroupData.userAuth];
+    dict[@"is_admin"] = @(_scialGroupData.userAuth > UserAuthTypeNormal);
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
