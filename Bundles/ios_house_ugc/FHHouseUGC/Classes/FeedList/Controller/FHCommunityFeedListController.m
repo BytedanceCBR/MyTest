@@ -115,7 +115,7 @@
     [self initTableView];
     [self initNotifyBarView];
     [self initPublishBtn];
-    if (_forumId > 0 && (_scialGroupData.userAuth > UserAuthTypeNormal || _scialGroupData.conversationId >= 0 || [@"50264240862" isEqualToString:TTAccountManager.userID])) {
+    if (_forumId > 0 && (_scialGroupData.userAuth > UserAuthTypeNormal || _scialGroupData.chatStatus.conversationId >= 0)) {
         [self initGroupChatBtn];
         [self initBageView];
     }
@@ -371,15 +371,13 @@
 
 - (void)gotoGroupChat {
    if ([TTAccountManager isLogin]) {
-       if (isEmptyString(_conversationId)) {
-           if (_scialGroupData.userAuth > UserAuthTypeNormal || [@"50264240862" isEqualToString:TTAccountManager.userID]) {
-               [self tryCreateNewGroupChat];
-           }
-       } else if(_scialGroupData.conversationStatus == joinConversation) {
+       if (_scialGroupData.userAuth > UserAuthTypeNormal && _scialGroupData.chatStatus.conversationId <= 0) {
+           [self tryCreateNewGroupChat];
+       } else if(_scialGroupData.chatStatus.conversationStatus == joinConversation) {
            [self gotoGroupChatVC:_conversationId isCreate:NO autoJoin:NO];
-       } else if (_scialGroupData.conversationStatus == leaveConversation) {
+       } else if (_scialGroupData.chatStatus.conversationStatus == leaveConversation) {
            [self tryJoinConversation];
-       } else if(_scialGroupData.conversationStatus == KickOutConversation) {
+       } else if(_scialGroupData.chatStatus.conversationStatus == KickOutConversation) {
            //todo toast
        } else {
           [self tryJoinConversation];

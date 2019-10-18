@@ -27,6 +27,19 @@ typedef NS_ENUM(NSUInteger, UserCoversationStatus) {
     KickOutConversation = 3,
 };
 
+@interface FHUGCScialGroupDataChatStatusModel: JSONModel
+
+//群聊的ID
+@property (nonatomic, assign) NSInteger conversationId;
+//用户在当前群聊的状态
+@property (nonatomic, assign) UserCoversationStatus conversationStatus;
+//群聊的上限
+@property (nonatomic, assign) NSUInteger maxConversationCount;
+//当前群聊的人数
+@property (nonatomic, assign) NSUInteger currentConversationCount;
+
+@end
+
 @interface FHUGCScialGroupDataModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *announcement;
@@ -41,16 +54,9 @@ typedef NS_ENUM(NSUInteger, UserCoversationStatus) {
 @property (nonatomic, copy , nullable) NSString *hasFollow;
 @property (nonatomic, strong, nullable) FHUGCSocialGroupOperationModel *operation;
 @property (nonatomic, assign) UserAuthType userAuth;
-@property(nonatomic, strong, nullable) NSArray <FHUGCConfigDataPermissionModel> *permission;
+@property (nonatomic, strong, nullable) NSArray <FHUGCConfigDataPermissionModel> *permission;
 @property (nonatomic, copy , nullable) NSDictionary *logPb;
-//群聊的ID
-@property (nonatomic, copy , nullable) NSString *conversationId;
-//用户在当前群聊的状态
-@property (nonatomic, assign) UserCoversationStatus conversationStatus;
-//群聊的上限
-@property (nonatomic, assign) NSUInteger maxConversationCount;
-//当前群聊的人数
-@property (nonatomic, assign) NSUInteger currentConversationCount;
+@property (nonatomic, strong) FHUGCScialGroupDataChatStatusModel *chatStatus;
 
 @end
 
