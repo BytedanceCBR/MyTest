@@ -213,24 +213,24 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     NSInteger row = indexPath.row;
-    if (row >= 0 && row < self.followList.count) {
-//        // 键盘是否显示
-//        self.isKeybordShow = self.keyboardVisible;
-//
-//        FHUGCScialGroupDataModel *data = self.items[row];
-//
-//        // 点击埋点
-//        [self addCommunityClickLog:data rank:row];
-//        NSMutableDictionary *dict = @{}.mutableCopy;
-//        dict[@"community_id"] = data.socialGroupId;
-//        dict[@"tracer"] = @{@"enter_from":@"community_search_show",
-//                            @"enter_type":@"click",
-//                            @"rank":@(row),
-//                            @"log_pb":data.logPb ?: @"be_null"};
-//        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//        // 跳转到圈子详情页
-//        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
-//        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    NSInteger section = indexPath.section;
+    if (section < self.mergedArray.count) {
+        NSArray *dataArr = self.mergedArray[section];
+        if (row < dataArr.count) {
+            FHUGCUserFollowDataFollowListModel *data = dataArr[row];
+            if (data.schema.length > 0) {
+                // 点击埋点
+                [self.viewController.view endEditing:YES];
+                NSMutableDictionary *dict = @{}.mutableCopy;
+                dict[@"tracer"] = @{@"enter_from":@"community_group_join_member",
+                                    @"enter_type":@"click",
+                                    @"rank":@(row)};
+                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                // 跳转到个人主页
+                NSURL *openUrl = [NSURL URLWithString:data.schema];
+                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+            }
+        }
     }
 }
 

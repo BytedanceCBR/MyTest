@@ -385,10 +385,6 @@
     return cell;
 }
 
--(void)onItemSelected:(FHUGCUserFollowDataFollowListModel*)item{
-    
-}
-
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
