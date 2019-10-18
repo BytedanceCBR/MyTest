@@ -426,6 +426,52 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     }
 }
 
+// 关注前先登录 逻辑
+- (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow enterFrom:(NSString *)enter_from enterType:(NSString *)enter_type completion:(void (^ _Nullable)(BOOL isSuccess))completion {
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        if (completion) {
+            completion(NO);
+        }
+        return;
+    }
+    // 登录 或者 是取消关注(取关可以不登录)
+    if ([TTAccountManager isLogin] || !follow) {
+        [self followUGCBy:social_group_id isFollow:follow completion:completion];
+    } else {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        if (enter_from.length <= 0) {
+            enter_from = @"be_null";
+        }
+        if (enter_type.length <= 0) {
+            enter_type = @"be_null";
+        }
+        [params setObject:enter_from forKey:@"enter_from"];
+        [params setObject:enter_type forKey:@"enter_type"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        params[@"from_ugc"] = @(YES);
+        __weak typeof(self) wSelf = self;
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                // 登录成功
+                if ([TTAccountManager isLogin]) {
+                    [wSelf followUGCBy:social_group_id isFollow:follow completion:completion];
+                } else {
+                    if (completion) {
+                        completion(NO);
+                    }
+                }
+            } else {
+                if (completion) {
+                    completion(NO);
+                }
+            }
+        }];
+    }
+}
+
+
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 - (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow completion:(void (^ _Nullable)(BOOL isSuccess))completion {
     if (![TTReachability isNetworkConnected]) {

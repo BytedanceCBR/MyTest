@@ -104,6 +104,11 @@
         StrongSelf;
         [self gotoPostThreadVC];
     };
+    
+    self.headerView.gotoSocialFollowUserListBlk = ^{
+        StrongSelf;
+        [self gotoSocialFollowUserList];
+    };
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onGlobalFollowListLoad:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
@@ -362,7 +367,8 @@
 - (void)followCommunity:(NSString *)groupId {
     if (groupId) {
         WeakSelf;
-        [[FHUGCConfig sharedInstance] followUGCBy:groupId isFollow:YES completion:^(BOOL isSuccess) {
+        NSString *enter_from = @"community_group_detail";
+        [[FHUGCConfig sharedInstance] followUGCBy:groupId isFollow:YES enterFrom:enter_from enterType:@"click" completion:^(BOOL isSuccess) {
             StrongSelf;
             if (isSuccess) {
                 [wself gotoPostVC];
@@ -632,6 +638,13 @@
     self.headerView.nameLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
     NSString *subtitle = data.countText;
     self.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
+    NSInteger followerCount = [data.followerCount integerValue];
+    if (followerCount <= 0) {
+       self.headerView.userCountBgView.hidden = YES;
+    } else {
+        self.headerView.userCountBgView.hidden = NO;
+        self.headerView.userCountLabel.text = [NSString stringWithFormat:@"%ld个成员",followerCount];
+    }
     
     // 配置公告
     [self updatePublicationsWith:data];
@@ -665,7 +678,6 @@
         
         self.feedListController.tableView.tableHeaderView = headerView;
         [self.feedListController.tableView bringSubviewToFront:self.feedListController.tableView.mj_header];
-        
     }
 
     //仅仅在未关注时显示引导页
@@ -679,6 +691,33 @@
     self.headerView.followButton.followed = followed;
     self.rightBtn.followed = followed;
     [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
+}
+
+- (void)gotoSocialFollowUserList {
+    FHUGCScialGroupDataModel *item = self.data;
+    if (!item && [item isKindOfClass:[FHUGCScialGroupDataModel class]]) {
+        return;
+    }
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"element_type"] = @"community_group_join_member";
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    params[@"click_position"] = @"community_group_join_member";
+    params[@"page_type"] = [self pageTypeString];
+    [FHUserTracker writeEvent:@"click_options" params:params];
+    NSMutableDictionary *infoDict = @{}.mutableCopy;
+    NSMutableDictionary *tracer = @{}.mutableCopy;
+    tracer[@"enter_type"] = @"click";
+    tracer[@"enter_from"] = [self pageTypeString];
+    //tracer[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+    tracer[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    // 埋点
+    [infoDict setValue:tracer forKey:@"tracer"];
+    // NSString *name = [NSString stringWithFormat:@"%@小区圈",item.socialGroupName];
+    infoDict[@"title"] = item.socialGroupName;
+    infoDict[@"social_group_id"] = item.socialGroupId;
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://ugc_follow_user_list"] userInfo:info];
 }
 
 #pragma UIScrollViewDelegate

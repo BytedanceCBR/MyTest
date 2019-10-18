@@ -617,6 +617,26 @@
     
     Class cls = NSClassFromString(@"FHUGCModel");
     
++ (TTHttpTask *)requestFollowUserListBySocialGroupId:(NSString *)socialGroupId offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/follow_list";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (socialGroupId.length > 0) {
+        paramDic[@"social_group_id"] = socialGroupId;
+    }
+    paramDic[@"offset"] = @(offset);
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestFollowSugSearchByText:(NSString *)text socialGroupId:(NSString *)socialGroupId offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/follow_suggest_list";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (text.length > 0) {
+        paramDic[@"query_key"] = text;
+    }
+    if (socialGroupId.length > 0) {
+        paramDic[@"social_group_id"] = socialGroupId;
+    }
+    paramDic[@"offset"] = @(offset);
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
