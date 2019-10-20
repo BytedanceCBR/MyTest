@@ -89,8 +89,12 @@
     if (self.requestTask) {
         [self.requestTask cancel];
     }
+    if (self.offset == 0) {
+        [self.viewController startLoading];
+    }
     __weak typeof(self) weakSelf = self;
     self.requestTask = [FHHouseUGCAPI requestFollowUserListBySocialGroupId:self.socialGroupId offset:self.offset class:[FHUGCUserFollowModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        [weakSelf.viewController endLoading];
         if (model != NULL && error == NULL) {
             [weakSelf processDataWith:(FHUGCUserFollowModel *)model];
         } else {
