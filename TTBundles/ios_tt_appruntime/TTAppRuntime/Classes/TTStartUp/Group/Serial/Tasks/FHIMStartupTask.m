@@ -25,6 +25,7 @@
 #import "TTLaunchDefine.h"
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <TTReachability/TTReachability.h>
+#import <TTSandBoxHelper.h>
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -69,6 +70,13 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
 - (void)registerTTRoute {
 
+}
+
+- (BOOL)isBOE {
+    if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
+        return YES;
+    }
+    return NO;
 }
 
 - (NSString *)appId {
