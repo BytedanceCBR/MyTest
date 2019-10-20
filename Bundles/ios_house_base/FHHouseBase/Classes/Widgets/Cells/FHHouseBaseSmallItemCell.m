@@ -45,6 +45,8 @@
 
 @property(nonatomic, strong) UIView *leftInfoView;
 
+@property(nonatomic, strong) UIView *maskVRImageView;
+
 @property(nonatomic, strong) UIImageView *houseVideoImageView;
 
 @property(nonatomic, strong) UILabel *imageTagLabel;
@@ -824,11 +826,22 @@
         NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:model.tags];
         self.tagLabel.attributedText =  attributeString;
     }
+    
+    if (self.maskVRImageView) {
+        [self.maskVRImageView removeFromSuperview];
+        self.maskVRImageView = nil;
+    }
 
     if (_vrLoadingView && model.vrInfo.hasVr) {
         _vrLoadingView.hidden = NO;
         [_vrLoadingView play];
         self.houseVideoImageView.hidden = YES;
+        
+        self.maskVRImageView = [UIView new];
+        self.maskVRImageView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
+        [self.mainImageView addSubview:self.maskVRImageView];
+        [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, MAIN_IMG_WIDTH, MAIN_IMG_HEIGHT)];
+        
     }else
     {
         _vrLoadingView.hidden = YES;

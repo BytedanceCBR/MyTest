@@ -53,6 +53,7 @@
 
 @property(nonatomic, strong) UILabel *imageTagLabel;
 @property(nonatomic, strong) FHCornerView *imageTagLabelBgView;
+@property(nonatomic, strong) UIView *maskVRImageView;
 
 @property(nonatomic, strong) UIView *rightInfoView;
 @property(nonatomic, strong) UILabel *mainTitleLabel; //主title lable
@@ -797,10 +798,20 @@
             self.imageTagLabelBgView.hidden = YES;
         }
     
+        if (self.maskVRImageView) {
+            [self.maskVRImageView removeFromSuperview];
+            self.maskVRImageView = nil;
+        }
+        
         if (_vrLoadingView && commonModel.vrInfo.hasVr) {
             _vrLoadingView.hidden = NO;
             [_vrLoadingView play];
             self.houseVideoImageView.hidden = YES;
+            
+            self.maskVRImageView = [UIView new];
+            self.maskVRImageView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
+            [self.mainImageView addSubview:self.maskVRImageView];
+            [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, MAIN_IMG_WIDTH, MAIN_IMG_HEIGHT)];
         }else
         {
             _vrLoadingView.hidden = YES;

@@ -69,7 +69,7 @@ static CGFloat multiplier = 2;
     
     
     self.maskBlackView = [UIView new];
-    [self.maskBlackView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.2]];
+    [self.maskBlackView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.1]];
     [self addSubview:self.maskBlackView];
     [self.maskBlackView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
