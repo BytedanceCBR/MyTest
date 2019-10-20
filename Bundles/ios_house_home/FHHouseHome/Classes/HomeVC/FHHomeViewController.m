@@ -632,14 +632,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     if ([FHEnvContext isUGCAdUser] && isAutoJump) {
         if ([FHEnvContext isUGCOpen]) {
             [[FHEnvContext sharedInstance] jumpUGCTab];
-        }else
-        {
-            NSString *cityIdStr = [FHEnvContext getCurrentSelectCityIdFromLocal];
-            NSNumber *cityIdNum = nil;
-            if ([cityIdStr isKindOfClass:[NSString class]]) {
-                cityIdNum = [NSNumber numberWithInteger:[cityIdStr integerValue]];
-            }
-            [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityIdNum];
         }
     }
     
@@ -721,8 +713,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
                 weakSelf.adUGCHadJump = YES;
                 [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityId];
             }
-            
-            
             //只保存数据
             [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
         }
