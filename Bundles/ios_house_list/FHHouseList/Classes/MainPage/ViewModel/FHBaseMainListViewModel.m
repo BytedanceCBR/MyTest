@@ -637,11 +637,9 @@ extern NSString *const INSTANT_DATA_KEY;
         } else {
             [self addLoadMoreRefreshLog];
         }
-        
-        if (!self.fromRecommend) {
-            self.redirectTips = redirectTips;
-            [self updateRedirectTipInfo];
-        }
+
+        self.redirectTips = redirectTips;
+        [self updateRedirectTipInfo];
         
         [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj isKindOfClass:[FHSearchHouseDataItemsModel class]]) {

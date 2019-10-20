@@ -909,10 +909,8 @@ extern NSString *const INSTANT_DATA_KEY;
             [self addCategoryRefreshLog];
         }
 
-        if (!self.fromRecommend) {
-            self.redirectTips = redirectTips;
-            [self updateRedirectTipInfo];
-        }
+        self.redirectTips = redirectTips;
+        [self updateRedirectTipInfo];
 
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
