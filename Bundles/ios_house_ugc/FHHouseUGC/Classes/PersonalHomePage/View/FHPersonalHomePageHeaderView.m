@@ -142,7 +142,7 @@
 }
 
 - (void)commentClicked {
-    if([[TTAccountManager userID] isEqualToString:self.model.data.userId]){
+    if(([[TTAccountManager userID] isEqualToString:self.model.data.userId]) && [self.model.data.fCommentCount integerValue] != 0){
         [self tracerClickOptions:@"personal_comment_list"];
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"uid"] = self.model.data.userId;
@@ -155,7 +155,7 @@
 }
 
 - (void)focusClicked {
-    if([self.model.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:self.model.data.userId]){
+    if(([self.model.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:self.model.data.userId]) && [self.model.data.fFollowSgCount integerValue] != 0){
         [self tracerClickOptions:@"personal_join_list"];
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"uid"] = self.model.data.userId;

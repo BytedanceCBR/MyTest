@@ -113,6 +113,17 @@
             self.moreBtn.hidden = NO;
         }
     }
+    
+    NSString *pageType = self.cellModel.tracerDic[@"page_type"];
+    if(pageType && [pageType isEqualToString:@"personal_homepage_detail"]){
+        //在个人主页页面 头像和名字不可点击
+        _icon.userInteractionEnabled = NO;
+        _userName.userInteractionEnabled = NO;
+    }else{
+        _icon.userInteractionEnabled = YES;
+        _userName.userInteractionEnabled = YES;
+    }
+    
 }
 
 - (void)moreOperation {
