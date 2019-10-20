@@ -33,6 +33,7 @@
 #import <TTVFeedCellAction.h>
 #import "FHFeedListModel.h"
 #import "ToastManager.h"
+#import "TTAccountManager.h"
 
 @interface FHPersonalHomePageViewModel ()<FHUGCBaseCellDelegate>
 
@@ -159,7 +160,7 @@
                     }
                     [wSelf.detailController refreshHeaderData:YES];
                     
-                    if([wSelf.headerModel.data.fHomepageAuth integerValue] == 0){
+                    if([wSelf.headerModel.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:wSelf.headerModel.data.userId]){
                         // 加载列表数据
                         [wSelf loadFeedListData];
                     }
@@ -275,7 +276,7 @@
 - (void)processLoadingState {
     NSString *showType = @"be_null";
     NSInteger requestCount = 0;
-    if([self.headerModel.data.fHomepageAuth integerValue] == 0){
+    if([self.headerModel.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:self.headerModel.data.userId]){
         requestCount = 2;
     }else{
         requestCount = 1;
@@ -288,6 +289,7 @@
         if (self.headerModel && self.dataList.count > 0) {
             // 数据ok
             [self.detailController hiddenEmptyView];
+             self.currentTableView.backgroundColor = [UIColor themeGray7];
 //            [self.detailController refreshHeaderData:NO];
             // 移除空页面
             if (self.tableEmptyView) {
@@ -312,7 +314,7 @@
             if (self.headerModel) {
 //                [self.detailController refreshHeaderData:NO];
                 self.currentTableView.mj_footer.hidden = YES;
-                
+                self.currentTableView.backgroundColor = [UIColor whiteColor];
                 if([self.headerModel.data.fHomepageAuth integerValue] == 0){
                     if (self.dataList.count <= 0) {
                         // 添加空态页
