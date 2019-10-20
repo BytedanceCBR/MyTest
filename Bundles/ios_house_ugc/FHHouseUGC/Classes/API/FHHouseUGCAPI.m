@@ -569,6 +569,7 @@
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"count"] = @(20);
     paramDic[@"offset"] = @(offset);
+    paramDic[@"category"] = @"my_comments";
     
     Class cls = NSClassFromString(@"FHUGCCommentListModel");
     

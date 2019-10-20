@@ -128,7 +128,7 @@
         
         if(model){
             wself.tableView.hasMore = feedListModel.hasMore;
-            wself.feedOffset = feedListModel.offset;
+            wself.feedOffset = [feedListModel.offset integerValue];
             
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
             
