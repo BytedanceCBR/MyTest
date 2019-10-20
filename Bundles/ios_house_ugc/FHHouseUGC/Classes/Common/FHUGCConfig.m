@@ -511,6 +511,12 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                     }
                     // 关注或者取消关注后 重新拉取 关注列表
                     isSuccess = YES;
+                } else if([model.status isEqualToString:@"1"]) {
+                    // 管理员 - 禁止取消关注 - toast 提示
+                    if ([model.message isKindOfClass:[NSString class]] && model.message.length > 0) {
+                        NSString *messageStr = model.message;
+                        [[ToastManager manager] showToast:messageStr];
+                    }
                 }
                 if (completion) {
                     completion(isSuccess);
