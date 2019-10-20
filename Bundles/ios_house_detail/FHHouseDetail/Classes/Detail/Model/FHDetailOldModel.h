@@ -361,6 +361,14 @@ typedef enum : NSInteger {
 
 @end
 
+@interface FHDetailDataBaseExtraNeighborhoodModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *subName;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
+
 
 @interface FHDetailDataBaseExtraModel : JSONModel
 
@@ -368,6 +376,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraOfficialModel *official;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraBudgetModel *budget;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraFloorInfoModel *floorInfo;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraNeighborhoodModel *neighborhoodInfo;
 
 @end
 
