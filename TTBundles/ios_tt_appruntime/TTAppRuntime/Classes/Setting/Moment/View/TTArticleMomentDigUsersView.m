@@ -405,7 +405,7 @@
         [baseCondition setValue:digUser.ID forKey:@"uid"];
         [baseCondition setValue:kFromFeedDetailDig forKey:@"from"];
         [baseCondition setValue:self.categoryName forKey:@"category_name"];
-        [baseCondition setValue:self.fromPage forKey:@"from_page"];
+        [baseCondition setValue:@"comment_list" forKey:@"from_page"];
         [baseCondition setValue:self.groupId forKey:@"group_id"];
 
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];

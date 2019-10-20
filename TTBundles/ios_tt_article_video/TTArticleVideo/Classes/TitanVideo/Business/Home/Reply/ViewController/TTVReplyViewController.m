@@ -421,6 +421,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 - (void)p_enterProfileWithUserID:(NSString *)userID {
     NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
     [baseCondition setValue:userID forKey:@"uid"];
+    [baseCondition setValue:@"comment_list" forKey:@"from_page"];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
 }
 

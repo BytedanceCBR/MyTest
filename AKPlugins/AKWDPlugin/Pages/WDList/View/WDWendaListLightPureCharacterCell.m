@@ -330,7 +330,7 @@
     
     NSString *categoryName = [self.gdExtJson objectForKey:@"category_name"];
     NSString *schema = [NSString stringWithFormat:@"sslocal://profile?uid=%@&refer=wenda", self.ansEntity.user.userID];
-    NSString *result = [WDTrackerHelper schemaTrackForPersonalHomeSchema:schema categoryName:categoryName fromPage:@"list_answer_wenda" groupId:self.ansEntity.ansid profileUserId:self.ansEntity.user.userID];
+    NSString *result = [WDTrackerHelper schemaTrackForPersonalHomeSchema:schema categoryName:categoryName fromPage:@"question" groupId:self.ansEntity.ansid profileUserId:self.ansEntity.user.userID];
     
     [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:result] userInfo:nil];
 }

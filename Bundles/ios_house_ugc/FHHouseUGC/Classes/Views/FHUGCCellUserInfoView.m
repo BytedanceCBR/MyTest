@@ -106,7 +106,7 @@
         self.moreBtn.hidden = YES;
     }else{
         //针对一下两种类型，隐藏...按钮
-        if(cellModel.cellType == FHUGCFeedListCellTypeAnswer || cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
+        if(cellModel.cellType == FHUGCFeedListCellTypeAnswer || cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
             BOOL hideDelete = [TTAccountManager isLogin] && [[TTAccountManager userID] isEqualToString:cellModel.user.userId];
             self.moreBtn.hidden = hideDelete;
         }else{
@@ -122,6 +122,11 @@
     }else{
         _icon.userInteractionEnabled = YES;
         _userName.userInteractionEnabled = YES;
+    }
+    
+    //我的评论列表页打开
+    if(pageType && [pageType isEqualToString:@"personal_comment_list"]){
+        self.moreBtn.hidden = NO;
     }
     
 }

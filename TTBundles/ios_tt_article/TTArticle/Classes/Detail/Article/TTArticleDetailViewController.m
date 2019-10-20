@@ -646,8 +646,8 @@
         }
         
         if (wself.detailModel.article.mediaInfo[@"media_id"]) {
-            NSString *mediaID = [NSString stringWithFormat:@"%@", wself.detailModel.article.mediaInfo[@"media_id"]];
-            NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@",mediaID];
+            NSString *userID = [NSString stringWithFormat:@"%@", wself.detailModel.article.mediaInfo[@"user_id"]];
+            NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=article_detail",userID];
             NSURL *openUrl = [NSURL URLWithString:url];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
             
@@ -2684,7 +2684,7 @@
     }
     
     NSString * userID = [NSString stringWithFormat:@"%@", model.userID];
-    NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@", userID];
+    NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@&from_page=comment_list", userID];
     
 //    NSString *trackLinkString = [TTUGCTrackerHelper schemaTrackForPersonalHomeSchema:linkURLString categoryName:self.detailModel.categoryID fromPage:@"detail_article_comment" groupId:self.detailModel.article.groupModel.groupID profileUserId:nil];
     [[TTRoute sharedRoute] openURLByPushViewController:[TTNetworkUtil URLWithURLString:linkURLString]];

@@ -586,7 +586,7 @@
     }
     
     NSString * userID = [NSString stringWithFormat:@"%@", model.userID];
-    NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@", userID];
+    NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@&from_page=comment_list", userID];
     
     [[TTRoute sharedRoute] openURLByPushViewController:[TTNetworkUtil URLWithURLString:linkURLString]];
 }

@@ -1876,6 +1876,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 - (void)p_enterProfileWithUserID:(NSString *)userID {
     NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
     [baseCondition setValue:userID forKey:@"uid"];
+    [baseCondition setValue:@"comment_list" forKey:@"from_page"];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
 }
 

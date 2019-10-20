@@ -32,6 +32,7 @@
 #import <TTVFeedCellWillDisplayContext.h>
 #import <TTVFeedCellAction.h>
 #import "FHFeedListModel.h"
+#import "ToastManager.h"
 
 @interface FHPersonalHomePageViewModel ()<FHUGCBaseCellDelegate>
 
@@ -189,6 +190,10 @@
                 // 说明是第一次请求
             } else {
                 // 上拉加载loadmore
+                [[ToastManager manager] showToast:@"网络异常"];
+                self.currentTableView.mj_footer.hidden = NO;
+                [self.currentTableView.mj_footer endRefreshing];
+                return;
             }
         } else {
             if ([model isKindOfClass:[FHFeedListModel class]]) {

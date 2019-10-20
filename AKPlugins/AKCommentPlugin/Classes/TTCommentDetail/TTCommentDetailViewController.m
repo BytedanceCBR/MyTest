@@ -794,19 +794,16 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header avatarViewOnClick:(id)sender {
     TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:self.pageState.detailModel.user.ID];
     NSMutableDictionary *mdict = action.payload.mutableCopy;
-    [mdict setValue:_categoryName forKey:@"categoryName"];
-    [mdict setValue:_groupId forKey:@"groupId"];
-    NSString *fromPage = _fromPage;
-    if ([_fromPage hasSuffix:@"_dig"]) {
-        fromPage = [_fromPage substringToIndex:[_fromPage rangeOfString:@"_dig"].location];
-    }
-    [mdict setValue:fromPage forKey:@"fromPage"];
+    [mdict setValue:@"comment_list" forKey:@"fromPage"];
     action.payload = mdict.copy;
     [self.store dispatch:action];
 }
 
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header nameViewOnClick:(id)sender {
     TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:self.pageState.detailModel.user.ID];
+    NSMutableDictionary *mdict = action.payload.mutableCopy;
+    [mdict setValue:@"comment_list" forKey:@"fromPage"];
+    action.payload = mdict.copy;
     [self.store dispatch:action];
 }
 
@@ -936,7 +933,8 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     NSMutableDictionary *mdict = action.payload.mutableCopy;
     [mdict setValue:_categoryName forKey:@"categoryName"];
     [mdict setValue:_groupId forKey:@"groupId"];
-    [mdict setValue:_fromPage forKey:@"fromPage"];
+//    [mdict setValue:_fromPage forKey:@"fromPage"];
+    [mdict setValue:@"comment_list" forKey:@"fromPage"];
     action.payload = mdict.copy;
     [self.store dispatch:action];
 }
