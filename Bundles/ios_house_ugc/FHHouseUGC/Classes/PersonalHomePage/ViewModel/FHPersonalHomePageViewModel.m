@@ -181,7 +181,7 @@
     self.detailController.isLoadingData = YES;
     
     __weak typeof(self) wSelf = self;
-    self.httpTopListTask = [FHHouseUGCAPI requestHomePageFeedListWithUserId:@"110720295922" offset:self.feedOffset count:self.count completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.httpTopListTask = [FHHouseUGCAPI requestHomePageFeedListWithUserId:self.userId offset:self.feedOffset count:self.count completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wSelf.loadDataSuccessCount += 1;
 
         if (error) {

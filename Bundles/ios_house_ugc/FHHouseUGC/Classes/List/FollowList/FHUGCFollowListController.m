@@ -47,14 +47,17 @@
         if (enterFrom.length > 0) {
             self.tracerDict[@"enter_from"] = enterFrom;
         }
+        self.tracerDict[@"enter_type"] = @"click";
+        
+        self.tracerDict[@"page_type"] = [self pageType];
         
         self.ttTrackStayEnable = YES;
     }
     return self;
 }
 
-- (NSString *)categoryName {
-    return @"my_joined_neighborhood_list";
+- (NSString *)pageType {
+    return @"personal_join_list";
 }
 
 - (void)dealloc {
@@ -67,11 +70,10 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.items = [NSMutableArray new];
     [self setupUI];
-//    [self setupData];
     [self startLoadData];
     // 埋点
      self.houseShowTracerDic = [NSMutableDictionary new];
-    [self addEnterCategoryLog];
+    [self addGoDetailLog];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -152,23 +154,6 @@
 }
 
 - (void)retryLoadData {
-//    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-//    tracerDict[@"click_position"] = @"join_like_neighborhood";
-//    NSString *category_name = self.tracerDict[@"category_name"];
-//    tracerDict[@"page_type"] = category_name ?: @"be_null";
-//    [tracerDict removeObjectForKey:@"category_name"];
-//    [FHUserTracker writeEvent:@"click_join_like_neighborhood" params:tracerDict];
-//
-//    NSMutableDictionary *dict = @{}.mutableCopy;
-//    NSMutableDictionary *traceParam = @{}.mutableCopy;
-//    NSString *enter_from = @"join_like_neighborhood";
-//    traceParam[@"enter_from"] = enter_from;
-//    dict[TRACER_KEY] = traceParam;
-//
-//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//    // 关注小区 按钮点击
-//    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_my_interest"];
-//    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     [self startLoadData];
 }
 
@@ -203,7 +188,7 @@
             if (!self.houseShowTracerDic[recordKey]) {
                 // 埋点
                 self.houseShowTracerDic[recordKey] = @(YES);
-                [self addHouseShowLog:indexPath];
+//                [self addHouseShowLog:indexPath];
             }
         }
     }
@@ -229,7 +214,7 @@
         // 我关注的小区
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = data.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"my_joined_neighborhood_list",
+        dict[@"tracer"] = @{@"enter_from":[self pageType],
                             @"enter_type":@"click",
                             @"rank":@(indexPath.row),
                             @"log_pb":data.logPb ?: @"be_null"};
@@ -243,7 +228,7 @@
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
-    [self addStayCategoryLog];
+    [self addStayPageLog];
 }
 
 - (void)trackStartedByAppWillEnterForground {
@@ -255,66 +240,49 @@
 
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self addStayCategoryLog];
+    [self addStayPageLog];
 }
 
--(void)addEnterCategoryLog {
-    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
-    [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
+-(void)addGoDetailLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
 }
 
--(void)addStayCategoryLog {
+-(void)addStayPageLog {
     NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
     if (duration == 0) {
         return;
     }
-    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    [FHUserTracker writeEvent:@"stay_category" params:tracerDict];
+    [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
     [self tt_resetStayTime];
 }
 
--(NSDictionary *)categoryLogDict {
-    
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    NSString *enter_type = self.tracerDict[@"enter_type"];
-    tracerDict[@"enter_type"] = enter_type.length > 0 ? enter_type : @"be_null";
-    NSString *category_name = self.tracerDict[@"category_name"];
-    tracerDict[@"category_name"] = category_name.length > 0 ? category_name : @"be_null";
-    NSString *enter_from = self.tracerDict[@"enter_from"];
-    tracerDict[@"enter_from"] = enter_from.length > 0 ? enter_from : @"be_null";
-    NSString *element_from = self.tracerDict[@"element_from"];
-    tracerDict[@"element_from"] = element_from.length > 0 ? element_from : @"be_null";
-    return tracerDict;
-}
-
-
--(void)addHouseShowLog:(NSIndexPath *)indexPath {
-    
-    if (indexPath.row >= self.items.count) {
-        return;
-    }
-    FHUGCScialGroupDataModel* cellModel = self.items[indexPath.row];
-    
-    if (!cellModel) {
-        return;
-    }
-    
-    NSString *house_type = @"community";
-    NSString *page_type = self.tracerDict[@"category_name"];
-    
-    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
-    tracerDict[@"house_type"] = house_type ? : @"be_null";
-    tracerDict[@"page_type"] = page_type ? : @"be_null";
-    tracerDict[@"rank"] = @(indexPath.row);
-    tracerDict[@"log_pb"] = cellModel.logPb ? : @"be_null";
-    tracerDict[@"card_type"] = @"left_pic";
-    
-    
-    [tracerDict removeObjectForKey:@"category_name"];
-    
-    
-    [FHUserTracker writeEvent:@"community_group_show" params:tracerDict];
-}
+//- (void)addHouseShowLog:(NSIndexPath *)indexPath {
+//    
+//    if (indexPath.row >= self.items.count) {
+//        return;
+//    }
+//    FHUGCScialGroupDataModel* cellModel = self.items[indexPath.row];
+//    
+//    if (!cellModel) {
+//        return;
+//    }
+//    
+//    NSString *house_type = @"community";
+//    NSString *page_type = self.tracerDict[@"category_name"];
+//    
+//    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+//    tracerDict[@"house_type"] = house_type ? : @"be_null";
+//    tracerDict[@"page_type"] = page_type ? : @"be_null";
+//    tracerDict[@"rank"] = @(indexPath.row);
+//    tracerDict[@"log_pb"] = cellModel.logPb ? : @"be_null";
+//    tracerDict[@"card_type"] = @"left_pic";
+//    
+//    [tracerDict removeObjectForKey:@"category_name"];
+//
+//    [FHUserTracker writeEvent:@"community_group_show" params:tracerDict];
+//}
 
 @end

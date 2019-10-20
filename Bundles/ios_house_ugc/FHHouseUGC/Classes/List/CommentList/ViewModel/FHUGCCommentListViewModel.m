@@ -303,7 +303,7 @@
         // 评论
         NSMutableDictionary *dict = [NSMutableDictionary new];
         NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"enter_from"] = @"community_group_detail";
+        traceParam[@"enter_from"] = [self pageType];
         traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
         traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
         traceParam[@"log_pb"] = cellModel.logPb;
@@ -366,7 +366,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = @"community_group_detail";
+    traceParam[@"enter_from"] = [self pageType];
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
@@ -417,7 +417,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = @"community_group_detail";
+    traceParam[@"enter_from"] = [self pageType];
     traceParam[@"element_from"] = @"feed_topic";
     traceParam[@"enter_type"] = @"click";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
@@ -474,7 +474,7 @@
 }
 
 - (NSString *)pageType {
-    return @"community_group_detail";
+    return @"personal_comment_list";
 }
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {

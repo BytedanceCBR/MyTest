@@ -69,6 +69,7 @@
     [self initConstraints];
     [self initViewModel];
     [self startLoadData];
+    [self addGoDetailLog];
 }
 
 - (void)dealloc {
@@ -213,6 +214,10 @@
         
     }completion:^(BOOL finished) {
         if (self.notifyCompletionBlock) {
+            
+            
+            
+            
             self.notifyCompletionBlock();
         }
     }];
@@ -220,6 +225,24 @@
 
 - (void)hideImmediately {
     [self.notifyBarView hideImmediately];
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayPageLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+#pragma mark - Tracer
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self addStayPageLog];
 }
 
 #pragma mark - 埋点
@@ -236,7 +259,8 @@
     }
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    [FHUserTracker writeEvent:@"stay_page_personal" params:tracerDict];
+    TRACK_EVENT(@"stay_page", tracerDict);
+
     [self tt_resetStayTime];
 }
 
