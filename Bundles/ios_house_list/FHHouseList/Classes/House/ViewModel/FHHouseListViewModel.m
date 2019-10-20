@@ -812,7 +812,12 @@ extern NSString *const INSTANT_DATA_KEY;
                 if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]] ) {
                     if(self.houseList.count <= 10 && itemArray.count <= 10 && itemArray.count > 1)
                     {
-                        [itemArray insertObject:topInfoModel atIndex:itemArray.count - 1];
+                        if (self.isShowSubscribeCell) {
+                            [itemArray insertObject:topInfoModel atIndex:itemArray.count - 1];
+                        }else
+                        {
+                            [itemArray addObject:topInfoModel];
+                        }
                     }else
                     {
                         [itemArray addObject:topInfoModel];
