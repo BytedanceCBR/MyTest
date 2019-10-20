@@ -717,7 +717,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
                 [FHUtils setContent:@"1" forKey:kFHUGCPromotionUser];
             }
             
-            if (!weakSelf.adUGCHadJump && [inviteStatus integerValue] != 2) {
+            if (!weakSelf.adUGCHadJump && [inviteStatus integerValue] != 2 && cityId) {
                 weakSelf.adUGCHadJump = YES;
                 [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityId];
             }
