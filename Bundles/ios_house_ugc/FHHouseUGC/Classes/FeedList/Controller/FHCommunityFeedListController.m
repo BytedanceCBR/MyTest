@@ -120,11 +120,6 @@
     [self initTableView];
     [self initNotifyBarView];
     [self initPublishBtn];
-//    if (_forumId > 0 && (_scialGroupData.userAuth > UserAuthTypeNormal || _scialGroupData.conversationId >= 0 || [@"50264240862" isEqualToString:TTAccountManager.userID])) {
-//        [self initGroupChatBtn];
-//        [self initBageView];
-//    }
-    
     if (_forumId > 0) {
         [self initGroupChatBtn];
         [self initBageView];
@@ -178,6 +173,7 @@
     [_groupChatBtn setImage:[UIImage imageNamed:@"fh_ugc_group_chat_tip"] forState:UIControlStateNormal];
     [_groupChatBtn addTarget:self action:@selector(gotoGroupChat) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_groupChatBtn];
+    [_groupChatBtn setHidden:YES];
 }
 
 - (void)initBageView {
@@ -224,6 +220,9 @@
 }
 
 - (void)updateViews {
+    if (_forumId > 0 && (_scialGroupData.userAuth > UserAuthTypeNormal || [_scialGroupData.chatStatus.conversationId integerValue] > 0)) {
+        [_groupChatBtn setHidden:NO];
+    }
     if (_scialGroupData.chatStatus.conversationStatus == joinConversation) {
         if ([[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.chatStatus.conversationId].mute) {
             _bageView.badgeNumber = TTBadgeNumberPoint;
@@ -342,12 +341,12 @@
    if ([TTAccountManager isLogin]) {
        if (_scialGroupData.chatStatus.currentConversationCount >= _scialGroupData.chatStatus.maxConversationCount) {
            [[ToastManager manager] showToast:@"成员已达上限"];
-       } else if ([_conversationId integerValue] <= 0) {
-           if (_scialGroupData.userAuth > UserAuthTypeNormal || [@"50264240862" isEqualToString:TTAccountManager.userID]) {
+       } else if ([_scialGroupData.chatStatus.conversationId integerValue] <= 0) {
+           if (_scialGroupData.userAuth > UserAuthTypeNormal) {
                [self tryCreateNewGroupChat];
            }
        } else if(_scialGroupData.chatStatus.conversationStatus == joinConversation) {
-           [self gotoGroupChatVC:_conversationId isCreate:NO autoJoin:NO];
+           [self gotoGroupChatVC:_scialGroupData.chatStatus.conversationId isCreate:NO autoJoin:NO];
        } else if (_scialGroupData.chatStatus.conversationStatus == leaveConversation) {
            [self tryJoinConversation];
        } else if(_scialGroupData.chatStatus.conversationStatus == KickOutConversation) {
@@ -439,8 +438,10 @@
         dict[@"chat_member_count"] = _scialGroupData.followerCount;
     } else if (autoJoin) {
         dict[@"auto_join"] = @"1";
-        dict[@"conversation_id"] = _scialGroupData.chatStatus.conversationId;
-        dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:_scialGroupData.chatStatus.conversationShortId] stringValue];
+        dict[@"conversation_id"] = @"6749073502277468423";
+        dict[@"short_conversation_id"] = @"6749073502277468423";
+//        dict[@"conversation_id"] = _scialGroupData.chatStatus.conversationId;
+//        dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:_scialGroupData.chatStatus.conversationShortId] stringValue];
         NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", _scialGroupData.socialGroupName, _scialGroupData.chatStatus.currentConversationCount];
         dict[@"chat_title"] = title;
     } else {
