@@ -652,6 +652,13 @@
     [self updateOperationInfo:data.operation];
     
     [self updateJoinUI:[data.hasFollow boolValue]];
+    if (followerCount > 0) {
+        if (subtitle.length > 0) {
+            subtitle = [NSString stringWithFormat:@"%@ | %@",subtitle, [NSString stringWithFormat:@"%ld个成员",followerCount]];
+        } else {
+            subtitle = [NSString stringWithFormat:@"%ld个成员",followerCount];
+        }
+    }
     self.titleLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
     self.subTitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
     
