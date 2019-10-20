@@ -23,7 +23,7 @@ static CGFloat heightYHalf = 0.2f;
 @property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 @property (nonatomic, strong) UIView *maskBlackView;
 @property(strong,nonatomic) CMMotionManager *manager;
-@property(assign,nonatomic) NSInteger *playCount;
+@property(assign,nonatomic) NSInteger playCount;
 
 @end
 
@@ -153,13 +153,14 @@ static CGFloat multiplier = 2;
         NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
         _vrLoadingView = [LOTAnimationView animationWithFilePath:path];
         _vrLoadingView.loopAnimation = NO;
+        __weak typeof(self) weakSelf = self;
         _vrLoadingView.completionBlock = ^(BOOL animationFinished) {
             if (animationFinished) {
-                self.playCount += 1;
-                if (self.playCount > 3) {
-                    return;
-                }
-                [_vrLoadingView play];
+                [weakSelf.vrLoadingView playWithCompletion:^(BOOL animationFinished) {
+                    [weakSelf.vrLoadingView playWithCompletion:^(BOOL animationFinished) {
+                        
+                    }];
+                }];
             }
         };
     }
