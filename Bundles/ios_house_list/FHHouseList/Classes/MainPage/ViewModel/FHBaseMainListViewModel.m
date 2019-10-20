@@ -544,6 +544,11 @@ extern NSString *const INSTANT_DATA_KEY;
                 fromRecommend = YES;
             }
             
+            if(!items)
+            {
+                items = [NSMutableArray new];
+            }
+            
             if (isRefresh) {
                 
                 //先插入订阅再判断其他

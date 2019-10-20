@@ -771,6 +771,11 @@ extern NSString *const INSTANT_DATA_KEY;
                 fromRecommend = YES;
             }
             
+            if(!itemArray)
+            {
+                itemArray = [NSMutableArray new];
+            }
+            
             if (self.isRefresh) {
                 //先插入订阅再判断其他
                 FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = houseModel.subscribeInfo;
