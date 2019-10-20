@@ -15,6 +15,7 @@
     @"conversationStatus": @"user_status",
     @"maxConversationCount": @"user_limit",
     @"currentConversationCount": @"user_count",
+    @"conversationShortId": @"conversation_short_id",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -41,7 +42,6 @@
     @"announcementUrl":@"announcement_url",
     @"userAuth": @"user_auth",
     @"chatStatus": @"chat_status",
-    @"conversationShortId":@"conversation_short_id"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
