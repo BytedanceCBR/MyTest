@@ -705,7 +705,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 + (BOOL)isUGCAdUser
 {
-    NSString *localMark = [FHUtils contentForKey:@"is_promotion_user"];
+    NSString *localMark = [FHUtils contentForKey:kFHUGCPromotionUser];
     
     if ([localMark isKindOfClass:[NSString class]] && [localMark isEqualToString:@"1"]){
         return YES;
@@ -855,10 +855,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
             
             if(isADUser)
             {
-                [FHUtils setContent:@"1" forKey:@"is_promotion_user"];
+                [FHUtils setContent:@"1" forKey:kFHUGCPromotionUser];
             }else
             {
-                [FHUtils setContent:@"0" forKey:@"is_promotion_user"];
+                [FHUtils setContent:@"0" forKey:kFHUGCPromotionUser];
             }
             
             if (isADUser) {

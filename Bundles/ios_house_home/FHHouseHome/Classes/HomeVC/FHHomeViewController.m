@@ -689,16 +689,17 @@ static NSString * const kFUGCPrefixStr = @"fugc";
             NSNumber *cityId = nil;
             NSString *alertStr = nil;
             NSNumber *inviteStatus = nil;
-            if ([result[@"data"] isKindOfClass:[NSDictionary class]] && [result[@"data"][@"city_id"] isKindOfClass:[NSNumber class]]) {
-                cityId = result[@"data"][@"city_id"];
+            NSDictionary *dataDict = result[@"data"];
+            if ([dataDict isKindOfClass:[NSDictionary class]] && [dataDict[@"city_id"] isKindOfClass:[NSNumber class]]) {
+                cityId = dataDict[@"city_id"];
             }
             
-            if ([result[@"data"] isKindOfClass:[NSDictionary class]] && [result[@"data"][@"tips"] isKindOfClass:[NSString class]]) {
-                alertStr = result[@"data"][@"tips"];
+            if ([dataDict isKindOfClass:[NSDictionary class]] && [dataDict[@"tips"] isKindOfClass:[NSString class]]) {
+                alertStr = dataDict[@"tips"];
             }
             
-            if ([result[@"data"] isKindOfClass:[NSDictionary class]] && [result[@"data"][@"invite_status"] isKindOfClass:[NSNumber class]]) {
-                inviteStatus = result[@"data"][@"invite_status"];
+            if ([dataDict isKindOfClass:[NSDictionary class]] && [dataDict[@"invite_status"] isKindOfClass:[NSNumber class]]) {
+                inviteStatus = dataDict[@"invite_status"];
             }
             
             if (alertStr && [inviteStatus isKindOfClass:[NSNumber class]] && [inviteStatus integerValue] != 2) {
@@ -713,7 +714,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
                     [alertVC showFrom:topVC animated:YES];
                 }
                 
-                [FHUtils setContent:@"1" forKey:@"is_promotion_user"];
+                [FHUtils setContent:@"1" forKey:kFHUGCPromotionUser];
             }
             
             if (!weakSelf.adUGCHadJump && [inviteStatus integerValue] != 2) {

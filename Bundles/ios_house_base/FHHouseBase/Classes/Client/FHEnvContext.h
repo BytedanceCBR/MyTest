@@ -38,6 +38,8 @@ static NSString *const kTracerEventType = @"house_app2c_v2";
 
 static NSString *const kFHSwitchGetLightFinishedNotification = @"k_fh_get_light_finish";
 
+static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
+
 @class FHMessageManager;
 
 NS_ASSUME_NONNULL_BEGIN
