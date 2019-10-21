@@ -49,7 +49,7 @@
     }];
 
     [self.bottomLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self);
+        make.centerY.mas_equalTo(self).offset(0.5);
         make.left.mas_equalTo(self.topLabel.mas_right).offset(4);
         make.right.mas_equalTo(self).offset(-10);
         make.height.mas_equalTo(17);

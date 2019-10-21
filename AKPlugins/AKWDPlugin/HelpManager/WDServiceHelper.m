@@ -20,7 +20,7 @@
 
 + (void)openProfileForUserID:(int64_t)uid
 {
-    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://profile?uid=%lli&refer=wenda", uid]];
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://profile?uid=%lli&refer=wenda&from_page=answer", uid]];
     [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
 }
 

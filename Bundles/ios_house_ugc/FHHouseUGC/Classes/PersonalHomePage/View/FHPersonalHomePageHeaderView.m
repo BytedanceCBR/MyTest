@@ -129,7 +129,7 @@
     self.userNameLabel.text = model.data.name;
     
     if(refreshAvatar){
-        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.data.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+        [self.icon bd_setImageWithURL:[NSURL URLWithString:model.data.avatarUrl] placeholder:[UIImage imageNamed:@"fh_ugc_home_page_default_avatar"]];
     }
     
     if([model.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:self.model.data.userId]){

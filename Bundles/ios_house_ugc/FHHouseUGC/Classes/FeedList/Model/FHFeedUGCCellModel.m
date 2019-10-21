@@ -386,6 +386,10 @@
             originItemModel.content = model.rawData.originThread.content;
             originItemModel.openUrl = model.rawData.originThread.schema;
             originItemModel.imageModel = [model.rawData.originThread.thumbImageList firstObject];
+        }else if(model.rawData.originUgcVideo){
+            originItemModel.content = model.rawData.originUgcVideo.rawData.title;
+            originItemModel.openUrl = model.rawData.originUgcVideo.rawData.detailSchema;
+            originItemModel.imageModel = [model.rawData.originUgcVideo.rawData.thumbImageList firstObject];
         }else{
             originItemModel.content = model.rawData.originCommonContent.title;
             originItemModel.openUrl = model.rawData.originCommonContent.schema;

@@ -467,6 +467,7 @@
                            @"stickStyle": @"stick_style",
                            @"contentDecoration": @"content_decoration",
                            @"originThread": @"origin_thread",
+                           @"originUgcVideo": @"origin_ugc_video",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -919,6 +920,108 @@
     @"diggCount": @"digg_count",
     @"threadId": @"thread_id",
     @"thumbImageList": @"thumb_image_list",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginUgcVideoRawDataUserModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"relationCount": @"relation_count",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginUgcVideoRawDataModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"groupIdStr": @"group_id_str",
+    @"textCommentCount": @"text_comment_count",
+    @"detailSchema": @"detail_schema",
+    @"titleRichSpan": @"title_rich_span",
+    @"voiceCommentEnable": @"voice_comment_enable",
+    @"voiceCommentCount": @"voice_comment_count",
+    @"createTime": @"create_time",
+    @"thumbImageList": @"thumb_image_list",
+    @"largeImageList": @"large_image_list",
+    @"groupSource": @"group_source",
+    @"itemId": @"item_id",
+    @"groupId": @"group_id",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginUgcVideoRawDataUserRelationCountModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"followersCount": @"followers_count",
+    @"followingsCount": @"followings_count",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginUgcVideoModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"cellType": @"cell_type",
+    @"dataType": @"data_type",
+    @"rawData": @"raw_data",
+    @"showOrigin": @"show_origin",
+    @"idStr": @"id_str",
+    @"showTips": @"show_tips",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginUgcVideoRawDataUserInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"userId": @"user_id",
+    @"userDecoration": @"user_decoration",
+    @"verifiedContent": @"verified_content",
+    @"avatarUrl": @"avatar_url",
+    @"userVerified": @"user_verified",
+    @"userAuthInfo": @"user_auth_info",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
