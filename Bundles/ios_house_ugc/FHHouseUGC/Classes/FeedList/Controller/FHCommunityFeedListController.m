@@ -223,8 +223,9 @@
     if (_forumId > 0 && (_scialGroupData.userAuth > UserAuthTypeNormal || [_scialGroupData.chatStatus.conversationId integerValue] > 0)) {
         [_groupChatBtn setHidden:NO];
     }
+     NSUInteger unreadCount = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.chatStatus.conversationId].unreadCount;
     if (_scialGroupData.chatStatus.conversationStatus == joinConversation) {
-        if ([[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.chatStatus.conversationId].mute) {
+        if ([[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.chatStatus.conversationId].mute && unreadCount > 0) {
             _bageView.badgeNumber = TTBadgeNumberPoint;
             [self.bageView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.groupChatBtn).offset(7);
@@ -233,7 +234,7 @@
                 make.width.mas_equalTo(10);
             }];
         } else {
-            _bageView.badgeNumber = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.chatStatus.conversationId].unreadCount;
+            _bageView.badgeNumber = unreadCount;
             [self.bageView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.groupChatBtn).offset(5);
                 make.right.mas_equalTo(self.self.groupChatBtn).offset(-5);
@@ -472,7 +473,7 @@
             [self.delegate refreshBasicInfo];
         }
     };
-    
+    _bageView.badgeNumber = 0;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
     NSURL* url = [NSURL URLWithString:@"sslocal://open_group_chat"];

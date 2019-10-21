@@ -173,7 +173,15 @@
 
 - (void)updateWithChat:(IMConversation*)conversation {
     IMConversation* conv = conversation;
-    self.unreadView.badgeNumber = conv.unreadCount;
+    if (conv.mute) {
+        if (conv.unreadCount > 0) {
+            self.unreadView.badgeNumber = TTBadgeNumberPoint;
+        } else {
+            self.unreadView.badgeNumber = 0;
+        }
+    } else {
+        self.unreadView.badgeNumber = conv.unreadCount;
+    }
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:conv.icon] placeholder:[UIImage imageNamed:@"chat_business_icon_c"]];
 
     self.titleLabel.text = conv.conversationDisplayName;
