@@ -181,6 +181,8 @@
             FHFeedContentRawDataModel *rawData = [[FHFeedContentRawDataModel alloc] init];
             rawData.commentBase = commentBase;
             rawData.originGroup = model.commentDetail.originGroup;
+            rawData.originThread = model.commentDetail.originThread;
+            rawData.originUgcVideo = model.commentDetail.originUgcVideo;
             FHFeedContentModel *feedContent = [[FHFeedContentModel alloc] init];
             feedContent.logPb = model.logPb;
             feedContent.imageList = model.commentDetail.thumbImageList;
