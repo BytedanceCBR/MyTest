@@ -333,20 +333,6 @@
     
     Class jsonCls = [FHFeedOperationResultModel class];
     
-    //json
-//    return [FHMainApi postJsonRequest:queryPath query:nil params:paramDic jsonClass:jsonCls completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
-//        if (completion) {
-//            completion(model,error);
-//        }
-//    }];
-    
-    //非json
-//    return [FHMainApi postRequest:queryPath query:nil params:paramDic jsonClass:jsonCls completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
-//        if (completion) {
-//            completion(model,error);
-//        }
-//    }];
-    
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
         __block NSError *backError = error;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{

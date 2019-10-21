@@ -269,7 +269,9 @@
 //问答回答和文章优质评论
 + (void)setOriginContentAttributeString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
     NSString *content = model.originItemModel.content;
-    if (!isEmptyString(content)) {
+    NSString *type = model.originItemModel.type;
+
+    if (!isEmptyString(content) || !isEmptyString(type)) {
         NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
         
         if([self typeAttr:model]){
@@ -280,16 +282,18 @@
         if (model.numberOfLines > 0) {
             parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:content fontSize:16 needParseCount:parseEmojiCount];
-        if (attrStr) {
-            UIFont *font = [UIFont themeFontRegular:16];
-            NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
-            NSMutableDictionary *attributes = @{}.mutableCopy;
-            [attributes setValue:[UIColor themeGray2] forKey:NSForegroundColorAttributeName];
-            [attributes setValue:font forKey:NSFontAttributeName];
+        if (!isEmptyString(content)) {
+            NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:content fontSize:16 needParseCount:parseEmojiCount];
+            if (attrStr) {
+                UIFont *font = [UIFont themeFontRegular:16];
+                NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
+                NSMutableDictionary *attributes = @{}.mutableCopy;
+                [attributes setValue:[UIColor themeGray2] forKey:NSForegroundColorAttributeName];
+                [attributes setValue:font forKey:NSFontAttributeName];
 
-            [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
-            [desc appendAttributedString:mutableAttributedString];
+                [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
+                [desc appendAttributedString:mutableAttributedString];
+            }
         }
         
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];

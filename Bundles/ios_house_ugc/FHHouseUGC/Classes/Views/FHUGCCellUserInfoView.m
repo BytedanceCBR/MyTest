@@ -21,6 +21,7 @@
 #import "TTAccountManager.h"
 #import <FHUGCConfig.h>
 #import "FHFeedOperationResultModel.h"
+#import <TTCommentDataManager.h>
 
 @implementation FHUGCCellUserInfoView
 
@@ -199,7 +200,14 @@
             [wself trackConfirmDeletePopupClick:YES];
         } confirmBlock:^{
             [wself trackConfirmDeletePopupClick:NO];
-            [wself postDelete:view.selectdWord.serverType];
+            
+            NSString *pageType = wself.cellModel.tracerDic[@"page_type"];
+            //我的评论列表页打开
+            if(pageType && [pageType isEqualToString:@"personal_comment_list"]){
+                [wself commentDelete:wself.cellModel.groupId];
+            }else{
+                [wself postDelete:view.selectdWord.serverType];
+            }
         }];
         [self trackConfirmPopupShow:@"confirm_delete_popup_show"];
         
@@ -297,6 +305,23 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
         }else{
             [[ToastManager manager] showToast:@"删除失败"];
+        }
+    }];
+}
+
+- (void)commentDelete:(NSString *)commentID {
+    __weak typeof(self) wself = self;
+    [[TTCommentDataManager sharedManager] deleteCommentWithCommentID:commentID finishBlock:^(NSError *error) {
+        if(!error){
+            if(wself.deleteCellBlock){
+                wself.deleteCellBlock();
+            }
+
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            if(self.cellModel){
+                dic[@"cellModel"] = self.cellModel;
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
         }
     }];
 }

@@ -466,6 +466,7 @@
                            @"isStick": @"is_stick",
                            @"stickStyle": @"stick_style",
                            @"contentDecoration": @"content_decoration",
+                           @"originThread": @"origin_thread",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -878,6 +879,50 @@
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
     }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginThreadModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"readCount": @"read_count",
+    @"defaultTextLine": @"default_text_line",
+    @"stickStyle": @"stick_style",
+    @"createTime": @"create_time",
+    @"shareUrl": @"share_url",
+    @"videoGroup": @"video_group",
+    @"detailCoverList": @"detail_cover_list",
+    @"userVerified": @"user_verified",
+    @"cellLayoutStyle": @"cell_layout_style",
+    @"maxTextLine": @"max_text_line",
+    @"businessPayload": @"business_payload",
+    @"innerUiFlag": @"inner_ui_flag",
+    @"contentRichSpan": @"content_rich_span",
+    @"commentCount": @"comment_count",
+    @"ugcU13CutImageList": @"ugc_u13_cut_image_list",
+    @"threadIdStr": @"thread_id_str",
+    @"diggIconKey": @"digg_icon_key",
+    @"uiType": @"ui_type",
+    @"followButtonStyle": @"follow_button_style",
+    @"cellType": @"cell_type",
+    @"verifiedContent": @"verified_content",
+    @"isStick": @"is_stick",
+    @"userDigg": @"user_digg",
+    @"ugcCutImageList": @"ugc_cut_image_list",
+    @"cellFlag": @"cell_flag",
+    @"cellUiType": @"cell_ui_type",
+    @"diggCount": @"digg_count",
+    @"threadId": @"thread_id",
+    @"thumbImageList": @"thumb_image_list",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
 }
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
