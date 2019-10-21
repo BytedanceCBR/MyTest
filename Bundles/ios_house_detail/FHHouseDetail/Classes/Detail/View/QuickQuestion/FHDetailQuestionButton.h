@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHDetailQuestionInternalButton *btn;
 @property (nonatomic, assign) BOOL isFold;
 - (void)updateTitle:(NSString *)title;
+- (CGFloat)totalWidth;
 
 @end
 

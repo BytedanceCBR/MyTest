@@ -110,6 +110,13 @@
 - (void)updateTitle:(NSString *)title
 {
     [self.btn setTitle:title forState:UIControlStateNormal];
+    [self.btn sizeToFit];
+    
+}
+
+- (CGFloat)totalWidth
+{
+    return 20 + self.btn.width + 4;
 }
 
 - (FHDetailQuestionInternalButton *)btn

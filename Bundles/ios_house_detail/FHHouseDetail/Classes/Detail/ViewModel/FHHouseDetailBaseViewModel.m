@@ -30,6 +30,9 @@
 @property (nonatomic, strong)   NSHashTable               *weakedVCLifeCycleCellTable;
 @property (nonatomic, assign)   CGPoint       lastPointOffset;
 @property (nonatomic, assign)   BOOL          scretchingWhenLoading;
+@property (nonatomic, assign) BOOL floatIconAnimation;
+@property (nonatomic, assign) BOOL clickShowIcon;
+@property(nonatomic, assign) CGPoint tableviewBeginOffSet;
 
 @end
 
@@ -358,11 +361,49 @@
     }
 }
 
+- (void)showQuestionBtn:(BOOL)isShow
+{
+    if(isShow && (CGRectGetMaxX(self.questionBtn.frame) - [UIScreen mainScreen].bounds.size.width) < 0){
+        return;
+    }
+    
+    if(!isShow && (CGRectGetMaxX(self.questionBtn.frame) - [UIScreen mainScreen].bounds.size.width) > 0){
+        return;
+    }
+    
+    if ([self clickShowIcon]) {
+        return;
+    }
+    
+    if(!self.floatIconAnimation){
+        self.floatIconAnimation = YES;
+        FHDetailQuestionButton *questionBtn = self.questionBtn;
+        CGFloat btnWidth = [questionBtn totalWidth];
+        [UIView animateWithDuration:0.2f animations:^{
+
+            CGFloat right = isShow ? -20 : btnWidth - 26;
+            [self.questionBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(right);
+            }];
+            [self.detailController.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            self.floatIconAnimation = NO;
+        }];
+    }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    self.clickShowIcon = NO;
+    self.tableviewBeginOffSet = scrollView.contentOffset;
+}
+
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (scrollView != self.tableView) {
         return;
     }
+
     // 解决类似周边房源列表页的house_show问题，视频播放逻辑
     CGPoint offset = scrollView.contentOffset;
     if (self.weakedCellTable.count > 0) {
@@ -378,11 +419,27 @@
     self.lastPointOffset = offset;
     
     [self.detailController refreshContentOffset:scrollView.contentOffset];
+
+    CGFloat diff = scrollView.contentOffset.y - self.tableviewBeginOffSet.y;
     
+    CGFloat height = scrollView.frame.size.height;
+    CGFloat contentYoffset = scrollView.contentOffset.y;
+    CGFloat distance = scrollView.contentSize.height - height;
+    if(fabs(diff) < 1 ){
+        return;
+    }
+    if (contentYoffset <= 0) {
+//        [self showQuestionBtn:NO];
+        return;
+    }
+    if (contentYoffset >= distance) {
+//        [self showQuestionBtn:YES];
+        return;
+    }
     self.questionBtn.userInteractionEnabled = NO;
-    [UIView animateWithDuration:0.25 animations:^{
-        self.questionBtn.left = [UIScreen mainScreen].bounds.size.width - 24;
-    }];
+    if(fabs(diff) > 10){
+        [self showQuestionBtn:NO];
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -391,23 +448,19 @@
         return;
     }
     self.questionBtn.userInteractionEnabled = YES;
-    [UIView animateWithDuration:0.25 animations:^{
-        self.questionBtn.right = [UIScreen mainScreen].bounds.size.width - 20;
-    }];
+    [self showQuestionBtn:YES];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    if (decelerate) {
-        return;
-    }
     if (scrollView != self.tableView) {
         return;
     }
+    if (decelerate) {
+        return;
+    }
     self.questionBtn.userInteractionEnabled = YES;
-    [UIView animateWithDuration:0.25 animations:^{
-        self.questionBtn.right = [UIScreen mainScreen].bounds.size.width - 20;
-    }];
+    [self showQuestionBtn:YES];
 }
 
 #pragma mark - 埋点
