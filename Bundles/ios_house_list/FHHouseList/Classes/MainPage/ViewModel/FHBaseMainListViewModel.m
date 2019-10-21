@@ -544,6 +544,11 @@ extern NSString *const INSTANT_DATA_KEY;
                 fromRecommend = YES;
             }
             
+            if(!items)
+            {
+                items = [NSMutableArray new];
+            }
+            
             if (isRefresh) {
                 
                 //先插入订阅再判断其他
@@ -591,8 +596,12 @@ extern NSString *const INSTANT_DATA_KEY;
                 if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]] ) {
                     if(self.houseList.count <= 10 && items.count <= 10 && items.count > 1)
                     {
-                        //                            self.showRealHouseTop = YES;
-                        [items insertObject:topInfoModel atIndex:items.count - 1];
+                        if (self.isShowSubscribeCell) {
+                            [items insertObject:topInfoModel atIndex:items.count - 1];
+                        }else
+                        {
+                            [items addObject:topInfoModel];
+                        }
                     }else
                     {
                             //                                self.showRealHouseTop = YES;
@@ -637,11 +646,9 @@ extern NSString *const INSTANT_DATA_KEY;
         } else {
             [self addLoadMoreRefreshLog];
         }
-        
-        if (!self.fromRecommend) {
-            self.redirectTips = redirectTips;
-            [self updateRedirectTipInfo];
-        }
+
+        self.redirectTips = redirectTips;
+        [self updateRedirectTipInfo];
         
         [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj isKindOfClass:[FHSearchHouseDataItemsModel class]]) {

@@ -798,6 +798,11 @@ extern NSString *const INSTANT_DATA_KEY;
                 fromRecommend = YES;
             }
             
+            if(!itemArray)
+            {
+                itemArray = [NSMutableArray new];
+            }
+            
             if (self.isRefresh) {
                 //先插入订阅再判断其他
                 FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = houseModel.subscribeInfo;
@@ -839,7 +844,12 @@ extern NSString *const INSTANT_DATA_KEY;
                 if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]] ) {
                     if(self.houseList.count <= 10 && itemArray.count <= 10 && itemArray.count > 1)
                     {
-                        [itemArray insertObject:topInfoModel atIndex:itemArray.count - 1];
+                        if (self.isShowSubscribeCell) {
+                            [itemArray insertObject:topInfoModel atIndex:itemArray.count - 1];
+                        }else
+                        {
+                            [itemArray addObject:topInfoModel];
+                        }
                     }else
                     {
                         [itemArray addObject:topInfoModel];
@@ -936,10 +946,8 @@ extern NSString *const INSTANT_DATA_KEY;
             [self addCategoryRefreshLog];
         }
 
-        if (!self.fromRecommend) {
-            self.redirectTips = redirectTips;
-            [self updateRedirectTipInfo];
-        }
+        self.redirectTips = redirectTips;
+        [self updateRedirectTipInfo];
 
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
