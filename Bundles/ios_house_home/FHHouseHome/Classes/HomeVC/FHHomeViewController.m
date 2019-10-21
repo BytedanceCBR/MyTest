@@ -99,6 +99,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
             [[FHEnvContext sharedInstance] jumpUGCTab];
         }
     }
+    
+    NSString *lastCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if (lastCityId) {
+        [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
+    }
 }
 
 - (void)scrollMainTableToTop
@@ -668,9 +673,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
                     pasteboard.strings = strs;
                 }
             });
-        }else
-        {
-            [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
         }
     });
 }
