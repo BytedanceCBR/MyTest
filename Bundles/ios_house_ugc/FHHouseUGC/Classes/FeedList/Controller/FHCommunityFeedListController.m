@@ -226,8 +226,19 @@
     if (_scialGroupData.chatStatus.conversationStatus == joinConversation) {
         if ([[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.chatStatus.conversationId].mute) {
             _bageView.badgeNumber = TTBadgeNumberPoint;
+            [self.bageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.groupChatBtn).offset(7);
+                make.right.mas_equalTo(self.self.groupChatBtn).offset(-7);
+                make.height.mas_equalTo(10);
+                make.width.mas_equalTo(10);
+            }];
         } else {
             _bageView.badgeNumber = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.chatStatus.conversationId].unreadCount;
+            [self.bageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.groupChatBtn).offset(5);
+                make.right.mas_equalTo(self.self.groupChatBtn).offset(-5);
+                make.height.mas_equalTo(15);
+            }];
         }
     }
 }
