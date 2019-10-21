@@ -22,6 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHCommunityFeedListControllerDelegate <NSObject>
+
+- (void)refreshBasicInfo;
+
+@end
+
 @interface FHCommunityFeedListController : FHBaseViewController
 
 @property(nonatomic, assign) FHCommunityFeedListType listType;
@@ -57,6 +63,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) id<CommunityGroupChatLoginDelegate> loginDelegate;
 
 @property(nonatomic, weak) id<UIScrollViewDelegate> scrollViewDelegate;
+@property(nonatomic, weak) id<FHCommunityFeedListControllerDelegate> delegate;
+
 - (void)showNotify:(NSString *)message ;
 - (void)showNotify:(NSString *)message completion:(void(^)())completion;
 //下拉刷新数据

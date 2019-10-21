@@ -465,6 +465,14 @@
     dict[@"is_admin"] = @(_scialGroupData.userAuth > UserAuthTypeNormal);
     dict[@"report_params"] = [[reportDic JSONRepresentation] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
+    @weakify(self);
+    dict[@"group_chat_page_exit_block"] = ^(void) {
+        @strongify(self);
+        if([self.delegate respondsToSelector:@selector(refreshBasicInfo)]) {
+            [self.delegate refreshBasicInfo];
+        }
+    };
+    
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
     NSURL* url = [NSURL URLWithString:@"sslocal://open_group_chat"];

@@ -30,7 +30,7 @@
 #import "TTAccount+Multicast.h"
 #import "TTAccountManager.h"
 
-@interface FHCommunityDetailViewModel () <FHUGCFollowObserver, CommunityGroupChatLoginDelegate>
+@interface FHCommunityDetailViewModel () <FHUGCFollowObserver, CommunityGroupChatLoginDelegate, FHCommunityFeedListControllerDelegate>
 
 @property(nonatomic, weak) FHCommunityDetailViewController *viewController;
 @property(nonatomic, strong) FHCommunityFeedListController *feedListController;
@@ -78,6 +78,7 @@
     self.feedListController.tableViewNeedPullDown = NO;
     self.feedListController.showErrorView = NO;
     self.feedListController.scrollViewDelegate = self;
+    self.feedListController.delegate = self;
     self.feedListController.listType = FHCommunityFeedListTypePostDetail;
     self.feedListController.forumId = self.viewController.communityId;
     MJWeakSelf;
@@ -785,4 +786,8 @@
     _isLoginSatusChangeFromGroupChat = YES;
 }
 
+// MARK: FHCommunityFeedListControllerDelegate
+-(void)refreshBasicInfo {
+    [self requestData:NO refreshFeed:NO showEmptyIfFailed:NO showToast:NO];
+}
 @end
