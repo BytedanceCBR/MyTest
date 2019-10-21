@@ -430,6 +430,9 @@
     dict[@"chat_avatar"] = _scialGroupData.avatar;
     dict[@"chat_name"] = _scialGroupData.socialGroupName;
     dict[@"community_id"] = _scialGroupData.socialGroupId;
+    NSMutableDictionary *reportDic = [NSMutableDictionary dictionary];
+    [reportDic setValue:@"community_group_detail" forKey:@"enter_from"];
+    [reportDic setValue:@"ugc_member_talk" forKey:@"element_from"];
  
     if (isCreate) {
         dict[@"is_create"] = @"1";
@@ -451,6 +454,7 @@
     }
     dict[@"member_role"] = [NSString stringWithFormat: @"%d", _scialGroupData.userAuth];
     dict[@"is_admin"] = @(_scialGroupData.userAuth > UserAuthTypeNormal);
+    dict[@"report_params"] = [[reportDic JSONRepresentation] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     

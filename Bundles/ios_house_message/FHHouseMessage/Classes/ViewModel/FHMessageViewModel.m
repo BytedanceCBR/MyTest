@@ -327,6 +327,7 @@
         [params setValue:title forKey:KSCHEMA_CHAT_TITLE];
         NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
         [tracer setValue:@"message_list" forKey:@"origin_from"];
+        [tracer setValue:@"message_list" forKey:@"enter_from"];
         NSURL *openUrl = [TTURLUtils URLWithString:@"sslocal://open_group_chat" queryItems:params];
         [self clickImMessageEvent:conv];
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer}];
