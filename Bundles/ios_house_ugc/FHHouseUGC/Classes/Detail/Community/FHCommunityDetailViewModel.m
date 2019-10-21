@@ -640,9 +640,9 @@
     self.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
     NSInteger followerCount = [data.followerCount integerValue];
     if (followerCount <= 0) {
-       self.headerView.userCountBgView.hidden = YES;
+       self.headerView.userCountShowen = NO;
     } else {
-        self.headerView.userCountBgView.hidden = NO;
+        self.headerView.userCountShowen = YES;
         self.headerView.userCountLabel.text = [NSString stringWithFormat:@"%ld个成员",followerCount];
     }
     

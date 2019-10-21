@@ -42,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)updateWithBudgetData:(FHDetailDataBaseExtraBudgetModel *)budgetmodel;
 
+-(void)updateWithNeighborhoodInfoData:(FHDetailDataBaseExtraNeighborhoodModel *)neighborModel;
+
 -(void)updateWithFloorInfo:(FHDetailDataBaseExtraFloorInfoModel *)floorInfo;
 
 @end

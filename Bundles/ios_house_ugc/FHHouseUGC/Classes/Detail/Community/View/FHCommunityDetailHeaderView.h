@@ -20,7 +20,8 @@ typedef void(^GotoPublicationsDetailBlock)(void);
 @property(nonatomic, strong) UIView *labelContainer;
 @property(nonatomic, strong) UILabel *nameLabel;
 @property(nonatomic, strong) UILabel *subtitleLabel;
-@property(nonatomic, strong) UIView  *userCountBgView;// 控制userCountLabel显示和隐藏
+@property (nonatomic, assign)   BOOL       userCountShowen;// 控制userCountLabel显示和隐藏
+@property(nonatomic, strong) UIView  *userCountSepLine;
 @property(nonatomic, strong) UILabel *userCountLabel;
 @property(nonatomic, strong) UIImageView *userCountRightArrow;
 @property(nonatomic, strong) FHUGCFollowButton *followButton;
