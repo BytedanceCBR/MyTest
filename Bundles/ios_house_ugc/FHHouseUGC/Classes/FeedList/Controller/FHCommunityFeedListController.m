@@ -441,10 +441,8 @@
         dict[@"chat_member_count"] = _scialGroupData.followerCount;
     } else if (autoJoin) {
         dict[@"auto_join"] = @"1";
-        dict[@"conversation_id"] = @"6749073502277468423";
-        dict[@"short_conversation_id"] = @"6749073502277468423";
-//        dict[@"conversation_id"] = _scialGroupData.chatStatus.conversationId;
-//        dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:_scialGroupData.chatStatus.conversationShortId] stringValue];
+        dict[@"conversation_id"] = _scialGroupData.chatStatus.conversationId;
+        dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:_scialGroupData.chatStatus.conversationShortId] stringValue];
         NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", _scialGroupData.socialGroupName, _scialGroupData.chatStatus.currentConversationCount];
         dict[@"chat_title"] = title;
     } else {
