@@ -547,7 +547,7 @@
     NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
     NSMutableDictionary *param = [NSMutableDictionary new];
     param[UT_ELEMENT_TYPE] = @"house_vr";
-    param[UT_PAGE_TYPE] = tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+    param[UT_PAGE_TYPE] = @"house_vr_detail";
     param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
     param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
     param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;
