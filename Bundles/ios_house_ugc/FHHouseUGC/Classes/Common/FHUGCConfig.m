@@ -328,6 +328,11 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                     model.followerCount = replaceFollowCountStr;
                 } else {
                     model.followerCount = followCountStr;
+                    if ([followCountStr isKindOfClass:[NSString class]]) {
+                        if (![replaceFollowCountStr isEqualToString:followCountStr]) {
+                            model.followerCount = replaceFollowCountStr;
+                        }
+                    }
                 }
                 model.countText = countText;
             }
@@ -350,6 +355,11 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                     model.followerCount = replaceFollowCountStr;
                 } else {
                     model.followerCount = followCountStr;
+                    if ([followCountStr isKindOfClass:[NSString class]]) {
+                        if (![replaceFollowCountStr isEqualToString:followCountStr]) {
+                            model.followerCount = replaceFollowCountStr;
+                        }
+                    }
                 }
                 model.countText = countText;
             }
