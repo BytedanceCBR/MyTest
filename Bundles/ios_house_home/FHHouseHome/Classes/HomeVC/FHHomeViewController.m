@@ -94,7 +94,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
-    [self checkPasteboard:YES];
+    if ([FHEnvContext isUGCAdUser]) {
+        if ([FHEnvContext isUGCOpen]) {
+            [[FHEnvContext sharedInstance] jumpUGCTab];
+        }
+    }
 }
 
 - (void)scrollMainTableToTop
@@ -379,6 +383,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     
+    [self checkPasteboard:NO];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -635,8 +640,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         }
     }
     
-    [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
-
     __weak typeof(self) weakSelf = self;
     //据说主线程读剪切板会导致app卡死。。。改为子线程读
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -665,6 +668,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
                     pasteboard.strings = strs;
                 }
             });
+        }else
+        {
+            [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
         }
     });
 }
@@ -709,8 +715,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
                 [FHUtils setContent:@"1" forKey:kFHUGCPromotionUser];
             }
             
-            if (!weakSelf.adUGCHadJump && [inviteStatus integerValue] != 2 && cityId) {
-                weakSelf.adUGCHadJump = YES;
+            if ([inviteStatus integerValue] != 2 && cityId) {
                 [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityId];
             }
             //只保存数据
