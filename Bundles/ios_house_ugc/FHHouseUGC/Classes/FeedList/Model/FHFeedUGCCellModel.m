@@ -382,6 +382,10 @@
             originItemModel.content = model.rawData.originGroup.title;
             originItemModel.openUrl = model.rawData.originGroup.schema;
             originItemModel.imageModel = model.rawData.originGroup.middleImage;
+        }else if(model.rawData.originThread){
+            originItemModel.content = model.rawData.originThread.content;
+            originItemModel.openUrl = model.rawData.originThread.schema;
+            originItemModel.imageModel = [model.rawData.originThread.thumbImageList firstObject];
         }else{
             originItemModel.content = model.rawData.originCommonContent.title;
             originItemModel.openUrl = model.rawData.originCommonContent.schema;
