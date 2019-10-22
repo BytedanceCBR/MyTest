@@ -50,7 +50,7 @@ def fhPods
     
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev' #
     pod 'FHCommonUI', '0.0.6'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '8c17951485cca8567e5b70b4f04d192866f8b6d2'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => 'ae4f993bf0f00a9205b55e937964371c4354192e'
     # pod 'ios_house_im' , '0.1.12-alpha.0'
 #    pod 'ios_house_im' , '0.1.10-alpha.1'
     # pod 'ios_house_im' , :path => '../../ios_house_im'
