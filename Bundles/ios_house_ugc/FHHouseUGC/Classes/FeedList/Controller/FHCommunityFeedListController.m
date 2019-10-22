@@ -461,6 +461,9 @@
         NSInteger count = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:convId].participantsCount;
         NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", _scialGroupData.socialGroupName, count];
         dict[@"chat_title"] = title;
+        dict[@"in_conversation"] = @"1";
+        dict[@"conversation_id"] = _scialGroupData.chatStatus.conversationId;
+        dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:_scialGroupData.chatStatus.conversationShortId] stringValue];
     }
     dict[@"member_role"] = [NSString stringWithFormat: @"%d", _scialGroupData.userAuth];
     dict[@"is_admin"] = @(_scialGroupData.userAuth > UserAuthTypeNormal);
