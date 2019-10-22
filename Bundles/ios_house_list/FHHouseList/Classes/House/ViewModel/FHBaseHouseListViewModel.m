@@ -50,6 +50,11 @@
     
 }
 
+-(void)showMessageList {
+    
+    
+}
+
 -(void)viewWillAppear:(BOOL)animated {
     
     
@@ -57,6 +62,14 @@
 
 -(void)viewWillDisappear:(BOOL)animated {
     
+    
+}
+
+- (void)addNotiWithNaviBar:(FHFakeInputNavbar *)naviBar {
+    
+}
+
+- (void)refreshMessageDot {
     
 }
 

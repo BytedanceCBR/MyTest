@@ -13,12 +13,16 @@
 #import "TTDeviceHelper.h"
 #import "FHCommunityDetailMJRefreshHeader.h"
 #import <UIFont+House.h>
+#import "TTRoute.h"
+#import "FHUGCScialGroupModel.h"
 
 @interface FHCommunityDetailHeaderView ()
 
 @property(nonatomic, strong) UIView *infoContainer;
 @property(nonatomic, strong) UIView *operationBannerContainer;
 @property(nonatomic, strong) UIView *publicationsDetailView;
+@property (nonatomic, strong)   UIView       *userCountTapView;
+
 @end
 
 @implementation FHCommunityDetailHeaderView
@@ -142,8 +146,33 @@
     self.subtitleLabel.textColor = [UIColor themeWhite];
     self.subtitleLabel.numberOfLines = 1;
     
+    // 用户关注count相关
+    UIView *sepLine = [[UIView alloc] initWithFrame:CGRectMake(0, 3.5, 0.5, 10)];
+    sepLine.backgroundColor = [UIColor whiteColor];
+    self.userCountSepLine = sepLine;
+    
+    self.userCountLabel = [UILabel new];
+    self.userCountLabel.font = [UIFont themeFontRegular:12];
+    self.userCountLabel.textColor = [UIColor themeWhite];
+    self.userCountLabel.numberOfLines = 1;
+    self.userCountLabel.text = @"0个成员";
+    
+    self.userCountRightArrow = [UIImageView new];
+    self.userCountRightArrow.image = [UIImage imageNamed:@"fh_ugc_community_right_2"];
+    
     [self.labelContainer addSubview:self.nameLabel];
     [self.labelContainer addSubview:self.subtitleLabel];
+    
+    [self.labelContainer addSubview:self.userCountLabel];
+    [self.labelContainer addSubview:self.userCountSepLine];
+    [self.labelContainer addSubview:self.userCountRightArrow];
+    
+    self.userCountTapView = [[UIView alloc] init];
+    self.userCountTapView.backgroundColor = [UIColor clearColor];
+    [self.labelContainer addSubview:self.userCountTapView];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoSocialFollowUserList:)];
+    [self.userCountTapView addGestureRecognizer:tap];
     
     /* 右边关注按钮 */
     self.followButton = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero style:FHUGCFollowButtonStyleNoBorder];
@@ -180,6 +209,16 @@
     [self addSubview:self.publicationsContainer];
     /** 运营位  **/
     [self addSubview:self.operationBannerContainer];
+    
+    self.userCountShowen = NO;
+}
+
+- (void)setUserCountShowen:(BOOL)userCountShowen {
+    _userCountShowen = userCountShowen;
+    self.userCountSepLine.hidden = !userCountShowen;
+    self.userCountLabel.hidden = !userCountShowen;
+    self.userCountRightArrow.hidden = !userCountShowen;
+    self.userCountTapView.hidden = !userCountShowen;
 }
 
 - (void)initConstraints {
@@ -209,8 +248,35 @@
 
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.greaterThanOrEqualTo(self.nameLabel).offset(5);
-        make.left.bottom.right.equalTo(self.labelContainer);
+        make.left.bottom.equalTo(self.labelContainer);
     }];
+    
+    [self.userCountSepLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.subtitleLabel);
+        make.height.mas_equalTo(10);
+        make.width.mas_equalTo(0.5);
+        make.left.mas_equalTo(self.subtitleLabel.mas_right).offset(5);
+    }];
+    
+    [self.userCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.subtitleLabel);
+        make.height.mas_equalTo(17);
+        make.left.mas_equalTo(self.userCountSepLine.mas_right).offset(5);
+    }];
+    
+    [self.userCountRightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.subtitleLabel);
+        make.height.width.mas_equalTo(14);
+        make.left.mas_equalTo(self.userCountLabel.mas_right).offset(0);
+        make.right.mas_lessThanOrEqualTo(self.labelContainer);
+    }];
+     
+     [self.userCountTapView mas_makeConstraints:^(MASConstraintMaker *make) {
+         make.centerY.mas_equalTo(self.subtitleLabel);
+         make.left.mas_equalTo(self.userCountSepLine.mas_left);
+         make.right.mas_equalTo(self.userCountRightArrow.mas_right);
+         make.height.mas_equalTo(22);
+     }];
 
     [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.avatar);
@@ -294,6 +360,13 @@
 - (void)gotoPublicationsDetail: (UITapGestureRecognizer *)gesture {
     if(self.gotoPublicationsDetailBlock) {
         self.gotoPublicationsDetailBlock();
+    }
+}
+
+// 小区圈关注列表
+- (void)gotoSocialFollowUserList: (UITapGestureRecognizer *)gesture {
+    if (self.gotoSocialFollowUserListBlk) {
+        self.gotoSocialFollowUserListBlk();
     }
 }
 

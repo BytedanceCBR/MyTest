@@ -213,7 +213,20 @@ NSString * const kWDWendaListViewControllerUMEventName = @"question";
         if (!error) {
             self.tabModelArray = responseModel.module_list;
             self.questionEntity = [WDQuestionEntity genQuestionEntityFromModel:responseModel.question];
-            
+            NSString *postAnswerSchema = self.questionEntity.postAnswerSchema;
+            if ([postAnswerSchema isKindOfClass:[NSString class]] && postAnswerSchema.length > 0) {
+                NSURL *url = [NSURL URLWithString:postAnswerSchema];
+                NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+                // url中参数的key value
+                NSMutableDictionary *parameter = [NSMutableDictionary dictionary];
+                for (NSURLQueryItem *item in urlComponents.queryItems) {
+                    [parameter setValue:item.value forKey:item.name];
+                }
+                NSString *gd_ext_json_str = parameter[@"gd_ext_json"];
+                if ([gd_ext_json_str isKindOfClass:[NSString class]] && gd_ext_json_str.length > 0) {
+                    self.post_gdExtJson = [gd_ext_json_str tt_JSONValue];
+                }
+            }
             self.inviteUserModels = [NSMutableArray arrayWithArray:responseModel.candidate_invite_user];
             [self transNewAnswerModelToEntityAndAppendToList:responseModel.data];
             self.offset = [responseModel.offset floatValue];

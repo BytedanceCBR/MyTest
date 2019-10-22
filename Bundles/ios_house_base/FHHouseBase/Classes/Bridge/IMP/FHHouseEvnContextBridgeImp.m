@@ -48,7 +48,7 @@
 
 -(NSString *)currentProvince
 {
-    NSString *province = [FHLocManager sharedInstance].currentReGeocode.administrativeArea;
+    NSString *province = [FHLocManager sharedInstance].currentReGeocode.province;
     return province;
 }
 

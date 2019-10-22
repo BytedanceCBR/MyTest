@@ -28,11 +28,16 @@
 //"editUserProfile"       = "TTEditUserProfileViewController";
 "editUserProfile"       = "FHEditUserController";
 "editingInfo"           = "FHEditingInfoController";
+"homePageSetting"       = "FHHomePageSettingController"; //个人主页设置
 
 // SSAppPageController
 "home"                  = "FHHomeSchemaObject";
 "main"                  = "FHHomeSchemaObject";
-"profile"               = "ArticleMomentProfileViewController";
+
+//"profile"               = "ArticleMomentProfileViewController"; //旧版个人主页
+"profile"               = "FHPersonalHomePageController"; //新版个人主页
+"media_account"         = "FHPersonalHomePageController";
+
 "invite_friend"         = "ArticleInviteFriendViewController";
 "address_list"          = "TTAddressListFriendViewController";
 ///...
@@ -183,6 +188,9 @@
 "ugc_comment_detail" = "FHCommentDetailViewController";
 "concern" = "FHTopicDetailViewController";// 话题详情页
 "ugc_notice_edit" = "FHUGCNoticeEditViewController";
+"ugc_focus_list" = "FHUGCFollowListController"; //关注列表页
+"ugc_comment_list" = "FHUGCCommentListController"; //评论列表页
+"ugc_follow_user_list" = "FHUGCUserFollowListController";//圈子关注用户列表
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";

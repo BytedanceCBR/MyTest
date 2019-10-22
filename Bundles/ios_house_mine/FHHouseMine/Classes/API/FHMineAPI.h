@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)uploadUserProfileInfo:(NSDictionary *)params completion:(void (^)(TTAccountUserEntity *userEntity, NSError *error))completedBlock;
 
++ (TTHttpTask *)setHomePageAuth:(BOOL)isOn completion:(void (^ _Nonnull)(BOOL success, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -182,7 +182,9 @@
     } else {
         self.unreadView.badgeNumber = conv.unreadCount;
     }
-    [self.iconView bd_setImageWithURL:[NSURL URLWithString:conv.icon] placeholder:[UIImage imageNamed:@"chat_business_icon_c"]];
+    BOOL isGroupChat = (conv.type == IMConversationTypeGroupChat);
+    
+    [self.iconView bd_setImageWithURL:[NSURL URLWithString:conv.icon] placeholder:[UIImage imageNamed:isGroupChat ? @"chat_group_icon_default" : @"chat_business_icon_c"]];
 
     self.titleLabel.text = conv.conversationDisplayName;
     if (isEmptyString(conv.conversationDisplayName)) {

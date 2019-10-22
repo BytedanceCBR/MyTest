@@ -12,6 +12,7 @@
 #import "FHUGCCellHelper.h"
 #import <TTVideoApiModel.h>
 #import "TTVFeedItem+Extension.h"
+#import "FHLocManager.h"
 
 @implementation FHFeedUGCCellCommunityModel
 
@@ -192,6 +193,7 @@
             user.name = model.userInfo.name;
             user.avatarUrl = model.userInfo.avatarUrl;
             user.userId = model.userInfo.userId;
+            user.schema = model.userInfo.schema;
             cellModel.user = user;
             
             [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
@@ -318,6 +320,7 @@
         user.name = model.rawData.content.user.uname;
         user.avatarUrl = model.rawData.content.user.avatarUrl;
         user.userId = model.rawData.content.user.userId;
+        user.schema = model.rawData.content.user.userSchema;
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
@@ -368,18 +371,33 @@
         user.name = model.rawData.commentBase.user.info.name;
         user.avatarUrl = model.rawData.commentBase.user.info.avatarUrl;
         user.userId = model.rawData.commentBase.user.info.userId;
+        user.schema = model.rawData.commentBase.user.info.schema;
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
-        if([model.rawData.commentBase.repostParams.repostType integerValue] == 223){
-            originItemModel.type = @"[视频]";
+        if(model.rawData.originType){
+            originItemModel.type = [NSString stringWithFormat:@"[%@]",model.rawData.originType];
+        }else if(model.originType){
+            originItemModel.type = [NSString stringWithFormat:@"[%@]",model.originType];
         }else{
-            originItemModel.type = @"[文章]";
+            if([model.rawData.commentBase.repostParams.repostType integerValue] == 223){
+                originItemModel.type = @"[视频]";
+            }else{
+                originItemModel.type = @"[文章]";
+            }
         }
         if(model.rawData.originGroup){
             originItemModel.content = model.rawData.originGroup.title;
             originItemModel.openUrl = model.rawData.originGroup.schema;
             originItemModel.imageModel = model.rawData.originGroup.middleImage;
+        }else if(model.rawData.originThread){
+            originItemModel.content = model.rawData.originThread.content;
+            originItemModel.openUrl = model.rawData.originThread.schema;
+            originItemModel.imageModel = [model.rawData.originThread.thumbImageList firstObject];
+        }else if(model.rawData.originUgcVideo){
+            originItemModel.content = model.rawData.originUgcVideo.rawData.title;
+            originItemModel.openUrl = model.rawData.originUgcVideo.rawData.detailSchema;
+            originItemModel.imageModel = [model.rawData.originUgcVideo.rawData.thumbImageList firstObject];
         }else{
             originItemModel.content = model.rawData.originCommonContent.title;
             originItemModel.openUrl = model.rawData.originCommonContent.schema;
@@ -475,6 +493,7 @@
         user.name = model.rawData.user.info.name;
         user.avatarUrl = model.rawData.user.info.avatarUrl;
         user.userId = model.rawData.user.info.userId;
+        user.schema = model.rawData.user.info.schema;
         cellModel.user = user;
         
         cellModel.diggCount = model.rawData.action.diggCount;
@@ -530,6 +549,7 @@
     user.name = model.user.name;
     user.avatarUrl = model.user.avatarUrl;
     user.userId = model.user.userId;
+    user.schema = model.user.schema;
     cellModel.user = user;
     
     NSMutableArray *cellImageList = [NSMutableArray array];
@@ -577,7 +597,8 @@
         [desc appendAttributedString:publishTimeAStr];
     }
     
-    if(!isEmptyString(model.distanceInfo)){
+    // 法务合规，如果没有定位权限，不展示位置信息
+    if(!isEmptyString(model.distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
         NSString *distance = [NSString stringWithFormat:@"   %@",model.distanceInfo];
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
         attachment.bounds = CGRectMake(8, 0, 8, 8);

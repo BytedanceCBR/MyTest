@@ -19,6 +19,7 @@
 #import "FHMainApi+Contact.h"
 #import <FHCHousePush/FHPushAuthorizeManager.h>
 #import "FHUGCConfig.h"
+#import "TTAccountManager.h"
 
 NSString *const kFHDetailFollowUpNotification = @"follow_up_did_changed";
 NSString *const kFHToastCountKey = @"kFHToastCountKey";
@@ -72,7 +73,10 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                 userInfo[@"followStatus"] = @(1);
                 [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
                 if(model.data.socialGroupFollowStatus == 0 && model.data.socialGroupId){
-                    [[FHUGCConfig sharedInstance] followUGCBy:model.data.socialGroupId isFollow:YES completion:nil];
+                    if ([TTAccountManager isLogin]) {
+                        // 修改逻辑 登录状态下 自动关注小区圈
+                        [[FHUGCConfig sharedInstance] followUGCBy:model.data.socialGroupId isFollow:YES completion:nil];
+                    }
                 }
                 if (completionBlock) {
                     completionBlock(isSuccess);
@@ -150,7 +154,10 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                 userInfo[@"followStatus"] = @(1);
                 [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
                 if(model.data.socialGroupFollowStatus == 0 && model.data.socialGroupId){
-                    [[FHUGCConfig sharedInstance] followUGCBy:model.data.socialGroupId isFollow:YES completion:nil];
+                    if ([TTAccountManager isLogin]) {
+                        // 修改逻辑 登录状态下 自动关注小区圈
+                        [[FHUGCConfig sharedInstance] followUGCBy:model.data.socialGroupId isFollow:YES completion:nil];
+                    }
                 }
             }
         }

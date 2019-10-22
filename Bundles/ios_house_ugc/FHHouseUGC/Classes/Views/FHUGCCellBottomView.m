@@ -21,7 +21,6 @@
 #import "TTVideoArticleService+Action.h"
 #import "TTVideoArticleServiceMessage.h"
 #import "TTVFeedUserOpDataSyncMessage.h"
-#import <UIView+XWAddForRoundedCorner.h>
 
 @interface FHUGCCellBottomView ()
 
@@ -62,10 +61,9 @@
     self.positionView = [[UIView alloc] init];
     _positionView.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
     _positionView.layer.masksToBounds= YES;
-//    _positionView.layer.cornerRadius = 4;
+    _positionView.layer.cornerRadius = 4;
     _positionView.userInteractionEnabled = YES;
     _positionView.hidden = YES;
-    [_positionView xw_roundedCornerWithRadius:4 cornerColor:[UIColor whiteColor]];
     [self addSubview:_positionView];
     
     self.positionImageView = [[UIImageView alloc] init];

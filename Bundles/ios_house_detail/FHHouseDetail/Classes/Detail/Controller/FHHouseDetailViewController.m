@@ -382,7 +382,7 @@
         if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
             NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
             if (log_pb_dic) {
-                self.tracerDict[@"log_pb"] = log_pb_str;
+                self.tracerDict[@"log_pb"] = log_pb_dic;// 之前有人写这个地方写成了log_pb_str，oops
             }
         }else
         {
@@ -405,6 +405,12 @@
                 }
             }
         }
+    }
+    
+    id tracerLogPb = self.tracerDict[@"log_pb"];
+    //IM 新房等进入时log_pb 是字符串
+    if ([tracerLogPb isKindOfClass:[NSString class]]) {
+        self.tracerDict[@"log_pb"] = self.tracerModel.logPb;
     }
     
     // rank字段特殊处理：外部可能传入字段为rank和index不同类型的数据
