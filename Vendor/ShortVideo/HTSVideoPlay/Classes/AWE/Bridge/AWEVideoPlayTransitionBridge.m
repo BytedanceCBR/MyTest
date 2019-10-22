@@ -38,24 +38,23 @@
     [dict setValue:userId forKey:@"uid"];
     [dict setValue:@"ies_video" forKey:@"refer"];
     
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     NSString *scheme = @"sslocal://profile";
     NSURL *url = [TTURLUtils URLWithString:scheme queryItems:dict];
-    if ([[TTRoute sharedRoute] canOpenURL:url]) {
-        if (pushWithTransitioningAnimationEnable) {
-            //自定义push方式打开火山详情页
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(userInfo) pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
-                if ([nav isKindOfClass:[TTNavigationController class]] &&
-                    [routeObj.instance isKindOfClass:[UIViewController class]]) {
-                    [(TTNavigationController *)nav pushViewControllerByTransitioningAnimation:((UIViewController *)routeObj.instance) animated:YES];
-                }
-            }];
-        } else {
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(userInfo)];
-        }
-    }
+    
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+//    if ([[TTRoute sharedRoute] canOpenURL:url]) {
+//        if (pushWithTransitioningAnimationEnable) {
+//            //自定义push方式打开火山详情页
+//            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(userInfo) pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
+//                if ([nav isKindOfClass:[TTNavigationController class]] &&
+//                    [routeObj.instance isKindOfClass:[UIViewController class]]) {
+//                    [(TTNavigationController *)nav pushViewControllerByTransitioningAnimation:((UIViewController *)routeObj.instance) animated:YES];
+//                }
+//            }];
+//        } else {
+//            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(userInfo)];
+//        }
+//    }
 }
 
 + (BOOL)canOpenAweme

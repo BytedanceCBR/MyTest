@@ -795,7 +795,7 @@ static NSInteger const kMaxPostImageCount = 9;
     } else {
         // 先关注
         __weak typeof(self) weakSelf = self;
-        [[FHUGCConfig sharedInstance] followUGCBy:self.selectView.groupId isFollow:YES completion:^(BOOL isSuccess) {
+        [[FHUGCConfig sharedInstance] followUGCBy:self.selectView.groupId isFollow:YES enterFrom:@"feed_publisher" enterType:@"click" completion:^(BOOL isSuccess) {
             if (isSuccess) {
                 [weakSelf postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
             } else {

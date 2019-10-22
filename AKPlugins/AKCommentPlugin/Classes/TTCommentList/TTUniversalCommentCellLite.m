@@ -271,10 +271,6 @@
 }
 
 - (void)nameViewOnClick:(id)sender {
-    
-    // add by zjing 去掉关注页跳转
-    return;
-    
     if ([self isDetailComment]) {
         wrapperTrackEvent(@"comment", @"click_name");
     }
@@ -539,8 +535,7 @@
 //        [_avatarView setupVerifyViewForLength:[TTUniversalCommentCellLiteHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
 //            return [TTUniversalCommentCellLiteHelper verifyLogoSize:standardSize];
 //        }];
-        // add by zjing 去掉头像点击
-//        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
+        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }
     return _avatarView;
 }

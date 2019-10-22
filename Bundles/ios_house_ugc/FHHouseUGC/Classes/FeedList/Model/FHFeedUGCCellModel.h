@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *avatarUrl;
 @property (nonatomic, copy , nullable) NSString *userId;
+@property (nonatomic, copy , nullable) NSString *schema;
 
 @end
 
@@ -140,6 +141,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) FHFeedContentStickStyle stickStyle;
 // 内容装饰
 @property (nonatomic, strong) FHFeedUGCCellContentDecorationModel *contentDecoration;
+// 隐藏...,默认为显示
+@property (nonatomic, assign) BOOL hiddenMore;
+// 数据内容是否有变化，如果有则刷新数据时候会刷新，没有则不会刷新，在对cellModel改动需要刷新页面时候，需要设置成YES
+@property (nonatomic, assign) BOOL ischanged;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

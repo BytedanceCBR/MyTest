@@ -147,6 +147,23 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     if (model.extraInfo) {
         
         FHDetailExtarInfoRowView *rowView = nil;
+        if (model.extraInfo.neighborhoodInfo) {
+            rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
+            [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
+            [rowView updateWithNeighborhoodInfoData:model.extraInfo.neighborhoodInfo];
+            [self.contentView addSubview:rowView];
+            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (lastView) {
+                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+                }else{
+                    make.top.mas_equalTo(10);
+                }
+                make.left.mas_equalTo(20);
+                make.right.mas_equalTo(-20);
+                make.height.mas_equalTo(20);
+            }];
+            lastView = rowView;
+        }
         if (model.extraInfo.budget) {
             rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
             [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
@@ -308,7 +325,27 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 - (void)jump2Page:(FHDetailExtarInfoRowView *)view
 {
     NSString *positionStr = @"be_null";
-    if ([view.data isKindOfClass:[FHDetailDataBaseExtraBudgetModel class]]) {
+    if ([view.data isKindOfClass:[FHDetailDataBaseExtraNeighborhoodModel class]]) {
+        // 二手房详情下发小区字段
+        FHDetailDataBaseExtraNeighborhoodModel *neighborhoodModel = (FHDetailDataBaseExtraNeighborhoodModel *)view.data;
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        // tracerDic[@"card_type"] = @"no_pic";
+        tracerDic[@"element_from"] = @"neighborhood_type";
+        tracerDic[@"enter_from"] = @"old_detail";
+        [tracerDic removeObjectForKey:@"rank"];
+        [tracerDic removeObjectForKey:@"card_type"];
+        if (!tracerDic) {
+            tracerDic = @{};
+        }
+        NSDictionary *userInfoDict = @{@"tracer":tracerDic};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+        NSString *openUrl = neighborhoodModel.openUrl;
+        if (openUrl.length > 0) {
+            NSURL *url = [NSURL URLWithString:openUrl];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+        positionStr = @"neighborhood_type";
+    } else if ([view.data isKindOfClass:[FHDetailDataBaseExtraBudgetModel class]]) {
         FHDetailDataBaseExtraBudgetModel *budgetModel = (FHDetailDataBaseExtraBudgetModel *)view.data;
         NSDictionary *userInfoDict = @{@"tracer":@{}};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
@@ -562,6 +599,22 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         make.size.mas_equalTo(CGSizeMake(15, 15));
     }];
     
+}
+
+-(void)updateWithNeighborhoodInfoData:(FHDetailDataBaseExtraNeighborhoodModel *)neighborModel
+{
+    self.data = neighborModel;
+    _nameLabel.text = neighborModel.baseTitle;
+    
+    NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
+    if (!IS_EMPTY_STRING(neighborModel.subName)) {
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:neighborModel.subName attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
+        [minfoAttrStr appendAttributedString:infoStr];
+    }
+    _infoLabel.attributedText = minfoAttrStr;
+    
+    _logoImageView.hidden = YES;
+    _indicatorLabel.hidden = YES;
 }
 
 -(void)updateWithBudgetData:(FHDetailDataBaseExtraBudgetModel *)budgetmodel

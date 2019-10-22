@@ -389,6 +389,24 @@
 }
 @end
 
+@implementation FHDetailDataBaseExtraNeighborhoodModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"baseTitle": @"base_title",
+                           @"subName":@"title",
+                           @"openUrl":@"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailDataBaseExtraFloorInfoModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -414,6 +432,7 @@
 {
     NSDictionary *dict = @{
                            @"floorInfo": @"floor_info",
+                           @"neighborhoodInfo": @"neighborhood_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

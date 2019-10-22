@@ -581,7 +581,14 @@
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(id<TTCommentModelProtocol>)model
 {
+    if ([model.userID longLongValue] == 0) {
+        return;
+    }
     
+    NSString * userID = [NSString stringWithFormat:@"%@", model.userID];
+    NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@&from_page=comment_list", userID];
+    
+    [[TTRoute sharedRoute] openURLByPushViewController:[TTNetworkUtil URLWithURLString:linkURLString]];
 }
 
 - (void)tt_commentViewController:(nonnull id<TTCommentViewControllerProtocol>)ttController deleteCommentWithCommentModel:(nonnull id<TTCommentModelProtocol>)model {

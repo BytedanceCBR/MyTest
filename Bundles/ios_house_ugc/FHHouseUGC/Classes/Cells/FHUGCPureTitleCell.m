@@ -14,6 +14,7 @@
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
 #import <TTBusinessManager+StringUtils.h>
+#import <UIViewAdditions.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -61,10 +62,10 @@
 - (void)initViews {
     __weak typeof(self) wself = self;
     
-    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
+    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     [self.contentView addSubview:_userInfoView];
     
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
@@ -78,11 +79,11 @@
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
+    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
     _originView.hidden = YES;
     [self.contentView addSubview:_originView];
     
-    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
+    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
@@ -92,30 +93,25 @@
 }
 
 - (void)initConstraints {
-    [self.userInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(topMargin);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(userInfoViewHeight);
-    }];
+    self.userInfoView.top = topMargin;
+    self.userInfoView.left = 0;
+    self.userInfoView.width = [UIScreen mainScreen].bounds.size.width;
+    self.userInfoView.height = userInfoViewHeight;
     
-    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-    }];
+    self.contentLabel.top = self.userInfoView.bottom + 10;
+    self.contentLabel.left = leftMargin;
+    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    self.contentLabel.height = 0;
+
+    self.bottomView.top = self.contentLabel.bottom + 10;
+    self.bottomView.left = 0;
+    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomView.height = bottomViewHeight;
     
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10 + originViewHeight + 10);
-        make.height.mas_equalTo(bottomViewHeight);
-        make.left.right.mas_equalTo(self.contentView);
-    }];
-    
-    [self.originView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-        make.height.mas_equalTo(originViewHeight);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-    }];
+    self.originView.top = self.contentLabel.bottom + 10;
+    self.originView.left = leftMargin;
+    self.originView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    self.originView.height = originViewHeight;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -129,9 +125,14 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
-    self.currentData = data;
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    
+    self.currentData = data;
     self.cellModel = cellModel;
     //设置userInfo
     self.userInfoView.cellModel = cellModel;
@@ -156,25 +157,22 @@
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
+        self.contentLabel.height = 0;
     }else{
         self.contentLabel.hidden = NO;
+        self.contentLabel.height = cellModel.contentHeight;
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
     }
     //origin
     if(cellModel.originItemModel){
         self.originView.hidden = NO;
         [self.originView refreshWithdata:cellModel];
-        [self.originView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(cellModel.originItemHeight);
-        }];
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(cellModel.originItemHeight + 20);
-        }];
+        self.originView.top = self.contentLabel.bottom + 10;
+        self.originView.height = cellModel.originItemHeight;
+        self.bottomView.top = self.contentLabel.bottom + cellModel.originItemHeight + 20;
     }else{
         self.originView.hidden = YES;
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-        }];
+        self.bottomView.top = self.contentLabel.bottom + 10;
     }
     
     [self showGuideView];
@@ -200,13 +198,9 @@
 
 - (void)showGuideView {
     if(_cellModel.isInsertGuideCell){
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(bottomViewHeight + guideViewHeight);
-        }];
+        self.bottomView.height = bottomViewHeight + guideViewHeight;
     }else{
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(bottomViewHeight);
-        }];
+        self.bottomView.height = bottomViewHeight;
     }
 }
 

@@ -44,7 +44,7 @@ PODS:
   - BDTExploreOrderedData (0.1.7)
   - BDTFactoryConfigurator (0.1.0.1-binary)
   - BDTSharedHeaders (0.1.0)
-  - BDUGAccountOnekeyLogin (1.1.3)
+  - BDUGAccountOnekeyLogin (1.1.6-rc.1)
   - BDUGContainer (1.1.2)
   - BDUGDeepLink (1.1.1)
   - BDUGKit (1.3.3):
@@ -94,7 +94,7 @@ PODS:
   - Fabric (1.10.2.1-binary)
   - FBRetainCycleDetector (0.1.5-alpha.2.1.binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.6-alpha.0)
+  - FHCommonUI (0.0.6)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -462,7 +462,7 @@ PODS:
   - TTPreloaderSDK (1.4.20-rc.0)
   - TTPushManager (0.0.13.4)
   - TTPushSDK (0.1.1.1-binary)
-  - TTReachability (0.5.2.1-binary)
+  - TTReachability (0.6.2.1-binary)
   - TTRegistry (7.4.0.3)
   - TTReporter (0.2.1.1-binary)
   - TTRexxar/Core (0.8.10.1-binary)
@@ -602,7 +602,7 @@ DEPENDENCIES:
   - BDTExploreOrderedData (from `../AKPlugins/BDTExploreOrderedData`)
   - BDTFactoryConfigurator (= 0.1.0.1-binary)
   - BDTSharedHeaders (from `../Vendor/BDTSharedHeaders`)
-  - BDUGAccountOnekeyLogin (= 1.1.3)
+  - BDUGAccountOnekeyLogin (= 1.1.6-rc.1)
   - BDUGContainer (= 1.1.2)
   - BDUGDeepLink (= 1.1.1)
   - BDUGKit (= 1.3.3)
@@ -631,7 +631,7 @@ DEPENDENCIES:
   - Fabric (= 1.10.2.1-binary)
   - FBRetainCycleDetector (= 0.1.5-alpha.2.1.binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.6-alpha.0)
+  - FHCommonUI (= 0.0.6)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -825,7 +825,7 @@ DEPENDENCIES:
   - TTPreloaderSDK (= 1.4.20-rc.0)
   - TTPushManager (= 0.0.13.4)
   - TTPushSDK (= 0.1.1.1-binary)
-  - TTReachability (= 0.5.2.1-binary)
+  - TTReachability (= 0.6.2.1-binary)
   - TTRegistry (= 7.4.0.3)
   - TTReporter (= 0.2.1.1-binary)
   - TTRexxar/Core (= 0.8.10.1-binary)
@@ -1007,7 +1007,7 @@ SPEC CHECKSUMS:
   BDTExploreOrderedData: 96bb150a05e560a5e927a7ee53bda56690571a61
   BDTFactoryConfigurator: c14af7870fcd1fa9c52142d0c01635775543e42d
   BDTSharedHeaders: 7ce2d05979120782a343993b31287684065e06a8
-  BDUGAccountOnekeyLogin: 6b9b71170a10e55b79b3d67f87cb19864479f372
+  BDUGAccountOnekeyLogin: fc05dd02e5ccf22928bc071277c0390a46ec8aff
   BDUGContainer: 28193629e67c7c9244f5d5836bfed611bf631321
   BDUGDeepLink: 44dfefe43051d60cb1fd918ebdca3abcc090d365
   BDUGKit: 215f3f098840a16e1c491447d56e49093f08075d
@@ -1026,7 +1026,7 @@ SPEC CHECKSUMS:
   Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
   FBRetainCycleDetector: 9efb6dac5baef178b6e60ba2f85112a7aff8dca4
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: fe6b647cf440ef59211e67f81430e5d172ef8212
+  FHCommonUI: 2680df0c1ce810573f320fa471035ab4c9e1161f
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1136,7 +1136,7 @@ SPEC CHECKSUMS:
   TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
   TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
   TTPushSDK: 3302f3e57c39cf8e14233769b28cb07d5f403966
-  TTReachability: bc8685b98fd9fcd949811a8a31236b5d5a3ec931
+  TTReachability: 7e6a58fa568af74e428e24394899caa3d8bddb00
   TTRegistry: da0948df15bacc1b90bb9ff8eb621b812ea9eebb
   TTReporter: 55c6785c79fb8b35a44105d760ac3493cc2ed365
   TTRexxar: 40c20cd090918e9816f74b0decced7094f000647
@@ -1177,6 +1177,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 1792c762d98e260545821bdc533c26f3a9088e2a
+PODFILE CHECKSUM: d423cb6f7053f26427054d296d94855e2949eb1e
 
 COCOAPODS: 1.4.0
