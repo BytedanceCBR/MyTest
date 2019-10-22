@@ -127,6 +127,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(JSONModel *)generateModel:(NSData *)jsonData class:(Class)class error:(NSError *__autoreleasing *)error;
 
+/**
+ UGC推广 增加植入种子
+ */
+
++(TTHttpTask *_Nullable)uploadUGCPostPromotionparams:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion;
+
+
+/**
+ UGC推广 获取种子
+ */
+
++(TTHttpTask *_Nullable)checkUGCPostPromotionparams:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion;
 @end
 
 NS_ASSUME_NONNULL_END

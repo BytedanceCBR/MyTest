@@ -38,6 +38,8 @@ static NSString *const kTracerEventType = @"house_app2c_v2";
 
 static NSString *const kFHSwitchGetLightFinishedNotification = @"k_fh_get_light_finish";
 
+static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
+
 @class FHMessageManager;
 @class TTReachability;
 NS_ASSUME_NONNULL_BEGIN
@@ -176,6 +178,11 @@ NS_ASSUME_NONNULL_BEGIN
  判断是否开通ugc模块
  */
 + (BOOL)isUGCOpen;
+
+/*
+ 判断是否ugc种子用户
+ */
++ (BOOL)isUGCAdUser;
 /*
  ugc tab 显示的文案
  */
@@ -205,9 +212,21 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)getGetOriginFromAndOriginId;
 
 /*
+  UGC线上线下推广,切换城市拉取config
+ */
+- (void)switchCityConfigForUGCADUser:(NSNumber *)cityId;
+
+/*
+ */
+- (void)checkUGCADUserIsLaunch:(BOOL)isAutoSwitch;
+
+/*
  DeepLink Zlink
  */
 - (void)checkZLink;
+
+- (void)jumpUGCTab;
+
 
 @end
 
