@@ -95,6 +95,13 @@
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
     self.headerView.followButton.groupId = self.viewController.communityId;
     self.headerView.followButton.tracerDic = [self followButtonTraceDict];
+    WeakSelf;
+    self.headerView.followButton.followedSuccess = ^(BOOL isSuccess, BOOL isFollow) {
+        StrongSelf;
+        if(isSuccess) {
+            [self refreshBasicInfo];
+        }
+    };
 
     //随机一张背景图
     NSInteger randomImageIndex = [self.viewController.communityId integerValue] % 4;
@@ -105,7 +112,6 @@
     [self.viewController addChildViewController:self.feedListController];
     [self.feedListController didMoveToParentViewController:self.viewController];
     [self.viewController.view addSubview:self.feedListController.view];
-    WeakSelf;
     self.feedListController.publishBlock = ^() {
         StrongSelf;
         [self gotoPostThreadVC];
@@ -168,6 +174,13 @@
     self.rightBtn.groupId = self.viewController.communityId;
     self.rightBtn.hidden = YES;
     self.rightBtn.tracerDic = [self followButtonTraceDict];
+    WeakSelf;
+    self.rightBtn.followedSuccess = ^(BOOL isSuccess, BOOL isFollow) {
+        StrongSelf;
+        if(isSuccess) {
+            [self refreshBasicInfo];
+        }
+    };
 
     self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
