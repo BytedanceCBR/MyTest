@@ -112,9 +112,11 @@
             [self.followList addObjectsFromArray:model.data.followList];
         }
         self.hasMore = model.data.hasMore;
+        if (self.offset == 0) {
+            self.adminCount = model.data.adminCount;
+            self.followCount = model.data.followCount;
+        }
         self.offset = model.data.offset;
-        self.adminCount = model.data.adminCount;
-        self.followCount = model.data.followCount;
     }
     // 后处理
     if (self.adminList.count > 0 || self.followList.count > 0) {
