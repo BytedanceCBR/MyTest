@@ -225,14 +225,9 @@
             if (data.schema.length > 0) {
                 // 点击埋点
                 [self.viewController.view endEditing:YES];
-                NSMutableDictionary *dict = @{}.mutableCopy;
-                dict[@"tracer"] = @{@"enter_from":@"community_group_join_member",
-                                    @"enter_type":@"click",
-                                    @"rank":@(row)};
-                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
                 // 跳转到个人主页
                 NSURL *openUrl = [NSURL URLWithString:data.schema];
-                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
             }
         }
     }
