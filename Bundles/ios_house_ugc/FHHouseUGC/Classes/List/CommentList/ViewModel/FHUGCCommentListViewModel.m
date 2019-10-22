@@ -397,6 +397,10 @@
         [self.dataList removeObjectAtIndex:row];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        
+        if(self.dataList.count <= 0){
+            [self.viewController.emptyView showEmptyWithTip:@"没有更多了" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
+        }
     }
 }
 

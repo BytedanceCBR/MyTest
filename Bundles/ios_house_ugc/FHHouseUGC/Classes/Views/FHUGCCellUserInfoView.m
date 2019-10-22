@@ -317,6 +317,11 @@
                 wself.deleteCellBlock();
             }
 
+            //通知其他带有评论的页面去删除此条记录
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+            [userInfo setValue:commentID forKey:@"id"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kDeleteCommentFromHomePageNotificationKey object:nil userInfo:userInfo];
+            
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
             if(self.cellModel){
                 dic[@"cellModel"] = self.cellModel;

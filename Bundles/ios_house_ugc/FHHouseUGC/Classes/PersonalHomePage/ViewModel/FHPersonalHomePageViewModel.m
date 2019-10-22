@@ -319,7 +319,8 @@
                     if (self.dataList.count <= 0) {
                         // 添加空态页
                         [self.currentTableView addSubview:self.tableEmptyView];
-                        [self.tableEmptyView showEmptyWithTip:@"TA没有留下任何足迹，去其他地方看看吧！" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
+                        NSString *tipStr = [[TTAccountManager userID] isEqualToString:self.userId] ? @"你还没有发布任何内容，快去发布吧" : @"TA没有留下任何足迹，去其他地方看看吧！";
+                        [self.tableEmptyView showEmptyWithTip:tipStr errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
                         self.currentTableView.scrollEnabled = NO;
                         
                         showType = @"personal_blank";
