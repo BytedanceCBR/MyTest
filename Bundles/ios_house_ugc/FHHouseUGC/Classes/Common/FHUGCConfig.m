@@ -254,6 +254,14 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
             if (findData) {
                 [sGroups removeObject:findData];
                 findData.hasFollow = @"0";
+                NSString *followCountStr = findData.followerCount;
+                NSInteger followCount = [findData.followerCount integerValue];
+                followCount -= 1;
+                if (followCount < 0) {
+                    followCount = 0;
+                }
+                NSString *replaceFollowCountStr = [TTBusinessManager formatCommentCount:followCount];
+                findData.followerCount = replaceFollowCountStr;
                 [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:findData];
             }
         }
@@ -319,22 +327,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                 NSInteger followCount = [model.followerCount integerValue];
                 followCount += 1;
                 NSString *replaceFollowCountStr = [TTBusinessManager formatCommentCount:followCount];
-                NSString *countText = model.countText;
-                // 替换第一个 关注数字
-                NSRange range = [countText rangeOfString:followCountStr];
-                // 有数据而且是起始位置的数据
-                if (range.location == 0 && range.length > 0) {
-                    countText = [countText stringByReplacingCharactersInRange:range withString:replaceFollowCountStr];
-                    model.followerCount = replaceFollowCountStr;
-                } else {
-                    model.followerCount = followCountStr;
-                    if ([followCountStr isKindOfClass:[NSString class]]) {
-                        if (![replaceFollowCountStr isEqualToString:followCountStr]) {
-                            model.followerCount = replaceFollowCountStr;
-                        }
-                    }
-                }
-                model.countText = countText;
+                model.followerCount = replaceFollowCountStr;
             }
         } else {
             // 看是否 - 1
@@ -347,21 +340,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                     followCount = 0;
                 }
                 NSString *replaceFollowCountStr = [TTBusinessManager formatCommentCount:followCount];
-                NSString *countText = model.countText;
-                // 替换第一个 关注数字
-                NSRange range = [countText rangeOfString:followCountStr];
-                if (range.location == 0 && range.length > 0) {
-                    countText = [countText stringByReplacingCharactersInRange:range withString:replaceFollowCountStr];
-                    model.followerCount = replaceFollowCountStr;
-                } else {
-                    model.followerCount = followCountStr;
-                    if ([followCountStr isKindOfClass:[NSString class]]) {
-                        if (![replaceFollowCountStr isEqualToString:followCountStr]) {
-                            model.followerCount = replaceFollowCountStr;
-                        }
-                    }
-                }
-                model.countText = countText;
+                model.followerCount = replaceFollowCountStr;
             }
         }
     }
