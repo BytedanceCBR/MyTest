@@ -74,6 +74,8 @@
     // 埋点
      self.houseShowTracerDic = [NSMutableDictionary new];
     [self addGoDetailLog];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -223,6 +225,41 @@
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
+}
+
+- (void)followStateChanged:(NSNotification *)notification {
+    //仅仅是进入我的关注列表需要处理
+    if([[TTAccountManager userID] isEqualToString:self.userId]){
+        BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
+        NSString *socialGroupId = notification.userInfo[@"social_group_id"];
+        
+        if(!followed && socialGroupId){
+            [self deleteCell:socialGroupId];
+        }
+    }
+}
+
+- (void)deleteCell:(NSString *)socialGroupId {
+    NSInteger row = [self getCellIndex:socialGroupId];
+    if(row < self.items.count && row >= 0){
+        [self.items removeObjectAtIndex:row];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        
+        if(self.items.count <= 0){
+            [self.emptyView showEmptyWithTip:@"没有更多了" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
+        }
+    }
+}
+
+- (NSInteger)getCellIndex:(NSString *)socialGroupId {
+    for (NSInteger i = 0; i < self.items.count; i++) {
+        FHUGCScialGroupDataModel *model = self.items[i];
+        if([socialGroupId isEqualToString:model.socialGroupId]){
+            return i;
+        }
+    }
+    return -1;
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol

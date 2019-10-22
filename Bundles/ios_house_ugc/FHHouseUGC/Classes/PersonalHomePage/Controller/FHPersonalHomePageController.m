@@ -74,30 +74,8 @@
         }
         
         self.tracerDict[@"enter_type"] = @"click";
-
-//        NSString *log_pb_str = params[@"log_pb"];
-//        if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
-//            NSData *jsonData = [log_pb_str dataUsingEncoding:NSUTF8StringEncoding];
-//            NSError *err = nil;
-//            NSDictionary *dic = nil;
-//            @try {
-//                dic = [NSJSONSerialization JSONObjectWithData:jsonData
-//                                                      options:NSJSONReadingMutableContainers
-//                                                        error:&err];
-//            } @catch (NSException *exception) {
-//                
-//            } @finally {
-//                
-//            }
-//            if (!err && [dic isKindOfClass:[NSDictionary class]] && dic.count > 0) {
-//                self.tracerDict[@"log_pb"] = dic;
-//            }
-//        }
         // 取url中的埋点数据结束
         self.enter_from = self.tracerDict[@"enter_from"];
-//        if (cid > 0) {
-//            self.tracerDict[@"concern_id"] = @(cid);
-//        }
         self.ttTrackStayEnable = YES;
     }
     return self;
