@@ -46,8 +46,8 @@
     FHUGCUserFollowDataFollowListModel *model = (FHUGCUserFollowDataFollowListModel *)self.currentData;
     
     _nameLabel.text = model.userName;
-    _descLabel.text = [NSString stringWithFormat:@"已关注：%@",model.followTime];
-    [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholder:nil];
+    _descLabel.text = [NSString stringWithFormat:@"%@",model.followTime];
+    [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     if (model.followTime.length > 0) {
         self.descLabel.hidden = NO;
         [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
