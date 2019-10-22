@@ -60,6 +60,7 @@ extern NSString *const kFHToastCountKey;
         subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号",subtitle];
     }
     [self addInformShowLog:configModel];
+    __weak typeof(self)wself = self;
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
     if (configModel.chooseAgencyList.count > 0) {
         NSInteger selectCount = 0;
@@ -87,8 +88,8 @@ extern NSString *const kFHToastCountKey;
     }
     alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
-        [self fillFormRequest:configModel phone:phoneNum alertView:alert];
-        [self addClickConfirmLog:configModel alertView:alertView];
+        [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
+        [wself addClickConfirmLog:configModel alertView:alertView];
     };
 
     alertView.tipClickBlock = ^{
@@ -128,18 +129,18 @@ extern NSString *const kFHToastCountKey;
     if (leftBtnTitle.length > 0) {
         alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle leftBtnTitle:leftBtnTitle];
         alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
-            [self phoneCallAction:configModel];
+            [wself phoneCallAction:configModel];
             [alert dismiss];
         };
         alertView.leftClickBlock = ^(NSString * _Nonnull phoneNum,FHDetailNoticeAlertView *alert) {
             [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
-            [self addClickConfirmLog:configModel alertView:alertView];
+            [wself addClickConfirmLog:configModel alertView:alertView];
         };
     }else {
         alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
         alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
             [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
-            [self addClickConfirmLog:configModel alertView:alertView];
+            [wself addClickConfirmLog:configModel alertView:alertView];
         };
     }
     if (configModel.chooseAgencyList.count > 0) {
