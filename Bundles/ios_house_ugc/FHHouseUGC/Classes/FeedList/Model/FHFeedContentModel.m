@@ -202,6 +202,7 @@
     @"danmakuCount": @"danmaku_count",
     @"isStick": @"is_stick",
     @"stickStyle": @"stick_style",
+    @"originType": @"origin_type",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -468,6 +469,7 @@
                            @"contentDecoration": @"content_decoration",
                            @"originThread": @"origin_thread",
                            @"originUgcVideo": @"origin_ugc_video",
+                           @"originType": @"origin_type",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

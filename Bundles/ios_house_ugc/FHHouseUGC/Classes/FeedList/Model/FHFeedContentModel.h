@@ -591,6 +591,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *articleSchema;
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, copy , nullable) NSString *groupId;
+@property (nonatomic, copy , nullable) NSString *originType;
 //视频相关
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *detailSchema;
@@ -701,6 +702,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, strong , nullable) FHFeedContentRawDataModel *rawData ;
 //临时处理服务器打平的逻辑
 @property (nonatomic, copy , nullable) NSString *articleSchema;
+@property (nonatomic, copy , nullable) NSString *originType;
 @property (nonatomic, assign)   BOOL       isFromDetail;// 详情页
 //视频相关
 @property (nonatomic, copy , nullable) NSString *videoId;
