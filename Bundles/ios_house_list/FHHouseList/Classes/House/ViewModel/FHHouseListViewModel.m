@@ -753,11 +753,18 @@ extern NSString *const INSTANT_DATA_KEY;
             self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
-            itemArray = houseModel.items;
+            
+            //修改数据类型风险
+            if ([houseModel.items isKindOfClass:[NSArray class]]) {
+                itemArray = [NSMutableArray arrayWithArray:houseModel.items];
+            }
+            
             redirectTips = houseModel.redirectTips;
             recommendHouseDataModel = houseModel.recommendSearchModel;
             recommendItemArray = recommendHouseDataModel.items;
             self.searchId = houseModel.searchId;
+            
+            
             if (recommendItemArray.count > 0) {
                 self.recommendSearchId = recommendHouseDataModel.searchId;
                 if (!hasMore) {
