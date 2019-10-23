@@ -160,7 +160,7 @@
     [self.mainScrollView addSubview:_topHeaderView];
     _topHeaderView.hidden = YES;
     
-    self.mainScrollView.backgroundColor = [UIColor themeGray7];
+    self.mainScrollView.backgroundColor = [UIColor whiteColor];
     self.topHeightOffset = CGRectGetMaxY(self.topHeaderView.frame) + 5;
     
     // 计算subScrollView的高度

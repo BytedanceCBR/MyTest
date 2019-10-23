@@ -159,6 +159,7 @@
                         wSelf.detailController.tracerDict[@"log_pb"] = wSelf.headerModel.data.logPb;
                     }
                     [wSelf.detailController refreshHeaderData:YES];
+                    wSelf.detailController.mainScrollView.backgroundColor = [UIColor themeGray7];
                     
                     if([wSelf.headerModel.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:wSelf.headerModel.data.userId]){
                         // 加载列表数据
