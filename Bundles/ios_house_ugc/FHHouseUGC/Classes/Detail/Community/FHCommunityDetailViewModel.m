@@ -302,6 +302,10 @@
         }
         if (model && (error == nil)) {
             FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
+            BOOL isFollowed = [responseModel.data.hasFollow boolValue];
+            if(isFollowed == NO) {
+                self.feedListController.bageView.badgeNumber = TTBadgeNumberHidden;
+            }
             [wself updateUIWithData:responseModel.data];
             if (responseModel.data) {
                 // 更新圈子数据
