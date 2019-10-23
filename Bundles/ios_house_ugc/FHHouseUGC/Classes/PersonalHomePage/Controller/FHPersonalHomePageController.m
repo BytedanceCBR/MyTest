@@ -148,6 +148,7 @@
     _mainScrollView.showsVerticalScrollIndicator = NO;
     _mainScrollView.showsHorizontalScrollIndicator = NO;
     _mainScrollView.scrollsToTop = YES;
+    _mainScrollView.bounces = NO;
     
     [_mainScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);
@@ -335,7 +336,7 @@
 // 滑动切换tab
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (scrollView == _mainScrollView) {
-        
+   
     } else if (scrollView == _subScrollView) {
         CGFloat offsetX = scrollView.contentOffset.x;
         CGFloat tempIndex = offsetX / SCREEN_WIDTH;
@@ -373,10 +374,9 @@
                 }
             }
         }
+        
     } if (scrollView == _subScrollView) {
         // 列表父scrollview
-        
-        NSLog(@"sub_table_%f",_subScrollView.contentOffset.y);
     } else {
         // nothing
     }
