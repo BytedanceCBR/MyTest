@@ -31,7 +31,7 @@
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
 
 @property(nonatomic, weak) FHCommunityDetailViewController *viewController;
-@property(nonatomic, strong) FHCommunityFeedListController *feedListController;
+@property(nonatomic, weak) FHCommunityFeedListController *feedListController;
 @property(nonatomic, strong) FHUGCScialGroupDataModel *data;
 @property(nonatomic, strong) FHCommunityDetailHeaderView *headerView;
 @property(nonatomic, strong) FHUGCFollowButton *rightBtn;
