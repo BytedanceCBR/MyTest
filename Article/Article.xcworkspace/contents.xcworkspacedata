@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Resource/VRImageLoading.json">
+   </FileRef>
+   <FileRef
       location = "group:Article.xcodeproj">
    </FileRef>
    <FileRef

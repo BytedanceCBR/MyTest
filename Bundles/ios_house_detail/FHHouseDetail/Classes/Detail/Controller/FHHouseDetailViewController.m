@@ -398,7 +398,7 @@
         if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
             NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
             if (log_pb_dic) {
-                self.tracerDict[@"log_pb"] = log_pb_dic;// 之前有人写这个地方写成了log_pb_str，oops
+                self.tracerDict[@"log_pb"] = log_pb_dic;
             }
         }else
         {

@@ -392,9 +392,14 @@ typedef enum : NSInteger {
 @property (nonatomic, assign) BOOL addFoldDirect;//标识评论高度，非服务端字段
 @end
 
-@protocol FHDetailDataQuickQuestionItemModel
+@interface FHDetailHouseVRDataModel: JSONModel
+@property (nonatomic, assign) BOOL hasVr;
+@property (nonatomic, strong , nullable) FHImageModel *vrImage;
+@property (nonatomic, copy , nullable) NSString *openUrl;
 @end
 
+@protocol FHDetailDataQuickQuestionItemModel
+@end
 @interface FHDetailDataQuickQuestionItemModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *id;
@@ -418,6 +423,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) FHDetailOldDataHousePriceRangeModel *housePriceRange ;
 @property (nonatomic, strong , nullable) FHDetailOldDataHousePricingRankModel *housePricingRank ;
+@property (nonatomic, strong , nullable) FHDetailHouseVRDataModel *vrData ;
 @property (nonatomic, copy , nullable) NSString *partner;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHDetailOldDataUserStatusModel *userStatus ;
