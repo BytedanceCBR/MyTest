@@ -290,11 +290,12 @@
         if(userPull){
             [self.feedListController.tableView.mj_header endRefreshing];
         }
+        [_viewController tt_endUpdataData];
         return;
     }
-
     WeakSelf;
     [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+        [_viewController tt_endUpdataData];
         StrongSelf;
         if(userPull){
             [wself.feedListController.tableView.mj_header endRefreshing];
@@ -322,6 +323,7 @@
     if (refreshFeed) {
         [self.feedListController startLoadData:NO];
     }
+    
 }
 
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
@@ -835,7 +837,10 @@
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
 {
     if (_isLogin != TTAccountManager.isLogin) {
-        [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+        [_viewController tt_startUpdate];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+             [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+        });
         _isLogin = TTAccountManager.isLogin;
     }
     
