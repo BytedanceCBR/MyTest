@@ -231,6 +231,12 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+@interface FHHomeHouseVRModel : JSONModel
+
+@property (nonatomic, assign) BOOL hasVr;
+
+@end
+
 //@protocol FHHomeHouseDataItemsImagesModel<NSObject>
 //
 //@end
@@ -268,6 +274,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displayPrice;
 @property (nonatomic, copy , nullable) NSString *subtitle;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsContactModel *contact ;
+@property (nonatomic, strong , nullable) FHHomeHouseVRModel *vrInfo ;
 @property (nonatomic, copy , nullable) NSString *displayPricePerSqm;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsFloorpanListModel *floorpanList ;
 @property (nonatomic, copy , nullable) NSString *cellStyle;

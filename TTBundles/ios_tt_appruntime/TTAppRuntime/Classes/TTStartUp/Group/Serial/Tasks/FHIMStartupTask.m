@@ -87,6 +87,14 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     return [[TTInstallIDManager sharedInstance] deviceID];
 }
 
+- (BOOL)isBOE {
+    
+    if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
+        return YES;
+    }
+    return NO;
+}
+
 - (void)onMessageRecieved:(ChatMsg *)msg {
     [[FHBubbleTipManager shareInstance] tryShowBubbleTip:msg openUrl:@""];
 }

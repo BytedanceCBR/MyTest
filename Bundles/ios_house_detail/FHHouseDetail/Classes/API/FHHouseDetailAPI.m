@@ -48,27 +48,12 @@
     }
     paramDic[@"court_id"] = houseId ?: @"";
     paramDic[@"house_type"] = @(FHHouseTypeNewHouse);
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        
-        FHDetailNewModel *model = nil;
-        if (!error && [jsonObj isKindOfClass:[NSDictionary class]]) {
-            model = [[FHDetailNewModel alloc] initWithDictionary:jsonObj error:&error];
-        }
-        if (model && !error) {
-            if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
-                error = nil;
-            }else {
-                error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-            }
-        }else if(model != nil) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-        }
+    
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailNewModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion((FHDetailNewModel *)model,error);
         }
-    } callbackInMainThread:NO];
+    }];
 }
 
 +(TTHttpTask*)requestOldDetail:(NSString *)houseId
@@ -92,27 +77,12 @@
     if (realtorId.length > 0) {
         paramDic[@"realtor_id"] = realtorId;
     }
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-
-        FHDetailOldModel *model = nil;
-        if (!error && [jsonObj isKindOfClass:[NSDictionary class]]) {
-            model = [[FHDetailOldModel alloc] initWithDictionary:jsonObj error:&error];
-        }
-        if (model && !error) {
-            if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
-                error = nil;
-            }else {
-                error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-            }
-        }else if(model != nil) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-        }
+    
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailOldModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion(model,error);
         }
-    } callbackInMainThread:NO];
+    }];
 }
 
 +(TTHttpTask*)requestNeighborhoodDetail:(NSString*)neighborhoodId
@@ -129,27 +99,11 @@
     if ([logPB isKindOfClass:[NSDictionary class]]) {
         [paramDic addEntriesFromDictionary:logPB];
     }
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        
-        FHDetailNeighborhoodModel *model = nil;
-        if (!error && [jsonObj isKindOfClass:[NSDictionary class]]) {
-            model = [[FHDetailNeighborhoodModel alloc] initWithDictionary:jsonObj error:&error];
-        }
-        if (!error && model) {
-            if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
-                error = nil;
-            }else {
-                error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-            }
-        }else if(model != nil) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-        }
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailNeighborhoodModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion((FHDetailNeighborhoodModel *)model,error);
         }
-    } callbackInMainThread:NO];
+    }];
 }
 
 // 租房详情页请求
@@ -163,27 +117,11 @@
         paramDic[@"rental_f_code"] = rentCode;
     }
     
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        
-        FHRentDetailResponseModel *model = nil;
-        if (!error && [jsonObj isKindOfClass:[NSDictionary class]]) {
-            model = [[FHRentDetailResponseModel alloc] initWithDictionary:jsonObj error:&error];
-        }
-        if (!error && model) {
-            if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
-                error = nil;
-            }else {
-                error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-            }
-        }else if(model != nil) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-        }
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHRentDetailResponseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion((FHRentDetailResponseModel *)model,error);
         }
-    } callbackInMainThread:NO];
+    }];
 }
 
 // 租房-周边房源
@@ -199,33 +137,25 @@
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_RENT;
 
     __weak typeof(self)wself = self;
-    return [[TTNetworkManager shareInstance]
-            requestForBinaryWithURL:url
-            params:paramDic
-            method:@"GET"
-            needCommonParams:YES
-            callback:^(NSError *error, id obj) {
-                FHHouseRentRelatedResponseModel* model = nil;
-                if (!error) {
-                    model = [[FHHouseRentRelatedResponseModel alloc] initWithData:obj error:nil];
-                }
-                if (!error && model) {
-                    if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
-                        error = nil;
-                    }else {
-                        error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-                        [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_rent" houseId:rentId status:model.status message:model.message userInfo:nil];
-                    }
-                }else if(model != nil) {
-                    error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-                    [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_rent" houseId:rentId status:model.status message:model.message userInfo:nil];
-                }else {
-                    [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_rent" houseId:rentId status:[NSString stringWithFormat:@"%ld",error.code] message:error.localizedDescription userInfo:error.userInfo];
-                }
-                if (completion) {
-                    completion(model,error);
-                }
-            }];
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHHouseRentRelatedResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
+        FHHouseRentRelatedResponseModel* model = (FHHouseRentRelatedResponseModel*)m;
+        if (!error && model) {
+            if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
+                error = nil;
+            }else {
+                error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
+                [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_rent" houseId:rentId status:model.status message:model.message userInfo:nil];
+            }
+        }else if(model != nil) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
+            [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_rent" houseId:rentId status:model.status message:model.message userInfo:nil];
+        }else {
+            [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_rent" houseId:rentId status:[NSString stringWithFormat:@"%ld",error.code] message:error.localizedDescription userInfo:error.userInfo];
+        }
+        if (completion) {
+            completion(model,error);
+        }
+    }];
 }
 
 // 租房-同小区房源
@@ -244,33 +174,26 @@
     paramDic[@"count"] = @(5);
     paramDic[CHANNEL_ID] = CHANNEL_ID_SAME_NEIGHBORHOOD_RENT;
     __weak typeof(self)wself = self;
-    return [[TTNetworkManager shareInstance]
-            requestForBinaryWithURL:url
-            params:paramDic
-            method:@"GET"
-            needCommonParams:YES
-            callback:^(NSError *error, id obj) {
-                FHRentSameNeighborhoodResponseModel* model = nil;
-                if (!error) {
-                    model = [[FHRentSameNeighborhoodResponseModel alloc] initWithData:obj error:nil];
-                }
-                if (!error && model) {
-                    if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
-                        error = nil;
-                    }else {
-                        error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-                        [wself addDetailRelatedRequestFailedLog:@"/f100/api/same_neighborhood_rent" houseId:rentId status:model.status message:model.message userInfo:nil];
-                    }
-                }else if(model != nil) {
-                    error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-                    [wself addDetailRelatedRequestFailedLog:@"/f100/api/same_neighborhood_rent" houseId:rentId status:model.status message:model.message userInfo:nil];
-                }else {
-                    [wself addDetailRelatedRequestFailedLog:@"/f100/api/same_neighborhood_rent" houseId:rentId status:[NSString stringWithFormat:@"%ld",error.code] message:error.localizedDescription userInfo:error.userInfo];
-                }
-                if (completion) {
-                    completion(model,error);
-                }
-            }];
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHRentSameNeighborhoodResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
+        FHRentSameNeighborhoodResponseModel* model = (FHRentSameNeighborhoodResponseModel*)m ;
+        if (!error && model) {
+            if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
+                error = nil;
+            }else {
+                error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
+                [wself addDetailRelatedRequestFailedLog:@"/f100/api/same_neighborhood_rent" houseId:rentId status:model.status message:model.message userInfo:nil];
+            }
+        }else if(model != nil) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
+            [wself addDetailRelatedRequestFailedLog:@"/f100/api/same_neighborhood_rent" houseId:rentId status:model.status message:model.message userInfo:nil];
+        }else {
+            [wself addDetailRelatedRequestFailedLog:@"/f100/api/same_neighborhood_rent" houseId:rentId status:[NSString stringWithFormat:@"%ld",error.code] message:error.localizedDescription userInfo:error.userInfo];
+        }
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+    
 }
 
 // 二手房-周边房源
@@ -290,12 +213,8 @@
     }
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_HOUSE;
     __weak typeof(self)wself = self;
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-
-        FHDetailRelatedHouseResponseModel *model = nil;
-        if (!error && [jsonObj isKindOfClass:[NSDictionary class]]) {
-            model = [[FHDetailRelatedHouseResponseModel alloc] initWithDictionary:jsonObj error:nil];
-        }
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailRelatedHouseResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
+        FHDetailRelatedHouseResponseModel *model = (FHDetailRelatedHouseResponseModel *)m;
         if (!error && model) {
             if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
                 error = nil;
@@ -310,11 +229,10 @@
             [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_house" houseId:houseId status:[NSString stringWithFormat:@"%ld",error.code] message:error.localizedDescription userInfo:error.userInfo];
         }
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion(model,error);
         }
-    } callbackInMainThread:NO];
+    }];
+    
 }
 
 // 二手房(小区详情)周边小区
@@ -338,12 +256,9 @@
     }
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_NEIGHBORHOOD;
     __weak typeof(self)wself = self;
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        
-        FHDetailRelatedNeighborhoodResponseModel *model = nil;
-        if (!error && [jsonObj isKindOfClass:[NSDictionary class]]) {
-            model = [[FHDetailRelatedNeighborhoodResponseModel alloc] initWithDictionary:jsonObj error:&error];
-        }
+    
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailRelatedNeighborhoodResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
+        FHDetailRelatedNeighborhoodResponseModel *model = (FHDetailRelatedNeighborhoodResponseModel *)m;
         if (!error && model) {
             if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
                 error = nil;
@@ -358,11 +273,9 @@
             [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_neighborhood" houseId:neighborhoodId status:[NSString stringWithFormat:@"%ld",error.code] message:error.localizedDescription userInfo:error.userInfo];
         }
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion(model,error);
         }
-    } callbackInMainThread:NO];
+    }];
 }
 
 // 二手房（小区）-小区成交历史
@@ -385,23 +298,11 @@
     if (searchId.length > 0) {
         paramDic[@"search_id"] = searchId;
     }
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        
-        FHTransactionHistoryModel *model = nil;
-        if (!error) {
-            model = [[FHTransactionHistoryModel alloc] initWithDictionary:jsonObj error:&error];
-        }
-        
-        if (![model.status isEqualToString:@"0"]) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
-        }
-        
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHTransactionHistoryModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion(model,error);
         }
-    } callbackInMainThread:NO];
+    }];
 }
 
 // 二手房（小区）-同小区房源
@@ -435,12 +336,8 @@
     }
     paramDic[CHANNEL_ID] = CHANNEL_ID_SAME_NEIGHBORHOOD_HOUSE;
     __weak typeof(self)wself = self;
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        
-        FHDetailSameNeighborhoodHouseResponseModel *model;
-        if (!error) {
-            model = [[FHDetailSameNeighborhoodHouseResponseModel alloc] initWithDictionary:jsonObj error:&error];
-        }
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailSameNeighborhoodHouseResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
+        FHDetailSameNeighborhoodHouseResponseModel *model = (FHDetailSameNeighborhoodHouseResponseModel *)m;
         if (!error && model) {
             if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
                 error = nil;
@@ -459,7 +356,8 @@
                 completion(model,error);
             });
         }
-    } callbackInMainThread:NO];
+    }];
+    
 }
 
 // 新房-周边新盘
@@ -475,23 +373,12 @@
         url = [NSString stringWithFormat:@"%@&%@",url,query];
     }
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_COURT;
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        
-        FHDetailRelatedCourtModel *model = nil;
-        if (!error) {
-            model = [[FHDetailRelatedCourtModel alloc] initWithDictionary:jsonObj error:&error];
-        }
-        
-        if (![model.status isEqualToString:@"0"]) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
-        }
-        
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailRelatedCourtModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion(model,error);
         }
-    } callbackInMainThread:NO];
+    }];
+    
 }
 
 // 新房-楼盘动态
@@ -503,23 +390,29 @@
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        
-        FHDetailNewTimeLineResponseModel *model = nil;
-        if (!error) {
-            model = [[FHDetailNewTimeLineResponseModel alloc] initWithDictionary:jsonObj error:&error];
-        }
-        
-        if (![model.status isEqualToString:@"0"]) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
-        }
-        
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailNewTimeLineResponseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion(model,error);
         }
-    } callbackInMainThread:NO];
+    }];
+    
+//    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+//
+//        FHDetailNewTimeLineResponseModel *model = nil;
+//        if (!error) {
+//            model = [[FHDetailNewTimeLineResponseModel alloc] initWithDictionary:jsonObj error:&error];
+//        }
+//
+//        if (![model.status isEqualToString:@"0"]) {
+//            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+//        }
+//
+//        if (completion) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                completion(model,error);
+//            });
+//        }
+//    } callbackInMainThread:NO];
 }
 
 +(TTHttpTask*)requestFloorCoreInfoSearch:(NSString*)courtId
@@ -533,23 +426,11 @@
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/court/detail?court_id=%@",courtId]];
     
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        
-        FHDetailNewCoreDetailModel *model = nil;
-        if (!error) {
-            model = [[FHDetailNewCoreDetailModel alloc] initWithDictionary:jsonObj error:&error];
-        }
-        
-        if (![model.status isEqualToString:@"0"]) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
-        }
-        
+    return [FHMainApi getRequest:url query:nil params:nil jsonClass:[FHDetailNewCoreDetailModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion(model,error);
         }
-    } callbackInMainThread:NO];
+    }];
 }
 
 +(TTHttpTask*)requestFloorPanDetailCoreInfoSearch:(NSString*)floorPanId
@@ -562,23 +443,12 @@
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/floorplan/info?floorplan_id=%@",floorPanId]];
     
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        
-        FHDetailFloorPanDetailInfoModel *model = nil;
-        if (!error) {
-            model = [[FHDetailFloorPanDetailInfoModel alloc] initWithDictionary:jsonObj error:&error];
-        }
-        
-        if (![model.status isEqualToString:@"0"]) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
-        }
-        
+    return [FHMainApi getRequest:url query:nil params:nil jsonClass:[FHDetailFloorPanDetailInfoModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion(model,error);
         }
-    } callbackInMainThread:NO];
+    }];
+    
 }
 
 +(TTHttpTask*)requestFloorPanListSearch:(NSString*)courtId
@@ -590,24 +460,11 @@
     
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/court/floorplan?court_id=%@",courtId]];
-    
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        
-        FHDetailFloorPanListResponseModel *model = nil;
-        if (!error) {
-            model = [[FHDetailFloorPanListResponseModel alloc] initWithDictionary:jsonObj error:&error];
-        }
-        
-        if (![model.status isEqualToString:@"0"]) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
-        }
-        
+    return [FHMainApi getRequest:url query:nil params:nil jsonClass:[FHDetailFloorPanListResponseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion(model,error);
         }
-    } callbackInMainThread:NO];
+    }];    
 }
 
 

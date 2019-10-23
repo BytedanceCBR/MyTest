@@ -15,9 +15,11 @@
 #import "FHVideoAndImageItemView.h"
 #import "FHVideoModel.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
+#import "FHMultiMediaVRImageCell.h"
 
 #define k_VIDEOCELLID @"video_cell_id"
 #define k_IMAGECELLID @"image_cell_id"
+#define k_VRELLID @"vr_cell_id"
 
 @interface FHMultiMediaScrollView ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -31,6 +33,7 @@
 @property(nonatomic, strong) NSMutableArray *itemArray;
 @property(nonatomic, strong) UICollectionViewCell *lastCell;
 @property(nonatomic, strong) FHMultiMediaVideoCell *firstVideoCell;
+@property(nonatomic, weak) FHMultiMediaVRImageCell *firstVRCell;
 @property(nonatomic, assign) CGFloat beginX;
 @property(nonatomic, strong) UIView *bottomBannerView;
 @property(nonatomic, strong) UIView *bottomGradientView;
@@ -63,7 +66,8 @@
     
     [_colletionView registerClass:[FHMultiMediaImageCell class] forCellWithReuseIdentifier:k_IMAGECELLID];
     [_colletionView registerClass:[FHMultiMediaVideoCell class] forCellWithReuseIdentifier:k_VIDEOCELLID];
-    
+    [_colletionView registerClass:[FHMultiMediaVRImageCell class] forCellWithReuseIdentifier:k_VRELLID];
+
     _colletionView.delegate = self;
     _colletionView.dataSource = self;
     
@@ -76,12 +80,12 @@
     
     // 底部右侧序号信息标签
     _infoLabel = [[UILabel alloc] init];
-    _infoLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
+//    _infoLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
     _infoLabel.textAlignment = NSTextAlignmentCenter;
-    _infoLabel.font = [UIFont themeFontRegular:12];
+    _infoLabel.font = [UIFont themeFontRegular:14];
     _infoLabel.textColor = [UIColor whiteColor];
-    _infoLabel.layer.cornerRadius = 10;
-    _infoLabel.layer.masksToBounds = YES;
+//    _infoLabel.layer.cornerRadius = 10;
+//    _infoLabel.layer.masksToBounds = YES;
     
     [self addSubview:_infoLabel];
     
@@ -166,12 +170,12 @@
         make.width.mas_equalTo(44);
         make.height.mas_equalTo(20);
         make.right.mas_equalTo(self).offset(-20);
-        make.bottom.mas_equalTo(self).offset(-10);
+        make.bottom.mas_equalTo(self).offset(-24);
     }];
     
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.bottom.mas_equalTo(self);
+        make.bottom.mas_equalTo(self).offset(-14);
         make.width.mas_equalTo(self.bounds.size.width);
         make.height.mas_equalTo(40);
     }];
@@ -265,7 +269,9 @@
 }
 
 - (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UICollectionViewScrollPosition)scrollPosition animated:(BOOL)animated {
-    [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
+    if ([self.colletionView numberOfSections] > indexPath.section && [self.colletionView numberOfItemsInSection:indexPath.section] > indexPath.row) {
+        [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
+    }
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -299,6 +305,9 @@
             if (!self.isShowenPictureVC) {
                 [self updateVideo:model];
             }
+        }else if(model.mediaType == FHMultiMediaTypeVRPicture){
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_VRELLID forIndexPath:indexPath];
+            self.firstVRCell = cell;
         }else{
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_IMAGECELLID forIndexPath:indexPath];
         }
@@ -482,7 +491,7 @@
         
         CGFloat itemViewWidth = 0;
         if(_itemArray.count > 0){
-            itemViewWidth = 10 + 44 * _itemArray.count + 10 * (_itemArray.count - 1);
+            itemViewWidth = 10 + 44 * _itemArray.count;
         }
         
         [self.itemView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -491,6 +500,13 @@
         }];
     }else{
         self.itemView.hidden = YES;
+    }
+}
+
+- (void)checkVRLoadingAnimate
+{
+    if (self.firstVRCell) {
+        [self.firstVRCell checkVRLoadingAnimate];
     }
 }
 

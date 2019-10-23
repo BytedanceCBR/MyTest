@@ -476,6 +476,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (extraDict[kFHCluePage]) {
             imExtra[kFHCluePage] = extraDict[kFHCluePage];
         }
+        if (extraDict[@"question_id"]) {
+            imExtra[@"question_id"] = extraDict[@"question_id"];
+        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }

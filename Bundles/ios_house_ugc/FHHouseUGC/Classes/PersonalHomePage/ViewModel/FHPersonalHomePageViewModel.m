@@ -149,16 +149,16 @@
             wSelf.loadDataSuccessCount += 1;
         } else {
             if ([model isKindOfClass:[FHPersonalHomePageModel class]]) {
-                if([model.message isEqualToString:@"error"]){
-                    wSelf.headerModel = nil;
+                wSelf.headerModel = model;
+                if([wSelf.headerModel.dErrno integerValue] != 0){
                     // 强制endLoading
                     wSelf.loadDataSuccessCount += 1;
                 }else{
-                    wSelf.headerModel = model;
                     if(wSelf.headerModel.data.logPb){
                         wSelf.detailController.tracerDict[@"log_pb"] = wSelf.headerModel.data.logPb;
                     }
                     [wSelf.detailController refreshHeaderData:YES];
+                    wSelf.detailController.mainScrollView.backgroundColor = [UIColor themeGray7];
                     
                     if([wSelf.headerModel.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:wSelf.headerModel.data.userId]){
                         // 加载列表数据
@@ -315,7 +315,16 @@
 //                [self.detailController refreshHeaderData:NO];
                 self.currentTableView.mj_footer.hidden = YES;
                 self.currentTableView.backgroundColor = [UIColor whiteColor];
-                if([self.headerModel.data.fHomepageAuth integerValue] == 0){
+                
+                if([self.headerModel.dErrno integerValue] != 0){
+                    // 添加空态页
+                    NSString *desc = self.headerModel.data.desc ? self.headerModel.data.desc : @"获取用户信息失败";
+                    [self.detailController.emptyView showEmptyWithTip:desc errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
+                    
+                    showType = @"personal_error";
+                    [self trackGoDetail:showType];
+                    
+                }else if([self.headerModel.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:self.headerModel.data.userId]){
                     if (self.dataList.count <= 0) {
                         // 添加空态页
                         [self.currentTableView addSubview:self.tableEmptyView];

@@ -103,6 +103,7 @@
     @"isFollowing": @"is_following",
     @"fHomepageAuth": @"f_homepage_auth",
     @"logPb": @"log_pb",
+    @"desc": @"description",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

@@ -49,12 +49,12 @@ def fhPods
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
     
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev'
-    #pod 'FHCommonUI', '0.0.6'
-    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '04b0711843b573a64a781571dd19bdf50f5cc59e'
-    pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '85160eeedd57ad84e1d82f08e03492b078f096bc'
-    # pod 'ios_house_im' , '0.1.12-alpha.0'
-#    pod 'ios_house_im' , '0.1.10-alpha.1'
-#     pod 'ios_house_im' , :path => '../../ios_house_im'
+    #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '04b0711843b573a64a781571dd19bdf50f5cc59e'
+    pod 'FHCommonUI', '0.0.7-alpha.0'
+
+    # pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '85160eeedd57ad84e1d82f08e03492b078f096bc'
+    # pod 'ios_house_im' , :path => '../../ios_house_im'
+    pod 'ios_house_im', '0.1.12-rc.2'
 
     #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
     pod 'ios_house_filter' , '1.0.1'
@@ -335,7 +335,7 @@ def appPods
     #-----头条网络库-----
 #    pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'fea3c88cb586f624970bdf5629f11aa1dc9c8521'
 #pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'e2434b5'
-    pod_binary 'TTNetworkManager' , '2.2.10.7'
+    pod_binary 'TTNetworkManager' , '2.2.14.3'
 
 #    pod 'TTNetworkManager', '2.2.8.16'#httpdns can config timeout
     #pod 'IESAntiSpam', '0.5.9', :subspecs => ['RequestEncrypt']
