@@ -52,6 +52,9 @@
 #import <FHHouseBase/FHUtils.h>
 #import "FHHouseListNoHouseCell.h"
 #import "FHHouseOpenURLUtil.h"
+#import "FHFakeInputNavbar.h"
+#import "FHEnvContext.h"
+#import "FHMessageManager.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -109,6 +112,7 @@ extern NSString *const INSTANT_DATA_KEY;
 @property (nonatomic, strong) FHHouseNeighborDataModel *currentNeighborDataModel;
 @property (nonatomic, strong) FHNewHouseListDataModel *currentNewDataModel;
 
+@property (nonatomic, weak)     FHFakeInputNavbar       *navbar;
 
 @end
 
@@ -246,6 +250,29 @@ extern NSString *const INSTANT_DATA_KEY;
 
     }
     return self;
+}
+
+- (void)addNotiWithNaviBar:(FHFakeInputNavbar *)naviBar {
+    self.navbar = naviBar;
+    if (_houseType == FHHouseTypeSecondHandHouse) {
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHMessageUnreadChangedNotification" object:nil];
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHChatMessageUnreadChangedNotification" object:nil];
+        [self refreshMessageDot];
+    }
+}
+
+- (void)refreshMessageDot {
+    if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
+        [self.navbar displayMessageDot:YES];
+    } else {
+        [self.navbar displayMessageDot:NO];
+    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
@@ -1292,6 +1319,35 @@ extern NSString *const INSTANT_DATA_KEY;
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
 
+}
+
+#pragma mark 消息列表
+- (void)showMessageList {
+    // 二手列表页
+    if (_houseType == FHHouseTypeSecondHandHouse) {
+        if (self.closeConditionFilter) {
+            self.closeConditionFilter();
+        }
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[UT_PAGE_TYPE] = [self categoryName] ? : @"be_null";
+        param[UT_ENTER_FROM] = self.tracerModel.enterFrom ? : @"be_null";
+        param[UT_ENTER_TYPE] = self.tracerModel.enterType ? : @"be_null";
+        param[UT_ELEMENT_FROM] = self.tracerModel.elementFrom ? : @"be_null";
+        param[UT_SEARCH_ID] = self.searchId ? : @"be_null";
+        param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ? : @"be_null";
+        param[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
+        
+        TRACK_EVENT(@"click_im_message", param);
+        
+        NSString *messageSchema = @"sslocal://message_conversation_list";
+        NSURL *openUrl = [NSURL URLWithString:messageSchema];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[UT_ENTER_FROM] = [self categoryName] ? : @"be_null";
+        dict[@"tracer"] = tracerDict;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
 }
 
 -(void)refreshHouseListUrlCallback:(NSString *)openUrl {

@@ -109,10 +109,10 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             NSString *errMsg = nil;
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             
-            
             FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&backError];
             
             NSDate *serializeDate = [NSDate date];
+            NSMutableDictionary *extraDict = nil;
             
             if (response.statusCode != 200) {
                 resultType = FHNetworkMonitorTypeNetFailed;
@@ -120,8 +120,14 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                 resultType = FHNetworkMonitorTypeBizFailed;
                 code = backError.code;
                 errMsg = backError.domain;
+                
+                extraDict = @{}.mutableCopy;
+                extraDict[@"request_url"] = response.URL.absoluteString;
+                extraDict[@"response_headers"] = response.allHeaderFields;
+                extraDict[@"error"] = error.domain;
+                extraDict[@"status"] = model.status;
             }
-            [self addRequestLog:@"config" startDate:startDate backDate:backDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg];
+            [self addRequestLog:@"config" startDate:startDate backDate:backDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
@@ -165,7 +171,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
         FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
         NSInteger code = 0;
         NSString *errMsg = nil;
-        
+        NSMutableDictionary *extraDict = nil;
         if (error) {
             if (response.statusCode != 200) {
                 code = response.statusCode;
@@ -177,11 +183,12 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             if ([model respondsToSelector:@selector(status)]) {
                 NSString *status = [model performSelector:@selector(status)];
                 if (status.integerValue != 0 || error != nil) {
-                    NSMutableDictionary *extraDict = @{}.mutableCopy;
+                    extraDict = @{}.mutableCopy;
                     extraDict[@"request_url"] = response.URL.absoluteString;
                     extraDict[@"response_headers"] = response.allHeaderFields;
                     extraDict[@"error"] = error.domain;
-                    [self addServerFailerLog:model.status extraDict:extraDict];
+                    extraDict[@"status"] = model.status;
+                    
                     code = [status integerValue];
                     errMsg = error.domain;
                     resultType = FHNetworkMonitorTypeBizFailed;
@@ -189,7 +196,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             }
         }
         
-        [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg];
+        [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
         if (completion) {
             completion(model,error);
         }
@@ -289,19 +296,6 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             completion(model,error);
         }
     }];
-    
-//    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:param method:GET needCommonParams:YES callback:^(NSError *error, id obj) {
-//        __block NSError *backError = error;
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-//            id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[self generateModel:obj class:cls error:&backError];
-//            if (completion) {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    completion(model,backError);
-//                });
-//            }
-//        });
-//
-//    }];
 }
 
 +(TTHttpTask *)queryData:(NSString *_Nullable)queryPath uploadLog:(BOOL)uploadLog params:(NSDictionary *_Nullable)param class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
@@ -323,6 +317,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             NSInteger code = 0;
             NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
             
             BOOL success = NO;
             if (response.statusCode == 200 ) {
@@ -330,11 +325,10 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                     NSString *status = [model performSelector:@selector(status)];
                     if (status.integerValue != 0 || error != nil) {
                         if (uploadLog) {
-                            NSMutableDictionary *extraDict = @{}.mutableCopy;
+                            extraDict = @{}.mutableCopy;
                             extraDict[@"request_url"] = response.URL.absoluteString;
                             extraDict[@"response_headers"] = response.allHeaderFields;
                             extraDict[@"error"] = error.domain;
-                            [self addServerFailerLog:model.status extraDict:extraDict];
                         }
                         code = [status integerValue];
                         resultType = FHNetworkMonitorTypeBizFailed;
@@ -346,7 +340,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                 resultType = FHNetworkMonitorTypeNetFailed;
             }
             
-            [self addRequestLog:logPath?:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg];
+            [self addRequestLog:logPath?:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
             
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -367,21 +361,6 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             completion(model,error);
         }
     }];
-    
-//    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
-//        if (!completion) {
-//            return ;
-//        }
-//        __block NSError *backError = error;
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-//            FHHomeRollModel *model = (FHHomeRollModel *)[self generateModel:obj class:[FHHomeRollModel class] error:&backError];
-//            if (completion) {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    completion(model,backError);
-//                });
-//            }
-//        });
-//    }];
 }
 
 +(TTHttpTask *)requestHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion
@@ -401,16 +380,16 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             NSInteger code = 0;
             NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
             
             if (response.statusCode == 200  && [model isKindOfClass:[FHHomeHouseModel class]]) {
                 if ([model respondsToSelector:@selector(status)]) {
                     NSString *status = [model performSelector:@selector(status)];
                     if (status.integerValue != 0 || error != nil || model.data.items.count == 0) {
-                        NSMutableDictionary *extraDict = @{}.mutableCopy;
+                        extraDict = @{}.mutableCopy;
                         extraDict[@"request_url"] = response.URL.absoluteString;
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
-                        [self addServerFailerLog:model.status extraDict:extraDict];
                         
                         code = [status integerValue];
                         errMsg = error.domain;
@@ -421,7 +400,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                 code = response.statusCode;
                 resultType = FHNetworkMonitorTypeNetFailed;
             }
-            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg];
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(model,backError);
             });
@@ -429,16 +408,8 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
     }];
 }
 
-+ (void)addServerFailerLog:(NSString *)status extraDict:(NSDictionary *)extraDict
-{
-    NSMutableDictionary *categoryDict = @{}.mutableCopy;
-    if (status) {
-        categoryDict[@"status"] = status;
-    }
-    [[HMDTTMonitor defaultManager]hmdTrackService:@"server_api_request_failure" metric:nil category:categoryDict extra:extraDict];
-}
 
-+(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg
++(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict
 {
     path = [path stringByReplacingOccurrencesOfString:@"f100/api" withString:@""];
     path = [path stringByReplacingOccurrencesOfString:@"f100" withString:@""];
@@ -452,23 +423,23 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
     }];
     NSString *key = [@"f_api_performance_" stringByAppendingString:[items componentsJoinedByString:@"_"]];
     
-    NSMutableDictionary *extra = nil;
+    NSMutableDictionary *extra = [NSMutableDictionary new];
+    if (extraDict) {
+        [extra addEntriesFromDictionary:extraDict];
+    }
     NSMutableDictionary *metricDict = [NSMutableDictionary new];
     if (startData && backDate) {
-        metricDict[@"api_duration_network"] = @([backDate timeIntervalSinceDate:startData]);
+        metricDict[@"api_duration_network"] = @([backDate timeIntervalSinceDate:startData]*1000);
     }
     
     if (startData && serializeDate) {
-        metricDict[@"api_duration_business"] = @([serializeDate timeIntervalSinceDate:startData]);
+        metricDict[@"api_duration_business"] = @([serializeDate timeIntervalSinceDate:startData]*1000);
     }
     
-    metricDict[@"status"] = @(type);
-    
     if (type != FHNetworkMonitorTypeSuccess) {
-        metricDict[@"error_code"] = @(errorCode);
-        metricDict[@"error_message"] = errorMsg;
+        extra[@"error_code"] = @(errorCode);
+        extra[@"error_message"] = errorMsg;
         
-        extra = [NSMutableDictionary new];
         NSString *ntType = @"UNKNOWN";
         /*
          NotReachable = 0,
@@ -488,8 +459,8 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
         extra[@"network_status"] = ntType;
     }
     
-//    NSLog(@"[API] key: %@  metric is: %@",key,metricDict);
-    [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:nil extra:extra];
+    NSDictionary *cat = @{@"status":@(type)};
+    [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:cat extra:extra];
         
 }
 
@@ -517,18 +488,28 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             NSDate *serializeDate = [NSDate date];
             NSInteger code = 0;
             NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             if (error) {
                 code = response.statusCode;
                 errMsg = [error description];
                 resultType = FHNetworkMonitorTypeNetFailed;
             }else if(backError){
+                
+                NSInteger status = backError.code;
+                extraDict = @{}.mutableCopy;
+                extraDict[@"request_url"] = response.URL.absoluteString;
+                extraDict[@"response_headers"] = response.allHeaderFields;
+                extraDict[@"error"] = error.domain;
+                extraDict[@"status"] = @(status);
+                
                 code = backError.code;
                 errMsg = [backError description];
                 resultType = FHNetworkMonitorTypeBizFailed;
             }
             
-            [self addRequestLog:response.URL.path startDate:startDate backDate:requestDoneDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg];
+            [self addRequestLog:response.URL.path startDate:startDate backDate:requestDoneDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
             
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -581,6 +562,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             NSDate *serializeDate = [NSDate date];
             NSInteger code = 0;
             NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             
             if (response.statusCode == 200 ) {
@@ -588,13 +570,11 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                 if ([model respondsToSelector:@selector(status)]) {
                     NSString *status = [model performSelector:@selector(status)];
                     if (status.integerValue != 0 || error != nil) {
-                        if (uploadLog) {
-                            NSMutableDictionary *extraDict = @{}.mutableCopy;
-                            extraDict[@"request_url"] = response.URL.absoluteString;
-                            extraDict[@"response_headers"] = response.allHeaderFields;
-                            extraDict[@"error"] = error.domain;
-                            [self addServerFailerLog:model.status extraDict:extraDict];
-                        }
+                        extraDict = @{}.mutableCopy;
+                        extraDict[@"request_url"] = response.URL.absoluteString;
+                        extraDict[@"response_headers"] = response.allHeaderFields;
+                        extraDict[@"error"] = error.domain;
+                        extraDict[@"status"] = status;
                         code = [status integerValue];
                         errMsg = error.domain;
                         resultType = FHNetworkMonitorTypeBizFailed;
@@ -605,7 +585,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                 code = response.statusCode;
                 errMsg = error.domain;
             }
-            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg];
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,error);
@@ -637,6 +617,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             NSDate *backDate = [NSDate date];
             NSInteger code = 0;
             NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             
             if (!error) {
@@ -653,8 +634,18 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                 code = response.statusCode;
                 resultType = FHNetworkMonitorTypeNetFailed;
                 errMsg = error.domain;
+                if ([json isKindOfClass:[NSDictionary class]] && json[@"status"]) {
+                    NSInteger status = [json[@"status"] integerValue];
+                    if (status != 0) {
+                        extraDict = @{}.mutableCopy;
+                        extraDict[@"request_url"] = response.URL.absoluteString;
+                        extraDict[@"response_headers"] = response.allHeaderFields;
+                        extraDict[@"error"] = error.domain;
+                        extraDict[@"status"] = @(status);
+                    }
+                }
             }
-            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg];
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
             completion(json,error);
         }
     }];
@@ -674,6 +665,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             NSDate *backDate = [NSDate date];
             NSInteger code = 0;
             NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             
             if (!error) {
@@ -690,8 +682,18 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                 code = response.statusCode;
                 resultType = FHNetworkMonitorTypeNetFailed;
                 errMsg = error.domain;
+                if ([json isKindOfClass:[NSDictionary class]] && json[@"status"]) {
+                    NSInteger status = [json[@"status"] integerValue];
+                    if (status != 0) {
+                        extraDict = @{}.mutableCopy;
+                        extraDict[@"request_url"] = response.URL.absoluteString;
+                        extraDict[@"response_headers"] = response.allHeaderFields;
+                        extraDict[@"error"] = error.domain;
+                        extraDict[@"status"] = @(status);
+                    }
+                }
             }
-             [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg];
+             [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
             completion(json,error);
         }
     }];
@@ -712,6 +714,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             NSDate *backDate = [NSDate date];
             NSInteger code = 0;
             NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             
             if (!error) {
@@ -728,8 +731,18 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                 code = response.statusCode;
                 resultType = FHNetworkMonitorTypeNetFailed;
                 errMsg = error.domain;
+                if ([json isKindOfClass:[NSDictionary class]] && json[@"status"]) {
+                    NSInteger status = [json[@"status"] integerValue];
+                    if (status != 0) {
+                        extraDict = @{}.mutableCopy;
+                        extraDict[@"request_url"] = response.URL.absoluteString;
+                        extraDict[@"response_headers"] = response.allHeaderFields;
+                        extraDict[@"error"] = error.domain;
+                        extraDict[@"status"] = @(status);
+                    }
+                }
             }
-            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg];
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
             completion(json,error);
         }
     }];

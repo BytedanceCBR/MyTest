@@ -52,6 +52,8 @@
 #import "FHDetailUserHouseCommentCell.h"
 #import <FHHouseBase/FHSearchHouseModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
+#import <TTBaseLib/UIViewAdditions.h>
+#import "FHDetailQuestionPopView.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -255,6 +257,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         headerCellModel.isInstantData = model.isInstantData;
         [self.items addObject:headerCellModel];
         
+    }
+    if (model.data.quickQuestion.questionItems.count > 0) {
+        self.questionBtn.hidden = NO;
+        [self.questionBtn updateTitle:model.data.quickQuestion.buttonContent];
     }
     // 添加标题
     if (model.data) {

@@ -389,6 +389,24 @@
 }
 @end
 
+@implementation FHDetailDataBaseExtraNeighborhoodModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"baseTitle": @"base_title",
+                           @"subName":@"title",
+                           @"openUrl":@"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailDataBaseExtraFloorInfoModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -414,6 +432,7 @@
 {
     NSDictionary *dict = @{
                            @"floorInfo": @"floor_info",
+                           @"neighborhoodInfo": @"neighborhood_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -451,18 +470,58 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
-                           @"hasVr": @"has_vr",
-                           @"vrImage": @"vr_image",
-                           @"openUrl":@"open_url"
+                                   @"hasVr": @"has_vr",
+                                   @"vrImage": @"vr_image",
+                                   @"openUrl":@"open_url"
+                                   };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHDetailDataQuickQuestionItemModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"openUrl": @"open_url",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
     }];
 }
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
 }
+@end
+
+@implementation FHDetailDataQuickQuestionModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"buttonContent": @"button_content",
+                           @"questionItems": @"question_items",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
 @end
 
 @implementation FHDetailOldDataModel
@@ -502,6 +561,7 @@
                            @"houseReviewComment":@"house_review_comments",
                            @"userHouseComments": @"user_evaluations",
                            @"recommendedRealtorsTitle": @"recommended_realtors_title",
+                           @"quickQuestion": @"quick_question",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
