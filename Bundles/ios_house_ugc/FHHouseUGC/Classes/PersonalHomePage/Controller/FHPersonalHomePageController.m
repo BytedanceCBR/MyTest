@@ -382,6 +382,19 @@
     }
 }
 
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
+    [self mainScrollToTop];
+    return NO;
+}
+
+- (void)mainScrollToTop {
+    __weak typeof(self) wSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [wSelf.mainScrollView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+        [wSelf.viewModel.currentTableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+    });
+}
+
 #pragma mark -- SSImpressionProtocol
 
 - (void)needRerecordImpressions {
