@@ -321,8 +321,8 @@
                     NSString *desc = self.headerModel.data.desc ? self.headerModel.data.desc : @"获取用户信息失败";
                     [self.detailController.emptyView showEmptyWithTip:desc errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
                     
-//                    showType = @"personal_error";
-//                    [self trackGoDetail:showType];
+                    showType = @"personal_error";
+                    [self trackGoDetail:showType];
                     
                 }else if([self.headerModel.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:self.headerModel.data.userId]){
                     if (self.dataList.count <= 0) {
