@@ -1540,7 +1540,6 @@ extern NSString *const INSTANT_DATA_KEY;
     self.animateShowNotify = YES;
     __weak typeof(self) wself = self;
     CGFloat height =  [_topView showNotify:message willCompletion:^{
-        
         wself.tableView.scrollEnabled = NO;
         [UIView animateWithDuration:0.3 animations:^{
             
@@ -1554,7 +1553,6 @@ extern NSString *const INSTANT_DATA_KEY;
             }
             wself.animateShowNotify = NO;
         }];
-        
     }];
     
     [self configNotifyInfo:height isShow:YES];
@@ -1582,7 +1580,8 @@ extern NSString *const INSTANT_DATA_KEY;
             if (self.tableView.contentOffset.y >= -[self.topView filterBottom]) {
                 if (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight - [self.topView notifyHeight])) {
                     self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + [self.topView notifyHeight]);
-                } else {
+                } else if (self.tableView.contentOffset.y < self.tableView.height){
+                    //小于一屏再进行设置
                     self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
                 }
             }

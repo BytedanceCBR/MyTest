@@ -65,7 +65,7 @@
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentView);
         make.left.mas_equalTo(20);
-        make.width.mas_equalTo(80);
+        make.width.mas_equalTo(100);
     }];
     
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {

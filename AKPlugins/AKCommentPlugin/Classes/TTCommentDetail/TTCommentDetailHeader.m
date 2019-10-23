@@ -621,8 +621,7 @@
 //        [_avatarView setupVerifyViewForLength:[TTCommentDetailHeaderUIHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
 //            return [TTCommentDetailHeaderUIHelper verifyLogoSize:standardSize];
 //        }];
-        // add by zjing 去掉头像点击
-//        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
+        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }
     return _avatarView;
 }

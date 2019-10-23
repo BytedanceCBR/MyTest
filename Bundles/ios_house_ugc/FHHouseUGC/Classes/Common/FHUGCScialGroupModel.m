@@ -7,6 +7,25 @@
 }
 @end
 
+@implementation FHUGCScialGroupDataChatStatusModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"conversationId": @"conversation_id",
+    @"conversationStatus": @"user_status",
+    @"maxConversationCount": @"user_limit",
+    @"currentConversationCount": @"user_count",
+    @"conversationShortId": @"conversation_short_id",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 @implementation FHUGCScialGroupDataModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -22,6 +41,7 @@
     @"logPb":@"log_pb",
     @"announcementUrl":@"announcement_url",
     @"userAuth": @"user_auth",
+    @"chatStatus": @"chat_status",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

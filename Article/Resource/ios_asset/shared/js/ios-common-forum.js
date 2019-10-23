@@ -346,11 +346,11 @@ publishTime: t.publish_stamp ? formatTime(1e3 * t.publish_stamp) : t.publish_tim
 userId: t.media_user_id,
 mediaId: a.id,
 name: a.name,
-link: "sslocal://profile?refer=all&source=article_top_author&uid=" + t.media_user_id + "&group_id=" + n.statistics.group_id + "&from_page=detail_article" + (t.category_name ? "&category_name=" + t.category_name : ""),
+link: "sslocal://profile?refer=all&source=article_top_author&uid=" + t.media_user_id + "&group_id=" + n.statistics.group_id + "&from_page=article_detail" + (t.category_name ? "&category_name=" + t.category_name : ""),
 intro: a.description,
 avatar: a.avatar_url,
 isAuthorSelf: !!t.is_author
-}, (n.h5_settings.is_liteapp || !t.media_user_id) && (n.author.link = "");
+}, (i.h5_settings.is_liteapp || !t.media_user_id) && (i.author.link = (i.h5_settings.is_liteapp && client.isIOS ? "sslocal" : "bytedance") + "://profile?refer=all&uid=" + t.media_user_id + "&from_page=article_detail");
 var i = {
 auth_type: "",
 auth_info: ""
@@ -1475,7 +1475,7 @@ source: "wenda_detail",
 profile_user_id: Page.author.userId
 }
 }), a = "detail_follow_card_wenda", i = wenda_extra.gd_ext_json ? wenda_extra.gd_ext_json.category_name : "", 
-o = wenda_extra.ansid), window.location.href = "ss://pro?uid=" + t + ("wenda" === Page.article.type ? "&refer=wenda" : "") + "&group_id=" + o + "&from_page=" + a + "&profile_user_id=" + Page.author.userId + (i ? "&category_name=" + i : "");
+o = wenda_extra.ansid), window.location.href = "sslocal://profile?uid=" + t + ("wenda" === Page.article.type ? "&refer=wenda" : "") + "&group_id=" + o + "&from_page=" + a + "&profile_user_id=" + Page.author.userId + (i ? "&category_name=" + i : "");
 }
 }
 

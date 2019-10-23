@@ -1886,7 +1886,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setValue:self.categoryName forKey:@"category_name"];
-    [params setValue:@"detail_short_video_comment" forKey:@"from_page"];
+    [params setValue:@"comment_list" forKey:@"from_page"];
     [params setValue:self.model.groupID forKey:@"group_id"];
     [AWEVideoPlayTransitionBridge openProfileViewWithUserId:[commentModel.userId stringValue] params:params];
 }

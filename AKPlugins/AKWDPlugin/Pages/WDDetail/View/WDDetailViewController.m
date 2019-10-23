@@ -2152,10 +2152,10 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
     
     NSString *userID = [NSString stringWithFormat:@"%@", model.userID];
-    NSString *schema = [NSString stringWithFormat:@"sslocal://profile?uid=%@&enter_from=%@",userID,@"answer_detail_comment"];
+    NSString *schema = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=%@",userID,@"comment_list"];
     NSString *categoryName = [self.detailModel.gdExtJsonDict objectForKey:@"category_name"];
     
-    NSString *result = [WDTrackerHelper schemaTrackForPersonalHomeSchema:schema categoryName:categoryName fromPage:@"detail_wenda_comment" groupId:self.detailModel.answerEntity.ansid profileUserId:userID];
+    NSString *result = [WDTrackerHelper schemaTrackForPersonalHomeSchema:schema categoryName:categoryName fromPage:@"comment_list" groupId:self.detailModel.answerEntity.ansid profileUserId:userID];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:result]];
     
     [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];

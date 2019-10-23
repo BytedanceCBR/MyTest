@@ -344,6 +344,12 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
                                              selector:@selector(keyboardDidShow)
                                                  name:UIKeyboardDidShowNotification
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(deletedInHomePageList:)
+                                                 name:kDeleteCommentFromHomePageNotificationKey
+                                               object:nil];
+    
 }
 
 - (void)p_addPullUpViewIfNeeded {
@@ -576,6 +582,39 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
             self.oldTableHeaderViewFrame = newFrame;
             [self p_reloadCommentTableHeaderView];
         }
+    }
+}
+
+- (void)deletedInHomePageList:(NSNotification *)notification {
+    NSString *commentID = [notification.userInfo tt_stringValueForKey:@"id"];
+
+    NSMutableArray *mShowAry = [[self.commentViewModel tt_curCommentModels] mutableCopy];
+    for (id<TTCommentModelProtocol> comment in mShowAry) {
+        if ([comment.commentID.stringValue isEqualToString:commentID]) {
+            self.needDeleteCommentModel = comment;
+            return;
+        }
+    }
+
+    NSInteger replyCount = self.needDeleteCommentModel.replyCount ? self.needDeleteCommentModel.replyCount.integerValue + 1: 0;
+    if([self.delegate respondsToSelector:@selector(tt_commentDeleteSuccessWithCount:)]) {
+        [self.delegate tt_commentDeleteSuccessWithCount:replyCount];
+    }
+
+    if (self.needDeleteCommentModel) {
+        [self.commentViewModel tt_removeComment:self.needDeleteCommentModel];
+
+        if ([self.commentViewModel.dataSource respondsToSelector:@selector(tt_zzComments)] && [self.commentViewModel.dataSource respondsToSelector:@selector(tt_groupModel)]) {
+            NSInteger zzComment = [self.commentViewModel.dataSource tt_zzComments];
+            if (zzComment) {
+                NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+                [dict setValue:[self.commentViewModel.dataSource tt_groupModel].groupID forKey:@"group_id"];
+                [dict setValue:_needDeleteCommentModel.commentID.stringValue forKey:@"comment_id"];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kTTDeleteZZCommentNotification object:nil userInfo:dict];
+            }
+        }
+
+        self.needDeleteCommentModel = nil;
     }
 }
 
