@@ -25,7 +25,7 @@
 #import "TTLaunchDefine.h"
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <TTReachability/TTReachability.h>
-#import <TTBaseLib/TTSandBoxHelper.h>
+#import <TTSandBoxHelper.h>
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -72,6 +72,13 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
 }
 
+- (BOOL)isBOE {
+    if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
+        return YES;
+    }
+    return NO;
+}
+
 - (NSString *)appId {
     return [[TTInstallIDManager sharedInstance] appID];
 }
@@ -80,16 +87,12 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     return [[TTInstallIDManager sharedInstance] deviceID];
 }
 
-- (BOOL)isBOE {
-    
-    if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
-        return YES;
-    }
-    return NO;
-}
-
 - (void)onMessageRecieved:(ChatMsg *)msg {
     [[FHBubbleTipManager shareInstance] tryShowBubbleTip:msg openUrl:@""];
+}
+
+- (NSString *)appVersionCode {
+    return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
 }
 
 - (void)tryGetPhoneNumber:(nonnull NSString *)userId withImprId:(nonnull NSString *)imprId tracer:(nonnull NSDictionary *)tracer withBlock:(nullable PhoneCallback)finishBlock{

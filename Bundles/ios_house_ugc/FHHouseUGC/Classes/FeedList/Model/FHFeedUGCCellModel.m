@@ -125,9 +125,11 @@
 }
 
 + (FHFeedUGCCellContentDecorationModel *)contentDecorationFromString:(NSString *)contentDecoration {
-    if (!contentDecoration) {
+    
+    if(contentDecoration.length == 0){
         return nil;
     }
+    
     NSData *jsonData = [contentDecoration dataUsingEncoding:NSUTF8StringEncoding];
     NSError *err;
     NSDictionary *dic = nil;

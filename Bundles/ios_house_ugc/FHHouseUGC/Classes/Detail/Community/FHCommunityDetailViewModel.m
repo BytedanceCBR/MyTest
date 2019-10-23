@@ -26,9 +26,11 @@
 #import "FHCommonDefines.h"
 #import "TTUIResponderHelper.h"
 #import <TTUGCEmojiParser.h>
+#import "TTAccount.h"
+#import "TTAccount+Multicast.h"
+#import "TTAccountManager.h"
 
-
-@interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
+@interface FHCommunityDetailViewModel () <FHUGCFollowObserver, CommunityGroupChatLoginDelegate, FHCommunityFeedListControllerDelegate>
 
 @property(nonatomic, weak) FHCommunityDetailViewController *viewController;
 @property(nonatomic, weak) FHCommunityFeedListController *feedListController;
@@ -40,6 +42,8 @@
 @property(nonatomic, strong) UIView *titleContainer;
 @property(nonatomic, strong) MJRefreshHeader *refreshHeader;
 @property (nonatomic, assign)   BOOL       isViewAppear;
+@property(nonatomic, assign) BOOL isLoginSatusChangeFromGroupChat;
+@property(nonatomic, assign) BOOL isLogin;
 
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic) BOOL shouldShowUGcGuide;
@@ -55,6 +59,7 @@
         [self initView];
         self.shouldShowUGcGuide = YES;
         self.isViewAppear = YES;
+        self.isLogin = TTAccountManager.isLogin;
     }
     return self;
 }
@@ -73,6 +78,7 @@
     self.feedListController.tableViewNeedPullDown = NO;
     self.feedListController.showErrorView = NO;
     self.feedListController.scrollViewDelegate = self;
+    self.feedListController.delegate = self;
     self.feedListController.listType = FHCommunityFeedListTypePostDetail;
     self.feedListController.forumId = self.viewController.communityId;
     MJWeakSelf;
@@ -89,6 +95,13 @@
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
     self.headerView.followButton.groupId = self.viewController.communityId;
     self.headerView.followButton.tracerDic = [self followButtonTraceDict];
+    WeakSelf;
+    self.headerView.followButton.followedSuccess = ^(BOOL isSuccess, BOOL isFollow) {
+        StrongSelf;
+        if(isSuccess) {
+            [self refreshBasicInfo];
+        }
+    };
 
     //随机一张背景图
     NSInteger randomImageIndex = [self.viewController.communityId integerValue] % 4;
@@ -99,7 +112,6 @@
     [self.viewController addChildViewController:self.feedListController];
     [self.feedListController didMoveToParentViewController:self.viewController];
     [self.viewController.view addSubview:self.feedListController.view];
-    WeakSelf;
     self.feedListController.publishBlock = ^() {
         StrongSelf;
         [self gotoPostThreadVC];
@@ -110,6 +122,7 @@
         [self gotoSocialFollowUserList];
     };
 
+    [TTAccount addMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onGlobalFollowListLoad:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
@@ -155,6 +168,7 @@
 }
 
 - (void)dealloc {
+    [TTAccount removeMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -165,6 +179,13 @@
     self.rightBtn.groupId = self.viewController.communityId;
     self.rightBtn.hidden = YES;
     self.rightBtn.tracerDic = [self followButtonTraceDict];
+    WeakSelf;
+    self.rightBtn.followedSuccess = ^(BOOL isSuccess, BOOL isFollow) {
+        StrongSelf;
+        if(isSuccess) {
+            [self refreshBasicInfo];
+        }
+    };
 
     self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -269,23 +290,35 @@
         if(userPull){
             [self.feedListController.tableView.mj_header endRefreshing];
         }
+        [_viewController tt_endUpdataData];
         return;
     }
-
     WeakSelf;
     [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+        [_viewController tt_endUpdataData];
         StrongSelf;
         if(userPull){
             [wself.feedListController.tableView.mj_header endRefreshing];
         }
         if (model && (error == nil)) {
             FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
+            BOOL isFollowed = [responseModel.data.hasFollow boolValue];
+            if(isFollowed == NO) {
+                self.feedListController.bageView.badgeNumber = TTBadgeNumberHidden;
+            }
             [wself updateUIWithData:responseModel.data];
             if (responseModel.data) {
                 // 更新圈子数据
                 [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:responseModel.data];
                 //传入选项信息
                 self.feedListController.operations = responseModel.data.permission;
+                self.feedListController.scialGroupData = responseModel.data;
+                [self.feedListController updateViews];
+                self.feedListController.loginDelegate = wself;
+                if (_isLoginSatusChangeFromGroupChat) {
+                    [self.feedListController gotoGroupChat];
+                    _isLoginSatusChangeFromGroupChat = NO;
+                }
             }
             return;
         }
@@ -294,6 +327,7 @@
     if (refreshFeed) {
         [self.feedListController startLoadData:NO];
     }
+    
 }
 
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
@@ -803,4 +837,25 @@
     return [params copy];
 }
 
+// 帐号切换
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
+{
+    if (_isLogin != TTAccountManager.isLogin) {
+        [_viewController tt_startUpdate];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+             [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+        });
+        _isLogin = TTAccountManager.isLogin;
+    }
+    
+}
+
+- (void)onLoginIn {
+    _isLoginSatusChangeFromGroupChat = YES;
+}
+
+// MARK: FHCommunityFeedListControllerDelegate
+-(void)refreshBasicInfo {
+    [self requestData:NO refreshFeed:NO showEmptyIfFailed:NO showToast:NO];
+}
 @end
