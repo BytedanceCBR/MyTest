@@ -220,6 +220,25 @@
 }
 
 -(NSString*)cutLineBreak:(NSString*)content {
+    int length = 0;
+    while (length != content.length) {
+        length = content.length;
+        content = [self cutLineBreak2:content];
+        content = [self cutLineBreak3:content];
+    }
+    return content;
+}
+
+- (NSString*)cutLineBreak2:(NSString *)content {
+    NSRange range2 = [content rangeOfString:@"\n"];
+    if (range2.location == 0 && content.length > 1) {
+        return [NSString stringWithFormat:@" %@", [self cutLineBreak:[content substringFromIndex:range2.location + 1]]];
+    } else {
+        return content;
+    }
+}
+
+- (NSString*)cutLineBreak3:(NSString *)content {
     NSRange range = [content rangeOfString:@"\r"];
     if (range.location == 0 && content.length > 1) {
         return [NSString stringWithFormat:@" %@", [self cutLineBreak:[content substringFromIndex:range.location + 1]]];
