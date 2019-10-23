@@ -20,6 +20,7 @@
 #import <FHHouseBase/FHURLSettings.h>
 #import "FHHouseDetailAPI.h"
 #import <TTReachability/TTReachability.h>
+#import "FHDetailQuestionPopView.h"
 
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -29,6 +30,9 @@
 @property (nonatomic, strong)   NSHashTable               *weakedVCLifeCycleCellTable;
 @property (nonatomic, assign)   CGPoint       lastPointOffset;
 @property (nonatomic, assign)   BOOL          scretchingWhenLoading;
+@property (nonatomic, assign) BOOL floatIconAnimation;
+@property (nonatomic, assign) BOOL clickShowIcon;
+@property(nonatomic, assign) CGPoint tableviewBeginOffSet;
 
 @end
 
@@ -134,6 +138,67 @@
 -(BOOL)currentIsInstantData
 {
     return NO;
+}
+
+- (void)setQuestionBtn:(FHDetailQuestionButton *)questionBtn
+{
+    _questionBtn = questionBtn;
+    [_questionBtn.btn addTarget:self action:@selector(questionBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)questionBtnDidClick:(UIButton *)btn
+{
+    [self addQuickQuestionClickOptionLog:NO];
+    
+    FHDetailOldDataModel *dataModel = nil;
+    if ([self.detailData isKindOfClass:[FHDetailOldModel class]]) {
+        dataModel = [(FHDetailOldModel*)self.detailData data];
+    }
+    
+    if (dataModel.quickQuestion.questionItems.count < 1) {
+        return;
+    }
+    __weak typeof(self)wself = self;
+    NSMutableArray *menus = @[].mutableCopy;
+    for (NSInteger index = 0; index < dataModel.quickQuestion.questionItems.count; index++) {
+        FHDetailDataQuickQuestionItemModel *model = dataModel.quickQuestion.questionItems[index];
+        FHDetailQuestionPopMenuItem *item = [[FHDetailQuestionPopMenuItem alloc]init];
+        item.index = index;
+        item.model = model;
+        item.itemClickBlock = ^(FHDetailQuestionPopMenuItem *menuItem) {
+            FHDetailDataQuickQuestionItemModel *model = menuItem.model;
+            [wself addclickAskQuestionLog:model rank:@(menuItem.index)];
+            [wself imAction:model];
+        };
+        item.title = model.text;
+        [menus addObject:item];
+    }
+    FHDetailQuestionPopView *popView = [[FHDetailQuestionPopView alloc]init];
+    [popView updateTitle:dataModel.quickQuestion.buttonContent];
+    popView.menus = menus;
+    popView.completionBlock = ^{
+        wself.questionBtn.hidden = NO;
+        wself.questionBtn.isFold = YES;
+        [wself addQuickQuestionClickOptionLog:YES];
+    };
+    UIView *view = self.questionBtn;
+    [popView showAtPoint:view.origin parentView:self.detailController.view];
+    self.questionBtn.hidden = YES;
+}
+
+- (void)imAction:(FHDetailDataQuickQuestionItemModel *)model
+{
+    if (![model isKindOfClass:[FHDetailDataQuickQuestionItemModel class]]) {
+        return;
+    }
+    NSMutableDictionary *imExtra = @{}.mutableCopy;
+    imExtra[@"realtor_position"] = @"be_null";
+    imExtra[@"source_from"] = @"house_ask_question";
+    imExtra[@"im_open_url"] = model.openUrl;
+    imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
+    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHCluePageTypeCQuickQuestion];
+    imExtra[@"question_id"] = model.id;
+    [self.contactViewModel onlineActionWithExtraDict:imExtra];
 }
 
 #pragma mark - 需要子类实现的方法
@@ -296,11 +361,49 @@
     }
 }
 
+- (void)showQuestionBtn:(BOOL)isShow
+{
+    if(isShow && (CGRectGetMaxX(self.questionBtn.frame) - [UIScreen mainScreen].bounds.size.width) < 0){
+        return;
+    }
+    
+    if(!isShow && (CGRectGetMaxX(self.questionBtn.frame) - [UIScreen mainScreen].bounds.size.width) > 0){
+        return;
+    }
+    
+    if ([self clickShowIcon]) {
+        return;
+    }
+    
+    if(!self.floatIconAnimation){
+        self.floatIconAnimation = YES;
+        FHDetailQuestionButton *questionBtn = self.questionBtn;
+        CGFloat btnWidth = [questionBtn totalWidth];
+        [UIView animateWithDuration:0.2f animations:^{
+
+            CGFloat right = isShow ? -20 : btnWidth - 26;
+            [self.questionBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(right);
+            }];
+            [self.detailController.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            self.floatIconAnimation = NO;
+        }];
+    }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    self.clickShowIcon = NO;
+    self.tableviewBeginOffSet = scrollView.contentOffset;
+}
+
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (scrollView != self.tableView) {
         return;
     }
+
     // 解决类似周边房源列表页的house_show问题，视频播放逻辑
     CGPoint offset = scrollView.contentOffset;
     if (self.weakedCellTable.count > 0) {
@@ -316,6 +419,48 @@
     self.lastPointOffset = offset;
     
     [self.detailController refreshContentOffset:scrollView.contentOffset];
+
+    CGFloat diff = scrollView.contentOffset.y - self.tableviewBeginOffSet.y;
+    
+    CGFloat height = scrollView.frame.size.height;
+    CGFloat contentYoffset = scrollView.contentOffset.y;
+    CGFloat distance = scrollView.contentSize.height - height;
+    if(fabs(diff) < 1 ){
+        return;
+    }
+    if (contentYoffset <= 0) {
+//        [self showQuestionBtn:NO];
+        return;
+    }
+    if (contentYoffset >= distance) {
+//        [self showQuestionBtn:YES];
+        return;
+    }
+    self.questionBtn.userInteractionEnabled = NO;
+    if(fabs(diff) > 10){
+        [self showQuestionBtn:NO];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (scrollView != self.tableView) {
+        return;
+    }
+    self.questionBtn.userInteractionEnabled = YES;
+    [self showQuestionBtn:YES];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (scrollView != self.tableView) {
+        return;
+    }
+    if (decelerate) {
+        return;
+    }
+    self.questionBtn.userInteractionEnabled = YES;
+    [self showQuestionBtn:YES];
 }
 
 #pragma mark - 埋点
@@ -390,6 +535,51 @@
     [params addEntriesFromDictionary:self.detailTracerDic];
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
     [FHUserTracker writeEvent:@"stay_page" params:params];
+    
+}
+
+- (void)addclickAskQuestionLog:(FHDetailOldDataModel *)model rank:(NSNumber *)rank
+{
+//    1.event_type：house_app2c_v2
+//    2.page_type（页面类型）：old_detail（二手房详情页）
+//    3.element_from ：(与go_detail进入详情页的上传参数保持一致)
+//    4.enter_from：
+//    5. origin_from
+//    6. origin_search_id
+//    7.log_pb
+//    8.rank:
+//    9.question_id：问题id
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (self.detailTracerDic) {
+        [params addEntriesFromDictionary:self.detailTracerDic];
+    }
+    params[@"rank"] = rank ? : @"be_null";
+    params[@"question_id"] = model.id ? : @"be_null";
+    [FHUserTracker writeEvent:@"click_ask_question" params:params];
+    
+}
+
+- (void)addQuickQuestionClickOptionLog:(BOOL)isFold
+{
+//    1.event_type：house_app2c_v2
+//    2.page_type（页面类型）：old_detail（二手房详情页）
+//    3.element_from ：(与go_detail进入详情页的上传参数保持一致)
+//    4.enter_from：
+//    5. origin_from
+//    6. origin_search_id
+//    7.log_pb
+//    8.click_position：house_ask_question（提问按钮）
+//    9.show_type：展示状态：“问题内容展开”：“open”；“问题内容收起”：“close”
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"page_type"] = self.detailTracerDic[@"page_type"];
+    params[@"element_from"] = self.detailTracerDic[@"element_from"];
+    params[@"enter_from"] = self.detailTracerDic[@"enter_from"];
+    params[@"origin_from"] = self.detailTracerDic[@"origin_from"];
+    params[@"origin_search_id"] = self.detailTracerDic[@"origin_search_id"];
+    params[@"log_pb"] = self.detailTracerDic[@"log_pb"];
+    params[@"click_position"] = @"house_ask_question";
+    params[@"show_type"] = isFold ? @"close" : @"open";
+    [FHUserTracker writeEvent:@"click_options" params:params];
     
 }
 
