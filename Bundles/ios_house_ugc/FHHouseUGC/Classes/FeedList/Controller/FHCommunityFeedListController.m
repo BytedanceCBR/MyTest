@@ -340,7 +340,7 @@
         self.followCommunityDelegate = [[FollowCommunityAlertDelegate alloc] init];
         self.followCommunityDelegate.controller = self;
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
-                                                            message:@"你还未关注圈子，是否关注？"
+                                                            message:@"是否加入群聊并关注圈子？"
                                                            delegate:self.followCommunityDelegate
                                                   cancelButtonTitle:@"取消"
                                                   otherButtonTitles:@"确认", nil];
