@@ -209,7 +209,7 @@
     if (annotationView == nil) {
         annotationView = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:pointResueseIdetifier];
     }
-    annotationView.image = [UIImage imageNamed:@"icon-location"];
+    annotationView.image = [UIImage imageNamed:@"detail_map_loc_annotation"];
     //设置中心点偏移，使得标注底部中间点成为经纬度对应点
     annotationView.centerOffset = CGPointMake(0, -18);
     return annotationView;
