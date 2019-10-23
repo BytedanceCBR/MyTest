@@ -31,17 +31,21 @@
 
 - (void)updateViewModel:(FHMultiMediaItemModel *)model {
     NSString *imgStr = model.imageUrl;
-    NSURL *url = [NSURL URLWithString:imgStr];
-    UIImage *placeholder = nil;
-    if (model.instantImageUrl) {
-        NSString *key = [[BDWebImageManager sharedManager]requestKeyWithURL:[NSURL URLWithString:model.instantImageUrl]];
-        placeholder = [[[BDWebImageManager sharedManager] imageCache] imageForKey:key];
+    if (imgStr) {
+        NSURL *url = [NSURL URLWithString:imgStr];
+        if (url) {
+            UIImage *placeholder = nil;
+            if (model.instantImageUrl) {
+                NSString *key = [[BDWebImageManager sharedManager]requestKeyWithURL:[NSURL URLWithString:model.instantImageUrl]];
+                placeholder = [[[BDWebImageManager sharedManager] imageCache] imageForKey:key];
+            }
+            if (!placeholder) {
+                placeholder = self.placeHolder;
+            }
+            
+            [self.imageView updateImageUrl:url andPlaceHolder:placeholder];
+        }
     }
-    if (!placeholder) {
-        placeholder = self.placeHolder;
-    }
-    
-    [self.imageView updateImageUrl:url andPlaceHolder:placeholder];
 }
 
 - (void)checkVRLoadingAnimate
