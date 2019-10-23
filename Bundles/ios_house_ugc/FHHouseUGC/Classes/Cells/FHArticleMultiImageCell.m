@@ -11,7 +11,6 @@
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
 #import <TTImageView+TrafficSave.h>
-#import <UIView+XWAddForRoundedCorner.h>
 
 #define maxLines 3
 #define bottomViewHeight 39
@@ -85,15 +84,13 @@
     for (NSInteger i = 0; i < 3; i++) {
         TTImageView *imageView = [[TTImageView alloc] initWithFrame:CGRectZero];
         imageView.clipsToBounds = YES;
-//        imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
         imageView.backgroundColor = [UIColor themeGray6];
-//        imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
-//        imageView.layer.borderWidth = 0.5;
+        imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
+        imageView.layer.borderWidth = 0.5;
         imageView.layer.masksToBounds = YES;
-//        imageView.layer.cornerRadius = 4;
+        imageView.layer.cornerRadius = 4;
         imageView.hidden = YES;
-        [imageView xw_roundedCornerWithCornerRadii:CGSizeMake(4, 4) cornerColor:[UIColor whiteColor] corners:UIRectCornerAllCorners borderColor:[UIColor themeGray6] borderWidth:0.5];
         [self.contentView addSubview:imageView];
         
         [self.imageViewList addObject:imageView];

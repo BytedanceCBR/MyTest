@@ -187,7 +187,6 @@
 }
 
 - (void)avatarButtonClick:(id)sender {
-    
     if ([self.delegate respondsToSelector:@selector(listCellUserHeaderViewAvatarClick)]) {
         [self.delegate listCellUserHeaderViewAvatarClick];
     }
@@ -214,8 +213,7 @@
         _cellAvatarView.userInteractionEnabled = YES;
         _cellAvatarView.placeholder = @"big_defaulthead_head";
         
-        // add by zjing 去掉问答折叠里面头像点击
-//        [_cellAvatarView addTouchTarget:self action:@selector(avatarButtonClick:)];
+        [_cellAvatarView addTouchTarget:self action:@selector(avatarButtonClick:)];
 //        [_cellAvatarView setupVerifyViewForLength:36 adaptationSizeBlock:nil];
         
         UIView *coverView = [[UIView alloc] initWithFrame:_cellAvatarView.bounds];
@@ -237,8 +235,7 @@
         _userNameButton.titleLabel.font = [UIFont boldSystemFontOfSize:kUserNameLabelFontSize];
         _userNameButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         _userNameButton.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
-        // add by zjing 去掉问答折叠里面头像点击
-//        [_userNameButton addTarget:self action:@selector(avatarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        [_userNameButton addTarget:self action:@selector(avatarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _userNameButton;
 }

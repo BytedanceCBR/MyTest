@@ -20,8 +20,8 @@
 #import "FHUserTracker.h"
 #import "TTAccountManager.h"
 #import <FHUGCConfig.h>
-#import <UIView+XWAddForRoundedCorner.h>
 #import "FHFeedOperationResultModel.h"
+#import <TTCommentDataManager.h>
 
 @implementation FHUGCCellUserInfoView
 
@@ -39,12 +39,19 @@
     _icon.backgroundColor = [UIColor themeGray7];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
-//    _icon.layer.cornerRadius = 20;
-    [_icon xw_roundedCornerWithRadius:20 cornerColor:[UIColor whiteColor]];
+    _icon.layer.cornerRadius = 20;
     [self addSubview:_icon];
+    
+    _icon.userInteractionEnabled = YES;
+     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
+    [_icon addGestureRecognizer:tap];
     
     self.userName = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     [self addSubview:_userName];
+    
+    _userName.userInteractionEnabled = YES;
+     UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
+    [_userName addGestureRecognizer:tap1];
     
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self addSubview:_descLabel];
@@ -72,7 +79,7 @@
     [self.userName mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.icon);
         make.left.mas_equalTo(self.icon.mas_right).offset(10);
-        make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
+        make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 100);
         make.height.mas_equalTo(22);
     }];
     
@@ -95,13 +102,34 @@
 
 - (void)setCellModel:(FHFeedUGCCellModel *)cellModel {
     _cellModel = cellModel;
-    //针对一下两种类型，隐藏...按钮
-    if(cellModel.cellType == FHUGCFeedListCellTypeAnswer || cellModel.cellType == FHUGCFeedListCellTypeArticleComment){
-        BOOL hideDelete = [TTAccountManager isLogin] && [[TTAccountManager userID] isEqualToString:cellModel.user.userId];
-        self.moreBtn.hidden = hideDelete;
+    
+    if(cellModel.hiddenMore){
+        self.moreBtn.hidden = YES;
     }else{
+        //针对一下两种类型，隐藏...按钮
+        if(cellModel.cellType == FHUGCFeedListCellTypeAnswer || cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
+            BOOL hideDelete = [TTAccountManager isLogin] && [[TTAccountManager userID] isEqualToString:cellModel.user.userId];
+            self.moreBtn.hidden = hideDelete;
+        }else{
+            self.moreBtn.hidden = NO;
+        }
+    }
+    
+    NSString *pageType = self.cellModel.tracerDic[@"page_type"];
+    if(pageType && [pageType isEqualToString:@"personal_homepage_detail"]){
+        //在个人主页页面 头像和名字不可点击
+        _icon.userInteractionEnabled = NO;
+        _userName.userInteractionEnabled = NO;
+    }else{
+        _icon.userInteractionEnabled = YES;
+        _userName.userInteractionEnabled = YES;
+    }
+    
+    //我的评论列表页打开
+    if(pageType && [pageType isEqualToString:@"personal_comment_list"]){
         self.moreBtn.hidden = NO;
     }
+    
 }
 
 - (void)moreOperation {
@@ -154,9 +182,11 @@
     __weak typeof(self) wself = self;
     if(view.selectdWord.type == FHFeedOperationWordTypeReport){
         //举报
-        if(self.reportSuccessBlock){
-            self.reportSuccessBlock();
-        }
+//        if(self.reportSuccessBlock){
+//            self.reportSuccessBlock();
+//        }
+        
+        [[ToastManager manager] showToast:@"举报成功"];
     
         NSDictionary *dic = @{
                               @"cellModel":self.cellModel,
@@ -170,7 +200,14 @@
             [wself trackConfirmDeletePopupClick:YES];
         } confirmBlock:^{
             [wself trackConfirmDeletePopupClick:NO];
-            [wself postDelete:view.selectdWord.serverType];
+            
+            NSString *pageType = wself.cellModel.tracerDic[@"page_type"];
+            //我的评论列表页打开
+            if(pageType && [pageType isEqualToString:@"personal_comment_list"]){
+                [wself commentDelete:wself.cellModel.groupId];
+            }else{
+                [wself postDelete:view.selectdWord.serverType];
+            }
         }];
         [self trackConfirmPopupShow:@"confirm_delete_popup_show"];
         
@@ -268,6 +305,28 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
         }else{
             [[ToastManager manager] showToast:@"删除失败"];
+        }
+    }];
+}
+
+- (void)commentDelete:(NSString *)commentID {
+    __weak typeof(self) wself = self;
+    [[TTCommentDataManager sharedManager] deleteCommentWithCommentID:commentID finishBlock:^(NSError *error) {
+        if(!error){
+            if(wself.deleteCellBlock){
+                wself.deleteCellBlock();
+            }
+
+            //通知其他带有评论的页面去删除此条记录
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+            [userInfo setValue:commentID forKey:@"id"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kDeleteCommentFromHomePageNotificationKey object:nil userInfo:userInfo];
+            
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            if(self.cellModel){
+                dic[@"cellModel"] = self.cellModel;
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
         }
     }];
 }
@@ -381,6 +440,16 @@
             }
         }
     }];
+}
+
+- (void)goToPersonalHomePage {
+    if(self.cellModel.user.schema){
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"from_page"] = self.cellModel.tracerDic[@"page_type"] ? self.cellModel.tracerDic[@"page_type"] : @"default";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
 }
 
 #pragma mark - 埋点

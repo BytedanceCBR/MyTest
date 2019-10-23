@@ -476,7 +476,7 @@ static TTCommentDataManager *sharedManager;
 
 - (void)deleteCommentWithCommentID:(NSString *)commentID finishBlock:(void (^)(NSError *error))finishBlock {
     if ([commentID longLongValue] == 0) {
-        LOGI(@"删除文章评论的ID不能为0");
+        LOGI(@"删除评论的ID不能为0");
         return;
     }
 

@@ -190,4 +190,27 @@
     }];
 }
 
++ (TTHttpTask *)setHomePageAuth:(NSInteger)auth completion:(void (^ _Nonnull)(BOOL success, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/homepage_auth";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"homepage_auth"] = @(auth);
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+        BOOL success = NO;
+        @try{
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+            success = ([json[@"status"] integerValue] == 0);
+        }
+        @catch(NSException *e){
+            error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+        }
+
+        if (completion) {
+            completion(success, error);
+        }
+    }];
+}
+
 @end

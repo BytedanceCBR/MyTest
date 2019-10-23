@@ -32,7 +32,6 @@
 #import <TTVFeedUserOpDataSyncMessage.h>
 #import <SSCommonLogic.h>
 #import <TTVFeedItem+TTVConvertToArticle.h>
-#import <UIView+XWAddForRoundedCorner.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -104,10 +103,9 @@
     self.videoViewheight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * 188.0/335.0;
     self.videoView = [[FHUGCVideoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, self.videoViewheight)];
     _videoView.layer.masksToBounds = YES;
-//    _videoView.layer.cornerRadius = 4;
-//    _videoView.layer.borderColor = [[UIColor themeGray6] CGColor];
-//    _videoView.layer.borderWidth = 0.5;
-    [_videoView xw_roundedCornerWithCornerRadii:CGSizeMake(4, 4) cornerColor:[UIColor whiteColor] corners:UIRectCornerAllCorners borderColor:[UIColor themeGray6] borderWidth:0.5];
+    _videoView.layer.borderColor = [[UIColor themeGray6] CGColor];
+    _videoView.layer.borderWidth = 0.5;
+    _videoView.layer.cornerRadius = 4;
     [self.contentView addSubview:_videoView];
 
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
@@ -135,10 +133,11 @@
         make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        make.height.mas_equalTo(0);
     }];
     
     [self.videoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
         make.height.mas_equalTo(([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * 188.0/335.0);
@@ -162,9 +161,14 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
-    self.currentData = data;
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    
+    self.currentData = data;
     self.cellModel = cellModel;
     //设置userInfo
     self.userInfoView.cellModel = cellModel;
@@ -181,18 +185,19 @@
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
-        [self.videoView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+        [self.videoView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-            make.left.mas_equalTo(self.contentView).offset(leftMargin);
-            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-            make.height.mas_equalTo(self.videoViewheight);
         }];
     }else{
         self.contentLabel.hidden = NO;
-        [self.videoView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-            make.left.mas_equalTo(self.contentView).offset(leftMargin);
-            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(cellModel.contentHeight);
+        }];
+        [self.videoView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(20 + cellModel.contentHeight);
             make.height.mas_equalTo(self.videoViewheight);
         }];
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];

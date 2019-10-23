@@ -158,10 +158,8 @@
         [self addSubview:self.deleteButton];
         
         //event
-        
-        // add by zjing 去掉小视频评论头像点击
-//        UITapGestureRecognizer *avartarTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(avatarTapped)];
-//        [self.thumbView addGestureRecognizer:avartarTap];
+        UITapGestureRecognizer *avartarTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(avatarTapped)];
+        [self.thumbView addGestureRecognizer:avartarTap];
 
         self.userLabel.userInteractionEnabled = YES;
         UITapGestureRecognizer *nameTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(nameTapped)];

@@ -11,7 +11,6 @@
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
 #import <TTImageView+TrafficSave.h>
-#import <UIView+XWAddForRoundedCorner.h>
 
 #define maxLines 3
 #define singleImageViewHeight 90
@@ -60,14 +59,12 @@
     
     self.singleImageView = [[TTImageView alloc] initWithFrame:CGRectZero];
     _singleImageView.clipsToBounds = YES;
-//    _singleImageView.contentMode = UIViewContentModeScaleAspectFill;
     _singleImageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
     _singleImageView.backgroundColor = [UIColor themeGray6];
-//    _singleImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
-//    _singleImageView.layer.borderWidth = 0.5;
+    _singleImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
+    _singleImageView.layer.borderWidth = 0.5;
     _singleImageView.layer.masksToBounds = YES;
-//    _singleImageView.layer.cornerRadius = 4;
-    [_singleImageView xw_roundedCornerWithCornerRadii:CGSizeMake(4, 4) cornerColor:[UIColor whiteColor] corners:UIRectCornerAllCorners borderColor:[UIColor themeGray6] borderWidth:0.5];
+    _singleImageView.layer.cornerRadius = 4;
     [self.contentView addSubview:_singleImageView];
     
     self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectZero];

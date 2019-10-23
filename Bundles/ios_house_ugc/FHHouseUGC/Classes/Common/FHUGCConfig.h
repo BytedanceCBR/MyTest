@@ -71,7 +71,11 @@ static NSString *const kFHUGCGoodPostNotification = @"k_fh_ugc_good_post_finish"
  - 1       之前关注过，但是已经取消关注了
  - 2       其他错误
  */
+// 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 - (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow completion:(void (^ _Nullable)(BOOL isSuccess))completion;
+
+// 先登录 再关注 需要登录页面的埋点参数
+- (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow enterFrom:(NSString *)enter_from enterType:(NSString *)enter_type completion:(void (^ _Nullable)(BOOL isSuccess))completion;
 //
 
 

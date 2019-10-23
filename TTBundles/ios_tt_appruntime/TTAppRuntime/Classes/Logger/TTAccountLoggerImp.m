@@ -12,6 +12,13 @@
 #import "TTAccountTestSettings.h"
 #import <UIAlertView+Blocks.h>
 #import <BDTSharedHeaders/SSCommonDefines.h>
+#import "FHUserInfoManager.h"
+#import <FHHouseBase/FHMainApi.h>
+
+#define DEFULT_ERROR @"请求错误"
+#define API_ERROR_CODE  10000
+#define API_NO_DATA     10001
+#define API_WRONG_DATA  10002
 
 
 @implementation TTAccountLoggerImp : NSObject
@@ -364,6 +371,18 @@
             } else {
                 [enumValueDict setValue:@(1) forKey:key];
             }
+            
+            //by xsm ,这里是因为服务器在这个接口的返回时增加了我们F自己的字段，这个接口本来返回的模型是在TTAcount sdk里面，不方便修改，所以这里把接口返回保存到我们自己的数据模型中，方便以后字段扩展。
+            if([url.path hasPrefix:@"/2/user/info"]){
+                __block NSError *backError = error;
+                Class cls = NSClassFromString(@"FHUserInfoModel");
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                    id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[self generateModel:jsonObj class:cls error:&backError];
+                    if([model isKindOfClass:[FHUserInfoModel class]]){
+                        [FHUserInfoManager sharedInstance].userInfo = (FHUserInfoModel *)model;
+                    }
+                });
+            }
         }
     }
     
@@ -530,6 +549,41 @@
     NSString *captchaString = error.userInfo[@"captcha"];
     if (!captchaString || ![captchaString isKindOfClass:[NSString class]]) return NO;
     return (captchaString.length > 0);
+}
+
+- (JSONModel *)generateModel:(NSDictionary *)jsonData class:(Class)class error:(NSError *__autoreleasing *)error {
+    if (*error) {
+        //there is error
+        return nil;
+    }
+    
+    if (!jsonData) {
+        *error = [NSError errorWithDomain:@"未请求到数据" code:API_NO_DATA userInfo:nil];
+        return nil;
+    }
+    
+    NSError *jerror = nil;
+    JSONModel *model = [[class alloc]initWithDictionary:jsonData error:&jerror];
+
+    if (jerror) {
+#if DEBUG
+        NSLog(@" %s %ld API [%@] make json failed",__FILE__,__LINE__,NSStringFromClass(class));
+#endif
+        *error = [NSError errorWithDomain:@"数据异常" code:API_WRONG_DATA userInfo:nil];
+        return nil;
+    }
+    
+    if ([model respondsToSelector:@selector(status)]) {
+        NSString *status = [model performSelector:@selector(status)];
+        if (![@"0" isEqualToString:status]) {
+            NSString *message = nil;
+            if ([model respondsToSelector:@selector(message)]) {
+                message = [model performSelector:@selector(message)];
+            }
+            *error = [NSError errorWithDomain:message?:DEFULT_ERROR code:[status integerValue] userInfo:nil];
+        }
+    }
+    return model;
 }
 
 @end
