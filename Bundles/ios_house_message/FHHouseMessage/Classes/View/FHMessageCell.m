@@ -185,6 +185,7 @@
         self.unreadView.badgeNumber = conv.unreadCount;
     }
     BOOL isGroupChat = (conv.type == IMConversationTypeGroupChat);
+    ChatMsg *lastMsg = [conv lastChatMsg];
     
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:conv.icon] placeholder:[UIImage imageNamed:isGroupChat ? @"chat_group_icon_default" : @"chat_business_icon_c"]];
 
@@ -196,9 +197,20 @@
     if (!isEmptyString([conv getDraft])) {
         self.subTitleLabel.attributedText = [self getDraftAttributeString:[conv getDraft]];
     } else {
-        self.subTitleLabel.text = [self cutLineBreak:[conv lastMessage]];
+        if (isGroupChat) {
+            NSString *cutStr = [self cutLineBreak:[conv lastMessage]];
+            if (lastMsg.isCurrentUser) {
+                self.subTitleLabel.text = cutStr;
+            } else {
+                [[FHChatUserInfoManager shareInstance] getUserInfoSync:[[NSNumber numberWithLongLong:lastMsg.userId] stringValue] block:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
+                    self.subTitleLabel.text = [NSString stringWithFormat:@"%@: %@", userInfo.username, cutStr];
+                }];
+            }
+        } else {
+            self.subTitleLabel.text = [self cutLineBreak:[conv lastMessage]];
+        }
     }
-    ChatMsg *lastMsg = [conv lastChatMsg];
+    
 
     [self displaySendState:lastMsg];
     self.timeLabel.text = [self timeLabelByDate:conv.updatedAt];
