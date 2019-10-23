@@ -48,10 +48,14 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
-        [_controller gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
-        [[FHUGCConfig sharedInstance] followUGCBy:_controller.forumId isFollow:YES completion:^(BOOL isSuccess) {
-            
-        }];
+        if ([TTReachability isNetworkConnected]) {
+            [_controller gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
+            [[FHUGCConfig sharedInstance] followUGCBy:_controller.forumId isFollow:YES completion:^(BOOL isSuccess) {
+                
+            }];
+        } else {
+            [[ToastManager manager] showToast:@"网络异常"];
+        }
     }
 }
 
