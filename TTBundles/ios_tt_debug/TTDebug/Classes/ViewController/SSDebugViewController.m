@@ -376,7 +376,7 @@ extern NSString *const BOE_OPEN_KEY ;
         item71.checked = [self _shouldAllowHttps];
         item71.switchAction = @selector(_httpsSettingActionFired:);
         
-        STTableViewCellItem *item72 = [[STTableViewCellItem alloc] initWithTitle:@"BOE开关" target:self action:nil];
+        STTableViewCellItem *item72 = [[STTableViewCellItem alloc] initWithTitle:@"BOE开关" target:self action:@selector(switchBOEAction)];
         item72.switchStyle = YES;
         item72.checked = [self.class isBOEOn];
         item72.switchAction = @selector(switchBOE:);
@@ -1414,6 +1414,11 @@ extern NSString *const BOE_OPEN_KEY ;
 
 + (BOOL)supportHttps {
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"kHttpsSettingSwitchKey"];
+}
+
+-(void)switchBOEAction {
+    [self switchBOE:nil];
+    [self.tableView reloadData];
 }
 
 -(void)switchBOE:(UISwitch *)sw
