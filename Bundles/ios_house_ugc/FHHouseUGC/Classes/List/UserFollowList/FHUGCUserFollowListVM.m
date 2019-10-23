@@ -112,9 +112,11 @@
             [self.followList addObjectsFromArray:model.data.followList];
         }
         self.hasMore = model.data.hasMore;
+        if (self.offset == 0) {
+            self.adminCount = model.data.adminCount;
+            self.followCount = model.data.followCount;
+        }
         self.offset = model.data.offset;
-        self.adminCount = model.data.adminCount;
-        self.followCount = model.data.followCount;
     }
     // 后处理
     if (self.adminList.count > 0 || self.followList.count > 0) {
@@ -225,14 +227,9 @@
             if (data.schema.length > 0) {
                 // 点击埋点
                 [self.viewController.view endEditing:YES];
-                NSMutableDictionary *dict = @{}.mutableCopy;
-                dict[@"tracer"] = @{@"enter_from":@"community_group_join_member",
-                                    @"enter_type":@"click",
-                                    @"rank":@(row)};
-                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
                 // 跳转到个人主页
                 NSURL *openUrl = [NSURL URLWithString:data.schema];
-                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
             }
         }
     }

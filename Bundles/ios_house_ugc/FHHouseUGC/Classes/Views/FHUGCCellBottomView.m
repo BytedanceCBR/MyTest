@@ -206,6 +206,9 @@
                 case FHUGCFeedListCellTypeArticleComment:
                     self.diggType = FHDetailDiggTypeCOMMENT;
                 break;
+                case FHUGCFeedListCellTypeArticleComment2:
+                    self.diggType = FHDetailDiggTypeCOMMENT;
+                break;
                 case FHUGCFeedListCellTypeUGC:
                     self.diggType = FHDetailDiggTypeTHREAD;
                 break;

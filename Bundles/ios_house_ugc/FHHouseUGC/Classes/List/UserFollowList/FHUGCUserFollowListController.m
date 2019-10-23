@@ -412,16 +412,9 @@
         
         FHUGCUserFollowDataFollowListModel *data = self.items[row];
         if (data.schema.length > 0) {
-            // 点击埋点
-            // [self addCommunityClickLog:data rank:row];
-            NSMutableDictionary *dict = @{}.mutableCopy;
-            dict[@"tracer"] = @{@"enter_from":@"member_search_show",
-                                @"enter_type":@"click",
-                                @"rank":@(row)};
-            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             // 跳转到个人主页
             NSURL *openUrl = [NSURL URLWithString:data.schema];
-            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
         }
     }
 }
