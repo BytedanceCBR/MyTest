@@ -366,7 +366,7 @@
        } else if (_scialGroupData.chatStatus.conversationStatus == leaveConversation) {
            [self tryJoinConversation];
        } else if(_scialGroupData.chatStatus.conversationStatus == KickOutConversation) {
-           [[ToastManager manager]showToast:@"你已被踢出群聊"];
+           [[ToastManager manager]showToast:@"你已经被移出群中"];
        } else {
           [self tryJoinConversation];
        }
