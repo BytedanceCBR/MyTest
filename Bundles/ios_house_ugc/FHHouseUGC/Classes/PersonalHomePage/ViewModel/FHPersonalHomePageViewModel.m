@@ -315,7 +315,7 @@
 //                [self.detailController refreshHeaderData:NO];
                 self.currentTableView.mj_footer.hidden = YES;
                 self.currentTableView.backgroundColor = [UIColor whiteColor];
-                if([self.headerModel.data.fHomepageAuth integerValue] == 0){
+                if([self.headerModel.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:self.headerModel.data.userId]){
                     if (self.dataList.count <= 0) {
                         // 添加空态页
                         [self.currentTableView addSubview:self.tableEmptyView];
