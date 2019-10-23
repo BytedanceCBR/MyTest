@@ -199,7 +199,7 @@
     } else {
         if (isGroupChat) {
             NSString *cutStr = [self cutLineBreak:[conv lastMessage]];
-            if (lastMsg.isCurrentUser) {
+            if (lastMsg.isCurrentUser || lastMsg.type == ChatMstTypeNotice) {
                 self.subTitleLabel.text = cutStr;
             } else {
                 [[FHChatUserInfoManager shareInstance] getUserInfoSync:[[NSNumber numberWithLongLong:lastMsg.userId] stringValue] block:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
