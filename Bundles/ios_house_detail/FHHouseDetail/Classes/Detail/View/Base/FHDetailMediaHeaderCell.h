@@ -25,5 +25,6 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, strong, nullable)   FHMultiMediaItemModel       *vedioModel;// 视频模型
 @property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, assign) BOOL isInstantData;
+@property (nonatomic, strong, nullable)   FHDetailHouseVRDataModel  *vrModel;// 视频模型
 
 @end

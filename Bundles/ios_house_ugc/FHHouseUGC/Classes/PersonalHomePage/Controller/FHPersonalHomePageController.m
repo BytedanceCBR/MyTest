@@ -148,6 +148,7 @@
     _mainScrollView.showsVerticalScrollIndicator = NO;
     _mainScrollView.showsHorizontalScrollIndicator = NO;
     _mainScrollView.scrollsToTop = YES;
+    _mainScrollView.bounces = NO;
     
     [_mainScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);
@@ -159,7 +160,7 @@
     [self.mainScrollView addSubview:_topHeaderView];
     _topHeaderView.hidden = YES;
     
-    self.mainScrollView.backgroundColor = [UIColor themeGray7];
+    self.mainScrollView.backgroundColor = [UIColor whiteColor];
     self.topHeightOffset = CGRectGetMaxY(self.topHeaderView.frame) + 5;
     
     // 计算subScrollView的高度
@@ -335,7 +336,7 @@
 // 滑动切换tab
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (scrollView == _mainScrollView) {
-        
+   
     } else if (scrollView == _subScrollView) {
         CGFloat offsetX = scrollView.contentOffset.x;
         CGFloat tempIndex = offsetX / SCREEN_WIDTH;
@@ -373,13 +374,25 @@
                 }
             }
         }
+        
     } if (scrollView == _subScrollView) {
         // 列表父scrollview
-        
-        NSLog(@"sub_table_%f",_subScrollView.contentOffset.y);
     } else {
         // nothing
     }
+}
+
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
+    [self mainScrollToTop];
+    return NO;
+}
+
+- (void)mainScrollToTop {
+    __weak typeof(self) wSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [wSelf.mainScrollView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+        [wSelf.viewModel.currentTableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+    });
 }
 
 #pragma mark -- SSImpressionProtocol

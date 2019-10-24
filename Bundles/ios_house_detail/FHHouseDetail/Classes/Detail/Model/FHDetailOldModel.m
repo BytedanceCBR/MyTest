@@ -465,6 +465,65 @@
 }
 @end
 
+@implementation FHDetailHouseVRDataModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                                   @"hasVr": @"has_vr",
+                                   @"vrImage": @"vr_image",
+                                   @"openUrl":@"open_url"
+                                   };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHDetailDataQuickQuestionItemModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"openUrl": @"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailDataQuickQuestionModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"buttonContent": @"button_content",
+                           @"questionItems": @"question_items",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHDetailOldDataModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -486,6 +545,7 @@
                            @"abtestVersions": @"abtest_versions",
                            @"houseOverreview": @"house_overreview",
                            @"uploadAt": @"upload_at",
+                           @"vrData":@"vr_data",
                            @"coreInfo": @"core_info",
                            @"highlightedRealtor": @"highlighted_realtor",
                            @"recommendedRealtors": @"recommended_realtors",
@@ -501,6 +561,7 @@
                            @"houseReviewComment":@"house_review_comments",
                            @"userHouseComments": @"user_evaluations",
                            @"recommendedRealtorsTitle": @"recommended_realtors_title",
+                           @"quickQuestion": @"quick_question",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

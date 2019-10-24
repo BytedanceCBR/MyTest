@@ -51,6 +51,7 @@ static MAMapView *kFHPageMapView = nil;
 @property (nonatomic, strong) NSMutableArray <FHMyMAAnnotation *> *poiAnnotations;
 @property (nonatomic, strong) NSMutableDictionary *traceDict;
 @property (nonatomic , strong) FHMyMAAnnotation *pointCenterAnnotation;
+@property (nonatomic , strong) MACircle *locationCircle;
 @property (nonatomic , strong) NSString *titleStr;
 @property (nonatomic, weak)     UIScrollView       *bottomScrollView;
 
@@ -359,7 +360,7 @@ static MAMapView *kFHPageMapView = nil;
     CGRect mapFrame = CGRectMake(0, 0, self.view.width, self.view.height - navHeight - bottomHeight);
     if (!kFHPageMapView) {
         kFHPageMapView = [[MAMapView alloc] initWithFrame:mapFrame];// 不会同时出两个页面
-        kFHPageMapView.zoomLevel  = 15;
+        kFHPageMapView.zoomLevel  = 14;
         [kFHPageMapView setCenterCoordinate:self.centerPoint];
     }
     _mapView = kFHPageMapView;
@@ -369,18 +370,31 @@ static MAMapView *kFHPageMapView = nil;
     _mapView.zoomEnabled = YES;
     _mapView.scrollEnabled = YES;
     _mapView.showsUserLocation = NO;
+    _mapView.rotateCameraEnabled = NO;
+    _mapView.rotateEnabled = NO;
+    [_mapView setCenterCoordinate:self.centerPoint];
     [_mapContainer addSubview:_mapView];
     [_mapView setBackgroundColor:[UIColor whiteColor]];
     [_mapView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.bottom.equalTo(self.mapContainer);
     }];
     [_mapView setBackgroundColor:[UIColor whiteColor]];
+    
+    if (self.centerPoint.latitude > 0 && self.centerPoint.longitude > 0) {
+        MACircle *circle = [MACircle circleWithCenterCoordinate:self.centerPoint radius:1000];
+        [_mapView addOverlay:circle];
+        self.locationCircle = circle;
+    }
+    
     [self requestPoiInfo:self.centerPoint andKeyWord:self.searchCategory];
 }
 
 - (void)dealloc
 {
     [self cleanAllAnnotations];
+    if (self.locationCircle) {
+        [self.mapView removeOverlay:self.locationCircle];
+    }
     [_mapView removeFromSuperview];
 }
 
@@ -491,7 +505,8 @@ static MAMapView *kFHPageMapView = nil;
     [self.mapView addAnnotation:userAnna];
     self.pointCenterAnnotation = userAnna;
     
-    [self.mapView showAnnotations:self.mapView.annotations edgePadding:UIEdgeInsetsMake(20, 20, 20, 20) animated:NO];
+    // PM 确认 不进行缩放
+//    [self.mapView showAnnotations:self.mapView.annotations edgePadding:UIEdgeInsetsMake(20, 20, 20, 20) animated:NO];
 }
 
 #pragma poi Delegate
@@ -547,7 +562,7 @@ static MAMapView *kFHPageMapView = nil;
         return image;
     }else
     {
-        return [UIImage imageNamed:@"icon-location"];
+        return [UIImage imageNamed:@"detail_map_loc_annotation"];
     }
 }
 
@@ -563,7 +578,7 @@ static MAMapView *kFHPageMapView = nil;
         }
         
         annotationV.image = [self getIconImageFromCategory:((FHMyMAAnnotation *)annotation).type];
-        annotationV.centerOffset = CGPointMake(0, -18);
+        annotationV.centerOffset = CGPointMake(0, -10);
         annotationV.canShowCallout = true;
         
         return annotationV ? annotationV : [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
@@ -575,6 +590,15 @@ static MAMapView *kFHPageMapView = nil;
 
 - (MAOverlayRenderer *)mapView:(MAMapView *)mapView rendererForOverlay:(id <MAOverlay>)overlay
 {
+    
+    if ([overlay isKindOfClass:[MACircle class]]) {
+        MACircleRenderer *circleRenderer = [[MACircleRenderer alloc] initWithCircle:overlay];
+        
+        circleRenderer.lineWidth    = 0.0f;
+        circleRenderer.strokeColor  = [UIColor clearColor];
+        circleRenderer.fillColor    = [UIColor colorWithRed:255/255.0 green:88/255.0 blue:105/255.0 alpha:0.2];
+        return circleRenderer;
+    }
     MACircle * cicle = [MACircle circleWithMapRect:MAMapRectZero];
     MAOverlayRenderer *overlayRender = [[MAOverlayRenderer alloc] initWithOverlay:overlay];
     return overlayRender;

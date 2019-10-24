@@ -29,7 +29,7 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic, strong) NSMutableDictionary *houseShowTracerDic;
-
+@property (nonatomic, strong) NSMutableArray *preDeleteArray;
 @property (nonatomic, strong) NSString *userId;//用户id
 
 @end
@@ -69,6 +69,7 @@
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.items = [NSMutableArray new];
+    self.preDeleteArray = [NSMutableArray array];
     [self setupUI];
     [self startLoadData];
     // 埋点
@@ -78,11 +79,18 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    for (NSString *socialGroupId in self.preDeleteArray) {
+        [self deleteCell:socialGroupId];
+    }
+    [self.preDeleteArray removeAllObjects];
+    [self.tableView reloadData];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (self.items.count > 0) {
-        [self.tableView reloadData];
-    }
 }
 
 - (void)setupUI {
@@ -232,9 +240,19 @@
     if([[TTAccountManager userID] isEqualToString:self.userId]){
         BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
         NSString *socialGroupId = notification.userInfo[@"social_group_id"];
-        
-        if(!followed && socialGroupId){
-            [self deleteCell:socialGroupId];
+        NSInteger row = [self getCellIndex:socialGroupId];
+        if(row < self.items.count && row >= 0 && socialGroupId){
+            if(followed){
+                //关注
+                if([self.preDeleteArray containsObject:socialGroupId]){
+                    [self.preDeleteArray removeObject:socialGroupId];
+                }
+            }else{
+                //取消关注
+                if(![self.preDeleteArray containsObject:socialGroupId]){
+                    [self.preDeleteArray addObject:socialGroupId];
+                }
+            }
         }
     }
 }
@@ -243,9 +261,6 @@
     NSInteger row = [self getCellIndex:socialGroupId];
     if(row < self.items.count && row >= 0){
         [self.items removeObjectAtIndex:row];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
-        
         if(self.items.count <= 0){
             [self.emptyView showEmptyWithTip:@"没有更多了" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
         }

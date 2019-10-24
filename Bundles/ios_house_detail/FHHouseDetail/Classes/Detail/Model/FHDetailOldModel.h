@@ -392,6 +392,29 @@ typedef enum : NSInteger {
 @property (nonatomic, assign) BOOL addFoldDirect;//标识评论高度，非服务端字段
 @end
 
+@interface FHDetailHouseVRDataModel: JSONModel
+@property (nonatomic, assign) BOOL hasVr;
+@property (nonatomic, strong , nullable) FHImageModel *vrImage;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@end
+
+@protocol FHDetailDataQuickQuestionItemModel
+@end
+@interface FHDetailDataQuickQuestionItemModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
+
+@interface FHDetailDataQuickQuestionModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *buttonContent;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataQuickQuestionItemModel> *questionItems;
+
+@end
+
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, assign) NSInteger status;
@@ -400,6 +423,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) FHDetailOldDataHousePriceRangeModel *housePriceRange ;
 @property (nonatomic, strong , nullable) FHDetailOldDataHousePricingRankModel *housePricingRank ;
+@property (nonatomic, strong , nullable) FHDetailHouseVRDataModel *vrData ;
 @property (nonatomic, copy , nullable) NSString *partner;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHDetailOldDataUserStatusModel *userStatus ;
@@ -435,6 +459,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraModel *baseExtra;
 @property (nonatomic, strong , nullable) FHDetailCommunityEntryModel *ugcSocialGroup;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseReviewCommentModel> *houseReviewComment;
+@property (nonatomic, strong , nullable) FHDetailDataQuickQuestionModel *quickQuestion;
 
 @end
 

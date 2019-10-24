@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *userAuthInfo;
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *mediaId;
-@property (nonatomic, copy , nullable) NSString *description;
+@property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy , nullable) NSString *forumFollowingCount;
 @property (nonatomic, copy , nullable) NSString *fFollowSgCount;
 @property (nonatomic, copy , nullable) NSString *applyAuthUrl;

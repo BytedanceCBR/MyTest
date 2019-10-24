@@ -81,7 +81,12 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSString* from = extra[@"from"] ? : @"be_null";
     NSString *source = extra[@"source"];
     
-    [FHUserTracker writeEvent:@"click_im" params:dict];
+    NSMutableDictionary *clickImParams = @{}.mutableCopy;
+    if (dict) {
+        [clickImParams addEntriesFromDictionary:dict];
+        clickImParams[@"im_open_url"] = nil;
+    }
+    [FHUserTracker writeEvent:@"click_im" params:clickImParams];
     dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
     dict[@"search_id"] = self.tracerDict[@"search_id"] ? : @"be_null";
     if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {

@@ -25,6 +25,7 @@
 #import "TTReachability.h"
 #import "FHUserTracker.h"
 #import "UIImage+FIconFont.h"
+#import <Lottie/LOTAnimationView.h>
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -52,6 +53,7 @@
 
 @property(nonatomic, strong) UILabel *imageTagLabel;
 @property(nonatomic, strong) FHCornerView *imageTagLabelBgView;
+@property(nonatomic, strong) UIView *maskVRImageView;
 
 @property(nonatomic, strong) UIView *rightInfoView;
 @property(nonatomic, strong) UILabel *mainTitleLabel; //主title lable
@@ -66,6 +68,7 @@
 @property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 @property(nonatomic, strong) UIButton *closeBtn; //x按钮
+@property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 @property(nonatomic, strong) FHCornerItemLabel *tagTitleLabel; //降 新 榜等标签
@@ -241,6 +244,17 @@
     }
     return _pricePerSqmLabel;
 }
+
+-(LOTAnimationView *)vrLoadingView
+{
+    if (!_vrLoadingView) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
+        _vrLoadingView = [LOTAnimationView animationWithFilePath:path];
+        _vrLoadingView.loopAnimation = YES;
+    }
+    return _vrLoadingView;
+}
+
 
 -(UILabel *)distanceLabel
 {
@@ -480,6 +494,18 @@
         layout.height = YGPointValue(20.0f);
     }];
     
+    [self.leftInfoView addSubview:self.vrLoadingView];
+    self.vrLoadingView.hidden = YES;
+//    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
+    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.position = YGPositionTypeAbsolute;
+        layout.top = YGPointValue(25.0f);
+        layout.left = YGPointValue(23.0f);
+        layout.width = YGPointValue(24);
+        layout.height = YGPointValue(24);
+    }];
+    
     [_imageTagLabelBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
@@ -686,6 +712,9 @@
             self.imageTagLabelBgView.hidden = YES;
         }
         
+        
+    
+        
     } else if (houseType == FHHouseTypeRentHouse) {
         
         self.mainTitleLabel.text = commonModel.title;
@@ -696,13 +725,11 @@
         [self updateMainImageWithUrl:imageModel.url];
         
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
-            
             self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
             self.imageTagLabel.text = commonModel.houseImageTag.text;
             self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
             self.imageTagLabelBgView.hidden = NO;
         }else {
-            
             self.imageTagLabelBgView.hidden = YES;
         }
     } else {
@@ -769,6 +796,25 @@
             self.imageTagLabelBgView.hidden = NO;
         }else {
             self.imageTagLabelBgView.hidden = YES;
+        }
+    
+        if (self.maskVRImageView) {
+            [self.maskVRImageView removeFromSuperview];
+            self.maskVRImageView = nil;
+        }
+        
+        if (_vrLoadingView && commonModel.vrInfo.hasVr) {
+            _vrLoadingView.hidden = NO;
+            [_vrLoadingView play];
+            self.houseVideoImageView.hidden = YES;
+            
+            self.maskVRImageView = [UIView new];
+            self.maskVRImageView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
+            [self.mainImageView addSubview:self.maskVRImageView];
+            [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, MAIN_IMG_WIDTH, MAIN_IMG_HEIGHT)];
+        }else
+        {
+            _vrLoadingView.hidden = YES;
         }
         
         //处理标签
@@ -994,6 +1040,7 @@
     self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = model.displaySubtitle;
     self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
+
     
     self.priceLabel.text = model.displayPrice;
     self.pricePerSqmLabel.text = model.displayPricePerSqm;

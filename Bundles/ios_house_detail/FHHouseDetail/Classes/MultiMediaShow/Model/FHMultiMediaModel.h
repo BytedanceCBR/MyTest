@@ -10,6 +10,7 @@
 typedef NS_ENUM(NSUInteger, FHMultiMediaType) {
     FHMultiMediaTypeVideo, //视频
     FHMultiMediaTypePicture, //图片
+    FHMultiMediaTypeVRPicture, //VR图片
 };
 
 NS_ASSUME_NONNULL_BEGIN
