@@ -377,6 +377,10 @@
             [FHUserTracker writeEvent:@"delete_conversation" params:params];
         }
     }];
+    
+    [[[IMManager shareInstance].chatService sdkConversationWithIdentifier:conversationId] setSharedSyncedExtWithEntries:params completion:^(id<TIMOConversationOperationResponse>  _Nullable response, NSError * _Nullable error) {
+        
+    }];
 }
 
 - (void)clickImMessageEvent:(IMConversation *)conv {
