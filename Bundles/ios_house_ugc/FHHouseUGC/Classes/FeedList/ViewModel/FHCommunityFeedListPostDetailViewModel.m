@@ -664,7 +664,9 @@
         [self.dataList removeObjectAtIndex:row];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
-        [self reloadTableViewData];
+        if (self.dataList.count == 0) {
+            [self reloadTableViewData];
+        }
     }
 }
 
