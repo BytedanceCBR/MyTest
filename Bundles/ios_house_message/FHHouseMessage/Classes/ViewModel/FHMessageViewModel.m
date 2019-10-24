@@ -362,9 +362,7 @@
 - (void)deleteConversation:(IMConversation *)conv {
     NSString *conversationId = conv.identifier;
     NSString *targetUserId = [conv getTargetUserId:[[TTAccount sharedAccount] userIdString]];
-    NSDictionary *params = @{@"a:c_del": (conv.lastMessageIdentifier ? @"del_empty_conver" : conv.lastMessageIdentifier),
-                             @"a:c_del_fv": @"1"
-                             };
+    NSDictionary *params = @{@"a:c_del": (conv.lastMessageIdentifier ? @"del_empty_conver" : conv.lastMessageIdentifier)};
     [conv setSyncExtEntry:params completion:^(id _Nullable response, NSError *_Nullable error) {
         if (error == nil) {
             [conv setDraft:nil];
@@ -376,10 +374,6 @@
             };
             [FHUserTracker writeEvent:@"delete_conversation" params:params];
         }
-    }];
-    
-    [[[IMManager shareInstance].chatService sdkConversationWithIdentifier:conversationId] setSharedSyncedExtWithEntries:params completion:^(id<TIMOConversationOperationResponse>  _Nullable response, NSError * _Nullable error) {
-        
     }];
 }
 
