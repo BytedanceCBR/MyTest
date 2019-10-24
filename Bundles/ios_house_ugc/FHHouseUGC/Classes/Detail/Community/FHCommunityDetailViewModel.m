@@ -76,7 +76,7 @@
     }
     self.feedListController.publishBtnBottomHeight = publishBtnBottomHeight;
     self.feedListController.tableViewNeedPullDown = NO;
-    self.feedListController.showErrorView = NO;
+    self.feedListController.showErrorView = YES;
     self.feedListController.scrollViewDelegate = self;
     self.feedListController.delegate = self;
     self.feedListController.listType = FHCommunityFeedListTypePostDetail;
@@ -276,6 +276,13 @@
             self.data = model;
             [self updateUIWithData:model];
         }
+    }
+    // 修复发帖返回状态栏不对问题
+    if (self.feedListController.tableView) {
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf scrollViewDidScroll:weakSelf.feedListController.tableView];
+        });
     }
 }
 
@@ -720,6 +727,9 @@
         self.feedListController.tableView.tableHeaderView = headerView;
         [self.feedListController.tableView bringSubviewToFront:self.feedListController.tableView.mj_header];
     }
+    
+    CGFloat hei = self.headerView.frame.size.height;
+    self.feedListController.errorViewTopOffset = hei;
 
     //仅仅在未关注时显示引导页
     if (![data.hasFollow boolValue] && self.shouldShowUGcGuide) {
