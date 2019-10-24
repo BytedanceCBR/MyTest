@@ -181,17 +181,7 @@
         } else {
             self.unreadView.badgeNumber = 0;
         }
-        [self.unreadView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.iconView.mas_right);
-            make.top.mas_equalTo(self.iconView.mas_top);
-            make.height.mas_equalTo(12);
-            make.width.mas_equalTo(12);
-        }];
     } else {
-        [self.unreadView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.iconView.mas_right);
-            make.top.mas_equalTo(self.iconView.mas_top);
-        }];
         self.unreadView.badgeNumber = conv.unreadCount;
     }
     BOOL isGroupChat = (conv.type == IMConversationTypeGroupChat);

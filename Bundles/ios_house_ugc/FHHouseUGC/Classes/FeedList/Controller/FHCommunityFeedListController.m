@@ -355,7 +355,7 @@
 
 - (void)gotoGroupChat {
    if ([TTAccountManager isLogin]) {
-       if (_scialGroupData.chatStatus.currentConversationCount >= _scialGroupData.chatStatus.maxConversationCount) {
+       if (_scialGroupData.chatStatus.currentConversationCount >= _scialGroupData.chatStatus.maxConversationCount && _scialGroupData.chatStatus.maxConversationCount > 0) {
            [[ToastManager manager] showToast:@"成员已达上限"];
        } else if ([_scialGroupData.chatStatus.conversationId integerValue] <= 0) {
            if (_scialGroupData.userAuth > UserAuthTypeNormal) {
@@ -455,6 +455,7 @@
         NSString *title = [@"" stringByAppendingFormat:@"%@(%@)", _scialGroupData.socialGroupName, _scialGroupData.followerCount];
         dict[@"chat_title"] = title;
         dict[@"chat_member_count"] = _scialGroupData.followerCount;
+        dict[@"idempotent_id"] = isEmptyString(_scialGroupData.chatStatus.idempotentId) ? _scialGroupData.socialGroupId : _scialGroupData.chatStatus.idempotentId;
     } else if (autoJoin) {
         dict[@"auto_join"] = @"1";
         dict[@"conversation_id"] = _scialGroupData.chatStatus.conversationId;
