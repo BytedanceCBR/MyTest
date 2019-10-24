@@ -100,7 +100,7 @@
                                     }];
                                     // 插入在置顶贴的下方
                                     [self.dataList insertObject:cellModel atIndex:index];
-                                    [self.tableView reloadData];
+                                    [self reloadTableViewData];
                                     [self.tableView layoutIfNeeded]; self.needRefreshCell = NO;
                                     // JOKER: 发贴成功插入贴子后，滚动使露出
                                     if(index == 0) {
@@ -255,16 +255,8 @@
             }
             
             wself.viewController.hasValidateData = wself.dataList.count > 0;
-            
-            if(wself.dataList.count > 0){
-                [wself updateTableViewWithMoreData:wself.tableView.hasMore];
-                [wself.viewController.emptyView hideEmptyView];
-            }else{
-                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-                wself.viewController.showenRetryButton = YES;
-                wself.refreshFooter.hidden = YES;
-            }
-            [wself.tableView reloadData];
+        
+            [wself reloadTableViewData];
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
             if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
@@ -280,6 +272,18 @@
     }];
 }
 
+- (void)reloadTableViewData {
+    if(self.dataList.count > 0){
+        [self updateTableViewWithMoreData:self.tableView.hasMore];
+        [self.viewController.emptyView hideEmptyView];
+        self.viewController.tableView.scrollEnabled = YES;
+    }else{
+        [self.viewController.emptyView showEmptyWithTip:@"该圈子还没有内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        self.refreshFooter.hidden = YES;
+        self.viewController.tableView.scrollEnabled = NO;
+    }
+    [self.tableView reloadData];
+}
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.tableView.mj_footer.hidden = NO;
@@ -648,7 +652,7 @@
                 }
             }
         }
-        [self.tableView reloadData];
+        [self reloadTableViewData];
     }
 }
 
@@ -660,6 +664,7 @@
         [self.dataList removeObjectAtIndex:row];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        [self reloadTableViewData];
     }
 }
 
