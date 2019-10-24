@@ -123,14 +123,13 @@
 - (void)initView {
     [self initTableView];
     [self initNotifyBarView];
+    if(self.showErrorView){
+        [self addDefaultEmptyViewFullScreen];
+    }
     [self initPublishBtn];
     if (_forumId > 0) {
         [self initGroupChatBtn];
         [self initBageView];
-    }
-    
-    if(self.showErrorView){
-        [self addDefaultEmptyViewFullScreen];
     }
 }
 
@@ -165,6 +164,15 @@
     if(self.tableView){
         self.tableView.tableHeaderView = tableHeaderView;
     }
+}
+
+- (void)setErrorViewTopOffset:(CGFloat)errorViewTopOffset {
+    _errorViewTopOffset = errorViewTopOffset;
+    
+    [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.view).offset(errorViewTopOffset);
+    }];
 }
 
 - (void)initNotifyBarView {
