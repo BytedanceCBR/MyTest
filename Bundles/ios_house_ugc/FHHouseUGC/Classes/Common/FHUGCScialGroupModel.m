@@ -16,6 +16,7 @@
     @"maxConversationCount": @"user_limit",
     @"currentConversationCount": @"user_count",
     @"conversationShortId": @"conversation_short_id",
+    @"idempotentId": @"idempotent_id"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
