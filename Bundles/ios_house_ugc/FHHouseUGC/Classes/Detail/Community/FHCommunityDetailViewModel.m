@@ -302,6 +302,10 @@
     }
     
     if(self.viewController.communityId.length <= 0) {
+        [_viewController tt_endUpdataData];
+        if(userPull){
+            [self.feedListController.tableView.mj_header endRefreshing];
+        }
         return;
     }
     
