@@ -362,7 +362,7 @@
 - (void)deleteConversation:(IMConversation *)conv {
     NSString *conversationId = conv.identifier;
     NSString *targetUserId = [conv getTargetUserId:[[TTAccount sharedAccount] userIdString]];
-    NSDictionary *params = @{@"a:c_del": conv.lastMessageIdentifier};
+    NSDictionary *params = @{@"a:c_del": (conv.lastMessageIdentifier ? conv.lastMessageIdentifier : @"del_empty_conver")};
     [conv setSyncExtEntry:params completion:^(id _Nullable response, NSError *_Nullable error) {
         if (error == nil) {
             [conv setDraft:nil];

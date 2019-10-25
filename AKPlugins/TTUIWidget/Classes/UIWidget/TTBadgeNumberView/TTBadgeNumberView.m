@@ -143,6 +143,7 @@ const NSInteger TTBadgeNumberHeightInset = 4;
     self.backgroundColorThemeKey = kColorBackground7;
     self.badgeTextColorThemeKey = kColorText12;
     self.badgeBorderColorThemeKey = kColorBackground20;
+    self.badgeNumberPointSize = 0;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -180,7 +181,11 @@ const NSInteger TTBadgeNumberHeightInset = 4;
     size = [self.label sizeThatFits:size];
     
     if ([self.label.text isEqualToString:@""]) {
-        return (CGSize){8 + fixedWidth,8 + fixedHeight};
+        if(self.badgeNumberPointSize <= 0) {
+            return (CGSize){8 + fixedWidth,8 + fixedHeight};
+        } else {
+            return CGSizeMake(self.badgeNumberPointSize, self.badgeNumberPointSize);
+        }
     }
     else if (size.width == 0) {
         return size;

@@ -39,6 +39,8 @@ typedef NS_ENUM(NSUInteger, UserCoversationStatus) {
 @property (nonatomic, assign) NSUInteger currentConversationCount;
 //群聊的short id
 @property (nonatomic, assign) long long conversationShortId;
+//创建群聊的幂等id
+@property (nonatomic, copy) NSString *idempotentId;
 
 @end
 
