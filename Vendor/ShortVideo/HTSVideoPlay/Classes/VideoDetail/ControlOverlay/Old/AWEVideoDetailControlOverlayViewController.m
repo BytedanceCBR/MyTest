@@ -265,7 +265,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         _avatarImageView = [[TSVAvatarImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40) model:self.model.author disableNightMode:YES];
         [_userInfoContainerView addSubview:_avatarImageView];
         // add by zjing 去掉小视频关注
-//        [_avatarImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAvatarClick:)]];
+        [_avatarImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAvatarClick:)]];
 
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.textColor = [UIColor whiteColor];

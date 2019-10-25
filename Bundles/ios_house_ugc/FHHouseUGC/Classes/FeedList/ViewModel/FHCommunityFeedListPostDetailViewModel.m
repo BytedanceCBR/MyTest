@@ -46,7 +46,7 @@
         // 删帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 举报成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
         // 发帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
         // 置顶或取消置顶成功
@@ -100,7 +100,7 @@
                                     }];
                                     // 插入在置顶贴的下方
                                     [self.dataList insertObject:cellModel atIndex:index];
-                                    [self.tableView reloadData];
+                                    [self reloadTableViewData];
                                     [self.tableView layoutIfNeeded]; self.needRefreshCell = NO;
                                     // JOKER: 发贴成功插入贴子后，滚动使露出
                                     if(index == 0) {
@@ -141,99 +141,6 @@
         }];
     }
 }
-
-//- (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
-//    if(self.viewController.isLoadingData){
-//        return;
-//    }
-//
-//    self.viewController.isLoadingData = YES;
-//
-//    if(isFirst){
-//        [self.viewController startLoading];
-//    }
-//
-//    __weak typeof(self) wself = self;
-//
-//    NSInteger listCount = self.dataList.count;
-//    NSInteger offset = 0;
-//
-//    if(listCount > 0 && !isFirst){
-//        if(self.feedListModel){
-//            offset = [self.feedListModel.lastOffset integerValue];
-//        }
-//    }
-//
-//    self.requestTask = [FHHouseUGCAPI requestForumFeedListWithForumId:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-//        wself.viewController.isLoadingData = NO;
-//        if(isFirst){
-//            [wself.viewController endLoading];
-//        }
-//
-//        [wself.tableView finishPullDownWithSuccess:YES];
-//
-//        FHFeedListModel *feedListModel = (FHFeedListModel *)model;
-//        wself.feedListModel = feedListModel;
-//
-//        if (!wself) {
-//            return;
-//        }
-//
-//        if (error) {
-//            //TODO: show handle error
-//            if(isFirst){
-//                if(error.code != -999){
-//                    [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-//                    wself.viewController.showenRetryButton = YES;
-//                }
-//            }else{
-//                [[ToastManager manager] showToast:@"网络异常"];
-//                [wself updateTableViewWithMoreData:YES];
-//            }
-//            return;
-//        }
-//
-//        if(model){
-//            if (isHead && feedListModel.hasMore) {
-//                [wself.dataList removeAllObjects];
-//            }
-//            NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
-//
-//            if(isFirst){
-//                [wself.dataList removeAllObjects];
-//            }
-//
-//            if(isHead){
-//                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
-//            }else{
-//                [wself.dataList addObjectsFromArray:result];
-//            }
-//
-//            wself.tableView.hasMore = feedListModel.hasMore;
-//            wself.viewController.hasValidateData = wself.dataList.count > 0;
-//
-//            if(wself.dataList.count > 0){
-//                [wself updateTableViewWithMoreData:feedListModel.hasMore];
-//                [wself.viewController.emptyView hideEmptyView];
-//            }else{
-//                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-//                wself.viewController.showenRetryButton = YES;
-//            }
-//            [wself.tableView reloadData];
-//
-//            NSString *refreshTip = feedListModel.tips.displayInfo;
-//            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
-//                wself.isRefreshingTip = YES;
-//                [wself.viewController showNotify:refreshTip completion:^{
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        wself.isRefreshingTip = NO;
-//                    });
-//                }];
-//                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-//            }
-//        }
-//    }];
-//}
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     if(self.viewController.isLoadingData){
@@ -348,16 +255,8 @@
             }
             
             wself.viewController.hasValidateData = wself.dataList.count > 0;
-            
-            if(wself.dataList.count > 0){
-                [wself updateTableViewWithMoreData:wself.tableView.hasMore];
-                [wself.viewController.emptyView hideEmptyView];
-            }else{
-                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-                wself.viewController.showenRetryButton = YES;
-                wself.refreshFooter.hidden = YES;
-            }
-            [wself.tableView reloadData];
+        
+            [wself reloadTableViewData];
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
             if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
@@ -373,6 +272,18 @@
     }];
 }
 
+- (void)reloadTableViewData {
+    if(self.dataList.count > 0){
+        [self updateTableViewWithMoreData:self.tableView.hasMore];
+        [self.viewController.emptyView hideEmptyView];
+        self.viewController.tableView.scrollEnabled = YES;
+    }else{
+        [self.viewController.emptyView showEmptyWithTip:@"该圈子还没有内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        self.refreshFooter.hidden = YES;
+        self.viewController.tableView.scrollEnabled = NO;
+    }
+    [self.tableView reloadData];
+}
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.tableView.mj_footer.hidden = NO;
@@ -446,6 +357,7 @@
             originCellModel.isStick = cellModel.isStick;
             originCellModel.stickStyle = cellModel.stickStyle;
             originCellModel.contentDecoration = cellModel.contentDecoration;
+            originCellModel.ischanged = YES;
             
             [self refreshCell:originCellModel];
         }
@@ -723,6 +635,7 @@
         originCellModel.isStick = cellModel.isStick;
         originCellModel.stickStyle = cellModel.stickStyle;
         originCellModel.contentDecoration = cellModel.contentDecoration;
+        originCellModel.ischanged = YES;
         
         [self.dataList removeObjectAtIndex:row];
         if(isTop){
@@ -741,7 +654,7 @@
                 }
             }
         }
-        [self.tableView reloadData];
+        [self reloadTableViewData];
     }
 }
 
@@ -753,6 +666,9 @@
         [self.dataList removeObjectAtIndex:row];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        if (self.dataList.count == 0) {
+            [self reloadTableViewData];
+        }
     }
 }
 

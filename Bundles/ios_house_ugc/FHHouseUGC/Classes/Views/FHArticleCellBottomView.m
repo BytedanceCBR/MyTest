@@ -256,9 +256,10 @@
     __weak typeof(self) wself = self;
     if(view.selectdWord.type == FHFeedOperationWordTypeReport){
         //举报
-        if(self.deleteCellBlock){
-            self.deleteCellBlock();
-        }
+//        if(self.deleteCellBlock){
+//            self.deleteCellBlock();
+//        }
+        [[ToastManager manager] showToast:@"举报成功"];
     
         NSDictionary *dic = @{
                               @"cellModel":self.cellModel,

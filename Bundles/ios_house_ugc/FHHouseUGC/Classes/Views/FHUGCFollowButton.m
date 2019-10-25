@@ -182,7 +182,8 @@
 
 - (void)requestData {
     __weak typeof(self) wself = self;
-    [[FHUGCConfig sharedInstance] followUGCBy:self.groupId isFollow:!self.followed completion:^(BOOL isSuccess) {
+    NSString *enter_from = self.tracerDic[@"page_type"] ?: @"be_null";
+    [[FHUGCConfig sharedInstance] followUGCBy:self.groupId isFollow:!self.followed enterFrom:enter_from enterType:@"click" completion:^(BOOL isSuccess) {
         [wself stopLoading];
         if(isSuccess) {
             wself.followed = !wself.followed;

@@ -476,6 +476,107 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *imageList;
 @end
 
+@interface FHFeedContentRawDataOriginThreadModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *readCount;
+@property (nonatomic, copy , nullable) NSString *shareUrl;
+@property (nonatomic, copy , nullable) NSString *defaultTextLine;
+@property (nonatomic, copy , nullable) NSString *stickStyle;
+@property (nonatomic, copy , nullable) NSString *createTime;
+@property (nonatomic, copy , nullable) NSString *videoGroup;
+@property (nonatomic, copy , nullable) NSString *follow;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *detailCoverList;
+@property (nonatomic, copy , nullable) NSString *userVerified;
+@property (nonatomic, copy , nullable) NSString *cellLayoutStyle;
+@property (nonatomic, copy , nullable) NSString *maxTextLine;
+@property (nonatomic, copy , nullable) NSString *businessPayload;
+@property (nonatomic, copy , nullable) NSString *innerUiFlag;
+@property (nonatomic, copy , nullable) NSString *contentRichSpan;
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *commentCount;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *ugcU13CutImageList;
+@property (nonatomic, copy , nullable) NSString *threadIdStr;
+@property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *uiType;
+@property (nonatomic, copy , nullable) NSString *followButtonStyle;
+@property (nonatomic, copy , nullable) NSString *cellType;
+@property (nonatomic, copy , nullable) NSString *verifiedContent;
+@property (nonatomic, copy , nullable) NSString *isStick;
+@property (nonatomic, copy , nullable) NSString *userDigg;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *ugcCutImageList;
+@property (nonatomic, copy , nullable) NSString *threadId;
+@property (nonatomic, copy , nullable) NSString *cellFlag;
+@property (nonatomic, copy , nullable) NSString *cellUiType;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *diggCount;
+@property (nonatomic, copy , nullable) NSString *diggIconKey;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *thumbImageList;
+@end
+
+@interface FHFeedContentRawDataOriginUgcVideoRawDataUserInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *userId;
+@property (nonatomic, copy , nullable) NSString *name;
+@property (nonatomic, copy , nullable) NSString *userDecoration;
+@property (nonatomic, copy , nullable) NSString *verifiedContent;
+@property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSString *userAuthInfo;
+@property (nonatomic, copy , nullable) NSString *userVerified;
+@property (nonatomic, copy , nullable) NSString *schema;
+@end
+
+@interface FHFeedContentRawDataOriginUgcVideoRawDataUserRelationModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *isFollowed;
+@property (nonatomic, copy , nullable) NSString *isFollowing;
+@property (nonatomic, copy , nullable) NSString *remarkName;
+@property (nonatomic, copy , nullable) NSString *isFriend;
+@end
+
+@interface FHFeedContentRawDataOriginUgcVideoRawDataUserRelationCountModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *followersCount;
+@property (nonatomic, copy , nullable) NSString *followingsCount;
+@end
+
+@interface FHFeedContentRawDataOriginUgcVideoRawDataUserModel : JSONModel
+
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginUgcVideoRawDataUserInfoModel *info ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginUgcVideoRawDataUserRelationCountModel *relationCount ;
+@end
+
+@interface FHFeedContentRawDataOriginUgcVideoRawDataModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *groupId;
+@property (nonatomic, copy , nullable) NSString *textCommentCount;
+@property (nonatomic, copy , nullable) NSString *extra;
+@property (nonatomic, copy , nullable) NSString *detailSchema;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *titleRichSpan;
+@property (nonatomic, copy , nullable) NSString *voiceCommentEnable;
+@property (nonatomic, copy , nullable) NSString *voiceCommentCount;
+@property (nonatomic, copy , nullable) NSString *createTime;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *thumbImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *largeImageList;
+@property (nonatomic, copy , nullable) NSString *groupSource;
+@property (nonatomic, copy , nullable) NSString *itemId;
+@property (nonatomic, copy , nullable) NSString *groupIdStr;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginUgcVideoRawDataUserModel *user ;
+@end
+
+@interface FHFeedContentRawDataOriginUgcVideoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *cellType;
+@property (nonatomic, copy , nullable) NSString *dataType;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginUgcVideoRawDataModel *rawData ;
+@property (nonatomic, copy , nullable) NSString *idStr;
+@property (nonatomic, copy , nullable) NSString *showOrigin;
+@property (nonatomic, copy , nullable) NSString *showTips;
+@property (nonatomic, copy , nullable) NSString *id;
+@end
+
 @interface FHFeedContentRawDataModel : JSONModel
 
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOperationModel *operation ;
@@ -490,6 +591,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *articleSchema;
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, copy , nullable) NSString *groupId;
+@property (nonatomic, copy , nullable) NSString *originType;
 //视频相关
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *detailSchema;
@@ -503,6 +605,10 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, assign)   BOOL       isStick;      // 是否置顶
 @property (nonatomic, assign)   FHFeedContentStickStyle  stickStyle; // 置顶类型：精华或其它
 @property (nonatomic, copy , nullable) NSString *contentDecoration;
+//帖子
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginThreadModel *originThread ;
+//小视频
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginUgcVideoModel *originUgcVideo ;
 @end
 
 @interface FHFeedContentVideoDetailInfoModel : JSONModel
@@ -596,6 +702,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, strong , nullable) FHFeedContentRawDataModel *rawData ;
 //临时处理服务器打平的逻辑
 @property (nonatomic, copy , nullable) NSString *articleSchema;
+@property (nonatomic, copy , nullable) NSString *originType;
 @property (nonatomic, assign)   BOOL       isFromDetail;// 详情页
 //视频相关
 @property (nonatomic, copy , nullable) NSString *videoId;

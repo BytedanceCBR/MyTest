@@ -181,6 +181,9 @@
             FHFeedContentRawDataModel *rawData = [[FHFeedContentRawDataModel alloc] init];
             rawData.commentBase = commentBase;
             rawData.originGroup = model.commentDetail.originGroup;
+            rawData.originThread = model.commentDetail.originThread;
+            rawData.originUgcVideo = model.commentDetail.originUgcVideo;
+            rawData.originType = model.commentDetail.originType;
             FHFeedContentModel *feedContent = [[FHFeedContentModel alloc] init];
             feedContent.logPb = model.logPb;
             feedContent.imageList = model.commentDetail.thumbImageList;
@@ -642,7 +645,9 @@
 #pragma mark - TTCommentDetailCellDelegate
 
 - (void)tt_commentCell:(UITableViewCell *)view avatarTappedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-
+    NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@",model.user.ID];
+    NSURL *openUrl = [NSURL URLWithString:url];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view deleteCommentWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
@@ -685,7 +690,9 @@
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view nameViewonClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-
+    NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@",model.user.ID];
+    NSURL *openUrl = [NSURL URLWithString:url];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view quotedNameOnClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {

@@ -594,9 +594,6 @@
 
 - (void)clickTitleWithAction:(TitleLinkBlock)block
 {
-    // add by zjing 去掉头像点击
-    return;
-    
     if (block) {
         _clickTitleAction = block;
     }

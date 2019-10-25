@@ -39,6 +39,7 @@ typedef void(^WDWendaListManagerFinishBlock)(NSError * error);
 @property (nonatomic, readonly,   copy) NSString *qID;
 @property (nonatomic, readonly,   copy) NSDictionary *apiParameter;
 @property (nonatomic, readonly,   copy) NSDictionary *gdExtJson;
+@property (nonatomic,   copy) NSDictionary *post_gdExtJson;// 写回答需要的参数
 @property (nonatomic, readonly, assign) BOOL listPageneedReturn;
 
 @property (nonatomic, readonly,   copy) NSArray<WDModuleStructModel>*tabModelArray;

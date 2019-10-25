@@ -419,12 +419,9 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 
 #pragma mark private(cell)
 - (void)p_enterProfileWithUserID:(NSString *)userID {
-    
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
     [baseCondition setValue:userID forKey:@"uid"];
+    [baseCondition setValue:@"comment_list" forKey:@"from_page"];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
 }
 

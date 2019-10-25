@@ -126,12 +126,9 @@
 }
 #pragma mark - UICollectionViewDelegate
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-
-    // add by zjing 去掉 xx人赞过的头像点击
-//    if ([self.delegate respondsToSelector:@selector(commentDetailHeaderDigItem:diggUserAvatarClicked:)]) {
-//        [self.delegate commentDetailHeaderDigItem:self diggUserAvatarClicked:self.commentModel.digUsers[indexPath.row]];
-//    }
-    
+    if ([self.delegate respondsToSelector:@selector(commentDetailHeaderDigItem:diggUserAvatarClicked:)]) {
+        [self.delegate commentDetailHeaderDigItem:self diggUserAvatarClicked:self.commentModel.digUsers[indexPath.row]];
+    }
 }
 
 #pragma mark - UICollectionViewDataSource;

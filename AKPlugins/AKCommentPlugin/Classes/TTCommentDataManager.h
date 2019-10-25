@@ -21,6 +21,7 @@
 #define kCommentRepostSuccessNotification @"kCommentRepostSuccessNotification"
 #define kCommentRepostFwID                @"kCommentRepostFwID"
 #define kCommentRepostOptID               @"kCommentRepostOptID"
+#define kDeleteCommentFromHomePageNotificationKey     @"kDeleteCommentFromHomePageNotificationKey"
 
 
 typedef void (^TTCommentDiggListFinishBlock)(NSMutableOrderedSet <SSUserModel *> * _Nullable diggUsers, NSInteger diggCount, NSError * _Nullable error);

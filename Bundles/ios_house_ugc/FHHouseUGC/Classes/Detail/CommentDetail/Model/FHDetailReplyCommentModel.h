@@ -41,6 +41,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *thumbImageList;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *largeImageList;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginGroupModel *originGroup ;
+//帖子
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginThreadModel *originThread ;
+//小视频
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginUgcVideoModel *originUgcVideo ;
+@property (nonatomic, copy , nullable) NSString *originType;
 
 @end
 

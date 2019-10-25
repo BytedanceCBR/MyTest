@@ -72,6 +72,7 @@
     [self.contentView addSubview:_timeLabel];
     
     self.unreadView = [[TTBadgeNumberView alloc] init];
+    self.unreadView.badgeNumberPointSize = 12;
     _unreadView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
     [self.contentView addSubview:_unreadView];
 }
@@ -117,17 +118,21 @@
 }
 
 -(void)displaySendState:(ChatMsg *)msg {
-
-    if (msg.state == ChatMsgStateFail) {
+    if (msg.type == ChatMstTypeNotice) {
+        [self.msgStateView setHidden:YES];
+        [self updateLayoutForMsgState:ChatMsgStateSuccess];
+    } else if (msg.state == ChatMsgStateFail) {
         [self.msgStateView setImage:[UIImage imageNamed:@"chat_state_fail_ic"]];
         [self.msgStateView setHidden:NO];
+        [self updateLayoutForMsgState:msg.state];
     } else if (msg.state == ChatMsgStateSending) {
         [self.msgStateView setImage:[UIImage imageNamed:@"chat_state_message_sending_ic"]];
         [self.msgStateView setHidden:NO];
+        [self updateLayoutForMsgState:msg.state];
     } else {
         [self.msgStateView setHidden:YES];
+        [self updateLayoutForMsgState:msg.state];
     }
-    [self updateLayoutForMsgState:msg.state];
 }
 
 -(void)updateLayoutForMsgState:(ChatMsgState)state
@@ -149,6 +154,8 @@
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
     label.textColor = textColor;
+    label.numberOfLines = 1;
+    label.lineBreakMode = NSLineBreakByTruncatingTail;
     return label;
 }
 
@@ -169,8 +176,19 @@
 
 - (void)updateWithChat:(IMConversation*)conversation {
     IMConversation* conv = conversation;
-    self.unreadView.badgeNumber = conv.unreadCount;
-    [self.iconView bd_setImageWithURL:[NSURL URLWithString:conv.icon] placeholder:[UIImage imageNamed:@"chat_business_icon_c"]];
+    if (conv.mute) {
+        if (conv.unreadCount > 0) {
+            self.unreadView.badgeNumber = TTBadgeNumberPoint;
+        } else {
+            self.unreadView.badgeNumber = 0;
+        }
+    } else {
+        self.unreadView.badgeNumber = conv.unreadCount;
+    }
+    BOOL isGroupChat = (conv.type == IMConversationTypeGroupChat);
+    ChatMsg *lastMsg = [conv lastChatMsg];
+    
+    [self.iconView bd_setImageWithURL:[NSURL URLWithString:conv.icon] placeholder:[UIImage imageNamed:isGroupChat ? @"chat_group_icon_default" : @"chat_business_icon_c"]];
 
     self.titleLabel.text = conv.conversationDisplayName;
     if (isEmptyString(conv.conversationDisplayName)) {
@@ -180,9 +198,20 @@
     if (!isEmptyString([conv getDraft])) {
         self.subTitleLabel.attributedText = [self getDraftAttributeString:[conv getDraft]];
     } else {
-        self.subTitleLabel.text = [self cutLineBreak:[conv lastMessage]];
+        if (isGroupChat) {
+            NSString *cutStr = [self cutLineBreak:[conv lastMessage]];
+            if (lastMsg.isCurrentUser || lastMsg.type == ChatMstTypeNotice) {
+                self.subTitleLabel.text = cutStr;
+            } else {
+                [[FHChatUserInfoManager shareInstance] getUserInfoSync:[[NSNumber numberWithLongLong:lastMsg.userId] stringValue] block:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
+                    self.subTitleLabel.text = [NSString stringWithFormat:@"%@: %@", userInfo.username, cutStr];
+                }];
+            }
+        } else {
+            self.subTitleLabel.text = [self cutLineBreak:[conv lastMessage]];
+        }
     }
-    ChatMsg *lastMsg = [conv lastChatMsg];
+    
 
     [self displaySendState:lastMsg];
     self.timeLabel.text = [self timeLabelByDate:conv.updatedAt];
@@ -190,11 +219,11 @@
 
 -(NSAttributedString*)getDraftAttributeString:(NSString*)draft {
 
-    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"[草稿] %@", draft]];
+    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"[草稿] %@", [self cutLineBreak:draft]]];
     NSRange theRange = NSMakeRange(0, 4);
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = 0;
-    paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
+    paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
 
     NSDictionary<NSString *, id> *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14],
                                                  NSForegroundColorAttributeName : [UIColor redColor] ,
@@ -204,6 +233,25 @@
 }
 
 -(NSString*)cutLineBreak:(NSString*)content {
+    int length = 0;
+    while (length != content.length) {
+        length = content.length;
+        content = [self cutLineBreak2:content];
+        content = [self cutLineBreak3:content];
+    }
+    return content;
+}
+
+- (NSString*)cutLineBreak2:(NSString *)content {
+    NSRange range2 = [content rangeOfString:@"\n"];
+    if (range2.location == 0 && content.length > 1) {
+        return [NSString stringWithFormat:@" %@", [self cutLineBreak:[content substringFromIndex:range2.location + 1]]];
+    } else {
+        return content;
+    }
+}
+
+- (NSString*)cutLineBreak3:(NSString *)content {
     NSRange range = [content rangeOfString:@"\r"];
     if (range.location == 0 && content.length > 1) {
         return [NSString stringWithFormat:@" %@", [self cutLineBreak:[content substringFromIndex:range.location + 1]]];
