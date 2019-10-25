@@ -37,6 +37,7 @@
 @property (nonatomic, strong) UILabel *infoLabel;
 @property (nonatomic, strong) UIImageView *consultImgView;
 @property (nonatomic, strong) UIButton *consultBtn;
+@property (nonatomic, strong) UIButton *actionBtn;
 @property (nonatomic, copy) void (^actionBlock)(void);
 
 @end
@@ -68,9 +69,11 @@
     
     _consultBtn = [[UIButton alloc]init];
     [self addSubview:_consultBtn];
-    _consultBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -5, -5, -5);
-    [_consultBtn addTarget:self action:@selector(consultBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-    
+
+    _actionBtn = [[UIButton alloc]init];
+    [self addSubview:_actionBtn];
+    [_actionBtn addTarget:self action:@selector(consultBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+
     UIImage *img = ICON_FONT_IMG(15, @"\U0000e691", [UIColor themeRed1]);
     _consultImgView = [[UIImageView alloc] init];
     _consultImgView.image = img;
@@ -96,6 +99,10 @@
     }];
     [self.consultBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.consultImgView);
+    }];
+    [self.actionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.bottom.mas_equalTo(self.infoLabel);
+        make.right.mas_equalTo(self.consultImgView.mas_right);
     }];
 }
 
