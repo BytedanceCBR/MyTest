@@ -48,7 +48,11 @@
             
         }else if (self.higherPrice){
             NSInteger highPrice = self.higherPrice.integerValue;
-            [query appendFormat:@"%@[]=[0,%ld]",self.configOption.type?:@"price",highPrice*r];
+            if (highPrice > 0) {
+                [query appendFormat:@"%@[]=[0,%ld]",self.configOption.type?:@"price",highPrice*r];
+            }else {
+                [query appendFormat:@"%@[]=[%ld]",self.configOption.type?:@"price",0];
+            }
         }else{
             if (self.fromType == FHHouseFindPriceFromTypeHelp) {
                 for (NSNumber *index in self.selectIndexes) {
