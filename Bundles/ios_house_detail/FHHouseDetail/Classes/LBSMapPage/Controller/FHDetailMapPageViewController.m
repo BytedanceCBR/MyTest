@@ -380,11 +380,6 @@ static MAMapView *kFHPageMapView = nil;
     }];
     [_mapView setBackgroundColor:[UIColor whiteColor]];
     
-    if (self.centerPoint.latitude > 0 && self.centerPoint.longitude > 0) {
-        MACircle *circle = [MACircle circleWithCenterCoordinate:self.centerPoint radius:1000];
-        [_mapView addOverlay:circle];
-        self.locationCircle = circle;
-    }
     
     [self requestPoiInfo:self.centerPoint andKeyWord:self.searchCategory];
 }
@@ -552,6 +547,13 @@ static MAMapView *kFHPageMapView = nil;
     self.poiAnnotations = poiArray;
     
     [self setUpAnnotations];
+    self.mapView.zoomLevel  = 14;
+    [self.mapView setCenterCoordinate:self.centerPoint];
+    if (!self.locationCircle && self.centerPoint.latitude > 0 && self.centerPoint.longitude > 0) {
+        MACircle *circle = [MACircle circleWithCenterCoordinate:self.centerPoint radius:1000];
+        [_mapView addOverlay:circle];
+        self.locationCircle = circle;
+    }
 }
 
 - (UIImage *)getIconImageFromCategory:(NSString *)category
