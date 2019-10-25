@@ -357,6 +357,7 @@
             originCellModel.isStick = cellModel.isStick;
             originCellModel.stickStyle = cellModel.stickStyle;
             originCellModel.contentDecoration = cellModel.contentDecoration;
+            originCellModel.ischanged = YES;
             
             [self refreshCell:originCellModel];
         }
@@ -634,6 +635,7 @@
         originCellModel.isStick = cellModel.isStick;
         originCellModel.stickStyle = cellModel.stickStyle;
         originCellModel.contentDecoration = cellModel.contentDecoration;
+        originCellModel.ischanged = YES;
         
         [self.dataList removeObjectAtIndex:row];
         if(isTop){
