@@ -234,6 +234,8 @@
 - (void)updateViews {
     if (_forumId > 0 && (_scialGroupData.userAuth > UserAuthTypeNormal || [_scialGroupData.chatStatus.conversationId integerValue] > 0)) {
         [_groupChatBtn setHidden:NO];
+    } else {
+        [_groupChatBtn setHidden:YES];
     }
      NSUInteger unreadCount = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.chatStatus.conversationId].unreadCount;
     if (_scialGroupData.chatStatus.conversationStatus == joinConversation) {
