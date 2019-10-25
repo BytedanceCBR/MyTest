@@ -103,6 +103,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) FHMapAreaHouseListViewController *areaHouseListController; //区域内房源
 @property(nonatomic , assign) CLLocationCoordinate2D drawMinCoordinate;
 @property(nonatomic , assign) CLLocationCoordinate2D drawMaxCoordinate;
+@property(nonatomic , assign) BOOL hidingAreaHouseList;
 
 @end
 
@@ -562,6 +563,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)requestHouses:(BOOL)byUser showTip:(BOOL)showTip
 {
+    [self requestHouses:byUser showTip:showTip region:_mapView.region];
+}
+
+-(void)requestHouses:(BOOL)byUser showTip:(BOOL)showTip region:(MACoordinateRegion )region
+{
     if (_requestHouseTask &&  _requestHouseTask.state == TTHttpTaskStateRunning) {
         [_requestHouseTask cancel];
     }
@@ -586,7 +592,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _lastRequestCenter = CLLocationCoordinate2DMake(_lastBubble.centerLatitude, _lastBubble.centerLongitude);
     }
         
-    MACoordinateRegion region = _mapView.region;
+    
     if (region.span.latitudeDelta == 0 || region.span.longitudeDelta == 0) {
         MACoordinateRegion r = [self.mapView convertRect:self.mapView.bounds toRegionFromView:self.mapView];
         if (r.span.latitudeDelta == 0 || r.span.longitudeDelta == 0) {
@@ -1389,6 +1395,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)hideAreaHouseList
 {
+    if (self.hidingAreaHouseList) {
+        return;
+    }
+    self.hidingAreaHouseList = YES;
     CGRect frame = self.areaHouseListController.view.frame;
     frame.origin.y = CGRectGetMaxY(self.viewController.view.bounds);
     
@@ -1396,6 +1406,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         self.areaHouseListController.view.frame = frame;
         self.topInfoBar.alpha = 0;
     } completion:^(BOOL finished) {
+        self.hidingAreaHouseList = NO;
         [self.areaHouseListController.view removeFromSuperview];
         self.areaHouseListController = nil;
         
@@ -1410,10 +1421,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 region.center = CLLocationCoordinate2DMake((self.drawMinCoordinate.latitude+self.drawMaxCoordinate.latitude)/2, (self.drawMinCoordinate.longitude+self.drawMaxCoordinate.longitude)/2);
                 region.span = MACoordinateSpanMake((self.drawMaxCoordinate.latitude - self.drawMinCoordinate.latitude)*1.05 , (self.drawMaxCoordinate.longitude - self.drawMinCoordinate.longitude)*1.05);
                 
+                self.lastBubble.centerLatitude = region.center.latitude;
+                self.lastBubble.centerLongitude = region.center.longitude;
+                
                 [self.mapView setRegion:region animated:YES];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self requestHouses:YES showTip:NO];
-                });
+                [self requestHouses:YES showTip:NO region:region];
             }else{
                 [self requestHouses:YES showTip:NO];
             }
