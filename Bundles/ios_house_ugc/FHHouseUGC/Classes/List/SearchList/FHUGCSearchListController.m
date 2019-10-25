@@ -249,7 +249,7 @@
             weakSelf.associatedCount +=1;
             [weakSelf.items removeAllObjects];
             FHUGCSearchModel *tModel = model;
-            if (tModel.data.count > 0) {
+            if (tModel.data.count > 0 && weakSelf.searchText.length > 0)  {
                 [weakSelf.items addObjectsFromArray:tModel.data];
             }
             [weakSelf addAssociateCommunityShowLog];
