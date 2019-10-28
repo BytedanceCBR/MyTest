@@ -46,8 +46,6 @@
 + (TTHttpTask *)requestCommunityDetail:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/social_group_basic_info";
     NSString *url = QURL(queryPath);
-    //暂时为了测试写死开发机地址
-//    url = @"http://10.224.10.118:6789/f100/ugc/social_group_basic_info";
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"social_group_id"] = communityId ?: @"";

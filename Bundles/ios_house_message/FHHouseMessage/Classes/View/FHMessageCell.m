@@ -72,6 +72,7 @@
     [self.contentView addSubview:_timeLabel];
     
     self.unreadView = [[TTBadgeNumberView alloc] init];
+    self.unreadView.badgeNumberPointSize = 12;
     _unreadView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
     [self.contentView addSubview:_unreadView];
 }

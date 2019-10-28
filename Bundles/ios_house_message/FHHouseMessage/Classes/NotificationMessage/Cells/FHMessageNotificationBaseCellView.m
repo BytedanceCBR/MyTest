@@ -495,7 +495,13 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
     self.roleInfoView.left = FHMNRoleInfoViewLeftPadding();
     self.roleInfoView.top = FHMNRoleInfoViewTopPadding();
     self.roleInfoView.height = FHMNRoleInfoViewHeight();
-    self.roleInfoView.width = self.width - FHMNRoleInfoViewLeftPadding() - FHMNRoleInfoViewTopPadding();
+
+    CGSize size = [_roleInfoView sizeThatFits:CGSizeMake(self.width - FHMNRoleInfoViewLeftPadding() - FHMNRefImageViewSize() - FHMNRefRightPadding() - 15 , FHMNRoleInfoViewHeight())];
+    if(size.width < self.width - FHMNRoleInfoViewLeftPadding() - FHMNRefImageViewSize() - FHMNRefRightPadding() - 15){
+        self.roleInfoView.width = size.width;
+    }else{
+        self.roleInfoView.width = self.width - FHMNRoleInfoViewLeftPadding() - FHMNRefImageViewSize() - FHMNRefRightPadding() - 15;
+    }
 }
 
 - (void)layoutBodyTextLabelWithOrigin:(CGPoint)origin maxWidth:(CGFloat)maxWidth {
