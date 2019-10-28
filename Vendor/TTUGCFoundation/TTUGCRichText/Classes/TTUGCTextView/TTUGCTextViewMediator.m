@@ -62,23 +62,13 @@
 }
 
 - (void)toolbarDidClickAtButton {
-    self.textView.didInputTextAt = NO;
-
-    [TTTrackerWrapper eventV3:@"at_button_click" params:@{
-        @"source" : self.textView.source ?: @"post",
-        @"status" : self.textView.keyboardVisible ? @"keyboard" : @"no_keyboard",
-    }];
-
+    
+    self.textView.didInputTextHashtag = NO;
     self.isSelectViewControllerVisible = YES;
-
-    TTUGCSearchUserViewController *viewController = [[TTUGCSearchUserViewController alloc] init];
-    viewController.delegate = self;
-    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:viewController];
-    navigationController.ttNavBarStyle = @"White";
-    navigationController.ttHideNavigationBar = NO;
-    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-
-    [self.textView.navigationController presentViewController:navigationController animated:YES completion:nil];
+    
+    if(self.atBtnClickBlock) {
+        self.atBtnClickBlock(self.textView.didInputTextAt);
+    }
 }
 
 - (void)toolbarDidClickPictureButtonWithBanPicInput:(BOOL)banPicInput {
