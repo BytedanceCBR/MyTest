@@ -52,14 +52,14 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 
 @property (nonatomic, strong) NSError *searchError;
 @property (nonatomic, strong) NSError *searchResultError;
-
+@property (nonatomic, weak) id <TTUGCSearchUserTableViewDelegate> delegate;
 @end
 
 @implementation TTUGCSearchUserViewController
 
 -(instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
-        
+        self.delegate = paramObj.allParams[@"delegate"];
     }
     return self;
 }
@@ -301,22 +301,6 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     } else {
         [self.searchResultTableView finishPullUpWithSuccess:YES];
     }
-}
-
-- (void)dismissAction:(id)sender {
-    [self.searchBar endEditing:YES];
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(searchUserTableViewWillDismiss)]) {
-        [self.delegate searchUserTableViewWillDismiss];
-    }
-    
-    WeakSelf;
-    [self dismissViewControllerAnimated:YES completion:^{
-        StrongSelf;
-        if (self.delegate && [self.delegate respondsToSelector:@selector(searchUserTableViewDidDismiss)]) {
-            [self.delegate searchUserTableViewDidDismiss];
-        }
-    }];
 }
 
 - (void)backAction: (id)sender {
@@ -678,7 +662,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
             [self.delegate searchUserTableViewDidSelectedUser:userModel];
         }
         
-        [self dismissAction:nil];
+        [self backAction:nil];
     }
     
     NSString *trackEventProfileType = [self trackEventProfileTypeInSection:indexPath.section forState:self.state];
