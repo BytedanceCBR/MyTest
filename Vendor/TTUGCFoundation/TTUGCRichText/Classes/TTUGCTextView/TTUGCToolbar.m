@@ -109,7 +109,7 @@
 
 - (void)refreshButtonsUI {
     self.emojiButton.hidden = NO;
-    self.atButton.hidden = YES;
+    self.atButton.hidden = NO;
     self.shoppingButton.hidden = YES;
     
     self.emojiButton.left = 10;
@@ -121,6 +121,12 @@
         self.hashtagButton.right = 0;
     }
     
+    if (!self.atButton.hidden) {
+        self.atButton.left = self.hashtagButton.right - 5;
+    } else {
+        self.atButton.right = 0;
+    }
+    
     CGFloat right = self.toolbarView.width - 10;
     if (!self.keyboardButton.hidden) {
         self.keyboardButton.right = right;
@@ -130,7 +136,6 @@
     }
     
     // 隐藏
-    self.atButton.right = 0;
     self.shoppingButton.right = 0;
     self.longTextButton.right = 0;
     
@@ -466,7 +471,7 @@
 - (SSThemedButton *)atButton {
     if (!_atButton) {
         _atButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-        _atButton.imageName = @"toolbar_icon_at";
+        _atButton.imageName = @"fh_ugc_toolbar_hash_tag";
         _atButton.accessibilityLabel = @"@";
         [_atButton addTarget:self action:@selector(atAction:) forControlEvents:UIControlEventTouchUpInside];
     }

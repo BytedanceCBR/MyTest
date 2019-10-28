@@ -16,6 +16,7 @@
 #import "TTImagePickerController.h"
 
 typedef void (^DidClickHashtagButtonBlock)(BOOL didInputTextHashtag);
+typedef void (^DidClickAtButtonBlock)(BOOL didInputAt);
 
 @protocol TTUGCAddMultiImageProtocol
 
@@ -44,6 +45,7 @@ typedef void (^DidClickHashtagButtonBlock)(BOOL didInputTextHashtag);
 @property (nonatomic, assign) BOOL isSelectViewControllerVisible;
 
 @property (nonatomic, copy) DidClickHashtagButtonBlock hashTagBtnClickBlock;
+@property (nonatomic, copy) DidClickAtButtonBlock atBtnClickBlock;
 
 
 - (void)addHashtag:(FHTopicListResponseDataListModel *)hashtagModel;

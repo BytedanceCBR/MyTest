@@ -34,7 +34,7 @@
 }
 
 - (void)textViewDidInputTextAt:(TTUGCTextView *)textView {
-    [self toolbarDidClickAtButton];
+    [self didInputTextAt];
 }
 
 - (void)textViewDidInputTextHashtag:(TTUGCTextView *)textView {
@@ -50,6 +50,14 @@
         [self.textView resignFirstResponder];
 
         [self.toolbar endEditing:YES];
+    }
+}
+- (void)didInputTextAt {
+    self.textView.didInputTextAt = YES;
+    self.isSelectViewControllerVisible = YES;
+    
+    if(self.atBtnClickBlock) {
+        self.atBtnClickBlock(self.textView.didInputTextAt);
     }
 }
 
