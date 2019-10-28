@@ -18,6 +18,7 @@
 #import "UILabel+House.h"
 #import "FHEnvContext.h"
 #import "TTAccountManager.h"
+#import <TTSandBoxHelper.h>
 
 @interface FHDetailHouseOutlineInfoCell ()
 
@@ -195,6 +196,9 @@
                                    @"getNetCommonParams":commonParamsData
                                    };
         NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+        if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
+            host = @"http://i.haoduofangs.com.boe-gateway.byted.org";
+        }
         NSString *urlStr = [NSString stringWithFormat:@"%@%@",host,model.houseOverreview.reportUrl];
         NSDictionary *info = @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
