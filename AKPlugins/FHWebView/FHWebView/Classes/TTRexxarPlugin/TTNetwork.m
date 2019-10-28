@@ -145,7 +145,7 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
     
     NSString *startTime = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
     
-    [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:[FHCommonJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+    [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:seriallizerClass responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         if (callback) {
             NSString *result = @"";
             if([obj isKindOfClass:[NSData class]]){
