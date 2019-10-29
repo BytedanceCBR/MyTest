@@ -6,6 +6,7 @@
 //
 
 #import "FHSearchHouseModel.h"
+#import "FHDetailBaseModel.h"
 
 @implementation  FHSearchHouseDataItemsBaseInfoMapModel
 
@@ -147,7 +148,8 @@
                            @"agencyInfo": @"agency_info",
                            @"topTip":@"top_tip",
                            @"bottomTip":@"bottom_tip",
-                           };
+                           @"neighborhoodRealtorCard": @"neighborhood_realtor_card",
+                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
     }];
@@ -494,3 +496,27 @@
 }
 
 @end
+
+
+@implementation FHHouseNeighborAgencyModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+            @"neighborhoodName": @"neighborhood_name",
+            @"neighborhoodPrice": @"neighborhood_price",
+            @"displayStatusInfo": @"dis_play_status_info",
+            @"contactModel": @"realtor_info",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+

@@ -16,6 +16,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+@class FHHouseNeighborAgencyModel;
+@class FHDetailContactModel;
+
 @protocol FHSearchHouseDataItemsModel<NSObject>
 
 @end
@@ -293,6 +297,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) FHRecommendSecondhandHouseDataModel *recommendSearchModel;
 @property (nonatomic, strong, nullable) FHSugSubscribeDataDataSubscribeInfoModel *subscribeInfo;
 @property (nonatomic, assign) NSInteger offset;
+@property (nonatomic, strong , nullable) FHHouseNeighborAgencyModel *neighborhoodRealtorCard;
+
 
 @end
 
@@ -308,6 +314,17 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHSearchHouseDataItemsModel (RecommendReason)
 
 -(BOOL)showRecommendReason;
+
+@end
+
+
+@interface FHHouseNeighborAgencyModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *neighborhoodName;
+@property (nonatomic, copy , nullable) NSString *neighborhoodPrice;
+@property (nonatomic, copy , nullable) NSString *displayStatusInfo;
+@property (nonatomic, strong , nullable) FHDetailContactModel *contactModel ;
+
 
 @end
 
