@@ -627,7 +627,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
             [self showKeyboardMaskView:NO inputBarTargetY:targetMinY];
 
-            if (self.inputBar.textView.text.length == 0) {
+            if (self.inputBar.inputTextView.text.length == 0) {
                 // 没有输入内容的时候情空
                 [self.inputBar clearInputBar];
             }
@@ -1695,8 +1695,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     }
 
     self.inputBar.targetCommentModel = commentModel;
-    self.inputBar.textView.placeholder = [NSString stringWithFormat:@"@%@：", commentModel.userName];
-
+    self.inputBar.inputTextView.internalGrowingTextView.placeholder = [NSString stringWithFormat:@"@%@：", commentModel.userName];
     [self.inputBar becomeActive];
 }
 

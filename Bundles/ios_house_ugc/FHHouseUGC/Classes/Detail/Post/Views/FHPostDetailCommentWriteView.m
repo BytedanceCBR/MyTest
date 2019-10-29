@@ -755,7 +755,9 @@ static struct timeval kFHCommentTimeval;
     if (!_atButton) {
         _atButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         _atButton.imageName = @"fh_ugc_toolbar_hash_tag";
+        _atButton.hitTestEdgeInsets = UIEdgeInsetsMake(-8, -6, -8, -6);
         _atButton.accessibilityLabel = @"@";
+        _atButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
         [_atButton addTarget:self action:@selector(atAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     
