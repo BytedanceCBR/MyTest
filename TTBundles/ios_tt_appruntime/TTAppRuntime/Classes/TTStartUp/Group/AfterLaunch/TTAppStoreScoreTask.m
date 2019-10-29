@@ -11,6 +11,8 @@
 #import <FHCHousePush/TTPushAlertManager.h>
 #import <TTRoute/TTRoute.h>
 #import <FHHouseBase/FHAppStoreCustomAlertView.h>
+#import <TTSettingsManager/TTSettingsManager.h>
+#import <TTBaseLib/NSDictionary+TTAdditions.h>
 
 DEC_TASK("TTAppStoreScoreTask",FHTaskTypeService,TASK_PRIORITY_HIGH);
 
@@ -38,6 +40,9 @@ DEC_TASK("TTAppStoreScoreTask",FHTaskTypeService,TASK_PRIORITY_HIGH);
     [TTAppStoreStarManager sharedInstance].appStoreAppID = appId;
     //监听显示苹果商店评分系统显示时机的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appStoreStarScoreView:) name:@"TTAppStoreStarManagerShowNotice" object:nil];
+    
+    // add by zjing for test
+    [TTAppStoreStarManager sharedInstance].debug = NO;
 }
 
 - (void)appStoreStarScoreView:(NSNotification *)notice
@@ -60,9 +65,9 @@ DEC_TASK("TTAppStoreScoreTask",FHTaskTypeService,TASK_PRIORITY_HIGH);
 //setting开关，sdk通过代理读取setting开关
 - (BOOL)appStoreStarEnable
 {
-    // add by zjing for test
-    return YES;
-//    return [TTKitchen getBOOL:kMarketFeedbackDialogEnable];
+    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL isAppStoreEnable = [archSettings tt_boolValueForKey:@"store_score_enable"];
+    return isAppStoreEnable;
 }
 
 //SDK 内部如果在播放视频不会调起弹窗，如果App没有视频播放功能直接返回 NO
