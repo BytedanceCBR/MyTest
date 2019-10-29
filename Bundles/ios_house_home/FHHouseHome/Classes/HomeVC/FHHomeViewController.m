@@ -104,6 +104,10 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     if (lastCityId) {
         [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
     }
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"home"}];
+    });
 }
 
 - (void)scrollMainTableToTop
