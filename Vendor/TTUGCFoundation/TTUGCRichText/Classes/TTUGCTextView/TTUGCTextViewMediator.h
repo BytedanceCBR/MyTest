@@ -49,4 +49,8 @@ typedef void (^DidClickAtButtonBlock)(BOOL didInputAt);
 
 
 - (void)addHashtag:(FHTopicListResponseDataListModel *)hashtagModel;
+
+//@事件点击
+- (void)toolbarDidClickAtButton;
+
 @end

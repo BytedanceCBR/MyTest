@@ -206,7 +206,7 @@
     self.contentLabel.activeLinkAttributes = linkAttributes;
     self.contentLabel.inactiveLinkAttributes = linkAttributes;
     
-    if(!self.fromUGC){
+//    if(!self.fromUGC){
         NSArray <TTRichSpanLink *> *richSpanLinks = [self.layout.contentLayout.richSpanText richSpanLinksOfAttributedString];
         for (TTRichSpanLink *richSpanLink in richSpanLinks) {
             NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
@@ -218,7 +218,7 @@
                 }
             }
         }
-    }
+//    }
 }
 
 - (void)refreshReplayButton {
