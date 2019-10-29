@@ -65,7 +65,7 @@
 
 - (void)toolbarDidClickAtButton {
     
-    self.textView.didInputTextHashtag = NO;
+    self.textView.didInputTextAt = NO;
     self.isSelectViewControllerVisible = YES;
     
     if(self.atBtnClickBlock) {
@@ -79,9 +79,14 @@
     NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_at_list"];
     NSURL *url = components.URL;
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
-    
+    param[@"delegate"] = self;
+    param[@"isPushOutAtListController"] = @(self.isPushOutAtListController);
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    if(self.isPushOutAtListController) {
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    } else {
+        [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
+    }
     
 }
 

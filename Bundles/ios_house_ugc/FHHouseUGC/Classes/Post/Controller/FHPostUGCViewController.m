@@ -567,6 +567,7 @@ static NSInteger const kMaxPostImageCount = 9;
             NSURL *url = components.URL;
             NSMutableDictionary *param = [NSMutableDictionary dictionary];
             param[@"delegate"] = self.textViewMediator;
+            param[@"isPushOutAtListController"] = @(YES);
             
             NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
             
