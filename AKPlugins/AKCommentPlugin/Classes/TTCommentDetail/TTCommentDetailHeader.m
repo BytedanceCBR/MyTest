@@ -249,7 +249,7 @@
     self.contentLabel.text = attributedString;
     self.richSpanText = richSpanText;
     
-    if(!self.fromUGC){
+//    if(!self.fromUGC){
         NSArray <TTRichSpanLink *> *richSpanLinks = [richSpanText richSpanLinksOfAttributedString];
         for (TTRichSpanLink *richSpanLink in richSpanLinks) {
             NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
@@ -261,7 +261,7 @@
                 }
             }
         }
-    }
+//    }
 
     self.digButton.selected = model.userDigg;
     [self.digButton setDiggCount:model.diggCount];
