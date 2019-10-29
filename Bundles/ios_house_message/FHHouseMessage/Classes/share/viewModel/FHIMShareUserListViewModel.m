@@ -64,7 +64,7 @@
     NSString* currentUserId = [TTAccountManager currentUser].userID.stringValue;
     NSArray<IMConversation*>* cons = [[IMManager shareInstance].chatService allConversations];
     NSArray* users = [cons rx_mapWithBlock:^id(IMConversation* each) {
-        if ([each.someParticipants count] == 2) {
+        if (each.type == IMConversationType1to1Chat) {
             __block FHChatUserInfo* result = nil;
             [each.someParticipants enumerateObjectsUsingBlock:^(BaseChatUser * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if (![obj.userId isEqualToString:currentUserId]) {
