@@ -58,6 +58,8 @@
     
     if(self.atBtnClickBlock) {
         self.atBtnClickBlock(self.textView.didInputTextAt);
+    } else {
+        [self defaultActionForAtButton];
     }
 }
 
@@ -68,7 +70,19 @@
     
     if(self.atBtnClickBlock) {
         self.atBtnClickBlock(self.textView.didInputTextAt);
+    } else {
+        [self defaultActionForAtButton];
     }
+}
+
+- (void)defaultActionForAtButton {
+    NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_at_list"];
+    NSURL *url = components.URL;
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    
 }
 
 - (void)toolbarDidClickPictureButtonWithBanPicInput:(BOOL)banPicInput {
