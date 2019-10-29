@@ -30,7 +30,7 @@
 - (void)setupUI {
     // descLabel
     self.descLabel = [[UILabel alloc] init];
-    self.descLabel.text = @"未开通";
+//    self.descLabel.text = @"未开通";
     self.descLabel.textColor = [UIColor themeGray5];
     self.descLabel.font = [UIFont themeFontRegular:12];
     [self.contentView addSubview:self.descLabel];
