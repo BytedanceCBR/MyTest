@@ -3,11 +3,15 @@
 //
 
 #import <Masonry/View+MASAdditions.h>
+#import <FHCommonUI/UILabel+House.h>
 #import "FHNeighbourhoodAgencyCardCell.h"
 #import "FHSearchHouseModel.h"
 #import "FHDetailBaseModel.h"
 #import "BDWebImage.h"
 #import "FHDetailAgentListCell.h"
+#import "FHExtendHotAreaButton.h"
+#import "FHShadowView.h"
+#import <FHHouseBase/FHCommonDefines.h>
 
 
 @interface FHNeighbourhoodAgencyCardCell ()
@@ -272,18 +276,18 @@
             imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
             [self.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
         } else {
-            NSLog(@"emoty phoneCallViewModel");
+            NSLog(@"FENGBO TAG emoty phoneCallViewModel");
         }
     }
 
-    NSLog(@"imclick");
+    NSLog(@"FENGBO TAG imclick");
 
 
 }
 
 - (void)phoneClick:(id)phoneClick {
 
-    NSLog(@"phoneClick");
+    NSLog(@"FENGBO TAG phoneClick");
 
 //    FHDetailContactModel *contact = item.curData.realtorInfo;
 //    NSMutableDictionary *extraDict = @{}.mutableCopy;
@@ -321,10 +325,10 @@
         if (self.phoneCallViewModel) {
             [self.phoneCallViewModel licenseActionWithPhone:contact];
         } else {
-            NSLog(@"emoty phoneCallViewModel");
+            NSLog(@"FENGBO TAG emoty phoneCallViewModel");
         }
 
-        NSLog(@"licenseClick");
+        NSLog(@"FENGBO TAG licenseClick");
     }
 }
 
@@ -340,10 +344,10 @@
             [self.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO extra:dict];
 
         } else {
-            NSLog(@"emoty phoneCallViewModel");
+            NSLog(@"FENGBO TAG emoty phoneCallViewModel");
         }
 
-        NSLog(@"licenseClick");
+        NSLog(@"FENGBO TAG licenseClick");
     }
 
 //    FHDetailContactModel *contact = model.recommendedRealtors[index];
