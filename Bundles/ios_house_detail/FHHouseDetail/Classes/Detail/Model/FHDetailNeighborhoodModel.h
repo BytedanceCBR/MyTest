@@ -140,6 +140,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel *evaluationInfo ;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 @property (nonatomic, strong , nullable) FHDetailCommunityEntryModel *ugcSocialGroup;
+@property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle;
+@property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
+@property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 
 @end
 
