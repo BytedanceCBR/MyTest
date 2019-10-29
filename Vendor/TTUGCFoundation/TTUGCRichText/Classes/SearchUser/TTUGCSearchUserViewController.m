@@ -52,7 +52,6 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 
 @property (nonatomic, strong) NSError *searchError;
 @property (nonatomic, strong) NSError *searchResultError;
-@property (nonatomic, weak) id <TTUGCSearchUserTableViewDelegate> delegate;
 @end
 
 @implementation TTUGCSearchUserViewController
@@ -311,19 +310,19 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     }
     
     WeakSelf;
-    if(self.navigationController) {
-        [self.navigationController popViewControllerAnimated:YES];
-        if (self.delegate && [self.delegate respondsToSelector:@selector(searchUserTableViewDidDismiss)]) {
-            [self.delegate searchUserTableViewDidDismiss];
-        }
-    } else {
+//    if(self.navigationController) {
+//        [self.navigationController popViewControllerAnimated:YES];
+//        if (self.delegate && [self.delegate respondsToSelector:@selector(searchUserTableViewDidDismiss)]) {
+//            [self.delegate searchUserTableViewDidDismiss];
+//        }
+//    } else {
         [self dismissViewControllerAnimated:YES completion:^{
             StrongSelf;
             if (self.delegate && [self.delegate respondsToSelector:@selector(searchUserTableViewDidDismiss)]) {
                 [self.delegate searchUserTableViewDidDismiss];
             }
         }];
-    }
+//    }
 }
 
 - (void)swipeAction:(id)sender {

@@ -25,6 +25,6 @@
 
 @interface TTUGCSearchUserViewController : SSViewControllerBase
 
-@property (nonatomic, weak, readonly) id <TTUGCSearchUserTableViewDelegate> delegate;
+@property (nonatomic, weak) id <TTUGCSearchUserTableViewDelegate> delegate;
 
 @end

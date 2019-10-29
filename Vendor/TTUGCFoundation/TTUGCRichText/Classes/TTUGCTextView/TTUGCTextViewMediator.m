@@ -65,7 +65,7 @@
 
 - (void)toolbarDidClickAtButton {
     
-    self.textView.didInputTextHashtag = NO;
+    self.textView.didInputTextAt = NO;
     self.isSelectViewControllerVisible = YES;
     
     if(self.atBtnClickBlock) {
@@ -76,12 +76,14 @@
 }
 
 - (void)defaultActionForAtButton {
-    NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_at_list"];
-    NSURL *url = components.URL;
-    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    TTUGCSearchUserViewController *viewController = [[TTUGCSearchUserViewController alloc] init];
+    viewController.delegate = self;
+    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:viewController];
+    navigationController.ttNavBarStyle = @"White";
+    navigationController.ttHideNavigationBar = NO;
+    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    [self.textView.navigationController presentViewController:navigationController animated:YES completion:nil];
     
 }
 
