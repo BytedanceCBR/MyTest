@@ -182,7 +182,7 @@
 "ugc_post" = "FHPostUGCViewController";
 "thread_detail" = "FHPostDetailViewController";
 "ugc_post_topic_list" = "FHTopicListController";
-"ugc_post_at_list" = "FHAtListController";
+"ugc_post_at_list" = "TTUGCSearchUserViewController";
 "ugc_community_detail" = "FHCommunityDetailViewController";
 "ugc_my_interest" = "FHUGCMyInterestedController";
 "ugc_post_wd_answer" = "FHWDAnswerPictureTextViewController";
