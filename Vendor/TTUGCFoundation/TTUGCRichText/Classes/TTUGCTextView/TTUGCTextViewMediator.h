@@ -46,6 +46,7 @@ typedef void (^DidClickAtButtonBlock)(BOOL didInputAt);
 
 @property (nonatomic, copy) DidClickHashtagButtonBlock hashTagBtnClickBlock;
 @property (nonatomic, copy) DidClickAtButtonBlock atBtnClickBlock;
+@property (nonatomic, assign) BOOL isPushOutAtListController;
 
 
 - (void)addHashtag:(FHTopicListResponseDataListModel *)hashtagModel;

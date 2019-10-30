@@ -76,14 +76,17 @@
 }
 
 - (void)defaultActionForAtButton {
-    TTUGCSearchUserViewController *viewController = [[TTUGCSearchUserViewController alloc] init];
-    viewController.delegate = self;
-    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:viewController];
-    navigationController.ttNavBarStyle = @"White";
-    navigationController.ttHideNavigationBar = NO;
-    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-    
-    [self.textView.navigationController presentViewController:navigationController animated:YES completion:nil];
+    NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_at_list"];
+    NSURL *url = components.URL;
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"delegate"] = self;
+    param[@"isPushOutAtListController"] = @(self.isPushOutAtListController);
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
+    if(self.isPushOutAtListController) {
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    } else {
+        [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
+    }
     
 }
 

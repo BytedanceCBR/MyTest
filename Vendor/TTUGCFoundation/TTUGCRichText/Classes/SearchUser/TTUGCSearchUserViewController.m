@@ -52,6 +52,8 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 
 @property (nonatomic, strong) NSError *searchError;
 @property (nonatomic, strong) NSError *searchResultError;
+@property (nonatomic, weak) id <TTUGCSearchUserTableViewDelegate> delegate;
+@property (nonatomic, assign) BOOL isPushOutAtListController;
 @end
 
 @implementation TTUGCSearchUserViewController
@@ -59,6 +61,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 -(instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
         self.delegate = paramObj.allParams[@"delegate"];
+        self.isPushOutAtListController = [paramObj.allParams[@"isPushOutAtListController"] boolValue];
     }
     return self;
 }
@@ -71,13 +74,15 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     self.navigationItem.titleView = [SSNavigationBar navigationTitleViewWithTitle:@"联系人"];
-    TTNavigationBarItemContainerView *backItem = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationBackButtonWithTarget:self action:@selector(backAction:)];
-    
-    UIBarButtonItem *leftPaddingItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
-                                                                                     target:nil
-                                                                                     action:nil];
-    leftPaddingItem.width = 17.f;
-    self.navigationItem.leftBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:backItem], leftPaddingItem];
+    UIBarButtonItem *leftPaddingItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    if(self.isPushOutAtListController) {
+        TTNavigationBarItemContainerView *backItem = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationBackButtonWithTarget:self action:@selector(exitPage:)];
+        leftPaddingItem.width = 17.f;
+        self.navigationItem.leftBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:backItem], leftPaddingItem];
+    } else {
+        TTNavigationBarItemContainerView *dismissItem = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfLeft withTitle:@"取消" target:self action:@selector(exitPage:)];
+        self.navigationItem.leftBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:dismissItem], leftPaddingItem];
+    }
     self.navigationItem.rightBarButtonItem = nil;
     
     [self.view addSubview:self.searchBar];
@@ -302,6 +307,30 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     }
 }
 
+- (void)exitPage:(id)sender {
+    if(self.isPushOutAtListController) {
+        [self backAction:sender];
+    } else {
+        [self dismissAction:sender];
+    }
+}
+
+- (void)dismissAction:(id)sender {
+    [self.searchBar endEditing:YES];
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(searchUserTableViewWillDismiss)]) {
+        [self.delegate searchUserTableViewWillDismiss];
+    }
+    
+    WeakSelf;
+    [self dismissViewControllerAnimated:YES completion:^{
+        StrongSelf;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(searchUserTableViewDidDismiss)]) {
+            [self.delegate searchUserTableViewDidDismiss];
+        }
+    }];
+}
+
 - (void)backAction: (id)sender {
     [self.searchBar endEditing:YES];
     
@@ -310,19 +339,19 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     }
     
     WeakSelf;
-//    if(self.navigationController) {
-//        [self.navigationController popViewControllerAnimated:YES];
-//        if (self.delegate && [self.delegate respondsToSelector:@selector(searchUserTableViewDidDismiss)]) {
-//            [self.delegate searchUserTableViewDidDismiss];
-//        }
-//    } else {
+    if(self.navigationController) {
+        [self.navigationController popViewControllerAnimated:YES];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(searchUserTableViewDidDismiss)]) {
+            [self.delegate searchUserTableViewDidDismiss];
+        }
+    } else {
         [self dismissViewControllerAnimated:YES completion:^{
             StrongSelf;
             if (self.delegate && [self.delegate respondsToSelector:@selector(searchUserTableViewDidDismiss)]) {
                 [self.delegate searchUserTableViewDidDismiss];
             }
         }];
-//    }
+    }
 }
 
 - (void)swipeAction:(id)sender {
@@ -661,7 +690,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
             [self.delegate searchUserTableViewDidSelectedUser:userModel];
         }
         
-        [self backAction:nil];
+        [self exitPage:nil];
     }
     
     NSString *trackEventProfileType = [self trackEventProfileTypeInSection:indexPath.section forState:self.state];

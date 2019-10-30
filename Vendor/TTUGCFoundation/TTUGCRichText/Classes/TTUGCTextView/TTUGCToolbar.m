@@ -471,7 +471,7 @@
 - (SSThemedButton *)atButton {
     if (!_atButton) {
         _atButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-        _atButton.imageName = @"fh_ugc_toolbar_hash_tag";
+        _atButton.imageName = @"fh_ugc_toolbar_at_icon";
         _atButton.accessibilityLabel = @"@";
         [_atButton addTarget:self action:@selector(atAction:) forControlEvents:UIControlEventTouchUpInside];
     }
