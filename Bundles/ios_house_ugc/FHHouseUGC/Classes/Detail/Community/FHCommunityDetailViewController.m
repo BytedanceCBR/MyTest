@@ -8,9 +8,12 @@
 #import "FHCommunityDetailViewController.h"
 #import "FHCommunityDetailViewModel.h"
 #import "UIViewController+Track.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol>
 @property(nonatomic, strong) FHCommunityDetailViewModel *viewModel;
+@property (nonatomic, strong)   UIImage       *shareWhiteImage;
+@property (nonatomic, strong)   UIButton       *shareButton;// 分享
 @end
 
 @implementation FHCommunityDetailViewController
@@ -82,6 +85,17 @@
 
 - (void)initView {
     [self setupDefaultNavBar:NO];
+    // 分享按钮
+    self.shareButton = [[UIButton alloc] init];
+    [self.shareButton setBackgroundImage:self.shareWhiteImage forState:UIControlStateNormal];
+    [self.shareButton setBackgroundImage:self.shareWhiteImage forState:UIControlStateHighlighted];
+    [self.shareButton addTarget:self  action:@selector(shareButtonClicked:) forControlEvents:(UIControlEventTouchUpInside)];
+    [self.customNavBarView addSubview:_shareButton];
+    [self.shareButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(24);
+        make.right.mas_equalTo(-20);
+        make.bottom.mas_equalTo(-10);
+    }];
     [self setNavBar:NO];
     [self addDefaultEmptyViewFullScreen];
 }
@@ -91,17 +105,20 @@
         self.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        self.shareButton.hidden = YES;
         [self.customNavBarView setNaviBarTransparent:NO];
     } else {
         self.customNavBarView.title.textColor = [UIColor whiteColor];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+        self.shareButton.hidden = NO;
         [self.customNavBarView setNaviBarTransparent:YES];
     }
 }
 
 - (void)initViewModel {
     self.viewModel = [[FHCommunityDetailViewModel alloc] initWithController:self tracerDict:self.tracerDict];
+    self.viewModel.shareButton = self.shareButton;
     [self.viewModel addGoDetailLog];
     [self.viewModel addPublicationsShowLog];
     [self.viewModel requestData:NO refreshFeed:NO showEmptyIfFailed:YES showToast:NO];
@@ -109,6 +126,20 @@
 
 - (void)retryLoadData {
     [self.viewModel requestData:NO refreshFeed:YES showEmptyIfFailed:YES showToast:NO];
+}
+
+// 白色
+- (UIImage *)shareWhiteImage
+{
+    if (!_shareWhiteImage) {
+        _shareWhiteImage = ICON_FONT_IMG(24, @"\U0000e692", [UIColor whiteColor]); //detail_share_white
+    }
+    return _shareWhiteImage;
+}
+
+// 分享按钮点击
+- (void)shareButtonClicked:(UIButton *)btn {
+    
 }
 
 @end

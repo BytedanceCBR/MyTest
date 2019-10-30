@@ -10,6 +10,7 @@
 
 @interface FHCommunityDetailViewModel : NSObject <UIScrollViewDelegate>
 @property(nonatomic , strong) NSMutableDictionary *tracerDict;
+@property (nonatomic, weak)     UIButton       *shareButton;
 
 - (instancetype)initWithController:(FHCommunityDetailViewController *)viewController tracerDict:(NSDictionary*)tracerDict;
 
