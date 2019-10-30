@@ -24,8 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHUGCShareManager : NSObject
 
 + (instancetype)sharedManager;
-@property (nonatomic, strong)   FHUGCShareInfoModel       *shareInfo;
-@property(nonatomic , strong) NSDictionary *tracerDict; // 详情页基础埋点数据
+// 分享入口
+- (void)shareActionWithInfo:(FHUGCShareInfoModel *)shareInfo tracerDic:(NSDictionary *)tracerDict;
 
 @end
 

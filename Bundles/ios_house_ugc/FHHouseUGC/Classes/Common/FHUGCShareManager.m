@@ -26,7 +26,8 @@
 
 @interface FHUGCShareManager ()<TTShareManagerDelegate>
 @property (nonatomic, strong) TTShareManager *shareManager;
-@property (nonatomic, copy)     NSDictionary       *shareExtraDic;// 额外分享参数字典
+@property (nonatomic, strong)   FHUGCShareInfoModel       *shareInfo;
+@property(nonatomic , strong) NSDictionary *tracerDict; // 详情页基础埋点数据
 
 @end
 
@@ -81,14 +82,26 @@
     return _shareManager;
 }
 
-// 详情页分享
-- (void)shareAction {
-    [self shareActionWithShareExtra:nil];
+// 分享入口
+- (void)shareActionWithInfo:(FHUGCShareInfoModel *)shareInfo tracerDic:(NSDictionary *)tracerDict {
+    // 分享参数
+    if (!shareInfo || !tracerDict) {
+        return;
+    }
+    // 当前分享面板正在展示
+    if (self.shareInfo) {
+        return;
+    }
+    self.tracerDict = [tracerDict copy];
+    self.shareInfo = shareInfo;
+    
+    // 分享面板 显示
+    [self shareAction];
 }
 
 // 携带埋点参数的分享
-- (void)shareActionWithShareExtra:(NSDictionary *)extra {
-    self.shareExtraDic = extra;
+- (void)shareAction {
+    // 埋点
     [self addClickShareLog];
     
     if (!self.shareInfo) {
@@ -140,9 +153,6 @@
 {
     NSMutableDictionary *params = @{}.mutableCopy;
     [params addEntriesFromDictionary:[self baseParams]];
-    if (self.shareExtraDic) {
-        [params addEntriesFromDictionary:self.shareExtraDic];
-    }
     [FHUserTracker writeEvent:@"click_share" params:params];
 }
 
@@ -151,11 +161,9 @@
     NSMutableDictionary *params = @{}.mutableCopy;
     [params addEntriesFromDictionary:[self baseParams]];
     params[@"platform"] = platform ? : @"be_null";
-    if (self.shareExtraDic) {
-        [params addEntriesFromDictionary:self.shareExtraDic];
-    }
     [FHUserTracker writeEvent:@"share_platform" params:params];
-    self.shareExtraDic = nil;// 分享都会走当前方法
+    self.shareInfo = nil;
+    self.tracerDict = nil;
 }
 
 @end
