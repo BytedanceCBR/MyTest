@@ -181,33 +181,21 @@
     FHDetailContactModel *contactPhone = nil;
     if (model.data.highlightedRealtor) {
         contactPhone = model.data.highlightedRealtor;
+    } else {
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
     }
-
-//    else {
-//        contactPhone = model.data.contact;
-//        contactPhone.unregistered = YES;
-//    }
-//    if (contactPhone.phone.length > 0) {
-//
-//        if ([self isShowSubscribe]) {
-//            contactPhone.isFormReport = YES;
-//        }else {
-//            contactPhone.isFormReport = NO;
-//        }
-//    }else {
-//        contactPhone.isFormReport = YES;
-//    }
+    contactPhone.isInstantData = model.isInstantData;
+    //TODO fengbo check this?
+    if (contactPhone.phone.length > 0) {
+        contactPhone.isFormReport = NO;
+    }else {
+        contactPhone.isFormReport = YES;
+    }
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
 //    self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
-//
-//    FHDetailContactModel *contactPhone = [[FHDetailContactModel alloc]init];
-//    contactPhone.isInstantData = model.isInstantData;
-//    contactPhone.isFormReport = YES;
-//    self.contactViewModel.contactPhone = contactPhone;
-//    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
-
 
 
 
@@ -354,7 +342,6 @@
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
 
         /******* 这里的 逻辑   ********/
-        //TODO fengbo houseId -> neighbourhood id ? 以及和埋点相关的问题？？
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:self.houseId];
         //TODO fengbo important! generate IM Params
 //        [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title :imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
@@ -365,7 +352,6 @@
         agentListModel.imprId = imprId;
         agentListModel.houseId = self.houseId;
         agentListModel.houseType = self.houseType;
-        /***************/
 
         [self.items addObject:agentListModel];
         self.agentListModel = agentListModel;

@@ -143,6 +143,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
+@property (nonatomic, strong , nullable) FHDetailContactModel *contact;
+
 
 @end
 
