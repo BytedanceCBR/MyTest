@@ -19,6 +19,7 @@
 #import "FHFeedOperationView.h"
 #import "FHUGCConfig.h"
 #import <TTBusinessManager+StringUtils.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHPostDetailViewController ()
 
@@ -32,6 +33,8 @@
 
 @property (nonatomic, strong)   FHPostDetailNavHeaderView       *naviHeaderView;
 @property (nonatomic, strong)   FHUGCFollowButton       *followButton;// 关注
+@property (nonatomic, strong)   UIImage       *shareBlackImage;
+@property (nonatomic, strong)   UIButton       *shareButton;// 分享
 @property (nonatomic, assign)   BOOL       isViewAppearing;
 @property (nonatomic, copy)     NSString       *lastPageSocialGroupId;
 
@@ -169,6 +172,18 @@
 
 - (void)setupDetailNaviBar {
     self.customNavBarView.title.text = @"详情";
+    // 分享按钮
+    self.shareButton = [[UIButton alloc] init];
+    [self.shareButton setBackgroundImage:self.shareBlackImage forState:UIControlStateNormal];
+    [self.shareButton setBackgroundImage:self.shareBlackImage forState:UIControlStateHighlighted];
+    [self.shareButton addTarget:self  action:@selector(shareButtonClicked:) forControlEvents:(UIControlEventTouchUpInside)];
+    [self.customNavBarView addSubview:_shareButton];
+    [self.shareButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(24);
+        make.right.mas_equalTo(-20);
+        make.bottom.mas_equalTo(-10);
+    }];
+    
     // 关注按钮
     self.followButton = [[FHUGCFollowButton alloc] init];
     self.followButton.followed = YES;
@@ -192,6 +207,7 @@
     }];
     self.naviHeaderView.hidden = YES;
     self.followButton.hidden = YES;
+    self.shareButton.hidden = NO;
 }
 
 - (void)startLoadData {
@@ -268,9 +284,11 @@
         if (offsetY > 78) {
             self.naviHeaderView.hidden = NO;
             self.followButton.hidden = NO;
+            self.shareButton.hidden = YES;
         } else {
             self.naviHeaderView.hidden = YES;
             self.followButton.hidden = YES;
+            self.shareButton.hidden = NO;
         }
     }
 }
@@ -311,6 +329,20 @@
     tracerDict[@"percent"] = @"100";
     tracerDict[@"item_id"] = self.groupModel.itemID ?: @"be_null";
     [FHUserTracker writeEvent:@"read_pct" params:tracerDict];
+}
+
+// 黑色
+- (UIImage *)shareBlackImage
+{
+    if (!_shareBlackImage) {
+        _shareBlackImage = ICON_FONT_IMG(24, @"\U0000e692", nil); //detail_share_black
+    }
+    return _shareBlackImage;
+}
+
+// 分享按钮点击
+- (void)shareButtonClicked:(UIButton *)btn {
+    
 }
 
 @end
