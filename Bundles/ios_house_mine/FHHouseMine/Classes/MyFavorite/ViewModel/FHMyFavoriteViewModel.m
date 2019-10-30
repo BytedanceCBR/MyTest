@@ -119,7 +119,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 
         if (error && wself.dataList.count == 0) {
             //TODO: show handle error
-            [wself.viewController.emptyView showEmptyWithType:[self networkErrorType]];
+            [wself.viewController.emptyView showEmptyWithType:[wself networkErrorType]];
             return;
         }
         
@@ -575,7 +575,7 @@ extern NSString *const kFHDetailFollowUpNotification;
             FHSingleImageInfoCellModel *cellModel = wself.dataList[indexPath.row];
             [wself trackDeleteFollow:cellModel];
             [[ToastManager manager] showCustomLoading:@"正在取消关注"];
-            [self cancelHouseFollow:cellModel completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
+            [wself cancelHouseFollow:cellModel completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
                 if(error){
                     [wself.tableView setEditing:NO animated:YES];
                     [[ToastManager manager] dismissCustomLoading];
