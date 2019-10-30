@@ -222,7 +222,7 @@ static struct timeval commentTimeval;
     self.commentFunctionView.banCommentRepost = banCommentRepost;
     if (self.commentFunctionView.banCommentRepost) {
         self.inputTextView.isBanHashtag = YES;
-        self.inputTextView.isBanAt = YES;
+        self.inputTextView.isBanAt = NO;
     }
     [self layoutIfNeeded];
 }
@@ -618,10 +618,6 @@ static struct timeval commentTimeval;
     if (!_inputTextView) {
         _inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(14.f, [TTDeviceUIUtils tt_newPadding:10.f], self.width - 14.f - 60.f - 39.0f, [TTDeviceUIUtils tt_newPadding:32.f])];
         _inputTextView.isBanHashtag = YES;
-        if ([TTDeviceHelper isPadDevice]) {
-            _inputTextView.isBanHashtag = YES;
-            _inputTextView.isBanAt = YES;
-        }
         _inputTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _inputTextView.backgroundColorThemeKey = @"grey7";
 //        _inputTextView.borderColorThemeKey = kColorLine1;
@@ -713,7 +709,7 @@ static struct timeval commentTimeval;
 - (SSThemedButton *)atButton {
     if (!_atButton) {
         _atButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-        _atButton.imageName = @"fh_ugc_toolbar_hash_tag";
+        _atButton.imageName = @"fh_ugc_toolbar_at_icon";
         _atButton.accessibilityLabel = @"@";
         [_atButton addTarget:self action:@selector(atAction:) forControlEvents:UIControlEventTouchUpInside];
     }

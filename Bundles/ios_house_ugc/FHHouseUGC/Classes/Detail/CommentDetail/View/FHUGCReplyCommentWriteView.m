@@ -223,7 +223,7 @@ static struct timeval kFHCommentTimeval;
     self.commentFunctionView.banCommentRepost = banCommentRepost;
     if (self.commentFunctionView.banCommentRepost) {
         self.inputTextView.isBanHashtag = YES;
-        self.inputTextView.isBanAt = YES;
+        self.inputTextView.isBanAt = NO;
     }
     [self layoutIfNeeded];
 }
@@ -630,10 +630,6 @@ static struct timeval kFHCommentTimeval;
     if (!_inputTextView) {
         _inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(20.f, [TTDeviceUIUtils tt_newPadding:8.f], self.width - 20.f - 67.f, [TTDeviceUIUtils tt_newPadding:32.f])];
         _inputTextView.isBanHashtag = YES;
-        if ([TTDeviceHelper isPadDevice]) {
-            _inputTextView.isBanHashtag = YES;
-            _inputTextView.isBanAt = YES;
-        }
         _inputTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _inputTextView.backgroundColorThemeKey = @"grey7";
 //        _inputTextView.borderColorThemeKey = kColorLine1;
