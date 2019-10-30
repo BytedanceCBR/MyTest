@@ -66,7 +66,6 @@
 "search"                = "ExploreSearchViewController";
 "talk"                  = "ArticleMomentDetailViewController";
 "forum"                 = "FRForumListViewController";
-"thread_detail"         = "FRThreadSmartDetailViewController";
 "thread_smart_detail"   = "FRThreadSmartDetailViewController";
 "gossip"                = "FRForumGossipViewController";
 "send_thread"           = "TTPostThreadViewController";
@@ -77,7 +76,6 @@
 "blocklist"             = "BlockUsersListViewController";
 
 "login"                 = "open";
-"forum_guide"           = "FRForumAllForumViewController";
 "forum_guide"           = "FRForumAllForumViewController";
 
 "livechat"              = "TTLiveMainViewController";
