@@ -212,6 +212,9 @@
         }
         if (socialGroupModel) {
             // 更新圈子数据
+            if (self.shareInfo == nil && socialGroupModel.shareInfo) {
+                self.shareInfo = socialGroupModel.shareInfo;
+            }
             [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:socialGroupModel];
         }
         // 更新点赞以及评论数

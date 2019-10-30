@@ -343,15 +343,9 @@
 
 // 分享按钮点击
 - (void)shareButtonClicked:(UIButton *)btn {
-    FHUGCShareInfoModel *shareInfo = [[FHUGCShareInfoModel alloc] init];
-    shareInfo.coverImage = @"http://sf1-ttcdn-tos.pstatp.com/img/f100-image/RbFbukfH1O85ZR~1125x0.jpeg";
-    shareInfo.isVideo = @"0";
-    shareInfo.desc = @"麒麟南外 马群东 东郊小镇 精装修 诚心卖";
-    shareInfo.shareUrl = @"https://m.haoduofangs.com/nj/ershoufang/6707414281886892300.html?from=share&ridcode=RpTmQQUryTeQ";
-    shareInfo.title = @"江宁汤山 东郊小镇第六街区 2室2厅 167万 81平";
-    
-    [[FHUGCShareManager sharedManager] shareActionWithInfo:shareInfo tracerDic:self.tracerDict];
-    
+    if (self.viewModel.shareInfo && self.tracerDict) {
+        [[FHUGCShareManager sharedManager] shareActionWithInfo:self.viewModel.shareInfo tracerDic:self.tracerDict];
+    }
 }
 
 @end

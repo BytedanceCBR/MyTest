@@ -60,6 +60,15 @@
         self.shouldShowUGcGuide = YES;
         self.isViewAppear = YES;
         self.isLogin = TTAccountManager.isLogin;
+        
+        // 分享埋点
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+        params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
+        params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+        params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
+        params[@"page_type"] = [self pageTypeString];
+        self.shareTracerDict = [params copy];
     }
     return self;
 }
@@ -685,6 +694,10 @@
         return;
     }
     self.data = data;
+    // 第一次服务端返回数据
+    if (data.shareInfo && self.shareInfo == nil) {
+        self.shareInfo = data.shareInfo;
+    }
     self.feedListController.view.hidden = NO;
     self.viewController.emptyView.hidden = YES;
     [self.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar]];
