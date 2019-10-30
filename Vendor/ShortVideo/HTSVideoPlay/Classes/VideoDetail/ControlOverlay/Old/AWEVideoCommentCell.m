@@ -22,8 +22,16 @@
 #import "NSStringAdditions.h"
 #import "TTSandBoxHelper.h"
 #import "TTIndicatorView.h"
+#import <TTUGCAttributedLabel.h>
+#import <FHUGCCellHelper.h>
+#import <TTUniversalCommentLayout.h>
+#import <TTRichSpanText+Comment.h>
+#import <UIColor+Theme.h>
+#import <UIFont+House.h>
 
-@interface AWEVideoCommentCell () <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+#define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"
+
+@interface AWEVideoCommentCell () <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,TTUGCAttributedLabelDelegate>
 
 @property (nonatomic, strong) AWECommentModel *commentModel;
 @property (nonatomic, strong) NSNumber *videoId;
@@ -31,11 +39,12 @@
 
 @property (nonatomic, strong) TTAsyncCornerImageView *thumbView;
 @property (nonatomic, strong) UILabel *userLabel;
-@property (nonatomic, strong) UILabel *commentLabel;
+@property (nonatomic, strong) TTUGCAttributedLabel *commentLabel;
 @property (nonatomic, strong) UILabel *timeLabel;
 @property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UIButton *likeButton;
 @property (nonatomic, strong) UILabel *debugGidLabel;             //debug gid
+@property (nonatomic, strong) TTRichSpanText *richContent;
 
 @end
 
@@ -44,16 +53,16 @@
 + (CGFloat)heightForTableView:(UITableView *)tableView withCommentModel:(AWECommentModel *)model
 {
     // 添加replyPrefix
-    NSString *commentText;
-    if (model.replyToComment) {
-        NSString *username = model.replyToComment.userName;
-        commentText = [NSString stringWithFormat:@"@%@：%@", username, model.text];
-    } else {
-        commentText = model.text;
-    }
-    CGSize textSize = [commentText boundingRectWithSize:CGSizeMake(CGRectGetWidth(tableView.bounds) - 60 - 15, FLT_MAX) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17.0]} context:nil].size;
+    NSAttributedString *attrStr = [FHUGCCellHelper convertRichContentWithModel:model];
+    
+    NSUInteger numberOfLines = 0;
+    CGSize size = [FHUGCCellHelper sizeThatFitsAttributedString:attrStr
+                                                withConstraints:CGSizeMake(CGRectGetWidth(tableView.bounds) - 60 - 15, FLT_MAX)
+                                               maxNumberOfLines:0
+                                         limitedToNumberOfLines:&numberOfLines];
+
     CGFloat height = 37; // comment label top
-    height += textSize.height; // comment label height
+    height += size.height; // comment label height
     height += 8.0 + 16.5 + 14.0; // comment label to bottom height
     return ceil(height);
 }
@@ -99,10 +108,11 @@
             make.left.equalTo(self.thumbView.mas_right).offset(9);
         }];
 
-        self.commentLabel = [UILabel new];
+        self.commentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
         self.commentLabel.text = nil;
+        self.commentLabel.delegate = self;
         self.commentLabel.numberOfLines = 0;
-        self.commentLabel.font = [UIFont systemFontOfSize:17.0];
+        self.commentLabel.font = [UIFont themeFontRegular:16];
         self.commentLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
         [self addSubview:self.commentLabel];
         [self.commentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -188,9 +198,9 @@
     self.userLabel.left = self.thumbView.right + 9.0;
     self.commentLabel.top = self.userLabel.bottom + 4;
     self.commentLabel.left = 60;
-    self.commentLabel.width = self.contentView.width - 60 - 15;
-    CGSize textSize = [self.commentLabel.text boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.contentView.bounds) - 60 - 15, FLT_MAX) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17.0]} context:nil].size;
-    self.commentLabel.height = textSize.height;
+//    self.commentLabel.width = self.contentView.width - 60 - 15;
+//    CGSize textSize = [self.commentLabel.text boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.contentView.bounds) - 60 - 15, FLT_MAX) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17.0]} context:nil].size;
+//    self.commentLabel.height = textSize.height;
     self.timeLabel.top = self.commentLabel.bottom + 8;
     self.likeButton.top = self.thumbView.top;
     self.likeButton.width += 2;
@@ -217,13 +227,43 @@
         self.timeLabel.text = [[self _formattedTimeString:model.createTime] stringByAppendingString:@" · 回复"];
         self.deleteButton.hidden = YES;
     }
-   
-    // 添加replyPrefix
-    if (model.replyToComment) {
-        NSString *username = model.replyToComment.userName;
-        self.commentLabel.text = [NSString stringWithFormat:@"@%@：%@", username, model.text];
-    } else {
-        self.commentLabel.text = model.text;
+
+    NSMutableAttributedString *attributedString = [[FHUGCCellHelper convertRichContentWithModel:model] mutableCopy];
+    
+    [attributedString addAttributes:@{
+                                      NSForegroundColorAttributeName: [TTUniversalCommentCellLiteHelper contentLabelTextColor]
+                                      } range:NSMakeRange(0, attributedString.length)];
+    
+    self.commentLabel.text = [attributedString copy];
+    
+    NSDictionary *linkAttributes = @{
+                                     NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3]
+                                     };
+    self.commentLabel.linkAttributes = linkAttributes;
+    self.commentLabel.activeLinkAttributes = linkAttributes;
+    self.commentLabel.inactiveLinkAttributes = linkAttributes;
+    
+    TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
+    TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:model.text richSpans:richSpans];
+    
+    if(model.replyToComment){
+        [richContent appendCommentQuotedUserName:model.replyToComment.userName userId:model.replyToComment.userId.stringValue];
+        TTRichSpanText *quotedRichSpanText = [[TTRichSpanText alloc] initWithText:model.replyToComment.text
+                                                              richSpansJSONString:model.replyToComment.contentRichSpan];
+        [richContent appendRichSpanText:quotedRichSpanText];
+    }
+    self.richContent = richContent;
+    
+    NSArray <TTRichSpanLink *> *richSpanLinks = [self.richContent richSpanLinksOfAttributedString];
+    for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+        NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
+        if (NSMaxRange(range) <= attributedString.length) {
+            if (richSpanLink.type == TTRichSpanLinkTypeQuotedCommentUser) {
+                [self.commentLabel addLinkToURL:[NSURL URLWithString:kTTCommentContentLabelQuotedCommentUserURLString] withRange:range];
+            } else {
+                [self.commentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+            }
+        }
     }
     
     self.likeButton.selected = model.userDigg;
@@ -232,9 +272,7 @@
     [self.likeButton setTitle:[self showStringFromNumber:diggCount] forState:UIControlStateSelected];
     
     [self.thumbView tt_setImageWithURLString:(model.userProfileImageUrl?:@"")];
-//    [self.thumbView setupVerifyViewForLength:36 adaptationSizeBlock:^CGSize(CGSize standardSize) {
-//        return [TTVerifyIconHelper tt_newSize:standardSize];
-//    }];
+
     [self.thumbView showOrHideVerifyViewWithVerifyInfo:self.commentModel.userAuthInfo decoratorInfo:self.commentModel.userDecoration sureQueryWithID:NO userID:nil disableNightCover:NO];
     [self refreshDebugGidLabelWithCommentModel:model];
     [self setNeedsLayout];
@@ -480,6 +518,32 @@
     if (buttonIndex != alertView.cancelButtonIndex) {
         if ([self.delegate respondsToSelector:@selector(commentCell:didClickDeleteWithModel:)]) {
             [self.delegate commentCell:self didClickDeleteWithModel:self.commentModel];
+        }
+    }
+}
+
+#pragma mark - TTTAttributedLabel Delegate
+
+- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+    if ([url.absoluteString isEqualToString:kTTCommentContentLabelQuotedCommentUserURLString]) {
+        if (!isEmptyString([self.commentModel.userId stringValue])) {
+            if ([self.commentModel.replyToComment.userId longLongValue] == 0) {
+                return;
+            }
+            NSString *userIDstr = [self.commentModel.replyToComment.userId stringValue];
+            NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@&from_page=comment_list", userIDstr];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:linkURLString]];
+        }
+    } else {
+        if ([[TTRoute sharedRoute] canOpenURL:url]) {
+            [[TTRoute sharedRoute] openURLByPushViewController:url];
+        }
+        else {
+            NSString *linkStr = url.absoluteString;
+            if (!isEmptyString(linkStr)) {
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://webview"]
+                                                          userInfo:TTRouteUserInfoWithDict(@{@"url":linkStr})];
+            }
         }
     }
 }

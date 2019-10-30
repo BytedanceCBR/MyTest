@@ -11,6 +11,7 @@
 #import <TTBusinessManager+StringUtils.h>
 #import "TTVFeedListItem.h"
 #import <TTVFeedCellAction.h>
+#import <TTRichSpanText+Comment.h>
 
 @implementation FHUGCCellHelper
 
@@ -395,6 +396,46 @@
     }
     
     return nil;
+}
+
++ (NSAttributedString *)convertRichContentWithModel:(AWECommentModel *)model {
+    NSMutableAttributedString *mutableAttributedString = nil;
+    
+    TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
+    TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:model.text richSpans:richSpans];
+    
+    if(model.replyToComment){
+        [richContent appendCommentQuotedUserName:model.replyToComment.userName userId:model.replyToComment.userId.stringValue];
+        
+        TTRichSpanText *quotedRichSpanText = [[TTRichSpanText alloc] initWithText:model.replyToComment.text
+                                                              richSpansJSONString:model.replyToComment.contentRichSpan];
+        [richContent appendRichSpanText:quotedRichSpanText];
+    }
+    
+    if (!isEmptyString(richContent.text)) {
+        NSInteger parseEmojiCount = -1;
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:richContent.text fontSize:16 needParseCount:parseEmojiCount];
+        if (attrStr) {
+            UIFont *font = [UIFont themeFontRegular:16];
+            mutableAttributedString = [attrStr mutableCopy];
+            NSMutableDictionary *attributes = @{}.mutableCopy;
+            [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
+            [attributes setValue:font forKey:NSFontAttributeName];
+            
+            NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            
+            paragraphStyle.minimumLineHeight = 21;
+            paragraphStyle.maximumLineHeight = 21;
+            paragraphStyle.lineSpacing = 2;
+            
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+            
+            [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
+        }
+    }
+    
+    return [mutableAttributedString copy];
 }
 
 

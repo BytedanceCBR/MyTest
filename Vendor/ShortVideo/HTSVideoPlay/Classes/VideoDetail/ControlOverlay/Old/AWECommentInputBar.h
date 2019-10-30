@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "HTSVideoPlayGrowingTextView.h"
 #import "TTUGCTextView.h"
+#import <sys/time.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

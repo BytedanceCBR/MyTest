@@ -358,6 +358,10 @@ static struct timeval kFHCommentTimeval;
     }
 }
 
+- (void)clearInputBar {
+    self.inputTextView.text = nil;
+}
+
 #pragma mark -- kvo method
 
 - (void)themeChanged:(NSNotification*)notification {

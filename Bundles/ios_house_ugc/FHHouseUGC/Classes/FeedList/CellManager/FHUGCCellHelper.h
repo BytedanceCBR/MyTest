@@ -13,6 +13,7 @@
 #import "FHFeedUGCContentModel.h"
 #import "FHFeedUGCCellModel.h"
 #import <TTVFeedListItem.h>
+#import <AWECommentModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -42,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
                        withConstraints:(CGSize)size
                       maxNumberOfLines:(NSUInteger)maxLine
                 limitedToNumberOfLines:(NSUInteger *)numberOfLines;
+
++ (NSAttributedString *)convertRichContentWithModel:(AWECommentModel *)model;
 
 //cellModel转视频模型
 + (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel;

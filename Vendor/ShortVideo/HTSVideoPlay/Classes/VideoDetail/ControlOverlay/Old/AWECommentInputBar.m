@@ -21,6 +21,8 @@
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import <TTBaseLib/NSObject+MultiDelegates.h>
 
+static struct timeval kFHCommentTimeval;
+
 @interface AWECommentInputBar () <HTSVideoPlayGrowingTextViewDelegate>
 //@property (nonatomic, strong) HTSVideoPlayGrowingTextView *textView;
 @property (nonatomic, strong) SSThemedButton *sendButton;
@@ -29,6 +31,9 @@
 @property (nonatomic, strong) SSThemedView *textBgView;
 
 @property (nonatomic, strong) TTUGCTextViewMediator *textViewMediator;
+@property (nonatomic, assign) BOOL didBeginToComment;
+
+@property (nonatomic, strong) SSThemedButton *atButton;
 
 @end
 
@@ -48,7 +53,7 @@
         _defaultPlaceHolder = @"说点什么...";
         _params = [NSMutableDictionary dictionary];
         
-        _textBgView = [[SSThemedView alloc] initWithFrame:CGRectMake(14, 6, CGRectGetWidth(self.bounds) - 14 - 20 - 40, 32)];
+        _textBgView = [[SSThemedView alloc] initWithFrame:CGRectMake(14, 6, CGRectGetWidth(self.bounds) - 14 - 20 - 40 - 39, 32)];
         
         _textBgView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         _textBgView.borderColorThemeKey = kColorLine1;
@@ -58,18 +63,6 @@
         _textBgView.layer.masksToBounds = YES;
         [self addSubview:_textBgView];
         
-//        CGRect textRect = CGRectMake(10, 0, CGRectGetWidth(_textBgView.bounds) - 10, CGRectGetHeight(_textBgView.bounds));
-//        _textView = [[HTSVideoPlayGrowingTextView alloc] initWithFrame:textRect];
-//        _textView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-//        _textView.backgroundColor = [UIColor clearColor];
-//        _textView.textColor = [UIColor tt_themedColorForKey:kColorText1];
-//        _textView.placeholder = @"优质评论将会被优先展示";
-//        _textView.placeholderColor = [UIColor tt_themedColorForKey:@"grey3"];
-//        _textView.delegate = self;
-//        CGFloat verticalMargin = (self.textView.internalTextView.frame.size.height - [UIFont systemFontOfSize:16.0f].pointSize - 4.f) / 2.f;
-//        _textView.internalTextView.textContainerInset = UIEdgeInsetsMake(verticalMargin, self.textView.internalTextView.textContainerInset.left, verticalMargin, self.textView.internalTextView.textContainerInset.right);
-//        _textView.font = [UIFont systemFontOfSize:16.0f];
-//        [_textBgView addSubview:_textView];
         [_textBgView addSubview:self.inputTextView];
         
         // TextView and Toolbar Mediator
@@ -78,7 +71,7 @@
         self.inputTextView.delegate = self.textViewMediator;
         [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
         
-        _sendButton = [[SSThemedButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_textBgView.frame) + 10, CGRectGetMaxY(self.textBgView.frame) - 32, 40, 32)];
+        _sendButton = [[SSThemedButton alloc] initWithFrame:CGRectMake(self.width - 14 - 40, CGRectGetMaxY(self.textBgView.frame) - 32, 40, 32)];
         _sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
         
         if ([TTDeviceHelper OSVersionNumber] > 8.2) {
@@ -98,13 +91,21 @@
         [_sendButton addTarget:self action:@selector(handleSend) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_sendButton];
         
+        [self addSubview:self.atButton];
+        self.atButton.frame = CGRectMake(self.textBgView.right + 15, 0, 24, 24);
+        self.atButton.centerY = self.sendButton.centerY;
+        
         [self clearInputBar];
     }
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
+    _inputTextView.delegate = nil;
+    [_inputTextView tt_removeDelegate:_textViewMediator];
+//    _commentFunctionView.delegate = nil;
+//    _emojiInputView.delegate = nil;
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -128,8 +129,8 @@
     self.targetCommentModel = nil;
     self.sendButton.enabled = NO;
     self.sendButton.selected = NO;
-    self.inputTextView.text = nil;
-    self.inputTextView.internalGrowingTextView.placeholder = self.defaultPlaceHolder;
+//    self.inputTextView.text = nil;
+//    self.inputTextView.internalGrowingTextView.placeholder = self.defaultPlaceHolder;
 }
 
 - (void)becomeActive
@@ -169,98 +170,98 @@
     !self.onSendBlock ?: self.onSendBlock(self, self.inputTextView.text);
 }
 
-#pragma mark - HTSVideoPlayGrowingTextViewDelegate
+//#pragma mark - HTSVideoPlayGrowingTextViewDelegate
 
-- (BOOL)growingTextViewShouldBeginEditing:(HTSVideoPlayGrowingTextView *)growingTextView;
-{
-    if ([self.textViewDelegate respondsToSelector:_cmd]) {
-        return [self.textViewDelegate growingTextViewShouldBeginEditing:growingTextView];
-    }
-    return YES;
-}
-
-- (void)growingTextViewDidBeginEditing:(HTSVideoPlayGrowingTextView *)growingTextView
-{
-    if ([self.textViewDelegate respondsToSelector:_cmd]) {
-        [self.textViewDelegate growingTextViewDidBeginEditing:growingTextView];
-    }
-}
-
-- (BOOL)growingTextViewShouldEndEditing:(HTSVideoPlayGrowingTextView *)growingTextView
-{
-    if ([self.textViewDelegate respondsToSelector:_cmd]) {
-        return [self.textViewDelegate growingTextViewShouldEndEditing:growingTextView];
-    }
-    return YES;
-}
-
-- (void)growingTextViewDidEndEditing:(HTSVideoPlayGrowingTextView *)growingTextView
-{
-    if ([self.textViewDelegate respondsToSelector:_cmd]) {
-        [self.textViewDelegate growingTextViewDidEndEditing:growingTextView];
-    }
-}
-
-- (BOOL)growingTextView:(HTSVideoPlayGrowingTextView *)growingTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
-    if ([self.textViewDelegate respondsToSelector:_cmd]) {
-        return [self.textViewDelegate growingTextView:growingTextView shouldChangeTextInRange:range replacementText:text];
-    }
-    return YES;
-}
-
-- (BOOL)growingTextViewShouldReturn:(HTSVideoPlayGrowingTextView *)growingTextView
-{
-    BOOL shouldReturn = YES;
-    if ([self.textViewDelegate respondsToSelector:_cmd]) {
-        shouldReturn = [self.textViewDelegate growingTextViewShouldReturn:growingTextView];
-    }
-
-    return shouldReturn;
-}
-
-- (void)growingTextViewDidChange:(HTSVideoPlayGrowingTextView *)growingTextView
-{
-    
-    if (growingTextView.text.length > self.maxInputCount) {
-        growingTextView.text = [growingTextView.text substringToIndex:self.maxInputCount];
-        [HTSVideoPlayToast show:[NSString stringWithFormat:@"最多%ld字", (long)self.maxInputCount]];
-    }
-    
-    if (growingTextView.text.length == 0) {
-        self.sendButton.enabled = NO;
-        self.sendButton.selected = NO;
-    } else {
-        self.sendButton.enabled = YES;
-        self.sendButton.selected = YES;
-    }
-    
-    !self.textDidChangeBlock ?: self.textDidChangeBlock(growingTextView);
-}
-
-- (void)growingTextView:(HTSVideoPlayGrowingTextView *)growingTextView willChangeHeight:(float)height
-{
-    CGFloat diff = height - growingTextView.frame.size.height;
-    {
-        CGRect frame = self.frame;
-        frame.size.height += diff;
-        frame.origin.y -= diff;
-        self.frame = frame;
-    }
-    /*//加了auto resize 就不用了
-    {
-        CGRect frame = self.textBgView.frame;
-        frame.size.height += diff;
-        frame.origin.y -= diff;
-        self.textBgView.frame = frame;
-    }
-    */
-    {
-        CGRect frame = self.sendButton.frame;
-        frame.origin.y = CGRectGetMaxY(self.textBgView.frame) - frame.size.height;
-        self.sendButton.frame = frame;
-    }
-}
+//- (BOOL)growingTextViewShouldBeginEditing:(HTSVideoPlayGrowingTextView *)growingTextView;
+//{
+//    if ([self.textViewDelegate respondsToSelector:_cmd]) {
+//        return [self.textViewDelegate growingTextViewShouldBeginEditing:growingTextView];
+//    }
+//    return YES;
+//}
+//
+//- (void)growingTextViewDidBeginEditing:(HTSVideoPlayGrowingTextView *)growingTextView
+//{
+//    if ([self.textViewDelegate respondsToSelector:_cmd]) {
+//        [self.textViewDelegate growingTextViewDidBeginEditing:growingTextView];
+//    }
+//}
+//
+//- (BOOL)growingTextViewShouldEndEditing:(HTSVideoPlayGrowingTextView *)growingTextView
+//{
+//    if ([self.textViewDelegate respondsToSelector:_cmd]) {
+//        return [self.textViewDelegate growingTextViewShouldEndEditing:growingTextView];
+//    }
+//    return YES;
+//}
+//
+//- (void)growingTextViewDidEndEditing:(HTSVideoPlayGrowingTextView *)growingTextView
+//{
+//    if ([self.textViewDelegate respondsToSelector:_cmd]) {
+//        [self.textViewDelegate growingTextViewDidEndEditing:growingTextView];
+//    }
+//}
+//
+//- (BOOL)growingTextView:(HTSVideoPlayGrowingTextView *)growingTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+//{
+//    if ([self.textViewDelegate respondsToSelector:_cmd]) {
+//        return [self.textViewDelegate growingTextView:growingTextView shouldChangeTextInRange:range replacementText:text];
+//    }
+//    return YES;
+//}
+//
+//- (BOOL)growingTextViewShouldReturn:(HTSVideoPlayGrowingTextView *)growingTextView
+//{
+//    BOOL shouldReturn = YES;
+//    if ([self.textViewDelegate respondsToSelector:_cmd]) {
+//        shouldReturn = [self.textViewDelegate growingTextViewShouldReturn:growingTextView];
+//    }
+//
+//    return shouldReturn;
+//}
+//
+//- (void)growingTextViewDidChange:(HTSVideoPlayGrowingTextView *)growingTextView
+//{
+//
+//    if (growingTextView.text.length > self.maxInputCount) {
+//        growingTextView.text = [growingTextView.text substringToIndex:self.maxInputCount];
+//        [HTSVideoPlayToast show:[NSString stringWithFormat:@"最多%ld字", (long)self.maxInputCount]];
+//    }
+//
+//    if (growingTextView.text.length == 0) {
+//        self.sendButton.enabled = NO;
+//        self.sendButton.selected = NO;
+//    } else {
+//        self.sendButton.enabled = YES;
+//        self.sendButton.selected = YES;
+//    }
+//
+//    !self.textDidChangeBlock ?: self.textDidChangeBlock(growingTextView);
+//}
+//
+//- (void)growingTextView:(HTSVideoPlayGrowingTextView *)growingTextView willChangeHeight:(float)height
+//{
+//    CGFloat diff = height - growingTextView.frame.size.height;
+//    {
+//        CGRect frame = self.frame;
+//        frame.size.height += diff;
+//        frame.origin.y -= diff;
+//        self.frame = frame;
+//    }
+//    /*//加了auto resize 就不用了
+//    {
+//        CGRect frame = self.textBgView.frame;
+//        frame.size.height += diff;
+//        frame.origin.y -= diff;
+//        self.textBgView.frame = frame;
+//    }
+//    */
+//    {
+//        CGRect frame = self.sendButton.frame;
+//        frame.origin.y = CGRectGetMaxY(self.textBgView.frame) - frame.size.height;
+//        self.sendButton.frame = frame;
+//    }
+//}
 
 + (UIImage *)imageWithUIColor:(UIColor *)color
 {
@@ -273,6 +274,35 @@
     UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return theImage;
+}
+
+- (struct timeval)commentTimeval {
+    return kFHCommentTimeval;
+}
+
+- (void)atAction:(id)sender {
+    [self.textViewMediator toolbarDidClickAtButton];
+}
+
+#pragma mark - TTUGCTextViewDelegate
+
+- (void)textViewDidChange:(TTUGCTextView *)textView {
+    
+    if (!self.didBeginToComment) {
+        self.didBeginToComment = YES;
+        gettimeofday(&kFHCommentTimeval, NULL);
+    }
+    
+    self.sendButton.enabled = !isEmptyString(self.inputTextView.text);
+}
+
+- (void)textView:(TTUGCTextView *)textView willChangeHeight:(float)height withDiffHeight:(CGFloat)diffHeight{
+    self.height += diffHeight;
+    self.top -= diffHeight;
+
+    CGRect frame = self.sendButton.frame;
+    frame.origin.y = CGRectGetMaxY(self.textBgView.frame) - frame.size.height;
+    self.sendButton.frame = frame;
 }
 
 - (TTUGCTextView *)inputTextView {
@@ -304,6 +334,19 @@
     }
     
     return _inputTextView;
+}
+
+- (SSThemedButton *)atButton {
+    if (!_atButton) {
+        _atButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
+        _atButton.imageName = @"fh_ugc_toolbar_hash_tag";
+        _atButton.hitTestEdgeInsets = UIEdgeInsetsMake(-8, -6, -8, -6);
+        _atButton.accessibilityLabel = @"@";
+        _atButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
+        [_atButton addTarget:self action:@selector(atAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    return _atButton;
 }
 
 @end
