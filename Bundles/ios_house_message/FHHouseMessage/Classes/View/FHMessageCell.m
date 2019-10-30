@@ -200,11 +200,21 @@
     } else {
         if (isGroupChat) {
             NSString *cutStr = [self cutLineBreak:[conv lastMessage]];
+            NSNumber *uid =[NSNumber numberWithLongLong: [[[TTAccount sharedAccount] userIdString] longLongValue]];
             if (lastMsg.isCurrentUser || lastMsg.type == ChatMstTypeNotice) {
-                self.subTitleLabel.text = cutStr;
+                if ([lastMsg.mentionedUsers containsObject:uid]) {
+                    self.subTitleLabel.attributedText = [self getAtAttributeString:cutStr];;
+                } else {
+                    self.subTitleLabel.text = cutStr;
+                }
             } else {
                 [[FHChatUserInfoManager shareInstance] getUserInfoSync:[[NSNumber numberWithLongLong:lastMsg.userId] stringValue] block:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
-                    self.subTitleLabel.text = [NSString stringWithFormat:@"%@: %@", userInfo.username, cutStr];
+                    NSString *tipMsg = [NSString stringWithFormat:@"%@: %@", userInfo.username, cutStr];
+                    if ([lastMsg.mentionedUsers containsObject:uid]) {
+                        self.subTitleLabel.attributedText = [self getAtAttributeString:tipMsg];;
+                    } else {
+                         self.subTitleLabel.text = tipMsg;
+                    }
                 }];
             }
         } else {
@@ -225,6 +235,21 @@
     paragraphStyle.lineSpacing = 0;
     paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
 
+    NSDictionary<NSString *, id> *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14],
+                                                 NSForegroundColorAttributeName : [UIColor redColor] ,
+                                                 NSParagraphStyleAttributeName : paragraphStyle};
+    [attrStr addAttributes:attributes range:theRange];
+    return attrStr;
+}
+
+-(NSAttributedString*)getAtAttributeString:(NSString*)draft {
+    
+    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"[有人@我]%@", [self cutLineBreak:draft]]];
+    NSRange theRange = NSMakeRange(0, 6);
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 0;
+    paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+    
     NSDictionary<NSString *, id> *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14],
                                                  NSForegroundColorAttributeName : [UIColor redColor] ,
                                                  NSParagraphStyleAttributeName : paragraphStyle};
