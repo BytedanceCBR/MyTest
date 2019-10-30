@@ -1464,11 +1464,21 @@ extern NSString *const INSTANT_DATA_KEY;
             }
             
             return cell;
-            //TODO fengbo IMPORTANT  indexPath.section == 1 &&
         } else if (indexPath.section == 0 && indexPath.row == 0 && [self.houseList[0] isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
             FHNeighbourhoodAgencyCardCell *cell = [tableView dequeueReusableCellWithIdentifier:kNeighbourhoodAgencyCellId];
             FHHouseNeighborAgencyModel *model = self.currentHouseDataModel.neighborhoodRealtorCard;
-            [cell bindData:model];
+
+            NSMutableDictionary *traceParam = @{}.mutableCopy;
+            traceParam[@"card_type"] = @"left_pic";
+            traceParam[@"enter_from"] = [self pageTypeString];
+            traceParam[@"element_from"] = @"neighborhood_expert_card";
+            traceParam[@"search_id"] = self.searchId;
+            traceParam[@"log_pb"] = [model logPb];
+            traceParam[@"origin_from"] = self.originFrom;
+            traceParam[@"origin_search_id"] = self.originSearchId;
+            traceParam[@"rank"] = @(indexPath.row); //always 0
+
+            [cell bindData:model traceParams:traceParam.mutableCopy];
             return cell;
         } else {
             if (indexPath.section == 0) {
@@ -1609,7 +1619,9 @@ extern NSString *const INSTANT_DATA_KEY;
     if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
         return;
     }
-    
+
+    //TODO fengbo houseshow的修改
+
     if (indexPath.section == 0) {
         if (indexPath.row < self.houseList.count) {
 

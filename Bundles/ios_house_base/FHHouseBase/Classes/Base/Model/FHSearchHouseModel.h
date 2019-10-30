@@ -320,10 +320,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseNeighborAgencyModel : JSONModel
 
-//TODO fengbo
+@property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *neighborhoodName;
 @property (nonatomic, copy , nullable) NSString *neighborhoodPrice;
 @property (nonatomic, copy , nullable) NSString *displayStatusInfo;
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contactModel ;
 
 

@@ -12,12 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighbourhoodAgencyCardCell : UITableViewCell
 
-//TODO fengbo delegate
+- (void)bindData:(FHHouseNeighborAgencyModel *)model traceParams:(NSMutableDictionary *)params;
 
-
-
-
-- (void)bindData:(FHHouseNeighborAgencyModel *)model;
 @end
 
 NS_ASSUME_NONNULL_END

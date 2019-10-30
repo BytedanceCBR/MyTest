@@ -11,8 +11,9 @@
 #import "FHDetailAgentListCell.h"
 #import "FHExtendHotAreaButton.h"
 #import "FHShadowView.h"
+#import "FHHousePhoneCallUtils.h"
 #import <FHHouseBase/FHCommonDefines.h>
-
+#import <TTThemed/SSViewBase.h>
 
 @interface FHNeighbourhoodAgencyCardCell ()
 
@@ -25,6 +26,8 @@
 @property(nonatomic, strong) UILabel *pricePerSqmLabel; //房源价格
 @property(nonatomic, strong) UILabel *countOnSale; //在售套数
 @property(nonatomic, strong) UIImageView *rightArrow;
+@property(nonatomic, strong) UIView *verticleDividerView;
+
 
 @property(nonatomic, strong) UIView *dividerView;
 
@@ -37,8 +40,8 @@
 @property(nonatomic, strong) UILabel *agency;
 
 @property(nonatomic, strong) FHHouseNeighborAgencyModel *modelData;
-@property (nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
-
+@property(nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
+@property(nonatomic, strong) NSMutableDictionary *traceParams;
 
 
 @end
@@ -54,7 +57,6 @@
 
     return self;
 }
-
 
 - (void)initUI {
 
@@ -87,6 +89,10 @@
     _countOnSale.textColor = [UIColor themeGray1];
     _countOnSale.font = [UIFont themeFontRegular:14];
     [self.topInfoView addSubview:_countOnSale];
+
+    _verticleDividerView = [[UIView alloc] init];
+    [_verticleDividerView setBackgroundColor:[UIColor colorWithHexString:@"#e8e8e8"]];
+    [self.topInfoView addSubview:_verticleDividerView];
 
     self.rightArrow = [[UIImageView alloc] initWithImage:SYS_IMG(@"arrow_right_setup")];
     [self.topInfoView addSubview:_rightArrow];
@@ -169,9 +175,17 @@
         make.left.mas_equalTo(self.topInfoView).offset(20);
     }];
 
+    [self.verticleDividerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(0.5);
+        make.height.mas_equalTo(14);
+        make.centerY.mas_equalTo(self.pricePerSqmLabel);
+        make.left.mas_equalTo(self.pricePerSqmLabel.mas_right).offset(4);
+    }];
+
+
     [self.countOnSale mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.mainTitleLabel.mas_bottom).offset(4);
-        make.left.mas_equalTo(self.pricePerSqmLabel.mas_right).offset(9);
+        make.centerY.mas_equalTo(self.pricePerSqmLabel);
+        make.left.mas_equalTo(self.verticleDividerView.mas_right).offset(4.5);
     }];
 
     [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -208,13 +222,13 @@
         make.top.mas_equalTo(self.name.mas_bottom);
         make.height.mas_equalTo(17);
         make.left.mas_equalTo(self.avator.mas_right).offset(10);
-        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-20);
     }];
     [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.name.mas_right).offset(5);
         make.width.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self.name);
-        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-20);
     }];
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(36);
@@ -229,143 +243,113 @@
 
 }
 
-
-- (void)bindData:(FHHouseNeighborAgencyModel *)model {
-
+- (void)bindData:(FHHouseNeighborAgencyModel *)model traceParams:(NSMutableDictionary *)params {
     if (model) {
         self.modelData = model;
+        self.traceParams = params.mutableCopy;
+
         [self.mainTitleLabel setText:model.neighborhoodName];
         [self.pricePerSqmLabel setText:model.neighborhoodPrice];
         [self.countOnSale setText:model.displayStatusInfo];
 
-        self.name.text = model.contactModel.realtorName;
-        self.agency.text = model.contactModel.agencyName;
-        if (model.contactModel.avatarUrl.length > 0) {
-            [self.avator bd_setImageWithURL:[NSURL URLWithString:model.contactModel.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+        if (model.contactModel) {
+            self.name.text = model.contactModel.realtorName;
+            self.agency.text = model.contactModel.agencyName;
+            if (model.contactModel.avatarUrl.length > 0) {
+                [self.avator bd_setImageWithURL:[NSURL URLWithString:model.contactModel.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+            }
+            self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:model.id];
+            BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];
+            [self.licenceIcon setHidden:isLicenceIconHidden];
+
+            self.phoneCallViewModel.tracerDict = self.traceParams.mutableCopy;
+            //TODO fengbo  check this, seems like there`s no need to add view_controller?
+//            self.phoneCallViewModel.belongsVC = self.viewController;
+        } else {
+            [self.bottomInfoView setHidden:YES];
+            [self.dividerView setHidden:YES];
         }
-
-        //TODO fengbo
-        self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:@"6732371190876209164"];
-        //TODO fengbo
-//        FHDetailContactImageTagModel *tag = obj.imageTag;
-//        [self refreshIdentifyView:itemView.identifyView withUrl:tag.imageUrl];
-//        if (tag.imageUrl.length > 0) {
-//            [itemView.identifyView bd_setImageWithURL:[NSURL URLWithString:tag.imageUrl]];
-//            itemView.identifyView.hidden = NO;
-//        }else {
-//            itemView.identifyView.hidden = YES;
-//        }
-
-//        BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
-//        [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
-//        if(obj.realtorEvaluate.length > 0) {
-//            itemView.realtorEvaluate.text = obj.realtorEvaluate;
-//        }
     }
+}
 
+- (BOOL)shouldShowContact:(FHDetailContactModel *)contact {
+    BOOL result = NO;
+    if (contact.businessLicense.length > 0) {
+        result = YES;
+    }
+    if (contact.certificate.length > 0) {
+        result = YES;
+    }
+    return result;
 }
 
 - (void)imclick:(id)imclick {
-
     if (self.modelData) {
-        //TODO fengbo
         FHDetailContactModel *contact = self.modelData.contactModel;
         if (self.phoneCallViewModel) {
             NSMutableDictionary *imExtra = @{}.mutableCopy;
-            imExtra[@"realtor_position"] = @"detail_related";
-            imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
+            imExtra[@"realtor_position"] = @"neighborhood_expert_card";
+            imExtra[@"from"] = @"app_neighborhood_aladdin";
             [self.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
-        } else {
-            NSLog(@"FENGBO TAG emoty phoneCallViewModel");
         }
     }
-
-    NSLog(@"FENGBO TAG imclick");
-
 
 }
 
 - (void)phoneClick:(id)phoneClick {
+    if (self.modelData) {
+        FHDetailContactModel *contact = self.modelData.contactModel;
 
-    NSLog(@"FENGBO TAG phoneClick");
+        NSMutableDictionary *extraDict = @{}.mutableCopy;
+        extraDict[@"realtor_id"] = contact.realtorId;
+        extraDict[@"realtor_rank"] = @"be_null";
+        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
+        extraDict[@"realtor_logpb"] = contact.realtorLogpb;
 
-//    FHDetailContactModel *contact = item.curData.realtorInfo;
-//    NSMutableDictionary *extraDict = @{}.mutableCopy;
-//    extraDict[@"realtor_id"] = contact.realtorId;
-//    extraDict[@"realtor_rank"] = @(index);
-//    extraDict[@"realtor_position"] = @"realtor_evaluation";
-//    extraDict[@"realtor_logpb"] = contact.realtorLogpb;
-//    if (self.baseViewModel.detailTracerDic) {
-//        [extraDict addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
-//    }
-//
-//    FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc] initWithDictionary:extraDict error:nil];
-//    contactConfig.houseType = self.baseViewModel.houseType;
-//    contactConfig.houseId = self.baseViewModel.houseId;
-//    contactConfig.phone = contact.phone;
-//    contactConfig.realtorId = contact.realtorId;
-//    contactConfig.searchId = cellModel.searchId;
-//    contactConfig.imprId = cellModel.imprId;
-//    contactConfig.from = @"app_oldhouse_evaluate";
-//    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
-//        if (success && [cellModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]) {
-//            FHHouseDetailViewController *vc = (FHHouseDetailViewController *) cellModel.belongsVC;
-//            vc.isPhoneCallShow = YES;
-//            vc.phoneCallRealtorId = contactConfig.realtorId;
-//            vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
-//        }
-//    }];
+        //TODO fengbo check this?
+        [extraDict addEntriesFromDictionary:self.traceParams];
+
+        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc] initWithDictionary:extraDict error:nil];
+        contactConfig.houseType = FHHouseTypeNeighborhood;
+        contactConfig.houseId = self.modelData.id;
+        contactConfig.phone = contact.phone;
+        contactConfig.realtorId = contact.realtorId;
+
+        if (self.modelData.logPb) {
+            contactConfig.searchId = self.modelData.logPb[@"search_id"];
+            contactConfig.imprId = self.modelData.logPb[@"impr_id"];
+        }
+
+        contactConfig.from = @"app_neighborhood_aladdin";
+        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
+    }
 
 }
 
 - (void)licenseClick:(id)licenseClick {
     if (self.modelData) {
-        //TODO fengbo
-        FHDetailContactModel *contact = self.modelData.contactModel;
         if (self.phoneCallViewModel) {
-            [self.phoneCallViewModel licenseActionWithPhone:contact];
-        } else {
-            NSLog(@"FENGBO TAG emoty phoneCallViewModel");
+            [self.phoneCallViewModel licenseActionWithPhone:self.modelData.contactModel];
         }
-
-        NSLog(@"FENGBO TAG licenseClick");
     }
 }
 
 - (void)realtorInfoClick:(id)realtorInfoClick {
-    NSLog(@"realtorInfoClick");
-
     if (self.modelData) {
-        //TODO fengbo
         FHDetailContactModel *contact = self.modelData.contactModel;
         if (self.phoneCallViewModel) {
-            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-            dict[@"element_from"] = @"old_detail_related";
-            [self.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO extra:dict];
-
-        } else {
-            NSLog(@"FENGBO TAG emoty phoneCallViewModel");
+            [self.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO extra:nil];
         }
-
-        NSLog(@"FENGBO TAG licenseClick");
     }
-
-//    FHDetailContactModel *contact = model.recommendedRealtors[index];
-//    model.phoneCallViewModel.belongsVC = model.belongsVC;
-//    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-//    dict[@"element_from"] = @"old_detail_related";
-//    [model.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO extra:dict];
-//
-
-
-
 }
-
 - (void)neighbourhoodInfoClick:(id)neighbourhoodInfoClick {
-    //TODO fengbo change id
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@", @"6732371190876209164"]];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:nil];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    if (self.modelData) {
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@", self.modelData.id]];
+
+        NSMutableDictionary *dict = @{@"house_type": @(FHHouseTypeNeighborhood), @"tracer": self.traceParams}.mutableCopy;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
 }
 
 @end

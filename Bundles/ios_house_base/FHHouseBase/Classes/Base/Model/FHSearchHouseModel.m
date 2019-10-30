@@ -507,6 +507,8 @@
             @"neighborhoodPrice": @"neighborhood_price",
             @"displayStatusInfo": @"dis_play_status_info",
             @"contactModel": @"realtor_info",
+            @"logPb": @"log_pb",
+
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
