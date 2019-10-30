@@ -104,8 +104,13 @@
         if(configModel){
             wself.dataList = configModel.data.iconOpData;
             [wself.tableView reloadData];
+            [wself updateHomePageEntrance:configModel.data.homePage];
         }
     }];
+}
+
+- (void)updateHomePageEntrance:(FHMineConfigDataHomePageModel *)model {
+    [self.viewController.headerView sethomePageWithModel:model];
 }
 
 - (void)showInfo {

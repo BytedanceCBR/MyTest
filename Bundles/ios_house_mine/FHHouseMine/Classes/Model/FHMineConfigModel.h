@@ -48,9 +48,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
+@interface FHMineConfigDataHomePageModel : JSONModel
+
+@property (nonatomic, assign) BOOL showHomePage;
+@property (nonatomic, copy , nullable) NSString *homePageContent;
+@property (nonatomic, copy , nullable) NSString *schema;
+@end
+
 @interface FHMineConfigDataModel : JSONModel 
 
 @property (nonatomic, strong , nullable) NSArray<FHMineConfigDataIconOpDataModel> *iconOpData;
+@property (nonatomic, strong , nullable) FHMineConfigDataHomePageModel *homePage ;
 @end
 
 @interface FHMineConfigModel : JSONModel 
