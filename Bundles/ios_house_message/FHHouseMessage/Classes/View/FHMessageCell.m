@@ -205,19 +205,19 @@
             NSString *cutStr = [self cutLineBreak:[conv lastMessage]];
             NSNumber *uid =[NSNumber numberWithLongLong: [[[TTAccount sharedAccount] userIdString] longLongValue]];
             if (lastMsg.isCurrentUser || lastMsg.type == ChatMstTypeNotice) {
-//                if ([lastMsg.mentionedUsers containsObject:uid]) {
-//                    self.subTitleLabel.attributedText = [self getAtAttributeString:cutStr];;
-//                } else {
-//                    self.subTitleLabel.text = cutStr;
-//                }
+                if ([lastMsg.mentionedUsers containsObject:uid]) {
+                    self.subTitleLabel.attributedText = [self getAtAttributeString:cutStr];;
+                } else {
+                    self.subTitleLabel.text = cutStr;
+                }
             } else {
                 [[FHChatUserInfoManager shareInstance] getUserInfoSync:[[NSNumber numberWithLongLong:lastMsg.userId] stringValue] block:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
                     NSString *tipMsg = [NSString stringWithFormat:@"%@: %@", userInfo.username, cutStr];
-//                    if ([lastMsg.mentionedUsers containsObject:uid]) {
-//                        self.subTitleLabel.attributedText = [self getAtAttributeString:tipMsg];;
-//                    } else {
-//                         self.subTitleLabel.text = tipMsg;
-//                    }
+                    if ([lastMsg.mentionedUsers containsObject:uid]) {
+                        self.subTitleLabel.attributedText = [self getAtAttributeString:tipMsg];;
+                    } else {
+                         self.subTitleLabel.text = tipMsg;
+                    }
                 }];
             }
         } else {
