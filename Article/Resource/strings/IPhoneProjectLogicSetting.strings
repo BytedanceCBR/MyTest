@@ -128,6 +128,7 @@
 "im_share_favorite_house" = "FHIMFavoriteShareViewController";
 "im_group_chat_more_info" = "GroupChatMoreInfoViewController";
 "im_group_chat_member" = "GroupChatMemeberViewController";
+"im_group_chat_at" = "GroupChatMemeberViewController";
 //会话列表
 "message_conversation_list" = "FHTempMessageViewController";
 

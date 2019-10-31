@@ -53,8 +53,8 @@ def fhPods
     pod 'FHCommonUI', '0.0.7-alpha.0'
 
 #    pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '645dc3e426bf62a64e2cec359df5ae98e31f275b'
-#     pod 'ios_house_im' , :path => '../../ios_house_im'
-     pod 'ios_house_im', '0.1.12-rc.6'
+     pod 'ios_house_im' , :path => '../../ios_house_im'
+#     pod 'ios_house_im', '0.1.12-rc.6'
 
     #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
     pod 'ios_house_filter' , '1.0.1'
@@ -246,7 +246,7 @@ def appPods
     #-----头条图片滑动浏览器----
     pod 'TTPhotoScrollVC', :path => '../AKPlugins/TTPhotoScrollVC', :inhibit_warnings => false
     #-----头条用户设置库--------
-    pod_binary 'TTUserSettings', '0.3.4'
+    pod 'TTUserSettings', '0.3.4'
     #----头条webview库-----
 #    pod 'TTWebViewBundle', '0.8.15'
     pod 'AKWebViewBundlePlugin', :path => '../AKPlugins/AKWebViewBundlePlugin', :inhibit_warnings => false
