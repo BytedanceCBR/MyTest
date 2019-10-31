@@ -47,6 +47,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 
 @property (nonatomic, assign) BOOL hasMoreSearchResult; // 请求是否hasMore
 @property (nonatomic, strong) NSNumber *searchResultOffset;
+@property (nonatomic, copy)     NSString       *search_id;
 @property (nonatomic, strong) NSArray <FRPublishPostSearchUserStructModel *> *searchResultFollowingUsers;
 @property (nonatomic, strong) NSArray <FRPublishPostSearchUserStructModel *> *searchResultSuggestUsers;
 @property (nonatomic, strong) NSArray <FRPublishPostSearchUserStructModel *> *searchResultInputUsers;
@@ -132,7 +133,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         
         FRUgcPublishPostV1ContactResponseModel *model = (FRUgcPublishPostV1ContactResponseModel *) responseModel;
         
-        if (error || model.err_no.integerValue > 0) {
+        if (error || model.status.integerValue > 0) {
             if (self.offset.integerValue == 0) { // 首次请求
                 if ([error.domain isEqualToString:@"kCommonErrorDomain"] && error.code == 1001) {
                     self.ttViewType = TTFullScreenErrorViewTypeNetWorkError;
@@ -212,6 +213,8 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     FRUgcPublishPostV1SuggestRequestModel *requestModel = [[FRUgcPublishPostV1SuggestRequestModel alloc] init];
     requestModel.words = self.searchingWord;
     requestModel.offset = loadMore ? self.searchResultOffset : @0;
+    requestModel.type = @"mention_user";
+    requestModel.search_id = self.search_id ?: @"";
     
     self.ttTargetView = self.searchResultTableView;
     
@@ -231,7 +234,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         
         FRUgcPublishPostV1SuggestResponseModel *model = (FRUgcPublishPostV1SuggestResponseModel *) responseModel;
         
-        if (error || model.err_no.integerValue > 0) {
+        if (error || model.status.integerValue > 0) {
             if (!loadMore) { // 首次请求
                 if ([error.domain isEqualToString:@"kCommonErrorDomain"] && error.code == 1001) {
                     self.ttViewType = TTFullScreenErrorViewTypeNetWorkError;
@@ -255,7 +258,9 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
             
             return;
         }
-        
+        if (model.data.search_id) {
+            self.search_id = model.data.search_id;
+        }
         // 检索数据为空时，展现用户数据
         if (!loadMore && model.data.following.count == 0 && model.data.suggest.count == 0) {
             self.searchResultTableView.hasMore = NO;
