@@ -104,6 +104,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _longPressToSave = YES;
         _disableAutoPlayVideo = NO;
         _didEnterFullscreen = NO;
+        _isShowAllBtns = YES;
         
         self.ttHideNavigationBar = YES;
 
@@ -290,7 +291,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
     };
     
-    if (self.vedioCount > 0) {
+    if (self.vedioCount > 0 && _isShowAllBtns) {
         _videoInfoView = [[FHDetailVideoInfoView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 67)];
         _videoInfoView.hidden = _startWithIndex >= self.vedioCount;
         [self.view addSubview:_videoInfoView];
@@ -301,9 +302,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         self.videoInfoView.collectActionBlock = self.collectActionBlock;
     }
     
-    _bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height - kFHDPBottomBarHeight, self.view.width, kFHDPBottomBarHeight)];
-    _bottomBar.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:_bottomBar];
+    if (self.isShowAllBtns) {
+        _bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height - kFHDPBottomBarHeight, self.view.width, kFHDPBottomBarHeight)];
+        _bottomBar.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:_bottomBar];
+    }
+
     
     if (self.mediaHeaderModel.contactViewModel) {
         CGFloat itemWidth = self.view.width - 40;

@@ -33,6 +33,25 @@
 
 @end
 
+@implementation FHHouseNeighborItemHouseVideo
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"hasVideo": @"has_video"
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 
 @implementation  FHHouseNeighborDataItemsModel
 
@@ -50,6 +69,7 @@
                            @"imprId": @"impr_id",
                            @"displayBuiltYear": @"display_built_year",
                            @"houseType": @"house_type",
+                           @"houseVideo": @"house_video",
                            @"displayStatsInfo": @"display_stats_info",
                            @"baseInfoMap": @"base_info_map",
                            @"searchId": @"search_id",

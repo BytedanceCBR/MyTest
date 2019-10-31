@@ -31,6 +31,7 @@
 #import <HMDTTMonitor.h>
 #import <FHHouseBase/FHHouseNeighborModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
+#import <FHDetailMediaHeaderCell.h>
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -47,6 +48,7 @@
 // 注册cell类型
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
+    [self.tableView registerClass:[FHDetailMediaHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderModel class])];
     [self.tableView registerClass:[FHDetailNeighborPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceTrendCellModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodNameModel class])];
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
@@ -180,20 +182,84 @@
 
     // 清空数据源
     [self.items removeAllObjects];
-    // 添加头滑动图片
-    FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];        
-    if (model.data.neighborhoodImage.count > 0) {
-        headerCellModel.houseImage = model.data.neighborhoodImage;
-        if (!model.isInstantData) {
-            headerCellModel.instantHouseImages =  [self instantHouseImages];
-        }
-        headerCellModel.isInstantData = model.isInstantData;
-    }else{
-        //无图片时增加默认图
-        FHImageModel *imgModel = [FHImageModel new];
-        headerCellModel.houseImage = @[imgModel];
+    
+    BOOL hasVideo = NO;
+    BOOL isInstant = model.isInstantData;
+    if (model.data.neighborhoodVideo && model.data.neighborhoodVideo.videoInfos.count > 0) {
+        hasVideo = YES;
     }
-    [self.items addObject:headerCellModel];
+    
+    
+    if (hasVideo) {
+        FHMultiMediaItemModel *itemModel = nil;
+        if (hasVideo) {
+            FHVideoHouseVideoVideoInfosModel *info = model.data.neighborhoodVideo.videoInfos[0];
+            itemModel = [[FHMultiMediaItemModel alloc] init];
+            itemModel.cellHouseType = FHMultiMediaCellHouseNeiborhood;
+            itemModel.mediaType = FHMultiMediaTypeVideo;
+            // 测试id
+            // @"v03004b60000bh57qrtlt63p5lgd20d0";
+            // @"v0200c940000bh9r6mna1haoho053neg";
+//            if (info.coverImageUrl.length <= 0) {
+//                // 视频没有url
+//                if (model.data.houseImageDictList.count > 0) {
+//                    for (int i = 0; i < model.data.houseImageDictList.count; i++) {
+//                        FHDetailOldDataHouseImageDictListModel *item = model.data.houseImageDictList[i];
+//                        if (item.houseImageList.count > 0) {
+//                            FHImageModel *imageModel = item.houseImageList[0];
+//                            if (imageModel.url.length > 0) {
+//                                info.coverImageUrl = imageModel.url;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+            itemModel.videoID = info.vid;
+            itemModel.imageUrl = info.coverImageUrl;
+            itemModel.vWidth = info.vWidth;
+            itemModel.vHeight = info.vHeight;
+            itemModel.infoTitle = model.data.neighborhoodVideo.infoTitle;
+            itemModel.infoSubTitle = model.data.neighborhoodVideo.infoSubTitle;
+            itemModel.groupType = @"视频";
+        }
+        
+        FHDetailMediaHeaderModel *headerCellModel = [[FHDetailMediaHeaderModel alloc] init];
+        FHDetailOldDataHouseImageDictListModel *houseImageDictList = [[FHDetailOldDataHouseImageDictListModel alloc] init];
+        
+        if ([model.data.neighborhoodImage isKindOfClass:[NSArray class]] && model.data.neighborhoodImage.count > 0) {
+            houseImageDictList.houseImageList = model.data.neighborhoodImage;
+            houseImageDictList.houseImageTypeName = @"图片";
+            if ([houseImageDictList isKindOfClass:[FHDetailOldDataHouseImageDictListModel class]]) {
+                headerCellModel.houseImageDictList = @[houseImageDictList];
+            }
+            if (!isInstant) {
+                FHDetailOldDataHouseImageDictListModel *imgModel = [headerCellModel.houseImageDictList firstObject];
+                imgModel.instantHouseImageList = [self instantHouseImages];
+            }
+        }
+
+        headerCellModel.vedioModel = itemModel;// 添加视频模型数据
+        headerCellModel.contactViewModel = self.contactViewModel;
+        headerCellModel.isInstantData = model.isInstantData;
+        [self.items addObject:headerCellModel];
+    }else {
+        // 添加头滑动图片
+        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+        if (model.data.neighborhoodImage.count > 0) {
+            headerCellModel.houseImage = model.data.neighborhoodImage;
+            if (!model.isInstantData) {
+                headerCellModel.instantHouseImages =  [self instantHouseImages];
+            }
+            headerCellModel.isInstantData = model.isInstantData;
+        }else{
+            //无图片时增加默认图
+            FHImageModel *imgModel = [FHImageModel new];
+            headerCellModel.houseImage = @[imgModel];
+        }
+        [self.items addObject:headerCellModel];
+    }
+
     
     // 添加标题
     if (model.data && model.data.neighborhoodInfo.id.length > 0) {

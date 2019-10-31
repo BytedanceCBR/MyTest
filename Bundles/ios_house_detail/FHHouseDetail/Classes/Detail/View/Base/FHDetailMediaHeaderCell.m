@@ -16,6 +16,7 @@
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <NSString+URLEncoding.h>
 #import <FHUtils.h>
+#import "FHMultiMediaModel.h"
 
 @interface FHDetailMediaHeaderCell ()<FHMultiMediaScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -238,13 +239,19 @@
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
     vc.topVC = self.baseViewModel.detailController;
+    
+//    if (FHVideoModel.cellhou == FHCellt) {
+//        <#statements#>
+//    }
+    
+    FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
+
     // 获取图片需要的房源信息数据
     if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
         // 二手房数据
         FHDetailOldModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
         NSString *priceStr = @"";
         NSString *infoStr = @"";
-        FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
         if (vedioModel && vedioModel.videoID.length > 0) {
             priceStr = vedioModel.infoTitle;
             infoStr = vedioModel.infoSubTitle;
@@ -253,8 +260,15 @@
         vc.houseId = houseId;
         vc.priceStr = priceStr;
         vc.infoStr = infoStr;
+
         vc.followStatus = self.baseViewModel.contactViewModel.followStatus;
     }
+    
+    //如果是小区，移除按钮
+    if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
+        vc.isShowAllBtns = NO;
+    }
+    
     // 分享
     vc.shareActionBlock = ^{
         NSString *v_id = @"be_null";
