@@ -194,7 +194,8 @@ def appPods
 #        'WeiboSDK'
 #    ]
 
-    pod_binary 'TencentQQSDK', '1.0.0'
+#    pod_binary 'TencentQQSDK', '1.0.0'
+    pod 'TencentQQSDK', :git => 'git@code.byted.org:TTIOS/TencentQQSDK.git', :branch => 'feature/qq_3.3.7'
     pod_binary 'WechatSDK','0.1.5'
 #    pod 'TTThirdPartySDKs/WeiboSDK', '0.0.4'
     #-----免流量统计-----

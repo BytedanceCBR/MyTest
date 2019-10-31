@@ -285,7 +285,7 @@ PODS:
   - SocketRocket (0.5.1.1-binary)
   - SQLiteRepairKit (1.2.1.1-binary)
   - SSZipArchive (1.6.3.1-binary)
-  - TencentQQSDK (1.0.0.1-binary)
+  - TencentQQSDK (0.1.0)
   - ToutiaoFrontierWebSocket (0.2.5.1-binary):
     - ToutiaoFrontierWebSocket/Main (= 0.2.5.1-binary)
     - ToutiaoFrontierWebSocket/PB (= 0.2.5.1-binary)
@@ -730,7 +730,7 @@ DEPENDENCIES:
   - SocketRocket (= 0.5.1.1-binary)
   - SQLiteRepairKit (= 1.2.1.1-binary)
   - SSZipArchive (= 1.6.3.1-binary)
-  - TencentQQSDK (= 1.0.0.1-binary)
+  - TencentQQSDK (from `git@code.byted.org:TTIOS/TencentQQSDK.git`, branch `feature/qq_3.3.7`)
   - ToutiaoFrontierWebSocket (= 0.2.5.1-binary)
   - TSVToolkit (= 0.1.2.1-binary)
   - TTABManager (= 0.0.7.1-binary)
@@ -917,6 +917,9 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/FHWebView
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
+  TencentQQSDK:
+    :branch: feature/qq_3.3.7
+    :git: git@code.byted.org:TTIOS/TencentQQSDK.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAD:
@@ -978,6 +981,11 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/TTVPlayer
   yoga:
     :path: ../ReactCommon/yoga
+
+CHECKOUT OPTIONS:
+  TencentQQSDK:
+    :commit: 90b144139784aa3f8ce027af0ec61c5ef6da5ccb
+    :git: git@code.byted.org:TTIOS/TencentQQSDK.git
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
@@ -1076,7 +1084,7 @@ SPEC CHECKSUMS:
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
   SQLiteRepairKit: 272cadce05957d8b36df6ac573dc8a596649ed28
   SSZipArchive: cc2e2411672daf4be9f5f61d4184ba66f15bcd2b
-  TencentQQSDK: 64750e415a7c2c41578ec10c88364c9602c3d12b
+  TencentQQSDK: 84354ac1a7b529d0d1e0d54dce60f95fd691ae08
   ToutiaoFrontierWebSocket: 96f0257673f42edfffdf379681341854b1195937
   TSVToolkit: deb654f65a887a0c314aa70183681f25a8b0d75d
   TTABManager: b22ef5bd7f829192b72ec71d6e5f761e66428b5d
@@ -1175,6 +1183,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: e4ceef9b65a356c5314e0bf457d76cf286e73be0
+PODFILE CHECKSUM: 0444dd92a22a810f81c12e6b5fc29801d108b4d1
 
 COCOAPODS: 1.4.0
