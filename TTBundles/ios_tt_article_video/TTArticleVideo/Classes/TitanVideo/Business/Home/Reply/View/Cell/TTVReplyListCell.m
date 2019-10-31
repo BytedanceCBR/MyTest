@@ -30,6 +30,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import <UIColor+Theme.h>
 
 NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
 #define kTTCommentCellDigButtonHitTestInsets UIEdgeInsetsMake(-30, -30, -10, -30)
@@ -181,8 +182,13 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
         NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
         NSFontAttributeName : [TTVReplyListCellHelper contentLabelFont]
     };
+    NSDictionary *actionLinkAttributes = @{
+                                     NSParagraphStyleAttributeName: [TTVReplyListCellHelper contentLabelParagraphStyle],
+                                     NSForegroundColorAttributeName : [UIColor themeRed3],
+                                     NSFontAttributeName : [TTVReplyListCellHelper contentLabelFont]
+                                     };
     self.contentLabel.linkAttributes = linkAttributes;
-    self.contentLabel.activeLinkAttributes = linkAttributes;
+    self.contentLabel.activeLinkAttributes = actionLinkAttributes;
     self.contentLabel.inactiveLinkAttributes = linkAttributes;
 
     NSArray <TTRichSpanLink *> *richSpanLinks = [self.layout.contentLayout.richSpanText richSpanLinksOfAttributedString];
@@ -383,7 +389,7 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
         CGFloat maxWidth = self.width - [TTVReplyListCellHelper cellHorizontalPadding] - [TTVReplyListCellHelper avatarSize] - [TTVReplyListCellHelper avatarRightPadding] - [TTVReplyListCellHelper cellRightPadding] - 30.f - [TTVReplyListCellHelper nameViewRightPadding];
         _nameView = [[TTUserInfoView alloc] initWithBaselineOrigin:CGPointMake(0, 0) maxWidth:maxWidth limitHeight:[UIFont systemFontOfSize:[TTVReplyListCellHelper nameViewFontSize]].lineHeight title:nil fontSize:[TTVReplyListCellHelper nameViewFontSize] verifiedInfo:nil appendLogoInfoArray:nil];
         _nameView.frame = CGRectMake(self.avatarView.right + [TTVReplyListCellHelper avatarRightPadding], [TTVReplyListCellHelper cellVerticalPadding], maxWidth, [TTDeviceUIUtils tt_newPadding:20.f]);
-        [_nameView setTextColorThemedKey:kColorText5];
+        _nameView.titleLabel.textColor = [UIColor themeGray1];
         WeakSelf;
         __weak typeof(_nameView) weakNameView = _nameView;
         [_nameView clickTitleWithAction:^(NSString *title) {

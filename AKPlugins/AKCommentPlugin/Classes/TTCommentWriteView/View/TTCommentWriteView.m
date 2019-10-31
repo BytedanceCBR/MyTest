@@ -39,6 +39,7 @@ static struct timeval commentTimeval;
 @property (nonatomic, strong) SSThemedView *textInputView;
 
 @property (nonatomic, strong) SSThemedButton *publishButton;
+@property (nonatomic, strong) SSThemedButton *emojButton;
 @property (nonatomic, strong) SSThemedButton *atButton;
 
 @property (nonatomic, strong) TTCommentFunctionView *commentFunctionView;
@@ -485,6 +486,7 @@ static struct timeval commentTimeval;
     }
 
     self.publishButton.centerY = self.inputTextView.bottom - [TTDeviceUIUtils tt_newPadding:32.f]/2.f;
+    self.emojButton.centerY = self.publishButton.centerY;
     self.atButton.centerY = self.publishButton.centerY;
 }
 
@@ -518,6 +520,7 @@ static struct timeval commentTimeval;
 
 - (void)setupViews {
     self.atButton.frame = CGRectMake(self.inputTextView.right + 15, 0, 24, 24);
+    self.emojButton.frame = CGRectMake(self.atButton.right + 15, 0, 24, 24);
 
     self.publishButton.frame = CGRectMake(self.width - PUBLISHBUTTON_WIDTH - 20, 0, PUBLISHBUTTON_WIDTH, PUBLISHBUTTON_HEIGHT);
     
@@ -547,6 +550,7 @@ static struct timeval commentTimeval;
     [self.textInputView addSubview:self.inputTextView];
     [self.textInputView addSubview:self.commentFunctionView];
     [self.textInputView addSubview:self.publishButton];
+    [self.textInputView addSubview:self.emojButton];
     [self.textInputView addSubview:self.atButton];
     [self.containerView addSubview:self.emojiInputView];
 
@@ -571,6 +575,16 @@ static struct timeval commentTimeval;
 
     if (self.commentManager) {
         [self.commentManager commentViewClickPublishButton];
+    }
+}
+
+- (void)emojClick:(id)sender {
+    if (self.emojiInputViewVisible) {
+        self.emojiInputViewVisible = NO;
+        [self.inputTextView becomeFirstResponder];
+    } else {
+        self.emojiInputViewVisible = YES;
+        [self.inputTextView resignFirstResponder];
     }
 }
 
@@ -616,7 +630,7 @@ static struct timeval commentTimeval;
 
 - (TTUGCTextView *)inputTextView {
     if (!_inputTextView) {
-        _inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(14.f, [TTDeviceUIUtils tt_newPadding:10.f], self.width - 14.f - 60.f - 39.0f, [TTDeviceUIUtils tt_newPadding:32.f])];
+        _inputTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(14.f, [TTDeviceUIUtils tt_newPadding:10.f], self.width - 14.f - 106.f - 39.0f, [TTDeviceUIUtils tt_newPadding:32.f])];
         _inputTextView.isBanHashtag = YES;
         _inputTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _inputTextView.backgroundColorThemeKey = @"grey7";
@@ -676,6 +690,20 @@ static struct timeval commentTimeval;
     }
 
     return _publishButton;
+}
+
+- (SSThemedButton *)emojButton {
+    if (!_emojButton) {
+        _emojButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
+        _emojButton.hitTestEdgeInsets = UIEdgeInsetsMake(-8, -6, -8, -6);
+        _emojButton.imageName = @"fh_ugc_toolbar_emoj_normal";
+        _emojButton.selectedImageName = @"fh_ugc_toolbar_keyboard_normal";
+        _emojButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
+        [_emojButton addTarget:self action:@selector(emojClick:) forControlEvents:UIControlEventTouchUpInside];
+        _emojButton.enabled = YES;
+    }
+    
+    return _emojButton;
 }
 
 - (TTUGCEmojiInputView *)emojiInputView {

@@ -240,12 +240,12 @@
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
             
             if(isFirst){
-                [self.clientShowDict removeAllObjects];
+                [wself.clientShowDict removeAllObjects];
                 [wself.dataList removeAllObjects];
             }
             if(isHead){
                 // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
-                [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                [wself.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
                     cellModel.isStick = NO;
                 }];
                 // 头部插入新数据

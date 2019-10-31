@@ -1004,10 +1004,6 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view quotedNameOnClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-    
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.qutoedCommentModel.userID];
     [self.store dispatch:action];
 }

@@ -961,15 +961,12 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view replyListAvatarClickedWithUserID:(NSString *)userID commentModel:(id<TTCommentModelProtocol>)model {
-    
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     if (isEmptyString(userID)) {
         return;
     }
     
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(@{@"uid": userID})];
+    NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=comment_list",userID];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url] userInfo:nil];
 }
 
 - (void)tt_commentCell:(nonnull UITableViewCell *)view quotedNameViewonClickedWithCommentModel:(nonnull id<TTCommentModelProtocol>)model {
