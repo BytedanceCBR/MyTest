@@ -31,6 +31,7 @@
 @property(nonatomic, assign) BOOL hasLogin;
 @property(nonatomic, strong) FHMineMutiItemCell *focusCell;
 @property(nonatomic, assign) BOOL isFirstLoad;
+@property(nonatomic, strong) FHMineConfigModel *configModel;
 
 @end
 
@@ -101,6 +102,7 @@
         [wself.viewController.emptyView hideEmptyView];
         
         FHMineConfigModel *configModel = (FHMineConfigModel *)model;
+        self.configModel = configModel;
         if(configModel){
             wself.dataList = configModel.data.iconOpData;
             [wself.tableView reloadData];
@@ -176,6 +178,8 @@
         self.viewController.headerView.editIcon.hidden = YES;
         _hasLogin = NO;
     }
+    
+    [self.viewController.headerView sethomePageWithModel:self.configModel.data.homePage];
 }
 
 - (NSDictionary *)fhSettings {

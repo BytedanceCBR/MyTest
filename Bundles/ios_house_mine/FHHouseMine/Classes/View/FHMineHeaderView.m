@@ -15,6 +15,9 @@
 #import "UIButton+TTAdditions.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <TTRoute.h>
+#import <FHEnvContext.h>
+#import "TTAccountManager.h"
+#import <TTDeviceHelper.h>
 
 @interface FHMineHeaderView ()
 
@@ -76,12 +79,18 @@
     [_homePageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _homePageBtn.titleLabel.font = [UIFont themeFontRegular:12];
     _homePageBtn.hidden = YES;
-    _homePageBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [_homePageBtn addTarget:self action:@selector(goToHomePage:) forControlEvents:UIControlEventTouchUpInside];
-    _homePageBtn.titleLabel.layer.masksToBounds = YES;
-    _homePageBtn.layer.cornerRadius = 4;
-    _homePageBtn.layer.borderColor = [[UIColor whiteColor] CGColor];
-    _homePageBtn.layer.borderWidth = 0.5;
+//    _homePageBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
+    
+//    if([TTDeviceHelper isScreenWidthLarge320]){
+//        _homePageBtn.titleLabel.layer.masksToBounds = YES;
+//        _homePageBtn.layer.cornerRadius = 4;
+//        _homePageBtn.layer.borderColor = [[UIColor whiteColor] CGColor];
+//        _homePageBtn.layer.borderWidth = 0.5;
+//
+//    }else{
+//        _homePageBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
+//    }
     
     [self addSubview:_homePageBtn];
 }
@@ -114,7 +123,7 @@
         make.height.mas_equalTo(28);
         make.top.mas_equalTo(self.iconBorderView.mas_top).offset(7);
         make.left.mas_equalTo(self.iconBorderView.mas_right).offset(8);
-        make.right.mas_lessThanOrEqualTo(self).offset(-20).priorityHigh();
+        make.right.mas_equalTo(self).offset(-20);
     }];
     
     [_descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -131,10 +140,11 @@
     }];
     
     [_homePageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(31);
-        make.width.mas_lessThanOrEqualTo(80);
-        make.right.mas_equalTo(self).offset(-20);
-        make.bottom.mas_equalTo(self.descLabel.mas_bottom);
+        make.top.mas_equalTo(self.iconBorderView);
+        make.bottom.mas_equalTo(self);
+        make.width.mas_equalTo(50);
+        make.right.mas_equalTo(self);
+        make.centerY.mas_equalTo(self.iconBorderView.mas_centerY);
     }];
     
     [self layoutIfNeeded];
@@ -154,7 +164,7 @@
 -(void)updateAvatar:(NSString *)avatarUrl {
     if(avatarUrl){
         [self.icon bd_setImageWithURL:[NSURL URLWithString:avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"] options:BDImageRequestDefaultPriority completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
-            NSLog(@"1");
+        
         }];
     }else{
         self.icon.image = [UIImage imageNamed:@"fh_mine_avatar"];
@@ -208,52 +218,43 @@
     return newImage;
 }
 
-- (void)sethomePageWithText:(NSString *)text scheme:(NSString *)scheme {
-    self.homePageScheme = scheme;
-    [_homePageBtn setTitle:@"个人" forState:UIControlStateNormal];
-    //文字的size
-    CGSize textSize = [_homePageBtn.titleLabel.text sizeWithFont:_homePageBtn.titleLabel.font];
-    CGSize imageSize = _homePageBtn.currentImage.size;
-    CGFloat marginGay = 8;//图片跟文字之间的间距
-    _homePageBtn.imageEdgeInsets = UIEdgeInsetsMake(0, textSize.width + marginGay/2, 0, - textSize.width - marginGay/2);
-    _homePageBtn.titleEdgeInsets = UIEdgeInsetsMake(0, - imageSize.width - marginGay/2, 0, imageSize.width + marginGay/2);
-    _homePageBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 8 + marginGay/2, 0, 8 + marginGay/2);
-}
-
 - (void)sethomePageWithModel:(FHMineConfigDataHomePageModel *)model {
-    if(model && model.showHomePage){
+    if(model && model.showHomePage && [TTAccountManager isLogin] && [FHEnvContext isUGCOpen]){
         self.homePageBtn.hidden = NO;
         
         self.homePageScheme = model.schema;
-        [_homePageBtn setTitle:model.homePageContent forState:UIControlStateNormal];
-        //文字的size
-        CGSize textSize = [_homePageBtn.titleLabel.text sizeWithFont:_homePageBtn.titleLabel.font];
-        CGSize imageSize = _homePageBtn.currentImage.size;
         
-        //目前仅支持最大4个汉字
-        if(textSize.width > 48){
-            textSize.width = 48;
-            CGRect frame = _homePageBtn.titleLabel.frame;
-            frame.size.width = textSize.width;
-            _homePageBtn.titleLabel.frame = frame;
-        }
-        
-        CGFloat marginGay = 8;//图片跟文字之间的间距
-        _homePageBtn.imageEdgeInsets = UIEdgeInsetsMake(0, textSize.width + marginGay/2, 0, - textSize.width - marginGay/2);
-        _homePageBtn.titleEdgeInsets = UIEdgeInsetsMake(0, - imageSize.width - marginGay/2, 0, imageSize.width + marginGay/2);
-        _homePageBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 8 + marginGay/2, 0, 8 + marginGay/2);
+//        if([TTDeviceHelper isScreenWidthLarge320]){
+//            [_homePageBtn setTitle:model.homePageContent forState:UIControlStateNormal];
+//            //文字的size
+//            CGSize textSize = [_homePageBtn.titleLabel.text sizeWithFont:_homePageBtn.titleLabel.font];
+//            CGSize imageSize = _homePageBtn.currentImage.size;
+//
+//            //目前仅支持最大4个汉字
+//            if(textSize.width > 48){
+//                textSize.width = 48;
+//                CGRect frame = _homePageBtn.titleLabel.frame;
+//                frame.size.width = textSize.width;
+//                _homePageBtn.titleLabel.frame = frame;
+//            }
+//
+//            CGFloat marginGay = 8;//图片跟文字之间的间距
+//            _homePageBtn.imageEdgeInsets = UIEdgeInsetsMake(0, textSize.width + marginGay/2, 0, - textSize.width - marginGay/2);
+//            _homePageBtn.titleEdgeInsets = UIEdgeInsetsMake(0, - imageSize.width - marginGay/2, 0, imageSize.width + marginGay/2);
+//            _homePageBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 8 + marginGay/2, 0, 8 + marginGay/2);
+//        }
         
         [self layoutIfNeeded];
         
         [_userNameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_lessThanOrEqualTo(self).offset(- 30 - _homePageBtn.size.width).priorityHigh();
+            make.right.mas_equalTo(self).offset(-self.homePageBtn.size.width);
         }];
         
     }else{
         self.homePageBtn.hidden = YES;
         
         [_userNameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_lessThanOrEqualTo(self).offset(-20).priorityHigh();
+            make.right.mas_equalTo(self).offset(-20);
         }];
     }
 }
