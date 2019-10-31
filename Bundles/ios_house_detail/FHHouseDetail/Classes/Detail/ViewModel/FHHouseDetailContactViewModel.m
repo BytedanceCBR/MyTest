@@ -656,11 +656,27 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     self.shareExtraDic = nil;// 分享都会走当前方法
 }
 
+- (NSString *)elementTypeStringByHouseType:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_detail_button";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_detail_button";
+            break;
+            
+        default:
+            break;
+    }
+    return @"be_null";
+}
+
 - (void)addRealtorShowLog:(FHDetailContactModel *)contactPhone
 {
     NSMutableDictionary *tracerDic = @{}.mutableCopy;
     tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
-    tracerDic[@"element_type"] = @"old_detail_button";
+    tracerDic[@"element_type"] = [self elementTypeStringByHouseType:self.houseType];
     tracerDic[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
     tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
     tracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
@@ -694,7 +710,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSMutableDictionary *tracerDic = @{}.mutableCopy;
     tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
     tracerDic[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
-    tracerDic[@"element_type"] = @"old_detail_button";
+    tracerDic[@"element_type"] = [self elementTypeStringByHouseType:self.houseType];
     tracerDic[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
     tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
     tracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";

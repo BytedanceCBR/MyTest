@@ -249,7 +249,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"enter_from"] = self.tracerDict[@"page_type"] ? : @"be_null";
-    dict[@"element_from"] = extra[@"element_from"] ? : @"old_detail_button";
+    dict[@"element_from"] = extra[@"element_from"] ? : [self elementTypeStringByHouseType:self.houseType];
     dict[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
     id logPb = self.tracerDict[@"log_pb"];
     if ([logPb isKindOfClass:[NSDictionary class]]) {
@@ -351,6 +351,21 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
 }
 
+- (NSString *)elementTypeStringByHouseType:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_detail_button";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_detail_button";
+            break;
+            
+        default:
+            break;
+    }
+    return @"be_null";
+}
 
 - (void)destoryRNPreloadCache
 {

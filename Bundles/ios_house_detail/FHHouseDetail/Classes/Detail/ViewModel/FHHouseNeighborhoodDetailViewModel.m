@@ -186,7 +186,7 @@
         contactPhone.unregistered = YES;
     }
     contactPhone.isInstantData = model.isInstantData;
-    //TODO fengbo check this?
+
     if (contactPhone.phone.length > 0) {
         contactPhone.isFormReport = NO;
     }else {
