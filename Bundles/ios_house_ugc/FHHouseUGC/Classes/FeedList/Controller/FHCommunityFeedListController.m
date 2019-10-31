@@ -417,7 +417,7 @@
                                        [wSelf gotoPostVC];
                                    });
                 } else {
-                    [_loginDelegate onLoginIn];
+                    [wSelf.loginDelegate onLoginIn];
                 }
             }
         }
