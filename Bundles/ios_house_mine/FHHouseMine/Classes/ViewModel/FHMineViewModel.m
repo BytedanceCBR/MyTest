@@ -52,8 +52,13 @@
         self.viewController = viewController;
         
         [self.tableView registerClass:NSClassFromString(@"FHMineMutiItemCell") forCellReuseIdentifier:mutiItemCellId];
+//        [TTAccount addMulticastDelegate:self];
     }
     return self;
+}
+
+- (void)dealloc {
+//    [TTAccount removeMulticastDelegate:self];
 }
 
 - (void)requestData {
@@ -387,6 +392,11 @@
     [self.viewController refreshContentOffset:scrollView.contentOffset];
 }
 
-
+//#pragma mark - TTAccountMulticaastProtocol
+//
+//// 帐号切换
+//- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
+//    [self requestMineConfig];
+//}
 
 @end

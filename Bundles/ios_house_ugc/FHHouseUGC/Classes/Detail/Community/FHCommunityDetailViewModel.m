@@ -33,7 +33,7 @@
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver, CommunityGroupChatLoginDelegate, FHCommunityFeedListControllerDelegate>
 
 @property(nonatomic, weak) FHCommunityDetailViewController *viewController;
-@property(nonatomic, weak) FHCommunityFeedListController *feedListController;
+@property(nonatomic, strong) FHCommunityFeedListController *feedListController;
 @property(nonatomic, strong) FHUGCScialGroupDataModel *data;
 @property(nonatomic, strong) FHCommunityDetailHeaderView *headerView;
 @property(nonatomic, strong) FHUGCFollowButton *rightBtn;
@@ -41,7 +41,7 @@
 @property(nonatomic, strong) UILabel *subTitleLabel;
 @property(nonatomic, strong) UIView *titleContainer;
 @property(nonatomic, strong) MJRefreshHeader *refreshHeader;
-@property (nonatomic, assign)   BOOL       isViewAppear;
+@property(nonatomic, assign)   BOOL       isViewAppear;
 @property(nonatomic, assign) BOOL isLoginSatusChangeFromGroupChat;
 @property(nonatomic, assign) BOOL isLogin;
 

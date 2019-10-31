@@ -26,6 +26,7 @@
 #import <TTDiggButton/TTDiggButton.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTThemed/TTThemeManager.h>
+#import <UIColor+Theme.h>
 
 
 NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifier";
@@ -152,8 +153,13 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
         NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
         NSFontAttributeName : [TTCommentDetailCellHelper contentLabelFont]
     };
+    NSDictionary *activelinkAttributes = @{
+                                     NSParagraphStyleAttributeName: [TTCommentDetailCellHelper contentLabelParagraphStyle],
+                                     NSForegroundColorAttributeName : [UIColor themeRed3],
+                                     NSFontAttributeName : [TTCommentDetailCellHelper contentLabelFont]
+                                     };
     self.contentLabel.linkAttributes = linkAttributes;
-    self.contentLabel.activeLinkAttributes = linkAttributes;
+    self.contentLabel.activeLinkAttributes = activelinkAttributes;
     self.contentLabel.inactiveLinkAttributes = linkAttributes;
 
     NSArray <TTRichSpanLink *> *richSpanLinks = [self.layout.contentLayout.richSpanText richSpanLinksOfAttributedString];
