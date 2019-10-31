@@ -56,6 +56,7 @@
 #import "FHEnvContext.h"
 #import "FHMessageManager.h"
 #import "FHNeighbourhoodAgencyCardCell.h"
+#import <FHHouseDetail/FHDetailBaseModel.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -1625,9 +1626,10 @@ extern NSString *const INSTANT_DATA_KEY;
     if (indexPath.section == 0) {
         if (indexPath.row < self.houseList.count) {
 
-            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            id cm = self.houseList[indexPath.row];
 
-            if ([cellModel isKindOfClass:[FHSingleImageInfoCellModel class]]) {
+            if ([cm isKindOfClass:[FHSingleImageInfoCellModel class]]) {
+                FHSingleImageInfoCellModel *cellModel = (FHSingleImageInfoCellModel *)cm;
                 NSString *hashString = [NSString stringWithFormat:@"%ld",cellModel.hash];
 
                 if (cellModel.isSubscribCell && !self.houseShowCache[hashString] ) {
@@ -1649,6 +1651,15 @@ extern NSString *const INSTANT_DATA_KEY;
                 if (cellModel.groupId.length > 0 && ![self.houseShowCache.allKeys containsObject:cellModel.groupId] && !cellModel.isSubscribCell && !cellModel.isRealHouseTopCell) {
                     [self addHouseShowLog:cellModel withRank:indexPath.row - (_showRealHouseTop ? 1 : 0)];
                     self.houseShowCache[cellModel.groupId] = @"1";
+                }
+            }else if ([cm isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+                FHHouseNeighborAgencyModel *agencyModel = (FHHouseNeighborAgencyModel *)cm;
+                NSString *hashString = [NSString stringWithFormat:@"%ld",agencyModel.hash];
+                if (!self.houseShowCache[hashString]) {
+                    
+                    [self addHouseShowLog:agencyModel withRank:indexPath.row];
+                    [self addLeadShowLog:agencyModel];
+                    self.houseShowCache[hashString] = @"1";
                 }
             }
         }
@@ -2076,16 +2087,63 @@ extern NSString *const INSTANT_DATA_KEY;
 }
 
 #pragma mark house_show log
--(void)addHouseShowLog:(FHSingleImageInfoCellModel *)cellModel withRank: (NSInteger) rank {
-    if (!cellModel) {
+- (void)addLeadShowLog:(id)cm
+{
+    if (![cm isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
         return;
     }
+    FHHouseNeighborAgencyModel *cellModel = (FHHouseNeighborAgencyModel *)cm;
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"house_type"] = [self houseTypeString] ? : UT_BE_NULL;
+    tracerDict[@"page_type"] = [self pageTypeString];
+    tracerDict[@"card_type"] = @"left_pic";
+    tracerDict[@"enter_from"] = self.tracerModel.enterFrom;
+    tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
+    tracerDict[@"rank"] = @(0);
+    tracerDict[@"origin_from"] = self.originFrom;
+    tracerDict[@"origin_search_id"] = self.originSearchId ? : UT_BE_NULL;
+    tracerDict[@"log_pb"] = cellModel.logPb ? : UT_BE_NULL;
+
+    tracerDict[@"is_im"] = cellModel.contactModel.imOpenUrl.length > 0 ? @(0) : @(1);
+    tracerDict[@"is_call"] = cellModel.contactModel.phone.length < 1 ? @(0) : @(1);
+    tracerDict[@"is_report"] = @(0);
+    tracerDict[@"is_online"] = cellModel.contactModel.unregistered ? @(0) : @(1);
     
+    tracerDict[@"element_type"] = @"neighborhood_expert_card";
+
+    [FHUserTracker writeEvent:@"lead_show" params:tracerDict];
+}
+
+-(void)addHouseShowLog:(id)cm withRank: (NSInteger) rank {
+    if (!cm) {
+        return;
+    }
     NSString *originFrom = self.originFrom ? : @"be_null";
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"house_type"] = [self houseTypeString] ? : @"be_null";
     tracerDict[@"card_type"] = @"left_pic";
+    
+    if ([cm isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+        
+        FHHouseNeighborAgencyModel *cellModel = (FHHouseNeighborAgencyModel *)cm;
+
+        tracerDict[@"page_type"] = [self pageTypeString];
+        tracerDict[@"element_type"] = @"neighborhood_expert_card";
+        tracerDict[@"rank"] = @(rank);
+        tracerDict[@"origin_from"] = originFrom;
+        tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+        tracerDict[@"log_pb"] = cellModel.logPb ? : @"be_null";
+
+        [FHUserTracker writeEvent:@"house_show" params:tracerDict];
+        return;
+    }
+    
+    if (![cm isKindOfClass:[FHSingleImageInfoCellModel class]]) {
+        return;
+    }
+    FHSingleImageInfoCellModel *cellModel = (FHSingleImageInfoCellModel *)cm;
+
     if (cellModel.isRecommendCell) {
         tracerDict[@"page_type"] = [self pageTypeString];
         tracerDict[@"element_type"] = @"search_related";

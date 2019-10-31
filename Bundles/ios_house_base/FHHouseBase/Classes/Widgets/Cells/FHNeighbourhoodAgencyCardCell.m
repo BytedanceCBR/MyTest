@@ -283,31 +283,40 @@
     return result;
 }
 
-- (void)imclick:(id)imclick {
+- (void)imclick:(UIButton *)btn {
     if (self.modelData) {
         FHDetailContactModel *contact = self.modelData.contactModel;
         if (self.phoneCallViewModel) {
             NSMutableDictionary *imExtra = @{}.mutableCopy;
             imExtra[@"realtor_position"] = @"neighborhood_expert_card";
             imExtra[@"from"] = @"app_neighborhood_aladdin";
+            imExtra[@"element_from"] = @"neighborhood_expert_card";
+            // todo zjing
+//            if (extraDict[kFHClueEndpoint]) {
+//                imExtra[kFHClueEndpoint] = extraDict[kFHClueEndpoint];
+//            }
+//            if (extraDict[kFHCluePage]) {
+//                imExtra[kFHCluePage] = extraDict[kFHCluePage];
+//            }
             [self.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
         }
     }
 
 }
 
-- (void)phoneClick:(id)phoneClick {
+- (void)phoneClick:(UIButton *)btn {
     if (self.modelData) {
         FHDetailContactModel *contact = self.modelData.contactModel;
 
         NSMutableDictionary *extraDict = @{}.mutableCopy;
+        if (self.traceParams) {
+            [extraDict addEntriesFromDictionary:self.traceParams];
+        }
         extraDict[@"realtor_id"] = contact.realtorId;
         extraDict[@"realtor_rank"] = @"be_null";
         extraDict[@"realtor_position"] = @"neighborhood_expert_card";
         extraDict[@"realtor_logpb"] = contact.realtorLogpb;
-
-        //TODO fengbo check this?
-        [extraDict addEntriesFromDictionary:self.traceParams];
+        extraDict[@"element_from"] = @"neighborhood_expert_card";
 
         FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc] initWithDictionary:extraDict error:nil];
         contactConfig.houseType = FHHouseTypeNeighborhood;
@@ -319,7 +328,13 @@
             contactConfig.searchId = self.modelData.logPb[@"search_id"];
             contactConfig.imprId = self.modelData.logPb[@"impr_id"];
         }
-
+        // todo zjing
+        //            if (extraDict[kFHClueEndpoint]) {
+        //                imExtra[kFHClueEndpoint] = extraDict[kFHClueEndpoint];
+        //            }
+        //            if (extraDict[kFHCluePage]) {
+        //                imExtra[kFHCluePage] = extraDict[kFHCluePage];
+        //            }
         contactConfig.from = @"app_neighborhood_aladdin";
         [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
     }
@@ -337,8 +352,11 @@
 - (void)realtorInfoClick:(id)realtorInfoClick {
     if (self.modelData) {
         FHDetailContactModel *contact = self.modelData.contactModel;
+        NSMutableDictionary *extraDict = @{}.mutableCopy;
+        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
+        extraDict[@"element_from"] = @"neighborhood_expert_card";
         if (self.phoneCallViewModel) {
-            [self.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO extra:nil];
+            [self.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO extra:extraDict];
         }
     }
 }
