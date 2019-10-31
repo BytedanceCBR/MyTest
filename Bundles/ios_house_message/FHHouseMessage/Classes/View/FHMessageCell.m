@@ -13,6 +13,7 @@
 #import "UIImageView+BDWebImage.h"
 #import "TTAccount.h"
 #import "FHChatUserInfoManager.h"
+#import <TTRichSpanText.h>
 #define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
 @interface FHMessageCell()
@@ -195,8 +196,10 @@
         NSString *targetUserId = [conv getTargetUserId:[[TTAccount sharedAccount] userIdString]];
         self.titleLabel.text = [[FHChatUserInfoManager shareInstance] getUserInfo:targetUserId].username;
     }
-    if (!isEmptyString([conv getDraft])) {
-        self.subTitleLabel.attributedText = [self getDraftAttributeString:[conv getDraft]];
+    TTRichSpanText *richSpanTextDraft = [[TTRichSpanText alloc] initWithBase64EncodedString:[conv getDraft]];
+    NSString *draftText = richSpanTextDraft.text;
+    if (!isEmptyString(draftText)) {
+        self.subTitleLabel.attributedText = [self getDraftAttributeString:draftText];
     } else {
         if (isGroupChat) {
             NSString *cutStr = [self cutLineBreak:[conv lastMessage]];
