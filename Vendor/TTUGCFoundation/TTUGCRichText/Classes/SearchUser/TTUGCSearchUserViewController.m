@@ -20,6 +20,8 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "TTTrackerWrapper.h"
 #import "TTDeviceUIUtils.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
 
 typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     TTUGCSearchState,
@@ -70,10 +72,13 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     [super viewDidLoad];
     
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    self.view.backgroundColor = SSGetThemedColorWithKey(kColorBackground4);
+    self.view.backgroundColor = [UIColor themeWhite];
     
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    self.navigationItem.titleView = [SSNavigationBar navigationTitleViewWithTitle:@"联系人"];
+    SSThemedLabel *titleLabel = (SSThemedLabel *)[SSNavigationBar navigationTitleViewWithTitle:@"@用户"];
+    titleLabel.font = [UIFont themeFontMedium:18];
+    titleLabel.textColor = [UIColor themeGray1];
+    self.navigationItem.titleView = titleLabel;
     UIBarButtonItem *leftPaddingItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     if(self.isPushOutAtListController) {
         TTNavigationBarItemContainerView *backItem = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationBackButtonWithTarget:self action:@selector(exitPage:)];
@@ -107,7 +112,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     }];
     
     self.searchResultTableView.pullUpView.enabled = NO;
-    
+    self.ttNeedHideBottomLine = YES;
     [self loadRequest];
 }
 
@@ -183,7 +188,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
             // 由于涉及 ttErrorView 变量的共用，为了避免更多问题，这里不采用 ttErrorView 方式添加
             [self.tableView addSubview:self.emptyView];
         } else {
-            self.searchBar.searchField.placeholder = @"搜索";
+            self.searchBar.searchField.placeholder = @"搜索用户";
         }
     }];
 }
@@ -420,7 +425,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         
         CGFloat topInset = TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height;
         
-        self.maskView.top = topInset + 44.f;
+        self.maskView.top = topInset + 40.f;
         [self.view addSubview:self.maskView];
         
         [UIView animateWithDuration:UINavigationControllerHideShowBarDuration animations:^{
@@ -430,8 +435,8 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
             self.searchBar.showsCancelButton = YES;
             self.searchBar.contentView.width -= self.searchBar.cancelButton.width;
             self.searchBar.cancelButton.left -= self.searchBar.cancelButton.width;
-            self.searchBar.backgroundColorThemeKey = kColorBackground4;
-            self.searchBar.inputBackgroundView.backgroundColorThemeKey = kColorBackground3;
+            self.searchBar.backgroundColor = [UIColor themeWhite];
+            self.searchBar.inputBackgroundView.backgroundColor = [UIColor themeGray7];
             self.maskView.top = topInset;
             self.maskView.alpha = 0.3f;
         } completion:^(BOOL finished) {
@@ -492,9 +497,9 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         self.searchBar.showsCancelButton = NO;
         self.searchBar.contentView.width += self.searchBar.cancelButton.width;
         self.searchBar.cancelButton.left += self.searchBar.cancelButton.width;
-        self.searchBar.backgroundColorThemeKey = kColorBackground3;
-        self.searchBar.inputBackgroundView.backgroundColorThemeKey = kColorBackground4;
-        self.maskView.top = topInset + 44.f;
+        self.searchBar.backgroundColor = [UIColor whiteColor];
+        self.searchBar.inputBackgroundView.backgroundColor = [UIColor themeGray7];;
+        self.maskView.top = topInset + 40.f;
         self.maskView.alpha = 0.f;
     } completion:^(BOOL finished) {
         [self hideSearchResultTableView];
@@ -626,7 +631,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         return 46;
     }
     
-    return 74.f;
+    return 66.f;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -647,31 +652,16 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         arrowView.imageName = @"setting_arrow";
         [cell.contentView addSubview:arrowView];
         
-        SSThemedView *bottomLineView = [[SSThemedView alloc] init];
-        bottomLineView.backgroundColorThemeKey = kColorLine1;
-        [cell.contentView addSubview:bottomLineView];
-        
         arrowView.width = [TTDeviceUIUtils tt_newPadding:9];
         arrowView.height = [TTDeviceUIUtils tt_newPadding:14];
         arrowView.left = tableView.width - arrowView.width - [TTDeviceUIUtils tt_newPadding:15];
         arrowView.top = (cell.height - arrowView.height) / 2;
-        
-        bottomLineView.left = 15.f;
-        bottomLineView.width = tableView.width - 15.f;
-        bottomLineView.height = [TTDeviceHelper ssOnePixel];
-        bottomLineView.bottom = 45.f;
         
         return cell;
     }
     
     TTUGCSearchUserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([TTUGCSearchUserTableViewCell class]) forIndexPath:indexPath];
     [cell configWithUserModel:userModel];
-    
-    if (indexPath.section == 0 && indexPath.row == dataSource.count - 1) {
-        cell.bottomLineView.hidden = YES;
-    } else {
-        cell.bottomLineView.hidden = NO;
-    }
     
     return cell;
 }
@@ -710,11 +700,11 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     if (!_searchBar) {
         CGFloat topInset = TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height;
         
-        _searchBar = [[TTSeachBarView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, 44.f)];
-        _searchBar.backgroundColorThemeKey = kColorBackground3;
-        _searchBar.inputBackgroundView.backgroundColorThemeKey = kColorBackground4;
+        _searchBar = [[TTSeachBarView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, 40.f)];
+        _searchBar.backgroundColor = [UIColor themeWhite];
+        _searchBar.inputBackgroundView.backgroundColor = [UIColor themeGray7];
         _searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        _searchBar.searchField.placeholder = @"搜索";
+        _searchBar.searchField.placeholder = @"搜索用户";
         _searchBar.searchField.placeholderColorThemeKey = kColorText3;
         _searchBar.cancelButton.titleColorThemeKey = kColorText1;
         _searchBar.cancelButton.highlightedTitleColorThemeKey = kColorText1Highlighted;
@@ -728,10 +718,10 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     if (!_tableView) {
         CGFloat topInset = TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height;
         
-        _tableView = [[SSThemedTableView alloc] initWithFrame:CGRectMake(0, topInset + 44, self.view.width, self.view.height - topInset - 44)];
+        _tableView = [[SSThemedTableView alloc] initWithFrame:CGRectMake(0, topInset + 40, self.view.width, self.view.height - topInset - 40)];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.backgroundColorThemeKey = kColorBackground4;
+        _tableView.backgroundColor = [UIColor themeWhite];
         _tableView.backgroundView = nil;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -782,7 +772,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 
 - (TTUGCSearchUserEmptyView *)emptyView {
     if (!_emptyView) {
-        _emptyView = [[TTUGCSearchUserEmptyView alloc] initWithFrame:CGRectMake(0, 44, self.tableView.width, self.tableView.height - 44)];
+        _emptyView = [[TTUGCSearchUserEmptyView alloc] initWithFrame:CGRectMake(0, 40, self.tableView.width, self.tableView.height - 40)];
     }
     
     return _emptyView;
