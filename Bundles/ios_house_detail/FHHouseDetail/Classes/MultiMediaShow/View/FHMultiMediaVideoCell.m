@@ -67,8 +67,9 @@
     NSString *key = [[BDWebImageManager sharedManager]  requestKeyWithURL:[NSURL URLWithString:placeHolderImageUrl]];
     UIImage *placeHolder = [[BDWebImageManager sharedManager].imageCache imageForKey:key];
     
-    //        self.videoView.coverView.imageUrl = _model.coverImageUrl;
-    [self.coverView showWithImageUrl:self.model.imageUrl placeHoder:placeHolder];
+    if (self.model.imageUrl) {
+        [self.coverView showWithImageUrl:self.model.imageUrl placeHoder:placeHolder];
+    }
 }
 
 @end
