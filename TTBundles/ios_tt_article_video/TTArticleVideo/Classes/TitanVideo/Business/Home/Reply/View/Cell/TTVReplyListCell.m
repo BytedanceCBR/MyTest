@@ -179,16 +179,11 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
 
     NSDictionary *linkAttributes = @{
         NSParagraphStyleAttributeName: [TTVReplyListCellHelper contentLabelParagraphStyle],
-        NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
+        NSForegroundColorAttributeName : [UIColor themeRed3],
         NSFontAttributeName : [TTVReplyListCellHelper contentLabelFont]
     };
-    NSDictionary *actionLinkAttributes = @{
-                                     NSParagraphStyleAttributeName: [TTVReplyListCellHelper contentLabelParagraphStyle],
-                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-                                     NSFontAttributeName : [TTVReplyListCellHelper contentLabelFont]
-                                     };
     self.contentLabel.linkAttributes = linkAttributes;
-    self.contentLabel.activeLinkAttributes = actionLinkAttributes;
+    self.contentLabel.activeLinkAttributes = linkAttributes;
     self.contentLabel.inactiveLinkAttributes = linkAttributes;
 
     NSArray <TTRichSpanLink *> *richSpanLinks = [self.layout.contentLayout.richSpanText richSpanLinksOfAttributedString];
