@@ -607,16 +607,20 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     
     NSArray *dataSource = [self dataSourceInSection:section forState:self.state];
     
-    return dataSource.count > 0 ? 28.f : 0.f;
+    return dataSource.count > 0 ? 34.f : 0.f;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    SSThemedView *headerView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.width, 28)];
-    headerView.backgroundColor = SSGetThemedColorWithKey(kColorBackground3);
+    CGFloat top = 8;
+    if (section == 0) {
+        top = 6;
+    }
+    SSThemedView *headerView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.width, 34)];
+    headerView.backgroundColor = [UIColor themeWhite];
     
-    SSThemedLabel *titleLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 0, self.tableView.width - 15, 28)];
-    titleLabel.font = [UIFont systemFontOfSize:15];
-    titleLabel.textColor = SSGetThemedColorWithKey(kColorText1);
+    SSThemedLabel *titleLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(20, top, self.tableView.width - 15, 17)];
+    titleLabel.font = [UIFont systemFontOfSize:12];
+    titleLabel.textColor = [UIColor themeGray3];
     titleLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
     titleLabel.text = [self titleForHeaderInSection:section forState:self.state];
     
