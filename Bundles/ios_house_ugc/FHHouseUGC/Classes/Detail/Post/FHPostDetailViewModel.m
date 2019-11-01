@@ -171,6 +171,9 @@
         [self.items removeAllObjects];
         // 网络请求返回
         model.isFromDetail = YES;
+        if (self.shareInfo == nil && model.shareInfo) {
+            self.shareInfo = model.shareInfo;
+        }
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
         cellModel.feedVC = self.detailData.feedVC;
         cellModel.isStick = self.detailData.isStick;
@@ -212,9 +215,6 @@
         }
         if (socialGroupModel) {
             // 更新圈子数据
-            if (self.shareInfo == nil && socialGroupModel.shareInfo) {
-                self.shareInfo = socialGroupModel.shareInfo;
-            }
             [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:socialGroupModel];
         }
         // 更新点赞以及评论数
