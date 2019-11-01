@@ -2268,7 +2268,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @interface  FRPublishPostUserStructModel : JSONModel
 @property (strong, nonatomic) FRPublishPostUserInfoStructModel *info;
 @property (strong, nonatomic) FRPublishPostUserRelationStructModel<Optional> *relation;
-@property (strong, nonatomic) FRPublishPostUserRelationCountStructModel *relation_count;
+@property (strong, nonatomic) FRPublishPostUserRelationCountStructModel<Optional> *relation_count;
 @end
 
 @interface  FRPublishPostUserHighlightStructModel : JSONModel

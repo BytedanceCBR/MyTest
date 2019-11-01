@@ -24,7 +24,7 @@ typedef void (^DidClickAtButtonBlock)(BOOL didInputAt);
 
 @end
 @class FHTopicListResponseDataListModel;
-@interface TTUGCTextViewMediator : NSObject <TTUGCTextViewDelegate, TTUGCToolbarDelegate, TTUGCSearchUserTableViewDelegate, TTUGCSearchHashtagTableViewDelegate>
+@interface TTUGCTextViewMediator : NSObject <TTUGCTextViewDelegate, TTUGCToolbarDelegate, TTUGCSearchUserTableViewDelegate>
 
 @property (nonatomic, strong) SSThemedView <TTUGCToolbarProtocol> *toolbar;
 @property (nonatomic, strong) TTUGCTextView *textView;
