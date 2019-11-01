@@ -43,6 +43,7 @@
     @"announcementUrl":@"announcement_url",
     @"userAuth": @"user_auth",
     @"chatStatus": @"chat_status",
+    @"shareInfo":@"share_info",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
