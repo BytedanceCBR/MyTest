@@ -542,13 +542,13 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         if (section == 0) {
             return @"我的关注";
         } else if (section == 1) {
-            return @"网络搜索结果";
+            return @"搜索结果";
         } else if (section == 2) {
             return nil;
         }
     } else if (state == TTUGCSearchState || state == TTUGCSearchingState) {
         if (section == 0) {
-            return @"最近联系人";
+            return @"最近@过的用户";
         } else if (section == 1) {
             return @"我的关注";
         }
