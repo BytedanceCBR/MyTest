@@ -99,7 +99,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     
     //允许上拉刷新
     WeakSelf;
-    [self.tableView tt_addDefaultPullUpLoadMoreWithHandler:^{
+    [self.tableView tt_addPullUpLoadMoreWithNoMoreText:@"没有更多内容" withHandler:^{
         StrongSelf;
         [self triggerLoadMore];
     }];
@@ -146,8 +146,8 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
                 }
                 
                 self.searchError = error;
-                
                 [self tt_endUpdataData:NO error:error];
+                self.ttErrorView.frame = self.tableView.bounds;
             } else { // loadMore
                 self.searchError = nil;
                 
@@ -251,6 +251,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
                 [self.searchResultTableView reloadData];
                 
                 [self tt_endUpdataData:NO error:error];
+                self.ttErrorView.frame = self.searchResultTableView.bounds;
             } else { // loadMore
                 self.searchResultError = nil;
                 [self.searchResultTableView finishPullUpWithSuccess:NO];
@@ -395,6 +396,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     if (self.searchError) {
         self.ttTargetView = self.tableView;
         [self tt_endUpdataData:NO error:self.searchError];
+
     }
 }
 

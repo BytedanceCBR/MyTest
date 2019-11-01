@@ -52,7 +52,7 @@ def fhPods
     #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '04b0711843b573a64a781571dd19bdf50f5cc59e'
     pod 'FHCommonUI', '0.0.7-alpha.0'
 
-   pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '0612791d18a006d6efee7ca778a5eb87707ed495'
+   pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '44088394e15520c268b10e4b4fd80df2a9015faa'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
 #     pod 'ios_house_im', '0.1.13-rc.1'
 
@@ -194,7 +194,7 @@ def appPods
 #        'WeiboSDK'
 #    ]
 
-    pod_binary 'TencentQQSDK', '1.0.0'
+    pod_binary 'TencentQQSDK', '1.1.0-rc.0'
     pod_binary 'WechatSDK','0.1.5'
 #    pod 'TTThirdPartySDKs/WeiboSDK', '0.0.4'
     #-----免流量统计-----

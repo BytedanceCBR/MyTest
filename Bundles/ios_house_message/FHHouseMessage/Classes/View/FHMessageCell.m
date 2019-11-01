@@ -254,7 +254,7 @@
     paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
     
     NSDictionary<NSString *, id> *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14],
-                                                 NSForegroundColorAttributeName : [UIColor redColor] ,
+                                                 NSForegroundColorAttributeName : [UIColor themeRed3] ,
                                                  NSParagraphStyleAttributeName : paragraphStyle};
     [attrStr addAttributes:attributes range:theRange];
     return attrStr;
