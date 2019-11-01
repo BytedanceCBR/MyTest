@@ -489,9 +489,9 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 }
 
 - (void)searchBarCancelButtonClicked:(TTSeachBarView *)searchBar {
-    if (self.searchBar.isFirstResponder) {
+//    if (self.searchBar.isFirstResponder) {
         [self.searchBar resignFirstResponder];
-    }
+//    }
     
     CGFloat topInset = TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height;
     
