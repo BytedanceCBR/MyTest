@@ -197,16 +197,16 @@ extern UIColor *tt_ttuisettingHelper_detailViewCommentReplyUserNameColor(void);
         }
     }
     
-    NSDictionary *inactiveLinkAttributes = @{NSForegroundColorAttributeName:self.replyModel.notReplyMsg ? SSGetThemedColorWithKey(@"red3") : SSGetThemedColorWithKey(@"grey3") };
+    NSDictionary *inactiveLinkAttributes = @{NSForegroundColorAttributeName:self.replyModel.notReplyMsg ? SSGetThemedColorWithKey(@"red3") : SSGetThemedColorWithKey(@"red3") };
     NSDictionary *activeLinkAttributes = @{NSForegroundColorAttributeName:SSGetThemedColorWithKey(@"red3")};
     _replyLabel.labelInactiveLinkAttributes = inactiveLinkAttributes;
     _replyLabel.labelActiveLinkAttributes = activeLinkAttributes;
     _replyLabel.attributedText = mAttributedText;
     [_replyLabel removeAllLinkAttributes];
     
-    if (self.userNameRange.location != NSNotFound) {
-        [_replyLabel addLinkToLabelWithURL:[NSURL URLWithString:kTTCommentContentLabelQuotedCommentUserURLString] range:self.userNameRange];
-    }
+//    if (self.userNameRange.location != NSNotFound) {
+//        [_replyLabel addLinkToLabelWithURL:[NSURL URLWithString:kTTCommentContentLabelQuotedCommentUserURLString] range:self.userNameRange];
+//    }
     
     if (_replyModel.replyContentRichSpanJSONString) {
         TTRichSpanText *richSpanText = [[TTRichSpanText alloc] initWithText:_replyModel.replyContent

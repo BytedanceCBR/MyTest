@@ -237,13 +237,10 @@
     self.commentLabel.text = [attributedString copy];
     
     NSDictionary *linkAttributes = @{
-                                     NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3]
-                                     };
-    NSDictionary *actionLinkAttributes = @{
                                      NSForegroundColorAttributeName : [UIColor themeRed3]
                                      };
     self.commentLabel.linkAttributes = linkAttributes;
-    self.commentLabel.activeLinkAttributes = actionLinkAttributes;
+    self.commentLabel.activeLinkAttributes = linkAttributes;
     self.commentLabel.inactiveLinkAttributes = linkAttributes;
     
     TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];

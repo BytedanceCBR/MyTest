@@ -17,11 +17,22 @@
 //#import <TTRegistry/TTRegistryDefines.h>
 #import "TTUGCHashtagModel.h"
 #import "FHTopicListController.h"
+#import <UIColor+Theme.h>
+#import "NSString+UGCUtils.h"
 
 @interface TTUGCTextViewMediator() <FHTopicListControllerDelegate>
 @end
 
 @implementation TTUGCTextViewMediator
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _richSpanColorHexStringForDay = [NSString hexStringWithColor:[UIColor themeRed3]];
+        _richSpanColorHexStringForNight = [NSString hexStringWithColor:[UIColor themeRed3]];
+    }
+    return self;
+}
 
 #pragma mark - TTUGCTextViewDelegate
 
