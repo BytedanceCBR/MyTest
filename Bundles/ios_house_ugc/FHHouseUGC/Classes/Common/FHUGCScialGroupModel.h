@@ -1,6 +1,7 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 #import <FHUGCConfigModel.h>
+#import "FHUGCShareManager.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHUGCScialGroupDataModel <NSObject>
@@ -61,6 +62,7 @@ typedef NS_ENUM(NSUInteger, UserCoversationStatus) {
 @property (nonatomic, strong, nullable) NSArray <FHUGCConfigDataPermissionModel> *permission;
 @property (nonatomic, copy , nullable) NSDictionary *logPb;
 @property (nonatomic, strong) FHUGCScialGroupDataChatStatusModel *chatStatus;
+@property (nonatomic, strong, nullable)   FHUGCShareInfoModel *shareInfo;
 
 @end
 
