@@ -15,7 +15,7 @@
 
 #define kSearchBarLeftPad 20
 
-const CGFloat kCancelButtonPadding = 7;
+const CGFloat kCancelButtonPadding = 20;
 
 @implementation TTSeachBarView
 
@@ -37,7 +37,7 @@ const CGFloat kCancelButtonPadding = 7;
         self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:self.contentView];
         
-        self.cancelButton = [[SSThemedButton alloc] initWithFrame:CGRectMake(self.width, 0, 50, self.frame.size.height)];
+        self.cancelButton = [[SSThemedButton alloc] initWithFrame:CGRectMake(self.width, 0, 33, self.frame.size.height)];
         self.cancelButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
         self.cancelButton.titleLabel.font = [UIFont systemFontOfSize:16.];
         self.cancelButton.titleColorThemeKey = kColorText6;
@@ -66,9 +66,11 @@ const CGFloat kCancelButtonPadding = 7;
         
         self.closeButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         self.closeButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
-        self.closeButton.frame = CGRectMake((self.inputBackgroundView.width) - 22, 7, 14, 14);
-        self.closeButton.backgroundImageName = @"clear_icon";
-        self.closeButton.highlightedBackgroundImageName = @"clear_icon";
+        self.closeButton.frame = CGRectMake((self.inputBackgroundView.width) - 28, 4, 24, 24);
+        //self.closeButton.backgroundImageName = @"clear_icon";
+        //self.closeButton.highlightedBackgroundImageName = @"clear_icon";
+        [self.closeButton setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateNormal];
+        [self.closeButton setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateHighlighted];
         self.closeButton.hidden = YES;
         [self.inputBackgroundView addSubview:self.closeButton];
         [self.closeButton addTarget:self action:@selector(clearSearchText:) forControlEvents:UIControlEventTouchUpInside];
@@ -128,8 +130,8 @@ const CGFloat kCancelButtonPadding = 7;
         return;
     }
     CGRect initialContentFrame = self.contentView.frame, targetContentFrame = self.contentView.frame;
-    initialContentFrame.size.width = self.width - _editing * (self.cancelButton.width) * self.showsCancelButton;
-    targetContentFrame.size.width = self.width - editing * (self.cancelButton.width) * self.showsCancelButton;
+    initialContentFrame.size.width = self.width - _editing * (self.cancelButton.width + kCancelButtonPadding) * self.showsCancelButton;
+    targetContentFrame.size.width = self.width - editing * (self.cancelButton.width + kCancelButtonPadding) * self.showsCancelButton;
     
     CGRect initialCancelFrame = self.cancelButton.frame, targetCancelFrame = self.cancelButton.frame;
     initialCancelFrame.origin.x = self.width - _editing * ((self.cancelButton.width) + kCancelButtonPadding) * self.showsCancelButton;
