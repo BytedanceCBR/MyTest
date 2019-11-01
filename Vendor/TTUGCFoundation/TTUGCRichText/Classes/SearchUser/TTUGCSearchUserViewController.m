@@ -99,7 +99,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     
     //允许上拉刷新
     WeakSelf;
-    [self.tableView tt_addDefaultPullUpLoadMoreWithHandler:^{
+    [self.tableView tt_addPullUpLoadMoreWithNoMoreText:@"没有更多内容" withHandler:^{
         StrongSelf;
         [self triggerLoadMore];
     }];
