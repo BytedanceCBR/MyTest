@@ -115,7 +115,7 @@
                 // 处理 emoji 表情字符数问题
                 NSRange range = [self rangeOfComposedCharacterSequences:name atCodePoint:location.unsignedIntegerValue];
                 [mutableAttributedString addAttribute:NSForegroundColorAttributeName
-                                                value:SSGetThemedColorWithKey(kColorText4)
+                                                value:[UIColor themeRed3]
                                                 range:range];
             }
         }
@@ -128,7 +128,7 @@
                 NSRange range = [self rangeOfComposedCharacterSequences:remarkName atCodePoint:highlightLocation];
                 range.location += ellipsisUserName.length; // 这里避免重复计算 ellipsisUserName 的长度
                 [mutableAttributedString addAttribute:NSForegroundColorAttributeName
-                                                value:SSGetThemedColorWithKey(kColorText4)
+                                                value:[UIColor themeRed3]
                                                 range:range];
             }
         }
