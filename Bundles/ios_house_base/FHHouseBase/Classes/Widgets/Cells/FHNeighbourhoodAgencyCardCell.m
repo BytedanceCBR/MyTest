@@ -264,7 +264,7 @@
 
             self.phoneCallViewModel.tracerDict = self.traceParams.mutableCopy;
             //TODO fengbo  check this, seems like there`s no need to add view_controller?
-//            self.phoneCallViewModel.belongsVC = self.viewController;
+            self.phoneCallViewModel.belongsVC = self.belongsVC;
         } else {
             [self.bottomInfoView setHidden:YES];
             [self.dividerView setHidden:YES];
@@ -356,7 +356,7 @@
         extraDict[@"realtor_position"] = @"neighborhood_expert_card";
         extraDict[@"element_from"] = @"neighborhood_expert_card";
         if (self.phoneCallViewModel) {
-            [self.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO extra:extraDict];
+            [self.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:YES extra:extraDict];
         }
     }
 }

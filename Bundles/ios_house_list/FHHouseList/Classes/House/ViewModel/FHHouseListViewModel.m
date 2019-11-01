@@ -1468,7 +1468,7 @@ extern NSString *const INSTANT_DATA_KEY;
         } else if (indexPath.section == 0 && indexPath.row == 0 && [self.houseList[0] isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
             FHNeighbourhoodAgencyCardCell *cell = [tableView dequeueReusableCellWithIdentifier:kNeighbourhoodAgencyCellId];
             FHHouseNeighborAgencyModel *model = self.currentHouseDataModel.neighborhoodRealtorCard;
-
+            cell.belongsVC = self.listVC;
             NSMutableDictionary *traceParam = @{}.mutableCopy;
             traceParam[@"card_type"] = @"left_pic";
             traceParam[@"enter_from"] = [self pageTypeString];
