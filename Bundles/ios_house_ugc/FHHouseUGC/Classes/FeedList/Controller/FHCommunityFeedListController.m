@@ -511,8 +511,8 @@
     self.tableView.contentInset = inset;
     self.tableView.contentOffset = CGPointMake(0, -inset.top);
     self.notifyCompletionBlock = completion;
+    WeakSelf;
     [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
-        WeakSelf;
         if(!isImmediately) {
             [wself hideIfNeeds];
         } else {

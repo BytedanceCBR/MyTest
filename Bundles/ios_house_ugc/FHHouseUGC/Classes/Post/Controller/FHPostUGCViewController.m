@@ -557,7 +557,7 @@ static NSInteger const kMaxPostImageCount = 9;
         WeakSelf;
         self.textViewMediator.atBtnClickBlock = ^(BOOL didInputAt) {
             StrongSelf;
-            self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
+            self.keyboardVisibleBeforePresent = NO;// 不显示键盘了
             [self endEditing];
             
             NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_at_list"];

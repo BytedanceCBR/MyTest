@@ -2291,6 +2291,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @interface  FRPublishPostSearchUserSuggestStructModel : JSONModel
 @property (strong, nonatomic) NSNumber *offset;
 @property (assign, nonatomic) FRHasMoreType has_more;
+@property (nonatomic, copy)     NSString       *search_id;
 @property (strong, nonatomic) NSArray<FRPublishPostSearchUserStructModel, Optional> *following;
 @property (strong, nonatomic) NSArray<FRPublishPostSearchUserStructModel, Optional> *suggest;
 @end
@@ -2858,8 +2859,8 @@ FRUgcConcernThreadV3ListRequestModel;
 @end
 
 @interface  FRUgcPublishPostV1ContactResponseModel : JSONModel<TTResponseModelProtocol>
-@property (strong, nonatomic) NSNumber *err_no;
-@property (strong, nonatomic) NSString<Optional> *err_tips;
+@property (strong, nonatomic) NSString<Optional> *status;
+@property (strong, nonatomic) NSString<Optional> *message;
 @property (strong, nonatomic) FRPublishPostSearchUserContactStructModel *data;
 @end
 
@@ -3365,11 +3366,13 @@ FRUgcConcernThreadV3ListRequestModel;
 @interface  FRUgcPublishPostV1SuggestRequestModel : TTRequestModel
 @property (strong, nonatomic) NSNumber *offset;
 @property (strong, nonatomic) NSString *words;
+@property (nonatomic, copy)     NSString       *search_id;
+@property (nonatomic, copy)     NSString       *type;
 @end
 
 @interface  FRUgcPublishPostV1SuggestResponseModel : JSONModel<TTResponseModelProtocol>
-@property (strong, nonatomic) NSNumber *err_no;
-@property (strong, nonatomic) NSString<Optional> *err_tips;
+@property (strong, nonatomic) NSString<Optional> *status;
+@property (strong, nonatomic) NSString<Optional> *message;
 @property (strong, nonatomic) FRPublishPostSearchUserSuggestStructModel *data;
 @end
 
