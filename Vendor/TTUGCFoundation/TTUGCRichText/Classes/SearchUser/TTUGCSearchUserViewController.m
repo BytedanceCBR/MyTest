@@ -710,6 +710,9 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         _searchBar.inputBackgroundView.backgroundColor = [UIColor themeGray7];
         _searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _searchBar.searchField.placeholder = @"搜索用户";
+        _searchBar.searchField.font = [UIFont themeFontRegular:14];
+        _searchBar.searchField.textColor = [UIColor themeGray1];
+        _searchBar.searchField.tintColor = [UIColor themeRed1];
         _searchBar.searchField.placeholderColorThemeKey = kColorText3;
         _searchBar.cancelButton.titleColorThemeKey = kColorText1;
         _searchBar.cancelButton.highlightedTitleColorThemeKey = kColorText1Highlighted;
