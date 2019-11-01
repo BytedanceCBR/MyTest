@@ -99,7 +99,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     
     //允许上拉刷新
     WeakSelf;
-    [self.tableView tt_addDefaultPullUpLoadMoreWithHandler:^{
+    [self.tableView tt_addPullUpLoadMoreWithNoMoreText:@"没有更多内容" withHandler:^{
         StrongSelf;
         [self triggerLoadMore];
     }];
@@ -491,9 +491,9 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 }
 
 - (void)searchBarCancelButtonClicked:(TTSeachBarView *)searchBar {
-    if (self.searchBar.isFirstResponder) {
+//    if (self.searchBar.isFirstResponder) {
         [self.searchBar resignFirstResponder];
-    }
+//    }
     
     CGFloat topInset = TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height;
     
@@ -609,16 +609,20 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     
     NSArray *dataSource = [self dataSourceInSection:section forState:self.state];
     
-    return dataSource.count > 0 ? 28.f : 0.f;
+    return dataSource.count > 0 ? 34.f : 0.f;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    SSThemedView *headerView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.width, 28)];
-    headerView.backgroundColor = SSGetThemedColorWithKey(kColorBackground3);
+    CGFloat top = 8;
+    if (section == 0) {
+        top = 6;
+    }
+    SSThemedView *headerView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.width, 34)];
+    headerView.backgroundColor = [UIColor themeWhite];
     
-    SSThemedLabel *titleLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 0, self.tableView.width - 15, 28)];
-    titleLabel.font = [UIFont systemFontOfSize:15];
-    titleLabel.textColor = SSGetThemedColorWithKey(kColorText1);
+    SSThemedLabel *titleLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(20, top, self.tableView.width - 15, 17)];
+    titleLabel.font = [UIFont systemFontOfSize:12];
+    titleLabel.textColor = [UIColor themeGray3];
     titleLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
     titleLabel.text = [self titleForHeaderInSection:section forState:self.state];
     
@@ -712,6 +716,9 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         _searchBar.inputBackgroundView.backgroundColor = [UIColor themeGray7];
         _searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _searchBar.searchField.placeholder = @"搜索用户";
+        _searchBar.searchField.font = [UIFont themeFontRegular:14];
+        _searchBar.searchField.textColor = [UIColor themeGray1];
+        _searchBar.searchField.tintColor = [UIColor themeRed1];
         _searchBar.searchField.placeholderColorThemeKey = kColorText3;
         _searchBar.cancelButton.titleColorThemeKey = kColorText1;
         _searchBar.cancelButton.highlightedTitleColorThemeKey = kColorText1Highlighted;

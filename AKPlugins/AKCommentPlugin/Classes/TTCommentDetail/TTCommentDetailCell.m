@@ -150,16 +150,11 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
 
     NSDictionary *linkAttributes = @{
         NSParagraphStyleAttributeName: [TTCommentDetailCellHelper contentLabelParagraphStyle],
-        NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
+        NSForegroundColorAttributeName : [UIColor themeRed3],
         NSFontAttributeName : [TTCommentDetailCellHelper contentLabelFont]
     };
-    NSDictionary *activelinkAttributes = @{
-                                     NSParagraphStyleAttributeName: [TTCommentDetailCellHelper contentLabelParagraphStyle],
-                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-                                     NSFontAttributeName : [TTCommentDetailCellHelper contentLabelFont]
-                                     };
     self.contentLabel.linkAttributes = linkAttributes;
-    self.contentLabel.activeLinkAttributes = activelinkAttributes;
+    self.contentLabel.activeLinkAttributes = linkAttributes;
     self.contentLabel.inactiveLinkAttributes = linkAttributes;
 
     NSArray <TTRichSpanLink *> *richSpanLinks = [self.layout.contentLayout.richSpanText richSpanLinksOfAttributedString];
