@@ -470,6 +470,9 @@
     if (emojiTextAttachment.idx == TTUGCEmojiBlank) {
         return;
     } else if (emojiTextAttachment.idx == TTUGCEmojiDelete) {
+        NSString *text = self.internalGrowingTextView.text;
+        // 处理键盘删除按钮
+        self.didInputTextBackspaceOrAnythingElse = [text isEqualToString:@""] || text.length > 0;
         NSRange selectedRange = textView.selectedRange;
         if (selectedRange.length > 0) {
             [textView.textStorage deleteCharactersInRange:selectedRange];
@@ -495,7 +498,8 @@
         textView.selectedRange = NSMakeRange(textView.selectedRange.location + 1, 0);
         self.internalGrowingTextView.isInputEmojiToChangeRange = NO;
     }
-
+    
+//    self growingTextView:self.internalGrowingTextView shouldChangeTextInRange:<#(NSRange)#> replacementText:<#(NSString *)#>
     [self growingTextViewDidChange:self.internalGrowingTextView];  // 手动触发 textView 回调方法
 
     [self.internalGrowingTextView refreshHeight];
