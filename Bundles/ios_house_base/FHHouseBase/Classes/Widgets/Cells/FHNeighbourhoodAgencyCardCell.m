@@ -291,13 +291,8 @@
             imExtra[@"realtor_position"] = @"neighborhood_expert_card";
             imExtra[@"from"] = @"app_neighborhood_aladdin";
             imExtra[@"element_from"] = @"neighborhood_expert_card";
-            // todo zjing
-//            if (extraDict[kFHClueEndpoint]) {
-//                imExtra[kFHClueEndpoint] = extraDict[kFHClueEndpoint];
-//            }
-//            if (extraDict[kFHCluePage]) {
-//                imExtra[kFHCluePage] = extraDict[kFHCluePage];
-//            }
+            imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNeighborhoodAladdin];
             [self.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
         }
     }
@@ -317,7 +312,9 @@
         extraDict[@"realtor_position"] = @"neighborhood_expert_card";
         extraDict[@"realtor_logpb"] = contact.realtorLogpb;
         extraDict[@"element_from"] = @"neighborhood_expert_card";
-
+        extraDict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+        extraDict[kFHCluePage] = @(FHClueCallPageTypeCNeighborhoodAladdin);
+        
         FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc] initWithDictionary:extraDict error:nil];
         contactConfig.houseType = FHHouseTypeNeighborhood;
         contactConfig.houseId = self.modelData.id;
@@ -328,14 +325,7 @@
             contactConfig.searchId = self.modelData.logPb[@"search_id"];
             contactConfig.imprId = self.modelData.logPb[@"impr_id"];
         }
-        // todo zjing
-        //            if (extraDict[kFHClueEndpoint]) {
-        //                imExtra[kFHClueEndpoint] = extraDict[kFHClueEndpoint];
-        //            }
-        //            if (extraDict[kFHCluePage]) {
-        //                imExtra[kFHCluePage] = extraDict[kFHCluePage];
-        //            }
-        contactConfig.from = @"app_neighborhood_aladdin";
+//        contactConfig.from = @"app_neighborhood_aladdin";
         [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
     }
 

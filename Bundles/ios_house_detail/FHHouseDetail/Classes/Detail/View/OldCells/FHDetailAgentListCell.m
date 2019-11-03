@@ -197,7 +197,11 @@
         contactConfig.searchId = model.searchId;
         contactConfig.imprId = model.imprId;
         contactConfig.realtorType = contact.realtorType;
-        contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
+        if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+            contactConfig.cluePage = @(FHClueCallPageTypeCNeighborhoodMulrealtor);
+        }else {
+            contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
+        }
         [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
             if(success && [model.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
                 FHHouseDetailViewController *vc = (FHHouseDetailViewController *)model.belongsVC;
@@ -225,7 +229,11 @@
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         NSMutableDictionary *imExtra = @{}.mutableCopy;
         imExtra[@"realtor_position"] = @"detail_related";
-		imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
+        if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNeighborhoodMulrealtor];
+        }else {
+            imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
+        }
         [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
     }
 }

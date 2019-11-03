@@ -495,6 +495,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (self.houseType == FHHouseTypeNeighborhood) {
         fillFormConfig.title = @"咨询经纪人";
         fillFormConfig.btnTitle = @"提交";
+        fillFormConfig.cluePage = @(FHClueFormPageTypeCNeighborhood);
     }
     NSMutableDictionary *params = [self baseParams].mutableCopy;
     if (extraDict.count > 0) {
@@ -574,6 +575,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     contactConfig.showLoading = YES;
     contactConfig.realtorLogpb = self.contactPhone.realtorLogpb;
     contactConfig.realtorType = self.contactPhone.realtorType;
+    if (self.houseType == FHHouseTypeNeighborhood) {
+        contactConfig.cluePage = @(FHClueCallPageTypeCNeighborhood);
+    }
     if (extraDict[@"from"]) {
         contactConfig.from = extraDict[@"from"];
     }
@@ -603,6 +607,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (self.contactPhone.unregistered && self.contactPhone.imLabel.length > 0) {
         extraDic[@"position"] = @"online";
         extraDic[@"realtor_position"] = @"online";
+        if (self.houseType == FHHouseTypeNeighborhood) {
+            extraDic[kFHCluePage] = @(FHClueIMPageTypeCNeighborhood);
+        }
     }
     [self onlineActionWithExtraDict:extraDic];
 }
