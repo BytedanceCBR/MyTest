@@ -107,7 +107,7 @@
     if (!self.shareInfo) {
         return;
     }
-    UIImage *shareImage = [[BDImageCache sharedImageCache]imageFromDiskCacheForKey:self.shareInfo.coverImage] ? : [UIImage imageNamed:@"default_image"];
+    UIImage *shareImage = [[BDImageCache sharedImageCache]imageFromDiskCacheForKey:self.shareInfo.coverImage] ? : [UIImage imageNamed:@"Icon-72"];
     NSString *title = self.shareInfo.title ? : @"";
     NSString *desc = self.shareInfo.desc ? : @"";
     NSString *webPageUrl = self.shareInfo.shareUrl ? : @"";
