@@ -22,6 +22,7 @@
 #import "TTDeviceUIUtils.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import "TTNavigationController.h"
 
 typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     TTUGCSearchState,
@@ -117,6 +118,11 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     self.searchResultTableView.pullUpView.enabled = NO;
     self.ttNeedHideBottomLine = YES;
     [self loadRequest];
+    
+    __weak typeof(self) weakSelf = self;
+    self.panBeginAction = ^{
+        [weakSelf.searchBar resignFirstResponder];
+    };
 }
 
 - (void)loadRequest {
