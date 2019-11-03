@@ -20,6 +20,7 @@
 #import <TTBaseLib/UITextView+TTAdditions.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import <TTBaseLib/NSObject+MultiDelegates.h>
+#import <TTCommentDefines.h>
 
 static struct timeval kFHCommentTimeval;
 
@@ -50,7 +51,7 @@ static struct timeval kFHCommentTimeval;
         self.onSendBlock = sendBlock;
         
         _maxInputCount = 50;
-        _defaultPlaceHolder = @"说点什么...";
+        _defaultPlaceHolder = kCommentInputPlaceHolder;
         _params = [NSMutableDictionary dictionary];
         
         _textBgView = [[SSThemedView alloc] initWithFrame:CGRectMake(14, 6, CGRectGetWidth(self.bounds) - 14 - 20 - 40 - 39, 32)];
@@ -323,7 +324,7 @@ static struct timeval kFHCommentTimeval;
         internalTextView.contentInset = UIEdgeInsetsMake(0.f, 8.f, 0.f, 4.f);
         CGFloat verticalMargin = floorf(([TTDeviceUIUtils tt_newPadding:32.f] - [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]].lineHeight) / 2.f); // 文字垂直居中
         internalTextView.internalTextView.textContainerInset = UIEdgeInsetsMake(verticalMargin, internalTextView.internalTextView.textContainerInset.left, verticalMargin, internalTextView.internalTextView.textContainerInset.right);
-        internalTextView.placeholder = @"说点什么...";
+        internalTextView.placeholder = kCommentInputPlaceHolder;
         internalTextView.backgroundColor = [UIColor clearColor];
         internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
         internalTextView.tintColor = [UIColor themeRed];
