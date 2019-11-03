@@ -214,8 +214,9 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     requestModel.words = self.searchingWord;
     requestModel.offset = loadMore ? self.searchResultOffset : @0;
     requestModel.type = @"mention_user";
-    requestModel.search_id = self.search_id ?: @"";
-    
+    if(loadMore) {
+        requestModel.search_id = self.search_id ?: @"";
+    }
     self.ttTargetView = self.searchResultTableView;
     
     if (!loadMore && (!self.searchResultFollowingUsers && !self.searchResultSuggestUsers && !self.searchResultInputUsers)) {
