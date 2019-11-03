@@ -221,10 +221,10 @@
     if (imprId.length > 0) {
         paramDic[@"impr_id"] = imprId;
     }
-    paramDic[@"endpoint"] = clueEndpoint ? clueEndpoint : @(FHClueEndPointTypeC);
 
     if (cluePage) {
         paramDic[@"page"] = cluePage;
+        paramDic[@"endpoint"] = clueEndpoint ? clueEndpoint : @(FHClueEndPointTypeC);
     }else if (fromStr.length > 0) {
         paramDic[@"enterfrom"] = fromStr;
     }
