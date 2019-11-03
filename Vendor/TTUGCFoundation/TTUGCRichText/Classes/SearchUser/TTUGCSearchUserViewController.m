@@ -87,6 +87,8 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         self.navigationItem.leftBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:backItem], leftPaddingItem];
     } else {
         TTNavigationBarItemContainerView *dismissItem = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfLeft withTitle:@"取消" target:self action:@selector(exitPage:)];
+        dismissItem.button.titleLabel.font = [UIFont systemFontOfSize:16];
+        dismissItem.button.titleColors = @[[UIColor themeGray1],[UIColor themeGray1]];
         self.navigationItem.leftBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:dismissItem], leftPaddingItem];
     }
     self.navigationItem.rightBarButtonItem = nil;
@@ -188,6 +190,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
             // 因为 tableView 流程终止了，通过直接手动添加的方式
             // 由于涉及 ttErrorView 变量的共用，为了避免更多问题，这里不采用 ttErrorView 方式添加
             [self.tableView addSubview:self.emptyView];
+            self.tableView.pullUpView.hidden = YES;
         } else {
             self.searchBar.searchField.placeholder = @"搜索用户";
         }
