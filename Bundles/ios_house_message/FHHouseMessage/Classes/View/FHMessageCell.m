@@ -14,6 +14,9 @@
 #import "TTAccount.h"
 #import "FHChatUserInfoManager.h"
 #import <TTRichSpanText.h>
+#import <TIMOMessage.h>
+#import <TIMMessageStoreBridge.h>
+
 #define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
 @interface FHMessageCell()
@@ -205,7 +208,7 @@
             NSString *cutStr = [self cutLineBreak:[conv lastMessage]];
             NSNumber *uid =[NSNumber numberWithLongLong: [[[TTAccount sharedAccount] userIdString] longLongValue]];
             if (lastMsg.isCurrentUser || lastMsg.type == ChatMstTypeNotice) {
-                if ([lastMsg.mentionedUsers containsObject:uid]) {
+                if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                     self.subTitleLabel.attributedText = [self getAtAttributeString:cutStr];;
                 } else {
                     self.subTitleLabel.text = cutStr;
@@ -213,7 +216,7 @@
             } else {
                 [[FHChatUserInfoManager shareInstance] getUserInfoSync:[[NSNumber numberWithLongLong:lastMsg.userId] stringValue] block:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
                     NSString *tipMsg = [NSString stringWithFormat:@"%@: %@", userInfo.username, cutStr];
-                    if ([lastMsg.mentionedUsers containsObject:uid]) {
+                    if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                         self.subTitleLabel.attributedText = [self getAtAttributeString:tipMsg];;
                     } else {
                          self.subTitleLabel.text = tipMsg;
@@ -228,6 +231,18 @@
 
     [self displaySendState:lastMsg];
     self.timeLabel.text = [self timeLabelByDate:conv.updatedAt];
+}
+
+-(BOOL)lastMsgHasReadInConversation:(IMConversation *)conv {
+    BOOL ret = NO;
+    ChatMsg *lastMsg = [conv lastChatMsg];
+    TIMOMessage * lastMessage = [TIMOMessage instanceWithIdentifier:lastMsg.msgId inConversation:conv.identifier];
+    
+    id<TIMMessageModelProtocol> internalModel = [lastMessage valueForKey:@"internalModel"];
+    if(internalModel) {
+        ret = internalModel.hasRead;
+    }
+    return ret;
 }
 
 -(NSAttributedString*)getDraftAttributeString:(NSString*)draft {

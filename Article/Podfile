@@ -52,7 +52,7 @@ def fhPods
     #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '04b0711843b573a64a781571dd19bdf50f5cc59e'
     pod 'FHCommonUI', '0.0.7-alpha.0'
 
-   pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '43eab0ad5a013bd8b31ebd08ad2573b8ae511524'
+   pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '0e38143e7dcf49cd68b1eb37d46589e34302a381'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
 #     pod 'ios_house_im', '0.1.13-rc.1'
 
