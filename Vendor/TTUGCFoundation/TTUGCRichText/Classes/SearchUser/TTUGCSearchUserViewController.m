@@ -58,6 +58,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 @property (nonatomic, strong) NSError *searchResultError;
 @property (nonatomic, weak) id <TTUGCSearchUserTableViewDelegate> delegate;
 @property (nonatomic, assign) BOOL isPushOutAtListController;
+@property (nonatomic, assign) BOOL isShowCancelNavigationBar;
 @end
 
 @implementation TTUGCSearchUserViewController
@@ -66,6 +67,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     if(self = [super initWithRouteParamObj:paramObj]) {
         self.delegate = paramObj.allParams[@"delegate"];
         self.isPushOutAtListController = [paramObj.allParams[@"isPushOutAtListController"] boolValue];
+        self.isShowCancelNavigationBar = [paramObj.allParams[@"isShowCancelNavigationBar"] boolValue];
     }
     return self;
 }
@@ -82,7 +84,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     titleLabel.textColor = [UIColor themeGray1];
     self.navigationItem.titleView = titleLabel;
     UIBarButtonItem *leftPaddingItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    if(self.isPushOutAtListController) {
+    if(self.isPushOutAtListController && !self.isShowCancelNavigationBar) {
         TTNavigationBarItemContainerView *backItem = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationBackButtonWithTarget:self action:@selector(exitPage:)];
         leftPaddingItem.width = 17.f;
         self.navigationItem.leftBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:backItem], leftPaddingItem];

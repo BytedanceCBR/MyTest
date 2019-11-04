@@ -568,6 +568,7 @@ static NSInteger const kMaxPostImageCount = 9;
             NSMutableDictionary *param = [NSMutableDictionary dictionary];
             param[@"delegate"] = self.textViewMediator;
             param[@"isPushOutAtListController"] = @(YES);
+            param[@"isShowCancelNavigationBar"] = @(YES);
             
             NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
             
