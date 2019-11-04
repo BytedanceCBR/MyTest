@@ -76,15 +76,19 @@
             }
         };
         _containerView = [[UIView alloc]initWithFrame:self.bounds];
-        _tableView = [[FHBaseTableView alloc]initWithFrame:self.bounds style:UITableViewStyleGrouped];
+        _tableView = [[UITableView alloc]initWithFrame:self.bounds style:UITableViewStyleGrouped];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.allowsSelection = NO;
         _tableView.backgroundColor = [UIColor whiteColor];
         
+        _tableView.estimatedRowHeight = 0;
+        _tableView.estimatedSectionFooterHeight = 0;
+        _tableView.estimatedSectionHeaderHeight = 0;
+        
         if (@available(iOS 11.0 , *)) {
-            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentScrollableAxes;
         }
         
         _footer = [[FHDetailHalfPopFooter alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), FOOTER_HEIGHT)];
@@ -464,7 +468,7 @@
         NSString *comment = [(FHRentDetailDataBaseExtraModel *)self.data securityInformation].dialogContent.comment;
         return [FHDetailHalfPopDealFooter heightForText:comment];
     }
-    return CGFLOAT_MIN;
+    return 1;//CGFLOAT_MIN;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -522,14 +526,16 @@
             safeInsets = [[UIApplication sharedApplication]delegate].window.safeAreaInsets;
         }
         
-        if (@available(iOS 13.0 , *)) {
+//        contentSize.height = MIN(contentSize.height, self.footer.bottom);
+        
+//        if (@available(iOS 13.0 , *)) {
             //iOS 13下content size的高度有问题，会多20
-            contentSize.height -= 20;
-        }
+//            contentSize.height -= 20;
+//        }
         
         CGFloat headerHeight = [self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]] ? 30 : HEADER_HEIGHT;
         CGFloat bgTop = CGRectGetHeight(self.bounds) - headerHeight - floor(contentSize.height) - safeInsets.bottom;
-        CGFloat minTop = (safeInsets.top > 0)?safeInsets.top+40:64;
+        CGFloat minTop = (safeInsets.top > 20)?safeInsets.top+40:64;
         
         if (bgTop < minTop) {
             bgTop = minTop;
