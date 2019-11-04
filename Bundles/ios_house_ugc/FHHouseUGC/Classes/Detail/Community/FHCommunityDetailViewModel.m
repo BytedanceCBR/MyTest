@@ -266,7 +266,6 @@
 
 - (void)viewDidAppear {
     self.isViewAppear = YES;
-    [self.feedListController viewDidAppear:YES];
     self.feedListController.tableView.mj_header = self.refreshHeader;
     self.refreshHeader.ignoredScrollViewContentInsetTop = -([TTDeviceHelper isIPhoneXSeries] ? 44 + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.top : 64);
     NSString *version = [UIDevice currentDevice].systemVersion;
