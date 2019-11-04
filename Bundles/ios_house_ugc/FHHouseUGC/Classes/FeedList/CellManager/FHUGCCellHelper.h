@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model;
 
++ (void)setOriginRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model;
+
 + (void)setOriginContentAttributeString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
 
 + (void)setVoteContentString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
