@@ -252,6 +252,28 @@
     }
 }
 
++ (void)setOriginRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model {
+    //内容
+    [label setText:model.originItemModel.contentAStr];
+    
+    if(model.needLinkSpan && model.originItemModel.richContent){
+        NSArray <TTRichSpanLink *> *richSpanLinks = [model.originItemModel.richContent richSpanLinksOfAttributedString];
+        for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+            NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
+            if (NSMaxRange(range) <= label.attributedText.length) {
+                if(model.supportedLinkType){
+                    if(model.supportedLinkType.count > 0 && [model.supportedLinkType containsObject:@(richSpanLink.type)]){
+                        [label addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                    }
+                }else{
+                    //不设置默认全部支持
+                    [label addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                }
+            }
+        }
+    }
+}
+
 + (CGSize)sizeThatFitsAttributedString:(NSAttributedString *)attrStr
                        withConstraints:(CGSize)size
                       maxNumberOfLines:(NSUInteger)maxLine
@@ -269,49 +291,90 @@
 
 //问答回答和文章优质评论
 + (void)setOriginContentAttributeString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
-    NSString *content = model.originItemModel.content;
     NSString *type = model.originItemModel.type;
-
-    if (!isEmptyString(content) || !isEmptyString(type)) {
-        NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
-        
-        if([self typeAttr:model]){
-            [desc appendAttributedString:[self typeAttr:model]];
+    //这里是为了将[类型]占的位置给加出来
+    NSDictionary *richSpansDic = nil;
+    NSError *error;
+    if(!isEmptyString(model.originItemModel.contentRichSpan) && type.length > 0){
+        NSData *data = [model.originItemModel.contentRichSpan dataUsingEncoding:NSUTF8StringEncoding];
+        if (data) {
+            richSpansDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         }
-
+    }
+    
+    NSMutableDictionary *richSpansDicM = [richSpansDic mutableCopy];
+    NSMutableArray *links = [richSpansDicM[@"links"] mutableCopy];
+    for (NSInteger i = 0; i < links.count; i++) {
+        NSMutableDictionary *linkM = [links[i] mutableCopy];
+        linkM[@"start"] = @([linkM[@"start"] integerValue] + type.length);
+        links[i] = linkM;
+    }
+    richSpansDicM[@"links"] = links;
+    
+    NSMutableString *text = [NSMutableString string];
+    if(!isEmptyString(type)){
+        [text appendString:type];
+    }
+    
+    if(!isEmptyString(model.originItemModel.content)){
+        [text appendString:model.originItemModel.content];
+    }
+    
+    TTRichSpans *richSpans = [TTRichSpans richSpansForDictionary:richSpansDicM];
+    TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:text richSpans:richSpans];
+    
+    TTRichSpanText *threadContent = [[TTRichSpanText alloc] initWithText:@"" richSpanLinks:nil imageInfoModelDictionary:nil];
+    
+    model.originItemModel.richContent = richContent;
+    
+    if (!isEmptyString(text)) {
+        [threadContent appendRichSpanText:richContent];
+        
         NSInteger parseEmojiCount = -1;
         if (model.numberOfLines > 0) {
             parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
-        if (!isEmptyString(content)) {
-            NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:content fontSize:16 needParseCount:parseEmojiCount];
-            if (attrStr) {
-                UIFont *font = [UIFont themeFontRegular:16];
-                NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
-                NSMutableDictionary *attributes = @{}.mutableCopy;
-                [attributes setValue:[UIColor themeGray2] forKey:NSForegroundColorAttributeName];
-                [attributes setValue:font forKey:NSFontAttributeName];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16 needParseCount:parseEmojiCount];
+        if (attrStr) {
+            UIFont *font = [UIFont themeFontRegular:16];
+            
+            NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
 
-                [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
-                [desc appendAttributedString:mutableAttributedString];
+            NSMutableDictionary *attributes = @{}.mutableCopy;
+            [attributes setValue:[UIColor themeGray2] forKey:NSForegroundColorAttributeName];
+            [attributes setValue:font forKey:NSFontAttributeName];
+            
+            NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            
+            paragraphStyle.minimumLineHeight = 21;
+            paragraphStyle.maximumLineHeight = 21;
+            paragraphStyle.lineSpacing = 2;
+            
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+            
+            //类型
+            NSMutableDictionary *typeAttributes = @{}.mutableCopy;
+            [typeAttributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
+            [typeAttributes setValue:[UIFont themeFontMedium:16] forKey:NSFontAttributeName];
+            [typeAttributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+            
+            if(type.length > 0){
+                [mutableAttributedString addAttributes:typeAttributes range:NSMakeRange(0, type.length)];
             }
+            
+            if(attrStr.length > type.length){
+                [mutableAttributedString addAttributes:attributes range:NSMakeRange(type.length, attrStr.length - type.length)];
+            }
+
+            model.originItemModel.contentAStr = mutableAttributedString;
+            
+            CGSize size = [self sizeThatFitsAttributedString:mutableAttributedString
+                                             withConstraints:CGSizeMake(width, FLT_MAX)
+                                            maxNumberOfLines:numberOfLines
+                                      limitedToNumberOfLines:&numberOfLines];
+            model.originItemHeight = size.height + 36;
         }
-        
-        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-        paragraphStyle.minimumLineHeight = 21;
-        paragraphStyle.maximumLineHeight = 21;
-        paragraphStyle.lineSpacing = 2;
-        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-
-        [desc addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, desc.length)];
-        
-        model.originItemModel.contentAStr = desc;
-
-        CGSize size = [self sizeThatFitsAttributedString:desc
-                                         withConstraints:CGSizeMake(width, FLT_MAX)
-                                        maxNumberOfLines:numberOfLines
-                                  limitedToNumberOfLines:&numberOfLines];
-        model.originItemHeight = size.height + 36;
     }else{
         model.originItemHeight = 0;
     }

@@ -2163,9 +2163,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController tappedWithUserID:(NSString *)userID
 {
-    // add by zjing 去掉问答 回复@里面的点击
-    return;
-    
     if ([userID longLongValue] == 0) {
         return;
     }
