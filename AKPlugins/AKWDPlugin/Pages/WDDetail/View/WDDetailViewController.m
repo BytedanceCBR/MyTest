@@ -2167,7 +2167,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         return;
     }
     NSString *userIDstr = [NSString stringWithFormat:@"%@", userID];
-    NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@", userIDstr];
+    NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@&from_page=at_user_profile", userIDstr];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:linkURLString]];
 
     [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];
