@@ -562,6 +562,7 @@
                            @"userHouseComments": @"user_evaluations",
                            @"recommendedRealtorsTitle": @"recommended_realtors_title",
                            @"quickQuestion": @"quick_question",
+                           @"recommendedHouseTitle": @"recommended_house_title",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

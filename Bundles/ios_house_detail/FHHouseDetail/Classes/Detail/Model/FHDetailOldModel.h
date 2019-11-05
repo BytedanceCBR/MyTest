@@ -460,6 +460,8 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailCommunityEntryModel *ugcSocialGroup;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseReviewCommentModel> *houseReviewComment;
 @property (nonatomic, strong , nullable) FHDetailDataQuickQuestionModel *quickQuestion;
+@property (nonatomic, copy , nullable) NSString *recommendedHouseTitle;
+
 
 @end
 
