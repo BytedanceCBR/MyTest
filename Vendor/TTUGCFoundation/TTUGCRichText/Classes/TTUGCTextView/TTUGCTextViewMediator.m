@@ -19,6 +19,8 @@
 #import "FHTopicListController.h"
 #import <UIColor+Theme.h>
 #import "NSString+UGCUtils.h"
+#import "TTAccountManager.h"
+#import <FHEnvContext.h>
 
 @interface TTUGCTextViewMediator() <FHTopicListControllerDelegate>
 @end
@@ -70,7 +72,12 @@
     if(self.atBtnClickBlock) {
         self.atBtnClickBlock(self.textView.didInputTextAt);
     } else {
-        [self defaultActionForAtButton];
+        if ([TTAccountManager isLogin]) {
+            [self defaultActionForAtButton];
+        } else {
+            [self.textView resignFirstResponder];
+            [self gotoLogin];
+        }
     }
 }
 
@@ -82,8 +89,39 @@
     if(self.atBtnClickBlock) {
         self.atBtnClickBlock(self.textView.didInputTextAt);
     } else {
-        [self defaultActionForAtButton];
+        if ([TTAccountManager isLogin]) {
+            [self defaultActionForAtButton];
+        } else {
+            [self.textView resignFirstResponder];
+            [self gotoLogin];
+        }
     }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *enter_from = @"";
+    if (enter_from.length <= 0) {
+        enter_from = @"be_null";
+    }
+    [params setObject:enter_from forKey:@"enter_from"];
+//    [params setObject:@"feed_like" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager presentAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin] && ![FHEnvContext isUGCAdUser]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [wSelf defaultActionForAtButton];
+                });
+            }
+        }else if(type == TTAccountAlertCompletionEventTypeCancel){
+            self.isSelectViewControllerVisible = NO;
+            [self.textView becomeFirstResponder];
+        }
+    }];
 }
 
 - (void)defaultActionForAtButton {
@@ -98,7 +136,6 @@
     } else {
         [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
     }
-    
 }
 
 - (void)toolbarDidClickPictureButtonWithBanPicInput:(BOOL)banPicInput {

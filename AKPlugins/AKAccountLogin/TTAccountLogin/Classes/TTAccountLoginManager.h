@@ -287,6 +287,13 @@ typedef NS_ENUM(NSInteger, TTAccountLoginDialogTitleType) {
 + (void)showAlertFLoginVCWithParams:(NSDictionary *)params completeBlock:(TTAccountLoginAlertPhoneInputCompletionBlock)complete;
 
 /**
+ *  F项目文章登录，统一处理为VC登录 present方式
+ *
+ *  @param complete 完成回调处理
+ */
++ (void)presentAlertFLoginVCWithParams:(NSDictionary *)params completeBlock:(TTAccountLoginAlertPhoneInputCompletionBlock)complete;
+
+/**
  *  F项目文章登录，统一处理为VC登录
  *
  *  @param complete 完成回调处理

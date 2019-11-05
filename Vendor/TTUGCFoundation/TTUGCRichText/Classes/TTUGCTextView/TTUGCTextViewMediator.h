@@ -48,7 +48,6 @@ typedef void (^DidClickAtButtonBlock)(BOOL didInputAt);
 @property (nonatomic, copy) DidClickAtButtonBlock atBtnClickBlock;
 @property (nonatomic, assign) BOOL isPushOutAtListController;
 
-
 - (void)addHashtag:(FHTopicListResponseDataListModel *)hashtagModel;
 
 //@事件点击
