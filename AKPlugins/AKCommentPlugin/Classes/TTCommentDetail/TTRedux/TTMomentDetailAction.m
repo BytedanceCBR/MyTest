@@ -32,11 +32,15 @@
     return action;
 }
 
-+ (instancetype)enterProfileActionWithUserID:(NSString *)userID {
++ (instancetype)enterProfileActionWithUserID:(NSString *)userID fromPage:(NSString *)fromPage {
     TTMomentDetailAction *action = [self actionWithType:TTMomentDetailActionTypeEnterProfile comment:nil];
     NSMutableDictionary *payload = [[NSMutableDictionary alloc] initWithCapacity:1];
     [payload setValue:userID forKey:@"userID"];
-    [payload setValue:@"comment_list" forKey:@"fromPage"];
+    if(fromPage){
+        [payload setValue:fromPage forKey:@"fromPage"];
+    }else{
+        [payload setValue:@"comment_list" forKey:@"fromPage"];
+    }
     action.payload = payload;
     action.shouldMiddlewareHandle = NO;
     return action;
