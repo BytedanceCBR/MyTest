@@ -59,6 +59,8 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 @property (nonatomic, weak) id <TTUGCSearchUserTableViewDelegate> delegate;
 @property (nonatomic, assign) BOOL isPushOutAtListController;
 @property (nonatomic, assign) BOOL isShowCancelNavigationBar;
+
+@property (nonatomic, strong) TTNavigationController *navController;
 @end
 
 @implementation TTUGCSearchUserViewController
@@ -70,6 +72,23 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         self.isShowCancelNavigationBar = [paramObj.allParams[@"isShowCancelNavigationBar"] boolValue];
     }
     return self;
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if([self.navigationController isKindOfClass:[TTNavigationController class]]) {
+        self.navController = (TTNavigationController *)self.navigationController;
+        self.navController.isBanSideSlideAction = YES;
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    if(self.navController) {
+        self.navController.isBanSideSlideAction = NO;
+    }
 }
 
 - (void)viewDidLoad {
