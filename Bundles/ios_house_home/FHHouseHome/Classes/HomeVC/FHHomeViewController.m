@@ -93,25 +93,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-
-    
-    [self checkJumpTab];
-}
-
-- (void)checkJumpTab
-{
-    //首次安装启动暂不参与判断
+        
     NSString *lastCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    if (![FHEnvContext isCurrentCityNormalOpen] && lastCityId) {
-        [[FHEnvContext sharedInstance] jumpUGCTab];
-    }
-    
-    if ([FHEnvContext isUGCAdUser]) {
-        if ([FHEnvContext isUGCOpen]) {
-            [[FHEnvContext sharedInstance] jumpUGCTab];
-        }
-    }
-    
     if (lastCityId) {
         [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
     }

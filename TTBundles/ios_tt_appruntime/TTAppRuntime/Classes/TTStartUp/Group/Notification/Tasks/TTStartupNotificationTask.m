@@ -115,9 +115,6 @@ TTAccountMulticastProtocol
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shareToPlatformNeedEnterBackground:) name:kShareToPlatformNeedEnterBackground object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
-    
-    //监听显示苹果商店评分系统显示时机的通知
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appStoreStarScoreView:) name:TTAppStoreStarManagerShowNotice object:nil];
 }
 
 #pragma mark - TTAccountMulticastProtocol
@@ -237,55 +234,4 @@ TTAccountMulticastProtocol
 //    }
 }
 
-- (void)appStoreStarScoreView:(NSNotification *)notice
-{
-    //通用点赞动画需要特殊处理,有点赞动画的时候不执行
-    NSMutableDictionary *dic = [[NSMutableDictionary alloc] initWithDictionary:[notice userInfo]];
-    BOOL isDelay = NO;
-    BOOL isLike = NO;
-    if ([dic objectForKey:@"isDelay"]) {
-        isDelay = [dic tt_boolValueForKey:@"isDelay"];
-    }
-    if ([dic objectForKey:@"trigger"]) {
-        isLike = [[dic tt_stringValueForKey:@"trigger"] isEqualToString:@"like"];
-    }
-    
-    //弹窗管理器
-//    [TTDialogDirector showInstantlyDialog:@"TTAppStoreStarManager" shouldShowMe:^BOOL(BOOL * _Nullable keepAlive) {
-//        return [[TTAppStoreStarManager sharedInstance] meetOpenCondition];
-//    } showMe:^(id  _Nonnull dialogInst) {
-//
-//        //原来的调起语句
-//        [[TTAppStoreStarManager sharedInstance] showViewFromNotice:notice];
-//
-//    } hideForcedlyMe:^(id  _Nonnull dialogInst) {
-//
-//        //原来的关闭语句
-//        [[TTAppStoreStarManager sharedInstance] dismissView];
-//    }];
-    
-    //fixed: 应用内评分空闲时弹出即可，无需强制弹出
-    [TTDialogDirector enqueueShowDialog:@"TTAppStoreStarManager" shouldShowMe:^BOOL(BOOL * _Nullable keepAlive) {
-        return [[TTAppStoreStarManager sharedInstance] meetOpenCondition];
-    } showMe:^(id  _Nonnull dialogInst) {
-        //原来的调起语句
-        [[TTAppStoreStarManager sharedInstance] showViewFromNotice:notice];
-    } hideForcedlyMe:^(id  _Nonnull dialogInst) {
-        //原来的关闭语句
-        [[TTAppStoreStarManager sharedInstance] dismissView];
-    }];
-    
-    //设置主动关闭执行的回调
-    [[TTAppStoreStarManager sharedInstance] setDismissFinishedBlock:^{
-        //关闭完成，显示下一个弹窗
-        [TTDialogDirector dequeueDialog:@"TTAppStoreStarManager"];
-    }];
-    
-}
-
-- (void)appStoreStarScoreViewFromDiggAnimation:(NSNotification *)notice
-{
-    NSNotification *noticeTemp = [[NSNotification alloc] initWithName:notice.name object:nil userInfo:@{@"trigger":@"like",@"isDelay":@(1)}];
-    [self appStoreStarScoreView:noticeTemp];
-}
 @end

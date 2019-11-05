@@ -212,7 +212,7 @@ extern NSString *const BOE_OPEN_KEY ;
         STTableViewCellItem *item_17 = [[STTableViewCellItem alloc] initWithTitle:@"appStore评分视图" target:self action:NULL];
         item_17.switchStyle = YES;
         item_17.switchAction = @selector(_appStoreStarFired:);
-        item_17.checked =  [[TTAppStoreStarManager sharedInstance] advancedDebug];
+        item_17.checked =  [[TTAppStoreStarManager sharedInstance] isDebug];
         [itemArray addObject:item_17];
         
         STTableViewCellItem *item_18 = [[STTableViewCellItem alloc] initWithTitle:@"统计展示V3开关" target:self action:NULL];
@@ -1090,7 +1090,7 @@ extern NSString *const BOE_OPEN_KEY ;
 
 - (void)_appStoreStarFired:(UISwitch *)uiswitch
 {
-    [[TTAppStoreStarManager sharedInstance] setAdvancedDebug:uiswitch.isOn];
+    [[TTAppStoreStarManager sharedInstance] setDebug:uiswitch.isOn];
 }
 
 - (void)_trackV3Fired:(UISwitch *)uiswitch

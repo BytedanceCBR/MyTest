@@ -48,6 +48,13 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     }
     [self registerHomePageViewControllers];
     [[self class] setLaunchController];
+    
+    //待首页view初始化后 再执行切tab
+    if ([FHEnvContext isUGCAdUser]) {
+        if ([FHEnvContext isUGCOpen]) {
+            [[FHEnvContext sharedInstance] jumpUGCTab];
+        }
+    }
     // 后续inhouse功能都可以在此处添加添加
     dispatch_async(dispatch_get_main_queue(), ^{
         [self configInHouseFunc];
