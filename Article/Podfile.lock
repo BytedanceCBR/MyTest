@@ -315,7 +315,7 @@ PODS:
   - TTAdSplashSDK (0.4.4.1-binary)
   - TTAiKan (0.1.0)
   - TTAppRuntime (0.1.0)
-  - TTAppStoreStarManager (1.0.12)
+  - TTAppStoreStarManager (1.0.12.1-binary)
   - TTAppUpdateHelper/TTUpdateHelper (1.0.9.1-binary)
   - TTAppUpdateHelper/TTUpdateView (1.0.9.1-binary)
   - TTArticle (0.1.0)
@@ -747,7 +747,7 @@ DEPENDENCIES:
   - TTAdSplashSDK (= 0.4.4.1-binary)
   - TTAiKan (from `../TTBundles/ios_tt_aikan`)
   - TTAppRuntime (from `../TTBundles/ios_tt_appruntime`)
-  - TTAppStoreStarManager (= 1.0.12)
+  - TTAppStoreStarManager (= 1.0.12.1-binary)
   - TTAppUpdateHelper/TTUpdateHelper (= 1.0.9.1-binary)
   - TTAppUpdateHelper/TTUpdateView (= 1.0.9.1-binary)
   - TTArticle (from `../TTBundles/ios_tt_article`)
@@ -1090,7 +1090,7 @@ SPEC CHECKSUMS:
   TTAdSplashSDK: f02f0b22a03a06783ff6e1473f895fd8563c9333
   TTAiKan: 642649f0c4848130171604fa36db684ecbff7648
   TTAppRuntime: 950cd779a9ea11d64aa82e5c0899bd849c38799b
-  TTAppStoreStarManager: 8e327e01acea0cfff4cfb51e81c7a922a0cbc6a3
+  TTAppStoreStarManager: 70935d6a09575d63dd2c1fae2b6bb75c07caee2c
   TTAppUpdateHelper: d0e770676b263dfc1f8a0a6b07c280a760574b44
   TTArticle: 40401054fc58b1744b37a8ecb054b90dda774702
   TTArticleBase: b77815513c03f2a0339a9acf18ff1516789a0bc6
@@ -1178,6 +1178,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: eefbc9b74d70ca3154ac6cb917f98f18294083ba
+PODFILE CHECKSUM: 1e2829a9738c1cd6c6724d8dc85c73bd544b91eb
 
 COCOAPODS: 1.4.0

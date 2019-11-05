@@ -637,7 +637,7 @@ def appPods
 
     pod 'BDUGDeepLink', '1.1.1'
     
-    pod 'TTAppStoreStarManager', '1.0.12'
+    pod_binary 'TTAppStoreStarManager', '1.0.12'
 end
 
 
