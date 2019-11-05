@@ -540,6 +540,7 @@ static struct timeval kFHCommentTimeval;
     self.atButton.centerY = self.publishButton.centerY;
     self.emojiInputView.top = self.textInputView.bottom;
 
+    __weak typeof(self)wself = self;
     // TextView and Toolbar Mediator
     self.textViewMediator = [[TTUGCTextViewMediator alloc] init];
     self.textViewMediator.textView = self.inputTextView;
@@ -547,6 +548,7 @@ static struct timeval kFHCommentTimeval;
     [self.inputTextView tt_addDelegate:self asMainDelegate:NO];
     self.commentFunctionView.delegate = self;
     [self.commentFunctionView tt_addDelegate:self.textViewMediator asMainDelegate:NO];
+    
 
     [self addSubview:self.backgroundView];
     [self addSubview:self.containerViewBackgroundView];

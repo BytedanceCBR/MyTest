@@ -21,6 +21,7 @@
 @property (nonatomic, strong)     TTAcountFLoginDelegate       *loginDelegate;
 @property (nonatomic, assign)   BOOL       needPopVC;
 @property (nonatomic, assign)   BOOL       isFromUGC;
+@property (nonatomic, assign)   BOOL       present;
 
 @end
 
@@ -46,6 +47,10 @@
         self.isFromUGC = NO;
         if (params[@"from_ugc"]) {
             self.isFromUGC = [params[@"from_ugc"] boolValue];
+        }
+        
+        if (params[@"present"]) {
+            self.present = [params[@"present"] boolValue];
         }
     }
     return self;
@@ -117,6 +122,7 @@
 - (void)initViewModel {
     self.viewModel = [[FHLoginViewModel alloc] initWithView:self.loginView controller:self];
     self.viewModel.needPopVC = self.needPopVC;
+    self.viewModel.present = self.present;
     self.viewModel.loginDelegate = self.loginDelegate;
 }
 
