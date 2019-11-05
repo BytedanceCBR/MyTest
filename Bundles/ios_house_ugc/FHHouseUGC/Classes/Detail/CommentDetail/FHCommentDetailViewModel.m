@@ -690,13 +690,15 @@
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view nameViewonClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-    NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@",model.user.ID];
+    NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=comment_list",model.user.ID];
     NSURL *openUrl = [NSURL URLWithString:url];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view quotedNameOnClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-
+    NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=comment_list",model.qutoedCommentModel.userID];
+    NSURL *openUrl = [NSURL URLWithString:url];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
 
 #pragma mark - Tracer
