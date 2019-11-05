@@ -191,38 +191,18 @@
     
     
     if (hasVideo) {
-        FHMultiMediaItemModel *itemModel = nil;
-        if (hasVideo) {
-            FHVideoHouseVideoVideoInfosModel *info = model.data.neighborhoodVideo.videoInfos[0];
-            itemModel = [[FHMultiMediaItemModel alloc] init];
-            itemModel.cellHouseType = FHMultiMediaCellHouseNeiborhood;
-            itemModel.mediaType = FHMultiMediaTypeVideo;
-            // 测试id
-            // @"v03004b60000bh57qrtlt63p5lgd20d0";
-            // @"v0200c940000bh9r6mna1haoho053neg";
-//            if (info.coverImageUrl.length <= 0) {
-//                // 视频没有url
-//                if (model.data.houseImageDictList.count > 0) {
-//                    for (int i = 0; i < model.data.houseImageDictList.count; i++) {
-//                        FHDetailOldDataHouseImageDictListModel *item = model.data.houseImageDictList[i];
-//                        if (item.houseImageList.count > 0) {
-//                            FHImageModel *imageModel = item.houseImageList[0];
-//                            if (imageModel.url.length > 0) {
-//                                info.coverImageUrl = imageModel.url;
-//                                break;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-            itemModel.videoID = info.vid;
-            itemModel.imageUrl = info.coverImageUrl;
-            itemModel.vWidth = info.vWidth;
-            itemModel.vHeight = info.vHeight;
-            itemModel.infoTitle = model.data.neighborhoodVideo.infoTitle;
-            itemModel.infoSubTitle = model.data.neighborhoodVideo.infoSubTitle;
-            itemModel.groupType = @"视频";
-        }
+        
+        FHVideoHouseVideoVideoInfosModel *info = model.data.neighborhoodVideo.videoInfos[0];
+        FHMultiMediaItemModel * itemModel = [[FHMultiMediaItemModel alloc] init];
+        itemModel.cellHouseType = FHMultiMediaCellHouseNeiborhood;
+        itemModel.mediaType = FHMultiMediaTypeVideo;
+        itemModel.videoID = info.vid;
+        itemModel.imageUrl = info.coverImageUrl;
+        itemModel.vWidth = info.vWidth;
+        itemModel.vHeight = info.vHeight;
+        itemModel.infoTitle = model.data.neighborhoodVideo.infoTitle;
+        itemModel.infoSubTitle = model.data.neighborhoodVideo.infoSubTitle;
+        itemModel.groupType = @"视频";
         
         FHDetailMediaHeaderModel *headerCellModel = [[FHDetailMediaHeaderModel alloc] init];
         FHDetailOldDataHouseImageDictListModel *houseImageDictList = [[FHDetailOldDataHouseImageDictListModel alloc] init];
