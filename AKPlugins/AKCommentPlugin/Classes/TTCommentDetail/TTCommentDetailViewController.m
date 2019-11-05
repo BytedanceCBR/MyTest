@@ -792,7 +792,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark - TTDynamicDetailHeaderDelegate
 
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header avatarViewOnClick:(id)sender {
-    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:self.pageState.detailModel.user.ID];
+    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:self.pageState.detailModel.user.ID fromPage:nil];
     NSMutableDictionary *mdict = action.payload.mutableCopy;
     [mdict setValue:@"comment_list" forKey:@"fromPage"];
     action.payload = mdict.copy;
@@ -800,7 +800,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 }
 
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header nameViewOnClick:(id)sender {
-    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:self.pageState.detailModel.user.ID];
+    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:self.pageState.detailModel.user.ID fromPage:nil];
     NSMutableDictionary *mdict = action.payload.mutableCopy;
     [mdict setValue:@"comment_list" forKey:@"fromPage"];
     action.payload = mdict.copy;
@@ -924,12 +924,12 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     // add by zjing 去掉个人主页跳转
     return;
     
-    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:self.pageState.detailModel.qutoedCommentModel.userID];
+    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:self.pageState.detailModel.qutoedCommentModel.userID fromPage:nil];
     [self.store dispatch:action];
 }
 
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header diggedUserAvatarOnClick:(SSUserModel *)user {
-    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:user.ID];
+    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:user.ID fromPage:nil];
     NSMutableDictionary *mdict = action.payload.mutableCopy;
     [mdict setValue:_categoryName forKey:@"categoryName"];
     [mdict setValue:_groupId forKey:@"groupId"];
@@ -962,7 +962,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark - TTCommentDetailCellDelegate
 
 - (void)tt_commentCell:(UITableViewCell *)view avatarTappedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.user.ID];
+    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.user.ID fromPage:nil];
     [self.store dispatch:action];
 }
 
@@ -999,12 +999,12 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view nameViewonClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.user.ID];
+    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.user.ID fromPage:nil];
     [self.store dispatch:action];
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view quotedNameOnClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.qutoedCommentModel.userID];
+    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.qutoedCommentModel.userID fromPage:@"at_user_profile"];
     [self.store dispatch:action];
 }
 
