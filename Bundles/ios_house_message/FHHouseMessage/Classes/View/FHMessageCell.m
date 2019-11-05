@@ -14,6 +14,9 @@
 #import "TTAccount.h"
 #import "FHChatUserInfoManager.h"
 #import <TTRichSpanText.h>
+#import <TIMOMessage.h>
+#import <TIMMessageStoreBridge.h>
+
 #define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
 @interface FHMessageCell()
@@ -205,7 +208,7 @@
             NSString *cutStr = [self cutLineBreak:[conv lastMessage]];
             NSNumber *uid =[NSNumber numberWithLongLong: [[[TTAccount sharedAccount] userIdString] longLongValue]];
             if (lastMsg.isCurrentUser || lastMsg.type == ChatMstTypeNotice) {
-                if ([lastMsg.mentionedUsers containsObject:uid]) {
+                if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                     self.subTitleLabel.attributedText = [self getAtAttributeString:cutStr];;
                 } else {
                     self.subTitleLabel.text = cutStr;
@@ -213,7 +216,7 @@
             } else {
                 [[FHChatUserInfoManager shareInstance] getUserInfoSync:[[NSNumber numberWithLongLong:lastMsg.userId] stringValue] block:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
                     NSString *tipMsg = [NSString stringWithFormat:@"%@: %@", userInfo.username, cutStr];
-                    if ([lastMsg.mentionedUsers containsObject:uid]) {
+                    if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                         self.subTitleLabel.attributedText = [self getAtAttributeString:tipMsg];;
                     } else {
                          self.subTitleLabel.text = tipMsg;
@@ -228,6 +231,10 @@
 
     [self displaySendState:lastMsg];
     self.timeLabel.text = [self timeLabelByDate:conv.updatedAt];
+}
+
+-(BOOL)lastMsgHasReadInConversation:(IMConversation *)conv {
+    return conv.unreadCount == 0; // 会话的未读数为0时即为最后一条消息已读状态
 }
 
 -(NSAttributedString*)getDraftAttributeString:(NSString*)draft {
