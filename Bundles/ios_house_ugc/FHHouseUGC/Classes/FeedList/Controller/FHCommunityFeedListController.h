@@ -62,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
 //圈子信息
 @property(nonatomic, strong) FHUGCScialGroupDataModel *scialGroupData;
 
-@property(nonatomic, strong) id<CommunityGroupChatLoginDelegate> loginDelegate;
+@property(nonatomic, weak) id<CommunityGroupChatLoginDelegate> loginDelegate;
 
 @property(nonatomic, weak) id<UIScrollViewDelegate> scrollViewDelegate;
 @property(nonatomic, weak) id<FHCommunityFeedListControllerDelegate> delegate;

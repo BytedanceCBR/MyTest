@@ -33,7 +33,7 @@
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver, CommunityGroupChatLoginDelegate, FHCommunityFeedListControllerDelegate>
 
 @property(nonatomic, weak) FHCommunityDetailViewController *viewController;
-@property(nonatomic, weak) FHCommunityFeedListController *feedListController;
+@property(nonatomic, strong) FHCommunityFeedListController *feedListController;
 @property(nonatomic, strong) FHUGCScialGroupDataModel *data;
 @property(nonatomic, strong) FHCommunityDetailHeaderView *headerView;
 @property(nonatomic, strong) FHUGCFollowButton *rightBtn;
@@ -300,6 +300,15 @@
         [_viewController tt_endUpdataData];
         return;
     }
+    
+    if(self.viewController.communityId.length <= 0) {
+        [_viewController tt_endUpdataData];
+        if(userPull){
+            [self.feedListController.tableView.mj_header endRefreshing];
+        }
+        return;
+    }
+    
     WeakSelf;
     [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         [_viewController tt_endUpdataData];

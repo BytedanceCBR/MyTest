@@ -104,6 +104,10 @@
         }else if ([allInfo[@"tracer"] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *tracerDict = allInfo[@"tracer"];
             NSDictionary *logPbDict = tracerDict[@"log_pb"];
+            if ([logPbDict isKindOfClass:[NSString class]]) {
+                NSData *jsonData = [(NSString *)logPbDict dataUsingEncoding:NSUTF8StringEncoding];
+                logPbDict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil];
+            }
             self.searchId = logPbDict[@"search_id"];
             self.imprId = logPbDict[@"impr_id"];
         }
