@@ -234,15 +234,7 @@
 }
 
 -(BOOL)lastMsgHasReadInConversation:(IMConversation *)conv {
-    BOOL ret = NO;
-    ChatMsg *lastMsg = [conv lastChatMsg];
-    TIMOMessage * lastMessage = [TIMOMessage instanceWithIdentifier:lastMsg.msgId inConversation:conv.identifier];
-    
-    id<TIMMessageModelProtocol> internalModel = [lastMessage valueForKey:@"internalModel"];
-    if(internalModel) {
-        ret = internalModel.hasRead;
-    }
-    return ret;
+    return conv.unreadCount == 0; // 会话的未读数为0时即为最后一条消息已读状态
 }
 
 -(NSAttributedString*)getDraftAttributeString:(NSString*)draft {
