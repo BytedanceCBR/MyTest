@@ -93,11 +93,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-        
-    NSString *lastCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    if (lastCityId) {
-        [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
-    }
+    
 }
 
 - (void)scrollMainTableToTop

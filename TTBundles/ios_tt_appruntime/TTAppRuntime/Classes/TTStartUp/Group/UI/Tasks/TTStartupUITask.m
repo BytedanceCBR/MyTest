@@ -62,6 +62,10 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
             }
         }
     }
+    
+    if (lastCityId) {
+        [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
+    }
 
     // 后续inhouse功能都可以在此处添加添加
     dispatch_async(dispatch_get_main_queue(), ^{
