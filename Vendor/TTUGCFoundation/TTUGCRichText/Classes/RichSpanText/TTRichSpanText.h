@@ -115,7 +115,8 @@ typedef NS_ENUM (NSInteger, TTRichSpanLinkFlagType) {
 
 @property (nonatomic, copy, readonly) NSString *text;
 @property (nonatomic, strong, readonly) TTRichSpans *richSpans;
-
+- (NSString *)base64EncodedString;
+- (instancetype)initWithBase64EncodedString:(NSString *)base64String;
 - (instancetype)initWithText:(NSString *)text richSpansJSONString:(NSString *)richSpansJSONString;
 - (instancetype)initWithText:(NSString *)text richSpans:(TTRichSpans *)richSpans;
 //- (instancetype)initWithText:(NSString *)text richSpanLinks:(NSArray <TTRichSpanLink *>*)links;

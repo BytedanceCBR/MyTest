@@ -19,8 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) TTAcountFLoginDelegate *loginDelegate;
 @property(nonatomic, assign) BOOL needPopVC;
 @property(nonatomic, assign) BOOL noDismissVC;
+@property(nonatomic, assign) BOOL present;
 @property (nonatomic, assign) BOOL fromOneKeyLogin;
 @property (nonatomic, assign) BOOL fromOtherLogin;
+@property (nonatomic, assign)   BOOL  isNeedCheckUGCAdUser;
 
 - (instancetype)initWithView:(FHLoginView *)view controller:(FHLoginViewController *)viewController;
 

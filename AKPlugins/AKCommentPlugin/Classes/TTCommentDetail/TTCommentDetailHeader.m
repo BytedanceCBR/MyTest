@@ -29,6 +29,7 @@
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
 #import <TTUGCFoundation/TTRichSpanText+Emoji.h>
+#import <UIColor+Theme.h>
 
 
 @interface TTCommentDetailHeaderUIHelper : NSObject
@@ -249,7 +250,7 @@
     self.contentLabel.text = attributedString;
     self.richSpanText = richSpanText;
     
-    if(!self.fromUGC){
+//    if(!self.fromUGC){
         NSArray <TTRichSpanLink *> *richSpanLinks = [richSpanText richSpanLinksOfAttributedString];
         for (TTRichSpanLink *richSpanLink in richSpanLinks) {
             NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
@@ -261,7 +262,7 @@
                 }
             }
         }
-    }
+//    }
 
     self.digButton.selected = model.userDigg;
     [self.digButton setDiggCount:model.diggCount];
@@ -692,7 +693,7 @@
 
         NSDictionary *linkAttributes = @{
             NSParagraphStyleAttributeName: [TTCommentDetailHeaderUIHelper contentLabelParagraphStyle],
-            NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
+            NSForegroundColorAttributeName : [UIColor themeRed3],
             NSFontAttributeName : [TTCommentDetailHeaderUIHelper contentLabelFont]
         };
         _contentLabel.linkAttributes = linkAttributes;

@@ -29,7 +29,7 @@
 #import "FHCommonApi.h"
 #import "TTSandBoxHelper.h"
 #import "TTIndicatorView.h"
-
+#import <UIColor+Theme.h>
 
 
 #define kTTCommentCellDigButtonHitTestInsets UIEdgeInsetsMake(-30, -30, -10, -30)
@@ -199,14 +199,14 @@
     
     NSDictionary *linkAttributes = @{
                                      NSParagraphStyleAttributeName: [TTUniversalCommentCellLiteHelper contentLabelParagraphStyle],
-                                     NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
+                                     NSForegroundColorAttributeName : [UIColor themeRed3],
                                      NSFontAttributeName : [TTUniversalCommentCellLiteHelper contentLabelFont]
                                      };
     self.contentLabel.linkAttributes = linkAttributes;
     self.contentLabel.activeLinkAttributes = linkAttributes;
     self.contentLabel.inactiveLinkAttributes = linkAttributes;
     
-    if(!self.fromUGC){
+//    if(!self.fromUGC){
         NSArray <TTRichSpanLink *> *richSpanLinks = [self.layout.contentLayout.richSpanText richSpanLinksOfAttributedString];
         for (TTRichSpanLink *richSpanLink in richSpanLinks) {
             NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
@@ -218,7 +218,7 @@
                 }
             }
         }
-    }
+//    }
 }
 
 - (void)refreshReplayButton {
