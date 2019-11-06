@@ -60,7 +60,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 @property (nonatomic, assign) BOOL isPushOutAtListController;
 @property (nonatomic, assign) BOOL isShowCancelNavigationBar;
 
-@property (nonatomic, strong) TTNavigationController *navController;
+@property (nonatomic, weak) TTNavigationController *navController;
 @end
 
 @implementation TTUGCSearchUserViewController
