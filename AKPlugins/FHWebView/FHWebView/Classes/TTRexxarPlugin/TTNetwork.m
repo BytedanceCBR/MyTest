@@ -138,10 +138,14 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
         TTBRIDGE_CALLBACK_WITH_MSG(FHBridgeMsgFailed, @"url不能为空");
         return;
     }
+    Class seriallizerClass = [FHCommonJSONHTTPRequestSerializer class];
+    if ([header isKindOfClass:[NSDictionary class]] && [header[@"Content-Type"] isKindOfClass:[NSString class]] && [header[@"Content-Type"] isEqualToString:@"application/x-www-form-urlencoded"]) {
+        seriallizerClass = nil;
+    }
     
     NSString *startTime = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
     
-    [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:[FHCommonJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+    [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:seriallizerClass responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         if (callback) {
             NSString *result = @"";
             if([obj isKindOfClass:[NSData class]]){

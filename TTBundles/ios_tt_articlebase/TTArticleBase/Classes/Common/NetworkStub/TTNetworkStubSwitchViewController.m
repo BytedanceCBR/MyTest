@@ -122,13 +122,14 @@ static NSArray *switchItemSortedKeys;
         cell.detailTextLabel.text = item[@"path"];
     }
     
+    __weak typeof(self) wself = self;
     cell.valueChangedAction = ^void(BOOL newValue) {
         if (newValue && item) {
             [[TTNetworkStub sharedInstance] setupStub:key withConfigArray:configArray];
-            [self.statusDict setObject:@(newValue) forKey:key];
+            [wself.statusDict setObject:@(newValue) forKey:key];
         } else {
             [[TTNetworkStub sharedInstance] removeStub:key];
-            [self.statusDict removeObjectForKey:key];
+            [wself.statusDict removeObjectForKey:key];
         }
     };
     

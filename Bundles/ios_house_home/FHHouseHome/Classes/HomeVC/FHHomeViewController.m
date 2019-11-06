@@ -93,11 +93,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-        
-    NSString *lastCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    if (lastCityId) {
-        [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
-    }
+    
 }
 
 - (void)scrollMainTableToTop
@@ -633,12 +629,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)checkPasteboard:(BOOL)isAutoJump
 {
-    if ([FHEnvContext isUGCAdUser] && isAutoJump) {
-        if ([FHEnvContext isUGCOpen]) {
-            [[FHEnvContext sharedInstance] jumpUGCTab];
-        }
-    }
-    
     __weak typeof(self) weakSelf = self;
     //据说主线程读剪切板会导致app卡死。。。改为子线程读
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

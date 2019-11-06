@@ -18,6 +18,7 @@
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import <Heimdallr/HMDTTMonitor.h>
 #import <TTReachability/TTReachability.h>
+#import <Heimdallr/HMDUserExceptionTracker.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -381,6 +382,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             NSInteger code = 0;
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
             
             if (response.statusCode == 200  && [model isKindOfClass:[FHHomeHouseModel class]]) {
                 if ([model respondsToSelector:@selector(status)]) {
@@ -394,13 +396,14 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                         code = [status integerValue];
                         errMsg = error.domain;
                         resultType = FHNetworkMonitorTypeBizFailed;
+                        exceptionDict = @{@"data_type":(param[@"house_type"]?:@"-1")};
                     }
                 }
             }else{
                 code = response.statusCode;
                 resultType = FHNetworkMonitorTypeNetFailed;
             }
-            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(model,backError);
             });
@@ -411,6 +414,12 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
 
 +(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict
 {
+    [self addRequestLog:path startDate:startData backDate:backDate serializeDate:serializeDate resultType:type errorCode:errorCode errorMsg:errorMsg extra:extraDict exceptionDict:nil];
+}
+
++(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict exceptionDict:(NSDictionary *)exceptionDict
+{
+    NSString *sPath = path;
     path = [path stringByReplacingOccurrencesOfString:@"f100/api" withString:@""];
     path = [path stringByReplacingOccurrencesOfString:@"f100" withString:@""];
     
@@ -421,6 +430,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
             [items addObject:obj];
         }
     }];
+    
     NSString *key = [@"f_api_performance_" stringByAppendingString:[items componentsJoinedByString:@"_"]];
     
     NSMutableDictionary *extra = [NSMutableDictionary new];
@@ -461,7 +471,24 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
     
     NSDictionary *cat = @{@"status":@(type)};
     [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:cat extra:extra];
-        
+    
+    if (type == FHNetworkMonitorTypeBizFailed) {
+        NSMutableDictionary *filterDict = [NSMutableDictionary new];
+        filterDict[@"path"] = key;
+        NSMutableDictionary *customDict = [NSMutableDictionary new];
+        customDict[@"status"] = @(errorCode);
+        NSDictionary *headerDict = extra[@"response_headers"];
+        if ([headerDict isKindOfClass:[NSDictionary class]]) {
+            customDict[@"log_id"] = headerDict[@"x-tt-logid"];
+        }
+        NSStream *cityName = [FHEnvContext getCurrentSelectCityIdFromLocal];
+        customDict[@"city"] = cityName?:@"";
+        if ([exceptionDict isKindOfClass:[NSDictionary class]]) {
+            [customDict addEntriesFromDictionary:exceptionDict];
+        }
+        [[HMDUserExceptionTracker sharedTracker] trackUserExceptionWithType:[NSString stringWithFormat:@"api_error:%@",sPath?:@""] Log:errorMsg?:@"api_biz_error" CustomParams:customDict filters:filterDict callback:nil];
+    }
+    
 }
 
 #pragma Mark - base request

@@ -425,6 +425,7 @@
 - (void)playerDidEnterFullscreen:(TTVPlayer *)player {
     [self trackWithName:@"enter_fullscreen"];
     self.isFullScreen = YES;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     if(self.delegate && [self.delegate respondsToSelector:@selector(playerDidEnterFullscreen)]){
         [self.delegate playerDidEnterFullscreen];
     }
@@ -434,6 +435,7 @@
 - (void)playerDidExitFullscreen:(TTVPlayer *)player {
     [self trackWithName:@"exit_fullscreen"];
     self.isFullScreen = NO;
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     if(self.delegate && [self.delegate respondsToSelector:@selector(playerDidExitFullscreen)]){
         [self.delegate playerDidExitFullscreen];
     }
