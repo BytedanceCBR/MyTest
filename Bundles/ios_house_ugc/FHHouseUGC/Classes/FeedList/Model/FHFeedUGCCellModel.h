@@ -37,10 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHFeedUGCOriginItemModel : NSObject
 
 @property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *contentRichSpan;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *type;
 @property (nonatomic, copy , nullable) FHFeedContentImageListModel *imageModel;
 @property (nonatomic, copy , nullable) NSAttributedString *contentAStr;
+@property (nonatomic, strong) TTRichSpanText *richContent;
 
 @end
 

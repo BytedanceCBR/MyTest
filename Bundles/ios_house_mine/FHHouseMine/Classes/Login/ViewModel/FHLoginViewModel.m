@@ -456,7 +456,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)popViewController {
-    [self.viewController.navigationController popViewControllerAnimated:YES];
+    if(self.present){
+        [self.viewController dismissViewControllerAnimated:YES completion:nil];
+    }else{
+        [self.viewController.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void)sendVerifyCode {

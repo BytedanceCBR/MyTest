@@ -16,6 +16,7 @@
 #import "TTImagePickerController.h"
 
 typedef void (^DidClickHashtagButtonBlock)(BOOL didInputTextHashtag);
+typedef void (^DidClickAtButtonBlock)(BOOL didInputAt);
 
 @protocol TTUGCAddMultiImageProtocol
 
@@ -23,7 +24,7 @@ typedef void (^DidClickHashtagButtonBlock)(BOOL didInputTextHashtag);
 
 @end
 @class FHTopicListResponseDataListModel;
-@interface TTUGCTextViewMediator : NSObject <TTUGCTextViewDelegate, TTUGCToolbarDelegate, TTUGCSearchUserTableViewDelegate, TTUGCSearchHashtagTableViewDelegate>
+@interface TTUGCTextViewMediator : NSObject <TTUGCTextViewDelegate, TTUGCToolbarDelegate, TTUGCSearchUserTableViewDelegate>
 
 @property (nonatomic, strong) SSThemedView <TTUGCToolbarProtocol> *toolbar;
 @property (nonatomic, strong) TTUGCTextView *textView;
@@ -44,7 +45,12 @@ typedef void (^DidClickHashtagButtonBlock)(BOOL didInputTextHashtag);
 @property (nonatomic, assign) BOOL isSelectViewControllerVisible;
 
 @property (nonatomic, copy) DidClickHashtagButtonBlock hashTagBtnClickBlock;
-
+@property (nonatomic, copy) DidClickAtButtonBlock atBtnClickBlock;
+@property (nonatomic, assign) BOOL isPushOutAtListController;
 
 - (void)addHashtag:(FHTopicListResponseDataListModel *)hashtagModel;
+
+//@事件点击
+- (void)toolbarDidClickAtButton;
+
 @end

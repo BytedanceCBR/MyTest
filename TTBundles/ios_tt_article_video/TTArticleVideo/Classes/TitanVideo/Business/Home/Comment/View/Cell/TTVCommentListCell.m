@@ -33,6 +33,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "TTSandBoxHelper.h"
 #import "TTIndicatorView.h"
+#import <UIColor+Theme.h>
 
 #define kTTCommentCellDigButtonHitTestInsets UIEdgeInsetsMake(-30, -30, -10, -30)
 #define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"
@@ -206,7 +207,7 @@
 
     NSDictionary *linkAttributes = @{
         NSParagraphStyleAttributeName: [TTVCommentListCellHelper contentLabelParagraphStyle],
-        NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
+        NSForegroundColorAttributeName : [UIColor themeRed3],
         NSFontAttributeName : [TTVCommentListCellHelper contentLabelFont]
     };
     self.contentLabel.linkAttributes = linkAttributes;

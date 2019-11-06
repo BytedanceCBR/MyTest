@@ -84,10 +84,28 @@
 {
   NSDictionary *dict = @{
     @"iconOpData": @"icon_op_data",
+    @"homePage": @"home_page",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
   }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHMineConfigDataHomePageModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"showHomePage": @"show_home_page",
+                           @"homePageContent": @"home_page_content",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
 }
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {

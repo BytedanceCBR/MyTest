@@ -66,7 +66,6 @@
 "search"                = "ExploreSearchViewController";
 "talk"                  = "ArticleMomentDetailViewController";
 "forum"                 = "FRForumListViewController";
-"thread_detail"         = "FRThreadSmartDetailViewController";
 "thread_smart_detail"   = "FRThreadSmartDetailViewController";
 "gossip"                = "FRForumGossipViewController";
 "send_thread"           = "TTPostThreadViewController";
@@ -77,7 +76,6 @@
 "blocklist"             = "BlockUsersListViewController";
 
 "login"                 = "open";
-"forum_guide"           = "FRForumAllForumViewController";
 "forum_guide"           = "FRForumAllForumViewController";
 
 "livechat"              = "TTLiveMainViewController";
@@ -128,6 +126,7 @@
 "im_share_favorite_house" = "FHIMFavoriteShareViewController";
 "im_group_chat_more_info" = "GroupChatMoreInfoViewController";
 "im_group_chat_member" = "GroupChatMemeberViewController";
+"im_group_chat_at" = "GroupChatMemeberViewController";
 //会话列表
 "message_conversation_list" = "FHTempMessageViewController";
 
@@ -182,6 +181,7 @@
 "ugc_post" = "FHPostUGCViewController";
 "thread_detail" = "FHPostDetailViewController";
 "ugc_post_topic_list" = "FHTopicListController";
+"ugc_post_at_list" = "TTUGCSearchUserViewController";
 "ugc_community_detail" = "FHCommunityDetailViewController";
 "ugc_my_interest" = "FHUGCMyInterestedController";
 "ugc_post_wd_answer" = "FHWDAnswerPictureTextViewController";

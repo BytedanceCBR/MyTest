@@ -35,5 +35,7 @@
 + (CGFloat)heightForTableView:(UITableView *)tableView
              withCommentModel:(AWECommentModel *)model;
 
+//+ (NSAttributedString *)convertRichContentWithModel:(AWECommentModel *)model;
+
 
 @end

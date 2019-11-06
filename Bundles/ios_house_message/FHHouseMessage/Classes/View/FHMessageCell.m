@@ -13,6 +13,10 @@
 #import "UIImageView+BDWebImage.h"
 #import "TTAccount.h"
 #import "FHChatUserInfoManager.h"
+#import <TTRichSpanText.h>
+#import <TIMOMessage.h>
+#import <TIMMessageStoreBridge.h>
+
 #define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
 @interface FHMessageCell()
@@ -195,16 +199,28 @@
         NSString *targetUserId = [conv getTargetUserId:[[TTAccount sharedAccount] userIdString]];
         self.titleLabel.text = [[FHChatUserInfoManager shareInstance] getUserInfo:targetUserId].username;
     }
-    if (!isEmptyString([conv getDraft])) {
-        self.subTitleLabel.attributedText = [self getDraftAttributeString:[conv getDraft]];
+    TTRichSpanText *richSpanTextDraft = [[TTRichSpanText alloc] initWithBase64EncodedString:[conv getDraft]];
+    NSString *draftText = richSpanTextDraft.text;
+    if (!isEmptyString(draftText)) {
+        self.subTitleLabel.attributedText = [self getDraftAttributeString:draftText];
     } else {
         if (isGroupChat) {
             NSString *cutStr = [self cutLineBreak:[conv lastMessage]];
+            NSNumber *uid =[NSNumber numberWithLongLong: [[[TTAccount sharedAccount] userIdString] longLongValue]];
             if (lastMsg.isCurrentUser || lastMsg.type == ChatMstTypeNotice) {
-                self.subTitleLabel.text = cutStr;
+                if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
+                    self.subTitleLabel.attributedText = [self getAtAttributeString:cutStr];;
+                } else {
+                    self.subTitleLabel.text = cutStr;
+                }
             } else {
                 [[FHChatUserInfoManager shareInstance] getUserInfoSync:[[NSNumber numberWithLongLong:lastMsg.userId] stringValue] block:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
-                    self.subTitleLabel.text = [NSString stringWithFormat:@"%@: %@", userInfo.username, cutStr];
+                    NSString *tipMsg = [NSString stringWithFormat:@"%@: %@", userInfo.username, cutStr];
+                    if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
+                        self.subTitleLabel.attributedText = [self getAtAttributeString:tipMsg];;
+                    } else {
+                         self.subTitleLabel.text = tipMsg;
+                    }
                 }];
             }
         } else {
@@ -217,6 +233,10 @@
     self.timeLabel.text = [self timeLabelByDate:conv.updatedAt];
 }
 
+-(BOOL)lastMsgHasReadInConversation:(IMConversation *)conv {
+    return conv.unreadCount == 0; // 会话的未读数为0时即为最后一条消息已读状态
+}
+
 -(NSAttributedString*)getDraftAttributeString:(NSString*)draft {
 
     NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"[草稿] %@", [self cutLineBreak:draft]]];
@@ -227,6 +247,21 @@
 
     NSDictionary<NSString *, id> *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14],
                                                  NSForegroundColorAttributeName : [UIColor redColor] ,
+                                                 NSParagraphStyleAttributeName : paragraphStyle};
+    [attrStr addAttributes:attributes range:theRange];
+    return attrStr;
+}
+
+-(NSAttributedString*)getAtAttributeString:(NSString*)draft {
+    
+    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"[有人@我]%@", [self cutLineBreak:draft]]];
+    NSRange theRange = NSMakeRange(0, 6);
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 0;
+    paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+    
+    NSDictionary<NSString *, id> *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14],
+                                                 NSForegroundColorAttributeName : [UIColor themeRed3] ,
                                                  NSParagraphStyleAttributeName : paragraphStyle};
     [attrStr addAttributes:attributes range:theRange];
     return attrStr;

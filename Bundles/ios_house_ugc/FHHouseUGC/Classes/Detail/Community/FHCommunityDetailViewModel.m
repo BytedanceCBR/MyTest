@@ -41,7 +41,7 @@
 @property(nonatomic, strong) UILabel *subTitleLabel;
 @property(nonatomic, strong) UIView *titleContainer;
 @property(nonatomic, strong) MJRefreshHeader *refreshHeader;
-@property (nonatomic, assign)   BOOL       isViewAppear;
+@property(nonatomic, assign)   BOOL       isViewAppear;
 @property(nonatomic, assign) BOOL isLoginSatusChangeFromGroupChat;
 @property(nonatomic, assign) BOOL isLogin;
 
@@ -60,6 +60,15 @@
         self.shouldShowUGcGuide = YES;
         self.isViewAppear = YES;
         self.isLogin = TTAccountManager.isLogin;
+        
+        // 分享埋点
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+        params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
+        params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+        params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
+        params[@"page_type"] = [self pageTypeString];
+        self.shareTracerDict = [params copy];
     }
     return self;
 }
@@ -467,6 +476,7 @@
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = YES;
         self.rightBtn.hidden = YES;
+        self.shareButton.hidden = NO;
     } else if (alpha > 0.1f && alpha < 0.9f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         self.viewController.customNavBarView.title.textColor = [UIColor themeGray1];
@@ -474,12 +484,14 @@
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = YES;
         self.rightBtn.hidden = YES;
+        self.shareButton.hidden = NO;
     } else {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = NO;
         self.rightBtn.hidden = NO;
+        self.shareButton.hidden = YES;
     }
     [self.viewController.customNavBarView refreshAlpha:alpha];
 }
@@ -682,6 +694,10 @@
         return;
     }
     self.data = data;
+    // 第一次服务端返回数据
+    if (data.shareInfo && self.shareInfo == nil) {
+        self.shareInfo = data.shareInfo;
+    }
     self.feedListController.view.hidden = NO;
     self.viewController.emptyView.hidden = YES;
     [self.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar]];

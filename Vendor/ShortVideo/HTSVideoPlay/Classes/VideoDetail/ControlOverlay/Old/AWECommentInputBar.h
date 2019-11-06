@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "HTSVideoPlayGrowingTextView.h"
+#import "TTUGCTextView.h"
+#import <sys/time.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,7 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AWECommentInputBar : SSThemedView
 
-@property (nonatomic, strong, readonly) HTSVideoPlayGrowingTextView *textView;
+//@property (nonatomic, strong, readonly) HTSVideoPlayGrowingTextView *textView;
+@property (nonatomic, strong) TTUGCTextView * inputTextView;
 @property (nonatomic, strong, readonly) UIButton *sendButton;
 
 /// TextFiled内容改变回调

@@ -31,6 +31,7 @@
 @property(nonatomic, assign) BOOL hasLogin;
 @property(nonatomic, strong) FHMineMutiItemCell *focusCell;
 @property(nonatomic, assign) BOOL isFirstLoad;
+@property(nonatomic, strong) FHMineConfigModel *configModel;
 
 @end
 
@@ -51,8 +52,13 @@
         self.viewController = viewController;
         
         [self.tableView registerClass:NSClassFromString(@"FHMineMutiItemCell") forCellReuseIdentifier:mutiItemCellId];
+//        [TTAccount addMulticastDelegate:self];
     }
     return self;
+}
+
+- (void)dealloc {
+//    [TTAccount removeMulticastDelegate:self];
 }
 
 - (void)requestData {
@@ -83,8 +89,8 @@
     
     [FHMineAPI requestMineConfigWithClassName:@"FHMineConfigModel" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
-        if(self.isFirstLoad){
-            [self.viewController endLoading];
+        if(wself.isFirstLoad){
+            [wself.viewController endLoading];
         }
         
         wself.isFirstLoad = NO;
@@ -101,11 +107,17 @@
         [wself.viewController.emptyView hideEmptyView];
         
         FHMineConfigModel *configModel = (FHMineConfigModel *)model;
+        wself.configModel = configModel;
         if(configModel){
             wself.dataList = configModel.data.iconOpData;
             [wself.tableView reloadData];
+            [wself updateHomePageEntrance:configModel.data.homePage];
         }
     }];
+}
+
+- (void)updateHomePageEntrance:(FHMineConfigDataHomePageModel *)model {
+    [self.viewController.headerView sethomePageWithModel:model];
 }
 
 - (void)showInfo {
@@ -172,6 +184,8 @@
         self.viewController.headerView.editIcon.hidden = YES;
         _hasLogin = NO;
     }
+    
+    [self.viewController.headerView sethomePageWithModel:self.configModel.data.homePage];
 }
 
 - (NSDictionary *)fhSettings {
@@ -379,6 +393,11 @@
     [self.viewController refreshContentOffset:scrollView.contentOffset];
 }
 
-
+//#pragma mark - TTAccountMulticaastProtocol
+//
+//// 帐号切换
+//- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
+//    [self requestMineConfig];
+//}
 
 @end
