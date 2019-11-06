@@ -151,6 +151,7 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"enter_from"] = @"minetab";
         dict[@"enter_type"] = @"login";
+        dict[@"isCheckUGCADUser"] = @(1);
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
         NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];

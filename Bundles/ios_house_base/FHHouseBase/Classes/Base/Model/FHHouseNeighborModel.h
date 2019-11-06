@@ -25,6 +25,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHHouseNeighborItemHouseVideo : JSONModel
+
+@property (nonatomic, assign)   BOOL   hasVideo;
+
+@end
+
 
 @interface  FHHouseNeighborDataItemsModel  : JSONModel
 
@@ -34,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displayPricePerSqm;
 @property (nonatomic, copy , nullable) NSString *displayPrice;
 @property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, strong, nullable)   FHHouseNeighborItemHouseVideo*   houseVideo;
 @property (nonatomic, copy , nullable) NSString *address;
 @property (nonatomic, copy , nullable) NSString *displayTitle;
 @property (nonatomic, copy , nullable) NSString *displayDescription;

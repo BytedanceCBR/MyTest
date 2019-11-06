@@ -24,6 +24,7 @@
 #import "FHUserTracker.h"
 #import "TTDeviceHelper.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <TTSandBoxHelper.h>
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
@@ -323,6 +324,9 @@
                                    @"getNetCommonParams":commonParamsData
                                    };
         NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+        if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
+            host = @"http://i.haoduofangs.com.boe-gateway.byted.org";
+        }
         NSString *urlStr = [NSString stringWithFormat:@"%@%@",host,reportUrl];
         NSMutableDictionary *info = [NSMutableDictionary dictionaryWithDictionary: @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"}];
         

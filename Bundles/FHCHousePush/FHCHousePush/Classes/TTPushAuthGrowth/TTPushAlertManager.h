@@ -68,4 +68,6 @@ typedef NS_ENUM(NSInteger, TTPushWeakAlertPageType) {
 
 + (BOOL)newAlertEnabled;
 
++ (BOOL)meetsStrongAlertCondition;
+
 @end

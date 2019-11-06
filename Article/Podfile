@@ -636,7 +636,10 @@ def appPods
     #pod 'BDABTestSDK', '1.0.0'
 
     pod 'BDUGDeepLink', '1.1.1'
+    
+    pod_binary 'TTAppStoreStarManager', '1.0.12'
 end
+
 
 def testPods
     pod 'BDSSOAuthSDK'

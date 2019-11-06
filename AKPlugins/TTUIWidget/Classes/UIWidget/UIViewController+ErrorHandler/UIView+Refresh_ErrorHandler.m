@@ -437,71 +437,25 @@ CGFloat const kTipDurationInfinite = -1.0f;
                 
                 self.ttErrorView.hidden = NO;
             }
-
+            
         }//如果没有错误 看看需不需要加入空白页
         else {
             
-            if (tip.length > 0 && !self.ttDisableNotifyBar && [target performSelector:@selector(tt_hasValidateData)]){
+            if (![target performSelector:@selector(tt_hasValidateData)]){
                 
-                self.ttAssociatedScrollView.ttHasIntegratedMessageBar = YES;
-                
-                if (!self.ttErrorToastView) {
-                    
-                    NSLog(@"ttErrorToastView is nil");
-                    return;
-                    
-                }
-                self.ttErrorToastView.frame = CGRectMake(self.ttContentInset.left,self.ttContentInset.top, self.width - self.ttContentInset.left - self.ttContentInset.right, self.ttMessagebarHeight);
-                [self addSubview:self.ttErrorToastView];
-                
-                
-                __weak typeof(self) wself = self;
-                
-                [(UIView<ErrorToastProtocal> *)self.ttErrorToastView showMessage:tip actionButtonTitle:nil delayHide:kTipDefaultDuration == kTipDurationInfinite? NO:YES duration:kTipDefaultDuration bgButtonClickAction:^(UIButton* btn){
-                    
-                    if (block) {
-                        block();
-                    }
-                    if (duration != kTipDurationInfinite) {
-                        [wself.ttAssociatedScrollView.pullDownView messageBarResetContentInset];
-                        
-                    }
-                    
-                } actionButtonClickBlock:^(UIButton *button) {
-                    
-                    [wself.ttAssociatedScrollView.pullDownView messageBarResetContentInset];
-                    
-                }  didHideBlock:^(id barView) {
-                    [wself.ttAssociatedScrollView.pullDownView messageBarResetContentInset];
-                }];
-                
-                if(duration>0)
-                {
-                    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetMessageBarInset) object:nil];
-                    [self performSelector:@selector(resetMessageBarInset) withObject:nil afterDelay:duration];
-                }
-                
-                
-                if ([target respondsToSelector:@selector(handleError:)]) {
-                    
-                    [target performSelector:@selector(handleError:) withObject:error];
-                }
-                
-            } else if (![target performSelector:@selector(tt_hasValidateData)]){
-            
                 if (!self.ttErrorView) {
                     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"TTUIWidgetResources" ofType:@"bundle"];
                     NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
                     NSArray* nibViews = [bundle loadNibNamed:@"TTFullScreenErrorView" owner:nil options:nil];
                     self.ttErrorView = nibViews.firstObject;
                 }
-
+                
                 self.ttErrorView.frame = CGRectMake(self.ttContentInset.left,self.ttContentInset.top,self.frame.size.width - self.ttContentInset.left - self.ttContentInset.right, self.frame.size.height - self.ttContentInset.top - self.ttContentInset.bottom);
                 
                 self.ttErrorView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
                 if (self.ttTargetView) {
                     
-                    self.ttErrorView.frame = CGRectMake(0,0,self.frame.size.width, self.frame.size.height);
+                    //                    self.ttErrorView.frame = CGRectMake(0,0,self.frame.size.width, self.frame.size.height);
                     [self.ttTargetView addSubview: self.ttErrorView];
                 }
                 else {
@@ -517,14 +471,62 @@ CGFloat const kTipDurationInfinite = -1.0f;
                 if ([target respondsToSelector:@selector(emptyViewBtnAction)]) {
                     
                     [((TTFullScreenErrorView*)self.ttErrorView).actionBtn addTarget:target action:@selector(emptyViewBtnAction) forControlEvents:UIControlEventTouchUpInside];
-
+                    
                 }
                 
                 self.ttErrorView.hidden = NO;
                 
             }
-
+            
         }
+        
+        //不管有没有空白页 看是否需要显示tip
+        if (!self.ttDisableNotifyBar && tip && ![tip isEqualToString:@""]) {
+            
+            if (!self.ttErrorToastView) {
+                
+                NSLog(@"ttErrorToastView is nil");
+                return;
+                
+            }
+            self.ttAssociatedScrollView.ttHasIntegratedMessageBar = YES;
+            
+            self.ttErrorToastView.frame = CGRectMake(self.ttContentInset.left,self.ttContentInset.top, self.width - self.ttContentInset.left - self.ttContentInset.right, self.ttMessagebarHeight);
+            [self addSubview:self.ttErrorToastView];
+            
+            
+            __weak typeof(self) wself = self;
+            
+            [(UIView<ErrorToastProtocal> *)self.ttErrorToastView showMessage:NSLocalizedString(tip,nil) actionButtonTitle:nil delayHide:duration == kTipDurationInfinite? NO:YES duration:duration bgButtonClickAction:^(UIButton* btn){
+                
+                if (block) {
+                    block();
+                }
+                [wself.ttAssociatedScrollView.pullDownView messageBarResetContentInset];
+                
+                
+            }  actionButtonClickBlock:^(UIButton *button) {
+                
+                [wself.ttAssociatedScrollView.pullDownView messageBarResetContentInset];
+                
+            }  didHideBlock:^(id barView) {
+                [wself.ttAssociatedScrollView.pullDownView messageBarResetContentInset];
+            }];
+            
+            if(duration>0)
+            {
+                [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetMessageBarInset) object:nil];
+                [self performSelector:@selector(resetMessageBarInset) withObject:nil afterDelay:duration];
+            }
+            
+            
+            if ([target respondsToSelector:@selector(handleError:)]) {
+                
+                [target performSelector:@selector(handleError:) withObject:error];
+            }
+            
+        }
+        
     }
     
 }

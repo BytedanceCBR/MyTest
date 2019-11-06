@@ -315,6 +315,7 @@ PODS:
   - TTAdSplashSDK (0.4.4.1-binary)
   - TTAiKan (0.1.0)
   - TTAppRuntime (0.1.0)
+  - TTAppStoreStarManager (1.0.12.1-binary)
   - TTAppUpdateHelper/TTUpdateHelper (1.0.9.1-binary)
   - TTAppUpdateHelper/TTUpdateView (1.0.9.1-binary)
   - TTArticle (0.1.0)
@@ -682,7 +683,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `8b6f323cb2945d19e7978f5407be1170efdb8e24`)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `e364ec85699faef2a7265602b1ddd11b9a2a3b75`)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -746,6 +747,7 @@ DEPENDENCIES:
   - TTAdSplashSDK (= 0.4.4.1-binary)
   - TTAiKan (from `../TTBundles/ios_tt_aikan`)
   - TTAppRuntime (from `../TTBundles/ios_tt_appruntime`)
+  - TTAppStoreStarManager (= 1.0.12.1-binary)
   - TTAppUpdateHelper/TTUpdateHelper (= 1.0.9.1-binary)
   - TTAppUpdateHelper/TTUpdateView (= 1.0.9.1-binary)
   - TTArticle (from `../TTBundles/ios_tt_article`)
@@ -918,7 +920,7 @@ EXTERNAL SOURCES:
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   ios_house_im:
-    :commit: 8b6f323cb2945d19e7978f5407be1170efdb8e24
+    :commit: e364ec85699faef2a7265602b1ddd11b9a2a3b75
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
@@ -984,7 +986,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   ios_house_im:
-    :commit: 8b6f323cb2945d19e7978f5407be1170efdb8e24
+    :commit: e364ec85699faef2a7265602b1ddd11b9a2a3b75
     :git: git@code.byted.org:fproject/ios_house_im.git
 
 SPEC CHECKSUMS:
@@ -1096,6 +1098,7 @@ SPEC CHECKSUMS:
   TTAdSplashSDK: f02f0b22a03a06783ff6e1473f895fd8563c9333
   TTAiKan: 642649f0c4848130171604fa36db684ecbff7648
   TTAppRuntime: 950cd779a9ea11d64aa82e5c0899bd849c38799b
+  TTAppStoreStarManager: 70935d6a09575d63dd2c1fae2b6bb75c07caee2c
   TTAppUpdateHelper: d0e770676b263dfc1f8a0a6b07c280a760574b44
   TTArticle: 40401054fc58b1744b37a8ecb054b90dda774702
   TTArticleBase: b77815513c03f2a0339a9acf18ff1516789a0bc6
@@ -1183,6 +1186,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 7aeb98c42a413503ce945d6ff09128509b1e1624
+PODFILE CHECKSUM: 1640f3713f40cdd31e3e0ad83602f265d0f03d5b
 
 COCOAPODS: 1.4.0

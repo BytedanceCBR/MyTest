@@ -2203,6 +2203,7 @@ extern NSString *const INSTANT_DATA_KEY;
     } else {
          params[@"search_query"] = @"be_null";
     }
+    params[@"growth_deepevent"] = @(1);
     TRACK_EVENT(@"house_search",params);
     self.canChangeHouseSearchDic = YES;
 }

@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) UIView *playerView;
 
+- (void)showCoverView;
+
 @end
 
 NS_ASSUME_NONNULL_END

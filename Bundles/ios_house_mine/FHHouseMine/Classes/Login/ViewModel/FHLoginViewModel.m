@@ -44,6 +44,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         
         view.delegate = self;
         _needPopVC = YES;
+        _isNeedCheckUGCAdUser = NO;
         _view = view;
         _viewController = viewController;
         [self startLoadData];
@@ -378,7 +379,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
         [self loginSuccessedWithPhoneNum:phoneNumber];
         
-        [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:YES];
+        if (self.isNeedCheckUGCAdUser) {
+            [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:YES];
+        }
         
     } else if (captchaImage) {
         [self loginShowCaptcha:captchaImage error:error phoneNumber:phoneNumber smsCode:smsCode];

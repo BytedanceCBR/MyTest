@@ -22,6 +22,7 @@
 @property (nonatomic, assign)   BOOL       needPopVC;
 @property (nonatomic, assign)   BOOL       isFromUGC;
 @property (nonatomic, assign)   BOOL       present;
+@property (nonatomic, assign)   BOOL       isFromMineTab;
 
 @end
 
@@ -36,6 +37,12 @@
         self.tracerModel = [[FHTracerModel alloc] init];
         self.tracerModel.enterFrom = params[@"enter_from"];
         self.tracerModel.enterType = params[@"enter_type"];
+        if ([params[@"isCheckUGCADUser"] isKindOfClass:[NSNumber class]]) {
+            self.isFromMineTab = [params[@"isCheckUGCADUser"] boolValue];
+        }else
+        {
+            self.isFromMineTab = NO;
+        }
         if (params[@"delegate"]) {
             NSHashTable *delegate = params[@"delegate"];
             self.loginDelegate = delegate.anyObject;
@@ -123,6 +130,7 @@
     self.viewModel = [[FHLoginViewModel alloc] initWithView:self.loginView controller:self];
     self.viewModel.needPopVC = self.needPopVC;
     self.viewModel.present = self.present;
+    self.viewModel.isNeedCheckUGCAdUser = self.isFromMineTab;
     self.viewModel.loginDelegate = self.loginDelegate;
 }
 
