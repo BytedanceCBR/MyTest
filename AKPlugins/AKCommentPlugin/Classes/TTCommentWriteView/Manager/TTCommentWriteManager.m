@@ -427,7 +427,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
     NSString *content = richSpanText.text;
     TTRichSpans *contentRichSpans = richSpanText.richSpans;
     NSString *text_rich_span = [TTRichSpans JSONStringForRichSpans:contentRichSpans];
-    
+    //为了处理埋点
     text_rich_span = [text_rich_span stringByReplacingOccurrencesOfString:@"from_page=follow_list" withString:@"from_page=at_user_profile_comment"];
 
     NSMutableArray *mentionUsers = [NSMutableArray arrayWithCapacity:richSpanText.richSpans.links.count];
