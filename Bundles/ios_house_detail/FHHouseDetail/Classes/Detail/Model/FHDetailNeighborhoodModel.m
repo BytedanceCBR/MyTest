@@ -38,6 +38,7 @@
                            @"abtestVersions": @"abtest_versions",
                            @"neighborhoodImage": @"neighborhood_image",
                            @"coreInfo": @"core_info",
+                           @"neighborhoodVideo": @"neighborhood_video",
                            @"evaluationInfo": @"evaluation_info",
                            @"chooseAgencyList": @"choose_agency_list",
                            @"ugcSocialGroup":@"ugc_social_group",
@@ -171,8 +172,47 @@
                            @"districtName": @"district_name",
                            @"monthUp": @"month_up",
                            @"gaodeLng": @"gaode_lng",
+                           @"houseVideo": @"house_video",
                            @"searchId": @"search_id",
                            @"gaodeImageUrl": @"gaode_image_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHVideoHouseVideoVideoInfosModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"vHeight": @"v_height",
+                           @"imageHeight": @"image_height",
+                           @"vWidth": @"v_width",
+                           @"imageWidth": @"image_width",
+                           @"coverImageUrl": @"cover_image_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHVideoHouseVideoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"videoInfos": @"video_infos",
+                           @"infoSubTitle": @"info_sub_title",
+                           @"infoTitle": @"info_title",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
