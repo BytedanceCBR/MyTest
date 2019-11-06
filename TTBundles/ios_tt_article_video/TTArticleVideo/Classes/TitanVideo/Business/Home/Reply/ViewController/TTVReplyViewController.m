@@ -715,7 +715,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 }
 
 - (void)replyListCell:(UITableViewCell *)view quotedNameOnClickedWithModel:(id<TTVReplyModelProtocol>)model {
-    [self p_enterProfileWithUserID:model.tt_qutoedCommentStructModel.user_id.stringValue fromPage:@"at_user_profile"];
+    [self p_enterProfileWithUserID:model.tt_qutoedCommentStructModel.user_id.stringValue fromPage:@"at_user_profile_comment"];
 }
 
 #pragma mark - TTVReplyViewDelegate

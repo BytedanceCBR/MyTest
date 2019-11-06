@@ -89,8 +89,8 @@
     
     [FHMineAPI requestMineConfigWithClassName:@"FHMineConfigModel" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
-        if(self.isFirstLoad){
-            [self.viewController endLoading];
+        if(wself.isFirstLoad){
+            [wself.viewController endLoading];
         }
         
         wself.isFirstLoad = NO;
@@ -107,7 +107,7 @@
         [wself.viewController.emptyView hideEmptyView];
         
         FHMineConfigModel *configModel = (FHMineConfigModel *)model;
-        self.configModel = configModel;
+        wself.configModel = configModel;
         if(configModel){
             wself.dataList = configModel.data.iconOpData;
             [wself.tableView reloadData];

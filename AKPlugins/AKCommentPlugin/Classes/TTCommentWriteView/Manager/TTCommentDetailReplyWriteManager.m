@@ -414,6 +414,8 @@ static bool isTTCommentPublishing = NO;
 
     NSString *replyContent = replyRichSpanText.text;
     NSString *replyContentRichSpan = [TTRichSpans JSONStringForRichSpans:replyRichSpanText.richSpans];
+    
+    replyContentRichSpan = [replyContentRichSpan stringByReplacingOccurrencesOfString:@"from_page=follow_list" withString:@"from_page=at_user_profile_comment"];
 
     NSMutableArray *mentionUsers = [NSMutableArray arrayWithCapacity:replyRichSpanText.richSpans.links.count];
     for (TTRichSpanLink *link in replyRichSpanText.richSpans.links) {

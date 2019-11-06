@@ -1004,7 +1004,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view quotedNameOnClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.qutoedCommentModel.userID fromPage:@"at_user_profile"];
+    TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.qutoedCommentModel.userID fromPage:@"at_user_profile_comment"];
     [self.store dispatch:action];
 }
 

@@ -611,7 +611,7 @@ TTCommentFooterCellDelegate>
         return;
     }
     
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile?from_page=at_user_profile"] userInfo:TTRouteUserInfoWithDict(@{@"uid": item.commentModel.quotedComment.user_id})];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile?from_page=at_user_profile_comment"] userInfo:TTRouteUserInfoWithDict(@{@"uid": item.commentModel.quotedComment.user_id})];
 }
 
 - (void)commentCell:(UITableViewCell *)view contentUnfoldWithCommentItem:(nonnull TTVCommentListItem *)item

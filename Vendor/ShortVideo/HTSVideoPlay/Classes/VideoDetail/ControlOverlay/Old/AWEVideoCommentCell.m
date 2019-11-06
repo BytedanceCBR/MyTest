@@ -531,7 +531,7 @@
                 return;
             }
             NSString *userIDstr = [self.commentModel.replyToComment.userId stringValue];
-            NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@&from_page=at_user_profile", userIDstr];
+            NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@&from_page=at_user_profile_comment", userIDstr];
             [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:linkURLString]];
         }
     } else {

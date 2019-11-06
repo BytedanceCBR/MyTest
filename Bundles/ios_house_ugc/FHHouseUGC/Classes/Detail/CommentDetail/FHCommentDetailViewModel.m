@@ -696,7 +696,7 @@
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view quotedNameOnClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
-    NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=at_user_profile",model.qutoedCommentModel.userID];
+    NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=at_user_profile_comment",model.qutoedCommentModel.userID];
     NSURL *openUrl = [NSURL URLWithString:url];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
 }
