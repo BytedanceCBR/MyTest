@@ -2245,6 +2245,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client;
@@ -2332,6 +2333,7 @@
 				);
 				LLVM_LTO = NO;
 				ONLY_ACTIVE_ARCH = NO;
+				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client;
@@ -2412,6 +2414,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
@@ -2502,6 +2505,7 @@
 				);
 				LLVM_LTO = NO;
 				ONLY_ACTIVE_ARCH = NO;
+				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
