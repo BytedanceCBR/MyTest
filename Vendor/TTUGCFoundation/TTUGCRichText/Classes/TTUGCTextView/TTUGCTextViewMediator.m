@@ -113,16 +113,16 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [wSelf defaultActionForAtButton];
                 });
             }else{
-                self.isSelectViewControllerVisible = NO;
-                [self.textView becomeFirstResponder];
+                wSelf.isSelectViewControllerVisible = NO;
+                [wSelf.textView becomeFirstResponder];
             }
         }else{
-            self.isSelectViewControllerVisible = NO;
-            [self.textView becomeFirstResponder];
+            wSelf.isSelectViewControllerVisible = NO;
+            [wSelf.textView becomeFirstResponder];
         }
     }];
 }
