@@ -45,10 +45,11 @@
     self.layer.masksToBounds = YES;
     self.layer.cornerRadius = 4;
     
-    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToDetail:)];
-    singleTap.cancelsTouchesInView = NO;
+    //这里有个坑，加上手势会导致@不能点击
+    self.userInteractionEnabled = YES;
+//    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToDetail:)];
 //    singleTap
-    [self addGestureRecognizer:singleTap];
+//    [self addGestureRecognizer:singleTap];
     
     self.iconView = [[UIImageView alloc] init];
     _iconView.hidden = YES;
@@ -57,8 +58,7 @@
     _iconView.clipsToBounds = YES;
     [self addSubview:_iconView];
     
-//    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 50, 0)];
+    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = 2;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor themeGray7];
@@ -107,15 +107,7 @@
     }
 }
 
-- (void)goToDetail:(UITapGestureRecognizer *)sender {
-    [self performSelector:@selector(goDetail) withObject:nil afterDelay:0.5];
-}
-
-- (void)goDetail {
-    if(_isClickLink){
-        _isClickLink = NO;
-        return;
-    }
+- (void)goToDetail {
     NSString *routeUrl = self.cellModel.originItemModel.openUrl;
     if(routeUrl){
         NSURL *openUrl = [NSURL URLWithString:routeUrl];
@@ -123,10 +115,13 @@
     }
 }
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self goToDetail];
+}
+
 #pragma mark - TTUGCAttributedLabelDelegate
 
 - (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
-    self.isClickLink = YES;
     if(self.goToLinkBlock){
         self.goToLinkBlock(self.cellModel, url);
     }
