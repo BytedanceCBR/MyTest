@@ -13,6 +13,7 @@
 #import <FHHouseBase/FHAppStoreCustomAlertView.h>
 #import <TTSettingsManager/TTSettingsManager.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import <FHHouseBase/FHCommonDefines.h>
 
 DEC_TASK("TTAppStoreScoreTask",FHTaskTypeService,TASK_PRIORITY_HIGH);
 
@@ -38,6 +39,7 @@ DEC_TASK("TTAppStoreScoreTask",FHTaskTypeService,TASK_PRIORITY_HIGH);
 
     [TTAppStoreStarManager sharedInstance].delegate = self;
     [TTAppStoreStarManager sharedInstance].appStoreAppID = appId;
+        
     //监听显示苹果商店评分系统显示时机的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appStoreStarScoreView:) name:@"TTAppStoreStarManagerShowNotice" object:nil];
 }
@@ -72,6 +74,16 @@ DEC_TASK("TTAppStoreScoreTask",FHTaskTypeService,TASK_PRIORITY_HIGH);
 {
     BOOL meetCondition = [TTPushAlertManager meetsStrongAlertCondition];
     return !meetCondition;
+}
+
+- (BOOL)useSystemAlert
+{
+    BOOL isSytemBug = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"12.2") && SYSTEM_VERSION_LESS_THAN(@"12.4");
+    //TODO zjing 系统好评弹窗展示时的window判断在iOS12和iOS13上面都有问题，导致系统好评弹窗和自定义好评弹窗h重合，在这两个版本上单独处理下
+    if (isSytemBug) {
+        return NO;
+    }
+    return YES;
 }
 
 - (void)showCustomStoreGoodReviewGuidView
