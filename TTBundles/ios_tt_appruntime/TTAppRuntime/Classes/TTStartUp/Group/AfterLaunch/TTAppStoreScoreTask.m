@@ -39,9 +39,7 @@ DEC_TASK("TTAppStoreScoreTask",FHTaskTypeService,TASK_PRIORITY_HIGH);
 
     [TTAppStoreStarManager sharedInstance].delegate = self;
     [TTAppStoreStarManager sharedInstance].appStoreAppID = appId;
-    
-    [TTAppStoreStarManager sharedInstance].debug = YES;
-    
+        
     //监听显示苹果商店评分系统显示时机的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appStoreStarScoreView:) name:@"TTAppStoreStarManagerShowNotice" object:nil];
 }
