@@ -10,7 +10,7 @@
 #import "TTHttpTask.h"
 #import "FHPostDetailViewModel.h"
 
-@interface FHCommentBaseDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHCommentBaseDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
 @property (nonatomic, strong)   NSMutableDictionary       *cellHeightCaches;
 
@@ -103,6 +103,7 @@
         NSString *identifier = [self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
             FHUGCBaseCell *cell = (FHUGCBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            cell.delegate = self;
             cell.baseViewModel = self;
             [cell refreshWithData:data];
             return cell;
