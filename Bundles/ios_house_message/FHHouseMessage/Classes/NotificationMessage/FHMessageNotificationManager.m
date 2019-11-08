@@ -96,7 +96,7 @@ static NSString *const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNo
 
 - (void)periodicalFetchUnreadMessage:(NSTimer *)timer {
     [[NSNotificationCenter defaultCenter] postNotificationName:kPeriodicalFetchUnreadMessage object:nil];
-//    [self fetchUnreadMessageWithChannel:nil callback:nil];
+    [self fetchUnreadMessageWithChannel:nil callback:nil];
 }
 
 #pragma mark - 手动拉取未读消息提示
