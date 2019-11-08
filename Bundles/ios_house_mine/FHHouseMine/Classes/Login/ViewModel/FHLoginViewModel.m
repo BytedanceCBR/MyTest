@@ -371,7 +371,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [[ToastManager manager] showToast:@"登录成功"];
         if (phoneNumber.length > 0) {
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
+//            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
         }
         if (self.needPopVC) {
