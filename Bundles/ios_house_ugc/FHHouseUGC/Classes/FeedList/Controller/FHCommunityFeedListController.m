@@ -424,7 +424,19 @@
     }];
 }
 
+// TODO: Test Code To Be Delete
+- (void)gotoVoteVC {
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{}];
+    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+}
+
 - (void)gotoPostVC {
+    
+    // TODO: Delete Code
+    [self gotoVoteVC];
+    return;
+    
     // 跳转到发布器
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"element_type"] = @"feed_publisher";
