@@ -12,6 +12,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // 投票详情页
+// FHDetailCommentAllFooter FHPostDetailCommentWriteView  FHPostDetailHeaderCell FHPostDetailNavHeaderView 复用帖子详情页
+// FHUGCVoteDetailCell 投票cell
 @interface FHVoteDetailViewController : FHCommentBaseDetailViewController
 
 @end

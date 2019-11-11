@@ -39,6 +39,7 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
     FHUGCFeedListCellSubTypeUGCVote,                               //投票pk
     FHUGCFeedListCellSubTypeUGCVideo,                              //视频
     FHUGCFeedListCellSubTypeUGCSmallVideo,                         //小视频
+    FHUGCFeedListCellSubTypeUGCVoteDetail,                         //新投票类型
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)

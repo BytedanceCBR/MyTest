@@ -118,9 +118,6 @@
     [self firstLoadCommentCount];
     // 列表页数据
     if (self.detailData) {
-//        [self.viewModel.items addObject:self.detailData];
-//        // 刷新数据
-//        [self.viewModel reloadData];
         self.weakViewModel.detailData = self.detailData;
     }
     [self addDefaultEmptyViewFullScreen];
@@ -132,15 +129,6 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self addStayPageLog];
-//    if (self.detailData) {
-//        // 修改列表页数据
-//        self.detailData.commentCount = [NSString stringWithFormat:@"%lld",self.comment_count];
-//        self.detailData.userDigg = [NSString stringWithFormat:@"%ld",self.user_digg];
-//        self.detailData.diggCount = [NSString stringWithFormat:@"%lld",self.digg_count];
-//        self.detailData.isStick = self.weakViewModel.serverData.isStick;
-//        self.detailData.stickStyle = self.weakViewModel.serverData.stickStyle;
-//        self.detailData.contentDecoration = self.weakViewModel.serverData.contentDecoration;
-//    }
     //跳页时关闭举报的弹窗
     [FHFeedOperationView dismissIfVisible];
 }
