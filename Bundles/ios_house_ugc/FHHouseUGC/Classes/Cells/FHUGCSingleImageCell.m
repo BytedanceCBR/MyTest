@@ -63,6 +63,8 @@
 }
 
 - (void)initViews {
+    __weak typeof(self) wself = self;
+    
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     [self.contentView addSubview:_userInfoView];
     
@@ -86,6 +88,11 @@
     self.imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:1 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
     
     self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
+    _originView.goToLinkBlock = ^(FHFeedUGCCellModel * _Nonnull cellModel, NSURL * _Nonnull url) {
+        if(wself.delegate && [wself.delegate respondsToSelector:@selector(gotoLinkUrl:url:)]){
+            [wself.delegate gotoLinkUrl:cellModel url:url];
+        }
+    };
     _originView.hidden = YES;
     [self.contentView addSubview:_originView];
     

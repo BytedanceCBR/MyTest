@@ -172,12 +172,11 @@
             imageView.hidden = NO;
             if (imageModel && imageModel.url.length > 0) {
                 TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
-                __weak typeof(self) wSelf = self;
+                __weak typeof(imageView) wImageView = imageView;
                 [imageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
-                    [imageView setImage:nil];
+                    [wImageView setImage:nil];
                 }];
             }
-//            [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
         }else{
             imageView.hidden = YES;
         }
