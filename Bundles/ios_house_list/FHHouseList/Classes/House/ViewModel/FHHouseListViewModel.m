@@ -52,6 +52,9 @@
 #import <FHHouseBase/FHUtils.h>
 #import "FHHouseListNoHouseCell.h"
 #import "FHHouseOpenURLUtil.h"
+#import "FHFakeInputNavbar.h"
+#import "FHEnvContext.h"
+#import "FHMessageManager.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -102,6 +105,14 @@ extern NSString *const INSTANT_DATA_KEY;
 @property (nonatomic , strong) NSString * subScribeQuery;
 @property (nonatomic , strong) NSDictionary * subScribeShowDict;
 @property (nonatomic , assign) BOOL isShowSubscribeCell;
+
+@property (nonatomic, strong) FHRecommendSecondhandHouseDataModel *currentRecommendHouseDataModel;
+@property (nonatomic, strong) FHSearchHouseDataModel *currentHouseDataModel;
+@property (nonatomic, strong) FHHouseRentDataModel *currentRentDataModel;
+@property (nonatomic, strong) FHHouseNeighborDataModel *currentNeighborDataModel;
+@property (nonatomic, strong) FHNewHouseListDataModel *currentNewDataModel;
+
+@property (nonatomic, weak)     FHFakeInputNavbar       *navbar;
 
 @end
 
@@ -241,6 +252,29 @@ extern NSString *const INSTANT_DATA_KEY;
     return self;
 }
 
+- (void)addNotiWithNaviBar:(FHFakeInputNavbar *)naviBar {
+    self.navbar = naviBar;
+    if (_houseType == FHHouseTypeSecondHandHouse) {
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHMessageUnreadChangedNotification" object:nil];
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHChatMessageUnreadChangedNotification" object:nil];
+        [self refreshMessageDot];
+    }
+}
+
+- (void)refreshMessageDot {
+    if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
+        [self.navbar displayMessageDot:YES];
+    } else {
+        [self.navbar displayMessageDot:NO];
+    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
     NSMutableDictionary *retDic = nil;
     if (jsonString.length > 0) {
@@ -264,13 +298,7 @@ extern NSString *const INSTANT_DATA_KEY;
     __weak typeof(self)wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         wself.isRefresh = NO;
-        if (wself.sugesstHouseList.count > 0) {
-            wself.fromRecommend = YES;
-            [wself loadData:wself.isRefresh fromRecommend:YES];
-        } else {
-            wself.fromRecommend = NO;
-            [wself loadData:wself.isRefresh];
-        }
+        [wself loadData:wself.isRefresh];
     }];
     self.tableView.mj_footer = self.refreshFooter;
     
@@ -356,9 +384,34 @@ extern NSString *const INSTANT_DATA_KEY;
         self.searchId = nil;
     } else {
         if (isFromRecommend) {
-            offset = self.sugesstHouseList.count - 1;
+//            offset = self.sugesstHouseList.count - 1;
+            offset = self.currentRecommendHouseDataModel.offset;
         } else {
-            offset = self.houseList.count;
+//            offset = self.houseList.count;
+            switch (self.houseType) {
+                case FHHouseTypeNewHouse:
+                    offset = self.currentNewDataModel.offset;
+                    break;
+                case FHHouseTypeSecondHandHouse:
+                    if (isFromRecommend) {
+                        offset = self.currentRecommendHouseDataModel.offset;
+                    } else {
+                        offset = self.currentHouseDataModel.offset;
+                    }
+                    break;
+                    
+                case FHHouseTypeRentHouse:
+                    offset = self.currentRentDataModel.offset;
+                    break;
+                    
+                case FHHouseTypeNeighborhood:
+                    
+                    offset = self.currentNeighborDataModel.offset;
+                    break;
+                    
+                default:
+                    break;
+            }
         }
     }
     
@@ -710,25 +763,35 @@ extern NSString *const INSTANT_DATA_KEY;
         FHSearchHouseDataRedirectTipsModel *redirectTips;
         FHRecommendSecondhandHouseDataModel *recommendHouseDataModel;
         BOOL needUploadMapFindHouseUrlEvent = NO;
-
+        BOOL fromRecommend = NO;
+        
         if ([model isKindOfClass:[FHRecommendSecondhandHouseModel class]]) {
             recommendHouseDataModel = ((FHRecommendSecondhandHouseModel *)model).data;
             self.recommendSearchId = recommendHouseDataModel.searchId;
             hasMore = recommendHouseDataModel.hasMore;
             recommendItemArray = recommendHouseDataModel.items;
-            
+            self.currentRecommendHouseDataModel = recommendHouseDataModel;
+            fromRecommend = YES;
         } else if ([model isKindOfClass:[FHSearchHouseModel class]]) {
 
             FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
+            self.currentHouseDataModel = houseModel;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
-            itemArray = houseModel.items;
+            
+            //修改数据类型风险
+            if ([houseModel.items isKindOfClass:[NSArray class]]) {
+                itemArray = [NSMutableArray arrayWithArray:houseModel.items];
+            }
+            
             redirectTips = houseModel.redirectTips;
             recommendHouseDataModel = houseModel.recommendSearchModel;
             recommendItemArray = recommendHouseDataModel.items;
             self.searchId = houseModel.searchId;
+            
+            
             if (recommendItemArray.count > 0) {
                 self.recommendSearchId = recommendHouseDataModel.searchId;
                 if (!hasMore) {
@@ -738,10 +801,16 @@ extern NSString *const INSTANT_DATA_KEY;
                 recommendTitleModel.noDataTip = recommendHouseDataModel.searchHint;
                 recommendTitleModel.title = recommendHouseDataModel.recommendTitle;
                 [self.sugesstHouseList addObject:recommendTitleModel];
+                self.currentRecommendHouseDataModel = recommendHouseDataModel;
+                fromRecommend = YES;
+            }
+            
+            if(!itemArray)
+            {
+                itemArray = [NSMutableArray new];
             }
             
             if (self.isRefresh) {
-                
                 //先插入订阅再判断其他
                 FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = houseModel.subscribeInfo;
                 if ([subscribeMode isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
@@ -761,8 +830,6 @@ extern NSString *const INSTANT_DATA_KEY;
                     }
                     self.showRealHouseTop = YES;
                 }
-              
-    
             }
 
             if (houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue && !houseModel.hasMore && houseModel.externalSite.fakeHouseTotal.integerValue != 0 && houseModel.externalSite.fakeText) {
@@ -784,7 +851,12 @@ extern NSString *const INSTANT_DATA_KEY;
                 if ([topInfoModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]] ) {
                     if(self.houseList.count <= 10 && itemArray.count <= 10 && itemArray.count > 1)
                     {
-                        [itemArray insertObject:topInfoModel atIndex:itemArray.count - 1];
+                        if (self.isShowSubscribeCell) {
+                            [itemArray insertObject:topInfoModel atIndex:itemArray.count - 1];
+                        }else
+                        {
+                            [itemArray addObject:topInfoModel];
+                        }
                     }else
                     {
                         [itemArray addObject:topInfoModel];
@@ -796,6 +868,7 @@ extern NSString *const INSTANT_DATA_KEY;
         } else if ([model isKindOfClass:[FHNewHouseListResponseModel class]]) {
             
             FHNewHouseListDataModel *houseModel = ((FHNewHouseListResponseModel *)model).data;
+            self.currentNewDataModel = houseModel;
             self.searchId = houseModel.searchId;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             if (self.houseListOpenUrl.length <= 0) {
@@ -809,6 +882,7 @@ extern NSString *const INSTANT_DATA_KEY;
         } else if ([model isKindOfClass:[FHHouseRentModel class]]) {
 
             FHHouseRentDataModel *houseModel = ((FHHouseRentModel *)model).data;
+            self.currentRentDataModel = houseModel;
             self.searchId = houseModel.searchId;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
@@ -823,6 +897,7 @@ extern NSString *const INSTANT_DATA_KEY;
         } else if ([model isKindOfClass:[FHHouseNeighborModel class]]) {
 
             FHHouseNeighborDataModel *houseModel = ((FHHouseNeighborModel *)model).data;
+            self.currentNeighborDataModel = houseModel;
             self.searchId = houseModel.searchId;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             hasMore = houseModel.hasMore;
@@ -833,6 +908,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 redirectTips = houseModel.redirectTips;
             }
         }
+        self.fromRecommend = fromRecommend;
         
         // 二手房、租房应该有 houseListOpenUrl
         /* 暂时无用 注释掉
@@ -877,10 +953,8 @@ extern NSString *const INSTANT_DATA_KEY;
             [self addCategoryRefreshLog];
         }
 
-        if (!self.fromRecommend) {
-            self.redirectTips = redirectTips;
-            [self updateRedirectTipInfo];
-        }
+        self.redirectTips = redirectTips;
+        [self updateRedirectTipInfo];
 
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
@@ -1247,6 +1321,35 @@ extern NSString *const INSTANT_DATA_KEY;
 
 }
 
+#pragma mark 消息列表
+- (void)showMessageList {
+    // 二手列表页
+    if (_houseType == FHHouseTypeSecondHandHouse) {
+        if (self.closeConditionFilter) {
+            self.closeConditionFilter();
+        }
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[UT_PAGE_TYPE] = [self categoryName] ? : @"be_null";
+        param[UT_ENTER_FROM] = self.tracerModel.enterFrom ? : @"be_null";
+        param[UT_ENTER_TYPE] = self.tracerModel.enterType ? : @"be_null";
+        param[UT_ELEMENT_FROM] = self.tracerModel.elementFrom ? : @"be_null";
+        param[UT_SEARCH_ID] = self.searchId ? : @"be_null";
+        param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ? : @"be_null";
+        param[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
+        
+        TRACK_EVENT(@"click_im_message", param);
+        
+        NSString *messageSchema = @"sslocal://message_conversation_list";
+        NSURL *openUrl = [NSURL URLWithString:messageSchema];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[UT_ENTER_FROM] = [self categoryName] ? : @"be_null";
+        dict[@"tracer"] = tracerDict;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
+}
+
 -(void)refreshHouseListUrlCallback:(NSString *)openUrl {
 
     if (openUrl.length < 1) {
@@ -1362,7 +1465,7 @@ extern NSString *const INSTANT_DATA_KEY;
                             NSString *houseCount = [NSString stringWithFormat:@"%@套",agencyInfoModel.houseTotal ? : @""];
                             NSMutableAttributedString *attr = [[NSMutableAttributedString alloc]initWithString:@"已为您找到全网" attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1]}];
                             [attr appendAttributedString:[[NSAttributedString alloc] initWithString:agencyCount attributes:@{NSForegroundColorAttributeName:[UIColor themeRed3]}]];
-                            [attr appendAttributedString:[[NSAttributedString alloc] initWithString:@"中介的" attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1]}]];
+                            [attr appendAttributedString:[[NSAttributedString alloc] initWithString:@"经纪公司的" attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1]}]];
                             [attr appendAttributedString:[[NSAttributedString alloc] initWithString:houseCount attributes:@{NSForegroundColorAttributeName:[UIColor themeRed3]}]];
                             [attr appendAttributedString:[[NSAttributedString alloc] initWithString:@"房源" attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1]}]];
                             agencyInfoCell.titleLabel.attributedText = attr;
@@ -2100,6 +2203,7 @@ extern NSString *const INSTANT_DATA_KEY;
     } else {
          params[@"search_query"] = @"be_null";
     }
+    params[@"growth_deepevent"] = @(1);
     TRACK_EVENT(@"house_search",params);
     self.canChangeHouseSearchDic = YES;
 }

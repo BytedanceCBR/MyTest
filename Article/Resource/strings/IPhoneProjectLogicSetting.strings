@@ -28,10 +28,16 @@
 //"editUserProfile"       = "TTEditUserProfileViewController";
 "editUserProfile"       = "FHEditUserController";
 "editingInfo"           = "FHEditingInfoController";
+"homePageSetting"       = "FHHomePageSettingController"; //个人主页设置
 
 // SSAppPageController
-"home"                  = "SSAppPageManagerNotificationHome";
-"profile"               = "ArticleMomentProfileViewController";
+"home"                  = "FHHomeSchemaObject";
+"main"                  = "FHHomeSchemaObject";
+
+//"profile"               = "ArticleMomentProfileViewController"; //旧版个人主页
+"profile"               = "FHPersonalHomePageController"; //新版个人主页
+"media_account"         = "FHPersonalHomePageController";
+
 "invite_friend"         = "ArticleInviteFriendViewController";
 "address_list"          = "TTAddressListFriendViewController";
 ///...
@@ -60,7 +66,6 @@
 "search"                = "ExploreSearchViewController";
 "talk"                  = "ArticleMomentDetailViewController";
 "forum"                 = "FRForumListViewController";
-"thread_detail"         = "FRThreadSmartDetailViewController";
 "thread_smart_detail"   = "FRThreadSmartDetailViewController";
 "gossip"                = "FRForumGossipViewController";
 "send_thread"           = "TTPostThreadViewController";
@@ -71,7 +76,6 @@
 "blocklist"             = "BlockUsersListViewController";
 
 "login"                 = "open";
-"forum_guide"           = "FRForumAllForumViewController";
 "forum_guide"           = "FRForumAllForumViewController";
 
 "livechat"              = "TTLiveMainViewController";
@@ -117,8 +121,12 @@
 
 //im 单聊
 "open_single_chat" = "ChatRootViewController";
+"open_group_chat" = "GroupChatRootViewController";
 "im_house_share" = "FHIMSharedUserListViewController";
 "im_share_favorite_house" = "FHIMFavoriteShareViewController";
+"im_group_chat_more_info" = "GroupChatMoreInfoViewController";
+"im_group_chat_member" = "GroupChatMemeberViewController";
+"im_group_chat_at" = "GroupChatMemeberViewController";
 //会话列表
 "message_conversation_list" = "FHTempMessageViewController";
 
@@ -166,10 +174,14 @@
 "house_real_web" = "FHHouseDetailWebViewController";
 "house_fake_list" = "FHFalseHouseListViewController";
 
+//VR详情页
+"house_vr_web" = "FHVRDetailWebViewController";
+
 //UGC相关
 "ugc_post" = "FHPostUGCViewController";
 "thread_detail" = "FHPostDetailViewController";
 "ugc_post_topic_list" = "FHTopicListController";
+"ugc_post_at_list" = "TTUGCSearchUserViewController";
 "ugc_community_detail" = "FHCommunityDetailViewController";
 "ugc_my_interest" = "FHUGCMyInterestedController";
 "ugc_post_wd_answer" = "FHWDAnswerPictureTextViewController";
@@ -178,6 +190,10 @@
 "ugc_community_list" = "FHUGCCommunityListViewController";
 "ugc_comment_detail" = "FHCommentDetailViewController";
 "concern" = "FHTopicDetailViewController";// 话题详情页
+"ugc_notice_edit" = "FHUGCNoticeEditViewController";
+"ugc_focus_list" = "FHUGCFollowListController"; //关注列表页
+"ugc_comment_list" = "FHUGCCommentListController"; //评论列表页
+"ugc_follow_user_list" = "FHUGCUserFollowListController";//圈子关注用户列表
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";

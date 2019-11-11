@@ -17,11 +17,24 @@
 //#import <TTRegistry/TTRegistryDefines.h>
 #import "TTUGCHashtagModel.h"
 #import "FHTopicListController.h"
+#import <UIColor+Theme.h>
+#import "NSString+UGCUtils.h"
+#import "TTAccountManager.h"
+#import <FHEnvContext.h>
 
 @interface TTUGCTextViewMediator() <FHTopicListControllerDelegate>
 @end
 
 @implementation TTUGCTextViewMediator
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _richSpanColorHexStringForDay = [NSString hexStringWithColor:[UIColor themeRed3]];
+        _richSpanColorHexStringForNight = [NSString hexStringWithColor:[UIColor themeRed3]];
+    }
+    return self;
+}
 
 #pragma mark - TTUGCTextViewDelegate
 
@@ -34,7 +47,7 @@
 }
 
 - (void)textViewDidInputTextAt:(TTUGCTextView *)textView {
-    [self toolbarDidClickAtButton];
+    [self didInputTextAt];
 }
 
 - (void)textViewDidInputTextHashtag:(TTUGCTextView *)textView {
@@ -52,25 +65,80 @@
         [self.toolbar endEditing:YES];
     }
 }
+- (void)didInputTextAt {
+    self.textView.didInputTextAt = YES;
+    self.isSelectViewControllerVisible = YES;
+    
+    if(self.atBtnClickBlock) {
+        self.atBtnClickBlock(self.textView.didInputTextAt);
+    } else {
+        if ([TTAccountManager isLogin]) {
+            [self defaultActionForAtButton];
+        } else {
+            [self.textView resignFirstResponder];
+            [self gotoLogin];
+        }
+    }
+}
 
 - (void)toolbarDidClickAtButton {
+    
     self.textView.didInputTextAt = NO;
-
-    [TTTrackerWrapper eventV3:@"at_button_click" params:@{
-        @"source" : self.textView.source ?: @"post",
-        @"status" : self.textView.keyboardVisible ? @"keyboard" : @"no_keyboard",
-    }];
-
     self.isSelectViewControllerVisible = YES;
+    
+    if(self.atBtnClickBlock) {
+        self.atBtnClickBlock(self.textView.didInputTextAt);
+    } else {
+        if ([TTAccountManager isLogin]) {
+            [self defaultActionForAtButton];
+        } else {
+            [self.textView resignFirstResponder];
+            [self gotoLogin];
+        }
+    }
+}
 
-    TTUGCSearchUserViewController *viewController = [[TTUGCSearchUserViewController alloc] init];
-    viewController.delegate = self;
-    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:viewController];
-    navigationController.ttNavBarStyle = @"White";
-    navigationController.ttHideNavigationBar = NO;
-    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *enter_from = @"";
+    if (enter_from.length <= 0) {
+        enter_from = @"be_null";
+    }
+    [params setObject:enter_from forKey:@"enter_from"];
+//    [params setObject:@"feed_like" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager presentAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [wSelf defaultActionForAtButton];
+                });
+            }else{
+                wSelf.isSelectViewControllerVisible = NO;
+                [wSelf.textView becomeFirstResponder];
+            }
+        }else{
+            wSelf.isSelectViewControllerVisible = NO;
+            [wSelf.textView becomeFirstResponder];
+        }
+    }];
+}
 
-    [self.textView.navigationController presentViewController:navigationController animated:YES completion:nil];
+- (void)defaultActionForAtButton {
+    NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_at_list"];
+    NSURL *url = components.URL;
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"delegate"] = self;
+    param[@"isPushOutAtListController"] = @(self.isPushOutAtListController);
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
+    if(self.isPushOutAtListController) {
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    } else {
+        [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
+    }
 }
 
 - (void)toolbarDidClickPictureButtonWithBanPicInput:(BOOL)banPicInput {
@@ -179,75 +247,6 @@
 
     self.textView.didInputTextAt = NO;
 }
-
-
-#pragma mark - TTUGCSearchHashtagTableViewDelegate
-
-//- (void)searchHashtagTableViewWillDismiss {
-//    if (self.textView.didInputTextHashtag) {
-//        NSString *text = @"#";
-//        NSRange range = self.textView.selectedRange;
-//
-//        TTRichSpanText *richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil imageInfoModelDictionary:nil];
-//
-//        [self.textView replaceRichSpanText:richSpanText inRange:range];
-//    }
-//
-//    [self.textView becomeFirstResponder];
-//}
-//
-//- (void)searchHashtagTableViewDidDismiss {
-//
-//    self.isSelectViewControllerVisible = NO;
-//
-//    // 为了让 toolbar 状态正确，保证键盘收起和弹出顺序
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self.textView becomeFirstResponder];
-//    });
-//}
-//
-//- (void)searchHashtagTableViewDidSelectedHashtag:(TTUGCHashtagModel *)hashtagModel {
-//    NSString *schema = hashtagModel.forum.schema;
-//    NSString *forumName = hashtagModel.forum.forum_name;
-//    NSString *concernId = hashtagModel.forum.concern_id;
-//    NSString *text = forumName ? [NSString stringWithFormat:@"#%@# ", forumName] : @"";
-//    NSRange range = self.textView.selectedRange;
-//
-//    TTRichSpanText *richSpanText;
-//    if (!isEmptyString(schema)) {
-//        TTRichSpanLink *hashtagLink = [[TTRichSpanLink alloc] initWithStart:0 length:forumName.length + 2 link:schema text:nil type:TTRichSpanLinkTypeHashtag];
-//
-//        NSDictionary *colorInfo = nil;
-//        if (self.richSpanColorHexStringForDay && self.richSpanColorHexStringForNight) {
-//            colorInfo = @{
-//                         @"day": self.richSpanColorHexStringForDay,
-//                         @"night":self.richSpanColorHexStringForNight
-//                         };
-//        }
-//        if (colorInfo) {
-//            hashtagLink.userInfo = @{
-//                                     @"forum_name": forumName ?: @"",
-//                                     @"concern_id": concernId ?: @"",
-//                                     @"color_info": colorInfo,
-//                                     @"forum_id": hashtagModel.forum.forum_id ?: @""
-//                                     };
-//        } else {
-//            hashtagLink.userInfo = @{
-//                                     @"forum_name": forumName ?: @"",
-//                                     @"concern_id": concernId ?: @"",
-//                                     @"forum_id": hashtagModel.forum.forum_id ?: @""
-//                                     };
-//        }
-//
-//        richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:@[hashtagLink] imageInfoModelDictionary:nil];
-//    } else {
-//        richSpanText = [[TTRichSpanText alloc] initWithText:text richSpanLinks:nil imageInfoModelDictionary:nil];
-//    }
-//
-//    [self.textView replaceRichSpanText:richSpanText inRange:range];
-//
-//    self.textView.didInputTextHashtag = NO;
-//}
 
 #pragma mark - FHTopicListControllerDelegate
 

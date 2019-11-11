@@ -83,6 +83,22 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
     }
 }
 
+- (void)appCommonParamsWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    NSDictionary *commonParams = [FHWebViewConfig getRequestCommonParams];
+    
+    if (!commonParams) {
+        if (callback) {
+            callback(TTRJSBMsgFailed, @{@"msg": @"通用参数为空..请联系客户端相关人士"});
+        }
+        return;
+    }
+    
+    if (callback) {
+        callback(TTRJSBMsgSuccess, @{@"data": commonParams});
+    }
+}
+
 - (void)fetchWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
 {
     NSString *url = [param tt_stringValueForKey:@"url"];
@@ -122,10 +138,14 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
         TTBRIDGE_CALLBACK_WITH_MSG(FHBridgeMsgFailed, @"url不能为空");
         return;
     }
+    Class seriallizerClass = [FHCommonJSONHTTPRequestSerializer class];
+    if ([header isKindOfClass:[NSDictionary class]] && [header[@"Content-Type"] isKindOfClass:[NSString class]] && [header[@"Content-Type"] isEqualToString:@"application/x-www-form-urlencoded"]) {
+        seriallizerClass = nil;
+    }
     
     NSString *startTime = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
     
-    [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:[FHCommonJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+    [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:seriallizerClass responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         if (callback) {
             NSString *result = @"";
             if([obj isKindOfClass:[NSData class]]){

@@ -49,6 +49,7 @@
 #import "FHWenDaToolbar.h"
 #import "FHUserTracker.h"
 #import "FHBubbleTipManager.h"
+#import "HMDTTMonitor.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -124,7 +125,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         self.answerSchema = @"";
         self.isForbidComment = NO;
         self.isPosting = NO;
-        self.gdExtJson = nil;
+        self.gdExtJson = params[@"gd_ext_json"];
         
         self.tracerDict[@"page_type"] = @"answer_publisher";
     }
@@ -522,17 +523,16 @@ static CGFloat kWenDaToolbarHeight = 80.f;
 
 - (void)sendAnswer {
     if (self && [TTAccountManager isLogin] && self.qid.length > 0) {
-//        BOOL containsImage = !SSIsEmptyArray(self.addImagesView.selectedImageCacheTasks);
+        __weak typeof(self) wself = self;
         self.sendingIndicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView indicatorText:NSLocalizedString(@"正在发送...", nil) indicatorImage:nil dismissHandler:^(BOOL isUserDismiss){
             if (isUserDismiss) {
                 //点击取消按钮
-                [self cancelImageUpload];
+                [wself cancelImageUpload];
             }
         }];
         self.sendingIndicatorView.autoDismiss = NO;
         self.sendingIndicatorView.showDismissButton = YES;
         [self.sendingIndicatorView showFromParentView:nil];
-        __weak typeof(self) wself = self;
         [self postAnswerWithApiParam:self.apiParam source:self.source listEntrance:self.listEntrance imageUploadComplete:^{
             //图片上传成功，隐藏关闭按钮
             [wself.sendingIndicatorView updateIndicatorWithText:NSLocalizedString(@"上传成功，加载中...", nil) shouldRemoveWaitingView:NO];
@@ -547,6 +547,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
             NSString *ansid = wself.ansid;
             if (qid.length > 0 && ansid.length > 0) {
                 //回答发送成功
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"f_ugc_post_answer_result" metric:nil category:@{@"status":@(0)} extra:nil];
                 [wself sendAnswerSuccessTracer:ansid];
                 [wself.sendingIndicatorView updateIndicatorWithText:[wself postAnswerSuccessText] shouldRemoveWaitingView:YES];
                 [wself.sendingIndicatorView updateIndicatorWithImage:[UIImage themedImageNamed:@"doneicon_popup_textpage"]];
@@ -561,6 +562,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
                 
                 [wself dismissSelf];
             }else {
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"f_ugc_post_answer_result" metric:nil category:@{@"status":@(1)} extra:nil];
                 NSNumber *errorCode = [error.userInfo objectForKey:kWDErrorCodeKey];
                 //回答发送失败
                 NSString *errorTips = [error.userInfo objectForKey:kWDErrorTipsKey];

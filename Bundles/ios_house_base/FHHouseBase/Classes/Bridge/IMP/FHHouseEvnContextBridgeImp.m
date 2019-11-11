@@ -50,7 +50,6 @@
 {
     NSString *province = [FHLocManager sharedInstance].currentReGeocode.province;
     return province;
-    //    return [[[EnvContext shared] client] currentProvince];
 }
 
 - (BOOL)isCurrentTabFirst

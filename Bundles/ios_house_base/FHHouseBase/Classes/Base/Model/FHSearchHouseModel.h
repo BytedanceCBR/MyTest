@@ -172,6 +172,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *textColor;
 @end
 
+@interface FHSearchHouseVRModel : JSONModel
+
+@property (nonatomic, assign) BOOL hasVr;
+
+@end
+
 @interface  FHSearchHouseDataItemsModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
@@ -190,6 +196,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *cellStyle;
 @property (nonatomic, copy , nullable) NSString *displayPrice;
 @property (nonatomic, strong, nullable) FHHouseItemHouseExternalModel *externalInfo;
+@property (nonatomic, strong, nullable) FHSearchHouseVRModel *vrInfo;
 @property (nonatomic, copy , nullable) FHSearchHouseDataItemsFakeReasonModel *fakeReason;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsBaseInfoMapModel *baseInfoMap ;
 @property (nonatomic, strong , nullable) NSArray<FHHouseCoreInfoModel> *coreInfo;
@@ -203,6 +210,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displayBuiltYear;
 @property (nonatomic, copy , nullable) NSString *displaySameNeighborhoodTitle;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsHouseImageTagModel *houseImageTag ;
+@property (nonatomic, strong , nullable) FHSearchHouseDataItemsHouseImageTagModel *houseTitleTag ;
 @property (nonatomic, copy , nullable) NSString *originPrice;
 @property (nonatomic, strong) NSArray* bottomText;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ;
@@ -222,6 +230,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *recommendTitle;
 @property (nonatomic, copy , nullable) NSString *searchHint;
 @property (nonatomic, assign) BOOL hasMore;
+@property (nonatomic, assign) NSInteger offset;
 
 @end
 
@@ -283,6 +292,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic, strong, nullable) FHRecommendSecondhandHouseDataModel *recommendSearchModel;
 @property (nonatomic, strong, nullable) FHSugSubscribeDataDataSubscribeInfoModel *subscribeInfo;
+@property (nonatomic, assign) NSInteger offset;
 
 @end
 

@@ -583,6 +583,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     model.categoryName = self.detailStateStore.state.categoryName;
     model.authorId = self.detailStateStore.state.authorId;
     model.fromGid = [self.detailStateStore.state ttv_fromGid];
+    model.extraDic = self.extraDic;
     if (self.videoInfo.isVideoSourceUGCVideo) {
         model.defaultResolutionType = TTVPlayerResolutionTypeHD;
     }

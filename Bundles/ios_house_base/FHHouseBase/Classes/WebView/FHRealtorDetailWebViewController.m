@@ -82,7 +82,7 @@ static NSString *s_oldAgent = nil;
     contactConfig.phone = phone;
     contactConfig.realtorId = self->_realtorId;
     contactConfig.from = @"app_realtor_mainpage";
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
         if (success) {
             completion(TTRJSBMsgSuccess, @{});
         }else {

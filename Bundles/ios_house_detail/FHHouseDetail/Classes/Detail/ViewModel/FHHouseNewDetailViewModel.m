@@ -325,7 +325,7 @@
     if (model.data) {
         houseName.type = 1;
         houseName.name = model.data.coreInfo.name;
-//        houseName.aliasName = model.data.coreInfo.aliasName;
+        houseName.aliasName = model.data.coreInfo.aliasName;
         houseName.type = 2;
         houseName.tags = model.data.tags;
         [self.items addObject:houseName];
@@ -423,7 +423,13 @@
         });
     }
     
-    [self reloadData];
+    if (model.isInstantData) {
+        [self.tableView reloadData];
+    }else{
+        [self reloadData];
+    }
+    
+    [self.detailController updateLayout:model.isInstantData];
 }
 
 // 处理详情页周边新盘请求数据

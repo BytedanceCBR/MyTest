@@ -26,6 +26,7 @@
 #import <TTDiggButton/TTDiggButton.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTThemed/TTThemeManager.h>
+#import <UIColor+Theme.h>
 
 
 NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifier";
@@ -149,7 +150,7 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
 
     NSDictionary *linkAttributes = @{
         NSParagraphStyleAttributeName: [TTCommentDetailCellHelper contentLabelParagraphStyle],
-        NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
+        NSForegroundColorAttributeName : [UIColor themeRed3],
         NSFontAttributeName : [TTCommentDetailCellHelper contentLabelFont]
     };
     self.contentLabel.linkAttributes = linkAttributes;
@@ -356,8 +357,7 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
 //        [_avatarView setupVerifyViewForLength:[TTCommentDetailCellHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
 //            return [TTCommentDetailCellHelper verifyLogoSize:standardSize];
 //        }];
-        // add by zjing 去掉头像点击
-//        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
+        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }
     return _avatarView;
 }

@@ -17,6 +17,7 @@
 @property(nonatomic, strong) NSMutableArray *btnArray;
 //每行显示多少个，自动根据宽度计算
 @property(nonatomic, assign) NSInteger row;
+@property(nonatomic, strong) UIView *bgView;
 
 @end
 
@@ -30,10 +31,10 @@
         _btnArray = [NSMutableArray array];
         _itemWidth = 44.0f;
         _itemHeight = 20.0f;
-        _itemPadding = 10.0f;
+        _itemPadding = 0.0f;
         _topMargin = 10.0f;
         _leftMargin = 5.0f;
-        _bgColor = [[UIColor whiteColor] colorWithAlphaComponent:0.9];
+        _bgColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8];
         _textColor = [UIColor themeGray1];
         _selectedBgColor = [UIColor themeRed1];
         _selectedTextColor = [UIColor whiteColor];
@@ -68,6 +69,26 @@
 }
 
 - (void)initViews {
+    if(self.bgView){
+        [self.bgView removeFromSuperview];
+        self.bgView = nil;
+    }
+    
+    self.bgView = [[UIView alloc] init];
+    _bgView.backgroundColor = _bgColor;
+    _bgView.layer.cornerRadius = self.itemHeight/2;
+    _bgView.layer.masksToBounds = YES;
+    [self addSubview:_bgView];
+    
+    [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self).offset(_leftMargin);
+        make.top.mas_equalTo(self).offset(_topMargin);
+        make.width.mas_equalTo(self.itemWidth * _titleArray.count);
+        make.height.mas_equalTo(self.itemHeight);
+    }];
+        
+    
+    
     for (UIButton *btn in self.btnArray) {
         [btn removeFromSuperview];
     }
@@ -97,7 +118,7 @@
 
 - (UIButton *)buttonWithTitle:(NSString *)title tag:(NSInteger)tag {
     UIButton *btn = [[UIButton alloc] init];
-    btn.backgroundColor = self.bgColor;
+    btn.backgroundColor = [UIColor clearColor];
     [btn setTitle:title forState:UIControlStateNormal];
     [btn setTitleColor:self.textColor forState:UIControlStateNormal];
     btn.titleLabel.font = self.font;
@@ -105,7 +126,7 @@
     btn.layer.cornerRadius = self.itemHeight/2;
     btn.layer.masksToBounds = YES;
     btn.tag = tag;
-    btn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -5, -10, -5);
+    btn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, 0, -10, 0);
     return btn;
 }
 
@@ -129,7 +150,7 @@
             button.backgroundColor = self.selectedBgColor;
         }else{
             [button setTitleColor:self.textColor forState:UIControlStateNormal];
-            button.backgroundColor = self.bgColor;
+            button.backgroundColor = [UIColor clearColor];
         }
     }
 }

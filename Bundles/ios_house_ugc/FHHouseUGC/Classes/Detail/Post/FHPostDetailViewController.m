@@ -19,6 +19,8 @@
 #import "FHFeedOperationView.h"
 #import "FHUGCConfig.h"
 #import <TTBusinessManager+StringUtils.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
+#import "FHUGCShareManager.h"
 
 @interface FHPostDetailViewController ()
 
@@ -32,6 +34,8 @@
 
 @property (nonatomic, strong)   FHPostDetailNavHeaderView       *naviHeaderView;
 @property (nonatomic, strong)   FHUGCFollowButton       *followButton;// 关注
+@property (nonatomic, strong)   UIImage       *shareBlackImage;
+@property (nonatomic, strong)   UIButton       *shareButton;// 分享
 @property (nonatomic, assign)   BOOL       isViewAppearing;
 @property (nonatomic, copy)     NSString       *lastPageSocialGroupId;
 
@@ -64,6 +68,37 @@
         // 埋点
         self.tracerDict[@"page_type"] = @"feed_detail";
         self.ttTrackStayEnable = YES;
+        // 取链接中的埋点数据
+        NSString *enter_from = params[@"enter_from"];
+        if (enter_from.length > 0) {
+            self.tracerDict[@"enter_from"] = enter_from;
+        }
+        NSString *enter_type = params[@"enter_type"];
+        if (enter_type.length > 0) {
+            self.tracerDict[@"enter_type"] = enter_type;
+        }
+        NSString *element_from = params[@"element_from"];
+        if (element_from.length > 0) {
+            self.tracerDict[@"element_from"] = element_from;
+        }
+        NSString *log_pb_str = params[@"log_pb"];
+        if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
+            NSData *jsonData = [log_pb_str dataUsingEncoding:NSUTF8StringEncoding];
+            NSError *err = nil;
+            NSDictionary *dic = nil;
+            @try {
+                dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                      options:NSJSONReadingMutableContainers
+                                                        error:&err];
+            } @catch (NSException *exception) {
+                
+            } @finally {
+                
+            }
+            if (!err && [dic isKindOfClass:[NSDictionary class]] && dic.count > 0) {
+                self.tracerDict[@"log_pb"] = dic;
+            }
+        }
     }
     return self;
 }
@@ -80,7 +115,7 @@
     // 导航栏
     [self setupDetailNaviBar];
     // 全部评论
-    [self commentCountChanged];
+    [self firstLoadCommentCount];
     // 列表页数据
     if (self.detailData) {
 //        [self.viewModel.items addObject:self.detailData];
@@ -97,12 +132,15 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self addStayPageLog];
-    if (self.detailData) {
-        // 修改列表页数据
-        self.detailData.commentCount = [NSString stringWithFormat:@"%lld",self.comment_count];
-        self.detailData.userDigg = [NSString stringWithFormat:@"%ld",self.user_digg];
-        self.detailData.diggCount = [NSString stringWithFormat:@"%lld",self.digg_count];
-    }
+//    if (self.detailData) {
+//        // 修改列表页数据
+//        self.detailData.commentCount = [NSString stringWithFormat:@"%lld",self.comment_count];
+//        self.detailData.userDigg = [NSString stringWithFormat:@"%ld",self.user_digg];
+//        self.detailData.diggCount = [NSString stringWithFormat:@"%lld",self.digg_count];
+//        self.detailData.isStick = self.weakViewModel.serverData.isStick;
+//        self.detailData.stickStyle = self.weakViewModel.serverData.stickStyle;
+//        self.detailData.contentDecoration = self.weakViewModel.serverData.contentDecoration;
+//    }
     //跳页时关闭举报的弹窗
     [FHFeedOperationView dismissIfVisible];
 }
@@ -135,6 +173,18 @@
 
 - (void)setupDetailNaviBar {
     self.customNavBarView.title.text = @"详情";
+    // 分享按钮
+    self.shareButton = [[UIButton alloc] init];
+    [self.shareButton setBackgroundImage:self.shareBlackImage forState:UIControlStateNormal];
+    [self.shareButton setBackgroundImage:self.shareBlackImage forState:UIControlStateHighlighted];
+    [self.shareButton addTarget:self  action:@selector(shareButtonClicked:) forControlEvents:(UIControlEventTouchUpInside)];
+    [self.customNavBarView addSubview:_shareButton];
+    [self.shareButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(24);
+        make.right.mas_equalTo(-20);
+        make.bottom.mas_equalTo(-10);
+    }];
+    
     // 关注按钮
     self.followButton = [[FHUGCFollowButton alloc] init];
     self.followButton.followed = YES;
@@ -158,6 +208,7 @@
     }];
     self.naviHeaderView.hidden = YES;
     self.followButton.hidden = YES;
+    self.shareButton.hidden = NO;
 }
 
 - (void)startLoadData {
@@ -178,6 +229,21 @@
     }
 }
 
+- (void)firstLoadCommentCount {
+    if (self.commentAllFooter == nil) {
+        self.commentAllFooter = [[FHDetailCommentAllFooter alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 52)];
+        self.tableView.tableFooterView = self.commentAllFooter;
+    }
+    // 全部评论
+    NSString *commentStr = @"全部评论";
+    if (self.comment_count > 0) {
+        commentStr = [NSString stringWithFormat:@"全部评论(%@)",[TTBusinessManager formatCommentCount:self.comment_count]];
+    } else {
+        commentStr = [NSString stringWithFormat:@"全部评论(0)"];
+    }
+    self.commentAllFooter.allCommentLabel.text = commentStr;
+}
+
 - (void)commentCountChanged {
     if (self.commentAllFooter == nil) {
         self.commentAllFooter = [[FHDetailCommentAllFooter alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 52)];
@@ -191,6 +257,14 @@
         commentStr = [NSString stringWithFormat:@"全部评论(0)"];
     }
     self.commentAllFooter.allCommentLabel.text = commentStr;
+    
+    //评论完成后发送通知修改评论数
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+               userInfo[@"group_id"] = self.detailData.groupId;
+               userInfo[@"comment_conut"] = @(self.comment_count);
+               [[NSNotificationCenter defaultCenter] postNotificationName:@"kPostMessageFinishedNotification"
+                                                                   object:nil
+                                                                 userInfo:userInfo];
 }
 
 - (void)headerInfoChanged {
@@ -211,9 +285,11 @@
         if (offsetY > 78) {
             self.naviHeaderView.hidden = NO;
             self.followButton.hidden = NO;
+            self.shareButton.hidden = YES;
         } else {
             self.naviHeaderView.hidden = YES;
             self.followButton.hidden = YES;
+            self.shareButton.hidden = NO;
         }
     }
 }
@@ -254,6 +330,22 @@
     tracerDict[@"percent"] = @"100";
     tracerDict[@"item_id"] = self.groupModel.itemID ?: @"be_null";
     [FHUserTracker writeEvent:@"read_pct" params:tracerDict];
+}
+
+// 黑色
+- (UIImage *)shareBlackImage
+{
+    if (!_shareBlackImage) {
+        _shareBlackImage = ICON_FONT_IMG(24, @"\U0000e692", nil); //detail_share_black
+    }
+    return _shareBlackImage;
+}
+
+// 分享按钮点击
+- (void)shareButtonClicked:(UIButton *)btn {
+    if (self.viewModel.shareInfo && self.tracerDict) {
+        [[FHUGCShareManager sharedManager] shareActionWithInfo:self.viewModel.shareInfo tracerDic:self.tracerDict];
+    }
 }
 
 @end

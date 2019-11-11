@@ -21,6 +21,10 @@
 #import "ArticleImpressionHelper.h"
 #import "FHUGCConfig.h"
 #import "TTUGCDefine.h"
+#import "TSVShortVideoDetailExitManager.h"
+#import "HTSVideoPageParamHeader.h"
+#import "FHUGCSmallVideoCell.h"
+#import "AWEVideoConstants.h"
 
 @interface FHTopicDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -68,12 +72,12 @@
         self.feedOffset = 0;
         self.dataList = [[NSMutableArray alloc] init];
         self.hashTable = [NSHashTable weakObjectsHashTable];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoTop" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoTop" object:@"topicDetail"];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:@"topicDetail"];
         // 删帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 举报成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
         // 发帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
     }
@@ -186,6 +190,11 @@
                     }
                     // 再插入顶部
                     if (self.dataList.count > 0) {
+                        // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
+                        [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                            cellModel.isStick = NO;
+                        }];
+                        // 头部插入新数据
                         [tempArray addObjectsFromArray:self.dataList];
                     }
                     [self.dataList removeAllObjects];
@@ -366,7 +375,7 @@
     }
     CGFloat offsetY = scrollView.contentOffset.y;
     if (offsetY<=0) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCLeaveTop" object:nil userInfo:@{@"canScroll":@"1"}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCLeaveTop" object:@"topicDetail" userInfo:@{@"canScroll":@"1"}];
     }
 }
 
@@ -453,18 +462,36 @@
                                         if ([richSpanLink.link containsString:cidStr]) {
                                             // 去重
                                             [self removeDuplicaionModel:cellModel.groupId];
-                                            // 是当前的话题
-                                            [tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
                                             if (self.dataList.count == 0) {
                                                 self.hasMore = NO;
-                                                [self.dataList addObject:cellModel];
-                                            } else {
-                                                [self.dataList insertObject:cellModel atIndex:0];
                                             }
-                                            //self.feedOffset += 1;
-                                            //[tableView reloadData];
+                                            // JOKER: 找到第一个非置顶贴的下标
+                                            __block NSUInteger index = self.dataList.count;
+                                            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                                                
+                                                BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
+                                                
+                                                if(!isStickTop) {
+                                                    index = idx;
+                                                    *stop = YES;
+                                                }
+                                            }];
+                                            // 插入在置顶贴的下方
+                                            [self.dataList insertObject:cellModel atIndex:index];
                                             [self processLoadingState];
                                             self.needRefreshCell = NO;
+                                            // JOKER: 发贴成功插入贴子后，滚动使露出
+                                            if(index == 0) {
+                                                [tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+                                            } else {
+                                                [tableView reloadData];
+                                                [tableView layoutIfNeeded];
+                                                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                                                CGRect rect = [tableView rectForRowAtIndexPath:indexPath];
+                                                self.canScroll = YES;
+                                                [tableView setContentOffset:rect.origin animated:NO];
+                                                [[NSNotificationCenter defaultCenter] postNotificationName:@"kScrollToSubScrollView" object:nil];
+                                            }
                                             break;
                                         }
                                     }
@@ -548,14 +575,22 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = [self pageType];
-    traceParam[@"enter_type"] = @"click";
-    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
-    traceParam[@"log_pb"] = cellModel.logPb;
     dict[TRACER_KEY] = traceParam;
     
     if (url) {
+        BOOL isOpen = YES;
         if ([url.absoluteString containsString:@"concern"]) {
+            traceParam[@"enter_from"] = [self pageType];
+            traceParam[@"enter_type"] = @"click";
+            traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+            traceParam[@"log_pb"] = cellModel.logPb;
+        } else if([url.absoluteString containsString:@"profile"]) {
+            // JOKER:
+        } else {
+            isOpen = NO;
+        }
+
+        if(isOpen) {
             // 话题
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
@@ -614,6 +649,26 @@
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    } if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
+        //小视频
+        WeakSelf;
+        TSVShortVideoDetailExitManager *exitManager = [[TSVShortVideoDetailExitManager alloc] initWithUpdateBlock:^CGRect{
+            StrongSelf;
+            CGRect imageFrame = [self selectedSmallVideoFrame];
+            imageFrame.origin = CGPointZero;
+            return imageFrame;
+        } updateTargetViewBlock:^UIView *{
+            StrongSelf;
+            return [self currentSelectSmallVideoView];
+        }];
+        NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:2];
+        [info setValue:exitManager forKey:HTSVideoDetailExitManager];
+        if (showComment) {
+            [info setValue:@(1) forKey:AWEVideoShowComment];
+        }
+        
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
     }
 }
 
@@ -643,7 +698,24 @@
     
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    self.needRefreshCell = YES;
+}
+
+- (UIView *)currentSelectSmallVideoView {
+    if (self.currentCell && [self.currentCell isKindOfClass:[FHUGCSmallVideoCell class]]) {
+        FHUGCSmallVideoCell *smallVideoCell = self.currentCell;
+        return smallVideoCell.videoImageView;
+    }
+    return nil;
+}
+
+- (CGRect)selectedSmallVideoFrame
+{
+    UIView *view = [self currentSelectSmallVideoView];
+    if (view) {
+        CGRect frame = [view convertRect:view.bounds toView:nil];
+        return frame;
+    }
+    return CGRectZero;
 }
 
 #pragma mark - 埋点

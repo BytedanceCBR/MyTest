@@ -24,6 +24,8 @@
 @property(nonatomic, copy) NSString *enterFrom;
 @property(nonatomic, copy) NSString *categoryName;
 @property(nonatomic, copy) NSString *authorId;
+//外面带的埋点信息
+@property(nonatomic, strong) NSDictionary *extraDic;
 
 
 @end

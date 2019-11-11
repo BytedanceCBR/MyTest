@@ -414,6 +414,8 @@ static bool isTTCommentPublishing = NO;
 
     NSString *replyContent = replyRichSpanText.text;
     NSString *replyContentRichSpan = [TTRichSpans JSONStringForRichSpans:replyRichSpanText.richSpans];
+    //为了处理埋点
+    replyContentRichSpan = [replyContentRichSpan stringByReplacingOccurrencesOfString:@"from_page=follow_list" withString:@"from_page=at_user_profile_comment"];
 
     NSMutableArray *mentionUsers = [NSMutableArray arrayWithCapacity:replyRichSpanText.richSpans.links.count];
     for (TTRichSpanLink *link in replyRichSpanText.richSpans.links) {
@@ -453,8 +455,12 @@ static bool isTTCommentPublishing = NO;
     if (self.enterFrom.length > 0) {
         [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName] enterFrom:[self enterFrom]]  forKey:@"enter_from"];
     }
-    [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
     
+    if(self.extraDic.count > 0){
+        [paramsDict addEntriesFromDictionary:self.extraDic];
+    }
+    
+    [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
     
     NSMutableDictionary *userInfoDic = [[NSMutableDictionary alloc] init];
     if ([self.commentDetailModel respondsToSelector:@selector(groupModel)]) {

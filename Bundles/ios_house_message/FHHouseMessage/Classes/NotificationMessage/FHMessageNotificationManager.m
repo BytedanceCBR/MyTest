@@ -95,6 +95,7 @@ static NSString *const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNo
 }
 
 - (void)periodicalFetchUnreadMessage:(NSTimer *)timer {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kPeriodicalFetchUnreadMessage object:nil];
     [self fetchUnreadMessageWithChannel:nil callback:nil];
 }
 

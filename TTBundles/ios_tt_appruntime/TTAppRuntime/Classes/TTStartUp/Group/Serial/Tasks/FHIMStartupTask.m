@@ -23,6 +23,9 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import "FHIMAlertViewListenerImpl.h"
 #import "TTLaunchDefine.h"
+#import <FHHouseBase/FHMainApi+Contact.h>
+#import <TTReachability/TTReachability.h>
+#import <TTSandBoxHelper.h>
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -69,6 +72,13 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
 }
 
+- (BOOL)isBOE {
+    if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
+        return YES;
+    }
+    return NO;
+}
+
 - (NSString *)appId {
     return [[TTInstallIDManager sharedInstance] appID];
 }
@@ -79,6 +89,10 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
 - (void)onMessageRecieved:(ChatMsg *)msg {
     [[FHBubbleTipManager shareInstance] tryShowBubbleTip:msg openUrl:@""];
+}
+
+- (NSString *)appVersionCode {
+    return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
 }
 
 - (void)tryGetPhoneNumber:(nonnull NSString *)userId withImprId:(nonnull NSString *)imprId tracer:(nonnull NSDictionary *)tracer withBlock:(nullable PhoneCallback)finishBlock{
@@ -96,17 +110,29 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                             };
     NSMutableDictionary *monitorParams = [NSMutableDictionary dictionaryWithDictionary:param];
     [monitorParams setValue:@"client_c" forKey:@"client_type"];
-    
-    [[TTNetworkManager shareInstance] requestForJSONWithURL:url params:param  method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+
+    [[TTNetworkManager shareInstance] requestForJSONWithResponse:url params:param  method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        
+        NSMutableDictionary *categoryDict = @{}.mutableCopy;
+        NSMutableDictionary *extraDict = @{}.mutableCopy;
+        if (![TTReachability isNetworkConnected]) {
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeNetFailure];
+        }
+        NSString *status = @"";
+        NSString *message = @"";
+
         if (!error) {
             NSString *number = @"";
             NSString *serverImprId = imprId;
+  
             @try {
                 if ([obj isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *jsonObj = (NSDictionary *)obj;
                     NSDictionary *data = [jsonObj objectForKey:@"data"];
                     number = data[@"virtual_number"];
                     serverImprId = data[@"impr_id"] ?: @"be_null";
+                    status = [jsonObj tta_stringForKey:@"status"];
+                    message = [jsonObj tta_stringForKey:@"message"];
                 }
             }
             @catch(NSException *e) {
@@ -139,7 +165,34 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
             [monitorParams setValue:error forKey:@"server_error"];
             [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_SERVER_ERROR extra:monitorParams];
             finishBlock(@"click_call", imprId,true);
+            
+            if ([obj isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *jsonObj = (NSDictionary *)obj;
+                NSDictionary *data = [jsonObj objectForKey:@"data"];
+                status = [jsonObj tta_stringForKey:@"status"];
+                message = [jsonObj tta_stringForKey:@"message"];
+            }
         }
+        
+        if (response.statusCode == 200) {
+            if (status.length > 0) {
+                if (status.integerValue != 0 || error != nil) {
+                    if (status) {
+                        extraDict[@"error_code"] = status;
+                    }
+                    extraDict[@"message"] = message.length > 0 ? message : error.domain;
+                    categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeServerFailure];
+                    extraDict[@"request_url"] = response.URL.absoluteString;
+                    extraDict[@"response_headers"] = response.allHeaderFields;
+                }else {
+                    categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeNone];
+                }
+            }
+        }else {
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",FHClueErrorTypeHttpFailure];
+            extraDict[@"error_code"] = [NSString stringWithFormat:@"%ld",response.statusCode];
+        }
+        [[self class] addClueCallErrorRateLog:categoryDict extraDict:extraDict];
     }];
 }
 
@@ -156,7 +209,10 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     
 }
 
-
++ (void)addClueCallErrorRateLog:categoryDict extraDict:(NSDictionary *)extraDict
+{
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"clue_call_error_rate" metric:nil category:categoryDict extra:extraDict];
+}
 
 @end
 

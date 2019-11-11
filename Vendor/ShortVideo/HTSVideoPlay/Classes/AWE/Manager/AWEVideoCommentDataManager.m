@@ -24,10 +24,8 @@ static NSString * const AWEIllegalParameterDomain = @"AWEIllegalParameterDomain"
 @interface AWEVideoCommentDataManager()
 
 @property (nonatomic, assign) BOOL hasMore;
-@property (nonatomic, assign) NSInteger totalCount;
 @property (nonatomic, assign) BOOL isLoadingComments;
 @property (nonatomic, assign) BOOL isSendingComments;
-@property(nonatomic, strong) NSMutableArray<AWECommentModel *> *commentArray;
 
 @end
 

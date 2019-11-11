@@ -25,9 +25,12 @@
 #import "MJRefresh.h"
 #import "FHCommonDefines.h"
 #import "TTUIResponderHelper.h"
+#import <TTUGCEmojiParser.h>
+#import "TTAccount.h"
+#import "TTAccount+Multicast.h"
+#import "TTAccountManager.h"
 
-
-@interface FHCommunityDetailViewModel () <FHUGCFollowObserver>
+@interface FHCommunityDetailViewModel () <FHUGCFollowObserver, CommunityGroupChatLoginDelegate, FHCommunityFeedListControllerDelegate>
 
 @property(nonatomic, weak) FHCommunityDetailViewController *viewController;
 @property(nonatomic, strong) FHCommunityFeedListController *feedListController;
@@ -38,7 +41,9 @@
 @property(nonatomic, strong) UILabel *subTitleLabel;
 @property(nonatomic, strong) UIView *titleContainer;
 @property(nonatomic, strong) MJRefreshHeader *refreshHeader;
-@property (nonatomic, assign)   BOOL       isViewAppear;
+@property(nonatomic, assign)   BOOL       isViewAppear;
+@property(nonatomic, assign) BOOL isLoginSatusChangeFromGroupChat;
+@property(nonatomic, assign) BOOL isLogin;
 
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic) BOOL shouldShowUGcGuide;
@@ -54,6 +59,16 @@
         [self initView];
         self.shouldShowUGcGuide = YES;
         self.isViewAppear = YES;
+        self.isLogin = TTAccountManager.isLogin;
+        
+        // 分享埋点
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+        params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
+        params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+        params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
+        params[@"page_type"] = [self pageTypeString];
+        self.shareTracerDict = [params copy];
     }
     return self;
 }
@@ -70,20 +85,32 @@
     }
     self.feedListController.publishBtnBottomHeight = publishBtnBottomHeight;
     self.feedListController.tableViewNeedPullDown = NO;
-    self.feedListController.showErrorView = NO;
+    self.feedListController.showErrorView = YES;
     self.feedListController.scrollViewDelegate = self;
+    self.feedListController.delegate = self;
     self.feedListController.listType = FHCommunityFeedListTypePostDetail;
     self.feedListController.forumId = self.viewController.communityId;
     MJWeakSelf;
     self.refreshHeader = [FHCommunityDetailMJRefreshHeader headerWithRefreshingBlock:^{
         [weakSelf requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+        weakSelf.feedListController.view.userInteractionEnabled = NO;
     }];
+    self.refreshHeader.endRefreshingCompletionBlock = ^{
+        weakSelf.feedListController.view.userInteractionEnabled = YES;
+    };
     self.refreshHeader.mj_h = 14;
     self.refreshHeader.alpha = 0.0f;
 
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
     self.headerView.followButton.groupId = self.viewController.communityId;
     self.headerView.followButton.tracerDic = [self followButtonTraceDict];
+    WeakSelf;
+    self.headerView.followButton.followedSuccess = ^(BOOL isSuccess, BOOL isFollow) {
+        StrongSelf;
+        if(isSuccess) {
+            [self refreshBasicInfo];
+        }
+    };
 
     //随机一张背景图
     NSInteger randomImageIndex = [self.viewController.communityId integerValue] % 4;
@@ -94,12 +121,17 @@
     [self.viewController addChildViewController:self.feedListController];
     [self.feedListController didMoveToParentViewController:self.viewController];
     [self.viewController.view addSubview:self.feedListController.view];
-    WeakSelf;
     self.feedListController.publishBlock = ^() {
         StrongSelf;
         [self gotoPostThreadVC];
     };
+    
+    self.headerView.gotoSocialFollowUserListBlk = ^{
+        StrongSelf;
+        [self gotoSocialFollowUserList];
+    };
 
+    [TTAccount addMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onGlobalFollowListLoad:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
@@ -145,6 +177,7 @@
 }
 
 - (void)dealloc {
+    [TTAccount removeMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -155,6 +188,13 @@
     self.rightBtn.groupId = self.viewController.communityId;
     self.rightBtn.hidden = YES;
     self.rightBtn.tracerDic = [self followButtonTraceDict];
+    WeakSelf;
+    self.rightBtn.followedSuccess = ^(BOOL isSuccess, BOOL isFollow) {
+        StrongSelf;
+        if(isSuccess) {
+            [self refreshBasicInfo];
+        }
+    };
 
     self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -246,6 +286,13 @@
             [self updateUIWithData:model];
         }
     }
+    // 修复发帖返回状态栏不对问题
+    if (self.feedListController.tableView) {
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf scrollViewDidScroll:weakSelf.feedListController.tableView];
+        });
+    }
 }
 
 - (void)viewWillDisappear {
@@ -259,21 +306,44 @@
         if(userPull){
             [self.feedListController.tableView.mj_header endRefreshing];
         }
+        [_viewController tt_endUpdataData];
         return;
     }
-
+    
+    if(self.viewController.communityId.length <= 0) {
+        [_viewController tt_endUpdataData];
+        if(userPull){
+            [self.feedListController.tableView.mj_header endRefreshing];
+        }
+        return;
+    }
+    
     WeakSelf;
     [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+        [_viewController tt_endUpdataData];
         StrongSelf;
         if(userPull){
             [wself.feedListController.tableView.mj_header endRefreshing];
         }
         if (model && (error == nil)) {
             FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
+            BOOL isFollowed = [responseModel.data.hasFollow boolValue];
+            if(isFollowed == NO) {
+                self.feedListController.bageView.badgeNumber = TTBadgeNumberHidden;
+            }
             [wself updateUIWithData:responseModel.data];
             if (responseModel.data) {
                 // 更新圈子数据
                 [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:responseModel.data];
+                //传入选项信息
+                self.feedListController.operations = responseModel.data.permission;
+                self.feedListController.scialGroupData = responseModel.data;
+                [self.feedListController updateViews];
+                self.feedListController.loginDelegate = wself;
+                if (_isLoginSatusChangeFromGroupChat) {
+                    [self.feedListController gotoGroupChat];
+                    _isLoginSatusChangeFromGroupChat = NO;
+                }
             }
             return;
         }
@@ -282,6 +352,7 @@
     if (refreshFeed) {
         [self.feedListController startLoadData:NO];
     }
+    
 }
 
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
@@ -355,7 +426,8 @@
 - (void)followCommunity:(NSString *)groupId {
     if (groupId) {
         WeakSelf;
-        [[FHUGCConfig sharedInstance] followUGCBy:groupId isFollow:YES completion:^(BOOL isSuccess) {
+        NSString *enter_from = @"community_group_detail";
+        [[FHUGCConfig sharedInstance] followUGCBy:groupId isFollow:YES enterFrom:enter_from enterType:@"click" completion:^(BOOL isSuccess) {
             StrongSelf;
             if (isSuccess) {
                 [wself gotoPostVC];
@@ -404,6 +476,7 @@
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = YES;
         self.rightBtn.hidden = YES;
+        self.shareButton.hidden = NO;
     } else if (alpha > 0.1f && alpha < 0.9f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         self.viewController.customNavBarView.title.textColor = [UIColor themeGray1];
@@ -411,12 +484,14 @@
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = YES;
         self.rightBtn.hidden = YES;
+        self.shareButton.hidden = NO;
     } else {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
         self.titleContainer.hidden = NO;
         self.rightBtn.hidden = NO;
+        self.shareButton.hidden = YES;
     }
     [self.viewController.customNavBarView refreshAlpha:alpha];
 }
@@ -459,7 +534,9 @@
     NSString *imageUrlString = model.imageUrl;
  
     if(linkUrlString.length > 0) {
+        WeakSelf;
         self.headerView.gotoOperationBlock = ^{
+            StrongSelf;
             NSURLComponents *urlComponents = [NSURLComponents new];
             urlComponents.scheme = @"fschema";
             urlComponents.host = @"webview";
@@ -496,49 +573,105 @@
     }
 
 }
+
+- (NSAttributedString *)announcementAttributeString:(NSString *) announcement {
+    announcement = [announcement stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
+       if(!isEmptyString(announcement)) {
+           UIFont *titleFont = [UIFont themeFontSemibold:12];
+           NSDictionary *announcementTitleAttributes = @{
+                                                         NSFontAttributeName: titleFont,
+                                                         NSForegroundColorAttributeName: [UIColor themeGray1]
+                                                         };
+           NSAttributedString *announcementTitle = [[NSAttributedString alloc] initWithString:@"[公告] " attributes: announcementTitleAttributes];
+           
+           NSAttributedString *emojiSupportAnnouncement = [[TTUGCEmojiParser parseInTextKitContext:announcement fontSize:12] mutableCopy];
+           NSAttributedString *announcementContent = [[NSAttributedString alloc] initWithAttributedString:emojiSupportAnnouncement];
+           
+           [attributedText appendAttributedString:announcementTitle];
+           [attributedText appendAttributedString:announcementContent];
+           
+           NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+           CGFloat lineHeight = PublicationsContentLabel_lineHeight;
+           paragraphStyle.minimumLineHeight = lineHeight;
+           paragraphStyle.maximumLineHeight = lineHeight;
+           paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+           
+           [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
+       }
+    return attributedText;
+}
+
 // 更新公告信息
 - (void)updatePublicationsWith:(FHUGCScialGroupDataModel *)data {
-    
-    NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
-    
-    if(!isEmptyString(data.announcement)) {
-        UIFont *titleFont = [UIFont themeFontSemibold:12];
-        NSDictionary *announcementTitleAttributes = @{
-                                                      NSFontAttributeName: titleFont,
-                                                      NSForegroundColorAttributeName: [UIColor themeGray1]
-                                                      };
-        NSAttributedString *announcementTitle = [[NSAttributedString alloc] initWithString:@"[公告] " attributes: announcementTitleAttributes];
-        
-        UIFont *contentFont = [UIFont themeFontRegular:12];
-        NSDictionary *announcemenContentAttributes = @{
-                                                       NSFontAttributeName: contentFont,
-                                                       NSForegroundColorAttributeName: [UIColor themeGray1]
-                                                       };
-        NSAttributedString *announcementContent = [[NSAttributedString alloc] initWithString:data.announcement attributes:announcemenContentAttributes];
-        
-        [attributedText appendAttributedString:announcementTitle];
-        [attributedText appendAttributedString:announcementContent];
-        
-        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-        CGFloat lineHeight = 20;
-        paragraphStyle.minimumLineHeight = lineHeight;
-        paragraphStyle.maximumLineHeight = lineHeight;
-        paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
-        
-        [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
-    }
-    
-    self.headerView.publicationsContentLabel.attributedText = attributedText;
-    if(data.announcementUrl.length > 0) {
+    WeakSelf;
+    BOOL isAdmin = (self.data.userAuth != UserAuthTypeNormal);
+    // 是否显示公告区
+    BOOL isShowPublications = !isEmptyString(data.announcement);
+    self.headerView.gotoPublicationsDetailBlock = nil;
+    BOOL hasDetailBtn = YES;
+
+    // 管理员
+    if(isAdmin) {
+        isShowPublications = YES;
+        self.headerView.publicationsDetailViewTitleLabel.text = @"编辑公告";
+        NSString *defaultAnnouncement = [NSString stringWithFormat:@"与%@有关的话题都可以在这里分享讨论哦", data.socialGroupName];
+        self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:(data.announcement.length > 0)?data.announcement: defaultAnnouncement];
+
         self.headerView.gotoPublicationsDetailBlock = ^{
-            NSURLComponents *urlComponents = [NSURLComponents new];
-            urlComponents.scheme = @"fschema";
-            urlComponents.host = @"webview";
-            urlComponents.queryItems = @[
-                                         [[NSURLQueryItem alloc] initWithName:@"url" value: data.announcementUrl]
-                                         ];
-            NSURL *url = urlComponents.URL;
-            [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+            StrongSelf;
+            // 跳转公告编辑页
+            NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
+            urlComponents.scheme = @"sslocal";
+            urlComponents.host = @"ugc_notice_edit";
+            
+            NSMutableDictionary *infoDict = @{}.mutableCopy;
+            infoDict[@"socialGroupId"] = self.data.socialGroupId;
+            infoDict[@"content"] = data.announcement;
+            infoDict[@"isReadOnly"] = @(NO);
+            infoDict[@"callback"] = ^(NSString *newContent){
+                data.announcement = newContent;
+                [self updateUIWithData:data];
+            };
+            
+            NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
+            tracer[UT_ENTER_FROM] = @"community_group_detail";
+            infoDict[@"tracer"] = tracer;
+            
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+            [[TTRoute sharedRoute] openURLByViewController:urlComponents.URL userInfo:userInfo];
+            
+            // 点击编辑公告按钮埋点
+            NSMutableDictionary *param = @{}.mutableCopy;
+            param[UT_ELEMENT_TYPE] = @"community_group_notice";
+            param[UT_PAGE_TYPE] = @"community_group_detail";
+            param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+            param[@"click_position"] = @"community_notice_edit";
+            TRACK_EVENT(@"click_community_notice_edit", param);
+        };
+    }
+    // 非管理员
+    else {
+        self.headerView.publicationsContentLabel.attributedText = [self announcementAttributeString:data.announcement];
+        self.headerView.publicationsDetailViewTitleLabel.text = @"点击查看";
+        self.headerView.gotoPublicationsDetailBlock = ^{
+            StrongSelf;
+            // 跳转只读模式的公告详情页
+            NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
+            urlComponents.scheme = @"sslocal";
+            urlComponents.host = @"ugc_notice_edit";
+            
+            NSMutableDictionary *infoDict = @{}.mutableCopy;
+            infoDict[@"socialGroupId"] = self.data.socialGroupId;
+            infoDict[@"content"] = data.announcement;
+            infoDict[@"isReadOnly"] = @(YES);
+            
+            NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
+            tracer[UT_ENTER_FROM] = @"community_group_detail";
+            infoDict[@"tracer"] = tracer;
+            
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+            [[TTRoute sharedRoute] openURLByViewController:urlComponents.URL userInfo:userInfo];
             
             NSMutableDictionary *param = [NSMutableDictionary dictionary];
             param[UT_ELEMENT_TYPE] = @"community_group_notice";
@@ -547,12 +680,11 @@
             param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
             TRACK_EVENT(@"click_community_notice_more", param);
         };
-    } else {
-        self.headerView.gotoPublicationsDetailBlock = nil;
+        hasDetailBtn = [self.headerView isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow];
     }
     
-    [self.headerView updatePublicationsInfo: !isEmptyString(data.announcement)
-                               hasDetailBtn: !isEmptyString(data.announcementUrl)];
+    [self.headerView updatePublicationsInfo: isShowPublications
+                               hasDetailBtn: hasDetailBtn];
 }
 
 - (void)updateUIWithData:(FHUGCScialGroupDataModel *)data {
@@ -562,12 +694,23 @@
         return;
     }
     self.data = data;
+    // 第一次服务端返回数据
+    if (data.shareInfo && self.shareInfo == nil) {
+        self.shareInfo = data.shareInfo;
+    }
     self.feedListController.view.hidden = NO;
     self.viewController.emptyView.hidden = YES;
     [self.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar]];
     self.headerView.nameLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
     NSString *subtitle = data.countText;
     self.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
+    NSInteger followerCount = [data.followerCount integerValue];
+    if (followerCount <= 0) {
+       self.headerView.userCountShowen = NO;
+    } else {
+        self.headerView.userCountShowen = YES;
+        self.headerView.userCountLabel.text = [NSString stringWithFormat:@"%ld个成员",followerCount];
+    }
     
     // 配置公告
     [self updatePublicationsWith:data];
@@ -575,6 +718,13 @@
     [self updateOperationInfo:data.operation];
     
     [self updateJoinUI:[data.hasFollow boolValue]];
+    if (followerCount > 0) {
+        if (subtitle.length > 0) {
+            subtitle = [NSString stringWithFormat:@"%@ | %@",subtitle, [NSString stringWithFormat:@"%ld个成员",followerCount]];
+        } else {
+            subtitle = [NSString stringWithFormat:@"%ld个成员",followerCount];
+        }
+    }
     self.titleLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
     self.subTitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
     
@@ -600,7 +750,11 @@
         }];
         
         self.feedListController.tableView.tableHeaderView = headerView;
+        [self.feedListController.tableView bringSubviewToFront:self.feedListController.tableView.mj_header];
     }
+    
+    CGFloat hei = self.headerView.frame.size.height;
+    self.feedListController.errorViewTopOffset = hei;
 
     //仅仅在未关注时显示引导页
     if (![data.hasFollow boolValue] && self.shouldShowUGcGuide) {
@@ -613,6 +767,33 @@
     self.headerView.followButton.followed = followed;
     self.rightBtn.followed = followed;
     [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
+}
+
+- (void)gotoSocialFollowUserList {
+    FHUGCScialGroupDataModel *item = self.data;
+    if (!item && [item isKindOfClass:[FHUGCScialGroupDataModel class]]) {
+        return;
+    }
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"element_type"] = @"community_group_join_member";
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    params[@"click_position"] = @"community_group_join_member";
+    params[@"page_type"] = [self pageTypeString];
+    [FHUserTracker writeEvent:@"click_options" params:params];
+    NSMutableDictionary *infoDict = @{}.mutableCopy;
+    NSMutableDictionary *tracer = @{}.mutableCopy;
+    tracer[@"enter_type"] = @"click";
+    tracer[@"enter_from"] = [self pageTypeString];
+    //tracer[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+    tracer[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    // 埋点
+    [infoDict setValue:tracer forKey:@"tracer"];
+    // NSString *name = [NSString stringWithFormat:@"%@小区圈",item.socialGroupName];
+    infoDict[@"title"] = item.socialGroupName;
+    infoDict[@"social_group_id"] = item.socialGroupId;
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://ugc_follow_user_list"] userInfo:info];
 }
 
 #pragma UIScrollViewDelegate
@@ -691,4 +872,25 @@
     return [params copy];
 }
 
+// 帐号切换
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
+{
+    if (_isLogin != TTAccountManager.isLogin) {
+        [_viewController tt_startUpdate];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+             [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+        });
+        _isLogin = TTAccountManager.isLogin;
+    }
+    
+}
+
+- (void)onLoginIn {
+    _isLoginSatusChangeFromGroupChat = YES;
+}
+
+// MARK: FHCommunityFeedListControllerDelegate
+-(void)refreshBasicInfo {
+    [self requestData:NO refreshFeed:NO showEmptyIfFailed:NO showToast:NO];
+}
 @end

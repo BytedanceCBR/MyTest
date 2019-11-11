@@ -11,6 +11,7 @@
 #import <FHHouseBase/FHCommonApi.h>
 
 @class TTHttpTask;
+@class FHUGCNoticeModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -49,6 +50,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 删除帖子
 + (TTHttpTask *)postDelete:(NSString *)groupId socialGroupId:(NSString *)socialGroupId enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void(^)(bool success , NSError *error))completion;
 
+// 管理员操作帖子
++ (TTHttpTask *)postOperation:(NSString *)groupId socialGroupId:(NSString *)socialGroupId operationCode:(NSString *)operationCode enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void (^ _Nonnull)(id<FHBaseModelProtocol> model, NSError *error))completion;
+
 // 评论详情
 + (TTHttpTask *)requestCommentDetailDataWithCommentId:(NSString *)comment_id socialGroupId:(NSString *)socialGroupId  class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
@@ -66,6 +70,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 获取话题Feed列表
 + (TTHttpTask *)requestTopicList:(NSString *)query_id tab_id:(NSString *)tab_id categoryName:(NSString *)category offset:(NSInteger)offset count:(NSInteger)count appExtraParams:(NSString *)appExtraParams completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
+
+// 管理员修改公告信息及通知用户
++ (TTHttpTask *)requestUpdateUGCNoticeWithParam:(NSDictionary *)params completion:(void (^)(FHUGCNoticeModel *model, NSError *error))completion;
+
+//请求评论列表
++ (TTHttpTask *)requestMyCommentListWithUserId:(NSString *)userId offset:(NSInteger)offset completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+//请求个人主页  个人信息
++ (TTHttpTask *)requestHomePageInfoWithUserId:(NSString *)userId completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
++ (TTHttpTask *)requestHomePageFeedListWithUserId:(NSString *)userId offset:(NSInteger)offset count:(NSInteger)count completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
++ (TTHttpTask *)requestFocusListWithUserId:(NSString *)userId completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 请求圈子用户关注列表
++ (TTHttpTask *)requestFollowUserListBySocialGroupId:(NSString *)socialGroupId offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 请求用户关注列表sug
++ (TTHttpTask *)requestFollowSugSearchByText:(NSString *)text socialGroupId:(NSString *)socialGroupId offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 @end
 

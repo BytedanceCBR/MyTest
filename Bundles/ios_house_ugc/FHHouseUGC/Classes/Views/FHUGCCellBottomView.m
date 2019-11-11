@@ -17,12 +17,16 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <TTBusinessManager+StringUtils.h>
+#import "TTMessageCenter.h"
+#import "TTVideoArticleService+Action.h"
+#import "TTVideoArticleServiceMessage.h"
+#import "TTVFeedUserOpDataSyncMessage.h"
 
 @interface FHUGCCellBottomView ()
 
-@property(nonatomic ,strong) UIView *likeView;
-@property(nonatomic ,strong) UIImageView *likeImageView;
-@property(nonatomic ,strong) UILabel *likeLabel;
+//@property(nonatomic ,strong) UIView *likeView;
+//@property(nonatomic ,strong) UIImageView *likeImageView;
+//@property(nonatomic ,strong) UILabel *likeLabel;
 @property(nonatomic ,strong) UIView *bottomSepView;
 @property (nonatomic, copy)  NSString *saveDiggGroupId;
 @property(nonatomic ,strong) UIImageView *positionImageView;
@@ -44,6 +48,8 @@
 
 - (void)initNotification {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
+    // 评论数变化通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentCountChange:) name:@"kPostMessageFinishedNotification" object:nil];
 }
 
 - (void)dealloc {
@@ -69,6 +75,7 @@
     [_positionView addSubview:_position];
     
     self.commentBtn = [[UIButton alloc] init];
+    _commentBtn.opaque = YES;
     _commentBtn.imageView.contentMode = UIViewContentModeCenter;
     [_commentBtn setImage:ICON_FONT_IMG(20, @"\U0000e699", nil) forState:UIControlStateNormal];// @"fh_ugc_comment"
     [_commentBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
@@ -76,22 +83,37 @@
     [_commentBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
     [_commentBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
     _commentBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
+    _commentBtn.titleLabel.layer.masksToBounds = YES;
+    _commentBtn.titleLabel.backgroundColor = [UIColor whiteColor];
     [self addSubview:_commentBtn];
     
-    self.likeView = [[UIView alloc] init];
-    _likeView.userInteractionEnabled = YES;
-    [self addSubview:_likeView];
+    self.likeBtn = [[UIButton alloc] init];
+    _likeBtn.imageView.contentMode = UIViewContentModeCenter;
+    [_likeBtn setImage:ICON_FONT_IMG(20, @"\U0000e69c", nil) forState:UIControlStateNormal];// @"fh_ugc_comment"
+    [_likeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    _likeBtn.titleLabel.font = [UIFont themeFontRegular:14];
+    [_likeBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+    [_likeBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
+    _likeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
+    [_likeBtn addTarget:self action:@selector(like:) forControlEvents:UIControlEventTouchUpInside];
+    _likeBtn.titleLabel.layer.masksToBounds = YES;
+    _likeBtn.titleLabel.backgroundColor = [UIColor whiteColor];
+    [self addSubview:_likeBtn];
     
-    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(like:)];
-    [self.likeView addGestureRecognizer:singleTap];
-    
-    self.likeImageView = [[UIImageView alloc] init];
-    _likeImageView.image = ICON_FONT_IMG(20, @"\U0000e69c", nil);//@"fh_ugc_like"
-    [self.likeView addSubview:_likeImageView];
-    
-    self.likeLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
-    [_likeLabel sizeToFit];
-    [self.likeView addSubview:_likeLabel];
+//    self.likeView = [[UIView alloc] init];
+//    _likeView.userInteractionEnabled = YES;
+//    [self addSubview:_likeView];
+//
+//    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(like:)];
+//    [self.likeView addGestureRecognizer:singleTap];
+//
+//    self.likeImageView = [[UIImageView alloc] init];
+//    _likeImageView.image = ICON_FONT_IMG(20, @"\U0000e69c", nil);//@"fh_ugc_like"
+//    [self.likeView addSubview:_likeImageView];
+//
+//    self.likeLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
+//    [_likeLabel sizeToFit];
+//    [self.likeView addSubview:_likeLabel];
     
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
@@ -128,28 +150,33 @@
         make.height.mas_equalTo(18);
     }];
     
-    [self.likeView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self);
-        make.left.mas_equalTo(self.commentBtn.mas_left).offset(-80);
-        make.width.mas_equalTo(70);
-        make.height.mas_equalTo(24);
-    }];
-    
-    [self.likeImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.likeView).offset(10);
-        make.centerY.mas_equalTo(self.likeView);
-        make.width.height.mas_equalTo(20);
-    }];
-    
-    [self.likeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.mas_equalTo(self.likeView);
-        make.left.mas_equalTo(self.likeImageView.mas_right).offset(3);
-        make.right.mas_equalTo(self.likeView);
+//    [self.likeView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self);
+//        make.left.mas_equalTo(self.commentBtn.mas_left).offset(-80);
+//        make.width.mas_equalTo(70);
+//        make.height.mas_equalTo(24);
+//    }];
+//
+//    [self.likeImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self.likeView).offset(10);
+//        make.centerY.mas_equalTo(self.likeView);
+//        make.width.height.mas_equalTo(20);
+//    }];
+//
+//    [self.likeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.bottom.mas_equalTo(self.likeView);
+//        make.left.mas_equalTo(self.likeImageView.mas_right).offset(3);
+//        make.right.mas_equalTo(self.likeView);
+//    }];
+    [self.likeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self).offset(2);
+        make.right.mas_equalTo(self).offset(-20);
+        make.height.mas_equalTo(20);
     }];
     
     [self.commentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self).offset(2);
-        make.right.mas_equalTo(self).offset(-20);
+        make.right.mas_equalTo(self.likeBtn.mas_left).offset(-20);
         make.height.mas_equalTo(20);
     }];
     
@@ -166,6 +193,9 @@
         switch (cellModel.cellType) {
                 case FHUGCFeedListCellTypeArticle:
                     self.diggType = FHDetailDiggTypeITEM;
+                    if (cellModel.hasVideo) {
+                        self.diggType = FHDetailDiggTypeVIDEO;
+                    }
                 break;
                 case FHUGCFeedListCellTypeAnswer:
                     self.diggType = FHDetailDiggTypeANSWER;
@@ -176,8 +206,14 @@
                 case FHUGCFeedListCellTypeArticleComment:
                     self.diggType = FHDetailDiggTypeCOMMENT;
                 break;
+                case FHUGCFeedListCellTypeArticleComment2:
+                    self.diggType = FHDetailDiggTypeCOMMENT;
+                break;
                 case FHUGCFeedListCellTypeUGC:
                     self.diggType = FHDetailDiggTypeTHREAD;
+                break;
+                case FHUGCFeedListCellTypeUGCSmallVideo:
+                    self.diggType = FHDetailDiggTypeSMALLVIDEO;
                 break;
             default:
                 self.diggType = FHDetailDiggTypeTHREAD;
@@ -211,16 +247,30 @@
 - (void)updateLikeState:(NSString *)diggCount userDigg:(NSString *)userDigg {
     NSInteger count = [diggCount integerValue];
     if(count == 0){
-        self.likeLabel.text = @"赞";
+//        self.likeLabel.text = @"赞";
+        [self.likeBtn setTitle:@"赞" forState:UIControlStateNormal];
     }else{
-        self.likeLabel.text = [TTBusinessManager formatCommentCount: count];
+//        self.likeLabel.text = [TTBusinessManager formatCommentCount: count];
+        [self.likeBtn setTitle:[TTBusinessManager formatCommentCount: count] forState:UIControlStateNormal];
     }
     if([userDigg boolValue]){
-        self.likeImageView.image = ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeRed1]);//"fh_ugc_like_selected"
-        self.likeLabel.textColor = [UIColor themeRed1];
+//        self.likeImageView.image = ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeRed1]);//"fh_ugc_like_selected"
+//        self.likeLabel.textColor = [UIColor themeRed1];
+        
+        [self.likeBtn setImage:ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeRed1]) forState:UIControlStateNormal];
+        [self.likeBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        
     }else{
-        self.likeImageView.image =  ICON_FONT_IMG(20, @"\U0000e69c", nil);//@"fh_ugc_like"
-        self.likeLabel.textColor = [UIColor themeGray1];
+//        self.likeImageView.image =  ICON_FONT_IMG(20, @"\U0000e69c", nil);//@"fh_ugc_like"
+//        self.likeLabel.textColor = [UIColor themeGray1];
+        
+        [self.likeBtn setImage:ICON_FONT_IMG(20, @"\U0000e69c", nil) forState:UIControlStateNormal];
+        [self.likeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    }
+    //补充逻辑，如果用户状态为已点赞，但是点赞数为零，这时候默认点赞数设为1
+    if([userDigg boolValue] && count == 0){
+//        self.likeLabel.text = @"1";
+        [self.likeBtn setTitle:@"1" forState:UIControlStateNormal];
     }
 }
 
@@ -307,7 +357,35 @@
             }
             
             self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
+            if (self.cellModel.hasVideo) {
+                // 视频点赞
+                self.cellModel.videoFeedItem.article.diggCount = diggCount;
+                self.cellModel.videoFeedItem.article.userDigg = user_digg;
+                NSString *unique_id = self.cellModel.groupId;
+                SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:(user_digg == 1) uniqueIDStr:unique_id);
+                SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:diggCount uniqueIDStr:unique_id);
+            }
             [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
+        }
+    }
+}
+
+// 评论数变化
+- (void)commentCountChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    
+    if(userInfo){
+        NSInteger comment_conut = [userInfo[@"comment_conut"] integerValue];
+        NSString *groupId = userInfo[@"group_id"];
+        if (groupId.length > 0 && [groupId isEqualToString:self.cellModel.groupId]) {
+            NSInteger commentCount = comment_conut;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if(commentCount == 0){
+                    [self.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
+                }else{
+                    [self.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
+                }
+            });
         }
     }
 }

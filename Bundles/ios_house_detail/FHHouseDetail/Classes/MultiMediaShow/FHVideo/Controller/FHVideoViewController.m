@@ -15,6 +15,7 @@
 #import "FHUserTracker.h"
 #import <TTVFullScreenPart.h>
 #import <BDWebImage/BDWebImageManager.h>
+#import "FHHMDTManager.h"
 
 @interface FHVideoViewController ()<FHVideoViewDelegate,TTVPlayerDelegate,TTVPlayerCustomViewDelegate>
 
@@ -155,6 +156,8 @@
 }
 
 - (void)play {
+    [FHHMDTManager sharedInstance].videoCreateTime = [[NSDate date] timeIntervalSince1970];
+    
     [self readyToPlay];
 
     if(!self.isShowingNetFlow && self.playbackState != TTVPlaybackState_Playing){
@@ -300,7 +303,7 @@
 
 /// 播放器展示第一帧
 - (void)playerReadyToDisplay:(TTVPlayer *)player {
-    
+    [[FHHMDTManager sharedInstance] videoFirstFrameReport:VIDEO_FHVideoViewController];
 }
 
 - (void)playerViewDidLayoutSubviews:(TTVPlayer *)player state:(TTVPlayerState *)state {
@@ -422,6 +425,7 @@
 - (void)playerDidEnterFullscreen:(TTVPlayer *)player {
     [self trackWithName:@"enter_fullscreen"];
     self.isFullScreen = YES;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     if(self.delegate && [self.delegate respondsToSelector:@selector(playerDidEnterFullscreen)]){
         [self.delegate playerDidEnterFullscreen];
     }
@@ -431,6 +435,7 @@
 - (void)playerDidExitFullscreen:(TTVPlayer *)player {
     [self trackWithName:@"exit_fullscreen"];
     self.isFullScreen = NO;
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     if(self.delegate && [self.delegate respondsToSelector:@selector(playerDidExitFullscreen)]){
         [self.delegate playerDidExitFullscreen];
     }

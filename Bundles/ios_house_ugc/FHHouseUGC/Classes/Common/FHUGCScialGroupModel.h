@@ -1,5 +1,7 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
+#import <FHUGCConfigModel.h>
+#import "FHUGCShareManager.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHUGCScialGroupDataModel <NSObject>
@@ -12,6 +14,35 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat imageHeight;
 @property (nonatomic, copy , nullable) NSString *linkUrl;
 @property (nonatomic, assign) BOOL hasOperation;
+@end
+
+typedef NS_ENUM(NSUInteger, UserAuthType) {
+    UserAuthTypeNormal = 0,
+    UserAuthTypeAdmin = 1,
+    UserAuthTypeSuperAdmin = 2,
+};
+
+typedef NS_ENUM(NSUInteger, UserCoversationStatus) {
+    joinConversation = 1,
+    leaveConversation = 2,
+    KickOutConversation = 3,
+};
+
+@interface FHUGCScialGroupDataChatStatusModel: JSONModel
+
+//群聊的ID
+@property (nonatomic, copy) NSString *conversationId;
+//用户在当前群聊的状态
+@property (nonatomic, assign) UserCoversationStatus conversationStatus;
+//群聊的上限
+@property (nonatomic, assign) NSUInteger maxConversationCount;
+//当前群聊的人数
+@property (nonatomic, assign) NSUInteger currentConversationCount;
+//群聊的short id
+@property (nonatomic, assign) long long conversationShortId;
+//创建群聊的幂等id
+@property (nonatomic, copy) NSString *idempotentId;
+
 @end
 
 @interface FHUGCScialGroupDataModel : JSONModel 
@@ -27,7 +58,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
 @property (nonatomic, copy , nullable) NSString *hasFollow;
 @property (nonatomic, strong, nullable) FHUGCSocialGroupOperationModel *operation;
+@property (nonatomic, assign) UserAuthType userAuth;
+@property (nonatomic, strong, nullable) NSArray <FHUGCConfigDataPermissionModel> *permission;
 @property (nonatomic, copy , nullable) NSDictionary *logPb;
+@property (nonatomic, strong) FHUGCScialGroupDataChatStatusModel *chatStatus;
+@property (nonatomic, strong, nullable)   FHUGCShareInfoModel *shareInfo;
 
 @end
 

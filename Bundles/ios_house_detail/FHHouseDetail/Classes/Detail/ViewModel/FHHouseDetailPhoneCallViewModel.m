@@ -26,6 +26,8 @@
 #import <FHIESGeckoManager.h>
 #import <FHRNHelper.h>
 
+#define IM_OPEN_URL @"im_open_url"
+
 extern NSString *const kFHToastCountKey;
 extern NSString *const kFHPhoneNumberCacheKey;
 
@@ -77,8 +79,14 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
 
     NSString* from = extra[@"from"] ? : @"be_null";
+    NSString *source = extra[@"source"];
     
-    [FHUserTracker writeEvent:@"click_im" params:dict];
+    NSMutableDictionary *clickImParams = @{}.mutableCopy;
+    if (dict) {
+        [clickImParams addEntriesFromDictionary:dict];
+        clickImParams[@"im_open_url"] = nil;
+    }
+    [FHUserTracker writeEvent:@"click_im" params:clickImParams];
     dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
     dict[@"search_id"] = self.tracerDict[@"search_id"] ? : @"be_null";
     if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
@@ -87,8 +95,16 @@ extern NSString *const kFHPhoneNumberCacheKey;
         dict[@"search_id"] = logPbDict[@"search_id"] ? : @"be_null";
         dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
     }
-    NSURL *openUrl = [NSURL URLWithString:contactPhone.imOpenUrl];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":dict, @"from": from}];
+    NSString *urlStr = contactPhone.imOpenUrl;
+    if (extra[IM_OPEN_URL]) {
+        urlStr = extra[IM_OPEN_URL];
+    }
+    NSURL *openUrl = [NSURL URLWithString:urlStr];
+    NSMutableDictionary * userInfoDict = @{@"tracer":dict, @"from": from}.mutableCopy;
+    if (!isEmptyString(source)) {
+        userInfoDict[@"source"] = source;
+    }
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     
     [self silentFollow:extra];
@@ -235,17 +251,29 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"enter_from"] = self.tracerDict[@"page_type"] ? : @"be_null";
     dict[@"element_from"] = extra[@"element_from"] ? : @"old_detail_button";
     dict[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
-    dict[@"log_pb"] = self.tracerDict[@"log_pb"];
+    id logPb = self.tracerDict[@"log_pb"];
+    if ([logPb isKindOfClass:[NSDictionary class]]) {
+        dict[@"log_pb"] = logPb;
+    }else if ([logPb isKindOfClass:[NSString class]]){
+        NSString * logPbStr = (NSString *)logPb;
+        logPbStr = [logPbStr stringByReplacingOccurrencesOfString:@"\\\"" withString:@"\""];
+        NSData *logPbData = [logPbStr dataUsingEncoding:NSUTF8StringEncoding];
+        if (logPbData) {
+            NSDictionary *logPbDict = [NSJSONSerialization JSONObjectWithData:logPbData options:kNilOptions error:nil];
+            dict[@"log_pb"] = logPbDict;
+        }
+        
+    }
     dict[@"search_id"] = self.tracerDict[@"search_id"] ? : @"be_null";
     dict[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
-    dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
+    dict[@"group_id"] = self.houseId ? : @"be_null";
     dict[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
     dict[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
     if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
         NSDictionary *logPbDict = self.tracerDict[@"log_pb"];
         dict[@"impr_id"] = logPbDict[@"impr_id"] ? : @"be_null";
         dict[@"search_id"] = logPbDict[@"search_id"] ? : @"be_null";
-        dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
+//        dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
     }
     dict[@"realtor_rank"] = @"be_null";
     dict[@"realtor_position"] = @"be_null";
@@ -271,7 +299,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSMutableDictionary *imdic = [NSMutableDictionary dictionaryWithDictionary:_imParams];
     [imdic setValue:contactPhone.realtorId forKey:@"target_user_id"];
     [imdic setValue:contactPhone.realtorName forKey:@"chat_title"];
-    imdic[@"source"] = @"1.81";
+    imdic[@"source"] = @"app_realtor_mainpage";
     NSString *imParams = nil;
     NSError *imParseError = nil;
     NSData *imJsonData = [NSJSONSerialization dataWithJSONObject:imdic options:0 error:&imParseError];

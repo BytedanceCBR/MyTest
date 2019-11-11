@@ -11,7 +11,7 @@
 // View
 #import "AWEVideoPlayView.h"
 #import "AWEVideoCommentCell.h"
-#import "AWECommentInputBar.h"
+//#import "AWECommentInputBar.h"
 // Model
 #import "TSVShortVideoOriginalData.h"
 #import "AWECommentModel.h"
@@ -110,6 +110,11 @@
 #import "ExploreOrderedData.h"
 #import <TTBusinessManager+StringUtils.h>
 
+#import <FHPostDetailCommentWriteView.h>
+#import "SSCommonLogic.h"
+#import "SSCommentInputHeader.h"
+#import <FHUserTracker.h>
+
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
 @import AVFoundation;
@@ -125,7 +130,7 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
     TSVDetailCommentViewStatusPopBySlideUp,
 };
 
-@interface AWEVideoDetailViewController () <UITableViewDataSource, UITableViewDelegate, HTSVideoPlayGrowingTextViewDelegate, UIGestureRecognizerDelegate, AWEVideoCommentCellOperateDelegate, TTRouteInitializeProtocol, TTPreviewPanBackDelegate, TTShareManagerDelegate, TTInteractExitProtocol>
+@interface AWEVideoDetailViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, AWEVideoCommentCellOperateDelegate, TTRouteInitializeProtocol, TTPreviewPanBackDelegate, TTShareManagerDelegate, TTInteractExitProtocol>
 
 // View
 @property (nonatomic, strong) SSThemedView *commentView;
@@ -134,7 +139,7 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, strong) AWEVideoContainerViewController *videoContainerViewController;
 //@property (nonatomic, strong) TSVProfileViewController *profileViewController;
 @property (nonatomic, strong) UIView *emptyHintView;
-@property (nonatomic, strong) AWECommentInputBar *inputBar;
+//@property (nonatomic, strong) AWECommentInputBar *inputBar;
 @property (nonatomic, strong) UIView *keyboardMaskView;
 @property (nonatomic, strong) AWEReportViewController *commentReportVC;
 @property (nonatomic, strong) AWEReportViewController *videoReportVC;
@@ -151,6 +156,8 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, strong) NSNumber *showComment;//0不弹，1弹起评论浮层，2弹输入框
 @property (nonatomic, copy) NSDictionary *commonTrackingParameter;
 @property (nonatomic, copy) NSDictionary *initialLogPb;
+//外面传的埋点信息 by xsm
+@property (nonatomic, strong) NSDictionary *extraDic;
 // 状态
 @property (nonatomic, assign) BOOL firstLoadFinished;
 @property (nonatomic, assign) BOOL isFirstTimeShowCommentListOrKeyboard;
@@ -224,6 +231,9 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 
 @property (nonatomic, assign) BOOL loadingShareImage;//加载分享图片时 点击分享按钮
 
+@property (nonatomic, strong) FHPostDetailCommentWriteView *commentWriteView;
+@property (nonatomic, strong) TTGroupModel *groupModel;
+
 @end
 
 static const CGFloat kFloatingViewOriginY = 230;
@@ -249,21 +259,14 @@ static const CGFloat kFloatingViewOriginY = 230;
         /// allParams 里是以上两个字典的并集，extra会覆盖 query
         _pageParams = paramObj.allParams.copy;
 
-        if ([TTDeviceHelper OSVersionNumber] < 8.) {
-            [[TTMonitor shareManager] trackService:@"shortvideo_detail_unsupported_os"
-                                        attributes:@{
-                                                     @"enter_from": [params[AWEVideoEnterFrom] copy] ?: @"",
-                                                     @"category_name": [params[AWEVideoCategoryName] copy] ?: @"",
-                                                     @"url": [paramObj.sourceURL absoluteString],
-                                                     }];
-            return nil;
-        }
-
         _groupID = [params[AWEVideoGroupId] copy] ?: @"";
         _originalGroupID = [params[AWEVideoGroupId] copy] ?: @"";
         _ruleID = [params[AWEVideoRuleId] copy];
         _groupSource = [params[VideoGroupSource] copy] ?: @"";
         _showComment = [params[AWEVideoShowComment] copy];
+        if (!_showComment) {
+            _showComment = [extraParams[AWEVideoShowComment] copy];
+        }
         _categoryName = [params tt_stringValueForKey:AWEVideoCategoryName];
         _commonTrackingParameter = @{
                                      @"enter_from": [params[AWEVideoEnterFrom] copy] ?: @"",
@@ -347,6 +350,14 @@ static const CGFloat kFloatingViewOriginY = 230;
         if (extraParams[HTSVideoDetailOrderedData]) {
             self.orderedData = extraParams[HTSVideoDetailOrderedData];
         }
+        
+        if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
+            self.extraDic = paramObj.allParams[@"extraDic"];
+        }
+        
+        TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.groupID itemID:self.groupID impressionID:nil aggrType:1];
+        self.groupModel = groupModel;
+        
     }
     return self;
 }
@@ -443,6 +454,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         AWEVideoContainerViewController *controller = [[AWEVideoContainerViewController alloc] init];
         controller.dataFetchManager = self.dataFetchManager;
         controller.commonTrackingParameter = self.commonTrackingParameter;
+        controller.extraDic = self.extraDic;
         controller.needCellularAlert = (self.pageParams[AWEVideoPageParamNonWiFiAlert] && [self.pageParams[AWEVideoPageParamNonWiFiAlert] isKindOfClass:[NSNumber class]]) ? [self.pageParams[AWEVideoPageParamNonWiFiAlert] boolValue] : YES;
         @weakify(self)
         controller.wantToClosePage = ^{
@@ -586,55 +598,55 @@ static const CGFloat kFloatingViewOriginY = 230;
     emptyHintLabel.text = @"暂无评论，还不快抢沙发～";
     [self.emptyHintView addSubview:emptyHintLabel];
 
-    self.inputBar = [[AWECommentInputBar alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds), 44) textViewDelegate:self sendBlock:^(AWECommentInputBar * _Nonnull inputBar, NSString * _Nullable text) {
-        @strongify(self);
-        [self handleSendComment:text fromInputBar:inputBar];
-    }];
-    self.inputBar.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
-    self.inputBar.hidden = YES;
-    [self.view addSubview:self.inputBar];
+//    self.inputBar = [[AWECommentInputBar alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds), 44) textViewDelegate:self sendBlock:^(AWECommentInputBar * _Nonnull inputBar, NSString * _Nullable text) {
+//        @strongify(self);
+//        [self handleSendComment:text fromInputBar:inputBar];
+//    }];
+//    self.inputBar.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
+//    self.inputBar.hidden = YES;
+//    [self.view addSubview:self.inputBar];
 
-    self.observerArray = [NSMutableArray array];
-    [self.observerArray addObject:[[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
-        @strongify(self);
-        if ([self isShowingOnTop] && [self.inputBar isActive]) {
-            CGRect keyboardFrame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-            keyboardFrame = [self.view convertRect:keyboardFrame fromView:nil];
-            NSTimeInterval keyboardAnimationDuration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-            // 只移评论发布器 评论view不用上移
-            self.inputBar.hidden = NO;
-            [UIView animateWithDuration:keyboardAnimationDuration animations:^{
-                [self.inputBar setMaxY:CGRectGetMinY(keyboardFrame)];
-            }];
-
-            [self showKeyboardMaskView:YES inputBarTargetY:(CGRectGetMinY(keyboardFrame) - CGRectGetHeight(self.inputBar.bounds))];
-
-            // fix 第三方输入法
-            [[UIApplication sharedApplication] setStatusBarHidden:[self shouldHideStatusBar] withAnimation:UIStatusBarAnimationNone];
-        }
-    }]];
-    [self.observerArray addObject:[[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillHideNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
-        @strongify(self);
-        if ([self isShowingOnTop]) {
-            NSTimeInterval keyboardAnimationDuration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-            CGFloat targetMinY = CGRectGetHeight(self.view.bounds);
-            [UIView animateWithDuration:keyboardAnimationDuration animations:^{
-                [self.inputBar setMinY:targetMinY];
-            } completion:^(BOOL finished) {
-                self.inputBar.hidden = YES;
-            }];
-
-            [self showKeyboardMaskView:NO inputBarTargetY:targetMinY];
-
-            if (self.inputBar.textView.text.length == 0) {
-                // 没有输入内容的时候情空
-                [self.inputBar clearInputBar];
-            }
-
-            // fix 第三方输入法
-            [[UIApplication sharedApplication] setStatusBarHidden:[self shouldHideStatusBar] withAnimation:UIStatusBarAnimationNone];
-        }
-    }]];
+//    self.observerArray = [NSMutableArray array];
+//    [self.observerArray addObject:[[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+//        @strongify(self);
+//        if ([self isShowingOnTop] && [self.inputBar isActive]) {
+//            CGRect keyboardFrame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+//            keyboardFrame = [self.view convertRect:keyboardFrame fromView:nil];
+//            NSTimeInterval keyboardAnimationDuration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+//            // 只移评论发布器 评论view不用上移
+//            self.inputBar.hidden = NO;
+//            [UIView animateWithDuration:keyboardAnimationDuration animations:^{
+//                [self.inputBar setMaxY:CGRectGetMinY(keyboardFrame)];
+//            }];
+//
+//            [self showKeyboardMaskView:YES inputBarTargetY:(CGRectGetMinY(keyboardFrame) - CGRectGetHeight(self.inputBar.bounds))];
+//
+//            // fix 第三方输入法
+//            [[UIApplication sharedApplication] setStatusBarHidden:[self shouldHideStatusBar] withAnimation:UIStatusBarAnimationNone];
+//        }
+//    }]];
+//    [self.observerArray addObject:[[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillHideNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+//        @strongify(self);
+//        if ([self isShowingOnTop]) {
+//            NSTimeInterval keyboardAnimationDuration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+//            CGFloat targetMinY = CGRectGetHeight(self.view.bounds);
+//            [UIView animateWithDuration:keyboardAnimationDuration animations:^{
+//                [self.inputBar setMinY:targetMinY];
+//            } completion:^(BOOL finished) {
+//                self.inputBar.hidden = YES;
+//            }];
+//
+//            [self showKeyboardMaskView:NO inputBarTargetY:targetMinY];
+//
+//            if (self.inputBar.inputTextView.text.length == 0) {
+//                // 没有输入内容的时候情空
+//                [self.inputBar clearInputBar];
+//            }
+//
+//            // fix 第三方输入法
+//            [[UIApplication sharedApplication] setStatusBarHidden:[self shouldHideStatusBar] withAnimation:UIStatusBarAnimationNone];
+//        }
+//    }]];
     [self.observerArray addObject:[[NSNotificationCenter defaultCenter] addObserverForName:@"RelationActionSuccessNotification" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) { // 头条关注通知
         @strongify(self);
         NSString *userID = note.userInfo[@"kRelationActionSuccessNotificationUserIDKey"];
@@ -730,7 +742,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     [UIApplication sharedApplication].statusBarStyle = self.originalStatusBarStyle;
 
-    [self.inputBar resignActive];
+//    [self.inputBar resignActive];
 
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kExploreMovieViewPlaybackFinishNotification" object:self];
 
@@ -808,8 +820,9 @@ static const CGFloat kFloatingViewOriginY = 230;
         if ([self.showComment integerValue] == ShowCommentModal){
             [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopByClick];
         } else if([self.showComment integerValue] == ShowKeyboardOnly){
-            self.inputBar.params[@"source"] = @"video_play";
-            [self.inputBar becomeActive];
+//            self.inputBar.params[@"source"] = @"video_play";
+//            [self.inputBar becomeActive];
+            [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
         }
     }
 }
@@ -903,8 +916,9 @@ static const CGFloat kFloatingViewOriginY = 230;
     if ([self.showComment integerValue] == ShowCommentModal) {
         [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopByClick];
     } else if ([self.showComment integerValue] == ShowKeyboardOnly) {
-        self.inputBar.params[@"source"] = @"video_play";
-        [self.inputBar becomeActive];
+//        self.inputBar.params[@"source"] = @"video_play";
+//        [self.inputBar becomeActive];
+        [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
     }
 }
 
@@ -1081,24 +1095,24 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.tableView.pullUpView.hidden = show;
 }
 
-- (void)showKeyboardMaskView:(BOOL)show inputBarTargetY:(CGFloat)inputBarTargetY
-{
-    if (show) {
-        if (!self.keyboardMaskView) {
-            self.keyboardMaskView = [[UIView alloc] init];
-            self.keyboardMaskView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-            [self.keyboardMaskView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDismissKeyboard)]];
-            [self.keyboardMaskView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDismissKeyboard)]];
-        }
-        UIView *superView = self.view.window;
-        CGPoint barOrigin = [self.inputBar.superview convertPoint:CGPointMake(0, inputBarTargetY) toView:superView];
-        self.keyboardMaskView.frame = CGRectMake(0, 0, CGRectGetWidth(superView.bounds), barOrigin.y);
-        [superView addSubview:self.keyboardMaskView];
-    } else {
-        [self.keyboardMaskView removeFromSuperview];
-    }
-    [self.detailPromptManager updateVisibleFloatingViewCountForVisibility:show];
-}
+//- (void)showKeyboardMaskView:(BOOL)show inputBarTargetY:(CGFloat)inputBarTargetY
+//{
+//    if (show) {
+//        if (!self.keyboardMaskView) {
+//            self.keyboardMaskView = [[UIView alloc] init];
+//            self.keyboardMaskView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+//            [self.keyboardMaskView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDismissKeyboard)]];
+//            [self.keyboardMaskView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDismissKeyboard)]];
+//        }
+//        UIView *superView = self.view.window;
+//        CGPoint barOrigin = [self.inputBar.superview convertPoint:CGPointMake(0, inputBarTargetY) toView:superView];
+//        self.keyboardMaskView.frame = CGRectMake(0, 0, CGRectGetWidth(superView.bounds), barOrigin.y);
+//        [superView addSubview:self.keyboardMaskView];
+//    } else {
+//        [self.keyboardMaskView removeFromSuperview];
+//    }
+//    [self.detailPromptManager updateVisibleFloatingViewCountForVisibility:show];
+//}
 
 - (void)showCommentViewMaskView:(BOOL)show
 {
@@ -1191,7 +1205,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     } completion:^(BOOL finished) {
         @strongify(self);
         self.commentView.hidden = YES;
-        self.inputBar.hidden = YES;
+//        self.inputBar.hidden = YES;
         self.isCommentViewAnimating = NO;
     }];
 
@@ -1450,103 +1464,113 @@ static const CGFloat kFloatingViewOriginY = 230;
     }
 }
 
-- (void)handleSendComment:(NSString *)comment fromInputBar:(AWECommentInputBar *)inputBar
-{
-    [AWEVideoDetailTracker trackEvent:@"comment_write_confirm"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:[self writeCommentExtraPositionDict]];
-    if (!BTDNetworkConnected()) {
-        [HTSVideoPlayToast show:@"当前无网络，请稍后重试"];
-        return;
-    }
-
-    // 判断输入是否全是空格
-    comment = [comment stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if (comment.length == 0) {
-        [HTSVideoPlayToast show:@"请添加回复内容后再尝试"];
-        return;
-    }
-
-    if (comment.length > 2000) {
-        [HTSVideoPlayToast show:@"评论字数不能超过2000字"];
-        return;
-    }
-
-    NSString *groupID = self.model.groupID ?: self.groupID;
-    NSString *itemID = self.model.itemID;
-
-    [self.inputBar resignActive];
-
-    AWECommentModel *replyToModel = inputBar.targetCommentModel;
-
-    @weakify(self);
-    AWEAwemeAddCommentResponseBlock callback = ^(AWECommentModel *model, NSError *error) {
-        @strongify(self);
-        if (!error) {
-            if (model.replyToComment == nil) {
-                [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
-                                            model:self.model
-                                  commonParameter:self.commonTrackingParameter
-                                   extraParameter:[self writeCommentExtraPositionDict]];
-            }
-
-            [self.inputBar clearInputBar];
-
-            self.model.commentCount = [self.commentManager totalCommentCount];
-            NSMutableDictionary *userInfo = @{}.mutableCopy;
-            userInfo[@"group_id"] = self.model.groupID;
-            [[NSNotificationCenter defaultCenter] postNotificationName:kPostMessageFinishedNotification
-                                                                object:nil
-                                                              userInfo:userInfo];
-            [self.model save];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                @strongify(self);
-                [self showEmptyHint:NO];
-                [self.tableView reloadData];
-                [self updateViews];
-
-                if (self.commentView.hidden) {
-                    [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopByClick];
-                }
-                // 滑动定位到评论位置
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:[self.tableView numberOfSections] - 1] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-
-                [HTSVideoPlayToast show:replyToModel ? @"发送成功" : @"发布成功"];
-            });
-        } else {
-            NSString *prompts = error.userInfo[@"prompts"] ?: @"操作失败，请重试";
-            [HTSVideoPlayToast show:prompts];
-        }
-    };
-
-    BOOL notLogin = [self alertIfNotLoginWithCompletion:^(BOOL success) {
-        @strongify(self);
-        //登录成功就发生出，否则重新弹起登录框
-        if (success) {
-            if (replyToModel) {
-                if([AWEVideoPlayAccountBridge isCurrentLoginUser:[replyToModel.userId stringValue]]){
-                    return;
-                }
-                [self.commentManager commentAwemeItemWithID:itemID groupID:groupID content:comment replyCommentID:replyToModel.id completion:callback];
-            } else {
-                [self.commentManager commentAwemeItemWithID:itemID groupID:groupID content:comment completion:callback];
-            }
-        } else {
-            [self.inputBar becomeActive];
-        }
-    }];
-    if (notLogin) {
-        return;
-    }
-
-    if (replyToModel) {
-        [self.commentManager commentAwemeItemWithID:itemID groupID:groupID content:comment replyCommentID:replyToModel.id completion:callback];
-    } else {
-        [self.commentManager commentAwemeItemWithID:itemID groupID:groupID content:comment completion:callback];
-    }
-
-}
+//- (void)handleSendComment:(NSString *)comment fromInputBar:(AWECommentInputBar *)inputBar
+//{
+//    NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
+//    [extra setValue:[inputBar.targetCommentModel.id stringValue] ?: @"" forKey:@"comment_id"];
+//    [extra setValue:@"reply_button" forKey:@"position"];
+//
+//    [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
+//                                model:self.model
+//                      commonParameter:self.commonTrackingParameter
+//                       extraParameter:extra];
+//
+//    [AWEVideoDetailTracker trackEvent:@"comment_write_confirm"
+//                                model:self.model
+//                      commonParameter:self.commonTrackingParameter
+//                       extraParameter:[self writeCommentExtraPositionDict]];
+//    if (!BTDNetworkConnected()) {
+//        [HTSVideoPlayToast show:@"当前无网络，请稍后重试"];
+//        return;
+//    }
+//
+//    // 判断输入是否全是空格
+//    comment = [comment stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+//    if (comment.length == 0) {
+//        [HTSVideoPlayToast show:@"请添加回复内容后再尝试"];
+//        return;
+//    }
+//
+//    if (comment.length > 2000) {
+//        [HTSVideoPlayToast show:@"评论字数不能超过2000字"];
+//        return;
+//    }
+//
+//    NSString *groupID = self.model.groupID ?: self.groupID;
+//    NSString *itemID = self.model.itemID;
+//
+//    [self.inputBar resignActive];
+//
+//    AWECommentModel *replyToModel = inputBar.targetCommentModel;
+//
+//    @weakify(self);
+//    AWEAwemeAddCommentResponseBlock callback = ^(AWECommentModel *model, NSError *error) {
+//        @strongify(self);
+//        if (!error) {
+//            if (model.replyToComment == nil) {
+//                [AWEVideoDetailTracker trackEvent:@"rt_post_comment"
+//                                            model:self.model
+//                                  commonParameter:self.commonTrackingParameter
+//                                   extraParameter:[self writeCommentExtraPositionDict]];
+//            }
+//
+////            [self.inputBar clearInputBar];
+//
+//            self.model.commentCount = [self.commentManager totalCommentCount];
+//            NSMutableDictionary *userInfo = @{}.mutableCopy;
+//            userInfo[@"group_id"] = self.model.groupID;
+//            userInfo[@"comment_conut"] = @(self.model.commentCount);
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kPostMessageFinishedNotification
+//                                                                object:nil
+//                                                              userInfo:userInfo];
+//            [self.model save];
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                @strongify(self);
+//                [self showEmptyHint:NO];
+//                [self.tableView reloadData];
+//                [self updateViews];
+//
+//                if (self.commentView.hidden) {
+//                    [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopByClick];
+//                }
+//                // 滑动定位到评论位置
+//                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:[self.tableView numberOfSections] - 1] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+//
+//                [HTSVideoPlayToast show:replyToModel ? @"发送成功" : @"发布成功"];
+//            });
+//        } else {
+//            NSString *prompts = error.userInfo[@"prompts"] ?: @"操作失败，请重试";
+//            [HTSVideoPlayToast show:prompts];
+//        }
+//    };
+//
+//    BOOL notLogin = [self alertIfNotLoginWithCompletion:^(BOOL success) {
+//        @strongify(self);
+//        //登录成功就发生出，否则重新弹起登录框
+//        if (success) {
+//            if (replyToModel) {
+//                if([AWEVideoPlayAccountBridge isCurrentLoginUser:[replyToModel.userId stringValue]]){
+//                    return;
+//                }
+//                [self.commentManager commentAwemeItemWithID:itemID groupID:groupID content:comment replyCommentID:replyToModel.id completion:callback];
+//            } else {
+//                [self.commentManager commentAwemeItemWithID:itemID groupID:groupID content:comment completion:callback];
+//            }
+//        } else {
+////            [self.inputBar becomeActive];
+//        }
+//    }];
+//    if (notLogin) {
+//        return;
+//    }
+//
+//    if (replyToModel) {
+//        [self.commentManager commentAwemeItemWithID:itemID groupID:groupID content:comment replyCommentID:replyToModel.id completion:callback];
+//    } else {
+//        [self.commentManager commentAwemeItemWithID:itemID groupID:groupID content:comment completion:callback];
+//    }
+//
+//}
 
 - (void)handleLoadMoreComments
 {
@@ -1597,7 +1621,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)handleDismissKeyboard
 {
-    [self.inputBar resignActive];
+//    [self.inputBar resignActive];
 }
 
 - (void)handleFakeInputBarClick:(id)sender
@@ -1610,7 +1634,8 @@ static const CGFloat kFloatingViewOriginY = 230;
     if ([self alertIfNotValid]) {
         return;
     }
-    [self.inputBar becomeActive];
+//    [self.inputBar becomeActive];
+    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
 }
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate
@@ -1654,12 +1679,12 @@ static const CGFloat kFloatingViewOriginY = 230;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     AWECommentModel *commentModel = [self.commentManager commentForIndexPath:indexPath];
-    NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
-    [extra setValue:[commentModel.id stringValue] ?: @"" forKey:@"comment_id"];
-    [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:extra];
+//    NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
+//    [extra setValue:[commentModel.id stringValue] ?: @"" forKey:@"comment_id"];
+//    [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
+//                                model:self.model
+//                      commonParameter:self.commonTrackingParameter
+//                       extraParameter:extra];
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ([self alertIfNotValid]) {
@@ -1674,19 +1699,22 @@ static const CGFloat kFloatingViewOriginY = 230;
     // 自己评论不弹窗
     if ([AWEVideoPlayAccountBridge isCurrentLoginUser:[commentModel.userId stringValue]]) {
         // 草稿是回复A，现在要回复B
-        [self.inputBar clearInputBar];
+        [self.commentWriteView clearInputBar];
         return;
     }
 
-    if (commentModel.userId && ![self.inputBar.targetCommentModel.userId isEqualToNumber: commentModel.userId]) {
-        // 草稿是回复视频或回复A，现在要回复B
-        [self.inputBar clearInputBar];
-    }
+//    if (commentModel.userId && ![self.inputBar.targetCommentModel.userId isEqualToNumber: commentModel.userId]) {
+//         草稿是回复视频或回复A，现在要回复B
+//        [self.inputBar clearInputBar];
+//    }
 
-    self.inputBar.targetCommentModel = commentModel;
-    self.inputBar.textView.placeholder = [NSString stringWithFormat:@"@%@：", commentModel.userName];
+//    self.inputBar.targetCommentModel = commentModel;
+//    self.inputBar.inputTextView.internalGrowingTextView.placeholder = [NSString stringWithFormat:@"@%@：", commentModel.userName];
 
-    [self.inputBar becomeActive];
+//    [self.inputBar becomeActive];
+    
+    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:commentModel.id.stringValue];
+    [self.commentWriteView setTextViewPlaceholder:[NSString stringWithFormat:@"@%@：", commentModel.userName]];
 }
 
 
@@ -1767,13 +1795,14 @@ static const CGFloat kFloatingViewOriginY = 230;
         return;
     }
 
-    if (self.inputBar.targetCommentModel) {
-        // 草稿是回复A，现在要回复视频
-        [self.inputBar clearInputBar];
-    }
-
-    self.inputBar.params[@"source"] = @"video_play";
-    [self.inputBar becomeActive];
+//    if (self.inputBar.targetCommentModel) {
+//        // 草稿是回复A，现在要回复视频
+//        [self.inputBar clearInputBar];
+//    }
+//
+//    self.inputBar.params[@"source"] = @"video_play";
+//    [self.inputBar becomeActive];
+    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
 }
 
 - (void)playView:(AWEVideoPlayView *)view didClickCommentWithModel:(TTShortVideoModel *)model
@@ -1815,6 +1844,14 @@ static const CGFloat kFloatingViewOriginY = 230;
                 self.model.commentCount = [self.commentManager totalCommentCount];
                 [self.model save];
                 [self updateViews];
+                //发送通知 其他页面同步评论数
+                NSMutableDictionary *userInfo = @{}.mutableCopy;
+                userInfo[@"group_id"] = self.model.groupID;
+                userInfo[@"comment_conut"] = @(self.model.commentCount);
+                [[NSNotificationCenter defaultCenter] postNotificationName:kPostMessageFinishedNotification
+                                                                    object:nil
+                                                                  userInfo:userInfo];
+                
             });
         }else{
             [HTSVideoPlayToast show:@"操作失败，请重试"];
@@ -1867,7 +1904,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setValue:self.categoryName forKey:@"category_name"];
-    [params setValue:@"detail_short_video_comment" forKey:@"from_page"];
+    [params setValue:@"comment_list" forKey:@"from_page"];
     [params setValue:self.model.groupID forKey:@"group_id"];
     [AWEVideoPlayTransitionBridge openProfileViewWithUserId:[commentModel.userId stringValue] params:params];
 }
@@ -2377,6 +2414,99 @@ static const CGFloat kFloatingViewOriginY = 230;
                                             }];
     }
     [TSVVideoShareManager synchronizeUserDefaultsWithAvtivityType:activity.contentItemType];
+}
+
+- (void)p_willOpenWriteCommentViewWithReservedText:(NSString *)reservedText switchToEmojiInput:(BOOL)switchToEmojiInput replyToCommentID:(NSString *)replyToCommentID {
+    
+    NSMutableDictionary *condition = [NSMutableDictionary dictionaryWithCapacity:10];
+    [condition setValue:self.groupModel forKey:kQuickInputViewConditionGroupModel];
+    [condition setValue:reservedText forKey:kQuickInputViewConditionInputViewText];
+    [condition setValue:@(NO) forKey:kQuickInputViewConditionHasImageKey];
+    if(replyToCommentID){
+        [condition setValue:replyToCommentID forKey:kQuickInputViewConditionReplyToCommentID];
+    }
+    
+    NSString *fwID = self.groupID;
+    
+//    TTArticleReadQualityModel *qualityModel = [[TTArticleReadQualityModel alloc] init];
+//    double readPct = (self.mainScrollView.contentOffset.y + self.mainScrollView.frame.size.height) / self.mainScrollView.contentSize.height;
+//    NSInteger percent = MAX(0, MIN((NSInteger)(readPct * 100), 100));
+//    qualityModel.readPct = @(percent);
+    //    qualityModel.stayTimeMs = @([self.detailModel.sharedDetailManager currentStayDuration]);
+    
+    __weak typeof(self) wSelf = self;
+    
+    TTCommentWriteManager *commentManager = [[TTCommentWriteManager alloc] initWithCommentCondition:condition commentViewDelegate:self commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
+        *willRepostFwID = fwID;
+        [wSelf clickSubmitComment];
+    } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:nil];
+    commentManager.enterFrom = @"feed_detail";
+    commentManager.enter_type = @"submit_comment";
+    
+    self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
+    
+    self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
+    
+    [self.commentWriteView showInView:self.view animated:YES];
+}
+
+- (void)clickSubmitComment {
+//    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+//    tracerDict[@"click_position"] = @"submit_comment";
+//    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
+}
+
+#pragma mark - TTWriteCommentViewDelegate
+
+- (void)commentView:(TTCommentWriteView *) commentView cancelledWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager {
+    // commentWriteManager.delegate = nil;
+}
+
+- (void)commentView:(TTCommentWriteView *) commentView sucessWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager responsedData:(NSDictionary *)responseData
+{
+    //数据处理
+    AWECommentModel *model = nil;
+    NSError *mappingError = nil;
+    NSDictionary *dataDic = [responseData objectForKey:@"data"];
+    if([dataDic isKindOfClass:[NSDictionary class]]){
+        model = [MTLJSONAdapter modelOfClass:[AWECommentModel class]
+                          fromJSONDictionary:dataDic
+                                       error:&mappingError];
+    }
+    if(model){
+        [self.commentManager.commentArray insertObject:model atIndex:0];
+        self.commentManager.totalCount += 1;
+    }
+    
+    commentWriteManager.delegate = nil;
+    [self.commentWriteView dismissAnimated:YES];
+    if (model.replyToComment == nil) {
+        [AWEVideoDetailTracker trackEvent:@"rt_post_comment"
+                                    model:self.model
+                          commonParameter:self.commonTrackingParameter
+                           extraParameter:[self writeCommentExtraPositionDict]];
+    }
+    
+    [self.commentWriteView clearInputBar];
+    self.model.commentCount = [self.commentManager totalCommentCount];
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    userInfo[@"group_id"] = self.model.groupID;
+    userInfo[@"comment_conut"] = @(self.model.commentCount);
+    [[NSNotificationCenter defaultCenter] postNotificationName:kPostMessageFinishedNotification
+                                                        object:nil
+                                                      userInfo:userInfo];
+    [self.model save];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self showEmptyHint:NO];
+        [self.tableView reloadData];
+        [self updateViews];
+        
+        if (self.commentView.hidden) {
+            [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopByClick];
+        }
+        // 滑动定位到评论位置
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:[self.tableView numberOfSections] - 1] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    });
 }
 
 #pragma mark -

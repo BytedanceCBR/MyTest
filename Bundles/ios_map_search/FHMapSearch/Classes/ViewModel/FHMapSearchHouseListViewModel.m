@@ -49,7 +49,8 @@
 @property(nonatomic , assign) CGPoint panStartLocation;
 @property(nonatomic , assign) CGFloat panStartDockLocation;
 @property(nonatomic , strong) NSMutableDictionary *houseLogs;
-
+@property(nonatomic , strong) FHSearchHouseDataModel *currentHouseDataModel;
+@property(nonatomic , strong) FHSearchHouseDataModel *currentRentDataModel;
 //for rent house list
 
 
@@ -372,6 +373,10 @@
 
 -(void)loadHouseData:(BOOL)showLoading
 {
+    if (showLoading) {
+        self.currentHouseDataModel = nil;
+        self.currentRentDataModel = nil;
+    }
     if (self.requestTask.state == TTHttpTaskStateRunning) {
         [self.requestTask cancel];
     }
@@ -445,7 +450,7 @@
     }
     
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.houseList.count needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
+    TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.currentHouseDataModel.offset needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
         
         if (!wself) {
             return ;
@@ -456,6 +461,7 @@
                 
         if (!error && houseModel) {
             wself.searchId = houseModel.searchId;
+            wself.currentHouseDataModel = houseModel;
             [wself addEnterListPageLog];
             if (showLoading) {
                 [wself addHouseListShowLog:wself.neighbor houseListModel:houseModel];
@@ -581,6 +587,7 @@
         
         if (!error && houseModel) {
             wself.searchId = houseModel.searchId;
+            wself.currentRentDataModel = houseModel;
             [wself addEnterListPageLog];
             if (showLoading) {
                 [wself addHouseListShowLog:wself.neighbor houseListModel:houseModel];

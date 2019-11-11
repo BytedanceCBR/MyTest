@@ -202,4 +202,20 @@
     return theImage;
 }
 
+- (UIImage *)imageWithCornerRadius:(CGFloat)radius imageView:(UIImage *)imageView {
+    CGRect rect = (CGRect){0.f, 0.f, imageView.size};
+    
+    UIGraphicsBeginImageContextWithOptions(imageView.size, NO, UIScreen.mainScreen.scale);
+    CGContextAddPath(UIGraphicsGetCurrentContext(),
+                     [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:radius].CGPath);
+    CGContextClip(UIGraphicsGetCurrentContext());
+    
+    [imageView drawInRect:rect];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
 @end

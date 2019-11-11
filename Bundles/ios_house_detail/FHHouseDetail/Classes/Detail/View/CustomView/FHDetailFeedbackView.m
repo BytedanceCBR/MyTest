@@ -24,6 +24,7 @@
 #import "FHUserTracker.h"
 #import "TTDeviceHelper.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <TTSandBoxHelper.h>
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
@@ -263,7 +264,7 @@
     [self hide];
     [self traceRealtorEvaluatePopupClick:[NSString stringWithFormat:@"%i",tag]];
     
-    [FHHouseDetailAPI requestPhoneFeedback:self.viewModel.houseId houseType:self.viewModel.houseType realtorId:self.realtorId imprId:self.imprId searchId:self.searchId score:tag completion:^(bool succss, NSError * _Nonnull error) {
+    [FHHouseDetailAPI requestPhoneFeedback:self.viewModel.houseId houseType:self.viewModel.houseType realtorId:self.realtorId imprId:self.imprId searchId:self.searchId score:tag requestId:self.requestId completion:^(bool succss, NSError * _Nonnull error) {
         if(succss){
             [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
         }else{
@@ -288,6 +289,25 @@
         if([item isKindOfClass:[FHDetailHouseOutlineInfoModel class]]){
             FHDetailHouseOutlineInfoModel *infoModel = (FHDetailHouseOutlineInfoModel *)item;
             reportUrl = infoModel.houseOverreview.reportUrl;
+            
+            // 传入h5页的埋点参数
+            NSMutableDictionary *reportParams = @{}.mutableCopy;
+            reportParams[UT_EVENT_TYPE] = @"house_app2c_v2";
+            reportParams[UT_PAGE_TYPE] = @"feedback_detail";
+            reportParams[UT_ENTER_FROM] = @"realtor_evaluate_popup";
+            reportParams[UT_ELEMENT_FROM] = self.viewModel.detailTracerDic[UT_ELEMENT_FROM]?:UT_BE_NULL;
+            reportParams[UT_LOG_PB] = self.viewModel.detailTracerDic[UT_LOG_PB]?:UT_BE_NULL;
+            reportParams[@"rank"] = self.viewModel.detailTracerDic[@"rank"]?:UT_BE_NULL;
+            reportParams[UT_ORIGIN_FROM] = self.viewModel.detailTracerDic[UT_ORIGIN_FROM]?:UT_BE_NULL;
+            reportParams[UT_ORIGIN_SEARCH_ID] = self.viewModel.detailTracerDic[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
+            reportParams[@"realtor_id"] = self.realtorId?:UT_BE_NULL;
+            reportParams[@"request_id"] = self.requestId?:UT_BE_NULL;
+            
+            NSString *queryParam = [[reportParams JSONRepresentation] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            if(reportUrl.length > 0) {
+                reportUrl = [reportUrl stringByAppendingFormat:@"&report_params=%@", queryParam];
+            }
+            
             break;
         }
     }
@@ -304,8 +324,12 @@
                                    @"getNetCommonParams":commonParamsData
                                    };
         NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+        if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
+            host = @"http://i.haoduofangs.com.boe-gateway.byted.org";
+        }
         NSString *urlStr = [NSString stringWithFormat:@"%@%@",host,reportUrl];
-        NSDictionary *info = @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"};
+        NSMutableDictionary *info = [NSMutableDictionary dictionaryWithDictionary: @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"}];
+        
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
     }
@@ -321,6 +345,7 @@
 - (void)traceRealtorEvaluatePopupShow {
     NSMutableDictionary *tracerDic = [self.viewModel.detailTracerDic mutableCopy];
     tracerDic[@"realtor_id"] = self.realtorId ? self.realtorId : @"be_null";
+    tracerDic[@"request_id"] = self.requestId?:UT_BE_NULL;
     TRACK_EVENT(@"realtor_evaluate_popup_show", tracerDic);
 }
 
@@ -328,12 +353,15 @@
     NSMutableDictionary *tracerDic = [self.viewModel.detailTracerDic mutableCopy];
     tracerDic[@"realtor_id"] = self.realtorId ? self.realtorId : @"be_null";
     tracerDic[@"click_position"] = position ? position : @"be_null";
+    tracerDic[@"request_id"] = self.requestId?:UT_BE_NULL;
     TRACK_EVENT(@"realtor_evaluate_popup_click", tracerDic);
 }
 
 - (void)traceClickFeedback {
     NSMutableDictionary *tracerDic = [self.viewModel.detailTracerDic mutableCopy];
     tracerDic[@"enter_from"] = @"realtor_evaluate_popup";
+    tracerDic[@"realtor_id"] = self.realtorId ?:UT_BE_NULL;
+    tracerDic[@"request_id"] = self.requestId?:UT_BE_NULL;
     TRACK_EVENT(@"click_feedback", tracerDic);
 }
 

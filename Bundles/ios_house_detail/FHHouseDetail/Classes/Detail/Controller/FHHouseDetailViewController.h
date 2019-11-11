@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isPhoneCallShow;
 //正在拨打电话的经纪人id
 @property (nonatomic, copy) NSString *phoneCallRealtorId;
+//正在拨打电话对应请求虚拟电话的请求ID
+@property (nonatomic, copy) NSString *phoneCallRequestId;
 
 //设置状态栏
 - (void)refreshContentOffset:(CGPoint)contentOffset;
@@ -42,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 //更新
 - (void)updateLoadFinish;
+
+-(void)updateLayout:(BOOL)isInstant;
 
 @end
 

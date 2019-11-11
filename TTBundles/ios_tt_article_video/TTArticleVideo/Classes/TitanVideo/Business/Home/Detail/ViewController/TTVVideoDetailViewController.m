@@ -1101,7 +1101,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     }else{
         infoModel.logPb = self.detailModel.gdExtJsonDict[@"log_pb"];
     }
-
+    infoModel.extraDic = self.detailModel.reportParams;
     infoModel.enterFrom = [self enterFromString];
     TTVVideoDetailNatantInfoViewController  *natantInfoVC = [[TTVVideoDetailNatantInfoViewController alloc] initWithWidth:containerWidth andinfoModel: infoModel];
     natantInfoVC.detailStateStore = self.detailStateStore;
@@ -1843,6 +1843,11 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     [params setValue:[self categoryName] forKey:@"category_name"];
     [params setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]] forKey:@"enter_from"];
     [params setValue:position forKey:@"position"];
+    
+    if(self.detailModel.reportParams.count > 0){
+        [params addEntriesFromDictionary:self.detailModel.reportParams];
+    }
+    
     if (isDigg) {
         [TTTrackerWrapper eventV3:@"rt_like" params:params];
     }else{
@@ -1869,12 +1874,9 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 }
 
 - (void)p_enterProfileWithUserID:(NSString *)userID {
-    
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
     [baseCondition setValue:userID forKey:@"uid"];
+    [baseCondition setValue:@"comment_list" forKey:@"from_page"];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
 }
 
@@ -1888,10 +1890,6 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 
 - (void)commentViewController:(id<TTVCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(nonnull id<TTVCommentModelProtocol, TTCommentDetailModelProtocol>)model
 {
-    
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     if ([model.userID longLongValue] == 0) {
         return;
     }
@@ -2045,6 +2043,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     replyManager.enterFrom = self.detailModel.clickLabel;
     replyManager.categoryID = self.detailModel.categoryID;
     replyManager.logPb = self.detailModel.logPb;
+    replyManager.extraDic = self.detailModel.reportParams;
 
     self.replyWriteView = [[TTCommentWriteView alloc] initWithCommentManager:replyManager];
     self.replyWriteView.banEmojiInput = commentDetailModel.banEmojiInput;
@@ -2066,6 +2065,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     vc.categoryID = self.detailModel.categoryID;
     vc.enterFromStr = self.detailModel.clickLabel;
     vc.logPb = self.detailModel.logPb;
+    vc.extraDic = self.detailModel.reportParams;
     if (self.detailModel.adID && self.detailModel.adID.longLongValue > 0) {
         vc.isAdVideo = YES;
     }

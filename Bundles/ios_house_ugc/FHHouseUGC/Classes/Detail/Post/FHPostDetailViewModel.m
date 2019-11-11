@@ -171,7 +171,13 @@
         [self.items removeAllObjects];
         // 网络请求返回
         model.isFromDetail = YES;
+        if (self.shareInfo == nil && model.shareInfo) {
+            self.shareInfo = model.shareInfo;
+        }
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+        cellModel.feedVC = self.detailData.feedVC;
+        cellModel.isStick = self.detailData.isStick;
+        cellModel.stickStyle = self.detailData.stickStyle;
         if (cellModel.community.socialGroupId.length <= 0) {
             cellModel.community = self.detailData.community;
         }

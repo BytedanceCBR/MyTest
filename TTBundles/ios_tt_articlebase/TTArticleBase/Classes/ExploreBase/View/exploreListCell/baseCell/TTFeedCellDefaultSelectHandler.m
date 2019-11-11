@@ -474,7 +474,7 @@
                 }
                  // add by zjing 家居走这里
                 [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:detailURL] userInfo:TTRouteUserInfoWithDict(statParams)];
-                
+                                
                 // 文章、图集等 启动关联时长统计
                 [[TTRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
             }

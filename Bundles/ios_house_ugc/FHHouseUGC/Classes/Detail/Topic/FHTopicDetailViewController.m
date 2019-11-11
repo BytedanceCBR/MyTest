@@ -120,7 +120,8 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     self.isViewAppear = YES;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:@"topicDetail"];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToSubScrollView:) name:@"kScrollToSubScrollView" object:nil];
     [[SSImpressionManager shareInstance] addRegist:self];
     __weak typeof(self) weakSelf = self;
     self.panBeginAction = ^{
@@ -130,7 +131,9 @@
         weakSelf.mainScrollView.scrollEnabled = YES;
     };
 }
-
+-(void)scrollToSubScrollView:(NSNotification *)notification {
+    [self.mainScrollView setContentOffset:self.subScrollView.frame.origin animated:YES];
+}
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -631,7 +634,7 @@
         if (_isTopIsCanNotMoveTabView != _isTopIsCanNotMoveTabViewPre) {
             if (!_isTopIsCanNotMoveTabViewPre && _isTopIsCanNotMoveTabView) {
                 // 滑动到顶端
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCGoTop" object:nil userInfo:@{@"canScroll":@"1"}];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCGoTop" object:@"topicDetail" userInfo:@{@"canScroll":@"1"}];
                 _canScroll = NO;
             }
             if(_isTopIsCanNotMoveTabViewPre && !_isTopIsCanNotMoveTabView){

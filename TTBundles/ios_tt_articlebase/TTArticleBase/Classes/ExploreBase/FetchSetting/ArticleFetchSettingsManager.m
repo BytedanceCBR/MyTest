@@ -81,6 +81,7 @@
 #import <TTMonitor/TTMonitor.h>
 #import "SSCommonLogic.h"
 #import "ExploreLogicSetting.h"
+#import <BDUGAccountOnekeyLogin/BDUGOnekeySettingManager.h>
 
 
 #define SSFetchSettingsManagerFetchedDateKey @"SSFetchSettingsManagerFetchedDateKey"
@@ -239,6 +240,7 @@
     [super dealAppSettingResult:dSettings];
     
     [[TTSettingsManager sharedManager] saveSettings:dSettings];
+    [[BDUGOnekeySettingManager sharedInstance]saveSettings:dSettings];
     
     // 固化settings配置的实验数据
     [self saveServerSettingsForClientABs];
@@ -1599,18 +1601,6 @@
     
     if ([dSettings objectForKey:@"tt_track_images_usage"]) {
         [SSCommonLogic setShouldTrackLocalImage:[dSettings tt_boolValueForKey:@"tt_track_images_usage"]];
-    }
-    
-    //是否显示引导评分视图
-    if ([dSettings objectForKey:@"tt_app_store_star_config"]) {
-        NSDictionary *config = [dSettings tt_dictionaryValueForKey:@"tt_app_store_star_config"];
-        if (config && config.allKeys.count > 0) {
-            BOOL validUser = [config tt_boolValueForKey:@"tt_app_store_star_valid_user"];
-            double interval = [config tt_doubleValueForKey:@"tt_app_store_star_show_interval"];
-            BOOL greenChannel = [config tt_boolValueForKey:@"tt_app_store_star_green_channel"];
-            
-            [[TTAppStoreStarManager sharedInstance] setValidUser:validUser showTimeInterval:interval isGreenChannel:greenChannel];
-        }
     }
     
     if ([dSettings objectForKey:@"tt_ugc_mediamaker_max_duration"]) {

@@ -165,28 +165,31 @@
     
     __weak typeof(self) wSelf = self;
     self.didClickCellBlk = ^{
-        FHNewHouseItemModel *theModel = self.itemModel;
-        NSMutableDictionary *traceParam = [NSMutableDictionary new];
-        traceParam[@"enter_from"] = @"new_detail";
-        traceParam[@"log_pb"] = theModel.logPb;
-        traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
-        traceParam[@"card_type"] = @"left_pic";
-        traceParam[@"rank"] = @(theModel.index);
-        traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
-        traceParam[@"element_from"] = @"related";
-        
-        NSDictionary *dict = @{@"house_type":@(1),
-                               @"tracer": traceParam
-                               };
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        
-        NSURL *jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId]];
-
-        if (jumpUrl != nil) {
-            [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
-        }
+        [wSelf p_didClickCell];
     };
+}
+
+- (void)p_didClickCell {
+    FHNewHouseItemModel *theModel = self.itemModel;
+    NSMutableDictionary *traceParam = [NSMutableDictionary new];
+    traceParam[@"enter_from"] = @"new_detail";
+    traceParam[@"log_pb"] = theModel.logPb;
+    traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
+    traceParam[@"card_type"] = @"left_pic";
+    traceParam[@"rank"] = @(theModel.index);
+    traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+    traceParam[@"element_from"] = @"related";
     
+    NSDictionary *dict = @{@"house_type":@(1),
+                           @"tracer": traceParam
+                           };
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL *jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId]];
+    
+    if (jumpUrl != nil) {
+        [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+    }
 }
 
 -(void)refreshTopMargin:(CGFloat)top {

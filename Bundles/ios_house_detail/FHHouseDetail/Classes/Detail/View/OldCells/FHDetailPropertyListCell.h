@@ -12,6 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHHouseDetailContactViewModel;
 // 用于二手房属性列表
 @interface FHDetailPropertyListCell : FHDetailBaseCell
 
@@ -39,6 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)updateWithSecurityInfo:(FHRentDetailDataBaseExtraSecurityInformationModel *)securityInfo;
 
+-(void)updateWithBudgetData:(FHDetailDataBaseExtraBudgetModel *)budgetmodel;
+
+-(void)updateWithNeighborhoodInfoData:(FHDetailDataBaseExtraNeighborhoodModel *)neighborModel;
+
+-(void)updateWithFloorInfo:(FHDetailDataBaseExtraFloorInfoModel *)floorInfo;
+
 @end
 
 // FHDetailPropertyListModel
@@ -48,6 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraModel *extraInfo;
 @property (nonatomic, strong , nullable) FHRentDetailDataBaseExtraModel *rentExtraInfo;
 @property (nonatomic, strong , nullable) FHDetailDataCertificateModel *certificate ;
+@property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 
 @end
 

@@ -1,6 +1,7 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 #import "FHFeedContentModel.h"
+#import "FHUGCShareManager.h"
 NS_ASSUME_NONNULL_BEGIN
 @interface FHFeedUGCContentCommunityModel : JSONModel
 
@@ -299,7 +300,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *followButtonStyle;
 @property (nonatomic, copy , nullable) NSString *richContent;
 @property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, strong , nullable) FHFeedUGCContentShareInfoModel *shareInfo ;  
+@property (nonatomic, strong , nullable) FHUGCShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *interactionData;
 @property (nonatomic, copy , nullable) NSString *cellType;
 @property (nonatomic, copy , nullable) NSString *videoStyle;
@@ -334,7 +335,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedUGCContentUserModel *user ;
 @property (nonatomic, strong , nullable) FHFeedUGCContentCommunityModel *community ;
 @property (nonatomic, assign)   NSInteger       ugcStatus;
-@property (nonatomic, assign)   BOOL       isFromDetail;// 详情页
+@property (nonatomic, assign)   BOOL       isFromDetail;              // 详情页
+@property (nonatomic, assign)   BOOL       isStick;                   // 是否置顶
+@property (nonatomic, assign)   FHFeedContentStickStyle stickStyle;// 置顶类型：精华或其它
+
 @end
 
 

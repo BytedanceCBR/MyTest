@@ -135,6 +135,27 @@
         case FHFeedOperationOptionTypeDelete: {
             icon = [UIImage imageNamed:@"fh_ugc_delete"];
         }
+            break;
+        case FHFeedOperationOptionTypeTop: {
+            icon = [UIImage imageNamed:@"fh_ugc_top"];
+        }
+            break;
+        case FHFeedOperationOptionTypeCancelTop: {
+            icon = [UIImage imageNamed:@"fh_ugc_top"];
+        }
+            break;
+        case FHFeedOperationOptionTypeGood: {
+            icon = [UIImage imageNamed:@"fh_ugc_good"];
+        }
+            break;
+        case FHFeedOperationOptionTypeCancelGood: {
+            icon = [UIImage imageNamed:@"fh_ugc_good"];
+        }
+            break;
+        case FHFeedOperationOptionTypeSelfLook: {
+            icon = [UIImage imageNamed:@"fh_ugc_self_look"];
+        }
+            break;
     }
     
     self.iconImageView.image = icon;

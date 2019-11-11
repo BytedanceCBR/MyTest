@@ -443,6 +443,9 @@
     [self switchNavbarMode:FHMapSearchShowModeMap];
     [self showNavTopViews:1 animated:NO];
     [self enablePan:YES];
+    if (!self.locationButton.hidden) {
+        self.locationButton.alpha = 1;
+    }
 }
 
 -(FHMapDrawMaskView *)drawMaskView

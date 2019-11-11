@@ -24,6 +24,7 @@
 #import "FHEnvContext.h"
 #import "TTInstallIDManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHDetailQuestionButton.h"
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -33,6 +34,7 @@
 @property (nonatomic, strong) UIView *bottomMaskView;
 @property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
 @property (nonatomic, strong) FHDetailFeedbackView *feedbackView;
+@property(nonatomic , strong) FHDetailQuestionButton *questionBtn;
 
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
@@ -132,7 +134,6 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     [self setupCallCenter];
-    [self startLoadData];
     self.isViewDidDisapper = NO;
     
     if(![SSCommonLogic disableDetailInstantShow] && [TTReachability isNetworkConnected]){
@@ -145,7 +146,9 @@
     }else{
         self.instantData = nil;
     }
-        
+    
+    [self startLoadData];
+    
     if (!self.isDisableGoDetail) {
         [self.viewModel addGoDetailLog];
     }
@@ -282,7 +285,20 @@
     self.viewModel.contactViewModel.imprId = self.imprId;
     self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
     self.viewModel.contactViewModel.belongsVC = self;
-
+    
+    [self.view addSubview:self.questionBtn];
+    self.viewModel.questionBtn = self.questionBtn;
+    self.questionBtn.hidden = YES;
+    CGFloat bottomMargin = 0;
+    if (@available(iOS 11.0, *)) {
+        bottomMargin = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom;
+    }
+    [self.questionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-20);
+        make.height.mas_equalTo(40);
+        make.bottom.mas_equalTo(self.view).mas_offset(-80 - bottomMargin);
+    }];
+    
     [self addDefaultEmptyViewFullScreen];
 
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -312,15 +328,40 @@
     [self.view bringSubviewToFront:_navBar];
 }
 
+
+-(void)updateLayout:(BOOL)isInstant
+{
+    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.view);
+        if (isInstant) {
+            make.bottom.mas_equalTo(self.view);
+        }else{
+            make.bottom.mas_equalTo(self.bottomBar.mas_top);
+        }
+    }];
+    self.bottomBar.hidden = isInstant;
+    self.bottomMaskView.hidden = isInstant;
+    self.bottomStatusBar.hidden = isInstant;
+    
+    if (isInstant) {
+        [self.view bringSubviewToFront:self.tableView];
+    }else{
+        [self.view sendSubviewToBack:self.tableView];
+    }
+    
+    [self.view setNeedsUpdateConstraints];
+}
+
 - (void)setupCallCenter {
-    __weak typeof(self) wself = self;
+    @weakify(self);
     self.callCenter = [[CTCallCenter alloc] init];
     _callCenter.callEventHandler = ^(CTCall* call){
+        @strongify(self);
         if ([call.callState isEqualToString:CTCallStateDisconnected]){
             //未接通
         }else if ([call.callState isEqualToString:CTCallStateConnected]){
             //通话中
-            wself.isPhoneCallPickUp = YES;
+            self.isPhoneCallPickUp = YES;
         }else if([call.callState isEqualToString:CTCallStateIncoming]){
             //来电话
         }else if ([call.callState isEqualToString:CTCallStateDialing]){
@@ -357,7 +398,7 @@
         if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
             NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
             if (log_pb_dic) {
-                self.tracerDict[@"log_pb"] = log_pb_str;
+                self.tracerDict[@"log_pb"] = log_pb_dic;
             }
         }else
         {
@@ -380,6 +421,12 @@
                 }
             }
         }
+    }
+    
+    id tracerLogPb = self.tracerDict[@"log_pb"];
+    //IM 新房等进入时log_pb 是字符串
+    if ([tracerLogPb isKindOfClass:[NSString class]]) {
+        self.tracerDict[@"log_pb"] = self.tracerModel.logPb;
     }
     
     // rank字段特殊处理：外部可能传入字段为rank和index不同类型的数据
@@ -556,12 +603,17 @@
         self.isPhoneCallShow = NO;
         [self addFeedBackView];
         self.phoneCallRealtorId = nil;
+        self.phoneCallRequestId = nil;
     }
 }
 
 - (BOOL)isShowFeedbackView {
     //满足这两个条件，在回来时候显示反馈弹窗
-    if(self.isPhoneCallPickUp && self.isPhoneCallShow && self.phoneCallRealtorId && (self.viewModel.houseType == FHHouseTypeSecondHandHouse)){
+    if(self.isPhoneCallPickUp &&
+       self.isPhoneCallShow &&
+       self.phoneCallRealtorId &&
+       self.phoneCallRequestId &&
+       (self.viewModel.houseType == FHHouseTypeSecondHandHouse)){
         NSString *houseId = self.viewModel.houseId;
         NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
         NSString *cacheKey = @"";
@@ -609,6 +661,7 @@
 
 - (void)addFeedBackView {
     self.feedbackView.realtorId = self.phoneCallRealtorId;
+    self.feedbackView.requestId = self.phoneCallRequestId;
     [self.feedbackView show:self.view];
 }
 
@@ -620,6 +673,16 @@
         _feedbackView.viewModel = self.viewModel;
     }
     return _feedbackView;
+}
+
+- (FHDetailQuestionButton *)questionBtn
+{
+    if (!_questionBtn) {
+        _questionBtn = [[FHDetailQuestionButton alloc]init];
+//        _questionBtn.backgroundColor = [UIColor whiteColor];
+        _questionBtn.isFold = YES;
+    }
+    return _questionBtn;
 }
 
 @end

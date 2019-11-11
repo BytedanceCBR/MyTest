@@ -239,8 +239,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 //    [self addKVO];
     [[TSVTabTipManager sharedManager] setupShortVideoTabRedDotWhenStartupIfNeeded];
-    
-    [self addClientABTestLog];
 }
 
 - (void)addUgcGuide {
@@ -258,19 +256,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(x, self.view.frame.size.height - self.tabbarHeight - height + 3, width, height) andType:FHUGCGuideViewTypeSecondTab];
     }
     return _guideView;
-}
-
-// add by zjing 测试客户端AB分流清空
-- (void)addClientABTestLog
-{
-    id res1 = [BDABTestManager getExperimentValueForKey:@"show_house" withExposure:YES];
-    NSInteger status = -1;
-    if ([res1 respondsToSelector:@selector(integerValue)]) {
-        status = [res1 integerValue];
-    }
-    if (status != -1) {
-        [[HMDTTMonitor defaultManager]hmdTrackService:@"abtest_show_house" status:status extra:nil];
-    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -1900,8 +1885,18 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 #pragma mark -
 - (void)changeTabbarIndex:(NSNotification *)notification {
-    NSString *tag = [notification.userInfo tt_stringValueForKey:@"tag"];
     
+    //在跳转之前先把现在的导航控制器pop到根视图,需要在通知中传入needToRoot的值，这是为了不影响其他地方的跳转逻辑
+    BOOL needToRoot = [notification.userInfo tt_boolValueForKey:@"needToRoot"];
+    if(needToRoot){
+        id vc = self.selectedViewController;
+        if([vc isKindOfClass:[UINavigationController class]]){
+            UINavigationController *naviVC = (UINavigationController *)vc;
+            [naviVC popToRootViewControllerAnimated:NO];
+        }
+    }
+    
+    NSString *tag = [notification.userInfo tt_stringValueForKey:@"tag"];
     [self updateSelectedViewControllerForTag:tag];
 }
 

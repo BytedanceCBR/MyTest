@@ -6,6 +6,17 @@
 //
 
 #import "FHCommonApi.h"
+#import "TTServiceCenter.h"
+#import "TTVideoDiggBuryParameter.h"
+#import "TTVideoArticleService.h"
+#import "TTVFeedUserOpDataSyncMessage.h"
+#import "TTVideoService.h"
+#import "TTVideoRecommendModel.h"
+#import "TTMessageCenter.h"
+#import "TTVideoArticleService+Action.h"
+#import "TTVideoArticleServiceMessage.h"
+#import "TTVFeedUserOpDataSyncMessage.h"
+#import "HMDTTMonitor.h"
 
 @implementation FHCommonApi
 
@@ -26,6 +37,12 @@
         userInfo[@"action"] = @(action);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCDiggStateChangeNotification" object:nil userInfo:userInfo];
     }
+    
+    if(group_type == FHDetailDiggTypeVIDEO){
+        [self requestVideoDiggWith:group_id groupType:group_type action:action completion:completion];
+        return nil;
+    }
+    
     paramDic[@"group_type"] = @(group_type);
     paramDic[@"action"] = @(action);
     NSString *query = [NSString stringWithFormat:@"group_id=%@&group_type=%ld&action=%ld",group_id,group_type,action];
@@ -39,11 +56,64 @@
         paramDic[@"page_type"] = page_type;
         query = [NSString stringWithFormat:@"%@&element_from=%@&enter_from=%@&page_type=%@",query,element_from,enter_from,page_type];
     }
+    NSString *serviceName = action > 0 ? @"digg_action" : @"undigg_action";
     return [FHMainApi postRequest:queryPath query:query params:paramDic jsonClass:[FHDetailDiggModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion(model,error);
         }
+        // 接口事件埋点
+        if (error) {
+            // 点赞/取消点赞 失败
+            [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"status":@(1)} extra:nil];
+        } else {
+            // 点赞/取消点赞 成功
+            [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"status":@(0)} extra:nil];
+        }
     }];
+}
+
+// 视频点赞走之前的接口---Track的方案，服务端支持视频点赞接口有问题，走之前的接口
++ (void)requestVideoDiggWith:(NSString *)group_id groupType:(FHDetailDiggType)group_type action:(NSInteger)action completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion  {
+    TTVideoArticleService *service = [[TTServiceCenter sharedInstance] getService:[TTVideoArticleService class]];
+    
+    TTVideoDiggBuryParameter *parameter = [[TTVideoDiggBuryParameter alloc] init];
+    parameter.aggr_type = 0; // 0
+    parameter.item_id = group_id;
+    parameter.group_id = group_id;// id
+    parameter.ad_id = nil; // nil
+    NSString *unique_id = group_id;
+    
+    if (action) {
+        // 点赞
+        NSString *serviceName = action > 0 ? @"digg_action" : @"undigg_action";
+         [service digg:parameter completion:^(TT2DataItemActionResponseModel *response, NSError *error) {
+             if (completion) {
+                 completion(response,error);
+             }
+             if (error) {
+                 // 点赞 失败
+                 [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"status":@(1)} extra:nil];
+             } else {
+                 // 点赞 成功
+                 [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"status":@(0)} extra:nil];
+             }
+        }];
+    } else {
+        // 取消点赞
+        NSString *serviceName = action > 0 ? @"digg_action" : @"undigg_action";
+        [service cancelDigg:parameter completion:^(TT2DataItemActionResponseModel *response, NSError *error) {
+            if (completion) {
+                completion(response,error);
+            }
+            if (error) {
+                // 取消点赞 失败
+                [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"status":@(1)} extra:nil];
+            } else {
+                // 取消点赞 成功
+                [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"status":@(0)} extra:nil];
+            }
+        }];
+    }
 }
 
 @end

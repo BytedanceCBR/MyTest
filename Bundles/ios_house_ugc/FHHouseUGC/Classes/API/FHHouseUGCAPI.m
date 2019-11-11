@@ -14,6 +14,8 @@
 #import "FHTopicHeaderModel.h"
 #import "FHURLSettings.h"
 #import "FHTopicFeedListModel.h"
+#import "FHFeedOperationResultModel.h"
+#import "FHUGCNoticeModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -43,9 +45,24 @@
 
 + (TTHttpTask *)requestCommunityDetail:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/social_group_basic_info";
+    NSString *url = QURL(queryPath);
+    
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"social_group_id"] = communityId ?: @"";
-    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:obj class:cls error:&backError];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
+        
+    }];
+//    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
@@ -289,6 +306,44 @@
     }];
 }
 
++ (TTHttpTask *)postOperation:(NSString *)groupId socialGroupId:(NSString *)socialGroupId operationCode:(NSString *)operationCode enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void (^ _Nonnull)(id<FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/stick_operate";
+    NSString *url = QURL(queryPath);
+    //暂时为了测试写死开发机地址
+//    url = @"http://10.224.10.118:6789/f100/ugc/stick_operate";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(groupId){
+        paramDic[@"group_id"] = groupId;
+    }
+    if(socialGroupId){
+        paramDic[@"social_group_id"] = socialGroupId;
+    }
+    if(enterFrom){
+        paramDic[@"enter_from"] = enterFrom;
+    }
+    if(pageType){
+        paramDic[@"page_type"] = pageType;
+    }
+    if(operationCode){
+        paramDic[@"operate_code"] = operationCode;
+    }
+    
+    Class jsonCls = [FHFeedOperationResultModel class];
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:obj class:jsonCls error:&backError];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
+    }];
+}
+
 + (TTHttpTask *)requestCommentDetailDataWithCommentId:(NSString *)comment_id socialGroupId:(NSString *)socialGroupId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/material/v0/comment_detail";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -325,6 +380,11 @@
     if(longitude != 0){
         paramDic[@"longitude"] = @(longitude);
     }
+    
+    if(source){
+        paramDic[@"source_from"] = source;
+    }
+    
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
@@ -449,6 +509,123 @@
             completion(listModel, error);
         }
     }];
+}
+
++ (TTHttpTask *)requestUpdateUGCNoticeWithParam:(NSDictionary *)params completion:(void (^)(FHUGCNoticeModel *model, NSError *error))completion {
+    
+    NSString *queryPath = @"/f100/ugc/social_group/announcement";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    [paramDic addEntriesFromDictionary:params];
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        FHUGCNoticeModel *ugcNoticeModel = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                }
+                else
+                {
+                    ugcNoticeModel = [[FHUGCNoticeModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        
+        if (completion) {
+            completion(ugcNoticeModel,error);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestMyCommentListWithUserId:(NSString *)userId offset:(NSInteger)offset completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/api/feed/my_comments/v1/?";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"count"] = @(20);
+    paramDic[@"offset"] = @(offset);
+    paramDic[@"category"] = @"my_comments";
+    
+    Class cls = NSClassFromString(@"FHUGCCommentListModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestHomePageInfoWithUserId:(NSString *)userId completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/user/profile/homepage/v7/?";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(userId){
+        paramDic[@"user_id"] = userId;
+    }
+    
+    paramDic[@"refer"] = @"all";
+    
+    Class cls = NSClassFromString(@"FHPersonalHomePageModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestHomePageFeedListWithUserId:(NSString *)userId offset:(NSInteger)offset count:(NSInteger)count completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/api/feed/profile/v1/?";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(userId){
+        paramDic[@"visited_uid"] = userId;
+    }
+    paramDic[@"category"] = @"profile_all";
+    paramDic[@"count"] = @(count);
+    paramDic[@"offset"] = @(offset);
+    paramDic[@"stream_api_version"] = [FHURLSettings streamAPIVersionString];
+    
+    Class cls = NSClassFromString(@"FHFeedListModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestFocusListWithUserId:(NSString *)userId completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/f100/ugc/follow_sg_list";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(userId){
+        paramDic[@"user_id"] = userId;
+    }
+    
+    Class cls = NSClassFromString(@"FHUGCModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+    
++ (TTHttpTask *)requestFollowUserListBySocialGroupId:(NSString *)socialGroupId offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/follow_list";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (socialGroupId.length > 0) {
+        paramDic[@"social_group_id"] = socialGroupId;
+    }
+    paramDic[@"offset"] = @(offset);
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestFollowSugSearchByText:(NSString *)text socialGroupId:(NSString *)socialGroupId offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/follow_suggest_list";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (text.length > 0) {
+        paramDic[@"query_key"] = text;
+    }
+    if (socialGroupId.length > 0) {
+        paramDic[@"social_group_id"] = socialGroupId;
+    }
+    paramDic[@"offset"] = @(offset);
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
 @end

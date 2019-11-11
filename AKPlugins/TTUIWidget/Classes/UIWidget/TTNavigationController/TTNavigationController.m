@@ -810,6 +810,11 @@ static inline CGFloat navigationBarTop() {
 
 - (void)pan:(UIPanGestureRecognizer *)recognizer
 {
+    // 禁止侧滑返回
+    if(self.isBanSideSlideAction) {
+        return;
+    }
+    
     UIGestureRecognizerState state = recognizer.state;
     CGPoint offset = [recognizer translationInView:recognizer.view];
     CGPoint velovity = [recognizer velocityInView:recognizer.view];

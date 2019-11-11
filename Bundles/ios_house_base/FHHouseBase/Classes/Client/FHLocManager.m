@@ -264,6 +264,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     
     [self.locManager setReGeocodeTimeout:2];
     __weak typeof(self) wSelf = self;
+    //由于BDUGLocation 无法提供定位AOI等数据，目前先使用高德sdk的定位
     [self.locManager requestLocationWithReGeocode:YES completionBlock:^(CLLocation *location, AMapLocationReGeocode *regeocode, NSError *error) {
         
         if (showAlert)

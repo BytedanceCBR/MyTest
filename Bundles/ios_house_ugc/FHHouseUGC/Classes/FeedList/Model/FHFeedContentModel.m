@@ -190,6 +190,19 @@
     @"recommendSocialGroupList": @"recommend_social_group_list",
     @"rawData": @"raw_data",
     @"articleSchema": @"article_schema",
+    @"videoId": @"video_id",
+    @"videoDetailInfo": @"video_detail_info",
+    @"playAuthToken": @"play_auth_token",
+    @"groupFlags": @"group_flags",
+    @"debugInfo": @"debug_info",
+    @"banImmersive": @"ban_immersive",
+    @"videoDuration": @"video_duration",
+    @"videoProportionArticle": @"video_proportion_article",
+    @"playBizToken": @"play_biz_token",
+    @"danmakuCount": @"danmaku_count",
+    @"isStick": @"is_stick",
+    @"stickStyle": @"stick_style",
+    @"originType": @"origin_type",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -444,7 +457,19 @@
                            @"originCommonContent": @"origin_common_content",
                            @"recommendSocialGroupList": @"recommend_social_group_list",
                            @"articleSchema": @"article_schema",
-                           @"hotTopicList": @"hot_topic_list"
+                           @"hotTopicList": @"hot_topic_list",
+                           
+                           @"firstFrameImageList": @"first_frame_image_list",
+                           @"detailSchema": @"detail_schema",
+                           @"titleRichSpan": @"title_rich_span",
+                           @"createTime": @"create_time",
+                           @"videoContent": @"video_content",
+                           @"isStick": @"is_stick",
+                           @"stickStyle": @"stick_style",
+                           @"contentDecoration": @"content_decoration",
+                           @"originThread": @"origin_thread",
+                           @"originUgcVideo": @"origin_ugc_video",
+                           @"originType": @"origin_type",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -550,6 +575,7 @@
                            @"groupId": @"group_id",
                            @"repostStatus": @"repost_status",
                            @"imageList": @"image_list",
+                           @"repostParams": @"repost_params",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -765,6 +791,243 @@
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
     }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataVideoOriginCoverModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"urlList": @"url_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataVideoPlayAddrModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"urlList": @"url_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataVideoDownloadAddrModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"urlList": @"url_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataVideoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"playAddr": @"play_addr",
+                           @"videoId": @"video_id",
+                           @"originCover": @"origin_cover",
+                           @"downloadAddr": @"download_addr",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentVideoDetailInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"groupFlags": @"group_flags",
+                           @"videoId": @"video_id",
+                           @"videoType": @"video_type",
+                           @"videoWatchingCount": @"video_watching_count",
+                           @"videoPreloadingFlag": @"video_preloading_flag",
+                           @"directPlay": @"direct_play",
+                           @"detailVideoLargeImage": @"detail_video_large_image",
+                           @"showPgcSubscribe": @"show_pgc_subscribe",
+                           @"videoWatchCount": @"video_watch_count",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginThreadModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"readCount": @"read_count",
+    @"defaultTextLine": @"default_text_line",
+    @"stickStyle": @"stick_style",
+    @"createTime": @"create_time",
+    @"shareUrl": @"share_url",
+    @"videoGroup": @"video_group",
+    @"detailCoverList": @"detail_cover_list",
+    @"userVerified": @"user_verified",
+    @"cellLayoutStyle": @"cell_layout_style",
+    @"maxTextLine": @"max_text_line",
+    @"businessPayload": @"business_payload",
+    @"innerUiFlag": @"inner_ui_flag",
+    @"contentRichSpan": @"content_rich_span",
+    @"commentCount": @"comment_count",
+    @"ugcU13CutImageList": @"ugc_u13_cut_image_list",
+    @"threadIdStr": @"thread_id_str",
+    @"diggIconKey": @"digg_icon_key",
+    @"uiType": @"ui_type",
+    @"followButtonStyle": @"follow_button_style",
+    @"cellType": @"cell_type",
+    @"verifiedContent": @"verified_content",
+    @"isStick": @"is_stick",
+    @"userDigg": @"user_digg",
+    @"ugcCutImageList": @"ugc_cut_image_list",
+    @"cellFlag": @"cell_flag",
+    @"cellUiType": @"cell_ui_type",
+    @"diggCount": @"digg_count",
+    @"threadId": @"thread_id",
+    @"thumbImageList": @"thumb_image_list",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginUgcVideoRawDataUserModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"relationCount": @"relation_count",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginUgcVideoRawDataModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"groupIdStr": @"group_id_str",
+    @"textCommentCount": @"text_comment_count",
+    @"detailSchema": @"detail_schema",
+    @"titleRichSpan": @"title_rich_span",
+    @"voiceCommentEnable": @"voice_comment_enable",
+    @"voiceCommentCount": @"voice_comment_count",
+    @"createTime": @"create_time",
+    @"thumbImageList": @"thumb_image_list",
+    @"largeImageList": @"large_image_list",
+    @"groupSource": @"group_source",
+    @"itemId": @"item_id",
+    @"groupId": @"group_id",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginUgcVideoRawDataUserRelationCountModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"followersCount": @"followers_count",
+    @"followingsCount": @"followings_count",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginUgcVideoModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"cellType": @"cell_type",
+    @"dataType": @"data_type",
+    @"rawData": @"raw_data",
+    @"showOrigin": @"show_origin",
+    @"idStr": @"id_str",
+    @"showTips": @"show_tips",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataOriginUgcVideoRawDataUserInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"userId": @"user_id",
+    @"userDecoration": @"user_decoration",
+    @"verifiedContent": @"verified_content",
+    @"avatarUrl": @"avatar_url",
+    @"userVerified": @"user_verified",
+    @"userAuthInfo": @"user_auth_info",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
 }
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {

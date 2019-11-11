@@ -11,6 +11,8 @@
 #import "FHHouseUGCHeader.h"
 #import "TTRichSpanText.h"
 #import "TTRichSpanText+Emoji.h"
+#import <TTVFeedItem+Extension.h>
+#import <TTVFeedListItem.h>
 
 @class FHCommunityFeedListController;
 
@@ -28,16 +30,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *avatarUrl;
 @property (nonatomic, copy , nullable) NSString *userId;
+@property (nonatomic, copy , nullable) NSString *schema;
 
 @end
 
 @interface FHFeedUGCOriginItemModel : NSObject
 
 @property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *contentRichSpan;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *type;
 @property (nonatomic, copy , nullable) FHFeedContentImageListModel *imageModel;
 @property (nonatomic, copy , nullable) NSAttributedString *contentAStr;
+@property (nonatomic, strong) TTRichSpanText *richContent;
 
 @end
 
@@ -54,6 +59,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat contentHeight;
 @property (nonatomic, assign) BOOL needUserLogin;
 
+@end
+
+@interface FHFeedUGCCellContentDecorationModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *url;
 @end
 
 @interface FHFeedUGCCellModel : NSObject
@@ -117,11 +126,27 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotTopicListModel> *hotTopicList;
 //投票
 @property (nonatomic, strong , nullable) FHFeedUGCVoteModel *vote;
+//视频和小视频相关
+@property (nonatomic, assign) BOOL hasVideo;
+@property (nonatomic, strong , nullable) TTVFeedItem *videoFeedItem;
+@property (nonatomic, strong , nullable) TTVFeedListItem *videoItem;
+@property (nonatomic, assign) NSInteger videoDuration;
+@property (nonatomic, strong , nullable) FHFeedContentVideoDetailInfoModel *videoDetailInfo ;
 //埋点相关
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy) NSString *elementFrom;
 @property (nonatomic, copy) NSString *enterFrom;
 @property (nonatomic, strong) NSDictionary *tracerDic;
+// 是否置顶
+@property (nonatomic, assign) BOOL isStick;
+// 置顶类型：精华或其它
+@property (nonatomic, assign) FHFeedContentStickStyle stickStyle;
+// 内容装饰
+@property (nonatomic, strong) FHFeedUGCCellContentDecorationModel *contentDecoration;
+// 隐藏...,默认为显示
+@property (nonatomic, assign) BOOL hiddenMore;
+// 数据内容是否有变化，如果有则刷新数据时候会刷新，没有则不会刷新，在对cellModel改动需要刷新页面时候，需要设置成YES
+@property (nonatomic, assign) BOOL ischanged;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

@@ -33,6 +33,8 @@
 @property (nonatomic, strong) NSString *enterFromStr;
 @property (nonatomic, strong) NSDictionary *logPb;
 @property (nonatomic, assign) BOOL isBanEmoji;
+//外面传入埋点信息 by xsm
+@property (nonatomic, strong) NSDictionary *extraDic;
 
 - (instancetype)initWithViewFrame:(CGRect)viewFrame comment:(id<TTVCommentModelProtocol, TTCommentDetailModelProtocol>)commentModel showWriteComment:(BOOL)showWriteComment;
 - (id <TTVCommentModelProtocol, TTCommentDetailModelProtocol>)commentModel;

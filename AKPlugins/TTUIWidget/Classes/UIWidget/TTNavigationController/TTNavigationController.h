@@ -22,6 +22,7 @@ typedef enum {
 @property (nonatomic, strong) UIPanGestureRecognizer *panRecognizer;
 @property (nonatomic, strong) UISwipeGestureRecognizer * swipeRecognizer;
 @property (nonatomic, assign) BOOL shouldIgnorePushingViewControllers;
+@property (nonatomic, assign) BOOL isBanSideSlideAction;
 
 + (BOOL)refactorNaviEnabled;//是否使用重构之后的NavigationController 默认不
 

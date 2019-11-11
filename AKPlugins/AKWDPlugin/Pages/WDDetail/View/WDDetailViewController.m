@@ -790,11 +790,12 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_showTitle:(BOOL)show
 {
-    BOOL isShow = self.profileTitleView.isShow;
-    [self.profileTitleView show:show animated:YES];
-    self.rightFollowButton.hidden = YES;
     if (show) {
         self.navigationItem.titleView = self.profileTitleView;
+    }
+    self.rightFollowButton.hidden = YES;
+    if(show != self.profileTitleView.isShow) {
+        [self.profileTitleView show:show animated:YES];
     }
 }
 
@@ -1238,7 +1239,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
     [self.detailView.detailWebView openFooterView:NO];
     self.wasTitleViewShowed = self.profileTitleView.isShow;
-    [self p_showTitle:YES];
+    self.rightFollowButton.hidden = YES;
+    self.navigationItem.titleView = self.profileTitleView;
 }
 
 - (void)p_closeNatantView
@@ -2150,10 +2152,10 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
     
     NSString *userID = [NSString stringWithFormat:@"%@", model.userID];
-    NSString *schema = [NSString stringWithFormat:@"sslocal://profile?uid=%@&enter_from=%@",userID,@"answer_detail_comment"];
+    NSString *schema = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=%@",userID,@"comment_list"];
     NSString *categoryName = [self.detailModel.gdExtJsonDict objectForKey:@"category_name"];
     
-    NSString *result = [WDTrackerHelper schemaTrackForPersonalHomeSchema:schema categoryName:categoryName fromPage:@"detail_wenda_comment" groupId:self.detailModel.answerEntity.ansid profileUserId:userID];
+    NSString *result = [WDTrackerHelper schemaTrackForPersonalHomeSchema:schema categoryName:categoryName fromPage:@"comment_list" groupId:self.detailModel.answerEntity.ansid profileUserId:userID];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:result]];
     
     [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];
@@ -2161,14 +2163,11 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController tappedWithUserID:(NSString *)userID
 {
-    // add by zjing 去掉问答 回复@里面的点击
-    return;
-    
     if ([userID longLongValue] == 0) {
         return;
     }
     NSString *userIDstr = [NSString stringWithFormat:@"%@", userID];
-    NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@", userIDstr];
+    NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@&from_page=at_user_profile_comment", userIDstr];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:linkURLString]];
 
     [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];

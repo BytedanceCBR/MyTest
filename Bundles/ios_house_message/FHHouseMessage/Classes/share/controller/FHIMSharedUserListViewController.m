@@ -22,6 +22,7 @@
 #import <ToastManager.h>
 #import <FHHouseBase/FHBaseTableView.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <FHHouseBase/FHHouseType.h>
 
 @interface FHIMSharedUserListViewController () <TTRouteInitializeProtocol, FHIMShareUserListViewModelDelegate, FHIMShareAlertViewDelegate, IMChatStateObserver>
 {
@@ -192,11 +193,13 @@
         NSMutableDictionary* dict = [_queryParams mutableCopy];
         NSMutableDictionary* theTracerDict = [self.tracerDict mutableCopy];
         theTracerDict[@"page_type"] = @"realotr_pick";
+        theTracerDict[@"from"] = [self sourceByHouseType:_houseType];
         dict[@"tracer"] = theTracerDict;
         dict[@"target_user_id"] = _target.userId;
         dict[@"chat_title"] = _target.username;
         dict[@"from_im_share"] = @(1);
         dict[@"source"] = [self sourceByHouseType:_houseType];
+        dict[@"from"] = [self sourceByHouseType:_houseType];
         TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://open_single_chat"] userInfo:info];
     } else {
@@ -217,11 +220,11 @@
 -(NSString*)sourceByHouseType:(NSInteger)houseType {
     switch (houseType) {
         case 3://租房
-            return @"1.73";
+            return @"app_renthouse_share";//@"1.73";
         case 1://新房
-            return @"1.32";
+            return @"app_court_share";//@"1.32";
         default://二手房
-            return @"1.14";
+            return @"app_oldhouse_share";//@"1.14";
     }
 }
 

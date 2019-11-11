@@ -52,6 +52,8 @@
 #import "FHDetailUserHouseCommentCell.h"
 #import <FHHouseBase/FHSearchHouseModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
+#import <TTBaseLib/UIViewAdditions.h>
+#import "FHDetailQuestionPopView.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -186,11 +188,17 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.items removeAllObjects];
     // 添加头滑动图片 && 视频
     BOOL hasVideo = NO;
+    BOOL hasVR = NO;
     BOOL isInstant = model.isInstantData;
     if (model.data.houseVideo && model.data.houseVideo.videoInfos.count > 0) {
         hasVideo = YES;
     }
-    if (model.data.houseImageDictList.count > 0 || hasVideo) {
+    
+    if (model.data.vrData && model.data.vrData.hasVr) {
+        hasVR = YES;
+    }
+    
+    if (model.data.houseImageDictList.count > 0 || hasVideo || hasVR) {
         FHMultiMediaItemModel *itemModel = nil;
         if (hasVideo) {
             FHVideoHouseVideoVideoInfosModel *info = model.data.houseVideo.videoInfos[0];
@@ -229,6 +237,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             FHDetailOldDataHouseImageDictListModel *imgModel = [headerCellModel.houseImageDictList firstObject];
             imgModel.instantHouseImageList = [self instantHouseImages];
         }
+        headerCellModel.vrModel = model.data.vrData;
         headerCellModel.vedioModel = itemModel;// 添加视频模型数据
         headerCellModel.contactViewModel = self.contactViewModel;
         headerCellModel.isInstantData = model.isInstantData;
@@ -249,6 +258,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         headerCellModel.isInstantData = model.isInstantData;
         [self.items addObject:headerCellModel];
         
+    }
+    if (model.data.quickQuestion.questionItems.count > 0) {
+        self.questionBtn.hidden = NO;
+        [self.questionBtn updateTitle:model.data.quickQuestion.buttonContent];
     }
     // 添加标题
     if (model.data) {
@@ -278,6 +291,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         propertyModel.baseInfo = model.data.baseInfo;
         propertyModel.certificate = model.data.certificate;
         propertyModel.extraInfo = model.data.baseExtra;
+        propertyModel.contactViewModel = self.contactViewModel;
         [self.items addObject:propertyModel];
     }
     
@@ -292,6 +306,12 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             if ((FHDetailHouseSubscribeCell *)subscribeModel.cell) {
                 ((FHDetailHouseSubscribeCell *)subscribeModel.cell).subscribeBlock = ^(NSString * _Nonnull phoneNum) {
                     [wSelf subscribeFormRequest:phoneNum subscribeModel:subscribeModel];
+                };
+                ((FHDetailHouseSubscribeCell *)subscribeModel.cell).legalAnnouncementClickBlock = ^() {
+                    NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
+                    NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
+                    [[TTRoute sharedRoute]openURLByPushViewController:url];
                 };
             }
         });
@@ -369,6 +389,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         NSString *imprId = self.listLogPB[@"impr_id"];
         agentListModel.tableView = self.tableView;
         agentListModel.belongsVC = self.detailController;
+        agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
@@ -432,6 +453,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
         infoModel.tableView = self.tableView;
+        infoModel.contactViewModel = self.contactViewModel;
         [self.items addObject:infoModel];
     }
     // 小区评测
@@ -524,7 +546,18 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
-    [self reloadData];
+    if (model.isInstantData) {
+        [self.tableView reloadData];
+    }else{
+        [self reloadData];
+    }
+    
+    [self.detailController updateLayout:model.isInstantData];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"old_detail"}];
+    });
+    
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated

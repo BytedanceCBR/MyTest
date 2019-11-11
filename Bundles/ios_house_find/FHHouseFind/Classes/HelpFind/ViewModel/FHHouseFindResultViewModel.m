@@ -176,7 +176,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     } else {
         paramsSearch[@"search_query"] = @"be_null";
     }
-    
+    paramsSearch[@"growth_deepevent"] = @(1);
     [FHEnvContext recordEvent:paramsSearch andEventKey:@"house_search"];
 }
 

@@ -77,6 +77,7 @@
 #import "TSVRecommendCardViewController.h"
 #import "TSVRecommendCardModel.h"
 #import "TSVRecommendCardViewModel.h"
+#import "FHCommonApi.h"
 
 static const CGFloat kCheckChallengeButtonWidth = 72;
 static const CGFloat kCheckChallengeButtonHeight = 28;
@@ -264,7 +265,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         _avatarImageView = [[TSVAvatarImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40) model:self.model.author disableNightMode:YES];
         [_userInfoContainerView addSubview:_avatarImageView];
         // add by zjing 去掉小视频关注
-//        [_avatarImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAvatarClick:)]];
+        [_avatarImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAvatarClick:)]];
 
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.textColor = [UIColor whiteColor];
@@ -1006,8 +1007,8 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [self postDiggCountSyncNotification];
     [self.model save];
     [self updateDiggState];
-
-    [AWEVideoDetailManager cancelDiggVideoItemWithID:self.model.groupID completion:nil];
+    // [AWEVideoDetailManager cancelDiggVideoItemWithID:self.model.groupID completion:nil];
+    [FHCommonApi requestCommonDigg:[NSString stringWithFormat:@"%@", self.model.groupID] groupType:FHDetailDiggTypeSMALLVIDEO action:0 completion:nil];
 }
 
 - (void)postDiggCountSyncNotification

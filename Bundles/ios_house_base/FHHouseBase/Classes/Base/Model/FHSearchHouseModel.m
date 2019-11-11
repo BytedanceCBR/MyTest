@@ -314,6 +314,22 @@
 
 @end
 
+@implementation FHSearchHouseVRModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"hasVr": @"has_vr",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHSearchHouseDataItemsSkyEyeTagModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -345,10 +361,12 @@
                            @"displayBuiltYear": @"display_built_year",
                            @"displayTitle": @"display_title",
                            @"houseImageTag": @"house_image_tag",
+                           @"houseTitleTag": @"title_tag",
                            @"displayDescription": @"display_description",
                            @"displayPricePerSqm": @"display_price_per_sqm",
                            @"uploadAt": @"upload_at",
                            @"imprId": @"impr_id",
+                           @"vrInfo": @"vr_info",
                            @"groupId": @"group_id",
                            @"searchId": @"search_id",
                            @"cellStyle": @"cell_style",

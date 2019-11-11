@@ -40,6 +40,7 @@
         titleLabel.font = [UIFont systemFontOfSize:WDFontSize(17.0f)];
         titleLabel.iconMaxHeight = ceil([TTDeviceUIUtils tt_fontSize:17.f] / 17.f * 14.f);
         titleLabel.backgroundColor = [UIColor clearColor];
+        titleLabel.userInteractionEnabled = YES;
         //default header titlelable set to invisiable.
         titleLabel.alpha = 0.f;
         //titleLabel.adjustsFontSizeToFitWidth = YES;
@@ -65,6 +66,7 @@
         logoView.hidden = YES;
         logoView.userInteractionEnabled = YES;
         logoView.enableBlackMaskView = YES;
+        logoView.highlightedMaskView.backgroundColor = [UIColor clearColor];
         logoView.imageView.hidden = YES;
 //        [logoView setupVerifyViewForLength:AvatarViewHeightWithoutShowFans adaptationSizeBlock:nil];
         [self addSubview:logoView];
@@ -73,6 +75,10 @@
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickTitleView:)];
         tap.delegate = self;
         [logoView addGestureRecognizer:tap];
+        
+        UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickTitleView:)];
+        tap.delegate = self;
+        [titleLabel addGestureRecognizer:tap1];
         
         [self show:NO animated:NO];
     }

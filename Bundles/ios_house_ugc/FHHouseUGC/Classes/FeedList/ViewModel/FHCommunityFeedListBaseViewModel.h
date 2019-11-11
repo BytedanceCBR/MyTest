@@ -15,6 +15,11 @@
 #import "FHFeedListModel.h"
 #import "FHUGCConfig.h"
 #import "FHUserTracker.h"
+#import "TSVShortVideoDetailExitManager.h"
+#import "HTSVideoPageParamHeader.h"
+#import "AWEVideoConstants.h"
+#import <TTVFeedListItem.h>
+#import <TTReachability.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,6 +40,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL isRefreshingTip;
 @property(nonatomic, assign) NSInteger refer;
 @property(nonatomic, assign) BOOL isShowing;
+//视频相关
+@property(nonatomic, strong) NSMutableArray *movieViews;
+@property(nonatomic, strong) UIView *movieView;
+@property(nonatomic, strong) FHFeedUGCCellModel *movieViewCellData;
+
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
 
@@ -42,11 +52,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshCurrentCell;
 
+- (void)refreshCell:(FHFeedUGCCellModel *)cellModel;
+
+- (NSInteger)getCellIndex:(FHFeedUGCCellModel *)cellModel;
+
+// 小视频
+- (UIView *)currentSelectSmallVideoView;
+
+- (CGRect)selectedSmallVideoFrame;
+
 - (void)viewWillAppear;
 
 - (void)viewWillDisappear;
 
 - (void)recordGroupWithCellModel:(FHFeedUGCCellModel *)cellModel status:(SSImpressionStatus)status;
+
+- (void)endDisplay;
 
 @end
 

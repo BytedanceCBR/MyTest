@@ -28,6 +28,22 @@
 
 @end
 
+@implementation FHHomeHouseVRModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"hasVr": @"has_vr",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 //for implementation
 @implementation  FHHomeHouseDataItemsFloorpanListModel
 
@@ -376,6 +392,7 @@
                            @"displayPrice": @"display_price",
                            @"displayPricePerSqm": @"display_price_per_sqm",
                            @"imprId": @"impr_id",
+                           @"vrInfo": @"vr_info",
                            @"cellStyle": @"cell_style",
                            @"houseImageTag": @"house_image_tag",
                            @"floorpanList": @"floorpan_list",
@@ -390,6 +407,7 @@
                            @"pricePerSqmNum":@"price_per_sqm_num",
                            @"pricePerSqmUnit":@"price_per_sqm_unit",
                            @"dislikeInfo": @"dislike_info",
+                           @"titleTag": @"title_tag",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -484,4 +502,21 @@
     return YES;
 }
 
+@end
+
+@implementation FHHomeHouseDataItemsTitleTagModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"backgroundColor": @"background_color",
+    @"textColor": @"text_color",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
 @end
