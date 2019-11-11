@@ -59,6 +59,8 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 @property (nonatomic, weak) id <TTUGCSearchUserTableViewDelegate> delegate;
 @property (nonatomic, assign) BOOL isPushOutAtListController;
 @property (nonatomic, assign) BOOL isShowCancelNavigationBar;
+@property (nonatomic, assign)   CGFloat       contentViewWidth;
+@property (nonatomic, assign)   CGFloat       cancelButtonLeft;
 
 @property (nonatomic, weak) TTNavigationController *navController;
 @end
@@ -114,7 +116,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         self.navigationItem.leftBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:dismissItem], leftPaddingItem];
     }
     self.navigationItem.rightBarButtonItem = nil;
-    
+    self.contentViewWidth = -1;
     [self.view addSubview:self.searchBar];
     [self.view addSubview:self.tableView];
     
@@ -465,14 +467,17 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         
         self.maskView.top = topInset + 40.f;
         [self.view addSubview:self.maskView];
-        
+        if (self.contentViewWidth < 0) {
+            self.contentViewWidth = self.searchBar.contentView.width;
+            self.cancelButtonLeft = self.searchBar.cancelButton.left;
+        }
         [UIView animateWithDuration:UINavigationControllerHideShowBarDuration animations:^{
             self.searchBar.top = [UIApplication sharedApplication].statusBarFrame.size.height;
             self.tableView.top = self.searchBar.bottom;
             self.tableView.height = self.view.height - self.searchBar.bottom;
             self.searchBar.showsCancelButton = YES;
-            self.searchBar.contentView.width -= self.searchBar.cancelButton.width;
-            self.searchBar.cancelButton.left -= self.searchBar.cancelButton.width;
+            self.searchBar.contentView.width = self.contentViewWidth - (self.searchBar.cancelButton.width + 20);
+            self.searchBar.cancelButton.left = self.cancelButtonLeft - (self.searchBar.cancelButton.width + 20);
             self.searchBar.backgroundColor = [UIColor themeWhite];
             self.searchBar.inputBackgroundView.backgroundColor = [UIColor themeGray7];
             self.maskView.top = topInset;
@@ -533,8 +538,8 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
         self.tableView.top = self.searchBar.bottom;
         self.tableView.height = self.view.height - self.searchBar.bottom;
         self.searchBar.showsCancelButton = NO;
-        self.searchBar.contentView.width += self.searchBar.cancelButton.width;
-        self.searchBar.cancelButton.left += self.searchBar.cancelButton.width;
+        self.searchBar.contentView.width += (self.searchBar.cancelButton.width  + 20);
+        self.searchBar.cancelButton.left += (self.searchBar.cancelButton.width  + 20);
         self.searchBar.backgroundColor = [UIColor whiteColor];
         self.searchBar.inputBackgroundView.backgroundColor = [UIColor themeGray7];;
         self.maskView.top = topInset + 40.f;

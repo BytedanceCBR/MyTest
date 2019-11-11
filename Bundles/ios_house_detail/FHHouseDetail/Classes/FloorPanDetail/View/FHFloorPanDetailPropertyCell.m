@@ -89,6 +89,7 @@
             [valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(nameLabel.mas_right).offset(10);
                 make.top.equalTo(nameLabel);
+                make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 80);
                 make.bottom.equalTo(itemContenView).offset(-7);
             }];
             
