@@ -25,17 +25,20 @@
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
-#define MAIN_IMG_WIDTH      70
-#define MAIN_IMG_HEIGHT     54.5
+#define MAIN_IMG_WIDTH      106
+#define MAIN_IMG_HEIGHT     80
 #define MAIN_TAG_BG_WIDTH   48
 #define MAIN_TAG_BG_HEIGHT  16
 #define MAIN_TAG_WIDTH      46
 #define MAIN_TAG_HEIGHT     10
 #define INFO_TO_ICON_MARGIN 12
 #define PRICE_BG_TOP_MARGIN 5
-#define CELL_HEIGHT 75
+#define CELL_HEIGHT 140.5
+#define CELL_RIGHTVIEW_HEIGHT 107
+#define CELL_PRICE_HEIGHT 22
+#define MAIN_IIMAGE_TOP      11.5
 
-#define YOGA_RIGHT_PRICE_WIDITH 72
+#define YOGA_RIGHT_PRICE_WIDITH 172
 
 
 @interface FHHouseBaseNewHouseCell ()
@@ -46,7 +49,6 @@
 
 @property(nonatomic, strong) UIView *leftInfoView;
 
-@property(nonatomic, strong) UIView *maskVRImageView;
 
 @property(nonatomic, strong) UIImageView *houseVideoImageView;
 
@@ -65,6 +67,10 @@
 @property(nonatomic, strong) UIImageView *fakeImageView;
 @property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
+@property(nonatomic, strong) UIView *bottomRecommendView;//底部推荐理由
+@property(nonatomic, strong) UIImageView *bottomIconImageView; //活动icon
+@property(nonatomic, strong) UILabel *bottomRecommendLabel; //活动title
+
 //@property(nonatomic, strong) UIButton *closeBtn; //x按钮
 @property(nonatomic, strong) YYLabel *trueHouseLabel; // 天眼验真
 @property (nonatomic, strong) LOTAnimationView *vrLoadingView;
@@ -266,36 +272,10 @@
     return _recReasonView;
 }
 
-//- (UIButton *)closeBtn {
-//    if (!_closeBtn) {
-//        _closeBtn = [[UIButton alloc] init];
-//        _closeBtn.hidden = YES;
-//        [_closeBtn setImage:[UIImage imageNamed:@"small_icon_close"] forState:UIControlStateNormal];
-//        [_closeBtn addTarget:self action:@selector(dislike) forControlEvents:UIControlEventTouchUpInside];
-//        _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -10, -5, -5);
-//    }
-//    return _closeBtn;
-//}
-
--(YYLabel *)trueHouseLabel
-{
-    if (!_trueHouseLabel) {
-        _trueHouseLabel = [[YYLabel alloc]init];
-        _trueHouseLabel.font = [UIFont themeFontRegular:10];
-        _trueHouseLabel.textColor = [UIColor whiteColor];
-        _trueHouseLabel.backgroundColor = [UIColor themeRed1];
-        _trueHouseLabel.layer.masksToBounds = YES;
-        _trueHouseLabel.layer.cornerRadius = 2;
-        _trueHouseLabel.textContainerInset = UIEdgeInsetsMake(0, 4, 0, 4);
-        _trueHouseLabel.text = @"天眼验真";
-        _trueHouseLabel.hidden = YES;
-    }
-    return _trueHouseLabel;
-}
 
 -(CGFloat)contentMaxWidth
 {
-    return  SCREEN_WIDTH - HOR_MARGIN * 2 - YOGA_RIGHT_PRICE_WIDITH - MAIN_IMG_WIDTH - INFO_TO_ICON_MARGIN; //根据UI图 直接计算出来
+    return  SCREEN_WIDTH - HOR_MARGIN * 2  - MAIN_IMG_WIDTH - INFO_TO_ICON_MARGIN; //根据UI图 直接计算出来
 }
 
 -(void)initUI
@@ -324,7 +304,7 @@
     [_mainImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(10.f);
+        layout.top = YGPointValue(MAIN_IIMAGE_TOP);
         layout.width = YGPointValue(MAIN_IMG_WIDTH);
         layout.height = YGPointValue(MAIN_IMG_HEIGHT);
     }];
@@ -379,16 +359,25 @@
         layout.marginLeft = YGPointValue(INFO_TO_ICON_MARGIN);
         layout.flexDirection = YGFlexDirectionColumn;
         layout.flexGrow = 1;
-        layout.justifyContent = YGJustifyCenter;
+        layout.marginTop = YGPointValue(MAIN_IIMAGE_TOP - 1.5);
+        layout.justifyContent = YGJustifyFlexStart;
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
-        layout.height = YGPointValue(CELL_HEIGHT);
+        layout.height = YGPointValue(CELL_RIGHTVIEW_HEIGHT);
     }];
     
     UIView *titleView = [[UIView alloc] init];
     [_rightInfoView addSubview:titleView];
+    _priceBgView = [[UIView alloc] init];
+    [_priceBgView setBackgroundColor:[UIColor whiteColor]];
+    [_rightInfoView addSubview:_priceBgView];
     [_rightInfoView addSubview:self.subTitleLabel];
     [_rightInfoView addSubview:self.statInfoLabel];
     [_rightInfoView addSubview:self.tagLabel];
+    
+    _bottomRecommendView = [[UIView alloc] init];
+    [_rightInfoView addSubview:_bottomRecommendView];
+    [_bottomRecommendView setBackgroundColor:[UIColor greenColor]];
+    
     
     [titleView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -402,6 +391,7 @@
     }];
     [titleView addSubview:self.mainTitleLabel];
     [titleView addSubview:self.tagTitleLabel];
+    [titleView setBackgroundColor:[UIColor whiteColor]];
     
     _mainTitleLabel.font = [UIFont themeFontSemibold:16];
     [_mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -409,6 +399,36 @@
         layout.marginTop = YGPointValue(0);
         layout.height = YGPointValue(22);
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
+    }];
+
+    [_priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.flexDirection = YGFlexDirectionRow;
+        layout.width = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
+        layout.height = YGPointValue(CELL_PRICE_HEIGHT);
+        layout.justifyContent = YGJustifyFlexStart;
+        layout.alignItems = YGAlignFlexStart;
+    }];
+    
+    [_priceBgView addSubview:self.priceLabel];
+    [_priceBgView addSubview:self.pricePerSqmLabel];
+    //    [_priceBgView addSubview:self.closeBtn];
+    [_priceBgView addSubview:self.trueHouseLabel];
+    _priceBgView.backgroundColor = [UIColor whiteColor];
+    
+    
+    [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.height = YGPointValue(19);
+        layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
+    }];
+    
+    _pricePerSqmLabel.textAlignment = 2;
+    [_pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.marginTop = YGPointValue(2);
+        layout.height = YGPointValue(14);
+        layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
     }];
     
     _tagTitleLabel.hidden = YES;
@@ -445,45 +465,48 @@
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
     }];
     
-    
-    _priceBgView = [[UIView alloc] init];
-    [_priceBgView setBackgroundColor:[UIColor whiteColor]];
-    [self.contentView addSubview:_priceBgView];
-    [_priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+    [_bottomRecommendView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.flexDirection = YGFlexDirectionColumn;
+        layout.flexDirection = YGFlexDirectionRow;
+        layout.marginRight = YGPointValue(20);
+        layout.height = YGPointValue(16);
+        layout.justifyContent = YGJustifyFlexStart;
+        layout.alignItems = YGAlignFlexStart;
+    }];
+    
+    [_bottomIconImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.flexDirection = YGFlexDirectionRow;
         layout.width = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
-        layout.height = YGPointValue(CELL_HEIGHT);
-        layout.justifyContent = YGJustifyCenter;
-        layout.alignItems = YGAlignFlexEnd;
+        layout.height = YGPointValue(CELL_PRICE_HEIGHT);
+        layout.justifyContent = YGJustifyFlexStart;
+        layout.alignItems = YGAlignFlexStart;
     }];
-    
-    [_priceBgView addSubview:self.priceLabel];
-    [_priceBgView addSubview:self.pricePerSqmLabel];
-    //    [_priceBgView addSubview:self.closeBtn];
-    [_priceBgView addSubview:self.trueHouseLabel];
-    
-    [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.height = YGPointValue(19);
-        layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
-    }];
-    
-    _pricePerSqmLabel.textAlignment = 2;
-    [_pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+
+    _bottomIconImageView = [UIImageView new];
+    [_bottomIconImageView setBackgroundColor:[UIColor redColor]];
+    [_bottomRecommendView addSubview:_bottomIconImageView];
+    [_bottomIconImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(2);
-        layout.height = YGPointValue(14);
-        layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
+        layout.marginLeft = YGPointValue(0);
+        layout.height = YGPointValue(12);
+        layout.width = YGPointValue(12);
     }];
     
-    [_trueHouseLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isIncludedInLayout = NO;
-        layout.marginTop = YGPointValue(5);
-        layout.height = YGPointValue(14);
+    _bottomRecommendLabel = [UILabel new];
+    _bottomRecommendLabel.font = [UIFont themeFontRegular:11];
+    _bottomRecommendLabel.textColor = [UIColor themeGray1];
+    [_bottomRecommendLabel setBackgroundColor:[UIColor blueColor]];
+    [_bottomRecommendView addSubview:_bottomRecommendLabel];
+    [_bottomRecommendLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.marginTop = YGPointValue(2);
+        layout.marginLeft = YGPointValue(15);
+        layout.height = YGPointValue(12);
     }];
-    
 
+    
     [_rightInfoView addSubview:self.recReasonView];
     [_recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isIncludedInLayout = NO;
@@ -529,6 +552,11 @@
     
     self.priceLabel.text = commonModel.pricePerSqmNum;
     self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
+
+    if (imageModel.url) {
+        [self.bottomIconImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+    }
+    self.bottomRecommendLabel.text = @"一期加推，签约即送2000京东卡";
     
     
     if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {

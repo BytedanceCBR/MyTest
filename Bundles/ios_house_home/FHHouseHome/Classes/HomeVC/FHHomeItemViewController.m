@@ -26,8 +26,12 @@
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import <FHHouseBaseNewHouseCell.h>
 
 extern NSString *const INSTANT_DATA_KEY;
+
+static NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
+static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate>
 
@@ -167,8 +171,10 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)registerCells
 {
-    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
-    
+    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellSmallItemImageId];
+
+    [self.tableView registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:kCellNewHouseItemImageId];
+
     [self.tableView  registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
     
     [self.tableView  registerClass:[FHHomeBaseTableCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBaseTableCell class])];
@@ -525,7 +531,9 @@ extern NSString *const INSTANT_DATA_KEY;
         if (self.showNoDataErrorView || self.showRequestErrorView || self.showDislikeNoDataView) {
             return [self getHeightShowNoData];
         }
-        
+        if (self.houseType == FHHouseTypeNewHouse) {
+            return 140.5;
+        }
         return 75;
     }
 }
@@ -630,8 +638,19 @@ extern NSString *const INSTANT_DATA_KEY;
             return cell;
         }
         
+        if (self.houseType == FHHouseTypeNewHouse) {
+            //to do 房源cell
+            FHHouseBaseNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellNewHouseItemImageId];
+            cell.delegate = self;
+            if (indexPath.row < self.houseDataItemsModel.count) {
+                JSONModel *model = self.houseDataItemsModel[indexPath.row];
+                [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
+                [cell updateHomeNewHouseCellModel:model];
+            }
+            return cell;
+        }
         //to do 房源cell
-        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellSmallItemImageId];
         cell.delegate = self;
         if (indexPath.row < self.houseDataItemsModel.count) {
             JSONModel *model = self.houseDataItemsModel[indexPath.row];
