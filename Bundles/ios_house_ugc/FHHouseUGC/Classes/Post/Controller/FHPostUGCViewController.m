@@ -502,6 +502,8 @@ static NSInteger const kMaxPostImageCount = 9;
     self.inputTextView.textLenDelegate = self;
     // 配置话题按钮
     [self configTopicBtnOnToolBar];
+    // 配置@人按钮
+    [self configAtBtnOnToolBar];
 }
 
 - (void)configTopicBtnOnToolBar {
@@ -544,6 +546,49 @@ static NSInteger const kMaxPostImageCount = 9;
         };
     } else {
         self.textViewMediator.hashTagBtnClickBlock = nil;
+    }
+}
+
+- (void)configAtBtnOnToolBar {
+    BOOL isShowAtBtn = YES;
+    self.toolbar.banAtInput = !isShowAtBtn;
+    self.inputTextView.isBanAt = self.toolbar.banAtInput;
+    if(isShowAtBtn) {
+        WeakSelf;
+        self.textViewMediator.atBtnClickBlock = ^(BOOL didInputAt) {
+            StrongSelf;
+            self.keyboardVisibleBeforePresent = NO;// 不显示键盘了
+            [self endEditing];
+            
+            NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_at_list"];
+            NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.selectView.groupId;
+            NSURLQueryItem *groudIPItem = [NSURLQueryItem queryItemWithName:@"groupId" value:groupId];
+            
+            NSURL *url = components.URL;
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            param[@"delegate"] = self.textViewMediator;
+            param[@"isPushOutAtListController"] = @(YES);
+            param[@"isShowCancelNavigationBar"] = @(YES);
+            
+            NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
+            
+            tracer[UT_ELEMENT_FROM] = didInputAt ? @"write_label" : @"publisher_at";
+            tracer[UT_ENTER_FROM] = @"feed_publisher";
+            tracer[UT_ENTER_TYPE] = @"click";
+            param[TRACER_KEY] = tracer;
+            
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+            
+            if(!didInputAt) {
+                // 发布器内点击“@”按钮
+                NSMutableDictionary *param = self.tracerDict.mutableCopy;
+                param[@"click_position"] = @"publisher_at";
+                TRACK_EVENT(@"click_options", param);
+            }
+        };
+    } else {
+        self.textViewMediator.atBtnClickBlock = nil;
     }
 }
 

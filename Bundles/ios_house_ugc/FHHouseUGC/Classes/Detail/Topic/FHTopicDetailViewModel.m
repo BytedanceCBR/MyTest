@@ -575,14 +575,22 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = [self pageType];
-    traceParam[@"enter_type"] = @"click";
-    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
-    traceParam[@"log_pb"] = cellModel.logPb;
     dict[TRACER_KEY] = traceParam;
     
     if (url) {
+        BOOL isOpen = YES;
         if ([url.absoluteString containsString:@"concern"]) {
+            traceParam[@"enter_from"] = [self pageType];
+            traceParam[@"enter_type"] = @"click";
+            traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+            traceParam[@"log_pb"] = cellModel.logPb;
+        } else if([url.absoluteString containsString:@"profile"]) {
+            // JOKER:
+        } else {
+            isOpen = NO;
+        }
+
+        if(isOpen) {
             // 话题
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];

@@ -19,11 +19,13 @@
 #import <UIImageView+BDWebImage.h>
 #import "TTRoute.h"
 #import "JSONAdditions.h"
+#import "FHUGCCellHelper.h"
 
-@interface FHUGCCellOriginItemView ()
+@interface FHUGCCellOriginItemView ()<TTUGCAttributedLabelDelegate>
 
 @property(nonatomic ,strong) UIImageView *iconView;
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,assign) BOOL isClickLink;
 
 @end
 
@@ -43,8 +45,11 @@
     self.layer.masksToBounds = YES;
     self.layer.cornerRadius = 4;
     
-    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToDetail:)];
-    [self addGestureRecognizer:singleTap];
+    //这里有个坑，加上手势会导致@不能点击
+    self.userInteractionEnabled = YES;
+//    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToDetail:)];
+//    singleTap
+//    [self addGestureRecognizer:singleTap];
     
     self.iconView = [[UIImageView alloc] init];
     _iconView.hidden = YES;
@@ -57,6 +62,14 @@
     _contentLabel.numberOfLines = 2;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor themeGray7];
+    NSDictionary *linkAttributes = @{
+                                     NSForegroundColorAttributeName : [UIColor themeRed3],
+                                     NSFontAttributeName : [UIFont themeFontRegular:16]
+                                     };
+    _contentLabel.linkAttributes = linkAttributes;
+    _contentLabel.activeLinkAttributes = linkAttributes;
+    _contentLabel.inactiveLinkAttributes = linkAttributes;
+    _contentLabel.delegate = self;
     [self addSubview:_contentLabel];
 }
 
@@ -78,7 +91,7 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         self.cellModel = cellModel;
-        [self.contentLabel setText:cellModel.originItemModel.contentAStr];
+        [FHUGCCellHelper setOriginRichContent:self.contentLabel model:cellModel];
         if(cellModel.originItemModel.imageModel){
             [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.originItemModel.imageModel.url] placeholder:nil];
             _iconView.hidden = NO;
@@ -94,11 +107,23 @@
     }
 }
 
-- (void)goToDetail:(UITapGestureRecognizer *)sender {
+- (void)goToDetail {
     NSString *routeUrl = self.cellModel.originItemModel.openUrl;
     if(routeUrl){
         NSURL *openUrl = [NSURL URLWithString:routeUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self goToDetail];
+}
+
+#pragma mark - TTUGCAttributedLabelDelegate
+
+- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+    if(self.goToLinkBlock){
+        self.goToLinkBlock(self.cellModel, url);
     }
 }
 

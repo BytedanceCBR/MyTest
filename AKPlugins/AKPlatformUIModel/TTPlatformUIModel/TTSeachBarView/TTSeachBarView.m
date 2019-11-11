@@ -10,10 +10,12 @@
 #import "TTTracker.h"
 #import "TTDeviceHelper.h"
 #import "UIViewAdditions.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
 
-#define kSearchBarLeftPad 15
+#define kSearchBarLeftPad 20
 
-const CGFloat kCancelButtonPadding = 7;
+const CGFloat kCancelButtonPadding = 20;
 
 @implementation TTSeachBarView
 
@@ -26,9 +28,6 @@ const CGFloat kCancelButtonPadding = 7;
     if (frame.size.width < TTSeachBarViewDefaultSize.width) {
         frame.size.width = TTSeachBarViewDefaultSize.width;
     }
-    if (frame.size.height < TTSeachBarViewDefaultSize.height) {
-        frame.size.height = TTSeachBarViewDefaultSize.height;
-    }
     
     self = [super initWithFrame:frame];
     if (self) {
@@ -38,7 +37,7 @@ const CGFloat kCancelButtonPadding = 7;
         self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:self.contentView];
         
-        self.cancelButton = [[SSThemedButton alloc] initWithFrame:CGRectMake(self.width, 0, 50, self.frame.size.height)];
+        self.cancelButton = [[SSThemedButton alloc] initWithFrame:CGRectMake(self.width, 0, 33, self.frame.size.height)];
         self.cancelButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
         self.cancelButton.titleLabel.font = [UIFont systemFontOfSize:16.];
         self.cancelButton.titleColorThemeKey = kColorText6;
@@ -48,21 +47,17 @@ const CGFloat kCancelButtonPadding = 7;
         [self addSubview:self.cancelButton];
         
         CGRect contentFrame = self.contentView.bounds;
-        self.inputBackgroundView = [[SSThemedButton alloc] initWithFrame:CGRectMake(kSearchBarLeftPad, 8, contentFrame.size.width - kSearchBarLeftPad*2, contentFrame.size.height - 16)];
+        self.inputBackgroundView = [[SSThemedButton alloc] initWithFrame:CGRectMake(kSearchBarLeftPad, 4, contentFrame.size.width - kSearchBarLeftPad*2, contentFrame.size.height - 8)];
         self.inputBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.inputBackgroundView.layer.cornerRadius = 4;
         self.inputBackgroundView.layer.masksToBounds = YES;
-        self.inputBackgroundView.backgroundColorThemeKey = kColorBackground4;
-        //self.inputBackgroundView.highlightedBackgroundColorThemeKey = kColorBackground4Highlighted;
-        self.inputBackgroundView.borderColorThemeKey = kColorLine1;
-        self.inputBackgroundView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
-        self.inputAccessoryView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
+        self.inputBackgroundView.backgroundColor = [UIColor themeGray7];
         [self.contentView addSubview:self.inputBackgroundView];
         
         self.searchImageView = [[SSThemedImageView alloc] init];
         self.searchImageView.imageName = @"search_small";
         [self.searchImageView sizeToFit];
-        self.searchImageView.left = 8;
+        self.searchImageView.left = 10;
         self.searchImageView.top = (self.inputBackgroundView.height - self.searchImageView.height) / 2;
         self.searchImageView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         self.searchImageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -71,16 +66,18 @@ const CGFloat kCancelButtonPadding = 7;
         
         self.closeButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         self.closeButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
-        self.closeButton.frame = CGRectMake((self.inputBackgroundView.width) - 22, 7, 14, 14);
-        self.closeButton.backgroundImageName = @"clear_icon";
-        self.closeButton.highlightedBackgroundImageName = @"clear_icon";
+        self.closeButton.frame = CGRectMake((self.inputBackgroundView.width) - 28, 4, 24, 24);
+        //self.closeButton.backgroundImageName = @"clear_icon";
+        //self.closeButton.highlightedBackgroundImageName = @"clear_icon";
+        [self.closeButton setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateNormal];
+        [self.closeButton setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateHighlighted];
         self.closeButton.hidden = YES;
         [self.inputBackgroundView addSubview:self.closeButton];
         [self.closeButton addTarget:self action:@selector(clearSearchText:) forControlEvents:UIControlEventTouchUpInside];
         
         
         // 调整输入框大小->输入框被遮挡
-        self.searchField = [[SSThemedTextField alloc] initWithFrame:CGRectMake(32, 4, self.closeButton.left - 15 - self.searchImageView.right, (self.inputBackgroundView.height) - 8)];
+        self.searchField = [[SSThemedTextField alloc] initWithFrame:CGRectMake(30, 4, self.closeButton.left - 15 - self.searchImageView.right, (self.inputBackgroundView.height) - 8)];
         self.searchField.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
         self.searchField.clearButtonMode = UITextFieldViewModeNever;
         self.searchField.backgroundColor = [UIColor clearColor];
@@ -96,9 +93,9 @@ const CGFloat kCancelButtonPadding = 7;
         
         self.showsCancelButton = NO;
         
-        self.bottomLineView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, self.height - [TTDeviceHelper ssOnePixel], self.width, [TTDeviceHelper ssOnePixel])];
-        self.bottomLineView.backgroundColorThemeKey = kColorLine1;
-        [self addSubview:self.bottomLineView];
+//        self.bottomLineView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, self.height - [TTDeviceHelper ssOnePixel], self.width, [TTDeviceHelper ssOnePixel])];
+//        self.bottomLineView.backgroundColorThemeKey = kColorLine1;
+//        [self addSubview:self.bottomLineView];
         
     }
     return self;
@@ -133,8 +130,8 @@ const CGFloat kCancelButtonPadding = 7;
         return;
     }
     CGRect initialContentFrame = self.contentView.frame, targetContentFrame = self.contentView.frame;
-    initialContentFrame.size.width = self.width - _editing * (self.cancelButton.width) * self.showsCancelButton;
-    targetContentFrame.size.width = self.width - editing * (self.cancelButton.width) * self.showsCancelButton;
+    initialContentFrame.size.width = self.width - _editing * (self.cancelButton.width + kCancelButtonPadding) * self.showsCancelButton;
+    targetContentFrame.size.width = self.width - editing * (self.cancelButton.width + kCancelButtonPadding) * self.showsCancelButton;
     
     CGRect initialCancelFrame = self.cancelButton.frame, targetCancelFrame = self.cancelButton.frame;
     initialCancelFrame.origin.x = self.width - _editing * ((self.cancelButton.width) + kCancelButtonPadding) * self.showsCancelButton;

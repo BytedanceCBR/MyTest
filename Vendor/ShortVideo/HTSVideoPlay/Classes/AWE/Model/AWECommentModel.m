@@ -39,6 +39,7 @@
              @"isFollowing" : @"is_following",
              @"userName" : @"user_name",
              @"userProfileImageUrl" : @"user_profile_image_url",
+             @"contentRichSpan" : @"content_rich_span",
             };
 }
 
@@ -52,6 +53,7 @@
              @"isFollowed" : @"is_followed",
              @"replyToComment" : @"reply_to_comment",
              @"text" : @"text",
+             @"contentRichSpan" : @"content_rich_span",
              @"replyCount" : @"reply_count",
              @"isFollowing" : @"is_following",
              @"userVerified" : @"user_verified",

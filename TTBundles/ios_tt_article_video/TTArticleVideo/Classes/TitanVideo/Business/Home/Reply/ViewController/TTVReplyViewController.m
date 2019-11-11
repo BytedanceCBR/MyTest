@@ -418,10 +418,14 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 }
 
 #pragma mark private(cell)
-- (void)p_enterProfileWithUserID:(NSString *)userID {
+- (void)p_enterProfileWithUserID:(NSString *)userID fromPage:(NSString *)fromPage {
     NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
     [baseCondition setValue:userID forKey:@"uid"];
-    [baseCondition setValue:@"comment_list" forKey:@"from_page"];
+    if(fromPage){
+        [baseCondition setValue:fromPage forKey:@"from_page"];
+    }else{
+        [baseCondition setValue:@"comment_list" forKey:@"from_page"];
+    }
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
 }
 
@@ -661,7 +665,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 
 - (void)replyListCell:(UITableViewCell *)view avatarTappedWithModel:(id<TTVReplyModelProtocol>)model {
 
-    [self p_enterProfileWithUserID:model.user.ID];
+    [self p_enterProfileWithUserID:model.user.ID fromPage:nil];
 }
 
 - (void)replyListCell:(UITableViewCell *)view deleteCommentWithModel:(id<TTVReplyModelProtocol>)model {
@@ -707,11 +711,11 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 
 - (void)replyListCell:(UITableViewCell *)view nameViewonClickedWithModel:(id<TTVReplyModelProtocol>)model {
 
-    [self p_enterProfileWithUserID:model.user.ID];
+    [self p_enterProfileWithUserID:model.user.ID fromPage:nil];
 }
 
 - (void)replyListCell:(UITableViewCell *)view quotedNameOnClickedWithModel:(id<TTVReplyModelProtocol>)model {
-    [self p_enterProfileWithUserID:model.tt_qutoedCommentStructModel.user_id.stringValue];
+    [self p_enterProfileWithUserID:model.tt_qutoedCommentStructModel.user_id.stringValue fromPage:@"at_user_profile_comment"];
 }
 
 #pragma mark - TTVReplyViewDelegate

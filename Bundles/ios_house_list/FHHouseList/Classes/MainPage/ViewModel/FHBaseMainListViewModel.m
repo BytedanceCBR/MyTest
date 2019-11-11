@@ -1913,6 +1913,7 @@ extern NSString *const INSTANT_DATA_KEY;
     params[UT_ORIGIN_SEARCH_ID] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
     params[UT_SEARCH_ID] =  self.searchId.length > 0 ? self.searchId : @"be_null";
     params[UT_ORIGIN_FROM] = self.viewController.tracerModel.originFrom.length > 0 ? self.viewController.tracerModel.originFrom : @"be_null";
+    params[@"growth_deepevent"] = @(1);
     TRACK_EVENT(@"house_search",params);
     self.canChangeHouseSearchDic = YES;
 }

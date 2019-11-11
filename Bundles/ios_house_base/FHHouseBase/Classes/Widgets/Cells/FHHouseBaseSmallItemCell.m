@@ -695,7 +695,7 @@
 
 - (void)updateWithNeighborModel:(FHHouseNeighborDataItemsModel *)model
 {
-    self.houseVideoImageView.hidden = YES;
+    self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
     FHImageModel *imageModel = model.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
