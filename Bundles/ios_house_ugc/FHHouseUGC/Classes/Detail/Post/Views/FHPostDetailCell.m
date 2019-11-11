@@ -115,6 +115,11 @@
     
     self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
     _originView.hidden = YES;
+    _originView.goToLinkBlock = ^(FHFeedUGCCellModel * _Nonnull cellModel, NSURL * _Nonnull url) {
+        if(weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(gotoLinkUrl:url:)]){
+            [weakSelf.delegate gotoLinkUrl:cellModel url:url];
+        }
+    };
     [self.contentView addSubview:_originView];
     
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCommunityDetail)];

@@ -121,6 +121,9 @@
             make.right.equalTo(self.mas_right).offset(-15);
         }];
         
+        UILongPressGestureRecognizer *longPress1 = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(cellLongPress:)];
+        [self.commentLabel addGestureRecognizer:longPress1];
+        
         self.debugGidLabel = [UILabel new];
         self.debugGidLabel.hidden = YES;
         self.debugGidLabel.text = nil;

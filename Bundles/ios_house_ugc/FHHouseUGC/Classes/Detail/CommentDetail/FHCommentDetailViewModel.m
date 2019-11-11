@@ -531,6 +531,7 @@
             if (identifier.length > 0) {
                 FHUGCBaseCell *cell = (FHUGCBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
                 cell.baseViewModel = self;
+                cell.delegate = self;
                 [cell refreshWithData:data];
                 return cell;
             }
@@ -717,6 +718,36 @@
     tracerDict[@"click_position"] = @"reply_dislike";
     tracerDict[@"comment_id"] = comment_id ?: @"be_null";
     [FHUserTracker writeEvent:@"click_reply_dislike" params:tracerDict];
+}
+
+# pragma mark - FHUGCBaseCellDelegate
+
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    // 埋点
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    dict[TRACER_KEY] = traceParam;
+    
+    if (url) {
+        BOOL isOpen = YES;
+        if ([url.absoluteString containsString:@"concern"]) {
+            // 话题
+            traceParam[@"enter_from"] = self.detailController.tracerDict[@"page_type"];
+            traceParam[@"element_from"] = @"feed_topic";
+            traceParam[@"enter_type"] = @"click";
+            traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+            traceParam[@"log_pb"] = cellModel.logPb;
+        } else if([url.absoluteString containsString:@"profile"]) {
+            // JOKER:
+        } else {
+            isOpen = NO;
+        }
+        
+        if(isOpen) {
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+    }
 }
 
 @end
