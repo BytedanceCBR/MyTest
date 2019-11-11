@@ -123,11 +123,13 @@ static APNsManager *_sharedManager = nil;
         }
 
         TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:theUrl];
-        if ([paramObj.allParams valueForKey:@"ext_growth"]) {
-            NSDictionary *apsDict = [userInfo tt_dictionaryValueForKey:@"aps"];
-            NSInteger badgeNumber = [apsDict[@"badge"]integerValue];
-            [self writeLaunchLogEvent:[paramObj.allParams valueForKey:@"ext_growth"] badgeNumber:badgeNumber];
-        }
+        
+        //对齐安卓逻辑
+        NSString *extGrowth = [paramObj.allParams valueForKey:@"ext_growth"] ?:@"be_null";
+        NSDictionary *apsDict = [userInfo tt_dictionaryValueForKey:@"aps"];
+        NSInteger badgeNumber = [apsDict[@"badge"]integerValue];
+        [self writeLaunchLogEvent:[paramObj.allParams valueForKey:@"ext_growth"] badgeNumber:badgeNumber];
+        
         if (!isEmptyString(paramObj.host)) {
             [self trackWithPageName:paramObj.host params:paramObj.queryParams];
         }
