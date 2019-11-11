@@ -156,6 +156,13 @@
 // MARK: 投票选项Cell
 @implementation FHUGCVotePublishOptionCell
 
+
+-(void)prepareForReuse {
+    [super prepareForReuse];
+    
+    self.optionTextField.text = @"";
+}
+
 - (UIImageView *)deleteImageView {
     if(!_deleteImageView) {
         _deleteImageView = [UIImageView new];
