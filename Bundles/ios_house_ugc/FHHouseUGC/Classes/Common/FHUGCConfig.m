@@ -17,6 +17,7 @@
 #import "FHEnvContext.h"
 #import <TTBusinessManager+StringUtils.h>
 #import <FHUtils.h>
+#import "HMDTTMonitor.h"
 
 //默认轮训间隔时间5分钟
 #define defaultFocusTimerInterval 300
@@ -493,10 +494,12 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                         if ([tModel isKindOfClass:[FHUGCFollowModel class]]) {
                             [self followSuccessWith:tModel.data];
                         }
+                        [[HMDTTMonitor defaultManager] hmdTrackService:@"follow_community" metric:nil category:@{@"status":@(0)} extra:nil];
                     } else {
                         // [[ToastManager manager] showToast:@"取消关注成功"];
                         // 取消关注成功
                         [self cancelFollowSuccessWith:social_group_id];
+                        [[HMDTTMonitor defaultManager] hmdTrackService:@"unfollow_community" metric:nil category:@{@"status":@(0)} extra:nil];
                     }
                     // 关注或者取消关注后 重新拉取 关注列表
                     isSuccess = YES;
@@ -527,8 +530,10 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         } else {
             if (follow) {
                 // [[ToastManager manager] showToast:@"关注失败"];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"follow_community" metric:nil category:@{@"status":@(2)} extra:nil];
             } else {
                 // [[ToastManager manager] showToast:@"取消关注失败"];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"unfollow_community" metric:nil category:@{@"status":@(2)} extra:nil];
             }
             if (completion) {
                 completion(NO);
