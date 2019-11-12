@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param: searchId 请求id
  *  @param: sugParam  suggestion params
  */
-+(TTHttpTask *)searchErshouHouseList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion;
++(TTHttpTask *)searchErshouHouseList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(FHSearchHouseModel * _Nullable model , NSError * _Nullable error))completion;
 
 /*
  *  虚假房源列表请求

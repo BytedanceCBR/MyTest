@@ -7,10 +7,13 @@
 
 #import <UIKit/UIKit.h>
 #import <JSONModel.h>
+#import <FHHouseBase/FHListBaseCell.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHSuggestionRealHouseTopCell : UITableViewCell
+@class FHSugListRealHouseTopInfoModel;
+
+@interface FHSuggestionRealHouseTopCell : FHListBaseCell
 
 @property (nonatomic, strong)   UILabel       *titleLabel;
 @property (nonatomic, strong)   UILabel       *realHouseLabel;
@@ -22,11 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UIButton      *allWebHouseBtn;
 @property (nonatomic, strong)   UIView        *segementLine;
 @property (nonatomic, strong)   UIImageView   *backImageView;
-@property (nonatomic, strong)   NSDictionary   *tracerDict;
-@property (nonatomic, strong)  NSString *searchQuery;
 
 - (void)refreshUI:(JSONModel *)data;
 
 @end
+
 
 NS_ASSUME_NONNULL_END

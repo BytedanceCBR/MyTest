@@ -692,7 +692,9 @@ extern NSString *const INSTANT_DATA_KEY;
     TTHttpTask *task = [FHHouseListAPI requestDeleteSugSubscribe:subscribeId class:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (!error) {
             NSMutableDictionary *dict = [NSMutableDictionary new];
-            [dict setValue:text forKey:@"text"];
+            if (text.length > 0) {
+                [dict setValue:text forKey:@"text"];
+            }
             [dict setValue:@"0" forKey:@"status"];
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
@@ -1481,7 +1483,7 @@ extern NSString *const INSTANT_DATA_KEY;
                         if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
                             FHSugListRealHouseTopInfoModel *realHouseInfo = (FHSugListRealHouseTopInfoModel *)cellModel.realHouseTopModel;
                             FHSuggestionRealHouseTopCell *topRealCell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListTopRealInfoCellId];
-                            topRealCell.searchQuery = self.query;
+//                            topRealCell.searchQuery = self.query;
                             if ([topRealCell respondsToSelector:@selector(refreshUI:)]) {
                                 [topRealCell refreshUI:realHouseInfo];
                             }
@@ -1500,8 +1502,8 @@ extern NSString *const INSTANT_DATA_KEY;
                                 }
                                 [traceDictParams setValue:cellModel.secondModel.imprId forKey:@"impr_id"];
                                 [traceDictParams setValue:@"old_list" forKey:@"category_name"];
-                                topRealCell.tracerDict = traceDictParams;
-                            }             
+//                                topRealCell.tracerDict = traceDictParams;
+                            }
                             return topRealCell;
                         }
                     }
@@ -1781,35 +1783,20 @@ extern NSString *const INSTANT_DATA_KEY;
     }
 }
 
-- (void)jump2Webview:(FHSingleImageInfoCellModel *)cellModel
+- (void)jump2Webview:(FHSearchRealHouseAgencyInfo *)model
 {
     if (![FHEnvContext isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
     
-    FHSearchRealHouseAgencyInfo *model = cellModel.agencyInfoModel;
-    if (!model) {
+    if (![model isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
         return;
     }
     if ([model isKindOfClass:[FHSearchRealHouseAgencyInfo class]] &&[model.openUrl isKindOfClass:[NSString class]]) {
         
         NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
         NSString *urlStr = model.openUrl;
-//        if ([tracerDict isKindOfClass:[NSDictionary class]] && model.openUrl) {
-//            NSMutableDictionary *reprotParams = [NSMutableDictionary new];
-//            [reprotParams addEntriesFromDictionary:tracerDict];
-//
-//            [reprotParams setValue:tracerDict[@"category_name"] forKey:@"enter_from"];
-//            if ([model.openUrl containsString:@"?"]) {
-//                urlStr = [NSString stringWithFormat:@"%@&report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
-//            }else
-//            {
-//                urlStr = [NSString stringWithFormat:@"%@?report_params=%@",model.openUrl,[FHUtils getJsonStrFrom:reprotParams]];
-//            }
-//        }else {
-//            urlStr = model.openUrl;
-//        }
         
         if ([urlStr isKindOfClass:[NSString class]]) {
             NSDictionary *info = @{@"url":urlStr,@"fhJSParams":@{},@"title":@" "};

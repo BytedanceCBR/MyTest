@@ -206,14 +206,14 @@
                     traceParam[@"origin_from"] = origin_from ? : @"be_null";
                     traceParam[@"origin_search_id"] = origin_search_id ? : @"be_null";
                     traceParam[@"search_id"] = self.searchId;
-                     topRealCell.tracerDict = traceParam;
+//                     topRealCell.tracerDict = traceParam;
                     
                     __weak typeof(self) weakSelf = self;
                     NSString *stringQuery = [NSString stringWithFormat:@"neighborhood_id=%@",self.neiborHoorId];
                     if (self.condition) {
                         stringQuery = [stringQuery stringByAppendingString:self.condition];
                     }
-                    topRealCell.searchQuery = stringQuery;
+//                    topRealCell.searchQuery = stringQuery;
                     
                     return topRealCell;
                 }

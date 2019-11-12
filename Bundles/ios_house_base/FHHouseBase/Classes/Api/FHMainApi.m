@@ -27,11 +27,6 @@
 #define API_NO_DATA     10001
 #define API_WRONG_DATA  10002
 
-typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
-    FHNetworkMonitorTypeSuccess = 0, //成功
-    FHNetworkMonitorTypeBizFailed = 1, //返回数据成功 status 非0
-    FHNetworkMonitorTypeNetFailed = 2, //数据返回失败
-};
 
 
 #define QURL(QPATH) [[self host] stringByAppendingString:QPATH]

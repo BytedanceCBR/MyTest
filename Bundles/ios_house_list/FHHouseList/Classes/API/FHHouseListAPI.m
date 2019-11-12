@@ -7,6 +7,17 @@
 
 #import "FHHouseListAPI.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
+#import <YYModel/YYModel.h>
+
+#define QURL(QPATH) [[FHMainApi host] stringByAppendingString:QPATH]
+#define GET @"GET"
+#define POST @"POST"
+#define DEFULT_ERROR @"请求错误"
+#define API_ERROR_CODE  10000
+#define API_NO_DATA     10001
+#define API_WRONG_DATA  10002
+
+
 
 @implementation FHHouseListAPI
 
@@ -86,7 +97,7 @@
  *  @param: searchId 请求id
  *  @param: sugParam  suggestion params 已废弃
  */
-+(TTHttpTask *)searchErshouHouseList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion
++(TTHttpTask *)searchErshouHouseList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(FHSearchHouseModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString *queryPath = @"/f100/api/search";
 
@@ -102,8 +113,8 @@
     if (sugParam) {
         qparam[@"suggestion_params"] = sugParam;
     }
-    
-    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls logPath:@"search_second" completion:completion];
+    return [self querySearchData:queryPath uploadLog:YES params:qparam method:GET logPath:@"search_second" completion:completion];
+//    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls logPath:@"search_second" completion:completion];
     
 }
 
@@ -383,6 +394,93 @@
     }
     
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
+#pragma mark - 统一处理search请求json to model
++ (TTHttpTask *)querySearchData:(NSString *_Nullable)queryPath uploadLog:(BOOL)uploadLog params:(NSDictionary *_Nullable)param method:(NSString *)method logPath:(NSString *)logPath completion:(void(^_Nullable)(FHSearchHouseModel *model , NSError *error))completion
+{
+    NSString *url = QURL(queryPath);
+    
+    NSDate *startDate = [NSDate date];
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:method needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        NSDate *backDate = [NSDate date];
+        
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHSearchHouseModel *model = (FHSearchHouseModel *)[self generateSearchModel:obj error:&backError];
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            
+            BOOL success = NO;
+            if (response.statusCode == 200 ) {
+                if ([model respondsToSelector:@selector(status)]) {
+                    NSString *status = [model performSelector:@selector(status)];
+                    if (status.integerValue != 0 || error != nil) {
+                        if (uploadLog) {
+                            extraDict = @{}.mutableCopy;
+                            extraDict[@"request_url"] = response.URL.absoluteString;
+                            extraDict[@"response_headers"] = response.allHeaderFields;
+                            extraDict[@"error"] = error.domain;
+                        }
+                        code = [status integerValue];
+                        resultType = FHNetworkMonitorTypeBizFailed;
+                        errMsg = error.domain;
+                    }
+                }
+            }else{
+                code = response.statusCode;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            }
+            
+            [FHMainApi addRequestLog:logPath?:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
+            
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
+        
+    }];
+}
+
++ (FHSearchHouseModel *)generateSearchModel:(NSData *)jsonData error:(NSError *__autoreleasing *)error
+{
+    if (*error) {
+        //there is error
+        return nil;
+    }
+    
+    if (!jsonData) {
+        *error = [NSError errorWithDomain:@"未请求到数据" code:API_NO_DATA userInfo:nil];
+        return nil;
+    }
+    
+    NSError *jerror = nil;
+    FHSearchHouseModel *model = nil;
+    model = [[FHSearchHouseModel alloc]initWithData:jsonData error:&jerror];
+    if (jerror) {
+#if DEBUG
+        NSLog(@" %s %ld API [%@] make json failed",__FILE__,__LINE__,NSStringFromClass([FHSearchHouseModel class]));
+#endif
+        *error = [NSError errorWithDomain:@"数据异常" code:API_WRONG_DATA userInfo:nil];
+        return nil;
+    }
+    
+    if ([model respondsToSelector:@selector(status)]) {
+        NSString *status = [model performSelector:@selector(status)];
+        if (![@"0" isEqualToString:status]) {
+            NSString *message = nil;
+            if ([model respondsToSelector:@selector(message)]) {
+                message = [model performSelector:@selector(message)];
+            }
+            *error = [NSError errorWithDomain:message?:DEFULT_ERROR code:[status integerValue] userInfo:nil];
+        }
+    }
+    return model;
 }
 
 

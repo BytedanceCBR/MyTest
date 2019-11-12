@@ -26,6 +26,9 @@
 @property (nonatomic, strong)UIButton *maskBtn;
 @property (nonatomic, strong)UIButton *maskWebBtn;
 
+@property (nonatomic, strong)   NSDictionary   *tracerDict;
+@property (nonatomic, strong)  NSString *searchQuery;
+
 @end
 
 @implementation FHSuggestionRealHouseTopCell
@@ -334,11 +337,25 @@
     _allWebHouseBtn.userInteractionEnabled = YES;
 }
 
+- (void)refreshWithData:(id)data
+{
+    if ([data isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+        [self refreshUI:data];
+    }
+}
+
++ (CGFloat)heightForData:(id)data
+{
+    return 50;
+}
+
 - (void)refreshUI:(JSONModel *)data
 {
     if ([data isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
         FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)data;
         self.currentModel = model;
+        self.searchQuery = model.searchQuery;
+        self.tracerDict = model.tracerDict;
         [_falseHouseLabel setBackgroundColor:[UIColor clearColor]];
         if ([model.fakeText isKindOfClass:[NSString class]]) {
             _falseHouseLabel.text = model.fakeText;
@@ -394,3 +411,4 @@
 }
 
 @end
+
