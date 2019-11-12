@@ -25,7 +25,6 @@
 @interface FHVoteDetailViewController ()
 @property (nonatomic, assign) int64_t tid; //帖子ID--必须
 @property (nonatomic, assign) int64_t fid; //话题ID
-@property (nonatomic, copy) NSString *cid; //关心ID
 // 列表页数据
 @property (nonatomic, strong)   FHFeedUGCCellModel       *detailData;
 @property (nonatomic, strong)   FHDetailCommentAllFooter       *commentAllFooter;
@@ -195,7 +194,7 @@
     }];
     self.naviHeaderView.hidden = YES;
     self.followButton.hidden = YES;
-    self.shareButton.hidden = NO;
+    self.shareButton.hidden = YES;// 先不支持分享
 }
 
 - (void)startLoadData {
@@ -276,7 +275,7 @@
         } else {
             self.naviHeaderView.hidden = YES;
             self.followButton.hidden = YES;
-            self.shareButton.hidden = NO;
+            self.shareButton.hidden = YES;// 先不支持分享
         }
     }
 }
@@ -330,9 +329,9 @@
 
 // 分享按钮点击
 - (void)shareButtonClicked:(UIButton *)btn {
-    if (self.viewModel.shareInfo && self.tracerDict) {
-        [[FHUGCShareManager sharedManager] shareActionWithInfo:self.viewModel.shareInfo tracerDic:self.tracerDict];
-    }
+//    if (self.viewModel.shareInfo && self.tracerDict) {
+//        [[FHUGCShareManager sharedManager] shareActionWithInfo:self.viewModel.shareInfo tracerDic:self.tracerDict];
+//    }
 }
 
 @end

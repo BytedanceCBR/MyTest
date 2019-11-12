@@ -752,7 +752,7 @@
                 if (commentHeight < frameHeight) {
                     topOffset = topOffset - (frameHeight - commentHeight) - 1;
                 }
-                if (self.postType == FHUGCPostTypePost) {
+                if (self.postType == FHUGCPostTypePost || self.postType == FHUGCPostTypeVote) {
                     // 帖子 -- 减去全部评论的高度
                     topOffset -= 52;
                 }
