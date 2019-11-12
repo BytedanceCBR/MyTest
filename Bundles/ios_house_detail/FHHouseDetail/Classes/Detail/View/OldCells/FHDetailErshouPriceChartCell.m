@@ -198,7 +198,7 @@
             return @"detail_circle_red";
             break;
         case 1:
-            return @"detail_circle_dark";
+            return @"detail_circle_yellow";
             break;
         case 2:
             return @"detail_circle_gray";
