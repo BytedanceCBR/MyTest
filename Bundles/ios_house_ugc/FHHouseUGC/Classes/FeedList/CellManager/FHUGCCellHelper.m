@@ -423,6 +423,24 @@
     }
 }
 
++ (void)setUGCVoteContentString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
+    if(!isEmptyString(model.voteInfo.title)){
+        UILabel *label = [[UILabel alloc] init];
+        label.numberOfLines = numberOfLines;
+        label.font = [UIFont themeFontRegular:16];
+        //设置字间距0.4
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:model.voteInfo.title attributes:@{NSKernAttributeName:@(0.4)}];
+        label.attributedText = attributedString;
+        
+        CGSize size = [label sizeThatFits:CGSizeMake(width, MAXFLOAT)];
+        model.voteInfo.contentAStr = attributedString;
+        model.voteInfo.contentHeight = size.height;
+    }else{
+        model.voteInfo.contentHeight = 0;
+        model.voteInfo.contentAStr = nil;
+    }
+}
+
 + (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel {
     TTVFeedListItem *item = [[TTVFeedListItem alloc] init];
     item.originData = cellModel.videoFeedItem;

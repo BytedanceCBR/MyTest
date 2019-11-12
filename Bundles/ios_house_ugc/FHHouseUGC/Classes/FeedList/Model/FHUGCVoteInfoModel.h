@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *deadline;
 @property (nonatomic, copy , nullable) NSString *displayCount;
 @property (nonatomic, copy , nullable) NSString *desc;
+
+@property (nonatomic, copy , nullable) NSString *contentAStr;
+@property (nonatomic, assign) CGFloat contentHeight;
 @end
 
 

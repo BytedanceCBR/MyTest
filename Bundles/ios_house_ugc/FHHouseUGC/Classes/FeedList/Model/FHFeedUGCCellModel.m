@@ -487,8 +487,10 @@
         cellModel.groupId = model.rawData.voteInfo.voteId;
         
         cellModel.voteInfo = model.rawData.voteInfo;
-        
-        // [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
+        if (cellModel.voteInfo == nil || cellModel.voteInfo.items.count < 2) {
+            return nil;
+        }
+        [FHUGCCellHelper setUGCVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;

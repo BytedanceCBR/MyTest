@@ -28,15 +28,11 @@
 @interface FHUGCVoteDetailCell() <TTUGCAttributedLabelDelegate>
 
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
-@property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) UIView *bottomSepView;
-@property(nonatomic ,assign) NSInteger       imageCount;
 @property(nonatomic ,strong) UILabel *position;
 @property(nonatomic ,strong) UIView *positionView;
 @property(nonatomic, assign)   BOOL       showCommunity;
-@property (nonatomic, assign)   BOOL       hasOriginItem;
-@property(nonatomic ,strong) FHUGCCellOriginItemView *originView;
 @property (nonatomic, strong)   UIImageView       *positionImageView;
 
 @end
@@ -53,7 +49,6 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         self.showCommunity = NO;
-        self.hasOriginItem = NO;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
@@ -90,9 +85,6 @@
     self.contentLabel.inactiveLinkAttributes = linkAttributes;
     [self.contentView addSubview:_contentLabel];
     
-    self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:self.imageCount];
-    [self.contentView addSubview:_multiImageView];
-    
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray6];
     [self.contentView addSubview:_bottomSepView];
@@ -113,15 +105,6 @@
     [_position sizeToFit];
     [_positionView addSubview:_position];
     
-    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
-    _originView.hidden = YES;
-    _originView.goToLinkBlock = ^(FHFeedUGCCellModel * _Nonnull cellModel, NSURL * _Nonnull url) {
-        if(weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(gotoLinkUrl:url:)]){
-            [weakSelf.delegate gotoLinkUrl:cellModel url:url];
-        }
-    };
-    [self.contentView addSubview:_originView];
-    
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCommunityDetail)];
     [self.positionView addGestureRecognizer:singleTap];
 }
@@ -135,36 +118,16 @@
     
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        make.left.mas_equalTo(self.contentView).offset(30);
+        make.right.mas_equalTo(self.contentView).offset(-30);
         make.height.mas_equalTo(0);
-    }];
-    
-    [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-        make.height.mas_equalTo(self.multiImageView.viewHeight);
     }];
     
     if (self.showCommunity) {
         self.positionView.hidden = NO;
-        UIView *lastView = self.multiImageView;
-        if (self.imageCount <= 0) {
-            lastView = self.contentLabel;
-        }
-        [self.originView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(lastView.mas_bottom).offset(10);
-            make.height.mas_equalTo(originViewHeight);
-            make.left.mas_equalTo(self.contentView).offset(leftMargin);
-            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-        }];
+        UIView *lastView = self.contentLabel;
         
         CGFloat topOffset = 10;
-        if (self.hasOriginItem) {
-            topOffset += originViewHeight;
-            topOffset += 10;
-        }
         
         [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(20);
@@ -194,22 +157,8 @@
         }];
     } else {
         self.positionView.hidden = YES;
-        UIView *lastView = self.multiImageView;
-        if (self.imageCount <= 0) {
-            lastView = self.contentLabel;
-        }
-        [self.originView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(lastView.mas_bottom).offset(10);
-            make.height.mas_equalTo(originViewHeight);
-            make.left.mas_equalTo(self.contentView).offset(leftMargin);
-            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-        }];
+        UIView *lastView = self.contentLabel;
         CGFloat topOffset = 20;
-        if (self.hasOriginItem) {
-            topOffset = 10;
-            topOffset += originViewHeight;
-            topOffset += 20;
-        }
         [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(lastView.mas_bottom).offset(topOffset);
             make.left.mas_equalTo(self.contentView).offset(leftMargin);
@@ -254,12 +203,8 @@
         [v removeFromSuperview];
     }
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-    self.imageCount = cellModel.largeImageList.count;
-    if (self.imageCount > 9) {
-        self.imageCount = 9;
-    }
+    FHUGCVoteInfoVoteInfoModel *voteInfo = cellModel.voteInfo;
     self.showCommunity = cellModel.showCommunity;
-    self.hasOriginItem = cellModel.originItemModel != nil;
     [self setupUIs];
     // 设置userInfo
     self.userInfoView.cellModel = cellModel;
@@ -267,38 +212,10 @@
     self.userInfoView.descLabel.attributedText = cellModel.desc;
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     // 内容
-    [self.contentLabel setText:cellModel.contentAStr];
-    NSArray <TTRichSpanLink *> *richSpanLinks = [cellModel.richContent richSpanLinksOfAttributedString];
-    for (TTRichSpanLink *richSpanLink in richSpanLinks) {
-        NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
-        if (NSMaxRange(range) <= self.contentLabel.attributedText.length) {
-            if(cellModel.supportedLinkType){
-                if(cellModel.supportedLinkType.count > 0 && [cellModel.supportedLinkType containsObject:@(richSpanLink.type)]){
-                    [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
-                }
-            }else{
-                //不设置默认全部支持
-                [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
-            }
-        }
-    }
+    [self.contentLabel setText:voteInfo.contentAStr];
     [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(cellModel.contentHeight);
+        make.height.mas_equalTo(voteInfo.contentHeight);
     }];
-    // 图片
-    [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
-    if(self.imageCount == 1) {
-        [self.multiImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(self.multiImageView.viewHeight);
-        }];
-    }
-    // origin
-    if(cellModel.originItemModel){
-        self.originView.hidden = NO;
-        [self.originView refreshWithdata:cellModel];
-    }else{
-        self.originView.hidden = YES;
-    }
     // 小区
     self.position.text = cellModel.community.name;
     [self.position sizeToFit];
@@ -310,28 +227,8 @@
         
         CGFloat height = topMargin + userInfoViewHeight + 10 + cellModel.contentHeight + 20.5;
         
-        if(isEmptyString(cellModel.content)){
-            height -= 10;
-        }
-        NSInteger imageCount = cellModel.largeImageList.count;
-        if (imageCount > 9) {
-            imageCount = 9;
-        }
-        CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:imageCount width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
-        if (imageCount == 1) {
-            // 单独计算单图显示高度
-            FHFeedContentImageListModel *imageData = [cellModel.imageList firstObject];
-            if (imageData && [imageData isKindOfClass:[FHFeedContentImageListModel class]] && [imageData.width floatValue] > 0) {
-                imageViewheight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * [imageData.height floatValue] / [imageData.width floatValue];
-            }
-        }
-        if (imageCount > 0) {
-            height += (imageViewheight + 10);
-        }
         
-        if(cellModel.originItemModel){
-            height += (originViewHeight + 10);
-        }
+        height += 20;
         
         if (cellModel.showCommunity) {
             height += (24 + 10);
