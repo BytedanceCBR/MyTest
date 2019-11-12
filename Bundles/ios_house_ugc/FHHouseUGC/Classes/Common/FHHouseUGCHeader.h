@@ -56,6 +56,7 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
     FHUGCFeedListCellTypeUGCHotTopic = 1104,               //热门话题
     FHUGCFeedListCellTypeUGCVote = 1103,                   //投票pk
     FHUGCFeedListCellTypeUGCSmallVideo = 333,              //小视频
+    FHUGCFeedListCellTypeUGCVoteInfo = 334,                //UGC投票，新投票类型
 };
 
 typedef NS_ENUM(NSInteger, FHUGCMyInterestedType)

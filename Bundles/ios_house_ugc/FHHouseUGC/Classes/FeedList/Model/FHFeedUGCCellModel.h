@@ -126,6 +126,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotTopicListModel> *hotTopicList;
 //投票
 @property (nonatomic, strong , nullable) FHFeedUGCVoteModel *vote;
+//UGC 投票
+@property (nonatomic, strong , nullable) FHUGCVoteInfoVoteInfoModel *voteInfo;
 //视频和小视频相关
 @property (nonatomic, assign) BOOL hasVideo;
 @property (nonatomic, strong , nullable) TTVFeedItem *videoFeedItem;

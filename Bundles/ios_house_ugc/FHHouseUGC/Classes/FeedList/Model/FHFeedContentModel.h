@@ -1,5 +1,6 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
+#import "FHUGCVoteInfoModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
@@ -609,6 +610,8 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginThreadModel *originThread ;
 //小视频
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOriginUgcVideoModel *originUgcVideo ;
+// UGC投票
+@property (nonatomic, strong , nullable) FHUGCVoteInfoVoteInfoModel *voteInfo ;
 @end
 
 @interface FHFeedContentVideoDetailInfoModel : JSONModel

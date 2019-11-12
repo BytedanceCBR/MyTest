@@ -470,6 +470,7 @@
                            @"originThread": @"origin_thread",
                            @"originUgcVideo": @"origin_ugc_video",
                            @"originType": @"origin_type",
+                           @"voteInfo": @"vote_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -88,7 +88,8 @@
                  type == FHUGCFeedListCellTypeArticleComment2 ||
                  type == FHUGCFeedListCellTypeUGCHotTopic ||
                  type == FHUGCFeedListCellTypeUGCVote ||
-                 type == FHUGCFeedListCellTypeUGCSmallVideo){
+                 type == FHUGCFeedListCellTypeUGCSmallVideo ||
+                 type == FHUGCFeedListCellTypeUGCVoteInfo){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -480,6 +481,14 @@
         cellModel.vote = vote;
         
         [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
+    } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVoteInfo){
+        // UGC 投票
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVoteDetail;
+        cellModel.groupId = model.rawData.voteInfo.voteId;
+        
+        cellModel.voteInfo = model.rawData.voteInfo;
+        
+        // [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;
