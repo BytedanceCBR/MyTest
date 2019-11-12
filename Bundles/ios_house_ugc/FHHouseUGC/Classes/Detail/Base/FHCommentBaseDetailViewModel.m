@@ -9,6 +9,7 @@
 #import "FHHouseUGCAPI.h"
 #import "TTHttpTask.h"
 #import "FHPostDetailViewModel.h"
+#import "FHVoteDetailViewModel.h"
 
 @interface FHCommentBaseDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
@@ -22,7 +23,14 @@
     FHCommentBaseDetailViewModel *viewModel = NULL;
     switch (postType) {
         case FHUGCPostTypePost:
+            // 帖子
             viewModel = [[FHPostDetailViewModel alloc] initWithController:viewController tableView:tableView postType:postType];
+        case FHUGCPostTypeWenDa:
+            // 暂无
+            break;
+        case FHUGCPostTypeVote:
+            // 投票
+            viewModel = [[FHVoteDetailViewModel alloc] initWithController:viewController tableView:tableView postType:postType];
             break;
     }
     return viewModel;

@@ -45,13 +45,14 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         // 帖子
-        self.postType = FHUGCPostTypePost;
+        self.postType = FHUGCPostTypeVote;
         self.fromUGC = YES;
         NSDictionary *params = paramObj.allParams;
         int64_t tid = [[paramObj.allParams objectForKey:@"tid"] longLongValue];
         int64_t fid = [[paramObj.allParams objectForKey:@"fid"] longLongValue];
         self.lastPageSocialGroupId = [params objectForKey:@"social_group_id"];
         // 帖子id
+        tid = 1648002853084171;
         self.tid = tid;// 1636215424527368  1636223115260939    1636223457031179    1636222717073420
         self.fid = fid;// 6564242300        1621706233835550    6564242300          86578926583
         TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:[NSString stringWithFormat:@"%lld", tid] itemID:[NSString stringWithFormat:@"%lld", tid] impressionID:nil aggrType:1];
