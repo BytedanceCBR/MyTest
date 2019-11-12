@@ -490,6 +490,24 @@
         if (cellModel.voteInfo == nil || cellModel.voteInfo.items.count < 2) {
             return nil;
         }
+        FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
+        user.name = model.rawData.user.info.name;
+        user.avatarUrl = model.rawData.user.info.avatarUrl;
+        user.userId = model.rawData.user.info.userId;
+        user.schema = model.rawData.user.info.schema;
+        cellModel.user = user;
+        // add by zyk 需要确认数据是否是从这个地方取
+        double time = [model.rawData.createTime doubleValue];
+        NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+        cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
+        
+        cellModel.diggCount = model.rawData.action.diggCount;
+        cellModel.commentCount = model.rawData.action.commentCount;
+        cellModel.userDigg = model.rawData.action.userDigg;
+        
+//        cellModel.content = model.rawData.voteInfo.title;
+//        cellModel.contentRichSpan = model.rawData.voteInfo.richContent;
+        
         [FHUGCCellHelper setUGCVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){

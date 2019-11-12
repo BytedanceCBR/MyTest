@@ -429,7 +429,7 @@
         label.numberOfLines = numberOfLines;
         label.font = [UIFont themeFontRegular:16];
         //设置字间距0.4
-        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:model.voteInfo.title attributes:@{NSKernAttributeName:@(0.4)}];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:model.voteInfo.title attributes:@{NSKernAttributeName:@(0.4),NSForegroundColorAttributeName : [UIColor themeGray1],NSFontAttributeName : [UIFont themeFontRegular:16]}];
         label.attributedText = attributedString;
         
         CGSize size = [label sizeThatFits:CGSizeMake(width, MAXFLOAT)];

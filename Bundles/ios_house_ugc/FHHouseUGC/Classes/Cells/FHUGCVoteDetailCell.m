@@ -14,6 +14,9 @@
 #import "FHUGCCellHelper.h"
 #import "FHCommentBaseDetailViewModel.h"
 #import "FHUGCCellOriginItemView.h"
+#import "TTRoute.h"
+#import <TTBusinessManager+StringUtils.h>
+#import <UIViewAdditions.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -29,11 +32,12 @@
 
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
-@property(nonatomic ,strong) UIView *bottomSepView;
+@property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) UILabel *position;
 @property(nonatomic ,strong) UIView *positionView;
 @property(nonatomic, assign)   BOOL       showCommunity;
 @property (nonatomic, strong)   UIImageView       *positionImageView;
+@property (nonatomic, weak)     FHFeedUGCCellModel       *cellModel;
 
 @end
 
@@ -50,32 +54,25 @@
     if (self) {
         self.showCommunity = NO;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        [self setupUIs];
     }
     return self;
 }
 
 - (void)setupUIs {
     [self setupViews];
-    [self setupConstraints];
 }
 
 - (void)setupViews {
-    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
+    __weak typeof(self) wself = self;
+    
+    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     [self.contentView addSubview:_userInfoView];
-    __weak typeof(self) weakSelf = self;
-    self.userInfoView.deleteCellBlock = ^{
-        FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
-        [viewModel.detailController goBack];
-    };
     
-    self.userInfoView.reportSuccessBlock = ^{
-        FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
-        [viewModel.detailController goBack];
-    };
-    
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30 * 2, 0)];
     _contentLabel.numberOfLines = 0;
-    _contentLabel.delegate = self;
+    _contentLabel.layer.masksToBounds = YES;
+    _contentLabel.backgroundColor = [UIColor whiteColor];
     NSDictionary *linkAttributes = @{
                                      NSForegroundColorAttributeName : [UIColor themeRed3],
                                      NSFontAttributeName : [UIFont themeFontRegular:16]
@@ -83,90 +80,32 @@
     self.contentLabel.linkAttributes = linkAttributes;
     self.contentLabel.activeLinkAttributes = linkAttributes;
     self.contentLabel.inactiveLinkAttributes = linkAttributes;
+    _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.bottomSepView = [[UIView alloc] init];
-    _bottomSepView.backgroundColor = [UIColor themeGray6];
-    [self.contentView addSubview:_bottomSepView];
+    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+    [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:_bottomView];
     
-    self.positionView = [[UIView alloc] init];
-    _positionView.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
-    _positionView.layer.masksToBounds= YES;
-    _positionView.layer.cornerRadius = 4;
-    _positionView.userInteractionEnabled = YES;
-    _positionView.hidden = YES;
-    [self.contentView addSubview:_positionView];
-    
-    self.positionImageView = [[UIImageView alloc] init];
-    _positionImageView.image = [UIImage imageNamed:@"fh_ugc_community_icon"];
-    [self.positionView addSubview:_positionImageView];
-    
-    self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeRed3]];
-    [_position sizeToFit];
-    [_positionView addSubview:_position];
-    
-    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCommunityDetail)];
-    [self.positionView addGestureRecognizer:singleTap];
+    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
+    [self.bottomView.positionView addGestureRecognizer:tap];
 }
 
-- (void)setupConstraints {
-    [self.userInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(20);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(40);
-    }];
+- (void)setupUIFrames {
+    self.userInfoView.top = topMargin;
+    self.userInfoView.left = 0;
+    self.userInfoView.width = [UIScreen mainScreen].bounds.size.width;
+    self.userInfoView.height = userInfoViewHeight;
     
-    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(30);
-        make.right.mas_equalTo(self.contentView).offset(-30);
-        make.height.mas_equalTo(0);
-    }];
+    self.contentLabel.top = self.userInfoView.bottom + 10;
+    self.contentLabel.left = 30;
+    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - 30 - 30;
     
-    if (self.showCommunity) {
-        self.positionView.hidden = NO;
-        UIView *lastView = self.contentLabel;
-        
-        CGFloat topOffset = 10;
-        
-        [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(20);
-            make.top.mas_equalTo(lastView.mas_bottom).offset(topOffset);
-            make.height.mas_equalTo(24);
-        }];
-        
-        [self.positionImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.positionView).offset(6);
-            make.centerY.mas_equalTo(self.positionView);
-            make.width.height.mas_equalTo(12);
-        }];
-        
-        [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.positionImageView.mas_right).offset(2);
-            make.right.mas_equalTo(self.positionView).offset(-6);
-            make.centerY.mas_equalTo(self.positionView);
-            make.height.mas_equalTo(18);
-        }];
-        
-        [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.positionView.mas_bottom).offset(20);
-            make.left.mas_equalTo(self.contentView).offset(leftMargin);
-            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-            make.bottom.mas_equalTo(self.contentView).offset(0);
-            make.height.mas_equalTo(0.5);
-        }];
-    } else {
-        self.positionView.hidden = YES;
-        UIView *lastView = self.contentLabel;
-        CGFloat topOffset = 20;
-        [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(lastView.mas_bottom).offset(topOffset);
-            make.left.mas_equalTo(self.contentView).offset(leftMargin);
-            make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-            make.bottom.mas_equalTo(self.contentView).offset(0);
-            make.height.mas_equalTo(0.5);
-        }];
-    }
+    self.bottomView.top = self.contentLabel.bottom + 10;
+    self.bottomView.left = 0;
+    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomView.height = bottomViewHeight;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -198,37 +137,49 @@
         return;
     }
     self.currentData = data;
-    //
-    for (UIView *v in self.contentView.subviews) {
-        [v removeFromSuperview];
+    self.cellModel = data;
+    //设置userInfo
+    self.userInfoView.cellModel = self.cellModel;
+    self.userInfoView.userName.text = self.cellModel.user.name;
+    self.userInfoView.descLabel.attributedText = self.cellModel.desc;
+    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    //设置底部
+    self.bottomView.cellModel = self.cellModel;
+    
+    BOOL showCommunity = self.cellModel.showCommunity && !isEmptyString(self.cellModel.community.name);
+    self.bottomView.position.text = self.cellModel.community.name;
+    [self.bottomView showPositionView:showCommunity];
+    
+    NSInteger commentCount = [self.cellModel.commentCount integerValue];
+    if(commentCount == 0){
+        [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
+    }else{
+        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
     }
-    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-    FHUGCVoteInfoVoteInfoModel *voteInfo = cellModel.voteInfo;
-    self.showCommunity = cellModel.showCommunity;
-    [self setupUIs];
-    // 设置userInfo
-    self.userInfoView.cellModel = cellModel;
-    self.userInfoView.userName.text = cellModel.user.name;
-    self.userInfoView.descLabel.attributedText = cellModel.desc;
-    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
-    // 内容
-    [self.contentLabel setText:voteInfo.contentAStr];
-    [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(voteInfo.contentHeight);
-    }];
-    // 小区
-    self.position.text = cellModel.community.name;
-    [self.position sizeToFit];
+    [self.bottomView updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
+    //内容
+    self.contentLabel.numberOfLines = self.cellModel.numberOfLines;
+    if(isEmptyString(self.cellModel.voteInfo.title)){
+        self.contentLabel.hidden = YES;
+        self.contentLabel.height = 0;
+    }else{
+        self.contentLabel.hidden = NO;
+        self.contentLabel.height = self.cellModel.voteInfo.contentHeight;
+        [self.contentLabel setText:self.cellModel.voteInfo.contentAStr];
+    }
+    self.bottomView.top = self.contentLabel.bottom + 10;
+    
+    [self setupUIFrames];
 }
 
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         
-        CGFloat height = topMargin + userInfoViewHeight + 10 + cellModel.contentHeight + 20.5;
+        CGFloat height = topMargin + userInfoViewHeight + 10 + 20.5;
         
         
-        height += 20;
+        height += 22;
         
         if (cellModel.showCommunity) {
             height += (24 + 10);
@@ -236,6 +187,27 @@
         return height;
     }
     return 44;
+}
+
+// 删除
+- (void)deleteCell {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
+        [self.delegate deleteCell:self.cellModel];
+    }
+}
+
+// 评论点击
+- (void)commentBtnClick {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:cell:)]){
+        [self.delegate commentClicked:self.cellModel cell:self];
+    }
+}
+
+// 进入圈子详情
+- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
+        [self.delegate goToCommunityDetail:self.cellModel];
+    }
 }
 
 - (void)attributedLabel:(TTUGCAttributedLabel *)label
