@@ -376,7 +376,7 @@
     
     _bottomRecommendView = [[UIView alloc] init];
     [_rightInfoView addSubview:_bottomRecommendView];
-    [_bottomRecommendView setBackgroundColor:[UIColor greenColor]];
+    [_bottomRecommendView setBackgroundColor:[UIColor whiteColor]];
     
     
     [titleView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -484,11 +484,11 @@
     }];
 
     _bottomIconImageView = [UIImageView new];
-    [_bottomIconImageView setBackgroundColor:[UIColor redColor]];
+    [_bottomIconImageView setBackgroundColor:[UIColor whiteColor]];
     [_bottomRecommendView addSubview:_bottomIconImageView];
     [_bottomIconImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.marginTop = YGPointValue(2);
+        layout.marginTop = YGPointValue(8);
         layout.marginLeft = YGPointValue(0);
         layout.height = YGPointValue(12);
         layout.width = YGPointValue(12);
@@ -497,12 +497,12 @@
     _bottomRecommendLabel = [UILabel new];
     _bottomRecommendLabel.font = [UIFont themeFontRegular:11];
     _bottomRecommendLabel.textColor = [UIColor themeGray1];
-    [_bottomRecommendLabel setBackgroundColor:[UIColor blueColor]];
+    [_bottomRecommendLabel setBackgroundColor:[UIColor whiteColor]];
     [_bottomRecommendView addSubview:_bottomRecommendLabel];
     [_bottomRecommendLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.marginTop = YGPointValue(2);
-        layout.marginLeft = YGPointValue(15);
+        layout.marginTop = YGPointValue(8);
+        layout.marginLeft = YGPointValue(5);
         layout.height = YGPointValue(12);
     }];
 
@@ -540,23 +540,19 @@
     FHImageModel *imageModel = commonModel.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
-    if ([TTDeviceHelper isScreenWidthLarge320]) {
-        _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
-        _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-        _pricePerSqmLabel.textColor = [UIColor themeRed1];
-    }else {
-        _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
-        _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-        _pricePerSqmLabel.textColor = [UIColor themeRed1];
-    }
+    _priceLabel.font = [UIFont themeFontSemibold:16];
+    _pricePerSqmLabel.font = [UIFont themeFontSemibold:16];
+    _pricePerSqmLabel.textColor = [UIColor themeRed1];
     
     self.priceLabel.text = commonModel.pricePerSqmNum;
     self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
 
-    if (imageModel.url) {
-        [self.bottomIconImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+    if (commonModel.advantageDescription.icon.url) {
+        [self.bottomIconImageView bd_setImageWithURL:[NSURL URLWithString:commonModel.advantageDescription.icon.url]];
     }
-    self.bottomRecommendLabel.text = @"一期加推，签约即送2000京东卡";
+    if (commonModel.advantageDescription.text) {
+        self.bottomRecommendLabel.text = commonModel.advantageDescription.text;
+    }
     
     
     if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
