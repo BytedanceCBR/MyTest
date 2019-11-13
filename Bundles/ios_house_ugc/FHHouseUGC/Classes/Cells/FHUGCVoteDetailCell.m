@@ -92,6 +92,7 @@
     
     self.voteView = [[FHUGCVoteMainView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     self.voteView.backgroundColor = [UIColor whiteColor];
+    self.voteView.detailCell = self;
     [self.contentView addSubview:self.voteView];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
@@ -217,6 +218,7 @@
     if (self.isFromDetail) {
         voteInfo.needFold = NO;// 不需要折叠展开
     }
+    self.voteView.tableView = self.cellModel.tableView;
     [self.voteView refreshWithData:voteInfo];
     self.voteView.height = voteInfo.voteHeight;
     // 更新布局
@@ -298,6 +300,7 @@
 @property (nonatomic, strong)   UIView       *optionBgView;
 @property (nonatomic, strong)   UIView       *bottomBgView;
 @property (nonatomic, strong)   NSMutableArray       *optionsViewArray;
+@property (nonatomic, weak)     FHUGCVoteFoldViewButton *foldButton;
 
 @end
 
@@ -345,6 +348,8 @@
         FHUGCVoteFoldViewButton *foldButton = [[FHUGCVoteFoldViewButton alloc] initWithDownText:@"展开查看更多" upText:@"收起" isFold:self.voteInfo.isFold];
         foldButton.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 28);
         [self.bottomBgView addSubview:foldButton];
+        [foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        self.foldButton = foldButton;
     }
     
     bottomHeight += 32;
@@ -373,8 +378,43 @@
     }
     // 更新数据以及布局
     
+    if (self.voteInfo.needFold) {
+        if (self.voteInfo.isFold) {
+            // 折叠
+            self.optionBgView.height = 48 * [self.voteInfo.displayCount integerValue];
+        } else {
+            // 展开
+            self.optionBgView.height = 48 * self.voteInfo.items.count;
+        }
+    } else {
+        self.optionBgView.height = 48 * self.voteInfo.items.count;
+    }
+    
+    self.bottomBgView.top = self.optionBgView.bottom;
+    
     self.voteInfo.voteHeight = self.bottomBgView.bottom;
     self.height = self.bottomBgView.bottom;
+}
+
+- (void)foldButtonClick:(UIButton *)button {
+    self.voteInfo.isFold = !self.voteInfo.isFold;
+    self.foldButton.isFold = self.voteInfo.isFold;
+    [self updateItems:YES];
+}
+
+- (void)updateItems:(BOOL)animated {
+    if (animated) {
+        [self.tableView beginUpdates];
+    }
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        [self refreshWithData:self.voteInfo];
+        [self.detailCell setupUIFrames];
+    }];
+    
+    if (animated) {
+        [self.tableView endUpdates];
+    }
 }
 
 @end
@@ -388,10 +428,10 @@
 // FHUGCVoteFoldViewButton
 @interface FHUGCVoteFoldViewButton ()
 
-@property (nonatomic, strong)   UIImageView       *iconView;
+@property (nonatomic, strong)   UIImageView   *iconView;
 @property (nonatomic, strong)   UILabel       *keyLabel;
-@property (nonatomic, copy)     NSString       *upText;
-@property (nonatomic, copy)     NSString       *downText;
+@property (nonatomic, copy)     NSString      *upText;
+@property (nonatomic, copy)     NSString      *downText;
 
 @end
 

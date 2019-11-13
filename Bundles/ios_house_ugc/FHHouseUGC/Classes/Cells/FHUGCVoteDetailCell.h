@@ -15,10 +15,15 @@ NS_ASSUME_NONNULL_BEGIN
 /*1、isFromDetail 从详情页过来的数据需要重新计算布局 全部展开 以及不显示“展开查看更多”
   2、非详情页，Feed中，布局需要折叠展开，默认展开 & 不添加展开按钮
  */
+- (void)setupUIFrames;
+
 @end
 
 // 投票视图
 @interface FHUGCVoteMainView : UIView
+
+@property (nonatomic, weak)     UITableView       *tableView;
+@property (nonatomic, weak)     FHUGCVoteDetailCell       *detailCell;
 
 - (void)refreshWithData:(id)data;
 
