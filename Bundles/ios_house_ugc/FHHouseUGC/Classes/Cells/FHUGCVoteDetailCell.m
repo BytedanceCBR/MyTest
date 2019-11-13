@@ -329,6 +329,7 @@
         FHUGCOptionView *optionV = [[FHUGCOptionView alloc] initWithFrame:CGRectMake(20, idx * 48, optionWidth, 38)];
         optionV.backgroundColor = [UIColor themeWhite];
         optionV.layer.cornerRadius = 19;
+        optionV.mainSelected = self.voteInfo.selected;
         [self.optionBgView addSubview:optionV];
         [self.optionsViewArray addObject:optionV];
     }];
@@ -420,7 +421,15 @@
         [self setupViews];
     }
     // 更新数据以及布局
-    
+    [self.optionsViewArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHUGCOptionView *optionV = obj;
+        if (idx < self.voteInfo.items.count) {
+            FHUGCVoteInfoVoteInfoItemsModel *item = self.voteInfo.items[idx];
+            optionV.mainSelected = self.voteInfo.selected;
+            [optionV refreshWithData:item];
+        }
+    }];
+    // 布局
     if (self.voteInfo.needFold) {
         if (self.voteInfo.isFold) {
             // 折叠
@@ -492,11 +501,11 @@
     self.bgView.backgroundColor = [UIColor colorWithHexStr:@"#e8e8e8"];// fef2ec
     [self addSubview:self.bgView];
     self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 8, 0, 22)];
-    self.contentLabel.text = @"内容内容内容内容内容内容内容内容";
+    self.contentLabel.text = @"内容内容内容内容内容内容内容内";
     if ([UIScreen mainScreen].bounds.size.width <= 321) {
-        self.contentLabel.font = [UIFont themeFontRegular:14];
+        self.contentLabel.font = [UIFont themeFontRegular:12];
     } if ([UIScreen mainScreen].bounds.size.width <= 376) {
-        self.contentLabel.font = [UIFont themeFontRegular:15];
+        self.contentLabel.font = [UIFont themeFontRegular:14];
     } else {
         self.contentLabel.font = [UIFont themeFontRegular:16];
     }
@@ -509,6 +518,27 @@
     [self addSubview:self.selectedIcon];
     self.selectedIcon.frame = CGRectMake(0, 8, 22, 22);
     self.selectedIcon.left = self.contentLabel.right;
+    
+    self.percentLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 8, 40, 22)];
+    self.percentLabel.text = @"100%";
+    self.percentLabel.textColor = [UIColor themeGray2];
+    self.percentLabel.textAlignment = NSTextAlignmentRight;
+    if ([UIScreen mainScreen].bounds.size.width <= 321) {
+        self.percentLabel.font = [UIFont themeFontRegular:13];
+    } if ([UIScreen mainScreen].bounds.size.width <= 376) {
+        self.percentLabel.font = [UIFont themeFontRegular:14];
+    } else {
+        self.percentLabel.font = [UIFont themeFontRegular:15];
+    }
+    self.percentLabel.left = self.width - 50;// 40 + 10
+    [self addSubview:self.percentLabel];
+    // 初始状态
+    self.bgView.hidden = YES;
+    self.contentLabel.hidden = NO;
+    self.selectedIcon.hidden = YES;
+    self.percentLabel.hidden = YES;
+    
+    [self addTarget:self action:@selector(optionClick:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)refreshWithData:(id)data {
@@ -516,6 +546,20 @@
         return;
     }
     self.item = data;
+    if (self.mainSelected) {
+        // 做动画
+    } else {
+        
+    }
+}
+
+// 点击
+- (void)optionClick:(UIButton *)btn {
+    if (self.mainSelected){
+        // 已做题目
+        return;
+    }
+    
 }
 
 @end
