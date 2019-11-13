@@ -37,6 +37,7 @@ typedef void(^GotoPublicationsDetailBlock)(void);
 @property(nonatomic, strong) UIImageView *operationBannerImageView;
 
 @property (nonatomic, strong) FHCommunityDetailRefreshHeader *refreshHeader;
+@property (nonatomic, assign) BOOL scrollViewDidEndDrag;
 
 - (void)startRefresh;
 
@@ -50,4 +51,5 @@ typedef void(^GotoPublicationsDetailBlock)(void);
 
 // 非管理员状态，判断如果没有查看详情按钮时公告内容标签的布局是否超过两行
 -(BOOL)isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow;
+
 @end

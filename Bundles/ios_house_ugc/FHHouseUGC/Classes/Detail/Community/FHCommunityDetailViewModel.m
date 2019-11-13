@@ -30,7 +30,7 @@
 #import "TTAccount+Multicast.h"
 #import "TTAccountManager.h"
 #import "FHCommunityDetailHorizontalPagingView.h"
-#import "FHCommunityDetailRefreshHeader.h"
+//#import "FHCommunityDetailRefreshHeader.h"
 
 #define kSegmentViewHeight 41
 
@@ -40,7 +40,7 @@
 @property (nonatomic, strong) FHCommunityFeedListController *feedListController; //当前显示的feedVC
 @property (nonatomic, strong) FHUGCScialGroupDataModel *data;
 @property (nonatomic, strong) FHUGCScialGroupModel *socialGroupModel;
-@property (nonatomic, strong) FHCommunityDetailRefreshHeader *refreshHeader;
+//@property (nonatomic, strong) FHCommunityDetailRefreshHeader *refreshHeader;
 @property (nonatomic, assign) BOOL isViewAppear;
 @property (nonatomic, assign) BOOL isLoginSatusChangeFromGroupChat;
 @property (nonatomic, assign) BOOL isLogin;
@@ -354,7 +354,7 @@
     feedListController.publishBtnBottomHeight = publishBtnBottomHeight;
     feedListController.tableViewNeedPullDown = NO;
     feedListController.showErrorView = YES;
-    //    self.feedListController.scrollViewDelegate = self;
+    feedListController.scrollViewDelegate = self;
     feedListController.delegate = self;
     feedListController.listType = FHCommunityFeedListTypePostDetail;
     feedListController.forumId = self.viewController.communityId;
@@ -812,6 +812,15 @@
 //    }
 }
 
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if(decelerate){
+        CGFloat delta = self.pagingView.currentContentViewTopInset + scrollView.contentOffset.y;
+        if(delta <= -50){
+            [self.viewController.headerView.refreshHeader beginRefreshing];
+        }
+    }
+}
+
 - (void)addGoDetailLog {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
@@ -946,11 +955,18 @@
     UIScrollView *scrollView = pagingView.currentContentView;
     [self refreshContentOffset:delta];
     [self.viewController.headerView updateWhenScrolledWithContentOffset:delta isScrollTop:NO scrollView:pagingView.currentContentView];
-    if(delta < 0){
-        CGFloat alpha = self.refreshHeader.mj_h <= 0 ? 0.0f : fminf(1.0f,fabsf(delta / self.refreshHeader.mj_h));
-        self.refreshHeader.alpha = alpha;
-    }else{
-        self.refreshHeader.alpha = 0;
+//    if(delta < 0){
+//        CGFloat alpha = self.refreshHeader.mj_h <= 0 ? 0.0f : fminf(1.0f,fabsf(delta / self.refreshHeader.mj_h));
+//        self.refreshHeader.alpha = alpha;
+//    }else{
+//        self.refreshHeader.alpha = 0;
+//    }
+}
+
+- (void)pagingView:(TTHorizontalPagingView *)pagingView scrollViewDidEndDraggingOffset:(CGFloat)offset {
+    CGFloat delta = self.pagingView.currentContentViewTopInset + offset;
+    if(delta <= -50){
+        [self.viewController.headerView.refreshHeader beginRefreshing];
     }
 }
 

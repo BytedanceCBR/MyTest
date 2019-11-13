@@ -329,7 +329,6 @@
 }
 
 - (void)updateWhenScrolledWithContentOffset:(CGFloat)offset isScrollTop:(BOOL)isScrollTop scrollView:(UIScrollView *)scrollView {
-    NSLog(@"offset___%f",offset);
     if (offset < 0) {
         CGFloat height = self.headerBackHeight - offset;
         self.topBack.frame = CGRectMake(0, offset, SCREEN_WIDTH, height);
@@ -353,10 +352,12 @@
         }
     }
     
-    CGFloat diff = offset - _preOffset;
-    if(diff > 0 && self.refreshHeader.state == MJRefreshStatePulling){
-        self.refreshHeader.state = MJRefreshStateRefreshing;
-    }
+//    CGFloat diff = offset - _preOffset;
+//    NSLog(@"diff____%f",diff);
+//    if(self.refreshHeader.state == MJRefreshStatePulling && self.scrollViewDidEndDrag){
+//        self.scrollViewDidEndDrag = NO;
+//        self.refreshHeader.state = MJRefreshStateRefreshing;
+//    }
     
     _preOffset = offset;
 }

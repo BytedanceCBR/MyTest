@@ -137,6 +137,12 @@
     }
 }
 
+- (void)beginRefreshing {
+//    if(self.state == MJRefreshStatePulling){
+        self.state = MJRefreshStateRefreshing;
+//    }
+}
+
 - (void)endRefreshing {
     NSTimeInterval endRefreshingTime = [[NSDate date] timeIntervalSinceReferenceDate];
     NSTimeInterval interval = 0;

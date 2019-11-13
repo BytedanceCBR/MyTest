@@ -75,6 +75,14 @@
  */
 - (void)pagingView:(TTHorizontalPagingView *)pagingView scrollTopOffset:(CGFloat)offset;
 
+/**
+ 视图滚动松手时候会调用，仅限于头部视图和segment视图
+ 
+ @param pagingView pagingView
+ @param offset 当前滚动视图的contentOffset.y
+ */
+- (void)pagingView:(TTHorizontalPagingView *)pagingView scrollViewDidEndDraggingOffset:(CGFloat)offset;
+
 @end
 
 @interface TTHorizontalPagingView : SSThemedView

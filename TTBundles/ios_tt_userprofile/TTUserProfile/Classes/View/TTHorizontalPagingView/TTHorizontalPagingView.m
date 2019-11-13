@@ -101,6 +101,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *,UIScrollView *> *contentViewDict;
 @property (nonatomic, assign) NSInteger lastPageIndex;
 @property (nonatomic, strong) UIPanGestureRecognizer *headerViewPanGestureRecognizer;
+@property (nonatomic, strong) UIPanGestureRecognizer *segmentViewPanGestureRecognizer;
 @property (nonatomic, assign) CGFloat lastHeaderViewTop;
 // 用于模拟scrollView滚动
 
@@ -244,6 +245,15 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     return _headerViewPanGestureRecognizer;
 }
 
+- (UIPanGestureRecognizer *)segmentViewPanGestureRecognizer
+{
+    if(!_segmentViewPanGestureRecognizer) {
+        _segmentViewPanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
+        _segmentViewPanGestureRecognizer.delegate = self;
+    }
+    return _segmentViewPanGestureRecognizer;
+}
+
 - (UIDynamicAnimator *)animator
 {
     if (!_animator) {
@@ -340,6 +350,8 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 {
     [_segmentView removeFromSuperview];
     _segmentView = segmentView;
+    [_segmentView removeGestureRecognizer:self.segmentViewPanGestureRecognizer];
+    [_segmentView addGestureRecognizer:self.segmentViewPanGestureRecognizer];
     _segmentView.frame = CGRectMake(0, self.headerView.bottom, self.width, self.segmentViewHeight);
     [self addSubview:_segmentView];
 }
@@ -521,13 +533,15 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     CGFloat offsety = contentOffset.y - point.y * (1/contentOffset.y * border * 0.6);
     self.currentContentView.contentOffset = CGPointMake(contentOffset.x, offsety);
     if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateFailed) {
+        if([self.delegate respondsToSelector:@selector(pagingView:scrollViewDidEndDraggingOffset:)]) {
+            [self.delegate pagingView:self scrollViewDidEndDraggingOffset:contentOffset.y];
+        }
         if(contentOffset.y <= border) {
             // 模拟弹回效果
             [UIView animateWithDuration:0.35 animations:^{
                 self.currentContentView.contentOffset = CGPointMake(contentOffset.x, border);
                 [self layoutIfNeeded];
             }];
-            
         } else {
             // 模拟减速滚动效果
             CGFloat velocity = [pan velocityInView:self.headerView].y;

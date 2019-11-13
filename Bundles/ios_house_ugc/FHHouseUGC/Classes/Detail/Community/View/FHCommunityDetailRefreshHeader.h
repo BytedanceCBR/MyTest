@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) void(^refreshingBlock)(void);
 @property(nonatomic, copy) void(^endRefreshingCompletionBlock)(void);
 
+- (void)beginRefreshing;
 - (void)endRefreshing;
 
 @end
