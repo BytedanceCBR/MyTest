@@ -509,6 +509,7 @@
 //        cellModel.contentRichSpan = model.rawData.voteInfo.richContent;
         
         [FHUGCCellHelper setUGCVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
+        cellModel.voteInfo.descHeight = 17;
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;

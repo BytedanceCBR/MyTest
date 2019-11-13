@@ -195,7 +195,7 @@
         self.contentLabel.hidden = NO;
         if (self.isFromDetail) {
             // 重新计算高度
-            [FHUGCCellHelper setUGCVoteContentString:self.cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:100];
+            [FHUGCCellHelper setUGCVoteContentString:self.cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:1000];
         }
         self.contentLabel.height = self.cellModel.voteInfo.contentHeight;
         [self.contentLabel setText:self.cellModel.voteInfo.contentAStr];
@@ -208,10 +208,11 @@
         self.descLabel.text = self.cellModel.voteInfo.desc;
         if (self.isFromDetail) {
             CGSize size = [self.descLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width - 60, 1000)];
-            self.descLabel.height = size.height;
+            self.cellModel.voteInfo.descHeight = size.height;
         } else {
-            self.descLabel.height = 17;
+            self.cellModel.voteInfo.descHeight = 17;
         }
+        self.descLabel.height = self.cellModel.voteInfo.descHeight;
     }
     // Vote View
     
@@ -229,12 +230,14 @@
             height += cellModel.voteInfo.contentHeight;
         }
         if (cellModel.voteInfo.desc.length > 0) {
-            height += 17;
+            height += cellModel.voteInfo.descHeight;
         }
         // 选项开始
         height += 10;
-        // 选项 + 按钮（高度）
-        height += 100;
+        // 选项（高度）
+        height += (cellModel.voteInfo.items.count * 48);
+        // 多少人参与 + 按钮（高度）
+        height += 70;
         // 按钮底部 + 10
         height += 10;
         // 小区圈底部
