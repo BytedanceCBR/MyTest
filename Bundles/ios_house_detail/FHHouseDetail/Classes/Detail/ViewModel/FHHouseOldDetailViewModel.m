@@ -179,6 +179,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model{
+    
     self.detailData = model;
     if (model.data.status != -1) {
         [self addDetailCoreInfoExcetionLog];
@@ -552,6 +553,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     
     [self.detailController updateLayout:model.isInstantData];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"old_detail"}];
+    });
     
 }
 

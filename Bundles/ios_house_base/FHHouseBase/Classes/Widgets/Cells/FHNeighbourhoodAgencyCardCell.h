@@ -4,13 +4,13 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "FHListBaseCell.h"
 @class FHHouseNeighborAgencyModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
 
-@interface FHNeighbourhoodAgencyCardCell : UITableViewCell
+@interface FHNeighbourhoodAgencyCardCell : FHListBaseCell
 
 @property(nonatomic, weak) UIViewController *belongsVC;
 

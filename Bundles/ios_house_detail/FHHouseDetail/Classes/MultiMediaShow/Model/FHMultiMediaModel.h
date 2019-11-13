@@ -13,12 +13,19 @@ typedef NS_ENUM(NSUInteger, FHMultiMediaType) {
     FHMultiMediaTypeVRPicture, //VR图片
 };
 
+
+typedef NS_ENUM(NSUInteger, FHMultiMediaCellHouseType) {
+    FHMultiMediaCellHouseSecond, //二手房
+    FHMultiMediaCellHouseNeiborhood, //小区
+};
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMultiMediaItemModel : NSObject
 
 @property(nonatomic, assign) FHMultiMediaType mediaType;
 @property(nonatomic, copy) NSString *groupType;
+@property(nonatomic, assign) FHMultiMediaCellHouseType cellHouseType;
 @property(nonatomic, copy) NSString *videoID;
 @property(nonatomic, copy) NSString *imageUrl;
 @property(nonatomic, assign) NSTimeInterval currentPlaybackTime;

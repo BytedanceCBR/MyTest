@@ -164,7 +164,7 @@
     cellModel.contentDecoration = [self contentDecorationFromString:(model.contentDecoration.length > 0 ? model.contentDecoration : model.rawData.contentDecoration)];
     cellModel.originData = model;
     //目前仅支持话题类型
-    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
+    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag),@(TTRichSpanLinkTypeAt)];
     //处理圈子信息
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     if(model.community){
@@ -352,6 +352,7 @@
     else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
         cellModel.groupId = model.rawData.commentBase.id;
         cellModel.content = model.rawData.commentBase.content;
+        cellModel.contentRichSpan = model.rawData.commentBase.contentRichSpan;
         cellModel.openUrl = model.rawData.commentBase.detailSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
@@ -388,18 +389,22 @@
         }
         if(model.rawData.originGroup){
             originItemModel.content = model.rawData.originGroup.title;
+            originItemModel.contentRichSpan = model.rawData.originGroup.titleRichSpan;
             originItemModel.openUrl = model.rawData.originGroup.schema;
             originItemModel.imageModel = model.rawData.originGroup.middleImage;
         }else if(model.rawData.originThread){
             originItemModel.content = model.rawData.originThread.content;
+            originItemModel.contentRichSpan = model.rawData.originThread.contentRichSpan;
             originItemModel.openUrl = model.rawData.originThread.schema;
             originItemModel.imageModel = [model.rawData.originThread.thumbImageList firstObject];
         }else if(model.rawData.originUgcVideo){
             originItemModel.content = model.rawData.originUgcVideo.rawData.title;
+            originItemModel.contentRichSpan = model.rawData.originUgcVideo.rawData.titleRichSpan;
             originItemModel.openUrl = model.rawData.originUgcVideo.rawData.detailSchema;
             originItemModel.imageModel = [model.rawData.originUgcVideo.rawData.thumbImageList firstObject];
         }else{
             originItemModel.content = model.rawData.originCommonContent.title;
+            originItemModel.contentRichSpan = model.rawData.originCommonContent.titleRichSpan;
             originItemModel.openUrl = model.rawData.originCommonContent.schema;
             originItemModel.imageModel = model.rawData.originCommonContent.coverImage;
         }
@@ -537,7 +542,7 @@
     cellModel.needLinkSpan = YES;
     cellModel.numberOfLines = 3;
     //目前仅支持话题类型
-    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
+    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag),@(TTRichSpanLinkTypeAt)];
     
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     community.name = model.community.name;

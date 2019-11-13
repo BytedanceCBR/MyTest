@@ -272,6 +272,14 @@
     }
 }
 
+- (void)refreshWithData:(id)data
+{
+    if ([data isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+        FHHouseNeighborAgencyModel *model = (FHHouseNeighborAgencyModel *)data;
+        [self bindData:model traceParams:model.tracerDict];
+    }
+}
+
 - (BOOL)shouldShowContact:(FHDetailContactModel *)contact {
     BOOL result = NO;
     if (contact.businessLicense.length > 0) {

@@ -52,9 +52,7 @@ def fhPods
     #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '04b0711843b573a64a781571dd19bdf50f5cc59e'
     pod 'FHCommonUI', '0.0.7-alpha.0'
 
-    pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '8af53c843788dfbbab2162ecc3d85be389798666'
-#     pod 'ios_house_im' , :path => '../../ios_house_im/ios_house_im'
-#     pod 'ios_house_im', '0.1.12-rc.6'
+     pod 'ios_house_im', '0.1.13-rc.3'
 
     #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
     pod 'ios_house_filter' , '1.0.1'
@@ -194,7 +192,7 @@ def appPods
 #        'WeiboSDK'
 #    ]
 
-    pod_binary 'TencentQQSDK', '1.0.0'
+    pod_binary 'TencentQQSDK', '1.1.0-rc.0'
     pod_binary 'WechatSDK','0.1.5'
 #    pod 'TTThirdPartySDKs/WeiboSDK', '0.0.4'
     #-----免流量统计-----
@@ -246,7 +244,7 @@ def appPods
     #-----头条图片滑动浏览器----
     pod 'TTPhotoScrollVC', :path => '../AKPlugins/TTPhotoScrollVC', :inhibit_warnings => false
     #-----头条用户设置库--------
-    pod_binary 'TTUserSettings', '0.3.4'
+    pod 'TTUserSettings', '0.3.4'
     #----头条webview库-----
 #    pod 'TTWebViewBundle', '0.8.15'
     pod 'AKWebViewBundlePlugin', :path => '../AKPlugins/AKWebViewBundlePlugin', :inhibit_warnings => false
@@ -636,7 +634,10 @@ def appPods
     #pod 'BDABTestSDK', '1.0.0'
 
     pod 'BDUGDeepLink', '1.1.1'
+    
+    pod_binary 'TTAppStoreStarManager', '1.0.12'
 end
+
 
 def testPods
     pod 'BDSSOAuthSDK'

@@ -475,7 +475,14 @@
 //    7. origin_from
 //    8. origin_search_id
 //    9.log_pb
-    [FHUserTracker writeEvent:@"go_detail" params:self.detailTracerDic];
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (self.detailTracerDic) {
+        [params addEntriesFromDictionary:self.detailTracerDic];
+    }
+    if (self.houseType == FHHouseTypeNeighborhood || self.houseType == FHHouseTypeSecondHandHouse) {
+        params[@"growth_deepevent"] = @(1);
+    }
+    [FHUserTracker writeEvent:@"go_detail" params:params];
 
 }
 

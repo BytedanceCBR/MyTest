@@ -120,6 +120,26 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *value;
 @end
 
+@protocol FHVideoHouseVideoVideoInfosModel<NSObject>
+@end
+
+@interface FHVideoHouseVideoVideoInfosModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *vid;
+@property (nonatomic, assign) NSInteger imageWidth;
+@property (nonatomic, assign) NSInteger vHeight;
+@property (nonatomic, assign) NSInteger imageHeight;
+@property (nonatomic, assign) NSInteger vWidth;
+@property (nonatomic, copy , nullable) NSString *coverImageUrl;
+@end
+
+@interface FHVideoHouseVideoModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHVideoHouseVideoVideoInfosModel> *videoInfos;
+@property (nonatomic, copy , nullable) NSString *infoSubTitle;
+@property (nonatomic, copy , nullable) NSString *infoTitle;
+@end
+
 @interface FHDetailNeighborhoodDataModel : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel> *priceTrend;
@@ -134,6 +154,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighbordhoodStatusModel *neighbordhoodStatus ;
 @property (nonatomic, copy , nullable) NSString *imprId;
+@property (nonatomic, strong , nullable) FHVideoHouseVideoModel *neighborhoodVideo;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *neighborhoodImage;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataCoreInfoModel> *coreInfo;

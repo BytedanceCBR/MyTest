@@ -61,6 +61,12 @@
         bottomOffset = 48;
     }
     self.items = model.relatedHouseData.items;
+    NSString *title = @"周边房源";
+    FHDetailOldModel *oldDetail = self.baseViewModel.detailData;
+    if (oldDetail) {
+        title = oldDetail.data.recommendedHouseTitle.length > 0 ? oldDetail.data.recommendedHouseTitle : @"周边房源";
+    }
+    _headerView.label.text = title;
     if (model.relatedHouseData.items.count > 0) {
         UITableView *tv = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
         tv.estimatedRowHeight = 108;
@@ -171,7 +177,7 @@
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;
         userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
-        userInfo[@"title"] = @"周边房源";
+        userInfo[@"title"] = oldDetail.data.recommendedHouseTitle.length > 0 ? oldDetail.data.recommendedHouseTitle : @"周边房源";
         if (oldDetail.data.neighborhoodInfo.id.length > 0) {
             userInfo[@"neighborhood_id"] = oldDetail.data.neighborhoodInfo.id;
         }

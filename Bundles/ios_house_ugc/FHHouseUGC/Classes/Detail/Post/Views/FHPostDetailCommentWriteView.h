@@ -54,6 +54,8 @@
 
 - (struct timeval)commentTimeval;
 
+- (void)clearInputBar;
+
 @end
 
 

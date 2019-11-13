@@ -111,9 +111,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
                             [[FHEnvContext sharedInstance] jumpUGCTab];
                         }else
                         {
-                            [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
-                                
-                            }];
+                            if (![self isCurrentCityNormalOpen]) {
+                                [[FHEnvContext sharedInstance] jumpUGCTab];
+                            }else
+                            {
+                                [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                                    
+                                }];
+                            }
                         }
                     }
                     //重试3次请求频道
@@ -306,7 +311,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
  */
 + (BOOL)isCurrentCityNormalOpen
 {
-    return [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable;
+    return [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue;
 }
 
 /*

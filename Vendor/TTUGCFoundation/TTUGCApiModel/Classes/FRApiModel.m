@@ -4879,8 +4879,8 @@
     self = [super init];
     if (self) {
         self._method = @"GET";
-        self._host = [FRCommonURLSetting baseURL];
-        self._uri = @"/ugc/publish/post/v1/contact";
+        self._host = [FHURLSettings baseURL];
+        self._uri = @" /f100/ugc/recently_user_list";
         self._response = @"FRUgcPublishPostV1ContactResponseModel";
     }
 
@@ -4911,8 +4911,8 @@
 
 - (void) reset
 {
-    self.err_no = nil;
-    self.err_tips = nil;
+    self.status = nil;
+    self.message = nil;
     self.data = nil;
 }
 @end
@@ -6612,8 +6612,8 @@
     self = [super init];
     if (self) {
         self._method = @"GET";
-        self._host = [FRCommonURLSetting baseURL];
-        self._uri = @"/ugc/publish/post/v1/suggest";
+        self._host = [FHURLSettings baseURL];
+        self._uri = @"/f100/ugc/search_user";
         self._response = @"FRUgcPublishPostV1SuggestResponseModel";
     }
 
@@ -6624,7 +6624,9 @@
 {
     NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:[super _requestParams]];
     [params setValue:_offset forKey:@"offset"];
-    [params setValue:_words forKey:@"words"];
+    [params setValue:_words forKey:@"query_name"];
+    [params setValue:_search_id forKey:@"search_id"];
+    [params setValue:_type forKey:@"type"];
 
     return params;
 }
@@ -6645,8 +6647,8 @@
 
 - (void) reset
 {
-    self.err_no = nil;
-    self.err_tips = nil;
+    self.status = nil;
+    self.message = nil;
     self.data = nil;
 }
 @end

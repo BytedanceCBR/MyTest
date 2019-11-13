@@ -21,6 +21,8 @@ typedef void(^AWEAwemeDetailCommonBlock)(id _Nullable response, NSError * _Nulla
 
 @property (nonatomic, strong) AWEActionSheetModel * _Nullable reportModel;
 @property (nonatomic, strong) NSString * _Nullable criticismInput;
+@property (nonatomic, assign) NSInteger totalCount;
+@property(nonatomic, strong) NSMutableArray<AWECommentModel *> *commentArray;
 
 - (void)addActionSheetMode:(AWEActionSheetModel *)model;
 

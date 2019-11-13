@@ -18,7 +18,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
+    FHNetworkMonitorTypeSuccess = 0, //成功
+    FHNetworkMonitorTypeBizFailed = 1, //返回数据成功 status 非0
+    FHNetworkMonitorTypeNetFailed = 2, //数据返回失败
+};
+
+
 @interface FHMainApi : NSObject
+
++(NSString *)host;
 
 /*
  * search config 废弃，接口合并
@@ -41,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param: searchId 请求id
  *  @param: sugParam  suggestion params
  */
-+(TTHttpTask *)searchRent:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam completion:(void(^_Nullable)(FHHouseRentModel *model , NSError *error))completion;
++(TTHttpTask *)searchRent:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion;
 
 
 /**
@@ -139,6 +148,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 
 +(TTHttpTask *_Nullable)checkUGCPostPromotionparams:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion;
+
++(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict;
+
 @end
 
 NS_ASSUME_NONNULL_END

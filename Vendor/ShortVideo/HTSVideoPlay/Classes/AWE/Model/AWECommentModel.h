@@ -27,12 +27,14 @@
 @property (nonatomic, assign) BOOL isFollowing;
 @property (nonatomic, copy) NSString *userName;
 @property (nonatomic, copy) NSString *userProfileImageUrl;
+@property (nonatomic, copy) NSString *contentRichSpan;
 @end
 
 @interface AWECommentModel : MTLModel<MTLJSONSerializing>
 @property (nonatomic, assign) BOOL isFollowed;
 @property (nonatomic, strong) ReplyCommentModel *replyToComment;
 @property (nonatomic, copy) NSString *text;
+@property (nonatomic, copy) NSString *contentRichSpan;
 @property (nonatomic, strong) NSNumber *replyCount;
 @property (nonatomic, assign) BOOL isFollowing;
 @property (nonatomic, assign) BOOL userVerified;
