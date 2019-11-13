@@ -301,6 +301,10 @@
 @property (nonatomic, strong)   UIView       *bottomBgView;
 @property (nonatomic, strong)   NSMutableArray       *optionsViewArray;
 @property (nonatomic, weak)     FHUGCVoteFoldViewButton *foldButton;
+@property (nonatomic, strong)   UILabel        *dateLabel;
+@property (nonatomic, strong)   UIButton       *voteButton;
+@property (nonatomic, strong)   UILabel        *hasVotedLabel;
+@property (nonatomic, strong)   UIButton       *editButton;
 
 @end
 
@@ -351,13 +355,51 @@
         [foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         self.foldButton = foldButton;
     }
+    // XX人参与 还有X天结束
+    self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 17)];
+    self.dateLabel.backgroundColor = [UIColor themeWhite];
+    self.dateLabel.text = @"XX人参与 还有5天结束";
+    self.dateLabel.textAlignment = NSTextAlignmentCenter;
+    self.dateLabel.textColor = [UIColor themeGray3];
+    self.dateLabel.font = [UIFont themeFontRegular:12];
+    [self.bottomBgView addSubview:self.dateLabel];
     
     bottomHeight += 32;
+    // 已投票和修改投票按钮
+    self.hasVotedLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, bottomHeight, ([UIScreen mainScreen].bounds.size.width - 40 - 10) / 2, 38)];
+    self.hasVotedLabel.layer.cornerRadius = 19;
+    self.hasVotedLabel.clipsToBounds = YES;
+    self.hasVotedLabel.backgroundColor = [UIColor colorWithHexStr:@"#c3c3c3"];
+    self.hasVotedLabel.text = @"已投票";
+    self.hasVotedLabel.font = [UIFont themeFontRegular:16];
+    self.hasVotedLabel.textAlignment = NSTextAlignmentCenter;
+    self.hasVotedLabel.textColor = [UIColor themeWhite];
+    [self.bottomBgView addSubview:self.hasVotedLabel];
+    
+    UIButton *editBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.hasVotedLabel.right + 10, bottomHeight, ([UIScreen mainScreen].bounds.size.width - 40 - 10) / 2, 38)];
+    editBtn.layer.cornerRadius = 19;
+    editBtn.layer.borderWidth = 0.5;
+    editBtn.layer.borderColor = [UIColor themeRed1].CGColor;
+    editBtn.backgroundColor = [UIColor themeWhite];
+    editBtn.titleLabel.font = [UIFont themeFontRegular:16];
+    [editBtn setTitle:@"修改投票" forState:UIControlStateNormal];
+    [editBtn setTitle:@"修改投票" forState:UIControlStateHighlighted];
+    [editBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [editBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
+    [self.bottomBgView addSubview:editBtn];
+    self.editButton = editBtn;
+    
+    // 投票按钮
     UIButton *voteBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 38)];
-    voteBtn.backgroundColor = [UIColor darkGrayColor];
-    [voteBtn setTitle:@"确认投票" forState:UIControlStateNormal];
-    [voteBtn setTitle:@"确认投票" forState:UIControlStateHighlighted];
-    [self.bottomBgView addSubview:voteBtn];
+    voteBtn.layer.cornerRadius = 19;
+    voteBtn.backgroundColor = [UIColor themeRed1];
+    voteBtn.titleLabel.font = [UIFont themeFontRegular:16];
+    [voteBtn setTitle:@"确定投票" forState:UIControlStateNormal];
+    [voteBtn setTitle:@"确定投票" forState:UIControlStateHighlighted];
+    [voteBtn setTitleColor:[UIColor themeWhite] forState:UIControlStateNormal];
+    [voteBtn setTitleColor:[UIColor themeWhite] forState:UIControlStateHighlighted];
+//    [self.bottomBgView addSubview:voteBtn];
+    self.voteButton = voteBtn;
     bottomHeight += 38;
     self.bottomBgView.height = bottomHeight;
 }
@@ -396,6 +438,7 @@
     self.height = self.bottomBgView.bottom;
 }
 
+// 折叠展开
 - (void)foldButtonClick:(UIButton *)button {
     self.voteInfo.isFold = !self.voteInfo.isFold;
     self.foldButton.isFold = self.voteInfo.isFold;
@@ -406,12 +449,10 @@
     if (animated) {
         [self.tableView beginUpdates];
     }
-    
     [UIView animateWithDuration:0.3 animations:^{
         [self refreshWithData:self.voteInfo];
         [self.detailCell setupUIFrames];
     }];
-    
     if (animated) {
         [self.tableView endUpdates];
     }
@@ -464,19 +505,19 @@
     [self addSubview:_iconView];
     _keyLabel = [[UILabel alloc] init];
     _keyLabel.text = @"";
-    _keyLabel.textColor = [UIColor themeRed1];
+    _keyLabel.textColor = [UIColor colorWithHexStr:@"#ff8151"];
     _keyLabel.font = [UIFont themeFontRegular:13];
     [self addSubview:_keyLabel];
     
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self).offset(-10);
+        make.centerX.mas_equalTo(self).offset(-6);
         make.top.mas_equalTo(self).offset(0);
         make.height.mas_equalTo(18);
     }];
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.keyLabel.mas_right).offset(4);
         make.centerY.mas_equalTo(self.keyLabel);
-        make.height.width.mas_equalTo(18);
+        make.height.width.mas_equalTo(10);
     }];
 }
 
