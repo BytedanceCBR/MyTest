@@ -64,8 +64,6 @@
 @property(nonatomic, strong) UILabel *originPriceLabel;
 @property(nonatomic, strong) UILabel *pricePerSqmLabel; // 价格/平米
 @property(nonatomic, strong) UILabel *distanceLabel; // 30 分钟到达
-@property(nonatomic, strong) UIImageView *fakeImageView;
-@property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 @property(nonatomic, strong) UIView *bottomRecommendView;//底部推荐理由
 @property(nonatomic, strong) UIImageView *bottomIconImageView; //活动icon
@@ -150,6 +148,7 @@
     return _houseVideoImageView;
 }
 
+
 -(UILabel *)imageTagLabel
 {
     if (!_imageTagLabel) {
@@ -191,6 +190,34 @@
         _mainTitleLabel.textColor = [UIColor themeGray1];
     }
     return _mainTitleLabel;
+}
+
+-(UIImageView *)bottomIconImageView
+{
+    if (!_bottomIconImageView) {
+        _bottomIconImageView= [[UIImageView alloc]init];
+        _bottomIconImageView.backgroundColor = [UIColor clearColor];
+    }
+    return _bottomIconImageView;
+}
+
+- (UIView *)bottomRecommendView
+{
+    if (!_bottomRecommendView) {
+        _bottomRecommendView = [[UIView alloc] init];
+    }
+    return _bottomRecommendView;
+}
+
+
+-(UILabel *)bottomRecommendLabel
+{
+    if (!_bottomRecommendLabel) {
+        _bottomRecommendLabel = [[UILabel alloc]init];
+        _bottomRecommendLabel.font = [UIFont themeFontMedium:16];
+        _bottomRecommendLabel.textColor = [UIColor themeGray1];
+    }
+    return _bottomRecommendLabel;
 }
 
 -(UILabel *)subTitleLabel
@@ -374,8 +401,7 @@
     [_rightInfoView addSubview:self.statInfoLabel];
     [_rightInfoView addSubview:self.tagLabel];
     
-    _bottomRecommendView = [[UIView alloc] init];
-    [_rightInfoView addSubview:_bottomRecommendView];
+    [_rightInfoView addSubview:self.bottomRecommendView];
     [_bottomRecommendView setBackgroundColor:[UIColor whiteColor]];
     
     
@@ -406,6 +432,7 @@
         layout.flexDirection = YGFlexDirectionRow;
         layout.width = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
         layout.height = YGPointValue(CELL_PRICE_HEIGHT);
+        layout.marginTop = YGPointValue(2);
         layout.justifyContent = YGJustifyFlexStart;
         layout.alignItems = YGAlignFlexStart;
     }];
@@ -443,7 +470,7 @@
     [_subTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(2);
-        layout.height = YGPointValue(17);
+        layout.height = YGPointValue(20);
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
         layout.flexGrow = 0;
     }];
@@ -459,7 +486,7 @@
     _tagLabel.font = [UIFont themeFontRegular:10];
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.marginTop = YGPointValue(2);
+        layout.marginTop = YGPointValue(5);
         layout.marginLeft = YGPointValue(0);
         layout.height = YGPointValue(14);
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
@@ -469,7 +496,7 @@
         layout.isEnabled = YES;
         layout.flexDirection = YGFlexDirectionRow;
         layout.marginRight = YGPointValue(20);
-        layout.height = YGPointValue(16);
+        layout.height = YGPointValue(24);
         layout.justifyContent = YGJustifyFlexStart;
         layout.alignItems = YGAlignFlexStart;
     }];
@@ -483,10 +510,9 @@
         layout.alignItems = YGAlignFlexStart;
     }];
 
-    _bottomIconImageView = [UIImageView new];
-    [_bottomIconImageView setBackgroundColor:[UIColor whiteColor]];
-    [_bottomRecommendView addSubview:_bottomIconImageView];
-    [_bottomIconImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+    [self.bottomIconImageView setBackgroundColor:[UIColor whiteColor]];
+    [self.bottomRecommendView addSubview:_bottomIconImageView];
+    [self.bottomIconImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(8);
         layout.marginLeft = YGPointValue(0);
@@ -494,12 +520,11 @@
         layout.width = YGPointValue(12);
     }];
     
-    _bottomRecommendLabel = [UILabel new];
-    _bottomRecommendLabel.font = [UIFont themeFontRegular:11];
-    _bottomRecommendLabel.textColor = [UIColor themeGray1];
-    [_bottomRecommendLabel setBackgroundColor:[UIColor whiteColor]];
-    [_bottomRecommendView addSubview:_bottomRecommendLabel];
-    [_bottomRecommendLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+    self.bottomRecommendLabel.font = [UIFont themeFontRegular:11];
+    self.bottomRecommendLabel.textColor = [UIColor themeGray1];
+    [self.bottomRecommendLabel setBackgroundColor:[UIColor whiteColor]];
+    [self.bottomRecommendView addSubview:self.bottomRecommendLabel];
+    [self.bottomRecommendLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(8);
         layout.marginLeft = YGPointValue(5);
@@ -548,10 +573,22 @@
     self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
 
     if (commonModel.advantageDescription.icon.url) {
+        self.bottomIconImageView.hidden = NO;
         [self.bottomIconImageView bd_setImageWithURL:[NSURL URLWithString:commonModel.advantageDescription.icon.url]];
+    }else
+    {
+        self.bottomIconImageView.hidden = YES;
     }
+    
     if (commonModel.advantageDescription.text) {
+        self.bottomRecommendLabel.hidden = NO;
         self.bottomRecommendLabel.text = commonModel.advantageDescription.text;
+        if (commonModel.advantageDescription.textColor) {
+            self.bottomRecommendLabel.textColor = [UIColor colorWithHexStr:commonModel.advantageDescription.textColor];
+        }
+    }else
+    {
+        self.bottomRecommendLabel.hidden = YES;
     }
     
     
