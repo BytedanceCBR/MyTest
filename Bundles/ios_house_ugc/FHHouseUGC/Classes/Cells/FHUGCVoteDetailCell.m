@@ -330,6 +330,7 @@
         optionV.backgroundColor = [UIColor themeWhite];
         optionV.layer.cornerRadius = 19;
         optionV.mainSelected = self.voteInfo.selected;
+        optionV.mainView = self;
         [self.optionBgView addSubview:optionV];
         [self.optionsViewArray addObject:optionV];
     }];
@@ -390,6 +391,8 @@
     [editBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
     [self.bottomBgView addSubview:editBtn];
     self.editButton = editBtn;
+    self.hasVotedLabel.hidden = YES;
+    self.editButton.hidden = YES;
     
     // 投票按钮
     UIButton *voteBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 38)];
@@ -400,7 +403,7 @@
     [voteBtn setTitle:@"确定投票" forState:UIControlStateHighlighted];
     [voteBtn setTitleColor:[UIColor themeWhite] forState:UIControlStateNormal];
     [voteBtn setTitleColor:[UIColor themeWhite] forState:UIControlStateHighlighted];
-//    [self.bottomBgView addSubview:voteBtn];
+    [self.bottomBgView addSubview:voteBtn];
     self.voteButton = voteBtn;
     bottomHeight += 38;
     self.bottomBgView.height = bottomHeight;
@@ -429,6 +432,8 @@
             [optionV refreshWithData:item];
         }
     }];
+    // 按钮状态等等
+    
     // 布局
     if (self.voteInfo.needFold) {
         if (self.voteInfo.isFold) {
@@ -468,6 +473,26 @@
     }
 }
 
+// 选项点击
+- (void)optionClickItem:(FHUGCVoteInfoVoteInfoItemsModel *)item {
+    if (item == nil) {
+        return;
+    }
+    if ([self.voteInfo.voteType isEqualToString:@"1"]) {
+        // 单选
+        [self.voteInfo.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            FHUGCVoteInfoVoteInfoItemsModel *temp = obj;
+            temp.selected = NO;
+        }];
+        item.selected = YES;
+    } else if ([self.voteInfo.voteType isEqualToString:@"2"]) {
+        // 多选
+        item.selected = !item.selected;
+    }
+    // 刷新数据
+    [self refreshWithData:self.voteInfo];
+}
+
 @end
 
 
@@ -490,7 +515,7 @@
     if (self) {
         self.clipsToBounds = YES;
         self.layer.borderWidth = 0.5;
-        self.layer.borderColor = [UIColor themeGray4].CGColor;
+        self.layer.borderColor = [UIColor colorWithHexStr:@"#aab5bd"].CGColor;
         [self setupViews];
     }
     return self;
@@ -498,10 +523,10 @@
 
 - (void)setupViews {
     self.bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, self.height)];
-    self.bgView.backgroundColor = [UIColor colorWithHexStr:@"#e8e8e8"];// fef2ec
+    self.bgView.backgroundColor = [UIColor colorWithHexStr:@"#ebeef0"];// fef2ec
     [self addSubview:self.bgView];
     self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 8, 0, 22)];
-    self.contentLabel.text = @"内容内容内容内容内容内容内容内";
+    self.contentLabel.text = @"";
     if ([UIScreen mainScreen].bounds.size.width <= 321) {
         self.contentLabel.font = [UIFont themeFontRegular:12];
     } if ([UIScreen mainScreen].bounds.size.width <= 376) {
@@ -510,7 +535,7 @@
         self.contentLabel.font = [UIFont themeFontRegular:16];
     }
     self.contentLabel.textAlignment = NSTextAlignmentCenter;
-    self.contentLabel.textColor = [UIColor themeGray2];
+    self.contentLabel.textColor = [UIColor colorWithHexStr:@"#7c848a"];
     [self addSubview:self.contentLabel];
     [self.contentLabel sizeToFit];
     self.contentLabel.centerX = self.width / 2;
@@ -520,8 +545,8 @@
     self.selectedIcon.left = self.contentLabel.right;
     
     self.percentLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 8, 40, 22)];
-    self.percentLabel.text = @"100%";
-    self.percentLabel.textColor = [UIColor themeGray2];
+    self.percentLabel.text = @"";
+    self.percentLabel.textColor = [UIColor colorWithHexStr:@"#7c848a"];
     self.percentLabel.textAlignment = NSTextAlignmentRight;
     if ([UIScreen mainScreen].bounds.size.width <= 321) {
         self.percentLabel.font = [UIFont themeFontRegular:13];
@@ -546,10 +571,27 @@
         return;
     }
     self.item = data;
+    self.contentLabel.text = self.item.content;
     if (self.mainSelected) {
-        // 做动画
+        // 做动画--已提交
     } else {
+        self.bgView.hidden = YES;
+        self.contentLabel.hidden = NO;
+        self.selectedIcon.hidden = YES;
+        self.percentLabel.hidden = YES;
         
+        [self.contentLabel sizeToFit];
+        self.contentLabel.centerX = self.width / 2;
+        if (self.item.selected) {
+            self.selectedIcon.hidden = NO;
+            self.selectedIcon.left = self.contentLabel.right;
+            self.contentLabel.textColor = [UIColor colorWithHexStr:@"#ff8151"];
+            self.layer.borderColor = [UIColor colorWithHexStr:@"#ff8151"].CGColor;
+        } else {
+            self.selectedIcon.hidden = YES;
+            self.contentLabel.textColor = [UIColor colorWithHexStr:@"#7c848a"];
+            self.layer.borderColor = [UIColor colorWithHexStr:@"#aab5bd"].CGColor;
+        }
     }
 }
 
@@ -559,7 +601,7 @@
         // 已做题目
         return;
     }
-    
+    [self.mainView optionClickItem:self.item];
 }
 
 @end

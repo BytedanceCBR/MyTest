@@ -27,12 +27,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshWithData:(id)data;
 
+// 选项点击
+- (void)optionClickItem:(FHUGCVoteInfoVoteInfoItemsModel *)item;
+
 @end
 
 // 选项
 @interface FHUGCOptionView : UIButton
 
 @property (nonatomic, assign)   BOOL       mainSelected;// 当前投票是否已答完
+@property (nonatomic, weak)     FHUGCVoteMainView       *mainView;
 - (void)refreshWithData:(id)data;
 
 @end
