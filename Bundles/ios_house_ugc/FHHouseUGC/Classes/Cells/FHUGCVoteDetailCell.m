@@ -372,7 +372,7 @@
     self.hasVotedLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, bottomHeight, ([UIScreen mainScreen].bounds.size.width - 40 - 10) / 2, 38)];
     self.hasVotedLabel.layer.cornerRadius = 19;
     self.hasVotedLabel.clipsToBounds = YES;
-    self.hasVotedLabel.backgroundColor = [UIColor colorWithHexStr:@"#c3c3c3"];
+    self.hasVotedLabel.backgroundColor = [UIColor colorWithHexString:@"#ff5869" alpha:0.24];
     self.hasVotedLabel.text = @"已投票";
     self.hasVotedLabel.font = [UIFont themeFontRegular:16];
     self.hasVotedLabel.textAlignment = NSTextAlignmentCenter;
@@ -403,10 +403,21 @@
     [voteBtn setTitle:@"确定投票" forState:UIControlStateHighlighted];
     [voteBtn setTitleColor:[UIColor themeWhite] forState:UIControlStateNormal];
     [voteBtn setTitleColor:[UIColor themeWhite] forState:UIControlStateHighlighted];
+    voteBtn.backgroundColor = [UIColor colorWithHexString:@"#ff5869" alpha:0.24];
+    voteBtn.enabled = NO;
+    [voteBtn addTarget:self action:@selector(voteButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBgView addSubview:voteBtn];
     self.voteButton = voteBtn;
     bottomHeight += 38;
     self.bottomBgView.height = bottomHeight;
+}
+
+// 确认投票按钮点击
+- (void)voteButtonClick:(UIButton *)btn {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.voteInfo.selected = YES;
+        [self refreshWithData:self.voteInfo];
+    });
 }
 
 - (void)refreshWithData:(id)data {
@@ -424,16 +435,37 @@
         [self setupViews];
     }
     // 更新数据以及布局
+    __block BOOL hasSelected = NO;
     [self.optionsViewArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHUGCOptionView *optionV = obj;
         if (idx < self.voteInfo.items.count) {
             FHUGCVoteInfoVoteInfoItemsModel *item = self.voteInfo.items[idx];
+            if (item.selected) {
+                hasSelected = YES;
+            }
             optionV.mainSelected = self.voteInfo.selected;
             [optionV refreshWithData:item];
         }
     }];
     // 按钮状态等等
-    
+    if (self.voteInfo.selected) {
+        // 已投票
+        self.editButton.hidden = NO;
+        self.hasVotedLabel.hidden = NO;
+        self.voteButton.hidden = YES;
+    } else {
+        self.editButton.hidden = YES;
+        self.hasVotedLabel.hidden = YES;
+        self.voteButton.hidden = NO;
+        if (hasSelected) {
+            // 有选中项
+            self.voteButton.backgroundColor = [UIColor themeRed1];
+            self.voteButton.enabled = YES;
+        } else {
+            self.voteButton.backgroundColor = [UIColor colorWithHexString:@"#ff5869" alpha:0.24];
+            self.voteButton.enabled = NO;
+        }
+    }
     // 布局
     if (self.voteInfo.needFold) {
         if (self.voteInfo.isFold) {
@@ -574,6 +606,33 @@
     self.contentLabel.text = self.item.content;
     if (self.mainSelected) {
         // 做动画--已提交
+        self.bgView.hidden = NO;
+        self.contentLabel.hidden = NO;
+        self.selectedIcon.hidden = YES;
+        self.percentLabel.hidden = NO;
+        
+        [self.contentLabel sizeToFit];
+        self.bgView.width = 0;
+        if (self.item.selected) {
+            self.selectedIcon.hidden = NO;
+            self.contentLabel.textColor = [UIColor colorWithHexStr:@"#ff8151"];
+            self.layer.borderColor = [UIColor colorWithHexStr:@"#ff8151"].CGColor;
+            self.percentLabel.textColor = [UIColor colorWithHexStr:@"#ff8151"];
+            self.bgView.backgroundColor = [UIColor colorWithHexStr:@"#fef2ec"];// fef2ec
+        } else {
+            self.selectedIcon.hidden = YES;
+            self.contentLabel.textColor = [UIColor colorWithHexStr:@"#7c848a"];
+            self.layer.borderColor = [UIColor colorWithHexStr:@"#aab5bd"].CGColor;
+            self.percentLabel.textColor = [UIColor colorWithHexStr:@"#7c848a"];
+            self.bgView.backgroundColor = [UIColor colorWithHexStr:@"#ebeef0"];// fef2ec
+        }
+        
+        [UIView animateWithDuration:0.3 animations:^{
+            self.width = 100;
+            self.contentLabel.left = 10;
+            self.selectedIcon.left = self.contentLabel.right;
+        }];
+        
     } else {
         self.bgView.hidden = YES;
         self.contentLabel.hidden = NO;
