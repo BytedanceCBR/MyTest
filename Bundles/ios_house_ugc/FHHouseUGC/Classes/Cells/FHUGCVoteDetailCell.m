@@ -31,6 +31,7 @@
 @interface FHUGCVoteDetailCell() <TTUGCAttributedLabelDelegate>
 
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) UILabel *descLabel;// 补充说明
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) UILabel *position;
@@ -38,6 +39,7 @@
 @property(nonatomic, assign)   BOOL       showCommunity;
 @property (nonatomic, strong)   UIImageView       *positionImageView;
 @property (nonatomic, weak)     FHFeedUGCCellModel       *cellModel;
+@property (nonatomic, strong)   FHUGCVoteMainView       *voteView;
 
 @end
 
@@ -54,6 +56,7 @@
     if (self) {
         self.showCommunity = NO;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.isFromDetail = YES;
         [self setupUIs];
     }
     return self;
@@ -83,6 +86,15 @@
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
+    self.descLabel = [self labelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    [self.contentView addSubview:self.descLabel];
+    
+    self.descLabel.numberOfLines = self.isFromDetail ? 0 : 1;
+    
+    self.voteView = [[FHUGCVoteMainView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+    self.voteView.backgroundColor = [UIColor redColor];
+    [self.contentView addSubview:self.voteView];
+    
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
@@ -101,14 +113,31 @@
     self.contentLabel.top = self.userInfoView.bottom + 10;
     self.contentLabel.left = 30;
     self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - 30 - 30;
+    UIView *lastView = self.contentLabel;
+    // 补充说明可以没有
+    if (self.cellModel.voteInfo.desc.length > 0) {
+        self.descLabel.left = 30;
+        self.descLabel.top = self.contentLabel.bottom + 1;
+        self.descLabel.width = [UIScreen mainScreen].bounds.size.width - 30 - 30;
+        self.descLabel.hidden = NO;
+        lastView = self.descLabel;
+    } else {
+        self.descLabel.hidden = YES;
+    }
+    // 投票视图
+    self.voteView.top = lastView.bottom + 10;
+    self.voteView.left = 0;
+    self.voteView.height = 100;
+    self.voteView.width = [UIScreen mainScreen].bounds.size.width;
     
-    self.bottomView.top = self.contentLabel.bottom + 10;
+    // 底部bottom
+    self.bottomView.top = self.voteView.bottom + 10;
     self.bottomView.left = 0;
     self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
     self.bottomView.height = bottomViewHeight;
 }
 
-- (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
+- (UILabel *)labelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
     label.textColor = textColor;
@@ -133,7 +162,7 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHFeedUGCCellModel class]]) {
+    if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
     self.currentData = data;
@@ -164,11 +193,29 @@
         self.contentLabel.height = 0;
     }else{
         self.contentLabel.hidden = NO;
+        if (self.isFromDetail) {
+            // 重新计算高度
+            [FHUGCCellHelper setUGCVoteContentString:self.cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:100];
+        }
         self.contentLabel.height = self.cellModel.voteInfo.contentHeight;
         [self.contentLabel setText:self.cellModel.voteInfo.contentAStr];
     }
-    self.bottomView.top = self.contentLabel.bottom + 10;
+    if (isEmptyString(self.cellModel.voteInfo.desc)) {
+        self.descLabel.hidden = YES;
+        self.descLabel.height = 0;
+    } else {
+        self.descLabel.hidden = NO;
+        self.descLabel.text = self.cellModel.voteInfo.desc;
+        if (self.isFromDetail) {
+            CGSize size = [self.descLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width - 60, 1000)];
+            self.descLabel.height = size.height;
+        } else {
+            self.descLabel.height = 17;
+        }
+    }
+    // Vote View
     
+    // 更新布局
     [self setupUIFrames];
 }
 
@@ -177,10 +224,20 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         
         CGFloat height = topMargin + userInfoViewHeight + 10 + 20.5;
-        
-        
-        height += 22;
-        
+        // 投票 title 高度
+        if (cellModel.voteInfo.title.length > 0) {
+            height += cellModel.voteInfo.contentHeight;
+        }
+        if (cellModel.voteInfo.desc.length > 0) {
+            height += 17;
+        }
+        // 选项开始
+        height += 10;
+        // 选项 + 按钮（高度）
+        height += 100;
+        // 按钮底部 + 10
+        height += 10;
+        // 小区圈底部
         if (cellModel.showCommunity) {
             height += (24 + 10);
         }
@@ -225,6 +282,85 @@
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
+    }
+}
+
+@end
+
+// FHUGCVoteMainView
+@interface FHUGCVoteMainView()
+
+@end
+
+@implementation FHUGCVoteMainView
+
+
+@end
+
+
+// FHUGCVoteFoldViewButton
+@interface FHUGCVoteFoldViewButton ()
+
+@property (nonatomic, strong)   UIImageView       *iconView;
+@property (nonatomic, strong)   UILabel       *keyLabel;
+@property (nonatomic, copy)     NSString       *upText;
+@property (nonatomic, copy)     NSString       *downText;
+
+@end
+
+@implementation FHUGCVoteFoldViewButton
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (instancetype)initWithDownText:(NSString *)down upText:(NSString *)up isFold:(BOOL)isFold
+{
+    self = [self initWithFrame:CGRectZero];
+    if (self) {
+        self.upText = up;
+        self.downText = down;
+        self.isFold = isFold;
+    }
+    return self;
+}
+
+- (void)setupUI {
+    _upText = @"收起";
+    _downText = @"展开";
+    _iconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-2"]];
+    [self addSubview:_iconView];
+    _keyLabel = [[UILabel alloc] init];
+    _keyLabel.text = @"";
+    _keyLabel.textColor = [UIColor themeRed1];
+    _keyLabel.font = [UIFont themeFontRegular:14];
+    [self addSubview:_keyLabel];
+    
+    [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self).offset(-11);
+        make.top.mas_equalTo(self).offset(20);
+        make.height.mas_equalTo(18);
+    }];
+    [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.keyLabel.mas_right).offset(4);
+        make.centerY.mas_equalTo(self.keyLabel);
+        make.height.width.mas_equalTo(18);
+    }];
+}
+
+- (void)setIsFold:(BOOL)isFold {
+    _isFold = isFold;
+    if (isFold) {
+        _keyLabel.text = self.downText;
+        _iconView.image = [UIImage imageNamed:@"arrowicon-feed-3"];
+    } else {
+        _keyLabel.text = self.upText;
+        _iconView.image = [UIImage imageNamed:@"arrowicon-feed-2"];
     }
 }
 
