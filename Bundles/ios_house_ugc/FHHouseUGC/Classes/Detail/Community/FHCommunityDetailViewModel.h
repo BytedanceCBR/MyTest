@@ -35,4 +35,6 @@
 
 - (void)gotoSocialFollowUserList;
 
+- (void)gotoPostThreadVC;
+
 @end

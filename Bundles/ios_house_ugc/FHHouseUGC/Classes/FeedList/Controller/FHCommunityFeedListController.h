@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL tableViewNeedPullDown;
 //发布按钮距离底部的高度,默认为0
 @property(nonatomic, assign) CGFloat publishBtnBottomHeight;
+//发布按钮隐藏
+@property(nonatomic, assign) BOOL hidePublishBtn;
 //当前定位的位置
 @property(nonatomic, strong) CLLocation *currentLocaton;
 //小区详情页进入需要传这个参数，小区圈子id

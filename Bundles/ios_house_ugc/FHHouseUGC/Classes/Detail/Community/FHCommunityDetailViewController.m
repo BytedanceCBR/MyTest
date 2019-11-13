@@ -13,6 +13,7 @@
 #import "TTBaseMacro.h"
 #import "FHUGCFollowButton.h"
 #import <UILabel+House.h>
+#import <TTDeviceHelper.h>
 
 @interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol>
 @property (nonatomic, strong) FHCommunityDetailViewModel *viewModel;
@@ -135,7 +136,7 @@
 - (void)initView {
     [self initHeaderView];
     [self initSegmentView];
-//    [self initPagingView];
+    [self initPublishBtn];
     [self addDefaultEmptyViewFullScreen];
 }
 
@@ -179,6 +180,13 @@
     _segmentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 }
 
+- (void)initPublishBtn {
+    self.publishBtn = [[UIButton alloc] init];
+    [_publishBtn setImage:[UIImage imageNamed:@"fh_ugc_publish"] forState:UIControlStateNormal];
+    [_publishBtn addTarget:self action:@selector(goToPublish) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_publishBtn];
+}
+
 - (void)initConstrains {
     [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.customNavBarView.leftBtn.mas_centerY);
@@ -208,6 +216,18 @@
         make.width.height.mas_equalTo(24);
         make.right.mas_equalTo(-20);
         make.bottom.mas_equalTo(-10);
+    }];
+    
+    CGFloat publishBtnBottomHeight;
+    if ([TTDeviceHelper isIPhoneXSeries]) {
+        publishBtnBottomHeight = 44;
+    }else{
+        publishBtnBottomHeight = 10;
+    }
+    [self.publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.view).offset(-publishBtnBottomHeight);
+        make.right.mas_equalTo(self.view).offset(-12);
+        make.width.height.mas_equalTo(64);
     }];
 }
 
@@ -253,6 +273,11 @@
     if (self.viewModel.shareInfo && self.viewModel.shareTracerDict) {
         [[FHUGCShareManager sharedManager] shareActionWithInfo:self.viewModel.shareInfo tracerDic:self.viewModel.shareTracerDict];
     }
+}
+
+//发布按钮点击
+- (void)goToPublish {
+    [self.viewModel gotoPostThreadVC];
 }
 
 - (NSString *)pageType {

@@ -40,7 +40,6 @@
 @property (nonatomic, strong) FHCommunityFeedListController *feedListController; //当前显示的feedVC
 @property (nonatomic, strong) FHUGCScialGroupDataModel *data;
 @property (nonatomic, strong) FHUGCScialGroupModel *socialGroupModel;
-//@property (nonatomic, strong) FHCommunityDetailRefreshHeader *refreshHeader;
 @property (nonatomic, assign) BOOL isViewAppear;
 @property (nonatomic, assign) BOOL isLoginSatusChangeFromGroupChat;
 @property (nonatomic, assign) BOOL isLogin;
@@ -94,19 +93,6 @@
     self.viewController.headerView.refreshHeader.endRefreshingCompletionBlock = ^{
         weakSelf.pagingView.userInteractionEnabled = YES;
     };
-    
-    
-    
-//    self.refreshHeader = [FHCommunityDetailMJRefreshHeader headerWithRefreshingBlock:^{
-//        [weakSelf requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
-//        weakSelf.feedListController.view.userInteractionEnabled = NO;
-//    }];
-//    self.refreshHeader.endRefreshingCompletionBlock = ^{
-//        weakSelf.feedListController.view.userInteractionEnabled = YES;
-//    };
-//    self.refreshHeader.mj_h = 14;
-//    self.refreshHeader.alpha = 0.0f;
-    
 
     [TTAccount addMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
@@ -306,16 +292,20 @@
     NSMutableArray *tabArray = [self.socialGroupModel.data.tabInfo mutableCopy];
 
     NSInteger selectedIndex = 0;
-    for(NSInteger i = 0;i < tabArray.count;i++) {
-        FHUGCScialGroupDataTabInfoModel *item = tabArray[i];
-        if(!isEmptyString(item.showName)) {
-            [titles addObject:item.showName];
+    if(tabArray && tabArray.count > 1) {
+        for(NSInteger i = 0;i < tabArray.count;i++) {
+            FHUGCScialGroupDataTabInfoModel *item = tabArray[i];
+            if(!isEmptyString(item.showName)) {
+                [titles addObject:item.showName];
+            }
+            if(item.isDefault) {
+                selectedIndex = i;
+                self.currentSegmentType = item.tabName;
+                self.defaultType = item.tabName;
+            }
         }
-        if(item.isDefault) {
-            selectedIndex = i;
-            self.currentSegmentType = item.tabName;
-            self.defaultType = item.tabName;
-        }
+    }else{
+        [titles addObject:@"全部"];
     }
     self.selectedIndex = selectedIndex;
     self.viewController.segmentView.selectedIndex = selectedIndex;
@@ -327,11 +317,15 @@
     [self.subVCs removeAllObjects];
     NSMutableArray *tabArray = [self.socialGroupModel.data.tabInfo mutableCopy];
     
-    for(NSInteger i = 0;i < tabArray.count;i++) {
-        FHUGCScialGroupDataTabInfoModel *item = tabArray[i];
-        if(!isEmptyString(item.showName) && !isEmptyString(item.tabName)) {
-            [self createFeedListController:item.tabName];
+    if(tabArray && tabArray.count > 1) {
+        for(NSInteger i = 0;i < tabArray.count;i++) {
+            FHUGCScialGroupDataTabInfoModel *item = tabArray[i];
+            if(!isEmptyString(item.showName) && !isEmptyString(item.tabName)) {
+                [self createFeedListController:item.tabName];
+            }
         }
+    }else{
+        [self createFeedListController:nil];
     }
     
     self.pagingView.delegate = self;
@@ -339,26 +333,20 @@
     
     //这里添加完subview以后导航条被盖住了，所以在这里给放到前面
     [self.viewController.view bringSubviewToFront:self.viewController.customNavBarView];
+    [self.viewController.view bringSubviewToFront:self.viewController.publishBtn];
     
 }
 
 - (void)createFeedListController:(NSString *)type {
     WeakSelf;
     FHCommunityFeedListController *feedListController = [[FHCommunityFeedListController alloc] init];
-    CGFloat publishBtnBottomHeight;
-    if ([TTDeviceHelper isIPhoneXSeries]) {
-        publishBtnBottomHeight = 44;
-    }else{
-        publishBtnBottomHeight = 10;
-    }
-    feedListController.publishBtnBottomHeight = publishBtnBottomHeight;
     feedListController.tableViewNeedPullDown = NO;
     feedListController.showErrorView = YES;
     feedListController.scrollViewDelegate = self;
     feedListController.delegate = self;
     feedListController.listType = FHCommunityFeedListTypePostDetail;
     feedListController.forumId = self.viewController.communityId;
-    
+    feedListController.hidePublishBtn = YES;
     //传入选项信息
     feedListController.operations = self.socialGroupModel.data.permission;
     feedListController.scialGroupData = self.socialGroupModel.data;
@@ -368,12 +356,6 @@
         [feedListController gotoGroupChat];
         self.isLoginSatusChangeFromGroupChat = NO;
     }
-    
-    feedListController.publishBlock = ^() {
-        StrongSelf;
-        [self gotoPostThreadVC];
-    };
-    
     [self.subVCs addObject:feedListController];
 }
 
@@ -909,11 +891,11 @@
 #pragma mark - pagingView 代理
 
 - (NSInteger)numberOfSectionsInPagingView:(TTHorizontalPagingView *)pagingView {
-    return self.socialGroupModel.data.tabInfo.count;
+    return self.subVCs.count;
 }
 
 - (UIScrollView *)pagingView:(TTHorizontalPagingView *)pagingView viewAtIndex:(NSInteger)index {
-    index = MIN(self.socialGroupModel.data.tabInfo.count - 1, index);
+    index = MIN(self.subVCs.count - 1, index);
     FHCommunityFeedListController *feedVC = self.subVCs[index];
     [feedVC viewDidLoad];
     return feedVC.tableView;
@@ -947,7 +929,12 @@
 }
 
 - (CGFloat)heightForSegmentInPagingView {
-    return kSegmentViewHeight;
+    NSMutableArray *tabArray = [self.socialGroupModel.data.tabInfo mutableCopy];
+    if(tabArray && tabArray.count > 1) {
+        return kSegmentViewHeight;
+    }else{
+        return 0;
+    }
 }
 
 - (void)pagingView:(TTHorizontalPagingView *)pagingView scrollTopOffset:(CGFloat)offset {
@@ -955,12 +942,6 @@
     UIScrollView *scrollView = pagingView.currentContentView;
     [self refreshContentOffset:delta];
     [self.viewController.headerView updateWhenScrolledWithContentOffset:delta isScrollTop:NO scrollView:pagingView.currentContentView];
-//    if(delta < 0){
-//        CGFloat alpha = self.refreshHeader.mj_h <= 0 ? 0.0f : fminf(1.0f,fabsf(delta / self.refreshHeader.mj_h));
-//        self.refreshHeader.alpha = alpha;
-//    }else{
-//        self.refreshHeader.alpha = 0;
-//    }
 }
 
 - (void)pagingView:(TTHorizontalPagingView *)pagingView scrollViewDidEndDraggingOffset:(CGFloat)offset {

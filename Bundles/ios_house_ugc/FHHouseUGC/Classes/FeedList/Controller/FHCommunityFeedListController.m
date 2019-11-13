@@ -202,6 +202,7 @@
     [_publishBtn setImage:[UIImage imageNamed:@"fh_ugc_publish"] forState:UIControlStateNormal];
     [_publishBtn addTarget:self action:@selector(goToPublish) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_publishBtn];
+    _publishBtn.hidden = self.hidePublishBtn;
 }
 
 - (void)initConstraints {
