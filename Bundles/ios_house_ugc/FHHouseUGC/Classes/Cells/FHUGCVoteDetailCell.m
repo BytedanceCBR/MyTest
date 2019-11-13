@@ -56,7 +56,6 @@
     if (self) {
         self.showCommunity = NO;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.isFromDetail = YES;
         [self setupUIs];
     }
     return self;
@@ -92,7 +91,7 @@
     self.descLabel.numberOfLines = self.isFromDetail ? 0 : 1;
     
     self.voteView = [[FHUGCVoteMainView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
-    self.voteView.backgroundColor = [UIColor redColor];
+    self.voteView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:self.voteView];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
@@ -127,7 +126,6 @@
     // 投票视图
     self.voteView.top = lastView.bottom + 10;
     self.voteView.left = 0;
-    self.voteView.height = 100;
     self.voteView.width = [UIScreen mainScreen].bounds.size.width;
     
     // 底部bottom
@@ -215,7 +213,12 @@
         self.descLabel.height = self.cellModel.voteInfo.descHeight;
     }
     // Vote View
-    
+    FHUGCVoteInfoVoteInfoModel *voteInfo = self.cellModel.voteInfo;
+    if (self.isFromDetail) {
+        voteInfo.needFold = NO;// 不需要折叠展开
+    }
+    [self.voteView refreshWithData:voteInfo];
+    self.voteView.height = voteInfo.voteHeight;
     // 更新布局
     [self setupUIFrames];
 }
@@ -234,10 +237,8 @@
         }
         // 选项开始
         height += 10;
-        // 选项（高度）
-        height += (cellModel.voteInfo.items.count * 48);
-        // 多少人参与 + 按钮（高度）
-        height += 70;
+        // 选项（高度） + 多少人参与 + 按钮（高度）
+        height += (cellModel.voteInfo.voteHeight);
         // 按钮底部 + 10
         height += 10;
         // 小区圈底部
@@ -293,13 +294,96 @@
 // FHUGCVoteMainView
 @interface FHUGCVoteMainView()
 
+@property (nonatomic, strong)   FHUGCVoteInfoVoteInfoModel *voteInfo;
+@property (nonatomic, strong)   UIView       *optionBgView;
+@property (nonatomic, strong)   UIView       *bottomBgView;
+@property (nonatomic, strong)   NSMutableArray       *optionsViewArray;
+
 @end
 
 @implementation FHUGCVoteMainView
 
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.optionsViewArray = [NSMutableArray new];
+    }
+    return self;
+}
+
+- (void)setupViews {
+    CGFloat optionWidth = [UIScreen mainScreen].bounds.size.width - 40;
+    self.optionBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+    self.optionBgView.clipsToBounds = YES;
+    [self addSubview:self.optionBgView];
+    // 加入所有选项
+    [self.voteInfo.items enumerateObjectsUsingBlock:^(FHUGCVoteInfoVoteInfoItemsModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHUGCOptionView *optionV = [[FHUGCOptionView alloc] initWithFrame:CGRectMake(20, idx * 48, optionWidth, 48)];
+        optionV.backgroundColor = [UIColor lightGrayColor];
+        [self.optionBgView addSubview:optionV];
+        [self.optionsViewArray addObject:optionV];
+    }];
+    if (self.voteInfo.needFold) {
+        if (self.voteInfo.isFold) {
+            // 折叠
+            self.optionBgView.height = 48 * [self.voteInfo.displayCount integerValue];
+        } else {
+            // 展开
+            self.optionBgView.height = 48 * self.voteInfo.items.count;
+        }
+    } else {
+        self.optionBgView.height = 48 * self.voteInfo.items.count;
+    }
+    // 底部
+    self.bottomBgView = [[UIView alloc] initWithFrame:CGRectMake(0, self.optionBgView.bottom, [UIScreen mainScreen].bounds.size.width, 0)];
+    [self addSubview:self.bottomBgView];
+    CGFloat bottomHeight = 0;
+    if (self.voteInfo.needFold) {
+        // 添加折叠展开按钮
+        bottomHeight += 28;
+        FHUGCVoteFoldViewButton *foldButton = [[FHUGCVoteFoldViewButton alloc] initWithDownText:@"展开查看更多" upText:@"收起" isFold:self.voteInfo.isFold];
+        foldButton.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 28);
+        [self.bottomBgView addSubview:foldButton];
+    }
+    
+    bottomHeight += 32;
+    UIButton *voteBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 38)];
+    voteBtn.backgroundColor = [UIColor darkGrayColor];
+    [voteBtn setTitle:@"确认投票" forState:UIControlStateNormal];
+    [voteBtn setTitle:@"确认投票" forState:UIControlStateHighlighted];
+    [self.bottomBgView addSubview:voteBtn];
+    bottomHeight += 38;
+    self.bottomBgView.height = bottomHeight;
+}
+
+- (void)refreshWithData:(id)data {
+    if (![data isKindOfClass:[FHUGCVoteInfoVoteInfoModel class]]) {
+        return;
+    }
+    if (self.voteInfo == data) {
+        // 只需要修改frame
+    } else {
+        self.voteInfo = (FHUGCVoteInfoVoteInfoModel *)data;
+        for (UIView *v in self.subviews) {
+            [v removeFromSuperview];
+        }
+        [self.optionsViewArray removeAllObjects];
+        [self setupViews];
+    }
+    // 更新数据以及布局
+    
+    self.voteInfo.voteHeight = self.bottomBgView.bottom;
+    self.height = self.bottomBgView.bottom;
+}
 
 @end
 
+
+// FHUGCOptionView
+@implementation FHUGCOptionView
+
+@end
 
 // FHUGCVoteFoldViewButton
 @interface FHUGCVoteFoldViewButton ()
@@ -341,12 +425,12 @@
     _keyLabel = [[UILabel alloc] init];
     _keyLabel.text = @"";
     _keyLabel.textColor = [UIColor themeRed1];
-    _keyLabel.font = [UIFont themeFontRegular:14];
+    _keyLabel.font = [UIFont themeFontRegular:13];
     [self addSubview:_keyLabel];
     
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self).offset(-11);
-        make.top.mas_equalTo(self).offset(20);
+        make.centerX.mas_equalTo(self).offset(-10);
+        make.top.mas_equalTo(self).offset(0);
         make.height.mas_equalTo(18);
     }];
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {

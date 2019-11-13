@@ -20,6 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
 // 投票视图
 @interface FHUGCVoteMainView : UIView
 
+- (void)refreshWithData:(id)data;
+
+@end
+
+// 选项
+@interface FHUGCOptionView : UIView
+
 @end
 
 // 外部布局高度28

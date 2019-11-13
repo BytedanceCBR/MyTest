@@ -490,6 +490,16 @@
         if (cellModel.voteInfo == nil || cellModel.voteInfo.items.count < 2) {
             return nil;
         }
+        cellModel.voteInfo.needFold = NO;
+        cellModel.voteInfo.isFold = NO;
+        NSInteger displayCount = [cellModel.voteInfo.displayCount integerValue];
+        if (displayCount <= 0 || displayCount >= cellModel.voteInfo.items.count) {
+            cellModel.voteInfo.needFold = NO;
+        } else {
+            cellModel.voteInfo.needFold = YES;
+            cellModel.voteInfo.isFold = YES;// 默认折叠，后续点击按钮修改
+        }
+        
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
         user.name = model.rawData.user.info.name;
         user.avatarUrl = model.rawData.user.info.avatarUrl;
