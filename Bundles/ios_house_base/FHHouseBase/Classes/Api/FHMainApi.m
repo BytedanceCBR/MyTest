@@ -142,7 +142,7 @@
  *  @param: searchId 请求id
  *  @param: sugParam  suggestion params
  */
-+(TTHttpTask *)searchRent:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam completion:(void(^_Nullable)(FHHouseRentModel *model , NSError *error))completion
++(TTHttpTask *)searchRent:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion
 {
     NSString *url = QURL(@"/f100/api/search_rent?");
     
@@ -162,7 +162,7 @@
     NSDate *startDate = [NSDate date];
     return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:qparam method:GET needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         NSDate *backDate = [NSDate date];
-        FHHouseRentModel *model = (FHHouseRentModel *)[self generateModel:obj class:[FHHouseRentModel class] error:&error];
+        id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[self generateModel:obj class:cls error:&error];
         NSDate *serDate = [NSDate date];
         FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
         NSInteger code = 0;

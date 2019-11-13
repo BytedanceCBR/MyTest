@@ -1015,6 +1015,72 @@
         self.priceLabel.text = model.displayPricePerSqm;
         FHImageModel *imageModel = model.images.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
+    }else if ([data isKindOfClass:[FHSearchHouseItemModel class]])
+    {
+        FHSearchHouseItemModel *commonModel = (FHSearchHouseItemModel *)data;
+        self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
+        self.mainTitleLabel.text = commonModel.displayTitle;
+        self.subTitleLabel.text = commonModel.displayDescription;
+        NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:commonModel.tags];
+        self.tagLabel.attributedText =  attributeString;
+        
+        self.priceLabel.text = commonModel.displayPricePerSqm;
+        //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
+        FHImageModel *imageModel = commonModel.images.firstObject;
+        [self updateMainImageWithUrl:imageModel.url];
+        
+        FHHouseType houseType = commonModel.houseType.integerValue;
+        if (houseType == FHHouseTypeSecondHandHouse) {
+            FHImageModel *imageModel = commonModel.houseImage.firstObject;
+            [self updateMainImageWithUrl:imageModel.url];
+            self.subTitleLabel.text = commonModel.displaySubtitle;
+            self.priceLabel.text = commonModel.displayPrice;
+            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+            if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
+                self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
+                self.imageTagLabel.text = commonModel.houseImageTag.text;
+                self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
+                self.imageTagLabelBgView.hidden = NO;
+            }else {
+                
+                self.imageTagLabelBgView.hidden = YES;
+            }
+            
+        } else if (houseType == FHHouseTypeRentHouse) {
+            
+            self.mainTitleLabel.text = commonModel.title;
+            self.subTitleLabel.text = commonModel.subtitle;
+            self.priceLabel.text = commonModel.pricing;
+            self.pricePerSqmLabel.text = nil;
+            FHImageModel *imageModel = [commonModel.houseImage firstObject];
+            [self updateMainImageWithUrl:imageModel.url];
+            
+            if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
+                self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
+                self.imageTagLabel.text = commonModel.houseImageTag.text;
+                self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
+                self.imageTagLabelBgView.hidden = NO;
+            }else {
+                self.imageTagLabelBgView.hidden = YES;
+            }
+        } else {
+            self.pricePerSqmLabel.text = @"";
+        }
+        
+        [self hideRecommendReason];
+        [self updateTitlesLayout:YES];
+        
+        [self.contentView.yoga applyLayoutPreservingOrigin:NO];
+    }
+}
+
++ (CGFloat)heightForData:(id)data
+{
+    BOOL isLastCell = NO;// todo: zjing
+    if([data isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+        CGFloat reasonHeight = [model showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+        return (isLastCell ? 125 : 105) + reasonHeight;
     }
 }
 

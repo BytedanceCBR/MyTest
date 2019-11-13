@@ -286,7 +286,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface  FHSearchHouseDataModel  : JSONModel
 
 @property (nonatomic, assign) BOOL hasMore;
-//@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsModel> *items;
+@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsModel> *items;
 @property (nonatomic, copy , nullable) NSString *houseListOpenUrl;
 @property (nonatomic, copy , nullable) NSString *refreshTip;
 @property (nonatomic, copy , nullable) NSString *mapFindHouseOpenUrl;
@@ -298,7 +298,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger offset;
 
 #pragma mark todo: zjing
-@property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items;
+//@property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items;
 
 @property (nonatomic, strong , nullable) FHSearchRealHouseExtModel *externalSite;
 @property (nonatomic, strong , nullable) FHSearchRealHouseAgencyInfo *agencyInfo;
@@ -316,6 +316,39 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataModel *data ;
 
 @end
+
+
+#pragma mark - zjing 新model
+@interface  FHListSearchHouseDataModel  : JSONModel
+
+@property (nonatomic, assign) BOOL hasMore;
+@property (nonatomic, copy , nullable) NSString *houseListOpenUrl;
+@property (nonatomic, copy , nullable) NSString *refreshTip;
+@property (nonatomic, copy , nullable) NSString *mapFindHouseOpenUrl;
+@property (nonatomic, copy , nullable) NSString *total;
+@property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, copy , nullable) NSString *topTip;
+@property (nonatomic, copy , nullable) NSString *bottomTip;
+@property (nonatomic, copy , nullable) FHImageModel *banner;
+@property (nonatomic, assign) NSInteger offset;
+
+#pragma mark todo: zjing
+@property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items;
+@property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
+@property (nonatomic, strong, nullable) FHRecommendSecondhandHouseDataModel *recommendSearchModel;
+
+@end
+
+
+@interface  FHListSearchHouseModel  : JSONModel<FHBaseModelProtocol>
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHListSearchHouseDataModel *data ;
+
+@end
+
+
 
 @interface FHSearchHouseDataItemsModel (RecommendReason)
 

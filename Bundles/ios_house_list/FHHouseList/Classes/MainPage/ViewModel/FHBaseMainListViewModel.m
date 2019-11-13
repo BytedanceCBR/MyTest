@@ -172,11 +172,6 @@ extern NSString *const INSTANT_DATA_KEY;
     }else if ([model isKindOfClass:[FHSearchGuessYouWantContentModel class]]) {
         return [FHRecommendSecondhandHouseTitleCell class];
     }
-    
-//    else if ([model isKindOfClass:[FHSuggestionRealHouseTopCellModel class]]) {
-//        return [FHSuggestionRealHouseTopCell class];
-//    }
-    
     else if ([model isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
         return [FHSuggestionRealHouseTopCell class];
     }
@@ -502,7 +497,7 @@ extern NSString *const INSTANT_DATA_KEY;
     __weak typeof(self) wself = self;
     if (_mainListPage && self.houseType == FHHouseTypeRentHouse) {
         
-        self.requestTask = [self requestRentData:isHead query:query completion:^(FHHouseRentModel * _Nullable model, NSError * _Nullable error) {
+        self.requestTask = [self requestRentData:isHead query:query completion:^(FHListSearchHouseModel * _Nullable model, NSError * _Nullable error) {
             [wself processData:model error:error isRefresh:isHead];
         }];
         
@@ -828,9 +823,9 @@ extern NSString *const INSTANT_DATA_KEY;
             recommendItems = recommendHouseDataModel.items;
             self.currentRecommendHouseDataModel = recommendHouseDataModel;
             fromRecommend = YES;
-        } else if ([model isKindOfClass:[FHSearchHouseModel class]]) { // 列表页
+        } else if ([model isKindOfClass:[FHListSearchHouseModel class]]) { // 列表页
             
-            FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
+            FHListSearchHouseDataModel *houseModel = ((FHListSearchHouseModel *)model).data;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
             self.currentHouseDataModel = houseModel;
@@ -924,6 +919,11 @@ extern NSString *const INSTANT_DATA_KEY;
         [recommendItems enumerateObjectsUsingBlock:^(id  _Nonnull itemDict, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([itemDict isKindOfClass:[NSDictionary class]]) {
                 id theItemModel = [[self class] searchItemModelByDict:itemDict];
+                if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+                    FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)theItemModel;
+                    itemModel.isRecommendCell = YES;
+                    theItemModel = itemModel;
+                }
                 if (theItemModel) {
                     [wself.sugesstHouseList addObject:theItemModel];
                 }

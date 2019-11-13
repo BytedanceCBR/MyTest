@@ -446,6 +446,51 @@
 
 @end
 
+
+#pragma mark - 新model
+
+@implementation  FHListSearchHouseModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation  FHListSearchHouseDataModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"hasMore": @"has_more",
+                           @"refreshTip": @"refresh_tip",
+                           @"redirectTips": @"redirect_tips",
+                           @"searchId": @"search_id",
+                           @"mapFindHouseOpenUrl": @"map_find_house_open_url",
+                           @"houseListOpenUrl": @"house_list_open_url",
+                           @"recommendSearchModel": @"recommend_search",
+                           @"subscribeInfo": @"subscribe_info",
+                           @"externalSite": @"external_site",
+                           @"agencyInfo": @"agency_info",
+                           @"topTip":@"top_tip",
+                           @"bottomTip":@"bottom_tip",
+                           //                           @"currentItems":@"items",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+
+
 @implementation FHSearchHouseDataItemsModelBottomText
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName
