@@ -326,8 +326,9 @@
     [self addSubview:self.optionBgView];
     // 加入所有选项
     [self.voteInfo.items enumerateObjectsUsingBlock:^(FHUGCVoteInfoVoteInfoItemsModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHUGCOptionView *optionV = [[FHUGCOptionView alloc] initWithFrame:CGRectMake(20, idx * 48, optionWidth, 48)];
-        optionV.backgroundColor = [UIColor lightGrayColor];
+        FHUGCOptionView *optionV = [[FHUGCOptionView alloc] initWithFrame:CGRectMake(20, idx * 48, optionWidth, 38)];
+        optionV.backgroundColor = [UIColor themeWhite];
+        optionV.layer.cornerRadius = 19;
         [self.optionBgView addSubview:optionV];
         [self.optionsViewArray addObject:optionV];
     }];
@@ -462,7 +463,60 @@
 
 
 // FHUGCOptionView
+@interface FHUGCOptionView ()
+
+@property (nonatomic, strong)   FHUGCVoteInfoVoteInfoItemsModel       *item;
+@property (nonatomic, strong)   UIView       *bgView;
+@property (nonatomic, strong)   UILabel       *contentLabel;
+@property (nonatomic, strong)   UIImageView       *selectedIcon;
+@property (nonatomic, strong)   UILabel       *percentLabel;
+
+@end
+
 @implementation FHUGCOptionView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.clipsToBounds = YES;
+        self.layer.borderWidth = 0.5;
+        self.layer.borderColor = [UIColor themeGray4].CGColor;
+        [self setupViews];
+    }
+    return self;
+}
+
+- (void)setupViews {
+    self.bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, self.height)];
+    self.bgView.backgroundColor = [UIColor colorWithHexStr:@"#e8e8e8"];// fef2ec
+    [self addSubview:self.bgView];
+    self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 8, 0, 22)];
+    self.contentLabel.text = @"内容内容内容内容内容内容内容内容";
+    if ([UIScreen mainScreen].bounds.size.width <= 321) {
+        self.contentLabel.font = [UIFont themeFontRegular:14];
+    } if ([UIScreen mainScreen].bounds.size.width <= 376) {
+        self.contentLabel.font = [UIFont themeFontRegular:15];
+    } else {
+        self.contentLabel.font = [UIFont themeFontRegular:16];
+    }
+    self.contentLabel.textAlignment = NSTextAlignmentCenter;
+    self.contentLabel.textColor = [UIColor themeGray2];
+    [self addSubview:self.contentLabel];
+    [self.contentLabel sizeToFit];
+    self.contentLabel.centerX = self.width / 2;
+    self.selectedIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fh_ugc_vote_selected"]];
+    [self addSubview:self.selectedIcon];
+    self.selectedIcon.frame = CGRectMake(0, 8, 22, 22);
+    self.selectedIcon.left = self.contentLabel.right;
+}
+
+- (void)refreshWithData:(id)data {
+    if (![data isKindOfClass:[FHUGCVoteInfoVoteInfoItemsModel class]]) {
+        return;
+    }
+    self.item = data;
+}
 
 @end
 

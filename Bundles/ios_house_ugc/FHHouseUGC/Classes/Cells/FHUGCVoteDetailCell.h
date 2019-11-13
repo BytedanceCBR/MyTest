@@ -30,7 +30,10 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 // 选项
-@interface FHUGCOptionView : UIView
+@interface FHUGCOptionView : UIButton
+
+@property (nonatomic, assign)   BOOL       mainSelected;// 当前投票是否已答完
+- (void)refreshWithData:(id)data;
 
 @end
 

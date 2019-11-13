@@ -6,6 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCVoteInfoVoteInfoItemsModel : JSONModel 
 
+@property (nonatomic, copy , nullable) NSString *index;
 @property (nonatomic, copy , nullable) NSString *content;
 @property (nonatomic, copy , nullable) NSString *voteCount;
 @property (nonatomic, assign) BOOL selected;
