@@ -2028,9 +2028,9 @@ extern NSString *const INSTANT_DATA_KEY;
             NSMutableDictionary *dict = [NSMutableDictionary new];
             dict[@"tracer"] = tracerParam;
             dict[@"house_type"] = @(self.houseType);
-            if (instantData) {
-                dict[INSTANT_DATA_KEY] = instantData;
-            }
+//            if (instantData) {
+//                dict[INSTANT_DATA_KEY] = instantData;
+//            }
             TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByViewController:url userInfo: userInfo];
         }

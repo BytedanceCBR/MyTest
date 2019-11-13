@@ -1048,6 +1048,16 @@
             
         } else if (houseType == FHHouseTypeRentHouse) {
             
+            NSArray *firstRow = [commonModel.bottomText firstObject];
+            NSDictionary *bottomText = nil;
+            if ([firstRow isKindOfClass:[NSArray class]]) {
+                NSDictionary *info = [firstRow firstObject];
+                if ([info isKindOfClass:[NSDictionary class]]) {
+                    bottomText = info;
+                }
+            }
+            [self updateBottomText:bottomText];
+
             self.mainTitleLabel.text = commonModel.title;
             self.subTitleLabel.text = commonModel.subtitle;
             self.priceLabel.text = commonModel.pricing;
@@ -1068,9 +1078,60 @@
         }
         
         [self hideRecommendReason];
-        [self updateTitlesLayout:YES];
+        [self updateTitlesLayout:attributeString.length > 0];
         
         [self.contentView.yoga applyLayoutPreservingOrigin:NO];
+    }
+}
+
+- (void)updateBottomText:(NSDictionary *)bottomText
+{
+    if (![bottomText isKindOfClass:[NSDictionary class]]) {
+        return;
+    }
+    NSString *infoText = bottomText[@"text"];
+    
+    if (bottomText && bottomText[@"color"] && !IS_EMPTY_STRING(infoText)) {
+        
+        NSMutableAttributedString *commuteAttr = [[NSMutableAttributedString alloc]init];
+        
+        UIImage *clockImg =  SYS_IMG(@"clock_small");
+        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+        attachment.image = clockImg;
+        attachment.bounds = CGRectMake(0, -1.5, 12, 12);
+        
+        NSAttributedString *clockAttr = [NSAttributedString attributedStringWithAttachment:attachment];
+        
+        [commuteAttr appendAttributedString:clockAttr];
+        
+        UIColor *textColor = [UIColor colorWithHexStr:bottomText[@"color"]]?:[UIColor themeGray3];
+        
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:textColor};
+        NSAttributedString *timeAttr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",infoText] attributes:attr];
+        
+        [commuteAttr appendAttributedString:timeAttr];
+        
+        self.distanceLabel.attributedText = commuteAttr;
+        
+        if (!_distanceLabel){
+            [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                layout.isEnabled = YES;
+                layout.marginLeft = YGPointValue(10);
+                layout.alignSelf = YGAlignCount;
+                layout.flexGrow = 1;
+            }];
+        }
+        [self.priceBgView addSubview:self.distanceLabel];
+        //因为有表情 强制计算宽度
+        [self.distanceLabel sizeToFit];
+        [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.width = YGPointValue(ceil(self.distanceLabel.frame.size.width));//x 设备上会出现因为小数计算显示不全的，改为上取整
+        }];
+        _priceBgView.yoga.justifyContent = YGJustifySpaceBetween;
+        [self.distanceLabel.yoga markDirty];
+    }else{
+        [_distanceLabel removeFromSuperview];
+        _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     }
 }
 
@@ -1161,7 +1222,6 @@
         }];
     }
     
-    
     NSArray *firstRow = [model.bottomText firstObject];
     NSDictionary *bottomText = nil;
     if ([firstRow isKindOfClass:[NSArray class]]) {
@@ -1170,51 +1230,7 @@
             bottomText = info;
         }
     }
-    
-    NSString *infoText = bottomText[@"text"];
-    
-    if (bottomText && bottomText[@"color"] && !IS_EMPTY_STRING(infoText)) {
-        
-        NSMutableAttributedString *commuteAttr = [[NSMutableAttributedString alloc]init];
-        
-        UIImage *clockImg =  SYS_IMG(@"clock_small");
-        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
-        attachment.image = clockImg;
-        attachment.bounds = CGRectMake(0, -1.5, 12, 12);
-        
-        NSAttributedString *clockAttr = [NSAttributedString attributedStringWithAttachment:attachment];
-        
-        [commuteAttr appendAttributedString:clockAttr];
-        
-        UIColor *textColor = [UIColor colorWithHexStr:bottomText[@"color"]]?:[UIColor themeGray3];
-        
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:textColor};
-        NSAttributedString *timeAttr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",infoText] attributes:attr];
-        
-        [commuteAttr appendAttributedString:timeAttr];
-        
-        self.distanceLabel.attributedText = commuteAttr;
-        
-        if (!_distanceLabel){
-            [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                layout.isEnabled = YES;
-                layout.marginLeft = YGPointValue(10);
-                layout.alignSelf = YGAlignCount;
-                layout.flexGrow = 1;
-            }];
-        }
-        [self.priceBgView addSubview:self.distanceLabel];
-        //因为有表情 强制计算宽度
-        [self.distanceLabel sizeToFit];
-        [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.width = YGPointValue(ceil(self.distanceLabel.frame.size.width));//x 设备上会出现因为小数计算显示不全的，改为上取整
-        }];
-        _priceBgView.yoga.justifyContent = YGJustifySpaceBetween;
-        [self.distanceLabel.yoga markDirty];
-    }else{
-        [_distanceLabel removeFromSuperview];
-        _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
-    }
+    [self updateBottomText:bottomText];
     
     FHImageModel *imageModel = [model.houseImage firstObject];
     [self updateMainImageWithUrl:imageModel.url];

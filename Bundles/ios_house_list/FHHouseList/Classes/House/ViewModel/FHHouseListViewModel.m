@@ -886,7 +886,15 @@ extern NSString *const INSTANT_DATA_KEY;
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             if (houseModel.items.count > 0) {
-                [itemArray addObjectsFromArray:houseModel.items];
+                for (FHHouseRentDataItemsModel *rentItem in houseModel.items) {
+                    NSDictionary *dict = [rentItem toDictionary];
+                    NSMutableDictionary *itemDict = @{}.mutableCopy;
+                    if (dict) {
+                        [itemDict addEntriesFromDictionary:dict];
+                        itemDict[@"card_type"] = [NSString stringWithFormat:@"%ld",FHSearchCardTypeRentHouse];
+                        [itemArray addObject:itemDict];
+                    }
+                }
             }
             redirectTips = houseModel.redirectTips;
         } else if ([model isKindOfClass:[FHHouseNeighborModel class]]) {
@@ -1484,7 +1492,7 @@ extern NSString *const INSTANT_DATA_KEY;
     __weak typeof(self)wself = self;
     if (identifier.length > 0) {
         FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-        if([cell isKindOfClass:[FHHouseBaseSmallItemCell class]] || [cell isKindOfClass:[FHHouseBaseSmallItemCell class]]){
+        if([cell isKindOfClass:[FHHouseBaseSmallItemCell class]]){
             FHHouseBaseSmallItemCell *theCell = (FHHouseBaseSmallItemCell *)cell;
             [theCell refreshTopMargin: 10];// todo: zjing
         }
@@ -1581,12 +1589,10 @@ extern NSString *const INSTANT_DATA_KEY;
         height = 105;
     }
     if (_showPlaceHolder) {
-        return 75;
+        return height;
     }
     
     BOOL isLastCell = NO;
-    
-    
     CGFloat normalHeight = height;
     
     if (self.isCommute && indexPath.row == 0) {
@@ -1767,7 +1773,7 @@ extern NSString *const INSTANT_DATA_KEY;
     // todo zjing id取值的问题
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
-            dict[INSTANT_DATA_KEY] = theModel;
+//            dict[INSTANT_DATA_KEY] = theModel;
             urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.id];
             break;
         case FHHouseTypeSecondHandHouse:
@@ -1790,18 +1796,18 @@ extern NSString *const INSTANT_DATA_KEY;
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_real_web"] userInfo:userInfoReal];
                 return;
             }
-            dict[INSTANT_DATA_KEY] = theModel;
+//            dict[INSTANT_DATA_KEY] = theModel;
             urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
             break;
         case FHHouseTypeRentHouse:
-            dict[INSTANT_DATA_KEY] = theModel;
+//            dict[INSTANT_DATA_KEY] = theModel;
             urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id];
             break;
         case FHHouseTypeNeighborhood:
             if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
                 urlStr = theModel.dealOpenUrl;
             }else {
-                dict[INSTANT_DATA_KEY] = theModel;
+//                dict[INSTANT_DATA_KEY] = theModel;
                 urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id];
             }
             break;
