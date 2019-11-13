@@ -11,6 +11,7 @@
 #import "FHCommunityDetailHeaderView.h"
 #import "FHCommunityDetailSegmentView.h"
 #import "FHCommunityDetailHorizontalPagingView.h"
+#import "TTBadgeNumberView.h"
 
 @class FHCommunityFeedListController;
 
@@ -28,6 +29,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UIView *titleContainer;
 //发布按钮
 @property (nonatomic, strong) UIButton *publishBtn;
+//群聊按钮
+@property(nonatomic, strong) UIButton *groupChatBtn;
+//群聊红泡提示按钮
+@property(nonatomic, strong) TTBadgeNumberView *bageView;
 
 @end
 

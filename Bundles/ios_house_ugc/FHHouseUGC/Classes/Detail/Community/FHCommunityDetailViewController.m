@@ -137,6 +137,10 @@
     [self initHeaderView];
     [self initSegmentView];
     [self initPublishBtn];
+    if(self.communityId){
+        [self initGroupChatBtn];
+        [self initBageView];
+    }
     [self addDefaultEmptyViewFullScreen];
 }
 
@@ -187,6 +191,20 @@
     [self.view addSubview:_publishBtn];
 }
 
+- (void)initGroupChatBtn {
+    self.groupChatBtn = [[UIButton alloc] init];
+    [_groupChatBtn setImage:[UIImage imageNamed:@"fh_ugc_group_chat_tip"] forState:UIControlStateNormal];
+    [_groupChatBtn addTarget:self action:@selector(gotoGroupChat) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_groupChatBtn];
+    [_groupChatBtn setHidden:YES];
+}
+
+- (void)initBageView {
+    self.bageView = [[TTBadgeNumberView alloc] init];
+    _bageView.badgeNumber = [[NSNumber numberWithInt:0] integerValue];
+    [self.view addSubview:_bageView];
+}
+
 - (void)initConstrains {
     [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.customNavBarView.leftBtn.mas_centerY);
@@ -228,6 +246,18 @@
         make.bottom.mas_equalTo(self.view).offset(-publishBtnBottomHeight);
         make.right.mas_equalTo(self.view).offset(-12);
         make.width.height.mas_equalTo(64);
+    }];
+    
+    [self.groupChatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.view).offset(-publishBtnBottomHeight - 64);
+        make.right.mas_equalTo(self.view).offset(-12);
+        make.width.height.mas_equalTo(64);
+    }];
+    
+    [self.bageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.groupChatBtn).offset(5);
+        make.right.mas_equalTo(self.self.groupChatBtn).offset(-5);
+        make.height.mas_equalTo(15);
     }];
 }
 
@@ -278,6 +308,11 @@
 //发布按钮点击
 - (void)goToPublish {
     [self.viewModel gotoPostThreadVC];
+}
+
+//去到群聊
+- (void)gotoGroupChat {
+    [self.viewModel gotoGroupChat];
 }
 
 - (NSString *)pageType {

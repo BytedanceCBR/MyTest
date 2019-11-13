@@ -30,11 +30,12 @@
 #import "TTAccount+Multicast.h"
 #import "TTAccountManager.h"
 #import "FHCommunityDetailHorizontalPagingView.h"
-//#import "FHCommunityDetailRefreshHeader.h"
+#import "IMManager.h"
+#import <TTThemedAlertController.h>
 
 #define kSegmentViewHeight 41
 
-@interface FHCommunityDetailViewModel () <FHUGCFollowObserver, CommunityGroupChatLoginDelegate, FHCommunityFeedListControllerDelegate,TTHorizontalPagingViewDelegate>
+@interface FHCommunityDetailViewModel () <FHUGCFollowObserver, TTHorizontalPagingViewDelegate>
 
 @property (nonatomic, weak) FHCommunityDetailViewController *viewController;
 @property (nonatomic, strong) FHCommunityFeedListController *feedListController; //当前显示的feedVC
@@ -248,7 +249,7 @@
             self.socialGroupModel = responseModel;
             BOOL isFollowed = [responseModel.data.hasFollow boolValue];
             if(isFollowed == NO) {
-                self.feedListController.bageView.badgeNumber = TTBadgeNumberHidden;
+                self.viewController.bageView.badgeNumber = TTBadgeNumberHidden;
             }
             [wself updateUIWithData:responseModel.data];
             if (responseModel.data) {
@@ -259,6 +260,11 @@
                     [self initSegment];
                     //初始化vc
                     [self initSubVC];
+                }
+                
+                if (self.isLoginSatusChangeFromGroupChat) {
+                    [self gotoGroupChat];
+                    self.isLoginSatusChangeFromGroupChat = NO;
                 }
                 
                 if (refreshFeed) {
@@ -283,7 +289,7 @@
     if ([TTAccountManager isLogin]) {
         [self goPostDetail];
     } else {
-        [self gotoLogin];
+        [self gotoLogin:0];
     }
 }
 
@@ -329,12 +335,13 @@
     }
     
     self.pagingView.delegate = self;
-    [self.viewController.view addSubview:self.pagingView];
-    
+//    [self.viewController.view addSubview:self.pagingView];
+    [self.viewController.view insertSubview:self.pagingView atIndex:0];
     //这里添加完subview以后导航条被盖住了，所以在这里给放到前面
-    [self.viewController.view bringSubviewToFront:self.viewController.customNavBarView];
-    [self.viewController.view bringSubviewToFront:self.viewController.publishBtn];
-    
+//    [self.viewController.view bringSubviewToFront:self.viewController.customNavBarView];
+//    [self.viewController.view bringSubviewToFront:self.viewController.publishBtn];
+//    [self.viewController.view bringSubviewToFront:self.viewController.groupChatBtn];
+//    [self.viewController.view bringSubviewToFront:self.viewController.bageView];
 }
 
 - (void)createFeedListController:(NSString *)type {
@@ -343,23 +350,132 @@
     feedListController.tableViewNeedPullDown = NO;
     feedListController.showErrorView = YES;
     feedListController.scrollViewDelegate = self;
-    feedListController.delegate = self;
     feedListController.listType = FHCommunityFeedListTypePostDetail;
     feedListController.forumId = self.viewController.communityId;
     feedListController.hidePublishBtn = YES;
     //传入选项信息
     feedListController.operations = self.socialGroupModel.data.permission;
-    feedListController.scialGroupData = self.socialGroupModel.data;
-    [feedListController updateViews];
-    feedListController.loginDelegate = wself;
-    if (self.isLoginSatusChangeFromGroupChat) {
-        [feedListController gotoGroupChat];
-        self.isLoginSatusChangeFromGroupChat = NO;
-    }
+//    feedListController.scialGroupData = self.socialGroupModel.data;
+//    [feedListController updateViews];
+//    feedListController.loginDelegate = wself;
     [self.subVCs addObject:feedListController];
 }
 
-- (void)gotoLogin {
+- (void)gotoGroupChat {
+    if ([TTAccountManager isLogin]) {
+        if (self.socialGroupModel.data.chatStatus.currentConversationCount >= self.socialGroupModel.data.chatStatus.maxConversationCount && self.socialGroupModel.data.chatStatus.maxConversationCount > 0) {
+            [[ToastManager manager] showToast:@"成员已达上限"];
+        } else if ([self.socialGroupModel.data.chatStatus.conversationId integerValue] <= 0) {
+            if (self.socialGroupModel.data.userAuth > UserAuthTypeNormal) {
+                [self tryCreateNewGroupChat];
+            }
+        } else if(self.socialGroupModel.data.chatStatus.conversationStatus == joinConversation) {
+            [self gotoGroupChatVC:self.socialGroupModel.data.chatStatus.conversationId isCreate:NO autoJoin:NO];
+        } else if (self.socialGroupModel.data.chatStatus.conversationStatus == leaveConversation) {
+            [self tryJoinConversation];
+        } else if(self.socialGroupModel.data.chatStatus.conversationStatus == KickOutConversation) {
+            [[ToastManager manager]showToast:@"你已经被移出群中"];
+        } else {
+            [self tryJoinConversation];
+        }
+    } else {
+        [self gotoLogin:1];
+    }
+}
+
+- (void)tryCreateNewGroupChat {
+    TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"" message:@"确认开启圈子群聊，所有关注用户将默认加入群聊" preferredType:TTThemedAlertControllerTypeAlert];
+    
+    WeakSelf;
+    [alertVC addActionWithTitle:@"取消" actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
+    
+    [alertVC addActionWithTitle:@"确认" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+        StrongSelf;
+        [self gotoGroupChatVC:@"-1" isCreate:YES autoJoin:NO];
+    }];
+    
+    UIViewController *topVC = [TTUIResponderHelper topmostViewController];
+    if (topVC) {
+        [alertVC showFrom:topVC animated:YES];
+    }
+}
+
+- (void)tryJoinConversation {
+    if ([self.socialGroupModel.data.hasFollow integerValue] == 1) {
+        [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
+    } else {
+        TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"" message:@"是否加入群聊并关注圈子？" preferredType:TTThemedAlertControllerTypeAlert];
+        
+        WeakSelf;
+        [alertVC addActionWithTitle:@"取消" actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
+        
+        [alertVC addActionWithTitle:@"确认" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+            StrongSelf;
+            if ([TTReachability isNetworkConnected]) {
+                [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
+                [[FHUGCConfig sharedInstance] followUGCBy:self.viewController.communityId isFollow:YES completion:^(BOOL isSuccess) {
+                    
+                }];
+            } else {
+                [[ToastManager manager] showToast:@"网络异常"];
+            }
+        }];
+        
+        UIViewController *topVC = [TTUIResponderHelper topmostViewController];
+        if (topVC) {
+            [alertVC showFrom:topVC animated:YES];
+        }
+    }
+}
+
+- (void)gotoGroupChatVC:(NSString *)convId isCreate:(BOOL)isCreate autoJoin:(BOOL)autoJoin {
+    //跳转到群聊页面
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"conversation_id"] = convId;
+    dict[@"chat_avatar"] = self.socialGroupModel.data.avatar;
+    dict[@"chat_name"] = self.socialGroupModel.data.socialGroupName;
+    dict[@"community_id"] = self.socialGroupModel.data.socialGroupId;
+    NSMutableDictionary *reportDic = [NSMutableDictionary dictionary];
+    [reportDic setValue:@"community_group_detail" forKey:@"enter_from"];
+    [reportDic setValue:@"ugc_member_talk" forKey:@"element_from"];
+    
+    if (isCreate) {
+        dict[@"is_create"] = @"1";
+        NSString *title = [@"" stringByAppendingFormat:@"%@(%@)", self.socialGroupModel.data.socialGroupName, self.socialGroupModel.data.followerCount];
+        dict[@"chat_title"] = title;
+        dict[@"chat_member_count"] = self.socialGroupModel.data.followerCount;
+        dict[@"idempotent_id"] = isEmptyString(self.socialGroupModel.data.chatStatus.idempotentId) ? self.socialGroupModel.data.socialGroupId : self.socialGroupModel.data.chatStatus.idempotentId;
+    } else if (autoJoin) {
+        dict[@"auto_join"] = @"1";
+        dict[@"conversation_id"] = self.socialGroupModel.data.chatStatus.conversationId;
+        dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:self.socialGroupModel.data.chatStatus.conversationShortId] stringValue];
+        NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", self.socialGroupModel.data.socialGroupName, self.socialGroupModel.data.chatStatus.currentConversationCount];
+        dict[@"chat_title"] = title;
+    } else {
+        NSInteger count = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:convId].participantsCount;
+        NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", self.socialGroupModel.data.socialGroupName, count];
+        dict[@"chat_title"] = title;
+        dict[@"in_conversation"] = @"1";
+        dict[@"conversation_id"] = self.socialGroupModel.data.chatStatus.conversationId;
+        dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:self.socialGroupModel.data.chatStatus.conversationShortId] stringValue];
+    }
+    dict[@"member_role"] = [NSString stringWithFormat: @"%d", self.socialGroupModel.data.userAuth];
+    dict[@"is_admin"] = @(self.socialGroupModel.data.userAuth > UserAuthTypeNormal);
+    dict[@"report_params"] = [[reportDic JSONRepresentation] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    WeakSelf;
+    dict[@"group_chat_page_exit_block"] = ^(void) {
+        StrongSelf;
+        [self refreshBasicInfo];
+    };
+    self.viewController.bageView.badgeNumber = 0;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL* url = [NSURL URLWithString:@"sslocal://open_group_chat"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+}
+
+- (void)gotoLogin:(NSUInteger *)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setObject:@"community_group_detail" forKey:@"enter_from"];
     [params setObject:@"feed_like" forKey:@"enter_type"];
@@ -371,9 +487,13 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [wSelf goPostDetail];
-                });
+                if (from == 0) {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [wSelf goPostDetail];
+                    });
+                } else {
+                    [wSelf onLoginIn];
+                }
             }
         }
     }];
@@ -716,27 +836,31 @@
     [self.viewController.headerView setNeedsLayout];
     [self.viewController.headerView layoutIfNeeded];
     
-    
-//    NSString *version = [UIDevice currentDevice].systemVersion;
-//    if (version.doubleValue >= 12.0) {
-//        self.feedListController.tableView.tableHeaderView = self.viewController.headerView;
-//    } else {
-//        CGFloat headerHeight = [self.viewController.headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-//        if(self.refreshHeader.isRefreshing) {
-//            headerHeight -= self.refreshHeader.mj_h;
-//        }
-//        CGRect headerFrame = CGRectMake(0, 0, SCREEN_WIDTH, headerHeight);
-//        self.viewController.headerView.frame = headerFrame;
-//
-//        UIView *headerView = [[UIView alloc] initWithFrame:headerFrame];
-//        [headerView addSubview:self.viewController.headerView];
-//        [self.viewController.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.edges.equalTo(headerView);
-//        }];
-//
-//        self.feedListController.tableView.tableHeaderView = headerView;
-//        [self.feedListController.tableView bringSubviewToFront:self.feedListController.tableView.mj_header];
-//    }
+    //更新群聊入口
+    if (self.viewController.communityId && (self.socialGroupModel.data.userAuth > UserAuthTypeNormal || [self.socialGroupModel.data.chatStatus.conversationId integerValue] > 0)) {
+        [self.viewController.groupChatBtn setHidden:NO];
+    } else {
+        [self.viewController.groupChatBtn setHidden:YES];
+    }
+    NSUInteger unreadCount = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:self.socialGroupModel.data.chatStatus.conversationId].unreadCount;
+    if (self.socialGroupModel.data.chatStatus.conversationStatus == joinConversation) {
+        if ([[IMManager shareInstance].chatService sdkConversationWithIdentifier:self.socialGroupModel.data.chatStatus.conversationId].mute && unreadCount > 0) {
+            self.viewController.bageView.badgeNumber = TTBadgeNumberPoint;
+            [self.viewController.bageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.viewController.groupChatBtn).offset(7);
+                make.right.mas_equalTo(self.viewController.groupChatBtn).offset(-7);
+                make.height.mas_equalTo(10);
+                make.width.mas_equalTo(10);
+            }];
+        } else {
+            self.viewController.bageView.badgeNumber = unreadCount;
+            [self.viewController.bageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.viewController.groupChatBtn).offset(5);
+                make.right.mas_equalTo(self.viewController.groupChatBtn).offset(-5);
+                make.height.mas_equalTo(15);
+            }];
+        }
+    }
     
     CGFloat hei = self.viewController.headerView.frame.size.height;
     self.feedListController.errorViewTopOffset = hei;
@@ -746,6 +870,7 @@
         [self addUgcGuide];
     }
     self.shouldShowUGcGuide = NO;
+    [self.pagingView reloadHeaderViewHeight:self.viewController.headerView.height];
 }
 
 - (void)updateJoinUI:(BOOL)followed {

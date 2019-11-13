@@ -37,4 +37,6 @@
 
 - (void)gotoPostThreadVC;
 
+- (void)gotoGroupChat;
+
 @end
