@@ -361,7 +361,7 @@
     // XX人参与 还有X天结束
     self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 17)];
     self.dateLabel.backgroundColor = [UIColor themeWhite];
-    self.dateLabel.text = @"XX人参与 还有5天结束";
+    self.dateLabel.text = @"还有5天结束";
     self.dateLabel.textAlignment = NSTextAlignmentCenter;
     self.dateLabel.textColor = [UIColor themeGray3];
     self.dateLabel.font = [UIFont themeFontRegular:12];
@@ -436,17 +436,34 @@
     }
     // 更新数据以及布局
     __block BOOL hasSelected = NO;
+    __block NSInteger selectCount = 0;
+    __block NSInteger totalCount = 0;
     [self.optionsViewArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHUGCOptionView *optionV = obj;
         if (idx < self.voteInfo.items.count) {
             FHUGCVoteInfoVoteInfoItemsModel *item = self.voteInfo.items[idx];
+            NSInteger voteCount = [item.voteCount integerValue];
+            totalCount += voteCount;
             if (item.selected) {
                 hasSelected = YES;
+                selectCount++;
+                totalCount += 1;
             }
             optionV.mainSelected = self.voteInfo.selected;
             [optionV refreshWithData:item];
         }
     }];
+    for (FHUGCVoteInfoVoteInfoItemsModel *item in self.voteInfo.items) {
+        if (totalCount <= 0) {
+            item.percent = 0;
+        } else {
+            NSInteger voteCount = [item.voteCount integerValue];
+            if (item.selected) {
+                voteCount += 1;
+            }
+            item.percent = (double)voteCount / totalCount;
+        }
+    }
     // 按钮状态等等
     if (self.voteInfo.selected) {
         // 已投票
@@ -627,8 +644,13 @@
             self.bgView.backgroundColor = [UIColor colorWithHexStr:@"#ebeef0"];// fef2ec
         }
         
+        double per = self.item.percent;
+        CGFloat wid = [UIScreen mainScreen].bounds.size.width - 40;
+        NSString *perStr = [NSString stringWithFormat:@"%.0f%%",per * 100];
+        self.percentLabel.text = perStr;
+        
         [UIView animateWithDuration:0.3 animations:^{
-            self.width = 100;
+            self.bgView.width = wid * per;
             self.contentLabel.left = 10;
             self.selectedIcon.left = self.contentLabel.right;
         }];

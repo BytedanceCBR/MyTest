@@ -10,6 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *content;
 @property (nonatomic, copy , nullable) NSString *voteCount;
 @property (nonatomic, assign) BOOL selected;
+@property (nonatomic, assign)   double percent;// 百分比
 @end
 
 @interface FHUGCVoteInfoVoteInfoModel : JSONModel 
