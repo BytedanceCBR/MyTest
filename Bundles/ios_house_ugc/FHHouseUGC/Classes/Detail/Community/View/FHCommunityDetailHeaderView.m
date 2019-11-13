@@ -11,17 +11,17 @@
 #import "FHUGCFollowButton.h"
 #import "SSViewBase.h"
 #import "TTDeviceHelper.h"
-#import "FHCommunityDetailMJRefreshHeader.h"
 #import <UIFont+House.h>
 #import "TTRoute.h"
 #import "FHUGCScialGroupModel.h"
 
 @interface FHCommunityDetailHeaderView ()
 
-@property(nonatomic, strong) UIView *infoContainer;
-@property(nonatomic, strong) UIView *operationBannerContainer;
-@property(nonatomic, strong) UIView *publicationsDetailView;
-@property (nonatomic, strong)   UIView       *userCountTapView;
+@property (nonatomic, strong) UIView *infoContainer;
+@property (nonatomic, strong) UIView *operationBannerContainer;
+@property (nonatomic, strong) UIView *publicationsDetailView;
+@property (nonatomic, strong) UIView *userCountTapView;
+@property (nonatomic, assign) CGFloat preOffset;
 
 @end
 
@@ -200,6 +200,10 @@
     [self.publicationsContainer addSubview:self.publicationsContentLabel];
     [self.publicationsContainer addSubview:self.publicationsDetailView]; // 公告点击查看按钮
     
+    self.refreshHeader = [[FHCommunityDetailRefreshHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 40, 20)];
+    _refreshHeader.alpha = 0;
+    [self.viewController.view addSubview:_refreshHeader];
+    
     
     /** 背景图 **/
     [self addSubview:self.topBack];
@@ -209,6 +213,8 @@
     [self addSubview:self.publicationsContainer];
     /** 运营位  **/
     [self addSubview:self.operationBannerContainer];
+    
+    [self addSubview:self.refreshHeader];
     
     self.userCountShowen = NO;
 }
@@ -222,6 +228,12 @@
 }
 
 - (void)initConstraints {
+    [self.refreshHeader mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self).offset(20);
+        make.right.equalTo(self).offset(-20);
+        make.bottom.equalTo(self.infoContainer.mas_top);
+        make.height.mas_equalTo(20);
+    }];
     
     [self.infoContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self).offset(20);
@@ -316,14 +328,37 @@
     }];
 }
 
-- (void)updateWhenScrolledWithContentOffset:(CGPoint)contentOffset isScrollTop:(BOOL)isScrollTop {
-    CGFloat offsetY = contentOffset.y;
-    if (offsetY < 0) {
-        CGFloat height = self.headerBackHeight - offsetY;
-        self.topBack.frame = CGRectMake(0, offsetY, SCREEN_WIDTH, height);
+- (void)updateWhenScrolledWithContentOffset:(CGFloat)offset isScrollTop:(BOOL)isScrollTop scrollView:(UIScrollView *)scrollView {
+    NSLog(@"offset___%f",offset);
+    if (offset < 0) {
+        CGFloat height = self.headerBackHeight - offset;
+        self.topBack.frame = CGRectMake(0, offset, SCREEN_WIDTH, height);
     } else {
         self.topBack.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight);
     }
+    
+    //控制刷新状态
+    if(offset <= 0 && self.refreshHeader.state != MJRefreshStateRefreshing){
+        CGFloat distance = fabs(offset) > 20 ? 20 : fabs(offset);
+        self.refreshHeader.alpha = distance / 20;
+    }
+
+    if(offset <= -50){
+        if(self.refreshHeader.state != MJRefreshStatePulling && self.refreshHeader.state != MJRefreshStateRefreshing){
+            self.refreshHeader.state = MJRefreshStatePulling;
+        }
+    }else{
+        if(self.refreshHeader.state != MJRefreshStateIdle && self.refreshHeader.state != MJRefreshStateRefreshing){
+            self.refreshHeader.state = MJRefreshStateIdle;
+        }
+    }
+    
+    CGFloat diff = offset - _preOffset;
+    if(diff > 0 && self.refreshHeader.state == MJRefreshStatePulling){
+        self.refreshHeader.state = MJRefreshStateRefreshing;
+    }
+    
+    _preOffset = offset;
 }
 
 - (void)updateOperationInfo:(BOOL)isShow whRatio:(CGFloat)whRatio {

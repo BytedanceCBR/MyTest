@@ -3,6 +3,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHCommunityDetailRefreshHeader.h"
 
 #define PublicationsContentLabel_numberOfLines 2
 #define PublicationsContentLabel_lineHeight 20
@@ -35,11 +36,13 @@ typedef void(^GotoPublicationsDetailBlock)(void);
 @property(nonatomic, copy) GotoOperationDetailBlock gotoOperationBlock;
 @property(nonatomic, strong) UIImageView *operationBannerImageView;
 
+@property (nonatomic, strong) FHCommunityDetailRefreshHeader *refreshHeader;
+
 - (void)startRefresh;
 
 - (void)stopRefresh;
 
-- (void)updateWhenScrolledWithContentOffset:(CGPoint)contentOffset isScrollTop:(BOOL)isScrollTop;
+- (void)updateWhenScrolledWithContentOffset:(CGFloat)offset isScrollTop:(BOOL)isScrollTop scrollView:(UIScrollView *)scrollView;
 
 - (void)updateOperationInfo:(BOOL)isShow whRatio:(CGFloat)whRatio;
 

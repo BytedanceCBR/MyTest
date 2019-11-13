@@ -134,29 +134,31 @@
 }
 
 - (void)initTableView {
-    self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    _tableView.backgroundColor = [UIColor themeGray7];
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
-    UIView *headerView = self.tableHeaderView ? self.tableHeaderView : [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
-    _tableView.tableHeaderView = headerView;
-    
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
-    _tableView.tableFooterView = footerView;
-    
-    _tableView.sectionFooterHeight = 0.0;
-    
-    _tableView.estimatedRowHeight = 0;
-    
-    if (@available(iOS 11.0 , *)) {
-        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    if(!_tableView){
+        self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        _tableView.backgroundColor = [UIColor themeGray7];
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        
+        UIView *headerView = self.tableHeaderView ? self.tableHeaderView : [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+        _tableView.tableHeaderView = headerView;
+        
+        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+        _tableView.tableFooterView = footerView;
+        
+        _tableView.sectionFooterHeight = 0.0;
+        
+        _tableView.estimatedRowHeight = 0;
+        
+        if (@available(iOS 11.0 , *)) {
+            self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+        
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+        }
+        
+        [self.view addSubview:_tableView];
     }
-    
-    if ([TTDeviceHelper isIPhoneXDevice]) {
-        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-    }
-    
-    [self.view addSubview:_tableView];
 }
 
 - (void)setTableHeaderView:(UIView *)tableHeaderView {

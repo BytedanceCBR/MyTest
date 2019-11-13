@@ -10,11 +10,15 @@
 #import "UIViewController+Track.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import "FHUGCShareManager.h"
+#import "TTBaseMacro.h"
+#import "FHUGCFollowButton.h"
+#import <UILabel+House.h>
 
 @interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol>
-@property(nonatomic, strong) FHCommunityDetailViewModel *viewModel;
-@property (nonatomic, strong)   UIImage       *shareWhiteImage;
-@property (nonatomic, strong)   UIButton       *shareButton;// 分享
+@property (nonatomic, strong) FHCommunityDetailViewModel *viewModel;
+@property (nonatomic, strong) UIImage *shareWhiteImage;
+@property (nonatomic, strong) UIButton *shareButton;// 分享
+
 @end
 
 @implementation FHCommunityDetailViewController
@@ -38,6 +42,8 @@
         if (element_from.length > 0) {
             self.tracerDict[@"element_from"] = element_from;
         }
+        self.tracerDict[@"page_type"] = [self pageType];
+        
         NSString *log_pb_str = params[@"log_pb"];
         if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
             NSData *jsonData = [log_pb_str dataUsingEncoding:NSUTF8StringEncoding];
@@ -63,7 +69,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    [self initNavBar];
     [self initView];
+    [self initConstrains];
     [self initViewModel];
 }
 
@@ -84,21 +93,122 @@
     [self tt_resetStayTime];
 }
 
-- (void)initView {
+- (void)initNavBar {
     [self setupDefaultNavBar:NO];
+    
+    self.rightBtn = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero];
+    self.rightBtn.backgroundColor = [UIColor themeWhite];
+    self.rightBtn.groupId = self.communityId;
+    self.rightBtn.hidden = YES;
+    self.rightBtn.tracerDic = [self followButtonTraceDict];
+    WeakSelf;
+    self.rightBtn.followedSuccess = ^(BOOL isSuccess, BOOL isFollow) {
+        StrongSelf;
+        if(isSuccess) {
+            [self.viewModel refreshBasicInfo];
+        }
+    };
+    
+    self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.titleLabel.textColor = [UIColor themeGray1];
+    
+    self.subTitleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:10];
+    self.subTitleLabel.textAlignment = NSTextAlignmentCenter;
+    self.subTitleLabel.textColor = [UIColor themeGray3];
+    
+    self.titleContainer = [[UIView alloc] init];
+    [self.titleContainer addSubview:self.titleLabel];
+    [self.titleContainer addSubview:self.subTitleLabel];
+    [self.customNavBarView addSubview:self.titleContainer];
+    [self.customNavBarView addSubview:self.rightBtn];
     // 分享按钮
     self.shareButton = [[UIButton alloc] init];
     [self.shareButton setBackgroundImage:self.shareWhiteImage forState:UIControlStateNormal];
     [self.shareButton setBackgroundImage:self.shareWhiteImage forState:UIControlStateHighlighted];
     [self.shareButton addTarget:self  action:@selector(shareButtonClicked:) forControlEvents:(UIControlEventTouchUpInside)];
     [self.customNavBarView addSubview:_shareButton];
+    //设置导航条透明
+    [self setNavBar:NO];
+}
+
+- (void)initView {
+    [self initHeaderView];
+    [self initSegmentView];
+//    [self initPagingView];
+    [self addDefaultEmptyViewFullScreen];
+}
+
+- (void)initHeaderView {
+    self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
+    self.headerView.followButton.groupId = self.communityId;
+    self.headerView.followButton.tracerDic = [self followButtonTraceDict];
+    WeakSelf;
+    self.headerView.followButton.followedSuccess = ^(BOOL isSuccess, BOOL isFollow) {
+        StrongSelf;
+        if(isSuccess) {
+            [self.viewModel refreshBasicInfo];
+        }
+    };
+    self.headerView.gotoSocialFollowUserListBlk = ^{
+        StrongSelf;
+        [self.viewModel gotoSocialFollowUserList];
+    };
+    
+    //随机一张背景图
+    NSInteger randomImageIndex = [self.communityId integerValue] % 4;
+    randomImageIndex = randomImageIndex < 0 ? 0 : randomImageIndex;
+    NSString *imageName = [NSString stringWithFormat:@"fh_ugc_community_detail_header_back%d", randomImageIndex];
+    self.headerView.topBack.image = [UIImage imageNamed:imageName];
+}
+
+- (void)initSegmentView {
+    self.segmentView = [[FHCommunityDetailSegmentView alloc] init];
+    [_segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont) {
+        *norColorKey = kColorText1;
+        *selColorKey = @"akmain";
+        *titleFont = [UIFont systemFontOfSize:15];
+    }];
+    [_segmentView setUpUnderLineEffect:^(BOOL *isUnderLineDelayScroll, CGFloat *underLineH, NSString *__autoreleasing *underLineColorKey, BOOL *isUnderLineEqualTitleWidth) {
+        *isUnderLineDelayScroll = NO;
+        *underLineH = 2;
+        *underLineColorKey = @"akmain";
+        *isUnderLineEqualTitleWidth = YES;
+    }];
+    _segmentView.backgroundColor = [UIColor clearColor];
+    _segmentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+}
+
+- (void)initConstrains {
+    [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.customNavBarView.leftBtn.mas_centerY);
+        make.right.mas_equalTo(self.customNavBarView).offset(-18.0f);
+        make.width.mas_equalTo(58);
+        make.height.mas_equalTo(24);
+    }];
+    
+    [self.titleContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.customNavBarView.leftBtn.mas_centerY);
+        make.left.mas_equalTo(self.customNavBarView.leftBtn.mas_right).offset(10.0f);
+        make.right.mas_equalTo(self.rightBtn.mas_left).offset(-10);
+        make.height.mas_equalTo(34);
+    }];
+    
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.titleContainer);
+        make.height.mas_equalTo(20);
+    }];
+    
+    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self.titleContainer);
+        make.height.mas_equalTo(14);
+    }];
+    
     [self.shareButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(24);
         make.right.mas_equalTo(-20);
         make.bottom.mas_equalTo(-10);
     }];
-    [self setNavBar:NO];
-    [self addDefaultEmptyViewFullScreen];
 }
 
 - (void)setNavBar:(BOOL)showJoinButton {
@@ -143,6 +253,23 @@
     if (self.viewModel.shareInfo && self.viewModel.shareTracerDict) {
         [[FHUGCShareManager sharedManager] shareActionWithInfo:self.viewModel.shareInfo tracerDic:self.viewModel.shareTracerDict];
     }
+}
+
+- (NSString *)pageType {
+    return @"community_group_detail";
+}
+
+#pragma mark - 埋点
+
+- (NSDictionary *)followButtonTraceDict {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"community_id"] = self.communityId;
+    params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
+    params[@"click_position"] = @"join_like";
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    return [params copy];
 }
 
 @end
