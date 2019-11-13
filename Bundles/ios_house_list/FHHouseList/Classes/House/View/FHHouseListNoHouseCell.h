@@ -16,4 +16,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHHouseListNoHouseCellModel : NSObject
+
+
+@end
+
+
+
 NS_ASSUME_NONNULL_END

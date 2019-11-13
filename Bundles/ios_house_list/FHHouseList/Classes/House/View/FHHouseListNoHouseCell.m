@@ -36,3 +36,9 @@
 }
 
 @end
+
+@implementation FHHouseListNoHouseCellModel
+
+
+
+@end
