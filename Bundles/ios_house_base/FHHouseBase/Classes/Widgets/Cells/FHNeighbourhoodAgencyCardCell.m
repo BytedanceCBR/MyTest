@@ -264,7 +264,7 @@
 
             self.phoneCallViewModel.tracerDict = self.traceParams.mutableCopy;
             //TODO fengbo  check this, seems like there`s no need to add view_controller?
-            self.phoneCallViewModel.belongsVC = self.belongsVC;
+            self.phoneCallViewModel.belongsVC = model.belongsVC;
         } else {
             [self.bottomInfoView setHidden:YES];
             [self.dividerView setHidden:YES];
@@ -278,6 +278,11 @@
         FHHouseNeighborAgencyModel *model = (FHHouseNeighborAgencyModel *)data;
         [self bindData:model traceParams:model.tracerDict];
     }
+}
+
++ (CGFloat)heightForData:(id)data
+{
+    return 160;
 }
 
 - (BOOL)shouldShowContact:(FHDetailContactModel *)contact {

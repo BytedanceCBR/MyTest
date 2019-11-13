@@ -307,15 +307,11 @@ extern NSString *const INSTANT_DATA_KEY;
         return [FHHouseListRecommendTipCell class];
     }else if ([model isKindOfClass:[FHSearchGuessYouWantContentModel class]]) {
         return [FHRecommendSecondhandHouseTitleCell class];
-        // todo zjing 检查大类页
     }else if ([model isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
         return [FHNeighbourhoodAgencyCardCell class];
-    }
-    else if ([model isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+    }else if ([model isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
         return [FHSuggestionRealHouseTopCell class];
-    }
-    
-    else if ([model isKindOfClass:[FHHomePlaceHolderCellModel class]]) {
+    }else if ([model isKindOfClass:[FHHomePlaceHolderCellModel class]]) {
         if (self.commute) {
             return [FHPlaceHolderCell class];
         }else {
@@ -975,15 +971,15 @@ extern NSString *const INSTANT_DATA_KEY;
         [self updateRedirectTipInfo];
 
         __weak typeof(self)wself = self;
+        NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
+        if ([wself categoryLogDict]) {
+            [traceDictParams addEntriesFromDictionary:[wself categoryLogDict]];
+        }
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull itemDict, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([itemDict isKindOfClass:[NSDictionary class]]) {
-                id theItemModel = [[self class] searchItemModelByDict:itemDict];
+                id theItemModel = [[wself class] searchItemModelByDict:itemDict];
                 if (theItemModel) {
                     [wself.houseList addObject:theItemModel];
-                }
-                NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
-                if ([self categoryLogDict]) {
-                    [traceDictParams addEntriesFromDictionary:[self categoryLogDict]];
                 }
                 // 展示经纪人信息
                 if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]] && wself.isRefresh) {
@@ -1003,6 +999,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 }else if ([theItemModel isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
                     FHHouseNeighborAgencyModel *agencyModel = theItemModel;
                     agencyModel.tracerDict = traceDictParams;
+                    agencyModel.belongsVC = wself.listVC;
                     theItemModel = agencyModel;
                 }
             }
@@ -1018,6 +1015,17 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
                 if (theItemModel) {
                     [wself.sugesstHouseList addObject:theItemModel];
+                }
+                if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                    FHSugListRealHouseTopInfoModel *infoModel = theItemModel;
+                    infoModel.tracerDict = traceDictParams;
+                    infoModel.searchQuery = wself.subScribeQuery;
+                    theItemModel = infoModel;
+                }else if ([theItemModel isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+                    FHHouseNeighborAgencyModel *agencyModel = theItemModel;
+                    agencyModel.tracerDict = traceDictParams;
+                    agencyModel.belongsVC = wself.listVC;
+                    theItemModel = agencyModel;
                 }
             }
         }];
@@ -2291,8 +2299,8 @@ extern NSString *const INSTANT_DATA_KEY;
         case FHSearchCardTypeSubscribe:
             itemModel = [[FHSugSubscribeDataDataSubscribeInfoModel alloc]initWithDictionary:itemDict error:&jerror];
             break;
-        case FHSearchCardTypeNeighborExpert:// todo: zjing
-            
+        case FHSearchCardTypeNeighborExpert:
+            itemModel = [[FHHouseNeighborAgencyModel alloc]initWithDictionary:itemDict error:&jerror];
             break;
         case FHSearchCardTypeAgencyInfo:
             itemModel = [[FHSearchRealHouseAgencyInfo alloc]initWithDictionary:itemDict error:&jerror];

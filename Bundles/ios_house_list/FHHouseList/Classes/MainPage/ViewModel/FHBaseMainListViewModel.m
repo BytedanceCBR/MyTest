@@ -63,6 +63,7 @@
 #import "FHListBaseCell.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHHouseListRecommendTipCell.h"
+#import "FHNeighbourhoodAgencyCardCell.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -152,6 +153,7 @@ extern NSString *const INSTANT_DATA_KEY;
     [self registerCellClassBy:[FHHouseListAgencyInfoCell class]];
     [self registerCellClassBy:[FHHomePlaceHolderCell class]];
     [self registerCellClassBy:[FHHouseListNoHouseCell class]];
+    [self registerCellClassBy:[FHNeighbourhoodAgencyCardCell class]];
 }
 
 - (void)registerCellClassBy:(Class)className
@@ -171,6 +173,8 @@ extern NSString *const INSTANT_DATA_KEY;
         return [FHHouseListRecommendTipCell class];
     }else if ([model isKindOfClass:[FHSearchGuessYouWantContentModel class]]) {
         return [FHRecommendSecondhandHouseTitleCell class];
+    }else if ([model isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+        return [FHNeighbourhoodAgencyCardCell class];
     }
     else if ([model isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
         return [FHSuggestionRealHouseTopCell class];
@@ -888,6 +892,10 @@ extern NSString *const INSTANT_DATA_KEY;
         [self updateRedirectTipInfo];
         
         __weak typeof(self)wself = self;
+        NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
+        if (wself.stayTraceDict) {
+            [traceDictParams addEntriesFromDictionary:wself.stayTraceDict];
+        }
         [items enumerateObjectsUsingBlock:^(id  _Nonnull itemDict, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([itemDict isKindOfClass:[NSDictionary class]]) {
                 id theItemModel = [[self class] searchItemModelByDict:itemDict];
@@ -901,10 +909,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     // 展示搜索订阅卡片
                     wself.isShowSubscribeCell = YES;
                 }else if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-                    NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
-                    if (wself.stayTraceDict) {
-                        [traceDictParams addEntriesFromDictionary:wself.stayTraceDict];
-                    }
+
                     FHSugListRealHouseTopInfoModel *infoModel = theItemModel;
                     infoModel.tracerDict = traceDictParams;
                     infoModel.searchQuery = wself.subScribeQuery;
@@ -912,6 +917,11 @@ extern NSString *const INSTANT_DATA_KEY;
                     if (!isRefresh) {
                         wself.showFakeHouseTop = YES;
                     }
+                }else if ([theItemModel isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+                    FHHouseNeighborAgencyModel *agencyModel = theItemModel;
+                    agencyModel.tracerDict = traceDictParams;
+                    agencyModel.belongsVC = wself.viewController;
+                    theItemModel = agencyModel;
                 }
             }
         }];
@@ -926,6 +936,17 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
                 if (theItemModel) {
                     [wself.sugesstHouseList addObject:theItemModel];
+                }
+                if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                    FHSugListRealHouseTopInfoModel *infoModel = theItemModel;
+                    infoModel.tracerDict = traceDictParams;
+                    infoModel.searchQuery = wself.subScribeQuery;
+                    theItemModel = infoModel;
+                }else if ([theItemModel isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+                    FHHouseNeighborAgencyModel *agencyModel = theItemModel;
+                    agencyModel.tracerDict = traceDictParams;
+                    agencyModel.belongsVC = wself.viewController;
+                    theItemModel = agencyModel;
                 }
             }
         }];
@@ -2528,8 +2549,8 @@ extern NSString *const INSTANT_DATA_KEY;
         case FHSearchCardTypeSubscribe:
             itemModel = [[FHSugSubscribeDataDataSubscribeInfoModel alloc]initWithDictionary:itemDict error:&jerror];
             break;
-        case FHSearchCardTypeNeighborExpert:// todo: zjing
-            
+        case FHSearchCardTypeNeighborExpert:
+            itemModel = [[FHHouseNeighborAgencyModel alloc]initWithDictionary:itemDict error:&jerror];
             break;
         case FHSearchCardTypeAgencyInfo:
             itemModel = [[FHSearchRealHouseAgencyInfo alloc]initWithDictionary:itemDict error:&jerror];

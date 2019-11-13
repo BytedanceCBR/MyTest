@@ -369,6 +369,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailContactModel *contactModel ;
 
 @property (nonatomic, strong , nullable) NSDictionary *tracerDict;
+@property(nonatomic, weak) UIViewController *belongsVC;
 
 @end
 

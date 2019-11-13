@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighbourhoodAgencyCardCell : FHListBaseCell
 
-@property(nonatomic, weak) UIViewController *belongsVC;
-
 - (void)bindData:(FHHouseNeighborAgencyModel *)model traceParams:(NSMutableDictionary *)params;
 
 @end
