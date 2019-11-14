@@ -1922,6 +1922,34 @@ extern NSString *const INSTANT_DATA_KEY;
 
 }
 
+- (void)addLeadShowLog:(id)cm
+{
+    if (![cm isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+        return;
+    }
+    FHHouseNeighborAgencyModel *cellModel = (FHHouseNeighborAgencyModel *)cm;
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"house_type"] = [self houseTypeString] ? : UT_BE_NULL;
+    tracerDict[@"page_type"] = [self pageTypeString];
+    tracerDict[@"card_type"] = @"left_pic";
+    tracerDict[@"enter_from"] = self.tracerModel.enterFrom;
+    tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
+    tracerDict[@"rank"] = @(0);
+    tracerDict[@"origin_from"] = self.originFrom;
+    tracerDict[@"origin_search_id"] = self.originSearchId ? : UT_BE_NULL;
+    tracerDict[@"log_pb"] = cellModel.logPb ? : UT_BE_NULL;
+    
+    tracerDict[@"is_im"] = cellModel.contactModel.imOpenUrl.length > 0 ? @(0) : @(1);
+    tracerDict[@"is_call"] = cellModel.contactModel.phone.length < 1 ? @(0) : @(1);
+    tracerDict[@"is_report"] = @(0);
+    tracerDict[@"is_online"] = cellModel.contactModel.unregistered ? @(0) : @(1);
+    
+    tracerDict[@"element_type"] = @"neighborhood_expert_card";
+    
+    [FHUserTracker writeEvent:@"lead_show" params:tracerDict];
+}
+
+
 #pragma mark house_show log
 
 -(void)addHouseShowLog:(FHSearchBaseItemModel *)cellModel withRank: (NSInteger) rank
@@ -1929,7 +1957,6 @@ extern NSString *const INSTANT_DATA_KEY;
     if (![cellModel isKindOfClass:[FHSearchBaseItemModel class]]) {
         return;
     }
-
     NSString *originFrom = self.originFrom ? : @"be_null";
 
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
@@ -1978,7 +2005,18 @@ extern NSString *const INSTANT_DATA_KEY;
         [tracerDict setValue:@"be_null" forKey:@"element_from"];
         [tracerDict setValue:@"selection_preference_tip" forKey:@"element_type"];
         [FHUserTracker writeEvent:@"selection_preference_tip_show" params:tracerDict];
+    }else if ([cellModel isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+        
+        FHHouseNeighborAgencyModel *agencyCM = (FHHouseNeighborAgencyModel *)cellModel;
+        [self addLeadShowLog:agencyCM];
+        tracerDict[@"page_type"] = [self pageTypeString];
+        tracerDict[@"element_type"] = @"neighborhood_expert_card";
+        tracerDict[@"origin_from"] = originFrom;
+        tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+        tracerDict[@"log_pb"] = agencyCM.logPb ? : @"be_null";
+        [FHUserTracker writeEvent:@"house_show" params:tracerDict];
     }
+
 }
 
 
