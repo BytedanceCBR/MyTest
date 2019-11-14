@@ -862,7 +862,7 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    BOOL isLastCell = NO;// todo: zjing
+    BOOL isLastCell = NO;// todo zjing
     if([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
         CGFloat reasonHeight = [model showRecommendReason] ? [FHHouseBaseSmallItemCell recommendReasonHeight] : 0;

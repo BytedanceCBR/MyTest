@@ -232,26 +232,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHRecommendSecondhandHouseDataModel : FHSearchBaseItemModel
-
-@property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items;
-@property (nonatomic, copy , nullable) NSString *total;
-@property (nonatomic, copy , nullable) NSString *searchId;
-@property (nonatomic, copy , nullable) FHImageModel *banner;
-@property (nonatomic, copy , nullable) NSString *recommendTitle;
-@property (nonatomic, copy , nullable) NSString *searchHint;
-@property (nonatomic, assign) BOOL hasMore;
-@property (nonatomic, assign) NSInteger offset;
-
-@end
-
-@interface  FHRecommendSecondhandHouseModel  : JSONModel<FHBaseModelProtocol>
-
-@property (nonatomic, copy , nullable) NSString *status;
-@property (nonatomic, copy , nullable) NSString *message;
-@property (nonatomic, strong , nullable) FHRecommendSecondhandHouseDataModel *data ;
-
-@end
+//@interface FHRecommendSecondhandHouseDataModel : FHSearchBaseItemModel
+//
+//@property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items;
+//@property (nonatomic, copy , nullable) NSString *total;
+//@property (nonatomic, copy , nullable) NSString *searchId;
+//@property (nonatomic, copy , nullable) FHImageModel *banner;
+//@property (nonatomic, copy , nullable) NSString *recommendTitle;
+//@property (nonatomic, copy , nullable) NSString *searchHint;
+//@property (nonatomic, assign) BOOL hasMore;
+//@property (nonatomic, assign) NSInteger offset;
+//
+//@end
+//
+//@interface  FHRecommendSecondhandHouseModel  : JSONModel<FHBaseModelProtocol>
+//
+//@property (nonatomic, copy , nullable) NSString *status;
+//@property (nonatomic, copy , nullable) NSString *message;
+//@property (nonatomic, strong , nullable) FHRecommendSecondhandHouseDataModel *data ;
+//
+//@end
 
 
 //@protocol FHSearchRealHouseExtModel<NSObject>
@@ -300,14 +300,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) FHImageModel *banner;
 @property (nonatomic, assign) NSInteger offset;
 
-#pragma mark todo: zjing
+#pragma mark todo zjing
 //@property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items;
 
-@property (nonatomic, strong , nullable) FHSearchRealHouseExtModel *externalSite;
-@property (nonatomic, strong , nullable) FHSearchRealHouseAgencyInfo *agencyInfo;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
-@property (nonatomic, strong, nullable) FHRecommendSecondhandHouseDataModel *recommendSearchModel;
-@property (nonatomic, strong, nullable) FHSugSubscribeDataDataSubscribeInfoModel *subscribeInfo;
+@property (nonatomic, strong, nullable) FHSearchHouseDataModel *recommendSearchModel;
 
 @end
 
@@ -335,10 +332,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) FHImageModel *banner;
 @property (nonatomic, assign) NSInteger offset;
 
-#pragma mark todo: zjing
+#pragma mark todo zjing
 @property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
-@property (nonatomic, strong, nullable) FHRecommendSecondhandHouseDataModel *recommendSearchModel;
+@property (nonatomic, strong, nullable) FHListSearchHouseDataModel *recommendSearchModel;
 
 @end
 
@@ -381,12 +378,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displayTitle;
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, strong, nullable)   FHHouseItemHouseVideo*   houseVideo;
-@property (nonatomic, copy , nullable) NSString *hid;
+
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *displayDescription;
 @property (nonatomic, copy , nullable) NSString *displayPricePerSqm;
 @property (nonatomic, copy , nullable) NSString *imprId;
-@property (nonatomic, copy , nullable) NSString *groupId;
+
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *cellStyle;
 @property (nonatomic, copy , nullable) NSString *displayPrice;
@@ -394,7 +391,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) FHSearchHouseVRModel *vrInfo;
 @property (nonatomic, copy , nullable) FHSearchHouseDataItemsFakeReasonModel *fakeReason;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsBaseInfoMapModel *baseInfoMap ;
-//@property (nonatomic, strong , nullable) NSArray<FHHouseCoreInfoModel> *coreInfo;// todo: zjing
+
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImage;

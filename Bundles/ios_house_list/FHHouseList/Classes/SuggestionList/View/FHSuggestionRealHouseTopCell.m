@@ -371,27 +371,6 @@
         
         [self layoutIfNeeded];
     }
-//    return;
-//    if ([data isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-//        FHSugListRealHouseTopInfoModel *model = (FHSugListRealHouseTopInfoModel *)data;
-//        self.currentModel = model;
-//
-//        _titleLabel.text = model.totalTitle;
-//        _realHouseLabel.text = model.trueTitle;
-//
-//        _realHouseNumLabel.text = [NSString stringWithFormat:@" %@",model.trueHouseTotal ? : @"0"];
-//        _falseHouseLabel.text = model.fakeTitle;
-//        _falseHouseNumLabel.text = [NSString stringWithFormat:@" %@",model.fakeHouseTotal ? : @"0"];;
-//        if([model.fakeHouseTotal integerValue] == 0)
-//        {
-//            _allFalseHouseBtn.hidden = YES;
-//        }else
-//        {
-//            _allFalseHouseBtn.hidden = NO;
-//        }
-//
-//        [self layoutIfNeeded];
-//    }
 }
 
 - (void)awakeFromNib {
