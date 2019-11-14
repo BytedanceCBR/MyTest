@@ -500,18 +500,8 @@
         layout.justifyContent = YGJustifyFlexStart;
         layout.alignItems = YGAlignFlexStart;
     }];
-    
-    [_bottomIconImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.flexDirection = YGFlexDirectionRow;
-        layout.width = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
-        layout.height = YGPointValue(CELL_PRICE_HEIGHT);
-        layout.justifyContent = YGJustifyFlexStart;
-        layout.alignItems = YGAlignFlexStart;
-    }];
 
-    [self.bottomIconImageView setBackgroundColor:[UIColor whiteColor]];
-    [self.bottomRecommendView addSubview:_bottomIconImageView];
+    [self.bottomRecommendView addSubview:self.bottomIconImageView];
     [self.bottomIconImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(8);
