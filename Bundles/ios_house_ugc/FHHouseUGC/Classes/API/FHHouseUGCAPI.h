@@ -90,6 +90,13 @@ NS_ASSUME_NONNULL_BEGIN
 // 请求用户关注列表sug
 + (TTHttpTask *)requestFollowSugSearchByText:(NSString *)text socialGroupId:(NSString *)socialGroupId offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
+// 投票
+// 提交投票
++ (TTHttpTask *)requestVoteSubmit:(NSString *)voteId optionIDs:(NSArray *)optionIds optionNum:(NSString *)optionNum completion:(void(^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 取消投票
++ (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSString *)optionNum completion:(void(^)(BOOL success , NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

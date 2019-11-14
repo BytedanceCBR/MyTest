@@ -628,4 +628,88 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
+// 提交投票
++ (TTHttpTask *)requestVoteSubmit:(NSString *)voteId optionIDs:(NSArray *)optionIds optionNum:(NSString *)optionNum completion:(void(^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/vote/submit";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(voteId.length > 0) {
+        paramDic[@"vote_id"] = voteId;
+    }
+    if(optionIds.count > 0) {
+        __block NSString *opIdstr = @"";
+        [optionIds enumerateObjectsUsingBlock:^(NSString *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (idx == 0) {
+                opIdstr = [NSString stringWithFormat:@"%@,",obj];
+            } else {
+                opIdstr = [NSString stringWithFormat:@"%@,%@",opIdstr,obj];
+            }
+        }];
+        paramDic[@"option_ids"] = opIdstr;
+    }
+    if(optionNum.length > 0) {
+        paramDic[@"option_num"] = optionNum;
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        id model = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                } else {
+                    model = [[FHTopicFeedListModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+            }
+        }
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+}
+
+// 取消投票
++ (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSString *)optionNum completion:(void(^)(BOOL success , NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/vote/cancel";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(voteId.length > 0) {
+        paramDic[@"vote_id"] = voteId;
+    }
+    if(optionNum.length > 0) {
+        paramDic[@"option_num"] = optionNum;
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+            }
+        }
+        if (completion) {
+            completion(success,error);
+        }
+    }];
+}
+
 @end
