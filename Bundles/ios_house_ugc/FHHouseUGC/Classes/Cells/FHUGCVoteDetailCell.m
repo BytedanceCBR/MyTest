@@ -258,6 +258,35 @@
     if (self.isFromDetail) {
         voteInfo.needFold = NO;// 不需要折叠展开
     }
+    // 过期处理
+    NSInteger intver = (NSInteger)[[NSDate date] timeIntervalSince1970];
+    NSInteger deadline = [voteInfo.deadline integerValue];
+    if (intver >= deadline) {
+        // 结束
+        voteInfo.selected = YES;
+        voteInfo.voteState = FHUGCVoteStateExpired;
+        voteInfo.deadLineContent = @"";
+        if (!voteInfo.hasReloadForVoteExpired) {
+            // add by zyk 发送通知 当前cell 刷新过了就不用再通知了
+        }
+    } else {
+        NSInteger val = deadline - intver;
+        NSInteger day = 24 * 60 * 60;
+        NSInteger hour = 60 * 60;
+        NSInteger min = 60;
+        if (val >= day) {
+            NSInteger temp = val / day;
+            voteInfo.deadLineContent = [NSString stringWithFormat:@"还有%ld天结束",temp];
+        } else if (val >= hour) {
+            NSInteger temp = val / hour;
+            voteInfo.deadLineContent = [NSString stringWithFormat:@"还有%ld小时结束",temp];
+        } else if (val >= min) {
+            NSInteger temp = val / min;
+            voteInfo.deadLineContent = [NSString stringWithFormat:@"还有%ld分钟结束",temp];
+        } else {
+            voteInfo.deadLineContent = [NSString stringWithFormat:@"还有1分钟结束"];
+        }
+    }
     self.voteView.tableView = self.cellModel.tableView;
     [self.voteView refreshWithData:voteInfo];
     self.voteView.height = voteInfo.voteHeight;
@@ -572,6 +601,7 @@
         self.voteButton.enabled = NO;
     } else {
         self.dateLabel.hidden = NO;
+        self.dateLabel.text = self.voteInfo.deadLineContent;
         self.bottomBgView.height = self.dateLabel.bottom;
         [self.voteButton setTitle:@"确定投票" forState:UIControlStateNormal];
         [self.voteButton setTitle:@"确定投票" forState:UIControlStateHighlighted];

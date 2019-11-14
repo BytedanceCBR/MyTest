@@ -42,6 +42,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign)   BOOL       isFold;// 当前折叠展开 状态 默认 NO（展开）
 @property (nonatomic, assign)   FHUGCVoteState       voteState;// 投票状态
 @property (nonatomic, assign)   BOOL       hasReloadForVoteExpired;
+@property (nonatomic, copy)     NSString       *deadLineContent;// 还有X天结束
 
 @end
 
