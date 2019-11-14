@@ -730,7 +730,7 @@
 - (void)setupUI {
     _upText = @"收起";
     _downText = @"展开";
-    _iconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-2"]];
+    _iconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fh_ugc_up_arrow"]];
     [self addSubview:_iconView];
     _keyLabel = [[UILabel alloc] init];
     _keyLabel.text = @"";
@@ -739,12 +739,12 @@
     [self addSubview:_keyLabel];
     
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self).offset(-6);
+        make.centerX.mas_equalTo(self).offset(-5);
         make.top.mas_equalTo(self).offset(0);
         make.height.mas_equalTo(18);
     }];
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.keyLabel.mas_right).offset(4);
+        make.left.mas_equalTo(self.keyLabel.mas_right).offset(2);
         make.centerY.mas_equalTo(self.keyLabel);
         make.height.width.mas_equalTo(10);
     }];
@@ -754,10 +754,10 @@
     _isFold = isFold;
     if (isFold) {
         _keyLabel.text = self.downText;
-        _iconView.image = [UIImage imageNamed:@"arrowicon-feed-3"];
+        _iconView.image = [UIImage imageNamed:@"fh_ugc_down_arrow"];
     } else {
         _keyLabel.text = self.upText;
-        _iconView.image = [UIImage imageNamed:@"arrowicon-feed-2"];
+        _iconView.image = [UIImage imageNamed:@"fh_ugc_up_arrow"];
     }
 }
 
