@@ -490,8 +490,13 @@
         if (cellModel.voteInfo == nil || cellModel.voteInfo.items.count < 2) {
             return nil;
         }
+        cellModel.voteInfo.voteState = FHUGCVoteStateNone;
         cellModel.voteInfo.needFold = NO;
         cellModel.voteInfo.isFold = NO;
+        if (cellModel.voteInfo.selected) {
+            cellModel.voteInfo.voteState = FHUGCVoteStateComplete;
+        }
+        // add by zyk  判断过期状态
         NSInteger displayCount = [cellModel.voteInfo.displayCount integerValue];
         if (displayCount <= 0 || displayCount >= cellModel.voteInfo.items.count) {
             cellModel.voteInfo.needFold = NO;

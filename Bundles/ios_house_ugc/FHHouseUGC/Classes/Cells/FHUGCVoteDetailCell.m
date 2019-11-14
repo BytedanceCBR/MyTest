@@ -57,12 +57,51 @@
         self.showCommunity = NO;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         [self setupUIs];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(voteCompleteNoti:) name:kFHUGCPostVoteSuccessNotification object:nil];
     }
     return self;
 }
 
 - (void)setupUIs {
     [self setupViews];
+}
+
+- (void)voteCompleteNoti:(NSNotification *)notification {
+    if (notification) {
+        NSDictionary *userInfo = notification.userInfo;
+        
+        FHUGCVoteInfoVoteInfoModel *voteInfo = notification.userInfo[@"vote_info"];
+        if (voteInfo && voteInfo.selected) {
+            // 完成(或者过期)
+            FHUGCVoteInfoVoteInfoModel *currentVoteInfo = self.cellModel.voteInfo;
+            if ([currentVoteInfo.voteId isEqualToString:voteInfo.voteId] && currentVoteInfo != voteInfo) {
+                // 同样的投票
+                // 更新数据
+                currentVoteInfo.selected = voteInfo.selected;
+                currentVoteInfo.voteState = voteInfo.voteState;
+                currentVoteInfo.displayCount = voteInfo.displayCount;
+                currentVoteInfo.deadline = voteInfo.deadline;
+                NSInteger curCount = currentVoteInfo.items.count;
+                [voteInfo.items enumerateObjectsUsingBlock:^(FHUGCVoteInfoVoteInfoItemsModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if (idx < curCount) {
+                        FHUGCVoteInfoVoteInfoItemsModel *temp = currentVoteInfo.items[idx];
+                        temp.index = obj.index;
+                        temp.content = obj.content;
+                        temp.voteCount = obj.voteCount;
+                        temp.selected = obj.selected;
+                        temp.percent = obj.percent;
+                    }
+                }];
+                // 更新UI
+                [self refreshWithData:self.cellModel];
+            }
+        }
+    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setupViews {
@@ -418,13 +457,18 @@
 - (void)voteButtonClick:(UIButton *)btn {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.voteInfo.selected = YES;
+        self.voteInfo.voteState = FHUGCVoteStateComplete;
         [self refreshWithData:self.voteInfo];
+        NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+        [userInfo setObject:self.voteInfo forKey:@"vote_info"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
     });
 }
 
 // 编辑按钮点击
 - (void)editButtonClick:(UIButton *)btn {
     self.voteInfo.selected = NO;
+    self.voteInfo.voteState = FHUGCVoteStateNone;
     [self refreshWithData:self.voteInfo];
 }
 

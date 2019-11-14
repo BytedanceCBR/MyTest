@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static NSString *const kFHUGCPostVoteSuccessNotification = @"k_fh_ugc_post_vote_finish";
+
 // UGC 投票类型cell Feed和详情页共用
 @interface FHUGCVoteDetailCell : FHUGCBaseCell
 /*1、isFromDetail 从详情页过来的数据需要重新计算布局 全部展开 以及不显示“展开查看更多”
