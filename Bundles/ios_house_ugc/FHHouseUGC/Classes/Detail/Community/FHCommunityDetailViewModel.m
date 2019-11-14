@@ -33,7 +33,7 @@
 #import "IMManager.h"
 #import <TTThemedAlertController.h>
 
-#define kSegmentViewHeight 41
+#define kSegmentViewHeight 52
 
 @interface FHCommunityDetailViewModel () <FHUGCFollowObserver, TTHorizontalPagingViewDelegate>
 
@@ -100,6 +100,26 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onGlobalFollowListLoad:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
+    // 加精或取消加精成功
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postGoodSuccess:) name:kFHUGCGoodPostNotification object:nil];
+}
+
+- (void)postGoodSuccess:(NSNotification *)noti {
+//    if (noti && noti.userInfo && self.dataList) {
+//        NSDictionary *userInfo = noti.userInfo;
+//        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+//        NSInteger row = [self getCellIndex:cellModel];
+//        
+//        if(row < self.dataList.count && row >= 0){
+//            FHFeedUGCCellModel *originCellModel = self.dataList[row];
+//            originCellModel.isStick = cellModel.isStick;
+//            originCellModel.stickStyle = cellModel.stickStyle;
+//            originCellModel.contentDecoration = cellModel.contentDecoration;
+//            originCellModel.ischanged = YES;
+//            
+//            [self refreshCell:originCellModel];
+//        }
+//    }
 }
 
 // 发帖成功通知

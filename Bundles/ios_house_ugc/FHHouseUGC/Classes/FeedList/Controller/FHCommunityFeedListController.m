@@ -64,7 +64,6 @@
 @interface FHCommunityFeedListController ()<SSImpressionProtocol>
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
-@property(nonatomic, assign) BOOL needReloadData;
 @property(nonatomic, copy) void(^notifyCompletionBlock)(void);
 @property(nonatomic, assign) NSInteger currentCityId;
 //@property(nonatomic, strong) CreateGroupChatAlertDelegate *createGroupDelegate;

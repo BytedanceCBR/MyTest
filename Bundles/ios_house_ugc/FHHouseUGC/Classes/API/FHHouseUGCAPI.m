@@ -107,11 +107,6 @@
     paramDic[@"list_count"] = @(listCount);
     paramDic[@"concern_id"] = @"";
 //    paramDic[@"cp"] = [self encreptTime:[[NSDate date] timeIntervalSince1970]];
-    
-    //圈子详情页使用的字段
-    if(extraDic[@"tab_name"]){
-        paramDic[@"tab_name"] = extraDic[@"tab_name"];
-    }
 
     if (!loadMore) {
         paramDic[@"refresh_reason"] = @(0);

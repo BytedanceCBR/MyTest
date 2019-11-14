@@ -169,17 +169,18 @@
 
 - (void)initSegmentView {
     self.segmentView = [[FHCommunityDetailSegmentView alloc] init];
-    [_segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont) {
-        *norColorKey = kColorText1;
-        *selColorKey = @"akmain";
-        *titleFont = [UIFont systemFontOfSize:15];
+    [_segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
+        *norColorKey = @"grey3"; //grey3
+        *selColorKey = @"grey1";//grey1
+        *titleFont = [UIFont themeFontRegular:16];
+        *selectedTitleFont = [UIFont themeFontSemibold:16];
     }];
-    [_segmentView setUpUnderLineEffect:^(BOOL *isUnderLineDelayScroll, CGFloat *underLineH, NSString *__autoreleasing *underLineColorKey, BOOL *isUnderLineEqualTitleWidth) {
-        *isUnderLineDelayScroll = NO;
-        *underLineH = 2;
-        *underLineColorKey = @"akmain";
-        *isUnderLineEqualTitleWidth = YES;
-    }];
+//    [_segmentView setUpUnderLineEffect:^(BOOL *isUnderLineDelayScroll, CGFloat *underLineH, NSString *__autoreleasing *underLineColorKey, BOOL *isUnderLineEqualTitleWidth) {
+//        *isUnderLineDelayScroll = NO;
+//        *underLineH = 2;
+//        *underLineColorKey = @"akmain";
+//        *isUnderLineEqualTitleWidth = YES;
+//    }];
     _segmentView.backgroundColor = [UIColor clearColor];
     _segmentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 }
