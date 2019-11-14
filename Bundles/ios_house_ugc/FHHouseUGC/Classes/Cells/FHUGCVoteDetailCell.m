@@ -169,7 +169,7 @@
     self.voteView.width = [UIScreen mainScreen].bounds.size.width;
     
     // 底部bottom
-    self.bottomView.top = self.voteView.bottom + 10;
+    self.bottomView.top = self.voteView.bottom + 20;
     self.bottomView.left = 0;
     self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
     self.bottomView.height = bottomViewHeight;
@@ -281,8 +281,8 @@
         height += 10;
         // 选项（高度） + 多少人参与 + 按钮（高度）
         height += (cellModel.voteInfo.voteHeight);
-        // 按钮底部 + 10
-        height += 10;
+        // 按钮底部 + 20
+        height += 20;
         // 小区圈底部
         if (cellModel.showCommunity) {
             height += (24 + 10);
@@ -398,16 +398,7 @@
         [foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         self.foldButton = foldButton;
     }
-    // XX人参与 还有X天结束
-    self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 17)];
-    self.dateLabel.backgroundColor = [UIColor themeWhite];
-    self.dateLabel.text = @"还有5天结束";
-    self.dateLabel.textAlignment = NSTextAlignmentCenter;
-    self.dateLabel.textColor = [UIColor themeGray3];
-    self.dateLabel.font = [UIFont themeFontRegular:12];
-    [self.bottomBgView addSubview:self.dateLabel];
-    
-    bottomHeight += 32;
+    bottomHeight += 10;
     // 已投票和修改投票按钮
     self.hasVotedLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, bottomHeight, ([UIScreen mainScreen].bounds.size.width - 40 - 10) / 2, 38)];
     self.hasVotedLabel.layer.cornerRadius = 19;
@@ -450,6 +441,18 @@
     [self.bottomBgView addSubview:voteBtn];
     self.voteButton = voteBtn;
     bottomHeight += 38;
+    
+    // 还有X天结束 -- 22
+    bottomHeight += 5;
+    self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 17)];
+    self.dateLabel.backgroundColor = [UIColor themeWhite];
+    self.dateLabel.text = @"还有5天结束";
+    self.dateLabel.textAlignment = NSTextAlignmentCenter;
+    self.dateLabel.textColor = [UIColor themeGray3];
+    self.dateLabel.font = [UIFont themeFontRegular:12];
+    [self.bottomBgView addSubview:self.dateLabel];
+    bottomHeight += 17;
+    
     self.bottomBgView.height = bottomHeight;
 }
 
@@ -516,6 +519,9 @@
             item.percent = (double)voteCount / totalCount;
         }
     }
+    if (self.voteInfo.voteState == FHUGCVoteStateExpired) {
+        self.voteInfo.selected = YES;
+    }
     // 按钮状态等等
     if (self.voteInfo.selected) {
         // 已投票
@@ -549,7 +555,25 @@
     }
     
     self.bottomBgView.top = self.optionBgView.bottom;
-    
+    // 过期逻辑处理
+    if (self.voteInfo.voteState == FHUGCVoteStateExpired) {
+        // 过期
+        self.bottomBgView.height = self.voteButton.bottom;
+        self.dateLabel.hidden = YES;
+        // 按钮
+        self.editButton.hidden = YES;
+        self.hasVotedLabel.hidden = YES;
+        self.voteButton.hidden = NO;
+        self.voteButton.backgroundColor = [UIColor colorWithHexString:@"#ff5869" alpha:0.24];
+        [self.voteButton setTitle:@"投票已过期" forState:UIControlStateNormal];
+        [self.voteButton setTitle:@"投票已过期" forState:UIControlStateHighlighted];
+        self.voteButton.enabled = NO;
+    } else {
+        self.dateLabel.hidden = NO;
+        self.bottomBgView.height = self.dateLabel.bottom;
+        [self.voteButton setTitle:@"确定投票" forState:UIControlStateNormal];
+        [self.voteButton setTitle:@"确定投票" forState:UIControlStateHighlighted];
+    }
     self.voteInfo.voteHeight = self.bottomBgView.bottom;
     self.height = self.bottomBgView.bottom;
 }
