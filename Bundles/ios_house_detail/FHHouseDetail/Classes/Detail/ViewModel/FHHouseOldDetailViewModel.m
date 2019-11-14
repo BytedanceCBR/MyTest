@@ -692,7 +692,9 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     NSString *houseId = self.houseId;
     NSString *from = @"app_oldhouse_subscription";
-    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+
+    
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
@@ -700,7 +702,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
             
             YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
-            [subscribeHouseCache setObject:@"1" forKey:self.houseId];
+            [subscribeHouseCache setObject:@"1" forKey:wself.houseId];
             
             [wself.items removeObject:subscribeModel];
             [wself reloadData];

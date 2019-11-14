@@ -6,6 +6,7 @@
 //
 
 #import "FHSearchHouseModel.h"
+#import "FHDetailBaseModel.h"
 
 @implementation  FHSearchHouseDataItemsBaseInfoMapModel
 
@@ -90,25 +91,25 @@
 
 @end
 
-@implementation FHRecommendSecondhandHouseDataModel
-
-+ (JSONKeyMapper *)keyMapper {
-    NSDictionary *dict = @{
-                           @"hasMore": @"has_more",
-                           @"recommendTitle": @"recommend_title",
-                           @"searchHint": @"search_hint",
-                           @"searchId": @"search_id",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName {
-    return YES;
-}
-
-@end
+//@implementation FHRecommendSecondhandHouseDataModel
+//
+//+ (JSONKeyMapper *)keyMapper {
+//    NSDictionary *dict = @{
+//                           @"hasMore": @"has_more",
+//                           @"recommendTitle": @"recommend_title",
+//                           @"searchHint": @"search_hint",
+//                           @"searchId": @"search_id",
+//                           };
+//    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+//        return dict[keyName]?:keyName;
+//    }];
+//}
+//
+//+ (BOOL)propertyIsOptional:(NSString *)propertyName {
+//    return YES;
+//}
+//
+//@end
 
 @implementation FHHouseItemHouseExternalModel
 
@@ -147,7 +148,6 @@
                            @"agencyInfo": @"agency_info",
                            @"topTip":@"top_tip",
                            @"bottomTip":@"bottom_tip",
-//                           @"currentItems":@"items",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -428,14 +428,14 @@
 //@end
 
 
-@implementation  FHRecommendSecondhandHouseModel
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
+//@implementation  FHRecommendSecondhandHouseModel
+//
+//+ (BOOL)propertyIsOptional:(NSString *)propertyName
+//{
+//    return YES;
+//}
+//
+//@end
 
 @implementation  FHSearchHouseModel
 
@@ -548,15 +548,37 @@
 @end
 
 
+@implementation FHHouseNeighborAgencyModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                                   @"id": @"neighborhood_id",
+                                   @"neighborhoodName": @"neighborhood_name",
+                                   @"neighborhoodPrice": @"neighborhood_price",
+                                   @"displayStatusInfo": @"display_status_info",
+                                   @"contactModel": @"realtor_info",
+                                   @"logPb": @"log_pb",
+                                   };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
 
-#pragma mark - todo: zjing 后续统一用FHSearchBaseItemModel 和 FHSearchHouseItemModel
+@end
+
+#pragma mark - 后续统一用FHSearchBaseItemModel 和 FHSearchHouseItemModel
 
 @implementation  FHSearchHouseItemModel
 
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+
                            @"logPb": @"log_pb",
                            @"recommendReasons": @"recommend_reasons",
                            @"baseInfo": @"base_info",
@@ -572,7 +594,7 @@
                            @"uploadAt": @"upload_at",
                            @"imprId": @"impr_id",
                            @"vrInfo": @"vr_info",
-                           @"groupId": @"group_id",
+
                            @"searchId": @"search_id",
                            @"houseImage": @"house_image",
                            @"houseType": @"house_type",
@@ -580,7 +602,7 @@
                            @"displaySameNeighborhoodTitle": @"display_same_neighborhood_title",
                            @"baseInfoMap": @"base_info_map",
                            @"coreInfo": @"core_info",
-                           @"hid":@"id",
+
                            @"externalInfo":@"external_info",
                            @"originPrice":@"origin_price",
                            @"subscribeInfo": @"subscribe_info",
@@ -598,8 +620,6 @@
                            @"pricingNum": @"pricing_num",
                            @"pricingUnit": @"pricing_unit",
 
-                           @"groupId": @"group_id",
-                           @"houseId": @"id",
                            @"houseType": @"house_type",
                            @"coreInfo": @"core_info",
                            @"logPb": @"log_pb",
