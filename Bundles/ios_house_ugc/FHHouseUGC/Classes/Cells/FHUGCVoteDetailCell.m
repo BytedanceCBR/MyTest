@@ -269,7 +269,7 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         
-        CGFloat height = topMargin + userInfoViewHeight + 10 + 20.5;
+        CGFloat height = topMargin + userInfoViewHeight + 10;
         // 投票 title 高度
         if (cellModel.voteInfo.title.length > 0) {
             height += cellModel.voteInfo.contentHeight;
@@ -285,7 +285,9 @@
         height += 20;
         // 小区圈底部
         if (cellModel.showCommunity) {
-            height += (24 + 10);
+            height += (24 + 25);
+        } else {
+            height += 25;
         }
         return height;
     }
@@ -460,7 +462,7 @@
 - (void)voteButtonClick:(UIButton *)btn {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.voteInfo.selected = YES;
-        self.voteInfo.voteState = FHUGCVoteStateComplete;
+        self.voteInfo.voteState = FHUGCVoteStateExpired;
         [self refreshWithData:self.voteInfo];
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
         [userInfo setObject:self.voteInfo forKey:@"vote_info"];
@@ -565,8 +567,8 @@
         self.hasVotedLabel.hidden = YES;
         self.voteButton.hidden = NO;
         self.voteButton.backgroundColor = [UIColor colorWithHexString:@"#ff5869" alpha:0.24];
-        [self.voteButton setTitle:@"投票已过期" forState:UIControlStateNormal];
-        [self.voteButton setTitle:@"投票已过期" forState:UIControlStateHighlighted];
+        [self.voteButton setTitle:@"投票已结束" forState:UIControlStateNormal];
+        [self.voteButton setTitle:@"投票已结束" forState:UIControlStateHighlighted];
         self.voteButton.enabled = NO;
     } else {
         self.dateLabel.hidden = NO;
@@ -576,6 +578,21 @@
     }
     self.voteInfo.voteHeight = self.bottomBgView.bottom;
     self.height = self.bottomBgView.bottom;
+    if (self.voteInfo.voteState == FHUGCVoteStateExpired) {
+        // 过期--刷新一次 够了
+        if (!self.voteInfo.hasReloadForVoteExpired) {
+            self.voteInfo.hasReloadForVoteExpired = YES;
+            [self.detailCell setupUIFrames];
+            if (self.detailCell.isFromDetail) {
+               // 详情页 过期 布局有问题 add by zyk
+            } else {
+                NSIndexPath *ind = [self.tableView indexPathForCell:self.detailCell];
+                if (ind) {
+                    [self.tableView reloadRowsAtIndexPaths:@[ind] withRowAnimation:UITableViewRowAnimationNone];
+                }
+            }
+        }
+    }
 }
 
 // 折叠展开

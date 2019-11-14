@@ -493,6 +493,7 @@
         cellModel.voteInfo.voteState = FHUGCVoteStateNone;
         cellModel.voteInfo.needFold = NO;
         cellModel.voteInfo.isFold = NO;
+        cellModel.voteInfo.hasReloadForVoteExpired = NO;
         if (cellModel.voteInfo.selected) {
             cellModel.voteInfo.voteState = FHUGCVoteStateComplete;
         }
