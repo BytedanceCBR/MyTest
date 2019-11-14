@@ -103,6 +103,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 @property (nonatomic, strong) UIPanGestureRecognizer *headerViewPanGestureRecognizer;
 @property (nonatomic, strong) UIPanGestureRecognizer *segmentViewPanGestureRecognizer;
 @property (nonatomic, assign) CGFloat lastHeaderViewTop;
+@property (nonatomic, assign) BOOL segmentCanPan;
 // 用于模拟scrollView滚动
 
 @property (nonatomic, strong) UIDynamicAnimator *animator;
@@ -138,7 +139,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     _isSwitching = NO;
     _lastPageIndex = 0;
     _alwaysBounceHorizontal = NO;
-    
+    _segmentCanPan = YES;
 }
 
 - (void)didMoveToSuperview
@@ -248,7 +249,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 - (UIPanGestureRecognizer *)segmentViewPanGestureRecognizer
 {
     if(!_segmentViewPanGestureRecognizer) {
-        _segmentViewPanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
+        _segmentViewPanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panS:)];
         _segmentViewPanGestureRecognizer.delegate = self;
     }
     return _segmentViewPanGestureRecognizer;
@@ -461,6 +462,22 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
         CGFloat oldOffsetY = [change[NSKeyValueChangeOldKey] CGPointValue].y;
         CGFloat newOffsetY = [change[NSKeyValueChangeNewKey] CGPointValue].y;
         CGFloat headerDisplayHeight = self.headerViewHeight + self.headerView.top;
+        
+        CGFloat border = -self.headerViewHeight - self.segmentViewHeight;
+        CGFloat maxOffset = self.currentContentView.contentSize.height - self.currentContentView.bounds.size.height - border;
+        //    || (offsety - contentOffset.y) >= 0
+        if(maxOffset <= 0 && oldOffsetY <= border && (newOffsetY - border) > 0){
+            self.currentContentView.contentOffset = CGPointMake([change[NSKeyValueChangeOldKey] CGPointValue].x, oldOffsetY);
+            return;
+        }
+        
+        if(maxOffset > 0){
+            if(newOffsetY > (maxOffset + border + 50)){
+                self.currentContentView.contentOffset = CGPointMake([change[NSKeyValueChangeOldKey] CGPointValue].x, oldOffsetY);
+                return;
+            }
+        }
+        
         [self scrollViewContentOffsetDidChangeWithOldValue:oldOffsetY newValue:newOffsetY headerDisplayHeight:headerDisplayHeight];
     } else if (context == TTHorizontalPagingViewInsetContext) {
         if(self.currentContentView.contentOffset.y > -self.segmentViewHeight) return;
@@ -504,6 +521,15 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
             self.segmentView.top = self.headerView.bottom;
         }
     }
+    
+    
+    if(self.segmentView.frame.origin.y == self.segmentTopSpace) {
+        self.segmentCanPan = NO;
+    }else{
+        self.segmentCanPan = YES;
+    }
+    
+    
     if(deltaY == 0) return;
     if([self.delegate respondsToSelector:@selector(pagingView:scrollTopOffset:)]) {
         [self.delegate pagingView:self scrollTopOffset:self.currentContentView.contentOffset.y];
@@ -530,7 +556,11 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     CGPoint point = [pan translationInView:self.headerView];
     CGPoint contentOffset = self.currentContentView.contentOffset;
     CGFloat border = -self.headerViewHeight - self.segmentViewHeight;
+    
     CGFloat offsety = contentOffset.y - point.y * (1/contentOffset.y * border * 0.6);
+    
+    CGFloat maxOffset = self.currentContentView.contentSize.height - self.currentContentView.bounds.size.height;
+    
     self.currentContentView.contentOffset = CGPointMake(contentOffset.x, offsety);
     if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateFailed) {
         if([self.delegate respondsToSelector:@selector(pagingView:scrollViewDidEndDraggingOffset:)]) {
@@ -550,6 +580,12 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     }
     // 清零防止偏移累计
     [pan setTranslation:CGPointZero inView:self.headerView];
+}
+
+- (void)panS:(UIPanGestureRecognizer*)pan {
+    if(self.segmentCanPan){
+        [self pan:pan];
+    }
 }
 
 - (void)deceleratingAnimator:(CGFloat)velocity
@@ -573,7 +609,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
         if(speed >= -0.2) {
             [weakSelf.animator removeBehavior:weakSelf.inertialBehavior];
             weakSelf.inertialBehavior = nil;
-        } else if (offset >= maxOffset){
+        } else if (fabsf(offset) >= fabsf(maxOffset) && maxOffset >= 0){
             [weakSelf.animator removeBehavior:weakSelf.inertialBehavior];
             weakSelf.inertialBehavior = nil;
             offset = maxOffset;

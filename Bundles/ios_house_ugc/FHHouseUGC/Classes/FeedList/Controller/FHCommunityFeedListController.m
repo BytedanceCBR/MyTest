@@ -124,6 +124,12 @@
     [self initNotifyBarView];
     if(self.showErrorView){
         [self addDefaultEmptyViewFullScreen];
+        if(self.errorViewTopOffset != 0){
+            [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.right.bottom.mas_equalTo(self.view);
+                make.top.mas_equalTo(self.view).offset(self.errorViewTopOffset);
+            }];
+        }
     }
     [self initPublishBtn];
 //    if (_forumId > 0) {
@@ -539,6 +545,10 @@
 
 - (void)hideImmediately {
     [self.notifyBarView hideImmediately];
+}
+
+- (NSArray *)dataList {
+    return self.viewModel.dataList;
 }
 
 #pragma mark - TTAccountMulticaastProtocol

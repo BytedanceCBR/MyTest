@@ -335,7 +335,6 @@
     } else {
         self.topBack.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight);
     }
-    
     //控制刷新状态
     if(offset <= 0 && self.refreshHeader.state != MJRefreshStateRefreshing){
         CGFloat distance = fabs(offset) > 20 ? 20 : fabs(offset);

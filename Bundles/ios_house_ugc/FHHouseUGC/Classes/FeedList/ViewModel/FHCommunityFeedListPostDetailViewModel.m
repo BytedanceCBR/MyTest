@@ -62,10 +62,14 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (BOOL)isNotInAllTab {
+    return self.tabName && ![self.tabName isEqualToString:@"all"];
+}
+
 // 发帖成功，插入数据
 - (void)postThreadSuccess:(NSNotification *)noti {
     //多个tab时候，仅仅强插在全部页面
-    if(self.tabName && ![self.tabName isEqualToString:@"all"]){
+    if([self isNotInAllTab]){
         return;
     }
     
@@ -286,7 +290,11 @@
         [self.viewController.emptyView hideEmptyView];
         self.viewController.tableView.scrollEnabled = YES;
     }else{
-        [self.viewController.emptyView showEmptyWithTip:@"该圈子还没有内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        if([self isNotInAllTab]){
+            [self.viewController.emptyView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        }else{
+            [self.viewController.emptyView showEmptyWithTip:@"该圈子还没有内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        }
         self.refreshFooter.hidden = YES;
         self.viewController.tableView.scrollEnabled = NO;
     }
@@ -345,6 +353,10 @@
 }
 
 - (void)postTopSuccess:(NSNotification *)noti {
+    //多个tab时候，仅仅强插在全部页面
+    if([self isNotInAllTab]){
+        return;
+    }
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
@@ -355,6 +367,11 @@
 }
 
 - (void)postGoodSuccess:(NSNotification *)noti {
+    //多个tab时候，仅仅强插在全部页面
+    if([self isNotInAllTab]){
+        return;
+    }
+    
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];

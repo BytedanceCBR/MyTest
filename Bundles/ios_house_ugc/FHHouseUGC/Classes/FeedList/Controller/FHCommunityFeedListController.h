@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) FHCommunityFeedListType listType;
 @property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
+@property(nonatomic, strong) NSArray *dataList;
 //发布按钮
 @property(nonatomic, strong) UIButton *publishBtn;
 ////群聊按钮

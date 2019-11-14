@@ -32,6 +32,7 @@
 #import "FHCommunityDetailHorizontalPagingView.h"
 #import "IMManager.h"
 #import <TTThemedAlertController.h>
+#import "FHFeedUGCCellModel.h"
 
 #define kSegmentViewHeight 52
 
@@ -50,6 +51,8 @@
 @property (nonatomic, copy) NSString *currentSegmentType;
 @property (nonatomic, copy) NSString *defaultType;
 @property (nonatomic, assign) NSInteger selectedIndex;
+//精华tab的index，默认是-1
+@property (nonatomic, assign) NSInteger essenceIndex;
 @property (nonatomic, assign) BOOL isFirstEnter;
 
 @property (nonatomic, strong) FHUGCGuideView *guideView;
@@ -69,6 +72,7 @@
         self.isLogin = TTAccountManager.isLogin;
         self.isFirstEnter = YES;
         self.viewController.segmentView.delegate = self;
+        self.essenceIndex = -1;
         
         // 分享埋点
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
@@ -105,21 +109,18 @@
 }
 
 - (void)postGoodSuccess:(NSNotification *)noti {
-//    if (noti && noti.userInfo && self.dataList) {
-//        NSDictionary *userInfo = noti.userInfo;
-//        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
-//        NSInteger row = [self getCellIndex:cellModel];
-//        
-//        if(row < self.dataList.count && row >= 0){
-//            FHFeedUGCCellModel *originCellModel = self.dataList[row];
-//            originCellModel.isStick = cellModel.isStick;
-//            originCellModel.stickStyle = cellModel.stickStyle;
-//            originCellModel.contentDecoration = cellModel.contentDecoration;
-//            originCellModel.ischanged = YES;
-//            
-//            [self refreshCell:originCellModel];
-//        }
-//    }
+    if (noti && noti.userInfo) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        NSString *socialGroupId = userInfo[@"social_group_id"];
+        if([socialGroupId isEqualToString:self.viewController.communityId]){
+            //多于1个tab的时候
+            if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
+                FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];
+                feedVC.needReloadData = YES;
+            }
+        }
+    }
 }
 
 // 发帖成功通知
@@ -329,6 +330,10 @@
             if(!isEmptyString(item.showName)) {
                 [titles addObject:item.showName];
             }
+            //这里记录一下精华tab的index,为了后面加精和取消加精时候，可以标记vc刷新
+            if([item.tabName isEqualToString:@"essence"]){
+                self.essenceIndex = i;
+            }
             if(item.isDefault) {
                 selectedIndex = i;
                 self.currentSegmentType = item.tabName;
@@ -381,6 +386,9 @@
     feedListController.tabName = tabName;
     //传入选项信息
     feedListController.operations = self.socialGroupModel.data.permission;
+    //错误页topOffset
+    CGFloat hei = self.viewController.headerView.frame.size.height;
+    feedListController.errorViewTopOffset = hei;
     [self.subVCs addObject:feedListController];
 }
 
@@ -885,8 +893,8 @@
         }
     }
     
-    CGFloat hei = self.viewController.headerView.frame.size.height;
-    self.feedListController.errorViewTopOffset = hei;
+//    CGFloat hei = self.viewController.headerView.frame.size.height;
+//    self.feedListController.errorViewTopOffset = hei;
 
     //仅仅在未关注时显示引导页
     if (![data.hasFollow boolValue] && self.shouldShowUGcGuide) {
