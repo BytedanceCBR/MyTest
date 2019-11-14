@@ -977,8 +977,12 @@ extern NSString *const INSTANT_DATA_KEY;
                 if (theItemModel) {
                     [wself.houseList addObject:theItemModel];
                 }
-                // 展示经纪人信息
-                if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]] && wself.isRefresh) {
+                if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+                    FHSearchHouseItemModel *itemModel = theItemModel;
+                    itemModel.isLastCell = (idx == itemArray.count - 1);
+                    theItemModel = itemModel;
+                }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]] && wself.isRefresh) {
+                    // 展示经纪人信息
                     wself.showRealHouseTop = YES;
                 }else if ([theItemModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]] && _isRefresh) {
                     // 展示搜索订阅卡片
@@ -1005,9 +1009,11 @@ extern NSString *const INSTANT_DATA_KEY;
         [recommendItemArray enumerateObjectsUsingBlock:^(id  _Nonnull itemDict, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([itemDict isKindOfClass:[NSDictionary class]]) {
                 id theItemModel = [[self class] searchItemModelByDict:itemDict];
+                
                 if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)theItemModel;
                     itemModel.isRecommendCell = YES;
+                    itemModel.isLastCell = (idx == itemArray.count - 1);
                     theItemModel = itemModel;
                 }
                 if (theItemModel) {
@@ -1510,6 +1516,7 @@ extern NSString *const INSTANT_DATA_KEY;
             data = self.sugesstHouseList[indexPath.row];
         }
     }
+    isFirstCell = (indexPath.row == 0);
     if (data) {
         identifier = [self cellIdentifierForEntity:data];
     }
@@ -1601,21 +1608,27 @@ extern NSString *const INSTANT_DATA_KEY;
     if (_showPlaceHolder) {
         return height;
     }
-
+    NSString *identifier = @"";
     BOOL isLastCell = NO;
     CGFloat normalHeight = height;
     
     if (self.isCommute && indexPath.row == 0) {
         normalHeight -= 10;//通勤找房第一个缩小间距
     }
-    NSString *identifier = @"";
     id data = nil;
     if (indexPath.section == 0) {
-        data = self.self.houseList[indexPath.row];
-        
+        if (indexPath.row < self.houseList.count) {
+            data = self.houseList[indexPath.row];
+            if (indexPath.row == self.houseList.count - 1) {
+                isLastCell = YES;
+            }
+        }
     } else {
         if (indexPath.row < self.sugesstHouseList.count) {
             data = self.sugesstHouseList[indexPath.row];
+            if (indexPath.row == self.sugesstHouseList.count - 1) {
+                isLastCell = YES;
+            }
         }
     }
     if (data) {
@@ -1623,6 +1636,11 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     if (identifier.length > 0) {
         FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+        if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
+            FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
+            item.isLastCell = isLastCell;
+            data = item;
+        }
         if ([[cell class]respondsToSelector:@selector(heightForData:)]) {
             return [[cell class] heightForData:data];
         }
@@ -1737,7 +1755,6 @@ extern NSString *const INSTANT_DATA_KEY;
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     FHSearchHouseItemModel *theModel = nil;
     
-    // todo zjing
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         theModel = (FHSearchHouseItemModel *)cellModel;
         logPb = theModel.logPb;
@@ -1773,13 +1790,6 @@ extern NSString *const INSTANT_DATA_KEY;
             if (theModel.externalInfo.externalUrl && theModel.externalInfo.isExternalSite.boolValue) {
                 NSMutableDictionary * dictRealWeb = [NSMutableDictionary new];
                 [dictRealWeb setValue:@(self.houseType) forKey:@"house_type"];
-                
-                // todo zjing
-//                if ([theModel.groupId isKindOfClass:[NSString class]] && theModel.groupId.length > 0) {
-//                    traceParam[@"group_id"] = theModel.groupId;
-//                }else {
-//                    traceParam[@"group_id"] = theModel.id;
-//                }
                 traceParam[@"group_id"] = theModel.id;
                 traceParam[@"impr_id"] = theModel.imprId;
                 
@@ -2204,7 +2214,6 @@ extern NSString *const INSTANT_DATA_KEY;
      "log_pb": "
      */
     
-    // todo zjing
     FHSearchHouseItemModel *theModel = nil;
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         theModel = (FHSearchHouseItemModel *)cellModel;

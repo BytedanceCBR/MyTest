@@ -433,8 +433,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displayStatsInfo;
 @property (nonatomic, assign) BOOL dealStatus;
 @property (nonatomic, copy , nullable) NSString *dealOpenUrl;
-@property (nonatomic, assign) BOOL isRecommendCell;
 
+@property (nonatomic, assign) BOOL isRecommendCell;
+@property (nonatomic, assign) BOOL isLastCell;
 
 @end
 
