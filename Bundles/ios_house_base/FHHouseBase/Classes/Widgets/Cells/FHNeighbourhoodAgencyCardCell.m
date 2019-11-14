@@ -255,6 +255,15 @@
         if (model.contactModel) {
             self.name.text = model.contactModel.realtorName;
             self.agency.text = model.contactModel.agencyName;
+            if (IS_EMPTY_STRING(self.agency.text)) {
+                [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.centerY.mas_equalTo(self.avator);
+                    make.left.mas_equalTo(self.avator.mas_right).offset(10);
+                    make.height.mas_equalTo(22);
+                }];
+
+                [self.licenceIcon updateConstraintsIfNeeded];
+            }
             if (model.contactModel.avatarUrl.length > 0) {
                 [self.avator bd_setImageWithURL:[NSURL URLWithString:model.contactModel.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
             }
@@ -282,7 +291,7 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 170;
+    return 169;
 }
 
 - (BOOL)shouldShowContact:(FHDetailContactModel *)contact {
