@@ -10,6 +10,7 @@
 #import "TTHttpTask.h"
 #import "FHPostDetailViewModel.h"
 #import "FHVoteDetailViewModel.h"
+#import "FHUGCVoteDetailCell.h"
 
 @interface FHCommentBaseDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
@@ -112,6 +113,7 @@
         if (identifier.length > 0) {
             FHUGCBaseCell *cell = (FHUGCBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             cell.delegate = self;
+            cell.isFromDetail = YES;
             cell.baseViewModel = self;
             [cell refreshWithData:data];
             return cell;
@@ -132,6 +134,19 @@
     NSNumber *cellHeight = self.cellHeightCaches[tempKey];
     if (cellHeight) {
         return [cellHeight floatValue];
+    }
+    return UITableViewAutomaticDimension;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    FHUGCBaseCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    // 投票cell FHUGCVoteDetailCell 行高
+    if ([cell isKindOfClass:[FHUGCVoteDetailCell class]]) {
+        NSInteger row = indexPath.row;
+        if (row >= 0 && row < self.items.count) {
+            id data = self.items[row];
+            return [FHUGCVoteDetailCell heightForData:data];
+        }
     }
     return UITableViewAutomaticDimension;
 }

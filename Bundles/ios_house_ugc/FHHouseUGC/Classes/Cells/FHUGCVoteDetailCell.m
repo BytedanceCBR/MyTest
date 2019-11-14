@@ -204,6 +204,7 @@
         self.descLabel.height = 0;
     } else {
         self.descLabel.hidden = NO;
+        self.descLabel.numberOfLines = self.isFromDetail ? 0 : 1;
         self.descLabel.text = self.cellModel.voteInfo.desc;
         if (self.isFromDetail) {
             CGSize size = [self.descLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width - 60, 1000)];
