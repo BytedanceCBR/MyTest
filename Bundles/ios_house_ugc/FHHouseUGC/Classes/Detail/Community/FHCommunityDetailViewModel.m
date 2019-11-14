@@ -104,6 +104,11 @@
 
 // 发帖成功通知
 - (void)postThreadSuccess:(NSNotification *)noti {
+    //如果是多tab，并且当前不在全部tab，这个时候要先切tab
+    if(self.selectedIndex != 0){
+        self.viewController.segmentView.selectedIndex = 0;
+    }
+    
     if (noti) {
         NSString *groupId = noti.userInfo[@"social_group_id"];
         if (groupId.length > 0) {
@@ -344,7 +349,7 @@
 //    [self.viewController.view bringSubviewToFront:self.viewController.bageView];
 }
 
-- (void)createFeedListController:(NSString *)type {
+- (void)createFeedListController:(NSString *)tabName {
     WeakSelf;
     FHCommunityFeedListController *feedListController = [[FHCommunityFeedListController alloc] init];
     feedListController.tableViewNeedPullDown = NO;
@@ -353,11 +358,9 @@
     feedListController.listType = FHCommunityFeedListTypePostDetail;
     feedListController.forumId = self.viewController.communityId;
     feedListController.hidePublishBtn = YES;
+    feedListController.tabName = tabName;
     //传入选项信息
     feedListController.operations = self.socialGroupModel.data.permission;
-//    feedListController.scialGroupData = self.socialGroupModel.data;
-//    [feedListController updateViews];
-//    feedListController.loginDelegate = wself;
     [self.subVCs addObject:feedListController];
 }
 
@@ -1079,6 +1082,7 @@
 #pragma mark - segmentView 代理
 - (void)segmentView:(TTHorizontalPagingSegmentView *)segmentView didSelectedItemAtIndex:(NSInteger)index toIndex:(NSInteger)toIndex {
     if(toIndex < self.subVCs.count){
+        self.selectedIndex = toIndex;
         self.feedListController = self.subVCs[toIndex];
     }
     

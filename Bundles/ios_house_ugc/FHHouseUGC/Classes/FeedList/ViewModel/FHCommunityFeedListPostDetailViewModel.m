@@ -64,6 +64,11 @@
 
 // 发帖成功，插入数据
 - (void)postThreadSuccess:(NSNotification *)noti {
+    //多个tab时候，仅仅强插在全部页面
+    if(self.tabName && ![self.tabName isEqualToString:@"all"]){
+        return;
+    }
+    
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         NSString *social_group_id = userInfo[@"social_group_id"];
@@ -195,6 +200,9 @@
     }
     if(lastGroupId){
         [extraDic setObject:lastGroupId forKey:@"last_group_id"];
+    }
+    if(self.tabName){
+        [extraDic setObject:self.tabName forKey:@"tab_name"];
     }
     
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {

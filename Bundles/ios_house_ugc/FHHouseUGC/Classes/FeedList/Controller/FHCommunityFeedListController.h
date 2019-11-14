@@ -53,6 +53,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) CLLocation *currentLocaton;
 //小区详情页进入需要传这个参数，小区圈子id
 @property(nonatomic, strong) NSString *forumId;
+//tab的名字,调用接口时候会传给服务器
+@property(nonatomic, strong) NSString *tabName;
 //小区群聊的conversation id
 @property(nonatomic, strong) NSString *conversationId;
 //传入以后点击三个点以后显示该数组的内容

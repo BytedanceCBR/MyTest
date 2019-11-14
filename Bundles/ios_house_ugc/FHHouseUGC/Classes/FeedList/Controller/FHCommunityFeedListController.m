@@ -273,6 +273,7 @@
     }else if(self.listType == FHCommunityFeedListTypePostDetail) {
         FHCommunityFeedListPostDetailViewModel *postDetailViewModel = [[FHCommunityFeedListPostDetailViewModel alloc] initWithTableView:_tableView controller:self];
         postDetailViewModel.socialGroupId = self.forumId;
+        postDetailViewModel.tabName = self.tabName;
         postDetailViewModel.categoryId = @"f_project_social";
         viewModel = postDetailViewModel;
     }

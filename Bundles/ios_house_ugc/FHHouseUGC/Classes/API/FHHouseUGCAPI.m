@@ -68,9 +68,6 @@
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
 
     NSString *queryPath = [ArticleURLSetting encrpytionStreamUrlString];
-    
-    //test
-//    NSString *queryPath = @"http://10.224.5.205:8765/api/news/feed/v96/";
 
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"category"] = category;
@@ -110,6 +107,11 @@
     paramDic[@"list_count"] = @(listCount);
     paramDic[@"concern_id"] = @"";
 //    paramDic[@"cp"] = [self encreptTime:[[NSDate date] timeIntervalSince1970]];
+    
+    //圈子详情页使用的字段
+    if(extraDic[@"tab_name"]){
+        paramDic[@"tab_name"] = extraDic[@"tab_name"];
+    }
 
     if (!loadMore) {
         paramDic[@"refresh_reason"] = @(0);

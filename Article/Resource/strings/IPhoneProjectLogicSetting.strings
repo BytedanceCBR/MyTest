@@ -34,8 +34,8 @@
 "home"                  = "FHHomeSchemaObject";
 "main"                  = "FHHomeSchemaObject";
 
-"profile"               = "ArticleMomentProfileViewController"; //旧版个人主页
-//"profile"               = "FHPersonalHomePageController"; //新版个人主页
+//"profile"               = "ArticleMomentProfileViewController"; //旧版个人主页
+"profile"               = "FHPersonalHomePageController"; //新版个人主页
 "media_account"         = "FHPersonalHomePageController";
 
 "invite_friend"         = "ArticleInviteFriendViewController";
