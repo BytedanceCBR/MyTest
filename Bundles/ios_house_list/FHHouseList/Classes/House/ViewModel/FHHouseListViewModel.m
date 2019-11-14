@@ -1558,8 +1558,9 @@ extern NSString *const INSTANT_DATA_KEY;
         hashString = [NSString stringWithFormat:@"%ld",[cellModel hash]];
     }
     if (indexPath.section == 0) {
-        cellModel = self.self.houseList[indexPath.row];
-        
+        if (indexPath.row < self.houseList.count) {
+            cellModel = self.houseList[indexPath.row];
+        }
     } else {
         if (indexPath.row < self.sugesstHouseList.count) {
             cellModel = self.sugesstHouseList[indexPath.row];
@@ -1569,7 +1570,7 @@ extern NSString *const INSTANT_DATA_KEY;
         return;
     }
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
-        FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)cell;
+        FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)cellModel;
         hashString = item.id;
     }
     [self addHouseShowLog:cellModel withRank:indexPath.row];
