@@ -282,7 +282,7 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 160;
+    return 170;
 }
 
 - (BOOL)shouldShowContact:(FHDetailContactModel *)contact {
