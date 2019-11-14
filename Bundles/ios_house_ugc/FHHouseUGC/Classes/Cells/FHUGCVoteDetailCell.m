@@ -389,6 +389,7 @@
     [editBtn setTitle:@"修改投票" forState:UIControlStateHighlighted];
     [editBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     [editBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
+    [editBtn addTarget:self action:@selector(editButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBgView addSubview:editBtn];
     self.editButton = editBtn;
     self.hasVotedLabel.hidden = YES;
@@ -418,6 +419,12 @@
         self.voteInfo.selected = YES;
         [self refreshWithData:self.voteInfo];
     });
+}
+
+// 编辑按钮点击
+- (void)editButtonClick:(UIButton *)btn {
+    self.voteInfo.selected = NO;
+    [self refreshWithData:self.voteInfo];
 }
 
 - (void)refreshWithData:(id)data {
