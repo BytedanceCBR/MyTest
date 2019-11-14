@@ -9,7 +9,8 @@
     @"voteType": @"vote_type",
     @"voteId": @"vote_id",
     @"userCount": @"user_count",
-    @"displayCount": @"display_count",
+    @"displayCount": @"option_limit",
+    @"desc": @"subject_content",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
