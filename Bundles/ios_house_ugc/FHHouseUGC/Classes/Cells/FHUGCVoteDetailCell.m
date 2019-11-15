@@ -411,7 +411,7 @@
 @property (nonatomic, strong)   UILabel        *dateLabel;
 @property (nonatomic, strong)   FHUGCLoadingButton       *voteButton;
 @property (nonatomic, strong)   UILabel        *hasVotedLabel;
-@property (nonatomic, strong)   UIButton       *editButton;
+@property (nonatomic, strong)   FHUGCLoadingButton       *editButton;
 
 @end
 
@@ -477,7 +477,7 @@
     self.hasVotedLabel.textColor = [UIColor themeWhite];
     [self.bottomBgView addSubview:self.hasVotedLabel];
     
-    UIButton *editBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.hasVotedLabel.right + 10, bottomHeight, ([UIScreen mainScreen].bounds.size.width - 40 - 10) / 2, 38)];
+    FHUGCLoadingButton *editBtn = [[FHUGCLoadingButton alloc] initWithFrame:CGRectMake(self.hasVotedLabel.right + 10, bottomHeight, ([UIScreen mainScreen].bounds.size.width - 40 - 10) / 2, 38)];
     editBtn.layer.cornerRadius = 19;
     editBtn.layer.borderWidth = 0.5;
     editBtn.layer.borderColor = [UIColor themeRed1].CGColor;
@@ -492,6 +492,7 @@
     self.editButton = editBtn;
     self.hasVotedLabel.hidden = YES;
     self.editButton.hidden = YES;
+    [self.editButton setLoadingImageName:@"fh_ugc_loading_red"];
     
     // 投票按钮
     FHUGCLoadingButton *voteBtn = [[FHUGCLoadingButton alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 38)];
@@ -533,8 +534,8 @@
     [self.voteButton startLoading];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.voteButton stopLoading];
-        self.voteInfo.selected = NO;
-        self.voteInfo.voteState = FHUGCVoteStateNone;
+        self.voteInfo.selected = YES;
+        self.voteInfo.voteState = FHUGCVoteStateComplete;
         [self refreshWithData:self.voteInfo];
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
         [userInfo setObject:self.voteInfo forKey:@"vote_info"];
@@ -549,9 +550,13 @@
         [self gotoLogin];
         return;
     }
-    self.voteInfo.selected = NO;
-    self.voteInfo.voteState = FHUGCVoteStateNone;
-    [self refreshWithData:self.voteInfo];
+    [self.editButton startLoading];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.editButton stopLoading];
+        self.voteInfo.selected = NO;
+        self.voteInfo.voteState = FHUGCVoteStateNone;
+        [self refreshWithData:self.voteInfo];
+    });
 }
 
 - (void)refreshWithData:(id)data {
@@ -1022,6 +1027,12 @@
         _loadingAnimateView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"detail_loading"]];
     }
     return _loadingAnimateView;
+}
+
+- (void)setLoadingImageName:(NSString *)imageName {
+    if (imageName.length > 0) {
+        _loadingAnimateView.image = [UIImage imageNamed:imageName];
+    }
 }
 
 @end

@@ -57,6 +57,8 @@ static NSString *const kFHUGCPostVoteSuccessNotification = @"k_fh_ugc_post_vote_
 - (void)startLoading;
 - (void)stopLoading;
 
+- (void)setLoadingImageName:(NSString *)imageName;
+
 @end
 
 NS_ASSUME_NONNULL_END
