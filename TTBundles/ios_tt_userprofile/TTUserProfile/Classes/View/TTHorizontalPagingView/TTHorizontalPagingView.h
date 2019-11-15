@@ -119,7 +119,7 @@ swipeView是否开启水平bounce效果，默认为 NO
 /**
  头部视图
  */
-@property (nonatomic, strong, readonly) UIView *headerView;
+@property (nonatomic, strong) UIView *headerView;
 /**
  代理
  */
@@ -127,7 +127,7 @@ swipeView是否开启水平bounce效果，默认为 NO
 /**
  segmentView
  */
-@property (nonatomic, strong, readonly) TTHorizontalPagingSegmentView *segmentView;
+@property (nonatomic, strong) TTHorizontalPagingSegmentView *segmentView;
 /**
  当前滚动的scrollView
  */

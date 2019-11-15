@@ -1123,6 +1123,8 @@
     if(toIndex < self.subVCs.count){
         self.selectedIndex = toIndex;
         self.feedListController = self.subVCs[toIndex];
+        self.pagingView.headerView = self.viewController.headerView;
+        self.pagingView.segmentView = self.viewController.segmentView;
     }
     
     if(self.isFirstEnter) {
