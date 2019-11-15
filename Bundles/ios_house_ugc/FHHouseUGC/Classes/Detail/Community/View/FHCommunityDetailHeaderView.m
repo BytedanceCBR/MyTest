@@ -108,8 +108,8 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        [self initView];
-        [self initConstraints];
+//        [self initView];
+//        [self initConstraints];
     }
     return self;
 }

@@ -293,15 +293,24 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 }
 
 - (void)adjustContentViewOffsetWithScrollView:(UIScrollView *)scrollView {
-    CGFloat headerViewDisplayHeight = self.headerViewHeight;
-    if (headerViewDisplayHeight != self.segmentTopSpace) {// 还原位置
-        scrollView.contentOffset = CGPointMake(0, -headerViewDisplayHeight - self.segmentViewHeight);
-    } else if (scrollView.contentOffset.y < -self.segmentViewHeight) {
-        scrollView.contentOffset = CGPointMake(0, -headerViewDisplayHeight - self.segmentViewHeight);
-    } else {
-        // self.segmentTopSpace
-        scrollView.contentOffset = CGPointMake(0, scrollView.contentOffset.y-headerViewDisplayHeight + self.segmentTopSpace);
+    if(self.headerShowHeight < self.headerViewHeight){
+        scrollView.contentOffset = CGPointMake(0, - self.headerShowHeight - self.segmentViewHeight);
     }
+//    scrollView.contentOffset = CGPointMake(0, -self.headerShowHeight - self.segmentViewHeight);
+//    CGFloat headerViewDisplayHeight = self.headerShowHeight;
+//    if(self.headerShowHeight < self.headerViewHeight){
+//        scrollView.contentOffset = CGPointMake(0, - self.currentContentViewTopInset - self.headerViewHeight + self.headerShowHeight);
+//    }
+    
+//    scrollView.contentOffset = CGPointMake(0, -headerViewDisplayHeight - self.segmentViewHeight);
+//    if (headerViewDisplayHeight != self.segmentTopSpace) {// 还原位置
+//        scrollView.contentOffset = CGPointMake(0, -headerViewDisplayHeight - self.segmentViewHeight);
+//    } else if (scrollView.contentOffset.y < -self.segmentViewHeight) {
+//        scrollView.contentOffset = CGPointMake(0, -headerViewDisplayHeight - self.segmentViewHeight);
+//    } else {
+//        // self.segmentTopSpace
+//        scrollView.contentOffset = CGPointMake(0, scrollView.contentOffset.y-headerViewDisplayHeight + self.segmentTopSpace);
+//    }
 }
 
 - (void)setupHorizontalCollectionView
@@ -335,16 +344,21 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     self.lastPageIndex = toIndex;
     _currentContentView = [self scrollViewAtIndex:toIndex];
     
+//    if(toIndex == 0){
+//    - self.headerViewHeight + self.headerShowHeight
     self.movingView.frame = CGRectMake(0, - self.currentContentViewTopInset, self.width, self.currentContentViewTopInset);
     
     [_headerView removeFromSuperview];
     [_segmentView removeFromSuperview];
     
+    _headerView.frame = CGRectMake(0, 0, self.width, self.headerViewHeight);
+    _segmentView.frame = CGRectMake(0, self.headerView.bottom, self.width, self.segmentViewHeight);
     [self.movingView addSubview:_headerView];
     [self.movingView addSubview:_segmentView];
     
     
     [_currentContentView addSubview:self.movingView];
+//    }
     
     
     if ([self.delegate respondsToSelector:@selector(pagingView:didSwitchIndex:to:)]) {
@@ -363,14 +377,14 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 
 - (void)setHeaderView:(UIView *)headerView
 {
-    if(self.headerShowHeight <= 0){
+    if(self.headerShowHeight <= self.segmentTopSpace){
         return;
     }
     [_headerView removeFromSuperview];
     _headerView = headerView;
 //    [_headerView removeGestureRecognizer:self.headerViewPanGestureRecognizer];
 //    [_headerView addGestureRecognizer:self.headerViewPanGestureRecognizer];
-    _headerView.frame = CGRectMake(0, 0, self.width, self.headerViewHeight);
+    _headerView.frame = CGRectMake(0, self.headerShowHeight - self.headerViewHeight, self.width, self.headerViewHeight);
     [self addSubview:_headerView];
     
 }
@@ -415,11 +429,17 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
         vc.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         vc.view.frame = cell.contentView.bounds;
         BOOL inset = [objc_getAssociatedObject(scrollView, TTHorizontalPagingViewSettingInset) boolValue];
-        self.headerShowHeight = self.headerViewHeight;
+        
         if(!inset) {
-            scrollView.contentInset = UIEdgeInsetsMake(self.currentContentViewTopInset, 0, scrollView.contentInset.bottom, 0);
-            scrollView.contentOffset = CGPointMake(0, - self.currentContentViewTopInset);
+            scrollView.contentInset = UIEdgeInsetsMake(self.headerShowHeight + self.segmentViewHeight, 0, scrollView.contentInset.bottom, 0);
+            scrollView.contentOffset = CGPointMake(0, -self.headerShowHeight - self.segmentViewHeight);
         }
+        
+//        if(!inset) {
+//            scrollView.contentInset = UIEdgeInsetsMake(self.currentContentViewTopInset, 0, scrollView.contentInset.bottom, 0);
+//            scrollView.contentOffset = CGPointMake(0, -self.currentContentViewTopInset - self.headerShowHeight + self.headerViewHeight);
+//        }
+        
         [cell.contentView addSubview:vc.view];
         objc_setAssociatedObject(cell.contentView, TTHorizontalPagingViewCellKey, scrollView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
@@ -433,7 +453,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     NSInteger currentIndex = scrollView.contentOffset.x / self.width;
     [self didSwitchIndex:self.lastPageIndex to:currentIndex];
     [self.segmentView scrollToIndex:currentIndex];
-    [self advanceLoadData];
+//    [self advanceLoadData];
     [self adjustContentViewOffsetWithScrollView:self.currentContentView];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0)), dispatch_get_main_queue(), ^{
         self.isSwitching = NO;
@@ -495,11 +515,11 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
         CGFloat newOffsetY = [change[NSKeyValueChangeNewKey] CGPointValue].y;
         [self scrollViewContentOffsetDidChangeWithOldValue:oldOffsetY newValue:newOffsetY headerDisplayHeight:self.headerShowHeight];
     } else if (context == TTHorizontalPagingViewInsetContext) {
-        if(self.currentContentView.contentOffset.y > -self.segmentViewHeight) return;
-        [UIView animateWithDuration:0.2 animations:^{
-            self.headerView.top = -self.headerViewHeight - self.segmentViewHeight - self.currentContentView.contentOffset.y;
-            self.segmentView.top = self.headerView.bottom;
-        }];
+//        if(self.currentContentView.contentOffset.y > -self.segmentViewHeight) return;
+//        [UIView animateWithDuration:0.2 animations:^{
+//            self.headerView.top = -self.headerViewHeight - self.segmentViewHeight - self.currentContentView.contentOffset.y;
+//            self.segmentView.top = self.headerView.bottom;
+//        }];
     }
 }
 
@@ -523,25 +543,24 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     }
     
     if(self.ignoreAdjust) return;
-    if(deltaY >= 0) {    //向上滚动
-        NSLog(@"space___%f",self.headerShowHeight);
-        if(self.headerShowHeight <= self.segmentTopSpace) {
-            if(self.segmentView.superview != self){
-                [_segmentView removeFromSuperview];
-                _segmentView.frame = CGRectMake(0, self.segmentTopSpace, self.width, self.segmentViewHeight);
-                [self addSubview:_segmentView];
-            }
-        }
-    } else {
-        if(self.headerShowHeight > self.segmentTopSpace) {
-            if(self.segmentView.superview == self){
-                [_segmentView removeFromSuperview];
-                _segmentView.frame = CGRectMake(0, self.headerView.bottom, self.width, self.segmentViewHeight);
-                [self.movingView addSubview:_segmentView];
-            }
-        }
-    }
-    
+//    if(deltaY >= 0) {    //向上滚动
+//        NSLog(@"space___%f",self.headerShowHeight);
+//        if(self.headerShowHeight <= self.segmentTopSpace) {
+//            if(self.segmentView.superview != self){
+//                [_segmentView removeFromSuperview];
+//                _segmentView.frame = CGRectMake(0, self.segmentTopSpace, self.width, self.segmentViewHeight);
+//                [self addSubview:_segmentView];
+//            }
+//        }
+//    } else {
+//        if(self.headerShowHeight > self.segmentTopSpace) {
+//            if(self.segmentView.superview == self){
+//                [_segmentView removeFromSuperview];
+//                _segmentView.frame = CGRectMake(0, self.headerView.bottom, self.width, self.segmentViewHeight);
+//                [self.movingView addSubview:_segmentView];
+//            }
+//        }
+//    }
     self.headerShowHeight = self.headerShowHeight - deltaY;
     
     if(deltaY == 0) return;

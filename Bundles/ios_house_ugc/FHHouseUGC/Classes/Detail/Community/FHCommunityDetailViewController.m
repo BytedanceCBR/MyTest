@@ -146,6 +146,7 @@
 
 - (void)initHeaderView {
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
+    self.headerView.backgroundColor = [UIColor blueColor];
     self.headerView.followButton.groupId = self.communityId;
     self.headerView.followButton.tracerDic = [self followButtonTraceDict];
     WeakSelf;
