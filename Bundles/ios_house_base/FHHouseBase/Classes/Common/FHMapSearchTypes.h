@@ -20,6 +20,7 @@ typedef NS_ENUM(NSInteger , FHMapSearchType) {
     FHMapSearchTypeStation = 9 , //地铁站点
     
     FHMapSearchTypeFakeStation = 1234, //只是展示的地铁站点 不响应点击
+    FHMapSearchTypeFakeStationIcon = 12345, //地铁站 火车头icon
 };
 
 #endif /* FHMapSearchTypes_h */
