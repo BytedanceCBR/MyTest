@@ -432,8 +432,13 @@
     dict[@"enter_from"] = self.tracerDict[@"enter_from"];
     dict[@"element_from"] = self.tracerDict[@"element_from"];
     dict[@"page_type"] = self.tracerDict[@"page_type"];
-    
-    [FHCommonApi requestCommonDigg:self.groupModel.groupID groupType:FHDetailDiggTypeTHREAD action:self.user_digg tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    FHDetailDiggType diggType = FHDetailDiggTypeTHREAD;
+    if (self.postType == FHUGCPostTypePost) {
+        diggType = FHDetailDiggTypeTHREAD;
+    } else if (self.postType == FHUGCPostTypeVote) {
+        diggType = FHDetailDiggTypeVote;
+    }
+    [FHCommonApi requestCommonDigg:self.groupModel.groupID groupType:diggType action:self.user_digg tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
     }];
 }
