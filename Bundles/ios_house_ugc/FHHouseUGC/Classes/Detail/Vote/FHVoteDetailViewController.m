@@ -23,7 +23,7 @@
 #import "FHUGCShareManager.h"
 
 @interface FHVoteDetailViewController ()
-@property (nonatomic, assign) int64_t tid; //帖子ID--必须
+@property (nonatomic, assign) int64_t voteId; //投票ID--必须
 @property (nonatomic, assign) int64_t fid; //话题ID
 // 列表页数据
 @property (nonatomic, strong)   FHFeedUGCCellModel       *detailData;
@@ -43,18 +43,17 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        // 帖子
+        // 投票
         self.postType = FHUGCPostTypeVote;
         self.fromUGC = YES;
         NSDictionary *params = paramObj.allParams;
-        int64_t tid = [[paramObj.allParams objectForKey:@"tid"] longLongValue];
+        int64_t voteId = [[paramObj.allParams objectForKey:@"vote_id"] longLongValue];
         int64_t fid = [[paramObj.allParams objectForKey:@"fid"] longLongValue];
         self.lastPageSocialGroupId = [params objectForKey:@"social_group_id"];
-        // 帖子id
-        tid = 1648002853084171;
-        self.tid = tid;// 1636215424527368  1636223115260939    1636223457031179    1636222717073420
+        // 投票id
+        self.voteId = voteId;// 1636215424527368  1636223115260939    1636223457031179    1636222717073420
         self.fid = fid;// 6564242300        1621706233835550    6564242300          86578926583
-        TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:[NSString stringWithFormat:@"%lld", tid] itemID:[NSString stringWithFormat:@"%lld", tid] impressionID:nil aggrType:1];
+        TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:[NSString stringWithFormat:@"%lld", voteId] itemID:[NSString stringWithFormat:@"%lld", voteId] impressionID:nil aggrType:1];
         self.groupModel = groupModel;
         // 列表页数据
         self.detailData = params[@"data"];
@@ -106,7 +105,7 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     // ViewModel
     self.weakViewModel = self.viewModel;
-    self.weakViewModel.threadID = self.tid;
+    self.weakViewModel.threadID = self.voteId;
     self.weakViewModel.forumID = self.fid;
     self.weakViewModel.category = @"thread_detail";
     self.weakViewModel.lastPageSocialGroupId = self.lastPageSocialGroupId;
@@ -175,7 +174,7 @@
     self.followButton = [[FHUGCFollowButton alloc] init];
     self.followButton.followed = YES;
     self.followButton.tracerDic = self.tracerDict.mutableCopy;
-    self.followButton.groupId = [NSString stringWithFormat:@"%lld",self.tid];
+    self.followButton.groupId = [NSString stringWithFormat:@"%lld",self.voteId];
     [self.customNavBarView addSubview:_followButton];
     [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(58);

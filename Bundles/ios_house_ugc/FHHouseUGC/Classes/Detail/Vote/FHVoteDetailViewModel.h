@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 投票详情页ViewModel
 @interface FHVoteDetailViewModel : FHCommentBaseDetailViewModel
 
-@property (nonatomic, assign) int64_t threadID;// 帖子id
+@property (nonatomic, assign) int64_t threadID;// 投票id
 @property (nonatomic, assign) int64_t forumID; // 暂时无用
 @property (nonatomic, copy) NSString *category;
 @property (nonatomic, weak)   FHFeedUGCCellModel       *detailData;

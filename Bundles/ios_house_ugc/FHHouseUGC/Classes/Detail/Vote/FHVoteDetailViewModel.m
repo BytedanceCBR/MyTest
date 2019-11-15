@@ -244,7 +244,7 @@
 {
     if (self.threadID) {
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        [param setValue:@(self.threadID) forKey:@"thread_id"];
+        [param setValue:@(self.threadID) forKey:@"vote_id"];
         [param setValue:self.category forKey:@"category"];
         if (self.lastPageSocialGroupId.length > 0) {
             [param setValue:self.lastPageSocialGroupId forKey:@"social_group_id"];
@@ -252,7 +252,7 @@
         uint64_t startTime = [NSObject currentUnixTime];
         WeakSelf;
         NSString *host = [FHURLSettings baseURL];
-        NSString *urlStr = [NSString stringWithFormat:@"%@/f100/ugc/thread",host];
+        NSString *urlStr = [NSString stringWithFormat:@"%@/f100/ugc/material/v1/vote_detail",host];
         [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
             StrongSelf;
             uint64_t endTime = [NSObject currentUnixTime];
