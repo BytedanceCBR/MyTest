@@ -72,7 +72,7 @@
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 @property(nonatomic, strong) FHCornerItemLabel *tagTitleLabel; //降 新 榜等标签
-
+@property (nonatomic, assign) CGSize titleSize;
 @end
 
 @implementation FHHouseBaseItemCell
@@ -1003,6 +1003,7 @@
 // 子类需要重写的方法，根据数据源刷新当前Cell，以及布局
 - (void)refreshWithData:(id)data
 {
+    self.currentData = data;
     if([data isKindOfClass:[FHNewHouseItemModel class]])
     {
         FHNewHouseItemModel *model = (FHNewHouseItemModel *)data;
@@ -1078,6 +1079,7 @@
         }
         
         [self hideRecommendReason];
+        self.titleSize = [[self class]titleSizeWithTagList:commonModel.tags titleStr:commonModel.title];
         [self updateTitlesLayout:attributeString.length > 0];
         
         [self.contentView.yoga applyLayoutPreservingOrigin:NO];
@@ -1278,9 +1280,9 @@
 
 -(void)updateTitlesLayout:(BOOL)showTags
 {
+    CGSize titleSize = self.cellModel ? self.cellModel.titleSize : self.titleSize;
     self.mainTitleLabel.numberOfLines = showTags?1:2;
-    
-    BOOL oneRow = showTags || self.cellModel.titleSize.height < 30;
+    BOOL oneRow = showTags || titleSize.height < 30;
     
     [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.marginTop = YGPointValue(oneRow?-2:-5);
@@ -1445,6 +1447,22 @@
     if (dirty) {
         [self.contentView.yoga applyLayoutPreservingOrigin:NO];
     }
+}
+
++ (CGSize)titleSizeWithTagList:(NSArray<FHHouseTagsModel *> *)tagList titleStr:(NSString *)titleStr {
+    
+    UILabel *majorTitle = [[UILabel alloc]init];
+    majorTitle.font = [UIFont themeFontRegular:16];
+    majorTitle.textColor = [UIColor themeGray1];
+    if (tagList.count < 1) {
+        
+        majorTitle.numberOfLines = 2;
+    }else {
+        majorTitle.numberOfLines = 1;
+    }
+    majorTitle.text = titleStr;
+    CGSize fitSize = [majorTitle sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width * ([UIScreen mainScreen].bounds.size.width > 376 ? 0.61 : [UIScreen mainScreen].bounds.size.width > 321 ? 0.56 : 0.48), 0)];
+    return fitSize;
 }
 #pragma mark 字符串处理
 -(NSAttributedString *)originPriceAttr:(NSString *)originPrice {

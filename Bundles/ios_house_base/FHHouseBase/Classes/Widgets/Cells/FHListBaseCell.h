@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHListBaseCell : UITableViewCell
 
+@property(nonatomic, strong) id currentData;
+
 - (void)refreshWithData:(id)data;
 
 + (CGFloat)heightForData:(id)data;
