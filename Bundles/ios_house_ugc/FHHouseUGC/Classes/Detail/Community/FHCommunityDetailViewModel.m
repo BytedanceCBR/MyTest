@@ -1007,6 +1007,15 @@
     [FHUserTracker writeEvent:@"community_publisher_popup_click" params:params];
 }
 
+- (void)addClickOptionsLog:(NSString *)position {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"enter_type"] =  @"click";
+    params[@"click_position"] = position;
+    [FHUserTracker writeEvent:@"community_publisher_popup_click" params:params];
+}
+
 // 帐号切换
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
 {
@@ -1053,7 +1062,9 @@
 - (UIScrollView *)pagingView:(TTHorizontalPagingView *)pagingView viewAtIndex:(NSInteger)index {
     index = MIN(self.subVCs.count - 1, index);
     FHCommunityFeedListController *feedVC = self.subVCs[index];
-    [feedVC viewDidLoad];
+    if(!feedVC.tableView){
+        [feedVC viewDidLoad];
+    }
     return feedVC.tableView;
 }
 
@@ -1118,6 +1129,14 @@
         [self.pagingView scrollToIndex:toIndex withAnimation:NO];
         self.isFirstEnter = NO;
     } else {
+        //上报埋点
+        NSString *position = @"";
+        if(self.selectedIndex == 0){
+            position = @"all_list";
+        }else if(self.selectedIndex == 1){
+            position = @"essence_list";
+        }
+        [self addClickOptionsLog:position];
         [self.pagingView scrollToIndex:toIndex withAnimation:YES];
     }
 }
