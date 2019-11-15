@@ -40,6 +40,7 @@
 @property (nonatomic, strong)   UIImageView       *positionImageView;
 @property (nonatomic, weak)     FHFeedUGCCellModel       *cellModel;
 @property (nonatomic, strong)   FHUGCVoteMainView       *voteView;
+@property (nonatomic, strong)   UIView       *bottomLine;
 
 @end
 
@@ -139,6 +140,11 @@
     [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
+    self.bottomLine = [[UIView alloc] initWithFrame:CGRectMake(20, 0, [UIScreen mainScreen].bounds.size.width - 40, 0.5)];
+    self.bottomLine.backgroundColor = [UIColor colorWithHexStr:@"#e8e8e8"];
+    self.bottomLine.hidden = YES;
+    [self.contentView addSubview:self.bottomLine];
+    
     UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
     [self.bottomView.positionView addGestureRecognizer:tap];
 }
@@ -168,11 +174,35 @@
     self.voteView.left = 0;
     self.voteView.width = [UIScreen mainScreen].bounds.size.width;
     
-    // 底部bottom
+    // 底部bottom -- 详情页和feed展示不同
     self.bottomView.top = self.voteView.bottom + 20;
     self.bottomView.left = 0;
     self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
     self.bottomView.height = bottomViewHeight;
+    
+    self.bottomLine.top = self.voteView.bottom + 20;
+    // 好多逻辑--不要再改ui了
+    if (self.cellModel.isFromDetail) {
+        self.bottomLine.hidden = NO;
+        self.bottomView.bottomSepView.hidden = YES;
+        if (self.cellModel.showCommunity) {
+            self.bottomView.hidden = NO;
+            self.bottomView.height = 45;// 24 + 21
+            self.bottomView.commentBtn.hidden = YES;
+            self.bottomView.likeBtn.hidden = YES;
+            self.bottomLine.top = self.voteView.bottom + 63;
+        } else {
+            self.bottomView.hidden = YES;
+            self.bottomLine.top = self.voteView.bottom + 19;
+        }
+    } else {
+        self.bottomLine.hidden = YES;
+        self.bottomView.hidden = NO;
+        self.bottomView.bottomSepView.hidden = NO;
+        self.bottomView.commentBtn.hidden = NO;
+        self.bottomView.likeBtn.hidden = NO;
+        self.bottomView.height = bottomViewHeight;
+    }
 }
 
 - (UILabel *)labelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -313,10 +343,15 @@
         // 按钮底部 + 20
         height += 20;
         // 小区圈底部
-        if (cellModel.showCommunity) {
-            height += (24 + 25);
+        if (cellModel.isFromDetail) {
+            // 详情页
+            if (cellModel.showCommunity) {
+                height += (24 + 21);
+            } else {
+                height += 1;
+            }
         } else {
-            height += 25;
+            height += (24 + 25);
         }
         return height;
     }

@@ -149,6 +149,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL hiddenMore;
 // 数据内容是否有变化，如果有则刷新数据时候会刷新，没有则不会刷新，在对cellModel改动需要刷新页面时候，需要设置成YES
 @property (nonatomic, assign) BOOL ischanged;
+// 来自详情页
+@property (nonatomic, assign)   BOOL       isFromDetail;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

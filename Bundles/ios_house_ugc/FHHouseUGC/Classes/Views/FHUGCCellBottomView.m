@@ -27,7 +27,6 @@
 //@property(nonatomic ,strong) UIView *likeView;
 //@property(nonatomic ,strong) UIImageView *likeImageView;
 //@property(nonatomic ,strong) UILabel *likeLabel;
-@property(nonatomic ,strong) UIView *bottomSepView;
 @property (nonatomic, copy)  NSString *saveDiggGroupId;
 @property(nonatomic ,strong) UIImageView *positionImageView;
 @property (nonatomic, assign)   FHDetailDiggType       diggType;

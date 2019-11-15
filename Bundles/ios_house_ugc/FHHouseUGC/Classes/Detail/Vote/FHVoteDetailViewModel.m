@@ -186,6 +186,7 @@
         ugcContent.community = model.community;
         ugcContent.rawData = model;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
+        cellModel.isFromDetail = YES;
         if (self.detailData) {
             cellModel.feedVC = self.detailData.feedVC;
             cellModel.isStick = self.detailData.isStick;
@@ -195,6 +196,7 @@
             cellModel.community = self.detailData.community;
         }
         cellModel.tracerDic = [self.detailController.tracerDict copy];
+        socialGroupModel.hasFollow = @"1";
         if (socialGroupModel && ![socialGroupModel.hasFollow boolValue]) {
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
@@ -290,7 +292,7 @@
                                 NSDictionary *detailDic = [dataStr tt_JSONValue];
                                 if (detailDic && [detailDic isKindOfClass:[NSDictionary class]] && detailDic[@"community"]) {
                                     // 继续解析小区头部
-                                    NSDictionary *social_group = [detailDic tt_dictionaryValueForKey:@"social_group"];
+                                    NSDictionary *social_group = [detailDic tt_dictionaryValueForKey:@"community"];
                                     NSError *groupError = nil;
                                     groupData = [[FHUGCScialGroupDataModel alloc] initWithDictionary:social_group error:&groupError];
                                 }
