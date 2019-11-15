@@ -408,7 +408,7 @@
 @property (nonatomic, strong)   NSMutableArray       *optionsViewArray;
 @property (nonatomic, weak)     FHUGCVoteFoldViewButton *foldButton;
 @property (nonatomic, strong)   UILabel        *dateLabel;
-@property (nonatomic, strong)   UIButton       *voteButton;
+@property (nonatomic, strong)   FHUGCLoadingButton       *voteButton;
 @property (nonatomic, strong)   UILabel        *hasVotedLabel;
 @property (nonatomic, strong)   UIButton       *editButton;
 
@@ -493,7 +493,7 @@
     self.editButton.hidden = YES;
     
     // 投票按钮
-    UIButton *voteBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 38)];
+    FHUGCLoadingButton *voteBtn = [[FHUGCLoadingButton alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 38)];
     voteBtn.layer.cornerRadius = 19;
     voteBtn.backgroundColor = [UIColor themeRed1];
     voteBtn.titleLabel.font = [UIFont themeFontRegular:16];
@@ -512,7 +512,7 @@
     bottomHeight += 5;
     self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 17)];
     self.dateLabel.backgroundColor = [UIColor themeWhite];
-    self.dateLabel.text = @"还有5天结束";
+    self.dateLabel.text = @"";
     self.dateLabel.textAlignment = NSTextAlignmentCenter;
     self.dateLabel.textColor = [UIColor themeGray3];
     self.dateLabel.font = [UIFont themeFontRegular:12];
@@ -524,9 +524,11 @@
 
 // 确认投票按钮点击
 - (void)voteButtonClick:(UIButton *)btn {
+    [self.voteButton startLoading];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.voteInfo.selected = YES;
-        self.voteInfo.voteState = FHUGCVoteStateExpired;
+        [self.voteButton stopLoading];
+        self.voteInfo.selected = NO;
+        self.voteInfo.voteState = FHUGCVoteStateNone;
         [self refreshWithData:self.voteInfo];
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
         [userInfo setObject:self.voteInfo forKey:@"vote_info"];
@@ -682,7 +684,9 @@
 
 // 选项点击
 - (void)optionClickItem:(FHUGCVoteInfoVoteInfoItemsModel *)item {
-    if (item == nil) {
+    if (item == nil
+        || self.voteInfo.voteState == FHUGCVoteStateVoting
+        || self.voteInfo.selected) {
         return;
     }
     if ([self.voteInfo.voteType isEqualToString:@"1"]) {
@@ -909,6 +913,83 @@
         _keyLabel.text = self.upText;
         _iconView.image = [UIImage imageNamed:@"fh_ugc_up_arrow"];
     }
+}
+
+@end
+
+
+@interface FHUGCLoadingButton ()
+
+@property(nonatomic , assign) BOOL isLoading;
+@property(nonatomic , strong) UIImageView *loadingAnimateView;
+@property(nonatomic , copy) NSString *originText;
+@end
+
+@implementation FHUGCLoadingButton
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI
+{
+    [self addSubview:self.loadingAnimateView];
+    self.loadingAnimateView.size = CGSizeMake(16, 16);
+    self.loadingAnimateView.hidden = YES;
+}
+
+- (void)startLoading
+{
+    self.isLoading = YES;
+    self.enabled = NO;
+    self.loadingAnimateView.hidden = NO;
+    self.originText = self.titleLabel.text;
+//    [self setTitle:@"" forState:UIControlStateNormal];
+    CFTimeInterval duration = 0.6;
+    CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.toValue = @(M_PI * 2);
+    rotationAnimation.duration = duration;
+    rotationAnimation.repeatCount = CGFLOAT_MAX;
+    [self.loadingAnimateView.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+}
+
+- (void)stopLoading
+{
+    self.isLoading = NO;
+    self.enabled = YES;
+    self.loadingAnimateView.hidden = YES;
+//    if(self.originText){
+//        [self setTitle:self.originText forState:UIControlStateNormal];
+//    }
+    [self.loadingAnimateView.layer removeAllAnimations];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    if (self.isLoading) {
+        [self.titleLabel sizeToFit];
+        self.loadingAnimateView.centerY = self.height/2;
+        self.loadingAnimateView.left = (self.width - self.loadingAnimateView.width - self.titleLabel.width - 4) / 2;
+//        self.loadingAnimateView.centerX = self.width/2;
+        self.titleLabel.left = self.loadingAnimateView.right + 4;
+    }else {
+        self.titleLabel.centerY = self.height / 2;
+        self.titleLabel.centerX = self.width / 2;
+    }
+}
+
+- (UIImageView *)loadingAnimateView
+{
+    if (!_loadingAnimateView) {
+        _loadingAnimateView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"detail_loading"]];
+    }
+    return _loadingAnimateView;
 }
 
 @end

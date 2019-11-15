@@ -51,4 +51,12 @@ static NSString *const kFHUGCPostVoteSuccessNotification = @"k_fh_ugc_post_vote_
 
 @end
 
+// 加载 loading button
+@interface FHUGCLoadingButton : UIButton
+
+- (void)startLoading;
+- (void)stopLoading;
+
+@end
+
 NS_ASSUME_NONNULL_END

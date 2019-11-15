@@ -214,6 +214,9 @@
                 case FHUGCFeedListCellTypeUGCSmallVideo:
                     self.diggType = FHDetailDiggTypeSMALLVIDEO;
                 break;
+                case FHUGCFeedListCellTypeUGCVoteInfo:
+                    self.diggType = FHDetailDiggTypeVote;
+                    break;
             default:
                 self.diggType = FHDetailDiggTypeTHREAD;
                 break;
