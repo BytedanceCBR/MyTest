@@ -115,6 +115,10 @@
             cell.delegate = self;
             cell.isFromDetail = YES;
             cell.baseViewModel = self;
+            if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
+                FHFeedUGCCellModel *cellModel = data;
+                cellModel.tracerDic = [self.detailController.tracerDict copy];
+            }
             [cell refreshWithData:data];
             return cell;
         }

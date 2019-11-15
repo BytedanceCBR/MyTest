@@ -17,6 +17,7 @@
 #import "TTRoute.h"
 #import <TTBusinessManager+StringUtils.h>
 #import <UIViewAdditions.h>
+#import "TTAccountManager.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -141,7 +142,7 @@
     [self.contentView addSubview:_bottomView];
     
     self.bottomLine = [[UIView alloc] initWithFrame:CGRectMake(20, 0, [UIScreen mainScreen].bounds.size.width - 40, 0.5)];
-    self.bottomLine.backgroundColor = [UIColor colorWithHexStr:@"#e8e8e8"];
+    self.bottomLine.backgroundColor = [UIColor themeGray6];
     self.bottomLine.hidden = YES;
     [self.contentView addSubview:self.bottomLine];
     
@@ -524,6 +525,11 @@
 
 // 确认投票按钮点击
 - (void)voteButtonClick:(UIButton *)btn {
+    // 先登录
+    if (![TTAccountManager isLogin]) {
+        [self gotoLogin];
+        return;
+    }
     [self.voteButton startLoading];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.voteButton stopLoading];
@@ -538,6 +544,11 @@
 
 // 编辑按钮点击
 - (void)editButtonClick:(UIButton *)btn {
+    // 先登录
+    if (![TTAccountManager isLogin]) {
+        [self gotoLogin];
+        return;
+    }
     self.voteInfo.selected = NO;
     self.voteInfo.voteState = FHUGCVoteStateNone;
     [self refreshWithData:self.voteInfo];
@@ -689,6 +700,11 @@
         || self.voteInfo.selected) {
         return;
     }
+    // 先登录
+    if (![TTAccountManager isLogin]) {
+        [self gotoLogin];
+        return;
+    }
     if ([self.voteInfo.voteType isEqualToString:@"1"]) {
         // 单选
         [self.voteInfo.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -702,6 +718,22 @@
     }
     // 刷新数据
     [self refreshWithData:self.voteInfo];
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *enter_from = self.detailCell.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+    [params setObject:enter_from forKey:@"enter_from"];
+    [params setObject:@"vote_click" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+        }
+    }];
 }
 
 @end
