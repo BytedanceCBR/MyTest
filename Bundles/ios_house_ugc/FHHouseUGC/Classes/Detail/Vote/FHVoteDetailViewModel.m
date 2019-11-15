@@ -165,18 +165,32 @@
 }
 
 // 处理数据
-- (void)processWithData:(FHFeedUGCContentModel *)model socialGroup:(FHUGCScialGroupDataModel *)socialGroupModel {
-    if (model && [model isKindOfClass:[FHFeedUGCContentModel class]]) {
+- (void)processWithData:(FHFeedContentRawDataModel *)model socialGroup:(FHUGCScialGroupDataModel *)socialGroupModel {
+    if (model && [model isKindOfClass:[FHFeedContentRawDataModel class]]) {
         [self.items removeAllObjects];
         // 网络请求返回
-        model.isFromDetail = YES;
+        /*model.isFromDetail = YES;
         if (self.shareInfo == nil && model.shareInfo) {
             self.shareInfo = model.shareInfo;
+        }*/
+        FHFeedContentModel *ugcContent = [[FHFeedContentModel alloc] init];
+        ugcContent.cellType = [NSString stringWithFormat:@"%d",FHUGCFeedListCellTypeUGCVoteInfo];
+        ugcContent.title = model.title;
+        ugcContent.isStick = model.isStick;
+        ugcContent.stickStyle = model.stickStyle;
+        ugcContent.diggCount = model.diggCount;
+        ugcContent.commentCount = model.commentCount;
+        ugcContent.userDigg = model.userDigg;
+        ugcContent.groupId = model.groupId;
+        ugcContent.logPb = model.logPb;
+        ugcContent.community = model.community;
+        ugcContent.rawData = model;
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
+        if (self.detailData) {
+            cellModel.feedVC = self.detailData.feedVC;
+            cellModel.isStick = self.detailData.isStick;
+            cellModel.stickStyle = self.detailData.stickStyle;
         }
-        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
-        cellModel.feedVC = self.detailData.feedVC;
-        cellModel.isStick = self.detailData.isStick;
-        cellModel.stickStyle = self.detailData.stickStyle;
         if (cellModel.community.socialGroupId.length <= 0) {
             cellModel.community = self.detailData.community;
         }
@@ -259,7 +273,7 @@
             uint64_t total = [NSObject machTimeToSecs:endTime - startTime] * 1000;
             if (!error) {
                 NSDictionary *dataDict = [jsonObj isKindOfClass:[NSDictionary class]]? jsonObj: nil;
-                if ([dataDict tt_longValueForKey:@"err_no"] == 0) {
+                if ([dataDict tt_longValueForKey:@"status"] == 0) {
                     NSString *dataStr = [dataDict tt_stringValueForKey:@"data"];
                     if (isEmptyString(dataStr)) {
                         //不该出现这种情况
@@ -267,24 +281,31 @@
                         NSError *jsonParseError;
                         NSData *jsonData = [dataStr dataUsingEncoding:NSUTF8StringEncoding];
                         if (jsonData) {
-                            Class cls = [FHFeedUGCContentModel class];
-                            FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
-                            if (model.ugcStatus == 0) {
-                                // 说明被删除
+                            Class cls = [FHFeedContentRawDataModel class];
+                            FHFeedContentRawDataModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedContentRawDataModel class] error:&jsonParseError];
+                            if (model && model.voteInfo) {
+                                // 有投票数据
+                                // social_group data
+                                FHUGCScialGroupDataModel * groupData = nil;
+                                NSDictionary *detailDic = [dataStr tt_JSONValue];
+                                if (detailDic && [detailDic isKindOfClass:[NSDictionary class]] && detailDic[@"community"]) {
+                                    // 继续解析小区头部
+                                    NSDictionary *social_group = [detailDic tt_dictionaryValueForKey:@"social_group"];
+                                    NSError *groupError = nil;
+                                    groupData = [[FHUGCScialGroupDataModel alloc] initWithDictionary:social_group error:&groupError];
+                                }
+                                [self processWithData:model socialGroup:groupData];
+                            } else {
+                                // 暂定被删除
                                 error = [NSError errorWithDomain:NSURLErrorDomain code:-10001 userInfo:nil];
                                 [self.detailController remove_comment_vc];
                                 self.tableView.hidden = YES;
                                 // 显示空页面
                                 [self.detailController.emptyView showEmptyWithTip:@"该内容已被删除" errorImageName:kFHErrorMaskNoListDataImageName showRetry:NO];
-                            } else {
-                                if (model && jsonParseError == nil) {
-                                    // 继续解析小区头部
-                                    NSDictionary *social_group = [dataDict tt_dictionaryValueForKey:@"social_group"];
-                                    NSError *groupError = nil;
-                                    FHUGCScialGroupDataModel * groupData = [[FHUGCScialGroupDataModel alloc] initWithDictionary:social_group error:&groupError];
-                                    [self processWithData:model socialGroup:groupData];
-                                }
                             }
+                        } else {
+                             //不该出现这种情况
+                            error = [NSError errorWithDomain:NSURLErrorDomain code:-2 userInfo:nil];
                         }
                     }
                 }

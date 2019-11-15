@@ -471,6 +471,11 @@
                            @"originUgcVideo": @"origin_ugc_video",
                            @"originType": @"origin_type",
                            @"voteInfo": @"vote_info",
+                           @"logPb":@"log_pb",
+                           @"commentCount":@"comment_count",
+                           @"diggCount":@"digg_count",
+                           @"userDigg":@"user_digg",
+                           @"distanceInfo":@"distance_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
