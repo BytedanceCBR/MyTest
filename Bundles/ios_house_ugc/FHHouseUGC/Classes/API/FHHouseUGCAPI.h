@@ -9,6 +9,7 @@
 #import <FHHouseBase/FHHouseType.h>
 #import <FHHouseBase/FHMainApi.h>
 #import <FHHouseBase/FHCommonApi.h>
+#import "TTHTTPRequestSerializerBase.h"
 
 @class TTHttpTask;
 @class FHUGCNoticeModel;
@@ -100,3 +101,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+// POST JSON 提交
+@interface FHVoteHTTPRequestSerializer : TTHTTPRequestSerializerBase<TTHTTPRequestSerializerProtocol>
+
+@end

@@ -18,6 +18,8 @@
 #import <TTBusinessManager+StringUtils.h>
 #import <UIViewAdditions.h>
 #import "TTAccountManager.h"
+#import "FHHouseUGCAPI.h"
+#import "ToastManager.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -531,16 +533,37 @@
         [self gotoLogin];
         return;
     }
+    
+    NSMutableArray *options = [NSMutableArray new];
+    
+    for (FHUGCVoteInfoVoteInfoItemsModel *item in self.voteInfo.items) {
+        if (item.selected) {
+            if (item.index.length > 0) {
+                [options addObject:[NSNumber numberWithInteger:[item.index integerValue]]];
+            }
+        }
+    }
+    
+    if (self.voteInfo.voteId.length <= 0 || options.count <= 0) {
+        [[ToastManager manager] showToast:@"投票失败"];
+        return;
+    }
+    NSNumber *optionNum = [NSNumber numberWithInteger:self.voteInfo.items.count];
     [self.voteButton startLoading];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.voteButton stopLoading];
-        self.voteInfo.selected = YES;
-        self.voteInfo.voteState = FHUGCVoteStateComplete;
-        [self refreshWithData:self.voteInfo];
-        NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-        [userInfo setObject:self.voteInfo forKey:@"vote_info"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
-    });
+    __weak typeof(self) weakSelf = self;
+    [FHHouseUGCAPI requestVoteSubmit:self.voteInfo.voteId optionIDs:options optionNum:optionNum completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        [weakSelf.voteButton stopLoading];
+    }];
+    // 投票失败 取消投票失败
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [self.voteButton stopLoading];
+//        self.voteInfo.selected = YES;
+//        self.voteInfo.voteState = FHUGCVoteStateComplete;
+//        [self refreshWithData:self.voteInfo];
+//        NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+//        [userInfo setObject:self.voteInfo forKey:@"vote_info"];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
+//    });
 }
 
 // 编辑按钮点击

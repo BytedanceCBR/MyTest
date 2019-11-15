@@ -629,7 +629,7 @@
 }
 
 // 提交投票
-+ (TTHttpTask *)requestVoteSubmit:(NSString *)voteId optionIDs:(NSArray *)optionIds optionNum:(NSString *)optionNum completion:(void(^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
++ (TTHttpTask *)requestVoteSubmit:(NSString *)voteId optionIDs:(NSArray *)optionIds optionNum:(NSNumber *)optionNum completion:(void(^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/vote/submit";
     NSString *url = QURL(queryPath);
     
@@ -638,21 +638,21 @@
         paramDic[@"vote_id"] = voteId;
     }
     if(optionIds.count > 0) {
-        __block NSString *opIdstr = @"";
-        [optionIds enumerateObjectsUsingBlock:^(NSString *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (idx == 0) {
-                opIdstr = [NSString stringWithFormat:@"%@,",obj];
-            } else {
-                opIdstr = [NSString stringWithFormat:@"%@,%@",opIdstr,obj];
-            }
-        }];
-        paramDic[@"option_ids"] = opIdstr;
+//        __block NSString *opIdstr = @"";
+//        [optionIds enumerateObjectsUsingBlock:^(NSString *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//            if (idx == 0) {
+//                opIdstr = [NSString stringWithFormat:@"%@,",obj];
+//            } else {
+//                opIdstr = [NSString stringWithFormat:@"%@,%@",opIdstr,obj];
+//            }
+//        }];
+        paramDic[@"option_ids"] = optionIds;
     }
-    if(optionNum.length > 0) {
+    if(optionNum > 0) {
         paramDic[@"option_num"] = optionNum;
     }
     
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
         
         BOOL success = NO;
         id model = nil;
@@ -676,7 +676,6 @@
         }
     }];
 }
-
 // 取消投票
 + (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSString *)optionNum completion:(void(^)(BOOL success , NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/vote/cancel";
@@ -712,4 +711,36 @@
     }];
 }
 
+@end
+
+
+
+@implementation FHVoteHTTPRequestSerializer
+
++ (NSObject<TTHTTPRequestSerializerProtocol> *)serializer
+{
+    return [FHVoteHTTPRequestSerializer new];
+    
+}
+
+- (TTHttpRequest *)URLRequestWithURL:(NSString *)URL
+                              params:(NSDictionary *)parameters
+                              method:(NSString *)method
+               constructingBodyBlock:(TTConstructingBodyBlock)bodyBlock
+                        commonParams:(NSDictionary *)commonParam
+{
+    TTHttpRequest * request = [super URLRequestWithURL:URL params:parameters method:method constructingBodyBlock:bodyBlock commonParams:commonParam];
+    
+    [request setValue:@"application/json; encoding=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    if ([@"POST" isEqualToString: method] && [parameters isKindOfClass:[NSDictionary class]]) {
+        NSData * postDate = [NSJSONSerialization dataWithJSONObject:parameters options:NSJSONWritingPrettyPrinted error:nil];
+        [request setHTTPBody:postDate];
+    }
+    
+    
+    return request;
+    
+}
 @end
