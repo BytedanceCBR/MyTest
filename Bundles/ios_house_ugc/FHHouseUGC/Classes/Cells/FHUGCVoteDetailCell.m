@@ -20,6 +20,7 @@
 #import "TTAccountManager.h"
 #import "FHHouseUGCAPI.h"
 #import "ToastManager.h"
+#import "FHUGCVoteResponseModel.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -550,20 +551,32 @@
     }
     NSNumber *optionNum = [NSNumber numberWithInteger:self.voteInfo.items.count];
     [self.voteButton startLoading];
+    self.voteInfo.voteState = FHUGCVoteStateVoting;
     __weak typeof(self) weakSelf = self;
     [FHHouseUGCAPI requestVoteSubmit:self.voteInfo.voteId optionIDs:options optionNum:optionNum completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         [weakSelf.voteButton stopLoading];
+        if (error) {
+            [[ToastManager manager] showToast:error.domain];
+            weakSelf.voteInfo.voteState = FHUGCVoteStateNone;
+        } else {
+            FHUGCVoteResponseModel *responseModel = (FHUGCVoteResponseModel *)model;
+            if (responseModel.status == 0) {
+                // 成功
+                // [[ToastManager manager] showToast:@"投票成功"];
+                weakSelf.voteInfo.selected = YES;
+                // add by zyk  根据返回数据 更新 选项
+                weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
+                [weakSelf refreshWithData:weakSelf.voteInfo];
+                NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+                [userInfo setObject:weakSelf.voteInfo forKey:@"vote_info"];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
+            } else {
+                // 失败
+                [[ToastManager manager] showToast:@"投票失败"];
+                weakSelf.voteInfo.voteState = FHUGCVoteStateNone;
+            }
+        }
     }];
-    // 投票失败 取消投票失败
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self.voteButton stopLoading];
-//        self.voteInfo.selected = YES;
-//        self.voteInfo.voteState = FHUGCVoteStateComplete;
-//        [self refreshWithData:self.voteInfo];
-//        NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-//        [userInfo setObject:self.voteInfo forKey:@"vote_info"];
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
-//    });
 }
 
 // 编辑按钮点击
@@ -579,12 +592,17 @@
     }
     NSNumber *optionNum = [NSNumber numberWithInteger:self.voteInfo.items.count];
     [self.editButton startLoading];
+    self.voteInfo.voteState = FHUGCVoteStateVoting;
     __weak typeof(self) weakSelf = self;
     [FHHouseUGCAPI requestVoteCancel:self.voteInfo.voteId optionNum:optionNum completion:^(BOOL success, NSError * _Nonnull error) {
         [weakSelf.editButton stopLoading];
         if (success) {
-            [[ToastManager manager] showToast:@"取消投票成功"];
+            // [[ToastManager manager] showToast:@"取消投票成功"];
+            weakSelf.voteInfo.selected = NO;
+            weakSelf.voteInfo.voteState = FHUGCVoteStateNone;
+            [weakSelf refreshWithData:weakSelf.voteInfo];
         } else {
+            weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
             if (error) {
                 [[ToastManager manager] showToast:error.domain];
             } else {
@@ -592,14 +610,6 @@
             }
         }
     }];
-    
-    
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self.editButton stopLoading];
-//        self.voteInfo.selected = NO;
-//        self.voteInfo.voteState = FHUGCVoteStateNone;
-//        [self refreshWithData:self.voteInfo];
-//    });
 }
 
 - (void)refreshWithData:(id)data {

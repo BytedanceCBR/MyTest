@@ -16,6 +16,7 @@
 #import "FHTopicFeedListModel.h"
 #import "FHFeedOperationResultModel.h"
 #import "FHUGCNoticeModel.h"
+#import "FHUGCVoteResponseModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -656,7 +657,7 @@
                     NSString *msg = json[@"message"];
                     error = [NSError errorWithDomain:msg?:@"投票失败" code:API_ERROR_CODE userInfo:nil];
                 } else {
-                    model = [[FHTopicFeedListModel alloc] initWithDictionary:json error:&error];
+                    model = [[FHUGCVoteResponseModel alloc] initWithDictionary:json error:&error];
                 }
             }
             @catch(NSException *e){
