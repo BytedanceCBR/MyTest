@@ -63,7 +63,7 @@
             self.digg_count = [self.detailData.diggCount longLongValue];
         }
         // 埋点
-        self.tracerDict[@"page_type"] = @"feed_detail";
+        self.tracerDict[@"page_type"] = @"vote_detail";
         self.ttTrackStayEnable = YES;
         // 取链接中的埋点数据
         NSString *enter_from = params[@"enter_from"];
@@ -107,7 +107,7 @@
     self.weakViewModel = self.viewModel;
     self.weakViewModel.threadID = self.voteId;
     self.weakViewModel.forumID = self.fid;
-    self.weakViewModel.category = @"thread_detail";
+    self.weakViewModel.category = @"vote_detail";
     self.weakViewModel.lastPageSocialGroupId = self.lastPageSocialGroupId;
     // 导航栏
     [self setupDetailNaviBar];
