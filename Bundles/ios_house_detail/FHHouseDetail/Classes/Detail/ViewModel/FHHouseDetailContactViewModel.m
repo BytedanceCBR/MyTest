@@ -607,9 +607,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (self.contactPhone.unregistered && self.contactPhone.imLabel.length > 0) {
         extraDic[@"position"] = @"online";
         extraDic[@"realtor_position"] = @"online";
-        if (self.houseType == FHHouseTypeNeighborhood) {
-            extraDic[kFHCluePage] = @(FHClueIMPageTypeCNeighborhood);
-        }
+    }
+    if (self.houseType == FHHouseTypeNeighborhood) {
+        extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+        extraDic[kFHCluePage] = @(FHClueIMPageTypeCNeighborhood);
     }
     [self onlineActionWithExtraDict:extraDic];
 }

@@ -315,6 +315,7 @@
             imExtra[@"element_from"] = @"neighborhood_expert_card";
             imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
             imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNeighborhoodAladdin];
+            imExtra[@"im_open_url"] = contact.imOpenUrl;
             [self.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
         }
     }
