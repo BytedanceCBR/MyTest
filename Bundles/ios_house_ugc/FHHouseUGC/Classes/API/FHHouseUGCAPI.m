@@ -635,17 +635,9 @@
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if(voteId.length > 0) {
-        paramDic[@"vote_id"] = voteId;
+        paramDic[@"vote_id"] = [NSNumber numberWithInteger:[voteId integerValue]];
     }
     if(optionIds.count > 0) {
-//        __block NSString *opIdstr = @"";
-//        [optionIds enumerateObjectsUsingBlock:^(NSString *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//            if (idx == 0) {
-//                opIdstr = [NSString stringWithFormat:@"%@,",obj];
-//            } else {
-//                opIdstr = [NSString stringWithFormat:@"%@,%@",opIdstr,obj];
-//            }
-//        }];
         paramDic[@"option_ids"] = optionIds;
     }
     if(optionNum > 0) {
@@ -662,7 +654,7 @@
                 success = ([json[@"status"] integerValue] == 0);
                 if (!success) {
                     NSString *msg = json[@"message"];
-                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                    error = [NSError errorWithDomain:msg?:@"投票失败" code:API_ERROR_CODE userInfo:nil];
                 } else {
                     model = [[FHTopicFeedListModel alloc] initWithDictionary:json error:&error];
                 }
@@ -677,19 +669,19 @@
     }];
 }
 // 取消投票
-+ (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSString *)optionNum completion:(void(^)(BOOL success , NSError *error))completion {
++ (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSNumber *)optionNum completion:(void(^)(BOOL success , NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/vote/cancel";
     NSString *url = QURL(queryPath);
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if(voteId.length > 0) {
-        paramDic[@"vote_id"] = voteId;
+        paramDic[@"vote_id"] = [NSNumber numberWithInteger:[voteId integerValue]];
     }
-    if(optionNum.length > 0) {
+    if(optionNum > 0) {
         paramDic[@"option_num"] = optionNum;
     }
     
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
         
         BOOL success = NO;
         if (!error) {
@@ -698,7 +690,7 @@
                 success = ([json[@"status"] integerValue] == 0);
                 if (!success) {
                     NSString *msg = json[@"message"];
-                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                    error = [NSError errorWithDomain:msg?:@"取消投票失败" code:API_ERROR_CODE userInfo:nil];
                 }
             }
             @catch(NSException *e){

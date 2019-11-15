@@ -93,10 +93,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 投票
 // 提交投票
-+ (TTHttpTask *)requestVoteSubmit:(NSString *)voteId optionIDs:(NSArray *)optionIds optionNum:(NSString *)optionNum completion:(void(^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
++ (TTHttpTask *)requestVoteSubmit:(NSString *)voteId optionIDs:(NSArray *)optionIds optionNum:(NSNumber *)optionNum completion:(void(^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 // 取消投票
-+ (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSString *)optionNum completion:(void(^)(BOOL success , NSError *error))completion;
++ (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSNumber *)optionNum completion:(void(^)(BOOL success , NSError *error))completion;
 
 @end
 

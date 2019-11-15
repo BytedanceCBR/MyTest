@@ -573,13 +573,33 @@
         [self gotoLogin];
         return;
     }
+    if (self.voteInfo.voteId.length <= 0) {
+        [[ToastManager manager] showToast:@"取消投票失败"];
+        return;
+    }
+    NSNumber *optionNum = [NSNumber numberWithInteger:self.voteInfo.items.count];
     [self.editButton startLoading];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.editButton stopLoading];
-        self.voteInfo.selected = NO;
-        self.voteInfo.voteState = FHUGCVoteStateNone;
-        [self refreshWithData:self.voteInfo];
-    });
+    __weak typeof(self) weakSelf = self;
+    [FHHouseUGCAPI requestVoteCancel:self.voteInfo.voteId optionNum:optionNum completion:^(BOOL success, NSError * _Nonnull error) {
+        [weakSelf.editButton stopLoading];
+        if (success) {
+            [[ToastManager manager] showToast:@"取消投票成功"];
+        } else {
+            if (error) {
+                [[ToastManager manager] showToast:error.domain];
+            } else {
+                [[ToastManager manager] showToast:@"取消投票失败"];
+            }
+        }
+    }];
+    
+    
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [self.editButton stopLoading];
+//        self.voteInfo.selected = NO;
+//        self.voteInfo.voteState = FHUGCVoteStateNone;
+//        [self refreshWithData:self.voteInfo];
+//    });
 }
 
 - (void)refreshWithData:(id)data {
