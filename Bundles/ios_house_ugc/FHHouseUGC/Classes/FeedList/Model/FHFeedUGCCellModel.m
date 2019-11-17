@@ -499,7 +499,6 @@
         if (cellModel.voteInfo.selected) {
             cellModel.voteInfo.voteState = FHUGCVoteStateComplete;
         }
-        // add by zyk  判断过期状态
         NSInteger displayCount = [cellModel.voteInfo.displayCount integerValue];
         if (displayCount <= 0 || displayCount >= cellModel.voteInfo.items.count) {
             cellModel.voteInfo.needFold = NO;
