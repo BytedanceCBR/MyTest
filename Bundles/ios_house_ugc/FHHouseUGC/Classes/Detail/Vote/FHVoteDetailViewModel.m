@@ -260,7 +260,7 @@
 {
     if (self.threadID) {
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        [param setValue:@(self.threadID) forKey:@"vote_id"];
+        [param setValue:@(self.threadID) forKey:@"group_id"];
         [param setValue:self.category forKey:@"category"];
         if (self.lastPageSocialGroupId.length > 0) {
             [param setValue:self.lastPageSocialGroupId forKey:@"social_group_id"];
