@@ -61,6 +61,7 @@
             self.comment_count = [self.detailData.commentCount longLongValue];
             self.user_digg = [self.detailData.userDigg integerValue];
             self.digg_count = [self.detailData.diggCount longLongValue];
+            self.detailData.groupId = [NSString stringWithFormat:@"%ld",self.voteId];
         }
         // 埋点
         self.tracerDict[@"page_type"] = @"vote_detail";
@@ -245,7 +246,8 @@
     
     //评论完成后发送通知修改评论数
     NSMutableDictionary *userInfo = @{}.mutableCopy;
-    userInfo[@"group_id"] = self.detailData.groupId;
+    NSString *group_id = [NSString stringWithFormat:@"%ld",self.voteId];
+    userInfo[@"group_id"] = group_id;
     userInfo[@"comment_conut"] = @(self.comment_count);
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kPostMessageFinishedNotification"
                                                         object:nil

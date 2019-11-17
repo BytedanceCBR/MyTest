@@ -64,6 +64,7 @@
             self.comment_count = [self.detailData.commentCount longLongValue];
             self.user_digg = [self.detailData.userDigg integerValue];
             self.digg_count = [self.detailData.diggCount longLongValue];
+            self.detailData.groupId = [NSString stringWithFormat:@"%ld",tid];
         }
         // 埋点
         self.tracerDict[@"page_type"] = @"feed_detail";
@@ -248,9 +249,10 @@
     
     //评论完成后发送通知修改评论数
     NSMutableDictionary *userInfo = @{}.mutableCopy;
-               userInfo[@"group_id"] = self.detailData.groupId;
-               userInfo[@"comment_conut"] = @(self.comment_count);
-               [[NSNotificationCenter defaultCenter] postNotificationName:@"kPostMessageFinishedNotification"
+    NSString *group_id = [NSString stringWithFormat:@"%ld",self.tid];
+    userInfo[@"group_id"] = group_id;
+    userInfo[@"comment_conut"] = @(self.comment_count);
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kPostMessageFinishedNotification"
                                                                    object:nil
                                                                  userInfo:userInfo];
 }
