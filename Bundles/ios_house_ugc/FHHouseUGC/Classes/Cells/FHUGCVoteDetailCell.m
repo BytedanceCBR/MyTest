@@ -301,7 +301,10 @@
         voteInfo.voteState = FHUGCVoteStateExpired;
         voteInfo.deadLineContent = @"";
         if (!voteInfo.hasReloadForVoteExpired) {
-            // add by zyk 发送通知 当前cell 刷新过了就不用再通知了
+            // 过期也要发送通知
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+            [userInfo setObject:voteInfo forKey:@"vote_info"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
         }
     } else {
         NSInteger val = deadline - intver;
@@ -757,7 +760,7 @@
             self.voteInfo.hasReloadForVoteExpired = YES;
             [self.detailCell setupUIFrames];
             if (self.detailCell.isFromDetail) {
-               // 详情页 过期 布局有问题 add by zyk
+               // 详情页 过期 UI 暂不处理
             } else {
                 NSIndexPath *ind = [self.tableView indexPathForCell:self.detailCell];
                 if (ind) {

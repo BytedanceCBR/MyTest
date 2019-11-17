@@ -99,11 +99,45 @@
         NSString *vote_data = userInfo[@"voteData"];
         if ([vote_data isKindOfClass:[NSString class]] && vote_data.length > 0) {
             // 模型转换
-//            FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
-//            if (model && jsonParseError == nil) {
-//
-//            }
-            [self insertPostData:nil];
+            NSDictionary *dic = [vote_data JSONValue];
+            FHFeedUGCCellModel *cellModel = nil;
+            if (dic && [dic isKindOfClass:[NSDictionary class]]) {
+                NSDictionary * rawDataDic = dic[@"raw_data"];
+                // 先转成rawdata
+                NSError *jsonParseError;
+                if (rawDataDic && [rawDataDic isKindOfClass:[NSDictionary class]]) {
+                    FHFeedContentRawDataModel *model = [[FHFeedContentRawDataModel alloc] initWithDictionary:rawDataDic error:&jsonParseError];
+                    if (model && model.voteInfo) {
+                        // 有投票数据
+                        // social_group data
+                        /*
+                        FHUGCScialGroupDataModel * groupData = nil;
+                        if (rawDataDic[@"community"]) {
+                            // 继续解析小区头部
+                            NSDictionary *social_group = [rawDataDic tt_dictionaryValueForKey:@"community"];
+                            NSError *groupError = nil;
+                            groupData = [[FHUGCScialGroupDataModel alloc] initWithDictionary:social_group error:&groupError];
+                        }
+                         */
+                        FHFeedContentModel *ugcContent = [[FHFeedContentModel alloc] init];
+                        ugcContent.cellType = [NSString stringWithFormat:@"%d",FHUGCFeedListCellTypeUGCVoteInfo];
+                        ugcContent.title = model.title;
+                        ugcContent.isStick = model.isStick;
+                        ugcContent.stickStyle = model.stickStyle;
+                        ugcContent.diggCount = model.diggCount;
+                        ugcContent.commentCount = model.commentCount;
+                        ugcContent.userDigg = model.userDigg;
+                        ugcContent.groupId = model.groupId;
+                        ugcContent.logPb = model.logPb;
+                        ugcContent.community = model.community;
+                        ugcContent.rawData = model;
+                        // FHFeedUGCCellModel
+                        cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
+                        cellModel.isFromDetail = NO;
+                    }
+                }
+            }
+            [self insertPostData:cellModel];
         }
     }
 }
@@ -606,7 +640,7 @@
         if (showComment) {
             jump_comment = YES;
         }
-        NSDictionary *dict = @{@"is_jump_comment":@(jump_comment)};
+        NSDictionary *dict = @{@"begin_show_comment":@(jump_comment)};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
