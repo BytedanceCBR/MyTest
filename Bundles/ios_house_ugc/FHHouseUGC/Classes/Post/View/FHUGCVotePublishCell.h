@@ -11,9 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 #define PADDING 20
-#define DATEPICKER_HEIGHT 200
-#define CELL_HEIGHT 60
-#define VOTE_TYPE_PICKTER_VIEW_HEIGHT 200
+#define CELL_HEIGHT 44
 
 @class FHUGCVotePublishTitleCell;
 @class FHUGCVotePublishDescriptionCell;
@@ -28,10 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)descriptionCell:(FHUGCVotePublishDescriptionCell *)descriptionCell didInputText: (NSString *)text;
 - (void)optionCell:(FHUGCVotePublishOptionCell *)optionCell didInputText: (NSString*)text;
 - (void)deleteOptionCell: (FHUGCVotePublishOptionCell *)optionCell;
-- (void)voteTypeCell:(FHUGCVotePublishVoteTypeCell *)voteTypeCell didSelectedType:(VoteType)type;
-- (void)voteTypeCell:(FHUGCVotePublishVoteTypeCell *)voteTypeCell toggleTypeStatus:(BOOL)isHidden;
-- (void)datePickerCell:(FHUGCVotePublishDatePickCell *)datePickerCell didSelectedDate:(NSDate *)date;
-- (void)datePickerCell:(FHUGCVotePublishDatePickCell *)datePickerCell toggleWithStatus:(BOOL)isHidden;
 @end
 
 @interface FHUGCVotePublishBaseCell: UITableViewCell
@@ -65,15 +59,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *typeLabel;
 @property (nonatomic, strong, readonly) NSArray<NSString *> *types;
+@property (nonatomic, strong) UIImageView *rightArrow;
 
-- (void)toggleTypePicker;
+- (void)updateWithVoteType:(VoteType) type;
 @end
 
 @interface FHUGCVotePublishDatePickCell: FHUGCVotePublishBaseCell
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *dateLabel;
-@property (nonatomic, strong) UIDatePicker *datePicker;
 @property (nonatomic, strong, readonly)NSDateFormatter *dateFormatter;
+@property (nonatomic, strong) UIImageView *rightArrow;
 
 - (void)toggleDatePicker;
 @end

@@ -15,7 +15,8 @@
     if(self = [super init]) {
         self.options = [NSMutableArray array];
         [self.options addObject:@""];
-        self.cityInfo = [FHUGCVotePublishCityInfo new];
+        [self.options addObject:@""];
+        self.type = VoteType_SingleSelect;
     }
     return self;
 }

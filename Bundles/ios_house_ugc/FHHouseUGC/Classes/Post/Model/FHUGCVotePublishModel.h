@@ -9,9 +9,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, VoteType) {
-    VoteType_SingleSelect,
-    VoteType_MultipleSelect,
+#define OPTION_LENGTH_LIMIT      15
+#define TITLE_LENGTH_LIMIT       40
+#define DESCRIPTION_LENGTH_LIMIT 100
+
+
+typedef NS_ENUM(NSInteger, VoteType) {
+    VoteType_Unknown = 0,
+    VoteType_SingleSelect = 1,
+    VoteType_MultipleSelect = 2,
+};
+
+typedef NS_ENUM(NSInteger, VisibleType) {
+    VisibleType_Unknown = 0,
+    VisibleType_Group = 1,
+    VisibleType_All = 2,
 };
 
 @interface FHUGCVotePublishCityInfo: NSObject
@@ -20,7 +32,10 @@ typedef NS_ENUM(NSUInteger, VoteType) {
 @end
 
 @interface FHUGCVotePublishModel : NSObject
-@property (nonatomic, strong) FHUGCVotePublishCityInfo *cityInfo;
+@property (nonatomic, assign) BOOL isAllSelected;
+@property (nonatomic, assign) BOOL isPartialSelected;
+@property (nonatomic, assign) VisibleType visibleType;
+@property (nonatomic, strong) NSArray<FHUGCVotePublishCityInfo *> *cityInfos;
 @property (nonatomic, copy) NSString *voteTitle;
 @property (nonatomic, copy) NSString *voteDescription;
 @property (nonatomic, strong) NSMutableArray<NSString *> *options;
