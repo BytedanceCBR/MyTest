@@ -48,6 +48,9 @@
         self.fromUGC = YES;
         NSDictionary *params = paramObj.allParams;
         int64_t voteId = [[paramObj.allParams objectForKey:@"vote_id"] longLongValue];
+        if (voteId <= 0) {
+            voteId = [[paramObj.allParams objectForKey:@"group_id"] longLongValue];
+        }
         int64_t fid = [[paramObj.allParams objectForKey:@"fid"] longLongValue];
         self.lastPageSocialGroupId = [params objectForKey:@"social_group_id"];
         // 投票id

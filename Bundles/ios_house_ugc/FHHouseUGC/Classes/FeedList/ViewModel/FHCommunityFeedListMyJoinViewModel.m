@@ -694,7 +694,6 @@
         }
         NSDictionary *dict = @{@"is_jump_comment":@(jump_comment)};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        cellModel.openUrl = @"sslocal://ugc_vote_detail?vote_id=6759096909350043655";
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
