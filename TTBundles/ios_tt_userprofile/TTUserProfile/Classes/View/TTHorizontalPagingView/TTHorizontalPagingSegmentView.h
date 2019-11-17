@@ -33,7 +33,7 @@ typedef enum {
 
  @param titleEffectBlock 回调的block
  */
-- (void)setUpTitleEffect:(void(^)(NSString *__autoreleasing *titleScrollViewColorKey,NSString *__autoreleasing *norColorKey,NSString *__autoreleasing *selColorKey,UIFont *__autoreleasing *titleFont))titleEffectBlock;
+- (void)setUpTitleEffect:(void(^)(NSString *__autoreleasing *titleScrollViewColorKey,NSString *__autoreleasing *norColorKey,NSString *__autoreleasing *selColorKey,UIFont *__autoreleasing *titleFont,UIFont *__autoreleasing *selectedTitleFont))titleEffectBlock;
 
 /**
  一次性设置所有下标的属性

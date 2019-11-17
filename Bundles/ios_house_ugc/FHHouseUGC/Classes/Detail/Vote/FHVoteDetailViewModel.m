@@ -220,7 +220,6 @@
             }*/
         }
         cellModel.tracerDic = [self.detailController.tracerDict copy];
-        socialGroupModel.hasFollow = @"1";
         if (socialGroupModel && ![socialGroupModel.hasFollow boolValue]) {
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];

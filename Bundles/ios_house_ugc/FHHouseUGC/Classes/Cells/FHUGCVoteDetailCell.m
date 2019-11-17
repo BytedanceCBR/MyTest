@@ -21,6 +21,7 @@
 #import "FHHouseUGCAPI.h"
 #import "ToastManager.h"
 #import "FHUGCVoteResponseModel.h"
+#import "FHUserTracker.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -45,6 +46,7 @@
 @property (nonatomic, weak)     FHFeedUGCCellModel       *cellModel;
 @property (nonatomic, strong)   FHUGCVoteMainView       *voteView;
 @property (nonatomic, strong)   UIView       *bottomLine;
+@property (nonatomic, assign)   BOOL       element_has_show;
 
 @end
 
@@ -60,6 +62,7 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         self.showCommunity = NO;
+        self.element_has_show = NO;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         [self setupUIs];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(voteCompleteNoti:) name:kFHUGCPostVoteSuccessNotification object:nil];
@@ -291,6 +294,15 @@
     FHUGCVoteInfoVoteInfoModel *voteInfo = self.cellModel.voteInfo;
     if (self.isFromDetail) {
         voteInfo.needFold = NO;// 不需要折叠展开
+        // 埋点
+        if (!self.element_has_show) {
+            NSMutableDictionary *tracerDict = self.cellModel.tracerDic.mutableCopy;
+            if (tracerDict) {
+                tracerDict[@"element_type"] = @"vote";
+            }
+            [FHUserTracker writeEvent:@"element_show" params:tracerDict];
+            self.element_has_show = YES;
+        }
     }
     // 过期处理
     NSInteger intver = (NSInteger)[[NSDate date] timeIntervalSince1970];
@@ -301,7 +313,10 @@
         voteInfo.voteState = FHUGCVoteStateExpired;
         voteInfo.deadLineContent = @"";
         if (!voteInfo.hasReloadForVoteExpired) {
-            // add by zyk 发送通知 当前cell 刷新过了就不用再通知了
+            // 过期也要发送通知
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+            [userInfo setObject:voteInfo forKey:@"vote_info"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
         }
     } else {
         NSInteger val = deadline - intver;
@@ -534,6 +549,12 @@
         [self gotoLogin];
         return;
     }
+    // 埋点
+    NSMutableDictionary *tracerDict = self.detailCell.cellModel.tracerDic.mutableCopy;
+    if (tracerDict) {
+        tracerDict[@"click_position"] = @"click_vote";
+    }
+    [FHUserTracker writeEvent:@"click_options" params:tracerDict];
     
     NSMutableArray *options = [NSMutableArray new];
     
@@ -605,6 +626,12 @@
         [[ToastManager manager] showToast:@"取消投票失败"];
         return;
     }
+    // 埋点
+    NSMutableDictionary *tracerDict = self.detailCell.cellModel.tracerDic.mutableCopy;
+    if (tracerDict) {
+        tracerDict[@"click_position"] = @"change_vote";
+    }
+    [FHUserTracker writeEvent:@"click_options" params:tracerDict];
     NSNumber *optionNum = [NSNumber numberWithInteger:self.voteInfo.items.count];
     [self.editButton startLoading];
     self.voteInfo.voteState = FHUGCVoteStateVoting;
@@ -757,7 +784,7 @@
             self.voteInfo.hasReloadForVoteExpired = YES;
             [self.detailCell setupUIFrames];
             if (self.detailCell.isFromDetail) {
-               // 详情页 过期 布局有问题 add by zyk
+               // 详情页 过期 UI 暂不处理
             } else {
                 NSIndexPath *ind = [self.tableView indexPathForCell:self.detailCell];
                 if (ind) {

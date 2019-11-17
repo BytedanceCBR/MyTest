@@ -95,13 +95,16 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 @interface TTHorizontalPagingView ()<UICollectionViewDataSource,UICollectionViewDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic, assign) NSInteger section;
-@property (nonatomic, strong, readwrite) UIView *headerView;
-@property (nonatomic, strong, readwrite) TTHorizontalPagingSegmentView *segmentView;
 @property (nonatomic, assign) BOOL isSwitching;
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *,UIScrollView *> *contentViewDict;
 @property (nonatomic, assign) NSInteger lastPageIndex;
 @property (nonatomic, strong) UIPanGestureRecognizer *headerViewPanGestureRecognizer;
+@property (nonatomic, strong) UIPanGestureRecognizer *segmentViewPanGestureRecognizer;
 @property (nonatomic, assign) CGFloat lastHeaderViewTop;
+@property (nonatomic, assign) BOOL segmentCanPan;
+@property (nonatomic, strong) UIView *movingView;
+@property (nonatomic, assign) CGFloat headerShowHeight;
+@property (nonatomic, assign) BOOL isFirstLoad;
 // 用于模拟scrollView滚动
 
 @property (nonatomic, strong) UIDynamicAnimator *animator;
@@ -137,7 +140,8 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     _isSwitching = NO;
     _lastPageIndex = 0;
     _alwaysBounceHorizontal = NO;
-    
+    _segmentCanPan = YES;
+    _isFirstLoad = YES;
 }
 
 - (void)didMoveToSuperview
@@ -153,6 +157,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     self.section = section;
     CGFloat headerViewHeight = [self.delegate heightForHeaderInPagingView];
     _headerViewHeight = headerViewHeight;
+    _headerShowHeight = headerViewHeight;
     UIView *headerView = [self.delegate viewForHeaderInPagingView];
     self.headerView = headerView;
     
@@ -169,6 +174,10 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     if(section <= 0) return;
     [self.horizontalCollectionView reloadData];
     
+}
+
+- (void)reloadHeaderShowHeight {
+    self.headerShowHeight = self.headerViewHeight;
 }
 
 - (void)scrollEnable:(BOOL)enable
@@ -244,12 +253,29 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     return _headerViewPanGestureRecognizer;
 }
 
+- (UIPanGestureRecognizer *)segmentViewPanGestureRecognizer
+{
+    if(!_segmentViewPanGestureRecognizer) {
+        _segmentViewPanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panS:)];
+        _segmentViewPanGestureRecognizer.delegate = self;
+    }
+    return _segmentViewPanGestureRecognizer;
+}
+
 - (UIDynamicAnimator *)animator
 {
     if (!_animator) {
         _animator = [[UIDynamicAnimator alloc] init];
     }
     return _animator;
+}
+
+- (UIView *)movingView {
+    if(!_movingView){
+        _movingView = [[UIView alloc] init];
+        _movingView.backgroundColor = [UIColor redColor];
+    }
+    return _movingView;
 }
 
 - (NSString *)collectionViewCellIdentifierWithIndex:(NSInteger)index
@@ -271,14 +297,12 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 }
 
 - (void)adjustContentViewOffsetWithScrollView:(UIScrollView *)scrollView {
-    CGFloat headerViewDisplayHeight = self.headerViewHeight + self.headerView.top;
-    if (headerViewDisplayHeight != self.segmentTopSpace) {// 还原位置
-        scrollView.contentOffset = CGPointMake(0, -headerViewDisplayHeight - self.segmentViewHeight);
+    if (self.headerShowHeight >= self.segmentTopSpace) {// 还原位置
+        scrollView.contentOffset = CGPointMake(0, - self.headerShowHeight - self.segmentViewHeight);
     } else if (scrollView.contentOffset.y < -self.segmentViewHeight) {
-        scrollView.contentOffset = CGPointMake(0, -headerViewDisplayHeight - self.segmentViewHeight);
+        scrollView.contentOffset = CGPointMake(0, - self.segmentTopSpace - self.segmentViewHeight);
     } else {
-        // self.segmentTopSpace
-        scrollView.contentOffset = CGPointMake(0, scrollView.contentOffset.y-headerViewDisplayHeight + self.segmentTopSpace);
+
     }
 }
 
@@ -312,6 +336,21 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 {
     self.lastPageIndex = toIndex;
     _currentContentView = [self scrollViewAtIndex:toIndex];
+    
+    self.movingView.frame = CGRectMake(0, - self.currentContentViewTopInset, self.width, self.currentContentViewTopInset);
+    
+    [_headerView removeFromSuperview];
+    _headerView.frame = CGRectMake(0, 0, self.width, self.headerViewHeight);
+    [self.movingView addSubview:_headerView];
+    
+    if(self.headerShowHeight > self.segmentTopSpace) {
+        [_segmentView removeFromSuperview];
+        _segmentView.frame = CGRectMake(0, self.headerView.bottom, self.width, self.segmentViewHeight);
+        [self.movingView addSubview:_segmentView];
+    }
+    
+    [_currentContentView addSubview:self.movingView];
+    
     if ([self.delegate respondsToSelector:@selector(pagingView:didSwitchIndex:to:)]) {
         [self.delegate pagingView:self didSwitchIndex:aIndex to:toIndex];
     }
@@ -328,18 +367,29 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 
 - (void)setHeaderView:(UIView *)headerView
 {
+    if(self.headerShowHeight <= self.segmentTopSpace){
+        return;
+    }
     [_headerView removeFromSuperview];
     _headerView = headerView;
-    [_headerView removeGestureRecognizer:self.headerViewPanGestureRecognizer];
-    [_headerView addGestureRecognizer:self.headerViewPanGestureRecognizer];
-    _headerView.frame = CGRectMake(0, 0, self.width, self.headerViewHeight);
+//    [_headerView removeGestureRecognizer:self.headerViewPanGestureRecognizer];
+//    [_headerView addGestureRecognizer:self.headerViewPanGestureRecognizer];
+    NSLog(@"space3___%f",self.headerShowHeight);
+    _headerView.frame = CGRectMake(0, self.headerShowHeight - self.headerViewHeight, self.width, self.headerViewHeight);
     [self addSubview:_headerView];
+    
 }
 
 - (void)setSegmentView:(TTHorizontalPagingSegmentView *)segmentView
 {
+    if(_segmentView.superview == self){
+        return;
+    }
+    
     [_segmentView removeFromSuperview];
     _segmentView = segmentView;
+//    [_segmentView removeGestureRecognizer:self.segmentViewPanGestureRecognizer];
+//    [_segmentView addGestureRecognizer:self.segmentViewPanGestureRecognizer];
     _segmentView.frame = CGRectMake(0, self.headerView.bottom, self.width, self.segmentViewHeight);
     [self addSubview:_segmentView];
 }
@@ -370,11 +420,18 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
         vc.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         vc.view.frame = cell.contentView.bounds;
         BOOL inset = [objc_getAssociatedObject(scrollView, TTHorizontalPagingViewSettingInset) boolValue];
+        
         if(!inset) {
-            CGFloat headerDisplayHeight = self.headerViewHeight + self.headerView.top;
-            scrollView.contentInset = UIEdgeInsetsMake(headerDisplayHeight + self.segmentViewHeight, 0, scrollView.contentInset.bottom, 0);
-            scrollView.contentOffset = CGPointMake(0, -headerDisplayHeight - self.segmentViewHeight);
+            CGFloat initHeader = self.headerShowHeight <= self.segmentTopSpace ? self.segmentTopSpace : self.headerShowHeight;
+            CGFloat distance = initHeader + self.segmentViewHeight;
+//            if(self.headerShowHeight <= self.segmentTopSpace) {
+//                distance = self.headerShowHeight + self.segmentViewHeight * 2;
+//            }
+            
+            scrollView.contentInset = UIEdgeInsetsMake(distance, 0, scrollView.contentInset.bottom, 0);
+            scrollView.contentOffset = CGPointMake(0, -distance);
         }
+        
         [cell.contentView addSubview:vc.view];
         objc_setAssociatedObject(cell.contentView, TTHorizontalPagingViewCellKey, scrollView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
@@ -448,17 +505,15 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
         self.currentContentView.contentSize = CGSizeMake(0, self.currentContentView.contentSize.height);
         CGFloat oldOffsetY = [change[NSKeyValueChangeOldKey] CGPointValue].y;
         CGFloat newOffsetY = [change[NSKeyValueChangeNewKey] CGPointValue].y;
-        CGFloat headerDisplayHeight = self.headerViewHeight + self.headerView.top;
-        [self scrollViewContentOffsetDidChangeWithOldValue:oldOffsetY newValue:newOffsetY headerDisplayHeight:headerDisplayHeight];
+        [self scrollViewContentOffsetDidChangeWithOldValue:oldOffsetY newValue:newOffsetY headerDisplayHeight:self.headerShowHeight];
     } else if (context == TTHorizontalPagingViewInsetContext) {
-        if(self.currentContentView.contentOffset.y > -self.segmentViewHeight) return;
-        [UIView animateWithDuration:0.2 animations:^{
-            self.headerView.top = -self.headerViewHeight - self.segmentViewHeight - self.currentContentView.contentOffset.y;
-            self.segmentView.top = self.headerView.bottom;
-        }];
+//        if(self.currentContentView.contentOffset.y > -self.segmentViewHeight) return;
+//        [UIView animateWithDuration:0.2 animations:^{
+//            self.headerView.top = -self.headerViewHeight - self.segmentViewHeight - self.currentContentView.contentOffset.y;
+//            self.segmentView.top = self.headerView.bottom;
+//        }];
     }
 }
-
 
 - (void)scrollViewPanDidChangeWithNewValue:(UIGestureRecognizerState)newState
 {
@@ -473,29 +528,48 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 
 - (void)scrollViewContentOffsetDidChangeWithOldValue:(CGFloat)oldOffsetY newValue:(CGFloat)newOffsetY headerDisplayHeight:(CGFloat)headerDisplayHeight
 {
+    NSLog(@"space2___%f",self.headerShowHeight);
     CGFloat deltaY = newOffsetY - oldOffsetY;
-    CGFloat headerViewHeight = self.headerViewHeight;
+    
+    if(deltaY == - self.currentContentViewTopInset){
+        return;
+    }
+    
     if(self.ignoreAdjust) return;
     if(deltaY >= 0) {    //向上滚动
-        if(headerDisplayHeight - deltaY <= self.segmentTopSpace) {
-            self.headerView.top = -headerViewHeight + self.segmentTopSpace;
-        } else {
-            self.headerView.top -= deltaY;
+//        CGFloat headerDisplayHeight = self.headerViewHeight + self.headerView.top;
+        if(self.headerShowHeight - deltaY <= self.segmentTopSpace) {
+            if(self.segmentView.superview != self){
+                [_segmentView removeFromSuperview];
+                _segmentView.frame = CGRectMake(0, self.segmentTopSpace, self.width, self.segmentViewHeight);
+                [self addSubview:_segmentView];
+            }
         }
-        if(headerDisplayHeight <= self.segmentTopSpace) {
-            self.headerView.top = -headerViewHeight + self.segmentTopSpace;
-        }
-        self.segmentView.top = self.headerView.bottom;
     } else {
-        if (headerDisplayHeight + self.segmentViewHeight < -newOffsetY) {
-            self.headerView.top = -self.headerViewHeight - self.segmentViewHeight - self.currentContentView.contentOffset.y;
-            self.segmentView.top = self.headerView.bottom;
+        if(self.headerShowHeight - deltaY > self.segmentTopSpace) {
+            if(self.segmentView.superview == self){
+                [_segmentView removeFromSuperview];
+                _segmentView.frame = CGRectMake(0, self.headerView.bottom, self.width, self.segmentViewHeight);
+                [self.movingView addSubview:_segmentView];
+            }
         }
     }
+    
     if(deltaY == 0) return;
+    self.headerShowHeight = [self headerDisplayHeight] - deltaY;
+    
+    NSLog(@"space___%f",self.headerShowHeight);
+    
     if([self.delegate respondsToSelector:@selector(pagingView:scrollTopOffset:)]) {
         [self.delegate pagingView:self scrollTopOffset:self.currentContentView.contentOffset.y];
     }
+}
+
+- (CGFloat)headerDisplayHeight {
+    CGFloat height = 0;
+    CGRect rect = [self.headerView convertRect:self.headerView.frame toView:self];
+    height = self.headerViewHeight + rect.origin.y;
+    return height;
 }
 
 #pragma mark - 手势相关
@@ -518,16 +592,22 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     CGPoint point = [pan translationInView:self.headerView];
     CGPoint contentOffset = self.currentContentView.contentOffset;
     CGFloat border = -self.headerViewHeight - self.segmentViewHeight;
+    
     CGFloat offsety = contentOffset.y - point.y * (1/contentOffset.y * border * 0.6);
+    
+    CGFloat maxOffset = self.currentContentView.contentSize.height - self.currentContentView.bounds.size.height;
+    
     self.currentContentView.contentOffset = CGPointMake(contentOffset.x, offsety);
     if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateFailed) {
+        if([self.delegate respondsToSelector:@selector(pagingView:scrollViewDidEndDraggingOffset:)]) {
+            [self.delegate pagingView:self scrollViewDidEndDraggingOffset:contentOffset.y];
+        }
         if(contentOffset.y <= border) {
             // 模拟弹回效果
             [UIView animateWithDuration:0.35 animations:^{
                 self.currentContentView.contentOffset = CGPointMake(contentOffset.x, border);
                 [self layoutIfNeeded];
             }];
-            
         } else {
             // 模拟减速滚动效果
             CGFloat velocity = [pan velocityInView:self.headerView].y;
@@ -536,6 +616,12 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     }
     // 清零防止偏移累计
     [pan setTranslation:CGPointZero inView:self.headerView];
+}
+
+- (void)panS:(UIPanGestureRecognizer*)pan {
+    if(self.segmentCanPan){
+        [self pan:pan];
+    }
 }
 
 - (void)deceleratingAnimator:(CGFloat)velocity
@@ -559,7 +645,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
         if(speed >= -0.2) {
             [weakSelf.animator removeBehavior:weakSelf.inertialBehavior];
             weakSelf.inertialBehavior = nil;
-        } else if (offset >= maxOffset){
+        } else if (fabsf(offset) >= fabsf(maxOffset) && maxOffset >= 0){
             [weakSelf.animator removeBehavior:weakSelf.inertialBehavior];
             weakSelf.inertialBehavior = nil;
             offset = maxOffset;
