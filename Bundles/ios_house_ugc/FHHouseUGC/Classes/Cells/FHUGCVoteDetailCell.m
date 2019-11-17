@@ -564,6 +564,7 @@
                 // 成功
                 // [[ToastManager manager] showToast:@"投票成功"];
                 weakSelf.voteInfo.selected = YES;
+                weakSelf.voteInfo.needAnimateShow = YES;
                 if (responseModel.data.optionIds.count > 0) {
                     for (FHUGCVoteInfoVoteInfoItemsModel *item in weakSelf.voteInfo.items) {
                         if (item.selected) {
@@ -614,6 +615,19 @@
             // [[ToastManager manager] showToast:@"取消投票成功"];
             weakSelf.voteInfo.selected = NO;
             weakSelf.voteInfo.voteState = FHUGCVoteStateNone;
+            // 票数计数 - 1
+            [weakSelf.voteInfo.items enumerateObjectsUsingBlock:^(FHUGCVoteInfoVoteInfoItemsModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (obj.selected) {
+                    NSInteger val = [obj.voteCount integerValue];
+                    if (val > 0) {
+                        val -= 1;
+                    } else {
+                        val = 0;
+                    }
+                    obj.voteCount = [NSString stringWithFormat:@"%ld",val];
+                }
+            }];
+            
             [weakSelf refreshWithData:weakSelf.voteInfo];
         } else {
             weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
@@ -656,20 +670,29 @@
                 totalCount += 1;
             }
             optionV.mainSelected = self.voteInfo.selected;
+        }
+    }];
+    // 计算百分比
+    [self.optionsViewArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHUGCOptionView *optionV = obj;
+        if (idx < self.voteInfo.items.count) {
+            FHUGCVoteInfoVoteInfoItemsModel *item = self.voteInfo.items[idx];
+            if (totalCount <= 0) {
+                item.percent = 0;
+            } else {
+                NSInteger voteCount = [item.voteCount integerValue];
+                if (item.selected) {
+                    voteCount += 1;
+                }
+                item.percent = (double)voteCount / totalCount;
+            }
             [optionV refreshWithData:item];
         }
     }];
-    for (FHUGCVoteInfoVoteInfoItemsModel *item in self.voteInfo.items) {
-        if (totalCount <= 0) {
-            item.percent = 0;
-        } else {
-            NSInteger voteCount = [item.voteCount integerValue];
-            if (item.selected) {
-                voteCount += 1;
-            }
-            item.percent = (double)voteCount / totalCount;
-        }
-    }
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        weakSelf.voteInfo.needAnimateShow = NO;
+    });
     if (self.voteInfo.voteState == FHUGCVoteStateExpired) {
         self.voteInfo.selected = YES;
     }
@@ -914,13 +937,17 @@
         CGFloat wid = [UIScreen mainScreen].bounds.size.width - 40;
         NSString *perStr = [NSString stringWithFormat:@"%.0f%%",per * 100];
         self.percentLabel.text = perStr;
-        
-        [UIView animateWithDuration:0.3 animations:^{
+        if (self.mainView.voteInfo.needAnimateShow) {
+            [UIView animateWithDuration:0.3 animations:^{
+                self.bgView.width = wid * per;
+                self.contentLabel.left = 10;
+                self.selectedIcon.left = self.contentLabel.right;
+            }];
+        } else {
             self.bgView.width = wid * per;
             self.contentLabel.left = 10;
             self.selectedIcon.left = self.contentLabel.right;
-        }];
-        
+        }
     } else {
         self.bgView.hidden = YES;
         self.contentLabel.hidden = NO;

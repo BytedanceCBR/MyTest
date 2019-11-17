@@ -38,6 +38,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) CGFloat descHeight;
 @property (nonatomic, assign) CGFloat voteHeight;// 投票height
 
+@property (nonatomic, assign)   BOOL       needAnimateShow;
 @property (nonatomic, assign)   BOOL       needFold;// 需要折叠展开，默认NO
 @property (nonatomic, assign)   BOOL       isFold;// 当前折叠展开 状态 默认 NO（展开）
 @property (nonatomic, assign)   FHUGCVoteState       voteState;// 投票状态
