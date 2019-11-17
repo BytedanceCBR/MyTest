@@ -474,7 +474,7 @@
                            @"logPb":@"log_pb",
                            @"commentCount":@"comment_count",
                            @"diggCount":@"digg_count",
-                           @"userDigg":@"user_digg",
+                           @"userDigg":@"is_digg",
                            @"distanceInfo":@"distance_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
