@@ -519,9 +519,9 @@
         NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
         cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
         
-        cellModel.diggCount = model.rawData.action.diggCount;
-        cellModel.commentCount = model.rawData.action.commentCount;
-        cellModel.userDigg = model.rawData.action.userDigg;
+        cellModel.diggCount = model.rawData.diggCount;
+        cellModel.commentCount = model.rawData.commentCount;
+        cellModel.userDigg = model.rawData.userDigg;
         
 //        cellModel.content = model.rawData.voteInfo.title;
 //        cellModel.contentRichSpan = model.rawData.voteInfo.richContent;
