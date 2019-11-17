@@ -34,6 +34,8 @@
 
 @interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
 
+@property(nonatomic, strong) FHErrorView *errorView;
+
 @end
 
 @implementation FHCommunityFeedListPostDetailViewModel
@@ -149,6 +151,13 @@
             [wself requestData:YES first:NO];
         }];
     }
+}
+
+- (FHErrorView *)errorView {
+    if(!_errorView){
+        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight)];
+    }
+    return _errorView;
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -287,16 +296,16 @@
 - (void)reloadTableViewData {
     if(self.dataList.count > 0){
         [self updateTableViewWithMoreData:self.tableView.hasMore];
-        [self.viewController.emptyView hideEmptyView];
-        self.viewController.tableView.scrollEnabled = YES;
+        self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
     }else{
         if([self isNotInAllTab]){
-            [self.viewController.emptyView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+            [self.errorView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+            self.tableView.tableFooterView = self.errorView;
         }else{
-            [self.viewController.emptyView showEmptyWithTip:@"该圈子还没有内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+            [self.errorView showEmptyWithTip:@"该圈子还没有内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+            self.tableView.tableFooterView = self.errorView;
         }
         self.refreshFooter.hidden = YES;
-        self.viewController.tableView.scrollEnabled = NO;
     }
     [self.tableView reloadData];
 }

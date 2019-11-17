@@ -145,8 +145,11 @@
 }
 
 - (void)initHeaderView {
-    self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectZero];
-    self.headerView.backgroundColor = [UIColor blueColor];
+    CGFloat headerBackNormalHeight = 144;
+    CGFloat headerBackXSeriesHeight = headerBackNormalHeight + 24; //刘海平多出24
+    CGFloat height = [TTDeviceHelper isIPhoneXSeries] ? headerBackXSeriesHeight : headerBackNormalHeight + 40;
+    
+    self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
     self.headerView.followButton.groupId = self.communityId;
     self.headerView.followButton.tracerDic = [self followButtonTraceDict];
     WeakSelf;

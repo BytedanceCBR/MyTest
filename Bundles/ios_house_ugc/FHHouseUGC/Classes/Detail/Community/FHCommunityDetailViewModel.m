@@ -96,6 +96,7 @@
     };
     
     self.viewController.headerView.refreshHeader.endRefreshingCompletionBlock = ^{
+        [weakSelf.pagingView reloadHeaderShowHeight];
         weakSelf.pagingView.userInteractionEnabled = YES;
     };
 
@@ -378,16 +379,17 @@
     WeakSelf;
     FHCommunityFeedListController *feedListController = [[FHCommunityFeedListController alloc] init];
     feedListController.tableViewNeedPullDown = NO;
-    feedListController.showErrorView = YES;
+    feedListController.showErrorView = NO;
     feedListController.scrollViewDelegate = self;
     feedListController.listType = FHCommunityFeedListTypePostDetail;
     feedListController.forumId = self.viewController.communityId;
     feedListController.hidePublishBtn = YES;
     feedListController.tabName = tabName;
+    feedListController.errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.headerView.height - kSegmentViewHeight;
     //传入选项信息
     feedListController.operations = self.socialGroupModel.data.permission;
     //错误页topOffset
-    CGFloat hei = self.viewController.headerView.frame.size.height;
+    CGFloat hei = self.viewController.headerView.frame.size.height + kSegmentViewHeight;
     feedListController.errorViewTopOffset = hei;
     [self.subVCs addObject:feedListController];
 }
@@ -1120,6 +1122,12 @@
 
 #pragma mark - segmentView 代理
 - (void)segmentView:(TTHorizontalPagingSegmentView *)segmentView didSelectedItemAtIndex:(NSInteger)index toIndex:(NSInteger)toIndex {
+    
+    //点击同一个不做处理
+    if(index == toIndex && !self.isFirstEnter){
+        return;
+    }
+    
     if(toIndex < self.subVCs.count){
         self.selectedIndex = toIndex;
         self.feedListController = self.subVCs[toIndex];
