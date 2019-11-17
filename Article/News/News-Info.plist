@@ -74,9 +74,9 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6.7.7.0</string>
+	<string>0.8.2.0</string>
 	<key>CHANNEL_NAME</key>
-	<string>App Store</string>
+	<string>local_test</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
