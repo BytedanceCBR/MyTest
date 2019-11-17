@@ -179,8 +179,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     self.headerShowHeight = self.headerViewHeight;
 }
 
-- (void)scrollEnable:(BOOL)enable
-{
+- (void)scrollEnable:(BOOL)enable {
     if(enable) {
         self.horizontalCollectionView.userInteractionEnabled = YES;
         self.segmentView.userInteractionEnabled = YES;
@@ -190,8 +189,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     }
 }
 
-- (void)scrollToIndex:(NSInteger)pageIndex withAnimation:(BOOL)animation
-{
+- (void)scrollToIndex:(NSInteger)pageIndex withAnimation:(BOOL)animation {
     if(pageIndex >= self.section || pageIndex < 0 || self.section <= 0) return;
     [self.horizontalCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:pageIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animation];
     if(!animation) {
@@ -199,8 +197,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     }
 }
 
-- (UIScrollView *)scrollViewAtIndex:(NSInteger)index
-{
+- (UIScrollView *)scrollViewAtIndex:(NSInteger)index {
     UIScrollView *tmpScrollView = self.contentViewDict[@(index)];
     if (!tmpScrollView) {
         tmpScrollView = [self.delegate pagingView:self viewAtIndex:index];
@@ -216,8 +213,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 }
 
 #pragma mark 监听事件
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *view = [super hitTest:point withEvent:event];
     if(self.inertialBehavior != nil) {
         [self.animator removeBehavior:self.inertialBehavior];
@@ -272,7 +268,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 - (UIView *)movingView {
     if(!_movingView){
         _movingView = [[UIView alloc] init];
-        _movingView.backgroundColor = [UIColor redColor];
+        _movingView.backgroundColor = [UIColor whiteColor];
     }
     return _movingView;
 }
@@ -348,6 +344,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
         [self.movingView addSubview:_segmentView];
     }
     
+    [self.movingView removeFromSuperview];
     [_currentContentView addSubview:self.movingView];
     
     if ([self.delegate respondsToSelector:@selector(pagingView:didSwitchIndex:to:)]) {
@@ -371,8 +368,6 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     }
     [_headerView removeFromSuperview];
     _headerView = headerView;
-//    [_headerView removeGestureRecognizer:self.headerViewPanGestureRecognizer];
-//    [_headerView addGestureRecognizer:self.headerViewPanGestureRecognizer];
     NSLog(@"space3___%f",self.headerShowHeight);
     _headerView.frame = CGRectMake(0, self.headerShowHeight - self.headerViewHeight, self.width, self.headerViewHeight);
     [self addSubview:_headerView];
@@ -387,8 +382,6 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     
     [_segmentView removeFromSuperview];
     _segmentView = segmentView;
-//    [_segmentView removeGestureRecognizer:self.segmentViewPanGestureRecognizer];
-//    [_segmentView addGestureRecognizer:self.segmentViewPanGestureRecognizer];
     _segmentView.frame = CGRectMake(0, self.headerView.bottom, self.width, self.segmentViewHeight);
     [self addSubview:_segmentView];
 }
@@ -407,7 +400,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.isSwitching = YES;
+//    self.isSwitching = YES;
     NSString *identifier = [self collectionViewCellIdentifierWithIndex:indexPath.item];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     UIScrollView *scrollView = [self scrollViewAtIndex:indexPath.row];
@@ -537,7 +530,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     if(self.ignoreAdjust) return;
     if(deltaY >= 0) {    //向上滚动
 //        CGFloat headerDisplayHeight = self.headerViewHeight + self.headerView.top;
-        if(self.headerShowHeight - deltaY <= self.segmentTopSpace) {
+        if(self.headerShowHeight <= self.segmentTopSpace) {
             if(self.segmentView.superview != self){
                 [_segmentView removeFromSuperview];
                 _segmentView.frame = CGRectMake(0, self.segmentTopSpace, self.width, self.segmentViewHeight);
@@ -545,7 +538,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
             }
         }
     } else {
-        if(self.headerShowHeight - deltaY > self.segmentTopSpace) {
+        if(self.headerShowHeight > self.segmentTopSpace) {
             if(self.segmentView.superview == self){
                 [_segmentView removeFromSuperview];
                 _segmentView.frame = CGRectMake(0, self.headerView.bottom, self.width, self.segmentViewHeight);
