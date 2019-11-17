@@ -151,6 +151,7 @@
                         // FHFeedUGCCellModel
                         cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
                         cellModel.isFromDetail = NO;
+                        cellModel.tableView = self.tableView;
                     }
                 }
             }
