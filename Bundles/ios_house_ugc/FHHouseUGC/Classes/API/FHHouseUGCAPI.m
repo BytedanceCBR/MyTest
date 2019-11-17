@@ -17,6 +17,7 @@
 #import "FHFeedOperationResultModel.h"
 #import "FHUGCNoticeModel.h"
 #import "FHUGCVoteModel.h"
+#import "FHUGCVoteResponseModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -636,7 +637,6 @@
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     [paramDic addEntriesFromDictionary:params];
     
-
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
         
         BOOL success = NO;
@@ -663,11 +663,84 @@
             completion(ugcVoteModel,error);
         }
     }];
+}
+
+// 提交投票
++ (TTHttpTask *)requestVoteSubmit:(NSString *)voteId optionIDs:(NSArray *)optionIds optionNum:(NSNumber *)optionNum completion:(void(^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/vote/submit";
+    NSString *url = QURL(queryPath);
     
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(voteId.length > 0) {
+        paramDic[@"vote_id"] = [NSNumber numberWithInteger:[voteId integerValue]];
+    }
+    if(optionIds.count > 0) {
+        paramDic[@"option_ids"] = optionIds;
+    }
+    if(optionNum > 0) {
+        paramDic[@"option_num"] = optionNum;
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        id model = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:@"投票失败" code:API_ERROR_CODE userInfo:nil];
+                } else {
+                    model = [[FHUGCVoteResponseModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+            }
+        }
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+}
+// 取消投票
++ (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSNumber *)optionNum completion:(void(^)(BOOL success , NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/vote/cancel";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(voteId.length > 0) {
+        paramDic[@"vote_id"] = [NSNumber numberWithInteger:[voteId integerValue]];
+    }
+    if(optionNum > 0) {
+        paramDic[@"option_num"] = optionNum;
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:@"取消投票失败" code:API_ERROR_CODE userInfo:nil];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+            }
+        }
+        if (completion) {
+            completion(success,error);
+        }
+    }];
 }
 
 @end
-
 
 @implementation FHVoteHTTPRequestSerializer
 

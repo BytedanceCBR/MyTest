@@ -88,7 +88,8 @@
                  type == FHUGCFeedListCellTypeArticleComment2 ||
                  type == FHUGCFeedListCellTypeUGCHotTopic ||
                  type == FHUGCFeedListCellTypeUGCVote ||
-                 type == FHUGCFeedListCellTypeUGCSmallVideo){
+                 type == FHUGCFeedListCellTypeUGCSmallVideo ||
+                 type == FHUGCFeedListCellTypeUGCVoteInfo){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -480,6 +481,53 @@
         cellModel.vote = vote;
         
         [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
+    } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVoteInfo){
+        // UGC 投票
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVoteDetail;
+        cellModel.groupId = model.rawData.voteInfo.voteId;
+        
+        cellModel.voteInfo = model.rawData.voteInfo;
+        if (cellModel.voteInfo == nil || cellModel.voteInfo.items.count < 2) {
+            return nil;
+        }
+        cellModel.voteInfo.voteState = FHUGCVoteStateNone;
+        cellModel.voteInfo.needFold = NO;
+        cellModel.voteInfo.isFold = NO;
+        cellModel.voteInfo.hasReloadForVoteExpired = NO;
+        cellModel.voteInfo.needAnimateShow = NO;
+        cellModel.openUrl = model.rawData.detailSchema;
+        if (cellModel.voteInfo.selected) {
+            cellModel.voteInfo.voteState = FHUGCVoteStateComplete;
+        }
+        // add by zyk  判断过期状态
+        NSInteger displayCount = [cellModel.voteInfo.displayCount integerValue];
+        if (displayCount <= 0 || displayCount >= cellModel.voteInfo.items.count) {
+            cellModel.voteInfo.needFold = NO;
+        } else {
+            cellModel.voteInfo.needFold = YES;
+            cellModel.voteInfo.isFold = YES;// 默认折叠，后续点击按钮修改
+        }
+        
+        FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
+        user.name = model.rawData.user.info.name;
+        user.avatarUrl = model.rawData.user.info.avatarUrl;
+        user.userId = model.rawData.user.info.userId;
+        user.schema = model.rawData.user.info.schema;
+        cellModel.user = user;
+        // add by zyk 需要确认数据是否是从这个地方取
+        double time = [model.rawData.createTime doubleValue];
+        NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+        cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
+        
+        cellModel.diggCount = model.rawData.diggCount;
+        cellModel.commentCount = model.rawData.commentCount;
+        cellModel.userDigg = model.rawData.userDigg;
+        
+//        cellModel.content = model.rawData.voteInfo.title;
+//        cellModel.contentRichSpan = model.rawData.voteInfo.richContent;
+        
+        [FHUGCCellHelper setUGCVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
+        cellModel.voteInfo.descHeight = 17;
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;
