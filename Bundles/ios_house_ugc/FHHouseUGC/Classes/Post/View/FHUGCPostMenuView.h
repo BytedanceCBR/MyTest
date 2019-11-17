@@ -10,8 +10,16 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHUGCPostMenuViewDelegate <NSObject>
+
 - (void)gotoPostPublish;
 - (void)gotoVotePublish;
+
+@optional
+
+- (void)postMenuViewWillShow;
+- (void)postMenuViewDidShow;
+- (void)postMenuWillHide;
+- (void)postMenuDidHide;
 
 @end
 
@@ -19,8 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<FHUGCPostMenuViewDelegate> delegate;
 
-- (void)show;
-- (void)hide;
+- (void)showForButton:(UIButton *)button;
+
 @end
 
 NS_ASSUME_NONNULL_END

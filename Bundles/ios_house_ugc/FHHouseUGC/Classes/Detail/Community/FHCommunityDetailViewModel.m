@@ -320,6 +320,22 @@
     }
 }
 
+- (void)gotoVotePublish {
+    
+    if ([TTAccountManager isLogin]) {
+        [self gotoVoteVC];
+    } else {
+        [self gotoLogin:1];
+    }
+}
+
+// 跳转到投票发布器
+- (void)gotoVoteVC {
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{}];
+    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+}
+
 - (void)initSegment {
     NSMutableArray *titles = [NSMutableArray array];
     NSMutableArray *tabArray = [self.socialGroupModel.data.tabInfo mutableCopy];

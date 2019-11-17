@@ -496,13 +496,14 @@
 }
 
 - (void)showDatePicker {
+    [self.viewController.view endEditing:YES];
     [self.bottomPopView showOnView:self.viewController.view withView:self.dateSelectView];
 }
 
 - (void)checkIfEnablePublish {
     
     BOOL hasTitle = self.model.voteTitle.length > 0;
-    BOOL hasOption = self.model.options.count > 0 && self.model.options.firstObject.length > 0;
+    BOOL hasOption = self.model.options.count >= 2 && self.model.options[0].length > 0 && self.model.options[1].length > 0;
     BOOL hasVisibleScope = self.model.isAllSelected || self.model.isPartialSelected;
     BOOL hasVoteType = self.model.type != VoteType_Unknown;
     

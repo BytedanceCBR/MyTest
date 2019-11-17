@@ -27,7 +27,7 @@
 #import "FHUGCPostMenuView.h"
 #import "FHCommonDefines.h"
 
-@interface FHCommunityFeedListController ()<SSImpressionProtocol>
+@interface FHCommunityFeedListController ()<SSImpressionProtocol, FHUGCPostMenuViewDelegate>
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic, copy) void(^notifyCompletionBlock)(void);
@@ -304,9 +304,22 @@
     [self showPublishMenu];
 }
 
-- (void)gotoPublishPost:(UIButton *)sender {
+- (FHUGCPostMenuView *)publishMenuView {
     
-    [self hidePublishMenu];
+    if(!_publishMenuView) {
+        _publishMenuView = [[FHUGCPostMenuView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        _publishMenuView.delegate = self;
+    }
+    return _publishMenuView;
+}
+
+- (void)showPublishMenu {
+    [self.publishMenuView showForButton:self.publishBtn];
+}
+
+#pragma mark - FHUGCPostMenuViewDelegate
+
+- (void)gotoPostPublish {
     
     if(self.publishBlock){
         self.publishBlock();
@@ -315,33 +328,13 @@
     [self gotoPostThreadVC];
 }
 
-- (void)gotoPublishVote:(UIButton *)sender {
-    
-    [self hidePublishMenu];
+- (void)gotoVotePublish {
     
     if ([TTAccountManager isLogin]) {
         [self gotoVoteVC];
     } else {
         [self gotoLogin:1];
     }
-    
-}
-
-- (FHUGCPostMenuView *)publishMenuView {
-    
-    if(!_publishMenuView) {
-        _publishMenuView = [[FHUGCPostMenuView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-    }
-    return _publishMenuView;
-}
-
-- (void)showPublishMenu {
-    [self.publishMenuView show];
-}
-
-- (void)hidePublishMenu {
-    
-    [self.publishMenuView hide];
 }
 
 // 发布按钮点击
