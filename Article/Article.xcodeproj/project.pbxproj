@@ -1295,7 +1295,6 @@
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
 				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
@@ -1615,7 +1614,6 @@
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/NetworkStubFiles/Stub_Article_Information.txt",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_article_video/TTArticleVideo/Assets/TTVTab.storyboard",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_article_video/TTArticleVideo/Assets/Video.storyboard",
-				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 				"${PODS_ROOT}/../../AKPlugins/AKImagePicker/TTImagePicker/Assets.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
@@ -1638,7 +1636,6 @@
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
 				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
@@ -1733,7 +1730,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Stub_Article_Information.txt",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVTab.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Video.storyboardc",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EditImage.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
