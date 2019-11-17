@@ -33,6 +33,7 @@
 #import "FHUGCScialGroupModel.h"
 #import "FHUGCConfig.h"
 #import "FHUGCCellHelper.h"
+#import "ReactiveObjC.h"
 
 @interface FHVoteDetailViewModel ()
 @property (nonatomic, copy , nullable) NSString *social_group_id;
@@ -164,6 +165,16 @@
     }];
 }
 
+// 重新刷新和重新添加评论VC--目前用于 过期投票刷新
+- (void)reloadAndReAddCommentVC {
+    [self.detailController remove_comment_vc];
+    [self.detailController.emptyView hideEmptyView];
+    [self reloadData];
+    [self.detailController re_add_comment_vc];
+    self.tableView.hidden = NO;
+    [self.detailController show_comment_view];
+}
+
 // 处理数据
 - (void)processWithData:(FHFeedContentRawDataModel *)model socialGroup:(FHUGCScialGroupDataModel *)socialGroupModel {
     if (model && [model isKindOfClass:[FHFeedContentRawDataModel class]]) {
@@ -194,6 +205,19 @@
         }
         if (cellModel.community.socialGroupId.length <= 0) {
             cellModel.community = self.detailData.community;
+        }
+        // 过期处理逻辑
+        if (cellModel.voteInfo) {
+            /*
+            if (cellModel.voteInfo.voteState != FHUGCVoteStateExpired) {
+                __weak typeof(self) weakSelf = self;
+                [RACObserve(cellModel.voteInfo, voteState) subscribeNext:^(id  _Nullable x) {
+                    if ([x integerValue] == FHUGCVoteStateExpired) {
+                        // 过期的话-- 这样子 评论会闪 先不走这个地方吧
+                        // [weakSelf reloadAndReAddCommentVC];
+                    }
+                }];
+            }*/
         }
         cellModel.tracerDic = [self.detailController.tracerDict copy];
         socialGroupModel.hasFollow = @"1";
