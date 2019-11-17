@@ -427,7 +427,12 @@
         if([model isKindOfClass:[FHUGCVoteModel class]]) {
             FHUGCVoteModel *voteModel = (FHUGCVoteModel *)model;
             if(voteModel.data.length > 0) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:kFHVotePublishNotificationName object:nil userInfo:@{@"voteData": voteModel.data}];
+                NSMutableDictionary *userInfo = @{}.mutableCopy;
+                userInfo[@"voteData"] = voteModel.data;
+                if (socialGroupIds.length > 0) {
+                    userInfo[@"social_group_ids"] = socialGroupIds;
+                }
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHVotePublishNotificationName object:nil userInfo:userInfo];
                 [self exitPage];
             }
             else {

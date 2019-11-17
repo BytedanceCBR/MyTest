@@ -94,7 +94,7 @@
                         FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
                         if (model && jsonParseError == nil) {
                             FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
-                            [self insertPostData:cellModel];
+                            [self insertPostData:cellModel socialGroupIds:nil];
                         }
                     }
                 }
@@ -113,6 +113,7 @@
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         NSString *vote_data = userInfo[@"voteData"];
+        NSString *social_group_ids = userInfo[@"social_group_ids"];
         if ([vote_data isKindOfClass:[NSString class]] && vote_data.length > 0) {
             // 模型转换
             NSDictionary *dic = [vote_data JSONValue];
@@ -153,19 +154,24 @@
                     }
                 }
             }
-            [self insertPostData:cellModel];
+            [self insertPostData:cellModel socialGroupIds:social_group_ids];
         }
     }
 }
-// 发帖和发投票后插入逻辑
-- (void)insertPostData:(FHFeedUGCCellModel *)cellModel {
+// 发帖和发投票后插入逻辑 social_group_ids 为空直接用cellModel.community.socialGroupId
+- (void)insertPostData:(FHFeedUGCCellModel *)cellModel socialGroupIds:(NSString *)social_group_ids {
     if (cellModel == nil) {
         return;
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         cellModel.showCommunity = NO;
         cellModel.feedVC = self.viewController;
-        if (cellModel && [cellModel.community.socialGroupId isEqualToString:self.viewController.forumId]) {
+        // 判断是否是需要插入的圈子,关注直接插入 不需要判断逻辑
+        NSString *socialGroups = social_group_ids;
+        if (socialGroups.length <= 0) {
+            socialGroups = cellModel.community.socialGroupId;
+        }
+        if (cellModel && self.viewController.forumId.length > 0 && [socialGroups containsString:self.viewController.forumId]) {
             //去重逻辑
             [self removeDuplicaionModel:cellModel.groupId];
             // JOKER: 找到第一个非置顶贴的下标
