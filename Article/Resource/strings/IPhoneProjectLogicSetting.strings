@@ -194,6 +194,7 @@
 "ugc_focus_list" = "FHUGCFollowListController"; //关注列表页
 "ugc_comment_list" = "FHUGCCommentListController"; //评论列表页
 "ugc_follow_user_list" = "FHUGCUserFollowListController";//圈子关注用户列表
+"ugc_vote_detail" = "FHVoteDetailViewController";// 投票详情页
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";

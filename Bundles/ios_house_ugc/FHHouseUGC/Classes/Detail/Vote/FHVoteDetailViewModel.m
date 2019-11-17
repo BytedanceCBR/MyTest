@@ -1,14 +1,14 @@
 //
-//  FHPostDetailViewModel.m
+//  FHVoteDetailViewModel.m
 //  FHHouseUGC
 //
-//  Created by 张元科 on 2019/6/3.
+//  Created by 张元科 on 2019/11/8.
 //
 
-#import "FHPostDetailViewModel.h"
+#import "FHVoteDetailViewModel.h"
 #import "FHHouseUGCAPI.h"
 #import "TTHttpTask.h"
-#import "FHPostDetailCell.h"
+#import "FHUGCVoteDetailCell.h"
 #import "TTUGCRequestManager.h"
 #import "NSObject+TTAdditions.h"
 #import "TTRoute.h"
@@ -33,18 +33,18 @@
 #import "FHUGCScialGroupModel.h"
 #import "FHUGCConfig.h"
 #import "FHUGCCellHelper.h"
+#import "ReactiveObjC.h"
 
-@interface FHPostDetailViewModel ()
-
+@interface FHVoteDetailViewModel ()
 @property (nonatomic, copy , nullable) NSString *social_group_id;
-
 @end
 
-@implementation FHPostDetailViewModel
+@implementation FHVoteDetailViewModel
+
 
 // 注册cell类型
 - (void)registerCellClasses {
-    [self.tableView registerClass:[FHPostDetailCell class] forCellReuseIdentifier:NSStringFromClass([FHPostDetailCell class])];
+    [self.tableView registerClass:[FHUGCVoteDetailCell class] forCellReuseIdentifier:NSStringFromClass([FHUGCVoteDetailCell class])];
     [self.tableView registerClass:[FHUGCDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHUGCDetailGrayLineCell class])];
     [self.tableView registerClass:[FHPostDetailHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHPostDetailHeaderCell class])];
 }
@@ -57,7 +57,7 @@
     }
     // 帖子详情cell
     if ([model isKindOfClass:[FHFeedUGCCellModel class]]) {
-        return [FHPostDetailCell class];
+        return [FHUGCVoteDetailCell class];
     }
     // 分割线
     if ([model isKindOfClass:[FHUGCDetailGrayLineModel class]]) {
@@ -165,23 +165,62 @@
     }];
 }
 
+// 重新刷新和重新添加评论VC--目前用于 过期投票刷新
+- (void)reloadAndReAddCommentVC {
+    [self.detailController remove_comment_vc];
+    [self.detailController.emptyView hideEmptyView];
+    [self reloadData];
+    [self.detailController re_add_comment_vc];
+    self.tableView.hidden = NO;
+    [self.detailController show_comment_view];
+}
+
 // 处理数据
-- (void)processWithData:(FHFeedUGCContentModel *)model socialGroup:(FHUGCScialGroupDataModel *)socialGroupModel {
-    if (model && [model isKindOfClass:[FHFeedUGCContentModel class]]) {
+- (void)processWithData:(FHFeedContentRawDataModel *)model socialGroup:(FHUGCScialGroupDataModel *)socialGroupModel {
+    if (model && [model isKindOfClass:[FHFeedContentRawDataModel class]]) {
         [self.items removeAllObjects];
         // 网络请求返回
-        model.isFromDetail = YES;
+        /*model.isFromDetail = YES;
         if (self.shareInfo == nil && model.shareInfo) {
             self.shareInfo = model.shareInfo;
+        }*/
+        FHFeedContentModel *ugcContent = [[FHFeedContentModel alloc] init];
+        ugcContent.cellType = [NSString stringWithFormat:@"%d",FHUGCFeedListCellTypeUGCVoteInfo];
+        ugcContent.title = model.title;
+        ugcContent.isStick = model.isStick;
+        ugcContent.stickStyle = model.stickStyle;
+        ugcContent.diggCount = model.diggCount;
+        ugcContent.commentCount = model.commentCount;
+        ugcContent.userDigg = model.userDigg;
+        ugcContent.groupId = model.groupId;
+        ugcContent.logPb = model.logPb;
+        ugcContent.community = model.community;
+        ugcContent.rawData = model;
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
+        cellModel.isFromDetail = YES;
+        if (self.detailData) {
+            cellModel.feedVC = self.detailData.feedVC;
+            cellModel.isStick = self.detailData.isStick;
+            cellModel.stickStyle = self.detailData.stickStyle;
         }
-        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
-        cellModel.feedVC = self.detailData.feedVC;
-        cellModel.isStick = self.detailData.isStick;
-        cellModel.stickStyle = self.detailData.stickStyle;
         if (cellModel.community.socialGroupId.length <= 0) {
             cellModel.community = self.detailData.community;
         }
+        // 过期处理逻辑
+        if (cellModel.voteInfo) {
+            /*
+            if (cellModel.voteInfo.voteState != FHUGCVoteStateExpired) {
+                __weak typeof(self) weakSelf = self;
+                [RACObserve(cellModel.voteInfo, voteState) subscribeNext:^(id  _Nullable x) {
+                    if ([x integerValue] == FHUGCVoteStateExpired) {
+                        // 过期的话-- 这样子 评论会闪 先不走这个地方吧
+                        // [weakSelf reloadAndReAddCommentVC];
+                    }
+                }];
+            }*/
+        }
         cellModel.tracerDic = [self.detailController.tracerDict copy];
+        socialGroupModel.hasFollow = @"1";
         if (socialGroupModel && ![socialGroupModel.hasFollow boolValue]) {
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
@@ -245,7 +284,7 @@
 {
     if (self.threadID) {
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        [param setValue:@(self.threadID) forKey:@"thread_id"];
+        [param setValue:@(self.threadID) forKey:@"group_id"];
         [param setValue:self.category forKey:@"category"];
         if (self.lastPageSocialGroupId.length > 0) {
             [param setValue:self.lastPageSocialGroupId forKey:@"social_group_id"];
@@ -253,14 +292,14 @@
         uint64_t startTime = [NSObject currentUnixTime];
         WeakSelf;
         NSString *host = [FHURLSettings baseURL];
-        NSString *urlStr = [NSString stringWithFormat:@"%@/f100/ugc/thread",host];
+        NSString *urlStr = [NSString stringWithFormat:@"%@/f100/ugc/material/v1/vote_detail",host];
         [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
             StrongSelf;
             uint64_t endTime = [NSObject currentUnixTime];
             uint64_t total = [NSObject machTimeToSecs:endTime - startTime] * 1000;
             if (!error) {
                 NSDictionary *dataDict = [jsonObj isKindOfClass:[NSDictionary class]]? jsonObj: nil;
-                if ([dataDict tt_longValueForKey:@"err_no"] == 0) {
+                if ([dataDict tt_longValueForKey:@"status"] == 0) {
                     NSString *dataStr = [dataDict tt_stringValueForKey:@"data"];
                     if (isEmptyString(dataStr)) {
                         //不该出现这种情况
@@ -268,24 +307,31 @@
                         NSError *jsonParseError;
                         NSData *jsonData = [dataStr dataUsingEncoding:NSUTF8StringEncoding];
                         if (jsonData) {
-                            Class cls = [FHFeedUGCContentModel class];
-                            FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
-                            if (model.ugcStatus == 0) {
-                                // 说明被删除
+                            Class cls = [FHFeedContentRawDataModel class];
+                            FHFeedContentRawDataModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedContentRawDataModel class] error:&jsonParseError];
+                            if (model && model.voteInfo) {
+                                // 有投票数据
+                                // social_group data
+                                FHUGCScialGroupDataModel * groupData = nil;
+                                NSDictionary *detailDic = [dataStr tt_JSONValue];
+                                if (detailDic && [detailDic isKindOfClass:[NSDictionary class]] && detailDic[@"community"]) {
+                                    // 继续解析小区头部
+                                    NSDictionary *social_group = [detailDic tt_dictionaryValueForKey:@"community"];
+                                    NSError *groupError = nil;
+                                    groupData = [[FHUGCScialGroupDataModel alloc] initWithDictionary:social_group error:&groupError];
+                                }
+                                [self processWithData:model socialGroup:groupData];
+                            } else {
+                                // 暂定被删除
                                 error = [NSError errorWithDomain:NSURLErrorDomain code:-10001 userInfo:nil];
                                 [self.detailController remove_comment_vc];
                                 self.tableView.hidden = YES;
                                 // 显示空页面
                                 [self.detailController.emptyView showEmptyWithTip:@"该内容已被删除" errorImageName:kFHErrorMaskNoListDataImageName showRetry:NO];
-                            } else {
-                                if (model && jsonParseError == nil) {
-                                    // 继续解析小区头部
-                                    NSDictionary *social_group = [dataDict tt_dictionaryValueForKey:@"social_group"];
-                                    NSError *groupError = nil;
-                                    FHUGCScialGroupDataModel * groupData = [[FHUGCScialGroupDataModel alloc] initWithDictionary:social_group error:&groupError];
-                                    [self processWithData:model socialGroup:groupData];
-                                }
                             }
+                        } else {
+                             //不该出现这种情况
+                            error = [NSError errorWithDomain:NSURLErrorDomain code:-2 userInfo:nil];
                         }
                     }
                 }
@@ -297,6 +343,25 @@
     } else {
         [self.detailController endLoading];
         [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+    }
+}
+
+- (NSString *)pageType {
+    return @"vote_detail";
+}
+
+- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
+    if(cellModel.community.socialGroupId){
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"community_id"] = cellModel.community.socialGroupId;
+        dict[@"tracer"] = @{@"enter_from":[self pageType],
+                            @"enter_type":@"click",
+                            @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
+                            @"log_pb":cellModel.logPb ?: @"be_null"};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        //跳转到圈子详情页
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 

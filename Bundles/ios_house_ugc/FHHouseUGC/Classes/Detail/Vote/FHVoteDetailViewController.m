@@ -1,11 +1,11 @@
 //
-//  FHPostDetailViewController
+//  FHVoteDetailViewController.m
 //  FHHouseUGC
 //
-//  Created by 张元科 on 2019/6/2.
+//  Created by 张元科 on 2019/11/8.
 //
 
-#import "FHPostDetailViewController.h"
+#import "FHVoteDetailViewController.h"
 #import "FHFeedUGCCellModel.h"
 #import "FHPostDetailViewModel.h"
 #import "FHDetailCommentAllFooter.h"
@@ -22,11 +22,9 @@
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import "FHUGCShareManager.h"
 
-@interface FHPostDetailViewController ()
-
-@property (nonatomic, assign) int64_t tid; //帖子ID--必须
+@interface FHVoteDetailViewController ()
+@property (nonatomic, assign) int64_t voteId; //投票ID--必须
 @property (nonatomic, assign) int64_t fid; //话题ID
-@property (nonatomic, copy) NSString *cid; //关心ID
 // 列表页数据
 @property (nonatomic, strong)   FHFeedUGCCellModel       *detailData;
 @property (nonatomic, strong)   FHDetailCommentAllFooter       *commentAllFooter;
@@ -38,25 +36,24 @@
 @property (nonatomic, strong)   UIButton       *shareButton;// 分享
 @property (nonatomic, assign)   BOOL       isViewAppearing;
 @property (nonatomic, copy)     NSString       *lastPageSocialGroupId;
-
 @end
 
-@implementation FHPostDetailViewController
+@implementation FHVoteDetailViewController
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        // 帖子
-        self.postType = FHUGCPostTypePost;
+        // 投票
+        self.postType = FHUGCPostTypeVote;
         self.fromUGC = YES;
         NSDictionary *params = paramObj.allParams;
-        int64_t tid = [[paramObj.allParams objectForKey:@"tid"] longLongValue];
+        int64_t voteId = [[paramObj.allParams objectForKey:@"group_id"] longLongValue];
         int64_t fid = [[paramObj.allParams objectForKey:@"fid"] longLongValue];
         self.lastPageSocialGroupId = [params objectForKey:@"social_group_id"];
-        // 帖子id
-        self.tid = tid;// 1636215424527368  1636223115260939    1636223457031179    1636222717073420
+        // 投票id
+        self.voteId = voteId;// 1636215424527368  1636223115260939    1636223457031179    1636222717073420
         self.fid = fid;// 6564242300        1621706233835550    6564242300          86578926583
-        TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:[NSString stringWithFormat:@"%lld", tid] itemID:[NSString stringWithFormat:@"%lld", tid] impressionID:nil aggrType:1];
+        TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:[NSString stringWithFormat:@"%lld", voteId] itemID:[NSString stringWithFormat:@"%lld", voteId] impressionID:nil aggrType:1];
         self.groupModel = groupModel;
         // 列表页数据
         self.detailData = params[@"data"];
@@ -64,10 +61,10 @@
             self.comment_count = [self.detailData.commentCount longLongValue];
             self.user_digg = [self.detailData.userDigg integerValue];
             self.digg_count = [self.detailData.diggCount longLongValue];
-            self.detailData.groupId = [NSString stringWithFormat:@"%ld",tid];
+            self.detailData.groupId = [NSString stringWithFormat:@"%ld",self.voteId];
         }
         // 埋点
-        self.tracerDict[@"page_type"] = @"feed_detail";
+        self.tracerDict[@"page_type"] = @"vote_detail";
         self.ttTrackStayEnable = YES;
         // 取链接中的埋点数据
         NSString *enter_from = params[@"enter_from"];
@@ -109,9 +106,9 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     // ViewModel
     self.weakViewModel = self.viewModel;
-    self.weakViewModel.threadID = self.tid;
+    self.weakViewModel.threadID = self.voteId;
     self.weakViewModel.forumID = self.fid;
-    self.weakViewModel.category = @"thread_detail";
+    self.weakViewModel.category = @"vote_detail";
     self.weakViewModel.lastPageSocialGroupId = self.lastPageSocialGroupId;
     // 导航栏
     [self setupDetailNaviBar];
@@ -178,7 +175,7 @@
     self.followButton = [[FHUGCFollowButton alloc] init];
     self.followButton.followed = YES;
     self.followButton.tracerDic = self.tracerDict.mutableCopy;
-    self.followButton.groupId = [NSString stringWithFormat:@"%lld",self.tid];
+    self.followButton.groupId = [NSString stringWithFormat:@"%lld",self.voteId];
     [self.customNavBarView addSubview:_followButton];
     [self.followButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(58);
@@ -197,7 +194,7 @@
     }];
     self.naviHeaderView.hidden = YES;
     self.followButton.hidden = YES;
-    self.shareButton.hidden = NO;
+    self.shareButton.hidden = YES;// 先不支持分享
 }
 
 - (void)startLoadData {
@@ -249,12 +246,12 @@
     
     //评论完成后发送通知修改评论数
     NSMutableDictionary *userInfo = @{}.mutableCopy;
-    NSString *group_id = [NSString stringWithFormat:@"%ld",self.tid];
+    NSString *group_id = [NSString stringWithFormat:@"%ld",self.voteId];
     userInfo[@"group_id"] = group_id;
     userInfo[@"comment_conut"] = @(self.comment_count);
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kPostMessageFinishedNotification"
-                                                                   object:nil
-                                                                 userInfo:userInfo];
+                                                        object:nil
+                                                      userInfo:userInfo];
 }
 
 - (void)headerInfoChanged {
@@ -279,7 +276,7 @@
         } else {
             self.naviHeaderView.hidden = YES;
             self.followButton.hidden = YES;
-            self.shareButton.hidden = NO;
+            self.shareButton.hidden = YES;// 先不支持分享
         }
     }
 }
@@ -333,9 +330,9 @@
 
 // 分享按钮点击
 - (void)shareButtonClicked:(UIButton *)btn {
-    if (self.viewModel.shareInfo && self.tracerDict) {
-        [[FHUGCShareManager sharedManager] shareActionWithInfo:self.viewModel.shareInfo tracerDic:self.tracerDict];
-    }
+//    if (self.viewModel.shareInfo && self.tracerDict) {
+//        [[FHUGCShareManager sharedManager] shareActionWithInfo:self.viewModel.shareInfo tracerDic:self.tracerDict];
+//    }
 }
 
 @end

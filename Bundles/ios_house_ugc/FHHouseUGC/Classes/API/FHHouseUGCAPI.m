@@ -16,6 +16,7 @@
 #import "FHTopicFeedListModel.h"
 #import "FHFeedOperationResultModel.h"
 #import "FHUGCNoticeModel.h"
+#import "FHUGCVoteResponseModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -628,4 +629,111 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
+// 提交投票
++ (TTHttpTask *)requestVoteSubmit:(NSString *)voteId optionIDs:(NSArray *)optionIds optionNum:(NSNumber *)optionNum completion:(void(^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/vote/submit";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(voteId.length > 0) {
+        paramDic[@"vote_id"] = [NSNumber numberWithInteger:[voteId integerValue]];
+    }
+    if(optionIds.count > 0) {
+        paramDic[@"option_ids"] = optionIds;
+    }
+    if(optionNum > 0) {
+        paramDic[@"option_num"] = optionNum;
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        id model = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:@"投票失败" code:API_ERROR_CODE userInfo:nil];
+                } else {
+                    model = [[FHUGCVoteResponseModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+            }
+        }
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+}
+// 取消投票
++ (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSNumber *)optionNum completion:(void(^)(BOOL success , NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/vote/cancel";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(voteId.length > 0) {
+        paramDic[@"vote_id"] = [NSNumber numberWithInteger:[voteId integerValue]];
+    }
+    if(optionNum > 0) {
+        paramDic[@"option_num"] = optionNum;
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:@"取消投票失败" code:API_ERROR_CODE userInfo:nil];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+            }
+        }
+        if (completion) {
+            completion(success,error);
+        }
+    }];
+}
+
+@end
+
+
+
+@implementation FHVoteHTTPRequestSerializer
+
++ (NSObject<TTHTTPRequestSerializerProtocol> *)serializer
+{
+    return [FHVoteHTTPRequestSerializer new];
+    
+}
+
+- (TTHttpRequest *)URLRequestWithURL:(NSString *)URL
+                              params:(NSDictionary *)parameters
+                              method:(NSString *)method
+               constructingBodyBlock:(TTConstructingBodyBlock)bodyBlock
+                        commonParams:(NSDictionary *)commonParam
+{
+    TTHttpRequest * request = [super URLRequestWithURL:URL params:parameters method:method constructingBodyBlock:bodyBlock commonParams:commonParam];
+    
+    [request setValue:@"application/json; encoding=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    if ([@"POST" isEqualToString: method] && [parameters isKindOfClass:[NSDictionary class]]) {
+        NSData * postDate = [NSJSONSerialization dataWithJSONObject:parameters options:NSJSONWritingPrettyPrinted error:nil];
+        [request setHTTPBody:postDate];
+    }
+    
+    
+    return request;
+    
+}
 @end
