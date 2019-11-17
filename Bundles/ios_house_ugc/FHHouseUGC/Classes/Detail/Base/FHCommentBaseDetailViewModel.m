@@ -143,13 +143,15 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHUGCBaseCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     // 投票cell FHUGCVoteDetailCell 行高
-    if ([cell isKindOfClass:[FHUGCVoteDetailCell class]]) {
+    if (self.postType == FHUGCPostTypeVote) {
+        // 投票
         NSInteger row = indexPath.row;
         if (row >= 0 && row < self.items.count) {
             id data = self.items[row];
-            return [FHUGCVoteDetailCell heightForData:data];
+            if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
+                return [FHUGCVoteDetailCell heightForData:data];
+            }
         }
     }
     return UITableViewAutomaticDimension;
