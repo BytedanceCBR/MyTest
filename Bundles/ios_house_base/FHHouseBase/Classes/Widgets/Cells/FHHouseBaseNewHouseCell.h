@@ -7,7 +7,7 @@
 
 #import "FHBaseTableViewCell.h"
 #import "FHHouseType.h"
-
+#import <FHSearchHouseModel.h>
 NS_ASSUME_NONNULL_BEGIN
 
 //当图图片cell
@@ -30,11 +30,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)refreshTopMargin:(CGFloat)top;
 
+- (void)refreshWithData:(id)data;
+
 -(void)updateHomeNewHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel;
+
+-(void)updateHouseListNewHouseCellModel:(FHSearchHouseItemModel *)commonModel;
 
 +(CGFloat)recommendReasonHeight;
 
 - (void)updateThirdPartHouseSourceStr:(NSString *)sourceStr;
+
++ (CGFloat)heightForData:(id)data;
 
 @end
 

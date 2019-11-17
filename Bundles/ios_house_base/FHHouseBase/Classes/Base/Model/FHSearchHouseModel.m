@@ -28,6 +28,27 @@
 
 @end
 
+@implementation FHHouseListHouseAdvantageTagModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"textColor": @"text_color",
+                           @"backgroundColor": @"background_color",
+                           @"borderColor": @"border_color",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 
 @implementation FHSearchRealHouseExtModel
 
@@ -610,7 +631,8 @@
                            @"fakeReason": @"fake_reason",
                            @"externalInfo": @"external_info",
                            @"skyEyeTag": @"sky_eye_tag",
-                           
+                           @"advantageDescription":@"advantage_description",
+
                            @"pricePerSqmNum": @"price_per_sqm_num",
                            @"pricePerSqmUnit": @"price_per_sqm_unit",
                            @"globalPricing":@"global_pricing",

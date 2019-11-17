@@ -59,6 +59,7 @@
 #import "FHHouseListRecommendTipCell.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
+#import <FHHouseBaseNewHouseCell.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -269,6 +270,7 @@ extern NSString *const INSTANT_DATA_KEY;
     [self registerCellClassBy:[FHPlaceHolderCell class]];
     [self registerCellClassBy:[FHHouseListAgencyInfoCell class]];
     [self registerCellClassBy:[FHHouseListNoHouseCell class]];
+    [self registerCellClassBy:[FHHouseBaseNewHouseCell class]];
     
     [self registerCellClassBy:[FHPlaceHolderCell class]];
     [self registerCellClassBy:[FHHouseBaseItemCell class]];
@@ -1506,6 +1508,10 @@ extern NSString *const INSTANT_DATA_KEY;
         identifier = [self cellIdentifierForEntity:data];
     }
     
+    if (self.houseType == FHHouseTypeNewHouse) {
+        identifier = NSStringFromClass([FHHouseBaseNewHouseCell class]);
+    }
+    
     __weak typeof(self)wself = self;
     if (identifier.length > 0) {
         FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
@@ -1513,6 +1519,12 @@ extern NSString *const INSTANT_DATA_KEY;
             FHHouseBaseSmallItemCell *theCell = (FHHouseBaseSmallItemCell *)cell;
             [theCell refreshTopMargin: 10];// todo zjing
         }
+        
+        if ([cell isKindOfClass:[FHHouseBaseNewHouseCell class]]) {
+            FHHouseBaseNewHouseCell *theCell = (FHHouseBaseNewHouseCell *)cell;
+            [theCell updateHouseListNewHouseCellModel:data];
+        }
+        
         [cell refreshWithData:data];
         if ([cell isKindOfClass:[FHHouseListAgencyInfoCell class]]) {
             FHHouseListAgencyInfoCell *agencyInfoCell = (FHHouseListAgencyInfoCell *)cell;
@@ -1530,7 +1542,6 @@ extern NSString *const INSTANT_DATA_KEY;
             if ([data isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
                 FHSugSubscribeDataDataSubscribeInfoModel *subscribModel = (FHSugSubscribeDataDataSubscribeInfoModel *)data;
                 subscribeText = subscribModel.text;
-
             }
             subscribeCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
                 [wself requestDeleteSubScribe:subscribeId andText:subscribeText];
@@ -1613,6 +1624,11 @@ extern NSString *const INSTANT_DATA_KEY;
     if (data) {
         identifier = [self cellIdentifierForEntity:data];
     }
+    //新房单独处理
+    if (self.houseType == FHHouseTypeNewHouse) {
+        identifier = NSStringFromClass([FHHouseBaseNewHouseCell class]);
+    }
+    
     if (identifier.length > 0) {
         FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
         if ([[cell class]respondsToSelector:@selector(heightForData:)]) {
