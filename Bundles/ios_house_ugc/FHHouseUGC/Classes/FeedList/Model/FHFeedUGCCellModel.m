@@ -514,17 +514,13 @@
         user.userId = model.rawData.user.info.userId;
         user.schema = model.rawData.user.info.schema;
         cellModel.user = user;
-        // add by zyk 需要确认数据是否是从这个地方取
-        double time = [model.rawData.createTime doubleValue];
-        NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
-        cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
+        
+        // 时间以及距离
+        cellModel.desc = [self generateUGCDescFromRawData:model.rawData];
         
         cellModel.diggCount = model.rawData.diggCount;
         cellModel.commentCount = model.rawData.commentCount;
         cellModel.userDigg = model.rawData.userDigg;
-        
-//        cellModel.content = model.rawData.voteInfo.title;
-//        cellModel.contentRichSpan = model.rawData.voteInfo.richContent;
         
         [FHUGCCellHelper setUGCVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
         cellModel.voteInfo.descHeight = 17;
@@ -640,6 +636,33 @@
 }
 
 + (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
+    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
+    double time = [model.createTime doubleValue];
+    
+    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+    
+    if(![publishTime isEqualToString:@""]){
+        NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
+        [desc appendAttributedString:publishTimeAStr];
+    }
+    
+    // 法务合规，如果没有定位权限，不展示位置信息
+    if(!isEmptyString(model.distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
+        NSString *distance = [NSString stringWithFormat:@"   %@",model.distanceInfo];
+        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+        attachment.bounds = CGRectMake(8, 0, 8, 8);
+        attachment.image = [UIImage imageNamed:@"fh_ugc_location"];
+        NSAttributedString *attachmentAStr = [NSAttributedString attributedStringWithAttachment:attachment];
+        [desc appendAttributedString:attachmentAStr];
+        
+        NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:distance];
+        [desc appendAttributedString:distanceAStr];
+    }
+    
+    return desc;
+}
+
++ (NSAttributedString *)generateUGCDescFromRawData:(FHFeedContentRawDataModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [model.createTime doubleValue];
     
