@@ -7,6 +7,7 @@
 
 #import "FHCommunityDetailHorizontalPagingView.h"
 #import <TTBaseLib/UIViewAdditions.h>
+#import "TTHorizontalPagingSegmentView.h"
 
 @implementation FHCommunityDetailHorizontalPagingView
 
@@ -18,6 +19,8 @@
     self.headerView.height = height;
     self.currentContentView.contentOffset = CGPointMake(0,offsetY);
     self.currentContentView.contentInset = UIEdgeInsetsMake(self.headerViewHeight + self.segmentViewHeight, 0, self.currentContentView.contentInset.bottom, 0);
+    self.movingView.frame = CGRectMake(0, - self.currentContentViewTopInset, self.width, self.currentContentViewTopInset);
+    self.segmentView.frame = CGRectMake(0, self.headerView.bottom, self.width, self.segmentViewHeight);
 }
 
 @end
