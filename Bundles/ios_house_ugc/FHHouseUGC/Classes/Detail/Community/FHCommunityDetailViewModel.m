@@ -385,12 +385,14 @@
     feedListController.forumId = self.viewController.communityId;
     feedListController.hidePublishBtn = YES;
     feedListController.tabName = tabName;
-    feedListController.errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.headerView.height - kSegmentViewHeight;
+    //错误页高度
+    CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.headerView.height;
+    if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1){
+        errorViewHeight -= kSegmentViewHeight;
+    }
+    feedListController.errorViewHeight = errorViewHeight;
     //传入选项信息
     feedListController.operations = self.socialGroupModel.data.permission;
-    //错误页topOffset
-    CGFloat hei = self.viewController.headerView.frame.size.height + kSegmentViewHeight;
-    feedListController.errorViewTopOffset = hei;
     [self.subVCs addObject:feedListController];
 }
 
