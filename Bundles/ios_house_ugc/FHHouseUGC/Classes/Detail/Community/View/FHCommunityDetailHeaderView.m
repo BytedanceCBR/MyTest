@@ -387,7 +387,7 @@
 
 - (void)updatePublicationsInfo:(BOOL)isShow hasDetailBtn:(BOOL)hasDetailBtn {
     if(isShow) {
-        if(hasDetailBtn){
+        if([self isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow]){
             [self.publicationsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(60);
             }];

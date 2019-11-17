@@ -102,7 +102,6 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 @property (nonatomic, strong) UIPanGestureRecognizer *segmentViewPanGestureRecognizer;
 @property (nonatomic, assign) CGFloat lastHeaderViewTop;
 @property (nonatomic, assign) BOOL segmentCanPan;
-@property (nonatomic, strong) UIView *movingView;
 @property (nonatomic, assign) CGFloat headerShowHeight;
 @property (nonatomic, assign) BOOL isFirstLoad;
 // 用于模拟scrollView滚动
