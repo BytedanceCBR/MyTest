@@ -9,6 +9,7 @@
 #import <FHHouseBase/FHHouseType.h>
 #import <FHHouseBase/FHMainApi.h>
 #import <FHHouseBase/FHCommonApi.h>
+#import "TTHTTPRequestSerializerBase.h"
 
 @class TTHttpTask;
 @class FHUGCNoticeModel;
@@ -90,6 +91,21 @@ NS_ASSUME_NONNULL_BEGIN
 // 请求用户关注列表sug
 + (TTHttpTask *)requestFollowSugSearchByText:(NSString *)text socialGroupId:(NSString *)socialGroupId offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
+// 投票发布器发布请求
++ (TTHttpTask *)requestVotePublishWithParam: (NSDictionary *)params completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 投票
+// 提交投票
++ (TTHttpTask *)requestVoteSubmit:(NSString *)voteId optionIDs:(NSArray *)optionIds optionNum:(NSNumber *)optionNum completion:(void(^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 取消投票
++ (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSNumber *)optionNum completion:(void(^)(BOOL success , NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
+
+// POST JSON 提交
+@interface FHVoteHTTPRequestSerializer : TTHTTPRequestSerializerBase<TTHTTPRequestSerializerProtocol>
+
+@end

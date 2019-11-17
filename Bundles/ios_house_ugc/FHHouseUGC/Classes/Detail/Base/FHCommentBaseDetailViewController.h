@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM (NSInteger , FHUGCPostType){
     FHUGCPostTypePost       = 1, // 帖子
     FHUGCPostTypeWenDa      = 2, // 问答
+    FHUGCPostTypeVote       = 3, // 投票
 };
 
 @class FHCommentBaseDetailViewModel;

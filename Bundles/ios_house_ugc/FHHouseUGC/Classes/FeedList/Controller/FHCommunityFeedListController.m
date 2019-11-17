@@ -22,52 +22,17 @@
 #import <UIScrollView+Refresh.h>
 #import "FHFeedOperationView.h"
 #import <FHHouseBase/FHBaseTableView.h>
-//#import "IMManager.h"
 #import "FHUGCConfig.h"
 #import "ToastManager.h"
-
-//@interface CreateGroupChatAlertDelegate : NSObject <UIAlertViewDelegate>
-//@property(nonatomic, weak) FHCommunityFeedListController *controller;
-//@end
-//
-//@implementation CreateGroupChatAlertDelegate
-//
-//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-//    if (buttonIndex == 1) {
-//        [_controller gotoGroupChatVC:@"-1" isCreate:YES autoJoin:NO];
-//    }
-//}
-//
-//@end
-
-//@interface FollowCommunityAlertDelegate : NSObject <UIAlertViewDelegate>
-//@property(nonatomic, weak) FHCommunityFeedListController *controller;
-//@end
-//
-//@implementation FollowCommunityAlertDelegate
-//
-//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-//    if (buttonIndex == 1) {
-//        if ([TTReachability isNetworkConnected]) {
-//            [_controller gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
-//            [[FHUGCConfig sharedInstance] followUGCBy:_controller.forumId isFollow:YES completion:^(BOOL isSuccess) {
-//
-//            }];
-//        } else {
-//            [[ToastManager manager] showToast:@"网络异常"];
-//        }
-//    }
-//}
-//
-//@end
+#import "FHCommonDefines.h"
 
 @interface FHCommunityFeedListController ()<SSImpressionProtocol>
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic, copy) void(^notifyCompletionBlock)(void);
 @property(nonatomic, assign) NSInteger currentCityId;
-//@property(nonatomic, strong) CreateGroupChatAlertDelegate *createGroupDelegate;
-//@property(nonatomic, strong) FollowCommunityAlertDelegate *followCommunityDelegate;
+@property(nonatomic, strong) UIView *publishMenuView;
+@property(nonatomic, strong) UIView *publishContentView;
 
 @end
 
@@ -335,6 +300,14 @@
 }
 
 - (void)goToPublish {
+    
+    [self showPublishMenu];
+}
+
+- (void)gotoPublishPost:(UIButton *)sender {
+    
+    [self hidePublishMenu];
+    
     if(self.publishBlock){
         self.publishBlock();
         return;
@@ -342,66 +315,121 @@
     [self gotoPostThreadVC];
 }
 
-//- (void)tryCreateNewGroupChat {
-//    self.createGroupDelegate = [[CreateGroupChatAlertDelegate alloc] init];
-//    self.createGroupDelegate.controller = self;
-//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
-//                                                        message:@"确认开启圈子群聊，所有关注用户将默认加入群聊"
-//                                                       delegate:self.createGroupDelegate
-//                                              cancelButtonTitle:@"取消"
-//                                              otherButtonTitles:@"确认", nil];
-//
-//    [alertView show];
-//}
-//
-//- (void)tryJoinConversation {
-//    if ([_scialGroupData.hasFollow integerValue] == 1) {
-//         [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
-//    } else {
-//        self.followCommunityDelegate = [[FollowCommunityAlertDelegate alloc] init];
-//        self.followCommunityDelegate.controller = self;
-//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
-//                                                            message:@"是否加入群聊并关注圈子？"
-//                                                           delegate:self.followCommunityDelegate
-//                                                  cancelButtonTitle:@"取消"
-//                                                  otherButtonTitles:@"确认", nil];
-//
-//        [alertView show];
-//    }
-//}
-//
-//- (void)gotoGroupChat {
-//   if ([TTAccountManager isLogin]) {
-//       if (_scialGroupData.chatStatus.currentConversationCount >= _scialGroupData.chatStatus.maxConversationCount && _scialGroupData.chatStatus.maxConversationCount > 0) {
-//           [[ToastManager manager] showToast:@"成员已达上限"];
-//       } else if ([_scialGroupData.chatStatus.conversationId integerValue] <= 0) {
-//           if (_scialGroupData.userAuth > UserAuthTypeNormal) {
-//               [self tryCreateNewGroupChat];
-//           }
-//       } else if(_scialGroupData.chatStatus.conversationStatus == joinConversation) {
-//           [self gotoGroupChatVC:_scialGroupData.chatStatus.conversationId isCreate:NO autoJoin:NO];
-//       } else if (_scialGroupData.chatStatus.conversationStatus == leaveConversation) {
-//           [self tryJoinConversation];
-//       } else if(_scialGroupData.chatStatus.conversationStatus == KickOutConversation) {
-//           [[ToastManager manager]showToast:@"你已经被移出群中"];
-//       } else {
-//          [self tryJoinConversation];
-//       }
-//   } else {
-//       [self gotoLogin:1];
-//   }
-//}
+- (void)gotoPublishVote:(UIButton *)sender {
+    
+    [self hidePublishMenu];
+    
+    if ([TTAccountManager isLogin]) {
+        [self gotoVoteVC];
+    } else {
+        [self gotoLogin:1];
+    }
+    
+}
+
+- (UIView *)publishMenuView {
+    
+    if(!_publishMenuView) {
+        
+        _publishMenuView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        
+        // 添加毛玻璃效果
+        UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        UIVisualEffectView * effectView = [[UIVisualEffectView alloc]initWithEffect:blurEffect];
+        //设置虚化度
+        effectView.alpha = 0.8;
+        effectView.frame = _publishMenuView.bounds;
+        [_publishMenuView addSubview:effectView];
+        
+        // 添加隐藏手势
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(publishMenuCancelAction:)];
+        [_publishMenuView addGestureRecognizer:tapGesture];
+        
+        // 添加弹出菜单
+        [_publishMenuView addSubview:self.publishContentView];
+        
+    }
+    return _publishMenuView;
+}
+
+- (UIView *)publishContentView {
+    
+    if(!_publishContentView) {
+        
+        CGFloat height = 200;
+        CGRect frame = CGRectMake(0, SCREEN_HEIGHT - height, SCREEN_WIDTH, height);
+        _publishContentView = [[UIView alloc] initWithFrame:frame];
+        
+        UIButton *pubPostButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [pubPostButton setTitle:@"发贴子" forState:UIControlStateNormal];
+        [pubPostButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        pubPostButton.titleLabel.font = [UIFont themeFontRegular:18];
+        pubPostButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [pubPostButton addTarget:self action:@selector(gotoPublishPost:) forControlEvents:UIControlEventTouchUpInside];
+        
+        UIButton *pubVoteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [pubVoteButton setTitle:@"发投票" forState:UIControlStateNormal];
+        [pubVoteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        pubVoteButton.titleLabel.font = [UIFont themeFontRegular:18];
+        pubVoteButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [pubVoteButton addTarget:self action:@selector(gotoPublishVote:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [_publishContentView addSubview:pubPostButton];
+        [_publishContentView addSubview:pubVoteButton];
+        
+        [pubPostButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(SCREEN_WIDTH / 2.0);
+            make.height.mas_equalTo(100);
+            make.left.equalTo(_publishContentView);
+            make.right.equalTo(pubVoteButton.mas_left);
+        }];
+        
+        [pubVoteButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(SCREEN_WIDTH / 2.0);
+            make.height.mas_equalTo(100);
+            make.right.equalTo(_publishContentView);
+        }];
+    }
+    return _publishContentView;
+}
+
+- (void)publishMenuCancelAction: (UITapGestureRecognizer *)tap {
+    [self hidePublishMenu];
+}
+
+- (void)showPublishMenu {
+    [[UIApplication sharedApplication].keyWindow addSubview:self.publishMenuView];
+    self.publishMenuView.alpha = 0;
+    
+    CGRect frame = self.publishContentView.frame;
+    frame.origin.y = SCREEN_HEIGHT - frame.size.height;
+    [UIView animateWithDuration:0.3 animations:^{
+        self.publishMenuView.alpha = 1.0;
+        self.publishContentView.frame = frame;
+    }];
+}
+
+- (void)hidePublishMenu {
+    CGRect frame = self.publishContentView.frame;
+    frame.origin.y = SCREEN_HEIGHT;
+    [UIView animateWithDuration:0.3 animations:^{
+        self.publishContentView.frame = frame;
+        self.publishMenuView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [self.publishMenuView removeFromSuperview];
+    }];
+}
 
 // 发布按钮点击
 - (void)gotoPostThreadVC {
     if ([TTAccountManager isLogin]) {
         [self gotoPostVC];
     } else {
-        [self gotoLogin];
+        [self gotoLogin:0];
     }
 }
 
-- (void)gotoLogin {
+- (void)gotoLogin:(NSInteger)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *page_type = @"nearby_list";
     if (self.listType == FHCommunityFeedListTypeMyJoin) {
@@ -419,15 +447,35 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [wSelf gotoPostVC];
-                });
+                if (from == 0) {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                       [wSelf gotoPostVC];
+                                   });
+                
+                } else if(from == 1) {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [wSelf gotoVoteVC];
+                    });
+                }
             }
         }
     }];
 }
 
+// 跳转到投票发布器
+- (void)gotoVoteVC {
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{}];
+    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+}
+
+// 跳转到UGC发布器
 - (void)gotoPostVC {
+    
+    // TODO: Delete Code
+    [self gotoVoteVC];
+    return;
+    
     // 跳转到发布器
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"element_type"] = @"feed_publisher";
