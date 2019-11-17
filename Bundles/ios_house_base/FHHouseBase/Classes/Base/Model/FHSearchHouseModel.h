@@ -57,6 +57,15 @@ NS_ASSUME_NONNULL_BEGIN
 //
 //@end
 
+@interface FHHouseListHouseAdvantageTagModel : JSONModel
+
+@property (nonatomic, strong , nullable) FHImageModel *icon;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *textColor;
+
+@end
+
 
 @interface  FHSearchHouseDataItemsNeighborhoodInfoBaseInfoMapModel  : JSONModel
 
@@ -406,6 +415,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *originPrice;
 @property (nonatomic, strong) NSArray* bottomText;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ;
+@property (nonatomic, strong , nullable) FHHouseListHouseAdvantageTagModel *advantageDescription ;
 
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *pricePerSqmNum;
