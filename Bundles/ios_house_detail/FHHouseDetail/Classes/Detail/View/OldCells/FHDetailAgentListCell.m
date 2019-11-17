@@ -556,10 +556,8 @@
 
 - (void)layoutForStyle1 {
     [self setupUI];
-    [self modifiedLayout];
-    
+    [self modifiedLayoutNameNeedShowCenter:self.model.realtorTags.count >0];
     [self addSubview:self.tagsView];
-    
     [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(15);
         make.left.equalTo(self.name);
@@ -571,10 +569,8 @@
 
 - (void)layoutForStyle2 {
     [self setupUI];
-    [self modifiedLayout];
-    
+    [self modifiedLayoutNameNeedShowCenter:self.model.realtorEvaluate.length>0];
     [self addSubview:self.realtorEvaluate];
-    
     [self.realtorEvaluate mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(17);
         make.left.equalTo(self.name);
@@ -583,7 +579,7 @@
     }];
 }
 
--(void)modifiedLayout {
+-(void)modifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
     
     [self addSubview: self.vSepLine];
     
@@ -593,13 +589,15 @@
         make.centerY.equalTo(self.name);
         make.left.equalTo(self.name.mas_right).offset(6);
     }];
-    
     [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.avator.mas_right).offset(14);
-        make.top.mas_equalTo(self.avator).offset(4);
-        make.height.mas_equalTo(20);
-    }];
-
+            make.left.mas_equalTo(self.avator.mas_right).offset(14);
+            if(!showCenter){
+                make.centerY.equalTo(self.avator);
+            }else {
+                make.top.mas_equalTo(self.avator).offset(4);
+            }
+            make.height.mas_equalTo(20);
+        }];
     [self.name setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
 
     [self.agency mas_remakeConstraints:^(MASConstraintMaker *make) {
