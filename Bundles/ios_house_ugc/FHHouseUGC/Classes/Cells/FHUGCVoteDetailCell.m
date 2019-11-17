@@ -560,11 +560,25 @@
             weakSelf.voteInfo.voteState = FHUGCVoteStateNone;
         } else {
             FHUGCVoteResponseModel *responseModel = (FHUGCVoteResponseModel *)model;
-            if (responseModel.status == 0) {
+            if ([responseModel.status isEqualToString:@"0"]) {
                 // 成功
                 // [[ToastManager manager] showToast:@"投票成功"];
                 weakSelf.voteInfo.selected = YES;
-                // add by zyk  根据返回数据 更新 选项
+                if (responseModel.data.optionIds.count > 0) {
+                    for (FHUGCVoteInfoVoteInfoItemsModel *item in weakSelf.voteInfo.items) {
+                        if (item.selected) {
+                            item.selected = NO;
+                        }
+                        [responseModel.data.optionIds enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                            NSString *objIndex = [NSString stringWithFormat:@"%@",obj];
+                            if (objIndex.length > 0) {
+                                if ([objIndex isEqualToString:item.index]) {
+                                    item.selected = YES;
+                                }
+                            }
+                        }];
+                    }
+                }
                 weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
                 [weakSelf refreshWithData:weakSelf.voteInfo];
                 NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
