@@ -174,7 +174,7 @@
 {
     if (!_imageTagLabel) {
         _imageTagLabel = [[UILabel alloc]init];
-        _imageTagLabel.text = @"新上";
+        _imageTagLabel.text = @"";
         _imageTagLabel.textAlignment = NSTextAlignmentCenter;
         _imageTagLabel.font = [UIFont themeFontRegular:10];
         _imageTagLabel.textColor = [UIColor whiteColor];
@@ -604,7 +604,7 @@
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
     self.mainTitleLabel.text = commonModel.displayTitle;
     self.subTitleLabel.text = commonModel.displayDescription;
-    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:commonModel.tags];
+    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:commonModel.tags];
     self.tagLabel.attributedText =  attributeString;
     self.priceLabel.text = commonModel.displayPricePerSqm;
     //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
@@ -677,7 +677,7 @@
      self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
      self.mainTitleLabel.text = commonModel.displayTitle;
      self.subTitleLabel.text = commonModel.displayDescription;
-     NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:commonModel.tags];
+     NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:commonModel.tags];
      self.tagLabel.attributedText =  attributeString;
      self.priceLabel.text = commonModel.displayPricePerSqm;
      //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
