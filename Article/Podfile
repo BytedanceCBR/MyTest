@@ -54,7 +54,7 @@ def fhPods
 
 #     pod 'ios_house_im', '0.1.13-rc.3'
 #     pod 'ios_house_im' , :path => '../../ios_house_im/ios_house_im'
-     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '8d0a248e7ff340e90caa271846770f17b1b455f8'
+     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => 'fd1edf1bb7a7f8eada3c481df454127da309aa2f'
 
     #pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
     pod 'ios_house_filter' , '1.0.1'
@@ -444,7 +444,7 @@ def appPods
     #-----头条日志库-----
     pod_binary 'TTTracker', '10.0.5'
     #-----头条推送SDK----
-    pod_binary 'TTPushSDK', '0.1.1'
+    pod 'TTPushSDK', '0.1.1'
     
     #-----路由-----
     pod 'TTRoute','1.1.3-rc.0-f100' # git:'git@code.byted.org:TTIOS/tt_pods_route.git', :branch => 'f100'
