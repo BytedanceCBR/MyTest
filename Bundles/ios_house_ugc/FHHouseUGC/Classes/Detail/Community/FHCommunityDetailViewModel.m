@@ -955,7 +955,7 @@
     tracer[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     // 埋点
     [infoDict setValue:tracer forKey:@"tracer"];
-    // NSString *name = [NSString stringWithFormat:@"%@小区圈",item.socialGroupName];
+    // NSString *name = [NSString stringWithFormat:@"%@圈子",item.socialGroupName];
     infoDict[@"title"] = item.socialGroupName;
     infoDict[@"social_group_id"] = item.socialGroupId;
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];

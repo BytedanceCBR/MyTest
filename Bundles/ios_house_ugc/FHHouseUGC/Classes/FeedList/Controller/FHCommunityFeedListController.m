@@ -398,7 +398,7 @@
     } else  if (self.listType == FHCommunityFeedListTypeNearby) {
         page_type = @"nearby_list";
     }
-    tracerDict[@"page_type"] = page_type;// “附近”：’nearby_list‘；“我加入的”：’my_join_list‘；'小区圈子详情页‘：community_group_detail‘
+    tracerDict[@"page_type"] = page_type;// “附近”：’nearby_list‘；“我加入的”：’my_join_list‘；'圈子子详情页‘：community_group_detail‘
     [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;

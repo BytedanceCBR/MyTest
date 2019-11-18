@@ -60,7 +60,7 @@ static NSString *const kFHUGCGoodPostNotification = @"k_fh_ugc_good_post_finish"
 // 删帖成功 更新帖子数 - 1
 - (void)updatePostDelSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model;
 
-// 非关注列表中的小区圈子数据 更新
+// 非关注列表中的圈子子数据 更新
 - (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model;// 内容更新
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
