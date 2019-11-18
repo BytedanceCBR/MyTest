@@ -495,7 +495,7 @@
     if ([TTAccountManager isLogin]) {
         [self gotoVoteVC];
     } else {
-        [self gotoLogin:1];
+        [self gotoLogin:FHUGCLoginFrom_VOTE];
     }
 }
 
@@ -511,11 +511,11 @@
     if ([TTAccountManager isLogin]) {
         [self gotoPostVC];
     } else {
-        [self gotoLogin:0];
+        [self gotoLogin:FHUGCLoginFrom_POST];
     }
 }
 
-- (void)gotoLogin:(NSInteger)from {
+- (void)gotoLogin:(FHUGCLoginFrom)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *page_type = @"topic_detail";
     [params setObject:page_type forKey:@"enter_from"];
@@ -528,11 +528,11 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                if(from == 0) {
+                if(from == FHUGCLoginFrom_POST) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [wSelf gotoPostVC];
                     });
-                } else if(from == 1) {
+                } else if(from == FHUGCLoginFrom_VOTE) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [wSelf gotoVoteVC];
                     });
