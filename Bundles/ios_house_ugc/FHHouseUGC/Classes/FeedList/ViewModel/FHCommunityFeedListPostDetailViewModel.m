@@ -31,6 +31,7 @@
 #import <TTVPlayVideo.h>
 #import <TTVFeedCellWillDisplayContext.h>
 #import <TTVFeedCellAction.h>
+#import "FHUGCEmptyCell.h"
 
 @interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -189,10 +190,12 @@
             // 插入在置顶贴的下方
             [self.dataList insertObject:cellModel atIndex:index];
             [self reloadTableViewData];
-            [self.tableView layoutIfNeeded]; self.needRefreshCell = NO;
+            [self.tableView layoutIfNeeded];
+            self.needRefreshCell = NO;
             // JOKER: 发贴成功插入贴子后，滚动使露出
             if(index == 0) {
-                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+//                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
             } else {
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
                 CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
@@ -235,6 +238,7 @@
         return;
     }
     
+    self.viewController.needReloadData = NO;
     self.viewController.isLoadingData = YES;
     
     if(self.isRefreshingTip){
@@ -365,6 +369,7 @@
 
 - (void)reloadTableViewData {
     if(self.dataList.count > 0){
+        [self.tableView reloadData];
         [self updateTableViewWithMoreData:self.tableView.hasMore];
         self.tableView.backgroundColor = [UIColor themeGray7];
         
@@ -379,6 +384,7 @@
             self.tableView.tableFooterView = tableFooterView;
         }else{
             self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
+            [self.tableView reloadData];
         }
     }else{
         if([self isNotInAllTab]){
@@ -393,8 +399,8 @@
         self.tableView.tableFooterView = tableFooterView;
         self.refreshFooter.hidden = YES;
         self.tableView.backgroundColor = [UIColor whiteColor];
+        [self.tableView reloadData];
     }
-    [self.tableView reloadData];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -603,10 +609,12 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    self.currentCellModel = cellModel;
-    self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-    [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        self.currentCellModel = cellModel;
+        self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
+        [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    }
 }
 
 #pragma UISCrollViewDelegate

@@ -97,10 +97,6 @@
         }
     }
     [self initPublishBtn];
-//    if (_forumId > 0) {
-//        [self initGroupChatBtn];
-//        [self initBageView];
-//    }
 }
 
 - (void)initTableView {
