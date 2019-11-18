@@ -435,6 +435,7 @@
         FHUGCCommunityListModel *listModel = (FHUGCCommunityListModel *) model;
         if (error || !listModel || !(listModel.data)) {
             [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            self.completeBtn.hidden = YES;
             return;
         }
         NSMutableArray *socialGroupList = [NSMutableArray array];
@@ -456,8 +457,12 @@
         }];
         
         self.socialGroupList = socialGroupList;
-        
-        [self.tableView reloadData];
+        self.completeBtn.hidden = (self.socialGroupList.count == 0);
+        if(self.socialGroupList.count > 0) {
+            [self.tableView reloadData];
+        } else {
+            [self.emptyView showEmptyWithTip:@"您还没有关注圈子，快去关注吧" errorImage:nil showRetry:NO];
+        }
     }];
 }
 @end
