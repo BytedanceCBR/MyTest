@@ -196,9 +196,6 @@
         self.selectedSocialGroup = paramObj.allParams[@"selectedSocialGroup"];
         self.isAllSelected = [paramObj.allParams[@"isAllSelected"] boolValue];
         self.isPartialSelected = [paramObj.allParams[@"isPartialSelected"] boolValue];
-        self.isPartialSelected = !self.isAllSelected;
-        self.isFoldSocialGroupList = YES;
-    
     }
     return self;
 }
@@ -231,6 +228,19 @@
     [self addDefaultEmptyViewFullScreen];
     
     [self request];
+}
+
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if(!self.isAllSelected && !self.isPartialSelected) {
+        self.isFoldSocialGroupList = YES;
+    } else if(!self.isAllSelected && self.isPartialSelected) {
+        self.isFoldSocialGroupList = NO;
+    } else {
+        self.isFoldSocialGroupList = YES;
+    }
 }
 
 - (void)configNavigation {
@@ -411,7 +421,7 @@
         BOOL isSelected = model.isSelected;
         
         if(title.length > 0) {
-            socialGroupCell.titleLabel.text = [NSString stringWithFormat:@"%@可见", title];
+            socialGroupCell.titleLabel.text = title;
             socialGroupCell.checkButton.selected = isSelected;
         }
         return socialGroupCell;

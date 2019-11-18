@@ -255,7 +255,7 @@
 - (UILabel *)typeLabel {
     if(!_typeLabel) {
         _typeLabel = [UILabel new];
-        _typeLabel.textColor = [UIColor themeGray2];
+        _typeLabel.textColor = [UIColor themeGray1];
         _typeLabel.font = [UIFont themeFontRegular:16];
         _typeLabel.text = self.types.firstObject;
     }
@@ -336,7 +336,7 @@
     if(!_dateLabel) {
         _dateLabel = [UILabel new];
         _dateLabel.font = [UIFont themeFontRegular:16];
-        _dateLabel.textColor = [UIColor themeGray3];
+        _dateLabel.textColor = [UIColor themeGray1];
     }
     return _dateLabel;
 }

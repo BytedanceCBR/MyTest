@@ -288,19 +288,26 @@
         if(indexPath.row == 0) {
             cell = [tableView dequeueReusableCellWithIdentifier:[FHUGCVotePublishCityCell reusedIdentifier] forIndexPath:indexPath];
             NSInteger count = self.model.cityInfos.count;
+            FHUGCVotePublishCityCell* cityCell = (FHUGCVotePublishCityCell *)cell;
+            
             NSMutableString *title = @"未设置";
+            cityCell.cityLabel.textColor = [UIColor themeGray3];
+            
             if(self.model.isAllSelected) {
-                title = @"全部关注圈子可见";
+                title = @"全部关注圈子";
+                cityCell.cityLabel.textColor = [UIColor themeGray1];
             }
             else if(self.model.isPartialSelected) {
                 if(count > 1) {
-                    title = [NSMutableString stringWithFormat:@"%@等%@个圈子可见", self.model.cityInfos.firstObject.socialGroupName, @(count)];
+                    title = [NSMutableString stringWithFormat:@"%@等%@个圈子", self.model.cityInfos.firstObject.socialGroupName, @(count)];
+                    cityCell.cityLabel.textColor = [UIColor themeGray1];
                 }
                 else if(count == 0) {
                     // 默认未设置
                 }
                 else {
-                    title = [NSMutableString stringWithFormat:@"%@可见", self.model.cityInfos.firstObject.socialGroupName];
+                    title = [NSMutableString stringWithFormat:@"%@", self.model.cityInfos.firstObject.socialGroupName];
+                    cityCell.cityLabel.textColor = [UIColor themeGray1];
                 }
             }
             ((FHUGCVotePublishCityCell *)cell).cityLabel.text = title;
