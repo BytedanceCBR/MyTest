@@ -532,7 +532,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
             return [self getHeightShowNoData];
         }
         if (self.houseType == FHHouseTypeNewHouse) {
-            return 140.5;
+            return [FHHouseBaseNewHouseCell heightForData:nil];
         }
         return 75;
     }

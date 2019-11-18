@@ -112,7 +112,7 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 140.5;
+    return 130.5;
 }
 
 - (void)awakeFromNib {
@@ -622,9 +622,11 @@
     if(commonModel.advantageDescription)
     {
         self.bottomRecommendView.hidden = NO;
+        self.bottomRecommendViewBack.hidden = NO;
     }else
     {
         self.bottomRecommendView.hidden = YES;
+        self.bottomRecommendViewBack.hidden = YES;
     }
     
     if (commonModel.advantageDescription.icon.url) {
@@ -689,24 +691,46 @@
      self.priceLabel.text = commonModel.pricePerSqmNum;
      self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
     
-     if (commonModel.advantageDescription.icon.url) {
-         self.bottomIconImageView.hidden = NO;
-         [self.bottomIconImageView bd_setImageWithURL:[NSURL URLWithString:commonModel.advantageDescription.icon.url]];
-     }else
-     {
-         self.bottomIconImageView.hidden = YES;
-     }
     
-     if (commonModel.advantageDescription.text) {
-         self.bottomRecommendLabel.hidden = NO;
-         self.bottomRecommendLabel.text = commonModel.advantageDescription.text;
-         if (commonModel.advantageDescription.textColor) {
-             self.bottomRecommendLabel.textColor = [UIColor colorWithHexStr:commonModel.advantageDescription.textColor];
-         }
-     }else
-     {
-         self.bottomRecommendLabel.hidden = YES;
-     }
+    if(commonModel.advantageDescription)
+    {
+        self.bottomRecommendView.hidden = NO;
+        self.bottomRecommendViewBack.hidden = NO;
+    }else
+    {
+        self.bottomRecommendView.hidden = YES;
+        self.bottomRecommendViewBack.hidden = YES;
+    }
+    
+    if (commonModel.advantageDescription.icon.url) {
+        self.bottomIconImageView.hidden = NO;
+        [self.bottomIconImageView bd_setImageWithURL:[NSURL URLWithString:commonModel.advantageDescription.icon.url]];
+    }else
+    {
+        self.bottomIconImageView.hidden = YES;
+    }
+    
+    if (commonModel.advantageDescription.text) {
+        self.bottomRecommendLabel.hidden = NO;
+        self.bottomRecommendLabel.text = commonModel.advantageDescription.text;
+        if (commonModel.advantageDescription.textColor) {
+            self.bottomRecommendLabel.textColor = [UIColor colorWithHexStr:commonModel.advantageDescription.textColor];
+        }
+    }else
+    {
+        self.bottomRecommendLabel.hidden = YES;
+    }
+    
+    if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
+        
+        self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
+        self.imageTagLabel.text = commonModel.houseImageTag.text;
+        self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
+        self.imageTagLabelBgView.hidden = NO;
+    }else {
+        
+        self.imageTagLabelBgView.hidden = YES;
+    }
     
     
      if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
