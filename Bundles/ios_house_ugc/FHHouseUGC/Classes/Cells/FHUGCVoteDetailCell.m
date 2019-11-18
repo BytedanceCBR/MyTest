@@ -601,6 +601,9 @@
                             if (objIndex.length > 0) {
                                 if ([objIndex isEqualToString:item.index]) {
                                     item.selected = YES;
+                                    NSInteger val = [item.voteCount integerValue];
+                                    val += 1;
+                                    item.voteCount = [NSString stringWithFormat:@"%ld",val];
                                 }
                             }
                         }];
@@ -699,7 +702,6 @@
             if (item.selected) {
                 hasSelected = YES;
                 selectCount++;
-                totalCount += 1;
             }
             optionV.mainSelected = self.voteInfo.selected;
         }
@@ -713,9 +715,6 @@
                 item.percent = 0;
             } else {
                 NSInteger voteCount = [item.voteCount integerValue];
-                if (item.selected) {
-                    voteCount += 1;
-                }
                 item.percent = (double)voteCount / totalCount;
             }
             [optionV refreshWithData:item];
