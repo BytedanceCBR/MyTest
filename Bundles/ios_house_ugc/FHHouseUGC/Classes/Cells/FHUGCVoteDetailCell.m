@@ -247,6 +247,11 @@
     self.userInfoView.userName.text = self.cellModel.user.name;
     self.userInfoView.descLabel.attributedText = self.cellModel.desc;
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    __weak typeof(self) weakSelf = self;
+    self.userInfoView.deleteCellBlock = ^{
+        FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
+        [viewModel.detailController goBack];
+    };
     //设置底部
     self.bottomView.cellModel = self.cellModel;
     
