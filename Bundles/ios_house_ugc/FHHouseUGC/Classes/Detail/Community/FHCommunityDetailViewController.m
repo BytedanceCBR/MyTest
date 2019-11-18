@@ -14,11 +14,14 @@
 #import "FHUGCFollowButton.h"
 #import <UILabel+House.h>
 #import <TTDeviceHelper.h>
+#import "FHUGCPostMenuView.h"
+#import "FHCommonDefines.h"
 
-@interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol>
+@interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol, FHUGCPostMenuViewDelegate>
 @property (nonatomic, strong) FHCommunityDetailViewModel *viewModel;
 @property (nonatomic, strong) UIImage *shareWhiteImage;
 @property (nonatomic, strong) UIButton *shareButton;// 分享
+@property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
 
 @end
 
@@ -312,7 +315,39 @@
 
 //发布按钮点击
 - (void)goToPublish {
+    
+    [self showPublishMenu];
+
+}
+- (FHUGCPostMenuView *)publishMenuView {
+    
+    if(!_publishMenuView) {
+        _publishMenuView = [[FHUGCPostMenuView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        _publishMenuView.delegate = self;
+    }
+    return _publishMenuView;
+}
+
+- (void)showPublishMenu {
+    [self.publishMenuView showForButton:self.publishBtn];
+}
+
+#pragma mark - FHUGCPostMenuViewDelegate
+
+- (void)gotoPostPublish {
     [self.viewModel gotoPostThreadVC];
+}
+
+- (void)gotoVotePublish {
+    [self.viewModel gotoVotePublish];
+}
+
+- (void)postMenuViewWillShow {
+    self.groupChatBtn.hidden = YES;
+}
+
+- (void)postMenuDidHide {
+    self.groupChatBtn.hidden = NO;
 }
 
 //去到群聊

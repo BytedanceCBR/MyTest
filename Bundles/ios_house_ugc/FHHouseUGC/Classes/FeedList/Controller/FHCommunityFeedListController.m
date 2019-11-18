@@ -24,15 +24,15 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHUGCConfig.h"
 #import "ToastManager.h"
+#import "FHUGCPostMenuView.h"
 #import "FHCommonDefines.h"
 
-@interface FHCommunityFeedListController ()<SSImpressionProtocol>
+@interface FHCommunityFeedListController ()<SSImpressionProtocol, FHUGCPostMenuViewDelegate>
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic, copy) void(^notifyCompletionBlock)(void);
 @property(nonatomic, assign) NSInteger currentCityId;
-@property(nonatomic, strong) UIView *publishMenuView;
-@property(nonatomic, strong) UIView *publishContentView;
+@property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
 
 @end
 
@@ -304,9 +304,22 @@
     [self showPublishMenu];
 }
 
-- (void)gotoPublishPost:(UIButton *)sender {
+- (FHUGCPostMenuView *)publishMenuView {
     
-    [self hidePublishMenu];
+    if(!_publishMenuView) {
+        _publishMenuView = [[FHUGCPostMenuView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        _publishMenuView.delegate = self;
+    }
+    return _publishMenuView;
+}
+
+- (void)showPublishMenu {
+    [self.publishMenuView showForButton:self.publishBtn];
+}
+
+#pragma mark - FHUGCPostMenuViewDelegate
+
+- (void)gotoPostPublish {
     
     if(self.publishBlock){
         self.publishBlock();
@@ -315,109 +328,13 @@
     [self gotoPostThreadVC];
 }
 
-- (void)gotoPublishVote:(UIButton *)sender {
-    
-    [self hidePublishMenu];
+- (void)gotoVotePublish {
     
     if ([TTAccountManager isLogin]) {
         [self gotoVoteVC];
     } else {
         [self gotoLogin:1];
     }
-    
-}
-
-- (UIView *)publishMenuView {
-    
-    if(!_publishMenuView) {
-        
-        _publishMenuView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-        
-        // 添加毛玻璃效果
-        UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-        UIVisualEffectView * effectView = [[UIVisualEffectView alloc]initWithEffect:blurEffect];
-        //设置虚化度
-        effectView.alpha = 0.8;
-        effectView.frame = _publishMenuView.bounds;
-        [_publishMenuView addSubview:effectView];
-        
-        // 添加隐藏手势
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(publishMenuCancelAction:)];
-        [_publishMenuView addGestureRecognizer:tapGesture];
-        
-        // 添加弹出菜单
-        [_publishMenuView addSubview:self.publishContentView];
-        
-    }
-    return _publishMenuView;
-}
-
-- (UIView *)publishContentView {
-    
-    if(!_publishContentView) {
-        
-        CGFloat height = 200;
-        CGRect frame = CGRectMake(0, SCREEN_HEIGHT - height, SCREEN_WIDTH, height);
-        _publishContentView = [[UIView alloc] initWithFrame:frame];
-        
-        UIButton *pubPostButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [pubPostButton setTitle:@"发贴子" forState:UIControlStateNormal];
-        [pubPostButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        pubPostButton.titleLabel.font = [UIFont themeFontRegular:18];
-        pubPostButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-        [pubPostButton addTarget:self action:@selector(gotoPublishPost:) forControlEvents:UIControlEventTouchUpInside];
-        
-        UIButton *pubVoteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [pubVoteButton setTitle:@"发投票" forState:UIControlStateNormal];
-        [pubVoteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        pubVoteButton.titleLabel.font = [UIFont themeFontRegular:18];
-        pubVoteButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-        [pubVoteButton addTarget:self action:@selector(gotoPublishVote:) forControlEvents:UIControlEventTouchUpInside];
-        
-        [_publishContentView addSubview:pubPostButton];
-        [_publishContentView addSubview:pubVoteButton];
-        
-        [pubPostButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(SCREEN_WIDTH / 2.0);
-            make.height.mas_equalTo(100);
-            make.left.equalTo(_publishContentView);
-            make.right.equalTo(pubVoteButton.mas_left);
-        }];
-        
-        [pubVoteButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(SCREEN_WIDTH / 2.0);
-            make.height.mas_equalTo(100);
-            make.right.equalTo(_publishContentView);
-        }];
-    }
-    return _publishContentView;
-}
-
-- (void)publishMenuCancelAction: (UITapGestureRecognizer *)tap {
-    [self hidePublishMenu];
-}
-
-- (void)showPublishMenu {
-    [[UIApplication sharedApplication].keyWindow addSubview:self.publishMenuView];
-    self.publishMenuView.alpha = 0;
-    
-    CGRect frame = self.publishContentView.frame;
-    frame.origin.y = SCREEN_HEIGHT - frame.size.height;
-    [UIView animateWithDuration:0.3 animations:^{
-        self.publishMenuView.alpha = 1.0;
-        self.publishContentView.frame = frame;
-    }];
-}
-
-- (void)hidePublishMenu {
-    CGRect frame = self.publishContentView.frame;
-    frame.origin.y = SCREEN_HEIGHT;
-    [UIView animateWithDuration:0.3 animations:^{
-        self.publishContentView.frame = frame;
-        self.publishMenuView.alpha = 0;
-    } completion:^(BOOL finished) {
-        [self.publishMenuView removeFromSuperview];
-    }];
 }
 
 // 发布按钮点击
@@ -471,11 +388,7 @@
 
 // 跳转到UGC发布器
 - (void)gotoPostVC {
-    
-    // TODO: Delete Code
-    [self gotoVoteVC];
-    return;
-    
+
     // 跳转到发布器
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"element_type"] = @"feed_publisher";
