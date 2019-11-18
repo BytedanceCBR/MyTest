@@ -144,10 +144,11 @@
 
 - (void)enablePublish:(BOOL)isEnable {
     if(isEnable) {
-        [_publishBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+        [self.publishBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     } else {
-        [_publishBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [self.publishBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
     }
+    self.publishBtn.enabled = isEnable;
 }
 
 @end
