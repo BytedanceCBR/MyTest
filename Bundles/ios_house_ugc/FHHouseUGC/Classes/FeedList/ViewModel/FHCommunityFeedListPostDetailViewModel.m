@@ -238,6 +238,7 @@
         return;
     }
     
+    self.viewController.needReloadData = NO;
     self.viewController.isLoadingData = YES;
     
     if(self.isRefreshingTip){

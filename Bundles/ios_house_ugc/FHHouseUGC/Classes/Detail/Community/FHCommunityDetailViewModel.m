@@ -299,7 +299,7 @@
                 }
                 
                 if (refreshFeed) {
-                    [self.feedListController startLoadData:NO];
+                    [self.feedListController startLoadData:YES];
                 }
             }
         }
