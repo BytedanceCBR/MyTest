@@ -12,8 +12,10 @@
 #import "FHExtendHotAreaButton.h"
 #import "FHShadowView.h"
 #import "FHHousePhoneCallUtils.h"
+#import "UIColor+Theme.h"
 #import <FHHouseBase/FHCommonDefines.h>
 #import <TTThemed/SSViewBase.h>
+#import <TTThemed/UIColor+TTThemeExtension.h>
 
 @interface FHNeighbourhoodAgencyCardCell ()
 
@@ -67,6 +69,8 @@
     CALayer *layer = _containerView.layer;
     layer.cornerRadius = 4;
     layer.masksToBounds = YES;
+    layer.borderColor =  [UIColor colorWithHexString:@"#e8e8e8"].CGColor;
+    layer.borderWidth = 0.5f;
     [self.contentView addSubview:_containerView];
 
     _topInfoView = [[UIView alloc] init];
