@@ -225,7 +225,7 @@
 
 - (FHErrorView *)errorView {
     if(!_errorView){
-        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight)];
+        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 400)];
     }
     return _errorView;
 }
@@ -366,16 +366,33 @@
 - (void)reloadTableViewData {
     if(self.dataList.count > 0){
         [self updateTableViewWithMoreData:self.tableView.hasMore];
-        self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
+        self.tableView.backgroundColor = [UIColor themeGray7];
+        
+        CGFloat height = [self getVisibleHeight:5];
+        if(height < self.viewController.errorViewHeight && height > 0 && self.viewController.errorViewHeight > 0){
+            CGFloat refreshFooterBottomHeight = self.tableView.mj_footer.height;
+            if ([TTDeviceHelper isIPhoneXSeries]) {
+                refreshFooterBottomHeight += 34;
+            }
+            UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight - height - refreshFooterBottomHeight)];
+            tableFooterView.backgroundColor = [UIColor themeGray7];
+            self.tableView.tableFooterView = tableFooterView;
+        }else{
+            self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
+        }
     }else{
         if([self isNotInAllTab]){
             [self.errorView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
-            self.tableView.tableFooterView = self.errorView;
         }else{
             [self.errorView showEmptyWithTip:@"该圈子还没有内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
-            self.tableView.tableFooterView = self.errorView;
         }
+        
+        UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight)];
+        tableFooterView.backgroundColor = [UIColor whiteColor];
+        [tableFooterView addSubview:self.errorView];
+        self.tableView.tableFooterView = tableFooterView;
         self.refreshFooter.hidden = YES;
+        self.tableView.backgroundColor = [UIColor whiteColor];
     }
     [self.tableView reloadData];
 }
@@ -388,6 +405,19 @@
         [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }
+}
+
+- (CGFloat)getVisibleHeight:(NSInteger)maxCount {
+    CGFloat height = 0;
+    if(self.dataList.count <= maxCount){
+        for (FHFeedUGCCellModel *cellModel in self.dataList) {
+            Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
+            if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
+                height += [cellClass heightForData:cellModel];
+            }
+        }
+    }
+    return height;
 }
 
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
@@ -446,11 +476,6 @@
 }
 
 - (void)postGoodSuccess:(NSNotification *)noti {
-    //多个tab时候，仅仅强插在全部页面
-    if([self isNotInAllTab]){
-        return;
-    }
-    
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];

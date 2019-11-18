@@ -402,11 +402,12 @@
     feedListController.hidePublishBtn = YES;
     feedListController.tabName = tabName;
     //错误页高度
-    CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.headerView.height;
+    CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
     if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1){
         errorViewHeight -= kSegmentViewHeight;
     }
     feedListController.errorViewHeight = errorViewHeight;
+    feedListController.notLoadDateWhenEmpty = YES;
     //传入选项信息
     feedListController.operations = self.socialGroupModel.data.permission;
     [self.subVCs addObject:feedListController];
