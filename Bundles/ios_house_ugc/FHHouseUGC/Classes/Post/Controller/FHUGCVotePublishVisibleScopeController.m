@@ -434,9 +434,7 @@
         StrongSelf;
         FHUGCCommunityListModel *listModel = (FHUGCCommunityListModel *) model;
         if (error || !listModel || !(listModel.data)) {
-            if (error.code != -999) {
-                
-            }
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             return;
         }
         NSMutableArray *socialGroupList = [NSMutableArray array];
