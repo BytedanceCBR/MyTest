@@ -67,7 +67,7 @@
 @property(nonatomic, strong) YYLabel *tagLabel; // 标签 label
 @property(nonatomic, strong) UILabel *priceLabel; //总价
 @property(nonatomic, strong) UILabel *originPriceLabel;
-@property(nonatomic, strong) UILabel *pricePerSqmLabel; // 价格/平米
+//@property(nonatomic, strong) UILabel *pricePerSqmLabel; // 价格/平米
 @property(nonatomic, strong) UILabel *distanceLabel; // 30 分钟到达
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 @property(nonatomic, strong) UIView *bottomRecommendView;//底部推荐理由
@@ -112,7 +112,7 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 130.5;
+    return 130;
 }
 
 - (void)awakeFromNib {
@@ -293,16 +293,6 @@
     return _originPriceLabel;
 }
 
--(UILabel *)pricePerSqmLabel
-{
-    if (!_pricePerSqmLabel) {
-        _pricePerSqmLabel = [[UILabel alloc]init];
-        _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-        _pricePerSqmLabel.textColor = [UIColor themeGray3];
-    }
-    return _pricePerSqmLabel;
-}
-
 -(UILabel *)distanceLabel
 {
     if (!_distanceLabel) {
@@ -470,7 +460,6 @@
     }];
     
     [_priceBgView addSubview:self.priceLabel];
-    [_priceBgView addSubview:self.pricePerSqmLabel];
     //    [_priceBgView addSubview:self.closeBtn];
     [_priceBgView addSubview:self.trueHouseLabel];
     _priceBgView.backgroundColor = [UIColor whiteColor];
@@ -479,14 +468,6 @@
     [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.height = YGPointValue(19);
-        layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
-    }];
-    
-    _pricePerSqmLabel.textAlignment = 2;
-    [_pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.marginTop = YGPointValue(2);
-        layout.height = YGPointValue(14);
         layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
     }];
     
@@ -612,12 +593,6 @@
     [self updateMainImageWithUrl:imageModel.url];
     
     _priceLabel.font = [UIFont themeFontSemibold:16];
-    _pricePerSqmLabel.font = [UIFont themeFontSemibold:16];
-    _pricePerSqmLabel.textColor = [UIColor themeRed1];
-    
-    self.priceLabel.text = commonModel.pricePerSqmNum;
-    self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
-
     
     if(commonModel.advantageDescription)
     {
@@ -660,7 +635,7 @@
     [self hideRecommendReason];
     [self updateTitlesLayout:attributeString.length > 0];
     
-    [self.bottomRecommendLabel.yoga markDirty];    
+    [self.bottomRecommendLabel.yoga markDirty];
     [self.contentView.yoga applyLayoutPreservingOrigin:NO];
 }
 
@@ -680,11 +655,6 @@
      [self updateMainImageWithUrl:imageModel.url];
     
      _priceLabel.font = [UIFont themeFontSemibold:16];
-     _pricePerSqmLabel.font = [UIFont themeFontSemibold:16];
-     _pricePerSqmLabel.textColor = [UIColor themeRed1];
-    
-     self.priceLabel.text = commonModel.pricePerSqmNum;
-     self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
     
     
     if(commonModel.advantageDescription)
@@ -775,8 +745,6 @@
     self.tagLabel.attributedText =  attributeString;
     
     self.priceLabel.text = model.pricePerSqmNum;
-    self.pricePerSqmLabel.text = model.pricePerSqmUnit;
-    self.pricePerSqmLabel.textColor = [UIColor themeRed1];
     
     [self hideRecommendReason];
     
@@ -827,7 +795,7 @@
     [self.rightInfoView.yoga markDirty];
     [self.tagLabel.yoga markDirty];
     [self.priceLabel.yoga markDirty];
-    [self.pricePerSqmLabel.yoga markDirty];
+//    [self.pricePerSqmLabel.yoga markDirty];
     [self.priceBgView.yoga markDirty];
 }
 
