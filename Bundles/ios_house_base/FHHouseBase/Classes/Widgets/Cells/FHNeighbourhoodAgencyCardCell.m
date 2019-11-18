@@ -171,6 +171,7 @@
     [self.mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.topInfoView).offset(20);
         make.left.mas_equalTo(self.topInfoView).offset(20);
+        make.right.mas_lessThanOrEqualTo(self.rightArrow.mas_left).offset(-20);
     }];
 
 
@@ -193,8 +194,10 @@
     }];
 
     [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.topInfoView).offset(-20);
+        make.right.mas_equalTo(self.topInfoView.mas_right).offset(-20);
         make.centerY.mas_equalTo(self.topInfoView);
+        make.width.mas_equalTo(18);
+        make.height.mas_equalTo(18);
     }];
 
     [self.dividerView mas_makeConstraints:^(MASConstraintMaker *make) {
