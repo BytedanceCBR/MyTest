@@ -50,8 +50,10 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHUGCVotePublishOptionCell: FHUGCVotePublishBaseCell
-@property (nonatomic, strong) UIImageView *deleteImageView;
+@property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UITextField *optionTextField;
+
+- (void)updateImageViewWithOption:(FHUGCVotePublishOption *)option;
 @end
 
 @interface FHUGCVotePublishVoteTypeCell: FHUGCVotePublishBaseCell<UIPickerViewDelegate, UIPickerViewDataSource>

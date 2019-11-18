@@ -162,16 +162,15 @@
 // MARK: 投票选项Cell
 @implementation FHUGCVotePublishOptionCell
 
-- (UIImageView *)deleteImageView {
-    if(!_deleteImageView) {
-        _deleteImageView = [UIImageView new];
-        _deleteImageView.userInteractionEnabled = YES;
-        _deleteImageView.image = [UIImage imageNamed:@"fh_ugc_vote_publish_delete_option"];
-        
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteOptionAction:)];
-        [_deleteImageView addGestureRecognizer:tap];
+-(UIButton *)deleteButton {
+    if(!_deleteButton) {
+        _deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _deleteButton.userInteractionEnabled = YES;
+        [_deleteButton setImage:[UIImage imageNamed:@"fh_ugc_vote_publish_delete_option_invalid"] forState:UIControlStateDisabled];
+        [_deleteButton setImage:[UIImage imageNamed:@"fh_ugc_vote_publish_delete_option_valid"] forState:UIControlStateNormal];
+        [_deleteButton addTarget:self action:@selector(deleteOptionAction:) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _deleteImageView;
+    return _deleteButton;
 }
 
 - (UITextField *)optionTextField {
@@ -189,17 +188,17 @@
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         
-        [self.contentView addSubview:self.deleteImageView];
+        [self.contentView addSubview:self.deleteButton];
         [self.contentView addSubview:self.optionTextField];
         
-        [self.deleteImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.height.mas_offset(18);
             make.left.equalTo(self.contentView).offset(PADDING);
             make.centerY.equalTo(self.optionTextField);
         }];
         
         [self.optionTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.deleteImageView.mas_right).offset(8);
+            make.left.equalTo(self.deleteButton.mas_right).offset(8);
             make.top.equalTo(self.contentView).offset(24);
             make.bottom.equalTo(self.contentView).offset(-16);
             make.right.equalTo(self.contentView).offset(-PADDING);
@@ -216,10 +215,14 @@
     return self;
 }
 
-- (void)deleteOptionAction: (UITapGestureRecognizer *)tap {
+- (void)deleteOptionAction: (UIButton *)sender {
     if([self.delegate respondsToSelector:@selector(deleteOptionCell:)]) {
         [self.delegate deleteOptionCell:self];
     }
+}
+
+- (void)updateImageViewWithOption:(FHUGCVotePublishOption *)option {
+    self.deleteButton.enabled = option.isValid;
 }
 
 @end

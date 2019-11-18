@@ -31,6 +31,13 @@ typedef NS_ENUM(NSInteger, VisibleType) {
 @property (nonatomic, copy) NSString *socialGroupName;
 @end
 
+@interface FHUGCVotePublishOption: NSObject
+@property (nonatomic, copy) NSString *content;
+@property (nonatomic, assign) BOOL isValid;
+
++ (instancetype)defaultOption;
+@end
+
 @interface FHUGCVotePublishModel : NSObject
 @property (nonatomic, assign) BOOL isAllSelected;
 @property (nonatomic, assign) BOOL isPartialSelected;
@@ -38,7 +45,7 @@ typedef NS_ENUM(NSInteger, VisibleType) {
 @property (nonatomic, strong) NSArray<FHUGCVotePublishCityInfo *> *cityInfos;
 @property (nonatomic, copy) NSString *voteTitle;
 @property (nonatomic, copy) NSString *voteDescription;
-@property (nonatomic, strong) NSMutableArray<NSString *> *options;
+@property (nonatomic, strong) NSMutableArray<FHUGCVotePublishOption *> *options;
 @property (nonatomic, assign) VoteType type;
 @property (nonatomic, strong) NSDate *deadline;
 @end

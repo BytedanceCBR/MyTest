@@ -64,7 +64,7 @@
         UIButton *confirmButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [confirmButton setTitle:@"确定" forState:UIControlStateNormal];
         confirmButton.titleLabel.font = [UIFont themeFontRegular:16];
-        [confirmButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [confirmButton setTitleColor:[UIColor themeRed3] forState:UIControlStateNormal];
         [confirmButton sizeToFit];
         [confirmButton addTarget:self action:@selector(dateConfirmAction:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -313,7 +313,9 @@
             
             NSInteger index = indexPath.row - OPTION_START_INDEX;
             if(index >= 0 && index < self.model.options.count) {
-                ((FHUGCVotePublishOptionCell *)cell).optionTextField.text = self.model.options[index];
+                FHUGCVotePublishOptionCell *optionCell = (FHUGCVotePublishOptionCell *)cell;
+                optionCell.optionTextField.text = self.model.options[index].content;
+                [optionCell updateImageViewWithOption:self.model.options[index]];
             }
         }
     }
@@ -344,7 +346,7 @@
     if(index < self.model.options.count) {
         NSString *limitedText = [text substringToIndex:MIN(text.length, OPTION_LENGTH_LIMIT)];
         optionCell.optionTextField.text = limitedText;
-        self.model.options[index] = limitedText;
+        self.model.options[index].content = limitedText;
         [self checkIfEnablePublish];
     }
 }
@@ -353,23 +355,6 @@
     self.model.deadline = date;
 }
 
-- (void)deleteOptionCell:(id)optionCell {
-    NSMutableArray *options = [NSMutableArray arrayWithArray:self.model.options];
-    
-    if(options == 2) {
-        [[ToastManager manager] showToast:@"最少填写两个选项"];
-        return;
-    }
-    
-    NSInteger optionStartIndex = OPTION_START_INDEX;
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:optionCell];
-    if(indexPath.row >= optionStartIndex) {
-        NSUInteger index = MIN(MAX(indexPath.row - optionStartIndex, 0), options.count);
-        [options removeObjectAtIndex:index];
-        self.model.options = options;
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    }
-}
 - (void)datePickerCell:(FHUGCVotePublishDatePickCell *)datePickerCell toggleWithStatus:(BOOL)isHidden {
     
     self.isDatePickerHidden = isHidden;
@@ -410,9 +395,9 @@
     params[@"visible"] = @(self.model.visibleType);
     params[@"deadline"] = @((NSInteger)[self.model.deadline timeIntervalSince1970]);
     NSMutableArray *optionList = [NSMutableArray array];
-    [self.model.options enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.model.options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
         NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-        dictionary[@"title"] = obj;
+        dictionary[@"title"] = option.content;
         [optionList addObject:dictionary];
     }];
     params[@"options"] = optionList;
@@ -447,13 +432,52 @@
 }
 
 - (void)addOptionAction:(UITapGestureRecognizer *)tap {
-    NSMutableArray *options = [NSMutableArray arrayWithArray:self.model.options];
-    [options addObject:@""];
+    NSMutableArray<FHUGCVotePublishOption *> *options = [NSMutableArray arrayWithArray:self.model.options];
+    [options addObject:[FHUGCVotePublishOption defaultOption]];
+    
+    if(options.count > 2) {
+        [options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
+            option.isValid = YES;
+        }];
+        
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:OPTION_START_INDEX inSection:1], [NSIndexPath indexPathForRow: OPTION_START_INDEX + 1 inSection:1] ] withRowAnimation:UITableViewRowAnimationFade];
+    }
     
     self.model.options = options;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:1] inSection:1];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+}
+
+- (void)deleteOptionCell:(FHUGCVotePublishOptionCell *)optionCell {
+    NSMutableArray *options = [NSMutableArray arrayWithArray:self.model.options];
+    NSInteger optionStartIndex = OPTION_START_INDEX;
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:optionCell];
+    if(indexPath.row >= optionStartIndex) {
+        NSUInteger index = MIN(MAX(indexPath.row - optionStartIndex, 0), options.count);
+        
+        if(self.model.options.count <= 3) {
+            [self.model.options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
+                option.isValid = NO;
+            }];
+            
+            NSMutableArray *indexPaths = [NSMutableArray array];
+            for(NSInteger i = 0; i < options.count; i++) {
+                if(i == index) {
+                    continue;
+                }
+                
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i + optionStartIndex inSection:1];
+                [indexPaths addObject:indexPath];
+            }
+            
+            [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+        }
+        
+        [options removeObjectAtIndex:index];
+        self.model.options = options;
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
 }
 
 - (void)gotoVoteVisibleScopePage {
@@ -472,6 +496,7 @@
         self.model.visibleType = VisibleType_Group;
         self.model.cityInfos = cityInfos;
         [self reloadTableView];
+        [self checkIfEnablePublish];
     };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_vote_publish_visible_scope"];
@@ -488,6 +513,7 @@
         StrongSelf;
         self.model.type = selectedModel.type;
         [self reloadTableView];
+        [self checkIfEnablePublish];
     };
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -503,7 +529,7 @@
 - (void)checkIfEnablePublish {
     
     BOOL hasTitle = self.model.voteTitle.length > 0;
-    BOOL hasOption = self.model.options.count >= 2 && self.model.options[0].length > 0 && self.model.options[1].length > 0;
+    BOOL hasOption = self.model.options.count >= 2 && self.model.options[0].content.length > 0 && self.model.options[1].content.length > 0;
     BOOL hasVisibleScope = self.model.isAllSelected || self.model.isPartialSelected;
     BOOL hasVoteType = self.model.type != VoteType_Unknown;
     
@@ -519,5 +545,6 @@
     NSIndexPath *datePickCellIndexPath = [NSIndexPath indexPathForRow:2 inSection:0];
     [self.tableView reloadRowsAtIndexPaths:@[datePickCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.bottomPopView hide];
+    [self checkIfEnablePublish];
 }
 @end
