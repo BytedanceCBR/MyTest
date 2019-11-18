@@ -11,6 +11,7 @@
 #import <WDDefines.h>
 #import <FHCommonDefines.h>
 #import <ReactiveObjC.h>
+#import "FHUserTracker.h"
 
 @interface FHUGCVotePublishViewController()
 
@@ -67,6 +68,11 @@
     }
     
     self.tableView.frame = tableViewFrame;
+    
+    if(!isShrinking) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:1] - 1 inSection:1];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
 }
 
 - (void)configNavigation {
@@ -86,25 +92,58 @@
 
 - (void)cancelAction: (UIButton *)cancelBtn {
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"编辑未完成" message: @"退出后编辑的内容将不会被保存" preferredStyle:UIAlertControllerStyleAlert];
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_PAGE_TYPE] = @"vote_publisher";
+    params[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+    params[@"click_position"] = @"publisher_cancel";
+    TRACK_EVENT(@"click_options", params);
     
-    WeakSelf;
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        StrongSelf;
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }];
-    
-    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"继续编辑" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    if([self.viewModel isEditedVote]) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"编辑未完成" message: @"退出后编辑的内容将不会被保存" preferredStyle:UIAlertControllerStyleAlert];
         
-    }];
-    
-    [alertController addAction:cancelAction];
-    [alertController addAction:confirmAction];
-    
-    [self presentViewController:alertController animated:YES completion:nil];
+        WeakSelf;
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            StrongSelf;
+            [self dismissViewControllerAnimated:YES completion:nil];
+            
+            NSMutableDictionary *params = @{}.mutableCopy;
+            params[UT_PAGE_TYPE] = @"vote_publisher";
+            params[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+            params[@"click_position"] = @"confirm";
+            TRACK_EVENT(@"publisher_cancel_popup_click", params);
+        }];
+        
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"继续编辑" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSMutableDictionary *params = @{}.mutableCopy;
+            params[UT_PAGE_TYPE] = @"vote_publisher";
+            params[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+            params[@"click_position"] = @"cancel";
+            TRACK_EVENT(@"publisher_cancel_popup_click", params);
+        }];
+        
+        [alertController addAction:cancelAction];
+        [alertController addAction:confirmAction];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+        
+        NSMutableDictionary *params = @{}.mutableCopy;
+        params[UT_PAGE_TYPE] = @"vote_publisher";
+        params[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+        TRACK_EVENT(@"publisher_cancel_popup_show", params);
+        
+    } else {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 - (void)publishAction: (UIButton *)publishBtn {
+    
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_PAGE_TYPE] = @"vote_publisher";
+    params[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+    params[@"click_position"] = @"passport_publisher";
+    TRACK_EVENT(@"feed_publish_click", params);
+    
     [self.viewModel publish];
 }
 

@@ -16,6 +16,7 @@
 #import <TTDeviceHelper.h>
 #import "FHUGCPostMenuView.h"
 #import "FHCommonDefines.h"
+#import "FHUserTracker.h"
 
 @interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol, FHUGCPostMenuViewDelegate>
 @property (nonatomic, strong) FHCommunityDetailViewModel *viewModel;
@@ -335,10 +336,22 @@
 #pragma mark - FHUGCPostMenuViewDelegate
 
 - (void)gotoPostPublish {
+    
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ELEMENT_TYPE] = @"feed_icon";
+    params[UT_PAGE_TYPE] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+    TRACK_EVENT(@"click_options", params);
+    
     [self.viewModel gotoPostThreadVC];
 }
 
 - (void)gotoVotePublish {
+    
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ELEMENT_TYPE] = @"vote_icon";
+    params[UT_PAGE_TYPE] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+    TRACK_EVENT(@"click_options", params);
+    
     [self.viewModel gotoVotePublish];
 }
 

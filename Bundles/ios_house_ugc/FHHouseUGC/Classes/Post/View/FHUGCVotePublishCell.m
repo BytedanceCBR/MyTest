@@ -111,27 +111,8 @@
 
 - (void)textFieldDidChange:(UITextField *)textField {
     
-    CGFloat maxLength = TITLE_LENGTH_LIMIT;
-    NSString *toBeString = textField.text;
-    
-    //获取高亮部分
-    UITextRange *selectedRange = [textField markedTextRange];
-    UITextPosition *position = [textField positionFromPosition:selectedRange.start offset:0];
-    if (!position || !selectedRange)
-    {
-        if (toBeString.length > maxLength)
-        {
-            NSRange rangeIndex = [toBeString rangeOfComposedCharacterSequenceAtIndex:maxLength];
-            if (rangeIndex.length == 1)
-            {
-                textField.text = [toBeString substringToIndex:maxLength];
-            }
-            else
-            {
-                NSRange rangeRange = [toBeString rangeOfComposedCharacterSequencesForRange:NSMakeRange(0, maxLength)];
-                textField.text = [toBeString substringWithRange:rangeRange];
-            }
-        }
+    if(textField.text.length > TITLE_LENGTH_LIMIT) {
+        textField.text = [textField.text substringToIndex:TITLE_LENGTH_LIMIT];
     }
     
     if([self.delegate respondsToSelector:@selector(voteTitleCell:didInputText:)]) {
@@ -238,28 +219,10 @@
 
 - (void)textFieldDidChange:(UITextField *)textField {
     
-    CGFloat maxLength = OPTION_LENGTH_LIMIT;
-    NSString *toBeString = textField.text;
-    
-    //获取高亮部分
-    UITextRange *selectedRange = [textField markedTextRange];
-    UITextPosition *position = [textField positionFromPosition:selectedRange.start offset:0];
-    if (!position || !selectedRange)
-    {
-        if (toBeString.length > maxLength)
-        {
-            NSRange rangeIndex = [toBeString rangeOfComposedCharacterSequenceAtIndex:maxLength];
-            if (rangeIndex.length == 1)
-            {
-                textField.text = [toBeString substringToIndex:maxLength];
-            }
-            else
-            {
-                NSRange rangeRange = [toBeString rangeOfComposedCharacterSequencesForRange:NSMakeRange(0, maxLength)];
-                textField.text = [toBeString substringWithRange:rangeRange];
-            }
-        }
+    if(textField.text.length > OPTION_LENGTH_LIMIT) {
+        textField.text = [textField.text substringToIndex:OPTION_LENGTH_LIMIT];
     }
+    
     if([self.delegate respondsToSelector:@selector(optionCell:didInputText:)]) {
         [self.delegate optionCell:self didInputText:textField.text];
     }
@@ -282,14 +245,6 @@
             make.top.equalTo(self.contentView).offset(24);
             make.bottom.equalTo(self.contentView).offset(-16);
             make.right.equalTo(self.contentView).offset(-PADDING);
-        }];
-        
-        @weakify(self);
-        [[[[[self.optionTextField rac_textSignal] distinctUntilChanged] throttle:0.5] deliverOnMainThread] subscribeNext:^(NSString * _Nullable text) {
-            @strongify(self);
-            if([self.delegate respondsToSelector:@selector(optionCell:didInputText:)]) {
-                [self.delegate optionCell:self didInputText:text];
-            }
         }];
     }
     return self;

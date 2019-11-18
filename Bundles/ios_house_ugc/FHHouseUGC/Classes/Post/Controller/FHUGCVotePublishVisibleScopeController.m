@@ -221,9 +221,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self configNavigation];
-    
     [self.view addSubview: self.tableView];
+    
+    [self configNavigation];
     
     [self addDefaultEmptyViewFullScreen];
     
@@ -337,8 +337,6 @@
 // MARK: UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    
-    
     NSIndexPath *allGroupHeaderCellIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     FHUGCVotePublishVisibleScopeHeaderCell *allGroupHeaderCell = [tableView cellForRowAtIndexPath: allGroupHeaderCellIndexPath];
     
@@ -391,6 +389,11 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    if(self.socialGroupList.count == 0) {
+        return 0;
+    }
+    
     if(section == 0) {
         return 1;
     } else {
@@ -471,7 +474,7 @@
         if(self.socialGroupList.count > 0) {
             [self.tableView reloadData];
         } else {
-            [self.emptyView showEmptyWithTip:@"您还没有关注圈子，快去关注吧" errorImage:nil showRetry:NO];
+            [self.emptyView showEmptyWithTip:@"您还没有关注圈子，快去关注吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
         }
     }];
 }
