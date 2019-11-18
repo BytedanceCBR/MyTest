@@ -221,7 +221,8 @@
     }
 }
 
-- (void)updateImageViewWithOption:(FHUGCVotePublishOption *)option {
+- (void)updateWithOption:(FHUGCVotePublishOption *)option {
+    self.optionTextField.text = option.content;
     self.deleteButton.enabled = option.isValid;
 }
 

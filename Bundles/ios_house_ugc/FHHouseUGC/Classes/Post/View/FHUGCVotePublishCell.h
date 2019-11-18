@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UITextField *optionTextField;
 
-- (void)updateImageViewWithOption:(FHUGCVotePublishOption *)option;
+- (void)updateWithOption:(FHUGCVotePublishOption *)option;
 @end
 
 @interface FHUGCVotePublishVoteTypeCell: FHUGCVotePublishBaseCell<UIPickerViewDelegate, UIPickerViewDataSource>

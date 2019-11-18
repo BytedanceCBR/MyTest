@@ -329,8 +329,7 @@
             NSInteger index = indexPath.row - OPTION_START_INDEX;
             if(index >= 0 && index < self.model.options.count) {
                 FHUGCVotePublishOptionCell *optionCell = (FHUGCVotePublishOptionCell *)cell;
-                optionCell.optionTextField.text = self.model.options[index].content;
-                [optionCell updateImageViewWithOption:self.model.options[index]];
+                [optionCell updateWithOption:self.model.options[index]];
             }
         }
     }
