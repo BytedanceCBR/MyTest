@@ -402,7 +402,7 @@
     feedListController.hidePublishBtn = YES;
     feedListController.tabName = tabName;
     //错误页高度
-    CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.headerView.height;
+    CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
     if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1){
         errorViewHeight -= kSegmentViewHeight;
     }
