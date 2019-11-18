@@ -690,7 +690,8 @@
         if (showComment) {
             jump_comment = YES;
         }
-        NSDictionary *dict = @{@"begin_show_comment":@(jump_comment)};
+        NSMutableDictionary *dict = @{@"begin_show_comment":@(jump_comment)}.mutableCopy;
+        dict[@"data"] = cellModel;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
