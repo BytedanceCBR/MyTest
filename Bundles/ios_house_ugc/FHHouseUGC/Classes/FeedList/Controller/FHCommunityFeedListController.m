@@ -97,10 +97,6 @@
         }
     }
     [self initPublishBtn];
-//    if (_forumId > 0) {
-//        [self initGroupChatBtn];
-//        [self initBageView];
-//    }
 }
 
 - (void)initTableView {
@@ -267,7 +263,11 @@
         [_viewModel requestData:YES first:YES];
     } else {
         if(!self.hasValidateData){
-            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            if(!self.showErrorView && self.errorViewHeight > 0){
+                [self.viewModel showCustomErrorView:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }else{
+                [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }
         }
     }
 }
@@ -277,7 +277,11 @@
         [_viewModel requestData:YES first:isFirst];
     } else {
         if(!self.hasValidateData){
-            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            if(!self.showErrorView && self.errorViewHeight > 0){
+                [self.viewModel showCustomErrorView:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }else{
+                [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }
         }
     }
 }
@@ -422,7 +426,7 @@
     } else  if (self.listType == FHCommunityFeedListTypeNearby) {
         page_type = @"nearby_list";
     }
-    tracerDict[@"page_type"] = page_type;// “附近”：’nearby_list‘；“我加入的”：’my_join_list‘；'小区圈子详情页‘：community_group_detail‘
+    tracerDict[@"page_type"] = page_type;// “附近”：’nearby_list‘；“我加入的”：’my_join_list‘；'圈子子详情页‘：community_group_detail‘
     [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;

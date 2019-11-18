@@ -139,9 +139,9 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
     }
     
     self.curCategory = select;
-    NSString* districtListTitle = [NSString stringWithFormat:@"%@的小区圈",select.title];
+    NSString* districtListTitle = [NSString stringWithFormat:@"%@的圈子",select.title];
     if(select.categoryId == FHUGCCommunityDistrictTabIdFollow){
-        districtListTitle = @"我关注的小区圈";
+        districtListTitle = @"我关注的圈子";
     }
     self.districtListTitleLabel.text = districtListTitle;
     [self onCateStateChange:self.curCategory reload:YES resetOffset:YES];
@@ -226,10 +226,10 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
     FHCommunityCategoryListStateModel *stateModel = self.dataDic[@(self.curCategory.categoryId)];
     if (stateModel.communityList.count <= 0) {
         self.viewController.errorView.hidden = NO;
-        NSString *tips = @"你还没有关注任何小区圈";
+        NSString *tips = @"你还没有关注任何圈子";
         if (self.curCategory.categoryId == FHUGCCommunityDistrictTabIdRecommend) {
             // 推荐
-            tips = @"更多小区圈正在开通，敬请期待";
+            tips = @"更多圈子正在开通，敬请期待";
         }
         [self.viewController.errorView showEmptyWithTip:tips errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
         return;

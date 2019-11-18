@@ -421,7 +421,7 @@
     }
 }
 
-// 小区圈关注列表
+// 圈子关注列表
 - (void)gotoSocialFollowUserList: (UITapGestureRecognizer *)gesture {
     if (self.gotoSocialFollowUserListBlk) {
         self.gotoSocialFollowUserListBlk();

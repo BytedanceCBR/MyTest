@@ -128,6 +128,7 @@
 - (void)postThreadSuccess:(NSNotification *)noti {
     //如果是多tab，并且当前不在全部tab，这个时候要先切tab
     if(self.selectedIndex != 0){
+        self.isFirstEnter = YES;
         self.viewController.segmentView.selectedIndex = 0;
     }
     
@@ -219,8 +220,11 @@
         NSString *socialGroupId = tempModel.socialGroupId;
         FHUGCScialGroupDataModel *model = [[FHUGCConfig sharedInstance] socialGroupData:socialGroupId];
         if (model && (![model.countText isEqualToString:tempModel.countText] || ![model.hasFollow isEqualToString:tempModel.hasFollow])) {
-            self.data = model;
-            [self updateUIWithData:model];
+            tempModel.countText = model.countText;
+            tempModel.contentCount = model.contentCount;
+            tempModel.hasFollow = model.hasFollow;
+            tempModel.followerCount = model.followerCount;
+            [self updateUIWithData:tempModel];
         }
     }
     // 修复发帖返回状态栏不对问题
@@ -295,7 +299,7 @@
                 }
                 
                 if (refreshFeed) {
-                    [self.feedListController startLoadData:NO];
+                    [self.feedListController startLoadData:YES];
                 }
             }
         }
@@ -959,7 +963,7 @@
     tracer[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     // 埋点
     [infoDict setValue:tracer forKey:@"tracer"];
-    // NSString *name = [NSString stringWithFormat:@"%@小区圈",item.socialGroupName];
+    // NSString *name = [NSString stringWithFormat:@"%@圈子",item.socialGroupName];
     infoDict[@"title"] = item.socialGroupName;
     infoDict[@"social_group_id"] = item.socialGroupId;
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];

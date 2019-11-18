@@ -20,6 +20,7 @@
 #import "FHUGCVideoCell.h"
 #import "FHUGCSmallVideoCell.h"
 #import "FHUGCVoteDetailCell.h"
+#import "FHUGCEmptyCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -52,7 +53,7 @@
                                 @"FHUGCVideoCell",
                                 @"FHUGCSmallVideoCell",
                                 @"FHUGCVoteDetailCell",
-                                
+                                @"FHUGCEmptyCell",
                                 //可扩展
                                  ];
 }

@@ -296,7 +296,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     } else if (scrollView.contentOffset.y < -self.segmentViewHeight) {
         scrollView.contentOffset = CGPointMake(0, - self.segmentTopSpace - self.segmentViewHeight);
     } else {
-
+        
     }
 }
 
@@ -329,6 +329,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 - (void)didSwitchIndex:(NSInteger)aIndex to:(NSInteger)toIndex
 {
     self.lastPageIndex = toIndex;
+    
     _currentContentView = [self scrollViewAtIndex:toIndex];
     
     self.movingView.frame = CGRectMake(0, - self.currentContentViewTopInset, self.width, self.currentContentViewTopInset);

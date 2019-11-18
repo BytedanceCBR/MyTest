@@ -366,7 +366,7 @@
         height += (cellModel.voteInfo.voteHeight);
         // 按钮底部 + 20
         height += 20;
-        // 小区圈底部
+        // 圈子底部
         if (cellModel.isFromDetail) {
             // 详情页
             if (cellModel.showCommunity) {

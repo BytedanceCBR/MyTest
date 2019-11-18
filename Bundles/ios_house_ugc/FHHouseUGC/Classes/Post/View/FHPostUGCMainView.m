@@ -41,7 +41,7 @@
     _nameLabel.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_nameLabel];
     _valueLabel = [[UILabel alloc] init];
-    _valueLabel.text = @"选择想要发布帖子的小区圈";
+    _valueLabel.text = @"选择想要发布帖子的圈子";
     _valueLabel.textColor = [UIColor themeGray3];
     _valueLabel.font = [UIFont themeFontRegular:16];
     _valueLabel.textAlignment = NSTextAlignmentLeft;
@@ -87,7 +87,7 @@
         }];
     } else {
         self.nameLabel.text = @"小区：";
-        self.valueLabel.text = @"选择想要发布帖子的小区圈";
+        self.valueLabel.text = @"选择想要发布帖子的圈子";
         self.valueLabel.textColor = [UIColor themeGray3];
         [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(49);
