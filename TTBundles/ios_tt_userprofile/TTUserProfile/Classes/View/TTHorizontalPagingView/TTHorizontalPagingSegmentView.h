@@ -28,6 +28,7 @@ typedef enum {
 @property (nonatomic, assign) TTPagingSegmentViewHorizontalAlignment type;
 @property (nonatomic, strong) NSArray<NSString *> *titles;
 @property (nonatomic, weak) id <TTHorizontalPagingSegmentViewDelegate> delegate;
+@property (nonatomic, assign) BOOL isSwitching;
 /**
  一次性设置素有字体属性
 

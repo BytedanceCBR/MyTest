@@ -270,6 +270,9 @@
 
 - (void)titleClick:(UITapGestureRecognizer *)tap
 {
+    if(self.isSwitching){
+        return;
+    }
     self.isTitleClick = YES;
     SSThemedLabel *label = (SSThemedLabel *)tap.view;
     [self setupLabelSelected:label];
