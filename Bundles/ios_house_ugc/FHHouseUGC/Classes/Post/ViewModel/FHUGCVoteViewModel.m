@@ -396,9 +396,11 @@
     params[@"deadline"] = @((NSInteger)[self.model.deadline timeIntervalSince1970]);
     NSMutableArray *optionList = [NSMutableArray array];
     [self.model.options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-        dictionary[@"title"] = option.content;
-        [optionList addObject:dictionary];
+        if(option.content.length > 0) {
+            NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+            dictionary[@"title"] = option.content;
+            [optionList addObject:dictionary];
+        }
     }];
     params[@"options"] = optionList;
     

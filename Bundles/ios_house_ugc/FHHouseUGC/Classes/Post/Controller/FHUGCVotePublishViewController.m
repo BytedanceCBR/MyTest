@@ -132,20 +132,22 @@
 - (UIButton *)publishBtn {
     if(!_publishBtn) {
         _publishBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        _publishBtn.titleLabel.font = [UIFont themeFontRegular:16];
-        _publishBtn.enabled = NO;
-        [_publishBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-        [_publishBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
-        [_publishBtn setTitle:@"发布" forState:UIControlStateNormal];
-        [_publishBtn setTitle:@"发布" forState:UIControlStateDisabled];
         _publishBtn.frame = CGRectMake(0, 0, 32, 44);
+        _publishBtn.titleLabel.font = [UIFont themeFontRegular:16];
+        [_publishBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [_publishBtn setTitle:@"发布" forState:UIControlStateNormal];
         [_publishBtn addTarget:self action:@selector(publishAction:) forControlEvents:UIControlEventTouchUpInside];
+        _publishBtn.enabled = NO;
     }
     return _publishBtn;
 }
 
 - (void)enablePublish:(BOOL)isEnable {
-    self.publishBtn.enabled = isEnable;
+    if(isEnable) {
+        [_publishBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    } else {
+        [_publishBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+    }
 }
 
 @end

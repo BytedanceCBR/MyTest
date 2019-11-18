@@ -33,6 +33,7 @@
 #import "FHUserTracker.h"
 #import "UIViewController+Track.h"
 #import "TTAccountManager.h"
+#import "FHUGCPostMenuView.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate,TTUIViewControllerTrackProtocol>
 
@@ -60,7 +61,7 @@
 @property (nonatomic, assign)   int64_t cid;// 话题id
 @property (nonatomic, strong)   UIButton       *publishBtn;
 @property (nonatomic, copy)     NSString       *enter_from;// 从哪进入的当前页面
-
+@property(nonatomic, strong)    FHUGCPostMenuView *publishMenuView;
 @end
 
 @implementation FHTopicDetailViewController
@@ -461,8 +462,48 @@
 - (void)setupPublishBtn {
     self.publishBtn = [[UIButton alloc] init];
     [_publishBtn setImage:[UIImage imageNamed:@"fh_ugc_publish"] forState:UIControlStateNormal];
-    [_publishBtn addTarget:self action:@selector(gotoPostThreadVC) forControlEvents:UIControlEventTouchUpInside];
+    [_publishBtn addTarget:self action:@selector(gotoPublish:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_publishBtn];
+}
+
+- (void)gotoPublish:(UIButton *)sender {
+    
+    [self showPublishMenu];
+    
+}
+
+- (FHUGCPostMenuView *)publishMenuView {
+    
+    if(!_publishMenuView) {
+        _publishMenuView = [[FHUGCPostMenuView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        _publishMenuView.delegate = self;
+    }
+    return _publishMenuView;
+}
+
+- (void)showPublishMenu {
+    [self.publishMenuView showForButton:self.publishBtn];
+}
+
+#pragma mark - FHUGCPostMenuViewDelegate
+
+- (void)gotoPostPublish {
+    [self gotoPostThreadVC];
+}
+
+- (void)gotoVotePublish {
+    if ([TTAccountManager isLogin]) {
+        [self gotoVoteVC];
+    } else {
+        [self gotoLogin:1];
+    }
+}
+
+// 跳转到投票发布器
+- (void)gotoVoteVC {
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{}];
+    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
 }
 
 // 发布按钮点击
@@ -470,11 +511,11 @@
     if ([TTAccountManager isLogin]) {
         [self gotoPostVC];
     } else {
-        [self gotoLogin];
+        [self gotoLogin:0];
     }
 }
 
-- (void)gotoLogin {
+- (void)gotoLogin:(NSInteger)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *page_type = @"topic_detail";
     [params setObject:page_type forKey:@"enter_from"];
@@ -487,9 +528,15 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [wSelf gotoPostVC];
-                });
+                if(from == 0) {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [wSelf gotoPostVC];
+                    });
+                } else if(from == 1) {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [wSelf gotoVoteVC];
+                    });
+                }
             }
         }
     }];
