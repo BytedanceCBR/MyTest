@@ -33,7 +33,6 @@
 #import "FHUserTracker.h"
 #import "UIViewController+Track.h"
 #import "TTAccountManager.h"
-#import "FHUGCPostMenuView.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate,TTUIViewControllerTrackProtocol>
 
@@ -61,7 +60,6 @@
 @property (nonatomic, assign)   int64_t cid;// 话题id
 @property (nonatomic, strong)   UIButton       *publishBtn;
 @property (nonatomic, copy)     NSString       *enter_from;// 从哪进入的当前页面
-@property(nonatomic, strong)    FHUGCPostMenuView *publishMenuView;
 @end
 
 @implementation FHTopicDetailViewController
@@ -468,42 +466,8 @@
 
 - (void)gotoPublish:(UIButton *)sender {
     
-    [self showPublishMenu];
-    
-}
-
-- (FHUGCPostMenuView *)publishMenuView {
-    
-    if(!_publishMenuView) {
-        _publishMenuView = [[FHUGCPostMenuView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-        _publishMenuView.delegate = self;
-    }
-    return _publishMenuView;
-}
-
-- (void)showPublishMenu {
-    [self.publishMenuView showForButton:self.publishBtn];
-}
-
-#pragma mark - FHUGCPostMenuViewDelegate
-
-- (void)gotoPostPublish {
     [self gotoPostThreadVC];
-}
 
-- (void)gotoVotePublish {
-    if ([TTAccountManager isLogin]) {
-        [self gotoVoteVC];
-    } else {
-        [self gotoLogin:FHUGCLoginFrom_VOTE];
-    }
-}
-
-// 跳转到投票发布器
-- (void)gotoVoteVC {
-    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{}];
-    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
 }
 
 // 发布按钮点击
@@ -531,10 +495,6 @@
                 if(from == FHUGCLoginFrom_POST) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [wSelf gotoPostVC];
-                    });
-                } else if(from == FHUGCLoginFrom_VOTE) {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [wSelf gotoVoteVC];
                     });
                 }
             }
