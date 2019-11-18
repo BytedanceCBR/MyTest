@@ -64,7 +64,7 @@
         UIButton *confirmButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [confirmButton setTitle:@"确定" forState:UIControlStateNormal];
         confirmButton.titleLabel.font = [UIFont themeFontRegular:16];
-        [confirmButton setTitleColor:[UIColor themeRed3] forState:UIControlStateNormal];
+        [confirmButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
         [confirmButton sizeToFit];
         [confirmButton addTarget:self action:@selector(dateConfirmAction:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -491,6 +491,7 @@
     dict[@"selectedSocialGroup"] = self.model.cityInfos;
     dict[@"resultBlock"] = ^(NSArray<FHUGCVotePublishCityInfo *> *cityInfos, BOOL isAllSelected, BOOL isPartialSelected) {
         StrongSelf;
+
         self.model.isPartialSelected = isPartialSelected;
         self.model.isAllSelected = isAllSelected;
         self.model.visibleType = VisibleType_Group;
