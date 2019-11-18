@@ -33,6 +33,7 @@
 #import "FHUGCScialGroupModel.h"
 #import "FHUGCConfig.h"
 #import "FHUGCCellHelper.h"
+#import "HMDTTMonitor.h"
 
 @interface FHPostDetailViewModel ()
 
@@ -264,6 +265,10 @@
                     NSString *dataStr = [dataDict tt_stringValueForKey:@"data"];
                     if (isEmptyString(dataStr)) {
                         //不该出现这种情况
+                        // 成功埋点 status = 0 成功（不上报） status = 1：data为空
+                        NSMutableDictionary *metric = @{}.mutableCopy;
+                        metric[@"post_id"] = @(self.threadID);
+                        [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_detail_error" metric:metric category:@{@"status":@(1)} extra:nil];
                     } else {
                         NSError *jsonParseError;
                         NSData *jsonData = [dataStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -286,6 +291,11 @@
                                     [self processWithData:model socialGroup:groupData];
                                 }
                             }
+                        } else {
+                            // 成功埋点 status = 0 成功（不上报） status = 2：转json失败
+                            NSMutableDictionary *metric = @{}.mutableCopy;
+                            metric[@"post_id"] = @(self.threadID);
+                            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_detail_error" metric:metric category:@{@"status":@(2)} extra:nil];
                         }
                     }
                 }
