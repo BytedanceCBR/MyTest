@@ -377,6 +377,7 @@
         
         cell.delegate = self;
         cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
+        cellModel.tableView = tableView;
         
         if(indexPath.row < self.dataList.count){
             [cell refreshWithData:cellModel];

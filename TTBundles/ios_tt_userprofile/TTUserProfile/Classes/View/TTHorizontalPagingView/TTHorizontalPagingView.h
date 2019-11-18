@@ -136,6 +136,8 @@ swipeView是否开启水平bounce效果，默认为 NO
 @property (nonatomic, assign) BOOL headerViewScrollEnabled;
 
 @property (nonatomic, strong) UIView *movingView;
+
+@property (nonatomic, assign) BOOL isSwitching;
 /**
  *  手动控制滚动到某个视图
  *
